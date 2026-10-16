@@ -4,9 +4,8 @@ summary: >-
 cause: >-
   The Bash rules hint (PR #1946, #1940) still added nothing to a failing compound read (`cat .claude/rules/guards.md; ls /nonexistent`, exit 2) in a live test run after #1946 merged.
 surface: guard-or-hook
-status: fixed
+status: open
 ref: "issue #1954 closed completed 2026-10-14T19:16Z: stale-session false alarm, fix PR #1946 holds"
-fixedOn: "2026-10-14"
 fixes:
   - pr: 1946
     date: "2026-10-14"

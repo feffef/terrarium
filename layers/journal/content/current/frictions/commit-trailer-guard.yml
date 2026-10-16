@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   The harness attribution reminder told sessions to hand-write the Co-Authored-By and Claude-Session trailer the commit-msg hook adds, and the commit-trailer guard denied the hand-written one.
 surface: guard-or-hook
-status: fixed
-fixedOn: "2026-10-10"
+status: open
 ref: "issue #1652; commit c9763310"
 fixes:
   - pr: 1735

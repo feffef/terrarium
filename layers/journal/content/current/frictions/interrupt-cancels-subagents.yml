@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   A user interrupt cancels running Agent subagents with no notification, and nothing tells the orchestrator to check, so it keeps reporting them as running.
 surface: safe
-status: fixed
-fixedOn: "2026-10-13"
+status: open
 ref: "frictions-to-fixes 2026-10-13b grouped doc PR: dispatch-subagents §3 says to check agents are alive after an interrupt"
 fixes:
   - pr: 1882

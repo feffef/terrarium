@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   The tail-pipe guard denies a whole chained command for a trailing pipe into tail or head; most sessions hit it on their first verification command.
 surface: guard-or-hook
-status: fixed
-fixedOn: "2026-10-11"
+status: open
 ref: "issues #873, #1769; PR #1793 (guard removed)"
 fixes:
   - pr: 1793

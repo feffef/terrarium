@@ -63,12 +63,11 @@ export const frictionClusterSchema = z
     // docs/agents/guards.md); `outside` is the harness or a service this
     // repo cannot change.
     surface: z.enum(['safe', 'human-only', 'guard-or-hook', 'outside']),
-    // `open`: no open issue or PR covers it. `tracked`: one does. `on-trial`:
-    // inside a Prune Trial's territory (ADR-0027). `fixed`: the fix merged
-    // on `fixedOn`, so `fixes` holds one dated it (the manifest takes no
-    // cluster-level refine; `tests/unit/ledger-content.spec.ts` checks).
-    status: z.enum(['open', 'tracked', 'on-trial', 'fixed']),
-    fixedOn: utcDate.optional(),
+    // The tracking state: `open`: no open issue or PR covers it. `tracked`:
+    // one does. `on-trial`: inside a Prune Trial's territory (ADR-0027). Whether
+    // the merged PRs in `fixes` worked is not stored: the page derives it
+    // (`ledgerFixState` in `app/utils/ledger.ts`).
+    status: z.enum(['open', 'tracked', 'on-trial']),
     // Agents' notes on the status, not rendered: the tracking issue, the
     // trial's territory match, what a fix left open. Merged PRs go in `fixes`.
     ref: z.string().optional(),

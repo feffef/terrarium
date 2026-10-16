@@ -50,8 +50,8 @@ Its brief:
   after its fix merged when it has one. Return the ledger changes (new entries, appended occurrences,
   status changes, each with its evidence) in the report. Survey the ledger with
   `pnpm exec tsx scripts/prune-friction-ledger.ts --summary` (one line per entry
-  with its fixes; it flags a possible regression, a `fixed` entry whose `fixes`
-  miss its `fixedOn`, and the frictions two clusters share, for you to re-judge);
+  with its fixes and its state; it lists the frictions two clusters share, for
+  you to re-judge);
   open an entry file only for its evidence.
 - **Re-cluster when the ledger says so.** The stored texts show a broad entry
   that holds several causes, or two entries with one: split or merge them,
@@ -60,9 +60,12 @@ Its brief:
   first: `pr`, `date` (its UTC merge date) and a one-line `summary` of what the
   PR changed, written from the PR's description, not the friction's. Count a PR
   only if it tries to change the cause (not a ledger-only, tracking or session-log
-  one); add every partial fix. A `fixed` entry's `fixedOn` is the date of the
-  fix that holds, so it has a `fixes` entry dated `fixedOn` (a content test
-  checks) and a re-fix after a regression moves it. `ref` is not rendered: it
+  one); add every partial fix. Never record that a fix worked: `status` is the
+  tracking state (`open`, `tracked`, `on-trial`), and for an entry with `fixes`
+  the page and `--summary` derive `fix landed`, `likely fixed` (no occurrence
+  for 3 days after the latest PR) or `still recurring` (occurrences dated after
+  it, counted), so a re-fix after a regression needs only its `fixes` entry.
+  `ref` is not rendered: it
   holds the tracking issue, the trial's territory match or what a fix left
   open, never the PR list. `gh api repos/feffef/terrarium/commits/<sha>/pulls`
   maps a commit to its PR and `gh api repos/feffef/terrarium/pulls/<N>` gives
@@ -138,7 +141,7 @@ trial. Then, for the rest: the §1 subagent applies these rules to every candida
   the main session to pick up or escalate.
 - **Reappeared _after_ its fix merged** (a friction logged in a session that
   started later than the fixing PR landed; the entry's latest fix dates it,
-  and `--summary` flags it) —
+  and `--summary` shows it as `still recurring`) —
   this is a **regression**: the fix that
   was supposed to be in place did not hold. Do **not** route it through the ordinary
   simplest-fix dispatch — a change that already failed once needs human eyes, not a
@@ -192,7 +195,7 @@ record. The ledger edit is:
 - the subagent's ledger changes (§1), `fixes` included;
 - `status` and `ref` for what this run files, dispatches or escalates: a
   dispatched fix is `tracked` until the next run sees it merged and records it
-  in `fixes` with `fixedOn`;
+  in `fixes`;
 - last, `pnpm exec tsx scripts/prune-friction-ledger.ts`, which drops every
   occurrence before the horizon and deletes an entry left with none (git
   keeps them).

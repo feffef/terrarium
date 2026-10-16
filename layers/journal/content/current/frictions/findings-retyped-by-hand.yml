@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   Subagents cannot always write their findings where the parent can read them (harness refusals, non-extractable output), so the parent transcribes them by hand.
 surface: safe
-status: fixed
-fixedOn: "2026-10-15"
+status: open
 ref: "issues #2028, #2011 closed by PR #2060 (merged 2026-10-15T11:42Z: subagents give verdicts in the final reply; audit-docs pools findings from hand-backs); earlier PRs #1699, #1768"
 fixes:
   - pr: 1699

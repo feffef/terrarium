@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   Sessions run pnpm gate:scoped (about 3 minutes) in the foreground although CLAUDE.md says to background commands over 2 minutes; only a guard would reach them.
 surface: guard-or-hook
-status: fixed
-fixedOn: "2026-10-11"
+status: open
 ref: "issue #1785; PR #1790"
 fixes:
   - pr: 1790

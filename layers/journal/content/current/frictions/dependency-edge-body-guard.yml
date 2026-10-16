@@ -3,8 +3,7 @@ summary: >-
   A safety check blocked a GitHub request whose text it could not read in advance, so agents retyped it by hand.
 cause: "issue-tracker.md's Blocking recipe gets run with a stdin or variable-built body; github-provenance-guard denies any gh api / curl body it cannot read (by design, #1900), so the edges are retyped literally."
 surface: "safe"
-status: "fixed"
-fixedOn: "2026-10-15"
+status: open
 ref: "docs/agents/issue-tracker.md Blocking clause"
 fixes:
   - pr: 2030

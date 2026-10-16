@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   session-id-guard judged inherited or pre-session commits as this session's and raised a blocker on a trailer it had no business checking.
 surface: guard-or-hook
-status: fixed
-fixedOn: "2026-10-09"
+status: open
 ref: "issues #387, #1611, #1698; PR #1708"
 fixes:
   - pr: 1708

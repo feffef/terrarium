@@ -31,6 +31,13 @@ const { data } = await useAsyncData(route.path, async () => {
   if (other && otherSpace !== space) await read(other.collections.sessions, false)
   return { clusters, goals, own }
 })
+// A merge is an attempt: the states say what happened after it, not that it worked.
+function stateHint(e: { state: string; since: number }): string {
+  if (e.state === 'still recurring') return `${e.since} occurrence(s) dated after the latest merged PR`
+  if (e.state === 'likely fixed') return `Merged PR(s) and no occurrence for ${LEDGER_QUIET_DAYS}+ days`
+  if (e.state === 'fix landed') return `Merged PR(s), no occurrence yet, under ${LEDGER_QUIET_DAYS} days old`
+  return ''
+}
 const panels = computed(() =>
   ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.own), otherSpace, data.value?.goals),
 )
@@ -62,7 +69,11 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         What went wrong, grouped by root cause. Each cluster gathers the
         <strong>frictions</strong> agents logged in their session logs; the
         <code>frictions-to-fixes</code> Skill keeps it current. Fixed clusters stay
-        listed: what went wrong matters as much as what is still open. A cluster
+        listed: what went wrong matters as much as what is still open. With merged
+        PRs a cluster reads <em>fix landed</em> (no occurrence since, under
+        {{ LEDGER_QUIET_DAYS }} days), <em>likely fixed</em> (quiet for longer) or
+        <em>still recurring</em> (occurrences after the latest PR); a merge is an
+        attempt, not proof. A cluster
         sits in the list where it ranks higher. Click a cluster (▸) to expand its
         cause, merged PRs, sessions and logged frictions.
       </p>
@@ -78,10 +89,14 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                 <span class="summary">{{ e.summary }}</span>
                 <span class="pills">
                   <span class="pill sev" :class="e.worst" :title="`Worst severity: ${e.worst}`">{{ e.worst }}</span>
-                  <span class="pill status" :class="e.status" :title="e.fixedOn ? `Fixed on ${e.fixedOn}` : undefined">
-                    {{ e.status.replace('-', ' ') }}{{ e.fixedOn ? ` ${e.fixedOn.slice(5)}` : '' }}
-                    <template v-if="e.status === 'fixed' && e.fixes.length">
-                      · {{ e.fixes.length === 1 ? 'PR' : 'PRs' }}
+                  <span class="pill status" :class="e.state.replace(' ', '-')" :title="stateHint(e)">
+                    {{ e.state }}
+                    <template v-if="e.state === 'still recurring'">
+                      · {{ e.since }} since <a :href="e.fixes[0]!.url" @click.stop>#{{ e.fixes[0]!.pr }}</a>{{ e.fixes.length > 1 ? ' ' : '' }}
+                      <template v-if="e.fixes.length > 1">(earlier: <template v-for="(f, i) in e.fixes.slice(1)" :key="f.pr"><a :href="f.url" @click.stop>#{{ f.pr }}</a>{{ i < e.fixes.length - 2 ? ', ' : '' }}</template>)</template>
+                    </template>
+                    <template v-else-if="e.fixes.length">
+                      {{ e.fixes[0]!.date.slice(5) }} · {{ e.fixes.length === 1 ? 'PR' : 'PRs' }}
                       <template v-for="(f, i) in e.fixes" :key="f.pr"><a :href="f.url" @click.stop>#{{ f.pr }}</a>{{ i < e.fixes.length - 1 ? ', ' : '' }}</template>
                     </template>
                   </span>
@@ -187,7 +202,9 @@ details[open] .summary::before { content: '▾'; }
 .pill.sev.moderate::before, .dot.moderate { background: var(--jd-sev-moderate); }
 .pill.sev.major::before, .dot.major { background: var(--jd-sev-major); }
 .pill.sev.blocker::before, .dot.blocker { background: var(--jd-sev-blocker); }
-.pill.status.fixed { color: var(--jd-surface); background: var(--jd-accent); border-color: var(--jd-accent); }
+.pill.status.likely-fixed { color: var(--jd-surface); background: var(--jd-accent); border-color: var(--jd-accent); }
+.pill.status.fix-landed { color: var(--jd-accent); border-color: var(--jd-accent); }
+.pill.status.still-recurring { color: var(--jd-ink); border-color: var(--jd-sev-moderate); background: color-mix(in srgb, var(--jd-sev-moderate) 18%, transparent); }
 .pill.status.open { color: var(--jd-ink); border-color: var(--jd-ink); }
 .cause, .ref-text { margin: 0 0 0.4rem 3.3rem; font-size: 0.8rem; color: var(--jd-muted); overflow-wrap: anywhere; }
 .jd-prose .occ-h { margin: 0.6rem 0 0.1rem 3.3rem; font-size: 0.8rem; color: var(--jd-ink); }

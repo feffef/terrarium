@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   Skills implied a synchronous Agent dispatch, sessions passed run_in_background: false, and the guard denied the no-op flag.
 surface: guard-or-hook
-status: fixed
-fixedOn: "2026-10-10"
+status: open
 ref: "issues #835, #1651; commit b02ca418"
 fixes:
   - pr: 1735

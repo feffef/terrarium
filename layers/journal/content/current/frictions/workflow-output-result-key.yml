@@ -3,8 +3,7 @@ summary: >-
   Workflow results sat one level deeper than expected, so the first read found nothing.
 cause: A saved Workflow's .output file nests the script's return value under a `result` key, so a first parse of explore/build output finds nothing; clear-backlog/SKILL.md does not say so.
 surface: safe
-status: fixed
-fixedOn: "2026-10-15"
+status: open
 ref: ".agents/skills/clear-backlog/SKILL.md intro"
 fixes:
   - pr: 2030

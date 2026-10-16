@@ -5,15 +5,17 @@
 // Usage:  tsx scripts/prune-friction-ledger.ts [--today YYYY-MM-DD]
 //   Edits `layers/journal/content/current/frictions/*.yml` in place and prints
 //   what it dropped. `--today` defaults to the current UTC date.
-//   `--summary` edits nothing and prints one line per entry: name, status,
-//   ref, in-horizon occurrence count, max severity (issue #1917), fix count and
-//   latest fix, plus a note on a fixed entry with an occurrence after (or on)
-//   its latest fix (issue #2024) or with no fix dated its fixedOn. It ends with
-//   every friction two clusters share, for the survey to judge.
+//   `--summary` edits nothing and prints one line per entry: name, state (the
+//   stored status, or with merged PRs what the page shows: fix landed, likely
+//   fixed, still recurring with the count since the latest PR, issue #2024),
+//   ref, in-horizon occurrence count, max severity (issue #1917), and the fix
+//   count and latest fix. It ends with every friction two clusters share, for
+//   the survey to judge.
 import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { isMap, isSeq, parse as parseYaml, parseDocument } from 'yaml'
+import { ledgerFixState } from '../layers/journal/app/utils/ledger.ts'
 import { LEDGER_DIR } from './session-frictions.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -61,27 +63,9 @@ const SEVERITIES = ['nit', 'minor', 'moderate', 'major', 'blocker']
 interface Entry {
   name?: string
   status?: string
-  fixedOn?: string
   ref?: string
   fixes?: { pr: number; date: string }[]
   occurrences?: { session?: string; date?: string; severity?: string; description?: string }[]
-}
-
-/** Notes on a fixed entry: an occurrence after its latest fix (a possible
- *  regression) or on it (the fix may have landed mid-session); no fix at all;
- *  no fix dated `fixedOn`. */
-function fixNotes(e: Entry): string {
-  if (e.status !== 'fixed') return ''
-  const fixes = e.fixes ?? []
-  const notes: string[] = []
-  if (!fixes.length) notes.push('fixed with no fixes entry')
-  else if (!fixes.some((f) => f.date === e.fixedOn)) notes.push(`no fix dated fixedOn ${e.fixedOn}`)
-  const latest = [e.fixedOn ?? '', ...fixes.map((f) => f.date)].sort().at(-1)!
-  const dates = (e.occurrences ?? []).map((o) => String(o.date))
-  if (!latest) return notes.map((n) => ` | ${n}`).join('')
-  if (dates.some((d) => d > latest)) notes.push(`possible regression: occurrence after latest fix ${latest}`)
-  else if (dates.includes(latest)) notes.push(`check startedAt: occurrence on latest fix ${latest}`)
-  return notes.map((n) => ` | ${n}`).join('')
 }
 
 function readEntries(cwd: string): [string, Entry][] {
@@ -91,12 +75,16 @@ function readEntries(cwd: string): [string, Entry][] {
 
 export function summarizeLedger(today: string, cwd = root): string[] {
   const start = horizonStart(today)
-  return readEntries(cwd).map(([f, e]) => {
+  const entries = readEntries(cwd)
+  const asOf = entries.flatMap(([, e]) => (e.occurrences ?? []).map((o) => String(o.date))).sort().at(-1) ?? ''
+  return entries.map(([f, e]) => {
     const occ = (e.occurrences ?? []).filter((o) => String(o.date) >= start)
     const max = Math.max(-1, ...occ.map((o) => SEVERITIES.indexOf(String(o.severity))))
     const last = [...(e.fixes ?? [])].sort((a, b) => a.date.localeCompare(b.date)).at(-1)
     const fixes = last ? `${e.fixes!.length} ${e.fixes!.length === 1 ? 'fix' : 'fixes'}, latest #${last.pr} ${last.date}` : 'no fixes'
-    return [e.name ?? f, e.status, e.ref ?? '-', `${occ.length} in horizon`, SEVERITIES[max] ?? '-', fixes].join(' | ') + fixNotes(e)
+    const derived = ledgerFixState(e.fixes ?? [], (e.occurrences ?? []).map((o) => String(o.date)), asOf)
+    const state = derived ? `${derived.state}${derived.since ? ` (${derived.since} since #${last!.pr})` : ''}` : e.status
+    return [e.name ?? f, state, e.ref ?? '-', `${occ.length} in horizon`, SEVERITIES[max] ?? '-', fixes].join(' | ')
   })
 }
 

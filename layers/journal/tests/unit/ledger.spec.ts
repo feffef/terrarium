@@ -1,6 +1,6 @@
 // The Friction Ledger page's ranking (layers/journal/app/utils/ledger.ts).
 import { describe, expect, it } from 'vitest'
-import { ledgerPanels } from '../../app/utils/ledger.ts'
+import { ledgerFixState, ledgerPanels } from '../../app/utils/ledger.ts'
 import type { FrictionClusterDoc, Severity } from '../../app/types/journal.ts'
 
 function cluster(name: string, severities: Severity[]): FrictionClusterDoc {
@@ -73,19 +73,48 @@ describe('ledgerPanels reports', () => {
   })
 })
 
-describe('ledgerPanels fixes', () => {
-  const fixed = (fixes: { pr: number; date: string }[], fixedOn = '2026-10-12'): FrictionClusterDoc => ({
+describe('ledgerFixState', () => {
+  const asOf = '2026-10-20'
+  const state = (fixDates: string[], occurrences: string[]) => ledgerFixState(fixDates.map((date) => ({ date })), occurrences, asOf)
+
+  it('has no state without a merged PR', () => {
+    expect(state([], ['2026-10-01'])).toBeUndefined()
+  })
+
+  it('is still recurring, with the count, when occurrences are dated after the latest PR', () => {
+    expect(state(['2026-10-02', '2026-10-06'], ['2026-10-01', '2026-10-05', '2026-10-07', '2026-10-08'])).toEqual({ state: 'still recurring', since: 2 })
+  })
+
+  it('is likely fixed after a quiet spell, and fix landed before it; the PR\'s own day does not count', () => {
+    expect(state(['2026-10-05'], ['2026-10-01', '2026-10-05'])).toEqual({ state: 'likely fixed', since: 0 })
+    expect(state(['2026-10-17'], ['2026-10-01'])).toEqual({ state: 'likely fixed', since: 0 })
+    expect(state(['2026-10-18'], ['2026-10-01'])).toEqual({ state: 'fix landed', since: 0 })
+  })
+})
+
+describe('ledgerPanels fixes and state', () => {
+  const merged = (fixes: { pr: number; date: string }[], ...extra: Partial<FrictionClusterDoc>[]): FrictionClusterDoc => ({
     ...cluster('x', ['nit']),
-    status: 'fixed',
-    fixedOn,
-    ref: 'issue #5; PR #7',
     fixes: fixes.map((f) => ({ ...f, summary: `fix ${f.pr}` })),
+    ...Object.assign({}, ...extra),
   })
 
   it('lists fixes newest first with their PR link, and none when there are none', () => {
-    const [e] = ledgerPanels([fixed([{ pr: 1, date: '2026-10-05' }, { pr: 2, date: '2026-10-12' }])], 'current', new Set(), 'archived').severe
+    const [e] = ledgerPanels([merged([{ pr: 1, date: '2026-10-05' }, { pr: 2, date: '2026-10-12' }])], 'current', new Set(), 'archived').severe
     expect(e!.fixes.map((f) => f.pr)).toEqual([2, 1])
     expect(e!.fixes[0]).toMatchObject({ summary: 'fix 2', url: 'https://github.com/feffef/terrarium/pull/2' })
-    expect(ledgerPanels([fixed([])], 'current', new Set(), 'archived').severe[0]!.fixes).toEqual([])
+    expect(ledgerPanels([merged([])], 'current', new Set(), 'archived').severe[0]!.fixes).toEqual([])
+  })
+
+  it('shows the stored status without a merged PR and the derived state with one, measured to the newest occurrence in the ledger', () => {
+    const clusters = [
+      { ...cluster('plain', ['nit']), status: 'on-trial' as const },
+      { ...merged([{ pr: 1, date: '2026-09-30' }]), name: 'late' },
+      { ...cluster('newest', ['nit', 'nit', 'nit', 'nit', 'nit']) },
+    ]
+    const { severe, frequent } = ledgerPanels(clusters, 'current', new Set(), 'archived')
+    const byName = Object.fromEntries([...severe, ...frequent].map((e) => [e.name, e]))
+    expect(byName.plain).toMatchObject({ state: 'on trial', since: 0 })
+    expect(byName.late).toMatchObject({ state: 'still recurring', since: 1 })
   })
 })
