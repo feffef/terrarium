@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   .claude/workflows/clear-backlog-explore.js unions issues by any shared file or relatedTo link with union-find, so the connected component can hold issues that share no file with each other. Signals: "chained", "grouping bundled", regroup by hand.
 surface: safe
-status: open
+status: tracked
+ref: "issue #2147"
 occurrences:
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"

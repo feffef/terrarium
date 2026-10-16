@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Sessions read governed files with cat, sed or chained Bash instead of the Read tool, so path rules did not load; PR #1775's Bash rules hint now loads them but sessions still break the CLAUDE.md rule; the harness auto-mode message that tells agents to prefer Bash also contributes (sessions 01V3bxJa, 01BLrfuH).
 surface: safe
-status: open
-ref: "issue #1778 closed; owner may cut the CLAUDE.md bullet via prune-trial"
+status: tracked
+ref: "regression issue #2145; issue #1778 closed; owner may cut the CLAUDE.md bullet via prune-trial"
 fixes:
   - pr: 1775
     date: "2026-10-11"
