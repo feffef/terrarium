@@ -406,6 +406,7 @@ async function main(): Promise<number> {
   const waitMs = extractFlag(waitFor.rest, '--wait')
   const scheme = extractFlag(waitMs.rest, '--scheme')
   const args = scheme.rest
+  if (verb === 'stop') return doStop(args)
   let opts: ShotOptions
   try {
     opts = { waitMs: parseWaitMs(waitMs.value), waitForSelector: waitFor.value, scheme: parseScheme(scheme.value), fullPage: full.on, mobile: mobile.on }
@@ -420,8 +421,6 @@ async function main(): Promise<number> {
       return doReview(args, dev.on, opts)
     case 'start':
       return doStart(dev.on)
-    case 'stop':
-      return doStop(args)
     default:
       console.error(USAGE)
       return 1
