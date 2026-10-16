@@ -3,7 +3,7 @@
 ## Purpose
 
 The handoff for a change an agent can't apply itself: a `.github/workflows/*`
-edit, or a repository setting such as a ruleset (why:
+edit from a cloud session, or a repository setting such as a ruleset (why:
 `docs/agents/environment-caveats.md`). An agent writes the intended change here;
 a human applies it by hand.
 

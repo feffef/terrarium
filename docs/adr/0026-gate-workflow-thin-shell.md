@@ -13,8 +13,8 @@ change to either file.
   is green.
 - **The workflow file holds only what cannot move:** triggers, permissions, the
   runner, the checkout, and the token the comment step needs. It changes only
-  when triggers or permissions do. Agents cannot push it, so such a change goes
-  to a human as a Proposal.
+  when triggers or permissions do. A cloud session cannot push it, so from
+  there such a change goes to a human as a Proposal.
 - **One step list, three copies, one test.** `package.json`'s `gate` script,
   `scripts/gate.ts` and the action must run the same steps in the same order,
   with the same skip conditions. `tests/unit/gate-parity.spec.ts` fails when
@@ -22,9 +22,9 @@ change to either file.
 
 ## Why
 
-Agent sessions cannot push `.github/workflows/`: their token lacks GitHub's
-`workflow` permission. That fence covers that folder only; `.github/actions/`
-is pushable. With the steps in the workflow file, every gate change waited for
+Cloud sessions cannot push `.github/workflows/`: their token lacks GitHub's
+`workflow` permission. A local session pushes with the owner's key, which has
+it. The fence covers that folder only; `.github/actions/` is pushable. With the steps in the workflow file, every gate change waited for
 a human to copy YAML by hand.
 
 The real cost was drift. A new check landed in `package.json` while its CI step
@@ -44,9 +44,9 @@ stays.
   name the check that failed. Its local habits are wrong in CI: it may run a
   plain `pnpm install` instead of a frozen one, and it finds its base by
   comparing with `main`, which is wrong for a PR into another branch.
-- **Give agent tokens the `workflow` permission.** It is not ours to grant.
-  It would also let one PR rewrite both the gate's code and its workflow, with
-  no part left that only a human can apply.
+- **Give cloud-session tokens the `workflow` permission.** It is not ours to
+  grant. Nor is it needed: a human merging the workflow file is the control,
+  and that holds for a local session too.
 - **Keep setup and install in the workflow file.** Every Node, pnpm or install
   change would then need a human to apply it again.
 
@@ -67,5 +67,6 @@ stays.
 
 - `scripts/gate.ts`: the step lists and the skip decision CI asks for.
 - `docs/agents/environment-caveats.md` and `scripts/workflow-edit-guard.ts`:
-  why and how a workflow edit is stopped before it is committed.
+  why and how a cloud session's workflow edit is stopped before it is
+  committed.
 - `docs/proposals/README.md`: how to hand a workflow change to a human.

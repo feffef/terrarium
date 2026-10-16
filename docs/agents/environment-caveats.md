@@ -37,8 +37,10 @@ re-diagnose them as new. Incident detail lives in the cited issue.
 - **A fired self-bind Routine's output may not surface as a visible turn.**
   Check `last_run.fired_at` via `list_triggers` before concluding it didn't fire.
   (issue #834)
-- **An agent session cannot write `.github/workflows/*` here — no `workflow`
-  OAuth scope.** `workflow-edit-guard` ([guards](./guards.md)) denies the write.
+- **A cloud session cannot write `.github/workflows/*` — its token has no
+  `workflow` OAuth scope.** `workflow-edit-guard` ([guards](./guards.md)) denies
+  the write there. A local session pushes with the owner's key, so the guard
+  lets it through (issue #2174).
   A commit that gets past it is rejected at
   push, stranding every other commit in that push. To recover, drop that commit
   rather than revert it; the push check reads every commit:
