@@ -22,6 +22,18 @@ describe('tinkerfundNow', () => {
     expect(tinkerfundNow('2026-06-01T12:00:00Z', 42)).toBe(NOW)
   })
 
+  // Under UTC, where CI runs, the bug is invisible (issue #2175).
+  it('reads the zone-less form Nuxt Content stores as UTC', () => {
+    const tz = process.env.TZ
+    process.env.TZ = 'Europe/Berlin'
+    try {
+      expect(tinkerfundNow('2026-06-01 12:00:00', 42)).toBe(NOW)
+    } finally {
+      if (tz === undefined) delete process.env.TZ
+      else process.env.TZ = tz
+    }
+  })
+
   it('follows real time when the Space pins nothing (prod)', () => {
     expect(tinkerfundNow(undefined, 42)).toBe(42)
   })

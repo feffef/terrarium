@@ -11,8 +11,11 @@ export function resolveTinkerfundOffset(offset: string, now: number): number {
   return now + hours * TINKERFUND_HOUR
 }
 
+// Nuxt Content stores a `datetime()` field in UTC without its zone
+// ("2026-06-01 12:00:00"), which `Date.parse` reads as local time (issue #2175).
 export function tinkerfundNow(pinned: string | undefined, realNow: number): number {
-  return pinned ? Date.parse(pinned) : realNow
+  if (!pinned) return realNow
+  return Date.parse(pinned.endsWith('Z') ? pinned : `${pinned.replace(' ', 'T')}Z`)
 }
 
 export function tinkerfundCountdown(now: number, until: number): { days: number; hours: number } {
