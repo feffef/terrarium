@@ -1,9 +1,11 @@
 // What every script CLI shares (#2185). `guard-io.ts` is Human-only and keeps
 // its own `runIfMain`; this is the one for everything else.
-import { basename } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { basename, dirname, resolve } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
-export { root } from '../../shared/expand.ts'
+// Not re-exported from shared/expand.ts: that pulls in jiti and zod, ~45ms on
+// every hint run that reaches this module through validate-adr-rules.ts.
+export const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
 /** Print `<script>: msg` and exit 1. The prefix is the entry script's name,
  *  which is what every copy hard-coded. */
