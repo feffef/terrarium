@@ -1,6 +1,7 @@
 import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { splitFrontmatter } from '../../../../scripts/validate-content.ts'
 import { root } from '../../../../shared/expand.ts'
 import glassbox from '../../tenant.config.ts'
 import { glassboxStories } from '../../app/utils/subjects.ts'
@@ -35,6 +36,7 @@ const site: GlassboxSite = {
   journal: ['/t/journal/current', '/t/journal/current/how-it-works', '/t/journal/current/skills'],
   terms: ['collection'],
   cites: { '/t/glassbox/guide/nuxt-content/collections': ['shared/expand.ts'] },
+  titles: { '/t/glassbox/guide': 'Home', '/t/glassbox/guide/nuxt-content/collections': 'Collections', '/t/glassbox/guide/terrarium-practice/gate': 'The Gate', '/t/glassbox/drafts/zod/timestamps': 'Timestamps' },
 }
 
 const frontmatter = `---\ntitle: T\ndescription: D\nrevision: '${rev}'\nrevisionDate: '2026-10-14'\n---\n`
@@ -93,13 +95,19 @@ How a page opens.
 
 ## 1. The request arrives
 
-It reaches the router.
+It reaches the router. The router picks a page.
 
 ::stop-links
 [Collections](/t/glassbox/guide/nuxt-content/collections)
 ::
 
 ## 2. The page renders
+
+The page reads \`shared/expand.ts\`, e.g. its keys, under "New here? Start. Go!". Then it renders.
+
+\`\`\`ts
+return \`out\`. // Not. A. Sentence.
+\`\`\`
 
 ::stop-links
 :file[shared/expand.ts]
@@ -177,6 +185,8 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a Where next over 5 pages', (s: string) => `${s}${gateItem.repeat(5)}`, 'Where next lists 6 pages, more than 5'],
     ['a Journal page before a Lesson in Where next', (s: string) => `${s}${journalItem}${gateItem}`, 'Where next lists a Journal page before its end'],
     ['a stop with over 5 chips', (s: string) => s.replace(':file[shared/expand.ts]\n', `${Array(6).fill(':file[layers/]').join(' · ')}\n`), 'stop "2. The page renders" has 6 chips, more than 5'],
+    ['a stop of one sentence', (s: string) => s.replace(' The router picks a page.', ''), 'stop "1. The request arrives" has 1 sentence(s), not 2 to 4'],
+    ['a stop of five sentences', (s: string) => s.replace('Then it renders.', 'Then it renders. It ends! Done? Yes.'), 'stop "2. The page renders" has 5 sentence(s), not 2 to 4'],
     ['a stop :file a linked Lesson cites', (s: string) => s.replace('(/t/glassbox/guide/nuxt-content/collections)', '$& · :file[shared/expand.ts]'), 'stop "1. The request arrives" repeats shared/expand.ts, which /t/glassbox/guide/nuxt-content/collections cites'],
   ])('fails a Walkthrough with %s', (_name, broken, message) => {
     expect(problemsOf('walkthroughs/from-file-to-browser.md', broken(walkthrough)).join('\n')).toContain(message)
@@ -208,6 +218,13 @@ describe('glassboxPageProblems on fixture pages', () => {
     expect(problemsOf(file, long).join('\n')).toContain(message)
     expect(problemsOf(file, page.replace(field === 'title' ? 'title: T' : 'description: D', `${field}: ${'x'.repeat(length - 1)}`))).toEqual([])
     expect(problemsOf(file, long, 'drafts').join('\n')).not.toContain('chars, more than')
+  })
+
+  it('fails guide link text that is not its target\'s title, unless it starts lowercase, and passes it in drafts', () => {
+    const stale = lesson.replace('[The Gate](', '[The Old Gate](')
+    expect(problemsOf('nuxt-content/01.collections.md', stale)).toEqual(['link text "The Old Gate" is not the title "The Gate" of /t/glassbox/guide/terrarium-practice/gate'])
+    expect(problemsOf('nuxt-content/01.collections.md', stale, 'drafts')).toEqual([])
+    expect(problemsOf('nuxt-content/01.collections.md', lesson.replace('[The Gate](', '[the gate step]('))).toEqual([])
   })
 
   it('passes a Where next of 5 pages ending in one Journal page', () => {
@@ -250,6 +267,7 @@ describe('every Glass Box page matches the code at its revision', () => {
     journal: glassboxJournalRoutes(),
     terms: Object.keys(terms),
     cites: Object.assign({}, ...spaces.map((space) => glassboxCites(Object.fromEntries(files[space]!.map((file) => [file, read(space, file)])), space))),
+    titles: Object.fromEntries(pages.map(({ space, file }) => [glassboxSitePath(space, file), String(splitFrontmatter(read(space, file)).frontmatter.title)])),
   }
 
   it('reaches Journal content pages and the Journal\'s own Vue routes', () => {

@@ -17,7 +17,7 @@ The home page says what Terrarium is in a few lines, links the repository's issu
 
 ## 2. "New here?" offers a short tour
 
-The Journal's landing page opens with "New here? Start with the short version", a row of cards, each a door to one explainer page. No list of those pages exists in code. A page joins the tour through its own frontmatter: `onramp` holds its place in the order, `onrampLabel` and `onrampBlurb` the card's text. The fields are optional parts of the Journal's `pages` schema, so an ordinary page leaves them out. The landing page reads every page of its :term[Space], keeps those that set `onramp` and a label, sorts them by it and draws a card for each, then adds one card of its own for the :term[Friction Ledger], a Vue page with no frontmatter to set.
+The Journal's landing page opens with "New here? Start with the short version", a row of cards, each a door to one explainer page. No list of those pages exists in code: a page joins the tour through its own frontmatter, where `onramp` holds its place in the order and `onrampLabel` and `onrampBlurb` the card's text. The fields are optional parts of the Journal's `pages` schema, so an ordinary page leaves them out. The landing page reads every page of its :term[Space], keeps those that set `onramp` and a label, sorts them by it and draws a card for each, then adds one card of its own for the :term[Friction Ledger], a Vue page with no frontmatter to set.
 
 ::stop-links
 [Manifest collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Schemas give column types, not validation](/t/glassbox/drafts/zod/schemas-column-types) · :file[layers/journal/tenant.config.ts] · :file[layers/journal/app/utils/onramp.ts]

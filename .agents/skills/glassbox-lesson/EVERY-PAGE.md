@@ -15,7 +15,8 @@ stays true after that change lands (diff the file between `revision` and the
 integration tip).
 Frontmatter holds `title`, `description`, `revision` and `revisionDate` only;
 the page draws `title` as its heading, so the body has no h1.
-`title` is a short name (<=28 chars; a Walkthrough's <=36); `description` is one sentence a visitor reads before clicking (<=120; a Walkthrough's <=140).
+`title` is a short name and `description` one sentence a visitor reads before
+clicking, each within its cap in `lengths` in `layers/glassbox/page-checks.ts`.
 
 ## Write
 

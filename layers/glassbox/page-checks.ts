@@ -47,6 +47,8 @@ export interface GlassboxSite {
   terms: string[]
   /** The repo paths each page cites, by site path, as `glassboxCites` gives them. */
   cites: Record<string, string[]>
+  /** Each page's frontmatter `title`, by site path. */
+  titles: Record<string, string>
 }
 
 // The most chips a stop holds and pages a Where next lists (GLOSSARY.md, Lesson and Walkthrough).
@@ -96,7 +98,14 @@ function readBody(body: string) {
   return { prose: prose.join('\n'), sections: sections.map((s) => ({ title: s.title, text: s.text.join('\n') })) }
 }
 
-/** The Walkthrough entry in GLOSSARY.md: at least one `## N. Title` stop, each with exactly one
+/** A stop's sentences before its `::stop-links`, counted by their end marks; none inside
+ *  code, a "quote" or "e.g." counts (#2096). */
+function stopSentences(text: string) {
+  const prose = readBody(text.split(/^::stop-links/m)[0]!).prose.replace(/"[^"\n]*"/g, 'quote').replace(/\b(e\.g|i\.e)\./g, '$1')
+  return prose.match(/[.!?](?=["')\]]*(\s|$))/g)?.length ?? 0
+}
+
+/** The Walkthrough entry in GLOSSARY.md: at least one `## N. Title` stop of 2–4 sentences, each with exactly one
  *  `::stop-links` block holding a link or `:file`, at most `cap` chips and no `:file` a Lesson
  *  it links cites. Outside a stop the block renders unstyled. */
 export function glassboxStopProblems(body: string, walkthrough: boolean, cites: GlassboxSite['cites']): string[] {
@@ -117,6 +126,8 @@ export function glassboxStopProblems(body: string, walkthrough: boolean, cites: 
         if (by) problems.push(`stop "${s.title}" repeats ${path}, which ${by} cites`)
       }
     }
+    const sentences = stopSentences(s.text)
+    if (sentences < 2 || sentences > 4) problems.push(`stop "${s.title}" has ${sentences} sentence(s), not 2 to 4`)
   }
   const stray = glassboxPageRefs(body).stopLinks.length - inStops
   if (stray) problems.push(`${stray} ::stop-links block(s) sit outside a Walkthrough stop`)
@@ -268,8 +279,11 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   const pages = new Set(site.pages)
   const journal = new Set(site.journal)
   const guide = glassboxSitePath('guide', 'index.md')
-  for (const [, link] of prose.matchAll(/\]\((\/t\/(?:glassbox\/[a-z0-9]+|journal)(?:\/[^)\s#?]*)?)/g)) {
+  for (const [, text, link] of prose.matchAll(/\[([^\]]*)\]\((\/t\/(?:glassbox\/[a-z0-9]+|journal)(?:\/[^)\s#?]*)?)/g)) {
     const path = link!.replace(/\/$/, '')
+    // A link quoting its target's title goes stale when the title changes; lowercase text is running prose (#2114).
+    const title = site.titles[path]
+    if (space === 'guide' && title !== undefined && !/^[a-z]/.test(text!) && text !== title) problems.push(`link text "${text}" is not the title "${title}" of ${path}`)
     // The guide stands alone; drafts may lean on it (GLOSSARY.md, Two Spaces).
     if (space === 'guide' && path.startsWith('/t/glassbox/') && path !== guide && !path.startsWith(`${guide}/`)) problems.push(`guide page links outside the guide: ${link}`)
     else if (path.startsWith('/t/glassbox/') ? !pages.has(path) : !journal.has(path)) problems.push(`link ${link} resolves to no page`)

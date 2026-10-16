@@ -41,7 +41,7 @@ A grilling ticket is a conversation with the owner, run with `grilling` and `dom
 
 ## 5. The map hands off to a spec
 
-When nothing is left to decide, the way is clear and the work is handed off. `to-spec` writes the decisions up as a spec, an ordinary issue here, and `to-tickets` breaks a spec into thin stories that each work end to end and can be checked alone. Each story is a sub-issue of the spec and starts with a `Part of` line naming it. The pack labels what it publishes `ready-for-agent`, which here is a :term[Trusted] user's approval to build. A spec on hold carries no label and says so in its body.
+When nothing is left to decide, the way is clear and the work is handed off. `to-spec` writes the decisions up as a spec, an ordinary issue here, and `to-tickets` breaks a spec into thin stories that each work end to end and can be checked alone. Each story is a sub-issue of the spec and starts with a `Part of` line naming it. The pack labels what it publishes `ready-for-agent`, which here is a :term[Trusted] user's approval to build, while a spec on hold carries no label and says so in its body.
 
 ::stop-links
 [Planning with the pack](/t/glassbox/drafts/skill-pack/planning-with-the-pack) · [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · :file[.agents/skills/to-spec/SKILL.md] · :file[.agents/skills/to-tickets/SKILL.md]

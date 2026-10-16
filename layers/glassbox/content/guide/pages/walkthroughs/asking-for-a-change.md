@@ -65,7 +65,7 @@ With the PR open, the session runs `close-session`. A script first re-reads `CLA
 
 ## 8. CI runs the same Gate
 
-GitHub Actions runs the Gate on the PR, and that run decides whether it may merge. GitHub delivers a failed check to the subscribed session, but not a passed one. When the Gate is green, its last step posts a fresh comment on the PR naming the commit; that comment wakes the session. A fork's PR gets no such comment. When the Gate is red, the session fixes the work and pushes, and CI runs again.
+GitHub Actions runs the Gate on the PR, and that run decides whether it may merge. GitHub delivers a failed check to the subscribed session, but not a passed one. When the Gate is green, its last step posts a fresh comment on the PR naming the commit; that comment wakes the session, though a fork's PR gets no such comment. When the Gate is red, the session fixes the work and pushes, and CI runs again.
 
 ::stop-links
 [The Gate](/t/glassbox/guide/terrarium-practice/gate)
