@@ -41,10 +41,10 @@ const codeBlock = computed(() => {
 <template>
   <figure class="excerpt">
     <figcaption>
-      <component :is="page ? 'a' : 'span'" :href="page && glassboxFileUrl(props.path, page.revision, range)">{{ props.path }}</component>
+      <component :is="page ? 'a' : 'span'" :href="page && glassboxFileUrl(props.path, page.revision, range)">{{ props.path }}<template v-if="page"> ↗</template></component>
       <span class="pills">
         <span v-if="range" class="pill">{{ range.start }}–{{ range.end }}</span>
-        <a v-if="page" class="pill" :href="`${REPO_URL}/commit/${page.revision}`">{{ formatGlassboxDate(page.revisionDate) }} ↗</a>
+        <span v-if="page" class="pill">as of <time :datetime="page.revisionDate">{{ formatGlassboxDate(page.revisionDate) }}</time></span>
       </span>
     </figcaption>
     <pre :class="codeBlock.class"><code><span
@@ -90,7 +90,6 @@ figcaption > :first-child {
   border-radius: 99px;
   background: var(--gb-pane);
   color: var(--gb-muted);
-  text-decoration: none;
 }
 /* `.excerpt` outranks theme.css's `.gb pre` rules, which style plain fences. */
 .excerpt pre {
