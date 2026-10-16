@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01E2zbWEQmuUrEhWvbzNpBba
 startedAt: 2026-10-15T18:26:19Z
-endedAt: 2026-10-15T20:35:30Z
+endedAt: 2026-10-16T04:49:13Z
 kind: interactive
 goal: Harvest and rank recent session ideas, then fix the From file to browser diagram
-status: in-review
-outcome: Ranked top-20 delivered; diagram fix open as PR 2102; Nuxt/Vue/Nitro research running
-summary: "Human-instructed throughout. The owner asked for a Sonnet agent to harvest the ideas and learnings fields of the last 14 days of session logs (frictions excluded on their instruction), check them against issues and git, and drop implemented ones; then for Sonnet, Opus and Fable agents to rate every item; then for a merged top 20. I verified the two biggest rater disagreements myself: the \"stale gate build\" item (#96) is moot because tests/support/fresh-output.ts checks every tracked and untracked file, and #99 is already fixed. The owner picked items 30, 70, 71 and 6. 71 and 6 were already open as #2073 and #2093; 70's premise was stale (the guards it names no longer exist), so I did not file it and said why; 30 became #2101, which the owner then had me close. The owner then asked me to fix the diagram in the Glass Box Walkthrough \"From file to browser\" so it shows the build creating the database and the browser querying from the other side; they chose to show both readers and adjust the text. My first left-to-right version was unreadable at 390px and drew one shared database; code-review caught both, and the second commit draws the build's dumps with the server's and the browser's own SQLite copies, top-down at 351px. Opened PR 2102. Last, the owner asked for a deep-research on whether Nuxt, Vue and Nitro deserve their own Glass Box pages; three researchers are running."
+status: completed
+outcome: Ranked top-20 delivered; diagram fix merged as PR 2102; Nitro/Journal-to-Walkthrough plans delivered for the owner to decide
+summary: "Human-instructed throughout. The owner asked for a Sonnet agent to harvest the ideas and learnings fields of the last 14 days of session logs (frictions excluded on their instruction), check them against issues and git, and drop implemented ones; then for Sonnet, Opus and Fable agents to rate every item; then for a merged top 20. I verified the two biggest rater disagreements myself: the \"stale gate build\" item (#96) is moot because tests/support/fresh-output.ts checks every tracked and untracked file, and #99 is already fixed. The owner picked items 30, 70, 71 and 6. 71 and 6 were already open as #2073 and #2093; 70's premise was stale (the guards it names no longer exist), so I did not file it and said why; 30 became #2101, which the owner then had me close. The owner then asked me to fix the diagram in the Glass Box Walkthrough \"From file to browser\" so it shows the build creating the database and the browser querying from the other side; they chose to show both readers and adjust the text. My first left-to-right version was unreadable at 390px and drew one shared database; code-review caught both, and the second commit draws the build's dumps with the server's and the browser's own SQLite copies, top-down at 351px. PR 2102 merged on the owner's instruction. The owner also asked for a deep-research on whether Nuxt, Vue and Nitro deserve their own Glass Box pages (recommendation: one Nitro Subject with one Lesson, keep Nuxt and Vue combined) and for a Fable agent to check whether the Journal's architecture and how-it-works pages can become Walkthroughs (mostly already covered; two new candidates; the pages stay). Both were delivered as plans with open questions; nothing was filed. One owner remark (\"that layout won't work for mobile\") stayed ambiguous; I asked which layout but the owner closed the session without saying."
 prs:
   - "2102"
 docsRead:
@@ -25,23 +25,49 @@ docsRead:
   - path: docs/agents/pr-workflow.md
     reason: gate:scoped and code-review before first push
     useful: yes
-  - path: layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
-    reason: (no reason given)
-  - path: .agents/skills/glassbox-walkthrough/SKILL.md
-    reason: (no reason given)
   - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
-    reason: (no reason given)
+    reason: "Standards reviewer: its 12px-at-390px diagram bar decided the hard finding"
+    useful: yes
+  - path: .agents/skills/glassbox-walkthrough/SKILL.md
+    reason: "Standards reviewer: Walkthrough steps, diagram only if it earns its place"
+    useful: yes
   - path: GLOSSARY-MAP.md
-    reason: (no reason given)
+    reason: raters read it as briefed; confirmed the Tenant list
+    useful: partly
   - path: GLOSSARY.md
+    reason: "raters: severity grades and ledger terms informed ratings"
+    useful: yes
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: "raters: one Tenant-root page, grounds for rejecting random-page ideas"
+    useful: yes
+  - path: docs/adr/0016-tenant-root-page.md
+    reason: Fable rater tried an older filename for ADR-0016 before finding the current one
+    useful: no
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "Opus rater: decided which items need a human merge"
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: "researcher: cache and payload rationale for the Nitro question"
+    useful: yes
+  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+    reason: "researcher: client DB fallback, first 40 lines"
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: "researcher: the bar for a new Lesson"
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: "researcher: how guide pages are kept current"
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: "researcher: Subject is the tool whose docs a Lesson links; combined Nuxt & Vue conflicts with it"
+    useful: yes
+  - path: layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
     reason: (no reason given)
   - path: layers/commons/app/components/commons/Search.vue
     reason: (no reason given)
   - path: /root/.claude/skills/synced/5db01b4f-7087-4fc8-8549-c34520e48f97_184a2dfe-14a2-45fd-9e0b-ee22c8404de5/deep-research/references/researcher.md
     reason: (no reason given)
-  - path: docs/adr/0016-tenant-root-page.md
-    reason: (no reason given)
-  - path: docs/adr/0016-tenant-root-layer-routes.md
+  - path: /root/.claude/skills/synced/5db01b4f-7087-4fc8-8549-c34520e48f97_184a2dfe-14a2-45fd-9e0b-ee22c8404de5/deep-research/references/report-writer.md
     reason: (no reason given)
   - path: nuxt.config.ts
     reason: (no reason given)
@@ -59,8 +85,6 @@ docsRead:
     reason: (no reason given)
   - path: app/pages/t/[tenant]/[space]/[...slug].vue
     reason: (no reason given)
-  - path: docs/adr/0028-navigation-reads-server-payloads.md
-    reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/index.md
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
@@ -73,12 +97,6 @@ docsRead:
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
     reason: (no reason given)
-  - path: .agents/skills/glassbox-lesson/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/glassbox-update/SKILL.md
-    reason: (no reason given)
-  - path: layers/glassbox/GLOSSARY.md
-    reason: (no reason given)
   - path: layers/glassbox/tenant.config.ts
     reason: (no reason given)
   - path: layers/glassbox/app/utils/subjects.ts
@@ -87,9 +105,53 @@ docsRead:
     reason: (no reason given)
   - path: shared/schemas/session.ts
     reason: (no reason given)
-  - path: docs/adr/0004-objective-safety-gate.md
+  - path: layers/journal/content/current/pages/architecture.md
     reason: (no reason given)
-  - path: docs/adr/0019-patched-nuxt-content-client-db-loading.md
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/walkthroughs/a-bug-report-becomes-work.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/walkthroughs/a-friction-becomes-a-fix.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/walkthroughs/a-newcomers-first-hour.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/walkthroughs/planning-a-big-change.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/walkthroughs/reading-across-tenants.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/walkthroughs/routines.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/walkthroughs/session-log-lands-on-main.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/02.one-table-per-key.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/terrarium-practice/08.cross-tenant-kinds.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/claude-code/10.routines.md
+    reason: (no reason given)
+  - path: layers/journal/app/components/journal/OnrampTour.vue
+    reason: (no reason given)
+  - path: layers/journal/app/utils/onramp.ts
+    reason: (no reason given)
+  - path: layers/journal/tests/e2e/journal.spec.ts
+    reason: (no reason given)
+  - path: layers/journal/app/assets/theme.css
+    reason: (no reason given)
+  - path: docs/diagrams/interactive-map/terrarium-overview.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
     reason: (no reason given)
 skillsUsed:
   - name: code-review
@@ -100,6 +162,8 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: model
+    reason: (invoked as a slash command)
 frictions:
   - description: Skipped reading GLOSSARY-MAP.md and GLOSSARY.md at session start, as CLAUDE.md requires; the task started as a delegation so it felt optional.
     solution: Read them before the first dispatch; a SessionStart reminder naming them would have caught it.
@@ -119,15 +183,15 @@ frictions:
   - description: "The harvest's rater panel twice rated already-done or moot items highly (#96 stale gate, #70 guards that no longer exist); only my own code check caught it."
     solution: Brief raters to verify each premise in code before scoring.
     severity: minor
-durationSec: 7752
+durationSec: 37375
 models:
   claude-sonnet-5-5: 80
-  claude-opus-5-5: 43
+  claude-opus-5-5: 67
 toolCounts:
   AskUserQuestion: 2
-  Bash: 30
+  Bash: 35
   Read: 10
-  Agent: 9
+  Agent: 11
   Write: 3
   ToolSearch: 2
   mcp__github__issue_read: 3
@@ -137,6 +201,10 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  SendUserFile: 1
+  ReadNotifications: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 rulesLoaded:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0025.md
@@ -159,6 +227,7 @@ rulesGlobal:
 rulesFollowedUp:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0008.md
 rulesLoadedBySubagents:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0021.md
@@ -175,6 +244,7 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0013.md
   - .claude/rules/adr-0011.md
   - .claude/rules/adr-0019.md
+  - .claude/rules/adr-0012.md
 docsReadBySubagents:
   - .agents/skills/glassbox-walkthrough/SKILL.md
   - .agents/skills/glassbox-lesson/EVERY-PAGE.md
@@ -188,6 +258,106 @@ docsReadBySubagents:
   - .agents/skills/glassbox-lesson/SKILL.md
   - .agents/skills/glassbox-update/SKILL.md
   - docs/adr/0019-patched-nuxt-content-client-db-loading.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/diagrams/interactive-map/terrarium-overview.md
+  - layers/journal/GLOSSARY.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Kept the log out of the branch; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Nothing I changed sat under a prune trial; did not apply
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: The owner is Trusted and all issues touched were owner-authored; did not apply
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself right after the push and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Made me start the issue and PR bodies with this session's header line
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading the session schema; no Human-only file was changed
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Confirmed the Commons Timeline issue needs no catalog change; raters also used it for Search
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the session schema read; did not affect the task
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded on reading gate.ts while checking the stale-build claim; no gate change made
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on gate files; no ADR edited
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Confirmed a new issue goes to needs-triage, not ready-for-agent
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Loaded while checking the guard-matcher premise; pointed at the roster, which confirmed the named guards are gone
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on reading the Commons Timeline; nothing in it applied
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Kept me to classDef lanes, no subgraph, in the redrawn diagram
+    useful: yes
+  - path: .claude/rules/adr-0007.md
+    reason: Loaded on the mermaid render; the SVG is a sanctioned committed derivative
+    useful: no
+  - path: .claude/rules/adr-0024.md
+    reason: Made me re-render and commit the SVG and drop the orphan; summary was enough
+    useful: yes
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept counts and ids out of the diagram labels and intro
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: "Raters: feeds must be build-time; researcher: context only"
+    useful: partly
+  - path: .claude/rules/adr-0028.md
+    reason: "Raters and researcher: payload-size limit for Search, cache rationale for Nitro"
+    useful: yes
+  - path: .claude/rules/adr-0014.md
+    reason: "Raters: no drift check for the routing map, bore on the system-maps item"
+    useful: partly
+  - path: .claude/rules/adr-0018.md
+    reason: "Opus rater: a new Tenant is a new folder, shaped the touchpoints item"
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: "Raters: Tenant product features are product choices; researcher: term placement"
+    useful: partly
+  - path: .claude/rules/adr-0016.md
+    reason: "Raters: one Tenant-root page, grounds for rejecting random-page ideas"
+    useful: yes
+  - path: .claude/rules/adr-0006.md
+    reason: Researcher on the catch-all page; context only
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading Skills; not relevant
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Fable rater cited it for digest verification parity
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on Glass Box files; not relevant
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on Glass Box files; not relevant
+    useful: no
+  - path: .claude/rules/adr-0013.md
+    reason: "Researcher: context on modules config"
+    useful: partly
+  - path: .claude/rules/adr-0011.md
+    reason: "Researcher: context on nuxt.config"
+    useful: partly
+  - path: .claude/rules/adr-0019.md
+    reason: "Researcher: client DB fallback context"
+    useful: partly
 subagents:
   - type: general-purpose
     task: Harvest ideas and learnings
@@ -213,6 +383,11 @@ subagents:
     task: Nitro and Nuxt Content
   - type: general-purpose
     task: Terrarium usage and Glass Box
+  - type: general-purpose
+    task: Write final report
+  - type: general-purpose
+    task: Journal pages to Walkthroughs
+    model: fable
 gitBranch: claude/optimistic-newton-9rynxx
 entrypoint: remote
 cliVersion: 2.1.300
