@@ -69,7 +69,7 @@ and you can state in one line why it earns a fix.
 ## 4. Design the picks — in a subagent
 
 Dispatch **one** design subagent (`general-purpose`) for all picks, with
-[`design-brief.md`](design-brief.md) verbatim and the picks filled in. It reads
+[`design-brief.md`](design-brief.md) verbatim, with the picks and the scratchpad path filled in. It reads
 the full session log of every occurrence, explores the source, and returns, per
 fix: the problem with its evidence, the sessions' own proposals, the design it
 recommends, a risk assessment and a recommendation (dispatch or issue). It
@@ -134,7 +134,8 @@ post-dispatch check. Run at most 2 impl agents' full gates concurrently
 - **Code or config fixes**: one PR each — they carry distinct review and CI surface
   and shouldn't ride on each other.
 
-Each PR description carries its fixes' problem, evidence and design (§5).
+Each PR description carries its fixes' problem, evidence and design (§5); a fix
+picked up from an open issue (§2) also `Closes` it.
 
 Each agent's brief is [`impl-brief.md`](impl-brief.md) verbatim, with its
 fixes and (for the doc-fix agent, or the lone ledger agent of §5) the ledger

@@ -779,8 +779,9 @@ it.
 |---|---|
 | survey (a helper agent) | gathers three days of frictions with a script |
 | screen (same helper) | drops what is fixed, tracked, on trial, or in an outside skill |
-| pick | up to ten, at most two hard; sorts each into fix, maintainer or "came back" |
-| file | opens issues for hard fixes, for the maintainer's fixes and for fixes that came back |
+| pick | up to ten; files an issue for each fix that came back |
+| design (a helper agent) | reads the picked frictions' full logs, designs each fix and rates its risk |
+| file | opens issues for the fixes it won't send on, such as the maintainer's |
 | fix (helper agents) | one pull request for all doc fixes, one per code fix |
 | review & merge | waits for green CI, reviews, posts a verdict, merges or leaves open |
 | log | writes the session log, with the routine's own frictions |

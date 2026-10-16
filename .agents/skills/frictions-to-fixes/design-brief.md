@@ -3,7 +3,7 @@ You design the fixes for the frictions the `frictions-to-fixes` run picked:
 (each a Friction Ledger entry or a window friction, with its sessions). You
 design and assess only: file no issues, open no PRs, change no code. **Keep it
 short** (CLAUDE.md) governs every design: prefer the fix a deletion makes over a
-new mechanism.
+new mechanism. Write scratch files only under {SCRATCH_DIR}.
 
 ## For each pick
 
@@ -34,7 +34,8 @@ the paths as evidence. **"Opened" can mean a subagent opened it:** subagent read
   citing a count.
 - **Explore the source** the fix would change, and any ADR that binds it
   (`grep -l <path-or-term> docs/adr/*`), until the design is concrete.
-- **Off limits:** an external pack Skill's `SKILL.md` (a `skills-lock.json`
+- **Off limits:** prose inside an open Prune Trial's territory
+  (`.agents/prune-trials.yml`; ADR-0027), an external pack Skill's `SKILL.md` (a `skills-lock.json`
   name; ADR-0015), an ADR, a Historical record (session logs, blog posts) and a
   Pack-generic template. A doc fix must also clear `audit-docs`' house rules
   (`audit-docs/SKILL.md`).
