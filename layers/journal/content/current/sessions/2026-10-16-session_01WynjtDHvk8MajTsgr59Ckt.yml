@@ -1,0 +1,192 @@
+schemaVersion: 1
+session: session_01WynjtDHvk8MajTsgr59Ckt
+startedAt: 2026-10-16T21:04:56Z
+endedAt: 2026-10-16T21:26:13Z
+kind: interactive
+goal: Feature Glass Box on the homepage
+status: in-review
+outcome: "PR open: a work-in-progress Glass Box band under the hero, Catalog opt-in and a publishedAt rule"
+summary: "The owner asked where Glass Box should go on the homepage, in which existing section, and whether to break the pattern, advertising it as the newest, work-in-progress experiment. I recommended its own full-width band under the hero (neither section fits: \"Commentary\" is the outside view, \"What the agents build\" is practice sites, and a third tile leaves an odd grid row). Over three rounds of questions the owner decided: guide and drafts both shown; Catalog opt-in yes; publishedAt only when a page changes substantially (agent judgement, not a script, which killed my --stamp script idea); new and promoted pages count; no backfill. The owner left \"slot vs one-off\" and \"long-term home\" to me: one-off, and the band stays put with the label dropped later. The owner then said \"build it\" (human-instructed); the HomeShowcase `wide` layout, the `.gb-tokens` split and the e2e test were my implementation choices. Code review caught a contradiction I wrote into EVERY-PAGE.md and a duplicated rule in the glossary; screenshots caught a padding bug the e2e test couldn't see."
+prs:
+  - "2170"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: located the Glass Box glossary and how it relates to the Journal
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: soft-launch decision and the two Spaces shaped the whole recommendation
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before rebase; commit -F for messages
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: gate and review before first push; recipe for landing
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP for writes in cloud
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts review/shot gave the screenshots that caught the padding bug
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: confirmed step 2 re-pins every page so publishedAt must not ride it
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: the one home all three Glass Box Skills share for the new rule
+    useful: yes
+  - path: shared/kinds.ts
+    reason: "page kind contract: optional publishedAt, so opt-in is one line"
+    useful: yes
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: "Standards reviewer: its When-to-revisit flagged that opting in lists drafts too; intended here"
+    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: "Standards reviewer: token inheritance for the tile"
+    useful: partly
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: "Standards reviewer: one-source-of-truth rule behind the duplicated-rule finding"
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: "Spec reviewer: checked it reaches EVERY-PAGE.md Pin for new pages"
+    useful: yes
+  - path: .agents/skills/glassbox-walkthrough/SKILL.md
+    reason: "Spec reviewer: same check for Walkthroughs"
+    useful: yes
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec review before first push; found two real doc defects
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Recommended placement in chat before reading the ADRs my grep found (0025, 0028), against CLAUDE.md's plan-or-recommend rule
+    solution: Nothing contradicted it later, but reading ADR-0025 first would have surfaced the Catalog question myself instead of in round two
+    severity: minor
+  - description: Skipped reading root GLOSSARY.md at session start; read only the head of GLOSSARY-MAP.md
+    solution: Read both at session start as CLAUDE.md says; the session hook could print the glossary map in full
+    severity: nit
+  - description: First commit wrote the publishedAt rule twice (EVERY-PAGE.md and the Glass Box glossary) and left EVERY-PAGE.md saying frontmatter holds four fields only
+    solution: Search the edited doc for statements the new rule contradicts before committing; code-review caught both
+    severity: minor
+  - description: The e2e test passed while the wide tile's last entry touched its bottom edge; only a screenshot showed it
+    solution: Screenshot every layout change, as verifying-ui-changes.md says, before the gate rather than after
+    severity: nit
+durationSec: 1277
+models:
+  claude-opus-5-5: 134
+toolCounts:
+  Bash: 49
+  Edit: 2
+  Skill: 3
+  Agent: 2
+  Read: 5
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - tests/e2e/smoke.spec.ts
+  - app/components/HomeShowcase.vue
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/agents/tenant-layers.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-walkthrough/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Kept me from pushing on the Stop hook until gate:scoped and code-review finished; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR right after push and subscribed; owner approval was explicit in chat
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Invoked close-session at PR open
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body starts with the session header; commit trailers checked
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Confirmed the product decision belongs in the Glass Box glossary, not an ADR
+    useful: yes
+  - path: .claude/rules/adr-0025.md
+    reason: Confirmed the home page may read Glass Box directly and opt-in is via kind; both reviewers checked it too
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Kept the useAsyncData result to counts and a selected title/description
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest is the only place to add kind
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Layer CSS loads everywhere, so the new .gb-tokens selector stays inert outside the tile
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Checked no changed file is Human-only; reviewers agreed
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: No content pages changed
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded from reading a glassbox page path; no diagrams touched
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded from manifest reads; no MDC decision in this task
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded from glassbox pages; resolveSpaceRoute use was already the pattern
+    useful: partly
+  - path: .claude/rules/adr-0016.md
+    reason: Loaded from the Glass Box root page; nothing changed there
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded from nuxt.config read; irrelevant to a homepage band
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: Loaded from nuxt.config read; irrelevant
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded from reading Skills; confirmed editing EVERY-PAGE.md is a normal gated change
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded from Skills; no open prune trial covered EVERY-PAGE.md
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded from Skills; no rule placement decision here
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded only by the Spec reviewer while reading files; it reported no bearing on the review
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+  - type: general-purpose
+    task: Spec review of diff
+gitBranch: claude/kind-ptolemy-iw1oen
+entrypoint: remote
+cliVersion: 2.1.302
+landedBy: Stop
