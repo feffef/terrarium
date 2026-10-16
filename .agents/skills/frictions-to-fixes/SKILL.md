@@ -49,10 +49,10 @@ Its brief:
   `pnpm exec tsx scripts/prune-friction-ledger.ts --summary` (one line per entry;
   it flags a possible regression);
   open an entry file only for its evidence.
-- **Record each fix that merged** as a `fixes` entry on its cluster, oldest
+- **Record each PR that merged to fix a cluster** as a `fixes` entry on its cluster, oldest
   first: `pr`, `date` (its UTC merge date) and a one-line `summary` of what the
   PR changed, written from the PR's description, not the friction's. Count a PR
-  only if it changes the cause (not a ledger-only, tracking or session-log
+  only if it tries to change the cause (not a ledger-only, tracking or session-log
   one); add every partial fix, and give a `fixed` entry one dated its
   `fixedOn`. `ref` often names an issue or commit, not the PR, and misses
   earlier partial fixes: `gh api repos/feffef/terrarium/commits/<sha>/pulls`
