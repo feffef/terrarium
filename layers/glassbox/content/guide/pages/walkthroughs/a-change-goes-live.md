@@ -1,8 +1,8 @@
 ---
 title: A change goes live
 description: How a commit on main reaches visitors, through one container that notices it, builds it beside the live site and swaps only a good build.
-revision: 'a93faa0135f652b85b4976418534243f649e58b9'
-revisionDate: '2026-10-15'
+revision: '592e3e22c323e2d4e489cf197f1d730037341cd9'
+revisionDate: '2026-10-16'
 ---
 
 A commit lands on `main`, and with no one running a deploy, the live site changes. This Walkthrough follows that commit from the container's side: from noticing it, through the install and the build, to the restarted server that answers the next visitor.
@@ -36,7 +36,7 @@ The script compares a hash of `pnpm-lock.yaml` with the hash it saved after its 
 The build runs in the checkout, beside the live server, which keeps answering. It writes `.output/`: a server that runs on its own, with each :term[Collection]'s content dump inside. If the build fails, nothing is swapped, and the old build stays live.
 
 ::stop-links
-[The content database](/t/glassbox/guide/nuxt-content/content-database) · [Self-updating container](/t/glassbox/guide/deploy/self-updating-container) · :file[package.json]
+[The content database](/t/glassbox/guide/nuxt-content/content-database) · [Self-updating container](/t/glassbox/guide/deploy/self-updating-container) · [Nitro: the server under Nuxt](/t/glassbox/guide/nuxt-vue/nitro) · :file[package.json]
 ::
 
 ## 5. The swap
