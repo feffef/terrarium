@@ -10,7 +10,7 @@ function cluster(name: string, severities: Severity[]): FrictionClusterDoc {
     cause: `${name} cause`,
     surface: 'safe',
     status: 'open',
-    occurrences: severities.map((severity, i) => ({ session: `${name}-${i}`, date: `2026-10-0${i + 1}`, severity })),
+    occurrences: severities.map((severity, i) => ({ session: `${name}-${i}`, date: `2026-10-0${i + 1}`, severity, description: `${name} ${i}`, solution: 'fix' })),
   }
 }
 
@@ -61,7 +61,7 @@ describe('ledgerPanels goals', () => {
 })
 
 describe('ledgerPanels reports', () => {
-  const logged = (name: string, texts: ({ description: string; solution: string } | undefined)[]): FrictionClusterDoc => ({
+  const logged = (name: string, texts: { description: string; solution: string }[]): FrictionClusterDoc => ({
     ...cluster(name, texts.map(() => 'nit')),
     occurrences: texts.map((t, i) => ({ session: `${name}-${i}`, date: `2026-10-0${i + 1}`, severity: 'nit' as const, ...t })),
   })
@@ -70,11 +70,6 @@ describe('ledgerPanels reports', () => {
     const t = { description: 'Gate ran twice', solution: 'Add a guard' }
     const [e] = ledgerPanels([logged('x', [t, t])], 'current', new Set(['x-0']), 'archived').severe
     expect(e!.reports).toEqual([{ ...t, date: '2026-10-02', to: '/t/journal/archived#session-x-1' }])
-  })
-
-  it('shows nothing for an occurrence that carries no friction text', () => {
-    const [e] = ledgerPanels([logged('x', [undefined])], 'current', new Set(), 'archived').severe
-    expect(e!.reports).toEqual([])
   })
 })
 

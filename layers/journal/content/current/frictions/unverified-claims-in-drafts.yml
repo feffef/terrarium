@@ -184,6 +184,8 @@ occurrences:
   - session: session_01BdQnbVQmdfrD1PPyZTnL9w
     date: "2026-10-14"
     severity: minor
+    description: "Recommended the new Tenant's shape without reading ADR-0021/0003 in full myself, as CLAUDE.md's plan-or-recommend trigger asks; relied on the Explore agent's summary."
+    solution: "Read the ADRs a new-Tenant plan binds (0003, 0018, 0021) before the breadth-first round."
   - session: session_01Qp5NojwQhExSmToPJtnQNV
     date: "2026-10-14"
     severity: minor

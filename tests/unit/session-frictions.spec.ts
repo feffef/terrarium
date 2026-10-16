@@ -103,7 +103,7 @@ describe('toTriageSession()', () => {
       prs: ['187'],
       docsRead: [{ path: 'docs/adr/0009-session-logs.md', reason: 'checked the schema' }],
       subagents: [{ type: 'general-purpose', task: 'Survey frictions', model: 'sonnet' }],
-      frictions: [{ description: 'a stale claim', solution: 'fix it', severity: 'minor' }],
+      frictions: [{ index: 0, description: 'a stale claim', solution: 'fix it', severity: 'minor' }],
     })
   })
   it('collapses session-log docsRead entries into one count', () => {
@@ -150,7 +150,7 @@ describe('formatCompact()', () => {
 })
 
 describe('toCompactSession()', () => {
-  it('keeps id/file/startedAt/prs, docsRead paths, subagents and only description/severity per friction', () => {
+  it('keeps id/file/startedAt/prs, docsRead paths, subagents and only index/description/severity per friction', () => {
     const s = session('session_abc', '2026-07-04T12:00:00Z', {
       goal: 'fix the thing',
       outcome: 'PR',
@@ -159,7 +159,7 @@ describe('toCompactSession()', () => {
       prs: ['187'],
       docsRead: [{ path: 'docs/a.md', reason: 'why' }],
       subagents: [{ type: 'impl' }],
-      frictions: [{ description: 'a stale claim', solution: 'fix it', severity: 'minor' }],
+      frictions: [{ index: 3, description: 'a stale claim', solution: 'fix it', severity: 'minor' }],
     })
     expect(toCompactSession(s)).toEqual({
       id: 'session_abc',
@@ -168,7 +168,7 @@ describe('toCompactSession()', () => {
       prs: ['187'],
       docsRead: ['docs/a.md'],
       subagents: [{ type: 'impl', count: 1 }],
-      frictions: [{ description: 'a stale claim', severity: 'minor' }],
+      frictions: [{ index: 3, description: 'a stale claim', severity: 'minor' }],
     })
   })
 })
@@ -244,12 +244,16 @@ describe('survey() — external exclusion (ADR-0009)', () => {
 })
 
 describe('dropLedgered() — --unledgered', () => {
-  it('drops sessions the ledger cites as an occurrence', () => {
+  it('drops the frictions the ledger carries, keeping their index, and sessions with none left', () => {
     const dir = mkdtempSync(join(tmpdir(), 'session-frictions-'))
     mkdirSync(join(dir, 'layers/journal/content/current/frictions'), { recursive: true })
-    writeFileSync(join(dir, 'layers/journal/content/current/frictions/x.yml'), 'name: x\noccurrences:\n  - session: session_a\n')
-    const mk = (id: string) => toTriageSession({ session: id }, `${id}.yml`)
-    expect(dropLedgered([mk('session_a'), mk('session_b')], dir).map((s) => s.id)).toEqual(['session_b'])
+    writeFileSync(join(dir, 'layers/journal/content/current/frictions/x.yml'), 'name: x\noccurrences:\n  - session: session_a\n    description: "gate ran twice"\n')
+    const mk = (id: string, ...descriptions: string[]) => toTriageSession({ session: id, frictions: descriptions.map((description) => ({ description })) }, `${id}.yml`)
+    const left = dropLedgered([mk('session_a', 'gate   ran twice', 'push failed'), mk('session_b'), mk('session_c', 'gate ran twice')], dir)
+    expect(left.map((s) => [s.id, s.frictions.map((f) => [f.index, f.description])])).toEqual([
+      ['session_a', [[1, 'push failed']]],
+      ['session_c', [[0, 'gate ran twice']]],
+    ])
     rmSync(dir, { recursive: true, force: true })
   })
 })

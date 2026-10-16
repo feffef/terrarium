@@ -54,12 +54,12 @@ export function ledgerPanels(
         date: o.date,
         severity: o.severity,
         goal: goals[o.session],
-        report: o.description === undefined || o.solution === undefined ? undefined : { description: o.description, solution: o.solution },
+        report: { description: o.description, solution: o.solution },
         to: `/t/journal/${ownSessions.has(o.session) ? space : otherSpace}#${sessionAnchor(o.session)}`,
       }))
       .sort((a, b) => b.date.localeCompare(a.date))
     const reports = occurrences
-      .flatMap((o) => (o.report ? [{ ...o.report, date: o.date, to: o.to }] : []))
+      .map((o) => ({ ...o.report, date: o.date, to: o.to }))
       .filter((r, i, all) => all.findIndex((x) => x.description === r.description && x.solution === r.solution) === i)
     const fixes = [...(c.fixes ?? [])]
       .sort((a, b) => b.date.localeCompare(a.date))

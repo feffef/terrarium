@@ -232,6 +232,8 @@ occurrences:
   - session: session_01TFojzwXEByz1nbqt3wcKNL
     date: "2026-10-14"
     severity: nit
+    description: "Read .githooks/commit-msg with Bash cat instead of the Read tool (CLAUDE.md), which loaded an irrelevant adr-0004-human-merge.md reminder since I only inspected, never edited, that Human-only file."
+    solution: "Use the Read tool for any file read, even a quick one-off inspection."
   - session: session_011xN2Zi67cjpCguuMiZbsJ6
     date: "2026-10-13"
     severity: minor

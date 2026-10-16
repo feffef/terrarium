@@ -36,9 +36,10 @@ Its brief:
   frictions with a common cause, carrying its `status`, `surface` and every
   `occurrence` so far. Append each friction in the window that matches an
   entry, whatever its severity; a session counts once, at its highest
-  severity. Each occurrence copies that friction's `description` and `solution` from
-  the session log (the compact survey omits `solution`: read the log's `file`),
-  so a later run can re-cluster from the ledger alone. A new entry needs a cause seen twice, or one `moderate`, `major` or
+  severity. An occurrence is the block
+  `pnpm exec tsx scripts/ledger-occurrence.ts <session> <index>` prints (the
+  friction's text copied from the log; a content test checks the copy), never
+  retyped. A friction sits in one cluster unless its text names two causes. A new entry needs a cause seen twice, or one `moderate`, `major` or
   `blocker`. Its `summary` is one plain sentence a visitor can read; its
   `cause` names the root mechanism and the signals that identify a new
   occurrence (error text, file or tool, trigger), so a later run can match it.
@@ -48,8 +49,9 @@ Its brief:
   recurrence is its occurrences within it, counting only sessions that started
   after its fix merged when it has one. Return the ledger changes (new entries, appended occurrences,
   status changes, each with its evidence) in the report. Survey the ledger with
-  `pnpm exec tsx scripts/prune-friction-ledger.ts --summary` (one line per entry;
-  it flags a possible regression);
+  `pnpm exec tsx scripts/prune-friction-ledger.ts --summary` (one line per entry
+  with its fixes; it flags a possible regression, a `fixed` entry whose `fixes`
+  miss its `fixedOn`, and the frictions two clusters share, for you to re-judge);
   open an entry file only for its evidence.
 - **Re-cluster when the ledger says so.** The stored texts show a broad entry
   that holds several causes, or two entries with one: split or merge them,
@@ -58,19 +60,22 @@ Its brief:
   first: `pr`, `date` (its UTC merge date) and a one-line `summary` of what the
   PR changed, written from the PR's description, not the friction's. Count a PR
   only if it tries to change the cause (not a ledger-only, tracking or session-log
-  one); add every partial fix, and give a `fixed` entry one dated its
-  `fixedOn`. `ref` often names an issue or commit, not the PR, and misses
-  earlier partial fixes: `gh api repos/feffef/terrarium/commits/<sha>/pulls`
+  one); add every partial fix. A `fixed` entry's `fixedOn` is the date of the
+  fix that holds, so it has a `fixes` entry dated `fixedOn` (a content test
+  checks) and a re-fix after a regression moves it. `ref` is not rendered: it
+  holds the tracking issue, the trial's territory match or what a fix left
+  open, never the PR list. `gh api repos/feffef/terrarium/commits/<sha>/pulls`
   maps a commit to its PR and `gh api repos/feffef/terrarium/pulls/<N>` gives
   its body and `merged_at` (`gh pr view` is blocked); read the body, since a
   batched doc PR's title names no cluster. This run's own PRs have no number
-  yet: the next run records them.
+  yet: the next run records them from this run's log (`prs` in the survey of
+  a `trigger: frictions-to-fixes` session).
 - **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a §2 `drop` instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
 - **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
   (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
   `/tmp/session-frictions-output.json` and stdout gets only a notice — read the file, or
-  pass `--out PATH`; don't parse stdout. Use `--compact --unledgered` (the latter skips sessions the ledger already cites; `--compact` keeps `docsRead` paths and
-  `subagents`, drops prose) and re-read a full log via its `file` only when a candidate needs it. This is a **recency window, not a
+  pass `--out PATH`; don't parse stdout. Use `--compact --unledgered` (the latter drops every friction the ledger already carries, and a session with none left; `--compact` keeps `docsRead` paths,
+  `subagents` and each friction's `index`, drops prose) and re-read a full log via its `file` only when a candidate needs it. This is a **recency window, not a
   sample** — read every session in it, don't chase frictions from older,
   likely-gone sessions. Each record's `id`/`file` point back to the full log —
   re-read it directly when a candidate needs more context than the triage
@@ -110,7 +115,9 @@ classification (never-fixed / open-already #N / regression of #N), fix type
 guard or hook wiring), difficulty (simple/hard), a one-line
 recommended fix, and evidence quotes; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match, §2);
 **(c) the subagent's own frictions** from the run; and **(d) the ledger changes**, also saved as a YAML patch file in the
-scratchpad whose path it names.
+scratchpad whose path it names: each new or changed entry in the ledger's own
+shape (`fixes` and `ref` included), with occurrence blocks as
+`ledger-occurrence.ts` printed them.
 
 ## 2. Screen against fixes already shipped (the subagent's rules)
 
@@ -130,7 +137,8 @@ trial. Then, for the rest: the §1 subagent applies these rules to every candida
   commit or comment within the horizon is idle: surface it as a candidate for
   the main session to pick up or escalate.
 - **Reappeared _after_ its fix merged** (a friction logged in a session that
-  started later than the fixing PR landed; the entry's `fixedOn` dates it) —
+  started later than the fixing PR landed; the entry's latest fix dates it,
+  and `--summary` flags it) —
   this is a **regression**: the fix that
   was supposed to be in place did not hold. Do **not** route it through the ordinary
   simplest-fix dispatch — a change that already failed once needs human eyes, not a
@@ -182,8 +190,9 @@ subsumes).
 record. The ledger edit is:
 
 - the subagent's ledger changes (§1), `fixes` included;
-- `status` and `ref` for what this run files, dispatches or escalates, with
-  `fixedOn` on anything it marks `fixed`;
+- `status` and `ref` for what this run files, dispatches or escalates: a
+  dispatched fix is `tracked` until the next run sees it merged and records it
+  in `fixes` with `fixedOn`;
 - last, `pnpm exec tsx scripts/prune-friction-ledger.ts`, which drops every
   occurrence before the horizon and deletes an entry left with none (git
   keeps them).
