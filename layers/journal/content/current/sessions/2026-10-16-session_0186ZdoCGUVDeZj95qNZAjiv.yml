@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_0186ZdoCGUVDeZj95qNZAjiv
 startedAt: 2026-10-16T20:54:44Z
-endedAt: 2026-10-16T21:11:50Z
+endedAt: 2026-10-16T21:15:02Z
 kind: interactive
 goal: Shorten and bulletize the guide's 'Why it's built this way' sections
-status: in-review
-outcome: "PR open: 20 guide Lessons rewritten as bullets, contract and checker updated"
-summary: "The user asked (one direct ask) for the 'Why it's built this way' sections of the Glass Box guide to be shortened and turned into bullets like 'What to watch for'. Because the Lesson contract and page-checks.ts required 12-90 word paragraphs, I asked three questions first (per the user's stated preference); the user chose one bullet per reason, about 30% shorter with bold lead-ins, guide Space only. Agent-initiated: the 12-65 word bound and the bold-lead-in check, the spec cases, and dispatching four subagents to rewrite five pages each. Subagents reached about 24% shorter on average, not 30%. The code-review Skill (two parallel reviewers) found dropped reasons and inconsistent final periods; I restored the reasons that changed meaning and fixed the periods before pushing. Open: the 30% target was not met on every page."
+status: completed
+outcome: "PR merged: 20 guide Lessons rewritten as bullets, contract and checker updated"
+summary: "The user asked (one direct ask) for the 'Why it's built this way' sections of the Glass Box guide to be shortened and turned into bullets like 'What to watch for'. Because the Lesson contract and page-checks.ts required 12-90 word paragraphs, I asked three questions first (per the user's stated preference); the user chose one bullet per reason, about 30% shorter with bold lead-ins, guide Space only. Agent-initiated: the 12-65 word bound and the bold-lead-in check, the spec cases, and dispatching four subagents to rewrite five pages each. Subagents reached about 24% shorter on average, not 30%. The code-review Skill (two parallel reviewers) found dropped reasons and inconsistent final periods; I restored the reasons that changed meaning and fixed the periods before pushing. Merged by me on green CI after a posted verdict; the 30% target was not met on every page."
 prs:
   - "2169"
 docsRead:
@@ -97,20 +97,24 @@ frictions:
   - description: Stop hook asked to commit and push four times while subagents were mid-rewrite, conflicting with ADR-0004 gate and review before first push.
     solution: Have the hook skip when background subagents are running.
     severity: nit
-durationSec: 1027
+durationSec: 1219
 models:
-  claude-sonnet-5-5: 93
+  claude-sonnet-5-5: 108
 toolCounts:
   Read: 13
   Grep: 5
   AskUserQuestion: 1
   Edit: 7
-  Bash: 17
+  Bash: 20
   Agent: 6
   Skill: 3
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/page-checks.ts
   - layers/glassbox/GLOSSARY.md
