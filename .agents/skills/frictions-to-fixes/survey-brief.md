@@ -50,7 +50,9 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   batched doc PR's title names no cluster. This run's own PRs are recorded
   by the main session; a PR an earlier run missed (still `tracked`, or in that run's log `prs`
   but in no `fixes`) is recorded here. A `tracked` entry whose PR closed
-  unmerged, or whose `ref` names no open issue or PR, goes back to `open`.
+  unmerged, or whose `ref` names no open issue or PR, goes back to `open`;
+  one whose PR merged drops `tracked`. A `fixes` entry's `date` is its PR's
+  merge date: correct one that differs.
 - **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a `drop` (Screen, below) instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
 - **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
   (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to

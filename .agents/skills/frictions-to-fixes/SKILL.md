@@ -178,7 +178,10 @@ not a bystander waiting for a human. For each branch:
    - **Escalate to a human** only when the actual diff meets an ADR-0004
      exception (its *Scope* lists them, with examples of behaviour no test can
      observe); check the diff against them rather than guessing. Leave the PR open, say precisely why it is
-     high-risk, in a PR comment.
+     high-risk, in a PR comment. First have the agent merge `origin/main` (once
+     the ledger PR of §5 has merged) and commit the PR's own `fixes` entry,
+     dated today, so the ledger updates when a human merges it; the next run's
+     survey corrects the date.
 
 A PR is finished only when **merged** (by you) or **escalated/abandoned**, not at push time (the ADR-0003 rule).
 
@@ -194,11 +197,10 @@ merged, abandoned or escalated), land **one combined** status-only PR from
 - a `fixes` entry (`pr`, its UTC merge date, a one-line summary from its
   description) for each merged PR, dropping `tracked`;
 - `open` again for each abandoned one;
-- its PR number in `ref` for each escalated one, staying `tracked`.
+- its PR number in `ref` for each escalated one, staying `tracked` (the PR
+  carries its own `fixes` entry, §7).
 
-Then, as each escalated PR merges or closes (you keep watching it, the ADR-0003
-rule), land **one small** PR with that entry's update. Done when every update
-has merged.
+Done when it has merged.
 
 Log the session. Among its frictions, name each place this Skill or its briefs
 were confusing or contradicted themselves, and each step that was hard to
