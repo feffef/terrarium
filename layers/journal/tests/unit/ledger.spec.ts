@@ -61,23 +61,22 @@ describe('ledgerPanels goals', () => {
 })
 
 describe('ledgerPanels reports', () => {
-  const logged = (severity: Severity, description: string, solution: string) => ({ severity, description, solution })
+  const withFriction = (name: string, frictions: (number | undefined)[]): FrictionClusterDoc => ({
+    ...cluster(name, frictions.map(() => 'nit')),
+    occurrences: frictions.map((friction, i) => ({ session: `${name}-${i}`, date: `2026-10-0${i + 1}`, severity: 'nit' as const, friction })),
+  })
 
-  it("lists what a session logged with its solution once, linked to the Space that holds it", () => {
-    const c = cluster('x', ['nit', 'nit'])
-    const same = [logged('nit', 'Gate ran twice', 'Add a guard')]
-    const [e] = ledgerPanels([c], 'current', new Set(['x-0']), 'archived', {}, { 'x-0': same, 'x-1': same }).severe
+  it("lists the friction an occurrence names with its solution once, linked to the Space that holds it", () => {
+    const logged = { 1: { description: 'Gate ran twice', solution: 'Add a guard' } }
+    const [e] = ledgerPanels([withFriction('x', [1, 1])], 'current', new Set(['x-0']), 'archived', {}, { 'x-0': logged, 'x-1': logged }).severe
     expect(e!.reports).toEqual([
       { description: 'Gate ran twice', solution: 'Add a guard', date: '2026-10-02', to: '/t/journal/archived#session-x-1' },
     ])
   })
 
-  it('skips a session whose Frictions of that severity are ambiguous, and is empty without any', () => {
-    const [e] = ledgerPanels([cluster('x', ['nit'])], 'current', new Set(['x-0']), 'archived', {}, {
-      'x-0': [logged('nit', 'a', 'A'), logged('nit', 'b', 'B'), logged('major', 'c', 'C')],
-    }).severe
+  it('shows nothing for an occurrence that names no friction, or one the session lacks', () => {
+    const [e] = ledgerPanels([withFriction('x', [undefined, 5])], 'current', new Set(), 'archived', {}, { 'x-1': { 0: { description: 'a', solution: 'A' } } }).severe
     expect(e!.reports).toEqual([])
-    expect(ledgerPanels([cluster('y', ['nit'])], 'current', new Set(), 'archived').severe[0]!.reports).toEqual([])
   })
 })
 

@@ -84,6 +84,9 @@ export const frictionClusterSchema = z
           session: z.string(),
           date: utcDate,
           severity: sessionSchema.shape.frictions.element.shape.severity,
+          // Which of that session's `frictions` this cluster is about: its
+          // 0-based position in the log's list, whose severity is `severity`.
+          friction: z.number().int().nonnegative().optional(),
         }),
       )
       .refine((occ) => new Set(occ.map((o) => o.session)).size === occ.length, 'a session is listed twice'),

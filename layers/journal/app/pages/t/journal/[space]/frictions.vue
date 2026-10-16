@@ -16,17 +16,21 @@ const otherSpace = Object.keys(routingMap.journal).find((s) => s !== space) ?? s
 const { data } = await useAsyncData(route.path, async () => {
   const clusters = await queryCollection(collections.frictions).all()
   // Only the sessions a cluster cites travel in the payload (ADR-0028).
-  const cited = new Map<string, Set<string>>()
-  for (const o of clusters.flatMap((c) => c.occurrences)) cited.set(o.session, (cited.get(o.session) ?? new Set()).add(o.severity))
+  const cited = new Map<string, Set<number>>()
+  for (const o of clusters.flatMap((c) => c.occurrences)) {
+    const frictionsOf = cited.get(o.session) ?? new Set<number>()
+    if (o.friction !== undefined) frictionsOf.add(o.friction)
+    cited.set(o.session, frictionsOf)
+  }
   const goals: Record<string, string> = {}
   const frictions: SessionFrictions = {}
   const own: string[] = []
   const read = async (sessions: typeof collections.sessions, isOwn: boolean) => {
     for (const s of await queryCollection(sessions).select('session', 'goal', 'frictions').all()) {
-      const severities = cited.get(s.session)
-      if (!severities || s.session in goals) continue
+      const indexes = cited.get(s.session)
+      if (!indexes || s.session in goals) continue
       goals[s.session] = s.goal
-      frictions[s.session] = s.frictions.filter((f) => severities.has(f.severity)).map(({ severity, description, solution }) => ({ severity, description, solution }))
+      frictions[s.session] = Object.fromEntries([...indexes].map((i) => [i, { description: s.frictions[i]!.description, solution: s.frictions[i]!.solution }]))
       if (isOwn) own.push(s.session)
     }
   }
