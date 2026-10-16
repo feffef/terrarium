@@ -76,7 +76,8 @@ Dispatch **one** design subagent (`general-purpose`) for all picks, with
 the survey reported on it) and the scratchpad path filled in. It reads
 the full session log of every occurrence, explores the source, and returns, per
 fix: the problem with its evidence, one precise design, a risk assessment and a
-recommendation (dispatch or issue). It
+recommendation (dispatch or issue), plus its own frictions (they belong in this
+session's log too, §7). It
 designs only — it files no issues, opens no PRs, changes no code.
 
 Done when every pick has a design and a recommendation.
