@@ -147,7 +147,6 @@ section { margin-bottom: 56px; }
 .words dt { font-size: 16px; font-weight: 600; }
 .words dd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--gb-ink-2); }
 
-/* The Walkthroughs, one full-width band after the Subjects. */
 .band {
   display: flex;
   flex-direction: column;
