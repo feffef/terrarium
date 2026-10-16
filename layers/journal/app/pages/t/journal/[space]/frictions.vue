@@ -113,8 +113,8 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                 </ul>
               </template>
               <template v-if="e.fixes.length">
-                <h3 class="occ-h">Fixes applied</h3>
-                <p class="occ-intro">Merged PRs that fixed it, newest first.</p>
+                <h3 class="occ-h">Merged PRs to fix it</h3>
+                <p class="occ-intro">Newest first. Merged to fix it, which does not prove it worked.</p>
                 <ul class="sol">
                   <li v-for="f in e.fixes" :key="f.pr">
                     {{ f.summary }} <a :href="f.url">PR #{{ f.pr }}</a> <span class="fix-date">{{ f.date }}</span>

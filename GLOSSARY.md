@@ -138,7 +138,7 @@ Frictions that share a cause are grouped in the **Friction Ledger**, not tagged.
 
 ### Friction Ledger
 An Inventory of the Platform's Friction clusters: one entry per root cause, with
-every occurrence by Session and every merged PR that fixed it, so recurrence is
+every occurrence by Session and every merged PR meant to fix it, so recurrence is
 counted over weeks, not one run's window. `frictions-to-fixes` maintains it.
 
 ### Skill
