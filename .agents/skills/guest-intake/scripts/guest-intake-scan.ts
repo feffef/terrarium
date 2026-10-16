@@ -27,9 +27,6 @@
 // state" below) and surfaces any OWNER-authored, unmarked comment newer
 // than that cursor, not just the single newest comment overall.
 //
-// Fetch strategy: same `gh`-then-REST-fallback split as `check-triage-drift.ts`
-// (issue #505's `gh`-less remote-session fragility).
-//
 // Usage:  pnpm exec tsx .agents/skills/guest-intake/scripts/guest-intake-scan.ts [N]
 //   Scans up to N open issues (default 100) and prints a `ScanReport` JSON:
 //   { scannedCount, counts: {guest-activity, owner-steering,
@@ -43,21 +40,11 @@
 // to fetch an issue's Timeline otherwise, so the marker check here costs one
 // extra `issues/{n}/events` call, and only for the rare issue that actually
 // carries the marker.
-import { execFileSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { isAiAuthored } from '../../../../scripts/check-triage-drift.ts'
-import {
-  decodeHtmlEntities,
-  envToken,
-  hasGhBinary,
-  parseNextLink,
-  parseOwnerRepo,
-  pickFetchStrategy,
-  type FetchStrategy,
-} from '../../../../scripts/list-open-issues.ts'
+import { decodeHtmlEntities, listAll, resolveAccess, type Access } from '../../../../scripts/lib/github-client.ts'
 import { hasMarker, isMarkerFresh, type RawLabelEventRecord } from '../../../../scripts/guest-marker.ts'
 import { PUBLIC_ASSOCIATIONS, TRUSTED_ASSOCIATIONS } from '../../../../scripts/trust.ts'
 import { root } from '../../../../shared/expand.ts'
@@ -257,188 +244,6 @@ export function buildReport(scanned: ScannedIssue[]): ScanReport {
   }
 }
 
-// ── GitHub shell (thin) ──────────────────────────────────────────────────────
-
-function readOriginUrl(cwd: string): string {
-  return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
-}
-
-function readOpenIssuesViaGh(owner: string, repo: string, cwd: string): RawIssueRecord[] {
-  const raw = execFileSync(
-    'gh',
-    [
-      'api',
-      '--method',
-      'GET',
-      `repos/${owner}/${repo}/issues`,
-      '-f',
-      'state=open',
-      '-f',
-      'per_page=100',
-      '--paginate',
-      '--jq',
-      '.[]',
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-  return raw
-    .split('\n')
-    .filter((line) => line.length > 0)
-    .map((line) => JSON.parse(line) as RawIssueRecord)
-}
-
-function readIssueCommentsViaGh(owner: string, repo: string, issueNumber: number, cwd: string): RawCommentRecord[] {
-  const raw = execFileSync(
-    'gh',
-    [
-      'api',
-      '--method',
-      'GET',
-      `repos/${owner}/${repo}/issues/${issueNumber}/comments`,
-      '-f',
-      'per_page=100',
-      '--paginate',
-      '--jq',
-      '.[]',
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-  return raw
-    .split('\n')
-    .filter((line) => line.length > 0)
-    .map((line) => JSON.parse(line) as RawCommentRecord)
-}
-
-/** The stable issue Events API (`.../issues/{n}/events`, no preview header
- *  needed) — used only for the marker-staleness check, and only for an
- *  issue `hasMarker` has already flagged as currently carrying it (see the
- *  header comment for why this is a second call here rather than folded
- *  into the Timeline fetch `poll-guest-tickets.ts` reuses). */
-function readIssueEventsViaGh(owner: string, repo: string, issueNumber: number, cwd: string): RawLabelEventRecord[] {
-  const raw = execFileSync(
-    'gh',
-    [
-      'api',
-      '--method',
-      'GET',
-      `repos/${owner}/${repo}/issues/${issueNumber}/events`,
-      '-f',
-      'per_page=100',
-      '--paginate',
-      '--jq',
-      '.[]',
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-  return raw
-    .split('\n')
-    .filter((line) => line.length > 0)
-    .map((line) => JSON.parse(line) as RawLabelEventRecord)
-}
-
-/** One `curl` GET through this environment's proxy, returning the response
- *  body text plus the *last* header block's status line and `Link` header.
- *
- *  Shells out to `curl`, not Node's `fetch`: outbound HTTPS goes through the
- *  `HTTPS_PROXY` proxy, which `curl` honours but undici's `fetch` ignores
- *  unless `NODE_USE_ENV_PROXY=1` is set at process startup (a script can't set
- *  it on itself), so `fetch()` silently bypasses the proxy and gets an
- *  unauthenticated 401 from `api.github.com`. `curl` needs no new dependency.
- *
- *  Through an HTTPS-over-proxy `CONNECT` tunnel, `curl -D` captures *two*
- *  header blocks — the proxy's own `200 Connection Established` first, then
- *  GitHub's real response — separated by a blank line; only the last block is
- *  the actual API response. */
-function curlGet(url: string, token: string): { body: string; status: number; linkHeader: string | null } {
-  const dir = mkdtempSync(join(tmpdir(), 'guest-intake-scan-'))
-  const headerFile = join(dir, 'headers.txt')
-  try {
-    const body = execFileSync(
-      'curl',
-      [
-        '-sS',
-        '-D',
-        headerFile,
-        '-H',
-        `Authorization: Bearer ${token}`,
-        '-H',
-        'Accept: application/vnd.github+json',
-        '-H',
-        'User-Agent: terrarium-guest-intake-scan',
-        url,
-      ],
-      { encoding: 'utf8' },
-    )
-    const blocks = readFileSync(headerFile, 'utf8')
-      .split(/\r?\n\r?\n/)
-      .filter((block) => block.trim().length > 0)
-    const lastBlock = blocks[blocks.length - 1] ?? ''
-    const lines = lastBlock.split(/\r?\n/)
-    const statusMatch = (lines[0] ?? '').match(/^HTTP\/[\d.]+\s+(\d+)/)
-    const status = statusMatch ? Number(statusMatch[1]) : 0
-    const linkLine = lines.find((line) => /^link:/i.test(line))
-    const linkHeader = linkLine ? linkLine.slice(linkLine.indexOf(':') + 1).trim() : null
-    return { body, status, linkHeader }
-  } finally {
-    rmSync(dir, { recursive: true, force: true })
-  }
-}
-
-function fetchAllPagesViaRest<T>(initialUrl: string, token: string): T[] {
-  const out: T[] = []
-  let url: string | null = initialUrl
-  while (url) {
-    const { body, status, linkHeader } = curlGet(url, token)
-    if (status < 200 || status >= 300) {
-      throw new Error(`GitHub REST API request to ${url} failed: ${status}\n${body}`)
-    }
-    out.push(...(JSON.parse(body) as T[]))
-    url = parseNextLink(linkHeader)
-  }
-  return out
-}
-
-function readOpenIssuesViaRest(owner: string, repo: string, token: string): RawIssueRecord[] {
-  return fetchAllPagesViaRest<RawIssueRecord>(
-    `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=100`,
-    token,
-  )
-}
-
-function readIssueCommentsViaRest(owner: string, repo: string, issueNumber: number, token: string): RawCommentRecord[] {
-  return fetchAllPagesViaRest<RawCommentRecord>(
-    `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}/comments?per_page=100`,
-    token,
-  )
-}
-
-function readIssueEventsViaRest(owner: string, repo: string, issueNumber: number, token: string): RawLabelEventRecord[] {
-  return fetchAllPagesViaRest<RawLabelEventRecord>(
-    `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}/events?per_page=100`,
-    token,
-  )
-}
-
-function readOpenIssues(strategy: FetchStrategy, owner: string, repo: string, cwd: string): RawIssueRecord[] {
-  if (strategy === 'gh') return readOpenIssuesViaGh(owner, repo, cwd)
-  const token = envToken()
-  if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return readOpenIssuesViaRest(owner, repo, token)
-}
-
-function readIssueComments(
-  strategy: FetchStrategy,
-  owner: string,
-  repo: string,
-  issueNumber: number,
-  cwd: string,
-): RawCommentRecord[] {
-  if (strategy === 'gh') return readIssueCommentsViaGh(owner, repo, issueNumber, cwd)
-  const token = envToken()
-  if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return readIssueCommentsViaRest(owner, repo, issueNumber, token)
-}
-
 // ── Cursor state (persisted between scan passes) ────────────────────────────
 
 /** Per-issue scan cursors: for each open issue (keyed by its number as a
@@ -465,34 +270,17 @@ export function writeCursorState(state: ScanCursorState, path: string): void {
   writeFileSync(path, JSON.stringify(state, null, 2) + '\n')
 }
 
-function readIssueEvents(
-  strategy: FetchStrategy,
-  owner: string,
-  repo: string,
-  issueNumber: number,
-  cwd: string,
-): RawLabelEventRecord[] {
-  if (strategy === 'gh') return readIssueEventsViaGh(owner, repo, issueNumber, cwd)
-  const token = envToken()
-  if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return readIssueEventsViaRest(owner, repo, issueNumber, token)
-}
-
 /** `isMarkerFresh`, but tolerant of the events fetch itself failing (a
  *  transient network/`gh` error) — same fail-closed reasoning as
  *  `isMarkerFresh`'s own missing-timestamp case (see `guest-marker.ts`): a
  *  fetch failure on one issue must not crash the whole scan and must not
  *  risk a double-build by treating an unreadable marker as safe to
- *  reclaim, so it's logged to stderr and treated as still-fresh (skip). */
-function issueMarkerLooksFresh(
-  strategy: FetchStrategy,
-  owner: string,
-  repo: string,
-  issueNumber: number,
-  cwd: string,
-): boolean {
+ *  reclaim, so it's logged to stderr and treated as still-fresh (skip).
+ *  Events come from the stable issue Events API (no preview header), a second
+ *  call here rather than folded into a Timeline fetch (see the header). */
+function issueMarkerLooksFresh(access: Access, issueNumber: number): boolean {
   try {
-    return isMarkerFresh(readIssueEvents(strategy, owner, repo, issueNumber, cwd))
+    return isMarkerFresh(listAll<RawLabelEventRecord>(access, `issues/${issueNumber}/events`))
   } catch (err) {
     console.error(
       `guest-intake-scan: couldn't fetch events for #${issueNumber} to check its guest-in-flight marker` +
@@ -505,19 +293,8 @@ function issueMarkerLooksFresh(
 // ── Command ──────────────────────────────────────────────────────────────────
 
 export function guestIntakeScan(limit = DEFAULT_LIMIT, cwd = root): ScanReport {
-  const originUrl = readOriginUrl(cwd)
-  const ownerRepo = parseOwnerRepo(originUrl)
-  if (ownerRepo === null) {
-    throw new Error(`could not parse owner/repo from origin remote: ${originUrl}`)
-  }
-  const strategy = pickFetchStrategy(hasGhBinary(cwd), Boolean(envToken()))
-  if (strategy === null) {
-    throw new Error(
-      'no GitHub access path available: `gh` is not installed and neither GH_TOKEN nor GITHUB_TOKEN is set',
-    )
-  }
-  const { owner, repo } = ownerRepo
-  const rawIssues = readOpenIssues(strategy, owner, repo, cwd)
+  const access = resolveAccess(cwd)
+  const rawIssues = listAll<RawIssueRecord>(access, 'issues', { state: 'open' })
     .filter((issue) => issue.pull_request === undefined)
     .slice(0, limit)
 
@@ -528,8 +305,8 @@ export function guestIntakeScan(limit = DEFAULT_LIMIT, cwd = root): ScanReport {
   const scanned: ScannedIssue[] = []
   for (const raw of rawIssues) {
     const labels = raw.labels.map((label) => (typeof label === 'string' ? label : label.name))
-    if (hasMarker(labels) && issueMarkerLooksFresh(strategy, owner, repo, raw.number, cwd)) continue
-    const comments = readIssueComments(strategy, owner, repo, raw.number, cwd)
+    if (hasMarker(labels) && issueMarkerLooksFresh(access, raw.number)) continue
+    const comments = listAll<RawCommentRecord>(access, `issues/${raw.number}/comments`)
     const cursor = cursorState[String(raw.number)] ?? null
     const result = scanIssue(raw, comments, cursor)
     if (result) scanned.push(result)

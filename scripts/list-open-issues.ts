@@ -19,30 +19,31 @@
 // distinguished only by a `pull_request` key) — filtered out below.
 //
 // `gh`-absent fallback (issue #505): the `gh` binary is missing in some remote
-// sessions, and the old `gh`-only path crashed there with a raw
-// `spawnSync gh ENOENT`, forcing the overflow-prone MCP listing this helper
-// exists to avoid. So when `gh` is absent but a `GH_TOKEN`/`GITHUB_TOKEN` is in
-// the environment, the same compact listing is produced via a direct
-// authenticated REST call (`curl`, not Node's built-in `fetch` — see the
-// strategy section below and issue #567). Only when neither path is usable does
-// the helper exit, and then with an actionable message pointing at the MCP
+// sessions, so with a `GH_TOKEN`/`GITHUB_TOKEN` the same listing is produced
+// via `curl` (see `lib/github-client.ts`). Only when neither path is usable
+// does the helper exit, with an actionable message pointing at the MCP
 // fallback rather than a bare ENOENT.
 //
-// This module is also the single home for the `gh`/`rest` strategy switch's
-// pure helpers (`pickFetchStrategy`, `parseNextLink`, `FetchStrategy`), shared
-// by the sibling issue-tracker scripts (`check-triage-drift.ts`,
-// `poll-guest-tickets.ts`, `guest-intake-scan.ts`, `owner-corrections.ts`) — it is the base module they
-// all already import from, so homing them here avoids the import cycle that
-// homing them in a sibling would create.
+// The names re-exported below keep `merge-pr.ts` (Human-only) and the specs
+// importing from here.
 //
 // Usage:  tsx scripts/list-open-issues.ts [N]
 //   Prints up to N open issues (default 50) as JSON:
 //   { number, title, labels, updatedAt }. Newest-updated-first.
-import { execFileSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { decodeHtmlEntities, listAll, NO_ACCESS_MESSAGE, resolveAccess, type Access } from './lib/github-client.ts'
+
+export {
+  decodeHtmlEntities,
+  envToken,
+  getJson,
+  hasGhBinary,
+  parseNextLink,
+  parseOwnerRepo,
+  pickFetchStrategy,
+  type FetchStrategy,
+} from './lib/github-client.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -70,20 +71,6 @@ export interface OpenIssue {
 
 // ── Pure core (unit-tested) ─────────────────────────────────────────────────
 
-/** GitHub's REST API HTML-entity-encodes issue text in this repo's
- *  environment (the same quirk `docs/agents/github-integration.md` notes for
- *  `issue_read`/`pull_request_read`) — decode the handful of entities GitHub
- *  actually emits so the listing reads as plain text. */
-export function decodeHtmlEntities(s: string): string {
-  return s
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#34;/g, '"')
-    .replace(/&#39;/g, "'")
-}
-
 /** Turn one raw REST record into an `OpenIssue`, or `null` if it's actually a
  *  pull request (see `RawIssueApiRecord`). */
 export function toOpenIssue(raw: RawIssueApiRecord): OpenIssue | null {
@@ -109,51 +96,7 @@ export function openIssues(records: RawIssueApiRecord[], limit = DEFAULT_LIMIT):
     .slice(0, limit)
 }
 
-/** Pull `{ owner, repo }` out of a git remote URL. Handles the
- *  `git@host:owner/repo.git`, `https://host/owner/repo.git`, and this
- *  environment's proxied `http://user@host:port/git/owner/repo` shapes
- *  alike — all three end in the same two path segments once `:` and `/` are
- *  both treated as separators. */
-export function parseOwnerRepo(remoteUrl: string): { owner: string; repo: string } | null {
-  const segments = remoteUrl
-    .replace(/\.git$/, '')
-    .split(/[/:]+/)
-    .filter(Boolean)
-  if (segments.length < 2) return null
-  const repo = segments[segments.length - 1]!
-  const owner = segments[segments.length - 2]!
-  return { owner, repo }
-}
-
-// ── GitHub access strategy (shared single home) ──────────────────────────────
-
-/** Which GitHub-access path a helper script should use. */
-export type FetchStrategy = 'gh' | 'rest'
-
-/** `gh` when the binary is present (the well-exercised path); `rest` when it is
- *  absent but a token is available (issue #505's `gh`-less remote sessions);
- *  `null` when neither is usable — the caller fails with an actionable message
- *  rather than a raw ENOENT/fetch error. */
-export function pickFetchStrategy(hasGh: boolean, hasToken: boolean): FetchStrategy | null {
-  if (hasGh) return 'gh'
-  if (hasToken) return 'rest'
-  return null
-}
-
-/** GitHub's `Link` response header, parsed for a `rel="next"` URL — the plain
- *  REST pagination mechanism `gh api --paginate` handles for us on the `gh`
- *  path; the REST fallback has to walk it by hand so it doesn't silently
- *  truncate a large open-issue set. */
-export function parseNextLink(linkHeader: string | null): string | null {
-  if (!linkHeader) return null
-  for (const part of linkHeader.split(',')) {
-    const m = part.match(/<([^>]+)>;\s*rel="next"/)
-    if (m) return m[1]!
-  }
-  return null
-}
-
-// ── GitHub shell (thin) ──────────────────────────────────────────────────────
+// ── Command ──────────────────────────────────────────────────────────────────
 
 // Every `gh`-absent failure mode ends with this caveat instead of a raw
 // ENOENT/HTTP error — the whole point of the helper is to keep an agent off the
@@ -165,170 +108,25 @@ const MCP_FALLBACK_CAVEAT =
   '(labels/state) to avoid the tool-result overflow this helper exists to ' +
   'prevent (issues #494/#131/#143).'
 
-/** The actionable message a `gh`-less, token-less session gets instead of a raw
- *  ENOENT (issue #505). */
-const NO_ACCESS_PATH_MESSAGE =
-  '`gh` is not installed and neither GH_TOKEN nor GITHUB_TOKEN is set. ' +
-  MCP_FALLBACK_CAVEAT
-
-function readOriginUrl(cwd: string): string {
-  return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
+const withCaveat = (err: unknown): Error => {
+  const msg = err instanceof Error ? err.message : String(err)
+  return new Error(`${msg}. ${MCP_FALLBACK_CAVEAT}`, { cause: err })
 }
-
-/** True when the `gh` binary is on PATH. Some remote sessions lack it (issue
- *  #505) — the strategy switch falls back to REST there. */
-export function hasGhBinary(cwd: string): boolean {
-  try {
-    execFileSync('gh', ['--version'], { cwd, stdio: 'ignore' })
-    return true
-  } catch {
-    return false
-  }
-}
-
-/** The GitHub token the REST fallback authenticates with, or `undefined` when
- *  none is set. */
-export function envToken(): string | undefined {
-  return process.env.GH_TOKEN || process.env.GITHUB_TOKEN
-}
-
-function readOpenIssueRecordsViaGh(owner: string, repo: string, cwd: string): RawIssueApiRecord[] {
-  const raw = execFileSync(
-    'gh',
-    [
-      'api',
-      '--method',
-      'GET',
-      `repos/${owner}/${repo}/issues`,
-      '-f',
-      'state=open',
-      '-f',
-      'per_page=100',
-      '--paginate',
-      '--jq',
-      '.[]',
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-  return raw
-    .split('\n')
-    .filter((line) => line.length > 0)
-    .map((line) => JSON.parse(line) as RawIssueApiRecord)
-}
-
-// `curl`, not Node's built-in `fetch`: this environment's outbound HTTPS goes
-// through an agent proxy that undici's `fetch` only honors with
-// `NODE_USE_ENV_PROXY=1` set *before the process starts* (too late from inside a
-// running script), whereas `curl` already respects `HTTPS_PROXY`/the
-// pre-installed CA bundle with no special flags (see /root/.ccr/README.md and
-// issue #567 — the reasoning `poll-guest-tickets.ts`'s `curlGetPage`
-// documents). `-D`/`-w '%{http_code}'` split the response into a header file
-// (for `Link` pagination) and a status code on stdout; the body goes to its own
-// temp file.
-function curlGetPage(
-  url: string,
-  token: string,
-  cwd: string,
-): { status: string; body: string; linkHeader: string | null } {
-  const dir = mkdtempSync(join(tmpdir(), 'list-open-issues-'))
-  const headerFile = join(dir, 'headers')
-  const bodyFile = join(dir, 'body')
-  try {
-    const status = execFileSync(
-      'curl',
-      [
-        '-sS',
-        '-o',
-        bodyFile,
-        '-D',
-        headerFile,
-        '-w',
-        '%{http_code}',
-        '-H',
-        `Authorization: Bearer ${token}`,
-        '-H',
-        'Accept: application/vnd.github+json',
-        '-H',
-        'User-Agent: terrarium-list-open-issues',
-        url,
-      ],
-      { cwd, encoding: 'utf8' },
-    ).trim()
-    const body = readFileSync(bodyFile, 'utf8')
-    const headers = readFileSync(headerFile, 'utf8')
-    const linkLine = headers.split(/\r?\n/).find((l) => /^link:/i.test(l))
-    return {
-      status,
-      body,
-      linkHeader: linkLine ? linkLine.slice(linkLine.indexOf(':') + 1).trim() : null,
-    }
-  } finally {
-    rmSync(dir, { recursive: true, force: true })
-  }
-}
-
-/** One GET of a repo-scoped REST `path` (e.g. `repos/o/r/pulls?page=2`),
- *  parsed — via `gh` or the REST fallback, whichever is usable. For a helper
- *  that pages by hand (`&page=N`) and so needs no `Link` walking. */
-export function getJson<T>(path: string, cwd: string): T {
-  const strategy = pickFetchStrategy(hasGhBinary(cwd), Boolean(envToken()))
-  if (strategy === null) throw new Error(NO_ACCESS_PATH_MESSAGE)
-  if (strategy === 'gh') {
-    const raw = execFileSync('gh', ['api', '--method', 'GET', path], {
-      cwd,
-      encoding: 'utf8',
-      maxBuffer: 64 * 1024 * 1024,
-      stdio: ['ignore', 'pipe', 'pipe'], // a failure's stderr rides on the thrown error
-    })
-    return JSON.parse(raw) as T
-  }
-  const url = `https://api.github.com/${path}`
-  const { status, body } = curlGetPage(url, envToken()!, cwd)
-  if (status[0] !== '2') throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
-  return JSON.parse(body) as T
-}
-
-function readOpenIssueRecordsViaRest(owner: string, repo: string, token: string, cwd: string): RawIssueApiRecord[] {
-  const out: RawIssueApiRecord[] = []
-  let url: string | null = `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=100`
-  while (url) {
-    const { status, body, linkHeader } = curlGetPage(url, token, cwd)
-    if (status[0] !== '2') {
-      throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
-    }
-    out.push(...(JSON.parse(body) as RawIssueApiRecord[]))
-    url = parseNextLink(linkHeader)
-  }
-  return out
-}
-
-function readOpenIssueRecords(owner: string, repo: string, cwd: string): RawIssueApiRecord[] {
-  const strategy = pickFetchStrategy(hasGhBinary(cwd), Boolean(envToken()))
-  if (strategy === null) throw new Error(NO_ACCESS_PATH_MESSAGE)
-  if (strategy === 'gh') return readOpenIssueRecordsViaGh(owner, repo, cwd)
-  // Any REST-path failure (non-2xx, `curl` absent, connection refused, malformed
-  // JSON) ends with the fallback caveat too — so *every* `gh`-absent failure
-  // mode, not just the no-credential one, steers back to the safe MCP path
-  // (issue #505).
-  try {
-    return readOpenIssueRecordsViaRest(owner, repo, envToken()!, cwd)
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : String(err)
-    throw new Error(msg.includes(MCP_FALLBACK_CAVEAT) ? msg : `${msg}. ${MCP_FALLBACK_CAVEAT}`, {
-      cause: err,
-    })
-  }
-}
-
-// ── Command ──────────────────────────────────────────────────────────────────
 
 export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root): OpenIssue[] {
-  const originUrl = readOriginUrl(cwd)
-  const ownerRepo = parseOwnerRepo(originUrl)
-  if (ownerRepo === null) {
-    throw new Error(`could not parse owner/repo from origin remote: ${originUrl}`)
+  let access: Access
+  try {
+    access = resolveAccess(cwd)
+  } catch (err) {
+    throw err instanceof Error && err.message === NO_ACCESS_MESSAGE ? withCaveat(err) : err
   }
-  return openIssues(readOpenIssueRecords(ownerRepo.owner, ownerRepo.repo, cwd), limit)
+  const list = () => openIssues(listAll<RawIssueApiRecord>(access, 'issues', { state: 'open' }), limit)
+  if (access.strategy === 'gh') return list()
+  try {
+    return list()
+  } catch (err) {
+    throw withCaveat(err) // any REST-path failure, so every `gh`-absent mode steers to the safe MCP path
+  }
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────

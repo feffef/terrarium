@@ -26,37 +26,15 @@
 // *detector*. Grow `TRANSITION_VERB_PATTERNS` when a real missed phrasing
 // turns up.
 //
-// Fetch strategy: prefers `gh api` (the same well-exercised path
-// `scripts/list-open-issues.ts` uses) when the `gh` binary is present, and
-// falls back to a direct authenticated REST call via `curl` (using a
-// `GH_TOKEN` / `GITHUB_TOKEN` env var) when it is not — `curl`, not Node's
-// built-in `fetch`, for the same proxy-auth reason `poll-guest-tickets.ts`'s
-// `curlGetPage` documents (issue #567). The strategy switch itself
-// (`pickFetchStrategy`/`parseNextLink`/`hasGhBinary`/`envToken`) is shared
-// with `list-open-issues.ts`, its single home since issue #505 gave that base
-// module the same `gh`-less REST fallback; only the endpoint-specific `gh`/REST
-// readers below are script-local.
-//
 // Usage:  tsx scripts/check-triage-drift.ts [N]
 //   Checks up to N open issues (default 50, newest-updated-first) and prints
 //   the flagged subset as JSON: { number, title, claimedLabel, liveLabels,
 //   commentUrl, commentCreatedAt }.
-import { execFileSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
+import { decodeHtmlEntities, listAll, resolveAccess } from './lib/github-client.ts'
+import type { RawIssueApiRecord } from './list-open-issues.ts'
 import { hasAuthorshipMarker } from './provenance-header.ts'
-import {
-  decodeHtmlEntities,
-  envToken,
-  hasGhBinary,
-  parseNextLink,
-  parseOwnerRepo,
-  pickFetchStrategy,
-  type FetchStrategy,
-  type RawIssueApiRecord,
-} from './list-open-issues.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -224,181 +202,11 @@ export function toDriftCheckIssue(raw: RawIssueApiRecord): DriftCheckIssue | nul
   }
 }
 
-// The `gh`/`rest` strategy switch (`pickFetchStrategy`, `parseNextLink`,
-// `FetchStrategy`, `hasGhBinary`, `envToken`) is single-homed in
-// `list-open-issues.ts` (issue #505) and imported above.
-
-// ── GitHub shell (thin) ──────────────────────────────────────────────────────
-
-function readOriginUrl(cwd: string): string {
-  return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
-}
-
-function readOpenIssuesViaGh(owner: string, repo: string, cwd: string): RawIssueApiRecord[] {
-  const raw = execFileSync(
-    'gh',
-    [
-      'api',
-      '--method',
-      'GET',
-      `repos/${owner}/${repo}/issues`,
-      '-f',
-      'state=open',
-      '-f',
-      'per_page=100',
-      '--paginate',
-      '--jq',
-      '.[]',
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-  return raw
-    .split('\n')
-    .filter((line) => line.length > 0)
-    .map((line) => JSON.parse(line) as RawIssueApiRecord)
-}
-
-function readIssueCommentsViaGh(owner: string, repo: string, issueNumber: number, cwd: string): RawCommentApiRecord[] {
-  const raw = execFileSync(
-    'gh',
-    [
-      'api',
-      '--method',
-      'GET',
-      `repos/${owner}/${repo}/issues/${issueNumber}/comments`,
-      '-f',
-      'per_page=100',
-      '--paginate',
-      '--jq',
-      '.[]',
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-  return raw
-    .split('\n')
-    .filter((line) => line.length > 0)
-    .map((line) => JSON.parse(line) as RawCommentApiRecord)
-}
-
-// See `poll-guest-tickets.ts`'s `curlGetPage` for why `curl` over `fetch`
-// here (issue #567) — mirrored verbatim, down to the header/body temp-file
-// split for `Link`-header pagination.
-function curlGetPage(url: string, token: string, cwd: string): { status: string; body: string; linkHeader: string | null } {
-  const dir = mkdtempSync(join(tmpdir(), 'check-triage-drift-'))
-  const headerFile = join(dir, 'headers')
-  const bodyFile = join(dir, 'body')
-  try {
-    const status = execFileSync(
-      'curl',
-      [
-        '-sS',
-        '-o',
-        bodyFile,
-        '-D',
-        headerFile,
-        '-w',
-        '%{http_code}',
-        '-H',
-        `Authorization: Bearer ${token}`,
-        '-H',
-        'Accept: application/vnd.github+json',
-        '-H',
-        'User-Agent: terrarium-check-triage-drift',
-        url,
-      ],
-      { cwd, encoding: 'utf8' },
-    ).trim()
-    const body = readFileSync(bodyFile, 'utf8')
-    const headers = readFileSync(headerFile, 'utf8')
-    const linkLine = headers.split(/\r?\n/).find((l) => /^link:/i.test(l))
-    return { status, body, linkHeader: linkLine ? linkLine.slice(linkLine.indexOf(':') + 1).trim() : null }
-  } finally {
-    rmSync(dir, { recursive: true, force: true })
-  }
-}
-
-async function fetchAllPagesViaRest<T>(initialUrl: string, token: string, cwd: string): Promise<T[]> {
-  const out: T[] = []
-  let url: string | null = initialUrl
-  while (url) {
-    const { status, body, linkHeader } = curlGetPage(url, token, cwd)
-    if (status[0] !== '2') {
-      throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
-    }
-    out.push(...(JSON.parse(body) as T[]))
-    url = parseNextLink(linkHeader)
-  }
-  return out
-}
-
-async function readOpenIssuesViaRest(
-  owner: string,
-  repo: string,
-  token: string,
-  cwd: string,
-): Promise<RawIssueApiRecord[]> {
-  return fetchAllPagesViaRest<RawIssueApiRecord>(
-    `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=100`,
-    token,
-    cwd,
-  )
-}
-
-async function readIssueCommentsViaRest(
-  owner: string,
-  repo: string,
-  issueNumber: number,
-  token: string,
-  cwd: string,
-): Promise<RawCommentApiRecord[]> {
-  return fetchAllPagesViaRest<RawCommentApiRecord>(
-    `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}/comments?per_page=100`,
-    token,
-    cwd,
-  )
-}
-
-async function readOpenIssues(
-  strategy: FetchStrategy,
-  owner: string,
-  repo: string,
-  cwd: string,
-): Promise<RawIssueApiRecord[]> {
-  if (strategy === 'gh') return readOpenIssuesViaGh(owner, repo, cwd)
-  const token = envToken()
-  if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return readOpenIssuesViaRest(owner, repo, token, cwd)
-}
-
-async function readIssueComments(
-  strategy: FetchStrategy,
-  owner: string,
-  repo: string,
-  issueNumber: number,
-  cwd: string,
-): Promise<RawCommentApiRecord[]> {
-  if (strategy === 'gh') return readIssueCommentsViaGh(owner, repo, issueNumber, cwd)
-  const token = envToken()
-  if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return readIssueCommentsViaRest(owner, repo, issueNumber, token, cwd)
-}
-
 // ── Command ──────────────────────────────────────────────────────────────────
 
 export async function checkTriageDrift(limit = DEFAULT_LIMIT, cwd = root): Promise<FlaggedIssue[]> {
-  const originUrl = readOriginUrl(cwd)
-  const ownerRepo = parseOwnerRepo(originUrl)
-  if (ownerRepo === null) {
-    throw new Error(`could not parse owner/repo from origin remote: ${originUrl}`)
-  }
-  const strategy = pickFetchStrategy(hasGhBinary(cwd), Boolean(envToken()))
-  if (strategy === null) {
-    throw new Error(
-      'no GitHub access path available: `gh` is not installed and neither GH_TOKEN nor GITHUB_TOKEN is set',
-    )
-  }
-  const { owner, repo } = ownerRepo
-  const rawIssues = await readOpenIssues(strategy, owner, repo, cwd)
+  const access = resolveAccess(cwd)
+  const rawIssues = listAll<RawIssueApiRecord>(access, 'issues', { state: 'open' })
   const issues = rawIssues
     .map(toDriftCheckIssue)
     .filter((x): x is DriftCheckIssue => x !== null)
@@ -406,7 +214,7 @@ export async function checkTriageDrift(limit = DEFAULT_LIMIT, cwd = root): Promi
 
   const flagged: FlaggedIssue[] = []
   for (const issue of issues) {
-    const comments = await readIssueComments(strategy, owner, repo, issue.number, cwd)
+    const comments = listAll<RawCommentApiRecord>(access, `issues/${issue.number}/comments`)
     const drift = findTriageDrift(issue, comments)
     if (drift !== null) flagged.push(drift)
   }

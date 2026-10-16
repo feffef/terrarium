@@ -20,7 +20,7 @@ import { readFileSync } from 'node:fs'
 import { pathToFileURL } from 'node:url'
 import { isAiAuthored } from '../../../../scripts/check-triage-drift.ts'
 import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
-import { getJson, parseOwnerRepo } from '../../../../scripts/list-open-issues.ts'
+import { getJson, paginate, parseOwnerRepo, PER_PAGE, readOriginUrl } from '../../../../scripts/lib/github-client.ts'
 import { root } from '../../../../shared/expand.ts'
 
 const DECISIONS = '.agents/skills/visitor-loop/decisions.md'
@@ -171,12 +171,13 @@ interface RawComment {
 
 /** Every page of `path` (which already has a `?`), stopping early once `done` says so. */
 function allPages<T>(path: string, cwd: string, done: (page: T[]) => boolean = () => false): T[] {
-  const out: T[] = []
-  for (let page = 1; ; page++) {
-    const items = getJson<T[]>(`${path}&per_page=100&page=${page}`, cwd)
-    out.push(...items)
-    if (items.length < 100 || done(items)) return out
-  }
+  return paginate<T>(
+    (page) => `${path}&per_page=${PER_PAGE}&page=${page}`,
+    (url) => {
+      const records = getJson<T[]>(url, cwd)
+      return { records, more: records.length >= PER_PAGE && !done(records) }
+    },
+  )
 }
 
 function lastDecisionsCommit(cwd: string): string {
@@ -224,7 +225,7 @@ function threadNumber(url: string): number {
 export function ownerCorrections(since: string | undefined, cwd = root): Candidate[] {
   fetchOriginMain(cwd, 'origin', undefined, true)
   const cutoff = since ?? lastDecisionsCommit(cwd)
-  const originUrl = execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
+  const originUrl = readOriginUrl(cwd)
   const ownerRepo = parseOwnerRepo(originUrl)
   if (ownerRepo === null) throw new Error(`could not parse owner/repo from origin remote: ${originUrl}`)
   const repo = `repos/${ownerRepo.owner}/${ownerRepo.repo}`

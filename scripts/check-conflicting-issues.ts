@@ -21,11 +21,7 @@
 //   - `--pr <number>` — resolved from the GitHub API: the PR's file list via
 //     `gh api .../pulls/<n>/files` (or the REST fallback), and open issues via
 //     the same `.../issues?state=open` listing `list-open-issues.ts` already
-//     uses. Reuses that module's `gh`/REST strategy switch
-//     (`pickFetchStrategy`, `hasGhBinary`, `envToken`, `parseNextLink`,
-//     `parseOwnerRepo`, `decodeHtmlEntities`) rather than reinventing it — the
-//     same shared base `check-triage-drift.ts` already imports from (issue
-//     #505/#507).
+//     uses, through `lib/github-client.ts`.
 //
 // `--pr <number>` mode also excludes the issue(s) the PR's own body
 // auto-closes (`Closes`/`Fixes`/`Resolves #N`, GitHub's linking-keyword
@@ -40,19 +36,19 @@
 //   matchedKeyword }[]. Empty array (`[]`) means no hits — still exits 0
 //   either way; this is advisory, never a failing gate.
 import { execFileSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import { dirname, join, resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import {
   decodeHtmlEntities,
-  envToken,
-  hasGhBinary,
-  parseNextLink,
-  parseOwnerRepo,
-  pickFetchStrategy,
-  type FetchStrategy,
-} from './list-open-issues.ts'
+  getJson,
+  listAll,
+  paginate,
+  parseRestPage,
+  PER_PAGE,
+  resolveAccess,
+  type Access,
+  type RestPage,
+} from './lib/github-client.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -205,10 +201,6 @@ export function parseChangedFileList(raw: string): string[] {
 
 // ── GitHub / git shell (thin) ────────────────────────────────────────────────
 
-function readOriginUrl(cwd: string): string {
-  return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
-}
-
 /** Changed files between two refs, resolved entirely locally — no GitHub call
  *  at all, mirroring how `merged-since.ts` stays git-only where it can. */
 export function changedFilesFromGitDiff(base: string, head: string, cwd = root): string[] {
@@ -216,218 +208,24 @@ export function changedFilesFromGitDiff(base: string, head: string, cwd = root):
   return parseChangedFileList(raw)
 }
 
-function readPrFilesViaGh(owner: string, repo: string, prNumber: number, cwd: string): string[] {
-  const raw = execFileSync(
-    'gh',
-    [
-      'api',
-      '--method',
-      'GET',
-      `repos/${owner}/${repo}/pulls/${prNumber}/files`,
-      '-f',
-      'per_page=100',
-      '--paginate',
-      '--jq',
-      '.[] | .filename, (.previous_filename // empty)',
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-  return parseChangedFileList(raw)
-}
+export type { RestPage }
 
-/** The PR's own body text — `''` when it has none — used to find the issues
- *  it self-closes (issue #967). `.body // ""` (not a bare `.body`) so a null
- *  body prints as an empty string rather than the literal text `"null"`,
- *  which `gh api --jq` would otherwise emit for a raw `null` value. */
-function readPrBodyViaGh(owner: string, repo: string, prNumber: number, cwd: string): string {
-  return execFileSync(
-    'gh',
-    ['api', '--method', 'GET', `repos/${owner}/${repo}/pulls/${prNumber}`, '--jq', '.body // ""'],
-    { cwd, encoding: 'utf8' },
-  ).trim()
-}
+// Every mid-walk failure says *incomplete*, not just *failed*: this check's
+// whole output is "these open issues conflict", and a caller who reads a
+// truncated walk as a finished one concludes "no conflict" about issues it
+// never looked at (issue #848).
+const INCOMPLETE_HINT = ' — no conflict verdict can be drawn from a partial read.'
 
-function readOpenIssuesViaGh(owner: string, repo: string, cwd: string): RawConflictIssue[] {
-  const raw = execFileSync(
-    'gh',
-    [
-      'api',
-      '--method',
-      'GET',
-      `repos/${owner}/${repo}/issues`,
-      '-f',
-      'state=open',
-      '-f',
-      'per_page=100',
-      '--paginate',
-      '--jq',
-      '.[]',
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-  return raw
-    .split('\n')
-    .filter((line) => line.length > 0)
-    .map((line) => JSON.parse(line) as RawConflictIssue)
-}
-
-// `curl`, not Node's built-in `fetch` — same proxy-auth reasoning as
-// `list-open-issues.ts`'s `curlGetPage` (issue #567), mirrored verbatim down
-// to the header/body temp-file split for `Link`-header pagination.
-function curlGetPage(url: string, token: string, cwd: string): { status: string; body: string; linkHeader: string | null } {
-  const dir = mkdtempSync(join(tmpdir(), 'check-conflicting-issues-'))
-  const headerFile = join(dir, 'headers')
-  const bodyFile = join(dir, 'body')
-  try {
-    const status = execFileSync(
-      'curl',
-      [
-        '-sS',
-        '-o',
-        bodyFile,
-        '-D',
-        headerFile,
-        '-w',
-        '%{http_code}',
-        '-H',
-        `Authorization: Bearer ${token}`,
-        '-H',
-        'Accept: application/vnd.github+json',
-        '-H',
-        'User-Agent: terrarium-check-conflicting-issues',
-        url,
-      ],
-      { cwd, encoding: 'utf8' },
-    ).trim()
-    const body = readFileSync(bodyFile, 'utf8')
-    const headers = readFileSync(headerFile, 'utf8')
-    const linkLine = headers.split(/\r?\n/).find((l) => /^link:/i.test(l))
-    return { status, body, linkHeader: linkLine ? linkLine.slice(linkLine.indexOf(':') + 1).trim() : null }
-  } finally {
-    rmSync(dir, { recursive: true, force: true })
-  }
-}
-
-/** One raw REST page response, as `curlGetPage` returns it — named so
- *  `walkPagesByNumber` can be driven by a fixture with no network (issue #848). */
-export interface RestPage {
-  status: string
-  body: string
-  linkHeader: string | null
-}
-
-/** Every mid-walk failure says *incomplete*, not just *failed*: this check's
- *  whole output is "these open issues conflict", and a caller who reads a
- *  truncated walk as a finished one concludes "no conflict" about issues it
- *  never looked at (issue #848). */
-function incompleteScanMessage(url: string, cause: string, recordsSoFar: number, page: number): string {
-  return (
-    `GitHub REST API request to ${url} ${cause} — scan INCOMPLETE at page ${page} after ${recordsSoFar} record(s). ` +
-    'No conflict verdict can be drawn from a partial read.'
-  )
-}
-
-/** Walks pages by NUMBER on our own `repos/{owner}/{repo}` URL, using the
- *  `Link` header only as the "is there another page" signal rather than
- *  following its URL (issue #848): GitHub answers `pulls` with a `rel="next"`
- *  pointing at the numeric `repositories/{id}/pulls` form, which this
- *  environment's agent proxy rejects outright, so following it verbatim 403s
- *  on page 2.
- *
- *  Throws on any mid-walk failure rather than returning the pages already
- *  read — see `incompleteScanMessage`. */
-export function walkPagesByNumber<T>(
-  pageUrl: (page: number) => string,
-  fetchPage: (url: string) => RestPage,
-): T[] {
-  const out: T[] = []
-  for (let page = 1; ; page++) {
-    const url = pageUrl(page)
-    const { status, body, linkHeader } = fetchPage(url)
-    if (status[0] !== '2') {
-      throw new Error(incompleteScanMessage(url, `failed: HTTP ${status}`, out.length, page))
-    }
-    let records: T[]
-    try {
-      records = JSON.parse(body) as T[]
-    } catch (err) {
-      throw new Error(incompleteScanMessage(url, 'returned a malformed JSON body', out.length, page), { cause: err })
-    }
-    out.push(...records)
-    if (parseNextLink(linkHeader) === null) return out
-  }
+/** `paginate` over our own `repos/{owner}/{repo}` URL with the `Link` header as
+ *  the only "another page" signal (issue #848), driven by a fixture with no
+ *  network in the spec. */
+export function walkPagesByNumber<T>(pageUrl: (page: number) => string, fetchPage: (url: string) => RestPage): T[] {
+  return paginate<T>(pageUrl, (url) => parseRestPage<T>(fetchPage(url), url), PER_PAGE, INCOMPLETE_HINT)
 }
 
 interface RawPrFile {
   filename: string
   previous_filename?: string
-}
-
-function readPrFilesViaRest(owner: string, repo: string, prNumber: number, token: string, cwd: string): string[] {
-  const files = walkPagesByNumber<RawPrFile>(
-    (page) => `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/files?per_page=100&page=${page}`,
-    (url) => curlGetPage(url, token, cwd),
-  )
-  return files.flatMap((f) => (f.previous_filename ? [f.filename, f.previous_filename] : [f.filename]))
-}
-
-function readOpenIssuesViaRest(owner: string, repo: string, token: string, cwd: string): RawConflictIssue[] {
-  return walkPagesByNumber<RawConflictIssue>(
-    (page) => `https://api.github.com/repos/${owner}/${repo}/issues?state=open&per_page=100&page=${page}`,
-    (url) => curlGetPage(url, token, cwd),
-  )
-}
-
-interface RawPr {
-  body: string | null
-}
-
-function readPrBodyViaRest(owner: string, repo: string, prNumber: number, token: string, cwd: string): string {
-  const url = `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}`
-  const { status, body } = curlGetPage(url, token, cwd)
-  if (status[0] !== '2') {
-    throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
-  }
-  const pr = JSON.parse(body) as RawPr
-  return pr.body ?? ''
-}
-
-async function readChangedFilesFromPr(
-  strategy: FetchStrategy,
-  owner: string,
-  repo: string,
-  prNumber: number,
-  cwd: string,
-): Promise<string[]> {
-  if (strategy === 'gh') return readPrFilesViaGh(owner, repo, prNumber, cwd)
-  const token = envToken()
-  if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return readPrFilesViaRest(owner, repo, prNumber, token, cwd)
-}
-
-async function readOpenIssues(
-  strategy: FetchStrategy,
-  owner: string,
-  repo: string,
-  cwd: string,
-): Promise<RawConflictIssue[]> {
-  if (strategy === 'gh') return readOpenIssuesViaGh(owner, repo, cwd)
-  const token = envToken()
-  if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return readOpenIssuesViaRest(owner, repo, token, cwd)
-}
-
-async function readPrBody(
-  strategy: FetchStrategy,
-  owner: string,
-  repo: string,
-  prNumber: number,
-  cwd: string,
-): Promise<string> {
-  if (strategy === 'gh') return readPrBodyViaGh(owner, repo, prNumber, cwd)
-  const token = envToken()
-  if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return readPrBodyViaRest(owner, repo, prNumber, token, cwd)
 }
 
 // ── Command ──────────────────────────────────────────────────────────────────
@@ -440,17 +238,20 @@ export async function checkConflictingIssuesForDiff(base: string, head: string, 
   return checkConflictingIssuesForFiles(changedFiles, cwd)
 }
 
+const listOpenIssues = (access: Access): RawConflictIssue[] =>
+  listAll<RawConflictIssue>(access, 'issues', { state: 'open' }, { hint: INCOMPLETE_HINT })
+
 /** Runs the check for a PR by number — resolves both the changed-file list
  *  and the open-issue listing from the GitHub API/`gh`. Excludes the
  *  issue(s) the PR's own body auto-closes (issue #967) — a self-referential
  *  false positive, not a real conflict. */
 export async function checkConflictingIssuesForPr(prNumber: number, cwd = root): Promise<ConflictHit[]> {
-  const { strategy, owner, repo } = resolveAccess(cwd)
-  const changedFiles = await readChangedFilesFromPr(strategy, owner, repo, prNumber, cwd)
-  const prBody = await readPrBody(strategy, owner, repo, prNumber, cwd)
-  const excludedIssueNumbers = findClosingIssueNumbers(decodeHtmlEntities(prBody))
-  const rawIssues = await readOpenIssues(strategy, owner, repo, cwd)
-  const issues = rawIssues
+  const access = resolveAccess(cwd)
+  const files = listAll<RawPrFile>(access, `pulls/${prNumber}/files`, {}, { hint: INCOMPLETE_HINT })
+  const changedFiles = files.flatMap((f) => (f.previous_filename ? [f.filename, f.previous_filename] : [f.filename]))
+  const pr = getJson<{ body: string | null }>(`repos/${access.owner}/${access.repo}/pulls/${prNumber}`, cwd)
+  const excludedIssueNumbers = findClosingIssueNumbers(decodeHtmlEntities(pr.body ?? ''))
+  const issues = listOpenIssues(access)
     .map(toConflictCandidateIssue)
     .filter((x): x is ConflictCandidateIssue => x !== null)
     .filter((issue) => !excludedIssueNumbers.has(issue.number))
@@ -458,25 +259,10 @@ export async function checkConflictingIssuesForPr(prNumber: number, cwd = root):
 }
 
 async function checkConflictingIssuesForFiles(changedFiles: string[], cwd: string): Promise<ConflictHit[]> {
-  const { strategy, owner, repo } = resolveAccess(cwd)
-  const rawIssues = await readOpenIssues(strategy, owner, repo, cwd)
-  const issues = rawIssues.map(toConflictCandidateIssue).filter((x): x is ConflictCandidateIssue => x !== null)
+  const issues = listOpenIssues(resolveAccess(cwd))
+    .map(toConflictCandidateIssue)
+    .filter((x): x is ConflictCandidateIssue => x !== null)
   return findAllConflictHits(issues, changedFiles)
-}
-
-function resolveAccess(cwd: string): { strategy: FetchStrategy; owner: string; repo: string } {
-  const originUrl = readOriginUrl(cwd)
-  const ownerRepo = parseOwnerRepo(originUrl)
-  if (ownerRepo === null) {
-    throw new Error(`could not parse owner/repo from origin remote: ${originUrl}`)
-  }
-  const strategy = pickFetchStrategy(hasGhBinary(cwd), Boolean(envToken()))
-  if (strategy === null) {
-    throw new Error(
-      'no GitHub access path available: `gh` is not installed and neither GH_TOKEN nor GITHUB_TOKEN is set',
-    )
-  }
-  return { strategy, owner: ownerRepo.owner, repo: ownerRepo.repo }
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────

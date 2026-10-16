@@ -6,21 +6,14 @@
 //
 // Usage:  tsx scripts/audit-skills.ts [--days N]
 import { execFileSync } from 'node:child_process'
-import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 import { isContentPath } from './session-trace.ts'
 import { isExternalSession } from '../shared/schemas/session.ts'
 import { SESSION_TRAILER } from './git-helpers.ts'
-import {
-  envToken,
-  hasGhBinary,
-  parseOwnerRepo,
-  pickFetchStrategy,
-  type FetchStrategy,
-} from './list-open-issues.ts'
+import { getJson, paginate, PER_PAGE, resolveAccess } from './lib/github-client.ts'
 import { readProvenanceHeader } from './provenance-header.ts'
 import { ARCHIVED_SESSIONS_DIR, readSessionLogs, SESSIONS_DIR } from './session-logs.ts'
 
@@ -829,86 +822,24 @@ function readLock(cwd = root): Set<string> {
 // boundary as the git readers above — everything below returns raw records, and
 // every judgement is made by the pure `parseMergedPullRequests`/
 // `findOrphanedSessions` pair, so the comparison stays testable with no network.
-//
-// The `gh`/`rest` strategy switch (`pickFetchStrategy`, `hasGhBinary`,
-// `envToken`, `parseOwnerRepo`) is single-homed in `list-open-issues.ts`
-// (issue #505) and imported at the top of this file.
 
-function readOriginUrl(cwd: string): string {
-  return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
-}
+const PULLS_PER_PAGE = PER_PAGE
 
-const PULLS_PER_PAGE = 100
-
-/** Walks pages by NUMBER and stops on the first page shorter than `perPage` —
- *  it never follows GitHub's `Link` URL. For `pulls`, `rel="next"` points at
- *  the numeric `repositories/{id}/pulls` form, which this environment's agent
- *  proxy 403s; `gh api --paginate` follows it verbatim (issue #1514). A short
- *  page, not `Link`, is the stop signal because `gh api` without `--include`
- *  returns no headers. Throws on any mid-walk failure rather than returning
- *  the pages already read: a partial scan that reads as complete is exactly
- *  the failure issue #738 exists to remove. */
+/** `paginate` by page number, stopping on the first page shorter than `perPage`:
+ *  `gh api` without `--include` returns no `Link` header to stop on. */
 export function walkPagesUntilShort<T>(
   pageUrl: (page: number) => string,
   fetchPage: (url: string) => T[],
   perPage = PULLS_PER_PAGE,
 ): T[] {
-  const out: T[] = []
-  for (let page = 1; ; page++) {
-    let records: T[]
-    try {
-      records = fetchPage(pageUrl(page))
-    } catch (err) {
-      const cause = err instanceof Error ? err.message : String(err)
-      throw new Error(`paged listing INCOMPLETE at page ${page} after ${out.length} record(s): ${cause}`, { cause: err })
-    }
-    out.push(...records)
-    if (records.length < perPage) return out
-  }
+  return paginate<T>(pageUrl, (url) => ({ records: fetchPage(url) }), perPage)
 }
 
-function ghGetPage(path: string, cwd: string): RawPullRequestApiRecord[] {
-  const raw = execFileSync('gh', ['api', '--method', 'GET', path], { cwd, encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 })
-  return JSON.parse(raw) as RawPullRequestApiRecord[]
-}
-
-// See `poll-guest-tickets.ts`'s `curlGetPage` for why `curl` over `fetch` here
-// (issue #567).
-function curlGetPage(url: string, token: string, cwd: string): RawPullRequestApiRecord[] {
-  const dir = mkdtempSync(join(tmpdir(), 'audit-skills-'))
-  const bodyFile = join(dir, 'body')
-  try {
-    const status = execFileSync(
-      'curl',
-      [
-        '-sS',
-        '-o',
-        bodyFile,
-        '-w',
-        '%{http_code}',
-        '-H',
-        `Authorization: Bearer ${token}`,
-        '-H',
-        'Accept: application/vnd.github+json',
-        '-H',
-        'User-Agent: terrarium-audit-skills',
-        url,
-      ],
-      { cwd, encoding: 'utf8' },
-    ).trim()
-    if (status[0] !== '2') throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
-    return JSON.parse(readFileSync(bodyFile, 'utf8')) as RawPullRequestApiRecord[]
-  } finally {
-    rmSync(dir, { recursive: true, force: true })
-  }
-}
-
-function readClosedPullRequests(strategy: FetchStrategy, owner: string, repo: string, cwd: string): RawPullRequestApiRecord[] {
-  const path = (page: number) => `repos/${owner}/${repo}/pulls?state=closed&per_page=${PULLS_PER_PAGE}&page=${page}`
-  if (strategy === 'gh') return walkPagesUntilShort(path, (p) => ghGetPage(p, cwd))
-  const token = envToken()
-  if (!token) throw new Error('rest strategy chosen with no GH_TOKEN/GITHUB_TOKEN set')
-  return walkPagesUntilShort((page) => `https://api.github.com/${path(page)}`, (url) => curlGetPage(url, token, cwd))
+function readClosedPullRequests(owner: string, repo: string, cwd: string): RawPullRequestApiRecord[] {
+  return walkPagesUntilShort(
+    (page) => `repos/${owner}/${repo}/pulls?state=closed&per_page=${PULLS_PER_PAGE}&page=${page}`,
+    (path) => getJson<RawPullRequestApiRecord[]>(path, cwd),
+  )
 }
 
 /** Every merged pull request's originating session — the orphan check's whole
@@ -918,22 +849,8 @@ function readClosedPullRequests(strategy: FetchStrategy, owner: string, repo: st
  *  entitled to make that claim when it could not look. */
 export function readPullRequestSessionRefs(cwd = root): PullRequestScan {
   try {
-    const originUrl = readOriginUrl(cwd)
-    const ownerRepo = parseOwnerRepo(originUrl)
-    if (ownerRepo === null) {
-      return { status: { scanned: false, reason: `could not parse owner/repo from origin remote: ${originUrl}` }, refs: [] }
-    }
-    const strategy = pickFetchStrategy(hasGhBinary(cwd), Boolean(envToken()))
-    if (strategy === null) {
-      return {
-        status: {
-          scanned: false,
-          reason: '`gh` is not installed and neither GH_TOKEN nor GITHUB_TOKEN is set',
-        },
-        refs: [],
-      }
-    }
-    const records = readClosedPullRequests(strategy, ownerRepo.owner, ownerRepo.repo, cwd)
+    const { owner, repo } = resolveAccess(cwd)
+    const records = readClosedPullRequests(owner, repo, cwd)
     const merged = records.filter((r) => r.merged_at !== null)
     const refs = parseMergedPullRequests(merged)
     return { status: { scanned: true, mergedPullRequests: merged.length, withSession: refs.length }, refs }
