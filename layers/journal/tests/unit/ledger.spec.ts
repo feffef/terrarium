@@ -60,24 +60,24 @@ describe('ledgerPanels goals', () => {
   })
 })
 
-describe('ledgerPanels solutions', () => {
-  const fix = (severity: Severity, solution: string) => ({ severity, solution })
+describe('ledgerPanels reports', () => {
+  const logged = (severity: Severity, description: string, solution: string) => ({ severity, description, solution })
 
-  it('lists a session\'s solution once, linked to the Space that holds it', () => {
+  it("lists what a session logged with its solution once, linked to the Space that holds it", () => {
     const c = cluster('x', ['nit', 'nit'])
-    const [e] = ledgerPanels([c], 'current', new Set(['x-0']), 'archived', {}, {
-      'x-0': [fix('nit', 'Add a guard')],
-      'x-1': [fix('nit', 'Add a guard')],
-    }).severe
-    expect(e!.solutions).toEqual([{ text: 'Add a guard', date: '2026-10-02', to: '/t/journal/archived#session-x-1' }])
+    const same = [logged('nit', 'Gate ran twice', 'Add a guard')]
+    const [e] = ledgerPanels([c], 'current', new Set(['x-0']), 'archived', {}, { 'x-0': same, 'x-1': same }).severe
+    expect(e!.reports).toEqual([
+      { description: 'Gate ran twice', solution: 'Add a guard', date: '2026-10-02', to: '/t/journal/archived#session-x-1' },
+    ])
   })
 
   it('skips a session whose Frictions of that severity are ambiguous, and is empty without any', () => {
     const [e] = ledgerPanels([cluster('x', ['nit'])], 'current', new Set(['x-0']), 'archived', {}, {
-      'x-0': [fix('nit', 'A'), fix('nit', 'B'), fix('major', 'C')],
+      'x-0': [logged('nit', 'a', 'A'), logged('nit', 'b', 'B'), logged('major', 'c', 'C')],
     }).severe
-    expect(e!.solutions).toEqual([])
-    expect(ledgerPanels([cluster('y', ['nit'])], 'current', new Set(), 'archived').severe[0]!.solutions).toEqual([])
+    expect(e!.reports).toEqual([])
+    expect(ledgerPanels([cluster('y', ['nit'])], 'current', new Set(), 'archived').severe[0]!.reports).toEqual([])
   })
 })
 
