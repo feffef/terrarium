@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01NFv67izdzVGrFHb2EVwZJ2
 startedAt: 2026-10-16T05:54:01Z
-endedAt: 2026-10-16T06:14:10Z
+endedAt: 2026-10-16T06:16:16Z
 kind: interactive
 goal: Glass Box Lesson on Nitro, the server under Nuxt
-status: in-review
-outcome: Nitro Lesson, Term and follow-up edits in PR 2118, gate green locally
+status: completed
+outcome: Nitro Lesson, Term and follow-up edits merged in PR 2118
 summary: "Human-instructed: the owner invoked /glassbox-lesson with issue 2117, which specifies the Lesson and its follow-ups. Before writing I asked three questions and the owner chose: cut the cache paragraph and the routeRules/Tinkerfund excerpts from useAsyncData & payloads, prefix 09 (after the planned NV topics), no diagram. nitro.build, nuxt.com and curl to docs hosts were blocked, so I verified the docs from the nitrojs/nitro v2 branch source and @nuxt/docs from npm, and confirmed URLs via web search; the Full reference points at v2.nitro.build because Nuxt 4.6.1 runs nitropack 2.13.4 while nitro.build documents v3. Technical claims"
 prs:
   - "2118"
@@ -78,13 +78,13 @@ frictions:
   - description: First draft said the typed-route {} type appeared 'after a fresh install', backwards from the session logs where a clean reinstall fixed it; Spec reviewer caught it
     solution: Quote the friction's own wording when turning a session-log friction into a watch item
     severity: minor
-durationSec: 1209
+durationSec: 1335
 models:
-  claude-opus-5-5: 169
+  claude-opus-5-5: 190
 toolCounts:
-  Bash: 50
-  ToolSearch: 5
-  mcp__github__issue_read: 2
+  Bash: 54
+  ToolSearch: 6
+  mcp__github__issue_read: 3
   Read: 19
   AskUserQuestion: 1
   WebFetch: 3
@@ -97,6 +97,11 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__claude-code-remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
   - layers/glassbox/content/guide/terms/nitro.yml
