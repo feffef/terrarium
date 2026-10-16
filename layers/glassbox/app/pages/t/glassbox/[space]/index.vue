@@ -10,17 +10,11 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
     queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title', 'description').all(),
     queryCollection(collections.terms).where('stem', 'IN', [...glassboxLandingTerms]).select('stem', 'term', 'definition').all(),
   ])
-  const stories = glassboxStories.flatMap((story) => {
-    const page = pages.find((p) => p.path === story.path)
-    return page ? [{ ...story, title: page.title, description: page.description }] : []
-  })
-  const told = new Set<string>(stories.map((story) => story.path))
   return {
     landing,
-    stories,
     words: glassboxLandingTerms.flatMap((id) => terms.filter((t) => t.stem === id)),
     directory: glassboxDirectory(pages),
-    walkthroughs: glassboxWalkthroughs(pages).filter((page) => !told.has(page.path)),
+    walkthroughs: glassboxWalkthroughs(pages),
   }
 })
 
@@ -58,30 +52,11 @@ useSeoMeta({ description: () => landing.value?.description })
       <ContentRenderer v-if="intro" class="lede" :value="intro.lede" />
     </div>
 
-    <nav v-if="data?.stories.length" class="stories" aria-label="Stories">
-      <NuxtLink v-for="story in data.stories" :key="story.path" class="story gb-pane" :to="`${base}${story.path}`">
-        <span class="gb-label">{{ story.verb }}<template v-if="story.path === glassboxStartHere"> · Start here</template></span>
-        <strong>{{ story.title }}</strong>
-        <span class="teaser">{{ story.description }}</span>
-        <span class="arrow" aria-hidden="true">→</span>
-      </NuxtLink>
-    </nav>
-
     <section v-if="data?.words.length" class="words" aria-labelledby="words-h">
       <h2 id="words-h">Words we use</h2>
       <dl>
         <div v-for="word in data.words" :key="word.stem" class="gb-pane"><dt>{{ word.term }}</dt><dd>{{ word.definition }}</dd></div>
       </dl>
-    </section>
-
-    <section v-if="data?.walkthroughs.length" class="band">
-      <h2>{{ data.stories.length ? 'More Walkthroughs' : 'Walkthroughs' }}</h2>
-      <ul>
-        <li v-for="page in data.walkthroughs" :key="page.path">
-          <NuxtLink :to="`${base}${page.path}`"><strong>{{ page.title }} →</strong><span class="teaser">{{ page.description }}</span></NuxtLink>
-        </li>
-      </ul>
-      <a class="folder" :href="folderUrl('walkthroughs')" title="This folder in the GitHub repo">files on GitHub ↗</a>
     </section>
 
     <section v-if="data?.directory.length" class="directory">
@@ -101,6 +76,16 @@ useSeoMeta({ description: () => landing.value?.description })
           <a class="folder" :href="folderUrl(subject.slug)" title="This folder in the GitHub repo">files on GitHub ↗</a>
         </section>
       </div>
+    </section>
+
+    <section v-if="data?.walkthroughs.length" class="walkthroughs">
+      <h2>Walkthroughs</h2>
+      <ul>
+        <li v-for="page in data.walkthroughs" :key="page.path">
+          <NuxtLink :to="`${base}${page.path}`"><strong>{{ page.title }} →</strong><span class="teaser">{{ page.description }}</span></NuxtLink>
+        </li>
+      </ul>
+      <a class="folder" :href="folderUrl('walkthroughs')" title="This folder in the GitHub repo">files on GitHub ↗</a>
     </section>
 
     <section v-if="landing" class="sources">
@@ -156,62 +141,18 @@ section { margin-bottom: 56px; }
 }
 .folder { align-self: flex-end; margin-top: auto; font: 400 11.5px var(--gb-mono); color: var(--gb-muted); text-decoration: underline 1px dotted; text-underline-offset: 3px; }
 
-/* Story tiles, Start here first. */
-.stories {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 56px;
-}
-.story {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 22px 24px;
-  border-radius: 20px;
-  color: inherit;
-  text-decoration: none;
-}
-.story .gb-label { color: var(--gb-accent); }
-.story strong { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
-.story .teaser { font-size: 15px; -webkit-line-clamp: 4; }
-.arrow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  align-self: flex-end;
-  width: 40px;
-  height: 40px;
-  margin-top: auto;
-  border-radius: 50%;
-  background: var(--gb-solid);
-  color: var(--gb-solid-ink);
-  font-size: 18px;
-}
-.story:hover strong { color: var(--gb-accent); }
-
 /* Words we use: the Terms every first Lesson leans on. */
 .words dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin: 0; }
 .words .gb-pane { display: flex; flex-direction: column; gap: 4px; padding: 16px 20px; border-radius: 16px; }
 .words dt { font-size: 16px; font-weight: 600; }
 .words dd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--gb-ink-2); }
 
-/* The other Walkthroughs, one full-width band. */
-.band {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 22px 24px;
-  border-radius: 20px;
-  background: var(--gb-solid);
-  color: var(--gb-solid-ink);
-}
-.band h2 { margin-bottom: 10px; font-size: 18px; }
-.band ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 24px; margin: 0; padding: 0; list-style: none; }
-.band a { display: flex; flex-direction: column; gap: 2px; color: inherit; text-decoration: none; }
-.band a:hover strong { text-decoration: underline; }
-.band strong { font-weight: 600; }
-.band .teaser, .band .folder { color: inherit; opacity: 0.7; }
+/* Plain, not a pane: Walkthroughs aren't ready to stand out (GLOSSARY.md). */
+.walkthroughs { display: flex; flex-direction: column; gap: 4px; }
+.walkthroughs ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px 24px; margin: 0 0 6px; padding: 0; list-style: none; }
+.walkthroughs a { display: flex; flex-direction: column; gap: 2px; color: inherit; text-decoration: none; }
+.walkthroughs a:hover strong { color: var(--gb-accent); }
+.walkthroughs strong { font-weight: 600; }
 
 /* Row-first, at most three across, so the cards read in the Subject map's order. */
 .cards {
@@ -247,19 +188,9 @@ section { margin-bottom: 56px; }
 .about { max-width: 720px; font-size: 16px; color: var(--gb-ink-2); }
 .about :deep(p) { margin: 0 0 0.8em; }
 
-/* A light slab glares on a dark page; Article.vue's Try it box does the same. */
-@media (prefers-color-scheme: dark) {
-  .band { border: 1px solid color-mix(in srgb, var(--gb-accent) 25%, transparent); background: var(--gb-tint); color: var(--gb-ink); }
-}
-@media (max-width: 860px) {
-  .stories { grid-template-columns: minmax(0, 1fr); }
-}
 @media (max-width: 640px) {
   .hero { padding: 28px 0 32px; }
   .lede { font-size: 17px; }
-  .story { position: relative; padding: 18px 64px 18px 20px; }
-  .arrow { position: absolute; top: 18px; right: 16px; width: 36px; height: 36px; margin: 0; }
-  .story strong { font-size: 20px; }
-  section, .stories { margin-bottom: 40px; }
+  section { margin-bottom: 40px; }
 }
 </style>

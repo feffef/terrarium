@@ -4,7 +4,6 @@ import { describe, expect, it } from 'vitest'
 import { splitFrontmatter } from '../../../../scripts/validate-content.ts'
 import { root } from '../../../../shared/expand.ts'
 import glassbox from '../../tenant.config.ts'
-import { glassboxStories } from '../../app/utils/subjects.ts'
 import { glassboxCites, glassboxJournalRoutes, glassboxPageProblems, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
@@ -282,10 +281,6 @@ describe('every Glass Box page matches the code at its revision', () => {
 
   it.each(pages.map(({ space, file }) => [`${space}/${file}`, space, file]))('%s', (_name, space, file) => {
     expect(glassboxPageProblems(file, read(space, file), realSite, repoGit, space)).toEqual([])
-  })
-
-  it('finds every landing story in the guide', () => {
-    expect(glassboxStories.map(({ path }) => glassboxSitePath('guide', `${path.slice(1)}.md`)).filter((path) => !realSite.pages.includes(path))).toEqual([])
   })
 
   it('reads the drafts Space\'s terms through its link to the guide\'s', () => {
