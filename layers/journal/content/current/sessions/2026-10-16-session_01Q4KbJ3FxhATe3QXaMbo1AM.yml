@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Q4KbJ3FxhATe3QXaMbo1AM
 startedAt: 2026-10-16T00:46:12Z
-endedAt: 2026-10-16T01:22:33Z
+endedAt: 2026-10-16T01:24:33Z
 kind: autonomous
 goal: Scheduled /audit-skills run — check whether the Platform's own Skills fire and deliver what they promise, keep the Skill Inventory in line with that evidence.
-status: in-review
-outcome: "PR #2106 open (in-review): 12 Skill Inventory entries updated, 2 new coverage-gap entries added, two new issues filed (#2104, #2105)."
-summary: "Fully agent-initiated, scheduled run (no human prompt): ran scripts/audit-skills.ts for the 7-day scorecard, then dispatched one read-only Sonnet subagent per Skill in behaviourChecks (12 total), all in parallel, each briefed with its SKILL.md path, changesInWindow, newest-10 usedIn sessions, prior observations, and (for modelInvoked Skills) notUsedWindow sessions. Verified every subagent's claims against GitHub/git myself before trusting them, per dispatch-subagents' \"a subagent's report is hearsay\" rule. Two findings cleared the escalation bar: issue #1819 (ready-for-human, needing a Human-only settings.json change) was closed by GitHub's own native auto-close on prose that deliberately avoided a literal closing keyword, bypassing the human-only gate — filed as #2104 after confirming merge-pr.ts's own CLOSING_KEYWORD_RE does not match the text, so this was GitHub itself, more permissive than the project assumes. digest's retention sweep broke a fragile e2e test for a third flagged occurrence of the same cross-Space side-effect pattern — filed as #2105, since the Inventory's own 2026-09-28 observation had already said a third occurrence deserves human attention. Checked closure completeness (step 3): orphan scan clean, both orphan candidates and the one humanPromptedClosures entry already settled. Tuned the Inventory (step 5): appended a dated, cited observation to each of the 12 behaviourChecks entries, added two coverage-gap entries (glassbox-update, retro) for Skills used this window with no prior entry, left every grade unchanged (no finding cleared the ≥2-session bar for a grade move). Ran pnpm gate:scoped (green: lint, typecheck, validate:content, unit tests, build, 138/138 e2e) and the code-review Skill (Standards + Spec subagents) before the first push, per ADR-0004."
+status: completed
+outcome: "PR #2106 merged: 12 Skill Inventory entries updated, 2 new coverage-gap entries added, two new issues filed (#2104, #2105)."
+summary: "Fully agent-initiated, scheduled run (no human prompt): ran scripts/audit-skills.ts for the 7-day scorecard, then dispatched one read-only Sonnet subagent per Skill in behaviourChecks (12 total), all in parallel, each briefed with its SKILL.md path, changesInWindow, newest-10 usedIn sessions, prior observations, and (for modelInvoked Skills) notUsedWindow sessions. Verified every subagent's claims against GitHub/git myself before trusting them, per dispatch-subagents' \"a subagent's report is hearsay\" rule. Two findings cleared the escalation bar: issue #1819 (ready-for-human, needing a Human-only settings.json change) was closed by GitHub's own native auto-close on prose that deliberately avoided a literal closing keyword, bypassing the human-only gate — filed as #2104 after confirming merge-pr.ts's own CLOSING_KEYWORD_RE does not match the text, so this was GitHub itself, more permissive than the project assumes. digest's retention sweep broke a fragile e2e test for a third flagged occurrence of the same cross-Space side-effect pattern — filed as #2105, since the Inventory's own 2026-09-28 observation had already said a third occurrence deserves human attention. Checked closure completeness (step 3): orphan scan clean, both orphan candidates and the one humanPromptedClosures entry already settled. Tuned the Inventory (step 5): appended a dated, cited observation to each of the 12 behaviourChecks entries, added two coverage-gap entries (glassbox-update, retro) for Skills used this window with no prior entry, left every grade unchanged (no finding cleared the ≥2-session bar for a grade move). Ran pnpm gate:scoped (green: lint, typecheck, validate:content, unit tests, build, 138/138 e2e) and the code-review Skill (Standards + Spec subagents) before the first push, per ADR-0004; both axes found real citation-rule misses in my own draft, fixed before pushing. Posted a merge verdict naming the head commit, ran check-conflicting-issues.ts (no hits), and self-merged via scripts/merge-pr.ts (PR #2106, merge commit 07e90bed)."
 prs:
   - "2106"
 docsRead:
@@ -170,7 +170,7 @@ skillsUsed:
   - name: code-review
     reason: Standards + Spec review before first push, per ADR-0004
   - name: close-session
-    reason: this invocation
+    reason: this invocation (PR-open, then final on merge)
   - name: log-session
     reason: (no reason given)
   - name: audit-skills
@@ -182,24 +182,27 @@ frictions:
   - description: Three of the fourteen appended Inventory observations initially broke audit-skills' own step-5 rule (only append when it cites a session no remaining entry already cites) — two cited no genuinely new session at all, one carried a redundant already-cited session id — caught only by the mandated code-review subagents, not self-caught.
     solution: Before appending each observation, grep the target file for existing session ids and confirm at least one id in the new note is absent from that list, instead of trusting my own summary judgment that this is new ground.
     severity: minor
-durationSec: 2182
+durationSec: 2301
 models:
-  claude-sonnet-5: 340
+  claude-sonnet-5: 362
 toolCounts:
   Read: 40
-  Bash: 76
+  Bash: 82
   Agent: 14
-  Write: 17
-  ToolSearch: 5
+  Write: 18
+  ToolSearch: 6
   mcp__github__pull_request_read: 6
   mcp__github__issue_read: 5
   mcp__github__search_issues: 5
   mcp__github__issue_write: 2
   Edit: 18
   ScheduleWakeup: 1
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/audit-skills.yml
