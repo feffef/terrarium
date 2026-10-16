@@ -4,7 +4,7 @@ cause: >-
 surface: safe
 status: fixed
 fixedOn: "2026-10-14"
-ref: "issue #1917 closed 2026-10-14T02:23Z by PR #1918"
+ref: "issue #1917 closed 2026-10-14T02:23Z by PR #1918; audit-skills output redirect in frictions-to-fixes §4, 2026-10-16"
 occurrences:
   - session: session_01GEqB5frKCNtJYAr9KaRxDo
     date: "2026-10-10"
@@ -23,4 +23,7 @@ occurrences:
     severity: minor
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
     date: "2026-10-14"
+    severity: minor
+  - session: session_01LpcCJWRYb5grgQe3wBGEwb
+    date: "2026-10-15"
     severity: minor

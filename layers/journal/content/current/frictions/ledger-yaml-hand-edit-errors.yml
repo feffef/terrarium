@@ -1,0 +1,12 @@
+name: ledger-yaml-hand-edit-errors
+cause: >-
+  Ledger and prune-trials YAML are patched by string replacement; unquoted dates, replaced refs or a match inside a comment broke the file (gate or repair needed). The status enum also lacks a value for an accepted cause.
+surface: safe
+status: open
+occurrences:
+  - session: session_0147UencKKZS3WLHvsbgywp7
+    date: "2026-10-15"
+    severity: nit
+  - session: session_01LpcCJWRYb5grgQe3wBGEwb
+    date: "2026-10-15"
+    severity: minor

@@ -5,12 +5,6 @@ surface: safe
 status: tracked
 ref: "issue #1786 (reopened 2026-10-12; PR #1792 refuses (not read) only for Read-tool docs); closed #1482, #1542, #1723; PRs #1485, #1725"
 occurrences:
-  - session: session_014aYTnetbYbfGH2MrSUDj9T
-    date: "2026-10-01"
-    severity: moderate
-  - session: session_01BNbm6z4gohjBmVoeadKibZ
-    date: "2026-10-01"
-    severity: moderate
   - session: session_01BXoQpiEuaGZJVRQB7XpsFi
     date: "2026-10-02"
     severity: moderate

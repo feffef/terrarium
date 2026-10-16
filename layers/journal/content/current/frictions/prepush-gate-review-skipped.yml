@@ -1,0 +1,12 @@
+name: prepush-gate-review-skipped
+cause: >-
+  ADR-0004's before-first-push gate:scoped plus code-review is skipped or the gate is not rerun after late edits.
+surface: guard-or-hook
+status: open
+occurrences:
+  - session: session_011t1xXHxqwrfAjt83s9oTEP
+    date: "2026-10-15"
+    severity: minor
+  - session: session_01NqN7omu3o4kxoGeQzzSXhK
+    date: "2026-10-15"
+    severity: minor
