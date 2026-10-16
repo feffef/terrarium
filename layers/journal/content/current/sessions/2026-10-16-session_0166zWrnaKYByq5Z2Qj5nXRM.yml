@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_0166zWrnaKYByq5Z2Qj5nXRM
 startedAt: 2026-10-16T12:53:14Z
-endedAt: 2026-10-16T13:35:36Z
+endedAt: 2026-10-16T14:34:46Z
 kind: interactive
 goal: Split frictions-to-fixes into briefs and add a design step
-status: in-review
-outcome: "Briefs extracted (PR #2152, merged); design agent step added (PR #2154, waits for a human merge)"
-summary: "Human-instructed: extract frictions-to-fixes' subagent instructions into briefs (PR #2152, survey-brief.md and impl-brief.md, merged). The user then asked why the survey needed difficulty and surface fields; I first agreed the survey could not know the files, then at the user's request three subagents read the transcripts of the last three runs (Oct 14-16) and showed the survey actually designs every fix in its one-line slot, the sessions' own solution proposals are dropped by --compact, and the main session dispatches within a minute. The user chose a new flow: survey screens only, the main session picks up to 10, one design agent reads the full logs and returns design and risk, the main session decides dispatch vs issue; drop the 2-hard cap; every regression is an issue. Built as PR #2154 with design-brief.md, and repointed guest-build, the overview diagram and the Skill Inventory role. Agent-initiated: leaving #2154 for a human merge, as it changes an unattended Skill's behaviour (ADR-0004)."
+status: completed
+outcome: "Briefs extracted (PR #2152) and frictions-to-fixes redesigned with a design step and its own ledger PRs (PR #2154); both merged"
+summary: "Human-instructed throughout. First, extract frictions-to-fixes' subagent instructions into survey-brief.md and impl-brief.md (PR #2152, merged). Then, at the user's request, three subagents read the transcripts of the Oct 14-16 runs: the survey was designing every fix in a one-line slot, the sessions' solution proposals were dropped by --compact, and the main session dispatched within a minute. The user then directed a redesign, built in PR #2154 over many small rounds: a survey that screens and returns all its non-log findings; one design agent that reads the full logs and returns one precise design and a risk assessment; caps of three regression issues and three too-hard issues (human-merge ones uncapped); a send-back option in review; frictions about the Skill and its briefs logged by every agent; and ledger handling moved to its own PR every run, a closing status PR, and escalated PRs carrying their own fixes entry, with the survey correcting that date only for tracked PR refs. A full two-axis review of #2154 found ordering bugs (close-session cue, send-back wording, step-8 zero case) that I fixed. Agent-initiated: leaving #2154 for a human merge (unattended Skill behaviour, ADR-0004); the owner merged it."
 prs:
   - "2152"
   - "2154"
@@ -65,14 +65,14 @@ docsRead:
   - path: docs/diagrams/interactive-map/terrarium-overview.md
     reason: repointed its frictions-to-fixes steps and table
     useful: partly
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (read before editing)
   - path: layers/journal/content/current/sessions/2026-10-15-session_01GLWVkt3R3EnHJj5XpQEJQt.yml
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-10-16-session_01RnZJ7VrgWpgzfJUCEdif77.yml
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-10-14-session_01ERZa4fUGxpF81MeLhZMkSB.yml
     reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/design-brief.md
-    reason: (read before editing)
   - path: docs/diagrams/interactive-map/README.md
     reason: (no reason given)
 skillsUsed:
@@ -92,22 +92,29 @@ frictions:
   - description: Agreed with the user that the survey cannot know which files a fix touches without checking; three run transcripts showed it routinely did
     solution: Verify a claim about how a Skill runs against a recent run's transcript before agreeing to redesign around it
     severity: minor
-durationSec: 2542
+  - description: A rejected Bash call had actually run and committed; the retry duplicated a sentence and needed a cleanup commit
+    solution: After a rejected or interrupted tool call that writes, check git log and git status before re-running it
+    severity: minor
+durationSec: 6093
 models:
-  claude-opus-5-5: 150
+  claude-opus-5-5: 358
 toolCounts:
-  Bash: 44
+  Bash: 96
   Read: 2
   AskUserQuestion: 2
   Write: 4
   Skill: 5
-  Agent: 7
-  ToolSearch: 1
+  Agent: 9
+  ToolSearch: 2
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 2
-  mcp__github__add_issue_comment: 2
+  ReadNotifications: 35
+  mcp__github__add_issue_comment: 13
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__claude-code-remote__send_later: 2
+  mcp__github__update_pull_request: 2
+  Edit: 4
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/survey-brief.md
   - .agents/skills/frictions-to-fixes/impl-brief.md
@@ -140,10 +147,9 @@ rulesFollowedUp:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0004-human-merge.md
 docsReadBySubagents:
-  - .agents/skills/audit-docs/SKILL.md
-  - .agents/skills/frictions-to-fixes/survey-brief.md
-  - .agents/skills/frictions-to-fixes/impl-brief.md
   - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/audit-docs/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Made me run gate:scoped and code-review before the first push; summary was enough
@@ -220,6 +226,10 @@ subagents:
     task: Standards review v2
   - type: general-purpose
     task: Spec review v2
+  - type: general-purpose
+    task: Standards review PR 2154
+  - type: general-purpose
+    task: Spec review PR 2154
 gitBranch: ccr-d1590e98-4fd9rn
 entrypoint: remote_mobile
 cliVersion: 2.1.301
