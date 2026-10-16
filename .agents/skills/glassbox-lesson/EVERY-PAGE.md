@@ -28,11 +28,11 @@ clicking, each within its cap in `lengths` in `layers/glassbox/page-checks.ts`.
   one range per run (Excerpt in the glossary). Don't Excerpt a Markdown table
   wider than about 80 characters: Excerpt the prose next to it, or link the
   table.
-- **Don't paraphrase an ADR.** In Terrarium and What to watch for don't retell
-  an ADR's Scope or Why either: show the files and link the ADR.
+- **Don't paraphrase an ADR** in In Terrarium or What to watch for: show the
+  files and link the ADR.
 - **Link only pages that exist**, and promise none.
 - **Mechanism, not motive.** *In Terrarium* says what the code does, not why;
-  a design "because" belongs to the ADR link.
+  a design "because" belongs in *Why it's built this way*.
 - **Test the lede.** Check its summary claim against the edge cases the page
   itself mentions.
 - **Verify each official-docs URL** by fetching it and checking it says what
@@ -44,7 +44,7 @@ clicking, each within its cap in `lengths` in `layers/glassbox/page-checks.ts`.
   links go to v3.zod.dev.
 - **A second tool gets its own link** at its first mention, even though *The
   concept* ends on one Full reference.
-- **Don't repeat a sibling page or the ADR the page links.** Check a Lesson's
+- **Don't repeat a sibling page.** Check a Lesson's
   *What to watch for* against the other Lessons in its Subject and the ADRs it
   cites; link a point one of them makes instead.
 - **In Terrarium gives no reasons:** no "so …" or "for …" clause saying why.

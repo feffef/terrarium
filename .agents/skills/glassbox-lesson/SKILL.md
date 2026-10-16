@@ -20,6 +20,11 @@ every page shares are in [`EVERY-PAGE.md`](EVERY-PAGE.md).
 3. **Write** it to the contract, in plain words. *The concept* is true of any
    project; *In Terrarium* is what this repo does. Done when every claim about
    Terrarium is checked against its file at `revision`.
+   For *Why it's built this way*, find the real reasons: the ADRs, the code,
+   and the PRs, commits and issues that made or changed the design. Explain
+   each reason so a newcomer follows it without opening the ADR: the problem it
+   solved, what was rejected, and what it costs. Tell an incident in plain
+   words, without its id. Done when each reason traces to a source you read.
 4. **Join the other pages.** Add the Lesson as a chip to the `::stop-links` of
    every Walkthrough stop whose mechanism it explains, and to the Where next of
    every existing Lesson it relates to, above any Journal page. Both are
