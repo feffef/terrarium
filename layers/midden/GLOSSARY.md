@@ -86,8 +86,8 @@ The name completes an institution's set: **trench** (excavation) → **gallery**
 (exhibition, out of scope, #522) → **stores** (storage). A find is on display in
 the trench, or held in the stores.
 
-Not to be confused with material that fails the inclusion bar outright, which is
-never catalogued at all — that is spoil, and spoil is by definition unrecorded.
+Not to be confused with spoil: material that fails the inclusion bar outright is
+never catalogued at all.
 
 ### The inclusion bar (two-gate test)
 The classifier deciding what may become an Artifact (#525): **Gate A**

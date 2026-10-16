@@ -1,8 +1,7 @@
 # Tenant layers: Nuxt-layer authoring conventions
 
 A Tenant is a Nuxt layer under `layers/<tenant>/`; Nuxt auto-extends every
-`layers/*`, so there is no `extends` list (ADR-0018). It extends the main app
-(GLOSSARY.md). The short layer instructions (auto-imports, aliases, adding a
+`layers/*`, so there is no `extends` list (ADR-0018). The short layer instructions (auto-imports, aliases, adding a
 Tenant, what leaks) live in `.claude/rules/tenant-layers.md`; this doc holds
 the longer ones.
 

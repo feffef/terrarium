@@ -23,7 +23,7 @@ or leaving the Markdown file.** The lens for every decision below is
 
 A layer without MDC needs a `components/content/` dir and a new SFC
 (mechanics: the research doc's §13). Journal has none (it keeps its components
-in a *prefixed* `components/journal/` dir); atlas and midden have one.
+in a *prefixed* `components/journal/` dir); atlas, glassbox and midden have one.
 
 ## The validation caveat (important in this repo)
 

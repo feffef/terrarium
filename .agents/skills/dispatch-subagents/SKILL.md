@@ -80,7 +80,7 @@ every line that applies.
   worktree (`pr-workflow.md`, "Review before the first push"), resume the
   agent for every fix, later ones included, and review again; it pushes once a
   review is clean, and you open and land the PR (`pr-workflow.md`).
-- Impl agents do not run `close-session`/`log-session` (guard-enforced), and
+- Impl agents do not run `close-session`/`log-session` (`log-session.ts --author` refuses from a linked worktree), and
   cannot spawn subagents here (the cloud environment sets
   `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`): run `/code-review` and any
   nested dispatch yourself.
