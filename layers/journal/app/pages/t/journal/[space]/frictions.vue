@@ -2,36 +2,54 @@
 // The Friction Ledger (GLOSSARY.md), rendered. A static segment, so it outranks
 // the sibling `[...slug].vue`; reads only this Space's collections via useSpace.
 import { routingMap } from '#routing'
+import { resolveSpaceRoute } from '#shared/routing'
+import type { SessionFixes } from '../../../../utils/ledger'
 
 definePageMeta({ name: 'journal-frictions' })
 const PAGE_TITLE = 'Friction Ledger'
 
 const route = useRoute()
 const { space, collections } = useSpace('journal')
+// Only two Spaces: a session not in this one was moved to the other.
+const otherSpace = Object.keys(routingMap.journal).find((s) => s !== space) ?? space
 
 const { data } = await useAsyncData(route.path, async () => {
   const clusters = await queryCollection(collections.frictions).all()
-  const sessions = await queryCollection(collections.sessions).select('session', 'goal').all()
   // Only the sessions a cluster cites travel in the payload (ADR-0028).
-  const cited = new Set(clusters.flatMap((c) => c.occurrences.map((o) => o.session)))
-  return { clusters, goals: Object.fromEntries(sessions.filter((s) => cited.has(s.session)).map((s) => [s.session, s.goal])) }
+  const cited = new Map<string, Set<string>>()
+  for (const o of clusters.flatMap((c) => c.occurrences)) cited.set(o.session, (cited.get(o.session) ?? new Set()).add(o.severity))
+  const goals: Record<string, string> = {}
+  const fixes: SessionFixes = {}
+  const own: string[] = []
+  const read = async (sessions: typeof collections.sessions, isOwn: boolean) => {
+    for (const s of await queryCollection(sessions).select('session', 'goal', 'frictions').all()) {
+      const severities = cited.get(s.session)
+      if (!severities || s.session in goals) continue
+      goals[s.session] = s.goal
+      fixes[s.session] = s.frictions.filter((f) => severities.has(f.severity)).map(({ severity, solution }) => ({ severity, solution }))
+      if (isOwn) own.push(s.session)
+    }
+  }
+  await read(collections.sessions, true)
+  // Archiving moved older sessions to the other Space; read it for what is still missing.
+  const other = cited.size > own.length ? resolveSpaceRoute('journal', otherSpace, undefined) : null
+  if (other && otherSpace !== space) await read(other.collections.sessions, false)
+  return { clusters, goals, fixes, own }
 })
-// Only two Spaces: a session not in this one was moved to the other.
-const otherSpace = Object.keys(routingMap.journal).find((s) => s !== space) ?? space
 const panels = computed(() =>
-  ledgerPanels(data.value?.clusters ?? [], space, new Set(Object.keys(data.value?.goals ?? {})), otherSpace, data.value?.goals),
+  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.own), otherSpace, data.value?.goals, data.value?.fixes),
 )
 const sections = computed(() => [
   {
     id: 'severe-h',
     title: 'Most severe',
-    intro: 'Ranked by the worst severity a cluster has reached, then by how often it hit that, then by its total.',
+    intro: 'The two highest severities reached, ranked by worst severity, then how often it hit that, then total.',
     entries: panels.value.severe,
   },
   {
     id: 'frequent-h',
     title: 'Most frequent',
-    intro: 'Every other cluster, ranked by how many sessions hit it.',
+    intro: 'The other clusters, ranked by how many sessions hit them.',
     entries: panels.value.frequent,
   },
 ])
@@ -49,8 +67,9 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         What went wrong, grouped by root cause. Each cluster gathers the
         <strong>frictions</strong> agents logged in their session logs; the
         <code>frictions-to-fixes</code> Skill keeps it current. Fixed clusters stay
-        listed: what went wrong matters as much as what is still open. Expand one
-        for its detailed cause and the sessions that hit it.
+        listed: what went wrong matters as much as what is still open. A cluster
+        sits in the list where it ranks higher. Click a cluster (▸) to expand its
+        cause, sessions and proposed solutions.
       </p>
 
       <template v-for="sec in sections" :key="sec.id">
@@ -73,15 +92,25 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
               <p class="cause">{{ e.cause }}</p>
               <p v-if="e.ref" class="ref-text">{{ e.ref }}</p>
               <h3 class="occ-h">Occurrences</h3>
-              <p class="occ-intro">One per session that hit this cause, newest first. Each date links to that session's log.</p>
+              <p class="occ-intro">Newest first: date (links to the session log) → the session's goal.</p>
               <ul class="occ">
                 <li v-for="(o, i) in e.occurrences" :key="i">
                   <span class="dot" :class="o.severity" :title="o.severity" />
                   <NuxtLink :to="o.to" :aria-label="`Session log, ${o.date}, ${o.severity}`">{{ o.date }} →</NuxtLink>
                   <span v-if="o.goal" class="occ-goal">{{ o.goal }}</span>
+                  <span v-else class="occ-goal">goal not available</span>
                   <span class="occ-sev">{{ o.severity }}</span>
                 </li>
               </ul>
+              <template v-if="e.solutions.length">
+                <h3 class="occ-h">Proposed solutions</h3>
+                <p class="occ-intro">As proposed by the agents that hit it.</p>
+                <ul class="sol">
+                  <li v-for="s in e.solutions" :key="s.text">
+                    {{ s.text }} <NuxtLink :to="s.to" :aria-label="`Session log, ${s.date}`">{{ s.date }}</NuxtLink>
+                  </li>
+                </ul>
+              </template>
             </details>
           </li>
         </ul>
@@ -97,7 +126,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 .jd-prose { max-width: 80ch; }
 .n { color: var(--jd-faint); font-weight: 400; margin-left: 0.4rem; }
 .intro { color: var(--jd-muted); font-size: 0.88rem; }
-.ledger { list-style: none; padding: 0; margin: 0; }
+.ledger { list-style: none; padding: 0 0.6rem; margin: 0; max-height: 28rem; overflow-y: auto; overscroll-behavior: contain; border: 1px solid var(--jd-line); border-radius: 6px; }
 .ledger > li { margin: 0; border-top: 1px solid var(--jd-line); }
 .ledger > li:first-child { border-top: 0; }
 summary {
@@ -121,6 +150,8 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
 }
 .count small { display: block; font-size: 0.6rem; font-weight: 400; letter-spacing: 0.04em; color: var(--jd-muted); }
 .summary { overflow-wrap: anywhere; }
+.summary::before { content: '▸'; display: inline-block; width: 1rem; color: var(--jd-muted); }
+details[open] .summary::before { content: '▾'; }
 .pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .pill {
   font-family: var(--jd-mono);
@@ -165,11 +196,13 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
   font-size: 0.75rem;
 }
 .occ li { margin: 0; }
+.sol { margin: 0 0 0.7rem 3.3rem; padding-left: 1.1rem; font-size: 0.78rem; color: var(--jd-muted); overflow-wrap: anywhere; }
+.jd-prose .sol a { color: var(--jd-faint); font-family: var(--jd-mono); font-size: 0.7rem; }
 .jd-prose .occ a { color: var(--jd-ink); text-decoration: none; }
 .jd-prose .occ a:hover { color: var(--jd-accent); text-decoration: underline; }
 .occ-goal { margin-left: 0.5rem; font-family: var(--jd-serif); font-size: 0.8rem; color: var(--jd-muted); }
 .occ-sev { color: var(--jd-faint); margin-left: 0.4rem; }
 @media (max-width: 560px) {
-  .cause, .ref-text, .occ, .jd-prose .occ-h, .occ-intro { margin-left: 0; }
+  .cause, .ref-text, .occ, .sol, .jd-prose .occ-h, .occ-intro { margin-left: 0; }
 }
 </style>
