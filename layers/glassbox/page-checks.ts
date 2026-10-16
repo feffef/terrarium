@@ -276,7 +276,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route), site.cites))
   if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, prose, space))
   if (glassboxSubjectOf(route) || glassboxWalkthroughOf(route)) problems.push(...nextProblems(prose))
-  // Drafts sit below the guide's bar (GLOSSARY.md, Two Spaces); a promoted page meets it.
+  // Drafts are set aside (GLOSSARY.md, Two Spaces); a page moved to the guide meets its caps.
   if (space === 'guide') problems.push(...lengthProblems(route, frontmatter))
 
   const { revision, revisionDate } = frontmatter

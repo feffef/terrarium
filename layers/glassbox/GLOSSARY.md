@@ -29,18 +29,19 @@ Terrarium applies them without reading the source.
   Journal's job. Glass Box links to Journal pages and ADRs as evidence and never
   repeats them. Each page is pinned to one `main` commit (`revision`, with its
   date in `revisionDate`), so it reads like a dated edition.
-- **A reference, not a course.** No global reading order: newcomers start at the
-  "From file to browser" Walkthrough, experts use the Subject directory.
-- **Two Spaces.** `guide`, at `/t/glassbox/guide`, holds only polished pages
-  central to Terrarium; `/t/glassbox` redirects there. `drafts` holds the pages
-  that failed the guide's bar on their first attempt; each may be improved and
+- **A reference, not a course.** No global reading order: readers use the
+  Subject directory. Walkthroughs don't work well yet, so nothing leads with
+  them.
+- **Two Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
+  Terrarium that we focus on first; it isn't finished. `/t/glassbox` redirects
+  there. `drafts` holds the rest, set aside for now; each may be improved and
   moved to the guide. A guide page never links to a draft; a draft may link to
   the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
   orders Lessons inside a folder; Subject order and names come from
   `glassboxSubjects` in `app/utils/subjects.ts`.
 - **Shown in progress.** The Platform homepage gives Glass Box its own band
-  under the hero, guide and drafts both, labelled the newest experiment and
-  work in progress; when it's finished, the label changes and the band stays.
+  under the hero, guide (the focus) and drafts both, with a guide Lesson of
+  the day, labelled the newest experiment and work in progress; when it's finished, the label changes and the band stays.
   Its `pages` are in the Catalog, and reach the Commons Timeline only when they
   teach something new (`publishedAt`: EVERY-PAGE.md's Pin).
 
