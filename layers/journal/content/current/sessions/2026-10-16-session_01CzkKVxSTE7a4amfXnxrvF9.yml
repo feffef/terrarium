@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CzkKVxSTE7a4amfXnxrvF9
 startedAt: 2026-10-16T17:24:01Z
-endedAt: 2026-10-16T18:27:33Z
+endedAt: 2026-10-16T18:32:32Z
 kind: interactive
 goal: Make each ADR summary say when its full ADR is worth reading
 status: in-review
 outcome: "PR 2165 open, held for a human merge: 30 summary rules name when the full ADR pays off; ADR-0020 and ADR-0027 now path-scoped"
-summary: "The owner asked me to look at issue #2146 (binding-docs-skipped regression) and read the full logs of the last 20 sessions in that Friction cluster. I sorted the 20 occurrences: skipped full ADR reads (mostly \"summary was enough\"), no ADR grep before recommending (mostly in wayfinder or grilling sessions), skipped session-start glossary reads, and one misfiled git near-miss. At the owner's request, an Explore agent then surveyed every rated ADR read since ratings began. It found the full read pays off in a few task-specific cases (merge decisions, triage, the Skill audit, trial verdicts, editing rules or ADRs, design work), not by file path. I offered three options. My option 3 (a prune trial) was wrong: ADR-0027 forbids trials on summary rules, and the validator enforces the pointer. I corrected that after reading ADR-0027. The owner chose per-ADR \"when\" clauses. I read all 30 ADRs and summary rules and drafted the clauses, the owner asked for shorter, more open ones and a better 0001 clause, and approved the result. The owner asked to start the change but not merge it. PR 2165 rewrites the 30 pointers to \"Read the full ADR (~N tokens) before you change this decision, or when <case>:\" and updates validate-adr-rules.ts and its test. No ADR changes: ADR-0029 already says a summary says when to read in full. Human-instructed: the analysis, both surveys, the clause approach, the clause wording and the PR. Agent-initiated: the shared prefix, keeping the token estimate in a shorter form (the owner asked, I recommended), and a regex cleanup from code-review. A second Explore agent, also owner-requested, checked whether the six always-loaded rules could become path-scoped. Only 0020 and 0027 would save context; each would need its action line moved into CLAUDE.md. I recommended a separate PR; the owner instead asked to split 0020 (with the guest Skills) and 0027 (with docs/). I added both to PR 2165, since this session's branch is its only allowed one, and also drafted CLAUDE.md action lines; the owner stopped me and said not to edit CLAUDE.md, so I reverted them and pushed only the two rules' paths. The owner then had me add every Skill folder to 0027's paths; I kept the four named Skill folders because skill-rules-hint.ts only matches a rule that names the running Skill's folder. The PR waits for a human merge (.claude/rules is Human-only), and CI's gate was green on the first commit."
+summary: "The owner asked me to look at issue #2146 (binding-docs-skipped regression) and read the full logs of the last 20 sessions in that Friction cluster. I sorted the 20 occurrences: skipped full ADR reads (mostly \"summary was enough\"), no ADR grep before recommending (mostly in wayfinder or grilling sessions), skipped session-start glossary reads, and one misfiled git near-miss. At the owner's request, an Explore agent then surveyed every rated ADR read since ratings began. It found the full read pays off in a few task-specific cases (merge decisions, triage, the Skill audit, trial verdicts, editing rules or ADRs, design work), not by file path. I offered three options. My option 3 (a prune trial) was wrong: ADR-0027 forbids trials on summary rules, and the validator enforces the pointer. I corrected that after reading ADR-0027. The owner chose per-ADR \"when\" clauses. I read all 30 ADRs and summary rules and drafted the clauses, the owner asked for shorter, more open ones and a better 0001 clause, and approved the result. The owner asked to start the change but not merge it. PR 2165 rewrites the 30 pointers to \"Read the full ADR (~N tokens) before you change this decision, or when <case>:\" and updates validate-adr-rules.ts and its test. No ADR changes: ADR-0029 already says a summary says when to read in full. Human-instructed: the analysis, both surveys, the clause approach, the clause wording and the PR. Agent-initiated: the shared prefix, keeping the token estimate in a shorter form (the owner asked, I recommended), and a regex cleanup from code-review. A second Explore agent, also owner-requested, checked whether the six always-loaded rules could become path-scoped. Only 0020 and 0027 would save context; each would need its action line moved into CLAUDE.md. I recommended a separate PR; the owner instead asked to split 0020 (with the guest Skills) and 0027 (with docs/). I added both to PR 2165, since this session's branch is its only allowed one, and also drafted CLAUDE.md action lines; the owner stopped me and said not to edit CLAUDE.md, so I reverted them and pushed only the two rules' paths. The owner then had me add every Skill folder to 0027's paths; I kept the four named Skill folders because skill-rules-hint.ts only matches a rule that names the running Skill's folder. Last, at the owner's request, every pointer now names its ADR's path inline (\"Read `docs/adr/NNNN-...md` (~N tokens) before you change this decision, or when ...\") with no \"full ADR\" wording, and the gate checks the path names the rule's own ADR. The PR waits for a human merge (.claude/rules is Human-only), and CI's gate was green on the first commit."
 prs:
   - "2165"
 docsRead:
@@ -202,26 +202,26 @@ frictions:
   - description: Added two CLAUDE.md lines for the 0020/0027 split that the owner had not asked for; the owner interrupted and I reverted them
     solution: When a split implies a CLAUDE.md change, ask before editing CLAUDE.md, since it loads in every session
     severity: minor
-durationSec: 3813
+durationSec: 4111
 models:
-  claude-opus-5-5: 280
+  claude-opus-5-5: 309
 toolCounts:
-  Bash: 42
+  Bash: 46
   ToolSearch: 4
   mcp__github__issue_read: 2
-  Read: 85
+  Read: 86
   Agent: 4
   Grep: 4
-  Edit: 14
+  Edit: 19
   Skill: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 3
+  mcp__github__add_issue_comment: 4
   Write: 1
-  ReadNotifications: 7
+  ReadNotifications: 10
   mcp__github__pull_request_read: 1
   mcp__claude-code-remote__send_later: 1
-  mcp__github__update_pull_request: 2
+  mcp__github__update_pull_request: 3
 filesEdited:
   - scripts/validate-adr-rules.ts
   - tests/unit/validate-adr-rules.spec.ts
