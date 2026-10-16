@@ -1,18 +1,19 @@
 schemaVersion: 1
 session: session_01DNheR1Cpt9b6vFsmGdzvxq
 startedAt: 2026-10-16T07:14:04Z
-endedAt: 2026-10-16T09:37:20Z
+endedAt: 2026-10-16T09:49:36Z
 kind: delegated
 goal: Explain the occurrence list on the Friction Ledger
 status: completed
-outcome: Ledger heading, archived goals, solutions, scrolling and rankings merged (2125 to 2129)
-summary: "Six human prompts. (1) Add a heading explaining the Friction Ledger's occurrence list (PR 2125). (2) The text after each date arrow was unexplained: after one clarifying question the user asked to show a hint for empty goals (archived sessions), read archived sessions too, and list proposed solutions as a bullet section (PR 2126). (3) Cap the lists at about 20 lines with inner scrolling, add an expand cue, and rank every cluster in both lists, placing it where it ranks higher, with \"most severe\" covering the two highest severities that exist (also PR 2126). (4) I had put the scroll on the cluster lists; the user meant each cluster's sessions and solutions lists, fixed in PR 2127 (my misreading of \"the lists\"; I had flagged the assumption in my reply). (5) Record the merged fix PRs per Friction Ledger cluster as structured data, show them as a third list and in the fixed pill, backfill with a subagent, and extend frictions-to-fixes (PR 2128). I used three parallel read-only subagents (about 18 clusters each) instead of one, checked every PR number and date against merge commits, and dropped three entries that did not fit; I added a per-fix date and a glossary phrase unasked and said so. (6) Reword the list so a merged PR is shown as an attempt to fix, not proof it worked (PR 2129). Everything else (gate, review, pushes, PRs, merges) was agent-initiated follow-through. Two judgement calls: a solution is shown only when the session has exactly one friction of the occurrence's severity, because clusters store no link to the exact friction; and I read \"higher ranking\" as the smaller position number, ties to most severe. Both are stated in the PR. The user's first-message example heading said \"proposed solutions\", which the list did not hold, so I left it out then. Code review was done inline, not with two sub-agents."
+outcome: Ledger heading, archived goals, solutions, scrolling and rankings merged (2125 to 2131)
+summary: "Seven human prompts. (1) Add a heading explaining the Friction Ledger's occurrence list (PR 2125). (2) The text after each date arrow was unexplained: after one clarifying question the user asked to show a hint for empty goals (archived sessions), read archived sessions too, and list proposed solutions as a bullet section (PR 2126). (3) Cap the lists at about 20 lines with inner scrolling, add an expand cue, and rank every cluster in both lists, placing it where it ranks higher, with \"most severe\" covering the two highest severities that exist (also PR 2126). (4) I had put the scroll on the cluster lists; the user meant each cluster's sessions and solutions lists, fixed in PR 2127 (my misreading of \"the lists\"; I had flagged the assumption in my reply). (5) Record the merged fix PRs per Friction Ledger cluster as structured data, show them as a third list and in the fixed pill, backfill with a subagent, and extend frictions-to-fixes (PR 2128). I used three parallel read-only subagents (about 18 clusters each) instead of one, checked every PR number and date against merge commits, and dropped three entries that did not fit; I added a per-fix date and a glossary phrase unasked and said so. (6) Reword the list so a merged PR is shown as an attempt to fix, not proof it worked (PR 2129). (7) The stop-hook-nag cluster showed PR pills but no fixed pill: I explained it is open on purpose and asked what to show; the user chose pills only from structured data, so the pills parsed from the free-text ref were removed (PR 2131). Everything else (gate, review, pushes, PRs, merges) was agent-initiated follow-through. Two judgement calls: a solution is shown only when the session has exactly one friction of the occurrence's severity, because clusters store no link to the exact friction; and I read \"higher ranking\" as the smaller position number, ties to most severe. Both are stated in the PR. The user's first-message example heading said \"proposed solutions\", which the list did not hold, so I left it out then. Code review was done inline, not with two sub-agents."
 prs:
   - "2125"
   - "2126"
   - "2127"
   - "2128"
   - "2129"
+  - "2131"
 docsRead:
   - path: GLOSSARY.md
     reason: Friction Ledger term
@@ -63,24 +64,24 @@ frictions:
   - description: The Stop hook asked to push a half-built branch; I committed locally and held the push for the gate and review, as ADR-0004 says.
     solution: Let the hook skip a branch whose gate has not run, or say so in its message.
     severity: nit
-durationSec: 8596
+durationSec: 9332
 models:
-  claude-sonnet-5-5: 283
+  claude-sonnet-5-5: 311
 toolCounts:
   Read: 12
   Grep: 6
   Glob: 2
   Edit: 13
-  Bash: 75
+  Bash: 84
   Skill: 4
   ToolSearch: 1
-  mcp__github__create_pull_request: 5
-  mcp__claude-code-remote__subscribe_pr_activity: 5
-  ReadNotifications: 15
-  mcp__github__pull_request_read: 10
-  mcp__github__add_issue_comment: 5
-  mcp__claude-code-remote__unsubscribe_pr_activity: 5
-  AskUserQuestion: 1
+  mcp__github__create_pull_request: 6
+  mcp__claude-code-remote__subscribe_pr_activity: 6
+  ReadNotifications: 18
+  mcp__github__pull_request_read: 11
+  mcp__github__add_issue_comment: 6
+  mcp__claude-code-remote__unsubscribe_pr_activity: 6
+  AskUserQuestion: 2
   mcp__github__update_pull_request: 1
   Agent: 3
   Write: 3
