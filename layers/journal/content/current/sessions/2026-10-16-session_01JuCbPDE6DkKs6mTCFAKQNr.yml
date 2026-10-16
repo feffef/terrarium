@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01JuCbPDE6DkKs6mTCFAKQNr
 startedAt: 2026-10-16T22:05:19Z
-endedAt: 2026-10-16T22:22:46Z
+endedAt: 2026-10-16T22:41:36Z
 kind: interactive
 goal: Tone down the Glass Box landing's term section
-status: in-review
+status: completed
 outcome: The "Words we use" cards became a compact chip strip above Primary sources
-summary: 'The owner said the "Words we use" section on the Glass Box landing was too prominent and odd. Following their preference, I asked questions before building. They confirmed it was too prominent, in the wrong place and showed the wrong terms, noted that Lessons already highlight terms inline with :term, and chose a compact strip. From two follow-up options they chose to put it above Primary sources and to show the terms guide Lessons expand most (I counted them). Human-instructed: the change, the placement and the term set. Agent-initiated: the heading wording, capitalizing Manifest in its term files, and the review fixes (aria-live, useId, Term naming, a heading that also holds on drafts). The Spec review rightly flagged that "use most" was untrue on drafts. Verified with screenshots and a Playwright click; scoped gate green.'
+summary: 'The owner said the "Words we use" section on the Glass Box landing was too prominent and odd. Following their preference, I asked questions before building. They confirmed it was too prominent, in the wrong place and showed the wrong terms, noted that Lessons already highlight terms inline with :term, and chose a compact strip. From two follow-up options they chose to put it above Primary sources and to show the terms guide Lessons expand most (I counted them). Human-instructed: the change, the placement and the term set. Agent-initiated: the heading wording, capitalizing Manifest in its term files, and the review fixes (aria-live, useId, Term naming, a heading that also holds on drafts). The Spec review rightly flagged that "use most" was untrue on drafts. Verified with screenshots and a Playwright click; scoped gate green. While the PR was open, main moved the landing to Subjects-first and put the old cards under the hero; the owner flagged the conflict, I merged main keeping its layout with the strip above Primary sources, CI went green, and the owner said to merge, so I merged it with merge-pr.ts.'
 prs:
   - "2178"
 docsRead:
@@ -57,19 +57,28 @@ frictions:
   - description: Recommended placement options without first grepping docs/adr for the Glass Box landing, as CLAUDE.md asks before recommending a change.
     solution: Run grep -l glassbox docs/adr/* before offering design options.
     severity: nit
-durationSec: 1047
+  - description: Main restructured the same landing while the PR was open, causing a merge conflict the owner had to point out.
+    solution: Fetch origin main and check for recent edits to the files right before pushing or asking to merge.
+    severity: minor
+durationSec: 2177
 models:
-  claude-opus-5-5: 94
+  claude-opus-5-5: 132
 toolCounts:
-  Bash: 32
+  Bash: 42
   AskUserQuestion: 2
-  Read: 5
+  Read: 6
   Skill: 3
   Agent: 2
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  SendUserFile: 1
+  SendUserFile: 2
+  ReadNotifications: 3
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__claude-code-remote__delete_trigger: 1
 rulesLoaded:
   - .claude/rules/tenant-layers.md
   - .claude/rules/adr-0021.md
