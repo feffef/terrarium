@@ -48,7 +48,8 @@ import { expand, loadManifests, root, type ExpandedCollection } from '../shared/
 import { DIG_SEASON_SLUGS, digSeasonOf, type DigSeason } from '../layers/midden/app/utils/strata.ts'
 import { TINKERFUND_OFFSET, resolveTinkerfundOffset } from '../layers/tinkerfund/app/utils/clock.ts'
 import type { campaign, pledge, updateLog } from '../layers/tinkerfund/schemas.ts'
-import { parseDocument, splitFrontmatter } from './validate-content.ts'
+import { splitFrontmatter } from './lib/frontmatter.ts'
+import { parseDocument } from './validate-content.ts'
 import { isMain } from './lib/cli.ts'
 
 export interface RefViolation {

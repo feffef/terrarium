@@ -12,6 +12,7 @@ import { parse as parseYaml } from 'yaml'
 import { isContentPath } from './session-trace.ts'
 import { isExternalSession } from '../shared/schemas/session.ts'
 import { SESSION_TRAILER } from './git-helpers.ts'
+import { frontmatterBlock } from './lib/frontmatter.ts'
 import { getJson, paginate, PER_PAGE, resolveAccess } from './lib/github-client.ts'
 import { readProvenanceHeader } from './provenance-header.ts'
 import { ARCHIVED_SESSIONS_DIR, readSessionLogs, SESSIONS_DIR } from './session-logs.ts'
@@ -743,10 +744,10 @@ export function readLandings(cwd = root, since: string): Landing[] {
  *  aborting the whole run — one bad Skill shouldn't block auditing every other
  *  one. `label` is only for that warning. */
 function readFrontmatter(text: string, label: string): Record<string, unknown> {
-  const m = text.match(/^---\n([\s\S]*?)\n---/)
-  if (!m) return {}
+  const block = frontmatterBlock(text)
+  if (!block) return {}
   try {
-    const parsed = parseYaml(m[1] as string) as Record<string, unknown>
+    const parsed = parseYaml(block.yaml) as Record<string, unknown>
     return parsed && typeof parsed === 'object' ? parsed : {}
   } catch (err) {
     console.error(

@@ -17,24 +17,23 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { root, isMain } from './lib/cli.ts'
+import { frontmatterBlock } from './lib/frontmatter.ts'
 
 const ADR_DIR = 'docs/adr'
 export const RULES_DIR = '.claude/rules'
 
 export const adrHash = (text: string) => createHash('sha256').update(text).digest('hex').slice(0, 12)
 
-const FRONTMATTER = /^---\n([\s\S]*?)\n---\n/
-
 /** A rule's `paths` frontmatter: the files that load it. Empty for a rule
  *  that loads at session start. */
 export function rulePaths(ruleText: string): string[] {
-  const fm = FRONTMATTER.exec(ruleText)?.[1]
+  const fm = frontmatterBlock(ruleText)?.yaml
   const paths = fm ? (parseYaml(fm) as { paths?: unknown } | null)?.paths : undefined
   return Array.isArray(paths) ? paths.filter((p): p is string => typeof p === 'string') : []
 }
 
 /** The text Claude Code shows for a rule: everything after its frontmatter. */
-export const ruleBody = (ruleText: string) => ruleText.replace(FRONTMATTER, '')
+export const ruleBody = (ruleText: string) => ruleText.slice(frontmatterBlock(ruleText)?.length ?? 0)
 
 /** A rule as the hints inject it. session-trace parses the header back with
  *  `ruleBlockFiles` to record the rule as loaded, so both live here. */
@@ -45,15 +44,15 @@ export const ruleBlockFiles = (text: string): string[] =>
   [...text.matchAll(/^Contents of (\.claude\/rules\/[\w.-]+\.md):$/gm)].map((m) => m[1]!)
 
 export function ruleHash(ruleText: string): string | undefined {
-  return FRONTMATTER.exec(ruleText)?.[1]?.match(/^adr:\s*(\S+)\s*$/m)?.[1]
+  return frontmatterBlock(ruleText)?.yaml.match(/^adr:\s*(\S+)\s*$/m)?.[1]
 }
 
 export function withRuleHash(ruleText: string, hash: string): string {
-  const fm = FRONTMATTER.exec(ruleText)
+  const fm = frontmatterBlock(ruleText)
   if (!fm) return `---\nadr: ${hash}\n---\n${ruleText}`
-  const head = fm[1] ?? ''
+  const head = fm.yaml
   const body = /^adr:.*$/m.test(head) ? head.replace(/^adr:.*$/m, `adr: ${hash}`) : `adr: ${hash}\n${head}`
-  return `---\n${body}\n---\n${ruleText.slice(fm[0].length)}`
+  return `---\n${body}\n---\n${ruleText.slice(fm.length)}`
 }
 
 /** About 4 characters a token, rounded to the nearest 100. */

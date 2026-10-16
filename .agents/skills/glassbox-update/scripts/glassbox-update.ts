@@ -6,7 +6,7 @@ import { join } from 'node:path'
 import { glassboxTerms } from '../../../../layers/glassbox/page-checks.ts'
 import { glassboxPageRefs, glassboxRelineRefs, rangeText, shiftLines, type LineRange } from '../../../../layers/glassbox/page-refs.ts'
 import { fetchOriginMain, git } from '../../../../scripts/git-helpers.ts'
-import { splitFrontmatter } from '../../../../scripts/validate-content.ts'
+import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { flagValue, isMain, root } from '../../../../scripts/lib/cli.ts'
 
 const pagesDir = (space: string) => `layers/glassbox/content/${space}/pages`

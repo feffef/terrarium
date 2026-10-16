@@ -36,12 +36,7 @@ import { parse as parseYaml } from 'yaml'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
 import { findTruncatedScalars } from './log-session.ts'
 import { isMain } from './lib/cli.ts'
-
-/** Coerce a parsed YAML/JSON value into a plain object, or `{}` for anything
- *  else (`null`, a scalar, an array) — a Document's data is always a record. */
-function asRecord(value: unknown): Record<string, unknown> {
-  return value && typeof value === 'object' ? (value as Record<string, unknown>) : {}
-}
+import { asRecord, frontmatterBlock, splitFrontmatter } from './lib/frontmatter.ts'
 
 export interface SchemaViolation {
   /** The collection key, e.g. `blog_david_pingbacks`. */
@@ -58,18 +53,8 @@ export interface ValidationReport {
   violations: SchemaViolation[]
 }
 
-const FRONTMATTER = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?/
-
-/** Split a Markdown file into its leading YAML frontmatter (between the first
- *  two `---` fences) and the body that follows. Frontmatter is `{}` when there
- *  is none. Exported so `validate-content-refs.ts` (issue #446) can read a
- *  page's MDC body without re-deriving this parse — single-homed here since
- *  `readFrontmatter` below is just this with the body discarded. */
-export function splitFrontmatter(text: string): { frontmatter: Record<string, unknown>; body: string } {
-  const m = text.match(FRONTMATTER)
-  if (!m) return { frontmatter: {}, body: text }
-  return { frontmatter: asRecord(parseYaml(m[1] as string)), body: text.slice(m[0].length) }
-}
+// Exported from here too: `layers/glassbox/tests/unit/glassbox-pages.spec.ts` imports it.
+export { splitFrontmatter }
 
 /** A page schema's fields are always optional additions on top of
  *  `@nuxt/content`'s built-ins (title/description/body/seo/…), which this
@@ -97,7 +82,7 @@ export function parseDocument(absPath: string): Record<string, unknown> {
  *  rejects this at authoring, and landed logs stay as they are (ADR-0009). */
 function truncations(absPath: string): string[] {
   const raw = readFileSync(absPath, 'utf8')
-  const yamlText = absPath.endsWith('.md') ? (raw.match(FRONTMATTER)?.[1] ?? '') : raw
+  const yamlText = absPath.endsWith('.md') ? (frontmatterBlock(raw)?.yaml ?? '') : raw
   return findTruncatedScalars(yamlText).map(
     (h) => `${h.keyPath}: parsed as ${JSON.stringify(h.value)} — an unquoted '#' dropped the rest. Quote it: ${JSON.stringify(h.full)}`,
   )
