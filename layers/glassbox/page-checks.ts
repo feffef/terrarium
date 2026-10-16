@@ -211,9 +211,9 @@ function placeProblems(file: string): string[] {
 
 // The Lesson contract in GLOSSARY.md: these sections, in this order; the two under In Terrarium are h3.
 const subsections: string[] = [glassboxLessonIds.why, glassboxLessonIds.watch]
-// Why it's built this way explains each reason in a short paragraph of its own words (GLOSSARY.md, Lesson); drafts meet the length bounds on promotion.
+// Why it's built this way explains each reason in a bullet of its own words (GLOSSARY.md, Lesson); drafts meet the bullet form and length bounds on promotion.
 const adrCite = /ADR-(\d{4}) \(:file\[docs\/adr\/(\d{4})-[^\]\s]+\.md\]\)/g
-const ownWords = { min: 12, max: 90 }
+const ownWords = { min: 12, max: 65 }
 
 function lessonProblems(file: string, prose: string, space: string): string[] {
   const headings = [...prose.matchAll(/^(#{2,3}) (.+)$/gm)].map((m) => ({ level: m[1]!.length, id: glassboxTermId(m[2]!) }))
@@ -229,13 +229,15 @@ function lessonProblems(file: string, prose: string, space: string): string[] {
   const lines = prose.split('\n')
   const start = lines.findIndex((l) => /^### /.test(l) && glassboxTermId(l.slice(4)) === glassboxLessonIds.why)
   const end = lines.findIndex((l, i) => i > start && /^#{2,3} /.test(l))
-  const paragraphs = start < 0 ? [] : lines.slice(start + 1, end < 0 ? undefined : end).join('\n').split(/\n\s*\n/).filter((p) => p.trim())
-  for (const p of paragraphs) {
+  const items = start < 0 ? [] : lines.slice(start + 1, end < 0 ? undefined : end).join('\n').split(/\n\s*\n|\n(?=- )/).filter((p) => p.trim())
+  for (const p of items) {
     if ([...p.matchAll(adrCite)].some((m) => m[1] !== m[2])) problems.push(`Why it's built this way cites an ADR by another ADR's file: ${p}`)
     const rest = p.replace(adrCite, '')
     if (/\bADR-\d{4}\b|docs\/adr\//.test(rest)) problems.push(`Why it's built this way cites an ADR not as "ADR-NNNN (:file[…])": ${p}`)
+    if (space !== 'guide') continue
+    if (!/^- \*\*[^*]+\*\*/.test(p)) problems.push(`Why it's built this way item is not a bullet that opens with a bold lead-in: ${p}`)
     const words = rest.replace(/:file\[[^\]]*\]/g, '').split(/\s+/).filter((w) => /\w/.test(w)).length
-    if (space === 'guide' && (words < ownWords.min || words > ownWords.max)) problems.push(`Why it's built this way paragraph has ${words} words of its own, not ${ownWords.min}-${ownWords.max}: ${p}`)
+    if (words < ownWords.min || words > ownWords.max) problems.push(`Why it's built this way item has ${words} words of its own, not ${ownWords.min}-${ownWords.max}: ${p}`)
   }
   const fullReference = new RegExp(`^${glassboxLessonLabels.fullReference}:?\\s*\\[[^\\]]+\\]\\(https://`, 'm')
   if (!file.startsWith('terrarium-practice/') && !fullReference.test(prose)) problems.push('Lesson has no "Full reference" https link')

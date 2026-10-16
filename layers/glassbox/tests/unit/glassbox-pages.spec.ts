@@ -66,9 +66,8 @@ export function catalogFrom(cols) {
 
 ### Why it's built this way
 
-Agents write most changes, so a check every PR must pass keeps mistakes off \`main\`. ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]).
-
-One expansion step turns a manifest into Collections, so a Tenant never writes them by hand. :file[shared/expand.ts].
+- **A shared check.** Agents write most changes, so a check every PR must pass keeps mistakes off \`main\`. ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]).
+- **One expansion step.** One expansion step turns a manifest into Collections, so a Tenant never writes them by hand. :file[shared/expand.ts].
 
 ### What to watch for
 
@@ -151,10 +150,12 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['descending ranges', (s: string) => s.replace('  // …\n  return out', '  // …\n  for (const col of cols) out[col.key] = col\n  // …\n  return out').replace('lines="3-7"}\n```', 'lines="6-7,5,3"}\n```'), 'does not match its ranges 6-7,5,3'],
     ['malformed lines', (s: string) => s.replace('{lines="3-7"}, one', '{lines="3,,5"}, one'), 'lines="3,,5" is not one or more'],
     ['lines with inner spaces', (s: string) => s.replace('{lines="3-7"}, one', '{lines=" 3 - 5"}, one'), 'lines=" 3 - 5" is not one or more'],
-    ['a Why paragraph whose ADR number is not its file', (s: string) => s.replace('ADR-0004 (:file[docs/adr/0004', 'ADR-0026 (:file[docs/adr/0004'), 'cites an ADR by another ADR\'s file'],
-    ['a Why paragraph naming an ADR bare', (s: string) => s.replace('keeps mistakes off', 'per ADR-0004 keeps mistakes off'), 'cites an ADR not as'],
-    ['a Why paragraph that only links its reason', (s: string) => s.replace(/One expansion step[^\n]*/, 'The expansion: :file[shared/expand.ts].'), 'words of its own, not 12-90'],
-    ['a Why paragraph too long to stay short', (s: string) => s.replace('One expansion step', 'One expansion step'.concat(' word'.repeat(80))), 'words of its own, not 12-90'],
+    ['a Why bullet whose ADR number is not its file', (s: string) => s.replace('ADR-0004 (:file[docs/adr/0004', 'ADR-0026 (:file[docs/adr/0004'), 'cites an ADR by another ADR\'s file'],
+    ['a Why bullet naming an ADR bare', (s: string) => s.replace('keeps mistakes off', 'per ADR-0004 keeps mistakes off'), 'cites an ADR not as'],
+    ['a Why bullet that only links its reason', (s: string) => s.replace(/- \*\*One expansion step\.\*\*[^\n]*/, '- **One expansion step.** The expansion: :file[shared/expand.ts].'), 'words of its own, not 12-65'],
+    ['a Why bullet too long to stay short', (s: string) => s.replace('turns a manifest', 'turns a manifest'.concat(' word'.repeat(80))), 'words of its own, not 12-65'],
+    ['a Why paragraph that is not a bullet', (s: string) => s.replace('- **One expansion step.** ', '\n'), 'not a bullet that opens with a bold lead-in'],
+    ['a Why bullet with no bold lead-in', (s: string) => s.replace('**One expansion step.** ', ''), 'not a bullet that opens with a bold lead-in'],
     ['an ADR missing at revision', (s: string) => s.replace('ADR-0004', 'ADR-0099'), 'ADR-0099 does not exist'],
     ['a guide link to no page', (s: string) => s.replace('terrarium-practice/gate', 'terrarium-practice/gates'), 'link /t/glassbox/guide/terrarium-practice/gates resolves to no page'],
     ['a Journal link to no content file', (s: string) => s.replace('current/how-it-works', 'current/made-up'), 'link /t/journal/current/made-up resolves to no page'],
@@ -165,7 +166,7 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a ::stop-links block on a Lesson', (s: string) => `${s}\n::stop-links\n[Home](/t/glassbox/guide)\n::\n`, '1 ::stop-links block(s) sit outside a Walkthrough stop'],
     ['a :term with no entry', (s: string) => s.replace(':term[Collection]', ':term[Space]'), ':term space has no entry'],
     ['a hand-written blob link', (s: string) => `${s}\n[x](https://github.com/feffef/terrarium/blob/${rev}/shared/expand.ts)\n`, 'hand-written link'],
-    ['a Why paragraph citing an ADR file without its number', (s: string) => s.replace(':file[shared/expand.ts].', ':file[docs/adr/0004-objective-safety-gate.md].'), 'cites an ADR not as'],
+    ['a Why bullet citing an ADR file without its number', (s: string) => s.replace(':file[shared/expand.ts].', ':file[docs/adr/0004-objective-safety-gate.md].'), 'cites an ADR not as'],
     ['a hand-written tree link', (s: string) => `${s}\nhttps://github.com/feffef/terrarium/tree/main/layers\n`, 'hand-written link'],
     ['a Where next over 5 pages', (s: string) => `${s}${gateItem.repeat(5)}`, 'Where next lists 6 pages, more than 5'],
     ['a Journal page before a Lesson in Where next', (s: string) => s.replace(gateItem, `${journalItem}${gateItem}`), 'Where next lists a Journal page before its end'],
