@@ -1,0 +1,172 @@
+schemaVersion: 1
+session: session_013RCsUF234qAGu3CJr3v2on
+startedAt: 2026-10-16T22:56:30Z
+endedAt: 2026-10-16T23:09:10Z
+kind: interactive
+goal: Propose a cleanup and restructure of scripts/
+status: completed
+outcome: "Filed umbrella issue #2183 with four sub-issues (#2184-#2187)"
+summary: "Human-instructed: scan the whole scripts/ folder via a subagent and propose a cleanup (file layout, moving single-Skill scripts into their Skill, code reuse, simplification). A read-only Explore subagent inventoried all 67 files (callers, imports, tests, duplicates, ADR path pins). I checked the binding ADRs (0004, 0005, 0026, 0029) and the Human-only list, then asked the user four questions; they chose: include Human-only moves, subfolders by area, propose deleting the 7 caller-less scripts, deliver as GitHub issues. I re-verified the dead scripts by repo-wide grep and checked open issues (only #2073 overlaps) and open Prune Trials (github-integration.md and pr-workflow.md are under trial, so the plan limits them to path repoints). Agent-initiated: the four-PR phasing, the concrete lib/ split and layout, and the open questions (hooks/** making two hints Human-only, digest scripts changing gate tier, Tenant checks in validate-content-refs). Nothing was built; everything waits on approval."
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start glossary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: terms Skill, Workflow, Human-only, Gate, Inert used in the issues
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: workflow scripts must stay in .claude/workflows; helper .ts can move into a Skill
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: gate.ts/package.json/action.yml parity constrains moving gate.ts
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: rules pin script paths by glob; moves must update them
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: spec/sub-issue conventions and Part of line
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: chose ready-for-human for an unapproved proposal
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP write tools in cloud; list-open-issues escape for duplicate check
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "Subagent: guard conventions (pure core, dry-run, spec per guard, Human-only)"
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: Subagent grepped it for script callers only
+    useful: partly
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: Subagent grepped it for script callers only
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: Subagent grepped it for probe/screenshot callers
+    useful: partly
+skillsUsed:
+  - name: close-session
+    reason: session only produced a proposal
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Filed the umbrella issue with #TBD placeholders for sub-issues, then had to rewrite the whole body once numbers existed."
+    solution: Create sub-issues first, or the umbrella last with real numbers; or keep the plan list only in native sub-issues.
+    severity: nit
+  - description: Explore subagent's report was very long (~6k tokens); much of the per-file table was not needed for the proposal.
+    solution: Brief subagents to return only findings that feed the decision, with the full table written to a scratch file.
+    severity: nit
+durationSec: 760
+models:
+  claude-opus-5-5: 44
+toolCounts:
+  Agent: 1
+  Bash: 11
+  Read: 1
+  AskUserQuestion: 1
+  ToolSearch: 1
+  mcp__github__issue_write: 6
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0005.md
+rulesLoadedBySubagents:
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0010.md
+docsReadBySubagents:
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/agents/guards.md
+  - docs/agents/verifying-ui-changes.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Its paths are the Human-only list that shaped which PRs need a human merge; subagent confirmed
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Showed guard/hint path globs a subfolder move must rewrite; subagent found it useful too
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Confirmed rules pin script paths; opened the full ADR for the paths/glob scope
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: ADR See lists must be repointed in the rename PR; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on the glossary read; nothing about scripts
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Led me to check open Prune Trials; two docs under trial get path-only repoints
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded by the open-issues listing; I triaged nothing
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: A larger redesign needs Trusted approval, so issues say waits on approval; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Merge-ability split of the four PRs; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to close-session for a question-only session
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line on every issue body
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: "Subagent: loaded on a multi-file grep; irrelevant to scripts layout"
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: "Subagent: workflow-location constraint; Skill helper scripts may move"
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: "Subagent: pins audit-skills.ts and verify-skills-lock.ts paths"
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: "Subagent: trust tiers, not relevant beyond pinning trust.ts"
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: "Subagent: pins poll-guest-tickets and guest-marker paths"
+    useful: partly
+  - path: .claude/rules/adr-0026.md
+    reason: "Subagent: gate.ts parity constraint; I also read the full ADR"
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: "Subagent: pins digest.ts and archive-journal-content.ts paths"
+    useful: yes
+  - path: .claude/rules/adr-0014.md
+    reason: "Subagent: loaded reading tsconfig; unrelated"
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: "Subagent: loaded on the typecheck test read; unrelated"
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: "Subagent: loaded on a tinkerfund grep; unrelated"
+    useful: no
+subagents:
+  - type: Explore
+    task: Explore scripts folder thoroughly
+gitBranch: claude/sweet-maxwell-v5qgbi
+entrypoint: remote
+cliVersion: 2.1.302
+landedBy: Stop
