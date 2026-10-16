@@ -195,8 +195,9 @@ abandoned, branch from `origin/main` and commit status updates only:
 - for each PR still open, its number in `ref`, staying `tracked`;
 - for each PR abandoned, `open` again.
 
-Open it as a PR to `main` and land it like the ledger PR. Done when it has
-merged.
+Open it as a PR to `main` and land it like the ledger PR. You keep watching each
+escalated PR (the ADR-0003 rule); when one merges or closes, land the same update
+for it the same way. Done when every update has merged.
 
 Log the session. Among its frictions, name each place this Skill or its briefs
 were confusing or contradicted themselves, and each step that was hard to
