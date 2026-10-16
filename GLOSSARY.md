@@ -71,9 +71,9 @@ may also carry, *only when the work sparked them*, two optional notes: **learnin
 (useful knowledge the session inferred during the work, not read from the repo,
 which would be a doc read; a Friction's positive twin) and **ideas** (see
 Idea). A session may
-span several branches or PRs, or none; its log is authored regardless
-of where the work went, or whether any code was committed. Session logs
-are ground truth, not a projection of repo state (see the Journal Tenant).
+span several branches or PRs, or none, and its log is authored either way, even
+if no code was committed. Session logs are ground truth, not a projection of
+repo state (see the Journal Tenant).
 
 A session log may be **external**: authored by a different agent / harness /
 environment than our Claude Code toolchain. An external log is still a real, honest
@@ -164,7 +164,7 @@ graded down for the rarity of its domain. Five grades:
   kinds of session (e.g. `log-session`, `domain-modeling`).
 - **routine** — the Platform's standing operation: the Skill *is* a scheduled
   Routine's job, driving whole unattended sessions of its own rather than being
-reached for inside someone else's (e.g. `digest`, `audit-docs`). Assigned from the observed fact that scheduled sessions run it, not from breadth, so it doesn't compete with `essential`. A Skill that is merely *fireable* on an interval but in practice invoked by hand is not `routine`.
+  reached for inside someone else's (e.g. `digest`, `audit-docs`). Assigned from the observed fact that scheduled sessions run it, not from breadth, so it doesn't compete with `essential`. A Skill that is merely *fireable* on an interval but in practice invoked by hand is not `routine`.
 - **specialist** — essential *within a specific kind* of work, even when that work
   is rare (e.g. `atlas-specimen`).
 - **supporting** — genuinely useful but not essential; work proceeds without it.
@@ -205,10 +205,7 @@ and ADR-0020).
 Platform-wide invariant, alongside Agent Authorship: the Platform is built to be
 watched, not just to run itself. Its substrate is **traceability**: every change
 to content, rules or code lands as a git commit inside a gated PR, so raw history
-is always reconstructable. The same history is annotated the way a development
-team's would be: each PR's description records why its change was made, and
-work a session can't finish waits in a GitHub issue rather than being forgotten.
-Three further altitudes sit on top of it. The
+is always reconstructable. Three further altitudes sit on top of it. The
 **Journal** turns the raw history into an accessible, public-facing overview of
 current activity. The **Blog** re-tells the same activity at a higher,
 plain-language altitude. The **Personas** add a self-reflection angle on top of
@@ -239,9 +236,9 @@ ADR-0023 has the guest-pipeline exception.
 
 ### Gate
 The objective, layered bar every change must clear before it lands (ADR-0004);
-formally the *safety gate*, but "the Gate" everywhere in practice. It is a single
-bar with two places it runs: locally, and in CI — where it is **authoritative**,
-the run that decides whether a gated PR may merge. Its steps split into a
+formally the *safety gate*, but "the Gate" everywhere in practice. It is one
+bar that runs locally and in CI; CI's run is **authoritative**: it decides
+whether a gated PR may merge. Its steps split into a
 **Floor** and a **Heavy** tier; running both is a **Full gate**. Objective by
 construction: it asks machine-checkable questions only, so it can be trusted
 without trusting the author (see **Agent Authorship**).

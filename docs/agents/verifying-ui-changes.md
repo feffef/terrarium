@@ -36,8 +36,8 @@ moved): `playwright-core` **1.64.0**, `nuxt` **4.6.1**. Entries that came from a
 - **Before calling an e2e/Playwright failure "pre-existing" or
   "environment-only," reproduce it on both `origin/main` and the branch** with the
   full `pnpm test:e2e` suite, never a `-t`-filtered single test: a filtered test
-  skips setup and ordering the full suite exercises. The run rebuilds a stale
-  `.output` itself; `E2E_FRESH_BUILD=1` forces a build. A PR once called a
+  skips setup and ordering the full suite exercises (rebuild rules:
+  `tests/README.md`). A PR once called a
   failing assertion pre-existing on a narrowed or stale repro, and CI then failed
   for real on it (issue #907).
 - **To read one in-page value from an already-serving page** (a computed style,

@@ -24,6 +24,6 @@ every page shares are in [`EVERY-PAGE.md`](EVERY-PAGE.md).
    every Walkthrough stop whose mechanism it explains, and to the Where next of
    every existing Lesson it relates to, above any Journal page. Both are
    capped (the contracts): a full list takes it only in place of its weakest
-   entry. Done when each stop and Where next it is closer than an entry of
-   links it.
+   entry. Done when each stop and Where next links the Lesson wherever it is closer than
+   one of the list's current entries.
 5. **Check** it (EVERY-PAGE.md).

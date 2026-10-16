@@ -19,8 +19,6 @@ down; it self-heals on the next good commit.
 /app/store   shared pnpm store
 ```
 
-
-
 ## On-VPS layout
 
 ```
@@ -35,8 +33,7 @@ down; it self-heals on the next good commit.
 
 > The clone at `/opt/terrarium/repo` only provides the compose/Dockerfile/
 > entrypoint used to **build the image**. The running container does its own
-> clone into the `terrarium_app` volume — that is the live app. The two are
-> independent.
+> clone into the `terrarium_app` volume — that is the live app.
 
 ## One-time bootstrap
 
@@ -58,7 +55,7 @@ down; it self-heals on the next good commit.
    chmod 600 .env                       # holds the PAT
    # edit .env: paste GITHUB_PAT (GIT_REPO_URL is already correct)
    ```
-   (The PAT is for the container's own clone (see **On-VPS layout**), not this host clone. It is needed even for a public repo: `entrypoint.sh` requires `GITHUB_PAT` unconditionally and passes it via `GIT_ASKPASS`, keeping it out of `.git/config`.)
+   The PAT is for the container's own clone (see **On-VPS layout**), not this host clone. It is needed even for a public repo: `entrypoint.sh` requires `GITHUB_PAT` unconditionally and passes it via `GIT_ASKPASS`, keeping it out of `.git/config`.
 
 3. **Shared proxy network.** Terrarium is reached by the existing Caddy over a
    shared network called `web`. Create it once:
@@ -96,8 +93,8 @@ down; it self-heals on the next good commit.
    docker compose logs -f      # watch: clone -> install -> build -> serving
    ```
    The **first boot** clones and does a full build (a few minutes) before the
-   server answers — the healthcheck stays `starting` until then, then flips to
-   `healthy` once `/` returns 200 (`docker compose ps` to check).
+   server answers. The healthcheck stays `starting` until `/` returns 200, then
+   turns `healthy` (check with `docker compose ps`).
 
    > If `up` fails with **`network web declared as external, but could not be
    > found`**, run `docker network create web` (step 3) and retry. Confirm both containers share it:
