@@ -56,5 +56,9 @@ Group picks that one change would retire. For each fix, return:
   choice a human should make.
 - **Recommendation**: dispatch, or file as an issue, with one line why.
 
+Also return your own frictions from this run, naming each place this brief was
+confusing or contradicted itself, and each step that was hard to follow with
+this run's data.
+
 Also return, for each rule and doc you loaded or read: its path, why it
 loaded or was read, and whether it was useful (yes/partly/no).

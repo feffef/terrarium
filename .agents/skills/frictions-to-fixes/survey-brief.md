@@ -101,7 +101,9 @@ regression — each with its citing issue/PR number where one exists.
 
 ## Your own frictions
 
-Whatever you hit while running the survey — an MCP disconnect, a tool that only resolved under its full id, an oversized result you had to slice — record and **return alongside** the screened list, so this run's own frictions feed the next cycle.
+Whatever you hit while running the survey — an MCP disconnect, a tool that only resolved under its full id, an oversized result you had to slice — record and **return alongside** the screened list, so this run's own frictions feed the next cycle. Name among them each place
+this brief was confusing or contradicted itself, and each step that was hard
+to follow with this run's data.
 
 ## Report
 
