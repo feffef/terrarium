@@ -140,11 +140,10 @@ export function fetchOriginMain(
  *  reader reuses this exact pattern rather than coining a divergent one. */
 export const SESSION_TRAILER = /Claude-Session:\s*\S*\/(\S+)/
 
-/** The merge commits on `<remote>/main` — single-homed here rather than
- *  duplicated per script (issue #448 code review). Calls
- *  `fetchOriginMain` first (see its own doc comment for why), then parses
- *  each merge's hash/timestamp/subject/body out of the `\x1f`/`\x1e`-delimited
- *  format string. Leaves PR-merge-vs-other-merge filtering to the caller. */
+/** The merge commits on `<remote>/main`. Calls `fetchOriginMain` first (see its
+ *  own doc comment for why), then parses each merge's
+ *  hash/timestamp/subject/body out of the `\x1f`/`\x1e`-delimited format
+ *  string. Leaves PR-merge-vs-other-merge filtering to the caller. */
 export function readMergeCommits(cwd: string, remote = 'origin'): RawMergeCommit[] {
   fetchOriginMain(cwd, remote)
   const raw = execFileSync(

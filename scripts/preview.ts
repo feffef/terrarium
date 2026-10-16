@@ -233,9 +233,8 @@ export interface PreviewServer {
 /**
  * Start a `preview` (or, with `dev`, a `nuxt dev`) server on its OWN ephemeral
  * port and resolve once it answers HTTP. The returned handle's `pid` must be
- * passed to `stopPreview` when done. Exported so other scripts
- * (ad-hoc probes) can manage a server without
- * re-hand-rolling the `pkill` dance this whole file exists to kill (#240).
+ * passed to `stopPreview` when done. Exported for ad-hoc probes, so they don't
+ * re-hand-roll the `pkill` dance this whole file exists to kill (#240).
  *
  * Throws — with a "likely causes" diagnostic already printed to stderr — if the
  * server can't be built or fails to come up; the failed child is cleaned up
