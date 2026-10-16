@@ -561,10 +561,12 @@ next session's log.
    worth fixing. *Decision.*
 6. **Design.** A helper in `helper-agents` reads the picked frictions' full
    `logs`, designs each fix and rates its risk. `frictions-to-fixes` sends the
-   safe ones on and files up to three of the rest as `issues`. *Decision.*
+   safe ones on, files the rest as `issues` (up to three, plus any only the
+   maintainer may merge), and opens and
+   merges a ledger pull request in `prs`. *Decision.*
 7. **Fix.** `helper-agents` write the fixes, each in its own copy of the
-   repository, and open pull requests in `prs`: one for all doc fixes, one
-   per code fix. Helpers never merge.
+   repository; `frictions-to-fixes` opens their pull requests in `prs`: one
+   for all doc fixes, one per code fix. Helpers never merge.
 8. **Check.** `ci` runs the checks on each pull request.
 9. **Review.** `frictions-to-fixes` reviews each pull request in `prs` and
    posts its verdict as a comment. *Decision.*
@@ -572,7 +574,9 @@ next session's log.
     refuses without the verdict. The fix lands in `rules` (or in `skills`,
     `scripts` or `code`).
 11. **The loop closes.** The next session, in `sessions`, reads the changed
-    rule (thick). Its log lists that file among the docs it read.
+    rule (thick). Its log lists that file among the docs it read. Once
+    no pull request waits on it, `frictions-to-fixes` merges one more ledger
+    pull request recording what merged.
 
 Branches:
 - at step 4: **Came back after a fix:** an earlier fix didn't hold. The routine files a new issue in
@@ -781,7 +785,8 @@ it.
 | screen (same helper) | drops what is fixed, tracked, on trial, or in an outside skill |
 | pick | up to ten; files an issue for up to three fixes that came back |
 | design (a helper agent) | reads the picked frictions' full logs, designs each fix and rates its risk |
-| file | opens issues for up to three fixes it won't send on, such as the maintainer's |
+| file | opens issues for up to three fixes it won't send on, plus each one only the maintainer may merge |
+| ledger | its own pull request each run, merged whatever happens to the fixes; one more records what merged |
 | fix (helper agents) | one pull request for all doc fixes, one per code fix |
 | review & merge | waits for green CI, reviews, posts a verdict, merges or leaves open |
 | log | writes the session log, with the routine's own frictions |

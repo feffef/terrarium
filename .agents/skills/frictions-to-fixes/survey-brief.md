@@ -50,9 +50,10 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   batched doc PR's title names no cluster. This run's own PRs are recorded
   by the main session; a PR an earlier run missed (still `tracked`, or in that run's log `prs`
   but in no `fixes`) is recorded here. A `tracked` entry whose PR closed
-  unmerged, or whose `ref` names no open issue or PR, goes back to `open`;
-  one whose PR merged drops `tracked`. A `fixes` entry's `date` is its PR's
-  merge date: correct one that differs.
+  unmerged, or whose `ref` names no open issue or PR, goes back to `open`.
+  For one whose `ref` PR merged, set `status: open` and set that PR's `fixes`
+  `date` to its `merged_at` (the same call), since an escalated PR dated its own
+  entry before it merged.
 - **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a `drop` (Screen, below) instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
 - **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
   (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
@@ -116,8 +117,9 @@ candidates** — each with its ledger entry, severity, recurrence (as counted ab
 classification (never-fixed / open-already #N / regression of #N) and evidence
 quotes from the friction descriptions, plus everything else you gathered about
 it that the session logs don't hold (what you found in the source, on `main`,
-in the ledger or on the tracker, and any fix idea it gave you): a later design
-agent reads the full logs and designs the fix from your findings. Cite GitHub
+in the ledger or on the tracker). Report no fix and no session `solution`
+proposals: a later design agent reads the full logs and designs the fix from
+your findings. Cite GitHub
 sources by issue or PR number or commit hash only, without copying their text; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match);
 **(c) your own frictions** from the run; **(d) the ledger changes**, each with its evidence, and the hash of the one
 commit on the current branch that holds them (`git commit -F <file>`; don't push

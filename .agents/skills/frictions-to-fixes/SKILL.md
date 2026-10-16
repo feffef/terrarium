@@ -30,7 +30,8 @@ subagent** (`general-purpose`, so it can run `tsx` and the GitHub MCP tools), wi
 surveys, screens, and returns a **distilled, ranked report**; the main session
 works only from that report and never re-reads the raw corpus. The subagent
 **surveys only** — it files no issues, opens no PRs, and changes nothing but the
-ledger, which it commits on the session's branch.
+ledger, which it commits on the session's branch. It runs in your checkout, not a
+worktree; touch no git state until it returns.
 
 Its report holds **(a)** the ranked actionable candidates, **(b)** a dropped list,
 **(c)** the subagent's own frictions (they belong in this session's log too, §7),
@@ -93,7 +94,8 @@ hook wiring (`docs/agents/guards.md`'s own rule, since editing it needs a
 human-attended session), or when it turns on a design choice a human should make.
 
 **File an issue** for each fix you don't dispatch, at most **three** per run,
-the highest-ranked first; list the rest in the description of the ledger PR,
+the highest-ranked first (one blocked only by a human-only surface doesn't count
+against the cap); list the rest in the description of the ledger PR,
 where they wait in the ledger for the next run. A
 group of related frictions is one issue, not several. Each issue holds the **problem** with its evidence (quote the logging
 sessions + severities — for a group, all of them) and the **design**. Search the tracker first to avoid duplicates. Label
@@ -117,8 +119,10 @@ of the survey's commit (§1), commit:
   drops every occurrence before the horizon and deletes an entry left with none
   (git keeps them).
 
-Push, open the **ledger PR**, review its diff yourself, and land it by
-`docs/agents/pr-workflow.md`'s recipe once CI is green; §6 need not wait for it.
+Run `pnpm gate:scoped`, review the diff yourself (this Skill's own review step,
+`docs/agents/pr-workflow.md`), push, and open the **ledger PR**; invoke
+`close-session` (`in-review`). Land it by `pr-workflow.md`'s recipe once CI is
+green; §6 need not wait for it.
 
 Done when every fix is ready to dispatch, has an open issue, or is listed for
 the next run, the top three regressions have their issues, and the ledger PR is
@@ -164,7 +168,7 @@ not a bystander waiting for a human. For each branch:
    confirm it clears `audit-docs`' house rules** ([`impl-brief.md`](impl-brief.md)): a fix that would itself be
    a future audit-docs finding is bounced back, not merged.
 3. **Have the agent push, then open the PR**, carrying its problem, evidence and
-   design inline. At the first PR open, invoke `close-session` (`in-review`).
+   design inline.
    **Always post the review result as a PR comment before merging, with no
    exception** — see `docs/agents/pr-workflow.md`'s recipe (step 4) for the
    rule and why it matters.
@@ -173,8 +177,8 @@ not a bystander waiting for a human. For each branch:
      follow `docs/agents/pr-workflow.md`'s recipe; you merge only by your own
      judgement call, on top of that mechanical recipe.
    - **Send it back** when the review has findings the agent can fix: resume
-     the impl agent with them for follow-up commits, then review again from
-     step 2.
+     the impl agent with them for follow-up commits, review those as in step 2,
+     then have it push them and decide again.
    - **Escalate to a human** only when the actual diff meets an ADR-0004
      exception (its *Scope* lists them, with examples of behaviour no test can
      observe); check the diff against them rather than guessing. Leave the PR open, say precisely why it is
@@ -195,13 +199,13 @@ merged, abandoned or escalated), land **one combined** status-only PR from
 `origin/main`, as you landed the ledger PR:
 
 - a `fixes` entry (`pr`, its UTC merge date, a one-line summary from its
-  description) for each merged PR, dropping `tracked`;
+  description) for each merged PR, with `status: open`;
 - `open` again for each abandoned one;
 - its PR number in `ref` for each escalated one, staying `tracked` (the PR
   carries its own `fixes` entry, §7).
 
-Done when it has merged.
+Skip it when this run opened no fix PR. Done when it has merged.
 
-Log the session. Among its frictions, name each place this Skill or its briefs
+Log the session (`close-session`). Among its frictions, name each place this Skill or its briefs
 were confusing or contradicted themselves, and each step that was hard to
 follow with this run's data.
