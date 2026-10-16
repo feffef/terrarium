@@ -12,8 +12,8 @@ export const glassboxSubjects = [
   { slug: 'terrarium-practice', name: 'House rules', blurb: 'The Gate, ADRs, session logs, the Human-only list.' },
 ] as const
 
-/** The landing's "Words we use": ids of `terms` entries, in the order a newcomer meets them. */
-export const glassboxLandingTerms = ['tenant', 'space', 'collection', 'document'] as const
+/** The landing's term strip: `terms` entries a newcomer meets first, picked from what guide Lessons expand most. */
+export const glassboxLandingTerms = ['gate', 'tenant', 'human-only', 'collection', 'space', 'skill', 'rule', 'manifest'] as const
 
 export interface GlassboxPageLink {
   path: string

@@ -1,2 +1,2 @@
-term: manifest
+term: Manifest
 definition: The one small file, tenant.config.ts, in which a Tenant states what it holds. It names the Tenant, its Spaces, and its Collections with their types and schemas, and code builds everything else from it.

@@ -8,7 +8,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
   const [landing, pages, terms] = await Promise.all([
     queryCollection(pagesKey).path('/').first(),
     queryCollection(pagesKey).order('stem', 'ASC').select('path', 'title', 'description').all(),
-    queryCollection(collections.terms).where('stem', 'IN', [...glassboxLandingTerms]).select('stem', 'term', 'definition').all(),
+    queryCollection(collections.terms).where('stem', 'IN', [...glassboxLandingTerms]).select('stem', 'term', 'definition', 'source').all(),
   ])
   return {
     landing,
@@ -35,6 +35,9 @@ const sources = [
   { path: 'GLOSSARY.md', label: 'Terms' },
   { path: 'layers/glassbox/', label: "This site's code" },
 ]
+const openTerm = ref<string>()
+const openEntry = computed(() => data.value?.words.find((word) => word.stem === openTerm.value))
+const definitionId = useId()
 provide(glassboxRevisionKey, computed(() => landing.value ?? undefined))
 
 useHead(() => ({ title: `${landing.value?.title ?? 'Glass Box'} · glassbox` }))
@@ -51,13 +54,6 @@ useSeoMeta({ description: () => landing.value?.description })
       <h1>{{ landing?.title }}</h1>
       <ContentRenderer v-if="intro" class="lede" :value="intro.lede" />
     </div>
-
-    <section v-if="data?.words.length" class="words" aria-labelledby="words-h">
-      <h2 id="words-h">Words we use</h2>
-      <dl>
-        <div v-for="word in data.words" :key="word.stem" class="gb-pane"><dt>{{ word.term }}</dt><dd>{{ word.definition }}</dd></div>
-      </dl>
-    </section>
 
     <section v-if="data?.directory.length" class="directory">
       <h2>Subjects</h2>
@@ -86,6 +82,21 @@ useSeoMeta({ description: () => landing.value?.description })
         </li>
       </ul>
       <a class="folder" :href="folderUrl('walkthroughs')" title="This folder in the GitHub repo">files on GitHub ↗</a>
+    </section>
+
+    <section v-if="data?.words.length" class="words" aria-labelledby="words-h">
+      <h2 id="words-h" class="gb-label">Terms you’ll meet</h2>
+      <ul>
+        <li v-for="word in data.words" :key="word.stem">
+          <button
+            type="button"
+            :aria-expanded="openTerm === word.stem"
+            :aria-controls="definitionId"
+            @click="openTerm = openTerm === word.stem ? undefined : word.stem"
+          >{{ word.term }}</button>
+        </li>
+      </ul>
+      <p v-show="openEntry" :id="definitionId" class="definition" role="note" aria-live="polite">{{ openEntry?.definition }}<File v-if="openEntry?.source" class="source">{{ openEntry.source }}</File></p>
     </section>
 
     <section v-if="landing" class="sources">
@@ -141,11 +152,15 @@ section { margin-bottom: 56px; }
 }
 .folder { align-self: flex-end; margin-top: auto; font: 400 11.5px var(--gb-mono); color: var(--gb-muted); text-decoration: underline 1px dotted; text-underline-offset: 3px; }
 
-/* Words we use: the Terms every first Lesson leans on. */
-.words dl { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; margin: 0; }
-.words .gb-pane { display: flex; flex-direction: column; gap: 4px; padding: 16px 20px; border-radius: 16px; }
-.words dt { font-size: 16px; font-weight: 600; }
-.words dd { margin: 0; font-size: 14px; line-height: 1.5; color: var(--gb-ink-2); }
+/* The term strip: chips like Term.vue's inline terms, one definition open at a time. */
+.words { margin-bottom: 40px; }
+.words h2 { margin-bottom: 12px; }
+.words ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.words button { all: unset; cursor: pointer; padding: 4px 12px; border: 1px solid var(--gb-line); border-radius: 999px; font-size: 14px; }
+.words button:hover, .words button[aria-expanded='true'] { color: var(--gb-accent); border-color: var(--gb-accent); }
+.words button:focus-visible { outline: 2px solid var(--gb-accent); outline-offset: 2px; }
+.definition { max-width: 720px; margin: 12px 0 0; padding: 10px 14px; border-radius: 12px; background: var(--gb-tint); color: var(--gb-ink-2); font-size: 14px; line-height: 1.5; }
+.definition .source { margin-inline-start: 0.4em; }
 
 /* Plain, not a pane: Walkthroughs aren't ready to stand out (GLOSSARY.md). */
 .walkthroughs { display: flex; flex-direction: column; gap: 4px; }

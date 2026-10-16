@@ -54,7 +54,7 @@ describe('glassboxDirectory', () => {
 })
 
 describe('glassboxLandingTerms', () => {
-  it.each(['guide', 'drafts'])("has a term file in the %s Space for every landing word", (space) => {
+  it.each(['guide', 'drafts'])("has a term file in the %s Space for every landing term", (space) => {
     for (const id of glassboxLandingTerms) {
       expect(existsSync(new URL(`../../content/${space}/terms/${id}.yml`, import.meta.url)), id).toBe(true)
     }
