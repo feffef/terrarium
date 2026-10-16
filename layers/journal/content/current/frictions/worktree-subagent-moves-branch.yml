@@ -1,4 +1,6 @@
 name: worktree-subagent-moves-branch
+summary: >-
+  A helper agent switched the branch the main agent was using, so the main copy showed phantom changes.
 cause: >-
   An impl agent in a worktree checks out or pushes the branch the primary checkout has checked out, so the primary tree shows phantom reverse changes.
 surface: safe

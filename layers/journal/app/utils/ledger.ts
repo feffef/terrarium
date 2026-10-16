@@ -15,6 +15,7 @@ export interface LedgerOccurrence {
 
 export interface LedgerEntry {
   name: string
+  summary: string
   cause: string
   status: FrictionClusterDoc['status']
   fixedOn?: string
@@ -56,6 +57,7 @@ export function ledgerPanels(
     const worst = c.occurrences.reduce<Severity>((w, o) => (SEVERITY_RANK[o.severity] > SEVERITY_RANK[w] ? o.severity : w), 'nit')
     return {
       name: c.name,
+      summary: c.summary,
       cause: c.cause,
       status: c.status,
       fixedOn: c.fixedOn,

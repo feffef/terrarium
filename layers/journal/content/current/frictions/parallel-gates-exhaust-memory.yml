@@ -1,4 +1,6 @@
 name: parallel-gates-exhaust-memory
+summary: >-
+  Running more than two full check runs at once ran out of memory and crashed the browser tests.
 cause: >-
   More than two full gates in one container exhaust memory and kill e2e.
 surface: safe

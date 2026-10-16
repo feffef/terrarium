@@ -1,4 +1,6 @@
 name: audit-docs-contradiction-rule-missing
+summary: >-
+  The doc review had no rule for two decision records that contradict each other.
 cause: audit-docs had no rule for two contradicting ADRs, so every future contradiction would have been filed as an issue.
 surface: safe
 status: fixed

@@ -6,6 +6,7 @@ import type { FrictionClusterDoc, Severity } from '../../app/types/journal.ts'
 function cluster(name: string, severities: Severity[]): FrictionClusterDoc {
   return {
     name,
+    summary: `${name} summary`,
     cause: `${name} cause`,
     surface: 'safe',
     status: 'open',
@@ -38,6 +39,13 @@ describe('ledgerPanels', () => {
       { date: '2026-10-02', severity: 'minor', to: '/t/journal/current#session-x-1' },
       { date: '2026-10-01', severity: 'nit', to: '/t/journal/archived#session-x-0' },
     ])
+  })
+})
+
+describe('ledgerPanels text', () => {
+  it('carries the visitor summary and the detailed cause', () => {
+    const [e] = ledgerPanels([cluster('x', ['nit'])], 'current', new Set(), 'archived').severe
+    expect(e).toMatchObject({ summary: 'x summary', cause: 'x cause' })
   })
 })
 

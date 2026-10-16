@@ -1,4 +1,6 @@
 name: stale-cache-typecheck
+summary: >-
+  Leftover build caches made local type checks disagree with the checks on GitHub.
 cause: >-
   Stale .nuxt or Nitro caches and the tsconfig.node alias map make local typecheck or the dev server disagree with CI.
 surface: safe

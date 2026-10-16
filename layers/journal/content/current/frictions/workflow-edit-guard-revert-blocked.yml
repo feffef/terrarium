@@ -1,4 +1,6 @@
 name: workflow-edit-guard-revert-blocked
+summary: >-
+  A safety check blocked undoing an accidental edit to a GitHub workflow file.
 cause: A comment edit under .github/workflows/ got committed with other work; the push was rejected and workflow-edit-guard then also denied the revert to main's version, leaving no documented way to undo it (environment-caveats says only "put the edit in docs/proposals/").
 surface: guard-or-hook
 status: fixed

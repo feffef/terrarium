@@ -1,4 +1,6 @@
 name: blocked-waiting
+summary: >-
+  Agents had no allowed way to wait for a long check to finish, so they kept polling.
 cause: >-
   Waiting on a backgrounded gate, build or CI needs a sleep the guards deny, so sessions poll with no-op calls or shell backgrounding.
 surface: guard-or-hook

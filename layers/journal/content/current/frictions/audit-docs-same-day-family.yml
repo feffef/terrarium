@@ -1,4 +1,6 @@
 name: audit-docs-same-day-family
+summary: >-
+  Running the doc review twice on one day re-checked the same docs instead of new ones.
 cause: audit-docs picks its doc family by day of year, so same-day reruns re-audit the family an earlier run just tightened.
 surface: safe
 status: fixed

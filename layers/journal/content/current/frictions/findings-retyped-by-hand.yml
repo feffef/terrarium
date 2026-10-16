@@ -1,4 +1,6 @@
 name: findings-retyped-by-hand
+summary: >-
+  Helper agents could not always hand back their findings directly, so the main agent copied them out by hand.
 cause: >-
   Subagents cannot always write their findings where the parent can read them (harness refusals, non-extractable output), so the parent transcribes them by hand.
 surface: safe

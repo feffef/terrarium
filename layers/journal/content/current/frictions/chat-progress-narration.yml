@@ -1,4 +1,6 @@
 name: chat-progress-narration
+summary: >-
+  Agents narrated their helpers' progress in chat, when the chat should hold only questions and the final report.
 cause: >-
   Harness status nudges pull sessions into narrating subagent progress in chat, though clear-backlog says the chat holds only questions and the report.
 surface: outside

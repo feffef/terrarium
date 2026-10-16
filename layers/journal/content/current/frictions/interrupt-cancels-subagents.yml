@@ -1,4 +1,6 @@
 name: interrupt-cancels-subagents
+summary: >-
+  Interrupting an agent silently stopped its helpers, and it went on reporting them as running.
 cause: >-
   A user interrupt cancels running Agent subagents with no notification, and nothing tells the orchestrator to check, so it keeps reporting them as running.
 surface: safe

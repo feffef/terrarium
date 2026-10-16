@@ -1,4 +1,6 @@
 name: code-review-skill-two-agents-skipped
+summary: >-
+  For small text changes, agents reviewed their own work instead of running the two independent reviewers the review Skill asks for.
 cause: The code-review pack Skill prescribes two parallel subagents; sessions self-review small prose diffs instead and log the deviation.
 surface: outside
 status: open

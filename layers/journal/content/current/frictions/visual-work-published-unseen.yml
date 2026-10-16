@@ -1,4 +1,6 @@
 name: visual-work-published-unseen
+summary: >-
+  Diagrams and layouts went live before a human looked at them, and the human found them poor.
 cause: >-
   Diagrams, illustrations and layouts ship after the agent's own screenshot check; the human first sees the result after it is published and judges it poor.
 surface: safe

@@ -1,4 +1,6 @@
 name: audit-docs-adr-decision-reversed
+summary: >-
+  A rewrite of a decision record quietly reversed the decision, and only the owner noticed.
 cause: audit-docs' checkers have no explicit check that an ADR rewording preserves the decision, so a rewrite that reverses it can pass; the owner caught it in review.
 surface: safe
 status: fixed

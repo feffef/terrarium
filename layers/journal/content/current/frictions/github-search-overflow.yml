@@ -1,4 +1,6 @@
 name: github-search-overflow
+summary: >-
+  GitHub searches returned so much text that they flooded the agent's working memory.
 cause: >-
   mcp__github__search_issues and search_pull_requests return full bodies unless `fields` omits them, so a broad or early query floods context; github-integration.md documents it, but sessions hit it before reading the doc or anyway.
 surface: guard-or-hook

@@ -1,4 +1,6 @@
 name: stop-hook-nag
+summary: >-
+  An end-of-turn reminder told agents to commit and push while checks were still running.
 cause: >-
   The Stop hook demands commit and push on every turn while a gate, build or fact-check subagent is still running, against ADR-0004's push-after-gate rule.
 surface: outside

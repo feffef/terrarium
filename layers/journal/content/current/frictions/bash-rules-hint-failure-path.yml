@@ -1,4 +1,6 @@
 name: bash-rules-hint-failure-path
+summary: >-
+  The hint that loads a file's rules stayed silent when the shell command reading the file failed.
 cause: >-
   The Bash rules hint (PR #1946, #1940) still added nothing to a failing compound read (`cat .claude/rules/guards.md; ls /nonexistent`, exit 2) in a live test run after #1946 merged.
 surface: guard-or-hook

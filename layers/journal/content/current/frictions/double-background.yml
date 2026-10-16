@@ -1,4 +1,6 @@
 name: double-background
+summary: >-
+  Agents told a command to run in the background twice over, and a safety check blocked it.
 cause: >-
   Sessions combine run_in_background: true with a trailing & or nohup, and the double-background guard denies it.
 surface: guard-or-hook

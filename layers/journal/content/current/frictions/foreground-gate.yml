@@ -1,4 +1,6 @@
 name: foreground-gate
+summary: >-
+  Agents waited on the full three-minute check run instead of running it in the background.
 cause: >-
   Sessions run pnpm gate:scoped (about 3 minutes) in the foreground although CLAUDE.md says to background commands over 2 minutes; only a guard would reach them.
 surface: guard-or-hook

@@ -1,4 +1,6 @@
 name: session-id-guard-trailer
+summary: >-
+  A safety check blamed the current session for commits made before it started.
 cause: >-
   session-id-guard judged inherited or pre-session commits as this session's and raised a blocker on a trailer it had no business checking.
 surface: guard-or-hook

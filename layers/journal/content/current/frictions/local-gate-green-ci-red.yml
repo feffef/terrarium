@@ -1,4 +1,6 @@
 name: local-gate-green-ci-red
+summary: >-
+  Checks passed on the agent's machine but failed on GitHub, because the two ran against different code.
 cause: >-
   CI tests the merge ref against the current main with its own git version; the local gate tests the branch as cut with the container git and may skip Heavy as Inert, so a local green still fails in CI.
 surface: safe

@@ -1,4 +1,6 @@
 name: skill-changed-mid-run
+summary: >-
+  A Skill changed while a run was using it, so the run followed the old version.
 cause: >-
   A Skill merged to main minutes after a run started, so the run used a stale copy (visitor-loop focus and refiner step); one-off race.
 surface: safe
