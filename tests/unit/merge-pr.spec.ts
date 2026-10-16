@@ -17,6 +17,7 @@ import {
   pollUntilResolved,
   prMetaFromPull,
   prOriginRefusal,
+  readyForHumanRefusal,
   reconcileClosingKeywords,
   verdictFromCheckRuns,
   verdictRefusal,
@@ -174,6 +175,11 @@ describe('parseClosingKeywordIssues()', () => {
     expect(parseClosingKeywordIssues('closes #7')).toEqual([7])
   })
 
+  it('matches a keyword followed by a colon, inside quotes or a negation, as GitHub does (#2104)', () => {
+    expect(parseClosingKeywordIssues('Fixes: #1819')).toEqual([1819])
+    expect(parseClosingKeywordIssues("don't write 'fix: #1819'")).toEqual([1819])
+  })
+
   it('deduplicates and sorts ascending', () => {
     expect(parseClosingKeywordIssues('Closes #5\nFixes #3, #5')).toEqual([3, 5])
   })
@@ -188,6 +194,27 @@ describe('parseClosingKeywordIssues()', () => {
 
   it('is empty for a body with no closing keywords', () => {
     expect(parseClosingKeywordIssues('Just a plain description, no keywords here.')).toEqual([])
+  })
+})
+
+describe('readyForHumanRefusal() (#2104)', () => {
+  it('refuses when a closing reference names an open ready-for-human issue', () => {
+    const refusal = readyForHumanRefusal([
+      { number: 7, state: 'open', labels: ['ready-for-agent'] },
+      { number: 1819, state: 'open', labels: ['ready-for-human'] },
+    ])
+    expect(refusal).toContain('#1819')
+    expect(refusal).toContain('relates to #1819')
+    expect(refusal).not.toContain('#7')
+  })
+
+  it('allows a closed ready-for-human issue and open issues without the label', () => {
+    expect(
+      readyForHumanRefusal([
+        { number: 1819, state: 'closed', labels: ['ready-for-human'] },
+        { number: 7, state: 'open', labels: ['ready-for-agent'] },
+      ]),
+    ).toBeNull()
   })
 })
 
