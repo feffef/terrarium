@@ -66,3 +66,8 @@ occurrences:
     severity: nit
     description: "code-review's two parallel review agents for a one-line --first-parent diff cost about 125k subagent tokens"
     solution: "Let code-review scale down to one inline pass for a diff under ~5 lines (pack Skill: note it in its Inventory entry)"
+  - session: session_01N9bwDKW51kMS6WJvK2nfSU
+    date: "2026-10-16"
+    severity: nit
+    description: "The code-review Skill mandates two parallel sub-agents, disproportionate for a one-file prose post already fact-checked; I reviewed inline."
+    solution: "Let pr-workflow allow an inline review for a single-file content diff."

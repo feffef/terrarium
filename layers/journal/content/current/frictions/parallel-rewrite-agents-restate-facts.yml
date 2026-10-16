@@ -1,13 +1,23 @@
 name: parallel-rewrite-agents-restate-facts
 summary: >-
-  Agents rewriting docs in parallel each repeated the same fact, so a cleanup pass was needed.
-cause: Parallel rewrite agents (ADR rewrite campaign) each restated the same fact in several ADRs, needing a separate consistency pass; campaign-specific, expected not to recur.
+  New text from drafting or rewriting agents repeated a fact that already has a home, and a reviewer or the owner had to catch it.
+cause: >-
+  Agents add a sentence, rejected alternative or excerpt that restates a fact kept elsewhere (CLAUDE.md "One home per fact"): ADR rewrite agents, a build adding two ADR-0003 sentences, a lesson draft repeating ADR-0028 and an excerpt; the build reviewers passed some of it.
 surface: safe
 status: open
-ref: "one-off of the completed ADR rewrite (PR #1898); candidate to drop at the next horizon prune"
 occurrences:
   - session: session_011xN2Zi67cjpCguuMiZbsJ6
     date: "2026-10-13"
     severity: moderate
     description: "Parallel rewrite agents restated the same fact in several ADRs (merge-pr gap, generated-config alternative); it took a separate consistency pass to find and fix."
     solution: "Rewrite in dependency order or add a mandatory cross-batch dedupe step to the rewrite guide."
+  - session: session_01NqN7omu3o4kxoGeQzzSXhK
+    date: "2026-10-15"
+    severity: minor
+    description: "Owner review on #2085 flagged two ADR-0003 additions (a rejected alternative and a summary sentence) as repetition the build reviewers had passed"
+    solution: "Have the clear-backlog-build Standards reviewer check new ADR text against Scope and summary for repetition"
+  - session: session_01NFv67izdzVGrFHb2EVwZJ2
+    date: "2026-10-16"
+    severity: minor
+    description: "First draft repeated ADR-0028's varies point as a watch item and kept a second copy of the Tinkerfund excerpt in the content database Lesson; code-review caught both"
+    solution: "Before writing What to watch for, grep sibling Lessons and the linked ADR for each point (EVERY-PAGE.md already says so)"

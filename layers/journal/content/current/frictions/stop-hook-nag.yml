@@ -322,3 +322,8 @@ occurrences:
     severity: nit
     description: "The Stop hook asked to push a half-built branch; I committed locally and held the push for the gate and review, as ADR-0004 says."
     solution: "Let the hook skip a branch whose gate has not run, or say so in its message."
+  - session: session_01N9bwDKW51kMS6WJvK2nfSU
+    date: "2026-10-16"
+    severity: nit
+    description: "The Stop hook asked me to push before the gate had finished; I held the push as ADR-0004 says."
+    solution: "Let the hook skip a branch whose gate has not run, or say so in its message."

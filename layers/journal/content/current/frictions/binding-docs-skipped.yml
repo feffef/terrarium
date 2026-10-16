@@ -484,3 +484,8 @@ occurrences:
     severity: minor
     description: "Did not grep docs/adr for ADRs binding Excerpt.vue before changing it"
     solution: "Run grep -l Excerpt docs/adr/* before editing, as CLAUDE.md asks"
+  - session: session_01N9bwDKW51kMS6WJvK2nfSU
+    date: "2026-10-16"
+    severity: minor
+    description: "Ran git log and git fetch before reading docs/agents/git-conventions.md, and an MCP GitHub call before github-integration.md, against CLAUDE.md read-first triggers; hooks reminded me afterwards."
+    solution: "Read both docs right after the session-start glossaries on any scheduled run that will use git and GitHub."

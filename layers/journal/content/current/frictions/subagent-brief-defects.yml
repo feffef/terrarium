@@ -1,0 +1,34 @@
+name: subagent-brief-defects
+summary: >-
+  Briefs for helper agents carried a wrong path, value, check or unfilled placeholder, which cost a wasted run or a review catch.
+cause: >-
+  Orchestrators write briefs from memory: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value restated wrongly, a check grepping output that lists only failures. The agent runs on the bad brief before anyone notices. Signals: "brief", "placeholder", "path did not exist".
+surface: safe
+status: tracked
+ref: "this run's grouped doc PR (dispatch-subagents §3 brief re-read line)"
+occurrences:
+  - session: session_011JKK8rrCwea3xSmL4kw6si
+    date: "2026-10-14"
+    severity: nit
+    description: "My brief gave the doc agent a wrong fixedOn and ref for reviewer-line-ranges-off, against the survey patch; code-review caught it before the push."
+    solution: "Point the brief at the patch for every status field instead of restating values from memory."
+  - session: session_01G6m9SbDppX4TE87Mp3m5Dk
+    date: "2026-10-14"
+    severity: nit
+    description: "Reviewer briefs named sibling paths relative to the Skill folder; agents reported the repo-root path didn't exist"
+    solution: "Write full repo-relative paths in briefs"
+  - session: session_01Dcufz27EyPsKy6sYafpKRg
+    date: "2026-10-14"
+    severity: nit
+    description: "The brief gave the content path without the Collection folder (content/guide/<subject>), which would have put the stories' files in the wrong place"
+    solution: "Fixed in the stories; spec writers should derive paths from shared/expand.ts"
+  - session: session_01C8c4U7TDuWnJwenPUWYxrP
+    date: "2026-10-15"
+    severity: minor
+    description: "Launched the first subagent with an unfilled {PAGES} placeholder in its brief, wasting a run until I re-sent the page list."
+    solution: "Build briefs from a script or re-read the prompt for placeholders before dispatching."
+  - session: session_01Fay2GiWTwxDKnnqS9DznHk
+    date: "2026-10-16"
+    severity: minor
+    description: "My brief's check grepped vitest's default output, which lists only failures, so several agents saw nothing for a passing page."
+    solution: "Brief agents to use --reporter=verbose when grepping per-page results."

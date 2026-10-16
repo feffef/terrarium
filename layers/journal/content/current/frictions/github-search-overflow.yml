@@ -36,3 +36,8 @@ occurrences:
     severity: nit
     description: "Ran git fetch and merge-base before reading git-conventions.md, and a GitHub search before github-integration.md; the search was also denied for missing fields."
     solution: "Read the trigger docs first; the search guard message was clear."
+  - session: session_01N9bwDKW51kMS6WJvK2nfSU
+    date: "2026-10-16"
+    severity: minor
+    description: "search_pull_requests asking for body returned about eight full PR bodies (visitor-loop tallies), flooding context before I read the overflow advice."
+    solution: "Use scripts/recent-prs.ts or list_pull_requests with fields that omit body for the last blog PRs, as the blog-post step could say."
