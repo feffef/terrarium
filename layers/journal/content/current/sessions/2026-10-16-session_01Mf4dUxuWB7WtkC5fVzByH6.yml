@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_01Mf4dUxuWB7WtkC5fVzByH6
 startedAt: 2026-10-16T12:07:54Z
-endedAt: 2026-10-16T12:42:28Z
+endedAt: 2026-10-16T12:50:25Z
 kind: interactive
 goal: Turn the latest session frictions into fixes
 status: completed
-outcome: Both PRs merged (ledger refresh plus a doc fix, and a cap on regression issues); five issues filed and open
-summary: "The user ran frictions-to-fixes. A survey subagent read the 44 sessions of the window and returned a ranked report and a ledger patch. Agent-initiated, per the Skill: picking one simple doc fix (a brief re-read line in dispatch-subagents), dispatching a Sonnet agent for the grouped doc PR with the ledger edit, and opening the two PRs. Human-instructed: the user answered two questions (file only the top 3 regressions; file both hard issues, so issues 2144 to 2148 went up) and then asked for the Skill to cap regression issues at three per run, ranked by severity, occurrence and proof of regression, as a separate PR (2149). The doc and ledger PR is 2150. The survey patch listed some sessions twice in a cluster, which the schema forbids; the impl agent dropped 23 duplicate occurrences (keeping the first, highest severity), and the counts quoted in my regression issues were the pre-dedupe ones, corrected by comment. Both PRs merged after green CI; PR 2150 is recorded in the ledger as the subagent-brief-defects fix. The five issues stay open for the owner."
+outcome: Three PRs merged (ledger refresh plus a doc fix, a cap on regression issues, and no user alert); five issues filed; a comment added on the review ticket
+summary: "The user ran frictions-to-fixes. A survey subagent read the 44 sessions of the window and returned a ranked report and a ledger patch. Agent-initiated, per the Skill: picking one simple doc fix (a brief re-read line in dispatch-subagents), dispatching a Sonnet agent for the grouped doc PR with the ledger edit, and opening the two PRs. Human-instructed: the user answered two questions (file only the top 3 regressions; file both hard issues, so issues 2144 to 2148 went up) and then asked for the Skill to cap regression issues at three per run, ranked by severity, occurrence and proof of regression, as a separate PR (2149). The doc and ledger PR is 2150. The survey patch listed some sessions twice in a cluster, which the schema forbids; the impl agent dropped 23 duplicate occurrences (keeping the first, highest severity), and the counts quoted in my regression issues were the pre-dedupe ones, corrected by comment. Both PRs merged after green CI; PR 2150 is recorded in the ledger as the subagent-brief-defects fix. The five issues stay open for the owner. The owner then pointed out the Skill usually runs unattended, so I removed the user alert wording (PR 2151, human-instructed) and commented on issue 2137 how the cap and alert changes affect next week's verification."
 prs:
   - "2149"
   - "2150"
+  - "2151"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: session-start glossary read
@@ -83,27 +84,29 @@ frictions:
   - description: The Stop hook asked to push unpushed commits twice before the ADR-0004 gate and code-review were done.
     solution: None needed; the rule said to wait, and I did.
     severity: nit
-durationSec: 2074
+durationSec: 2551
 models:
-  claude-sonnet-5-5: 142
+  claude-sonnet-5-5: 188
 toolCounts:
-  Read: 11
-  Agent: 6
+  Read: 14
+  Agent: 8
   AskUserQuestion: 1
   ToolSearch: 1
-  Bash: 37
+  Bash: 44
   mcp__github__issue_write: 5
   Grep: 1
-  Edit: 6
-  Write: 6
+  Edit: 11
+  Write: 7
   mcp__github__list_pull_requests: 1
   Skill: 2
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 5
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  mcp__github__add_issue_comment: 7
   mcp__github__pull_request_read: 1
   mcp__github__update_pull_request: 1
   mcp__github__list_issues: 1
+  ReadNotifications: 1
+  mcp__github__issue_read: 2
 filesEdited:
   - .claude/skills/frictions-to-fixes/SKILL.md
   - .agents/skills/frictions-to-fixes/SKILL.md
@@ -205,6 +208,12 @@ subagents:
     model: sonnet
   - type: general-purpose
     task: Spec review of ledger PR
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of alert removal
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of alert removal
     model: sonnet
 gitBranch: ccr-9bb7249a-zazowa
 entrypoint: remote_mobile
