@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01RKUs8JUM5uASMfiE3hvXRA
 startedAt: 2026-10-16T16:48:28Z
-endedAt: 2026-10-16T17:26:38Z
+endedAt: 2026-10-16T17:32:01Z
 kind: autonomous
 goal: Scheduled visitor-loop run on the Glass Box guide
-status: in-review
-outcome: Fix PR 2163 open; the feature PR follows once it merges
-summary: "Scheduled run, no human prompt; every change was agent-initiated under the visitor-loop Skill's remit. Built and served the site, sent three blind visitors (sonnet, fable, opus) through /t/glassbox/guide, tallied five consensus findings and dropped a sixth (code-excerpt scroll cue already exists). An opus refiner narrowed four of them (#2100, #2124, ADR-0006). Fixed: landing lede says what Terrarium is, walkthrough file chips wrap at 390px, Subject cards and pills link properly and /subject redirects to its card, Gate Lesson cites each ADR once. The code review caught a lost pill padding and a 404-after-redirect; both fixed. Opened PR 2163. Open: land it, then build the chosen feature, a \"Words we use\" strip on the landing."
+status: completed
+outcome: Fix PR 2163 and feature PR 2164 merged
+summary: "Scheduled run, no human prompt; every change was agent-initiated under the visitor-loop Skill's remit. Built and served the site, sent three blind visitors (sonnet, fable, opus) through /t/glassbox/guide, tallied five consensus findings and dropped a sixth (code-excerpt scroll cue already exists). An opus refiner narrowed four of them (#2100, #2124, ADR-0006). Fixed: landing lede says what Terrarium is, walkthrough file chips wrap at 390px, Subject cards and pills link properly and /subject redirects to its card, Gate Lesson cites each ADR once. The code review caught a lost pill padding and a 404-after-redirect; both fixed. Opened and merged PR 2163, then PR 2164: the chosen feature, a \"Words we use\" strip on the landing read from the terms Collection. No out-of-remit finding survived, so no issue was filed."
 prs:
   - "2163"
+  - "2164"
 docsRead:
   - path: GLOSSARY.md
     reason: Platform terms
@@ -111,20 +112,21 @@ frictions:
   - description: owner-corrections.ts listed 16 candidates; 13 came from file overlap with unrelated Journal Friction Ledger PRs, and each needed its own tally line.
     solution: Skip overlap candidates whose title and body never name a visitor-loop PR.
     severity: minor
-durationSec: 2291
+durationSec: 2613
 models:
-  claude-sonnet-5-5: 155
+  claude-sonnet-5-5: 168
 toolCounts:
   Read: 14
-  Bash: 52
+  Bash: 55
   Agent: 7
   ToolSearch: 2
   mcp__github__search_issues: 5
   Skill: 3
   Edit: 1
-  mcp__github__create_pull_request: 1
+  mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 1
 filesEdited:
   - layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
 rulesLoaded:
@@ -154,6 +156,8 @@ rulesFollowedUp:
 rulesLoadedBySubagents:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0013.md
   - .claude/rules/adr-0014.md
 docsReadBySubagents:
   - .agents/skills/visitor-loop/SKILL.md
