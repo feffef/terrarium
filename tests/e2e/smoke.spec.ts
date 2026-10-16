@@ -117,7 +117,7 @@ describe('L2 smoke render', async () => {
       }
     })
 
-    it('features Glass Box as the newest experiment: both Spaces, and its Start here Walkthrough', async () => {
+    it('features Glass Box as the newest experiment: both Spaces, and a guide Lesson of the day', async () => {
       const page = await createPage()
       try {
         await page.goto(url('/'), { waitUntil: 'hydration' })
@@ -125,10 +125,11 @@ describe('L2 smoke render', async () => {
         const tile = page.locator('.tile--glassbox')
         expect(await attrs(tile.locator('a.room'), 'href')).toEqual(['/t/glassbox/guide', '/t/glassbox/drafts'])
         expect(await tile.locator('a.room').allTextContents()).toEqual([
-          expect.stringMatching(/\d+ finished pages/),
+          expect.stringMatching(/\d+ core pages, the current focus/),
           expect.stringMatching(/\d+ pages still being written/),
         ])
-        expect(await tile.locator('a.lesson').getAttribute('href')).toBe('/t/glassbox/guide/walkthroughs/from-file-to-browser')
+        // A Lesson, never a Walkthrough: Walkthroughs aren't ready to lead with (layers/glassbox/GLOSSARY.md).
+        expect(await tile.locator('a.lesson').getAttribute('href')).toMatch(/^\/t\/glassbox\/guide\/(?!walkthroughs\/)[a-z-]+\/[a-z0-9-]+$/)
         expect(await tile.evaluate((el) => getComputedStyle(el).getPropertyValue('--gb-accent'))).not.toBe('')
       } finally {
         await page.close()

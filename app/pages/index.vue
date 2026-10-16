@@ -109,22 +109,33 @@ const { data: tinkerfund } = await useAsyncData('tinkerfund-showcase', async () 
 })
 
 // Glass Box is the newest experiment, shown in progress: both its Spaces, the
-// polished guide and the drafts that missed its bar (layers/glassbox/GLOSSARY.md).
+// guide in focus and the drafts set aside (layers/glassbox/GLOSSARY.md). The
+// teaser is a guide Lesson, not a Walkthrough: those aren't ready to lead with.
 const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
   const guide = resolveSpaceRoute('glassbox', 'guide', undefined)
   const drafts = resolveSpaceRoute('glassbox', 'drafts', undefined)
   if (!guide || !drafts) return null
-  const [guideCount, draftCount, start] = await Promise.all([
-    queryCollection(guide.pagesKey).where('path', '<>', '/').count(),
+  const [guidePages, draftCount] = await Promise.all([
+    queryCollection(guide.pagesKey).where('path', '<>', '/').select('path', 'title', 'description').all(),
     queryCollection(drafts.pagesKey).where('path', '<>', '/').count(),
-    queryCollection(guide.pagesKey).path(glassboxStartHere).select('title', 'description').first(),
   ])
+  const lessons = guidePages.flatMap((page) => {
+    const subject = glassboxSubjectOf(page.path)
+    return subject ? [{ ...page, subject: subject.name }] : []
+  })
+  lessons.sort((a, b) => a.path.localeCompare(b.path))
+  const lesson = pickOfTheDay(lessons)
   return {
     entries: [
-      { name: 'The guide', path: '/t/glassbox/guide', note: `${guideCount} finished pages`, accent: 'var(--gb-accent)' },
+      { name: 'The guide', path: '/t/glassbox/guide', note: `${guidePages.length} core pages, the current focus`, accent: 'var(--gb-accent)' },
       { name: 'Drafts', path: '/t/glassbox/drafts', note: `${draftCount} pages still being written`, accent: 'var(--gb-muted)' },
     ],
-    start: start && { ...start, url: `/t/glassbox/guide${glassboxStartHere}` },
+    lesson: lesson && {
+      url: `/t/glassbox/guide${lesson.path}`,
+      title: lesson.title,
+      description: lesson.description,
+      subject: lesson.subject,
+    },
   }
 })
 
@@ -173,21 +184,22 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-head">
         <h2 id="newest-heading" class="eyebrow">Newest experiment <span class="wip">work in progress</span></h2>
         <p class="tagline">
-          The agents' latest site, still being written: a few chapters are finished, most are drafts.
+          The agents' latest site, still being written: a core set of pages gets the attention first, the rest wait as drafts.
         </p>
       </div>
       <HomeShowcase
         tenant="Glass Box"
         path="/t/glassbox"
         noun="spaces"
-        teaser-label="Start here"
+        teaser-label="Lesson of the day"
         blurb="A textbook on how Terrarium works — Claude Code, Nuxt, Zod, Git and the house rules — with Terrarium itself as the worked example, every page pinned to a dated commit."
         :entries="glassbox.entries"
         wide
       >
-        <NuxtLink v-if="glassbox.start" :to="glassbox.start.url" class="lesson">
-          <span class="lesson-title">{{ glassbox.start.title }}</span>
-          <span class="lesson-description">{{ glassbox.start.description }}</span>
+        <NuxtLink v-if="glassbox.lesson" :to="glassbox.lesson.url" class="lesson">
+          <span class="lesson-subject">{{ glassbox.lesson.subject }}</span>
+          <span class="lesson-title">{{ glassbox.lesson.title }}</span>
+          <span class="lesson-description">{{ glassbox.lesson.description }}</span>
         </NuxtLink>
       </HomeShowcase>
     </section>
@@ -543,7 +555,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   }
 }
 
-/* ── Glass Box band: a work-in-progress badge, and its Start here Walkthrough. ── */
+/* ── Glass Box band: a work-in-progress badge, and its Lesson of the day. ── */
 .wip {
   margin-left: 0.5rem;
   padding: 0.1rem 0.45rem;
@@ -560,6 +572,12 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   gap: 0.3rem;
   color: var(--gb-ink);
   text-decoration: none;
+}
+.lesson-subject {
+  font: 0.72rem var(--gb-mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--gb-muted);
 }
 .lesson-title {
   font-family: var(--gb-sans);
