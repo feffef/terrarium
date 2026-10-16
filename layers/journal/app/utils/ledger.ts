@@ -20,7 +20,6 @@ export interface LedgerEntry {
   status: FrictionClusterDoc['status']
   fixedOn?: string
   ref?: string
-  refLinks: { label: string; url: string }[]
   /** The PR that merged the fix on `fixedOn`, shown in the status pill. */
   fixedPr?: { number: number; url: string }
   /** Newest first. */
@@ -42,17 +41,6 @@ function occurrenceSolution(fixes: SessionFixes[string] | undefined, severity: S
 
 /** Each session's Frictions, by session id. */
 export type SessionFixes = Record<string, { severity: Severity; solution: string }[]>
-
-/** The first issue and the first PR a cluster's free-text `ref` names: a ref
- *  often cites old PRs before the issue that tracks it now. */
-export function ledgerRefLinks(ref: string | undefined): LedgerEntry['refLinks'] {
-  const issue = ref?.match(/\bissues? #(\d+)/)?.[1]
-  const pr = ref?.match(/\bPRs? #(\d+)/)?.[1]
-  return [
-    ...(issue ? [{ label: `issue #${issue}`, url: `${REPO_URL}/issues/${issue}` }] : []),
-    ...(pr ? [{ label: `PR #${pr}`, url: `${REPO_URL}/pull/${pr}` }] : []),
-  ]
-}
 
 /** The severity levels the `severe` list covers: the highest that exist and the next. */
 const SEVERE_LEVELS = 2
@@ -97,8 +85,6 @@ export function ledgerPanels(
       status: c.status,
       fixedOn: c.fixedOn,
       ref: c.ref,
-      // A fixed pill that names its PR makes the free-text PR link redundant.
-      refLinks: ledgerRefLinks(c.ref).filter((r) => !(fixedPr && r.label.startsWith('PR'))),
       fixedPr: fixedPr && { number: fixedPr.pr, url: fixedPr.url },
       fixes,
       worst,
