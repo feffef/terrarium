@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01DNheR1Cpt9b6vFsmGdzvxq
 startedAt: 2026-10-16T07:14:04Z
-endedAt: 2026-10-16T07:21:30Z
+endedAt: 2026-10-16T08:47:31Z
 kind: delegated
 goal: Explain the occurrence list on the Friction Ledger
 status: completed
-outcome: Heading and intro added; PR 2125 merged
-summary: One human prompt asked for a short heading between a Friction Ledger cluster's cause and its dated occurrence list, explaining the list and that the dates link to session logs. Everything after that (edit, gate, review, push, PR, subscription) was agent-initiated follow-through of that ask. The user's example heading said "proposed solutions", but the list holds only date, session goal and severity, so I used "Occurrences" plus a one-line intro (newest first, dates link to the session log) and said so in the PR. I did not ask a clarifying question first despite the user's stated preference, because the ask was concrete. The code-review Skill was run inline on the 5-line diff instead of with two sub-agents.
+outcome: Ledger heading, archived goals, solutions, scrolling and rankings merged (2125, 2126)
+summary: "Three human prompts. (1) Add a heading explaining the Friction Ledger's occurrence list (PR 2125). (2) The text after each date arrow was unexplained: after one clarifying question the user asked to show a hint for empty goals (archived sessions), read archived sessions too, and list proposed solutions as a bullet section (PR 2126). (3) Cap the lists at about 20 lines with inner scrolling, add an expand cue, and rank every cluster in both lists, placing it where it ranks higher, with \"most severe\" covering the two highest severities that exist (also PR 2126). Everything else (gate, review, pushes, PRs, merges) was agent-initiated follow-through. Two judgement calls: a solution is shown only when the session has exactly one friction of the occurrence's severity, because clusters store no link to the exact friction; and I read \"higher ranking\" as the smaller position number, ties to most severe. Both are stated in the PR. The user's first-message example heading said \"proposed solutions\", which the list did not hold, so I left it out then. Code review was done inline, not with two sub-agents."
 prs:
   - "2125"
+  - "2126"
 docsRead:
   - path: GLOSSARY.md
     reason: Friction Ledger term
@@ -27,6 +28,14 @@ docsRead:
     useful: partly
   - path: layers/journal/app/pages/t/journal/[space]/frictions.vue
     reason: (read before editing)
+  - path: layers/journal/app/utils/ledger.ts
+    reason: (read before editing)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
 skillsUsed:
   - name: code-review
     reason: required before first push; run inline given a 5-line diff
@@ -38,25 +47,32 @@ frictions:
   - description: code-review Skill mandates two parallel sub-agents, disproportionate for a 5-line CSS and markup change; I reviewed inline.
     solution: Let the pre-push rule allow an inline review for diffs under a few dozen lines.
     severity: nit
-durationSec: 446
+  - description: git push --force-with-lease was rejected as stale info after the earlier PR merged and its remote branch was deleted.
+    solution: pr-workflow.md says to push plainly on a restarted branch; point the restart recipe at git remote prune first.
+    severity: nit
+durationSec: 5607
 models:
-  claude-sonnet-5-5: 57
+  claude-sonnet-5-5: 161
 toolCounts:
-  Read: 6
-  Grep: 4
+  Read: 10
+  Grep: 6
   Glob: 2
-  Edit: 3
-  Bash: 11
+  Edit: 13
+  Bash: 41
   Skill: 3
   ToolSearch: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
-  mcp__github__pull_request_read: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 6
+  mcp__github__pull_request_read: 4
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
+  AskUserQuestion: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/journal/app/pages/t/journal/[space]/frictions.vue
+  - layers/journal/app/utils/ledger.ts
+  - layers/journal/tests/unit/ledger.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0006.md
@@ -64,6 +80,14 @@ rulesLoaded:
   - .claude/rules/adr-0016.md
   - .claude/rules/adr-0008.md
   - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0014.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
