@@ -234,6 +234,9 @@ const overflow = props.entries.length - listed.length
   .tile--wide .rail {
     grid-column: 1 / -1;
   }
+  .tile--wide .rooms {
+    padding-bottom: 1rem;
+  }
   .tile--wide .teaser {
     grid-column: 2;
     grid-row: 2 / span 2;
