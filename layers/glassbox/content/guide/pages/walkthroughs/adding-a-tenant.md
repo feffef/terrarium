@@ -49,7 +49,7 @@ The same expansion feeds :file[modules/routing.ts], which writes the routing map
 
 ## 6. It gets its own look
 
-For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in its layer. Their path has the Tenant's name where the catch-all has `[tenant]`, so they outrank it for its addresses and no others. Its components go in a folder named after it, so Nuxt gives them its name as a prefix, as in `MarqueePoster`. Its stylesheet, listed in its `nuxt.config.ts`, loads on every page of every Tenant, so it prefixes its CSS custom properties with a short tag of its own (`--mq-`) and scopes its rules under a class only its pages carry. Its components read those properties with `var()`, so none of them repeats a colour.
+For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in its layer. Their path has the Tenant's name where the catch-all has `[tenant]`, so they outrank it for its addresses and no others. Its components go in a folder named after it, so Nuxt gives them its name as a prefix, as in `MarqueePoster`. Its stylesheet, listed in its `nuxt.config.ts`, loads on every page of every Tenant, so it prefixes its CSS custom properties with a short tag of its own (`--mq-`) and scopes its rules under a class only its pages carry; its components read those properties with `var()`, so none of them repeats a colour.
 
 ::stop-links
 [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/marquee/app/assets/theme.css]
@@ -57,7 +57,7 @@ For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in 
 
 ## 7. It gets its own words
 
-It writes its own `GLOSSARY.md` and adds itself to the root list and `GLOSSARY-MAP.md`.
+It writes its own `GLOSSARY.md` for the words only it uses. Then it adds itself to the root list and `GLOSSARY-MAP.md`.
 
 ::stop-links
 :file[layers/marquee/GLOSSARY.md]

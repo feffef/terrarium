@@ -93,13 +93,19 @@ How a page opens.
 
 ## 1. The request arrives
 
-It reaches the router.
+It reaches the router. The router picks a page.
 
 ::stop-links
 [Collections](/t/glassbox/guide/nuxt-content/collections)
 ::
 
 ## 2. The page renders
+
+The page reads \`shared/expand.ts\`, e.g. its keys, under "New here? Start. Go!". Then it renders.
+
+\`\`\`ts
+return \`out\`. // Not. A. Sentence.
+\`\`\`
 
 ::stop-links
 :file[shared/expand.ts]
@@ -177,6 +183,8 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a Where next over 5 pages', (s: string) => `${s}${gateItem.repeat(5)}`, 'Where next lists 6 pages, more than 5'],
     ['a Journal page before a Lesson in Where next', (s: string) => `${s}${journalItem}${gateItem}`, 'Where next lists a Journal page before its end'],
     ['a stop with over 5 chips', (s: string) => s.replace(':file[shared/expand.ts]\n', `${Array(6).fill(':file[layers/]').join(' · ')}\n`), 'stop "2. The page renders" has 6 chips, more than 5'],
+    ['a stop of one sentence', (s: string) => s.replace(' The router picks a page.', ''), 'stop "1. The request arrives" has 1 sentence(s), not 2 to 4'],
+    ['a stop of five sentences', (s: string) => s.replace('Then it renders.', 'Then it renders. It ends! Done? Yes.'), 'stop "2. The page renders" has 5 sentence(s), not 2 to 4'],
     ['a stop :file a linked Lesson cites', (s: string) => s.replace('(/t/glassbox/guide/nuxt-content/collections)', '$& · :file[shared/expand.ts]'), 'stop "1. The request arrives" repeats shared/expand.ts, which /t/glassbox/guide/nuxt-content/collections cites'],
   ])('fails a Walkthrough with %s', (_name, broken, message) => {
     expect(problemsOf('walkthroughs/from-file-to-browser.md', broken(walkthrough)).join('\n')).toContain(message)

@@ -43,7 +43,7 @@ The sweep takes the author's tier from the `author_association` GitHub records, 
 
 ## 4. The claim is checked by reading only
 
-The subagent checks the report against the repo by reading only. It never checks out, installs, builds or runs anything a Public author supplied. It also searches for the fix already built and for an earlier issue asking the same. A report that is already fixed or is a duplicate is closed as `wontfix`, with a pointer to where the answer lives. A report that lacks the details to act on goes to `needs-info`, with specific questions, and the reporter's reply brings it back into the next sweep. Otherwise the issue gets its category, `bug`, and `ready-for-human`, with a comment shaped like a brief that says why it waits for a person.
+The subagent checks the report against the repo by reading only: it never checks out, installs, builds or runs anything a Public author supplied, and it searches for the fix already built and for an earlier issue asking the same. A report that is already fixed or is a duplicate is closed as `wontfix`, with a pointer to where the answer lives, and one that lacks the details to act on goes to `needs-info`, with specific questions, and the reporter's reply brings it back into the next sweep. Otherwise the issue gets its category, `bug`, and `ready-for-human`, with a comment shaped like a brief that says why it waits for a person.
 
 ::stop-links
 [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · [Skill Inventory](/t/journal/current/skills)

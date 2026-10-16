@@ -96,7 +96,14 @@ function readBody(body: string) {
   return { prose: prose.join('\n'), sections: sections.map((s) => ({ title: s.title, text: s.text.join('\n') })) }
 }
 
-/** The Walkthrough entry in GLOSSARY.md: at least one `## N. Title` stop, each with exactly one
+/** A stop's sentences before its `::stop-links`, counted by their end marks; none inside
+ *  code, a "quote" or "e.g." counts (#2096). */
+function stopSentences(text: string) {
+  const prose = readBody(text.split(/^::stop-links/m)[0]!).prose.replace(/"[^"\n]*"/g, 'quote').replace(/\b(e\.g|i\.e)\./g, '$1')
+  return prose.match(/[.!?](?=["')\]]*(\s|$))/g)?.length ?? 0
+}
+
+/** The Walkthrough entry in GLOSSARY.md: at least one `## N. Title` stop of 2–4 sentences, each with exactly one
  *  `::stop-links` block holding a link or `:file`, at most `cap` chips and no `:file` a Lesson
  *  it links cites. Outside a stop the block renders unstyled. */
 export function glassboxStopProblems(body: string, walkthrough: boolean, cites: GlassboxSite['cites']): string[] {
@@ -117,6 +124,8 @@ export function glassboxStopProblems(body: string, walkthrough: boolean, cites: 
         if (by) problems.push(`stop "${s.title}" repeats ${path}, which ${by} cites`)
       }
     }
+    const sentences = stopSentences(s.text)
+    if (sentences < 2 || sentences > 4) problems.push(`stop "${s.title}" has ${sentences} sentence(s), not 2 to 4`)
   }
   const stray = glassboxPageRefs(body).stopLinks.length - inStops
   if (stray) problems.push(`${stray} ::stop-links block(s) sit outside a Walkthrough stop`)
