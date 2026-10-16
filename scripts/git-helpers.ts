@@ -141,8 +141,7 @@ export function fetchOriginMain(
 export const SESSION_TRAILER = /Claude-Session:\s*\S*\/(\S+)/
 
 /** The merge commits on `<remote>/main` — single-homed here rather than
- *  duplicated per script (issue #448 code review: `recent-prs.ts` and
- *  `pr-timeline.ts` both need the identical `git log --merges` scan). Calls
+ *  duplicated per script (issue #448 code review). Calls
  *  `fetchOriginMain` first (see its own doc comment for why), then parses
  *  each merge's hash/timestamp/subject/body out of the `\x1f`/`\x1e`-delimited
  *  format string. Leaves PR-merge-vs-other-merge filtering to the caller. */

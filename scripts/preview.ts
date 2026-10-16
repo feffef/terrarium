@@ -34,7 +34,7 @@
 //
 // `shot` is the frictionless default (one-shot screenshot, no teardown to get
 // wrong). `start`/`stop` keep a server up for multi-navigation tools that need
-// a live URL — `scripts/plate-gallery.ts`, ad-hoc `playwright-core` probes.
+// a live URL — ad-hoc `playwright-core` probes.
 // Default is a production-accurate `preview` server (requires a prior
 // `pnpm build`); `--dev` uses `nuxt dev` for fast iteration (its DevTools
 // overlay makes it wrong for a trusted screenshot — see docs/agents/verifying-ui-changes.md).
@@ -234,7 +234,7 @@ export interface PreviewServer {
  * Start a `preview` (or, with `dev`, a `nuxt dev`) server on its OWN ephemeral
  * port and resolve once it answers HTTP. The returned handle's `pid` must be
  * passed to `stopPreview` when done. Exported so other scripts
- * (`scripts/plate-gallery.ts`, ad-hoc probes) can manage a server without
+ * (ad-hoc probes) can manage a server without
  * re-hand-rolling the `pkill` dance this whole file exists to kill (#240).
  *
  * Throws — with a "likely causes" diagnostic already printed to stderr — if the
