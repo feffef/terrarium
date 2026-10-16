@@ -31,8 +31,10 @@ export function provenanceHeader(label: string, sessionUrl: string): string {
   return `${BOT_ICON} [${label}](${sessionUrl})`
 }
 
-/** A full session URL, wherever it appears and whatever wraps it. */
-const SESSION_URL = String.raw`https:\/\/claude\.ai\/code\/(session_[A-Za-z0-9_-]+)`
+/** A full session URL, wherever it appears and whatever wraps it. A local CLI
+ *  session has no `session_` id, so its raw UUID stands in
+ *  (`docs/agents/environment-caveats.md`). */
+const SESSION_URL = String.raw`https:\/\/claude\.ai\/code\/(session_[A-Za-z0-9_-]+|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})`
 
 const SESSION_URL_GLOBAL = new RegExp(SESSION_URL, 'g')
 

@@ -332,6 +332,11 @@ describe('verdictRefusal() (issues #1276, #1844)', () => {
     expect(verdictRefusal(owner('nit', header(me)), me, head)).toBeNull()
   })
 
+  it("accepts a local session's raw-UUID header", () => {
+    const local = 'e34491a0-8237-4285-88b7-1a0b73cd29e7'
+    expect(verdictRefusal(owner(header(local)), local, head)).toBeNull()
+  })
+
   it("names the session and the subagent cause when only another session's verdict exists", () => {
     const refusal = verdictRefusal(owner(header('session_other')), me, head)
     expect(refusal).toMatch(noVerdict)
