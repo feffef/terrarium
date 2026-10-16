@@ -5,12 +5,6 @@ surface: outside
 status: open
 ref: "issue #1653 (closed not-planned 2026-10-10: harness-side stop-hook-git-check.sh); PRs #1588, #1612 (caveat docs)"
 occurrences:
-  - session: session_01BNbm6z4gohjBmVoeadKibZ
-    date: "2026-10-01"
-    severity: minor
-  - session: session_01D3f62f5e7GhdAZLcuHjkdc
-    date: "2026-10-01"
-    severity: nit
   - session: session_01BK3hyL2f3mxedQimjd719K
     date: "2026-10-02"
     severity: minor
@@ -177,5 +171,14 @@ occurrences:
     date: "2026-10-14"
     severity: minor
   - session: session_01NoQubvnMfCpcq9nkicNsDq
+    date: "2026-10-15"
+    severity: nit
+  - session: session_01C8c4U7TDuWnJwenPUWYxrP
+    date: "2026-10-15"
+    severity: nit
+  - session: session_013LwpcexAe7t3Qck4CKtj9Y
+    date: "2026-10-15"
+    severity: nit
+  - session: session_01KVh6e6JUAssZvPRbuN5YDr
     date: "2026-10-15"
     severity: nit

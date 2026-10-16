@@ -6,15 +6,6 @@ status: fixed
 fixedOn: "2026-10-10"
 ref: "issues #1422, #1684; PR #1438; ADR-0017 amendment e76caa79"
 occurrences:
-  - session: session_015TVUDfeEoazwwnEyyKMa8M
-    date: "2026-10-01"
-    severity: nit
-  - session: session_01D3f62f5e7GhdAZLcuHjkdc
-    date: "2026-10-01"
-    severity: minor
-  - session: session_01Hi7Hh6P81Pdy936F6AmDzP
-    date: "2026-10-01"
-    severity: nit
   - session: session_01BEQMve6mV2yNDTMmjiCAYL
     date: "2026-10-02"
     severity: nit

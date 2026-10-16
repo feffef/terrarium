@@ -190,7 +190,7 @@ and re-drops it.
 A **simple** selection is dispatched, reviewed and merged inside this same run (§5–§6), so an issue would only be closed by its own merge minutes later, leaving nothing durable. **Skip the issue.** Carry the same problem/evidence/recommended-fix into §5's dispatch brief and into the PR description you write (§6); the merged PR is the record.
 
 **Before recommending "add a line to doc X", check that anyone reads doc X.**
-`pnpm exec tsx scripts/audit-skills.ts` reports `docReadCounts` — path → how many
+`pnpm exec tsx scripts/audit-skills.ts` (about 478 KB: redirect it to a file and read only `docReadCounts`) reports `docReadCounts` — path → how many
 of the windowed sessions opened it. A doc sitting at **0** is where a prose fix
 goes to die. Prune the instruction that caused it first (CLAUDE.md, "Keep it
 short"); failing that, recommend a mechanism that reaches the session (a

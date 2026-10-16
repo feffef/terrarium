@@ -1,0 +1,12 @@
+name: pack-skill-install-pitfalls
+cause: >-
+  No doc covers adding a pack Skill; the skills CLI installed under .claude/skills (needs move plus link) and skills-lock computedHash is not the on-disk installedSha256.
+surface: safe
+status: open
+occurrences:
+  - session: session_01Lwanyry6GWtqHYoMAgGGLa
+    date: "2026-10-15"
+    severity: minor
+  - session: session_01Q4KbJ3FxhATe3QXaMbo1AM
+    date: "2026-10-16"
+    severity: minor

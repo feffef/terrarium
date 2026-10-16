@@ -5,9 +5,6 @@ surface: outside
 status: open
 ref: "docs/agents/environment-caveats.md bullet listing blocked hosts, 2026-10-15"
 occurrences:
-  - session: session_014aYTnetbYbfGH2MrSUDj9T
-    date: "2026-10-01"
-    severity: moderate
   - session: session_01CF4k9jXS9wLrcPVsGduZmn
     date: "2026-10-08"
     severity: moderate
@@ -43,4 +40,7 @@ occurrences:
     severity: minor
   - session: session_01Dcufz27EyPsKy6sYafpKRg
     date: "2026-10-14"
+    severity: minor
+  - session: session_01KVh6e6JUAssZvPRbuN5YDr
+    date: "2026-10-15"
     severity: minor
