@@ -173,6 +173,9 @@ not a bystander waiting for a human. For each branch:
    - **Merge right away** when the review is clean and the change is low-risk —
      follow `docs/agents/pr-workflow.md`'s recipe; you merge only by your own
      judgement call, on top of that mechanical recipe.
+   - **Send it back** when the review has findings the agent can fix: resume
+     the impl agent with them for follow-up commits, then review again from
+     step 1.
    - **Escalate to a human** only when the actual diff meets an ADR-0004
      exception (its *Scope* lists them, with examples of behaviour no test can
      observe); check the diff against them rather than guessing. Leave the PR open, say precisely why it is
