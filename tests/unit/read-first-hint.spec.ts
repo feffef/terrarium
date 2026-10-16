@@ -56,6 +56,7 @@ describe('triggeredDocs()', () => {
     const cases: [string, string[]][] = [
       ['scripts/preview.ts shot /x', [UI]],
       ['pnpm exec tsx scripts/preview.ts shot --width 390 /x', [UI]],
+      ['scripts/preview.ts review / /tmp/out', [UI]],
       ['node_modules/.bin/tsx scripts/screenshot.ts /x', [UI]],
       ['scripts/preview.ts stop 123', []],
       ['cat scripts/preview.ts', []],
