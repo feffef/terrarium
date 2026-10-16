@@ -1,0 +1,130 @@
+schemaVersion: 1
+session: session_015Bv9LjWV7VZhFbpkfKcPqW
+startedAt: 2026-10-16T22:39:56Z
+endedAt: 2026-10-16T22:50:19Z
+kind: autonomous
+goal: Scheduled sync of Glass Box guide pages to main
+status: in-review
+outcome: "PR 2182 opened: 24 guide pages re-pinned, 7 pages and 1 term edited"
+summary: Scheduled glassbox-update run (agent-initiated by the schedule; no human instruction beyond the stored prompt). Ran the script, advanced pins to 1f6fb016, then read the commit range against every flagged page. Found renamed ADR files (0013, 0019), a stale pr-workflow.md Excerpt the layer test did not catch, and prose that moved (Read-tool advice cut, cloud-session workflow fence, ADR summary pointer check, Friction Ledger fixes). Gate green, one page screenshotted, a Standards subagent reviewed and its wording fix was taken. Drafts Space left alone as out of scope. PR 2182 awaits CI and merge.
+prs:
+  - "2182"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: page shapes and Excerpt rules
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin and Check steps
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: scheduled-run PR closing steps and review-before-push
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch and commit hygiene
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP write tools for the PR
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: review shots command
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/adr/0013-content-config-built-from-manifests.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: glassbox-update
+    reason: (invoked as a slash command)
+frictions:
+  - description: Layer test passed although a pr-workflow.md Excerpt no longer matched the file at the new revision; found only by reading the file by hand.
+    solution: Make page-checks compare Excerpts when a page has an edited range, or have the update script flag the page loudly.
+    severity: minor
+  - description: glassbox-update script pins pages that have changed paths but no edited range, so flagged pages look done before they are reviewed.
+    solution: Report flagged pages after --write too, or pin only after review.
+    severity: nit
+durationSec: 624
+models:
+  claude-sonnet-5-5: 102
+toolCounts:
+  Bash: 46
+  Read: 2
+  Skill: 2
+  Agent: 1
+  ReadNotifications: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before first push; summary enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself and subscribe; confirmed scheduled-run scope. Summary enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main, not my branch; summary enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line one of the PR body; summary enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded from reading the glossary; no glossary term was added so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded from reading Skill files; I changed no Skill so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded from the prune-trials diff; confirmed a trial covers the Read-tool cut, so I did not reword it
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded while reading its page; helped judge what the path-scoped-rules page should say, ADR not opened
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept ids and trial state out of page prose; the reviewer used it to trim my watch item
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagram was edited, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed no Human-only file is in the diff
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded from ADR reads; I rewrote no ADR so it did not apply
+    useful: no
+subagents:
+  - task: Standards review
+gitBranch: claude/ecstatic-euler-9835b5
+entrypoint: remote_trigger
+cliVersion: 2.1.302
+trigger: glassbox-update
+ideas:
+  - Have glassbox-update also list drafts pages whose cited paths no longer exist at the new main, so renamed ADRs surface there.
+landedBy: Stop
