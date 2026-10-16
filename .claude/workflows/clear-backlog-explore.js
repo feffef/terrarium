@@ -114,25 +114,21 @@ for (const [i, issue] of input.entries()) {
 }
 if (missing.length) log(`MISSING after retry: #${missing.join(', #')}`)
 
-const parent = {}
-const find = n => (parent[n] === n ? n : (parent[n] = find(parent[n])))
-const open = Object.keys(results).map(Number).filter(n => ['build', 'grill'].includes(results[n].outcome))
-for (const n of open) parent[n] = n
-const fileOwner = {}
+// A group holds only issues that pairwise overlap directly, so A-B and B-C never chain A with C (#2147).
+const open = Object.keys(results).map(Number).filter(n => ['build', 'grill'].includes(results[n].outcome)).sort((a, b) => a - b)
+const linked = (a, b) =>
+  results[a].relatedTo.includes(b) || results[b].relatedTo.includes(a) || results[a].files.some(f => results[b].files.includes(f))
+const grouped = []
 for (const n of open) {
-  for (const f of results[n].files) {
-    if (fileOwner[f] === undefined) fileOwner[f] = n
-    else parent[find(n)] = find(fileOwner[f])
-  }
-  for (const m of results[n].relatedTo) if (parent[m] !== undefined) parent[find(n)] = find(m)
+  const group = grouped.find(g => g.every(m => linked(n, m)))
+  if (group) group.push(n)
+  else grouped.push([n])
 }
-const groups = {}
-for (const n of open) (groups[find(n)] ||= []).push(n)
 
 return {
   results,
   missing,
-  grouping: Object.values(groups).map(issues => ({
+  grouping: grouped.map(issues => ({
     issues,
     sharedFiles: [...new Set(issues.flatMap(n => results[n].files))].filter(f => issues.filter(n => results[n].files.includes(f)).length > 1),
   })),
