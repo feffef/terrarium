@@ -119,7 +119,11 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
     queryCollection(guide.pagesKey).where('path', '<>', '/').select('path', 'title', 'description').all(),
     queryCollection(drafts.pagesKey).where('path', '<>', '/').count(),
   ])
-  const lessons = guidePages.filter((p) => glassboxSubjectOf(p.path)).sort((a, b) => a.path.localeCompare(b.path))
+  const lessons = guidePages.flatMap((page) => {
+    const subject = glassboxSubjectOf(page.path)
+    return subject ? [{ ...page, subject: subject.name }] : []
+  })
+  lessons.sort((a, b) => a.path.localeCompare(b.path))
   const lesson = pickOfTheDay(lessons)
   return {
     entries: [
@@ -130,7 +134,7 @@ const { data: glassbox } = await useAsyncData('glassbox-showcase', async () => {
       url: `/t/glassbox/guide${lesson.path}`,
       title: lesson.title,
       description: lesson.description,
-      subject: glassboxSubjectOf(lesson.path)!.name,
+      subject: lesson.subject,
     },
   }
 })

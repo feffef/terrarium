@@ -30,19 +30,18 @@ Terrarium applies them without reading the source.
   repeats them. Each page is pinned to one `main` commit (`revision`, with its
   date in `revisionDate`), so it reads like a dated edition.
 - **A reference, not a course.** No global reading order: readers use the
-  Subject directory. Walkthroughs don't work well yet, so nothing leads with
-  them.
+  Subject directory. The homepage leads with a Lesson, not a Walkthrough, while
+  Walkthroughs are still being worked out.
 - **Two Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
-  Terrarium that we focus on first; it isn't finished. `/t/glassbox` redirects
-  there. `drafts` holds the rest, set aside for now; each may be improved and
-  moved to the guide. A guide page never links to a draft; a draft may link to
+  Terrarium that the work focuses on; `/t/glassbox` redirects there. `drafts`
+  holds the rest; each may be improved and moved to the guide. A guide page never links to a draft; a draft may link to
   the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
   orders Lessons inside a folder; Subject order and names come from
   `glassboxSubjects` in `app/utils/subjects.ts`.
 - **Shown in progress.** The Platform homepage gives Glass Box its own band
-  under the hero, guide (the focus) and drafts both, with a guide Lesson of
-  the day, labelled the newest experiment and work in progress; when it's finished, the label changes and the band stays.
-  Its `pages` are in the Catalog, and reach the Commons Timeline only when they
+  under the hero, labelled the newest experiment and work in progress, with
+  both Spaces and a guide Lesson of the day; when it's finished, the label
+  changes and the band stays. Its `pages` are in the Catalog, and reach the Commons Timeline only when they
   teach something new (`publishedAt`: EVERY-PAGE.md's Pin).
 
 ## Glossary
