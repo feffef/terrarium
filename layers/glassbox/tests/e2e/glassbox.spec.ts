@@ -1,5 +1,6 @@
 // The smoke sweep visits /t/glassbox/guide; the Tenant root is ours (ADR-0016).
-import { describe, it } from 'vitest'
+import { describe, expect, it } from 'vitest'
+import { $fetch } from '@nuxt/test-utils/e2e'
 import { expectRedirect, setupL2 } from '../../../../tests/support/e2e.ts'
 
 describe('glassbox Tenant', async () => {
@@ -10,4 +11,12 @@ describe('glassbox Tenant', async () => {
 
   it('sends a Subject folder URL to its card on the guide landing', () =>
     expectRedirect('/t/glassbox/guide/nuxt-vue', '/t/glassbox/guide#nuxt-vue'))
+
+  // Walkthroughs don't lead while they're being worked out (layers/glassbox/GLOSSARY.md).
+  it('leads the guide landing with Subjects, Walkthroughs after them and no Start here', async () => {
+    const html = await $fetch<string>('/t/glassbox/guide')
+    expect(html).not.toContain('Start here')
+    expect(html.indexOf('class="directory"')).toBeGreaterThan(0)
+    expect(html.indexOf('class="band"')).toBeGreaterThan(html.indexOf('class="directory"'))
+  })
 })
