@@ -3,7 +3,8 @@ import { adrHash, adrTokens, findAdrRuleProblems, newFormatProblems, ruleAdr, ru
 
 const ADR = '# ADR-0024: Mermaid\n\nDecision text.\n'
 const stamped = (body: string) => withRuleHash(body, adrHash(ADR))
-const POINTER_RULE = (n: string) => `If this rule seems relevant to your task, you must read the full ADR first:\ndocs/adr/${n}-mermaid.md\n`
+const POINTER_RULE = (n: string) =>
+  `Read the full ADR before you change this decision, or when you change how diagrams are drawn:\ndocs/adr/${n}-mermaid.md\n`
 const summaryFor = (n: string) => withRuleTokens(stamped(POINTER_RULE(n)), adrTokens(ADR))
 const summary = summaryFor('0024')
 
@@ -56,17 +57,19 @@ describe('ADR token estimate in the summary pointer', () => {
   })
 
   it('stamps the estimate, and restamps a stale one', () => {
-    expect(summary).toContain('If this rule seems relevant to your task, you must read the full ADR first (about 100 tokens):\ndocs/adr/')
-    expect(withRuleTokens(summary, 900)).toContain('(about 900 tokens):')
+    expect(summary).toContain('Read the full ADR (~100 tokens) before you change this decision, or when you change how diagrams are drawn:\ndocs/adr/')
+    expect(withRuleTokens(summary, 900)).toContain('Read the full ADR (~900 tokens) before')
   })
 
-  it('fails a summary whose estimate is stale or whose pointer is missing or old', () => {
+  it('fails a summary whose estimate is stale or whose pointer is missing, old or has no case', () => {
     const check = (rule: string) => findAdrRuleProblems({ adrs: { '0024': ADR }, rules: { 'adr-0024.md': rule } })
     expect(check(withRuleTokens(summary, 900))).toEqual([
       '.claude/rules/adr-0024.md gives a stale token estimate: run `pnpm exec tsx scripts/validate-adr-rules.ts --write`.',
     ])
     expect(check(stamped('x'))[0]).toContain('must point to its ADR')
     expect(check(stamped("If this touches your task, read the full ADR first (it's only 3 lines):\n"))[0]).toContain('must point to its ADR')
+    expect(check(stamped('If this rule seems relevant to your task, you must read the full ADR first (about 100 tokens):\n'))[0]).toContain('must point to its ADR')
+    expect(check(stamped('Read the full ADR (~100 tokens) before you change this decision, or when :\n'))[0]).toContain('must point to its ADR')
   })
 })
 
