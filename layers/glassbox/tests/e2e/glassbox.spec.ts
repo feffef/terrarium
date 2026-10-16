@@ -7,4 +7,7 @@ describe('glassbox Tenant', async () => {
 
   it('redirects the Tenant root /t/glassbox to its guide Space', () =>
     expectRedirect('/t/glassbox', '/t/glassbox/guide'))
+
+  it('sends a Subject folder URL to its card on the guide landing', () =>
+    expectRedirect('/t/glassbox/guide/nuxt-vue', '/t/glassbox/guide#nuxt-vue'))
 })
