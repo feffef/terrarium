@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_0166zWrnaKYByq5Z2Qj5nXRM
 startedAt: 2026-10-16T12:53:14Z
-endedAt: 2026-10-16T13:08:27Z
-kind: delegated
-goal: Move frictions-to-fixes subagent instructions into briefs
-status: completed
-outcome: "survey-brief.md and impl-brief.md extracted; SKILL.md down from 336 to 217 lines; PR #2152 merged"
-summary: "Human-instructed: the user asked to extract the subagent-only instructions from frictions-to-fixes SKILL.md into an agent brief, keeping the wording, with clean-up deferred. Before building I asked two questions (one brief or also the impl brief; visitor-loop sibling files or a triage-style AGENT-BRIEF.md), and the user picked both briefs, visitor-loop style. §1's brief, §2's screening rules and the report spec went to survey-brief.md; §5's agent brief and the audit-docs house rules went to impl-brief.md. SKILL.md keeps the report's parts and the four screen labels the main session acts on. Agent-initiated: the Standards + Spec review found a dangling §5 reference, impl-brief sections that applied unconditionally to code agents, an unlabelled on-trial blocker and a stale script comment, and I fixed them. Left open for the later clean-up: §3's surface/difficulty definitions are now duplicated in survey-brief.md, and guest-build still cites §5."
+endedAt: 2026-10-16T13:35:36Z
+kind: interactive
+goal: Split frictions-to-fixes into briefs and add a design step
+status: in-review
+outcome: "Briefs extracted (PR #2152, merged); design agent step added (PR #2154, waits for a human merge)"
+summary: "Human-instructed: extract frictions-to-fixes' subagent instructions into briefs (PR #2152, survey-brief.md and impl-brief.md, merged). The user then asked why the survey needed difficulty and surface fields; I first agreed the survey could not know the files, then at the user's request three subagents read the transcripts of the last three runs (Oct 14-16) and showed the survey actually designs every fix in its one-line slot, the sessions' own solution proposals are dropped by --compact, and the main session dispatches within a minute. The user chose a new flow: survey screens only, the main session picks up to 10, one design agent reads the full logs and returns design and risk, the main session decides dispatch vs issue; drop the 2-hard cap; every regression is an issue. Built as PR #2154 with design-brief.md, and repointed guest-build, the overview diagram and the Skill Inventory role. Agent-initiated: leaving #2154 for a human merge, as it changes an unattended Skill's behaviour (ADR-0004)."
 prs:
   - "2152"
+  - "2154"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: session-start read; Friction and Friction Ledger terms
@@ -58,6 +59,22 @@ docsRead:
   - path: .agents/skills/audit-docs/SKILL.md
     reason: Standards reviewer grepped it for the duplication lens
     useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "Scope: unattended behaviour no gate observes needs a human merge; decided #2154"
+    useful: yes
+  - path: docs/diagrams/interactive-map/terrarium-overview.md
+    reason: repointed its frictions-to-fixes steps and table
+    useful: partly
+  - path: layers/journal/content/current/sessions/2026-10-15-session_01GLWVkt3R3EnHJj5XpQEJQt.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-16-session_01RnZJ7VrgWpgzfJUCEdif77.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01ERZa4fUGxpF81MeLhZMkSB.yml
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (read before editing)
+  - path: docs/diagrams/interactive-map/README.md
+    reason: (no reason given)
 skillsUsed:
   - name: code-review
     reason: Standards + Spec review before first push; found 5 real fixes
@@ -72,25 +89,30 @@ frictions:
   - description: First extraction left a dangling §5 reference and made impl-brief's doc and ledger sections apply to every code agent; review caught both
     solution: When moving text out of a Skill, grep the Skill for every § it referenced and check each section's audience before writing
     severity: minor
-durationSec: 914
+  - description: Agreed with the user that the survey cannot know which files a fix touches without checking; three run transcripts showed it routinely did
+    solution: Verify a claim about how a Skill runs against a recent run's transcript before agreeing to redesign around it
+    severity: minor
+durationSec: 2542
 models:
-  claude-opus-5-5: 67
+  claude-opus-5-5: 150
 toolCounts:
-  Bash: 24
-  Read: 1
-  AskUserQuestion: 1
-  Write: 2
-  Skill: 3
-  Agent: 2
+  Bash: 44
+  Read: 2
+  AskUserQuestion: 2
+  Write: 4
+  Skill: 5
+  Agent: 7
   ToolSearch: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/survey-brief.md
   - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0021.md
@@ -114,12 +136,14 @@ rulesGlobal:
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0004.md
   - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
 docsReadBySubagents:
-  - .agents/skills/guest-build/SKILL.md
   - .agents/skills/audit-docs/SKILL.md
   - .agents/skills/frictions-to-fixes/survey-brief.md
   - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Made me run gate:scoped and code-review before the first push; summary was enough
@@ -186,6 +210,16 @@ subagents:
     task: Standards review
   - type: general-purpose
     task: Spec review
+  - type: general-purpose
+    task: Investigate f2f run Oct 16
+  - type: general-purpose
+    task: Investigate f2f run Oct 15
+  - type: general-purpose
+    task: Investigate f2f run Oct 14
+  - type: general-purpose
+    task: Standards review v2
+  - type: general-purpose
+    task: Spec review v2
 gitBranch: ccr-d1590e98-4fd9rn
 entrypoint: remote_mobile
 cliVersion: 2.1.301
