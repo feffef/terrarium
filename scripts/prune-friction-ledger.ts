@@ -82,7 +82,7 @@ export function summarizeLedger(today: string, cwd = root): string[] {
     const max = Math.max(-1, ...occ.map((o) => SEVERITIES.indexOf(String(o.severity))))
     const last = [...(e.fixes ?? [])].sort((a, b) => a.date.localeCompare(b.date)).at(-1)
     const fixes = last ? `${e.fixes!.length} ${e.fixes!.length === 1 ? 'fix' : 'fixes'}, latest #${last.pr} ${last.date}` : 'no fixes'
-    const derived = e.status === 'accepted' ? undefined : ledgerFixState(e.fixes ?? [], (e.occurrences ?? []).map((o) => String(o.date)), asOf)
+    const derived = ledgerFixState(e.status, e.fixes ?? [], (e.occurrences ?? []).map((o) => String(o.date)), asOf)
     const state = derived ? `${derived.state}${derived.since ? ` (${derived.since} since #${last!.pr})` : ''}` : e.status
     return [e.name ?? f, state, e.ref ?? '-', `${occ.length} in horizon`, SEVERITIES[max] ?? '-', fixes].join(' | ')
   })

@@ -117,11 +117,6 @@ occurrences:
     severity: nit
     description: "Did not read docs/adr/0004 in full though the ADR-0004 rule asks for it when touching the topic; I read only the amendment diff."
     solution: "Read the full ADR before writing about it; a prose-only blog post made the impact low."
-  - session: session_01WuJh8gfMFWfS5bWEJcdScC
-    date: "2026-10-11"
-    severity: nit
-    description: "Called mcp__github__search_issues before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation."
-    solution: "Read the required docs in the first batch of tool calls, before any GitHub tool."
   - session: session_01V3bxJaTSH8AWjrtSoBhNxK
     date: "2026-10-11"
     severity: minor

@@ -29,6 +29,11 @@ occurrences:
     severity: minor
     description: "Called mcp__github__search_pull_requests before reading docs/agents/github-integration.md; the unscoped search returned six full PR bodies (~15k tokens), the overflow trap that doc warns about."
     solution: "Read github-integration.md before the first mcp__github call, and pass fields omitting body to search_pull_requests."
+  - session: session_01WuJh8gfMFWfS5bWEJcdScC
+    date: "2026-10-11"
+    severity: nit
+    description: "Called mcp__github__search_issues before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation."
+    solution: "Read the required docs in the first batch of tool calls, before any GitHub tool."
   - session: session_01KnHp9a9Ljbiuu8NjLLx8i1
     date: "2026-10-11"
     severity: minor

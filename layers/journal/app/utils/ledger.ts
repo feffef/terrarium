@@ -21,17 +21,19 @@ export const LEDGER_MAX_PRS = 5
 /** Days without a new occurrence after the latest PR before it reads "likely fixed". */
 export const LEDGER_QUIET_DAYS = 3
 
-/** The fix state of a cluster with merged PRs, or `undefined` without any.
+/** The fix state of a cluster with merged PRs, or `undefined` without any or
+ *  when `status` is `accepted`, which overrides it.
  *  `since` counts occurrences dated after the latest PR; "now" is `asOf`, the
  *  newest occurrence date in the ledger, so the result needs no clock. A date
  *  has day precision: an occurrence on the PR's own day does not count. */
 export function ledgerFixState(
+  status: string | undefined,
   fixes: { date: string }[],
   occurrenceDates: string[],
   asOf: string,
 ): { state: FixState; since: number } | undefined {
   const latest = fixes.map((f) => f.date).sort().at(-1)
-  if (!latest) return undefined
+  if (!latest || status === 'accepted') return undefined
   const since = occurrenceDates.filter((d) => d > latest).length
   if (since) return { state: 'still recurring', since }
   const quietDays = (Date.parse(asOf) - Date.parse(latest)) / 86_400_000
@@ -98,7 +100,7 @@ export function ledgerPanels(
     const fixes = [...(c.fixes ?? [])]
       .sort((a, b) => b.date.localeCompare(a.date))
       .map((f) => ({ ...f, url: `${REPO_URL}/pull/${f.pr}` }))
-    const derived = c.status === 'accepted' ? undefined : ledgerFixState(fixes, c.occurrences.map((o) => o.date), asOf)
+    const derived = ledgerFixState(c.status, fixes, c.occurrences.map((o) => o.date), asOf)
     return {
       name: c.name,
       summary: c.summary,
