@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: e34491a0-8237-4285-88b7-1a0b73cd29e7
 startedAt: 2026-10-16T21:59:32Z
-endedAt: 2026-10-16T22:26:38Z
+endedAt: 2026-10-16T22:32:02Z
 kind: interactive
 goal: Let local sessions edit and push GitHub workflow files
 status: in-review
-outcome: "PR #2177 (guard scoped to cloud sessions) waits for a human merge; PR #2179 (session id caveat) is green-gated but merge-pr.ts can't merge from a local session"
-summary: "The owner asked me to read issue #2174, then said \"fix\" (an explicit green-light for the build). The issue: the workflow-edit guard and the docs claimed no agent can push .github/workflows/, but only cloud sessions lack the workflow scope; a local session pushes with the owner's SSH key. I scoped the guard to sessions where CLAUDE_CODE_REMOTE_SESSION_ID is set (the signal the issue proposed) and rewrote ADR-0026, its rule, the environment caveat, the guard roster and the proposals README to match (PR #2177, Human-only). Agent-initiated: rewriting ADR-0026's rejected alternative, whose old reason (\"no part left that only a human can apply\") no longer holds for a local session; the PR flags it. The session started with every guard crashing on a stale TMPDIR, which needed a restart by the owner. Auto mode blocked the first commit as a security weakening; the owner left auto mode and said \"try again\". The local gate was red only on two Tinkerfund e2e tests the owner pointed me to as #2175. Review fixes were small. The owner questioned a cse_ test fixture and confirmed the shape from a cloud session, then asked (human-instructed) that the cse_ env value versus the session_ id claude.ai/code uses be documented in environment-caveats.md, noting there is no local session link: PR #2179. scripts/merge-pr.ts then refused #2179: its header regex accepts only session_<id>, but a local session's id is a raw UUID, so no verdict from a local session can ever pass. Left for the owner to merge or decide."
+outcome: "Three PRs open for a human merge: #2177 (workflow guard scoped to cloud sessions), #2179 (session id caveat), #2180 (local sessions' UUID provenance header)"
+summary: "The owner asked me to read issue #2174, then said \"fix\" (an explicit green-light for the build). The issue: the workflow-edit guard and the docs claimed no agent can push .github/workflows/, but only cloud sessions lack the workflow scope; a local session pushes with the owner's SSH key. I scoped the guard to sessions where CLAUDE_CODE_REMOTE_SESSION_ID is set (the signal the issue proposed) and rewrote ADR-0026, its rule, the environment caveat, the guard roster and the proposals README to match (PR #2177, Human-only). Agent-initiated: rewriting ADR-0026's rejected alternative, whose old reason (\"no part left that only a human can apply\") no longer holds for a local session; the PR flags it. The session started with every guard crashing on a stale TMPDIR, which needed a restart by the owner. Auto mode blocked the first commit as a security weakening; the owner left auto mode and said \"try again\". The local gate was red only on two Tinkerfund e2e tests the owner pointed me to as #2175. Review fixes were small. The owner questioned a cse_ test fixture and confirmed the shape from a cloud session, then asked (human-instructed) that the cse_ env value versus the session_ id claude.ai/code uses be documented in environment-caveats.md, noting there is no local session link: PR #2179. scripts/merge-pr.ts then refused #2179: its header regex accepts only session_<id>, but a local session's id is a raw UUID, so no verdict from a local session can ever pass. The owner said \"just open a PR for it\" (human-instructed): PR #2180 widens the header to accept a local session's raw UUID and states that form in ADR-0017 and its rule. Review caught that my first rule edit decided something the ADR didn't (ADR-0029) and that the code comment pointed at the unmerged caveat; both fixed before the push."
 prs:
   - "2177"
   - "2179"
+  - "2180"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: "session start: Tenant roster"
@@ -44,6 +45,8 @@ docsRead:
   - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
     reason: "Standards agent read it: confirmed the ADR-0026 rewrite was in place with no history"
     useful: yes
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (read before editing)
 skillsUsed:
   - name: code-review
     reason: Standards and Spec review before the first push
@@ -82,15 +85,18 @@ frictions:
   - description: An untracked .archify/ folder counted as a changed non-inert path, so gate:scoped ran the full gate on a docs-only diff
     solution: Have gate:scoped ignore untracked files, or gitignore .archify/
     severity: minor
-durationSec: 1627
+  - description: "Broke ADR-0029 on the first pass of PR #2180: added a local-session clause to the ADR-0017 rule that the ADR itself did not state"
+    solution: Caught by the Standards review; rule edits could get a validate-adr-rules check that flags a rule edit with no ADR edit in the same diff
+    severity: nit
+durationSec: 1950
 models:
-  claude-opus-5-5: 194
+  claude-opus-5-5: 253
 toolCounts:
-  Bash: 106
+  Bash: 144
   Read: 5
-  Edit: 40
+  Edit: 58
   Skill: 3
-  Agent: 6
+  Agent: 8
   Write: 1
 filesEdited:
   - scripts/workflow-edit-guard.ts
@@ -100,6 +106,11 @@ filesEdited:
   - docs/adr/0026-gate-workflow-thin-shell.md
   - .claude/rules/adr-0026.md
   - tests/unit/workflow-edit-guard.spec.ts
+  - scripts/provenance-header.ts
+  - .claude/rules/adr-0017.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - tests/unit/provenance-header.spec.ts
+  - tests/unit/github-provenance-guard.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0027.md
@@ -113,8 +124,11 @@ rulesGlobal:
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0017.md
 rulesLoadedBySubagents:
   - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0015.md
 docsReadBySubagents:
   - docs/adr/0030-adrs-document-a-decision-not-its-history.md
 ruleVerdicts:
@@ -134,8 +148,8 @@ ruleVerdicts:
     reason: Opened the PR right after the push; could not subscribe to PR activity locally
     useful: partly
   - path: .claude/rules/adr-0017.md
-    reason: Header on the PR body; it says session_<id> but a local session only has a raw UUID, which I used
-    useful: partly
+    reason: "Header on every PR body; PR #2180 changes it so a local session's UUID counts; read the full ADR to rewrite it"
+    useful: yes
   - path: .claude/rules/adr-0009.md
     reason: Told me to log at PR open; summary was enough
     useful: yes
@@ -154,6 +168,9 @@ ruleVerdicts:
   - path: .claude/rules/adr-0021.md
     reason: Both review agents loaded it with GLOSSARY.md; glossary split was not at issue here
     useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "Only the PR #2180 spec reviewer loaded it, via audit-skills.ts; it reported it did not apply"
+    useful: no
 subagents:
   - type: general-purpose
     task: "Standards review of #2174 diff"
@@ -167,6 +184,10 @@ subagents:
     task: Standards review of caveat diff
   - type: general-purpose
     task: Spec review of caveat diff
+  - type: general-purpose
+    task: Standards review of header fix
+  - type: general-purpose
+    task: Spec review of header fix
 gitBranch: claude/1897-workflow-comments
 entrypoint: cli
 cliVersion: 2.1.302
