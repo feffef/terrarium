@@ -72,7 +72,7 @@ useSeoMeta({ description: () => landing.value?.description })
           <NuxtLink :to="`${base}${page.path}`"><strong>{{ page.title }} →</strong><span class="teaser">{{ page.description }}</span></NuxtLink>
         </li>
       </ul>
-      <a class="folder" :href="folderUrl('walkthroughs')" title="Folder in the repo">files on GitHub ↗</a>
+      <a class="folder" :href="folderUrl('walkthroughs')" title="This folder in the GitHub repo">files on GitHub ↗</a>
     </section>
 
     <section v-if="data?.directory.length" class="directory">
@@ -89,7 +89,7 @@ useSeoMeta({ description: () => landing.value?.description })
               <NuxtLink :to="`${base}${lesson.path}`"><span class="title">{{ lesson.title }}</span><span class="teaser">{{ lesson.description }}</span></NuxtLink>
             </li>
           </ul>
-          <a class="folder" :href="folderUrl(subject.slug)" title="Folder in the repo">files on GitHub ↗</a>
+          <a class="folder" :href="folderUrl(subject.slug)" title="This folder in the GitHub repo">files on GitHub ↗</a>
         </section>
       </div>
     </section>

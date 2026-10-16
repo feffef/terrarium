@@ -62,6 +62,7 @@ const parts = computed(() => {
 .chips { display: flex; gap: 8px; margin: 40px 0 0; font-size: 13px; color: var(--gb-muted); }
 .chips span { padding: 5px 12px; }
 .chips .chip {
+  padding: 5px 12px;
   text-decoration: none;
   border: 1px solid var(--gb-pane-edge);
   border-radius: 99px;
