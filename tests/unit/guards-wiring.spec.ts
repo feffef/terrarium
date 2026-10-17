@@ -16,7 +16,11 @@ describe('every scripts/hooks/*-guard.ts is wired', () => {
   it.each(guards)('%s runs from a PreToolUse hook', (guard) => {
     const wired = entries.filter((h) => h.command.includes(`scripts/hooks/${guard}.`))
     expect(wired, `no PreToolUse hook runs ${guard}`).not.toHaveLength(0)
-    if (!FAIL_OPEN.includes(guard)) for (const h of wired) expect(h.onFailure, h.command).toBe('block')
+    if (FAIL_OPEN.includes(guard)) return
+    for (const h of wired) {
+      expect(h.onFailure, h.command).toBe('block')
+      expect(h.command, 'a `|| true` exits 0, so onFailure never fires').not.toContain('|| true')
+    }
   })
 
   it('finds the guards at all', () => {
