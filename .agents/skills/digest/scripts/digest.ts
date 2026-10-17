@@ -210,6 +210,8 @@ function digestDaysIn(dir: string): string[] {
     .map((f) => f.slice(0, 10))
 }
 
+/** Checks `ARCHIVED_DIGESTS_DIR` too — otherwise an archived day looks undigested
+ *  again and `list` re-offers it forever (issue found live, 2026-09-06). */
 export function existingDigestDays(cwd = root): Set<string> {
   return new Set([
     ...digestDaysIn(join(cwd, DIGESTS_DIR)),

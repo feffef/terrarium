@@ -301,8 +301,8 @@ export function buildSkillRows(
   })
 }
 
-/** The `scripts/**.ts` and `.agents/skills/<name>/scripts/**.ts` paths a SKILL.md names, whole,
- *  deduplicated, in order of first mention. */
+// The `scripts/**/*.ts` and `.agents/skills/<name>/scripts/**/*.ts` paths a
+// SKILL.md names, whole, deduplicated, in order of first mention.
 export function scriptsNamedIn(skillMd: string): string[] {
   return [...new Set(skillMd.match(/(?<![\w./-])(?:\.agents\/skills\/[\w-]+\/)?scripts\/(?:[\w-]+\/)*[\w.-]+\.ts\b/g) ?? [])]
 }

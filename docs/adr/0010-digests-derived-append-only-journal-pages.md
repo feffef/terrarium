@@ -66,9 +66,11 @@ an ordinary gated PR, not the direct-to-main path that session logs use.
 
 - `.agents/skills/digest/SKILL.md`: the run, the writing rules and what a run
   may change.
-- `.agents/skills/digest/scripts/digest.ts` and `.agents/skills/digest/tests/unit/digest.spec.ts`: the folders, finished
-  days and the day's material.
-- `.agents/skills/digest/scripts/archive-journal-content.ts`: how many Digests stay in `current`.
+- `.agents/skills/digest/scripts/digest.ts` and
+  `.agents/skills/digest/tests/unit/digest.spec.ts`: the folders, finished days
+  and the day's material.
+- `.agents/skills/digest/scripts/archive-journal-content.ts`: how many Digests
+  stay in `current`.
 - `layers/journal/app/utils/dashboard.ts`: the live listing and its headline.
 - `shared/kinds.ts`: the `summary` headline field.
 - `layers/commons/app/composables/timeline.ts`: the Timeline's Journal-only

@@ -25,9 +25,10 @@
 // read `judgeable from:` below as something to hit precisely.
 //
 // Usage:
-//   tsx .agents/skills/prune-trial/scripts/find-trial-window.ts                # every open trial in the ledger
-//   tsx .agents/skills/prune-trial/scripts/find-trial-window.ts <problem-substr> # just the trial(s) whose
-//                                                        # problem text contains this
+//   tsx .agents/skills/prune-trial/scripts/find-trial-window.ts
+//     every open trial in the ledger
+//   tsx .agents/skills/prune-trial/scripts/find-trial-window.ts <problem-substr>
+//     just the trial(s) whose problem text contains this
 import { readFileSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'

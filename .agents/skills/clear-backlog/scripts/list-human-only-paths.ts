@@ -1,7 +1,9 @@
 // Prints the Human-only paths (ADR-0004) a worktree's branch touches, for
 // clear-backlog to put in a PR body; a workflow script can't run git (#1942).
 //
-// Usage: pnpm exec tsx .agents/skills/clear-backlog/scripts/list-human-only-paths.ts <worktree>
+// Usage:
+//   pnpm exec tsx .agents/skills/clear-backlog/scripts/list-human-only-paths.ts
+//     <worktree>
 import { matchesGlob } from 'node:path'
 import { git } from '../../../../scripts/git-helpers.ts'
 import { HUMAN_MERGE_RULE } from '../../../../scripts/merge-pr.ts'

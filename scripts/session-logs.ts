@@ -10,9 +10,7 @@ export const SESSIONS_DIR = 'layers/journal/content/current/sessions'
 export const ARCHIVED_SESSIONS_DIR = 'layers/journal/content/archived/sessions'
 /** Digests are pages under a subfolder (ADR-0010). */
 export const DIGESTS_DIR = 'layers/journal/content/current/pages/digests'
-/** Where the retention sweep (`archive-journal-content.ts`) moves aged-out Digests.
- *  `existingDigestDays` must check here too — otherwise an archived day looks
- *  undigested again and `list` re-offers it forever (issue found live, 2026-09-06). */
+/** Where the retention sweep (`archive-journal-content.ts`) moves aged-out Digests. */
 export const ARCHIVED_DIGESTS_DIR = 'layers/journal/content/archived/pages/digests'
 
 export interface SessionLog {

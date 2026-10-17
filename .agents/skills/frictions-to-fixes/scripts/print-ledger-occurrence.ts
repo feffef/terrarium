@@ -3,7 +3,9 @@
 // checks it (whitespace-normalised text, the session's UTC start date), so the
 // `frictions-to-fixes` survey never retypes it.
 //
-// Usage:  tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts <session> <index> [<session> <index> ...]
+// Usage:
+//   tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
+//     <session> <index> [<session> <index> ...]
 //   `index` is the friction's position in the log's `frictions` list, as
 //   `session-frictions.ts --compact` prints it. Output is ready to paste under
 //   a cluster's `occurrences:`.

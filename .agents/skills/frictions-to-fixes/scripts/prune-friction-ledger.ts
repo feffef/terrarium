@@ -2,7 +2,9 @@
 // every occurrence dated before it and deletes an entry left with none, so the
 // ledger never carries history git already keeps.
 //
-// Usage:  tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts [--today YYYY-MM-DD]
+// Usage:
+//   tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts
+//     [--today YYYY-MM-DD]
 //   Edits `layers/journal/content/current/frictions/*.yml` in place and prints
 //   what it dropped. `--today` defaults to the current UTC date.
 //   `--summary` edits nothing and prints one line per entry: name, state (the
