@@ -1,0 +1,120 @@
+schemaVersion: 1
+session: session_01Sm7rZKVibYfwdy8ibzEFge
+startedAt: 2026-10-17T13:13:52Z
+endedAt: 2026-10-17T13:21:19Z
+kind: autonomous
+goal: Scheduled prune of the Platform's agent instructions
+status: in-review
+outcome: One trial judged and deleted; background-guard headers cut by 34 lines; PR 2223 open for a human merge
+summary: Scheduled /prune-trial run, agent-initiated by the schedule. Judged the github-integration trial (only nit/minor Frictions, no regression) and deleted it. A search subagent found the failed-prose candidates; the provenance and read-first candidates overlapped open-trial territory, so I cut the two background-guard script headers to rule plus pointers (-34, comments only). A Sonnet probe at the pinned SHA answered correctly, gate:scoped passed, and PR 2223 is open. It touches Human-only hook files, so a human merges. I reviewed the comment-only diff by hand instead of running two code-review subagents. The prose mass was small.
+prs:
+  - "2223"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read late after the hook; little needed
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: pre-push review and scheduled-run closing steps
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: header only; this was the judged trial
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: "subagent: key finding aid mapping guards to issues"
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git fetch and the frictions extract before reading docs/agents/git-conventions.md; the hook flagged it after the call.
+    solution: Read the doc at session start for scheduled runs.
+    severity: nit
+durationSec: 447
+models:
+  claude-sonnet-5-5: 53
+toolCounts:
+  Read: 5
+  Bash: 18
+  Agent: 2
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  PushNotification: 1
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped before the first push; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main via close-session; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Said to open the PR at once and subscribe; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Defined trial territory and verdict rules for this run; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on a docs read; not needed for this task.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Not relevant, no ADR edited.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; not relevant to this task.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed the hook files need a human merge.
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skill model; not relevant here.
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Pointed to the guards roster; it confirmed where the residual list lives.
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Find failed prose to prune
+    model: sonnet
+  - type: general-purpose
+    task: Probe pruned guard headers
+    model: sonnet
+gitBranch: claude/practical-rubin-mk2tln
+entrypoint: remote_trigger
+cliVersion: 2.1.302
+trigger: prune-trial
+landedBy: Stop
