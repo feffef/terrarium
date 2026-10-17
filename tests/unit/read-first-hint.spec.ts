@@ -148,7 +148,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     expect(run(call('git log', { transcript_path: join(dir, 'nope.jsonl') }))).toMatchObject({ status: 0, stdout: '' })
   })
 
-  it('says to invoke close-session after a main-session PR create, until the transcript shows it invoked', () => {
+  it('says to invoke close-session after a main-session PR create, unless the transcript shows it invoked after that PR', () => {
     const pr = (extra: object = {}) => context(run(call('x', { tool_name: 'mcp__github__create_pull_request', tool_input: {}, ...extra })))
     expect(pr()).toContain(CLOSE_SESSION_HINT)
     // Not tied to a doc pointer being due.
@@ -157,9 +157,17 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     transcript('pr/subagents/agent-s1.jsonl', [{ type: 'user', message: { content: 'go' } }])
     expect(pr({ transcript_path: join(dir, 'pr.jsonl'), agent_id: 's1' })).not.toContain(CLOSE_SESSION_HINT)
     expect(pr({ hook_event_name: 'PostToolUseFailure' })).not.toContain(CLOSE_SESSION_HINT)
-    const skill = transcript('skill.jsonl', [toolUse('s', 'Skill', { skill: 'close-session' })])
-    const slash = transcript('slash.jsonl', [{ type: 'user', message: { content: '<command-name>/close-session</command-name>' } }])
-    for (const t of [skill, slash]) expect(pr({ transcript_path: t }), t).not.toContain(CLOSE_SESSION_HINT)
+    const prUse = (id: string) => toolUse(id, 'mcp__github__create_pull_request', {})
+    const skill = toolUse('s', 'Skill', { skill: 'close-session' })
+    const slash = { type: 'user', message: { content: '<command-name>/close-session</command-name>' } }
+    // Invoked after the latest PR (here, in parallel with it): no hint.
+    for (const [name, close] of [['skill.jsonl', skill], ['slash.jsonl', slash]] as const) {
+      const t = transcript(name, [prUse('p1'), close])
+      expect(pr({ transcript_path: t }), t).not.toContain(CLOSE_SESSION_HINT)
+    }
+    // Invoked only before the latest PR: the new PR needs it again.
+    const earlier = transcript('earlier.jsonl', [prUse('p1'), toolResult('p1', 'ok'), skill, prUse('p2')])
+    expect(pr({ transcript_path: earlier })).toContain(CLOSE_SESSION_HINT)
     expect(context(run(call('x', { tool_name: 'mcp__github__get_me', tool_input: {} })))).not.toContain(CLOSE_SESSION_HINT)
   })
 
