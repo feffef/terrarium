@@ -17,3 +17,8 @@ occurrences:
     severity: minor
     description: "The check 2 script has me read each rule's frontmatter first, which marks it loaded, so reads of governed files showed nothing and 2b to 2d could not be observed."
     solution: "Have a subagent or later session read the governed files first, or tell the tester to check frontmatter with a Bash command that is not credited as a rule read."
+  - session: session_01R8ZgGod9KTmxwvnDyB4PQY
+    date: "2026-10-14"
+    severity: minor
+    description: "Could not verify the issue's done-when (rule loads on Read): a probe content file read mid-session loaded no rule, likely because a new rule is not indexed until the next session."
+    solution: "Document in docs/agents/environment-caveats.md that rules added mid-session do not load until a new session, and how to verify a new rule's paths offline."

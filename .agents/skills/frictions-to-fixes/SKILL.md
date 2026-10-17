@@ -56,6 +56,8 @@ The subagent labels every candidate **never-fixed**, **drop**, **open-already** 
   ineffective (link the prior issue/PR and quote both the original and the
   recurring friction) for the top **three** of the run by severity, occurrence
   count and proof of regression (occurrences dated after the fix) together.
+  A regression that already carries an open issue from an earlier run needs
+  none and does not count toward the three.
   List the rest in the description of the ledger PR (§5);
   they wait in the ledger for the next run.
 

@@ -11,26 +11,6 @@ fixes:
     date: "2026-10-10"
     summary: "Removed the commit-trailer guard, so hand-written trailers are no longer denied; recognised current models."
 occurrences:
-  - session: session_019e8Gy8cuUFcMzNkEYLfuP4
-    date: "2026-10-02"
-    severity: nit
-    description: "Hand-wrote the commit trailer because the harness system-reminder asked for it; the commit-trailer guard denied the call"
-    solution: "Guard worked as designed; the repo convention already wins over that reminder"
-  - session: session_01BEQMve6mV2yNDTMmjiCAYL
-    date: "2026-10-02"
-    severity: nit
-    description: "Hand-writing the commit trailer from the harness reminder was denied by the commit-trailer guard, costing one retry."
-    solution: "The harness attribution reminder and the repo guard disagree; the reminder should defer to the repo convention."
-  - session: session_01C48djYtfD6dTcY8aESJJUD
-    date: "2026-10-02"
-    severity: minor
-    description: "The commit-trailer guard denied my first commit because the harness reminder told me to hand-write the trailer the guard forbids."
-    solution: "Make the harness attribution reminder and the guard agree, or have the CLAUDE.md note say the reminder's trailer is superseded."
-  - session: session_01FRVSQVFVfLCWyn2cBtG9qM
-    date: "2026-10-02"
-    severity: nit
-    description: "Hand-wrote the commit trailer from the system-reminder attribution template; the commit-trailer guard denied it"
-    solution: "Guard worked as designed; the harness reminder conflicts with the repo rule, which CLAUDE.md already flags"
   - session: session_0168r95gLDEqJ8JBEV6UuUbo
     date: "2026-10-03"
     severity: minor

@@ -47,3 +47,13 @@ occurrences:
     severity: nit
     description: "Deferred close-session until after the owner's follow-up instead of invoking it when the answer was given."
     solution: "Invoke close-session with the answer; re-logging is cheap."
+  - session: session_013RCsUF234qAGu3CJr3v2on
+    date: "2026-10-16"
+    severity: minor
+    description: "Opened PR #2189 after the first issue landed but did not invoke close-session then, against CLAUDE.md's 'Invoke close-session when you open a PR'; the session log stayed stale for hours."
+    solution: "Invoke close-session in the same turn as create_pull_request; a PostToolUse hint on create_pull_request could remind."
+  - session: session_018pjaBqTXahmE3DFhAbkide
+    date: "2026-10-16"
+    severity: nit
+    description: "Did not invoke close-session after the earlier answer-only turns, as CLAUDE.md asks when a session only answers a question."
+    solution: "Log after the first answered question; re-invoking later is cheap."

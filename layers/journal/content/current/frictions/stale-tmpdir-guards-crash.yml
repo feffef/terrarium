@@ -1,0 +1,15 @@
+name: stale-tmpdir-guards-crash
+summary: "A stale temp-directory setting from a suspended terminal made every guard hook crash, blocking nearly all tool calls."
+cause: "TMPDIR pointing at another user's folder (/var/folders/zz...) makes each tsx-based guard exit with EACCES and fail closed; environment-caveats.md does not list it. Signals: \"guard-wrap exited 1 with no output\", \"EACCES\", stale TMPDIR."
+surface: outside
+status: open
+fixes:
+  - pr: 2197
+    date: "2026-10-17"
+    summary: "Documented the stale TMPDIR guard crash in the environment caveats."
+occurrences:
+  - session: 5ba40529-d06b-4b13-a44a-a01292148909
+    date: "2026-10-16"
+    severity: major
+    description: "A stale TMPDIR (root's /var/folders/zz) made every tsx guard crash with EACCES and fail closed, blocking almost all tool calls"
+    solution: "Add a line to docs/agents/environment-caveats.md: on a guard-wrap 'exited 1 with no output' deny, check TMPDIR and restart Claude Code with a fresh one"

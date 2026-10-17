@@ -35,3 +35,13 @@ occurrences:
     severity: minor
     description: "My brief's check grepped vitest's default output, which lists only failures, so several agents saw nothing for a passing page."
     solution: "Brief agents to use --reporter=verbose when grepping per-page results."
+  - session: session_013RCsUF234qAGu3CJr3v2on
+    date: "2026-10-16"
+    severity: minor
+    description: "My #2186 brief did not exclude dated content, so the agent rewrote three dated blog posts to new paths; a review caught it and they were reverted."
+    solution: "Every move/rename brief lists dated content (journal, blog, pinned Glass Box pages, docs/research) as untouchable; done from #2187 on."
+  - session: session_011RZgGTE5Mh25D2ZNoKqfAM
+    date: "2026-10-16"
+    severity: minor
+    description: "The explore triage brief for #2147 stated the fix may be agent-merged because the file is not Human-only, missing ADR-0004's untested-behaviour exception; I caught it only at close-session."
+    solution: "Have clear-backlog-explore's triage schema ask which ADR-0004 exception applies, not just whether a path is Human-only."

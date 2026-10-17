@@ -16,27 +16,10 @@ fixes:
   - pr: 2123
     date: "2026-10-16"
     summary: "git-conventions now says no push is needed when the Stop hook counts main's commits and origin/main..HEAD is empty."
+  - pr: 2188
+    date: "2026-10-16"
+    summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_01BK3hyL2f3mxedQimjd719K
-    date: "2026-10-02"
-    severity: minor
-    description: "Stop hook demanded a commit while the full `pnpm gate:scoped` run was still in progress in the background, before I'd confirmed it was green — the same pattern already recorded as a friction in visitor-loop's 2026-10-01 session (session_01BNbm6z4gohjBmVoeadKibZ)."
-    solution: "Let scheduled runs defer the stop-hook git check until the closing step, as that session's own solution already proposed — this is a second, independent recurrence of the same gap."
-  - session: session_01FRVSQVFVfLCWyn2cBtG9qM
-    date: "2026-10-02"
-    severity: nit
-    description: "Stop hook nagged twice to commit an unverified trial upgrade while the gate ran and while awaiting the user's choice"
-    solution: "Stop-hook git check could tolerate uncommitted changes when a background task is running or a question is pending"
-  - session: session_01HDNTJNfSFzDsgeaG92ZttX
-    date: "2026-10-02"
-    severity: nit
-    description: "Stop hook demanded commit and push while the fact-check and gate were still running, forcing an early push and a follow-up wording commit."
-    solution: "Let the hook defer while background tasks are pending."
-  - session: session_01VC6tZCm3HYs9BsJ7JrQQ5Z
-    date: "2026-10-02"
-    severity: minor
-    description: "The Stop hook pressed to commit and push a half-applied working tree right after the user had explicitly paused the apply phase"
-    solution: "The hook cannot know about a user pause; I reported the state and waited. A hook that only nags on a turn that ends without an open user question would avoid the contradiction"
   - session: session_01CbWrei9SvmrH9vjNx2MB2f
     date: "2026-10-03"
     severity: nit
@@ -332,3 +315,28 @@ occurrences:
     severity: nit
     description: "The Stop hook asked to push unpushed commits twice before the ADR-0004 gate and code-review were done."
     solution: "None needed; the rule said to wait, and I did."
+  - session: session_01XxPqcyjVxcgmHTidWtoF1g
+    date: "2026-10-16"
+    severity: nit
+    description: "Stop hook asked me to commit and push while the gate and code-review were still pending; ADR-0004 says finish them first."
+    solution: "Let the Stop hook skip the nag while a background gate is running."
+  - session: session_01CzkKVxSTE7a4amfXnxrvF9
+    date: "2026-10-16"
+    severity: nit
+    description: "The Stop hook asked to push four times while gate:scoped and code-review were still running; each needed a reply"
+    solution: "Let the hook stay quiet while a background gate or review runs"
+  - session: session_0186ZdoCGUVDeZj95qNZAjiv
+    date: "2026-10-16"
+    severity: nit
+    description: "Stop hook asked to commit and push four times while subagents were mid-rewrite, conflicting with ADR-0004 gate and review before first push."
+    solution: "Have the hook skip when background subagents are running."
+  - session: session_017KwEjDERgWLRvZYsewWp4Q
+    date: "2026-10-16"
+    severity: nit
+    description: "The Stop hook asked to push my own ungated doc commit while the user had asked me to wait."
+    solution: "Known harness-side stop-hook-nag; held the push until gate and review passed."
+  - session: session_018sAirSgDY1Nv82JVogjcyR
+    date: "2026-10-16"
+    severity: nit
+    description: "The Stop hook asked me to push the unpushed survey commit before the gate and review ADR-0004 requires; I declined."
+    solution: "Have the hook skip the nag while a frictions-to-fixes ledger branch awaits its gate."

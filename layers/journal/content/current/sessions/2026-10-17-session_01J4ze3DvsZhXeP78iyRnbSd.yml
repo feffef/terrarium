@@ -1,0 +1,230 @@
+schemaVersion: 1
+session: session_01J4ze3DvsZhXeP78iyRnbSd
+startedAt: 2026-10-17T02:03:36Z
+endedAt: 2026-10-17T02:39:57Z
+kind: autonomous
+goal: Turn the last days' recorded frictions into fixes
+status: in-review
+outcome: "Four PRs merged; the dead-glob validator PR #2199 awaits a human merge"
+summary: "Scheduled frictions-to-fixes run (agent-initiated, no human prompt). A survey subagent read 46 sessions and updated the Friction Ledger; a design agent designed seven picks. I filed #2193 (glassbox-update, a precision/recall choice for the owner) and regression issues #2195 and #2196, dropped edit-during-gate-run as costing less than any fix, pushed the ledger PR #2194 after a green gate:scoped, and dispatched three Sonnet impl agents (grouped doc fixes, dead-glob validation which needs a human merge because it edits .claude/rules, a worktree refusal message). Merged #2194 (ledger), #2197 (docs), #2198 (message), #2200 (closing ledger); #2199 is escalated for a human merge."
+prs:
+  - "2194"
+  - "2197"
+  - "2198"
+  - "2199"
+  - "2200"
+docsRead:
+  - path: .claude/skills/frictions-to-fixes/SKILL.md
+    reason: the task steps
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and verdict recipe
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: tool name resolution and issue write mapping
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist for impl agents
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; Journal relationships
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Friction Ledger and Prune Trial terms
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit -F and fetch rules
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: issue conventions before filing
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: ready-for-human label meaning
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: briefs for impl agents; I did not read it in full myself
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: read at start; survey agent followed it
+    useful: yes
+  - path: .claude/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/.claude/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: scripts/validate-adr-rules.ts
+    reason: (read before editing)
+  - path: tests/unit/validate-adr-rules.spec.ts
+    reason: (read before editing)
+  - path: scripts/log-session.ts
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: .claude/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief checklist for three impl agents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git branch --show-current before reading git-conventions.md, though CLAUDE.md allows only status and diff first; the hook then reminded me.
+    solution: Use git status alone, which already prints the branch.
+    severity: nit
+  - description: Survey brief says --unledgered drops carried frictions, yet 7 blocks for sessions already in a cluster reappeared and only surfaced at validate time (survey agent's friction).
+    solution: Have the brief say to skip a session already present in the target cluster, or filter by session in the script.
+    severity: minor
+  - description: Skill §5 puts the ledger PR before dispatch, but its gate:scoped, code-review and the regression-issue count rules left unclear whether a data-only diff needs the full code-review run.
+    solution: State in §5 that a ledger-only diff is reviewed by the main session's own read, per the pr-workflow skip rule.
+    severity: nit
+  - description: A cd into an impl agent's worktree left my shell there; the next merge-pr and ledger edits ran in the wrong checkout until the harness noted it.
+    solution: Use absolute paths or git -C instead of cd when inspecting a worktree.
+    severity: nit
+durationSec: 2181
+models:
+  claude-sonnet-5-5: 126
+toolCounts:
+  Bash: 37
+  Read: 4
+  Agent: 5
+  Write: 2
+  ToolSearch: 1
+  mcp__github__issue_write: 3
+  mcp__github__create_pull_request: 5
+  mcp__github__update_pull_request: 1
+  mcp__github__subscribe_pr_activity: 4
+  Skill: 2
+  ReadNotifications: 4
+  mcp__github__add_issue_comment: 6
+  PushNotification: 1
+filesEdited:
+  - scripts/validate-adr-rules.ts
+  - tests/unit/validate-adr-rules.spec.ts
+  - .claude/rules/tenant-layers.md
+  - scripts/log-session.ts
+  - docs/agents/environment-caveats.md
+  - CLAUDE.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0029.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0026.md
+docsReadBySubagents:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Held the first push until gate:scoped; summary enough, ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on issues and PR; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the ledger PR and subscribed; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main by hook; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Subagents reported it decided the dead-glob PR needs a human merge
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Subagents reported it showed trial territory to avoid (pr-workflow, close-session)
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed Skills are gated code; not needed further
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Binding ADR for the dead-glob fix per the impl agent
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Subagents reported it confirmed frictions-to-fixes is not a pack Skill
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; unrelated to this run
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded by a subagent read; unrelated
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded by a subagent read; unrelated
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded by a subagent read; unrelated
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded by a subagent read; unrelated
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded by a subagent read; unrelated
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Held the one dead glob that the fix removed
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Guard roster used by the design agent
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded by reading triage docs; the sweep does not apply here
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Design fixes for picks
+  - type: general-purpose
+    task: Impl doc batch fixes
+    model: sonnet
+  - type: general-purpose
+    task: Impl dead-glob validator
+    model: sonnet
+  - type: general-purpose
+    task: Impl worktree refusal message
+    model: sonnet
+gitBranch: claude/eager-ptolemy-15yo6a
+entrypoint: remote_trigger
+cliVersion: 2.1.302
+trigger: frictions-to-fixes
+landedBy: Stop
