@@ -8,9 +8,7 @@ Take every issue the sweep picks up (§1) to a merged PR, a closed issue, or
 a decision only the owner can make. The owner is present twice: at the start
 and for one **grilling** in the middle. Everything else runs unattended.
 
-The chat holds only questions for the owner and the final report. Handle PR
-events, task notifications and finished agents silently. When you wait on an
-answer, the questions are your whole message.
+When you wait on an answer, the questions are your whole message.
 
 Two saved workflows do the agent work, so their steps can't be skipped:
 `clear-backlog-explore` (§1) and `clear-backlog-build` (§3). Invoking this
