@@ -37,8 +37,9 @@ the sole merge authority for guest work.
 Scan open issues labelled `ready-for-agent`. **Skip any that already has an open
 or merged linked PR** — check before dispatching, so a tight loop never
 double-builds a story already in flight. **Also skip any that already carries a
-fresh `guest-in-flight` marker** — see "Concurrency" below; `poll-guest-tickets.ts`
-already applies both skips.
+fresh `guest-in-flight` marker** — see "Concurrency" below;
+`pnpm exec tsx .agents/skills/guest-build/scripts/poll-guest-tickets.ts` prints
+the candidates (JSON; `[]` when none) and already applies both skips.
 
 ## Concurrency — the `guest-in-flight` marker
 
@@ -58,7 +59,7 @@ against #555 before a human stepped in).
   `guest-in-flight` in the same `issue_write` call that applies the step's
   resulting label. A marker left behind after the Skill's own turn ends blocks
   every future pass, guest-intake's included, until it ages out.
-- **Staleness.** `scripts/guest-marker.ts` (`MARKER_STALE_MINUTES`) is the single home for the label name and the staleness window, with its reasoning in the header comment. `poll-guest-tickets.ts` re-surfaces an issue whose marker is older than that window: its session likely died mid-flight. Trust the script's output; only when checking an issue by hand, read the most recent `labeled` event's `created_at` (`gh api repos/OWNER/REPO/issues/N/events`).
+- **Staleness.** `scripts/github/guest-label.ts` (`MARKER_STALE_MINUTES`) is the single home for the label name and the staleness window, with its reasoning in the header comment. `poll-guest-tickets.ts` re-surfaces an issue whose marker is older than that window: its session likely died mid-flight. Trust the script's output; only when checking an issue by hand, read the most recent `labeled` event's `created_at` (`gh api repos/OWNER/REPO/issues/N/events`).
 
 ## Per ready story
 
@@ -75,7 +76,7 @@ against #555 before a human stepped in).
    its worktree on the orchestrator's own model (a distinct model, as the demo
    requires), per `dispatch-subagents` §3 ("Scope and trust"). Once clean, the
    agent pushes and you open a **gated PR** that `Closes #N`, labelled
-   `guest-pipeline` (`GUEST_PIPELINE_LABEL` in `scripts/merge-pr.ts`, which
+   `guest-pipeline` (`GUEST_PIPELINE_LABEL` in `scripts/github/merge-pr.ts`, which
    refuses to merge it). **Post the verdict as a PR
    comment — every time, even when clean** — so the audit trail lives on the PR
    (`docs/agents/pr-workflow.md`).

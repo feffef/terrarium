@@ -96,14 +96,14 @@ const remainEntry = z
 export const artifactSchema = z
   .object({
     title: z.string(), // the artifact's own name
-    stratum: z.string(), // dig-season slug — validated against utils/strata.ts by scripts/validate-content-refs.ts
+    stratum: z.string(), // dig-season slug — validated against utils/strata.ts by scripts/gate/validate-content-refs.ts
     condition,
     provenance,
     // Back-reference to the `pages` (site) Document slug that narrates it.
     // Optional at the SCHEMA level because the policy is per-Space and a
     // schema is declared Tenant-wide: required-and-resolving in a Space
     // that has dig reports, forbidden in one that has none (the stores).
-    // `scripts/validate-content-refs.ts` enforces the real rule.
+    // `scripts/gate/validate-content-refs.ts` enforces the real rule.
     site: z.string().optional(),
     // Curator's voice — small-caps register (theme.css). Terse; contrast
     // the more generous latitude the `lost` gravestone epitaph gets, which

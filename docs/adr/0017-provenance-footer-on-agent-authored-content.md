@@ -71,11 +71,11 @@ work.
 
 ## See
 
-- `scripts/provenance-header.ts`: the header and which marks count
+- `scripts/lib/provenance-header.ts`: the header and which marks count
   (`hasAuthorshipMarker`).
-- `scripts/github-provenance-guard.ts`: the checked tool calls and the deny
+- `scripts/hooks/github-provenance-guard.ts`: the checked tool calls and the deny
   messages.
-- `scripts/provenance-footer.ts` and `.githooks/commit-msg`: the trailer and
-  its hook; `scripts/log-session.ts` builds it on session-log commits.
+- `scripts/session/commit-trailer.ts` and `.githooks/commit-msg`: the trailer and
+  its hook; `scripts/session/log-session.ts` builds it on session-log commits.
 - `docs/agents/github-integration.md`, `docs/agents/git-conventions.md`: the
   traps agents hit when writing.

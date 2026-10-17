@@ -7,7 +7,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { findCadenceViolations, validateSkillCadence } from '../../scripts/validate-skill-cadence.ts'
+import { findCadenceViolations, validateSkillCadence } from '../../scripts/gate/validate-skill-cadence.ts'
 import type { ExpandedCollection } from '../../shared/expand.ts'
 
 // ── findCadenceViolations() — the sentence-level proximity check ───────────

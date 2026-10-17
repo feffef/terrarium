@@ -93,7 +93,7 @@ re-diagnose them as new. Incident detail lives in the cited issue.
 - **A cloud session's `CLAUDE_CODE_REMOTE_SESSION_ID` is `cse_<id>`, but
   claude.ai/code opens that session at `session_<id>`: the same id, another
   prefix.** Swap the prefix before you link the session or write its ADR-0017
-  header; `normalizeRemoteSessionId` in `scripts/session-trace.ts` does it. A
+  header; `normalizeRemoteSessionId` in `scripts/session/transcript-trace.ts` does it. A
   local CLI session has no claude.ai/code link; its id is the transcript's raw
   UUID. (issue #387)
 - **A headless `claude -p` probe inherits the parent's session id and writes its
@@ -102,7 +102,7 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   stderr to `/dev/null` when parsing `--output-format json`.
 - **A stale `TMPDIR` makes every guard crash.** A resumed terminal can keep
   `TMPDIR` pointing at another user's folder (e.g. `/var/folders/zz/...`), so
-  every `tsx` guard exits with EACCES, `scripts/guard-wrap.sh` denies with
+  every `tsx` guard exits with EACCES, `scripts/hooks/guard-wrap.sh` denies with
   "exited 1 with no output", and nearly every tool call is blocked. Not a repo
   bug: ask the owner to restart Claude Code from a shell with a fresh `TMPDIR`.
   (session 92148909)

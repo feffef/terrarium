@@ -49,7 +49,7 @@ const sheet = resolve(outDir, 'sheet.html')
 writeFileSync(sheet, html)
 const width = before.length ? 1760 : 940
 const height = 40 + figures.length * 450
-execFileSync('pnpm', ['exec', 'tsx', 'scripts/screenshot.ts', pathToFileURL(sheet).href, resolve(outDir, 'sheet.png'), `${width}x${height}`], { stdio: 'inherit' })
+execFileSync('pnpm', ['exec', 'tsx', 'scripts/ui/screenshot.ts', pathToFileURL(sheet).href, resolve(outDir, 'sheet.png'), `${width}x${height}`], { stdio: 'inherit' })
 for (const [i, fig] of figures.entries()) {
   const { bytes, problems } = check(fig.svg)
   console.log(`FIG. ${i + 1} ${fig.style.padEnd(9)} ${String(bytes).padStart(4)} B  ${problems.length ? 'PROBLEMS: ' + problems.join('; ') : 'ok'}`)

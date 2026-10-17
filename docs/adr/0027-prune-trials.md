@@ -72,4 +72,4 @@ verdict.
 
 - `.agents/skills/prune-trial/SKILL.md`: choosing, cutting, probing and judging.
 - `.agents/prune-trials.yml`: the open trials and their areas.
-- `scripts/prune-trial-window.ts`: the window and when a cut landed.
+- `.agents/skills/prune-trial/scripts/find-trial-window.ts`: the window and when a cut landed.

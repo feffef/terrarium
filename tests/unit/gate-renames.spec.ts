@@ -3,7 +3,7 @@
 import { mkdirSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { changedPaths, decideScope } from '../../scripts/gate.ts'
+import { changedPaths, decideScope } from '../../scripts/gate/gate.ts'
 import { commitFile, createGitFixture, git, type GitFixture } from '../support/git-fixture.ts'
 
 let fixture: GitFixture

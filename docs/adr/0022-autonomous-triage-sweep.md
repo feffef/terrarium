@@ -70,5 +70,5 @@ person.
 
 - `.agents/skills/auto-triage/SKILL.md`: which issues a run picks up, the
   wayfinder rules, and how to run it. It applies `triage`'s per-issue rules.
-- `docs/agents/triage-labels.md`: the labels. `scripts/trust.ts`: who is
+- `docs/agents/triage-labels.md`: the labels. `scripts/lib/author-trust.ts`: who is
   Trusted.

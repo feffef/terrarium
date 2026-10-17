@@ -5,14 +5,13 @@
 // mechanical path only; a new runtime dependency would also escalate the
 // merge bar, ADR-0004).
 //
-// Mirrors `scripts/digest.ts`'s split: pure, unit-tested core (keyword
+// Mirrors `.agents/skills/digest/scripts/digest.ts`'s split: pure, unit-tested core (keyword
 // extraction, overlap scoring, clustering) behind a thin FS/CLI shell.
 //
 // Usage:  tsx .agents/skills/visitor-loop/scripts/ideas.ts gather [--threshold <n>] [--days <n>]
-import { pathToFileURL } from 'node:url'
 import { isExternalSession } from '../../../../shared/schemas/session.ts'
-import { readSessionLogs } from '../../../../scripts/session-logs.ts'
-import { root } from '../../../../shared/expand.ts'
+import { readSessionLogs } from '../../../../scripts/session/journal-files.ts'
+import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -186,18 +185,12 @@ export function cmdGather(cwd = root, threshold = CLUSTER_THRESHOLD, days?: numb
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`ideas: ${msg}`)
-  process.exit(1)
-}
-
 function main(): void {
   const argv = process.argv.slice(2)
   const cmd = argv[0]
-  const thresholdIdx = argv.indexOf('--threshold')
-  const threshold = thresholdIdx >= 0 && argv[thresholdIdx + 1] ? Number(argv[thresholdIdx + 1]) : CLUSTER_THRESHOLD
-  const daysIdx = argv.indexOf('--days')
-  const days = daysIdx >= 0 ? Number(argv[daysIdx + 1]) : undefined
+  const thresholdArg = flagValue(argv, '--threshold')
+  const threshold = thresholdArg ? Number(thresholdArg) : CLUSTER_THRESHOLD
+  const days = argv.includes('--days') ? Number(flagValue(argv, '--days')) : undefined
   if (days !== undefined && !(days > 0)) fail('--days needs a positive number')
 
   if (cmd === 'gather') {
@@ -207,11 +200,4 @@ function main(): void {
   }
 }
 
-// Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

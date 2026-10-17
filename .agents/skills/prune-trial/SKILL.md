@@ -21,16 +21,16 @@ Everything below is mechanism; the goal above is the point.
 
 ## 1. Judge the open trials
 
-`.agents/prune-trials.yml` holds them; `scripts/prune-trial-window.ts` holds the window.
+`.agents/prune-trials.yml` holds them; `.agents/skills/prune-trial/scripts/find-trial-window.ts` holds the window.
 
 **A trial is judgeable only once its prune has landed on `main` and sessions
 have run against it since.** `opened:` records when the entry was written, which
 is earlier and is never the window's start. Run
-`pnpm exec tsx scripts/prune-trial-window.ts` to get every open trial's real landing commit, timestamp, and `judgeable from:` time, taken from `git log -S`; never derive or recall them by hand (a hand-derived one is how PR #1061 judged a trial a day early against a landing commit that did not exist). Its `judgeable from:` time is a floor, not a deadline: judge at or after it, never before. A `NOT FOUND` result means silence is not evidence: leave the entry alone and judge nothing.
+`pnpm exec tsx .agents/skills/prune-trial/scripts/find-trial-window.ts` to get every open trial's real landing commit, timestamp, and `judgeable from:` time, taken from `git log -S`; never derive or recall them by hand (a hand-derived one is how PR #1061 judged a trial a day early against a landing commit that did not exist). Its `judgeable from:` time is a floor, not a deadline: judge at or after it, never before. A `NOT FOUND` result means silence is not evidence: leave the entry alone and judge nothing.
 
 For each trial that has landed and is past its window: **apply** its `check`
 (prose, not a command), and read the Frictions logged since it landed
-(`scripts/session-frictions.ts --since <landing time>`, then only sessions that started after it — large output goes to a file automatically),
+(`scripts/session/extract-frictions.ts --since <landing time>`, then only sessions that started after it — large output goes to a file automatically),
 plus Gate failures and any issue filed since as a regression of an earlier
 fix — `frictions-to-fixes` files those, naming the fix that didn't hold.
 

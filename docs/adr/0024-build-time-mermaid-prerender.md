@@ -67,8 +67,8 @@ A font per Tenant lets a diagram match the type of the page around it.
 
 - `app/utils/mermaid.ts`: the `--diagram-*` colours, default font and SVG key.
 - `layers/<tenant>/mermaid-font.ts`: a Tenant's own render font, if any.
-- `scripts/render-mermaid.ts`: the authoring step and its options.
-- `scripts/verify-mermaid.ts`, `app/utils/svg.ts`: the gate check, what is safe.
+- `scripts/gate/render-mermaid.ts`: the authoring step and its options.
+- `scripts/gate/validate-mermaid-svgs.ts`, `app/utils/svg.ts`: the gate check, what is safe.
 - `app/components/MermaidDiagram.vue`: how a page shows the SVG.
 - `app/assets/fonts/README.md`: the default font.
 - `docs/research/mermaid-server-side-rendering.md`: the options compared.

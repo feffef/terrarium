@@ -67,5 +67,3 @@ must click.
   and the once-per-path guard.
 - `layers/blog/tests/e2e/blog.spec.ts`, `tests/unit/chunk-recovery.spec.ts`:
   the checks.
-- `scripts/repro-236.ts`: reproduces the library's kept failure on a real
-  server restart.

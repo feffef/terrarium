@@ -1,0 +1,303 @@
+// The worktree sweep (issue #427): a mechanical replacement for CLAUDE.md's
+// doc-only "orchestrator must check each returned worktree for uncommitted
+// work" guard (#317). That guard only ever caught a stop-with-uncommitted-work
+// three times as an after-the-fact safety net (#427) — and being keyed on the
+// orchestrator remembering to inspect a *returned* worktree, it can't catch one
+// left behind by a subagent that never returned at all (a silent platform
+// "session limit" abort). This script enumerates worktrees from git state
+// itself, so an orphaned worktree is caught the same way a returned one is.
+//
+// Usage:  tsx scripts/git/check-worktrees.ts
+//   Exits non-zero iff any LINKED (non-primary) worktree has uncommitted
+//   changes (staged, unstaged, or untracked — any `git status --porcelain`
+//   output) or unpushed commits (commits on its HEAD absent from its upstream;
+//   for a branch with no upstream, commits on no remote-tracking ref). The primary worktree's own in-progress edits are reported
+//   for visibility but never fail the sweep — the orchestrator manages its own
+//   tree directly. Same for a linked worktree whose HEAD is already merged
+//   into `origin/main` (issue #1169): its work has already landed, so a
+//   stale dirty index or unpushed local commit left behind (e.g. by a
+//   review-subagent checkout collision, per dispatch-subagents/SKILL.md) is
+//   harmless cruft, not unrescued work. Likewise a dirty linked worktree whose
+//   content already equals a pushed commit's tree (issue #1585: a sibling moved
+//   its branch ref, so it reads as a reversed diff of work already on the remote).
+import { copyFileSync, existsSync, mkdtempSync, rmSync, statSync, utimesSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join, resolve } from 'node:path'
+import { git, tryGit } from '../lib/git.ts'
+import { root, runIfMain } from '../lib/cli.ts'
+
+// ── Types ───────────────────────────────────────────────────────────────────
+
+/** One worktree block as read off `git worktree list --porcelain`, parsed but
+ *  not yet joined with any per-worktree git status. */
+export interface RawWorktree {
+  path: string
+  head: string
+  /** Branch shorthand (e.g. `main`), or `null` when detached. */
+  branch: string | null
+  bare: boolean
+  detached: boolean
+  locked: boolean
+  prunable: boolean
+}
+
+/** A `RawWorktree` joined with its working-tree/push state — the input the
+ *  pure `sweep()` decision is made from. */
+export interface WorktreeState {
+  path: string
+  branch: string | null
+  isPrimary: boolean
+  /** Any `git status --porcelain` output for this worktree (staged, unstaged,
+   *  or untracked files all count — a bare worktree has no working tree to be
+   *  dirty, so this is always `false` for one). */
+  dirty: boolean
+  /** Commits reachable from this worktree's HEAD absent from its remote — via
+   *  its upstream when one is configured, else absent from every
+   *  remote-tracking ref. `null` when undeterminable (e.g. no
+   *  `origin/main` to compare against) — treated as "can't say," not a pass. */
+  unpushedCount: number | null
+  /** True when this worktree's HEAD commit is already reachable from
+   *  `origin/main` — its work has already landed, so a dirty/stale index
+   *  left behind (issue #1169: a review-subagent checkout collision whose PR
+   *  has since merged) is harmless housekeeping cruft, not unrescued work.
+   *  `false` for a bare worktree (no HEAD to compare) and for any other
+   *  undeterminable case — never assumed merged. */
+  headMergedToMain: boolean
+  /** True when this dirty worktree's content (index + working files, untracked
+   *  non-ignored included) equals the tree of a commit on a remote-tracking ref
+   *  — already pushed, so not unrescued work (issue #1585). */
+  contentPushed: boolean
+}
+
+/** The sweep's verdict for one worktree. */
+export interface Finding {
+  path: string
+  branch: string | null
+  isPrimary: boolean
+  uncommitted: boolean
+  unpushed: boolean
+  /** Mirrors `WorktreeState.headMergedToMain` — carried onto the finding so
+   *  a caller (the CLI included) can tell a dirty/unpushed-but-already-merged
+   *  worktree (issue #1169) apart from one that's actually clean, without
+   *  needing the raw `WorktreeState`. */
+  mergedToMain: boolean
+  /** Mirrors `WorktreeState.contentPushed`. */
+  contentPushed: boolean
+  /** Why a linked worktree that is dirty/unpushed still passes; `null` when
+   *  nothing needs excusing or nothing excuses it. */
+  excusedBy: Excusal | null
+}
+
+/** The single table of reasons a dirty/unpushed linked worktree passes — read
+ *  by both `sweep()` and the CLI report, so the two can't drift. */
+export const EXCUSALS = {
+  'merged-to-main': 'left dirty/unpushed but already merged into origin/main — harmless cruft (issue #1169)',
+  'content-pushed': 'dirty, but its content equals a pushed commit\'s tree and it has no unpushed commits (issue #1585)',
+} as const
+export type Excusal = keyof typeof EXCUSALS
+
+export interface SweepResult {
+  /** Every worktree, primary included — for the visibility report. */
+  findings: Finding[]
+  /** The subset that fails the sweep: linked (non-primary), uncommitted or
+   *  unpushed, and not excused. Drives the exit code. */
+  failures: Finding[]
+}
+
+// ── Pure core (unit-tested against fixture strings) ─────────────────────────
+
+/** Parse `git worktree list --porcelain`'s block format: one blank-line
+ *  separated block per worktree, each block a run of `<key> [value]` lines
+ *  (`worktree`, `HEAD`, `branch`, and the bare `bare`/`detached`/`locked`/
+ *  `prunable` flag lines that carry no value or a trailing reason). */
+export function parseWorktreeList(porcelain: string): RawWorktree[] {
+  const blocks = porcelain
+    .split(/\n{2,}/)
+    .map((b) => b.trim())
+    .filter((b) => b.length > 0)
+  return blocks.map((block) => {
+    const lines = block.split('\n')
+    let path = ''
+    let head = ''
+    let branch: string | null = null
+    let bare = false
+    let detached = false
+    let locked = false
+    let prunable = false
+    for (const line of lines) {
+      if (line.startsWith('worktree ')) path = line.slice('worktree '.length).trim()
+      else if (line.startsWith('HEAD ')) head = line.slice('HEAD '.length).trim()
+      else if (line.startsWith('branch ')) branch = line.slice('branch '.length).trim().replace(/^refs\/heads\//, '')
+      else if (line === 'bare' || line.startsWith('bare ')) bare = true
+      else if (line === 'detached' || line.startsWith('detached ')) detached = true
+      else if (line === 'locked' || line.startsWith('locked ')) locked = true
+      else if (line === 'prunable' || line.startsWith('prunable ')) prunable = true
+    }
+    return { path, head, branch, bare, detached, locked, prunable }
+  })
+}
+
+/** The primary worktree's path always sits one directory above the shared
+ *  `.git` common dir (a linked worktree's `.git` is a file pointing *into*
+ *  that common dir; the primary's `.git` *is* it) — so this needs no
+ *  filesystem stat, just the already-known common-dir path. */
+export function primaryWorktreePath(gitCommonDir: string): string {
+  return dirname(gitCommonDir)
+}
+
+/** Decide pass/fail per worktree. A worktree fails the sweep only when it is
+ *  linked (not primary), either dirty or carrying unpushed commits, AND its
+ *  HEAD is NOT already merged into `origin/main` — the primary's own
+ *  in-progress edits are reported but never fail it (the orchestrator
+ *  manages its own tree directly); an undeterminable unpushed count (`null`)
+ *  is treated as "not proven unpushed," not a pass; and a HEAD already
+ *  merged into `origin/main` (issue #1169: cruft left behind by a
+ *  review-subagent checkout collision whose PR has since landed) is reported
+ *  in `findings` for visibility but excluded from `failures`, since its work
+ *  is already safe. `EXCUSALS` lists every such exemption. */
+export function sweep(states: WorktreeState[]): SweepResult {
+  const findings: Finding[] = states.map((s) => {
+    const uncommitted = s.dirty
+    const unpushed = (s.unpushedCount ?? 0) > 0
+    const needsRescue = !s.isPrimary && (uncommitted || unpushed)
+    const excusedBy: Excusal | null = !needsRescue
+      ? null
+      : s.headMergedToMain
+        ? 'merged-to-main'
+        : s.contentPushed && !unpushed ? 'content-pushed' : null
+    return {
+      path: s.path,
+      branch: s.branch,
+      isPrimary: s.isPrimary,
+      uncommitted,
+      unpushed,
+      mergedToMain: s.headMergedToMain,
+      contentPushed: s.contentPushed,
+      excusedBy,
+    }
+  })
+  const failures = findings.filter((f) => !f.isPrimary && (f.uncommitted || f.unpushed) && f.excusedBy === null)
+  return { findings, failures }
+}
+
+// ── Git shell (thin) ─────────────────────────────────────────────────────────
+
+function isDirty(path: string): boolean {
+  return git(['status', '--porcelain'], path).trim().length > 0
+}
+
+/** Commits on this worktree's HEAD not yet on its remote. Prefers the
+ *  branch's configured upstream (`@{upstream}`); with none, counts commits on
+ *  no remote-tracking ref, so a local-only branch or detached HEAD already
+ *  contained in a pushed branch is rescued. `null` when there is no
+ *  `origin/main` to compare against. */
+export function unpushedCount(path: string): number | null {
+  const upstream = tryGit(['rev-parse', '--abbrev-ref', '@{upstream}'], path)
+  if (upstream.ok) {
+    const count = tryGit(['rev-list', '--count', `${upstream.out.trim()}..HEAD`], path)
+    return count.ok ? Number.parseInt(count.out, 10) : null
+  }
+  if (!tryGit(['merge-base', 'origin/main', 'HEAD'], path).ok) return null
+  const count = tryGit(['rev-list', '--count', 'HEAD', '--not', '--remotes'], path)
+  return count.ok ? Number.parseInt(count.out, 10) : null
+}
+
+/** True when `head` is already reachable from `origin/main` — this
+ *  worktree's work has already landed, so a stale/dirty index left behind
+ *  (issue #1169: a review-subagent checkout collision whose PR has since
+ *  merged) is housekeeping cruft, not unrescued work. `git merge-base
+ *  --is-ancestor` signals via exit code alone (0 = ancestor) with no stdout
+ *  to parse; any nonzero exit — not an ancestor, or no `origin/main` ref at
+ *  all — reads as "not (provably) merged," never a false positive. */
+function isMergedToMain(head: string, cwd: string): boolean {
+  return tryGit(['merge-base', '--is-ancestor', head, 'origin/main'], cwd).ok
+}
+
+/** Snapshots the worktree's content as a tree via a throwaway index copy (the
+ *  real index is untouched), then looks for that tree among remote commits. */
+export function contentMatchesRemoteCommit(path: string): boolean {
+  const dir = mkdtempSync(join(tmpdir(), 'check-worktrees-index-'))
+  try {
+    const index = join(dir, 'index')
+    const realIndex = resolve(path, git(['rev-parse', '--git-path', 'index'], path).trim())
+    // Keep the real index's mtime: a fresher copy hides git's racy-timestamp
+    // check, so a same-size rewrite within one clock tick reads as unchanged
+    // (issue #1818).
+    if (existsSync(realIndex)) {
+      copyFileSync(realIndex, index)
+      const { atime, mtime } = statSync(realIndex)
+      utimesSync(index, atime, mtime)
+    }
+    const env = { ...process.env, GIT_INDEX_FILE: index }
+    git(['add', '-A'], path, { env, stdio: 'ignore' })
+    const tree = git(['write-tree'], path, { env }).trim()
+    return tryGit(['log', '--remotes', '--format=%T'], path).out.trim().split('\n').includes(tree)
+  } catch {
+    return false
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+}
+
+function readWorktreeStates(cwd = root): WorktreeState[] {
+  const porcelain = git(['worktree', 'list', '--porcelain'], cwd).trim()
+  const raw = parseWorktreeList(porcelain)
+  const commonDir = resolve(cwd, git(['rev-parse', '--git-common-dir'], cwd).trim())
+  const primaryPath = primaryWorktreePath(commonDir)
+  return raw.map((wt) => {
+    // A bare worktree has no working tree to be dirty or ahead — report it
+    // inert rather than shelling out to commands that don't apply to it.
+    const dirty = wt.bare ? false : isDirty(wt.path)
+    return {
+      path: wt.path,
+      branch: wt.branch,
+      isPrimary: wt.path === primaryPath,
+      dirty,
+      unpushedCount: wt.bare ? 0 : unpushedCount(wt.path),
+      headMergedToMain: wt.bare ? false : isMergedToMain(wt.head, wt.path),
+      contentPushed: dirty && contentMatchesRemoteCommit(wt.path),
+    }
+  })
+}
+
+export function runSweep(cwd = root): SweepResult {
+  return sweep(readWorktreeStates(cwd))
+}
+
+// ── CLI ───────────────────────────────────────────────────────────────────────
+
+function describe(f: Finding): string {
+  const reasons: string[] = []
+  if (f.uncommitted) reasons.push('uncommitted changes')
+  if (f.unpushed) reasons.push('unpushed commits')
+  const branch = f.branch ?? '(detached)'
+  return `  ${f.path} [${branch}] — ${reasons.join(' and ')}`
+}
+
+function main(): void {
+  const { findings, failures } = runSweep()
+  const primary = findings.find((f) => f.isPrimary)
+  if (primary) {
+    const state = primary.uncommitted || primary.unpushed
+      ? `has ${[primary.uncommitted && 'uncommitted changes', primary.unpushed && 'unpushed commits'].filter(Boolean).join(' and ')} (not a failure — it's the orchestrator's own tree)`
+      : 'clean and pushed'
+    console.log(`check-worktrees: primary ${primary.path} [${primary.branch ?? '(detached)'}] — ${state}`)
+  }
+  const linked = findings.filter((f) => !f.isPrimary)
+  for (const [reason, text] of Object.entries(EXCUSALS)) {
+    const excused = linked.filter((f) => f.excusedBy === reason)
+    if (excused.length === 0) continue
+    console.log(`check-worktrees: ${excused.length} linked worktree(s) ${text} — not failing the sweep:`)
+    for (const f of excused) console.log(describe(f))
+  }
+  if (failures.length === 0) {
+    console.log(`check-worktrees: PASS — ${linked.length} linked worktree(s) clean/pushed or excused`)
+    return
+  }
+  console.error(`\ncheck-worktrees: FAIL — ${failures.length} linked worktree(s) have unrescued work (issue #427):\n`)
+  for (const f of failures) console.error(describe(f))
+  console.error('\nCommit + push (or otherwise rescue) each before treating its subagent as done.\n')
+  process.exit(1)
+}
+
+runIfMain(import.meta.url, main)

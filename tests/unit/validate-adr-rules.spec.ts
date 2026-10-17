@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { adrHash, adrTokens, findAdrRuleProblems, newFormatProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash, withRuleTokens } from '../../scripts/validate-adr-rules.ts'
+import { adrHash, adrTokens, findAdrRuleProblems, newFormatProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash, withRuleTokens } from '../../scripts/lib/adr-rules.ts'
 
 const ADR = '# ADR-0024: Mermaid\n\nDecision text.\n'
 const stamped = (body: string) => withRuleHash(body, adrHash(ADR))
@@ -64,7 +64,7 @@ describe('ADR token estimate in the summary pointer', () => {
   it('fails a summary whose estimate is stale or whose pointer is missing, old, empty after "or", or names another ADR', () => {
     const check = (rule: string) => findAdrRuleProblems({ adrs: { '0024': ADR }, rules: { 'adr-0024.md': rule } })
     expect(check(withRuleTokens(summary, 900))).toEqual([
-      '.claude/rules/adr-0024.md gives a stale token estimate: run `pnpm exec tsx scripts/validate-adr-rules.ts --write`.',
+      '.claude/rules/adr-0024.md gives a stale token estimate: run `pnpm exec tsx scripts/gate/validate-adr-rules.ts --write`.',
     ])
     expect(check(stamped('x'))[0]).toContain('must point to its ADR')
     expect(check(stamped("If this touches your task, read the full ADR first (it's only 3 lines):\n"))[0]).toContain('must point to its ADR')
@@ -108,7 +108,7 @@ describe('newFormatProblems (ADR-0030)', () => {
 describe('non-ADR rules (ADR-0029)', () => {
   const exists = (p: string) => p === 'docs/agents/guards.md'
   const check = (files: Record<string, string>) => findAdrRuleProblems({ adrs: {}, rules: {}, otherRules: { files, exists } })
-  const scoped = (body: string) => `---\npaths:\n  - "scripts/*-guard.ts"\n---\n${body}`
+  const scoped = (body: string) => `---\npaths:\n  - "scripts/hooks/*-guard.ts"\n---\n${body}`
 
   it('passes a rule with paths whose docs exist, with no adr hash and no "no matching ADR"', () => {
     expect(check({ 'guards.md': scoped('# Guards\n\nSee docs/agents/guards.md.\n') })).toEqual([])
@@ -131,8 +131,8 @@ describe('non-ADR rules (ADR-0029)', () => {
   it('fails a paths glob that matches no repo file, and passes one that does', () => {
     const files = { 'guards.md': scoped('# Guards\n') }
     const run = (repoFiles: string[]) => findAdrRuleProblems({ adrs: {}, rules: {}, otherRules: { files, exists }, repoFiles })
-    expect(run(['scripts/a-guard.ts'])).toEqual([])
-    expect(run(['scripts/a.ts'])).toEqual(['.claude/rules/guards.md paths "scripts/*-guard.ts" matches no file: fix the glob or drop it (ADR-0029).'])
+    expect(run(['scripts/hooks/a-guard.ts'])).toEqual([])
+    expect(run(['scripts/hooks/a.ts'])).toEqual(['.claude/rules/guards.md paths "scripts/hooks/*-guard.ts" matches no file: fix the glob or drop it (ADR-0029).'])
   })
 
   it('ignores frontmatter globs, trailing punctuation, anchors and backticks', () => {

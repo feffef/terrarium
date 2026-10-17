@@ -1,10 +1,11 @@
 // Checks a Glass Box page against the code at its `revision`, for the layer
 // test and the glassbox-update Skill (issue #1994). A stale page passes; only a
 // page wrong about what it cites fails.
-import { execFileSync } from 'node:child_process'
 import { globSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
-import { parseDocument, splitFrontmatter } from '../../scripts/validate-content.ts'
+import { splitFrontmatter } from '../../scripts/lib/frontmatter.ts'
+import { tryGit } from '../../scripts/lib/git.ts'
+import { parseDocument } from '../../scripts/gate/validate-content-schema.ts'
 import { root } from '../../shared/expand.ts'
 import { glassboxLessonIds, glassboxLessonLabels } from './app/utils/lesson.ts'
 import { glassboxSubjectOf, glassboxSubjects, glassboxWalkthroughOf } from './app/utils/subjects.ts'
@@ -18,24 +19,21 @@ export interface GlassboxGit {
   read(rev: string, path: string): string | string[] | undefined
 }
 
-function git(args: string[]): { out?: string; status: number } {
-  try {
-    return { out: execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }), status: 0 }
-  } catch (error) {
-    return { status: (error as { status?: number }).status ?? -1 }
-  }
-}
-
 export const repoGit: GlassboxGit = {
   commit(rev) {
-    const date = git(['show', '-s', '--format=%cI', `${rev}^{commit}`]).out?.trim()
+    const shown = tryGit(['show', '-s', '--format=%cI', `${rev}^{commit}`], root)
     // `--is-ancestor` exits 1 for "not an ancestor" and otherwise for anything it can't resolve.
-    const { status } = git(['merge-base', '--is-ancestor', rev, 'origin/main'])
+    const { status } = tryGit(['merge-base', '--is-ancestor', rev, 'origin/main'], root)
+    const date = shown.out.trim()
     return date && status <= 1 ? { date, onMain: status === 0 } : undefined
   },
   read(rev, path) {
-    if (!path.endsWith('/')) return git(['cat-file', 'blob', `${rev}:${path}`]).out
-    return git(['ls-tree', '--name-only', `${rev}:${path}`]).out?.split('\n').filter(Boolean)
+    if (!path.endsWith('/')) {
+      const blob = tryGit(['cat-file', 'blob', `${rev}:${path}`], root)
+      return blob.ok ? blob.out : undefined
+    }
+    const tree = tryGit(['ls-tree', '--name-only', `${rev}:${path}`], root)
+    return tree.ok ? tree.out.split('\n').filter(Boolean) : undefined
   },
 }
 

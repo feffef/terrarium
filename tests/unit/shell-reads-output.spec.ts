@@ -3,7 +3,7 @@
 // that appear in a Bash tool_result, never from the command text. Expected
 // values are worked examples from docs/research/shell-reads-by-output-matching.md.
 import { describe, expect, it } from 'vitest'
-import { buildDocLineIndex, MIN_LINES_SHOWN, scanShellReadsByOutput } from '../../scripts/shell-reads.ts'
+import { buildDocLineIndex, MIN_LINES_SHOWN, scanShellReadsByOutput } from '../../scripts/session/shell-reads.ts'
 
 const GUARDS = [
   '# Guards',
@@ -95,7 +95,7 @@ describe('the path-prefix signal', () => {
   })
 
   it('relativizes an absolute prefix and ignores one that is not an instruction doc', () => {
-    const out = ['/repo/.claude/skills/tdd/SKILL.md:3:short', 'scripts/gate.ts:9:short', 'layers/journal/content/current/pages/x.md:1:short'].join('\n')
+    const out = ['/repo/.claude/skills/tdd/SKILL.md:3:short', 'scripts/gate/gate.ts:9:short', 'layers/journal/content/current/pages/x.md:1:short'].join('\n')
     expect(scanShellReadsByOutput([{ command: 'x', output: out }], index(), rel, 1).paths).toEqual(['.agents/skills/tdd/SKILL.md'])
   })
 })

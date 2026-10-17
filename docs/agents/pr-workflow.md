@@ -33,12 +33,12 @@ story or repeat its findings.
 
 1. Run `pnpm gate:scoped` and wait (a prose- or docs-only follow-up push may skip
    it). A red gate never merges.
-2. Run `pnpm exec tsx scripts/check-conflicting-issues.ts --pr <number>`. It is
+2. Run `pnpm exec tsx scripts/github/check-conflicting-issues.ts --pr <number>`. It is
    advisory: a hit means read that issue (#798), not that there is a conflict.
 3. Wait for green checks: `in_progress` is not failing. A clean mergeable state
    says you don't conflict, not that your rationale still holds: if the PR cites
    an ADR or proposal and the base has moved, re-read the cited doc (#889).
-   `scripts/merge-pr.ts` polls for you (step 5). When babysitting across a wait
+   `scripts/github/merge-pr.ts` polls for you (step 5). When babysitting across a wait
    of many hours, schedule `mcp__Claude_Code_Remote__send_later` check-ins at
    about 2h, then 6h, then every ~12h (#929).
 4. Before merging, post your verdict as a PR comment, even a clean "merging
@@ -49,7 +49,7 @@ story or repeat its findings.
    APPROVE review: it fails on our own PRs, and on a fork PR it would fake the
    human merge authority [`guest-contributions.md`](./guest-contributions.md)
    reserves.
-5. Land through `scripts/merge-pr.ts <pr-number>`, the only merge path; never
+5. Land through `scripts/github/merge-pr.ts <pr-number>`, the only merge path; never
    call `enable_pr_auto_merge`. The script refuses what a human must merge
    (ADR-0004, ADR-0020, ADR-0023) and a PR without your step-4 verdict
    naming its head (why: #1276).
@@ -89,7 +89,7 @@ own work is staged (not `frictions-to-fixes`, which opens many PRs per run).
 Each SKILL.md adds only its delta: what its diff is limited to, and what to do
 when something outside that scope rides in.
 
-1. Run `pnpm gate:scoped` (ADR-0004; `scripts/gate.ts` owns what it runs).
+1. Run `pnpm gate:scoped` (ADR-0004; `scripts/gate/gate.ts` owns what it runs).
    Done when it's green.
 2. Commit, review (see "Review before the first push"), push with retry, and
    open **one gated PR** scoped to that Skill's own diff — one per run unless

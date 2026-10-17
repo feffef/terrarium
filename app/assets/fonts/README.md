@@ -9,7 +9,7 @@ Journal's serif stack (`layers/journal/app/assets/theme.css`).
 
 Why bundled rather than a stack of system fonts: mermaid bakes node geometry by
 measuring rendered text at author time, so the renderer
-(`scripts/render-mermaid.ts`, injected as a data: URI) **and** the browser
+(`scripts/gate/render-mermaid.ts`, injected as a data: URI) **and** the browser
 (`app/components/MermaidDiagram.vue`, via `@font-face`) must use the same face.
 
 - Source: `@fontsource/gelasio@5.3.0` (`files/gelasio-latin-400-normal.woff2`),

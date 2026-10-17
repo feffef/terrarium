@@ -5,7 +5,7 @@
 // a Platform contract, not Tenant-private content, and now that the Commons
 // Timeline reads sessions across the Catalog, the shape is a genuine cross-consumer
 // contract that wants a single home. Journal's `sessions` collection references it
-// via `kind: 'session'`; `scripts/log-session.ts` validates authored logs against
+// via `kind: 'session'`; `scripts/session/log-session.ts` validates authored logs against
 // it; the Timeline projects it. Behaviour is unchanged from the pre-move inline
 // schema — same fields, same `.strict()`.
 import { z } from 'zod'
@@ -50,7 +50,7 @@ export const sessionSchema = z
       .array(z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict.optional() }))
       .default([]),
     skillsUsed: z.array(z.object({ name: z.string(), reason: z.string() })).default([]),
-    // Mechanical trace — derived from the transcript by scripts/session-trace.ts
+    // Mechanical trace — derived from the transcript by scripts/session/transcript-trace.ts
     // when the landing script runs (ADR-0009), never self-reported. All optional: absent ⇒
     // an older, authored-only log. Additive per the schema-evolution policy.
     durationSec: z.number().int().nonnegative().optional(),
@@ -86,7 +86,7 @@ export const sessionSchema = z
     entrypoint: z.string().optional(),
     cliVersion: z.string().optional(),
     // A human-legible identifier for what fired a Routine-triggered session —
-    // derived by session-trace.ts's extractTrace ONLY when entrypoint is
+    // derived by transcript-trace.ts's extractTrace ONLY when entrypoint is
     // 'remote_trigger' (issue #449 Gap 1); absent for every other session.
     trigger: z.string().optional(),
     // Marks a log authored by an EXTERNAL harness — a different agent / toolchain /
@@ -132,7 +132,7 @@ export const sessionSchema = z
 /** True when a raw (parsed, not-yet-validated) session log was authored by an
  *  EXTERNAL harness — the `external: true` flag above. Single home for that check,
  *  shared by every self-improvement consumer that must exclude external sessions
- *  (visitor-loop's `ideas.ts`, `scripts/audit-skills.ts`, `scripts/session-frictions.ts`;
+ *  (visitor-loop's `ideas.ts`, `scripts/session/audit-skills.ts`, `scripts/session/extract-frictions.ts`;
  *  ADR-0009). Absent/false/non-object ⇒ internal. */
 export function isExternalSession(raw: unknown): boolean {
   return typeof raw === 'object' && raw !== null && (raw as Record<string, unknown>).external === true

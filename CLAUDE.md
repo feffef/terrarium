@@ -53,7 +53,7 @@ act, once per session.
 - **Stay on the branch your session started on.** If that is `main`, fetch
   `origin main` and cut a new branch first.
 - **Invoke `close-session`** when you open a PR, and when a session only answers a question.
-- **Merge your own PR** with `scripts/merge-pr.ts <number>` once the ADR-0004
+- **Merge your own PR** with `scripts/github/merge-pr.ts <number>` once the ADR-0004
   rule allows it.
 - **Verify before you state.** Only call something settled (an id, a count, a
   cause, another session's claim) if you checked it this turn against the
@@ -81,7 +81,8 @@ docs/agents/              how-to docs for agents
 docs/research/            dated reference notes
 .agents/skills/           our Skills (.claude/skills/ links here)
 .claude/workflows/        workflow scripts, each its Skill's code (ADR-0005)
-scripts/                  repo tooling, the gate, and the tool-call guards
+scripts/                  repo tooling by area: gate/ (the gate and its checks), hooks/ (tool-call
+                          guards and hints), session/ (session logs, Skill audit), github/, git/, ui/, lib/ (shared)
 tests/                    Platform tests; each Tenant keeps its own in its layer
 ```
 
@@ -92,4 +93,4 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
   can't background: `dispatch-subagents` §3); redirect output to a file.
 - **Never use `pkill`,** and never chain a kill with `&&` or `;` (the commands
   after it can silently not run). Stop a preview or dev server with
-  `scripts/preview.ts stop <pid>`.
+  `scripts/ui/preview.ts stop <pid>`.

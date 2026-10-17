@@ -3,7 +3,7 @@ description: The Gate's layered steps (ADR-0004), cheapest-first, with the Heavy
 
 # Why the Gate's steps live here and not in `.github/workflows/gate.yml`, and why
 # this file is Human-only to *merge* but not to edit: ADR-0026.
-# `tests/unit/gate-parity.spec.ts` pins this step list against `scripts/gate.ts`.
+# `tests/unit/gate-parity.spec.ts` pins this step list against `scripts/gate/gate.ts`.
 
 inputs:
   github-token:
@@ -25,7 +25,7 @@ runs:
       shell: bash
       run: pnpm install --frozen-lockfile
 
-    # Asks scripts/gate.ts — the same classifier `pnpm gate:scoped` runs locally
+    # Asks scripts/gate/gate.ts — the same classifier `pnpm gate:scoped` runs locally
     # — whether this changeset can skip the Heavy tier, rather than re-expressing
     # `isInert` in YAML where the two would drift (#350, #445). Skipped entirely
     # on push:main, which leaves the output empty and so runs everything below.
@@ -39,7 +39,7 @@ runs:
       env:
         BASE_SHA: ${{ github.event.pull_request.base.sha }}
         HEAD_SHA: ${{ github.sha }}
-      run: pnpm exec tsx scripts/gate.ts --decide --base "$BASE_SHA" --head "$HEAD_SHA"
+      run: pnpm exec tsx scripts/gate/gate.ts --decide --base "$BASE_SHA" --head "$HEAD_SHA"
 
     # Pins each external pack Skill's installed SKILL.md hash against its
     # Skill Inventory entry (ADR-0015) — a governance/provenance
@@ -77,7 +77,7 @@ runs:
       run: pnpm typecheck
 
     # L1 — content validates against strict Collection schemas via Zod
-    # .safeParse() (scripts/validate-content.ts). Nuxt Content 3 never
+    # .safeParse() (scripts/gate/validate-content-schema.ts). Nuxt Content 3 never
     # validates content at build time (docs/research/nuxt-content-review-grounding.md
     # §2) — this script is what actually enforces L1.
     - name: 'L1 · content validation'
@@ -88,7 +88,7 @@ runs:
     # proof, ADR-0004). An empty or absent output — step skipped, step failed,
     # base undeterminable — is not 'true', so it runs. The skip is only ever reached on a
     # positively-proven Inert changeset. `skip_build` guards only build and e2e
-    # (`scripts/gate.ts` `isSkillFile`, #1603).
+    # (`scripts/gate/gate.ts` `isSkillFile`, #1603).
 
     # L0/L3 — the unit suite (`pnpm test`), including the isolation invariant:
     # unique, correctly-scoped collection keys.

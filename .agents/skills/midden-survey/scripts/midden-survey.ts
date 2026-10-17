@@ -20,11 +20,9 @@
 //   (`git fetch --unshallow origin main`).
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
-import { execFileSync } from 'node:child_process'
 import { parse as parseYaml } from 'yaml'
-import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
-import { root } from '../../../../shared/expand.ts'
+import { fetchOriginMain, git } from '../../../../scripts/lib/git.ts'
+import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const FIELD_SEP = '\x1f'
 
@@ -109,7 +107,7 @@ export function parseDeletionLog(raw: string): DeletionLog {
  * Paths whose deletion is process residue, not discarded work — never Midden
  * candidates, so screened before any judgment:
  *  - `layers/journal/content/` — session logs and digests are archived by
- *    moving files (`scripts/archive-journal-content.ts`), so deletions there are churn —
+ *    moving files (`.agents/skills/digest/scripts/archive-journal-content.ts`), so deletions there are churn —
  *    except its `skills/` subtree (the Skill Inventory), authored content
  *    that is never archived by move (#1043);
  *  - `.claude/skills/` — symlinks mirroring `.agents/skills/`, where the real
@@ -440,10 +438,6 @@ export function screenCatalogued<T>(
 
 // ── Git / filesystem shell (thin) ────────────────────────────────────────────
 
-function git(args: string[], cwd = root): string {
-  return execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 })
-}
-
 function assertNotShallow(cwd = root): void {
   if (git(['rev-parse', '--is-shallow-repository'], cwd).trim() === 'true') {
     throw new Error(
@@ -529,7 +523,7 @@ export interface SurveyReport {
 
 export function surveyReport(cwd = root, sinceIso?: string): SurveyReport {
   assertNotShallow(cwd)
-  // See `fetchOriginMain`'s doc comment (scripts/git-helpers.ts) for why this is
+  // See `fetchOriginMain`'s doc comment (scripts/lib/git.ts) for why this is
   // called before every read, and why a failure here is left fatal.
   fetchOriginMain(cwd)
 
@@ -571,27 +565,14 @@ export function surveyReport(cwd = root, sinceIso?: string): SurveyReport {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`midden-survey: ${msg}`)
-  process.exit(1)
-}
-
 function main(): void {
   const argv = process.argv.slice(2)
   let since: string | undefined
-  const sinceAt = argv.indexOf('--since')
-  if (sinceAt !== -1) {
-    since = argv[sinceAt + 1]
+  if (argv.includes('--since')) {
+    since = flagValue(argv, '--since')
     if (!since || !/^\d{4}-\d{2}-\d{2}$/.test(since)) fail('--since expects YYYY-MM-DD')
   }
   process.stdout.write(JSON.stringify(surveyReport(root, since), null, 2) + '\n')
 }
 
-// Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

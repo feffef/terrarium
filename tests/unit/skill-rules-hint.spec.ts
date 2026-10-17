@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { invokedSkill, rulesForSkill, skillRulesHint, type RuleFile } from '../../scripts/skill-rules-hint.ts'
+import { invokedSkill, rulesForSkill, skillRulesHint } from '../../scripts/hooks/skill-rules-hint.ts'
+import type { RuleFile } from '../../scripts/lib/adr-rules.ts'
 
 const rule = (file: string, paths: string[], body: string): RuleFile => ({
   file,

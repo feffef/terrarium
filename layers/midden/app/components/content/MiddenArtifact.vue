@@ -16,7 +16,7 @@
 // `useSpace('midden')` to read this Space's own `artifacts` collection key, so an
 // embed inside one Site's body can never reach across Spaces.
 //
-// `scripts/validate-content-refs.ts` (its `midden-artifact` check, run by
+// `scripts/gate/validate-content-refs.ts` (its `midden-artifact` check, run by
 // `validate:content` in the gate) catches a broken `slug`; the `v-else`
 // fallback below stays as a runtime backstop.
 const props = defineProps<{ slug: string }>()

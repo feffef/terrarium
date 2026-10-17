@@ -9,7 +9,7 @@ disable-model-invocation: true
 Bring the Journal's front pages up to date: write a **Digest** per closed UTC
 day — a short, human **catch-up** on everything that happened across the
 Platform that day — and archive aged-out content. The index overview refreshes
-itself (step 4). A thin, tested helper (`scripts/digest.ts`) does the
+itself (step 4). A thin, tested helper (`.agents/skills/digest/scripts/digest.ts`) does the
 deterministic gathering; **you write the prose**.
 
 > **Command-only — follow the steps.** A scheduled Routine or a human runs
@@ -30,7 +30,7 @@ CLAUDE.md's "Stay on the branch your session started on" rule.
 ## 2. Find the days to write
 
 ```
-pnpm exec tsx scripts/digest.ts list
+pnpm exec tsx .agents/skills/digest/scripts/digest.ts list
 ```
 
 It prints the **closed** UTC days that have activity but no digest yet — the
@@ -45,7 +45,7 @@ Done when you hold the list of days to author.
 For each listed `<date>`:
 
 ```
-pnpm exec tsx scripts/digest.ts gather <date>
+pnpm exec tsx .agents/skills/digest/scripts/digest.ts gather <date>
 ```
 
 The JSON gives you `prs` (merged/referenced), `otherCommits` (direct-to-main
@@ -133,12 +133,12 @@ Done when you have confirmed the new Digest(s) will show — no index edit is ne
 Run the retention sweep so the `current` Space doesn't keep growing (issue #672):
 
 ```
-pnpm exec tsx scripts/archive-journal-content.ts --write
+pnpm exec tsx .agents/skills/digest/scripts/archive-journal-content.ts --write
 ```
 
 This `git mv`s the Digests and session logs that fall outside the retention
 budget — the newest `RETAIN_DATES` dates of each kind, per
-`scripts/archive-journal-content.ts` — from `current` to `archived` (preserving
+`.agents/skills/digest/scripts/archive-journal-content.ts` — from `current` to `archived` (preserving
 history); every other Journal Collection is untouched. The script never commits itself; its moves ride the **same**
 commit/PR as this run, alongside whatever Digest(s) step 3 wrote. Run it on
 **every** invocation of this Skill, not only on days that also produce a new

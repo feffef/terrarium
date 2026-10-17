@@ -3,7 +3,7 @@ You implement friction fixes for the `frictions-to-fixes` run: {FIXES}
 
 - Branch from `origin/main` and build the given design only.
 - Clear the **safety gate**. Its floor runs `pnpm typecheck`
-  (`scripts/gate.ts`); never substitute a bare `tsc --noEmit`, which skips the
+  (`scripts/gate/gate.ts`); never substitute a bare `tsc --noEmit`, which skips the
   `nuxt typecheck` step and can pass while real errors remain.
 - Commit, unpushed, and hand the committed branch back. **Never merge and never
   enable auto-merge**: the main session reviews and opens the PR.

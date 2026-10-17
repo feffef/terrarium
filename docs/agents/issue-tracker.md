@@ -27,7 +27,7 @@ name resolution, see [`github-integration.md`](./github-integration.md).
 - **Before implementing a `ready-for-agent` issue, check for supersession.**
   A missing target file is not the only way an issue goes stale. Search for a
   merged PR or commit that already solved it another way
-  (`scripts/merged-since.ts`, or a tracker search). Check whether its territory
+  (`scripts/git/list-merges-since.ts`, or a tracker search). Check whether its territory
   overlaps an open Prune Trial (`.agents/prune-trials.yml`, ADR-0027):
   implementing over a trial re-legislates prose the trial is still weighing.
 - **Before locking a design that merges, moves or deletes a file, grep for its
@@ -74,7 +74,7 @@ as feature requests; `/triage` reads this flag.)_
 PRs go through the same labels and states as issues, using `gh pr`:
 
 - **Read**: `gh pr view <number> --comments`; `gh pr diff <number>` for the diff.
-- **List external PRs**: `gh api --paginate 'repos/{owner}/{repo}/pulls?state=open'` (REST, so it works in a cloud session), then keep only PRs whose `author_association` is in `PUBLIC_ASSOCIATIONS` (`scripts/trust.ts`; ADR-0020 says what follows).
+- **List external PRs**: `gh api --paginate 'repos/{owner}/{repo}/pulls?state=open'` (REST, so it works in a cloud session), then keep only PRs whose `author_association` is in `PUBLIC_ASSOCIATIONS` (`scripts/lib/author-trust.ts`; ADR-0020 says what follows).
 - **Comment / label / close**: `gh pr comment`, `gh pr edit --add-label`/`--remove-label`, `gh pr close`.
 - **The `trusted` label** is applied automatically to same-repo PRs by `.github/workflows/pr-authorassociation-label.yml` (ADR-0020, issue #443). There is no `public` label. A fork PR is left unlabeled on purpose (see the workflow header), so judge Public by `authorAssociation`, not by the missing label.
 

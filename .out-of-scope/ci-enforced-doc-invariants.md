@@ -19,7 +19,7 @@ marginal value is low:
 
 - **The scheduled documentation review** catches drifted terminology. No drift
   has been reported slipping past it.
-- **The provenance guard** (`scripts/github-provenance-guard.ts`) is a
+- **The provenance guard** (`scripts/hooks/github-provenance-guard.ts`) is a
   `PreToolUse` hook that fails closed: it refuses to let an agent post or record
   anything unstamped, at the moment of writing rather than after the fact. What
   remains is a locally-made commit where the stamping helper silently fails —

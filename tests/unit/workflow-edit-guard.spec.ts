@@ -1,5 +1,5 @@
 // Coverage for the workflow-edit guard (issue #897; rationale and detection
-// contract in `scripts/workflow-edit-guard.ts`). The pure core is pinned
+// contract in `scripts/hooks/workflow-edit-guard.ts`). The pure core is pinned
 // directly; the CLI's stdin→deny-JSON path, `--dry-run`, and the hot-path
 // pre-filter are exercised end to end against the real scripts
 // (docs/agents/guards.md).
@@ -15,12 +15,12 @@ import {
   denyOutputFor,
   formatGuardMessage,
   isCloudSession,
-} from '../../scripts/workflow-edit-guard.ts'
-import { envWithTsxShim, runTsx } from '../support/run-script.ts'
+} from '../../scripts/hooks/workflow-edit-guard.ts'
+import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const SCRIPT = join(root, 'scripts', 'workflow-edit-guard.ts')
-const PREFILTER = join(root, 'scripts', 'workflow-edit-guard.sh')
+const SCRIPT = join(root, 'scripts', 'hooks', 'workflow-edit-guard.ts')
+const PREFILTER = join(root, 'scripts', 'hooks', 'workflow-edit-guard.sh')
 /** The guard denies only in a cloud session (issue #2174), so its CLI runs get one. */
 const CLOUD = { CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01TestCloudSession' }
 const cloudEnv = (): NodeJS.ProcessEnv => ({ ...process.env, ...CLOUD })
@@ -190,7 +190,7 @@ describe('the workflow-edit-guard.sh hot-path pre-filter', () => {
   function runPrefilter(payload: unknown): string {
     return execFileSync('sh', [PREFILTER], {
       cwd: root,
-      env: { ...envWithTsxShim(), ...CLOUD },
+      env: { ...process.env, ...CLOUD },
       input: typeof payload === 'string' ? payload : JSON.stringify(payload),
       encoding: 'utf8',
     }).trim()

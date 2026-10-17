@@ -8,8 +8,7 @@
 //   doc comment for what each field means.
 import { readdirSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
-import { pathToFileURL } from 'node:url'
-import { root } from '../../../../shared/expand.ts'
+import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
 const BLOG_CONTENT_DIR = 'layers/blog/content'
 
 // ── Types ───────────────────────────────────────────────────────────────────
@@ -111,20 +110,8 @@ export function currentRotation(cwd = root): RotationState {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-function fail(msg: string): never {
-  console.error(`blog-rotation: ${msg}`)
-  process.exit(1)
-}
-
 function main(): void {
   process.stdout.write(JSON.stringify(currentRotation(), null, 2) + '\n')
 }
 
-// Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

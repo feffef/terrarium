@@ -11,7 +11,7 @@ import { fileURLToPath } from 'node:url'
 import type { Locator, Page, Response } from 'playwright-core'
 import { afterAll, expect } from 'vitest'
 import { createPage, fetch, setup, url, type NuxtPage } from '@nuxt/test-utils/e2e'
-import { findPreinstalledChromium, findSystemChrome } from '../../scripts/chromium-path.ts'
+import { findPreinstalledChromium, findSystemChrome } from '../../scripts/lib/chromium.ts'
 import { entryRoutesFrom, expand, loadManifests } from '../../shared/expand.ts'
 import { mermaidRoutes } from './mermaid-pages.ts'
 
@@ -20,8 +20,8 @@ const root = fileURLToPath(new URL('../..', import.meta.url))
 // The browser is located, not resolved by playwright's own pinned revision:
 // first a Chromium under PLAYWRIGHT_BROWSERS_PATH (the agent sandbox's
 // pre-installed build, or the one CI provisions there), then the system
-// Chrome/Chromium. Both lookups are single-homed in scripts/chromium-path.ts,
-// shared with scripts/screenshot.ts and ad-hoc probes (issue #202). CI pins a
+// Chrome/Chromium. Both lookups are single-homed in scripts/lib/chromium.ts,
+// shared with scripts/ui/screenshot.ts and ad-hoc probes (issue #202). CI pins a
 // Playwright-managed Chromium via the first path for determinism; the
 // system-Chrome fallback keeps every other environment provisioning-free
 // (issue #97).

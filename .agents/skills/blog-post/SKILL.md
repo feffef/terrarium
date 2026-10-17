@@ -61,7 +61,7 @@ Read, hunting for the best stories rather than confirming one:
   diffs that look interesting. Adjacent lines are not evidence of the same PR
   or of merge order — concurrent branches merge interleaved. Confirm any
   PR-boundary or ordering claim via the GitHub API (`pull_request_read` →
-  `get_commits` / `merged_at`) or `scripts/merged-since.ts`. Lifetimes and
+  `get_commits` / `merged_at`) or `scripts/git/list-merges-since.ts`. Lifetimes and
   durations on main use the PR `merged_at`, never a commit's author or revert
   time.
 - The session logs dated inside the window —
@@ -292,7 +292,7 @@ remains on the branch.
 
 ### 13. Close
 
-Invoke the `close-session` Skill (not only `scripts/log-session.ts`) so the
+Invoke the `close-session` Skill (not only `scripts/session/log-session.ts`) so the
 log records the run's final state.
 
 Done when: the log is on `origin/main` with its final status (`close-session`).

@@ -27,7 +27,7 @@ Journal has none (its components sit in the prefixed `components/journal/` dir).
 
 ## The validation caveat (important in this repo)
 
-**Body MDC skips the collection's Zod schema: `scripts/validate-content.ts`
+**Body MDC skips the collection's Zod schema: `scripts/gate/validate-content-schema.ts`
 `safeParse`s only a `.md` file's frontmatter** (why, and what a collection
 `schema` is and isn't used for at build:
 `docs/research/nuxt-content-review-grounding.md` §2). So a typo'd key or

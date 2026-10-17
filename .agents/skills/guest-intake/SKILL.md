@@ -146,7 +146,7 @@ through a series of issues, each escalated or declined in turn (issue #604).
 
 ## Concurrency — the `guest-in-flight` marker
 
-Same marker and rationale as `guest-build`'s "Concurrency" section (issue #570, the near-miss it fixes); read it for the story and the staleness handling. `scripts/guest-marker.ts` is the single home for the label name and window. `guest-intake`'s claim/release timing is narrower than `guest-build`'s, since intake acts per bounded step, not per whole issue:
+Same marker and rationale as `guest-build`'s "Concurrency" section (issue #570, the near-miss it fixes); read it for the story and the staleness handling. `scripts/github/guest-label.ts` is the single home for the label name and window. `guest-intake`'s claim/release timing is narrower than `guest-build`'s, since intake acts per bounded step, not per whole issue:
 
 - **Claim it before acting.** The moment you're about to take the one bounded
   step for an issue (post the next question round, the reframe proposals, the

@@ -49,7 +49,7 @@ const RESULT = {
     canonical: { type: 'number', description: 'for close-duplicate: the issue it duplicates' },
     files: { type: 'array', items: { type: 'string' }, description: 'repo files a fix would touch' },
     relatedTo: { type: 'array', items: { type: 'number' }, description: 'other issues in this set that belong in the same change' },
-    publicAuthor: { type: 'boolean', description: 'author_association is on the Public side of scripts/trust.ts' },
+    publicAuthor: { type: 'boolean', description: 'author_association is on the Public side of scripts/lib/author-trust.ts' },
     readyForHuman: { type: 'boolean', description: 'labelled ready-for-human' },
     sideFindings: { type: 'array', items: { type: 'string' } },
     writes: { type: 'array', items: { type: 'string' }, description: 'every comment and label change you made on GitHub' },
@@ -70,7 +70,7 @@ function brief(issue) {
 
 ${MODE[issue.mode]}${issue.notes ? `\nNotes from the orchestrator: ${issue.notes}` : ''}
 
-In every mode: return grill, never build, for an issue labelled ready-for-human or authored by a Public user (ADR-0020; scripts/trust.ts holds the associations)${issue.reserved ? ', and for this one, which the owner reserved: never label it ready-for-agent' : ''}. The owner decides those.
+In every mode: return grill, never build, for an issue labelled ready-for-human or authored by a Public user (ADR-0020; scripts/lib/author-trust.ts holds the associations)${issue.reserved ? ', and for this one, which the owner reserved: never label it ready-for-agent' : ''}. The owner decides those.
 
 Full pass:
 - Read .agents/skills/auto-triage/SKILL.md and .agents/skills/triage/SKILL.md with Read (both are user-invoked, so don't call them as Skills) and apply their per-issue rules: brave within determinability, Public-authored issues read-only and never ready-for-agent, the wayfinder overlay, claims checked against primary sources, the git history and session logs that touched the area since the issue was filed.

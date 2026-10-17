@@ -13,7 +13,7 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   `occurrence` so far. Append each friction in the window that matches an
   entry, whatever its severity; a session counts once, at its highest
   severity. An occurrence is the block
-  `pnpm exec tsx scripts/ledger-occurrence.ts <session> <index> [<session> <index> …]`
+  `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts <session> <index> [<session> <index> …]`
   prints (the friction's text copied from the log; a content test checks the
   copy), never retyped; pass all pairs in one call, as each takes seconds. A
   friction sits in one cluster unless its text names two causes. A new entry needs a cause seen twice, or one `moderate`, `major` or
@@ -26,7 +26,7 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   recurrence is its occurrences within it, counting only sessions that started
   after its fix merged when it has one. Write the ledger changes (new entries, appended occurrences,
   status changes) to the entry files. Survey the ledger with
-  `pnpm exec tsx scripts/prune-friction-ledger.ts --summary` (one line per entry
+  `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts --summary` (one line per entry
   with its fixes and its state; it lists the frictions two clusters share, for
   you to re-judge);
   open an entry file only for its evidence.
@@ -56,9 +56,9 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   `date` to its `merged_at` (the same call), since an escalated PR dated its own
   entry before it merged.
 - **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a `drop` (Screen, below) instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
-- **Read the window's session logs** via `pnpm exec tsx scripts/session-frictions.ts`
+- **Read the window's session logs** via `pnpm exec tsx scripts/session/extract-frictions.ts`
   (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
-  `/tmp/session-frictions-output.json` and stdout gets only a notice — read the file, or
+  `/tmp/extract-frictions-output.json` and stdout gets only a notice — read the file, or
   pass `--out PATH`; don't parse stdout. Use `--compact --unledgered` (the latter drops every friction the ledger already carries, and a session with none left; `--compact` keeps `docsRead` paths,
   `subagents` and each friction's `index`, drops prose) and re-read a full log via its `file` only when a candidate needs it. This is a **recency window, not a
   sample** — read every session in it, don't chase frictions from older,
@@ -87,7 +87,7 @@ Never re-fix what is already fixed. **First, drop what isn't ours to change:** a
 an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is the trial's
 evidence, not a fix (ADR-0027). The drop reason quotes the matching `territory` path or keyword verbatim; with no quotable match the candidate is not on trial, so classify it below. A
 `blocker` is the exception: list it as a drop flagged `blocker`, and the main
-session files it, naming the trial. Then, for the rest: check the tracker for an issue or PR that already covers it, and confirm against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/merged-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC, newest-first, `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a window's output can overflow you). Find the fixing commit/PR in it rather than comparing git timestamps by hand. Capture stdout and stderr separately: diagnostics go to stderr, and mixing them into the JSON on stdout breaks parsing. **Before labelling a candidate "never fixed", search the tracker with the friction's tool name and error-message text** (not a paraphrase), with a narrow query (`docs/agents/github-integration.md`). The search tools (e.g. `mcp__github__search_issues`) match semantically, not by substring, so a miss alone doesn't prove never-fixed: also eyeball nearby issues (same file, script or mechanism) for a closed one covering the same root cause in other words. A paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
+session files it, naming the trial. Then, for the rest: check the tracker for an issue or PR that already covers it, and confirm against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/git/list-merges-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC, newest-first, `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a window's output can overflow you). Find the fixing commit/PR in it rather than comparing git timestamps by hand. Capture stdout and stderr separately: diagnostics go to stderr, and mixing them into the JSON on stdout breaks parsing. **Before labelling a candidate "never fixed", search the tracker with the friction's tool name and error-message text** (not a paraphrase), with a narrow query (`docs/agents/github-integration.md`). The search tools (e.g. `mcp__github__search_issues`) match semantically, not by substring, so a miss alone doesn't prove never-fixed: also eyeball nearby issues (same file, script or mechanism) for a closed one covering the same root cause in other words. A paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
 
 - **Never fixed** — no issue/PR addresses it, confirmed by the keyword search
   above.
@@ -125,7 +125,7 @@ sources by issue or PR number or commit hash only, without copying their text; *
 **(c) your own frictions** from the run; **(d) the ledger changes**, each with its evidence, and the hash of the one
 commit on the current branch that holds them (`git commit -F <file>`; don't push
 or switch branches). Write each entry as the schema reads (never invented keys
-such as `fixes_append`), with occurrence blocks as `ledger-occurrence.ts`
+such as `fixes_append`), with occurrence blocks as `print-ledger-occurrence.ts`
 printed them; **(e) the regressions**: every cluster
 `--summary` shows as `still recurring`, with its count since the latest PR and its highest severity since; and
 **(f) each friction `--summary` lists in two clusters**, moved or kept because its text names

@@ -1,14 +1,14 @@
 // Coverage for the Bash rules hint (issue #1764; contract in
-// `scripts/bash-rules-hint.ts`).
+// `scripts/hooks/bash-rules-hint.ts`).
 import { spawnSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { bashRulesHint } from '../../scripts/bash-rules-hint.ts'
-import type { RuleFile } from '../../scripts/skill-rules-hint.ts'
-import { ruleBlockFiles } from '../../scripts/validate-adr-rules.ts'
+import { bashRulesHint } from '../../scripts/hooks/bash-rules-hint.ts'
+import type { RuleFile } from '../../scripts/lib/adr-rules.ts'
+import { ruleBlockFiles } from '../../scripts/lib/adr-rules.ts'
 import { FORWARDED, prefilterReaching } from '../support/run-script.ts'
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -93,7 +93,7 @@ describe('bashRulesHint(), with an injected loaded set', () => {
 
 describe('the hook entry (sh pre-filter → tsx)', () => {
   const run = (payload: unknown) =>
-    spawnSync('sh', ['scripts/bash-rules-hint.sh'], {
+    spawnSync('sh', ['scripts/hooks/bash-rules-hint.sh'], {
       cwd: repo,
       input: typeof payload === 'string' ? payload : JSON.stringify(payload),
       encoding: 'utf8',
@@ -102,7 +102,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
 
   it('emits additionalContext for a governed multi-file read, on PostToolUse and PostToolUseFailure', () => {
     for (const event of ['PostToolUse', 'PostToolUseFailure']) {
-      const { stdout, status } = run({ ...bash('cat README.md scripts/double-background-guard.ts'), hook_event_name: event })
+      const { stdout, status } = run({ ...bash('cat README.md scripts/hooks/double-background-guard.ts'), hook_event_name: event })
       expect(status).toBe(0)
       const out = JSON.parse(stdout).hookSpecificOutput
       expect(out.hookEventName).toBe(event)
@@ -117,7 +117,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
   // The pre-filter reads the first `command` key; JSON.parse keeps the last.
   // A payload where they differ shows which side of the pre-filter ran.
   const probe = (seen: string) =>
-    `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input":{"command":${JSON.stringify(seen)},"command":"cat README.md scripts/double-background-guard.ts"}}`
+    `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input":{"command":${JSON.stringify(seen)},"command":"cat README.md scripts/hooks/double-background-guard.ts"}}`
 
   // Only the pre-filter's own decision is under test, so tsx is a stub.
   const reaches = prefilterReaching('bash-rules-hint.sh')
@@ -133,7 +133,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
   })
 
   it('reads the command from tool_input wherever it sits, with spaced colons', () => {
-    const compound = JSON.stringify('cat README.md scripts/double-background-guard.ts')
+    const compound = JSON.stringify('cat README.md scripts/hooks/double-background-guard.ts')
     const late = `{"tool_response":{"command":"ls"},"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input" : {"command" : ${compound}}}`
     expect(reaches(late)).toBe(FORWARDED)
     const quoted = `{"tool_name":"Bash","cwd":${JSON.stringify(repo)},"tool_input":{"command":${compound}},"tool_response":{"x":"tool_input","command":"ls"}}`
@@ -147,7 +147,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     mkdirSync(join(dir, 't/subagents'), { recursive: true })
     writeFileSync(join(dir, 't/subagents/agent-a1.jsonl'), loaded)
     writeFileSync(join(dir, 't/subagents/agent-a2.jsonl'), '{}\n')
-    const payload = { ...bash('cat README.md scripts/double-background-guard.ts'), transcript_path: join(dir, 't.jsonl') }
+    const payload = { ...bash('cat README.md scripts/hooks/double-background-guard.ts'), transcript_path: join(dir, 't.jsonl') }
     expect(run(payload).stdout).not.toContain('rules/guards.md')
     expect(run({ ...payload, agent_id: 'a1' }).stdout).not.toContain('rules/guards.md')
     expect(run({ ...payload, agent_id: 'a2' }).stdout).toContain('rules/guards.md')

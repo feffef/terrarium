@@ -9,7 +9,7 @@ writes only the judgement half; the rest comes from the session's transcript.
 - **What skips the PR.** Only a session's own log, one file in the Journal's
   current sessions folder. Everything else goes through a gated PR (ADR-0003),
   including archive moves of old logs and the landing script's own code.
-- **One script holds the boundary.** `scripts/log-session.ts` alone lands a
+- **One script holds the boundary.** `scripts/session/log-session.ts` alone lands a
   log. It builds the commit from `main`, so none of the session's other work
   rides along, and refuses a commit that touches another path or a log that
   fails the schema.
@@ -82,13 +82,13 @@ writes only the judgement half; the rest comes from the session's transcript.
 
 ## See
 
-- `scripts/log-session.ts` and `.claude/settings.json`: authoring, landing and
+- `scripts/session/log-session.ts` and `.claude/settings.json`: authoring, landing and
   its hooks, the filename, `landedBy`.
-- `scripts/session-trace.ts`, `scripts/shell-reads.ts`: derived fields and
+- `scripts/session/transcript-trace.ts`, `scripts/session/shell-reads.ts`: derived fields and
   shell-read thresholds.
 - `shared/schemas/session.ts`: the schema, versions, `isExternalSession`.
 - The `close-session` and `log-session` Skills: closure, statuses, authoring.
-- `scripts/archive-journal-content.ts`: how many logs stay in `current`.
+- `.agents/skills/digest/scripts/archive-journal-content.ts`: how many logs stay in `current`.
 - `docs/agents/guest-contributions.md`: an outside agent's log.
 - `docs/research/github-branch-protection-vs-autonomous-log-commits.md`:
   `main`'s ruleset.

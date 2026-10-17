@@ -1,7 +1,7 @@
 # Open Prune Trials (ADR-0027). One entry per pruned problem. The window runs
 # from when the prune lands on `main`, not from `opened:`;
-# `pnpm exec tsx scripts/prune-trial-window.ts` gives it. An entry
-# is deleted the moment `/prune-trial` judges it — git holds the history, this
+# `pnpm exec tsx .agents/skills/prune-trial/scripts/find-trial-window.ts`
+# gives it. An entry is deleted the moment `/prune-trial` judges it — git holds the history, this
 # file holds only what is unjudged.
 #
 # The entry ships in the prune's own commit, so that commit is the record: to

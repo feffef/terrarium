@@ -30,7 +30,6 @@ import {
   SEP,
   tallyUsage,
   toSession,
-  walkPagesUntilShort,
   type CommitFileChange,
   type InventoryEntry,
   type Landing,
@@ -39,7 +38,7 @@ import {
   type Session,
   type SessionTrailerRef,
   type SkillRow,
-} from '../../scripts/audit-skills.ts'
+} from '../../scripts/session/audit-skills.ts'
 
 function sess(over: Partial<Session> = {}): Session {
   return {
@@ -163,6 +162,8 @@ describe('scriptsNamedIn() / parseLandings() / pickSkillChanges() — a run answ
   it('finds the scripts a SKILL.md names, once each', () => {
     const md = 'Run `pnpm exec tsx scripts/owner-corrections.ts` then `scripts/ideas.ts gather`; `scripts/owner-corrections.ts` again. Not scripts/notes.md.'
     expect(scriptsNamedIn(md)).toEqual(['scripts/owner-corrections.ts', 'scripts/ideas.ts'])
+    const local = 'Run `pnpm exec tsx .agents/skills/digest/scripts/digest.ts`, then scripts/lib/cli.ts and `scripts/hooks/a.ts`.'
+    expect(scriptsNamedIn(local)).toEqual(['.agents/skills/digest/scripts/digest.ts', 'scripts/lib/cli.ts', 'scripts/hooks/a.ts'])
   })
 
   // Mirrors `git log --first-parent --name-only --pretty=format:REC%H SEP %cI`.
@@ -857,40 +858,5 @@ describe('findManuallyRescuedClosures()', () => {
     const sessions = [sess({ session: 's', endedAt: '2026-07-13T02:00:00Z' })] // 2h gap
     expect(findManuallyRescuedClosures(refs, sessions, RESCUED_GAP_HOURS)).toEqual([]) // below default 6h
     expect(findManuallyRescuedClosures(refs, sessions, 1)).toHaveLength(1) // above a 1h threshold
-  })
-})
-
-describe('walkPagesUntilShort() — paging by number, never following Link (issue #1514)', () => {
-  const pageUrl = (page: number) => `repos/o/r/pulls?state=closed&per_page=2&page=${page}`
-
-  function fetcher(pages: number[][]) {
-    const requested: string[] = []
-    const fetchPage = (url: string) => {
-      requested.push(url)
-      return pages[requested.length - 1] ?? []
-    }
-    return { requested, fetchPage }
-  }
-
-  it('requests page 1, 2, … on our own repos/{owner}/{repo} URL and stops on the first short page', () => {
-    const { requested, fetchPage } = fetcher([[1, 2], [3, 4], [5]])
-    expect(walkPagesUntilShort<number>(pageUrl, fetchPage, 2)).toEqual([1, 2, 3, 4, 5])
-    expect(requested).toEqual([pageUrl(1), pageUrl(2), pageUrl(3)])
-  })
-
-  it('stops on an empty page when the last full page was exactly per_page long', () => {
-    const { requested, fetchPage } = fetcher([[1, 2]])
-    expect(walkPagesUntilShort<number>(pageUrl, fetchPage, 2)).toEqual([1, 2])
-    expect(requested).toEqual([pageUrl(1), pageUrl(2)])
-  })
-
-  it('throws on a later-page failure instead of returning the pages already read', () => {
-    const fetchPage = (url: string) => {
-      if (url === pageUrl(1)) return [1, 2]
-      throw new Error('HTTP 403')
-    }
-    expect(() => walkPagesUntilShort<number>(pageUrl, fetchPage, 2)).toThrow(
-      /INCOMPLETE at page 2 after 2 record\(s\).*HTTP 403/,
-    )
   })
 })

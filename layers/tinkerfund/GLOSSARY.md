@@ -96,5 +96,5 @@ flat shipping rate.
   full spec, linking the ticket that holds each locked decision (ADR-0021).
 - **`layers/tinkerfund/schemas.ts`** — the content model: each
   Collection's shape, and how each Space tells time (`shop.now`).
-- **`scripts/validate-content-refs.ts`** — the cross-Document references a
+- **`scripts/gate/validate-content-refs.ts`** — the cross-Document references a
   schema can't check, such as a past Pledge naming a real Reward.

@@ -1,5 +1,5 @@
-// Coverage for scripts/guard-wrap.sh (issue #1223): the shared wiring that
-// stops a fail-closed guard's crash-before-`runIfMain`'s-try/catch (a `tsx`
+// Coverage for scripts/hooks/guard-wrap.sh (issue #1223): the shared wiring that
+// stops a fail-closed guard's crash-before-`runGuard`'s-try/catch (a `tsx`
 // cold-start failure, a module-resolution error, a throw during import) from
 // reading as a silent allow. A plain unit test can't observe the live
 // `.claude/settings.json`-wired interception (docs/agents/guards.md's own
@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const WRAPPER = join(root, 'scripts', 'guard-wrap.sh')
+const WRAPPER = join(root, 'scripts', 'hooks', 'guard-wrap.sh')
 
 /** Runs the wrapper with `sh`, feeding `stdin` through untouched — the same
  *  shape `.claude/settings.json` invokes it with. */
@@ -27,7 +27,7 @@ function runWrapper(args: string[], stdin = '{}'): { stdout: string; status: num
   }
 }
 
-describe('scripts/guard-wrap.sh (issue #1223)', () => {
+describe('scripts/hooks/guard-wrap.sh (issue #1223)', () => {
   it('passes through a clean exit-0 ALLOW (no stdout) unchanged', () => {
     const { stdout, status } = runWrapper(['test-guard', '--', 'true'])
     expect(stdout).toBe('')

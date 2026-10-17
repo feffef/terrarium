@@ -258,7 +258,7 @@ innocent of the whole thing.
 
 ## 7. Verify
 
-Run `pnpm gate:scoped` before opening the PR (`scripts/gate.ts` owns what it runs). Then eyeball the render — a specimen is a visual artifact,
+Run `pnpm gate:scoped` before opening the PR (`scripts/gate/gate.ts` owns what it runs). Then eyeball the render — a specimen is a visual artifact,
 so screenshot the entry and the biome landing
-(`pnpm exec tsx scripts/screenshot.ts <url> <out.png>`), don't trust the HTML text
+(`pnpm exec tsx scripts/ui/screenshot.ts <url> <out.png>`), don't trust the HTML text
 (`docs/agents/verifying-ui-changes.md`: grepping SSR HTML is not proof a plate rendered).

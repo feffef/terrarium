@@ -124,7 +124,7 @@ const externalSkillTotal = computed(() => externalSkillCount(skills.value))
 
 // The stat tiles below only ever read THIS Space's own collections (see
 // the resolver comment atop this file), and archiving retains just the newest
-// RETAIN_DATES=7 dates on `current` (scripts/archive-journal-content.ts) —
+// RETAIN_DATES=7 dates on `current` (.agents/skills/digest/scripts/archive-journal-content.ts) —
 // so the tiles' scope tracks which Space is showing, not an explicit filter.
 // Zero kinds are dropped so the breakdown fits a fifth of the strip.
 const kindSubtext = computed(() =>

@@ -5,8 +5,8 @@
 //
 // Usage: pnpm exec tsx .agents/skills/close-session/scripts/always-loaded.ts
 import { readFileSync } from 'node:fs'
-import { loadRules } from '../../../../scripts/skill-rules-hint.ts'
-import { RULES_DIR, rulePaths } from '../../../../scripts/validate-adr-rules.ts'
+import { loadRules, RULES_DIR, rulePaths } from '../../../../scripts/lib/adr-rules.ts'
+import { runIfMain } from '../../../../scripts/lib/cli.ts'
 
 export function alwaysLoadedText(claudeMd: string, rules: { file: string; text: string }[]): string {
   const always = rules.filter((r) => rulePaths(r.text).length === 0)
@@ -14,6 +14,6 @@ export function alwaysLoadedText(claudeMd: string, rules: { file: string; text: 
   return [block('CLAUDE.md', claudeMd), ...always.map((r) => block(`${RULES_DIR}/${r.file}`, r.text))].join('\n\n')
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+runIfMain(import.meta.url, () => {
   console.log(alwaysLoadedText(readFileSync('CLAUDE.md', 'utf8'), loadRules()))
-}
+})

@@ -15,13 +15,11 @@
 //   "Human": bot accounts are excluded by account type; among the rest,
 //   ADR-0017 provenance (`isAiAuthored`) separates agent writes, which land
 //   under the owner's login, from the owner's own.
-import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
-import { pathToFileURL } from 'node:url'
-import { isAiAuthored } from '../../../../scripts/check-triage-drift.ts'
-import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
-import { getJson, parseOwnerRepo } from '../../../../scripts/list-open-issues.ts'
-import { root } from '../../../../shared/expand.ts'
+import { isAiAuthored } from '../../../../scripts/github/check-triage-drift.ts'
+import { fetchOriginMain, git } from '../../../../scripts/lib/git.ts'
+import { getJson, listAll, resolveAccess } from '../../../../scripts/lib/github-client.ts'
+import { root, fail, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const DECISIONS = '.agents/skills/visitor-loop/decisions.md'
 // The harness pins most runs to a session branch, so the title is the stable marker (issue #1515).
@@ -169,27 +167,14 @@ interface RawComment {
   pull_request_url?: string
 }
 
-/** Every page of `path` (which already has a `?`), stopping early once `done` says so. */
-function allPages<T>(path: string, cwd: string, done: (page: T[]) => boolean = () => false): T[] {
-  const out: T[] = []
-  for (let page = 1; ; page++) {
-    const items = getJson<T[]>(`${path}&per_page=100&page=${page}`, cwd)
-    out.push(...items)
-    if (items.length < 100 || done(items)) return out
-  }
-}
-
 function lastDecisionsCommit(cwd: string): string {
-  return execFileSync('git', ['log', '-1', '--format=%cI', 'origin/main', '--', DECISIONS], {
-    cwd,
-    encoding: 'utf8',
-  }).trim()
+  return git(['log', '-1', '--format=%cI', 'origin/main', '--', DECISIONS], cwd).trim()
 }
 
 function mergeFiles(sha: string | null, cwd: string): string[] {
   if (!sha) return []
   try {
-    const raw = execFileSync('git', ['diff', '--no-renames', '--name-only', `${sha}^1`, sha], { cwd, encoding: 'utf8' })
+    const raw = git(['diff', '--no-renames', '--name-only', `${sha}^1`, sha], cwd)
     return raw.split('\n').filter(Boolean)
   } catch {
     return [] // a sha not on main; a rebase merge's sha is only its last commit, so it undercounts instead
@@ -224,26 +209,23 @@ function threadNumber(url: string): number {
 export function ownerCorrections(since: string | undefined, cwd = root): Candidate[] {
   fetchOriginMain(cwd, 'origin', undefined, true)
   const cutoff = since ?? lastDecisionsCommit(cwd)
-  const originUrl = execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
-  const ownerRepo = parseOwnerRepo(originUrl)
-  if (ownerRepo === null) throw new Error(`could not parse owner/repo from origin remote: ${originUrl}`)
-  const repo = `repos/${ownerRepo.owner}/${ownerRepo.repo}`
+  const access = resolveAccess(cwd)
 
   // A visitor-loop PR can be reworked up to OVERLAP_WINDOW_MS after it merged.
   const floorMs = Date.parse(cutoff) - OVERLAP_WINDOW_MS
-  const rawPulls = allPages<RawPull>(`${repo}/pulls?state=all&sort=updated&direction=desc`, cwd, (page) =>
-    Date.parse(page[page.length - 1]!.updated_at) < floorMs,
-  ).filter((p) => Date.parse(p.updated_at) >= floorMs)
+  const rawPulls = listAll<RawPull>(access, 'pulls', { state: 'all', sort: 'updated', direction: 'desc' }, {
+    until: (page) => Date.parse(page[page.length - 1]!.updated_at) < floorMs,
+  }).filter((p) => Date.parse(p.updated_at) >= floorMs)
   const prs = rawPulls.map((p) => toPr(p, cwd))
   const prByNumber = new Map(rawPulls.map((p) => [p.number, p]))
 
-  const sinceQuery = `since=${encodeURIComponent(cutoff)}`
+  const sinceParam = { since: cutoff }
   const raw: Array<RawComment & { thread: number }> = [
-    ...allPages<RawComment>(`${repo}/issues/comments?${sinceQuery}`, cwd).map((c) => ({ ...c, thread: threadNumber(c.issue_url!) })),
-    ...allPages<RawComment>(`${repo}/pulls/comments?${sinceQuery}`, cwd).map((c) => ({ ...c, thread: threadNumber(c.pull_request_url!) })),
+    ...listAll<RawComment>(access, 'issues/comments', sinceParam).map((c) => ({ ...c, thread: threadNumber(c.issue_url!) })),
+    ...listAll<RawComment>(access, 'pulls/comments', sinceParam).map((c) => ({ ...c, thread: threadNumber(c.pull_request_url!) })),
     ...rawPulls
       .filter((p) => isVisitorLoopPull(p) && Date.parse(p.updated_at) > Date.parse(cutoff))
-      .flatMap((p) => allPages<RawComment>(`${repo}/pulls/${p.number}/reviews?`, cwd).map((r) => ({ ...r, thread: p.number }))),
+      .flatMap((p) => listAll<RawComment>(access, `pulls/${p.number}/reviews`).map((r) => ({ ...r, thread: p.number }))),
   ]
 
   // Only human comments matter, which keeps the per-thread fetch rare.
@@ -252,7 +234,7 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
     const pr = prByNumber.get(c.thread)
     if (pr) return `${pr.title}\n${pr.body ?? ''}`
     if (!threadTexts.has(c.thread)) {
-      const issue = getJson<{ title: string; body: string | null }>(`${repo}/issues/${c.thread}`, cwd)
+      const issue = getJson<{ title: string; body: string | null }>(access, `issues/${c.thread}`)
       threadTexts.set(c.thread, `${issue.title}\n${issue.body ?? ''}`)
     }
     return threadTexts.get(c.thread)!
@@ -279,7 +261,7 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
     if (prByNumber.has(n)) continue
     let p: RawPull
     try {
-      p = getJson<RawPull>(`${repo}/pulls/${n}`, cwd)
+      p = getJson<RawPull>(access, `pulls/${n}`)
     } catch (err) {
       if (/HTTP 404|Not Found/.test(String(err))) continue // #n is an issue, not a PR
       throw err
@@ -290,11 +272,6 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
-
-function fail(msg: string): never {
-  console.error(`owner-corrections: ${msg}`)
-  process.exit(1)
-}
 
 function main(): void {
   const argv = process.argv.slice(2)
@@ -317,11 +294,4 @@ function main(): void {
   }
 }
 
-// Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  try {
-    main()
-  } catch (err) {
-    fail(err instanceof Error ? err.message : String(err))
-  }
-}
+runIfMain(import.meta.url, main)

@@ -21,7 +21,7 @@ Adding a Tenant that needs tests adds a `layers/<tenant>/tests/` folder; nothing
 
 - **A Skill's helper script** — one only its Skill runs — lives at
   `.agents/skills/<name>/scripts/`, its unit test at
-  `.agents/skills/<name>/tests/unit/` (the gate skips build and e2e for these, not unit tests: `scripts/gate.ts` `isSkillFile`, #1603).
+  `.agents/skills/<name>/tests/unit/` (the gate skips build and e2e for these, not unit tests: `scripts/gate/gate.ts` `isSkillFile`, #1603).
 
 ## The e2e gate is ONE build, reused by every spec
 

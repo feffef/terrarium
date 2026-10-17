@@ -1,0 +1,427 @@
+// Local preview/dev server lifecycle (issue #240). One tool (verbs in
+// `USAGE` below), so agents stop hand-rolling the start-server /
+// screenshot / `pkill -f` teardown dance that has now silently corrupted work
+// three times running.
+//
+// Why this script exists at all (the `pkill` history, so nobody re-simplifies
+// it back into a one-liner):
+//   - #102: added a CLAUDE.md bullet "never `&&`-chain pkill teardown".
+//   - #183 → #189: expanded that bullet to explain exit code 144.
+//   - #240: it happened a THIRD time anyway — this time a `;`-chain.
+// Three rounds of prose did not hold, because the failure isn't ignorance of
+// the rule, it's that `pkill -f <pattern>` is structurally fragile every time:
+//   1. Self-match — `pkill -f` matches the invoking shell's OWN command line,
+//      so a chained teardown SIGTERMs its own shell (exit 144) and silently
+//      drops every step after the `;`/`&&`.
+//   2. Container-wide match — `pkill -f 'nuxt preview'` also kills a SIBLING
+//      agent's server: multiple agents share one container's port space.
+//   3. Exit-code confusion — a successful kill returns 144, read as failure
+//      and re-derived as "harmless" every session.
+//
+// How this tool removes all three, by construction:
+//   - Teardown keys ONLY on a specific child PID (its process group), never a
+//     pattern or a shared port — so it can't self-match and can't touch a
+//     sibling's server.
+//   - Each instance binds its OWN ephemeral port (chosen at start), so two
+//     agents in one container never collide — the concurrency case that makes
+//     any fixed key (port 3000, or a name pattern) wrong.
+//   - `stop` ALWAYS exits 0 (teardown is never a "failure"); `shot`/`start`/`review`
+//     exit non-zero WITH diagnostics only on a genuine failure to come up.
+//   - `shot` folds the whole lifecycle into one process, so the common
+//     screenshot path has no teardown step for a shell to drop at all.
+//
+// Usage: see `USAGE` below.
+//
+// `shot` is the frictionless default (one-shot screenshot, no teardown to get
+// wrong). `start`/`stop` keep a server up for multi-navigation tools that need
+// a live URL — ad-hoc `playwright-core` probes.
+// Default is a production-accurate `preview` server (requires a prior
+// `pnpm build`); `--dev` uses `nuxt dev` for fast iteration (its DevTools
+// overlay makes it wrong for a trusted screenshot — see docs/agents/verifying-ui-changes.md).
+import { spawn, type ChildProcess } from 'node:child_process'
+import { createServer } from 'node:net'
+import { existsSync, mkdirSync, openSync, closeSync, readFileSync, rmSync } from 'node:fs'
+import { join } from 'node:path'
+import { tmpdir } from 'node:os'
+import { extractFlag, extractSwitch, runIfMain } from '../lib/cli.ts'
+import {
+  captureScreenshot,
+  captureScreenshotWaitingFor,
+  parseScheme,
+  parseSize,
+  type CaptureOptions,
+  type ColorScheme,
+} from './screenshot.ts'
+
+const HOST = '127.0.0.1'
+const READY_TIMEOUT_MS = 45_000
+const POLL_INTERVAL_MS = 300
+const KILL_GRACE_MS = 5_000
+const SERVER_ENTRY = '.output/server/index.mjs'
+
+const USAGE =
+  'Usage:\n' +
+  '  pnpm exec tsx scripts/ui/preview.ts shot <route> <out.png> [WxH] [--wait <ms>] [--wait-for <selector>] [--scheme light|dark] [--full] [--mobile] [--dev]\n' +
+  '  pnpm exec tsx scripts/ui/preview.ts review <route> <out-dir> [--wait <ms>] [--wait-for <selector>] [--dev]\n' +
+  '  pnpm exec tsx scripts/ui/preview.ts start [--dev]\n' +
+  '  pnpm exec tsx scripts/ui/preview.ts stop <pid>\n' +
+  '  <route>            a path on the site, e.g. /t/journal/current\n' +
+  '  [WxH]              optional window size (e.g. 1280x1600); defaults to 1280x800\n' +
+  '  --wait <ms>        pre-capture wait so async content renders; defaults to 2000.\n' +
+  '                     Ignored when --wait-for is given\n' +
+  '  --wait-for <sel>   wait until <sel> attaches to the DOM instead of a fixed\n' +
+  "                     wait (e.g. '.mermaid-diagram svg' for an async diagram)\n" +
+  "  --scheme <s>       light or dark: emulate the visitor's colour scheme\n" +
+  '  --full             capture the whole scrollable page, not just the viewport\n' +
+  '  --mobile           emulate a touch phone at 2x pixel density (pair with e.g. 390x844)\n' +
+  '  review             one server, four full-page shots in <out-dir>: desktop-light.png,\n' +
+  '                     desktop-dark.png (1280x900), mobile-light.png, mobile-dark.png (390x844)\n' +
+  '  --dev              use `nuxt dev` instead of a built `preview` server (fast, but\n' +
+  '                     the DevTools overlay makes it unfit for a trusted screenshot)'
+
+const sleep = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
+
+/** Ask the OS for a free port by binding `0`, then release it. Each instance
+ *  gets its own port so concurrent agents in one container never collide. */
+function pickFreePort(): Promise<number> {
+  return new Promise((resolve, reject) => {
+    const probe = createServer()
+    probe.once('error', reject)
+    probe.listen(0, HOST, () => {
+      const address = probe.address()
+      if (address === null || typeof address === 'string') {
+        probe.close()
+        reject(new Error('could not determine a free port'))
+        return
+      }
+      const { port } = address
+      probe.close(() => resolve(port))
+    })
+  })
+}
+
+function logPathFor(port: number): string {
+  return join(tmpdir(), `terrarium-preview-${port}.log`)
+}
+
+/** Spawn the server as a DETACHED child (its own process group, so `stop` can
+ *  kill the whole tree by group) with stdout/stderr redirected to a log file
+ *  (so it survives the parent exiting in `start`, and so `shot` can read it for
+ *  diagnostics on a failed startup). */
+function spawnServer(port: number, dev: boolean, logPath: string): ChildProcess {
+  const fd = openSync(logPath, 'w')
+  const env = { ...process.env, HOST, PORT: String(port), NITRO_PORT: String(port) }
+  const child = dev
+    ? spawn('pnpm', ['exec', 'nuxt', 'dev', '--host', HOST, '--port', String(port)], {
+        detached: true,
+        stdio: ['ignore', fd, fd],
+        env,
+      })
+    : spawn(process.execPath, [SERVER_ENTRY], {
+        detached: true,
+        stdio: ['ignore', fd, fd],
+        env,
+      })
+  closeSync(fd)
+  child.unref() // don't keep our own event loop alive on the child's account
+  return child
+}
+
+/** Poll the server until it answers HTTP (any status = "up"), the child exits,
+ *  or the timeout elapses. Returns whether it came up. */
+async function waitReady(port: number, child: ChildProcess): Promise<boolean> {
+  const url = `http://${HOST}:${port}/`
+  const deadline = Date.now() + READY_TIMEOUT_MS
+  while (Date.now() < deadline) {
+    if (child.exitCode !== null) return false // server died during startup
+    try {
+      await fetch(url, { method: 'HEAD' })
+      return true
+    } catch {
+      // connection refused / reset — not up yet, keep polling
+    }
+    await sleep(POLL_INTERVAL_MS)
+  }
+  return false
+}
+
+/** Explain a failed startup with the concrete likely causes (issue #240 asked
+ *  for this): the bind race, a missing build, or a crash — with the server's
+ *  own captured output shown so the real error isn't swallowed. */
+function diagnose(port: number, child: ChildProcess, dev: boolean, logPath: string): void {
+  console.error(`\nPreview server on port ${port} did not become ready.`)
+  if (child.exitCode !== null) {
+    console.error(`The server process exited early (code ${child.exitCode}).`)
+  }
+  console.error('Most likely causes:')
+  console.error(
+    `  1. The ephemeral port ${port} was claimed by another process between ` +
+      'selection and bind (a rare race under concurrent agents) — just retry.',
+  )
+  if (!dev) {
+    console.error(
+      `  2. No build present — \`${SERVER_ENTRY}\` ` +
+        `${existsSync(SERVER_ENTRY) ? 'exists' : 'is MISSING'}. ` +
+        'Preview needs a prior `pnpm build` (or use --dev).',
+    )
+  }
+  console.error('  3. The server crashed on startup — its output follows:')
+  let tail = ''
+  try {
+    tail = readFileSync(logPath, 'utf8').slice(-2000)
+  } catch {
+    // no log to show
+  }
+  console.error(tail.trim() ? tail.trim() : '  (no server output was captured)')
+}
+
+/** Terminate a process group (leader `pid`), escalating SIGTERM → SIGKILL.
+ *  Never throws — a process that's already gone is success, not an error. This
+ *  is why teardown can always exit 0. */
+async function killGroup(pid: number): Promise<void> {
+  const signal = (sig: NodeJS.Signals): boolean => {
+    // Try the whole group first (negative pid), then fall back to the lone pid.
+    for (const target of [-pid, pid]) {
+      try {
+        process.kill(target, sig)
+        return true
+      } catch (err) {
+        if ((err as NodeJS.ErrnoException).code === 'ESRCH') continue // already gone
+      }
+    }
+    return false
+  }
+  if (!signal('SIGTERM')) return
+  const deadline = Date.now() + KILL_GRACE_MS
+  while (Date.now() < deadline) {
+    // `kill(pid, 0)` throws ESRCH once the process is truly gone.
+    try {
+      process.kill(-pid, 0)
+    } catch {
+      try {
+        process.kill(pid, 0)
+      } catch {
+        return // group is gone
+      }
+    }
+    await sleep(150)
+  }
+  signal('SIGKILL')
+}
+
+function ensureBuilt(dev: boolean): void {
+  if (dev) return
+  if (!existsSync(SERVER_ENTRY)) {
+    throw new Error(
+      `No built server at \`${SERVER_ENTRY}\`. Run \`pnpm build\` first, ` +
+        'or pass --dev to use the dev server.',
+    )
+  }
+}
+
+/** A running server owned by the caller. `pid` is the process-group leader —
+ *  hand it to `stopPreview` (or `preview.ts stop`) to tear the server down. */
+export interface PreviewServer {
+  port: number
+  url: string
+  pid: number
+  logPath: string
+}
+
+/**
+ * Start a `preview` (or, with `dev`, a `nuxt dev`) server on its OWN ephemeral
+ * port and resolve once it answers HTTP. The returned handle's `pid` must be
+ * passed to `stopPreview` when done. Exported for ad-hoc probes, so they don't
+ * re-hand-roll the `pkill` dance this whole file exists to kill (#240).
+ *
+ * Throws — with a "likely causes" diagnostic already printed to stderr — if the
+ * server can't be built or fails to come up; the failed child is cleaned up
+ * first, so a throw never leaks a process.
+ */
+export async function startPreview(opts: { dev?: boolean } = {}): Promise<PreviewServer> {
+  const dev = opts.dev ?? false
+  ensureBuilt(dev)
+  const port = await pickFreePort()
+  const logPath = logPathFor(port)
+  const child = spawnServer(port, dev, logPath)
+  const pid = child.pid
+  if (!(await waitReady(port, child)) || pid === undefined) {
+    diagnose(port, child, dev, logPath)
+    if (pid !== undefined) await killGroup(pid)
+    try {
+      rmSync(logPath)
+    } catch {
+      // best-effort cleanup
+    }
+    throw new Error(`preview server did not become ready on port ${port}`)
+  }
+  return { port, url: `http://${HOST}:${port}`, pid, logPath }
+}
+
+/** Tear down a server started by `startPreview`. Always resolves — a process
+ *  that's already gone is success, not an error — so teardown is never a
+ *  dropped-step footgun. */
+export async function stopPreview(pid: number): Promise<void> {
+  await killGroup(pid)
+}
+
+interface ShotOptions {
+  waitMs: number
+  /** A CSS selector to await before capturing. */
+  waitForSelector?: string
+  scheme?: ColorScheme
+  fullPage: boolean
+  mobile: boolean
+}
+
+function parseWaitMs(value: string | undefined): number {
+  if (value === undefined) return 2000
+  const parsed = Number(value)
+  if (!Number.isInteger(parsed) || parsed < 0) {
+    throw new Error(`Invalid --wait "${value}" — expected a non-negative integer (ms).`)
+  }
+  return parsed
+}
+
+export interface ReviewShot {
+  out: string
+  windowSize: string
+  scheme: ColorScheme
+  mobile: boolean
+}
+
+/** The `review` verb's four shots, named so a reviewer knows each file unseen. */
+export function reviewShots(outDir: string): ReviewShot[] {
+  const devices = [
+    { name: 'desktop', windowSize: '1280,900', mobile: false },
+    { name: 'mobile', windowSize: '390,844', mobile: true },
+  ]
+  return devices.flatMap(({ name, windowSize, mobile }) =>
+    (['light', 'dark'] as const).map((scheme) => ({ out: join(outDir, `${name}-${scheme}.png`), windowSize, scheme, mobile })),
+  )
+}
+
+/** Start a server, run `fn` against its URL for `route`, and always stop it. */
+async function withServer(route: string, dev: boolean, fn: (url: string) => Promise<void>): Promise<number> {
+  let server: PreviewServer
+  try {
+    server = await startPreview({ dev })
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : String(err))
+    return 1
+  }
+  const path = route.startsWith('/') ? route : `/${route}`
+  try {
+    await fn(`${server.url}${path}`)
+    return 0
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : String(err))
+    return 1
+  } finally {
+    await stopPreview(server.pid)
+    try {
+      rmSync(server.logPath)
+    } catch {
+      // best-effort cleanup
+    }
+  }
+}
+
+async function capture(url: string, out: string, waitMs: number, waitForSelector: string | undefined, opts: CaptureOptions): Promise<void> {
+  if (waitForSelector) await captureScreenshotWaitingFor(url, out, waitForSelector, opts)
+  else await captureScreenshot(url, out, { ...opts, waitMs })
+  console.log(`Wrote ${out} (${url})`)
+}
+
+async function doShot(args: string[], dev: boolean, opts: ShotOptions): Promise<number> {
+  const [route, out, sizeArg] = args
+  if (!route || !out) {
+    console.error(USAGE)
+    return 1
+  }
+  const windowSize = sizeArg === undefined ? '1280,800' : parseSize(sizeArg)
+  if (!windowSize) {
+    console.error(`Invalid size "${sizeArg}" — expected <width>x<height>, e.g. 1280x1600.`)
+    return 1
+  }
+  const { waitMs, waitForSelector, scheme: colorScheme, fullPage, mobile } = opts
+  return withServer(route, dev, (url) => capture(url, out, waitMs, waitForSelector, { windowSize, colorScheme, fullPage, mobile }))
+}
+
+async function doReview(args: string[], dev: boolean, opts: ShotOptions): Promise<number> {
+  const [route, outDir] = args
+  if (!route || !outDir) {
+    console.error(USAGE)
+    return 1
+  }
+  mkdirSync(outDir, { recursive: true })
+  return withServer(route, dev, async (url) => {
+    for (const shot of reviewShots(outDir)) {
+      await capture(url, shot.out, opts.waitMs, opts.waitForSelector, {
+        windowSize: shot.windowSize,
+        colorScheme: shot.scheme,
+        fullPage: true,
+        mobile: shot.mobile,
+      })
+    }
+  })
+}
+
+async function doStart(dev: boolean): Promise<number> {
+  let server: PreviewServer
+  try {
+    server = await startPreview({ dev })
+  } catch (err) {
+    console.error(err instanceof Error ? err.message : String(err))
+    return 1
+  }
+  console.log(`PID=${server.pid}`)
+  console.log(`URL=${server.url}`)
+  console.log(`Log=${server.logPath}`)
+  console.log(`Stop it with: pnpm exec tsx scripts/ui/preview.ts stop ${server.pid}`)
+  return 0 // the server keeps running; this process exits (child is unref'd)
+}
+
+async function doStop(args: string[]): Promise<number> {
+  const pid = Number(args[0])
+  if (!Number.isInteger(pid) || pid <= 0) {
+    console.error('Usage: pnpm exec tsx scripts/ui/preview.ts stop <pid>')
+    // A malformed pid is a usage error; teardown of a real pid always succeeds.
+    return 1
+  }
+  await stopPreview(pid)
+  console.log(`Stopped preview server ${pid} (or it was already gone).`)
+  return 0 // teardown is always a success — never a dropped-step footgun
+}
+
+async function main(): Promise<number> {
+  const [verb, ...rest] = process.argv.slice(2)
+  const dev = extractSwitch(rest, '--dev')
+  const full = extractSwitch(dev.rest, '--full')
+  const mobile = extractSwitch(full.rest, '--mobile')
+  const waitFor = extractFlag(mobile.rest, '--wait-for')
+  const waitMs = extractFlag(waitFor.rest, '--wait')
+  const scheme = extractFlag(waitMs.rest, '--scheme')
+  const args = scheme.rest
+  if (verb === 'stop') return doStop(args)
+  let opts: ShotOptions
+  try {
+    opts = { waitMs: parseWaitMs(waitMs.value), waitForSelector: waitFor.value, scheme: parseScheme(scheme.value), fullPage: full.on, mobile: mobile.on }
+  } catch (err) {
+    console.error((err as Error).message)
+    return 1
+  }
+  switch (verb) {
+    case 'shot':
+      return doShot(args, dev.on, opts)
+    case 'review':
+      return doReview(args, dev.on, opts)
+    case 'start':
+      return doStart(dev.on)
+    default:
+      console.error(USAGE)
+      return 1
+  }
+}
+
+runIfMain(import.meta.url, async () => process.exit(await main()))

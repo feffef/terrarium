@@ -1,0 +1,885 @@
+// The transcript-trace extractor (ADR-0009): the deterministic half of a
+// session log. It reads a Claude session's transcript jsonl and derives the
+// MECHANICAL trace — timings, models, tool counts, files read/edited, subagents,
+// and provenance — purely from the recorded tool calls. Nothing here is
+// self-reported: it is the reliable ground truth the authored half (summary,
+// frictions) cannot provide, and the SessionEnd handler stitches the two.
+//
+// The extraction is a pure function over parsed records (unit-tested); the file
+// IO is a thin shell. Read-tool paths are the only source of `filesRead`; what a
+// `cat`/`grep` inspection of an agent-instruction doc actually showed is picked
+// up as `docsReadViaShell` (shell-reads.ts, issues #1074/#1545): the command's
+// output matched against an injected doc-line index, so the command's own shape
+// never matters. The stitch folds both into `docsRead`; both remain a floor
+// rather than a complete count.
+//
+// A dispatched subagent's tool calls are NOT inlined into the parent transcript
+// (it carries no sidechain records at all); the harness writes each one its own
+// jsonl under `subagents/` beside the parent — see `subagentTranscriptPaths`.
+// `foldSubagentTrace` unions those in, so `filesRead`/`filesEdited`/`skillsUsed`
+// cover delegated work too. Issue #796 documented the gap and deferred the fix
+// for want of evidence the access was cheap; it is — same record shape, sibling
+// directory. Everything stays derived, never self-reported (ADR-0009).
+//
+// `skillsUsed` has two derived sources: `Skill` tool_use blocks, and slash-command
+// expansions in user turns (`<command-name>`). The second exists because a Skill
+// invoked as `/name` — the shape every Routine-fired session starts with, e.g. the
+// nightly `/digest` — is expanded by the harness *before* the model runs, so no
+// Skill tool call ever appears in the transcript and tool_use-only derivation
+// left every scheduled run's own entry Skill untagged.
+//
+// Usage:  tsx scripts/session/transcript-trace.ts <transcript.jsonl>
+//   Prints the derived trace as JSON.
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
+import { basename, dirname, join } from 'node:path'
+import type { RuleVerdict, UsefulVerdict } from '../../shared/schemas/session.ts'
+import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../../shared/trace-fields.ts'
+import {
+  buildDocLineIndex,
+  scanShellReads,
+  scanShellReadsByOutput,
+  canonicalizeInstructionPath,
+  isInstructionDoc,
+  type DocLineIndex,
+  type DocText,
+  type NearMiss,
+  type ShellCommand,
+} from './shell-reads.ts'
+import { ruleAdr, ruleBlockFiles } from '../lib/adr-rules.ts'
+import { root, runIfMain } from '../lib/cli.ts'
+
+/** The one authored-scratch file per container (one session per container in the
+ *  remote model). Gitignored — its home is `main`. Single-homed here so its
+ *  writer and reader agree without a circular import. Repo-relative; each caller joins its root. */
+export const SCRATCH_DIR = '.session-logs'
+export const SCRATCH_FILE = join(SCRATCH_DIR, 'pending.scratch.json')
+
+/** Where the log lands from before it is pushed: a gitignored staging copy, never
+ *  the working tree. `absPath` is only a byte source for `git hash-object` (the
+ *  commit's tree location is the separate `relPath`), so the tree never holds an
+ *  untracked session log — a frozen-network push failure leaves nothing outside
+ *  gitignored `.session-logs/` for a stray `git add -A` to sweep into a PR (#148). */
+export const STAGING_DIR = join(SCRATCH_DIR, 'staged')
+
+/** The gitignored sentinel recording the last scratch we landed: `{ scratchHash,
+ *  relPath }`. The landing gate keys on the *authored scratch* changing, not the
+ *  stitched output — the derived trace grows every turn, so an output-keyed gate
+ *  would push on every turn after closure. Same home as the scratch, so it is
+ *  durable across container reclaim and the resume flush sees it (#148). */
+export const LAST_LANDED_FILE = join(SCRATCH_DIR, 'last-landed.json')
+
+/** One entry the extractor folds into `docsRead`/`skillsUsed`; `reason` is absent
+ *  for derived entries (the agent supplies reasons, the transcript does not). */
+export interface DerivedRef {
+  path?: string
+  name?: string
+  source: 'derived'
+}
+
+export interface SubagentRef {
+  type?: string
+  task?: string
+  model?: string
+}
+
+/** The mechanical trace — every field derived, none self-reported. Shapes match
+ *  the optional `sessions` fields (tenant.config.ts) the stitch will populate. */
+export interface MechanicalTrace {
+  session?: string
+  gitBranch?: string
+  entrypoint?: string
+  cliVersion?: string
+  /** A human-legible identifier for what fired a Routine-triggered session — the
+   *  slash-command name if the first user turn expanded one, else that turn's
+   *  first line (issue #449 Gap 1). Populated ONLY for `entrypoint:
+   *  'remote_trigger'`; every other session omits it, including one that merely
+   *  lacks `remote_trigger`. See `deriveTrigger` for why this is prompt-derived
+   *  rather than a dedicated trigger-name/id field. */
+  trigger?: string
+  startedAt?: string
+  endedAt?: string
+  durationSec?: number
+  models: Record<string, number>
+  toolCounts: Record<string, number>
+  filesRead: string[]
+  filesEdited: string[]
+  /** Agent-instruction docs Bash output showed the session (#1074); the stitch
+   *  folds them into `docsRead` like `filesRead`. */
+  docsReadViaShell: string[]
+  /** Path-scoped `.claude/rules/` files that loaded on a file touch or a Skill
+   *  run, in load order. */
+  rulesLoaded: string[]
+  /** Always-loaded rules: `.claude/rules/` files with no `paths`, which load at
+   *  session start. The field keeps its older name because landed logs carry it. */
+  rulesGlobal: string[]
+  /** The subset of both rule lists whose ADR the session read after the rule first
+   *  loaded: whole, by the Read tool, or in Bash output once `docIndex` is given
+   *  (the shell detector's floor, not a whole read). */
+  rulesFollowedUp: string[]
+  /** Rules only a subagent or workflow agent loaded. Set by `foldSubagentTrace`. */
+  rulesLoadedBySubagents?: string[]
+  /** Instruction docs only a subagent or workflow agent read. Set by `foldSubagentTrace`. */
+  docsReadBySubagents?: string[]
+  skillsUsed: string[]
+  /** The subset of `skillsUsed` seen only as a slash-command expansion — kept
+   *  alongside (not instead of) the union so the stitch can annotate provenance
+   *  without consumers having to re-union two lists. */
+  commandSkills: string[]
+  subagents: SubagentRef[]
+  prSignals: string[]
+}
+
+const EDIT_TOOLS = new Set(['Edit', 'Write', 'NotebookEdit'])
+
+/** Paths that are never "docs read" — harness scratch, build output, deps, git
+ *  internals. Filtered so the mechanical half doesn't drown the curated list.
+ *  `tool-results/` and `.claude/projects/` are the harness's own spill files and
+ *  transcript store: a sampling pass found them to be the ONLY zero-signal reads
+ *  in the corpus (8 across 43 logs), which is why this list, not a file-type
+ *  filter, is the right place to cut. Reads of code — a manifest holding a
+ *  schema, a workflow file settling a CI question — carry real signal and stay. */
+const NOISE = [
+  /\/node_modules\//,
+  /\/\.nuxt\//,
+  /\/\.output\//,
+  /\/\.git\//,
+  /\/scratchpad\//,
+  /^\/tmp\//,
+  /\/tool-results\//,
+  /\/\.claude\/projects\//,
+]
+export function isContentPath(p: string | undefined): p is string {
+  return typeof p === 'string' && p.length > 0 && !NOISE.some((re) => re.test(p))
+}
+
+// The harness doesn't record a rule that scripts/hooks/skill-rules-hint.ts or
+// scripts/hooks/bash-rules-hint.ts injects as a load; only the hint's own
+// "Contents of <rule>:" headers name it.
+/** A `hook_additional_context` attachment's text. */
+export const hintText = (content: unknown) => (Array.isArray(content) ? content : [content]).filter((c) => typeof c === 'string').join('\n')
+const hintedRules = (content: unknown) => ruleBlockFiles(hintText(content))
+
+/** A rule's identity is its `.claude/rules/` path, not where it was loaded
+ *  from: a worktree subagent loads the same rule under another absolute root,
+ *  which `relativizer` cannot strip (issue #1763). */
+function ruleKey(path: string): string {
+  return path.slice(path.lastIndexOf('.claude/rules/'))
+}
+
+/** Relativize repo paths to match how the agent cites them (`docs/adr/…`, not
+ *  `/home/user/terrarium/docs/adr/…`) so the stitch dedups a curated entry
+ *  against its observed twin instead of listing the file twice. Applied AFTER
+ *  the noise filter, which keys on absolute paths. Paths outside the repo stay
+ *  absolute — honestly flagging an external file. Shared with the author-time
+ *  shell-read scan so both derive the same key for one file. */
+function relativizer(records: Record<string, unknown>[]): (p: string) => string {
+  const meta = records.find((r) => r.type === 'user' || r.type === 'assistant') ?? {}
+  const cwd = typeof meta.cwd === 'string' ? meta.cwd : ''
+  return (p) => (cwd && p.startsWith(cwd + '/') ? p.slice(cwd.length + 1).replace(/^\.claude\/worktrees\/[^/]+\//, '') : p)
+}
+
+/** The text a `tool_result` block actually carries — a plain string, or the
+ *  `text` blocks of an array (mirrors `userText` below, but for a tool_result's
+ *  own array shape: a `tool_reference` block, e.g., carries no text and
+ *  contributes nothing). */
+function toolResultText(content: unknown): string {
+  if (typeof content === 'string') return content
+  if (!Array.isArray(content)) return ''
+  return content
+    .filter((b): b is { type: string; text: string } =>
+      !!b && typeof b === 'object' && (b as { type?: string }).type === 'text'
+      && typeof (b as { text?: unknown }).text === 'string')
+    .map((b) => b.text)
+    .join('\n')
+}
+
+/** What the harness records in place of an empty stdout (issue #1355). */
+const EMPTY_BASH_OUTPUT = '(Bash completed with no output)'
+
+/** A large result reaches the transcript only as a 2KB preview plus a pointer
+ *  ("Full output saved to: <path>"); the command's real output is that file
+ *  (issue #1723). An unreadable pointer keeps the preview. */
+function persistedOutput(text: string): string {
+  const path = /Full output saved to:\s*(\S+)/.exec(text)?.[1]
+  try {
+    return path && existsSync(path) ? readFileSync(path, 'utf8') : text
+  } catch {
+    return text
+  }
+}
+
+/** Every Bash command a transcript recorded, each paired with its own
+ *  `tool_result` output text — `scanShellReads` needs the OUTPUT, not just the
+ *  command, to gate a grep/rg's crediting on what it actually matched (issue
+ *  #1247). Paired by `tool_use_id`, not transcript order: a tool_result can
+ *  land several records after its tool_use. A command whose result is missing
+ *  (a torn transcript) pairs with `''` — the same as a real zero-output run,
+ *  which undercounts rather than guesses. */
+function bashCommandsOf(records: Record<string, unknown>[]): ShellCommand[] {
+  const outputs = new Map<string, string>()
+  for (const rec of records) {
+    const content = (rec.message as { content?: unknown } | undefined)?.content
+    if (!Array.isArray(content)) continue
+    for (const block of content) {
+      const b = block as { type?: string; tool_use_id?: string; content?: unknown }
+      if (b?.type === 'tool_result' && typeof b.tool_use_id === 'string') {
+        const text = persistedOutput(toolResultText(b.content))
+        outputs.set(b.tool_use_id, text.trim() === EMPTY_BASH_OUTPUT ? '' : text)
+      }
+    }
+  }
+  const commands: ShellCommand[] = []
+  for (const rec of records) {
+    const content = (rec.message as { content?: unknown } | undefined)?.content
+    if (!Array.isArray(content)) continue
+    for (const block of content) {
+      const b = block as { type?: string; name?: string; id?: string; input?: { command?: unknown } }
+      if (b?.type === 'tool_use' && b.name === 'Bash' && typeof b.input?.command === 'string') {
+        commands.push({ command: b.input.command, output: outputs.get(b.id ?? '') ?? '' })
+      }
+    }
+  }
+  return commands
+}
+
+/** A merged scan, plus where each path was credited: without that a reader
+ *  cannot tell a detector error from correctly folded delegated work, and
+ *  guesses a mechanism instead (issues #1206, #1244). */
+export interface FoldedShellReadScan {
+  paths: string[]
+  provenance: Map<string, { command: string; source: string }>
+  nearMisses: NearMiss[]
+}
+
+export interface LabelledRecords {
+  label: string
+  records: Record<string, unknown>[]
+}
+
+/** Resolves a glob/variable token against the real repo tree at `repoRoot`, for
+ *  `scanShellReads`'s injectable `resolveGlob` (issue #1246) — `scanShellReads`
+ *  itself stays fs-free, so only its real caller, here, touches disk. Handles
+ *  the shape every occurrence in the wild has taken: a literal directory prefix
+ *  plus a `*`/`?` wildcard in the FINAL path segment (`docs/adr/0017-*.md`).
+ *  A glob earlier in the path, or any other `GLOB_OR_VAR` character (a shell
+ *  variable's `$`/`` ` ``/`~`, or `[]`/`{}`), has no filesystem meaning to
+ *  resolve — it falls through to `undefined`, i.e. today's near-miss, same as
+ *  a 0- or 2+-match glob. Never guesses among several real matches. */
+function resolveGlobAgainstTree(repoRoot: string): (token: string) => string | undefined {
+  return (token) => {
+    const slash = token.lastIndexOf('/')
+    const dir = slash === -1 ? '' : token.slice(0, slash)
+    const filePattern = slash === -1 ? token : token.slice(slash + 1)
+    if (/[*?]/.test(dir)) return undefined
+    const dirAbs = join(repoRoot, dir)
+    if (!existsSync(dirAbs) || !statSync(dirAbs).isDirectory()) return undefined
+    const source = filePattern.replace(/[.+^${}()|[\]\\]/g, '\\$&').replace(/\*/g, '[^/]*').replace(/\?/g, '[^/]')
+    const regex = new RegExp(`^${source}$`)
+    const matches = readdirSync(dirAbs).filter((name) => regex.test(name))
+    return matches.length === 1 ? (dir ? `${dir}/${matches[0]!}` : matches[0]!) : undefined
+  }
+}
+
+/** Files whose bytes are never prose, so reading them as sink text is waste. */
+const BINARY_EXT = /\.(png|jpe?g|gif|webp|ico|woff2?|ttf|otf|pdf|zip|gz|wasm|mp4|mp3)$/i
+const MAX_SINK_BYTES = 1 << 20
+
+/** The doc-line index behind `docsReadViaShell` (ADR-0009, issue #1545),
+ *  the one filesystem read it needs: every file in the checkout, the
+ *  instruction docs (`isInstructionDoc`) as docs and all the rest as sinks — a doc that quotes a line of code or config must not be credited
+ *  when the agent reads that code. `.claude/skills` is a symlink tree over
+ *  `.agents/skills`, so it is skipped with the build and dependency trees. */
+export function loadDocLineIndex(repoRoot: string): DocLineIndex {
+  const docs: DocText[] = []
+  const sinks: DocText[] = []
+  const skip = new Set(['node_modules', '.git', '.nuxt', '.output', '.claude'])
+  const walk = (dir: string): void => {
+    for (const name of readdirSync(dir)) {
+      if (skip.has(name)) continue
+      const abs = join(dir, name)
+      const st = statSync(abs, { throwIfNoEntry: false })
+      if (!st) continue
+      if (st.isDirectory()) {
+        walk(abs)
+        continue
+      }
+      const rel = abs.slice(repoRoot.length + 1)
+      if (isInstructionDoc(rel)) docs.push({ path: rel, text: readFileSync(abs, 'utf8') })
+      else if (!BINARY_EXT.test(name) && st.size <= MAX_SINK_BYTES) sinks.push({ path: rel, text: readFileSync(abs, 'utf8') })
+    }
+  }
+  walk(repoRoot.replace(/\/$/, ''))
+  return buildDocLineIndex(docs, sinks)
+}
+
+/** An exact leading `cd <dir> &&`/`cd <dir>;` (or `cd <dir> ; `) prefix at the
+ *  very start of a command — deliberately narrow (issue #1454): a quoted dir
+ *  is unwrapped, but a `||`, a subshell, or a `cd` that isn't the command's
+ *  first word all fall outside this shape and are left to resolve against the
+ *  session's default cwd unchanged. */
+const CD_PREFIX_RE = /^cd\s+"?([^"'\s;&]+)"?\s*(?:&&|;)\s*/
+
+/** `p` was named by `command`: when it matches `CD_PREFIX_RE`, resolve it
+ *  against that `cd`'s own target directory instead of the session's default
+ *  cwd (issue #1454), so the near-miss names the file the agent will recognize.
+ *  A `cd` outside the repo (no shared prefix, or one that walks back out via
+ *  `..`) leaves `p` unchanged rather than guessing. */
+function resolveAgainstCdDir(p: string, command: string, rel: (s: string) => string): string {
+  const m = CD_PREFIX_RE.exec(command)
+  if (!m) return p
+  const dir = rel(m[1]!.replace(/\/$/, ''))
+  return dir && !dir.startsWith('/') && !dir.startsWith('..') ? `${dir}/${p}` : p
+}
+
+/** The label both read-source maps give the main session's own reads. */
+export const MAIN_SOURCE = 'this session'
+
+/** The shell-read scan WITH its near-misses, for the author-time advisory the
+ *  `log-session` Skill prints (#1074's loop): credit from the same output
+ *  matcher `extractTrace` lands, explanations from the command parser (ADR-0009).
+ *  A parser note on a command whose output DID credit a doc is dropped: an
+ *  unresolved glob or loop token there is a doc the matcher already saw, not a
+ *  miss. Subagent transcripts belong here for
+ *  the same reason `docsReadViaShell` is in `FOLDED_TRACE_FIELDS`.
+ *
+ *  `repoRoot` builds the index from the checkout and resolves single-match
+ *  globs for the near-miss side (#1246); tests inject `docIndex` directly. */
+export function shellReadScanOf(
+  records: Record<string, unknown>[],
+  subagents: LabelledRecords[] = [],
+  opts: { repoRoot?: string; docIndex?: DocLineIndex } = {},
+): FoldedShellReadScan {
+  const docIndex = opts.docIndex ?? (opts.repoRoot !== undefined ? loadDocLineIndex(opts.repoRoot) : buildDocLineIndex([]))
+  const resolveGlob = opts.repoRoot !== undefined ? resolveGlobAgainstTree(opts.repoRoot) : undefined
+  const sets = [{ label: MAIN_SOURCE, records }, ...subagents.map((s) => ({ ...s, label: `subagent: ${s.label}` }))]
+  const provenance: FoldedShellReadScan['provenance'] = new Map()
+  const unshown: NearMiss[] = []
+  const parsed: NearMiss[] = []
+  for (const { label, records: rs } of sets) {
+    const rel = relativizer(rs)
+    const commands = bashCommandsOf(rs)
+    const matched = scanShellReadsByOutput(commands, docIndex, rel)
+    for (const [p, command] of matched.creditedBy) {
+      if (!provenance.has(p)) provenance.set(p, { command, source: label })
+    }
+    const crediting = new Set(matched.creditedBy.values())
+    const parser = scanShellReads(commands, rel, resolveGlob)
+    for (const [p, command] of parser.creditedBy) {
+      const path = resolveAgainstCdDir(p, command, rel)
+      unshown.push({ command, token: p, path, rule: 'named by the command, but its output showed too little of this doc' })
+    }
+    parsed.push(...parser.nearMisses.filter((m) => !crediting.has(m.command)))
+  }
+  const seen = new Set<string>()
+  const nearMisses = [...unshown, ...parsed].filter((m) => {
+    const key = `${m.path}\u0000${m.rule}`
+    if (provenance.has(m.path) || seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+  return { paths: [...provenance.keys()], provenance, nearMisses }
+}
+
+function dedup(xs: (string | undefined)[]): string[] {
+  return [...new Set(xs.filter((x): x is string => !!x))]
+}
+
+/** The marker the harness leaves in a user turn when a slash command ran: the
+ *  Skill's instructions are injected at expansion time, so the model is told NOT
+ *  to also call the Skill tool — this tag is the only transcript evidence. */
+const COMMAND_NAME_RE = /<command-name>([^<]*)<\/command-name>/g
+
+/** A user turn's own text — a plain string, or the `text` blocks of an array.
+ *  tool_result blocks are deliberately excluded: a session that Reads another
+ *  transcript (log tooling does) would otherwise "invoke" every command in it. */
+function userText(content: unknown): string[] {
+  if (typeof content === 'string') return [content]
+  if (!Array.isArray(content)) return []
+  return content
+    .filter((b): b is { type: string; text: string } =>
+      !!b && typeof b === 'object' && (b as { type?: string }).type === 'text'
+      && typeof (b as { text?: unknown }).text === 'string')
+    .map((b) => b.text)
+}
+
+/** Skill names invoked as slash commands in a user turn (`/digest` → `digest`). */
+export function commandSkillNames(content: unknown): string[] {
+  const names: string[] = []
+  for (const text of userText(content)) {
+    for (const m of text.matchAll(COMMAND_NAME_RE)) {
+      const name = (m[1] ?? '').trim().replace(/^\//, '')
+      if (name) names.push(name)
+    }
+  }
+  return names
+}
+
+/** A human-legible identifier for what fired a Routine-triggered session (issue
+ *  #449 Gap 1). Data-availability check performed against a live transcript: the
+ *  `user` record's own metadata carries only `sessionId`/`cwd`/`gitBranch`/
+ *  `entrypoint`/`version`/`timestamp` — no separate trigger name/id field exists
+ *  anywhere in the transcript. "The Routine's own prompt lands as the session's
+ *  first user turn" (the same source `commandSkillNames` reads) is the only
+ *  available signal, so this derives the slash-command name when the first turn
+ *  expanded one (the common shape for every scheduled Routine), else that turn's
+ *  own first line, capped so a long freeform prompt doesn't balloon the log.
+ *  Populated ONLY for `entrypoint: 'remote_trigger'` — every other session omits
+ *  the field, degrading cleanly rather than surfacing unrelated first-turn text. */
+export function deriveTrigger(
+  records: Record<string, unknown>[],
+  entrypoint: string | undefined,
+): string | undefined {
+  if (entrypoint !== 'remote_trigger') return undefined
+  const first = records.find((r) => r.type === 'user')
+  if (!first) return undefined
+  const msg = first.message as { content?: unknown } | undefined
+  const [name] = commandSkillNames(msg?.content) // reuse the one slash-command extractor
+  if (name) return name
+  const text = userText(msg?.content).join('\n').trim()
+  if (!text) return undefined
+  const firstLine = (text.split('\n')[0] ?? '').trim()
+  return firstLine ? firstLine.slice(0, 200) : undefined
+}
+
+/** Second-precision UTC (`…:SSZ`) — the canonical form the `sessions` schema's
+ *  `utcTimestamp` refine requires; `toISOString()`'s millisecond `.000Z` is rejected. */
+function toUtcSeconds(ms: number): string {
+  return new Date(ms).toISOString().replace(/\.\d{3}Z$/, 'Z')
+}
+
+/** Index signature so a real `process.env` satisfies this structurally. */
+export interface SessionIdEnv {
+  CLAUDE_CODE_REMOTE_SESSION_ID?: string
+  [key: string]: string | undefined
+}
+
+/** `cse_01…` → `session_01…` (issue #387). */
+export function normalizeRemoteSessionId(raw: string | undefined): string | undefined {
+  const m = raw ? /^cse_(.+)$/.exec(raw) : null
+  return m ? `session_${m[1]}` : undefined
+}
+
+/** Ground-truth session id: prefer `CLAUDE_CODE_REMOTE_SESSION_ID` (normalized),
+ *  else the transcript's own `sessionId` (canonical on a plain local CLI
+ *  session). Never the hand-typed authored value — issue #387/#449. */
+export function resolveGroundTruthSessionId(
+  transcriptSessionId: string | undefined,
+  env: SessionIdEnv = process.env,
+): string | undefined {
+  return normalizeRemoteSessionId(env.CLAUDE_CODE_REMOTE_SESSION_ID) ?? transcriptSessionId
+}
+
+/** `resolveGroundTruthSessionId` straight from a raw transcript, for callers
+ *  that hold only the jsonl. */
+export function resolveGroundTruthFromTranscript(
+  transcriptJsonl: string,
+  env: SessionIdEnv = process.env,
+): string | null {
+  return extractTrace(parseTranscript(transcriptJsonl), env).session ?? null
+}
+
+/** `claude-opus-4-8` → `Claude Opus 4.8` — the display wording the harness's own
+ *  commit template uses for the `Co-Authored-By:` line (ADR-0017). One formatter
+ *  for the log-commit footer and the commit-msg footer, so they can't fork. */
+export function formatModelId(id: string): string {
+  const m = /^claude-([a-z]+)-(.+)$/.exec(id)
+  if (!m) return id
+  const family = m[1]!
+  const versionParts = m[2]!
+  return `Claude ${family[0]!.toUpperCase()}${family.slice(1)} ${versionParts.split('-').join('.')}`
+}
+
+/** The busiest model id in a `models` map (model id → assistant-turn count), or
+ *  `undefined` for an empty map. Ties break by highest turn count,
+ *  then lexical id. */
+export function busiestModelId(models: Record<string, number>): string | undefined {
+  const entries = Object.entries(models)
+  if (entries.length === 0) return undefined
+  return entries.sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))[0]![0]
+}
+
+/** Parse a transcript jsonl into records, skipping unparseable lines. */
+export function parseTranscript(jsonl: string): Record<string, unknown>[] {
+  const out: Record<string, unknown>[] = []
+  for (const line of jsonl.split('\n')) {
+    if (!line.trim()) continue
+    try {
+      out.push(JSON.parse(line))
+    } catch {
+      /* tolerate a torn final line */
+    }
+  }
+  return out
+}
+
+/** This container's session transcript, best-effort: the newest `*.jsonl` in the
+ *  harness's project store for `cwd`. ADVISORY ONLY — it feeds the author-time
+ *  shell-read report (#1074); the log itself is always stitched from the real
+ *  `transcript_path` the SessionEnd hook is handed, never from this guess. A
+ *  container holds one session's transcript, so "newest" is unambiguous in
+ *  practice; `undefined` when the store isn't where we expect, which degrades
+ *  the report to silence rather than failing authoring. */
+export function findLatestTranscript(cwd: string, home: string | undefined): string | undefined {
+  if (!home) return undefined
+  const dir = join(home, '.claude', 'projects', cwd.replace(/[/.]/g, '-'))
+  if (!existsSync(dir)) return undefined
+  const jsonls = readdirSync(dir, { withFileTypes: true })
+    .filter((e) => e.isFile() && e.name.endsWith('.jsonl'))
+    .map((e) => join(dir, e.name))
+  if (jsonls.length === 0) return undefined
+  return jsonls.sort((a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs)[0]
+}
+
+/** Derive the mechanical trace from parsed transcript records. Pure — the
+ *  testable core. `env` is injectable (defaults to `process.env`). `docIndex`
+ *  is what `docsReadViaShell` is credited against (ADR-0009): the lander and
+ *  the advisory pass `loadDocLineIndex(root)`; without one the field is simply empty, which is all the guard and
+ *  provenance callers need. */
+export function extractTrace(
+  records: Record<string, unknown>[],
+  env: SessionIdEnv = process.env,
+  docIndex?: DocLineIndex,
+): MechanicalTrace {
+  const stamps: number[] = []
+  const models: Record<string, number> = {}
+  const toolCounts: Record<string, number> = {}
+  const reads: (string | undefined)[] = []
+  const edits: (string | undefined)[] = []
+  const skills: (string | undefined)[] = []
+  const commandSkills: string[] = []
+  const subagents: SubagentRef[] = []
+  const prSignals: string[] = []
+  const rules: string[] = []
+  const alwaysLoadedRules: string[] = []
+  const ruleLoadedAt = new Map<string, number>()
+  const readAt: [string, number][] = []
+
+  for (const [i, rec] of records.entries()) {
+    const ts = typeof rec.timestamp === 'string' ? Date.parse(rec.timestamp) : NaN
+    if (!Number.isNaN(ts)) stamps.push(ts)
+
+    const att = rec.attachment as { type?: string; path?: string; content?: unknown; files?: { path?: string }[] } | undefined
+    if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(ruleKey(att.path))
+    if (att?.type === 'hook_additional_context') rules.push(...hintedRules(att.content))
+    if (att?.type === 'instructions') {
+      for (const f of att.files ?? []) if (f.path?.includes('/.claude/rules/')) alwaysLoadedRules.push(ruleKey(f.path))
+    }
+    for (const r of [...alwaysLoadedRules, ...rules]) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
+
+    const msg = rec.message as { content?: unknown; model?: string } | undefined
+    if (rec.type === 'assistant' && msg?.model) {
+      models[msg.model] = (models[msg.model] ?? 0) + 1
+    }
+
+    const content = msg?.content
+    if (rec.type === 'user') commandSkills.push(...commandSkillNames(content))
+    if (!Array.isArray(content)) continue
+    for (const block of content) {
+      if (!block || typeof block !== 'object') continue
+      const b = block as { type?: string; name?: string; input?: Record<string, unknown> }
+      if (b.type !== 'tool_use') continue
+      const name = b.name ?? '?'
+      const input = b.input ?? {}
+      toolCounts[name] = (toolCounts[name] ?? 0) + 1
+
+      if (name === 'Read') {
+        reads.push(input.file_path as string)
+        if (input.offset === undefined && input.limit === undefined) readAt.push([input.file_path as string, i])
+      }
+      else if (EDIT_TOOLS.has(name)) edits.push(input.file_path as string)
+      else if (name === 'Skill') skills.push((input.skill ?? input.command) as string)
+      else if (name === 'Agent' || name === 'Task') {
+        subagents.push({
+          type: input.subagent_type as string,
+          task: input.description as string,
+          model: input.model as string | undefined,
+        })
+      } else if (name.includes('create_pull_request')) {
+        prSignals.push((input.title as string) ?? '(pr)')
+      }
+
+      if (name === 'Bash') {
+        const cmd = (input.command as string) ?? ''
+        if (cmd.includes('git push') || cmd.includes('pr create')) {
+          prSignals.push(`(bash) ${cmd.slice(0, 60)}`)
+        }
+      }
+    }
+  }
+
+  const meta = records.find((r) => r.type === 'user' || r.type === 'assistant') ?? {}
+  const started = stamps.length ? Math.min(...stamps) : undefined
+  const ended = stamps.length ? Math.max(...stamps) : undefined
+
+  const rel = relativizer(records)
+  const adrReadAfter = (rule: string, at: number): boolean => {
+    const n = ruleAdr(basename(rule))
+    if (n === undefined) return false
+    const isAdr = (p: string) => p.startsWith(`docs/adr/${n}-`)
+    if (readAt.some(([p, j]) => j > at && typeof p === 'string' && isAdr(rel(p)))) return true
+    return !!docIndex && scanShellReadsByOutput(bashCommandsOf(records.slice(at + 1)), docIndex, rel).paths.some(isAdr)
+  }
+
+  return {
+    session: resolveGroundTruthSessionId(meta.sessionId as string | undefined, env),
+    gitBranch: meta.gitBranch as string | undefined,
+    entrypoint: meta.entrypoint as string | undefined,
+    cliVersion: meta.version as string | undefined,
+    trigger: deriveTrigger(records, meta.entrypoint as string | undefined),
+    startedAt: started !== undefined ? toUtcSeconds(started) : undefined,
+    endedAt: ended !== undefined ? toUtcSeconds(ended) : undefined,
+    durationSec: started !== undefined && ended !== undefined ? Math.round((ended - started) / 1000) : undefined,
+    models,
+    toolCounts,
+    filesRead: dedup(reads).filter(isContentPath).map(rel),
+    filesEdited: dedup(edits).filter(isContentPath).map(rel),
+    docsReadViaShell: docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths : [],
+    rulesLoaded: dedup(rules).filter((r) => !alwaysLoadedRules.includes(r)),
+    rulesGlobal: dedup(alwaysLoadedRules),
+    rulesFollowedUp: [...ruleLoadedAt].filter(([r, at]) => adrReadAfter(r, at)).map(([r]) => r),
+    skillsUsed: dedup([...skills, ...commandSkills]),
+    commandSkills: dedup(commandSkills),
+    subagents,
+    prSignals,
+  }
+}
+
+const subagentsDir = (transcriptPath: string) => join(dirname(transcriptPath), basename(transcriptPath, '.jsonl'), 'subagents')
+
+/** One depth-1 subagent's transcript, named for the hook payload's `agent_id`. */
+export const subagentTranscript = (transcriptPath: string, agentId: string) => join(subagentsDir(transcriptPath), `agent-${agentId}.jsonl`)
+
+/** Every dispatched subagent's own transcript, given the parent's path: the
+ *  harness writes them to `<parent-dir>/<parent-basename>/subagents/*.jsonl`
+ *  (each with a `.meta.json` sibling this fold has no use for). Returns [] when
+ *  the directory is absent — the shape of a session that dispatched nobody.
+ *  Sorted so a fold is deterministic, and a parent precedes what it dispatched.
+ *
+ *  Walks every subdirectory, so it finds a depth-2 agent whether the harness
+ *  nests it under its parent (`agent-a/subagents/`) or flattens it beside it;
+ *  only depth 1 is confirmed live (`.meta.json` carries a `spawnDepth`). It
+ *  also finds workflow agents, reported under `workflows/<runId>/` beside the
+ *  engine's own `journal.jsonl`, which is no agent's transcript (#1870). */
+export function subagentTranscriptPaths(transcriptPath: string): string[] {
+  const dir = subagentsDir(transcriptPath)
+  if (!existsSync(dir)) return []
+  return readdirSync(dir, { recursive: true, withFileTypes: true })
+    .filter((e) => e.isFile() && e.name.endsWith('.jsonl') && e.name !== 'journal.jsonl')
+    .map((e) => join(e.parentPath, e.name))
+    .sort()
+}
+
+export interface SubagentJsonl {
+  label: string
+  jsonl: string
+  agent?: SubagentRef
+}
+
+/** One subagent's parsed transcript; `agent` names a workflow agent (#1876). */
+export interface SubagentRecords {
+  records: Record<string, unknown>[]
+  agent?: SubagentRef
+}
+
+/** Every subagent transcript beside `transcriptPath`, read tolerantly: a sibling
+ *  jsonl that vanished or won't read costs its reads, not the whole trace.
+ *  `label` is the sibling `.meta.json`'s dispatch `description`, else the agent id.
+ *  `agent` is set only for a workflow agent: an Agent/Task dispatch is already
+ *  in the parent's `subagents`, but a workflow's agents are not (#1876).
+ *  `foldSubagentTrace` adds its model. */
+export function readSubagentJsonls(transcriptPath: string): SubagentJsonl[] {
+  const out: SubagentJsonl[] = []
+  const workflows = join(subagentsDir(transcriptPath), 'workflows') + '/'
+  for (const p of subagentTranscriptPaths(transcriptPath)) {
+    let jsonl
+    try {
+      jsonl = readFileSync(p, 'utf8')
+    } catch {
+      continue
+    }
+    let label = basename(p, '.jsonl').replace(/^agent-/, '')
+    let type: string | undefined
+    try {
+      const { description, agentType } = JSON.parse(readFileSync(p.replace(/\.jsonl$/, '.meta.json'), 'utf8'))
+      if (typeof description === 'string' && description) label = description
+      if (typeof agentType === 'string') type = agentType
+    } catch {
+      /* no readable meta: keep the agent id */
+    }
+    out.push(p.startsWith(workflows) ? { label, jsonl, agent: { type, task: label } } : { label, jsonl })
+  }
+  return out
+}
+
+/** Union a parent trace with its subagents' — the *attention* fields only:
+ *  what was read, edited, and which Skills ran (`FOLDED_TRACE_FIELDS`). Nested
+ *  subagents need no special case: each spawn depth gets its own transcript in
+ *  the same directory.
+ *
+ *  Deliberately NOT merged: `models`/`toolCounts`/`durationSec` describe the
+ *  parent's own turns, and a consumer reading `toolCounts.Read` against
+ *  `filesRead` would otherwise compare two different populations. Timings stay
+ *  the parent's for the same reason. `subagents` gains only workflow agents,
+ *  which the parent never dispatched as a tool call (#1876). */
+export function foldSubagentTrace(
+  trace: MechanicalTrace,
+  subagents: SubagentRecords[],
+  env: SessionIdEnv = process.env,
+  docIndex?: DocLineIndex,
+): MechanicalTrace {
+  if (subagents.length === 0) return trace
+  const subs = subagents.map(({ records }) => extractTrace(records, env, docIndex))
+  const folded = { ...trace }
+  folded.subagents = [
+    ...trace.subagents,
+    ...subagents.flatMap(({ agent }, i) => (agent ? [{ ...agent, model: busiestModelId(subs[i]!.models) }] : [])),
+  ]
+  for (const { field } of FOLDED_TRACE_FIELDS) {
+    folded[field] = dedup([...trace[field], ...subs.flatMap((s) => s[field])])
+  }
+  // Folded too, but kept out of FOLDED_TRACE_FIELDS: SessionCard's explainer
+  // lists those fields, and the card tags these 'via subagent' instead.
+  folded.rulesGlobal = dedup([...trace.rulesGlobal, ...subs.flatMap((s) => s.rulesGlobal)])
+  folded.rulesLoaded = trace.rulesLoaded.filter((r) => !folded.rulesGlobal.includes(r))
+  folded.rulesLoadedBySubagents = dedup(subs.flatMap((s) => s.rulesLoaded)).filter(
+    (r) => !folded.rulesGlobal.includes(r) && !folded.rulesLoaded.includes(r),
+  )
+  folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
+  const mainDocs = new Set([...trace.filesRead, ...trace.docsReadViaShell].map(canonicalizeInstructionPath))
+  folded.docsReadBySubagents = dedup(subs.flatMap((s) => [...s.filesRead, ...s.docsReadViaShell])).filter(
+    (p) => isInstructionDoc(p) && !mainDocs.has(canonicalizeInstructionPath(p)),
+  )
+  return folded
+}
+
+// ── Stitch ────────────────────────────────────────────────────────────────
+
+/** The reason for a folded-in `docsRead` entry whose path also appears in
+ *  `filesEdited`. The Edit tool (and Write-on-an-existing-file) refuses to run
+ *  unless the path was `Read` first in the same session — so for these paths
+ *  the read wasn't unexplained, it was a harness-enforced precondition of the
+ *  edit. Worded as "before", not "required for", because the trace is derived
+ *  from tool_use calls, not results: a Read attempted against a not-yet-created
+ *  path still lands in `filesRead` even though it errored and read nothing. */
+export const DERIVED_REASON_EDITED = '(read before editing)'
+
+/** The reason for a folded-in `skillsUsed` entry observed only as a slash-command
+ *  expansion (see `commandSkillNames`) — the shape of every Routine-fired run. It
+ *  doubles as the explanation for why `toolCounts` shows no `Skill` call for it. */
+export const DERIVED_REASON_COMMAND = '(invoked as a slash command)'
+
+/** The reason an agent gives a derived `docsRead` path it never read: the stitch
+ *  drops the path, and a shell credit dropped this way becomes a Friction, so the
+ *  detector's error stays visible (ADR-0009). */
+export const NOT_READ_REASON = '(not read)'
+
+/** The interpretive half the live agent writes to the scratch during the session.
+ *  Timings/models/etc. are NOT here — those are derived. `session`/`kind` are the
+ *  only identity fields the agent must supply; everything mechanical comes from
+ *  the trace. */
+export interface AuthoredScratch {
+  session: string
+  kind?: 'interactive' | 'delegated' | 'autonomous'
+  goal: string
+  status: 'completed' | 'in-review' | 'partial' | 'blocked' | 'abandoned'
+  outcome: string
+  summary: string
+  prs?: string[]
+  docsRead?: { path: string; reason: string; useful?: UsefulVerdict }[]
+  skillsUsed?: { name: string; reason: string }[]
+  ruleVerdicts?: RuleVerdict[]
+  frictions: { description: string; solution: string; severity: string }[]
+  learnings?: string[]
+  ideas?: string[]
+}
+
+function mergeRefs<T extends Record<string, string | undefined>>(
+  authored: T[],
+  derivedKeys: string[],
+  keyField: 'path' | 'name',
+  reasonFor: (key: string) => string = () => DERIVED_REASON,
+): T[] {
+  const seen = new Set(authored.map((a) => a[keyField]))
+  const folded = dedup(derivedKeys)
+    .filter((k) => !seen.has(k))
+    .map((k) => ({ [keyField]: k, reason: reasonFor(k) }) as unknown as T)
+  return [...authored, ...folded]
+}
+
+/** Combine the authored scratch with the derived trace into a full session-log
+ *  entry. Pure — the testable core of the stitch. Mechanical fields come only
+ *  from `trace`; `docsRead`/`skillsUsed` union the curated entries with observed
+ *  reads (folded in with a placeholder reason). Empty mechanical collections are
+ *  dropped so a minimal session stays clean. */
+export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Record<string, unknown> {
+  const editedSet = new Set(trace.filesEdited)
+  const notRead = new Set((authored.docsRead ?? []).filter((d) => d.reason === NOT_READ_REASON).map((d) => d.path))
+  const detectorErrors = trace.docsReadViaShell.filter((p) => notRead.has(p)).map((p) => ({
+    description: `SHELL-READ-DETECTION: ${p} was credited from shell output, but the session marked it ${NOT_READ_REASON}`,
+    solution: 'Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts',
+    severity: 'moderate',
+  }))
+  const docsRead = mergeRefs(
+    (authored.docsRead ?? []).filter((d) => !notRead.has(d.path)),
+    // A rule file is logged as a rule (rulesGlobal/rulesLoaded + ruleVerdicts),
+    // even when close-session has the agent re-read it.
+    [...trace.filesRead, ...trace.docsReadViaShell].filter((p) => !notRead.has(p) && !p.startsWith('.claude/rules/')),
+    'path',
+    (path) => (editedSet.has(path) ? DERIVED_REASON_EDITED : DERIVED_REASON),
+  )
+  const docsReadBySubagents = (trace.docsReadBySubagents ?? []).filter((p) => docsRead.some((d) => d.path === p))
+  const entry: Record<string, unknown> = {
+    schemaVersion: 1,
+    // trace.session is already ground-truth-resolved; wins over authored.
+    session: trace.session || authored.session,
+    startedAt: trace.startedAt,
+    endedAt: trace.endedAt,
+    kind: authored.kind ?? 'interactive',
+    goal: authored.goal,
+    status: authored.status,
+    outcome: authored.outcome,
+    summary: authored.summary,
+    prs: authored.prs ?? [],
+    docsRead,
+    skillsUsed: mergeRefs(authored.skillsUsed ?? [], trace.skillsUsed, 'name', (name) =>
+      trace.commandSkills.includes(name) ? DERIVED_REASON_COMMAND : DERIVED_REASON,
+    ),
+    frictions: [...authored.frictions, ...detectorErrors],
+  }
+  // Mechanical fields — include only when they carry signal.
+  if (trace.durationSec !== undefined) entry.durationSec = trace.durationSec
+  if (Object.keys(trace.models).length) entry.models = trace.models
+  if (Object.keys(trace.toolCounts).length) entry.toolCounts = trace.toolCounts
+  if (trace.filesEdited.length) entry.filesEdited = trace.filesEdited
+  if (trace.rulesLoaded.length) entry.rulesLoaded = trace.rulesLoaded
+  if (trace.rulesGlobal.length) entry.rulesGlobal = trace.rulesGlobal
+  if (trace.rulesFollowedUp.length) entry.rulesFollowedUp = trace.rulesFollowedUp
+  if (trace.rulesLoadedBySubagents?.length) entry.rulesLoadedBySubagents = trace.rulesLoadedBySubagents
+  if (docsReadBySubagents.length) entry.docsReadBySubagents = docsReadBySubagents
+  if (authored.ruleVerdicts?.length) entry.ruleVerdicts = authored.ruleVerdicts
+  if (trace.subagents.length) entry.subagents = trace.subagents
+  if (trace.gitBranch) entry.gitBranch = trace.gitBranch
+  if (trace.entrypoint) entry.entrypoint = trace.entrypoint
+  if (trace.cliVersion) entry.cliVersion = trace.cliVersion
+  if (trace.trigger) entry.trigger = trace.trigger
+  // Optional authored fields — carried only when the session actually noted one,
+  // never emitted empty (matching their `.optional()` schema, so a bare log has
+  // no dangling `learnings: []`).
+  if (authored.learnings?.length) entry.learnings = authored.learnings
+  if (authored.ideas?.length) entry.ideas = authored.ideas
+  return entry
+}
+
+function main(): void {
+  const [path] = process.argv.slice(2)
+  if (!path) {
+    console.error('usage: tsx scripts/session/transcript-trace.ts <transcript.jsonl>')
+    process.exit(1)
+  }
+  const docIndex = loadDocLineIndex(root)
+  const trace = extractTrace(parseTranscript(readFileSync(path, 'utf8')), process.env, docIndex)
+  const folded = foldSubagentTrace(trace, readSubagentJsonls(path).map((s) => ({ records: parseTranscript(s.jsonl), agent: s.agent })), process.env, docIndex)
+  console.log(JSON.stringify(folded, null, 2))
+}
+
+runIfMain(import.meta.url, main)

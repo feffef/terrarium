@@ -3,8 +3,7 @@
 // phrase matcher, the most-recent-AI-comment pick, and the per-issue drift
 // check. The `gh api` / REST shell is a thin wrapper over these, exercised by
 // running the script directly. The shared `gh`/`rest` strategy decision
-// (`pickFetchStrategy`, `parseNextLink`) is single-homed in `list-open-issues.ts`
-// (issue #505) and tested there.
+// (`pickFetchStrategy`, `parseNextLink`) is single-homed in `scripts/lib/github-client.ts`.
 import { describe, expect, it } from 'vitest'
 import {
   CANONICAL_LABELS,
@@ -15,8 +14,8 @@ import {
   mostRecentAiComment,
   toDriftCheckIssue,
   type RawCommentApiRecord,
-} from '../../scripts/check-triage-drift.ts'
-import type { RawIssueApiRecord } from '../../scripts/list-open-issues.ts'
+} from '../../scripts/github/check-triage-drift.ts'
+import type { RawIssueApiRecord } from '../../scripts/github/list-open-issues.ts'
 
 // A real AI-authored comment body, lifted from issue #325's second comment —
 // the exact motivating example from #507.

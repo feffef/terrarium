@@ -12,12 +12,12 @@ import {
   denyOutputFor,
   detectAgentContext,
   formatGuardMessage,
-} from '../../scripts/subagent-background-guard.ts'
-import { envWithTsxShim, runTsx } from '../support/run-script.ts'
+} from '../../scripts/hooks/subagent-background-guard.ts'
+import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const SCRIPT = join(root, 'scripts', 'subagent-background-guard.ts')
-const PREFILTER = join(root, 'scripts', 'subagent-background-guard.sh')
+const SCRIPT = join(root, 'scripts', 'hooks', 'subagent-background-guard.ts')
+const PREFILTER = join(root, 'scripts', 'hooks', 'subagent-background-guard.sh')
 
 /** A dispatched subagent's PreToolUse payload, in the exact shape observed
  *  live (the probe recorded in docs/agents/guards.md). */
@@ -252,7 +252,6 @@ describe('the subagent-background-guard.sh hot-path pre-filter', () => {
   function runPrefilter(payload: unknown): string {
     return execFileSync('sh', [PREFILTER], {
       cwd: root,
-      env: envWithTsxShim(),
       input: typeof payload === 'string' ? payload : JSON.stringify(payload),
       encoding: 'utf8',
     }).trim()

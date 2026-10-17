@@ -3,7 +3,7 @@
 import { readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { parseDocument } from '../../../../scripts/validate-content.ts'
+import { parseDocument } from '../../../../scripts/gate/validate-content-schema.ts'
 import { deriveCampaignStatus, derivePromotionState } from '../../app/utils/status'
 
 interface Campaign {

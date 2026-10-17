@@ -1,5 +1,5 @@
 // Coverage for the double-background guard (issue #1208; rationale and
-// detection contract in `scripts/double-background-guard.ts`). The pure core
+// detection contract in `scripts/hooks/double-background-guard.ts`). The pure core
 // is pinned directly; the CLI's stdin→deny-JSON path, `--dry-run`, and the
 // hot-path pre-filter are exercised end to end against the real scripts
 // (docs/agents/guards.md). Per docs/agents/guards.md's warning, these
@@ -12,12 +12,12 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { checkDoubleBackground, denyOutputFor, formatGuardMessage } from '../../scripts/double-background-guard.ts'
-import { envWithTsxShim, runTsx } from '../support/run-script.ts'
+import { checkDoubleBackground, denyOutputFor, formatGuardMessage } from '../../scripts/hooks/double-background-guard.ts'
+import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const SCRIPT = join(root, 'scripts', 'double-background-guard.ts')
-const PREFILTER = join(root, 'scripts', 'double-background-guard.sh')
+const SCRIPT = join(root, 'scripts', 'hooks', 'double-background-guard.ts')
+const PREFILTER = join(root, 'scripts', 'hooks', 'double-background-guard.sh')
 
 /** A PreToolUse payload in the shape the harness sends for a Bash call —
  *  identity fields present but irrelevant here, since this guard is
@@ -43,7 +43,7 @@ describe('checkDoubleBackground() — the pure predicate (issue #1208)', () => {
 
   it('DENIES: run_in_background:true stacked on the recorded merge-pr.ts regression shape', () => {
     expect(
-      checkDoubleBackground('Bash', { command: 'pnpm exec tsx scripts/merge-pr.ts 123 &', run_in_background: true }),
+      checkDoubleBackground('Bash', { command: 'pnpm exec tsx scripts/github/merge-pr.ts 123 &', run_in_background: true }),
     ).toBe(true)
   })
 
@@ -171,7 +171,6 @@ describe('the double-background-guard.sh hot-path pre-filter', () => {
   function runPrefilter(payload: unknown): string {
     return execFileSync('sh', [PREFILTER], {
       cwd: root,
-      env: envWithTsxShim(),
       input: typeof payload === 'string' ? payload : JSON.stringify(payload),
       encoding: 'utf8',
     }).trim()

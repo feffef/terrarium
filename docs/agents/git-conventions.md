@@ -33,10 +33,10 @@ branches restructured, read both sides in full.
 
 ## If a checkout is still shallow
 
-`scripts/unshallow-on-start.ts` unshallows at session start (issue #772), so a
+`scripts/hooks/unshallow-on-start.ts` unshallows at session start (issue #772), so a
 shallow checkout means its fetch failed. A shallow `merge-base` can under-report
 a diff. Run `git fetch --unshallow` before trusting any history; if that fails,
-refuse to answer from the truncated graph. `scripts/gate.ts` unshallows too,
+refuse to answer from the truncated graph. `scripts/gate/gate.ts` unshallows too,
 and runs the full gate if that fails or the clone stays shallow (issue #849).
 
 ## File lists that feed a decision need `--no-renames`

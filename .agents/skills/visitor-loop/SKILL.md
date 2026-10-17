@@ -51,7 +51,7 @@ in the session log's summary.
 
 ## 1. Serve the site
 
-On a fresh `origin/main`: `pnpm install`, `pnpm build`, then `pnpm exec tsx scripts/preview.ts start` (production
+On a fresh `origin/main`: `pnpm install`, `pnpm build`, then `pnpm exec tsx scripts/ui/preview.ts start` (production
 preview, not `--dev`: visitors must see what the public sees). Done when the
 printed `URL=` returns 200 for `/`.
 
@@ -65,7 +65,7 @@ path and note (blank if none), and a scratch
 directory unique to that visitor filled in. They get no repo context, no hints,
 no list of past findings — a primed visitor is not a first-time visitor.
 Done when all three reports are in; resume a stalled visitor with
-`SendMessage`, never by re-dispatching. Then `scripts/preview.ts stop <pid>`.
+`SendMessage`, never by re-dispatching. Then `scripts/ui/preview.ts stop <pid>`.
 
 ## 3. Tally consensus
 
@@ -121,7 +121,7 @@ or refined (or no idea is left: then step 6 is skipped).
 
 Use the session's designated branch (the cloud harness pins one); `claude/visitor-loop-fixes-<YYYY-MM-DD>` is only the fallback. Branch from `origin/main`. Fix every
 consensus finding marked *fix*, in the form step 4 left it. Prove each one in the rendered DOM, before and
-after (`docs/agents/verifying-ui-changes.md`: `probe.ts` to measure, `preview.ts shot` to screenshot; hand-roll a Playwright script only to prove a click those two can't reach, per the doc's recipe). Commit, then run **`/code-review`** before the first
+after (`docs/agents/verifying-ui-changes.md`: `eval-in-page.ts` to measure, `preview.ts shot` to screenshot; hand-roll a Playwright script only to prove a click those two can't reach, per the doc's recipe). Commit, then run **`/code-review`** before the first
 push, fixed point `origin/main`, with the refined tally as the spec. **Auto-fix every
 important finding yourself** — a real bug, a broken documented standard (an
 ADR included), an accessibility or honesty problem — never defer it to a human
