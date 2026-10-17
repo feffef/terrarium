@@ -4,10 +4,9 @@
 // nearly ship contradictory PRs for issue #555 before a human intervened.
 // The fix is a GitHub label both Skills add when they start actively
 // negotiating/building against an issue and remove when they finish or hand
-// off (success or escalation); `poll-guest-tickets.ts` and
-// `guest-intake-scan.ts` both import this module as the single home for the
-// label name, the staleness window, and the staleness check itself, rather
-// than each re-deriving them (CLAUDE.md's single-home rule). The write side
+// off (success or escalation). This module is the single home for the
+// label name, the staleness window, and the staleness check itself, so the two
+// Skills' scripts don't each re-derive them (CLAUDE.md's single-home rule). The write side
 // (adding/removing the label) lives in `.agents/skills/guest-intake/SKILL.md`
 // and `.agents/skills/guest-build/SKILL.md`; this module is the read side
 // both scan scripts share.

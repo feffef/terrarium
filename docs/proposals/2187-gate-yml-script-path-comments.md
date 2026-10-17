@@ -24,5 +24,5 @@ session cannot push `.github/workflows/` (`docs/agents/environment-caveats.md`).
 
 ## Companion change
 
-The #2187 part A PR (moves `scripts/gate.ts` to `scripts/gate/gate.ts`). The
+PR #2189 (moves `scripts/gate.ts` to `scripts/gate/gate.ts`). The
 comments are inert, so either order works; delete this file when applied.

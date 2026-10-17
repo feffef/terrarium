@@ -1,6 +1,6 @@
 // The one home for where the Journal's session logs live, how to read them
-// all (issue #1342) and how to check one (ADR-0009). log-session.ts and
-// validate-content-schema.ts both import it, so neither imports the other.
+// all (issue #1342) and how to check one (ADR-0009). A module of its own so the
+// log writer and the content validator share it without importing each other.
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { isPair, isScalar, parse as parseYaml, parseDocument, visit } from 'yaml'

@@ -1,9 +1,7 @@
-// Shared `PreToolUse` hook plumbing (issue #1080). The guards had each
-// independently reimplemented the same ~90 lines of stdin→deny-JSON→`--dry-run`
-// →bootstrap wiring around their own pure predicate; only the predicate and the
-// deny message were genuinely per-guard. This module owns the shape they share.
-// `deferred-tool-guard.ts` also builds on it, passing `failOpen: true` — it is
-// the one guard that must never deny a call it could not positively identify.
+// Shared `PreToolUse` hook plumbing (issue #1080): the stdin→deny-JSON→
+// `--dry-run`→bootstrap wiring around a guard's pure predicate. Only the
+// predicate and the deny message are per-guard. `deferred-tool-guard.ts` passes
+// `failOpen: true`: it must never deny a call it could not positively identify.
 //
 // Each guard keeps its OWN header as the single home for its rationale,
 // detection contract and residual fail-opens (`docs/agents/guards.md`) — this

@@ -2,8 +2,8 @@
 // harness template does not reliably add the trailer. This is the code
 // home for the footer's exact two-line format plus a commit-msg git-hook entry
 // point that appends it when absent, reconstructing the model name and session
-// URL repo-side — the same two values `buildLogCommit()` derives (both now share
-// `provenanceFooter()` and the model/session helpers, so the format is single-homed).
+// URL repo-side — the same two values the log commit derives, through the shared
+// `provenanceFooter()` and model/session helpers.
 //
 // The pure core (`hasProvenanceFooter` / `computeFooterAction` / `applyFooter` /
 // `correctSessionTrailer` / `correctCoAuthorLine` / `applyCorrections` /
@@ -126,9 +126,9 @@ function sessionLine(sessionUrl: string): string {
   return `Claude-Session: ${sessionUrl}`
 }
 
-/** The ADR-0017 two-line footer. The single code home for the format — reused by
- *  `buildLogCommit()` (the direct-to-`main` log commit) and by this guard, so the
- *  two can never drift (issue #346's "reuse, don't fork the footer" invariant). */
+/** The ADR-0017 two-line footer. The single code home for the format, shared
+ *  with the direct-to-`main` log commit so the two can never drift (issue #346's
+ *  "reuse, don't fork the footer" invariant). */
 export function provenanceFooter(modelName: string, sessionUrl: string): string {
   return [coAuthorLine(modelName), sessionLine(sessionUrl)].join('\n')
 }

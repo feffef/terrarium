@@ -1,9 +1,8 @@
 // Shared helper for resolving the pre-installed Chromium executable path
 // under `PLAYWRIGHT_BROWSERS_PATH` (falling back to the conventional
-// `/opt/pw-browsers` default some environments set). Extracted out of
-// `scripts/ui/screenshot.ts` (issue #202) so ad-hoc `playwright-core` probes —
-// see `docs/agents/verifying-ui-changes.md` — can import the same
-// lookup logic instead of re-deriving it by hand each session.
+// `/opt/pw-browsers` default some environments set). A module of its own so
+// ad-hoc `playwright-core` probes (`docs/agents/verifying-ui-changes.md`)
+// import the same lookup instead of re-deriving it by hand each session.
 import { accessSync, constants, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { chromium } from 'playwright-core'

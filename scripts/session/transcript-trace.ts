@@ -49,9 +49,8 @@ import { ruleAdr, ruleBlockFiles } from '../lib/adr-rules.ts'
 import { root, runIfMain } from '../lib/cli.ts'
 
 /** The one authored-scratch file per container (one session per container in the
- *  remote model). Gitignored — its home is `main`, written by the `--author` mode
- *  of log-session.ts and consumed by the SessionEnd handler. Single-homed here so
- *  both agree without a circular import. Repo-relative; each caller joins its root. */
+ *  remote model). Gitignored — its home is `main`. Single-homed here so its
+ *  writer and reader agree without a circular import. Repo-relative; each caller joins its root. */
 export const SCRATCH_DIR = '.session-logs'
 export const SCRATCH_FILE = join(SCRATCH_DIR, 'pending.scratch.json')
 
@@ -480,9 +479,8 @@ export function resolveGroundTruthFromTranscript(
 }
 
 /** `claude-opus-4-8` → `Claude Opus 4.8` — the display wording the harness's own
- *  commit template uses for the `Co-Authored-By:` line (ADR-0017). Moved here from
- *  `log-session.ts` (issue #346) so the direct-to-`main` log-commit footer and the
- *  commit-msg footer guard (`commit-trailer.ts`) share one formatter, never fork it. */
+ *  commit template uses for the `Co-Authored-By:` line (ADR-0017). One formatter
+ *  for the log-commit footer and the commit-msg footer, so they can't fork. */
 export function formatModelId(id: string): string {
   const m = /^claude-([a-z]+)-(.+)$/.exec(id)
   if (!m) return id
@@ -492,8 +490,8 @@ export function formatModelId(id: string): string {
 }
 
 /** The busiest model id in a `models` map (model id → assistant-turn count), or
- *  `undefined` for an empty map. Same tiebreak the log-commit footer already used:
- *  highest turn count, then lexical id. Single-homed for the footer guard's reuse. */
+ *  `undefined` for an empty map. Ties break by highest turn count,
+ *  then lexical id. */
 export function busiestModelId(models: Record<string, number>): string | undefined {
   const entries = Object.entries(models)
   if (entries.length === 0) return undefined
@@ -683,10 +681,8 @@ export interface SubagentRecords {
   agent?: SubagentRef
 }
 
-/** Every subagent transcript beside `transcriptPath`, read tolerantly. Callers
- *  are a Stop hook and a CLI, neither of which should die over a sibling jsonl
- *  that vanished or won't read: one lost subagent costs its reads, not the
- *  whole trace. Single-homed here so the hook and the CLI can't diverge on it.
+/** Every subagent transcript beside `transcriptPath`, read tolerantly: a sibling
+ *  jsonl that vanished or won't read costs its reads, not the whole trace.
  *  `label` is the sibling `.meta.json`'s dispatch `description`, else the agent id.
  *  `agent` is set only for a workflow agent: an Agent/Task dispatch is already
  *  in the parent's `subagents`, but a workflow's agents are not (#1876).
