@@ -1,8 +1,9 @@
 ---
 title: A friction becomes a fix
 description: How a pain-point one agent logs becomes a change to the instructions every later agent works under, through a scheduled Skill that groups, screens, fixes and merges.
-revision: 'b814fa1cbc100a9ebc249423ca536284604f5c10'
-revisionDate: '2026-10-15'
+revision: '75deb9486800d2fa8ccb7c90bb2e03b566542e8d'
+revisionDate: '2026-10-17'
+publishedAt: '2026-10-17T09:52:35Z'
 ---
 
 No one reads every session to fix what went wrong in it. Each session reports its own pain-points instead, and a scheduled agent turns the ones that recur or cost the most into fixes. This Walkthrough follows one Friction from the session that hit it, through that agent's run, to the changed instruction a later session reads.
@@ -43,31 +44,31 @@ A :term[Routine] starts a session that runs the `frictions-to-fixes` Skill, or a
 
 ## 4. A subagent reads the logs
 
-One subagent reads the logs and hands back a short ranked report. It reads every log in a recent window and files each matching Friction under an entry of the :term[Friction Ledger]: one entry per root cause, with every session that hit it. For a Friction that a doc already covers, it checks whether the session had opened that doc. If not, the instruction sits where nobody looks; if so, its wording failed.
+One subagent reads the logs and hands back a short ranked report. It reads every log in a recent window and files each matching Friction under an entry of the :term[Friction Ledger]: one entry per root cause, with every session that hit it. It commits those Ledger changes and changes nothing else.
 
 ::stop-links
-[Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · [Friction Ledger](/t/journal/current/frictions) · :file[scripts/session-frictions.ts] · :file[layers/journal/content/current/frictions/]
+[Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · [Friction Ledger](/t/journal/current/frictions) · :file[scripts/session/extract-frictions.ts] · :file[layers/journal/content/current/frictions/]
 ::
 
 ## 5. It screens out what a fix can't help
 
-The subagent drops a Friction that a merged change already fixed, one that an open issue or PR already tracks, one inside an instruction that a :term[Prune Trial] is testing, and one that only an edit to an outside pack Skill could fix. A Friction that came back after its fix merged is a regression: the run files an issue that names the fix that failed, tells the user, and doesn't try the same fix again.
+The subagent drops a Friction that a merged change already fixed, one that an open issue or PR already tracks, one inside an instruction that a :term[Prune Trial] is testing, and one that only an edit to an outside pack Skill could fix. A Friction that came back after its fix merged is a regression: the run files an issue that names the fix that failed, and doesn't try the same fix again.
 
 ::stop-links
-[Prune Trials](/t/glassbox/drafts/terrarium-practice/prune-trials) · [The Skill pack](/t/glassbox/drafts/skill-pack/skill-pack) · :file[scripts/merged-since.ts]
+[Prune Trials](/t/glassbox/drafts/terrarium-practice/prune-trials) · [The Skill pack](/t/glassbox/drafts/skill-pack/skill-pack) · :file[scripts/git/list-merges-since.ts]
 ::
 
 ## 6. The run picks what to fix
 
-The run weighs recurrence and severity together and picks a handful, few of them hard: a change to several files, or one that turns on a design choice. Each hard pick also gets an issue. A fix that would touch a :term[Human-only] file, a guard or the hook wiring is never built in this run: it gets an issue with the recommended fix instead.
+The run weighs recurrence and severity together and picks the top candidates, and one design subagent reads each occurrence's full log and designs every fix. For a Friction that a doc already covers, it checks whether the session had opened that doc: if not, the instruction sits where nobody looks; if so, its wording failed. A fix that would touch a :term[Human-only] file, a guard or the hook wiring, or that turns on a design choice a person should make, is never built in this run: it gets an issue with the design instead.
 
 ::stop-links
-[A Human-only list read from main](/t/glassbox/guide/terrarium-practice/human-only-list) · [Guards that fail closed](/t/glassbox/drafts/claude-code/guards) · [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue)
+[A Human-only list read from main](/t/glassbox/guide/terrarium-practice/human-only-list) · [Guards that fail closed](/t/glassbox/drafts/claude-code/guards) · [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · :file[.agents/skills/frictions-to-fixes/design-brief.md]
 ::
 
 ## 7. Helper agents write the fixes
 
-Helper agents write the fixes, each in a git worktree of its own, run the Gate and hand back a committed branch; they never merge. All the doc fixes go to one agent as one branch, along with this run's update to the Friction Ledger. Each code or config fix gets a branch of its own.
+Helper agents write the fixes, each in a git worktree of its own, run the Gate and hand back a committed branch; they never merge. All the doc fixes go to one agent as one branch, and each code or config fix gets a branch of its own. The run's update to the Friction Ledger goes in a PR of its own, every run, fixes or none.
 
 ::stop-links
 [Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees)
@@ -75,7 +76,7 @@ Helper agents write the fixes, each in a git worktree of its own, run the Gate a
 
 ## 8. The run reviews and merges
 
-The run reviews each branch itself, opens its PR and posts its verdict there as a comment. A clean, low-risk fix it merges through `scripts/merge-pr.ts`, which refuses without that verdict and refuses a PR that changes a Human-only file. A fix whose diff needs a human merge stays open, with the reason, for a Trusted user.
+The run reviews each branch itself, opens its PR and posts its verdict there as a comment. A clean, low-risk fix it merges through `scripts/github/merge-pr.ts`, which refuses without that verdict and refuses a PR that changes a Human-only file. A fix whose diff needs a human merge stays open, with the reason, for a Trusted user.
 
 ::stop-links
 [The Gate](/t/glassbox/guide/terrarium-practice/gate) · [Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr)
@@ -83,7 +84,7 @@ The run reviews each branch itself, opens its PR and posts its verdict there as 
 
 ## 9. The next session reads the fix
 
-The fix lands in a doc, a repo-owned Skill, a script or config. A later session that opens that doc or runs that Skill gets the new text, and its log lists that doc among the docs it read, or that Skill among the Skills it used. The Ledger entry is marked `fixed` with a date, and from then on only sessions that started after the fix count as a recurrence.
+The fix lands in a doc, a repo-owned Skill, a script or config. A later session that opens that doc or runs that Skill gets the new text, and its log lists that doc among the docs it read, or that Skill among the Skills it used. The Ledger entry records the fix's PR and the date it merged, and from then on only sessions that started after the fix count as a recurrence.
 
 ::stop-links
 [Skills](/t/glassbox/guide/claude-code/skills) · [CLAUDE.md as the every-session contract](/t/glassbox/guide/claude-code/claude-md) · [Friction Ledger](/t/journal/current/frictions)
@@ -91,7 +92,7 @@ The fix lands in a doc, a repo-owned Skill, a script or config. A later session 
 
 ## A real case
 
-In July 2026 a session waited about two hours on a PR's CI. It had called `ScheduleWakeup` to wake it later, but that tool paces `/loop`, and nothing woke the session. An issue filed from the logged Friction added a line to an agent doc (#241), and a later `frictions-to-fixes` run added another (#425). On 31 July two scheduled sessions made the same mistake; neither had any reason to open that doc. A run filed it as a regression (#814), and the owner chose both a line in CLAUDE.md and a guard. Since PR #843, :file[scripts/loop-only-tool-guard.ts] denies a new wakeup outside `/loop`, and its message says what to use instead.
+In July 2026 a session waited about two hours on a PR's CI. It had called `ScheduleWakeup` to wake it later, but that tool paces `/loop`, and nothing woke the session. An issue filed from the logged Friction added a line to an agent doc (#241), and a later `frictions-to-fixes` run added another (#425). On 31 July two scheduled sessions made the same mistake; neither had any reason to open that doc. A run filed it as a regression (#814), and the owner chose both a line in CLAUDE.md and a guard. Since PR #843, :file[scripts/hooks/loop-only-tool-guard.ts] denies a new wakeup outside `/loop`, and its message says what to use instead.
 
 ## Where next
 

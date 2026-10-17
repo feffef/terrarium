@@ -1,8 +1,8 @@
 ---
 title: A session log lands on main
 description: How an agent session's own record of its work reaches main without a PR, from the agent's judgement to one commit built with git's plumbing commands.
-revision: 'b814fa1cbc100a9ebc249423ca536284604f5c10'
-revisionDate: '2026-10-15'
+revision: '75deb9486800d2fa8ccb7c90bb2e03b566542e8d'
+revisionDate: '2026-10-17'
 ---
 
 An agent session finishes a piece of work and writes down what happened. This Walkthrough follows that record from the agent's side: from the moment the session judges its work done, through the hooks that complete the record from the transcript, to one commit on `main` that holds nothing else. It ends where the log is read.
@@ -17,7 +17,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 
 ## 2. The agent writes only its judgement
 
-`close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the docs and Skills that mattered, and every :term[Friction]. `scripts/log-session.ts --author` checks those fields and saves them as a scratch file, `.session-logs/pending.scratch.json`, which git ignores, so nothing is committed yet. Run again later in the session, the command merges the new pass with the earlier one. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
+`close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the docs and Skills that mattered, and every :term[Friction]. `scripts/session/log-session.ts --author` checks those fields and saves them as a scratch file, `.session-logs/pending.scratch.json`, which git ignores, so nothing is committed yet. Run again later in the session, the command merges the new pass with the earlier one. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
 
 ::stop-links
 [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · :file[.agents/skills/log-session/SKILL.md]
@@ -33,10 +33,10 @@ When Claude finishes responding, Claude Code fires the `Stop` hook wired in `.cl
 
 ## 4. The transcript supplies the facts
 
-Nobody writes the rest of the log: `scripts/session-trace.ts` reads the transcript, the JSON Lines file in which Claude Code records every message and tool call, and derives the timings, models, tool counts, files read and edited, subagents, Skills used and rules loaded, folding in each subagent's own transcript, which sits beside its parent's. A doc read through the shell instead of the Read tool counts only when the command's output shows enough of that instruction doc's distinctive lines: long lines that appear in no other doc, which `scripts/shell-reads.ts` looks for in the output. A Skill started as a slash command, the way a Routine starts a run, appears in the transcript as the command's expanded text rather than as a tool call, and is counted from that; the trace and the scratch are then stitched into one entry.
+Nobody writes the rest of the log: `scripts/session/transcript-trace.ts` reads the transcript, the JSON Lines file in which Claude Code records every message and tool call, and derives the timings, models, tool counts, files read and edited, subagents, Skills used and rules loaded, folding in each subagent's own transcript, which sits beside its parent's. A doc read through the shell instead of the Read tool counts only when the command's output shows enough of that instruction doc's distinctive lines: long lines that appear in no other doc, which `scripts/session/shell-reads.ts` looks for in the output. A Skill started as a slash command, the way a Routine starts a run, appears in the transcript as the command's expanded text rather than as a tool call, and is counted from that; the trace and the scratch are then stitched into one entry.
 
 ::stop-links
-[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · :file[scripts/shell-reads.ts]
+[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · :file[scripts/session/shell-reads.ts]
 ::
 
 ## 5. The entry is checked against main
@@ -51,14 +51,14 @@ The stitched entry must pass the session schema, and its file name is fixed: the
 
 A normal `git commit` takes what the session has staged, on whatever branch it is on. The lander uses git's [plumbing commands](https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain) instead, the low-level commands meant for scripts, with an index file of its own in a temporary folder. It loads `origin/main`'s tree into that index, stores the log as a blob, adds the blob at the log's path, writes the tree and makes a commit whose one parent is `main`. The working copy and the session's branch never change:
 
-::excerpt{path="scripts/log-session.ts" lines="366-378"}
+::excerpt{path="scripts/session/log-session.ts" lines="274-286"}
 ```ts
-    git(['read-tree', base], { env: idxEnv, cwd }) // start from main's tree
-    const blob = git(['hash-object', '-w', absPath], { cwd })
-    git(['update-index', '--add', '--cacheinfo', `100644,${blob},${relPath}`], { env: idxEnv, cwd })
-    const tree = git(['write-tree'], { env: idxEnv, cwd })
+    git(['read-tree', base], cwd, { env: idxEnv }) // start from main's tree
+    const blob = git(['hash-object', '-w', absPath], cwd).trim()
+    git(['update-index', '--add', '--cacheinfo', `100644,${blob},${relPath}`], cwd, { env: idxEnv })
+    const tree = git(['write-tree'], cwd, { env: idxEnv }).trim()
     // …
-    const commit = git(['commit-tree', tree, '-p', base, '-m', subject, '-m', trailer], { env, cwd })
+    const commit = git(['commit-tree', tree, '-p', base, '-m', subject, '-m', trailer], cwd, { env }).trim()
 ```
 ::
 

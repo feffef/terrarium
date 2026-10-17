@@ -1,8 +1,8 @@
 ---
 title: A bug report becomes work
 description: How a visitor's issue reaches a merged fix, through a sweep that reads who wrote it, a person's approval, a session that builds it and a merge a person makes.
-revision: 'b814fa1cbc100a9ebc249423ca536284604f5c10'
-revisionDate: '2026-10-15'
+revision: '75deb9486800d2fa8ccb7c90bb2e03b566542e8d'
+revisionDate: '2026-10-17'
 ---
 
 A visitor finds something broken and opens an issue. This Walkthrough follows that issue from the tracker's side: a triage sweep reads who wrote it and labels it, a person approves it, a session builds the fix, and a person merges it, which closes the issue.

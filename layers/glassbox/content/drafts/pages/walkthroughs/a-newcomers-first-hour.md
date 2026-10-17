@@ -1,8 +1,8 @@
 ---
 title: A newcomer's first hour
 description: How a developer new to Terrarium finds their way in, from the home page through the Journal's short tour to the files every agent session reads first.
-revision: 'a93faa0135f652b85b4976418534243f649e58b9'
-revisionDate: '2026-10-15'
+revision: '75deb9486800d2fa8ccb7c90bb2e03b566542e8d'
+revisionDate: '2026-10-17'
 ---
 
 A developer has just heard of Terrarium and has an hour to spare. This Walkthrough follows them from the home page, through the Journal's short tour of how the place works, into the repository, where they read the same files every agent session reads first. It ends where the Lessons here take over.
