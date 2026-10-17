@@ -57,7 +57,7 @@ export function parseNextLink(linkHeader: string | null): string | null {
 
 export function hasGhBinary(cwd: string): boolean {
   try {
-    execFileSync('gh', ['--version'], { cwd, stdio: 'ignore' })
+    runGh(['--version'], cwd)
     return true
   } catch {
     return false
@@ -145,13 +145,24 @@ export function curlPage(
   }
 }
 
-function assertOk(status: string, url: string): void {
-  if (status[0] !== '2') throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
+function assertOk({ status, body }: RestPage, method: HttpMethod, url: string): void {
+  if (status[0] !== '2') throw new Error(`GitHub REST API ${method} ${url} failed: HTTP ${status}: ${body}`)
+}
+
+/** The one `gh api` call: `args` after `gh`, stdout returned. A failure's stderr
+ *  rides on the thrown error. */
+function runGh(args: string[], cwd: string): string {
+  return execFileSync('gh', args, {
+    cwd,
+    encoding: 'utf8',
+    maxBuffer: 256 * 1024 * 1024,
+    stdio: ['ignore', 'pipe', 'pipe'],
+  })
 }
 
 /** A page's records, and whether another page follows by its `Link` header. */
 export function parseRestPage<T>(page: RestPage, url: string): { records: T[]; more: boolean } {
-  assertOk(page.status, url)
+  assertOk(page, 'GET', url)
   let records: T[]
   try {
     records = JSON.parse(page.body) as T[]
@@ -178,17 +189,13 @@ export function repoPath(a: Access, path: string): string {
 export function requestJson<T>(a: Access, method: HttpMethod, path: string, fields?: Record<string, string>): T {
   const full = repoPath(a, path)
   if (a.strategy === 'gh') {
-    const raw = execFileSync('gh', ghRequestArgs(method, full, fields), {
-      cwd: a.cwd,
-      encoding: 'utf8',
-      maxBuffer: 256 * 1024 * 1024,
-      stdio: ['ignore', 'pipe', 'pipe'], // a failure's stderr rides on the thrown error
-    })
+    const raw = runGh(ghRequestArgs(method, full, fields), a.cwd)
     return (raw.trim() ? JSON.parse(raw) : undefined) as T
   }
   const url = `https://api.github.com/${full}`
-  const { status, body } = curlPage(url, a.token, a.cwd, { method, json: fields })
-  if (status[0] !== '2') throw new Error(`GitHub REST API ${method} ${url} failed: HTTP ${status}: ${body}`)
+  const page = curlPage(url, a.token, a.cwd, { method, json: fields })
+  assertOk(page, method, url)
+  const { body } = page
   return (body.length > 0 ? JSON.parse(body) : undefined) as T
 }
 
@@ -200,20 +207,19 @@ export function getJson<T>(a: Access, path: string): T {
 /** Walks pages by NUMBER on our own URL and never follows GitHub's `Link` URL:
  *  for `pulls` its `rel="next"` is the numeric `repositories/{id}/…` form this
  *  environment's agent proxy 403s (#848, #1514). A page says whether another
- *  follows (`more`); without that, a page shorter than `perPage` is the last.
+ *  follows (`more`).
  *  Throws on any mid-walk failure rather than return the pages already read: a
  *  partial listing that reads as complete is the failure #738 and #848 removed.
  *  `hint` is appended to that error for callers whose verdict a partial read
  *  would corrupt. */
-export function paginate<T>(
+function paginate<T>(
   pageUrl: (page: number) => string,
-  fetchPage: (url: string) => { records: T[]; more?: boolean },
-  perPage = PER_PAGE,
+  fetchPage: (url: string) => { records: T[]; more: boolean },
   hint = '',
 ): T[] {
   const out: T[] = []
   for (let page = 1; ; page++) {
-    let result: { records: T[]; more?: boolean }
+    let result: { records: T[]; more: boolean }
     try {
       result = fetchPage(pageUrl(page))
     } catch (err) {
@@ -221,7 +227,7 @@ export function paginate<T>(
       throw new Error(`paged listing INCOMPLETE at page ${page} after ${out.length} record(s): ${cause}${hint}`, { cause: err })
     }
     out.push(...result.records)
-    if (!(result.more ?? result.records.length >= perPage)) return out
+    if (!result.more) return out
   }
 }
 
@@ -242,12 +248,7 @@ export function listAll<T>(
     `${a.strategy === 'gh' ? '' : 'https://api.github.com/'}${full}?${new URLSearchParams({ ...params, per_page: String(PER_PAGE), page: String(page) })}`
   const fetchRaw = (pageUrl: string): { records: T[]; more: boolean } => {
     if (a.strategy === 'rest') return parseRestPage<T>(curlPage(pageUrl, a.token, a.cwd, { accept }), pageUrl)
-    const raw = execFileSync('gh', ['api', '--method', 'GET', pageUrl, ...(accept ? ['-H', `Accept: ${accept}`] : [])], {
-      cwd: a.cwd,
-      encoding: 'utf8',
-      maxBuffer: 256 * 1024 * 1024,
-      stdio: ['ignore', 'pipe', 'pipe'], // a failure's stderr rides on the thrown error
-    })
+    const raw = runGh(['api', '--method', 'GET', pageUrl, ...(accept ? ['-H', `Accept: ${accept}`] : [])], a.cwd)
     const records = JSON.parse(raw) as T[]
     return { records, more: records.length >= PER_PAGE }
   }
@@ -257,7 +258,6 @@ export function listAll<T>(
       const { records, more } = fetchRaw(pageUrl)
       return { records, more: more && records.length > 0 && !until?.(records) }
     },
-    PER_PAGE,
     hint,
   )
 }

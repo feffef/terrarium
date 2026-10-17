@@ -7,37 +7,11 @@ import {
   ghRequestArgs,
   listAll,
   PER_PAGE,
-  paginate,
   parseNextLink,
   parseOwnerRepo,
   parseRestPage,
   pickFetchStrategy,
-  type RestPage,
 } from '../../scripts/lib/github-client.ts'
-
-describe('paginate()', () => {
-  const url = (page: number) => `u${page}`
-
-  it('stops when a page says there is no more, whatever its length', () => {
-    const pages = [{ records: [1, 2], more: true }, { records: [3], more: false }]
-    expect(paginate<number>(url, (u) => pages[Number(u.slice(1)) - 1]!)).toEqual([1, 2, 3])
-  })
-
-  it('without `more`, a page shorter than perPage is the last', () => {
-    const pages = [[1, 2], [3]]
-    expect(paginate<number>(url, (u) => ({ records: pages[Number(u.slice(1)) - 1]! }), 2)).toEqual([1, 2, 3])
-  })
-
-  it('names the page, the records so far and the hint when a page fails', () => {
-    const fetchPage = (u: string) => {
-      if (u === 'u2') throw new Error('boom')
-      return { records: [1], more: true }
-    }
-    expect(() => paginate<number>(url, fetchPage, 100, ' (hint)')).toThrow(
-      'paged listing INCOMPLETE at page 2 after 1 record(s): boom (hint)',
-    )
-  })
-})
 
 describe('parseRestPage()', () => {
   it('reads records and the Link header as the more-signal', () => {
@@ -128,67 +102,6 @@ describe('ghRequestArgs()', () => {
   })
 })
 
-describe('paginate() over REST pages, by number', () => {
-  const walkPagesByNumber = <T>(pageUrl: (page: number) => string, fetchPage: (url: string) => RestPage): T[] =>
-    paginate<T>(pageUrl, (url) => parseRestPage<T>(fetchPage(url), url))
-
-  // The real shape of GitHub's `rel="next"` on the `pulls` endpoint: the
-  // numeric `repositories/{id}/…` form this environment's agent proxy rejects
-  // (issue #848). A walker that follows it verbatim 403s on page 2.
-  const NUMERIC_NEXT_LINK =
-    '<https://api.github.com/repositories/1300192/pulls/42/files?per_page=100&page=2>; rel="next", ' +
-    '<https://api.github.com/repositories/1300192/pulls/42/files?per_page=100&page=2>; rel="last"'
-
-  const pageUrl = (page: number) =>
-    `https://api.github.com/repos/feffef/terrarium/pulls/42/files?per_page=100&page=${page}`
-
-  /** A fixture fetcher: serves `pages` in order and records every URL asked for. */
-  function fixtureFetcher(pages: RestPage[]): { fetchPage: (url: string) => RestPage; requested: string[] } {
-    const requested: string[] = []
-    let index = 0
-    return {
-      requested,
-      fetchPage: (url) => {
-        requested.push(url)
-        const page = pages[index++]
-        if (!page) throw new Error(`fixture exhausted: unexpected request for ${url}`)
-        return page
-      },
-    }
-  }
-
-  it('reaches page 2 by number instead of following the numeric next link', () => {
-    const { fetchPage, requested } = fixtureFetcher([
-      { status: '200', body: JSON.stringify([{ filename: 'a.ts' }]), linkHeader: NUMERIC_NEXT_LINK },
-      { status: '200', body: JSON.stringify([{ filename: 'b.ts' }]), linkHeader: null },
-    ])
-    expect(walkPagesByNumber(pageUrl, fetchPage)).toEqual([{ filename: 'a.ts' }, { filename: 'b.ts' }])
-    expect(requested).toEqual([pageUrl(1), pageUrl(2)])
-    expect(requested.some((url) => url.includes('/repositories/'))).toBe(false)
-  })
-
-  it('stops after one page when there is no next link', () => {
-    const { fetchPage, requested } = fixtureFetcher([
-      { status: '200', body: JSON.stringify([{ filename: 'a.ts' }]), linkHeader: null },
-    ])
-    expect(walkPagesByNumber(pageUrl, fetchPage)).toEqual([{ filename: 'a.ts' }])
-    expect(requested).toEqual([pageUrl(1)])
-  })
-
-  it('throws an explicit incomplete-scan error on a mid-walk rejection, never the short list', () => {
-    const { fetchPage } = fixtureFetcher([
-      { status: '200', body: JSON.stringify([{ filename: 'a.ts' }]), linkHeader: NUMERIC_NEXT_LINK },
-      { status: '403', body: 'Numeric-ID repository paths are not supported through this proxy', linkHeader: null },
-    ])
-    expect(() => walkPagesByNumber(pageUrl, fetchPage)).toThrow(/INCOMPLETE at page 2 after 1 record/)
-  })
-
-  it('throws an explicit incomplete-scan error on a malformed page body', () => {
-    const { fetchPage } = fixtureFetcher([{ status: '200', body: '<html>nope</html>', linkHeader: null }])
-    expect(() => walkPagesByNumber(pageUrl, fetchPage)).toThrow(/INCOMPLETE at page 1 after 0 record/)
-  })
-})
-
 describe('listAll() over REST', () => {
   let dir: string
   const path = process.env.PATH
@@ -197,13 +110,69 @@ describe('listAll() over REST', () => {
     rmSync(dir, { recursive: true, force: true })
   })
 
-  it('carries its hint into the error a failed page throws', () => {
+  const access = { owner: 'o', repo: 'r', cwd: process.cwd(), strategy: 'rest' as const, token: 't' }
+  // The real shape of GitHub's `rel="next"` on the `pulls` endpoint: the
+  // numeric `repositories/{id}/…` form this environment's agent proxy rejects
+  // (issue #848). A walker that follows it verbatim 403s on page 2.
+  const NUMERIC_NEXT_LINK =
+    '<https://api.github.com/repositories/1/pulls?per_page=100&page=2>; rel="next", ' +
+    '<https://api.github.com/repositories/1/pulls?per_page=100&page=2>; rel="last"'
+  const pageUrl = (n: number) => `https://api.github.com/repos/o/r/pulls?per_page=${PER_PAGE}&page=${n}`
+
+  // A `curl` serving `pages` in call order and logging each requested URL.
+  function fakeCurl(pages: { status: string; body: string; link?: string }[]): () => string[] {
     dir = mkdtempSync(join(tmpdir(), 'fake-curl-'))
-    // A curl that answers HTTP 500 for every request.
-    writeFileSync(join(dir, 'curl'), '#!/bin/sh\nwhile [ $# -gt 0 ]; do [ "$1" = -o ] && : > "$2"; [ "$1" = -D ] && : > "$2"; shift; done\nprintf 500\n')
+    writeFileSync(join(dir, 'pages.json'), JSON.stringify(pages))
+    writeFileSync(
+      join(dir, 'curl'),
+      `#!/usr/bin/env node
+const fs = require('node:fs')
+const a = process.argv.slice(2)
+const val = (f) => a[a.indexOf(f) + 1]
+fs.appendFileSync(${JSON.stringify(join(dir, 'urls.log'))}, a[a.length - 1] + '\\n')
+const n = fs.readFileSync(${JSON.stringify(join(dir, 'urls.log'))}, 'utf8').trim().split('\\n').length - 1
+const p = JSON.parse(fs.readFileSync(${JSON.stringify(join(dir, 'pages.json'))}, 'utf8'))[n]
+if (!p) process.exit(7)
+fs.writeFileSync(val('-o'), p.body)
+fs.writeFileSync(val('-D'), p.link ? 'HTTP/2 ' + p.status + '\\r\\nLink: ' + p.link + '\\r\\n' : '')
+process.stdout.write(p.status)
+`,
+    )
     chmodSync(join(dir, 'curl'), 0o755)
     process.env.PATH = `${dir}${delimiter}${path}`
-    const access = { owner: 'o', repo: 'r', cwd: process.cwd(), strategy: 'rest' as const, token: 't' }
+    return () => readFileSync(join(dir, 'urls.log'), 'utf8').trim().split('\n')
+  }
+
+  it('reaches page 2 by number instead of following the numeric next link', () => {
+    const requested = fakeCurl([
+      { status: '200', body: '[1]', link: NUMERIC_NEXT_LINK },
+      { status: '200', body: '[2]' },
+    ])
+    expect(listAll<number>(access, 'pulls')).toEqual([1, 2])
+    expect(requested()).toEqual([pageUrl(1), pageUrl(2)])
+  })
+
+  it('stops after one page when there is no next link, whatever its length', () => {
+    const requested = fakeCurl([{ status: '200', body: '[1]' }])
+    expect(listAll<number>(access, 'pulls')).toEqual([1])
+    expect(requested()).toEqual([pageUrl(1)])
+  })
+
+  it('throws an incomplete-listing error on a mid-walk rejection, never the short list', () => {
+    fakeCurl([
+      { status: '200', body: '[1]', link: NUMERIC_NEXT_LINK },
+      { status: '403', body: 'Numeric-ID repository paths are not supported through this proxy' },
+    ])
+    expect(() => listAll(access, 'pulls')).toThrow(/INCOMPLETE at page 2 after 1 record.*HTTP 403/)
+  })
+
+  it('throws an incomplete-listing error on a malformed page body', () => {
+    fakeCurl([{ status: '200', body: '<html>nope</html>' }])
+    expect(() => listAll(access, 'pulls')).toThrow(/INCOMPLETE at page 1 after 0 record/)
+  })
+
+  it('carries its hint into the error a failed page throws', () => {
+    fakeCurl([{ status: '500', body: '' }])
     expect(() => listAll(access, 'issues', {}, { hint: ' (HINT-MARK)' })).toThrow(/INCOMPLETE at page 1.*HTTP 500.*\(HINT-MARK\)/)
   })
 })
@@ -216,8 +185,8 @@ describe('listAll() over gh', () => {
     rmSync(dir, { recursive: true, force: true })
   })
 
-  // A `gh` that logs its argv and serves a full first page, then a short one.
-  function fakeGh(): string {
+  // A `gh` that logs its argv and serves a full first page, then page 2 per `second`.
+  function fakeGh(second: 'short' | 'empty' | 'fail' = 'short'): string {
     dir = mkdtempSync(join(tmpdir(), 'fake-gh-'))
     const log = join(dir, 'argv.log')
     writeFileSync(
@@ -227,7 +196,9 @@ const fs = require('node:fs')
 fs.appendFileSync(${JSON.stringify(log)}, JSON.stringify(process.argv.slice(2)) + '\\n')
 const url = process.argv.find((a) => a.startsWith('repos/')) ?? ''
 const page = Number(new URL('https://x/' + url).searchParams.get('page'))
-process.stdout.write(JSON.stringify(page === 1 ? Array.from({ length: ${PER_PAGE} }, (_, i) => i) : [${PER_PAGE}]))
+if (page > 1 && ${JSON.stringify(second)} === 'fail') { console.error('boom'); process.exit(1) }
+const rest = ${JSON.stringify(second)} === 'empty' ? [] : [${PER_PAGE}]
+process.stdout.write(JSON.stringify(page === 1 ? Array.from({ length: ${PER_PAGE} }, (_, i) => i) : rest))
 `,
     )
     chmodSync(join(dir, 'gh'), 0o755)
@@ -246,6 +217,17 @@ process.stdout.write(JSON.stringify(page === 1 ? Array.from({ length: ${PER_PAGE
       `repos/o/r/pulls?state=closed&per_page=${PER_PAGE}&page=2`,
     ])
     expect(calls.flat()).not.toContain('--paginate')
+  })
+
+  it('stops on an empty page when the last full page was exactly per_page long', () => {
+    const log = fakeGh('empty')
+    expect(listAll<number>(access, 'pulls')).toHaveLength(PER_PAGE)
+    expect(readFileSync(log, 'utf8').trim().split('\n')).toHaveLength(2)
+  })
+
+  it('throws on a later-page failure instead of returning the pages already read', () => {
+    fakeGh('fail')
+    expect(() => listAll(access, 'pulls')).toThrow(new RegExp(`INCOMPLETE at page 2 after ${PER_PAGE} record\\(s\\)`))
   })
 
   it('stops early once `until` says the page is past its cutoff', () => {

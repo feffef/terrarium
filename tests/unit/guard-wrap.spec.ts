@@ -1,5 +1,5 @@
 // Coverage for scripts/hooks/guard-wrap.sh (issue #1223): the shared wiring that
-// stops a fail-closed guard's crash-before-`runIfMain`'s-try/catch (a `tsx`
+// stops a fail-closed guard's crash-before-`runGuard`'s-try/catch (a `tsx`
 // cold-start failure, a module-resolution error, a throw during import) from
 // reading as a silent allow. A plain unit test can't observe the live
 // `.claude/settings.json`-wired interception (docs/agents/guards.md's own

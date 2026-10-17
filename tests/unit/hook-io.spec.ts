@@ -14,13 +14,13 @@ function run(mode: 'throw' | 'reject', failOpen: boolean): string {
   const script = join(dir, `${mode}-${failOpen}.ts`)
   writeFileSync(
     script,
-    `import { runIfMain } from ${JSON.stringify(hookIo)}\n` +
-      `runIfMain(import.meta.url, { main: ${mode === 'throw' ? `() => { throw new Error('boom') }` : `async () => { throw new Error('boom') }`}, label: 'test guard', ref: 'issue #0', failOpen: ${failOpen} })\n`,
+    `import { runGuard } from ${JSON.stringify(hookIo)}\n` +
+      `runGuard(import.meta.url, { main: ${mode === 'throw' ? `() => { throw new Error('boom') }` : `async () => { throw new Error('boom') }`}, label: 'test guard', ref: 'issue #0', failOpen: ${failOpen} })\n`,
   )
   return runTsx(script, { input: '{}' }).trim()
 }
 
-describe('runIfMain() crash handling', () => {
+describe('runGuard() crash handling', () => {
   it.each(['throw', 'reject'] as const)('a guard whose main %ss prints a deny', (mode) => {
     const out = JSON.parse(run(mode, false))
     expect(out.hookSpecificOutput.permissionDecision).toBe('deny')

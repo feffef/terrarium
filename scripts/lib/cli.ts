@@ -1,15 +1,14 @@
-// What every script CLI shares (#2185). Guards use `hooks/hook-io.ts` instead:
-// they must deny on a crash, where `runIfMain` here exits 1.
+// Guards use `hooks/hook-io.ts` instead: they must deny on a crash, where
+// `runIfMain` here exits 1.
 import { realpathSync } from 'node:fs'
 import { basename, dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 // Not re-exported from shared/expand.ts: that pulls in jiti and zod, ~45ms on
-// every hint run that reaches this module through validate-adr-rules.ts.
+// every hook run, and every hook imports this module.
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
-/** Print `<script>: msg` and exit 1. The prefix is the entry script's name,
- *  which is what every copy hard-coded. */
+/** Print `<script>: msg` and exit 1. The prefix is the entry script's name. */
 export function fail(msg: string): never {
   console.error(`${basename(process.argv[1] ?? '', '.ts')}: ${msg}`)
   process.exit(1)

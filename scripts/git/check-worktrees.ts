@@ -182,14 +182,6 @@ export function sweep(states: WorktreeState[]): SweepResult {
 
 // ── Git shell (thin) ─────────────────────────────────────────────────────────
 
-/** Like `git()`, but for a probe that's *expected* to fail some of the time
- *  (e.g. no upstream configured) — `null` on failure instead of throwing, and
- *  stderr suppressed so an expected failure doesn't read as a live error. */
-function probe(args: string[], cwd: string): string | null {
-  const r = tryGit(args, cwd)
-  return r.ok ? r.out.trim() : null
-}
-
 function isDirty(path: string): boolean {
   return git(['status', '--porcelain'], path).trim().length > 0
 }
@@ -200,15 +192,14 @@ function isDirty(path: string): boolean {
  *  contained in a pushed branch is rescued. `null` when there is no
  *  `origin/main` to compare against. */
 export function unpushedCount(path: string): number | null {
-  const upstream = probe(['rev-parse', '--abbrev-ref', '@{upstream}'], path)
-  if (upstream !== null) {
-    const count = probe(['rev-list', '--count', `${upstream}..HEAD`], path)
-    return count === null ? null : Number.parseInt(count, 10)
+  const upstream = tryGit(['rev-parse', '--abbrev-ref', '@{upstream}'], path)
+  if (upstream.ok) {
+    const count = tryGit(['rev-list', '--count', `${upstream.out.trim()}..HEAD`], path)
+    return count.ok ? Number.parseInt(count.out, 10) : null
   }
-  const mergeBase = probe(['merge-base', 'origin/main', 'HEAD'], path)
-  if (mergeBase === null) return null
-  const count = probe(['rev-list', '--count', 'HEAD', '--not', '--remotes'], path)
-  return count === null ? null : Number.parseInt(count, 10)
+  if (!tryGit(['merge-base', 'origin/main', 'HEAD'], path).ok) return null
+  const count = tryGit(['rev-list', '--count', 'HEAD', '--not', '--remotes'], path)
+  return count.ok ? Number.parseInt(count.out, 10) : null
 }
 
 /** True when `head` is already reachable from `origin/main` — this
@@ -240,7 +231,7 @@ export function contentMatchesRemoteCommit(path: string): boolean {
     const env = { ...process.env, GIT_INDEX_FILE: index }
     git(['add', '-A'], path, { env, stdio: 'ignore' })
     const tree = git(['write-tree'], path, { env }).trim()
-    return (probe(['log', '--remotes', '--format=%T'], path) ?? '').split('\n').includes(tree)
+    return tryGit(['log', '--remotes', '--format=%T'], path).out.trim().split('\n').includes(tree)
   } catch {
     return false
   } finally {

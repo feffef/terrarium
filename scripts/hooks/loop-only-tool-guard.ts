@@ -29,7 +29,7 @@ import {
   readTranscript,
   requireToolFlag,
   resolveDryRunInput,
-  runIfMain,
+  runGuard,
   type DenyOutput,
 } from './hook-io.ts'
 import { flagValue } from '../lib/cli.ts'
@@ -211,4 +211,4 @@ export function main(): void {
   if (output) process.stdout.write(JSON.stringify(output))
 }
 
-runIfMain(import.meta.url, { main, dryRun, label: LABEL, ref: REF })
+runGuard(import.meta.url, { main, dryRun, label: LABEL, ref: REF })

@@ -45,7 +45,7 @@ import {
   readHookPayload,
   requireToolFlag,
   resolveDryRunInput,
-  runIfMain,
+  runGuard,
   type DenyOutput,
 } from './hook-io.ts'
 
@@ -186,4 +186,4 @@ function dryRun(argv: string[]): void {
   })
 }
 
-runIfMain(import.meta.url, { main, dryRun, label: LABEL, ref: REF })
+runGuard(import.meta.url, { main, dryRun, label: LABEL, ref: REF })

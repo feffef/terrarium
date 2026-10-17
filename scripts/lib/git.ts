@@ -24,10 +24,14 @@ export interface RawMergeCommit {
  *  of duplicating the number per call site. */
 export const FETCH_TIMEOUT_MS = 10_000
 
-/** Run git in `cwd`; stdout as-is, untrimmed. Throws on a non-zero exit. `stdio`
- *  and `env` are the caller's to set; stderr is inherited unless `stdio` says
- *  otherwise. */
-export function git(args: string[], cwd?: string, opts: { env?: NodeJS.ProcessEnv; stdio?: StdioOptions } = {}): string {
+/** Run git in `cwd`; stdout as-is, untrimmed. Throws on a non-zero exit. `stdio`,
+ *  `env` and `timeout` are the caller's to set; stderr is inherited unless
+ *  `stdio` says otherwise. */
+export function git(
+  args: string[],
+  cwd?: string,
+  opts: { env?: NodeJS.ProcessEnv; stdio?: StdioOptions; timeout?: number } = {},
+): string {
   return execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, ...opts })
 }
 
@@ -71,7 +75,7 @@ export const UNSHALLOW_TIMEOUT_MS = 30_000
  *  answer: see `docs/agents/git-conventions.md` for what a shallow clone
  *  silently gets wrong (blame/pickaxe archaeology, and `merge-base`). */
 export function isShallowRepository(cwd: string): boolean {
-  return execFileSync('git', ['rev-parse', '--is-shallow-repository'], { cwd, encoding: 'utf8' }).trim() === 'true'
+  return git(['rev-parse', '--is-shallow-repository'], cwd).trim() === 'true'
 }
 
 /** Complete a shallow clone's history in place, so commit-graph reads
@@ -90,11 +94,7 @@ export function isShallowRepository(cwd: string): boolean {
  *  caller's decision under noise (#930). Default stays inherited so a real
  *  (non-dry) run keeps that output for debugging. */
 export function unshallow(cwd: string, timeoutMs = UNSHALLOW_TIMEOUT_MS, quiet = false): void {
-  execFileSync('git', ['fetch', '--unshallow'], {
-    cwd,
-    stdio: ['ignore', 'ignore', quiet ? 'ignore' : 'inherit'],
-    timeout: timeoutMs,
-  })
+  git(['fetch', '--unshallow'], cwd, { stdio: ['ignore', 'ignore', quiet ? 'ignore' : 'inherit'], timeout: timeoutMs })
 }
 
 /** True when `<remote>/HEAD` is already a symbolic ref pointing at the
@@ -103,19 +103,14 @@ export function unshallow(cwd: string, timeoutMs = UNSHALLOW_TIMEOUT_MS, quiet =
  *  `/security-review`'s `git diff origin/HEAD...`). Callers should check this
  *  before `setOriginHead` so the common (already-set) case does no extra work. */
 export function hasOriginHead(cwd: string, remote = 'origin'): boolean {
-  try {
-    execFileSync('git', ['symbolic-ref', '-q', `refs/remotes/${remote}/HEAD`], { cwd, stdio: 'ignore' })
-    return true
-  } catch {
-    return false
-  }
+  return tryGit(['symbolic-ref', '-q', `refs/remotes/${remote}/HEAD`], cwd).ok
 }
 
 /** Auto-detect and set `<remote>/HEAD` from the remote itself. Gate this on
  *  `!hasOriginHead` first — see its doc comment for why the ref can be
  *  missing at all. */
 export function setOriginHead(cwd: string, remote = 'origin'): void {
-  execFileSync('git', ['remote', 'set-head', remote, '-a'], { cwd, stdio: 'ignore' })
+  git(['remote', 'set-head', remote, '-a'], cwd, { stdio: 'ignore' })
 }
 
 /** Bring the local `<remote>/main` ref up to date before it's read. Without
@@ -141,11 +136,7 @@ export function fetchOriginMain(
   quiet = false,
 ): void {
   try {
-    execFileSync('git', ['fetch', remote, 'main'], {
-      cwd,
-      stdio: ['ignore', 'ignore', quiet ? 'ignore' : 'inherit'],
-      timeout: timeoutMs,
-    })
+    git(['fetch', remote, 'main'], cwd, { stdio: ['ignore', 'ignore', quiet ? 'ignore' : 'inherit'], timeout: timeoutMs })
   } catch (err) {
     if (isFetchTimeout(err)) {
       throw new Error(`git fetch ${remote} main timed out after ${timeoutMs}ms`, { cause: err })
@@ -167,16 +158,9 @@ export const SESSION_TRAILER = /Claude-Session:\s*\S*\/(\S+)/
  *  string. Leaves PR-merge-vs-other-merge filtering to the caller. */
 export function readMergeCommits(cwd: string, remote = 'origin'): RawMergeCommit[] {
   fetchOriginMain(cwd, remote)
-  const raw = execFileSync(
-    'git',
-    [
-      'log',
-      `${remote}/main`,
-      '--merges',
-      '--date=iso-strict',
-      `--format=%H${FIELD_SEP}%cd${FIELD_SEP}%s${FIELD_SEP}%b${RECORD_SEP}`,
-    ],
-    { cwd, encoding: 'utf8' },
+  const raw = git(
+    ['log', `${remote}/main`, '--merges', '--date=iso-strict', `--format=%H${FIELD_SEP}%cd${FIELD_SEP}%s${FIELD_SEP}%b${RECORD_SEP}`],
+    cwd,
   )
   return raw
     .split(RECORD_SEP)

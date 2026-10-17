@@ -15,7 +15,7 @@
 //   tsx scripts/hooks/subagent-background-guard.ts         # payload on stdin (Bash and Monitor alike)
 //   tsx scripts/hooks/subagent-background-guard.ts --dry-run --tool Bash \
 //       [--context subagent|main|undeterminable] [--payload '<json>'] [--input '<json>']
-import { buildDenyOutput, denyUninspectable, printDryRunResult, readHookPayload, requireToolFlag, resolveDryRunInput, runIfMain, type DenyOutput } from './hook-io.ts'
+import { buildDenyOutput, denyUninspectable, printDryRunResult, readHookPayload, requireToolFlag, resolveDryRunInput, runGuard, type DenyOutput } from './hook-io.ts'
 import { flagValue } from '../lib/cli.ts'
 
 const LABEL = 'subagent background guard'
@@ -169,4 +169,4 @@ function dryRun(argv: string[]): void {
   printDryRunResult({ tool, context, decision: finding ? 'deny' : 'allow', reason: finding ? formatGuardMessage(finding) : undefined })
 }
 
-runIfMain(import.meta.url, { main, dryRun, label: LABEL, ref: REF })
+runGuard(import.meta.url, { main, dryRun, label: LABEL, ref: REF })

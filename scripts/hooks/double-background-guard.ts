@@ -35,7 +35,7 @@ import {
   readHookPayload,
   requireToolFlag,
   resolveDryRunInput,
-  runIfMain,
+  runGuard,
   type DenyOutput,
 } from './hook-io.ts'
 import { hasBackgroundOperator } from './subagent-background-guard.ts'
@@ -103,4 +103,4 @@ function dryRun(argv: string[]): void {
   printDryRunResult({ tool, decision: finding ? 'deny' : 'allow', reason: finding ? formatGuardMessage() : undefined })
 }
 
-runIfMain(import.meta.url, { main, dryRun, label: LABEL, ref: REF })
+runGuard(import.meta.url, { main, dryRun, label: LABEL, ref: REF })

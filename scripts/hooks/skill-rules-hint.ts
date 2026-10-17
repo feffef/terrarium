@@ -10,7 +10,7 @@
 //   tsx scripts/hooks/skill-rules-hint.ts                # hook payload on stdin
 //   tsx scripts/hooks/skill-rules-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
 import { matchesGlob } from 'node:path'
-import { printDryRunResult, prop, readHookJson, resolveDryRunInput, runIfMain } from './hook-io.ts'
+import { printDryRunResult, prop, readHookJson, resolveDryRunInput, runGuard } from './hook-io.ts'
 import { loadRules, ruleBlock, rulePaths, type RuleFile } from '../lib/adr-rules.ts'
 
 /** The repo Skill a payload invokes: a Skill tool call, or a prompt that is a
@@ -62,4 +62,4 @@ function dryRun(argv: string[]): void {
   printDryRunResult({ skill: invokedSkill(payload), hint: hintFor(payload) })
 }
 
-runIfMain(import.meta.url, { main, dryRun, label: 'skill-rules hint', ref: 'PR #1741', failOpen: true })
+runGuard(import.meta.url, { main, dryRun, label: 'skill-rules hint', ref: 'PR #1741', failOpen: true })

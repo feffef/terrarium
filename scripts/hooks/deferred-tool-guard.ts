@@ -34,7 +34,7 @@
 //
 // Usage (normally invoked by the PreToolUse hook with the payload on stdin):
 //   tsx scripts/hooks/deferred-tool-guard.ts        # reads hook JSON on stdin
-import { buildDenyOutput, readHookPayload, runIfMain, type DenyOutput } from './hook-io.ts'
+import { buildDenyOutput, readHookPayload, runGuard, type DenyOutput } from './hook-io.ts'
 
 /** A distinctive argument fingerprint that uniquely identifies ONE tool. When a
  *  call to a *different* tool carries every one of `requiredKeys`, it is almost
@@ -159,4 +159,4 @@ export function main(): void {
   if (output) process.stdout.write(JSON.stringify(output))
 }
 
-runIfMain(import.meta.url, { main, label: 'deferred-tool guard', ref: 'issue #612', failOpen: true })
+runGuard(import.meta.url, { main, label: 'deferred-tool guard', ref: 'issue #612', failOpen: true })

@@ -21,7 +21,7 @@
 //     (with no transcript_path, the dry run assumes an empty transcript)
 import { readFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
-import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runIfMain } from './hook-io.ts'
+import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runGuard } from './hook-io.ts'
 import { extractTrace, hintText, subagentTranscript } from '../session/transcript-trace.ts'
 import { buildDocLineIndex, commandWords } from '../session/shell-reads.ts'
 import { root } from '../lib/cli.ts'
@@ -122,4 +122,4 @@ function dryRun(argv: string[]): void {
   printDryRunResult({ hint: hintFor(resolveDryRunInput(argv), true) })
 }
 
-runIfMain(import.meta.url, { main, dryRun, label: 'read-first hint', ref: 'issue #1754', failOpen: true })
+runGuard(import.meta.url, { main, dryRun, label: 'read-first hint', ref: 'issue #1754', failOpen: true })

@@ -8,7 +8,7 @@
 //   sh scripts/hooks/stale-push-hint.sh                 # the installed hook entry
 //   tsx scripts/hooks/stale-push-hint.ts                # hook payload on stdin
 //   tsx scripts/hooks/stale-push-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
-import { printDryRunResult, readHookPayload, resolveDryRunInput, runIfMain } from './hook-io.ts'
+import { printDryRunResult, readHookPayload, resolveDryRunInput, runGuard } from './hook-io.ts'
 
 const HINT =
   'This push was rejected as "stale info" (issue #1610). The remote branch was probably deleted when its PR ' +
@@ -59,4 +59,4 @@ function dryRun(argv: string[]): void {
   printDryRunResult({ hint: staleInfoHint(resolveDryRunInput(argv)) })
 }
 
-runIfMain(import.meta.url, { main, dryRun, label: 'stale-push hint', ref: 'issue #1610', failOpen: true })
+runGuard(import.meta.url, { main, dryRun, label: 'stale-push hint', ref: 'issue #1610', failOpen: true })

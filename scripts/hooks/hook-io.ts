@@ -72,8 +72,8 @@ export function readHookJson(): { kind: 'none' } | { kind: 'invalid' } | { kind:
   }
 }
 
-/** `readHookJson` plus the shape check every guard's `main()` repeated
- *  verbatim: the payload must name a `tool_name` string. Never throws. */
+/** `readHookJson` plus the shape check: the payload must name a `tool_name`
+ *  string. Never throws. */
 export function readHookPayload(): HookPayloadResult {
   const read = readHookJson()
   if (read.kind !== 'ok') return read
@@ -111,7 +111,7 @@ export function denyUninspectable(label: string, ref: string, detail: string): v
  *  stays silent (a hook must never wedge tool use with its own fault). It does
  *  not use `lib/cli`'s `runIfMain`, which exits 1 on a crash, and the harness
  *  reads that as an allow. Call it with the CALLING module's `import.meta.url`. */
-export function runIfMain(
+export function runGuard(
   moduleUrl: string,
   opts: {
     main: () => void | Promise<void>

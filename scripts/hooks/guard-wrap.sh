@@ -1,6 +1,6 @@
 #!/bin/sh
 # Standard `.claude/settings.json` wiring for a FAIL-CLOSED `PreToolUse` guard
-# (issue #1223). `runIfMain` (`hook-io.ts`) only fail-closes a crash INSIDE its
+# (issue #1223). `runGuard` (`hook-io.ts`) only fail-closes a crash INSIDE its
 # own try/catch; a crash before that point — tsx failing to cold
 # start, a module-resolution error, a throw during import/top-level evaluation
 # — exits nonzero with no stdout at all. The old wiring, "<guard> || true",
@@ -46,7 +46,7 @@ out=$("$@")
 status=$?
 
 if [ "$status" -ne 0 ] && [ -z "$out" ]; then
-  printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Blocked by scripts/hooks/guard-wrap.sh (issue #1223): the %s guard process exited %s with no output, before it could reach its own fail-closed try/catch (runIfMain, hook-io.ts) — e.g. a tsx cold-start or module-load-time crash, not a genuine allow decision. The guard fails CLOSED. This is a guard fault, not an authoring mistake — report it rather than working around it."}}' "$guard_name" "$status"
+  printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Blocked by scripts/hooks/guard-wrap.sh (issue #1223): the %s guard process exited %s with no output, before it could reach its own fail-closed try/catch (runGuard, hook-io.ts) — e.g. a tsx cold-start or module-load-time crash, not a genuine allow decision. The guard fails CLOSED. This is a guard fault, not an authoring mistake — report it rather than working around it."}}' "$guard_name" "$status"
 else
   printf '%s' "$out"
 fi

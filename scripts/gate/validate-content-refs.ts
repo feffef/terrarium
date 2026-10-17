@@ -370,11 +370,9 @@ function checkPath(field: string, path: string): string[] {
  * well-formed hash's commit can be unreachable without being a typo. So this
  * check is deliberately soft:
  *   - `commit`: format-validate `hash` (hex, 7-40 chars) — a malformed hash is
- *     always a violation. A well-formed hash gets a best-effort
- *     `git cat-file -e` confirmation attempt, but a failed lookup is NEVER
- *     itself a violation (it fails constantly on a shallow clone, or on a
- *     hash from history genuinely not fetched) — only a genuinely malformed
- *     hash is.
+ *     always a violation. A well-formed hash is never looked up: the
+ *     lookup fails constantly on a shallow clone or a hash from history not
+ *     fetched, so it could never be a violation.
  *   - `file`/`commit`: no strong check is possible without full history either —
  *     validate `path` is a plausible repo-relative path (see
  *     `implausiblePathReason`) and stop there. `path` is required on `file`,
@@ -386,7 +384,7 @@ function checkPath(field: string, path: string): string[] {
  * Don't "fix" this into a deep-history dependency — an expected-gone referent
  * is the point, not a gap.
  */
-export function checkProvenance(provenance: unknown, projectRoot: string): string[] {
+export function checkProvenance(provenance: unknown): string[] {
   const p = provenance && typeof provenance === 'object' ? (provenance as Record<string, unknown>) : {}
   const kind = typeof p.kind === 'string' ? p.kind : undefined
 
@@ -396,11 +394,6 @@ export function checkProvenance(provenance: unknown, projectRoot: string): strin
       const hash = typeof p.hash === 'string' ? p.hash : ''
       if (!/^[0-9a-fA-F]{7,40}$/.test(hash)) {
         msgs.push(`provenance.hash: "${hash}" does not look like a plausible git hash (7-40 hex chars)`)
-      } else {
-        // Best-effort confirmation only — see the block comment above for why a
-        // failed lookup here never becomes a violation.
-        // Not found on this (possibly shallow) clone is not evidence of a typo.
-        tryGit(['cat-file', '-e', `${hash}^{commit}`], projectRoot)
       }
       if (typeof p.path === 'string') msgs.push(...checkPath('provenance.path', p.path))
       return msgs
@@ -500,7 +493,7 @@ function checkArtifacts(
 
     if (typeof data.stratum === 'string') msgs.push(...checkStratum(data.stratum))
 
-    msgs.push(...checkProvenance(data.provenance, projectRoot))
+    msgs.push(...checkProvenance(data.provenance))
 
     if (typeof data.removedIn === 'string') {
       msgs.push(...checkTerminalCommitSeason('removedIn', data.removedIn, data.stratum, projectRoot))

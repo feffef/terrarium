@@ -13,7 +13,7 @@
 //   tsx scripts/hooks/bash-rules-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
 import { existsSync, statSync } from 'node:fs'
 import { dirname, isAbsolute, join, matchesGlob, relative } from 'node:path'
-import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runIfMain } from './hook-io.ts'
+import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runGuard } from './hook-io.ts'
 import { extractTrace, subagentTranscript } from '../session/transcript-trace.ts'
 import { bashReadPaths } from '../session/shell-reads.ts'
 import { loadRules, RULES_DIR, ruleBlock, rulePaths, type RuleFile } from '../lib/adr-rules.ts'
@@ -74,4 +74,4 @@ function dryRun(argv: string[]): void {
   printDryRunResult({ reads, hint: hintFor(payload) })
 }
 
-runIfMain(import.meta.url, { main, dryRun, label: 'bash-rules hint', ref: 'issue #1764', failOpen: true })
+runGuard(import.meta.url, { main, dryRun, label: 'bash-rules hint', ref: 'issue #1764', failOpen: true })

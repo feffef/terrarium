@@ -424,5 +424,4 @@ async function main(): Promise<number> {
   }
 }
 
-// Importers (`startPreview`/`stopPreview`) must not run `main()` on import.
 runIfMain(import.meta.url, async () => process.exit(await main()))

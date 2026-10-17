@@ -70,7 +70,7 @@ import { readFileSync } from 'node:fs'
 import { isAbsolute, resolve } from 'node:path'
 import { sessionUrl } from '../../shared/session-url.ts'
 import { SESSION_TRAILER } from '../lib/git.ts'
-import { buildDenyOutput, denyUninspectable, prop, readHookPayload, runIfMain, type DenyOutput } from './hook-io.ts'
+import { buildDenyOutput, denyUninspectable, prop, readHookPayload, runGuard, type DenyOutput } from './hook-io.ts'
 import { provenanceFooter } from '../session/commit-trailer.ts'
 import { provenanceHeader, readProvenanceHeader, sessionIdsIn } from '../lib/provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from '../session/transcript-trace.ts'
@@ -563,4 +563,4 @@ export function main(): void {
   if (output) process.stdout.write(JSON.stringify(output))
 }
 
-runIfMain(import.meta.url, { main, label: LABEL, ref: REF })
+runGuard(import.meta.url, { main, label: LABEL, ref: REF })

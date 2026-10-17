@@ -412,7 +412,7 @@ describe('validateReferences() — Midden page body: ::midden-artifact resolutio
 // dynamic route's `[`/`]`) — both of which real artifacts already cite.
 
 describe('checkProvenance() — file-kind path plausibility', () => {
-  const filePath = (path: unknown) => checkProvenance({ kind: 'file', path }, dir)
+  const filePath = (path: unknown) => checkProvenance({ kind: 'file', path })
 
   it('accepts an ordinary repo-relative path', () => {
     expect(filePath('scripts/gate/validate-content-refs.ts')).toEqual([])
@@ -464,7 +464,7 @@ describe('checkProvenance() — commit-kind path plausibility', () => {
   // violation (shallow-clone stance) — so these isolate the path rule.
   const hash = 'b23e8d3'
   const commit = (path?: unknown) =>
-    checkProvenance(path === undefined ? { kind: 'commit', hash } : { kind: 'commit', hash, path }, dir)
+    checkProvenance(path === undefined ? { kind: 'commit', hash } : { kind: 'commit', hash, path })
 
   it('stays valid with no path — it is optional on this kind', () => {
     expect(commit()).toEqual([])
@@ -483,11 +483,11 @@ describe('checkProvenance() — commit-kind path plausibility', () => {
   })
 
   it('still rejects a malformed hash', () => {
-    expect(checkProvenance({ kind: 'commit', hash: 'nothex' }, dir)).toHaveLength(1)
+    expect(checkProvenance({ kind: 'commit', hash: 'nothex' })).toHaveLength(1)
   })
 
   it('reports a malformed hash and a malformed path together', () => {
-    expect(checkProvenance({ kind: 'commit', hash: 'nothex', path: '/absolute' }, dir)).toHaveLength(2)
+    expect(checkProvenance({ kind: 'commit', hash: 'nothex', path: '/absolute' })).toHaveLength(2)
   })
 })
 
