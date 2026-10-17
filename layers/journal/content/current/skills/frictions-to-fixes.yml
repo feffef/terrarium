@@ -266,3 +266,13 @@ observations:
       No reverts of this Skill's own work in the 2-week sweep. Grade/role
       unchanged (routine) — the bypass is a shared-tooling/GitHub-behavior
       gap, not this Skill's own promise breaking.
+  - date: "2026-10-17"
+    note: >-
+      Self-check (audit-skills behaviour check): 4 freshly-verified sessions
+      beyond prior entries (session_01RnZJ7VrgWpgzfJUCEdif77 PRs
+      #2107-#2109, session_01XUuxhnMc7t2zXaH9ebtxKZ PR #2140 + issue #2138,
+      session_01Mf4dUxuWB7WtkC5fVzByH6 PRs #2149-#2151,
+      session_018sAirSgDY1Nv82JVogjcyR PRs #2155-#2157), all merged and
+      diff-matched; no PR touched a Human-only path. #1449 reconfirmed still
+      CLOSED (wontfix), no recurrence. No reverts in the 2-week sweep. No new
+      silent failure. Grade/role unchanged.

@@ -343,3 +343,17 @@ observations:
       branch collisions, no merge-pr.ts-to-subagent violations, no new
       missed invocation. No reverts in the 2-week sweep. Grade/role
       unchanged (essential).
+  - date: "2026-10-17"
+    note: >-
+      Self-check (audit-skills behaviour check), Part A (10 usedIn, all
+      2026-10-16): no stranded work, no branch/worktree collision beyond the
+      already-known owner-accepted #1480 recurrence (not_planned, self-caught,
+      no damage), no merge-pr.ts dispatched to a subagent;
+      `pnpm exec tsx scripts/check-worktrees.ts` passes clean. Part B (124
+      notUsedSessions, 105 ruled out by goal, 19 opened in full): 0 new missed
+      invocations - every dispatch found was strictly read-only or a clean
+      worktree-isolated landing; every skillsUsed omission matches the
+      already-tracked, owner-closed-not_planned #1586/#1915 logging gap, which
+      this Skill's own grading rule excludes (outcome delivered, just
+      untagged). No reverts of this Skill's own mechanics. Grade/role
+      unchanged (essential).
