@@ -3,6 +3,11 @@ summary: "The ADR-rule check passes a rule whose file pattern matches no file, s
 cause: "scripts/validate-adr-rules.ts checks that a rule has a `paths` list and that named docs exist, but never that each glob matches a file; after a file move ADR-0007's rule stopped loading until a reviewer noticed."
 surface: safe
 status: tracked
+ref: "PR #2199 (escalated for a human merge)"
+fixes:
+  - pr: 2199
+    date: "2026-10-17"
+    summary: "The ADR-rule validator now fails a rule whose paths glob matches no file; removed the one dead glob."
 occurrences:
   - session: session_013RCsUF234qAGu3CJr3v2on
     date: "2026-10-16"
