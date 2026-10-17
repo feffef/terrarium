@@ -1,8 +1,8 @@
 ---
 title: A friction becomes a fix
 description: How a pain-point one agent logs becomes a change to the instructions every later agent works under, through a scheduled Skill that groups, screens, fixes and merges.
-revision: 'b814fa1cbc100a9ebc249423ca536284604f5c10'
-revisionDate: '2026-10-15'
+revision: '75deb9486800d2fa8ccb7c90bb2e03b566542e8d'
+revisionDate: '2026-10-17'
 ---
 
 No one reads every session to fix what went wrong in it. Each session reports its own pain-points instead, and a scheduled agent turns the ones that recur or cost the most into fixes. This Walkthrough follows one Friction from the session that hit it, through that agent's run, to the changed instruction a later session reads.

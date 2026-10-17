@@ -1,8 +1,8 @@
 ---
 title: The Routines
 description: What Terrarium's scheduled runs do, one Routine at a time, from the docs and the Skills to the site, the day's news and the day's story. A run that changes something ends in its own PR.
-revision: 'b814fa1cbc100a9ebc249423ca536284604f5c10'
-revisionDate: '2026-10-15'
+revision: '75deb9486800d2fa8ccb7c90bb2e03b566542e8d'
+revisionDate: '2026-10-17'
 ---
 
 Some of Terrarium's work happens without anyone asking. A :term[Routine] starts a session on a timer, and the session runs one Skill. This Walkthrough follows those runs from the session's side, one stop per Routine, between a stop on how a run starts and one on how it ends. The [Skill Inventory](/t/journal/current/skills) shows which Skills the Routines run.
