@@ -26,6 +26,16 @@ export const glassboxLessonLabels = {
 const ids = glassboxLessonIds
 const labels = glassboxLessonLabels
 
+/** The nodes under a Lesson's "Try it in your project" heading, up to the next h2; none if it has no such section. */
+export function glassboxTryIt(nodes: MinimarkNode[]): MinimarkNode[] {
+  const isH2 = (node: MinimarkNode) => typeof node !== 'string' && node[0] === 'h2'
+  const start = nodes.findIndex((node) => isH2(node) && (node as MinimarkElement)[1].id === ids.tryIt)
+  if (start < 0) return []
+  const rest = nodes.slice(start + 1)
+  const end = rest.findIndex(isH2)
+  return end < 0 ? rest : rest.slice(0, end)
+}
+
 /** A Lesson body with design 1b's section frames added; other nodes unchanged. */
 export function glassboxLessonSections(nodes: MinimarkNode[], base: string): MinimarkNode[] {
   const out: MinimarkNode[] = []
