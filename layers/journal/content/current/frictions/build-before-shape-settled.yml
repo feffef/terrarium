@@ -19,3 +19,8 @@ occurrences:
     severity: nit
     description: "The first backfill plan used an index, the user then preferred full text; the index commits and schema were built and thrown away within one PR."
     solution: "When a data-shape choice is cheap to ask about, ask it before building; I only answered with a size comparison afterwards."
+  - session: session_01WynjtDHvk8MajTsgr59Ckt
+    date: "2026-10-16"
+    severity: minor
+    description: "Shipped homepage copy calling the guide finished pages without asking what the guide means to the owner; it needed a follow-up PR"
+    solution: "When copy characterises a Tenant's content, check the framing with the owner before building; the glossary's polished wording was out of date"

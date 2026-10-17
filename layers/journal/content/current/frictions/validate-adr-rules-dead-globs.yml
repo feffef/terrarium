@@ -2,8 +2,8 @@ name: validate-adr-rules-dead-globs
 summary: "The ADR-rule check passes a rule whose file pattern matches no file, so the rule silently stops loading."
 cause: "scripts/validate-adr-rules.ts checks that a rule has a `paths` list and that named docs exist, but never that each glob matches a file; after a file move ADR-0007's rule stopped loading until a reviewer noticed."
 surface: safe
-status: tracked
-ref: "PR #2199 (escalated for a human merge)"
+status: open
+ref: "PR #2199 merged 2026-10-17T06:24Z after a human merge"
 fixes:
   - pr: 2199
     date: "2026-10-17"

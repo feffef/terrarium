@@ -25,3 +25,8 @@ occurrences:
     severity: nit
     description: "Workflow output nests results as a JSON string under result, so my first parse printed nothing useful and needed a second pass."
     solution: "Document the output shape in the clear-backlog Skill or return a flat object."
+  - session: session_014H5yqxJ4wuQfuCP7tqW7z5
+    date: "2026-10-17"
+    severity: nit
+    description: "Workflow results are nested JSON in .output files, so reading them took a one-off node script each time."
+    solution: "A small script that prints a clear-backlog run's results (outcome, question, decisions, judgement calls) from the .output file."

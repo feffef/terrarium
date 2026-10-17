@@ -26,3 +26,18 @@ occurrences:
     severity: nit
     description: "Ledger refs for the three tracked entries could not name this run's PR, because it did not exist when the ledger was edited."
     solution: "Let a ledger ref hold a branch name now, and have the next run record the PR number in fixes, as the Skill already says."
+  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
+    date: "2026-10-16"
+    severity: minor
+    description: "I searched for the latest frictions-to-fixes run by trigger and goal only and missed a manual run at 11:25 UTC; the owner had to point it out and the first audit was a baseline of an older run."
+    solution: "Find skill runs by trigger, goal, and the PRs/ledger commits they landed, or list session logs after a given merge time."
+  - session: session_018pjaBqTXahmE3DFhAbkide
+    date: "2026-10-16"
+    severity: minor
+    description: "frictions-to-fixes runs left an 11-occurrence cluster open with no recorded reason, so the owner had to ask why."
+    solution: "Have the ledger PR description name each high-occurrence open cluster it skipped and why."
+  - session: session_01J4ze3DvsZhXeP78iyRnbSd
+    date: "2026-10-17"
+    severity: minor
+    description: "Survey brief says --unledgered drops carried frictions, yet 7 blocks for sessions already in a cluster reappeared and only surfaced at validate time (survey agent's friction)."
+    solution: "Have the brief say to skip a session already present in the target cluster, or filter by session in the script."
