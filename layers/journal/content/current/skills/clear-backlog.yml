@@ -77,3 +77,12 @@ observations:
       carried a posted `Reviewed: <sha>` verdict naming the PR's actual head
       plus a green gate comment before merge. No new silent failure. Grade
       unchanged (specialist).
+  - date: "2026-10-17"
+    note: >-
+      Self-check (audit-skills behaviour check): 3 newest usedIn sessions
+      checked beyond the 2026-10-16 entry (the other 7 already independently
+      verified). session_01VPNHf6qDdJPXX23GghKs74 (PRs #2119-#2123),
+      session_011RZgGTE5Mh25D2ZNoKqfAM (PR #2158), session_015vXkKcdLwYRQqKKVJ8BLJJ
+      (PRs #2159/#2160) all confirmed merged, scoped as claimed, correct
+      self-merge-vs-human-merge split, posted `Reviewed: <sha>` verdicts
+      before merge. No reverts. Grade unchanged (specialist).

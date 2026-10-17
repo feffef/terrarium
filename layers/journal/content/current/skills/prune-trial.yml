@@ -349,3 +349,12 @@ observations:
       correctly "not yet judgeable." #1856 (ADR-0027 grace mismatch)
       re-confirmed structurally resolved via the ADR-0030 rewrite. No
       reverts in the 2-week sweep. Grade unchanged.
+  - date: "2026-10-17"
+    note: >-
+      Self-check (audit-skills behaviour check): all 8 usedIn sessions
+      checked (2 freshly end-to-end: PR #2153; PRs #2165/#2166/#2168 - the
+      latter correctly human-merged for touching Human-only ADR/rule paths,
+      one new trial opened per run as required). #1451 (verbatim-quote
+      clause) reconfirmed still resolved by the earlier prune, not restored.
+      No reverts in the 2-week sweep. No new silent failure. Grade/role
+      unchanged.

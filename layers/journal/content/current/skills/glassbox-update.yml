@@ -19,3 +19,10 @@ observations:
       drafts-Space sync, 40 pages, 9 edited, pinned to b814fa1c) — all
       three confirmed merged via pull_request_read. Below the ≥3-session
       bar for a dedicated behaviour check this window.
+  - date: "2026-10-17"
+    note: >-
+      Self-check (audit-skills behaviour check): all 3 usedIn sessions
+      checked end-to-end (PR #2091; PRs #2094/#2095; PR #2182),
+      pins/excerpts/citations verified word-for-word against source at each
+      pinned commit. No reverts. No new silent failure. Grade unchanged
+      (specialist).

@@ -1,0 +1,23 @@
+name: glassbox-lesson
+category: platform-operation
+importance: specialist
+gist: Writes one Glass Box Lesson page explaining a concept with Terrarium as the example.
+role: >-
+  Writes a single Glass Box Lesson: one concept, pinned to a revision, with
+  a Terrarium worked example and sourced "why it's built this way" reasoning,
+  then links it into the surrounding Walkthroughs and Lessons. Dispatched
+  per-topic from the topic inventory, not model-invoked
+  (disable-model-invocation: true).
+observations:
+  - date: "2026-10-17"
+    note: >-
+      Coverage gap found (audit-skills sweep): used once this window
+      (allTimeUses: 1), on disk, no prior Inventory entry.
+      session_01NFv67izdzVGrFHb2EVwZJ2 (a Glass Box Lesson on Nitro, the
+      server under Nuxt) verified merged and genuine. Below the
+      ≥3-session bar for a dedicated behaviour check this window; graded
+      `specialist` on its own structure, not session-count evidence: it is
+      explicitly non-model-invoked (`disable-model-invocation: true`),
+      dispatched per topic from a fixed topic inventory rather than reached
+      for — essential whenever a Lesson is being written, but that kind of
+      work is itself rare, matching GLOSSARY.md's definition of the grade.

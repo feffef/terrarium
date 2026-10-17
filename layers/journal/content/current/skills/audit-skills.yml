@@ -519,3 +519,26 @@ observations:
       Coverage gaps added this run: `glassbox-update` (2 uses, both verified
       merged) and `retro` (1 use, verified genuine — 2 real issues filed
       from its candidates). Grade/role unchanged (routine).
+  - date: "2026-10-17"
+    note: >-
+      Self-check: dispatched 13 behaviour-check subagents this run (one per
+      behaviourChecks entry — audit-docs, audit-skills self, auto-triage,
+      blog-post, clear-backlog, close-session, digest, dispatch-subagents,
+      frictions-to-fixes, glassbox-update, log-session, prune-trial,
+      visitor-loop), each report independently verified against primary
+      sources before use. All 13 came back clean this run — no new silent
+      failure or missed invocation found anywhere, an unusually clean week
+      given the heavy churn (all 13 Skills' SKILL.md changed, up to 33 edits
+      each), which the checks confirm is the trail of fixes landing from
+      prior audit findings rather than fresh instability. One watch item
+      from visitor-loop's own check, not escalated: an owner-directed rework
+      (PR #2178, 5h after PR #2164) sits in the 3-day owner-corrections.ts
+      window untested, since no visitor-loop run has fired since — worth
+      confirming next run. Step 3 closure completeness: orphan scan clean
+      (scanned: true), both orphan candidates carry `resolvedBy` (left
+      alone), orphanSuppressionLog both entries plausible
+      (`resolved-annotation`), humanPromptedClosures' one entry
+      (session_014uXxmT6359K4Z42a6We6Gh) already settled 2026-10-13,
+      manuallyRescuedClosures empty. Coverage gap found and added:
+      `glassbox-lesson` (1 use, session_01NFv67izdzVGrFHb2EVwZJ2's Glass Box
+      Nitro Lesson, verified merged). Grade/role unchanged (routine).
