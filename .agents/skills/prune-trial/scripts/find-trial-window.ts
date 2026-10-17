@@ -33,7 +33,7 @@ import { readFileSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
-import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
+import { fetchOriginMain } from '../../../../scripts/lib/git.ts'
 import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const LEDGER_PATH = '.agents/prune-trials.yml'

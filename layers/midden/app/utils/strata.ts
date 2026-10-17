@@ -2,7 +2,7 @@
 // (Stratum)", #519) — the Midden's structural analog to the Atlas's
 // `GLASS_SEASONS` (layers/atlas/app/utils/almanac.ts): an array-plus-lookup
 // shape, single-homed here so the stratigraphy sidebar (#524), the trench-index
-// legend (#528), and `scripts/validate-content-refs.ts`'s `stratum` reference
+// legend (#528), and `scripts/gate/validate-content-refs.ts`'s `stratum` reference
 // check all read the same list.
 //
 // The seasons below are the REAL dig seasons, named for what the Platform was
@@ -123,7 +123,7 @@ export const DIG_SEASONS: DigSeason[] = [
 ]
 
 /** Dig-season slugs in the same oldest-first order as `DIG_SEASONS` — the
- * canonical membership set `scripts/validate-content-refs.ts`'s `stratum`
+ * canonical membership set `scripts/gate/validate-content-refs.ts`'s `stratum`
  * reference check validates each Artifact's `stratum` value against. */
 export const DIG_SEASON_SLUGS: string[] = DIG_SEASONS.map((s) => s.slug)
 

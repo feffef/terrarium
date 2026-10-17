@@ -1,0 +1,297 @@
+// The conflicting-issue cross-check (issue #798): a PR touching a file has no
+// mechanical way today to know an *open* issue separately schedules that same
+// file for deletion or removal. PR #789 was caught mid-review only because a
+// human happened to read the full issue history (issue #784, `ready-for-agent`,
+// instructed deleting `SESSION_TRAILER_GLOBAL` as unused — the very symbol
+// #789 was repurposing). This script is the mechanical cross-check option 2
+// from #798 recommends, scoped conservatively for a first pass.
+//
+// **File-level matching only** — issue #798 explicitly scopes out
+// symbol-level precision for this first pass. A "hit" means: an open issue's
+// body contains BOTH one of the changed file paths (verbatim substring) AND
+// one of a small fixed deletion-language keyword list. That's a heuristic,
+// not a proof the issue actually schedules the file for deletion — it is
+// advisory, meant to be eyeballed by a reviewer before merge, not a hard gate
+// (it never runs in CI).
+//
+// Two ways to get the changed-file list, mirroring how a reviewer actually
+// has the PR in front of them:
+//   - `<base> <head>` — resolved locally via `git diff --name-only
+//     <base>...<head>`, no GitHub call at all.
+//   - `--pr <number>` — resolved from the GitHub API: the PR's file list via
+//     `gh api .../pulls/<n>/files` (or the REST fallback), and open issues via
+//     the same `.../issues?state=open` listing `list-open-issues.ts` already
+//     uses, through `lib/github-client.ts`.
+//
+// `--pr <number>` mode also excludes the issue(s) the PR's own body
+// auto-closes (`Closes`/`Fixes`/`Resolves #N`, GitHub's linking-keyword
+// syntax) from that PR's own scan — otherwise the closed issue's own text
+// routinely self-matches the generic keyword list and reports back as a
+// false "conflict" with the PR that's resolving it (issue #967).
+//
+// Usage:
+//   tsx scripts/github/check-conflicting-issues.ts <base> <head>
+//   tsx scripts/github/check-conflicting-issues.ts --pr <number>
+//   Prints any hits as JSON: { issueNumber, issueTitle, issueUrl, filePath,
+//   matchedKeyword }[]. Empty array (`[]`) means no hits — still exits 0
+//   either way; this is advisory, never a failing gate.
+import { execFileSync } from 'node:child_process'
+import {
+  decodeHtmlEntities,
+  getJson,
+  listAll,
+  paginate,
+  parseRestPage,
+  PER_PAGE,
+  resolveAccess,
+  type Access,
+  type RestPage,
+} from '../lib/github-client.ts'
+import { root, fail, runIfMain } from '../lib/cli.ts'
+
+// ── Types ───────────────────────────────────────────────────────────────────
+
+/** One open issue as read off the GitHub REST `issues` list endpoint, trimmed
+ *  to what the match needs — unlike `list-open-issues.ts`'s `OpenIssue`, this
+ *  keeps `body`: the whole point here is searching issue text, not just
+ *  metadata. */
+export interface RawConflictIssue {
+  number: number
+  title: string
+  body: string | null
+  html_url: string
+  pull_request?: unknown
+}
+
+/** One open issue past the screen (real issue, not a PR mixed into the same
+ *  REST endpoint — see `RawConflictIssue`). */
+export interface ConflictCandidateIssue {
+  number: number
+  title: string
+  body: string
+  htmlUrl: string
+}
+
+/** One flagged conflict: `filePath` (one of the PR's changed files) and
+ *  `matchedKeyword` (one deletion-language keyword) both appear, verbatim, in
+ *  `issueNumber`'s open-issue body. */
+export interface ConflictHit {
+  issueNumber: number
+  issueTitle: string
+  issueUrl: string
+  filePath: string
+  matchedKeyword: string
+}
+
+// ── Pure core (unit-tested) ─────────────────────────────────────────────────
+
+/** The fixed first-pass keyword list (issue #798's own scoping: "a small
+ *  fixed keyword list is fine, this is a first-pass heuristic, not precise").
+ *  Matched case-insensitively as a plain substring — not a word-boundary
+ *  regex — so "deleted"/"removes"/etc. still count; the tradeoff (more
+ *  recall, more false positives) matches the "advisory, not a hard gate"
+ *  framing above. */
+export const DELETION_KEYWORDS = ['delete', 'remove', 'unused', 'no longer needed'] as const
+export type DeletionKeyword = (typeof DELETION_KEYWORDS)[number]
+
+/** Every deletion-language keyword (see `DELETION_KEYWORDS`) that appears,
+ *  case-insensitively, anywhere in `body`. Order matches `DELETION_KEYWORDS`,
+ *  not appearance order in the text — this is a presence check, not a
+ *  position-sensitive parse (file-level matching only, issue #798). */
+export function findDeletionKeywords(body: string): DeletionKeyword[] {
+  const lower = body.toLowerCase()
+  return DELETION_KEYWORDS.filter((keyword) => lower.includes(keyword))
+}
+
+/** True when `filePath` appears verbatim in `body` — the file-level match
+ *  issue #798 scopes this first pass to (no symbol-level precision). Case
+ *  *sensitive*: a file path is a literal identifier, and case-insensitive
+ *  matching a short path segment (e.g. `shared/kinds.ts` vs a prose
+ *  sentence's "Shared Kinds") would trade too much precision for a marginal
+ *  recall gain. */
+export function bodyMentionsFilePath(body: string, filePath: string): boolean {
+  return body.includes(filePath)
+}
+
+/** Every conflict hit between one candidate issue and the PR's changed file
+ *  list: a hit requires the issue body to name the file AND carry at least
+ *  one deletion keyword (checked once for the whole body, not per file — see
+ *  `findDeletionKeywords`). One `ConflictHit` per (file, matched keyword)
+ *  pair, so a body naming several keywords surfaces all of them rather than
+ *  picking one arbitrarily. */
+export function findConflictHits(issue: ConflictCandidateIssue, changedFiles: string[]): ConflictHit[] {
+  const keywords = findDeletionKeywords(issue.body)
+  if (keywords.length === 0) return []
+  const hits: ConflictHit[] = []
+  for (const filePath of changedFiles) {
+    if (!bodyMentionsFilePath(issue.body, filePath)) continue
+    for (const keyword of keywords) {
+      hits.push({
+        issueNumber: issue.number,
+        issueTitle: issue.title,
+        issueUrl: issue.htmlUrl,
+        filePath,
+        matchedKeyword: keyword,
+      })
+    }
+  }
+  return hits
+}
+
+/** `findConflictHits` across every candidate issue, in issue order. */
+export function findAllConflictHits(issues: ConflictCandidateIssue[], changedFiles: string[]): ConflictHit[] {
+  return issues.flatMap((issue) => findConflictHits(issue, changedFiles))
+}
+
+/** GitHub's own auto-close keyword list (singular/plural/past-tense forms),
+ *  lowercase — https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue */
+const CLOSING_KEYWORDS = [
+  'close', 'closes', 'closed',
+  'fix', 'fixes', 'fixed',
+  'resolve', 'resolves', 'resolved',
+] as const
+
+/** Every issue number a PR body auto-closes (issue #967): the numbers a PR
+ *  itself declares via `Closes`/`Fixes`/`Resolves #N` (and their plural/past
+ *  forms, case-insensitive), matched the way GitHub parses linking keywords —
+ *  a keyword followed by one or more `#N` references, comma- or
+ *  "and"-separated. Excluded from that PR's own conflict scan below: the
+ *  issue a PR closes is expected to name the same file/keywords the PR
+ *  itself is changing, which is a false positive, not a real conflict. */
+export function findClosingIssueNumbers(body: string): Set<number> {
+  const numbers = new Set<number>()
+  const keywordPattern = CLOSING_KEYWORDS.join('|')
+  const re = new RegExp(`\\b(?:${keywordPattern})\\b:?((?:\\s*(?:,|and)?\\s*#\\d+)+)`, 'gi')
+  for (const match of body.matchAll(re)) {
+    for (const ref of (match[1] ?? '').matchAll(/#(\d+)/g)) {
+      if (ref[1] !== undefined) numbers.add(Number(ref[1]))
+    }
+  }
+  return numbers
+}
+
+/** Turn one raw REST issue record into a `ConflictCandidateIssue`, or `null`
+ *  if it's actually a pull request (the REST `issues` endpoint mixes both in,
+ *  same quirk `list-open-issues.ts`/`check-triage-drift.ts` screen for) or has
+ *  no body to search. */
+export function toConflictCandidateIssue(raw: RawConflictIssue): ConflictCandidateIssue | null {
+  if (raw.pull_request !== undefined) return null
+  if (!raw.body) return null
+  return {
+    number: raw.number,
+    title: decodeHtmlEntities(raw.title),
+    body: decodeHtmlEntities(raw.body),
+    htmlUrl: raw.html_url,
+  }
+}
+
+/** Splits `git diff --name-only`/`gh api .../files` output into a clean file
+ *  path list — trims blank lines, nothing else (a path itself is never
+ *  re-validated against the filesystem; the caller may be diffing two refs
+ *  where a deleted file no longer exists on disk). */
+export function parseChangedFileList(raw: string): string[] {
+  return raw
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0)
+}
+
+// ── GitHub / git shell (thin) ────────────────────────────────────────────────
+
+/** Changed files between two refs, resolved entirely locally — no GitHub call
+ *  at all, mirroring how `merged-since.ts` stays git-only where it can. */
+export function changedFilesFromGitDiff(base: string, head: string, cwd = root): string[] {
+  const raw = execFileSync('git', ['diff', '--name-only', '--no-renames', `${base}...${head}`], { cwd, encoding: 'utf8' })
+  return parseChangedFileList(raw)
+}
+
+export type { RestPage }
+
+// Every mid-walk failure says *incomplete*, not just *failed*: this check's
+// whole output is "these open issues conflict", and a caller who reads a
+// truncated walk as a finished one concludes "no conflict" about issues it
+// never looked at (issue #848).
+const INCOMPLETE_HINT = ' — no conflict verdict can be drawn from a partial read.'
+
+/** `paginate` over our own `repos/{owner}/{repo}` URL with the `Link` header as
+ *  the only "another page" signal (issue #848), driven by a fixture with no
+ *  network in the spec. */
+export function walkPagesByNumber<T>(pageUrl: (page: number) => string, fetchPage: (url: string) => RestPage): T[] {
+  return paginate<T>(pageUrl, (url) => parseRestPage<T>(fetchPage(url), url), PER_PAGE, INCOMPLETE_HINT)
+}
+
+interface RawPrFile {
+  filename: string
+  previous_filename?: string
+}
+
+// ── Command ──────────────────────────────────────────────────────────────────
+
+/** Runs the check against a locally-resolvable diff (`git diff --name-only
+ *  <base>...<head>`) — still needs the GitHub open-issues listing, so a
+ *  `gh`/token access path is required either way. */
+export async function checkConflictingIssuesForDiff(base: string, head: string, cwd = root): Promise<ConflictHit[]> {
+  const changedFiles = changedFilesFromGitDiff(base, head, cwd)
+  return checkConflictingIssuesForFiles(changedFiles, cwd)
+}
+
+const listOpenIssues = (access: Access): RawConflictIssue[] =>
+  listAll<RawConflictIssue>(access, 'issues', { state: 'open' }, { hint: INCOMPLETE_HINT })
+
+/** Runs the check for a PR by number — resolves both the changed-file list
+ *  and the open-issue listing from the GitHub API/`gh`. Excludes the
+ *  issue(s) the PR's own body auto-closes (issue #967) — a self-referential
+ *  false positive, not a real conflict. */
+export async function checkConflictingIssuesForPr(prNumber: number, cwd = root): Promise<ConflictHit[]> {
+  const access = resolveAccess(cwd)
+  const files = listAll<RawPrFile>(access, `pulls/${prNumber}/files`, {}, { hint: INCOMPLETE_HINT })
+  const changedFiles = files.flatMap((f) => (f.previous_filename ? [f.filename, f.previous_filename] : [f.filename]))
+  const pr = getJson<{ body: string | null }>(access, `repos/${access.owner}/${access.repo}/pulls/${prNumber}`)
+  const excludedIssueNumbers = findClosingIssueNumbers(decodeHtmlEntities(pr.body ?? ''))
+  const issues = listOpenIssues(access)
+    .map(toConflictCandidateIssue)
+    .filter((x): x is ConflictCandidateIssue => x !== null)
+    .filter((issue) => !excludedIssueNumbers.has(issue.number))
+  return findAllConflictHits(issues, changedFiles)
+}
+
+async function checkConflictingIssuesForFiles(changedFiles: string[], cwd: string): Promise<ConflictHit[]> {
+  const issues = listOpenIssues(resolveAccess(cwd))
+    .map(toConflictCandidateIssue)
+    .filter((x): x is ConflictCandidateIssue => x !== null)
+  return findAllConflictHits(issues, changedFiles)
+}
+
+// ── CLI ───────────────────────────────────────────────────────────────────────
+
+function usage(): string {
+  return (
+    'usage: tsx scripts/github/check-conflicting-issues.ts <base> <head>\n' +
+    '       tsx scripts/github/check-conflicting-issues.ts --pr <number>'
+  )
+}
+
+async function main(): Promise<void> {
+  const argv = process.argv.slice(2)
+  let hits: ConflictHit[]
+  if (argv[0] === '--pr') {
+    const prArg = argv[1]
+    const prNumber = Number(prArg)
+    if (!prArg || !Number.isInteger(prNumber) || prNumber <= 0) fail(usage())
+    hits = await checkConflictingIssuesForPr(prNumber)
+  } else if (argv.length === 2) {
+    const [base, head] = argv as [string, string]
+    hits = await checkConflictingIssuesForDiff(base, head)
+  } else {
+    fail(usage())
+  }
+  if (hits.length > 0) {
+    console.error(
+      `check-conflicting-issues: ${hits.length} possible conflict(s) with an open issue — advisory only, ` +
+        'eyeball each before merging:',
+    )
+  }
+  process.stdout.write(JSON.stringify(hits, null, 2) + '\n')
+}
+
+runIfMain(import.meta.url, main)

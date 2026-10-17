@@ -1,11 +1,11 @@
-// L3 — pure arg-parsing seam for the value-taking flags of `scripts/preview.ts shot`
-// and `scripts/screenshot.ts` (`--wait`, `--wait-for`, issue #364; `--scheme`;
+// L3 — pure arg-parsing seam for the value-taking flags of `scripts/ui/preview.ts shot`
+// and `scripts/ui/screenshot.ts` (`--wait`, `--wait-for`, issue #364; `--scheme`;
 // `--full`, `--mobile` and the `review` verb's shots, issue #2112).
 // Keeps the positional `<route> <out> [WxH]` parsing unaware of the flags, so
 // this is where the extraction contract is pinned.
 import { describe, expect, it } from 'vitest'
-import { extractFlag, extractSwitch, parseScheme } from '../../scripts/screenshot.ts'
-import { reviewShots } from '../../scripts/preview.ts'
+import { extractFlag, extractSwitch, parseScheme } from '../../scripts/ui/screenshot.ts'
+import { reviewShots } from '../../scripts/ui/preview.ts'
 
 describe('extractFlag()', () => {
   it('pulls a flag and its value out, leaving the positionals', () => {

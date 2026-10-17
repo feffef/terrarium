@@ -4,7 +4,7 @@
 // fetch-strategy decision (`pickFetchStrategy`, `parseNextLink`), homed in
 // `scripts/lib/github-client.ts`, re-exported here (issue #505). The `gh api` /
 // REST `curl` shell is a thin wrapper over these, exercised by running the
-// script directly (`tsx scripts/list-open-issues.ts`).
+// script directly (`tsx scripts/github/list-open-issues.ts`).
 import { describe, expect, it } from 'vitest'
 import {
   decodeHtmlEntities,
@@ -14,7 +14,7 @@ import {
   pickFetchStrategy,
   toOpenIssue,
   type RawIssueApiRecord,
-} from '../../scripts/list-open-issues.ts'
+} from '../../scripts/github/list-open-issues.ts'
 
 describe('decodeHtmlEntities()', () => {
   it('decodes the entities GitHub actually emits', () => {
@@ -47,7 +47,7 @@ describe('toOpenIssue()', () => {
   it('returns null for a record that is actually a pull request', () => {
     const record: RawIssueApiRecord = {
       number: 319,
-      title: 'Add scripts/recent-prs.ts',
+      title: 'Add scripts/git/list-recent-prs.ts',
       labels: [],
       updated_at: '2026-07-11T09:00:00Z',
       pull_request: { url: 'https://api.github.com/repos/feffef/terrarium/pulls/319' },

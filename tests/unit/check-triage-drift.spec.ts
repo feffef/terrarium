@@ -14,8 +14,8 @@ import {
   mostRecentAiComment,
   toDriftCheckIssue,
   type RawCommentApiRecord,
-} from '../../scripts/check-triage-drift.ts'
-import type { RawIssueApiRecord } from '../../scripts/list-open-issues.ts'
+} from '../../scripts/github/check-triage-drift.ts'
+import type { RawIssueApiRecord } from '../../scripts/github/list-open-issues.ts'
 
 // A real AI-authored comment body, lifted from issue #325's second comment —
 // the exact motivating example from #507.

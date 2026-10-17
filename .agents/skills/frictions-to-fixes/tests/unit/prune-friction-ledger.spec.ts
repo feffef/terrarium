@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import { horizonStart, pruneEntry, pruneLedger, sharedFrictions, summarizeLedger } from '../../scripts/prune-friction-ledger.ts'
-import { LEDGER_DIR } from '../../../../../scripts/session-frictions.ts'
+import { LEDGER_DIR } from '../../../../../scripts/session/extract-frictions.ts'
 
 const entry = (...occ: [session: string, date: string][]) => `name: x
 # kept comment

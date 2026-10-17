@@ -39,7 +39,7 @@ import {
   type Session,
   type SessionTrailerRef,
   type SkillRow,
-} from '../../scripts/audit-skills.ts'
+} from '../../scripts/session/audit-skills.ts'
 
 function sess(over: Partial<Session> = {}): Session {
   return {

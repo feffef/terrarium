@@ -15,7 +15,7 @@ import {
   detectSessionMode,
   formatGuardMessage,
   LOOP_ONLY_TOOLS,
-} from '../../scripts/loop-only-tool-guard.ts'
+} from '../../scripts/hooks/loop-only-tool-guard.ts'
 import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')

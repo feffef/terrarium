@@ -1,7 +1,7 @@
 // Pure helpers shared by the mermaid render/verify scripts and the runtime
 // component (issue #379). Kept fs-free and framework-free so both the
-// author-time renderer (`scripts/render-mermaid.ts`), the drift gate
-// (`scripts/verify-mermaid.ts`), and `app/components/MermaidDiagram.vue` can
+// author-time renderer (`scripts/gate/render-mermaid.ts`), the drift gate
+// (`scripts/gate/validate-mermaid-svgs.ts`), and `app/components/MermaidDiagram.vue` can
 // import the SAME contract — no forked second copy (single-home, CLAUDE.md).
 
 // The `--diagram-*` theming contract (issue #364): mermaid `themeVariables` name

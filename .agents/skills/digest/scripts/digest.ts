@@ -23,7 +23,7 @@ import { execFileSync } from 'node:child_process'
 import { existsSync, readdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR, readSessionLogs } from '../../../../scripts/session-logs.ts'
+import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR, readSessionLogs } from '../../../../scripts/session/journal-files.ts'
 import { fail, flagValue, resolveOutputTarget as outputTarget, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────

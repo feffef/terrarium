@@ -1,5 +1,5 @@
 // Coverage for the workflow-edit guard (issue #897; rationale and detection
-// contract in `scripts/workflow-edit-guard.ts`). The pure core is pinned
+// contract in `scripts/hooks/workflow-edit-guard.ts`). The pure core is pinned
 // directly; the CLI's stdin→deny-JSON path, `--dry-run`, and the hot-path
 // pre-filter are exercised end to end against the real scripts
 // (docs/agents/guards.md).
@@ -15,7 +15,7 @@ import {
   denyOutputFor,
   formatGuardMessage,
   isCloudSession,
-} from '../../scripts/workflow-edit-guard.ts'
+} from '../../scripts/hooks/workflow-edit-guard.ts'
 import { envWithTsxShim, runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')

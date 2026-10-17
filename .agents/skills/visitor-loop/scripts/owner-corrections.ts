@@ -17,8 +17,8 @@
 //   under the owner's login, from the owner's own.
 import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
-import { isAiAuthored } from '../../../../scripts/check-triage-drift.ts'
-import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
+import { isAiAuthored } from '../../../../scripts/github/check-triage-drift.ts'
+import { fetchOriginMain } from '../../../../scripts/lib/git.ts'
 import { getJson, paginate, PER_PAGE, resolveAccess, type Access } from '../../../../scripts/lib/github-client.ts'
 import { root, fail, runIfMain } from '../../../../scripts/lib/cli.ts'
 

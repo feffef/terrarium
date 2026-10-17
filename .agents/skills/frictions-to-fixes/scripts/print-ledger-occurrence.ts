@@ -10,8 +10,8 @@
 //   `session-frictions.ts --compact` prints it. Output is ready to paste under
 //   a cluster's `occurrences:`.
 import { Document, Scalar } from 'yaml'
-import { flattenText } from '../../../../scripts/session-frictions.ts'
-import { readSessionLogs } from '../../../../scripts/session-logs.ts'
+import { flattenText } from '../../../../scripts/session/extract-frictions.ts'
+import { readSessionLogs } from '../../../../scripts/session/journal-files.ts'
 import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 export function occurrenceBlock(log: Record<string, unknown>, index: number): string {

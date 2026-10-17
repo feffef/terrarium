@@ -34,7 +34,7 @@
 //
 // Also skips an issue already carrying the `guest-in-flight` marker
 // (issue #570) whose age can't be shown stale — another session may be
-// actively negotiating/building it. See `scripts/guest-marker.ts` for the
+// actively negotiating/building it. See `scripts/github/guest-label.ts` for the
 // label name, staleness window, and staleness check (single home, shared
 // with `poll-guest-tickets.ts`). Unlike that script, this one has no reason
 // to fetch an issue's Timeline otherwise, so the marker check here costs one
@@ -42,10 +42,10 @@
 // carries the marker.
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { isAiAuthored } from '../../../../scripts/check-triage-drift.ts'
+import { isAiAuthored } from '../../../../scripts/github/check-triage-drift.ts'
 import { decodeHtmlEntities, listAll, resolveAccess, type Access } from '../../../../scripts/lib/github-client.ts'
-import { hasMarker, isMarkerFresh, type RawLabelEventRecord } from '../../../../scripts/guest-marker.ts'
-import { PUBLIC_ASSOCIATIONS, TRUSTED_ASSOCIATIONS } from '../../../../scripts/trust.ts'
+import { hasMarker, isMarkerFresh, type RawLabelEventRecord } from '../../../../scripts/github/guest-label.ts'
+import { PUBLIC_ASSOCIATIONS, TRUSTED_ASSOCIATIONS } from '../../../../scripts/lib/author-trust.ts'
 import { root, fail, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const DEFAULT_LIMIT = 100

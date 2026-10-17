@@ -10,7 +10,7 @@
 //
 // Usage:  tsx .agents/skills/visitor-loop/scripts/ideas.ts gather [--threshold <n>] [--days <n>]
 import { isExternalSession } from '../../../../shared/schemas/session.ts'
-import { readSessionLogs } from '../../../../scripts/session-logs.ts'
+import { readSessionLogs } from '../../../../scripts/session/journal-files.ts'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────

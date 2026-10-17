@@ -7,7 +7,7 @@ import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { changedPathsBetween, decideScope, githubOutputBlock } from '../../scripts/gate.ts'
+import { changedPathsBetween, decideScope, githubOutputBlock } from '../../scripts/gate/gate.ts'
 
 const realGit = execFileSync('which', ['git'], { encoding: 'utf8' }).trim()
 const isShallow = execFileSync('git', ['rev-parse', '--is-shallow-repository'], { encoding: 'utf8' }).trim() === 'true'

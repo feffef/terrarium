@@ -8,7 +8,7 @@
 // interval only wakes the model when there's an actual guest-authored
 // candidate.
 //
-// Guest vs. Trusted is ADR-0020's line; `scripts/trust.ts` holds the
+// Guest vs. Trusted is ADR-0020's line; `scripts/lib/author-trust.ts` holds the
 // `authorAssociation` values.
 //
 // "Already has a linked PR" is checked via the issue's timeline
@@ -27,15 +27,15 @@
 //
 // Also skips an issue already carrying the `guest-in-flight` marker
 // (issue #570) — another session may be actively negotiating/building it.
-// See `scripts/guest-marker.ts` for the label name, staleness window, and
+// See `scripts/github/guest-label.ts` for the label name, staleness window, and
 // staleness check (single home, shared with `guest-intake-scan.ts`); the
 // timeline fetch below already covers this for free — the Timeline API's
 // `labeled` events carry the same `created_at`/`label` shape the marker
 // check needs, so no second API call is added for it.
 import { decodeHtmlEntities, listAll, resolveAccess } from '../../../../scripts/lib/github-client.ts'
-import type { RawIssueApiRecord } from '../../../../scripts/list-open-issues.ts'
-import { hasMarker, isMarkerFresh } from '../../../../scripts/guest-marker.ts'
-import { PUBLIC_ASSOCIATIONS } from '../../../../scripts/trust.ts'
+import type { RawIssueApiRecord } from '../../../../scripts/github/list-open-issues.ts'
+import { hasMarker, isMarkerFresh } from '../../../../scripts/github/guest-label.ts'
+import { PUBLIC_ASSOCIATIONS } from '../../../../scripts/lib/author-trust.ts'
 import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const READY_FOR_AGENT_LABEL = 'ready-for-agent'
@@ -62,7 +62,7 @@ export interface GuestReadyIssue {
 
 /** One raw timeline-event record, trimmed to the `cross-referenced` shape
  *  the linked-PR check needs, plus the `created_at`/`label` fields the
- *  `guest-in-flight` marker-staleness check (`scripts/guest-marker.ts`)
+ *  `guest-in-flight` marker-staleness check (`scripts/github/guest-label.ts`)
  *  needs from the same fetch. */
 export interface RawTimelineEventRecord {
   event: string
@@ -78,7 +78,7 @@ export interface RawTimelineEventRecord {
 
 // ── Pure core (unit-tested) ─────────────────────────────────────────────────
 
-/** True when `authorAssociation` is Public (`scripts/trust.ts`). */
+/** True when `authorAssociation` is Public (`scripts/lib/author-trust.ts`). */
 export function isPublicAuthor(authorAssociation: string): boolean {
   return PUBLIC_ASSOCIATIONS.has(authorAssociation)
 }

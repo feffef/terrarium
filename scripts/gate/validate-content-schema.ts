@@ -1,0 +1,173 @@
+// Fast, local, content-only validation (issue #133). Validates every Tenant's
+// content against its Collection's Zod schema WITHOUT paying the cost of a
+// full `nuxt build` + `pnpm test:e2e` — a content-only Markdown/YAML edit
+// shouldn't need the whole safety gate (ADR-0004) just to see a typo'd
+// frontmatter field.
+//
+// Why this exists rather than trusting `pnpm build`: `nuxt build` parses every
+// content file into the SQLite content DB using each Collection's Zod schema
+// only to derive SQL *column types* (`generateCollectionTableDefinition` /
+// `generateCollectionInsert` in `@nuxt/content`) — it does not actually run
+// the schema's `safeParse` against the parsed frontmatter anywhere in that
+// path. A `.strict()` schema's extra-field check, an enum's membership check,
+// a `.refine()` — none of them reject the build today. (Verified empirically
+// while building this script: an out-of-enum `fromPersona` and an extra field
+// on a `.strict()` Pingback both sailed through a clean `pnpm build`.) So this
+// script is not a "fast subset" of an existing check — it is the first place
+// these Collection schemas actually get evaluated against real content.
+//
+// Reuses the single source of truth instead of re-deriving it: `loadManifests()`
+// + `expand()` (`shared/expand.ts`) are the exact same calls `content.config.ts`
+// makes to turn Tenant manifests into keyed collections, each carrying the
+// Collection's live Zod schema object, its content dir, and its glob include
+// pattern. This script only adds the file IO + `schema.safeParse()` call that
+// `@nuxt/content`'s own build pipeline turns out not to make.
+//
+// Usage:  pnpm validate:content
+//   Exits 0 if every Document matches its Collection's schema, 1 otherwise
+//   (with every violation listed: collection key, file, and the Zod issue).
+//
+// Scope: content only. Does NOT run `pnpm test:e2e` or any other part of the
+// full gate, but IS wired in as its own `pnpm gate` step and CI's dedicated
+// 'L1 · content validation' step (ADR-0004 L1, .github/actions/gate/action.yml).
+import { globSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+import { parse as parseYaml } from 'yaml'
+import { expand, loadManifests, root, type ExpandedCollection } from '../../shared/expand.ts'
+import { findTruncatedScalars } from '../session/journal-files.ts'
+import { runIfMain } from '../lib/cli.ts'
+import { asRecord, frontmatterBlock, splitFrontmatter } from '../lib/frontmatter.ts'
+
+export interface SchemaViolation {
+  /** The collection key, e.g. `blog_david_pingbacks`. */
+  key: string
+  /** Path to the offending file, relative to the repo root. */
+  file: string
+  /** One human-readable message per failed Zod issue. */
+  messages: string[]
+}
+
+export interface ValidationReport {
+  collectionsChecked: number
+  documentsChecked: number
+  violations: SchemaViolation[]
+}
+
+// Exported from here too: `layers/glassbox/tests/unit/glassbox-pages.spec.ts` imports it.
+export { splitFrontmatter }
+
+/** A page schema's fields are always optional additions on top of
+ *  `@nuxt/content`'s built-ins (title/description/body/seo/…), which this
+ *  script does not re-validate: those are synthesized by `@nuxt/content`
+ *  itself, not authored frontmatter. */
+function readFrontmatter(text: string): Record<string, unknown> {
+  return splitFrontmatter(text).frontmatter
+}
+
+/** Parse one content file into the plain object its Collection schema validates
+ *  against. `.md` → frontmatter only (the body isn't part of the authored
+ *  schema); `.yml`/`.yaml`/`.json` → the whole file, matching how a `data`
+ *  Collection's Document is entirely its frontmatter. Exported for reuse by
+ *  `validate-content-refs.ts` (issue #446), which needs the same `.yml`
+ *  whole-file parse for `interactions`/`observations` Documents. */
+export function parseDocument(absPath: string): Record<string, unknown> {
+  const raw = readFileSync(absPath, 'utf8')
+  if (absPath.endsWith('.md')) return readFrontmatter(raw)
+  if (absPath.endsWith('.yml') || absPath.endsWith('.yaml')) return asRecord(parseYaml(raw))
+  if (absPath.endsWith('.json')) return asRecord(JSON.parse(raw))
+  throw new Error(`don't know how to parse "${absPath}" (unsupported extension)`)
+}
+
+/** Values an unquoted ` #` silently cut short. Session logs are skipped: `log-session`
+ *  rejects this at authoring, and landed logs stay as they are (ADR-0009). */
+function truncations(absPath: string): string[] {
+  const raw = readFileSync(absPath, 'utf8')
+  const yamlText = absPath.endsWith('.md') ? (frontmatterBlock(raw)?.yaml ?? '') : raw
+  return findTruncatedScalars(yamlText).map(
+    (h) => `${h.keyPath}: parsed as ${JSON.stringify(h.value)} — an unquoted '#' dropped the rest. Quote it: ${JSON.stringify(h.full)}`,
+  )
+}
+
+/** Lines of a folded block scalar (`>`, `>-`, `>+`) ending in `word-`: the fold
+ *  turns the line break into a space, so the hyphenated word reads as two. */
+function foldedHyphens(absPath: string): string[] {
+  const out: string[] = []
+  let headerIndent = -1 // -1: not inside a folded scalar
+  readFileSync(absPath, 'utf8').split('\n').forEach((line, i) => {
+    const indent = line.length - line.trimStart().length
+    if (headerIndent >= 0 && line.trim() && indent <= headerIndent) headerIndent = -1
+    if (headerIndent >= 0) {
+      if (/[A-Za-z0-9]-$/.test(line.trimEnd())) out.push(`line ${i + 1} ends in "-" inside a folded scalar; the fold splits the word. Rejoin it`)
+    } else if (/(^|[:-])\s*>[-+]?\s*$/.test(line)) headerIndent = indent
+  })
+  return out
+}
+
+/** Validate every Document in every expanded Collection that carries a schema.
+ *  Pure aside from the file reads — takes the already-expanded collections so
+ *  it's testable against a hand-built list, not just the real `layers/` tree. */
+export function validateContent(cols: ExpandedCollection[], projectRoot = root): ValidationReport {
+  let documentsChecked = 0
+  let collectionsChecked = 0
+  const violations: SchemaViolation[] = []
+
+  for (const col of cols) {
+    const schema = col.schema
+    if (!schema) continue // page Collection with no additional schema — nothing authored to check
+    collectionsChecked++
+
+    const cwd = join(projectRoot, col.cwdRel)
+    const relFiles = globSync(col.include, { cwd })
+    for (const rel of relFiles) {
+      const absPath = join(cwd, rel)
+      documentsChecked++
+      let data: Record<string, unknown>
+      try {
+        data = parseDocument(absPath)
+      } catch (err) {
+        violations.push({
+          key: col.key,
+          file: join(col.cwdRel, rel),
+          messages: [err instanceof Error ? err.message : String(err)],
+        })
+        continue
+      }
+      const messages = col.kind === 'session' ? [] : truncations(absPath)
+      if (col.tenant === 'journal' && col.collection === 'skills') messages.push(...foldedHyphens(absPath))
+      const res = schema.safeParse(data)
+      if (!res.success) {
+        messages.push(
+          ...res.error.issues.map((i) => {
+            const where = i.path.join('.')
+            return where ? `${where}: ${i.message}` : i.message
+          }),
+        )
+      }
+      if (messages.length > 0) violations.push({ key: col.key, file: join(col.cwdRel, rel), messages })
+    }
+  }
+
+  return { collectionsChecked, documentsChecked, violations }
+}
+
+// ── CLI ─────────────────────────────────────────────────────────────────────
+
+function printReport(report: ValidationReport): void {
+  for (const v of report.violations) {
+    console.error(`\n${v.key}  (${v.file})`)
+    for (const m of v.messages) console.error(`  - ${m}`)
+  }
+  const status = report.violations.length === 0 ? 'PASS' : 'FAIL'
+  console.log(
+    `\nvalidate-content: ${status} — ${report.collectionsChecked} collections, ` +
+      `${report.documentsChecked} documents checked, ${report.violations.length} violation(s)`,
+  )
+}
+
+function main(): void {
+  const report = validateContent(expand(loadManifests()), root)
+  printReport(report)
+  if (report.violations.length > 0) process.exit(1)
+}
+
+runIfMain(import.meta.url, main)

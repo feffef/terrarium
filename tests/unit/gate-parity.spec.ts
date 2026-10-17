@@ -1,5 +1,5 @@
 // The Gate's step list lives in three places that must agree: `package.json`'s
-// `gate` script, `scripts/gate.ts`'s FLOOR/HEAVY, and the composite action CI
+// `gate` script, `scripts/gate/gate.ts`'s FLOOR/HEAVY, and the composite action CI
 // runs. Keeping them in sync used to be unenforceable, because the third sat
 // behind a push barrier; ADR-0026 removed it and owns the rationale.
 import { existsSync, readFileSync } from 'node:fs'
@@ -7,7 +7,7 @@ import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse as parseYaml } from 'yaml'
 import { root } from '../../shared/expand.ts'
-import { BUILT, FLOOR, HEAVY } from '../../scripts/gate.ts'
+import { BUILT, FLOOR, HEAVY } from '../../scripts/gate/gate.ts'
 
 const ACTION = join(root, '.github/actions/gate/action.yml')
 
@@ -65,7 +65,7 @@ function packageGateScripts(): string[] {
     .map((s: string) => s.trim().replace(/^pnpm /, ''))
 }
 
-describe('Gate parity — the composite action matches scripts/gate.ts (ADR-0026, #879)', () => {
+describe('Gate parity — the composite action matches scripts/gate/gate.ts (ADR-0026, #879)', () => {
   it('the composite action exists and is a composite', () => {
     expect(existsSync(ACTION), `${ACTION} must exist — the Gate's steps live there (ADR-0026)`).toBe(true)
     expect(readAction().runs.using).toBe('composite')

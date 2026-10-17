@@ -1,5 +1,5 @@
 // Coverage for the Skill-inline guard (issue #1018; rationale and detection
-// contract in `scripts/skill-inline-guard.ts`). The pure core is pinned
+// contract in `scripts/hooks/skill-inline-guard.ts`). The pure core is pinned
 // directly against parsed transcript records — the same shape
 // `loop-only-tool-guard.spec.ts` uses for its `<command-name>` fixtures — plus
 // the CLI's stdin→deny-JSON path and `--dry-run`, exercised end to end against
@@ -9,7 +9,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { checkSkillInlineCall, denyOutputFor, formatGuardMessage } from '../../scripts/skill-inline-guard.ts'
+import { checkSkillInlineCall, denyOutputFor, formatGuardMessage } from '../../scripts/hooks/skill-inline-guard.ts'
 import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')

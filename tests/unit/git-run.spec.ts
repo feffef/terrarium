@@ -2,7 +2,7 @@ import { mkdtempSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterAll, describe, expect, it } from 'vitest'
-import { git } from '../../scripts/git-helpers.ts'
+import { git } from '../../scripts/lib/git.ts'
 
 describe('git()', () => {
   const dir = mkdtempSync(join(tmpdir(), 'git-run-'))

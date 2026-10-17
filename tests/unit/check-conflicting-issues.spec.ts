@@ -20,7 +20,7 @@ import {
   type ConflictCandidateIssue,
   type RawConflictIssue,
   type RestPage,
-} from '../../scripts/check-conflicting-issues.ts'
+} from '../../scripts/github/check-conflicting-issues.ts'
 
 // The motivating case from issue #798: issue #784 instructs deleting
 // `SESSION_TRAILER_GLOBAL` as unused, while PR #789 repurposes it.
@@ -96,7 +96,7 @@ describe('bodyMentionsFilePath()', () => {
     expect(bodyMentionsFilePath(ISSUE_784_BODY, 'shared/session-trailer.ts')).toBe(true)
   })
   it('is false when the path does not appear', () => {
-    expect(bodyMentionsFilePath(ISSUE_784_BODY, 'scripts/gate.ts')).toBe(false)
+    expect(bodyMentionsFilePath(ISSUE_784_BODY, 'scripts/gate/gate.ts')).toBe(false)
   })
   it('is case-sensitive (a path is a literal identifier)', () => {
     expect(bodyMentionsFilePath('See Shared/Session-Trailer.ts', 'shared/session-trailer.ts')).toBe(false)
@@ -218,9 +218,9 @@ describe('toConflictCandidateIssue()', () => {
 
 describe('parseChangedFileList()', () => {
   it('splits on newlines and drops blank lines', () => {
-    expect(parseChangedFileList('shared/kinds.ts\n\nscripts/gate.ts\n')).toEqual([
+    expect(parseChangedFileList('shared/kinds.ts\n\nscripts/gate/gate.ts\n')).toEqual([
       'shared/kinds.ts',
-      'scripts/gate.ts',
+      'scripts/gate/gate.ts',
     ])
   })
   it('returns an empty array for empty input', () => {

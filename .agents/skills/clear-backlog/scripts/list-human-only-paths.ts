@@ -5,8 +5,8 @@
 //   pnpm exec tsx .agents/skills/clear-backlog/scripts/list-human-only-paths.ts
 //     <worktree>
 import { matchesGlob } from 'node:path'
-import { git } from '../../../../scripts/git-helpers.ts'
-import { HUMAN_MERGE_RULE } from '../../../../scripts/merge-pr.ts'
+import { git } from '../../../../scripts/lib/git.ts'
+import { HUMAN_MERGE_RULE } from '../../../../scripts/github/merge-pr.ts'
 import { rulePaths } from '../../../../scripts/lib/adr-rules.ts'
 import { runIfMain } from '../../../../scripts/lib/cli.ts'
 

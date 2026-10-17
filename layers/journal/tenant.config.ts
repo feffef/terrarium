@@ -141,7 +141,7 @@ export default defineTenant({
     // (ADR-0009). The shape is now the shared **`session` collection kind**
     // (ADR-0025): its schema is single-homed in `shared/schemas/session.ts` and
     // referenced by `kind` here, so the Commons Timeline can read sessions across
-    // the Catalog without re-declaring the schema. `scripts/log-session.ts`
+    // the Catalog without re-declaring the schema. `scripts/session/log-session.ts`
     // validates authored logs against that same shared schema.
     sessions: { type: 'data', kind: 'session', source: '**/*.yml' },
     frictions: {

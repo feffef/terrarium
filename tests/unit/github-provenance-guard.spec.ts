@@ -27,7 +27,7 @@ import {
   denyOutputFor,
   formatGuardMessage,
   GITHUB_PROVENANCE_TOOLS,
-} from '../../scripts/github-provenance-guard.ts'
+} from '../../scripts/hooks/github-provenance-guard.ts'
 import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')

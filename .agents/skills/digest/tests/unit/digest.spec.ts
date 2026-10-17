@@ -18,7 +18,7 @@ import {
   type Commit,
   type SessionMaterial,
 } from '../../scripts/digest.ts'
-import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR, SESSIONS_DIR } from '../../../../../scripts/session-logs.ts'
+import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR, SESSIONS_DIR } from '../../../../../scripts/session/journal-files.ts'
 
 function commit(subject: string, opts: Partial<Commit> = {}): Commit {
   return { sha: 'abc', at: new Date('2026-07-04T12:00:00Z'), subject, body: '', isMerge: false, ...opts }

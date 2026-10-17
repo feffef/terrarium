@@ -1,4 +1,4 @@
-// Coverage for scripts/guard-wrap.sh (issue #1223): the shared wiring that
+// Coverage for scripts/hooks/guard-wrap.sh (issue #1223): the shared wiring that
 // stops a fail-closed guard's crash-before-`runIfMain`'s-try/catch (a `tsx`
 // cold-start failure, a module-resolution error, a throw during import) from
 // reading as a silent allow. A plain unit test can't observe the live
@@ -27,7 +27,7 @@ function runWrapper(args: string[], stdin = '{}'): { stdout: string; status: num
   }
 }
 
-describe('scripts/guard-wrap.sh (issue #1223)', () => {
+describe('scripts/hooks/guard-wrap.sh (issue #1223)', () => {
   it('passes through a clean exit-0 ALLOW (no stdout) unchanged', () => {
     const { stdout, status } = runWrapper(['test-guard', '--', 'true'])
     expect(stdout).toBe('')

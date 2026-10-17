@@ -3,7 +3,7 @@
 // masquerading as a real typecheck/build break, or `pnpm install` fires on
 // every run for no reason.
 import { describe, expect, it } from 'vitest'
-import { isStale } from '../../scripts/gate.ts'
+import { isStale } from '../../scripts/gate/gate.ts'
 
 describe('isStale()', () => {
   it('is fresh when node_modules/.pnpm is newer than both source files', () => {

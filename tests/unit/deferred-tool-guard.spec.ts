@@ -15,7 +15,7 @@ import {
   denyOutputFor,
   formatGuardMessage,
   FOREIGN_SIGNATURES,
-} from '../../scripts/deferred-tool-guard.ts'
+} from '../../scripts/hooks/deferred-tool-guard.ts'
 import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')

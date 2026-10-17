@@ -18,7 +18,7 @@ import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { isMap, isSeq, parse as parseYaml, parseDocument } from 'yaml'
 import { LEDGER_HORIZON_DAYS, ledgerFixState } from '../../../../layers/journal/app/utils/ledger.ts'
-import { LEDGER_DIR } from '../../../../scripts/session-frictions.ts'
+import { LEDGER_DIR } from '../../../../scripts/session/extract-frictions.ts'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 /** The oldest occurrence date the horizon keeps. */

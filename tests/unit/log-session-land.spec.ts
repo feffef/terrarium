@@ -19,9 +19,9 @@ import {
   schemaErrors,
   scratchHashOf,
   validateEntry,
-} from '../../scripts/log-session.ts'
-import { SESSIONS_DIR } from '../../scripts/session-logs.ts'
-import { extractTrace, parseTranscript, stitch, STAGING_DIR, type AuthoredScratch } from '../../scripts/session-trace.ts'
+} from '../../scripts/session/log-session.ts'
+import { SESSIONS_DIR } from '../../scripts/session/journal-files.ts'
+import { extractTrace, parseTranscript, stitch, STAGING_DIR, type AuthoredScratch } from '../../scripts/session/transcript-trace.ts'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
@@ -61,7 +61,7 @@ describe('handle() — lands from gitignored staging, never the tree (#148)', ()
     const landFn = vi.fn((_rel: string, abs: string) => {
       seenAbs = abs
       return 'deadbeef0000'
-    }) as unknown as typeof import('../../scripts/log-session.ts').land
+    }) as unknown as typeof import('../../scripts/session/log-session.ts').land
 
     const res = handle(scratch, transcript, {
       dryRun: false,
@@ -94,14 +94,14 @@ describe('handle() — lands from gitignored staging, never the tree (#148)', ()
       landFn: ((_rel: string, abs: string) => {
         yaml = readFileSync(abs, 'utf8')
         return 'x'
-      }) as unknown as typeof import('../../scripts/log-session.ts').land,
+      }) as unknown as typeof import('../../scripts/session/log-session.ts').land,
     })
     rmSync(stagingAbs, { force: true })
     expect(yaml).not.toBe('')
 
     // Second pass: main already has that YAML → the diff-guard short-circuits
     // before any staging write or land call.
-    const landFn = vi.fn() as unknown as typeof import('../../scripts/log-session.ts').land
+    const landFn = vi.fn() as unknown as typeof import('../../scripts/session/log-session.ts').land
     const res = handle(scratch, transcript, {
       dryRun: false,
       remote: 'origin',
@@ -119,7 +119,7 @@ describe("main's session schema — a branch's new field cannot land a log main 
   afterEach(() => rmSync(stagingAbs, { force: true }))
 
   it('refuses to land, and stages nothing, when main rejects the entry', () => {
-    const landFn = vi.fn() as unknown as typeof import('../../scripts/log-session.ts').land
+    const landFn = vi.fn() as unknown as typeof import('../../scripts/session/log-session.ts').land
     const res = handle(scratch, transcript, {
       dryRun: false,
       remote: 'origin',
@@ -158,7 +158,7 @@ describe('landedBy — which hook registration landed the log (issue #865)', () 
       landFn: ((_rel: string, abs: string) => {
         yaml = readFileSync(abs, 'utf8')
         return 'x'
-      }) as unknown as typeof import('../../scripts/log-session.ts').land,
+      }) as unknown as typeof import('../../scripts/session/log-session.ts').land,
     })
     return { res, yaml }
   }
@@ -225,7 +225,7 @@ describe('declaredClosure() / recoverDroppedScratch() — issue #449 Gap 3', () 
       dryRun: false,
       remote: 'origin',
       env: {},
-      landFn: landFn as unknown as typeof import('../../scripts/log-session.ts').land,
+      landFn: landFn as unknown as typeof import('../../scripts/session/log-session.ts').land,
       mainVersionFn: () => null,
     })
     expect(res.action).toBe('landed')
@@ -242,7 +242,7 @@ describe('declaredClosure() / recoverDroppedScratch() — issue #449 Gap 3', () 
       dryRun: false,
       remote: 'origin',
       env: {},
-      landFn: landFn as unknown as typeof import('../../scripts/log-session.ts').land,
+      landFn: landFn as unknown as typeof import('../../scripts/session/log-session.ts').land,
       mainVersionFn: () => null,
     })
     expect(res.action).toBe('skipped-no-scratch')
@@ -255,7 +255,7 @@ describe('declaredClosure() / recoverDroppedScratch() — issue #449 Gap 3', () 
       dryRun: false,
       remote: 'origin',
       env: {},
-      landFn: landFn as unknown as typeof import('../../scripts/log-session.ts').land,
+      landFn: landFn as unknown as typeof import('../../scripts/session/log-session.ts').land,
       mainVersionFn: () => 'schemaVersion: 1\nsession: whatever\n', // something already lives there
     })
     expect(res.action).toBe('skipped-unchanged')

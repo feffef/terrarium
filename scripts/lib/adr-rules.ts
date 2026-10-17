@@ -1,5 +1,5 @@
 // The ADR-rule parsing library: hashes, rule frontmatter, the pointer line and
-// the checks over them. `scripts/validate-adr-rules.ts` is the gate CLI on top;
+// the checks over them. `scripts/gate/validate-adr-rules.ts` is the gate CLI on top;
 // the hints and session-trace import this directly.
 import { createHash } from 'node:crypto'
 import { parse as parseYaml } from 'yaml'
@@ -105,7 +105,7 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
   }
   for (const file of staleRules(input)) {
     problems.push(
-      `ADR-${ruleAdr(file)} changed since ${RULES_DIR}/${file} was last checked. Re-read it, update it if the rule changed, then run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`,
+      `ADR-${ruleAdr(file)} changed since ${RULES_DIR}/${file} was last checked. Re-read it, update it if the rule changed, then run \`pnpm exec tsx scripts/gate/validate-adr-rules.ts --write\`.`,
     )
   }
   for (const [file, text] of Object.entries(rules)) {
@@ -115,7 +115,7 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
     if (adr === undefined || !isSummary(file) || (own && pointer![0].includes(estimate(adrTokens(adr))))) continue
     problems.push(
       own
-        ? `${RULES_DIR}/${file} gives a stale token estimate: run \`pnpm exec tsx scripts/validate-adr-rules.ts --write\`.`
+        ? `${RULES_DIR}/${file} gives a stale token estimate: run \`pnpm exec tsx scripts/gate/validate-adr-rules.ts --write\`.`
         : `${RULES_DIR}/${file} must point to its ADR with a line "${POINTER_SHAPE}".`,
     )
   }

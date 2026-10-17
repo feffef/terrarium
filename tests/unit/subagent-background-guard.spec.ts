@@ -12,7 +12,7 @@ import {
   denyOutputFor,
   detectAgentContext,
   formatGuardMessage,
-} from '../../scripts/subagent-background-guard.ts'
+} from '../../scripts/hooks/subagent-background-guard.ts'
 import { envWithTsxShim, runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')

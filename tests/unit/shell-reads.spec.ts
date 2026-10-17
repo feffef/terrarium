@@ -11,7 +11,7 @@ import {
   scanShellReads,
   scanShellReadsByOutput,
   shellSegments,
-} from '../../scripts/shell-reads.ts'
+} from '../../scripts/session/shell-reads.ts'
 
 /** Mirrors the trace's own relativizer for an absolute in-repo path. */
 const rel = (p: string): string => (p.startsWith('/repo/') ? p.slice(6) : p)

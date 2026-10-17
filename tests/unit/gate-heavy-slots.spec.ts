@@ -4,7 +4,7 @@ import { mkdtempSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { acquireHeavySlot } from '../../scripts/gate.ts'
+import { acquireHeavySlot } from '../../scripts/gate/gate.ts'
 
 describe('acquireHeavySlot()', () => {
   const DEAD_PID = 2 ** 22 + 1 // above Linux's pid_max ceiling, so never alive

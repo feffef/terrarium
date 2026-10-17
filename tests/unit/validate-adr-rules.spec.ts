@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { adrHash, adrTokens, findAdrRuleProblems, newFormatProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash, withRuleTokens } from '../../scripts/validate-adr-rules.ts'
+import { adrHash, adrTokens, findAdrRuleProblems, newFormatProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash, withRuleTokens } from '../../scripts/gate/validate-adr-rules.ts'
 
 const ADR = '# ADR-0024: Mermaid\n\nDecision text.\n'
 const stamped = (body: string) => withRuleHash(body, adrHash(ADR))
@@ -64,7 +64,7 @@ describe('ADR token estimate in the summary pointer', () => {
   it('fails a summary whose estimate is stale or whose pointer is missing, old, empty after "or", or names another ADR', () => {
     const check = (rule: string) => findAdrRuleProblems({ adrs: { '0024': ADR }, rules: { 'adr-0024.md': rule } })
     expect(check(withRuleTokens(summary, 900))).toEqual([
-      '.claude/rules/adr-0024.md gives a stale token estimate: run `pnpm exec tsx scripts/validate-adr-rules.ts --write`.',
+      '.claude/rules/adr-0024.md gives a stale token estimate: run `pnpm exec tsx scripts/gate/validate-adr-rules.ts --write`.',
     ])
     expect(check(stamped('x'))[0]).toContain('must point to its ADR')
     expect(check(stamped("If this touches your task, read the full ADR first (it's only 3 lines):\n"))[0]).toContain('must point to its ADR')

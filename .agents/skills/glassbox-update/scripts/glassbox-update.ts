@@ -5,7 +5,7 @@ import { existsSync, globSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { glassboxTerms } from '../../../../layers/glassbox/page-checks.ts'
 import { glassboxPageRefs, glassboxRelineRefs, rangeText, shiftLines, type LineRange } from '../../../../layers/glassbox/page-refs.ts'
-import { fetchOriginMain, git } from '../../../../scripts/git-helpers.ts'
+import { fetchOriginMain, git } from '../../../../scripts/lib/git.ts'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 

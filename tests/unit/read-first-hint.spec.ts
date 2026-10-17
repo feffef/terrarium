@@ -1,12 +1,12 @@
 // Coverage for the read-first hint (issue #1754; contract in
-// `scripts/read-first-hint.ts`).
+// `scripts/hooks/read-first-hint.ts`).
 import { spawnSync } from 'node:child_process'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { CLOSE_SESSION_HINT, LATE_READ_NOTE, READ_FIRST, triggeredDocs } from '../../scripts/read-first-hint.ts'
+import { CLOSE_SESSION_HINT, LATE_READ_NOTE, READ_FIRST, triggeredDocs } from '../../scripts/hooks/read-first-hint.ts'
 import { runTsx } from '../support/run-script.ts'
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -54,12 +54,12 @@ describe('triggeredDocs()', () => {
   it('matches a screenshot script run directly or through tsx, not preview stop', () => {
     const UI = 'docs/agents/verifying-ui-changes.md'
     const cases: [string, string[]][] = [
-      ['scripts/preview.ts shot /x', [UI]],
-      ['pnpm exec tsx scripts/preview.ts shot --width 390 /x', [UI]],
-      ['scripts/preview.ts review / /tmp/out', [UI]],
-      ['node_modules/.bin/tsx scripts/screenshot.ts /x', [UI]],
-      ['scripts/preview.ts stop 123', []],
-      ['cat scripts/preview.ts', []],
+      ['scripts/ui/preview.ts shot /x', [UI]],
+      ['pnpm exec tsx scripts/ui/preview.ts shot --width 390 /x', [UI]],
+      ['scripts/ui/preview.ts review / /tmp/out', [UI]],
+      ['node_modules/.bin/tsx scripts/ui/screenshot.ts /x', [UI]],
+      ['scripts/ui/preview.ts stop 123', []],
+      ['cat scripts/ui/preview.ts', []],
     ]
     for (const [command, docs] of cases) expect(bashDocs(command), command).toEqual(docs)
   })
@@ -73,7 +73,7 @@ describe('triggeredDocs()', () => {
 
 describe('the hook entry (sh pre-filter → tsx)', () => {
   const run = (payload: unknown) =>
-    spawnSync('sh', ['scripts/read-first-hint.sh'], {
+    spawnSync('sh', ['scripts/hooks/read-first-hint.sh'], {
       cwd: repo,
       input: typeof payload === 'string' ? payload : JSON.stringify(payload),
       encoding: 'utf8',
@@ -166,7 +166,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
   it('--dry-run prints the pointer for an unread doc, and nothing for git status', () => {
     const dry = (command: string, tool_name = 'Bash') => {
       const input = JSON.stringify({ tool_name, cwd: repo, tool_input: { command } })
-      return JSON.parse(runTsx(join(repo, 'scripts/read-first-hint.ts'), { args: ['--dry-run', '--input', input] })).hint as string | null
+      return JSON.parse(runTsx(join(repo, 'scripts/hooks/read-first-hint.ts'), { args: ['--dry-run', '--input', input] })).hint as string | null
     }
     expect(dry('git log -1')).toContain(GIT)
     expect(dry('git status')).toBeNull()

@@ -15,7 +15,7 @@ import {
   provenanceHeader,
   readProvenanceHeader,
   sessionIdsIn,
-} from '../../scripts/provenance-header.ts'
+} from '../../scripts/lib/provenance-header.ts'
 
 const URL = 'https://claude.ai/code/session_019hdkXjoebyR8etKVNyjn7S'
 const ID = 'session_019hdkXjoebyR8etKVNyjn7S'

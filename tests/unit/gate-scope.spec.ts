@@ -5,7 +5,7 @@ import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { changedPaths, decideScope, isInert, isSkillFile, planSteps, FLOOR, HEAVY } from '../../scripts/gate.ts'
+import { changedPaths, decideScope, isInert, isSkillFile, planSteps, FLOOR, HEAVY } from '../../scripts/gate/gate.ts'
 
 describe('isInert()', () => {
   it('treats a Markdown file outside layers/ as inert', () => {
@@ -34,7 +34,7 @@ describe('isInert()', () => {
   })
 
   it('treats any non-.md path as non-inert', () => {
-    expect(isInert('scripts/gate.ts')).toBe(false)
+    expect(isInert('scripts/gate/gate.ts')).toBe(false)
     expect(isInert('package.json')).toBe(false)
     expect(isInert('.github/workflows/gate.yml')).toBe(false)
     expect(isInert('docs/research/diagram.png')).toBe(false)
@@ -54,9 +54,9 @@ describe('decideScope()', () => {
   })
 
   it('runs the full gate when ANY changed path is non-inert', () => {
-    const scope = decideScope(['docs/adr/0004.md', 'scripts/gate.ts'])
+    const scope = decideScope(['docs/adr/0004.md', 'scripts/gate/gate.ts'])
     expect(scope.skipHeavy).toBe(false)
-    expect(scope.reason).toContain('scripts/gate.ts')
+    expect(scope.reason).toContain('scripts/gate/gate.ts')
     expect(planSteps(scope)).toEqual([...FLOOR, ...HEAVY])
   })
 
@@ -83,9 +83,9 @@ describe('decideScope()', () => {
   })
 
   it('runs the full gate when a Skill file comes with any other non-inert path', () => {
-    const scope = decideScope(['.agents/skills/blog-post/scripts/blog-rotation.ts', 'scripts/session-logs.ts'])
+    const scope = decideScope(['.agents/skills/blog-post/scripts/blog-rotation.ts', 'scripts/session/journal-files.ts'])
     expect(scope).toMatchObject({ skipHeavy: false, skipBuild: false })
-    expect(scope.reason).toContain('scripts/session-logs.ts')
+    expect(scope.reason).toContain('scripts/session/journal-files.ts')
     expect(planSteps(scope)).toEqual([...FLOOR, ...HEAVY])
   })
 

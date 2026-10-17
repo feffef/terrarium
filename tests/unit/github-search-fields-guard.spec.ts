@@ -1,9 +1,9 @@
 // Coverage for the GitHub search fields guard (issue #1860; rationale in
-// `scripts/github-search-fields-guard.ts`).
+// `scripts/hooks/github-search-fields-guard.ts`).
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { checkSearchFields, denyOutputFor, SEARCH_FIELDS_TOOLS } from '../../scripts/github-search-fields-guard.ts'
+import { checkSearchFields, denyOutputFor, SEARCH_FIELDS_TOOLS } from '../../scripts/hooks/github-search-fields-guard.ts'
 import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')

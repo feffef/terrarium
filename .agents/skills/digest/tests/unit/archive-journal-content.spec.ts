@@ -16,7 +16,7 @@ import {
   planPart,
   RETAIN_DATES,
 } from '../../scripts/archive-journal-content.ts'
-import { ARCHIVED_DIGESTS_DIR, ARCHIVED_SESSIONS_DIR, DIGESTS_DIR, SESSIONS_DIR } from '../../../../../scripts/session-logs.ts'
+import { ARCHIVED_DIGESTS_DIR, ARCHIVED_SESSIONS_DIR, DIGESTS_DIR, SESSIONS_DIR } from '../../../../../scripts/session/journal-files.ts'
 
 describe('datesToRetain()', () => {
   it('keeps the newest N distinct dates present', () => {

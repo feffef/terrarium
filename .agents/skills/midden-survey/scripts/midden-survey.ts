@@ -21,7 +21,7 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
-import { fetchOriginMain, git } from '../../../../scripts/git-helpers.ts'
+import { fetchOriginMain, git } from '../../../../scripts/lib/git.ts'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const FIELD_SEP = '\x1f'
@@ -523,7 +523,7 @@ export interface SurveyReport {
 
 export function surveyReport(cwd = root, sinceIso?: string): SurveyReport {
   assertNotShallow(cwd)
-  // See `fetchOriginMain`'s doc comment (scripts/git-helpers.ts) for why this is
+  // See `fetchOriginMain`'s doc comment (scripts/lib/git.ts) for why this is
   // called before every read, and why a failure here is left fatal.
   fetchOriginMain(cwd)
 

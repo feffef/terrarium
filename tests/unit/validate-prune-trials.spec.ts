@@ -2,7 +2,7 @@
 // gate check for `.agents/prune-trials.yml`. Exercised against fixture
 // strings, never the repo's own ledger (that file's content stays untouched).
 import { describe, expect, it } from 'vitest'
-import { validatePruneTrialsYaml } from '../../scripts/validate-prune-trials.ts'
+import { validatePruneTrialsYaml } from '../../scripts/gate/validate-prune-trials.ts'
 
 const CLEAN_LEDGER = `# header comment, ordinary YAML below
 trials:

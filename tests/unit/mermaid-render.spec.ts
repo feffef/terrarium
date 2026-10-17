@@ -6,7 +6,7 @@ import { existsSync, globSync, mkdirSync, mkdtempSync, readFileSync, rmSync, wri
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { discoverDiagrams } from '../../scripts/mermaid-lib.ts'
+import { discoverDiagrams } from '../../scripts/gate/mermaid-files.ts'
 import {
   extractMermaidBlocks,
   MERMAID_RENDER_FONT,
@@ -19,8 +19,8 @@ import {
   relaxNodeLabelOverflow,
   SENTINELS,
   themeSvg,
-} from '../../scripts/render-mermaid.ts'
-import { diffMermaid } from '../../scripts/verify-mermaid.ts'
+} from '../../scripts/gate/render-mermaid.ts'
+import { diffMermaid } from '../../scripts/gate/validate-mermaid-svgs.ts'
 
 describe('mermaidKey()', () => {
   it('is deterministic for the same source', () => {

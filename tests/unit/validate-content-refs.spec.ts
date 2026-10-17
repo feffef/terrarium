@@ -1,6 +1,6 @@
 // Unit tests for `validateReferences()` (issue #446) — the pure-ish core of
 // the referential-integrity + Atlas MDC structural pass that `pnpm
-// validate:content` also runs (via `scripts/validate-content-refs.ts`).
+// validate:content` also runs (via `scripts/gate/validate-content-refs.ts`).
 // Exercises it against hand-built fixture files under a throwaway temp dir
 // (not the real `layers/atlas/` tree), in the same spirit as
 // `validate-content.spec.ts`: a valid baseline plus one fixture per violation
@@ -15,7 +15,7 @@ import {
   commitDateWithinSeason,
   scanDirectives,
   validateReferences,
-} from '../../scripts/validate-content-refs.ts'
+} from '../../scripts/gate/validate-content-refs.ts'
 import type { ExpandedCollection } from '../../shared/expand.ts'
 
 let dir: string
@@ -415,7 +415,7 @@ describe('checkProvenance() — file-kind path plausibility', () => {
   const filePath = (path: unknown) => checkProvenance({ kind: 'file', path }, dir)
 
   it('accepts an ordinary repo-relative path', () => {
-    expect(filePath('scripts/validate-content-refs.ts')).toEqual([])
+    expect(filePath('scripts/gate/validate-content-refs.ts')).toEqual([])
     expect(filePath('GLOSSARY.md')).toEqual([])
   })
 

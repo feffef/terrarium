@@ -18,8 +18,8 @@ import {
   reportUnexplainedReads,
   validateAuthored,
   validateEntry,
-} from '../../scripts/log-session.ts'
-import type { AuthoredScratch } from '../../scripts/session-trace.ts'
+} from '../../scripts/session/log-session.ts'
+import type { AuthoredScratch } from '../../scripts/session/transcript-trace.ts'
 
 const valid = {
   session: 'session_01HNmYFFBMxwQufmpeXMqLHK',

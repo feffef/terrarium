@@ -2,7 +2,7 @@
 // `prod` holds realistic simulated content; `qa` holds edge-case test data
 // that Tinkerfund's e2e tests run against (issue #1375). No `kind`: Tinkerfund
 // stays out of the Commons' Catalog. The content model is issue #1366;
-// cross-Document references are checked in scripts/validate-content-refs.ts.
+// cross-Document references are checked in scripts/gate/validate-content-refs.ts.
 // Every Collection's schema lives in schemas.ts.
 import { defineTenant } from '../../shared/manifest'
 import { backer, category, commentThread, inventor, page, promotion, shop, updateLog } from './schemas'
