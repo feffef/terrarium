@@ -86,6 +86,7 @@ useSeoMeta({ description: () => landing.value?.description })
 
     <section v-if="data?.words.length" class="words" aria-labelledby="words-h">
       <h2 id="words-h" class="gb-label">Terms you’ll meet</h2>
+      <p class="hint">Tap a term to see what it means.</p>
       <ul>
         <li v-for="word in data.words" :key="word.stem">
           <button
@@ -142,10 +143,6 @@ h1 {
 h2 { margin: 0 0 16px; font-size: 22px; font-weight: 600; }
 section { margin-bottom: 56px; }
 .teaser {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
   font-size: 13.5px;
   line-height: 1.45;
   color: var(--gb-muted);
@@ -154,7 +151,8 @@ section { margin-bottom: 56px; }
 
 /* The term strip: chips like Term.vue's inline terms, one definition open at a time. */
 .words { margin-bottom: 40px; }
-.words h2 { margin-bottom: 12px; }
+.words h2 { margin-bottom: 4px; }
+.words .hint { margin: 0 0 10px; font-size: 13px; color: var(--gb-muted); }
 .words ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .words button { all: unset; cursor: pointer; padding: 4px 12px; border: 1px solid var(--gb-line); border-radius: 999px; font-size: 14px; }
 .words button:hover, .words button[aria-expanded='true'] { color: var(--gb-accent); border-color: var(--gb-accent); }
@@ -190,6 +188,7 @@ section { margin-bottom: 56px; }
 .blurb { margin: -4px 0 4px; font-size: 14px; line-height: 1.45; color: var(--gb-muted); }
 .card ul { display: flex; flex-direction: column; gap: 10px; margin: 0; padding: 0; list-style: none; }
 .card li a { display: flex; flex-direction: column; gap: 1px; text-decoration: none; }
+.card .teaser { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .card .title { font-size: 15px; line-height: 1.4; color: var(--gb-ink); font-weight: 500; }
 .card .title::after { content: ' →'; color: var(--gb-muted); }
 .card li a:hover .title { color: var(--gb-accent); }

@@ -19,3 +19,5 @@ here is dropped. One line each, in the order added, citing the PR where it was m
 - The site footer links only the five homepage sites (Journal, Blog, Midden, Atlas, Tinkerfund) — Search (Commons) and Marquee stay out of it on every page (owner, #1624, 2026-10-05).
 - Each Blog Persona landing page lists "Popular posts" with owner-endorsed picks — never a "New here? Start with these three"-style start list in its place (owner, reworking #1667 in #1672, 2026-10-07).
 - The Journal's on-ramp explains the Platform itself, never a tour of the demo sites, which the homepage features enough (owner, #1851, 2026-10-12).
+- The Glass Box guide landing has no "Start here" card or reading path, and Walkthroughs follow the Subjects as a plain list; they aren't ready to stand out (owner, #2171/#2176, 2026-10-16).
+- The Glass Box landing's terms stay a compact chip strip, not prominent cards (owner, #2178, 2026-10-16).

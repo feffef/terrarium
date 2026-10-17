@@ -34,14 +34,13 @@ button:focus-visible {
 }
 button[aria-expanded='true'] { color: var(--gb-accent); }
 .definition {
-  margin-inline-start: 0.35em;
-  padding: 0.1em 0.45em;
+  display: block;
+  margin: 0.3em 0 0.5em;
+  padding: 0.3em 0.6em;
   border-radius: 6px;
   background: var(--gb-tint);
   color: var(--gb-muted);
   font-size: 0.92em;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
 }
 .source { margin-inline-start: 0.4em; }
 </style>
