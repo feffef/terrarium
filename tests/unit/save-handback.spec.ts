@@ -37,3 +37,15 @@ it('throws when the subagent has no transcript', () => {
   dirs.push(dir)
   expect(() => saveHandback(join(dir, 'parent.jsonl'), 'nope', join(dir, 'o'))).toThrow(/nope/)
 })
+
+it('refuses to save while the subagent is mid-run', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'handback-'))
+  dirs.push(dir)
+  const sub = join(dir, 'parent', 'subagents')
+  mkdirSync(sub, { recursive: true })
+  writeFileSync(
+    join(sub, 'agent-run1.jsonl'),
+    rec([{ type: 'text', text: 'working' }, { type: 'tool_use', name: 'Bash', input: {} }]),
+  )
+  expect(() => saveHandback(join(dir, 'parent.jsonl'), 'run1', join(dir, 'o'))).toThrow(/not finished/)
+})

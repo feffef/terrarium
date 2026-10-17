@@ -7,21 +7,20 @@ import { basename } from 'node:path'
 import { fail, runIfMain } from '../lib/cli.ts'
 import { findLatestTranscript, parseTranscript, subagentTranscriptPaths } from './transcript-trace.ts'
 
-/** The last text block of the last assistant record that has one. */
+/** The text of the last assistant record, or undefined when it holds none or ends on a tool call (mid-run). */
 function finalText(jsonl: string): string | undefined {
-  for (const r of parseTranscript(jsonl).reverse()) {
-    const content = (r.message as { content?: unknown } | undefined)?.content
-    if (r.type !== 'assistant' || !Array.isArray(content)) continue
-    const texts = content.filter((c) => c?.type === 'text' && typeof c.text === 'string')
-    if (texts.length) return texts[texts.length - 1].text
-  }
+  const last = parseTranscript(jsonl).findLast((r) => r.type === 'assistant')
+  const content = (last?.message as { content?: unknown } | undefined)?.content
+  const texts = Array.isArray(content) ? content.filter((c) => c?.type === 'text' && typeof c.text === 'string') : []
+  if (!Array.isArray(content) || content.some((c) => c?.type === 'tool_use')) return undefined
+  return texts.at(-1)?.text
 }
 
 export function saveHandback(parentTranscript: string, agentId: string, out: string): void {
   const file = subagentTranscriptPaths(parentTranscript).find((p) => basename(p) === `agent-${agentId}.jsonl`)
   if (!file) throw new Error(`no transcript for agent ${agentId} under ${parentTranscript}`)
   const text = finalText(readFileSync(file, 'utf8'))
-  if (text === undefined) throw new Error(`agent ${agentId} has no assistant text yet`)
+  if (text === undefined) throw new Error(`agent ${agentId} has not finished (no final text)`)
   writeFileSync(out, text)
 }
 
