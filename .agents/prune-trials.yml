@@ -79,33 +79,6 @@ trials:
       prevented it. NOT damage: the read-first hint firing, or a session that
       logs `HUMAN-PROMPTED-CLOSURE` correctly.
   - problem: >
-      `docs/agents/github-integration.md` rewritten plainly, 190 lines to 159
-      (-31): the overflow and precision traps merged and shortened (the
-      `fields`-on-search rule is held by `github-search-fields-guard.ts`, which
-      failed as prose in #1860, read via the search subagent's report), the
-      script escapes cut to a line each, the 503 and angle-bracket notes
-      tightened. Section names the guard message and other docs cite are kept.
-      The search subagent covered the instruction corpus, guard headers and the
-      tracker; runners-up: provenance-header restatements across ~10 Skills (thin
-      per file) and deferred-tool resolution (host behaviour, not prunable). Same
-      run judged and deleted two trials (guards.md; the pr-workflow recipe): only
-      nit/minor Frictions, no regression issue. The mass here was small.
-    territory:
-      paths:
-        - "docs/agents/github-integration.md (all of it)"
-      keywords:
-        - Overflow and precision traps
-        - Script escapes
-        - Write traps
-    opened: 2026-10-14
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session overflowed its
-      context on a GitHub list/search/log call, hit a 403 search rate limit
-      repeatedly, or missed a real issue by trusting a zero-hit search, and a
-      line the old page carried would have prevented it. NOT damage: the
-      fields guard denying and the session fixing itself from the message.
-  - problem: >
       `docs/agents/pr-workflow.md` rewritten plainly, 116 lines to 104 (-12): the
       self-merge discipline (verdict comment, `Reviewed: <sha>`, no auto-merge,
       closing keywords) cut to the rule and a pointer to `merge-pr.ts`, which now
