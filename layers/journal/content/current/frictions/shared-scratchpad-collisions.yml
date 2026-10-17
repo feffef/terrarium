@@ -2,7 +2,11 @@ name: shared-scratchpad-collisions
 summary: "Parallel subagents share one scratchpad, so one overwrites or runs another agent's helper files."
 cause: "Dispatched agents write helper scripts and drafts to the same scratchpad directory; a stale or foreign script runs or is overwritten. Signals: \"shared the scratchpad\", \"stale helper\", \"overwrote another's helper script\"."
 surface: safe
-status: tracked
+status: open
+fixes:
+  - pr: 2197
+    date: "2026-10-17"
+    summary: "Subagent briefs now ask each agent to keep scratch files in its own scratchpad subfolder."
 occurrences:
   - session: session_01Fay2GiWTwxDKnnqS9DznHk
     date: "2026-10-16"
