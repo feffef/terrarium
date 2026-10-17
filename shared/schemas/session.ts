@@ -86,7 +86,7 @@ export const sessionSchema = z
     entrypoint: z.string().optional(),
     cliVersion: z.string().optional(),
     // A human-legible identifier for what fired a Routine-triggered session —
-    // derived by session-trace.ts's extractTrace ONLY when entrypoint is
+    // derived by transcript-trace.ts's extractTrace ONLY when entrypoint is
     // 'remote_trigger' (issue #449 Gap 1); absent for every other session.
     trigger: z.string().optional(),
     // Marks a log authored by an EXTERNAL harness — a different agent / toolchain /

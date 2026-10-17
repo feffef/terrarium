@@ -93,7 +93,7 @@ re-diagnose them as new. Incident detail lives in the cited issue.
 - **A cloud session's `CLAUDE_CODE_REMOTE_SESSION_ID` is `cse_<id>`, but
   claude.ai/code opens that session at `session_<id>`: the same id, another
   prefix.** Swap the prefix before you link the session or write its ADR-0017
-  header; `normalizeRemoteSessionId` in `scripts/session-trace.ts` does it. A
+  header; `normalizeRemoteSessionId` in `scripts/session/transcript-trace.ts` does it. A
   local CLI session has no claude.ai/code link; its id is the transcript's raw
   UUID. (issue #387)
 - **A headless `claude -p` probe inherits the parent's session id and writes its

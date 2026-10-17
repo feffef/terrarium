@@ -858,7 +858,7 @@ Every panel has the same rows, in this order. An empty row is hidden.
 | Node | Files | Why |
 |---|---|---|
 | `maintainer` | none | ADR-0020, ADR-0003 |
-| `visitor` | `docs/agents/guest-contributions.md`, `scripts/trust.ts` | ADR-0020 |
+| `visitor` | `docs/agents/guest-contributions.md`, `scripts/lib/author-trust.ts` | ADR-0020 |
 | `routines` | none: each timer is set in claude.ai | – |
 | each routine | `.agents/skills/<name>/` | ADR-0003 |
 | `prune-trial`, also | `.agents/prune-trials.yml` | ADR-0027 |
@@ -866,16 +866,16 @@ Every panel has the same rows, in this order. An empty row is hidden.
 | `helper-agents` | `.agents/skills/dispatch-subagents/` | – |
 | `rules` | `CLAUDE.md`, `GLOSSARY-MAP.md`, `GLOSSARY.md`, `layers/<tenant>/GLOSSARY.md`, `docs/agents/`, `docs/adr/` | ADR-0021, ADR-0029, ADR-0030 |
 | `skills` | `.agents/skills/`, `.claude/skills/`, `.claude/workflows/`, `skills-lock.json` | ADR-0005, ADR-0015 |
-| `guards` | `scripts/*-guard.ts`, `scripts/guard-wrap.sh`, `.claude/settings.json`, `.githooks/`, `docs/agents/guards.md` | – |
+| `guards` | `scripts/hooks/*-guard.ts`, `scripts/hooks/guard-wrap.sh`, `.claude/settings.json`, `.githooks/`, `docs/agents/guards.md` | – |
 | `scripts` | `scripts/` | – |
 | `code` | `app/`, `modules/`, `shared/`, `nuxt.config.ts`, `content.config.ts`, `layers/<tenant>/app/`, `layers/<tenant>/nuxt.config.ts`, `layers/<tenant>/tenant.config.ts`, `layers/<tenant>/tests/`, `tests/` | ADR-0001, ADR-0018 |
 | `content` | `layers/<tenant>/content/` | ADR-0001, ADR-0002 |
 | `journal` | `.agents/skills/digest/scripts/archive-journal-content.ts` | ADR-0009, ADR-0010 |
-| `logs` | `layers/journal/content/*/sessions/`, `shared/schemas/session.ts`, `scripts/log-session.ts` | ADR-0009 |
+| `logs` | `layers/journal/content/*/sessions/`, `shared/schemas/session.ts`, `scripts/session/log-session.ts` | ADR-0009 |
 | `inventory` | `layers/journal/content/*/skills/` | ADR-0015 |
 | `issues` | `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `.agents/skills/triage/`, `.agents/skills/auto-triage/` | ADR-0020, ADR-0022 |
-| `prs` | `docs/agents/pr-workflow.md`, `scripts/merge-pr.ts` | ADR-0003, ADR-0004 |
-| `ci` | `.github/workflows/gate.yml`, `.github/actions/gate/action.yml`, `scripts/gate.ts` | ADR-0004, ADR-0026 |
+| `prs` | `docs/agents/pr-workflow.md`, `scripts/github/merge-pr.ts` | ADR-0003, ADR-0004 |
+| `ci` | `.github/workflows/gate.yml`, `.github/actions/gate/action.yml`, `scripts/gate/gate.ts` | ADR-0004, ADR-0026 |
 | `caddy` | `deploy/README.md`; Caddy itself is set up outside the repository | – |
 | `container` | `deploy/entrypoint.sh`, `deploy/Dockerfile`, `deploy/docker-compose.yml` | ADR-0011 |
 | `browser` | `app/components/ContentLoadErrorDialog.vue` | ADR-0028, ADR-0019 |

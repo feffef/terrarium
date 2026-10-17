@@ -65,7 +65,7 @@ Large results overflow your context. Keep them small and read every hit.
 - **Prefer a repo-scoped listing to `search_*`.** Searching is the fragile path:
   the `search_*` tools return a 403 rate limit after a few sequential calls, and
   the proxy blocks GitHub's `search/issues` for scripts. Use `list_issues`,
-  `list_pull_requests` or `pnpm exec tsx scripts/list-open-issues.ts` and filter
+  `list_pull_requests` or `pnpm exec tsx scripts/github/list-open-issues.ts` and filter
   locally. If a search is unavoidable and returns 403, wait a minute and retry
   once, sequentially. Always scope a search (state, label, keyword): a broad
   query overflows too. A guard requires `fields` on `search_issues` and
@@ -91,13 +91,13 @@ Large results overflow your context. Keep them small and read every hit.
 
 ## Script escapes — cheaper than the API
 
-- **Recently merged PRs:** `pnpm exec tsx scripts/recent-prs.ts [N]` reads
+- **Recently merged PRs:** `pnpm exec tsx scripts/git/list-recent-prs.ts [N]` reads
   `git log origin/main` (number, title, merge time only).
-- **Open issues:** `pnpm exec tsx scripts/list-open-issues.ts [N]` (number,
+- **Open issues:** `pnpm exec tsx scripts/github/list-open-issues.ts [N]` (number,
   title, labels, updated time). It falls back to `curl` with `GH_TOKEN` /
   `GITHUB_TOKEN` when `gh` is missing; with neither, use the MCP tools.
 - **An AI comment may claim a triage-label change the issue never got**
-  (issue #325). `pnpm exec tsx scripts/check-triage-drift.ts [N]` prints such
+  (issue #325). `pnpm exec tsx scripts/github/check-triage-drift.ts [N]` prints such
   mismatches as JSON; the script's header says how.
 
 ## Polling: gate status is not webhook-delivered

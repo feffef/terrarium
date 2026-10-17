@@ -67,7 +67,7 @@ and issues.
 
 ## See
 
-- `scripts/verify-skills-lock.ts`: the pack check and how to re-pin.
+- `scripts/gate/validate-skills-lock.ts`: the pack check and how to re-pin.
 - `.agents/skills/audit-skills/SKILL.md`: the audit's steps and limits.
-- `scripts/audit-skills.ts`: the scorecard and which Skills get checked.
+- `scripts/session/audit-skills.ts`: the scorecard and which Skills get checked.
 - `layers/journal/tenant.config.ts`: the Inventory schema.

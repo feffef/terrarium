@@ -81,7 +81,7 @@ joins the pool like any other.
   (step 8). Never add a hand-kept ADR list to `CLAUDE.md`. Older additions are
   out of scope.
 
-**Agent B — Single-home.** `pnpm exec tsx scripts/audit-skills.ts` reports
+**Agent B — Single-home.** `pnpm exec tsx scripts/session/audit-skills.ts` reports
 `docReadCounts` (how many recent sessions opened each doc). A fact in a doc
 nobody opens is mis-homed, however correct. Use the count only to corroborate a
 finding reached another way; the field's docstring lists why it undercounts.
@@ -175,7 +175,7 @@ an issue only when neither settles it.
 File a `needs-triage` issue for one thing only: two sources state conflicting
 facts and no primary source (code, schemas, ADRs) settles which is true. Give
 both readings and your best guess, leave that finding, and move on. Check for
-an open duplicate first (`scripts/list-open-issues.ts` or a scoped
+an open duplicate first (`scripts/github/list-open-issues.ts` or a scoped
 `list_issues`; `docs/agents/github-integration.md`), never re-file one, and open with the
 provenance header.
 

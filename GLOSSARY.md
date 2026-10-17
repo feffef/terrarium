@@ -259,7 +259,7 @@ skipped).
 A changed path that provably cannot affect the **Heavy** tier, so running Heavy
 against it could only re-confirm the previous answer. A property of the *path*,
 not of the change's importance: an Inert change may still be substantial. Only a
-changeset that is entirely Inert may skip all of Heavy; `scripts/gate.ts` holds
+changeset that is entirely Inert may skip all of Heavy; `scripts/gate/gate.ts` holds
 the narrower skips.
 
 ### Human-only

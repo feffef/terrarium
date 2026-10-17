@@ -139,7 +139,7 @@ field from ground truth whenever it can (issue #387), so it is only a fallback.
 Hand the authored YAML to the helper:
 
 ```
-pnpm exec tsx scripts/log-session.ts --author <path-to-authored.yml>
+pnpm exec tsx scripts/session/log-session.ts --author <path-to-authored.yml>
 ```
 
 It validates the interpretive fields and writes `.session-logs/pending.scratch.json`
@@ -181,6 +181,6 @@ verdict you leave out stands, and the report lists it to re-confirm or change. R
 included, or it is logged twice.
 
 The report also lists docs a command named but did not show enough of to
-count; `scripts/shell-reads.ts`'s header lists what stays invisible. If one of them was a real read, log a Friction:
+count; `scripts/session/shell-reads.ts`'s header lists what stays invisible. If one of them was a real read, log a Friction:
 `severity` at least `moderate`, the marker `SHELL-READ-DETECTION`, the command
 verbatim, and the path expected.

@@ -67,5 +67,5 @@ map, so we use its shape.
 - `docs/agents/domain.md`: how a `GLOSSARY.md` is laid out, and where it
   differs from the `domain-modeling` Skill's templates.
 - `CLAUDE.md` and `.claude/rules/tenant-layers.md`: when to read which glossary.
-- `scripts/shell-reads.ts`: treats `layers/<tenant>/GLOSSARY.md`, one level
+- `scripts/session/shell-reads.ts`: treats `layers/<tenant>/GLOSSARY.md`, one level
   deep, as instruction and the Tenant's content as not.

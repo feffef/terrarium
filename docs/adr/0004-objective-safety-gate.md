@@ -32,7 +32,7 @@ A human merges the few PRs whose risk the gate cannot see.
 - **The Human-only list** holds the files where a bad change escapes the gate
   or weakens the merge check itself. The list is the `paths` of the
   human-merge rule.
-  `scripts/merge-pr.ts` reads it from `main`, so a PR cannot shrink it for
+  `scripts/github/merge-pr.ts` reads it from `main`, so a PR cannot shrink it for
   itself.
 - **Merging, not editing.** Agents may edit Human-only files; only the merge
   waits for a human.
@@ -62,7 +62,7 @@ blindness matters, so a person reads them before they land.
 
 ## Consequences
 
-- `scripts/merge-pr.ts` sees a PR's author, not the request behind it, and
+- `scripts/github/merge-pr.ts` sees a PR's author, not the request behind it, and
   enforces the path list, Public or fork authors, and the `guest-pipeline`
   label `guest-build` puts on its PRs. The other exceptions rest on the agent
   recognising them, including any other PR built from a Public request: it
@@ -71,8 +71,8 @@ blindness matters, so a person reads them before they land.
 ## See
 
 - `.claude/rules/adr-0004-human-merge.md`: the Human-only list.
-- `scripts/merge-pr.ts`: the merge refusals.
-- `scripts/gate.ts`, `.github/actions/gate/action.yml` and `package.json`'s
+- `scripts/github/merge-pr.ts`: the merge refusals.
+- `scripts/gate/gate.ts`, `.github/actions/gate/action.yml` and `package.json`'s
   `gate`: the steps, their labels and when they skip (ADR-0026).
 - `docs/agents/pr-workflow.md`: running the gate, the review and the merge.
 - `tests/README.md`: where tests live and how the e2e reuses one build.

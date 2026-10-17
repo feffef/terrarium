@@ -7,7 +7,7 @@
 //   tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
 //     <session> <index> [<session> <index> ...]
 //   `index` is the friction's position in the log's `frictions` list, as
-//   `session-frictions.ts --compact` prints it. Output is ready to paste under
+//   `extract-frictions.ts --compact` prints it. Output is ready to paste under
 //   a cluster's `occurrences:`.
 import { Document, Scalar } from 'yaml'
 import { flattenText } from '../../../../scripts/session/extract-frictions.ts'

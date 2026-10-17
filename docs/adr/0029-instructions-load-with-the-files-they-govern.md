@@ -67,9 +67,9 @@ each kind of instruction has one home.
 
 ## See
 
-- `scripts/validate-adr-rules.ts`: the gate's checks on rules.
-- `scripts/skill-rules-hint.ts`: adds a Skill's rules when it runs.
-- `scripts/bash-rules-hint.ts`: which Bash reads load rules.
-- `scripts/read-first-hint.ts`: points to a doc at a matching action.
+- `scripts/gate/validate-adr-rules.ts`: the gate's checks on rules.
+- `scripts/hooks/skill-rules-hint.ts`: adds a Skill's rules when it runs.
+- `scripts/hooks/bash-rules-hint.ts`: which Bash reads load rules.
+- `scripts/hooks/read-first-hint.ts`: points to a doc at a matching action.
 - `.agents/skills/audit-docs/SKILL.md`: checks that `docs/agents/` is reached.
 - `.agents/skills/log-session/SKILL.md`: logging an unrelated rule.

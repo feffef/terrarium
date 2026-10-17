@@ -9,21 +9,21 @@ layout bug, or asserting a style took effect.
 
 - **The deployed site (terrarium.feffef.de) is blocked in cloud sessions:** the
   proxy answers 403 on CONNECT. Review a local production build instead:
-  `pnpm build`, then `scripts/preview.ts start`, `shot` or `review`.
-- **One screenshot:** `pnpm exec tsx scripts/preview.ts shot <route> <out.png> [WxH] [--dev] [--scheme light|dark] [--full] [--mobile]`.
+  `pnpm build`, then `scripts/ui/preview.ts start`, `shot` or `review`.
+- **One screenshot:** `pnpm exec tsx scripts/ui/preview.ts shot <route> <out.png> [WxH] [--dev] [--scheme light|dark] [--full] [--mobile]`.
   It starts a server on its own port, takes the shot and stops the server, so
   there is nothing to `pkill` (issue #240). By default it serves the production
   build (run `pnpm build` first). `--dev` is faster, but its DevTools overlay
   badge can cover real content and look like a UI bug. `WxH` sets the window
   size; a `#anchor` in `<route>` scrolls to an element. `--full` captures the
   whole page; `--mobile` emulates a touch phone at 2x pixel density.
-- **A page review:** `scripts/preview.ts review <route> <out-dir> [--dev] [--wait <ms>] [--wait-for <selector>]`
+- **A page review:** `scripts/ui/preview.ts review <route> <out-dir> [--dev] [--wait <ms>] [--wait-for <selector>]`
   writes four full-page shots from one server: `desktop-light.png` and
   `desktop-dark.png` at 1280x900, `mobile-light.png` and `mobile-dark.png` at
   390x844.
-- **A server that stays up:** `scripts/preview.ts start [--dev]` prints `PID=`
-  and `URL=`; `scripts/preview.ts stop <pid>` stops it (always exits 0).
-- **A URL that is already serving:** `scripts/screenshot.ts <url> <out.png> [WxH]`
+- **A server that stays up:** `scripts/ui/preview.ts start [--dev]` prints `PID=`
+  and `URL=`; `scripts/ui/preview.ts stop <pid>` stops it (always exits 0).
+- **A URL that is already serving:** `scripts/ui/screenshot.ts <url> <out.png> [WxH]`
   drives the pre-installed Chromium directly.
 
 **Browser facts verified against** (from `node_modules`; re-check if they've
@@ -35,7 +35,7 @@ session cite it.
 - **A grep of SSR HTML does not prove a change renders.** The HTML includes a
   serialized `useAsyncData` payload, so a string match can succeed even when the
   DOM never picks up the change (or errors trying). Check the **rendered DOM**:
-  take a screenshot with `scripts/screenshot.ts`, or drive the page with
+  take a screenshot with `scripts/ui/screenshot.ts`, or drive the page with
   Playwright.
 - **If a standalone repro of the logic matches expectations but the live app
   doesn't, immediately render the computed value into the DOM (a debug
@@ -50,15 +50,15 @@ session cite it.
   failing assertion pre-existing on a narrowed or stale repro, and CI then failed
   for real on it (issue #907).
 - **To read one in-page value from an already-serving page** (a computed style,
-  a bounding rect, any `page.evaluate` result), use `scripts/probe.ts` before an
+  a bounding rect, any `page.evaluate` result), use `scripts/ui/eval-in-page.ts` before an
   ad-hoc script; it handles the gotchas below:
-  `pnpm exec tsx scripts/probe.ts <url> "<js-expression>"`, e.g.
-  `pnpm exec tsx scripts/probe.ts http://localhost:3000/t/journal/current "getComputedStyle(document.querySelector('.foo')).color"`.
+  `pnpm exec tsx scripts/ui/eval-in-page.ts <url> "<js-expression>"`, e.g.
+  `pnpm exec tsx scripts/ui/eval-in-page.ts http://localhost:3000/t/journal/current "getComputedStyle(document.querySelector('.foo')).color"`.
 - **To verify a click/interaction, not just a static render**, write a small
   ad-hoc `playwright-core` script and launch the pre-installed Chromium
-  `scripts/screenshot.ts` uses with
+  `scripts/ui/screenshot.ts` uses with
   `chromium.launch({ executablePath: resolveChromiumPath() })`, importing
-  `resolveChromiumPath()` from `scripts/chromium-path.ts` (don't re-derive the
+  `resolveChromiumPath()` from `scripts/lib/chromium.ts` (don't re-derive the
   `PLAYWRIGHT_BROWSERS_PATH` lookup). Three gotchas: (1) `tsx` runs it as CJS,
   so wrap top-level `await` in an `async` IIFE; (2) write it **inside the repo
   tree** so imports resolve against this repo's `node_modules`
@@ -69,7 +69,7 @@ session cite it.
 - **A screenshot can't be trusted to rule out a subtle/scoped CSS change:**
   downscaled or compressed PNGs can mask a style that actually applied. Before
   concluding a scoped style is missing, read the element's *computed* style
-  with `scripts/probe.ts` (above).
+  with `scripts/ui/eval-in-page.ts` (above).
 - **A diagram, illustration or layout from a brief needs the human's eye first.**
   Agree the reader and the question it answers, and show a rough draft for a
   quick reaction before you polish and publish. Passing gates is necessary, not
@@ -118,7 +118,7 @@ mobile-overflow bug is usually a dead end: set the viewport via the driver to
 reproduce the narrow width. (Session `…Bhu3Y1`.) **Don't reach for a
 `--window-size` launch arg as an equivalent**: it leaves a Chromium
 chrome/viewport offset uncompensated and ships a frame shorter than requested;
-`scripts/screenshot.ts` hit exactly this and switched to `newPage({ viewport })`
+`scripts/ui/screenshot.ts` hit exactly this and switched to `newPage({ viewport })`
 (issue #575).
 
 ### A screenshot needs a wait; the shutter can fire pre-render
@@ -126,7 +126,7 @@ chrome/viewport offset uncompensated and ships a frame shorter than requested;
 A screenshot captures whatever frame exists *now*. Two ways the frame is empty:
 
 - **Async client-only content** (e.g. any Nuxt Content body that loads
-  post-hydration) may not have rendered yet. `scripts/preview.ts
+  post-hydration) may not have rendered yet. `scripts/ui/preview.ts
   shot` defaults to a 2s wait (`--wait <ms>`) and supports
   `--wait-for <selector>`; use the selector wait when you know the element you're
   waiting on.

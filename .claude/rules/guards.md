@@ -1,9 +1,6 @@
 ---
 paths:
-  - "scripts/*-guard.*"
-  - "scripts/*-hint.*"
-  - "scripts/guard-wrap.sh"
-  - "scripts/guard-io.ts"
+  - "scripts/hooks/**"
   - ".claude/settings.json"
   - "tests/unit/*-guard.spec.ts"
   - "tests/unit/*-hint.spec.ts"

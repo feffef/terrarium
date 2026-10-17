@@ -1,5 +1,5 @@
 ---
-adr: 8396f6d25681
+adr: 5a9b1bc04062
 paths:
   - "content.config.ts"
   - "nuxt.config.ts"
@@ -17,21 +17,15 @@ paths:
   - ".claude/rules/**"
   - ".claude/settings.json"
   - ".githooks/**"
-  - "scripts/*-guard.ts"
-  - "scripts/*-guard.sh"
-  - "scripts/guard-io.ts"
-  - "scripts/guard-wrap.sh"
-  - "scripts/skill-rules-hint.ts"
-  - "scripts/bash-rules-hint.ts"
-  - "scripts/bash-rules-hint.sh"
-  - "scripts/merge-pr.ts"
-  - "scripts/trust.ts"
-  - "scripts/gate.ts"
+  - "scripts/hooks/**"
+  - "scripts/gate/gate.ts"
+  - "scripts/github/merge-pr.ts"
+  - "scripts/lib/author-trust.ts"
   - "package.json"
 ---
 # ADR-0004: Files that need a human merge
 
 You just touched a Human-only file: this rule's `paths` are the list. If your
 PR changes one of them, a human merges it. Open the PR as usual and say in its
-description that it waits for a human merge; `scripts/merge-pr.ts` refuses to
+description that it waits for a human merge; `scripts/github/merge-pr.ts` refuses to
 merge it.

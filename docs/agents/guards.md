@@ -5,7 +5,7 @@ rationale, detection contract and residual gaps are single-homed in **its
 own script header** — read that before changing one. This page is the index and
 the conventions they share.
 
-`scripts/guard-io.ts` holds the plumbing every `PreToolUse` guard needs (stdin
+`scripts/hooks/hook-io.ts` holds the plumbing every `PreToolUse` guard needs (stdin
 to deny-JSON, transcript read, `--dry-run`, direct-run bootstrap). Each guard
 adds only its registry, a pure predicate and `formatGuardMessage`.
 `subagent-background-guard.ts` skips it (quote-aware command scanning).
@@ -26,7 +26,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `double-background-guard.ts` | a `Bash` call stacking `run_in_background: true` on a text-level background operator in the command (a bare `&` anywhere, `nohup … &` included) — for **any** caller, main session included (no `detectAgentContext` gate, unlike `subagent-background-guard.ts`) | the deny message | #1208 |
 | `github-provenance-guard.ts` | a GitHub body (MCP, or a Bash `gh api`/`curl` write), or an MCP-API commit, missing this session's provenance in the shape its surface prescribes; also an MCP title or body carrying a bare `<...>` span GitHub silently strips | ADR-0017 — the deny message is the agent-facing home | #886, #1900 |
 | `github-search-fields-guard.ts` | `search_issues` or `search_pull_requests` called with `fields` missing or empty | the deny message | #1860 |
-| `stale-info-hint.ts` | nothing: a hint, not a guard. After a `git push` rejected as "stale info" it adds the fix to the result | its script header | #1610 |
+| `stale-push-hint.ts` | nothing: a hint, not a guard. After a `git push` rejected as "stale info" it adds the fix to the result | its script header | #1610 |
 | `skill-rules-hint.ts` | nothing: a hint, not a guard. When a Skill runs (Skill tool or slash command) it adds the rules whose `paths` name the Skill's directory | its script header | PR #1741 |
 | `bash-rules-hint.ts` | nothing: a hint, not a guard. After a piped, chained or multi-file Bash read it adds the rules whose `paths` match the files read | its script header | #1764 |
 | `read-first-hint.ts` | nothing: a hint, not a guard. At a session's first git (beyond `status`/`diff`), GitHub or screenshot (`preview.ts shot`/`review`, `screenshot.ts`) call it points to the doc CLAUDE.md says to read first, once per doc. After a successful `mcp__github__create_pull_request` in the main session, until `close-session` is invoked, it says to invoke that Skill now | its script header | #1754, #1859 |
@@ -38,7 +38,7 @@ under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
 
 - **A crash.** If a hint crashes, the action goes ahead. If a guard crashes, or
   can't read its context or payload, the action is blocked, except
-  `deferred-tool-guard`, which lets it go ahead. `scripts/guard-wrap.sh` wraps
+  `deferred-tool-guard`, which lets it go ahead. `scripts/hooks/guard-wrap.sh` wraps
   every guard but `deferred-tool-guard.ts` (#1223); that guard and all four hints
   use a bare `|| true`.
 - **Matcher-scoped, never `"*"`.** Each `tsx` start (~0.3s) would hit every

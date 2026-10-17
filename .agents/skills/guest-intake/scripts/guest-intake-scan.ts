@@ -271,7 +271,7 @@ export function writeCursorState(state: ScanCursorState, path: string): void {
 
 /** `isMarkerFresh`, but tolerant of the events fetch itself failing (a
  *  transient network/`gh` error) — same fail-closed reasoning as
- *  `isMarkerFresh`'s own missing-timestamp case (see `guest-marker.ts`): a
+ *  `isMarkerFresh`'s own missing-timestamp case (see `guest-label.ts`): a
  *  fetch failure on one issue must not crash the whole scan and must not
  *  risk a double-build by treating an unreadable marker as safe to
  *  reclaim, so it's logged to stderr and treated as still-fresh (skip).

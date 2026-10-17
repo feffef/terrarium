@@ -65,8 +65,8 @@ so the human merge stays as the backstop for whatever an agent wrongly obeys.
 
 ## See
 
-- `scripts/trust.ts`: which `author_association` values are Trusted.
-- `scripts/merge-pr.ts`: refuses fork and Public-authored PRs, and counts a
+- `scripts/lib/author-trust.ts`: which `author_association` values are Trusted.
+- `scripts/github/merge-pr.ts`: refuses fork and Public-authored PRs, and counts a
   review verdict only from a Trusted author.
 - `.github/workflows/pr-authorassociation-label.yml`: the `trusted` label.
 - `docs/agents/guest-contributions.md`: fork PRs and the fork-run approval

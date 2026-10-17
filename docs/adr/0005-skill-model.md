@@ -54,7 +54,7 @@ Skill lives outside the repo.
 ## See
 
 - `CLAUDE.md` (Repo layout): where Skills and workflows live.
-- `scripts/gate.ts` (`isSkillFile`, `isInert`): which steps a Skill-only
+- `scripts/gate/gate.ts` (`isSkillFile`, `isInert`): which steps a Skill-only
   change skips.
 - `tests/unit/workflow-scripts.spec.ts`: checks workflow scripts, which ESLint
   skips.

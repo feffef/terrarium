@@ -10,7 +10,7 @@ to. {NOTE}
 Rules:
 - Experience the site only through the browser. Do not read the repository's
   source, docs or git history. The one repo file you may use is
-  `scripts/chromium-path.ts` (`resolveChromiumPath()`) to launch Chromium.
+  `scripts/lib/chromium.ts` (`resolveChromiumPath()`) to launch Chromium.
 - Drive the browser with a small `playwright-core` script, run from the repo
   root with `pnpm exec tsx <script>`, launched with
   `executablePath: resolveChromiumPath()`. On every page you visit, read the

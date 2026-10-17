@@ -133,7 +133,7 @@ and report it); at the first PR open, invoke `close-session`
 (`in-review`). Land it with `docs/agents/pr-workflow.md`. For a later
 fix (CI, a PR comment), re-run that branch with its `worktree` and the fix
 in its `brief`. A PR built from a Public issue waits for a human merge
-(ADR-0020), even though `scripts/merge-pr.ts` would accept it. Merge
+(ADR-0020), even though `scripts/github/merge-pr.ts` would accept it. Merge
 the rest unless ADR-0004 reserves it for a human; `merge-pr.ts` checks only
 some of its exceptions.
 

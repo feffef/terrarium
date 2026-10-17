@@ -47,5 +47,5 @@ it in a PR adds noise, not review.
 - `shared/expand.ts`: the one expansion every build-time consumer uses.
 - `modules/routing.ts`, `modules/catalog.ts`, `content.config.ts`: where the
   build derives them.
-- `scripts/verify-mermaid.ts` and `scripts/gate.ts`: the drift check for a
+- `scripts/gate/validate-mermaid-svgs.ts` and `scripts/gate/gate.ts`: the drift check for a
   committed derived file and where the gate runs it.

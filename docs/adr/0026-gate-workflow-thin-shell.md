@@ -16,7 +16,7 @@ change to either file.
   when triggers or permissions do. A cloud session cannot push it, so from
   there such a change goes to a human as a Proposal.
 - **One step list, three copies, one test.** `package.json`'s `gate` script,
-  `scripts/gate.ts` and the action must run the same steps in the same order,
+  `scripts/gate/gate.ts` and the action must run the same steps in the same order,
   with the same skip conditions. `tests/unit/gate-parity.spec.ts` fails when
   they differ. Change all three together.
 
@@ -35,7 +35,7 @@ both halves pushable, the parity test can catch it.
 
 Moving the steps opens no new hole. What CI runs was always defined by files
 agents could push: `package.json` decides what `pnpm typecheck` means, and
-`scripts/gate.ts` decides which steps skip. CI also runs the PR's own copy of
+`scripts/gate/gate.ts` decides which steps skip. CI also runs the PR's own copy of
 every file. What protects the gate is a human reviewing the merge, and that
 stays.
 
@@ -66,8 +66,8 @@ stays.
 
 ## See
 
-- `scripts/gate.ts`: the step lists and the skip decision CI asks for.
-- `docs/agents/environment-caveats.md` and `scripts/workflow-edit-guard.ts`:
+- `scripts/gate/gate.ts`: the step lists and the skip decision CI asks for.
+- `docs/agents/environment-caveats.md` and `scripts/hooks/workflow-edit-guard.ts`:
   why and how a cloud session's workflow edit is stopped before it is
   committed.
 - `docs/proposals/README.md`: how to hand a workflow change to a human.

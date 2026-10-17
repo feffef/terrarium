@@ -29,11 +29,11 @@ fix activity is not one (#1627, #1720).
 ## 1. Gather the scorecard
 
 ```
-pnpm exec tsx scripts/audit-skills.ts
+pnpm exec tsx scripts/session/audit-skills.ts
 ```
 
 It prints JSON for the last 7 days of session logs (`--days N` widens or
-narrows that). The `Scorecard` type in `scripts/audit-skills.ts` documents
+narrows that). The `Scorecard` type in `scripts/session/audit-skills.ts` documents
 every field.
 
 Done when you hold the scorecard.

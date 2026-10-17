@@ -117,7 +117,7 @@ procedure lives in `.agents/skills/midden-catalogue/`.
 - **`layers/midden/app/utils/condition.ts`** — the single-homed
   {grade, label, definition} table the dig-report page's condition key and each
   inline find read from.
-- **`scripts/validate-content-refs.ts`** — enforces what the schema can't express about an Artifact's `site`, `stratum` and `removedIn` (see Artifact and Dig season above); its comments hold the rules.
+- **`scripts/gate/validate-content-refs.ts`** — enforces what the schema can't express about an Artifact's `site`, `stratum` and `removedIn` (see Artifact and Dig season above); its comments hold the rules.
 - **`layers/midden/app/utils/find.ts`** — the Artifact document shape and the
   two record-fact formatters, shared by both renderers so they cannot drift.
 - **`.agents/skills/midden-survey/`** — the survey Skill that mechanizes
