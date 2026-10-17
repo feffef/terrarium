@@ -3,7 +3,6 @@ paths:
   - "nuxt.config.ts"
   - "layers/*/nuxt.config.ts"
   - "layers/*/tenant.config.ts"
-  - "layers/*/package.json"
   - "layers/*/app/**"
 ---
 # Tenant layers
