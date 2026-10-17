@@ -14,7 +14,8 @@
 //   pnpm exec tsx scripts/validate-adr-rules.ts [--write]
 import { createHash } from 'node:crypto'
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { dirname, join, resolve } from 'node:path'
+import { execFileSync } from 'node:child_process'
+import { dirname, join, matchesGlob, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 import { parse as parseYaml } from 'yaml'
 
@@ -75,6 +76,7 @@ export interface AdrRuleInput {
   rules: Record<string, string> // rule file name → rule file text
   // `exists` travels with the files so the docs check can never be skipped.
   otherRules?: { files: Record<string, string>; exists: (repoPath: string) => boolean }
+  repoFiles?: string[] // when given, a `paths` glob matching none of them is dead
 }
 
 /** The `docs/` paths a rule's body names (not its frontmatter globs). */
@@ -146,6 +148,13 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
       if (!other!.exists(p)) problems.push(`${RULES_DIR}/${file} names ${p}, which does not exist.`)
     }
   }
+  for (const [file, text] of Object.entries({ ...rules, ...other?.files })) {
+    for (const g of input.repoFiles ? rulePaths(text) : []) {
+      if (!input.repoFiles!.some((f) => matchesGlob(f, g))) {
+        problems.push(`${RULES_DIR}/${file} paths "${g}" matches no file: fix the glob or drop it (ADR-0029).`)
+      }
+    }
+  }
   return problems
 }
 
@@ -162,7 +171,10 @@ function load(): AdrRuleInput {
     if (f.startsWith('adr-')) rules[f] = readFileSync(join(dir, f), 'utf8')
     else if (f.endsWith('.md')) others[f] = readFileSync(join(dir, f), 'utf8')
   }
-  return { adrs, rules, otherRules: { files: others, exists: (p) => existsSync(join(root, p)) } }
+  const repoFiles = execFileSync('git', ['ls-files', '--cached', '--others', '--exclude-standard'], { cwd: root, encoding: 'utf8', maxBuffer: 1 << 26 })
+    .split('\n')
+    .filter(Boolean)
+  return { adrs, rules, repoFiles, otherRules: { files: others, exists: (p) => existsSync(join(root, p)) } }
 }
 
 function main(): void {
