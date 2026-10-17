@@ -10,8 +10,9 @@
 // transcript beside its parent's; if that is missing it points anyway. A missing
 // main transcript adds nothing, since every call would repeat the pointer.
 // After a successful `mcp__github__create_pull_request` in the main session it
-// also says to invoke `close-session` now, until the transcript shows it invoked:
-// prose alone left sessions logging only at the end (issue #1859).
+// also says to invoke `close-session` now, unless the transcript shows it invoked
+// after that PR call, so each PR gets it (issue #2209): prose alone left sessions
+// logging only at the end (issue #1859).
 // Fails open: any error adds nothing. `scripts/hooks/read-first-hint.sh` is the Bash
 // hot-path pre-filter.
 //
@@ -86,6 +87,11 @@ function seen(records: Record<string, unknown>[], docs: ReadFirst[], trace: Retu
   return new Set(docs.filter((r) => read.some((p) => p === r.doc || p.endsWith(`/${r.doc}`)) || hinted.includes(pointer(r))).map((r) => r.doc))
 }
 
+/** The record holding the latest `create_pull_request` call: the one this hook
+ *  fires for, once written. -1 when none is written, so the whole transcript counts. */
+const lastPrCall = (records: Record<string, unknown>[]) => records.findLastIndex((r) => r.type === 'assistant'
+  && [prop(prop(r, 'message'), 'content')].flat().some((b) => prop(b, 'type') === 'tool_use' && prop(b, 'name') === 'mcp__github__create_pull_request'))
+
 function hintFor(payload: unknown, dryRun = false): string | null {
   const tool = String(prop(payload, 'tool_name'))
   const docs = triggeredDocs(tool, prop(prop(payload, 'tool_input'), 'command'))
@@ -104,7 +110,7 @@ function hintFor(payload: unknown, dryRun = false): string | null {
   const skip = seen(records, docs, trace)
   const lines = docs.filter((r) => !skip.has(r.doc)).map(pointer)
   if (lines.length) lines.push(LATE_READ_NOTE)
-  if (prOpened && !trace.skillsUsed.includes('close-session')) lines.push(CLOSE_SESSION_HINT)
+  if (prOpened && !extractTrace(records.slice(lastPrCall(records) + 1), process.env).skillsUsed.includes('close-session')) lines.push(CLOSE_SESSION_HINT)
   return lines.length ? lines.join('\n') : null
 }
 
