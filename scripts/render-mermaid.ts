@@ -27,7 +27,7 @@ import {
   SVG_DIR,
 } from './mermaid-lib.ts'
 import { diffMermaid } from './verify-mermaid.ts'
-import { isMain, root } from './lib/cli.ts'
+import { root, runIfMain } from './lib/cli.ts'
 
 // A unique, deliberately-unusual sentinel hex per colour token — far from any
 // palette or author `classDef` colour so the rewrite can't hit a real value.
@@ -228,9 +228,4 @@ async function main(): Promise<void> {
   }
 }
 
-if (isMain(import.meta.url)) {
-  main().catch((err) => {
-    console.error(err instanceof Error ? err.stack ?? err.message : String(err))
-    process.exit(1)
-  })
-}
+runIfMain(import.meta.url, main)

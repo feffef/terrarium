@@ -19,10 +19,11 @@ export function isMain(importMetaUrl: string): boolean {
   return importMetaUrl === pathToFileURL(process.argv[1] ?? '').href
 }
 
-/** Run `main` when executed directly; an error it throws or rejects with fails the script. */
+/** Run `main` when executed directly. Expected failures call `fail`, which
+ *  exits, so an error reaching here is unexpected: print its stack. */
 export function runIfMain(importMetaUrl: string, main: () => void | Promise<void>): void {
   if (!isMain(importMetaUrl)) return
-  const onError = (err: unknown): never => fail(err instanceof Error ? err.message : String(err))
+  const onError = (err: unknown): never => fail(err instanceof Error ? (err.stack ?? err.message) : String(err))
   try {
     const done = main()
     if (done instanceof Promise) done.catch(onError)
