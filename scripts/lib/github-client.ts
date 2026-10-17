@@ -166,12 +166,18 @@ export function ghRequestArgs(method: HttpMethod, path: string, fields: Record<s
   return ['api', '--method', method, path, ...Object.entries(fields).flatMap(([k, v]) => ['-f', `${k}=${v}`])]
 }
 
-/** One request to a `repos/…` path with an optional flat-string JSON body (a
+/** `repos/{owner}/{repo}/<path>`: every request below takes a repo-relative path. */
+export function repoPath(a: Access, path: string): string {
+  return `repos/${a.owner}/${a.repo}/${path}`
+}
+
+/** One request to a repo-relative path with an optional flat-string JSON body (a
  *  merge, a close), parsed (`undefined` for an empty reply), via the access path
  *  `resolveAccess` chose. A failure's message carries GitHub's reply. */
 export function requestJson<T>(a: Access, method: HttpMethod, path: string, fields?: Record<string, string>): T {
+  const full = repoPath(a, path)
   if (a.strategy === 'gh') {
-    const raw = execFileSync('gh', ghRequestArgs(method, path, fields), {
+    const raw = execFileSync('gh', ghRequestArgs(method, full, fields), {
       cwd: a.cwd,
       encoding: 'utf8',
       maxBuffer: 256 * 1024 * 1024,
@@ -179,13 +185,13 @@ export function requestJson<T>(a: Access, method: HttpMethod, path: string, fiel
     })
     return (raw.trim() ? JSON.parse(raw) : undefined) as T
   }
-  const url = `https://api.github.com/${path}`
+  const url = `https://api.github.com/${full}`
   const { status, body } = curlPage(url, a.token, a.cwd, { method, json: fields })
   if (status[0] !== '2') throw new Error(`GitHub REST API ${method} ${url} failed: HTTP ${status}: ${body}`)
   return (body.length > 0 ? JSON.parse(body) : undefined) as T
 }
 
-/** One GET of a `repos/…` path, parsed. */
+/** One GET of a repo-relative path, parsed. */
 export function getJson<T>(a: Access, path: string): T {
   return requestJson<T>(a, 'GET', path)
 }
@@ -218,32 +224,38 @@ export function paginate<T>(
   }
 }
 
-/** The paged `repos/{owner}/{repo}/<path>` listing as records, via `gh api
- *  --paginate` (one JSON record per line) or `curl` plus `paginate`.
+/** The paged `repos/{owner}/{repo}/<path>` listing as records, paged by number
+ *  through `paginate` on both `gh` and `curl`, so it is safe behind the proxy
+ *  (never `gh api --paginate`, which follows `Link`).
  *  `accept` overrides the media type (the timeline API needs a preview one);
- *  `hint` is `paginate`'s. */
+ *  `hint` is `paginate`'s; `until` stops after the first page it returns true
+ *  for (a newest-first listing past its cutoff). */
 export function listAll<T>(
   a: Access,
   path: string,
   params: Record<string, string> = {},
-  { accept, hint }: { accept?: string; hint?: string } = {},
+  { accept, hint, until }: { accept?: string; hint?: string; until?: (page: T[]) => boolean } = {},
 ): T[] {
-  const full = `repos/${a.owner}/${a.repo}/${path}`
-  if (a.strategy === 'gh') {
-    const args = ['api', '--method', 'GET', full]
-    if (accept) args.push('-H', `Accept: ${accept}`)
-    for (const [k, v] of Object.entries({ ...params, per_page: String(PER_PAGE) })) args.push('-f', `${k}=${v}`)
-    const raw = execFileSync('gh', [...args, '--paginate', '--jq', '.[]'], { cwd: a.cwd, encoding: 'utf8' })
-    return raw
-      .split('\n')
-      .filter((line) => line.length > 0)
-      .map((line) => JSON.parse(line) as T)
+  const full = repoPath(a, path)
+  const url = (page: number) =>
+    `${a.strategy === 'gh' ? '' : 'https://api.github.com/'}${full}?${new URLSearchParams({ ...params, per_page: String(PER_PAGE), page: String(page) })}`
+  const fetchRaw = (pageUrl: string): { records: T[]; more: boolean } => {
+    if (a.strategy === 'rest') return parseRestPage<T>(curlPage(pageUrl, a.token, a.cwd, { accept }), pageUrl)
+    const raw = execFileSync('gh', ['api', '--method', 'GET', pageUrl, ...(accept ? ['-H', `Accept: ${accept}`] : [])], {
+      cwd: a.cwd,
+      encoding: 'utf8',
+      maxBuffer: 256 * 1024 * 1024,
+      stdio: ['ignore', 'pipe', 'pipe'], // a failure's stderr rides on the thrown error
+    })
+    const records = JSON.parse(raw) as T[]
+    return { records, more: records.length >= PER_PAGE }
   }
-  const { token, cwd } = a
-  const query = (page: number) => new URLSearchParams({ ...params, per_page: String(PER_PAGE), page: String(page) })
   return paginate<T>(
-    (page) => `https://api.github.com/${full}?${query(page)}`,
-    (url) => parseRestPage<T>(curlPage(url, token, cwd, { accept }), url),
+    url,
+    (pageUrl) => {
+      const { records, more } = fetchRaw(pageUrl)
+      return { records, more: more && records.length > 0 && !until?.(records) }
+    },
     PER_PAGE,
     hint,
   )

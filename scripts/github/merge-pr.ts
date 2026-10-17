@@ -58,7 +58,7 @@
 import { matchesGlob } from 'node:path'
 import { fail, root, runIfMain } from '../lib/cli.ts'
 import { git } from '../lib/git.ts'
-import { getJson, paginate, PER_PAGE, requestJson, resolveAccess, type Access } from '../lib/github-client.ts'
+import { getJson, listAll, PER_PAGE, requestJson, resolveAccess, type Access } from '../lib/github-client.ts'
 import { findTranscriptContents } from '../session/commit-trailer.ts'
 import { hasAuthorshipMarker, readProvenanceHeader } from '../lib/provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from '../session/transcript-trace.ts'
@@ -305,24 +305,22 @@ export function prMetaFromPull(pr: RawPull): PrMeta {
   }
 }
 
-const repoPath = (a: Access, path: string): string => `repos/${a.owner}/${a.repo}/${path}`
-
 function readPrMeta(a: Access, prNumber: number): PrMeta {
-  return prMetaFromPull(getJson<RawPull>(a, repoPath(a, `pulls/${prNumber}`)))
+  return prMetaFromPull(getJson<RawPull>(a, `pulls/${prNumber}`))
 }
 
 function readCheckRuns(a: Access, sha: string): RawCheckRun[] {
-  return getJson<{ check_runs: RawCheckRun[] }>(a, repoPath(a, `commits/${sha}/check-runs?per_page=100`)).check_runs
+  return getJson<{ check_runs: RawCheckRun[] }>(a, `commits/${sha}/check-runs?per_page=${PER_PAGE}`).check_runs
 }
 
 function mergePr(a: Access, prNumber: number, mergeMethod: MergeMethod, sha: string): string {
-  return requestJson<{ sha: string }>(a, 'PUT', repoPath(a, `pulls/${prNumber}/merge`), mergeRequestFields(mergeMethod, sha)).sha
+  return requestJson<{ sha: string }>(a, 'PUT', `pulls/${prNumber}/merge`, mergeRequestFields(mergeMethod, sha)).sha
 }
 
 type RawIssue = { state: string; labels: { name: string }[] }
 
 function closeIssue(a: Access, issueNumber: number): void {
-  requestJson(a, 'PATCH', repoPath(a, `issues/${issueNumber}`), { state: 'closed', state_reason: 'completed' })
+  requestJson(a, 'PATCH', `issues/${issueNumber}`, { state: 'closed', state_reason: 'completed' })
 }
 
 type RawPrFile = { filename: string; previous_filename?: string }
@@ -330,11 +328,7 @@ type RawPrFile = { filename: string; previous_filename?: string }
 /** Every path the PR touches, a rename's old path included, so moving a file
  *  out of a Human-only path still counts. */
 function readChangedFiles(a: Access, prNumber: number): string[] {
-  // By number, not `listAll`: its gh path follows `Link`, whose numeric URL the proxy 403s (#848).
-  const items = paginate<RawPrFile>(
-    (page) => repoPath(a, `pulls/${prNumber}/files?per_page=${PER_PAGE}&page=${page}`),
-    (path) => ({ records: getJson<RawPrFile[]>(a, path) }),
-  )
+  const items = listAll<RawPrFile>(a, `pulls/${prNumber}/files`)
   return items.flatMap((i) => [i.filename, ...(i.previous_filename ? [i.previous_filename] : [])])
 }
 
@@ -349,11 +343,11 @@ function readHumanMergeGlobsFromMain(cwd: string): string[] {
 
 type RawVerdictBody = { body: string | null; author_association: string }
 
-/** The PR's review and conversation-comment bodies — one `per_page=100` page
+/** The PR's review and conversation-comment bodies — one page
  *  each, like the check runs. */
 function readVerdictBodies(a: Access, prNumber: number): VerdictBody[] {
   return [`pulls/${prNumber}/reviews`, `issues/${prNumber}/comments`].flatMap((path) =>
-    getJson<RawVerdictBody[]>(a, repoPath(a, `${path}?per_page=100`)).map((i) => ({
+    getJson<RawVerdictBody[]>(a, `${path}?per_page=${PER_PAGE}`).map((i) => ({
       body: i.body ?? '',
       authorAssociation: i.author_association,
     })),
@@ -361,7 +355,7 @@ function readVerdictBodies(a: Access, prNumber: number): VerdictBody[] {
 }
 
 function readIssue(a: Access, issueNumber: number): IssueFacts {
-  const issue = getJson<RawIssue>(a, repoPath(a, `issues/${issueNumber}`))
+  const issue = getJson<RawIssue>(a, `issues/${issueNumber}`)
   return { number: issueNumber, state: issue.state, labels: issue.labels.map((l) => l.name) }
 }
 

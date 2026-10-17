@@ -69,8 +69,8 @@ export function toOpenIssue(raw: RawIssueApiRecord): OpenIssue | null {
 /** The `limit` most-recently-updated open issues out of `records`,
  *  newest-first. Pull requests are silently skipped (see `toOpenIssue`);
  *  records are re-sorted by their own `updated_at` rather than trusting API
- *  order, since `gh api --paginate` hands back one page's order after
- *  another rather than a single global sort. */
+ *  order, since pages arrive one after another rather than as a single global
+ *  sort. */
 export function openIssues(records: RawIssueApiRecord[], limit = DEFAULT_LIMIT): OpenIssue[] {
   return records
     .map(toOpenIssue)

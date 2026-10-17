@@ -13,7 +13,7 @@ import { isContentPath } from './transcript-trace.ts'
 import { isExternalSession } from '../../shared/schemas/session.ts'
 import { SESSION_TRAILER } from '../lib/git.ts'
 import { asRecord, frontmatterBlock } from '../lib/frontmatter.ts'
-import { getJson, paginate, PER_PAGE, resolveAccess, type Access } from '../lib/github-client.ts'
+import { listAll, resolveAccess, type Access } from '../lib/github-client.ts'
 import { readProvenanceHeader } from '../lib/provenance-header.ts'
 import { ARCHIVED_SESSIONS_DIR, readSessionLogs, SESSIONS_DIR } from './journal-files.ts'
 import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
@@ -821,13 +821,8 @@ function readLock(cwd = root): Set<string> {
 // every judgement is made by the pure `parseMergedPullRequests`/
 // `findOrphanedSessions` pair, so the comparison stays testable with no network.
 
-/** `gh api` without `--include` returns no `Link` header, so a page shorter
- *  than `PER_PAGE` is the last. */
 function readClosedPullRequests(access: Access): RawPullRequestApiRecord[] {
-  return paginate<RawPullRequestApiRecord>(
-    (page) => `repos/${access.owner}/${access.repo}/pulls?state=closed&per_page=${PER_PAGE}&page=${page}`,
-    (path) => ({ records: getJson<RawPullRequestApiRecord[]>(access, path) }),
-  )
+  return listAll<RawPullRequestApiRecord>(access, 'pulls', { state: 'closed' })
 }
 
 /** Every merged pull request's originating session — the orphan check's whole

@@ -1,4 +1,4 @@
-import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { chmodSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { delimiter, join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
@@ -6,6 +6,7 @@ import {
   decodeHtmlEntities,
   ghRequestArgs,
   listAll,
+  PER_PAGE,
   paginate,
   parseNextLink,
   parseOwnerRepo,
@@ -204,5 +205,52 @@ describe('listAll() over REST', () => {
     process.env.PATH = `${dir}${delimiter}${path}`
     const access = { owner: 'o', repo: 'r', cwd: process.cwd(), strategy: 'rest' as const, token: 't' }
     expect(() => listAll(access, 'issues', {}, { hint: ' (HINT-MARK)' })).toThrow(/INCOMPLETE at page 1.*HTTP 500.*\(HINT-MARK\)/)
+  })
+})
+
+describe('listAll() over gh', () => {
+  let dir: string
+  const path = process.env.PATH
+  afterEach(() => {
+    process.env.PATH = path
+    rmSync(dir, { recursive: true, force: true })
+  })
+
+  // A `gh` that logs its argv and serves a full first page, then a short one.
+  function fakeGh(): string {
+    dir = mkdtempSync(join(tmpdir(), 'fake-gh-'))
+    const log = join(dir, 'argv.log')
+    writeFileSync(
+      join(dir, 'gh'),
+      `#!/usr/bin/env node
+const fs = require('node:fs')
+fs.appendFileSync(${JSON.stringify(log)}, JSON.stringify(process.argv.slice(2)) + '\\n')
+const url = process.argv.find((a) => a.startsWith('repos/')) ?? ''
+const page = Number(new URL('https://x/' + url).searchParams.get('page'))
+process.stdout.write(JSON.stringify(page === 1 ? Array.from({ length: ${PER_PAGE} }, (_, i) => i) : [${PER_PAGE}]))
+`,
+    )
+    chmodSync(join(dir, 'gh'), 0o755)
+    process.env.PATH = `${dir}${delimiter}${path}`
+    return log
+  }
+  const access = { owner: 'o', repo: 'r', cwd: process.cwd(), strategy: 'gh' as const }
+
+  it('pages by number, one gh call per page, and never uses --paginate', () => {
+    const log = fakeGh()
+    const records = listAll<number>(access, 'pulls', { state: 'closed' })
+    expect(records).toHaveLength(PER_PAGE + 1)
+    const calls = readFileSync(log, 'utf8').trim().split('\n').map((l) => JSON.parse(l) as string[])
+    expect(calls.map((c) => c[3])).toEqual([
+      `repos/o/r/pulls?state=closed&per_page=${PER_PAGE}&page=1`,
+      `repos/o/r/pulls?state=closed&per_page=${PER_PAGE}&page=2`,
+    ])
+    expect(calls.flat()).not.toContain('--paginate')
+  })
+
+  it('stops early once `until` says the page is past its cutoff', () => {
+    const log = fakeGh()
+    expect(listAll<number>(access, 'pulls', {}, { until: () => true })).toHaveLength(PER_PAGE)
+    expect(readFileSync(log, 'utf8').trim().split('\n')).toHaveLength(1)
   })
 })
