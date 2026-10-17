@@ -2,7 +2,7 @@
 // the checks over them. `scripts/gate/validate-adr-rules.ts` is the gate CLI on top.
 import { createHash } from 'node:crypto'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, matchesGlob } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { frontmatterBlock } from './frontmatter.ts'
 
@@ -73,6 +73,7 @@ export interface AdrRuleInput {
   rules: Record<string, string> // rule file name → rule file text
   // `exists` travels with the files so the docs check can never be skipped.
   otherRules?: { files: Record<string, string>; exists: (repoPath: string) => boolean }
+  repoFiles?: string[] // when given, a `paths` glob matching none of them is dead
 }
 
 /** The `docs/` paths a rule's body names (not its frontmatter globs). */
@@ -142,6 +143,13 @@ export function findAdrRuleProblems(input: AdrRuleInput): string[] {
     }
     for (const p of ruleDocPaths(text)) {
       if (!other!.exists(p)) problems.push(`${RULES_DIR}/${file} names ${p}, which does not exist.`)
+    }
+  }
+  for (const [file, text] of Object.entries({ ...rules, ...other?.files })) {
+    for (const g of input.repoFiles ? rulePaths(text) : []) {
+      if (!input.repoFiles!.some((f) => matchesGlob(f, g))) {
+        problems.push(`${RULES_DIR}/${file} paths "${g}" matches no file: fix the glob or drop it (ADR-0029).`)
+      }
     }
   }
   return problems

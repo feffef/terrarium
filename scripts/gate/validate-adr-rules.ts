@@ -15,6 +15,7 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { root, runIfMain } from '../lib/cli.ts'
+import { git } from '../lib/git.ts'
 import {
   ADR_DIR,
   adrHash,
@@ -41,7 +42,8 @@ function load(): AdrRuleInput {
     if (f.startsWith('adr-')) rules[f] = readFileSync(join(dir, f), 'utf8')
     else if (f.endsWith('.md')) others[f] = readFileSync(join(dir, f), 'utf8')
   }
-  return { adrs, rules, otherRules: { files: others, exists: (p) => existsSync(join(root, p)) } }
+  const repoFiles = git(['ls-files', '--cached', '--others', '--exclude-standard'], root).split('\n').filter(Boolean)
+  return { adrs, rules, repoFiles, otherRules: { files: others, exists: (p) => existsSync(join(root, p)) } }
 }
 
 function main(): void {

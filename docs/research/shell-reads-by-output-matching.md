@@ -11,7 +11,7 @@ frictions the Journal has accumulated, or only trade them for new ones?
 following commit; `git show aa86e131:scripts/shell-reads-by-output.prototype.ts`
 to read it). Every number in the results table is that script's printed
 output; anything else that is a count over the logs or an ad-hoc probe says so.
-**Status: adopted (#1545, ADR-0009).** `scripts/shell-reads.ts` now credits a
+**Status: adopted (issue #1545, ADR-0009).** `scripts/shell-reads.ts` now credits a
 doc from the command's output; the numbers below are the 2026-10-03 measurement
 of the old command-text detector against the prototype.
 
@@ -137,5 +137,3 @@ matches 10 lines once it has).
   verbatim credits only the one whose lines are unique. No decoy exercised
   this.
 - No new dependency.
-
-Adoption and the ADR-0009 points above: issue #1545.

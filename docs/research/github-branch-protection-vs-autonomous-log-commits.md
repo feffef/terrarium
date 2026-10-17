@@ -174,7 +174,7 @@ that credential is on the bypass list (§2) — `contents: write` permission
 alone does not let an actor skip a required check; the bypass list is the
 only skip mechanism.
 
-**This repo is not that case**: no GitHub Actions workflow pushes these commits (see repo context). The actor is a live session's own git credential (a personal-account `GH_TOKEN`/`GITHUB_TOKEN` env var injected by the connector), which branch protection treats like an ordinary authenticated human push, not like a workflow-scoped Actions `GITHUB_TOKEN`.
+**This repo is not that case**: no GitHub Actions workflow pushes these commits (see repo context). The actor is a live session's own personal-account credential, which branch protection treats like an ordinary authenticated human push, not like a workflow-scoped Actions `GITHUB_TOKEN`.
 
 ---
 

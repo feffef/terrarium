@@ -128,6 +128,13 @@ describe('non-ADR rules (ADR-0029)', () => {
     ])
   })
 
+  it('fails a paths glob that matches no repo file, and passes one that does', () => {
+    const files = { 'guards.md': scoped('# Guards\n') }
+    const run = (repoFiles: string[]) => findAdrRuleProblems({ adrs: {}, rules: {}, otherRules: { files, exists }, repoFiles })
+    expect(run(['scripts/hooks/a-guard.ts'])).toEqual([])
+    expect(run(['scripts/hooks/a.ts'])).toEqual(['.claude/rules/guards.md paths "scripts/hooks/*-guard.ts" matches no file: fix the glob or drop it (ADR-0029).'])
+  })
+
   it('ignores frontmatter globs, trailing punctuation, anchors and backticks', () => {
     const rule = '---\npaths:\n  - "docs/adr/**"\n---\n(docs/agents/guards.md), `docs/agents/guards.md`, docs/agents/guards.md#the-roster.\n'
     expect(ruleDocPaths(rule)).toEqual(['docs/agents/guards.md'])

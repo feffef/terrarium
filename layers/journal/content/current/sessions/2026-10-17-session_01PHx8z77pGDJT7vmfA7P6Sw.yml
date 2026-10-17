@@ -1,0 +1,401 @@
+schemaVersion: 1
+session: session_01PHx8z77pGDJT7vmfA7P6Sw
+startedAt: 2026-10-17T04:01:53Z
+endedAt: 2026-10-17T04:21:51Z
+kind: autonomous
+goal: Scheduled audit of the repo's docs against the code
+status: completed
+outcome: "Docs sweep PR #2202 merged with 15 fact-checked fixes; 2 unsettled readings filed as #2201"
+summary: "Scheduled audit-docs run (no human prompt). Concision family: docs/research. Four reviewer agents (freshness, single-home, concision, coherence) returned A none, B 4, C 7, D 7 findings; three independent checkers gave 5 CONFIRMED, 10 CONFIRMED-BUT, 0 WRONG, 2 UNSETTLED. Applied 15 fixes to Live docs only and merged #2202 (gate:scoped and CI green). Not applied on purpose: the journal page's \"seven sites\" count (a prior sweep left it for the owner, as Glass Box is deliberately unlinked) and ADR-0020's Dependabot line (ADR edit, Human-only, tied to open #1889); both are named in the PR. Filed #2201 for the two unsettled readings. Everything was agent-initiated by the schedule."
+prs:
+  - "2202"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: required reading; Tenant roster
+    useful: yes
+  - path: GLOSSARY.md
+    reason: required reading; Tenant roster and terms
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: required before git commands
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR steps
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before first GitHub write
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: read before filing the issue
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: needs-triage label for the issue
+    useful: partly
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: (no reason given)
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: (no reason given)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: .agents/skills/retro/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: layers/atlas/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/commons/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/marquee/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-walkthrough/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the run's Skill
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read github-integration.md, issue-tracker.md and triage-labels.md only after already listing issues with a script; late reads cost a few tokens.
+    solution: Read the GitHub docs before the duplicate check, in the same step.
+    severity: nit
+  - description: Reviewer findings arrive only as chat replies; pooling them into one file means retyping some, against the copy-never-retype step.
+    solution: Brief each reviewer to write its full findings file, and verify the file is non-stub before it replies.
+    severity: minor
+durationSec: 1198
+models:
+  claude-sonnet-5-5: 84
+toolCounts:
+  Bash: 24
+  Read: 4
+  Agent: 7
+  ToolSearch: 1
+  mcp__github__issue_write: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+  ReadNotifications: 2
+  mcp__github__unsubscribe_pr_activity: 1
+  PushNotification: 1
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0014.md
+docsReadBySubagents:
+  - docs/adr/0007-derived-files-built-not-committed.md
+  - docs/research/content-client-queries-without-wasm.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/proposals/README.md
+  - .agents/skills/retro/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - docs/agents/mdc-when-to-use.md
+  - .agents/skills/audit-skills/SKILL.md
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/making-repo-public.md
+  - docs/research/public-readiness-review.md
+  - docs/research/shell-reads-by-output-matching.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/agents/domain.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/verifying-ui-changes.md
+  - layers/atlas/GLOSSARY.md
+  - layers/blog/GLOSSARY.md
+  - layers/commons/GLOSSARY.md
+  - layers/journal/GLOSSARY.md
+  - layers/marquee/GLOSSARY.md
+  - layers/tinkerfund/GLOSSARY.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - layers/midden/GLOSSARY.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-walkthrough/SKILL.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/visitor-loop/refiner-brief.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0007.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Loaded by hooks or in a reviewer subagent; bore on a finding or the PR steps. Summary enough, full ADR not opened by me
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0024.md
+    reason: Loaded by hooks or in a reviewer subagent; bore on a finding or the PR steps. Summary enough, full ADR not opened by me
+    useful: yes
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded by hooks or in a reviewer subagent; bore on a finding or the PR steps. Summary enough, full ADR not opened by me
+    useful: yes
+  - path: .claude/rules/glassbox-content.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Loaded by hooks or in a reviewer subagent; bore on a finding or the PR steps. Summary enough, full ADR not opened by me
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Loaded by hooks or in a reviewer subagent; bore on a finding or the PR steps. Summary enough, full ADR not opened by me
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by hooks or in a reviewer subagent; bore on a finding or the PR steps. Summary enough, full ADR not opened by me
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded by hooks or in a reviewer subagent; bore on a finding or the PR steps. Summary enough, full ADR not opened by me
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded as a side effect of reading files in the sweep; did not bear on any finding. Not opened in full
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Audit A: freshness"
+  - type: general-purpose
+    task: "Audit B: single-home"
+  - type: general-purpose
+    task: "Audit C: concision research"
+  - type: general-purpose
+    task: "Audit D: coherence"
+  - type: general-purpose
+    task: Check findings set 1
+  - type: general-purpose
+    task: Check findings set 2
+  - type: general-purpose
+    task: Check findings set 3
+gitBranch: claude/festive-mayer-n3uyeb
+entrypoint: remote_trigger
+cliVersion: 2.1.302
+trigger: audit-docs
+landedBy: Stop
