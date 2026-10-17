@@ -193,7 +193,8 @@ surface in a tier or on the Skip list. Done when every surface has one.
 
 Run the reviewer agents; each returns its findings in its final reply, in the
 format above plus replacement text. Pool them into one scratchpad file, copied,
-never retyped. Done when every one has reported and every file in the
+never retyped (`pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`
+saves a reply verbatim). Done when every one has reported and every file in the
 concision family was read in full.
 
 ## 4. Dedupe the pool
