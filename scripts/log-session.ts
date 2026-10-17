@@ -917,7 +917,8 @@ export function authorMain(
         "scratch path, and this invocation would silently clobber the orchestrator's own log (issue #449 Gap 4). " +
         'The orchestrator is the sole log author; a dispatched impl agent just implements, pushes, and hands ' +
         'back the PR. If this is instead a deliberate EnterWorktree-based single-session run, re-run with ' +
-        '--allow-worktree.',
+        '--allow-worktree. ' +
+        "If your working directory only drifted into a dispatched agent's worktree, `cd` back to the main checkout and re-run.",
     )
   }
   const text = readFileSync(resolve(inputPath), 'utf8')
