@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_01Sc82qSCs4NVP3igf9SaGXM
 startedAt: 2026-10-17T07:43:44Z
-endedAt: 2026-10-17T08:01:21Z
+endedAt: 2026-10-17T08:11:36Z
 kind: delegated
 goal: Turn recent session frictions into fixes
-status: in-review
-outcome: Ledger PR and one grouped doc-fix PR open; three regression issues filed; merge pending
-summary: "The owner ran /frictions-to-fixes (one human prompt, no later steering). I followed the Skill: a survey subagent updated the Friction Ledger, I picked build-before-shape-settled and frictions-to-fixes-skill-gaps, a design subagent designed both as prose edits, and a Sonnet impl agent made one grouped doc branch. I filed regression issues #2209, #2210 and #2211 (the cap of three), updated the ledger (tracked, refs, one occurrence dropped) and opened the ledger PR #2212 and the doc PR #2213. All of that was agent-initiated within the Skill's remit; the owner's only instruction was to run it. I did not ask the owner questions first (their stated preference) because the Skill is a fixed procedure. Still open: CI, verdict comments, merging both PRs, and the close-the-ledger PR of section 8."
+status: completed
+outcome: "Doc fixes and ledger updates merged (#2212, #2213, #2214); three regression issues filed"
+summary: "The owner ran /frictions-to-fixes (one human prompt, no later steering). I followed the Skill: a survey subagent updated the Friction Ledger, I picked build-before-shape-settled and frictions-to-fixes-skill-gaps, a design subagent designed both as prose edits, and a Sonnet impl agent made one grouped doc branch. I filed regression issues #2209, #2210 and #2211 (the cap of three), updated the ledger (tracked, refs, one occurrence dropped) and opened the ledger PR #2212 and the doc PR #2213, then merged both and a closing status PR #2214. All of that was agent-initiated within the Skill's remit; the owner's only instruction was to run it. I did not ask the owner questions first (their stated preference) because the Skill is a fixed procedure."
 prs:
   - "2212"
   - "2213"
+  - "2214"
 docsRead:
   - path: .claude/skills/frictions-to-fixes/survey-brief.md
     reason: brief for the survey subagent
@@ -87,19 +88,29 @@ frictions:
   - description: A subagent's cd and the shell's directory changes left the working directory in the frictions folder and a worktree, so later relative commands could have hit the wrong tree.
     solution: Use absolute paths or cd to the repo root at the start of each command.
     severity: nit
-durationSec: 1057
+  - description: Wrote a made-up full commit SHA in a PR verdict comment after seeing only the short hash; I caught it before merging and edited the comment to the real SHA.
+    solution: Take the full head SHA from git rev-parse before writing the Reviewed line.
+    severity: nit
+  - description: Passed both -m and -F to git commit, so the commit failed; the gate had already run on an uncommitted tree.
+    solution: Commit with -F only, as git-conventions says, then run the gate.
+    severity: nit
+durationSec: 1673
 models:
-  claude-sonnet-5-5: 72
+  claude-sonnet-5-5: 104
 toolCounts:
   Read: 9
-  Bash: 17
+  Bash: 27
   Skill: 3
   Agent: 3
   ToolSearch: 1
   mcp__github__issue_write: 3
   mcp__github__list_pull_requests: 2
-  mcp__github__create_pull_request: 2
+  mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 3
+  mcp__github__update_issue_comment: 1
 filesEdited:
   - .agents/skills/dispatch-subagents/SKILL.md
   - .agents/skills/frictions-to-fixes/survey-brief.md
