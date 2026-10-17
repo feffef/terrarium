@@ -20,7 +20,7 @@ public (deployed at `terrarium.feffef.de`) and a write collaborator already
 exists, so going public newly exposes four surfaces: **git history, issues/PRs,
 Actions logs, and the agent workflow's attack surface.**
 
-## Addressed in this change
+## Addressed during the review
 
 - **`deploy/README.md` infra disclosure** — genericized the concrete Docker
   operator account and removed the co-located sibling-project name (a neighbor
