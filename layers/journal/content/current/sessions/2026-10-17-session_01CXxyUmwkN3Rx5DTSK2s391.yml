@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01CXxyUmwkN3Rx5DTSK2s391
 startedAt: 2026-10-17T16:48:22Z
-endedAt: 2026-10-17T17:28:17Z
+endedAt: 2026-10-17T17:36:41Z
 kind: autonomous
 goal: Scheduled visitor review of the Glass Box guide
-status: in-review
-outcome: Fix PR for consensus findings open (#2225); the feature PR has not been built yet
-summary: "Scheduled visitor-loop run, focus glassbox (entry /t/glassbox/guide); nothing in it was human-instructed, all of it came from the Skill's schedule. Served a production build and sent three blind visitors (sonnet, fable, opus). Nine consensus findings; \"Start here\" (all three) was dropped on the owner's #2171/#2176 ruling and the empty Subject-card space on #2100's deliberate equal heights. The owner-corrections script gave 25 candidates; two became decisions.md lines (#2176 no Start here, #2178 compact term chips). The fit check refined several fixes: it found that the code-scroll fade already existed, so I only widened it, and that Source pointing at main is deliberate. Fix PR #2225 passed gate:scoped and code-review with no important finding. The refiner's fallback for browsers without animation-timeline was not built because CSS cannot tell an overflowing block from a short one. The chosen feature is a Try-it-in-your-project page, derived from each Lesson's section. Still to do after #2225 merges: that feature PR, and filing the single-visitor findings as ideas."
+status: completed
+outcome: "Fix PR #2225 and a Try-it page PR #2226 both merged"
+summary: "Scheduled visitor-loop run, focus glassbox (entry /t/glassbox/guide); nothing in it was human-instructed, all of it came from the Skill's schedule. Served a production build and sent three blind visitors (sonnet, fable, opus). Nine consensus findings; \"Start here\" (all three) was dropped on the owner's #2171/#2176 ruling and the empty Subject-card space on #2100's deliberate equal heights. The owner-corrections script gave 25 candidates; two became decisions.md lines (#2176 no Start here, #2178 compact term chips). The fit check refined several fixes: the code-scroll fade already existed, so I only widened it, and Source pointing at main is deliberate. Fix PR #2225 merged after gate:scoped and code-review with no important finding; the refiner's fallback for browsers without animation-timeline was not built because CSS cannot tell an overflowing block from a short one. The feature, a Try-it-in-your-project page derived from each Lesson's section, went in as #2226 after both review axes found a payload leak (toc) and a drafts-landing spacing change, both fixed before the push. No out-of-remit finding survived, so no issue was filed; single-visitor findings are in ideas."
 prs:
   - "2225"
+  - "2226"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: CLAUDE.md read-first; Glass Box glossary location
@@ -28,6 +29,12 @@ docsRead:
   - path: .agents/skills/visitor-loop/decisions.md
     reason: filters for findings and ideas
     useful: yes
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: brief for the fit-check subagent
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: read after a wrong shot call; gave the preview.ts shot syntax
+    useful: yes
   - path: .claude/skills/visitor-loop/visitor-brief.md
     reason: (no reason given)
   - path: .claude/skills/visitor-loop/decisions.md
@@ -39,10 +46,6 @@ docsRead:
   - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
     reason: (no reason given)
   - path: layers/glassbox/page-checks.ts
-    reason: (no reason given)
-  - path: .agents/skills/visitor-loop/refiner-brief.md
-    reason: (no reason given)
-  - path: docs/agents/verifying-ui-changes.md
     reason: (no reason given)
   - path: docs/agents/tenant-layers.md
     reason: (no reason given)
@@ -80,20 +83,21 @@ frictions:
   - description: The Stop hook asked for a push twice while the review was running; ADR-0004 required waiting.
     solution: Let the hook skip the nag while a code-review run is in flight.
     severity: nit
-durationSec: 2395
+durationSec: 2899
 models:
-  claude-sonnet-5-5: 152
+  claude-sonnet-5-5: 174
 toolCounts:
-  Bash: 52
+  Bash: 58
   Read: 13
   Agent: 8
   mcp__github__pull_request_read: 3
   mcp__github__search_issues: 12
   Skill: 2
-  mcp__github__create_pull_request: 1
-  mcp__github__add_issue_comment: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__add_issue_comment: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  ReadNotifications: 1
 rulesLoaded:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0021.md
