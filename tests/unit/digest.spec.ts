@@ -6,11 +6,9 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import {
-  ARCHIVED_DIGESTS_DIR,
   buildDayMaterials,
   closedUndigestedDays,
   dayIsClosed,
-  DIGESTS_DIR,
   existingDigestDays,
   OUTPUT_FILE_PATH,
   prFromCommit,
@@ -20,7 +18,7 @@ import {
   type Commit,
   type SessionMaterial,
 } from '../../scripts/digest.ts'
-import { SESSIONS_DIR } from '../../scripts/session-logs.ts'
+import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR, SESSIONS_DIR } from '../../scripts/session-logs.ts'
 
 function commit(subject: string, opts: Partial<Commit> = {}): Commit {
   return { sha: 'abc', at: new Date('2026-07-04T12:00:00Z'), subject, body: '', isMerge: false, ...opts }

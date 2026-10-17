@@ -23,15 +23,8 @@ import { execFileSync } from 'node:child_process'
 import { existsSync, readdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { readSessionLogs } from './session-logs.ts'
+import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR, readSessionLogs } from './session-logs.ts'
 import { fail, flagValue, resolveOutputTarget as outputTarget, root, runIfMain } from './lib/cli.ts'
-
-/** The Journal paths this helper reads. Digests are pages under a subfolder (ADR-0010). */
-export const DIGESTS_DIR = 'layers/journal/content/current/pages/digests'
-/** Where the retention sweep (`archive-journal-content.ts`) moves aged-out Digests.
- *  `existingDigestDays` must check here too — otherwise an archived day looks
- *  undigested again and `list` re-offers it forever (issue found live, 2026-09-06). */
-export const ARCHIVED_DIGESTS_DIR = 'layers/journal/content/archived/pages/digests'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 

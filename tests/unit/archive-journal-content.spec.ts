@@ -8,7 +8,6 @@ import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
 import {
   applyArchive,
-  ARCHIVED_DIGESTS_DIR,
   buildPlan,
   datesToRetain,
   digestDate,
@@ -17,8 +16,7 @@ import {
   planPart,
   RETAIN_DATES,
 } from '../../scripts/archive-journal-content.ts'
-import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from '../../scripts/session-logs.ts'
-import { DIGESTS_DIR } from '../../scripts/digest.ts'
+import { ARCHIVED_DIGESTS_DIR, ARCHIVED_SESSIONS_DIR, DIGESTS_DIR, SESSIONS_DIR } from '../../scripts/session-logs.ts'
 
 describe('datesToRetain()', () => {
   it('keeps the newest N distinct dates present', () => {

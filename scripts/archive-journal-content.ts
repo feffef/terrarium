@@ -27,11 +27,8 @@ import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
-import { ARCHIVED_SESSIONS_DIR, SESSIONS_DIR } from './session-logs.ts'
-import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR } from './digest.ts'
+import { ARCHIVED_DIGESTS_DIR, ARCHIVED_SESSIONS_DIR, DIGESTS_DIR, SESSIONS_DIR } from './session-logs.ts'
 import { root, runIfMain } from './lib/cli.ts'
-
-export { ARCHIVED_DIGESTS_DIR }
 
 /** How many dates' worth of each kind stay on `current` after a sweep — 7
  *  Digests, and every session log belonging to the newest 7 session dates. */
