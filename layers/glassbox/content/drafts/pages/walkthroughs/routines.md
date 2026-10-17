@@ -3,6 +3,7 @@ title: The Routines
 description: What Terrarium's scheduled runs do, one Routine at a time, from the docs and the Skills to the site, the day's news and the day's story. A run that changes something ends in its own PR.
 revision: '75deb9486800d2fa8ccb7c90bb2e03b566542e8d'
 revisionDate: '2026-10-17'
+publishedAt: '2026-10-17T09:52:35Z'
 ---
 
 Some of Terrarium's work happens without anyone asking. A :term[Routine] starts a session on a timer, and the session runs one Skill. This Walkthrough follows those runs from the session's side, one stop per Routine, between a stop on how a run starts and one on how it ends. The [Skill Inventory](/t/journal/current/skills) shows which Skills the Routines run.
@@ -33,7 +34,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 
 ## 4. prune-trial: a rule cut on trial
 
-`prune-trial` first judges the open trials whose window has passed: a `major` or `blocker` Friction traced to the cut brings back one goal-shaped line; nits, minor Frictions and silence leave it standing. Then it cuts the instructions about one problem down to their goal and opens a new trial for them. It may change instruction prose, never ADRs or the pack's Skills, and the cut leaves in one PR; a cut that a subagent can't act on is dropped, and an issue proposes a hook instead.
+`prune-trial` first judges the open trials whose window has passed: a `major` or `blocker` Friction traced to the cut brings back one goal-shaped line; nits, minor and moderate Frictions and silence leave it standing. Then it cuts the instructions about one problem down to their goal and opens a new trial for them. It may change instruction prose, never the pack's Skills, and an ADR only in a trial a Trusted user started. The cut leaves in one PR; a cut that a subagent can't act on is dropped, and an issue proposes a hook instead.
 
 ::stop-links
 [Prune Trials](/t/glassbox/drafts/terrarium-practice/prune-trials) · [Path-scoped rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
@@ -65,7 +66,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 
 ## 8. A run that changes something ends in its own PR
 
-Each run that changes something closes the same way: it runs `pnpm gate:scoped`, the local run of the :term[Gate], commits, and opens one PR, or the ones its Skill names. At that moment it runs `close-session`, and its :term[session log] lands on `main`. Once CI is green, it posts its verdict, naming the head commit it reviewed, and merges through `scripts/merge-pr.ts`, which refuses a PR that changes a Human-only file or has no such verdict. If anything its Skill doesn't allow rode into the PR, or the Gate failed for a reason that isn't the run's own, it leaves the PR open for a person, and once the PR is merged or left open, it logs again.
+Each run that changes something closes the same way: it runs `pnpm gate:scoped`, the local run of the :term[Gate], commits, and opens one PR, or the ones its Skill names. At that moment it runs `close-session`, and its :term[session log] lands on `main`. Once CI is green, it posts its verdict, naming the head commit it reviewed, and merges through `scripts/github/merge-pr.ts`, which refuses a PR that changes a Human-only file or has no such verdict. If anything its Skill doesn't allow rode into the PR, or the Gate failed for a reason that isn't the run's own, it leaves the PR open for a person, and once the PR is merged or left open, it logs again.
 
 ::stop-links
 [Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr) · [The Gate](/t/glassbox/guide/terrarium-practice/gate) · [A Human-only list read from main](/t/glassbox/guide/terrarium-practice/human-only-list) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
