@@ -88,7 +88,7 @@ writes only the judgement half; the rest comes from the session's transcript.
   shell-read thresholds.
 - `shared/schemas/session.ts`: the schema, versions, `isExternalSession`.
 - The `close-session` and `log-session` Skills: closure, statuses, authoring.
-- `scripts/archive-journal-content.ts`: how many logs stay in `current`.
+- `.agents/skills/digest/scripts/archive-journal-content.ts`: how many logs stay in `current`.
 - `docs/agents/guest-contributions.md`: an outside agent's log.
 - `docs/research/github-branch-protection-vs-autonomous-log-commits.md`:
   `main`'s ruleset.
