@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01PHx8z77pGDJT7vmfA7P6Sw
 startedAt: 2026-10-17T04:01:53Z
-endedAt: 2026-10-17T04:19:52Z
+endedAt: 2026-10-17T04:21:51Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs against the code
-status: in-review
-outcome: "Docs sweep PR #2202 open with 15 fact-checked fixes; 2 unsettled readings filed as #2201"
-summary: "Scheduled audit-docs run (no human prompt). Concision family: docs/research. Four reviewer agents (freshness, single-home, concision, coherence) returned A none, B 4, C 7, D 7 findings; three independent checkers gave 5 CONFIRMED, 10 CONFIRMED-BUT, 0 WRONG, 2 UNSETTLED. Applied 15 fixes to Live docs only and opened #2202 (gate:scoped green). Not applied on purpose: the journal page's \"seven sites\" count (a prior sweep left it for the owner, as Glass Box is deliberately unlinked) and ADR-0020's Dependabot line (ADR edit, Human-only, tied to open #1889); both are named in the PR. Filed #2201 for the two unsettled readings. Everything was agent-initiated by the schedule."
+status: completed
+outcome: "Docs sweep PR #2202 merged with 15 fact-checked fixes; 2 unsettled readings filed as #2201"
+summary: "Scheduled audit-docs run (no human prompt). Concision family: docs/research. Four reviewer agents (freshness, single-home, concision, coherence) returned A none, B 4, C 7, D 7 findings; three independent checkers gave 5 CONFIRMED, 10 CONFIRMED-BUT, 0 WRONG, 2 UNSETTLED. Applied 15 fixes to Live docs only and merged #2202 (gate:scoped and CI green). Not applied on purpose: the journal page's \"seven sites\" count (a prior sweep left it for the owner, as Glass Box is deliberately unlinked) and ADR-0020's Dependabot line (ADR edit, Human-only, tied to open #1889); both are named in the PR. Filed #2201 for the two unsettled readings. Everything was agent-initiated by the schedule."
 prs:
   - "2202"
 docsRead:
@@ -167,11 +167,11 @@ frictions:
   - description: Reviewer findings arrive only as chat replies; pooling them into one file means retyping some, against the copy-never-retype step.
     solution: Brief each reviewer to write its full findings file, and verify the file is non-stub before it replies.
     severity: minor
-durationSec: 1079
+durationSec: 1198
 models:
-  claude-sonnet-5-5: 74
+  claude-sonnet-5-5: 84
 toolCounts:
-  Bash: 22
+  Bash: 24
   Read: 4
   Agent: 7
   ToolSearch: 1
@@ -181,6 +181,9 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   Skill: 2
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
+  mcp__github__unsubscribe_pr_activity: 1
+  PushNotification: 1
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0015.md
