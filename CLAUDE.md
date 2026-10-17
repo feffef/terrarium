@@ -60,6 +60,8 @@ act, once per session.
 - **Question the premise.** Before you recommend, implement or harden a change,
   give each part a reason of your own from the current goal; drop the parts you
   can't, and add nothing beyond the ask.
+- **Ask before building** something the Trusted user will see, or a data shape
+  they may prefer (the `grilling` Skill); don't assume.
 - **One home per fact.** Write each fact once; elsewhere, point to it. When a
   fact and reality differ, fix its home.
 - **Code comments say WHY, never WHAT.** Default to no comment. When the why

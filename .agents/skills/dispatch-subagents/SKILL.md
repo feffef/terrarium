@@ -8,8 +8,9 @@ Goal: every subagent's work lands, is right, and is never **stranded**
 
 ## 1. Lock the shared design axis first
 
-If several subagents' outputs depend on one **load-bearing** design choice (even
-two agents on a small pass), settle it first with the `grilling` Skill. A choice
+If several subagents' outputs depend on one **load-bearing** choice (what the owner
+will see, a data shape, a length bound, who owns a shared item; even two agents
+on a small pass), settle it first with the `grilling` Skill. A choice
 that shifts after agents have started forces a full redo.
 
 ## 2. Pick the isolation
