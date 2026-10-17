@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01CtktRkpbF4wQ3TTQVYUqLz
 startedAt: 2026-10-17T09:47:52Z
-endedAt: 2026-10-17T10:57:44Z
+endedAt: 2026-10-17T11:34:37Z
 kind: interactive
 goal: Sync Glass Box drafts pages with the code
-status: completed
-outcome: "All 36 drafts pages re-checked and pinned to 75deb948; PR #2219 merged"
-summary: "The user invoked /glassbox-update with the argument \"briefs only\". That is not a Glass Box term, so I asked what it meant; the user answered \"Drafts\", which I took as running the Skill on the drafts Space only (human-instructed scope). Everything else was agent-initiated, following the Skill. The report flagged all 36 drafts pages and 25 Terms over 425 commits, mostly because b1f1e05e split scripts/ into area folders. I committed the step-2 advance, then dispatched six agents on disjoint page sets in the shared checkout (file edits only, no git writes), with a common brief, the old-to-new script map and the commit list. Five pages changed what they teach (fail-closed guards now use onFailure, the workflow scope is cloud-only, ADR trials need a Trusted user, frictions-to-fixes gained a design subagent); the rest needed path or Excerpt fixes or nothing. All Terms still matched. Layer test, validate:content and gate:scoped were green; code-review found one judgement call, which I fixed. A seventh agent reviewing 76 screenshots one image at a time ran about 50 minutes and 1,200 tool calls; the user reported the session became impossible to open in the app and investigated from another session, which relayed a request to stop it. I stopped it, checked the key pages myself, found one pre-existing mobile overflow (a long :file chip on mdc-components, outside this run's paths), posted my verdict and merged PR #2219."
+status: in-review
+outcome: "Drafts pages synced in PR #2219 (merged); file-chip mobile overflow fix in PR #2222"
+summary: "The user invoked /glassbox-update with the argument \"briefs only\"; I asked, and the user answered \"Drafts\", so the run covered the drafts Space only (human-instructed). Six agents re-checked all 36 drafts pages against 75deb948 after the scripts/ split; five pages changed what they teach, the rest needed path fixes or nothing, and all 25 Terms still matched. PR #2219 merged. A screenshot-review subagent read 76 shots one by one for ~50 minutes and left the session unopenable; the user investigated from another session and I stopped it. The user then asked to continue: the guide had already been synced and a fresh report flagged nothing in either Space. On the user's explicit \"Fix it\", I added overflow-wrap: anywhere to the Glass Box file chip, which removed the mdc-components page's sideways scroll on phones (PR #2222)."
 prs:
   - "2219"
+  - "2222"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: Lesson/Walkthrough/Excerpt contracts for the re-check
@@ -138,23 +139,26 @@ frictions:
   - description: nuxt-content/mdc-components scrolls sideways on mobile because a long :file chip path does not wrap; pre-existing, outside this run's paths
     solution: "Let the Glass Box :file chip wrap (overflow-wrap: anywhere) in its component; file an issue"
     severity: minor
-durationSec: 4191
+  - description: "I subscribed to PR #2221 by guessing the new PR number before reading the create result (it was #2222), then had to unsubscribe and resubscribe"
+    solution: Wait for create_pull_request's result before subscribing
+    severity: nit
+durationSec: 6405
 models:
-  claude-opus-5-5: 153
+  claude-opus-5-5: 192
 toolCounts:
-  Bash: 36
+  Bash: 46
   Read: 5
-  Skill: 4
-  Agent: 9
+  Skill: 5
+  Agent: 11
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 3
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  ReadNotifications: 4
   mcp__github__pull_request_read: 1
   SendMessage: 1
   mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
   mcp__claude-code-remote__send_message: 1
 rulesLoaded:
   - .claude/rules/adr-0021.md
@@ -164,6 +168,9 @@ rulesLoaded:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/glassbox-content.md
   - .claude/rules/mermaid-lanes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -178,8 +185,6 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0001.md
   - .claude/rules/adr-0013.md
   - .claude/rules/adr-0002.md
-  - .claude/rules/mdc-when-to-use.md
-  - .claude/rules/tenant-layers.md
 docsReadBySubagents:
   - .agents/skills/glassbox-update/SKILL.md
   - docs/agents/guards.md
@@ -203,8 +208,8 @@ docsReadBySubagents:
   - docs/agents/domain.md
   - layers/blog/GLOSSARY.md
   - docs/adr/0027-prune-trials.md
-  - docs/agents/mdc-when-to-use.md
   - docs/agents/tenant-layers.md
+  - docs/agents/mdc-when-to-use.md
 ruleVerdicts:
   - path: .claude/rules/glassbox-content.md
     reason: Kept versions and ids out of rewritten prose; subagents agreed it guided the new sentences
@@ -273,6 +278,10 @@ subagents:
     task: Standards review of drafts diff
   - type: general-purpose
     task: Spec review of drafts diff
+  - type: general-purpose
+    task: Standards review CSS fix
+  - type: general-purpose
+    task: Spec review CSS fix
 gitBranch: ccr-7a61668b-2310vh
 entrypoint: remote_mobile
 cliVersion: 2.1.302
