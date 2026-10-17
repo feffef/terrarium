@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01BZfZ9Ro87HdnHqwjc2j6m2
 startedAt: 2026-10-17T06:38:43Z
-endedAt: 2026-10-17T06:53:01Z
+endedAt: 2026-10-17T06:55:29Z
 kind: autonomous
 goal: Weekly update of the Glass Box guide to the latest main
-status: in-review
-outcome: "PR 2203 opened: guide re-pinned to d6efb61, 12 pages repointed after the scripts/ reorganisation, terms unchanged"
-summary: "Scheduled glassbox-update run, no human prompt. The script flagged 18 pages and 22 terms against 90 new commits, mostly the scripts/ move into gate/, hooks/, session/, github/, git/ and lib/. Six subagents re-checked pages in groups and the terms; most edits were path repoints and four Excerpt updates, plus one dropped unsupported history claim in the skills page. No term definition moved. Script reports no pages left; page tests, validate:content and gate:scoped are green, 12 changed pages were built and shot, code-review (Standards and Spec) found nothing. Open: Drafts Space pages still cite old script paths, outside this run's default scope. All work was agent-initiated by the schedule."
+status: completed
+outcome: "PR 2203 merged: guide re-pinned to d6efb61, 12 pages repointed after the scripts/ reorganisation, terms unchanged"
+summary: "Scheduled glassbox-update run, no human prompt. The script flagged 18 pages and 22 terms against 90 new commits, mostly the scripts/ move into gate/, hooks/, session/, github/, git/ and lib/. Six subagents re-checked pages in groups and the terms; most edits were path repoints and four Excerpt updates, plus one dropped unsupported history claim in the skills page. No term definition moved. Script reports no pages left; page tests, validate:content and gate:scoped are green, 12 changed pages were built and shot, code-review (Standards and Spec) found nothing. Merged on a green gate after a posted verdict. Open: Drafts Space pages still cite old script paths, outside this run's default scope. All work was agent-initiated by the schedule."
 prs:
   - "2203"
 docsRead:
@@ -79,17 +79,21 @@ frictions:
   - description: Read only parts of docs/agents/pr-workflow.md (grep and head) before pushing instead of in full.
     solution: Read it in full once the first push is near.
     severity: nit
-durationSec: 858
+durationSec: 1006
 models:
-  claude-sonnet-5-5: 68
+  claude-sonnet-5-5: 83
 toolCounts:
-  Bash: 19
+  Bash: 23
   Agent: 8
   ListAgents: 1
   Read: 2
   Skill: 3
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0005.md
