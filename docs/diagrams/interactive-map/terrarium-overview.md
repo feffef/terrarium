@@ -866,7 +866,7 @@ Every panel has the same rows, in this order. An empty row is hidden.
 | `helper-agents` | `.agents/skills/dispatch-subagents/` | – |
 | `rules` | `CLAUDE.md`, `GLOSSARY-MAP.md`, `GLOSSARY.md`, `layers/<tenant>/GLOSSARY.md`, `docs/agents/`, `docs/adr/` | ADR-0021, ADR-0029, ADR-0030 |
 | `skills` | `.agents/skills/`, `.claude/skills/`, `.claude/workflows/`, `skills-lock.json` | ADR-0005, ADR-0015 |
-| `guards` | `scripts/hooks/*-guard.ts`, `scripts/hooks/guard-wrap.sh`, `.claude/settings.json`, `.githooks/`, `docs/agents/guards.md` | – |
+| `guards` | `scripts/hooks/*-guard.ts`, `.claude/settings.json`, `.githooks/`, `docs/agents/guards.md` | – |
 | `scripts` | `scripts/` | – |
 | `code` | `app/`, `modules/`, `shared/`, `nuxt.config.ts`, `content.config.ts`, `layers/<tenant>/app/`, `layers/<tenant>/nuxt.config.ts`, `layers/<tenant>/tenant.config.ts`, `layers/<tenant>/tests/`, `tests/` | ADR-0001, ADR-0018 |
 | `content` | `layers/<tenant>/content/` | ADR-0001, ADR-0002 |

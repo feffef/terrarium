@@ -529,7 +529,7 @@ const SHELL = /(?:^|\/)(?:ba|z|da)?sh$/
  *  a verification failure. The old early-return here skipped that env lookup
  *  entirely and passed such calls unchecked.
  *
- *  A crash before this runs is turned into a deny by `scripts/hooks/guard-wrap.sh`. */
+ *  A crash before this runs is blocked by the hook entry's `"onFailure": "block"`. */
 export function main(): void {
   const result = readHookPayload()
   if (result.kind === 'none') return

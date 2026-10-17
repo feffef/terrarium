@@ -108,9 +108,9 @@ export function denyUninspectable(label: string, ref: string, detail: string): v
 
 /** The direct-run bootstrap every guard repeats: dispatch to `--dry-run` or
  *  `main`. A crash or rejection denies (fails closed) unless `failOpen`, which
- *  stays silent (a hook must never wedge tool use with its own fault). It does
- *  not use `lib/cli`'s `runIfMain`, which exits 1 on a crash, and the harness
- *  reads that as an allow. Call it with the CALLING module's `import.meta.url`. */
+ *  stays silent (a hook must never wedge tool use with its own fault). A crash
+ *  also blocks through `"onFailure": "block"`, but this deny names the guard and
+ *  its issue. Call it with the CALLING module's `import.meta.url`. */
 export function runGuard(
   moduleUrl: string,
   opts: {

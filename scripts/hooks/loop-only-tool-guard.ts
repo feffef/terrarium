@@ -188,13 +188,7 @@ function dryRun(argv: string[]): void {
 
 /** Reads the hook JSON on stdin, resolves the session's mode from its
  *  transcript, runs the pure predicate, and writes a deny control object for any
- *  finding. Always exits 0 — the deny travels in stdout, not the exit code.
- *
- *  **The residual fail-open this cannot close** (identical to
- *  `github-provenance-guard.ts`, recorded there too): the hook is invoked as
- *  `node_modules/.bin/tsx … || true`, so if tsx is unavailable the command dies
- *  before this file is evaluated, producing no stdout and therefore no deny.
- *  Closing that needs a change of invocation, not of this script. */
+ *  finding. Always exits 0 — the deny travels in stdout, not the exit code. */
 export function main(): void {
   const result = readHookPayload()
   if (result.kind === 'none') return
