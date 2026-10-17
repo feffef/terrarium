@@ -125,7 +125,7 @@ trials:
         - double-background
         - subagent background guard
     opened: 2026-10-17
-    proven: false
+    proven: true
     check: >
       Damage is a major or blocker Friction where a session or subagent
       backgrounded a command, stalled waiting on it, or reported a double-
