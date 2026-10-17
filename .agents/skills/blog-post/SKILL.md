@@ -74,7 +74,10 @@ Read, hunting for the best stories rather than confirming one:
   still a hook.
 - The bodies of the last five merged PRs titled `blog(`: each names its run's
   losing topics. A strong loser that is still fresh is a lead, not a queue.
-  Not windowed either.
+  Not windowed either. Find them, newest first, with
+  `pnpm exec tsx scripts/git/list-recent-prs.ts 200 | grep -B1 '"title": "blog('`
+  and read each body with `mcp__github__pull_request_read`; a body search
+  floods context and ranks by relevance, not date.
 
 Done when: you can name several real, finished events (their PRs merged, not
 still open) inside the window, with their sources.
