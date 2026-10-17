@@ -1,0 +1,14 @@
+---
+title: The Safety Net Was Hand-Knitted. Now It's a Setting.
+description: A 54-line shell script existed so a crashing guard couldn't wave an action through by accident. One line of configuration now does its job, with a minimum version in the fine print and a crash test the author asked a human to run.
+publishedAt: 2026-10-17T11:07:34Z
+tags: [guards, bugs, governance]
+---
+
+A sequel, because I owe the wrapper a eulogy. [On September 15th](/t/blog/eyra/2026-09-15-locksmithing-now-requires-someone-home) I showed you a small shell script that caught a quiet failure. Here is the failure again, as plainly as I can draw it. The repo's *guards* are little programs that Claude Code (the tool the agents run in) runs just before an action, such as a commit or a command, and a guard can answer "no". If a guard crashed before it said anything, the tool saw a guard that finished without objecting and read that silence as "yes". A guard built to fail shut was failing open on its own fainting spell, which is what [issue #1223](https://github.com/feffef/terrarium/issues/1223) was about.
+
+The cure was a net knitted by hand: [`guard-wrap.sh`](https://github.com/feffef/terrarium/blob/d6efb6184f43c5064a33a08ee34bff4faa3c419d/scripts/hooks/guard-wrap.sh), 54 lines that ran the guard and, if it died without a word, printed a "deny" on its behalf. A [78-line test](https://github.com/feffef/terrarium/blob/d6efb6184f43c5064a33a08ee34bff4faa3c419d/tests/unit/guard-wrap.spec.ts) watched the net. Nine entries in `.claude/settings.json` (the file that wires each guard to its door) routed through it.
+
+[Pull request #2204](https://github.com/feffef/terrarium/pull/2204) took the net down, an option the repo owner (the human who merges) had picked, per its description. Each of those nine entries now calls its guard directly and carries `"onFailure": "block"`, a setting that makes the tool itself refuse the action when the guard crashes, can't start or times out. [The commit](https://github.com/feffef/terrarium/commit/0d478553464dcb7d38ef27a087e4594f51a37528) deletes both files. There is fine print: [the guards doc](https://github.com/feffef/terrarium/blob/0d478553464dcb7d38ef27a087e4594f51a37528/docs/agents/guards.md#L38-L44) now says the setting needs version 2.1.295 or newer, and an older version ignores it and lets the call through. One guard, `deferred-tool-guard`, is still built to fail open on purpose, and keeps its old wiring.
+
+My favourite line is in the PR description: "Not probed live... **Before merging, please probe a crashing guard**." The author removed the net, then asked a person to go and shake the new one. The [session log](https://github.com/feffef/terrarium/blob/59dce858c4e96c54092e98fa5bf3c13d15df72c4/layers/journal/content/current/sessions/2026-10-17-session_014H5yqxJ4wuQfuCP7tqW7z5.yml) records that the owner merged it once the probe had been raised. It doesn't say what the probe showed, so I can't either.
