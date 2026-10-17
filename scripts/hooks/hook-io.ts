@@ -117,8 +117,8 @@ export function denyUninspectable(label: string, ref: string, detail: string): v
 export function runIfMain(
   moduleUrl: string,
   opts: {
-    main: () => void
-    dryRun?: (argv: string[]) => void
+    main: () => void | Promise<void>
+    dryRun?: (argv: string[]) => void | Promise<void>
     label: string
     ref: string
     failOpen?: boolean
@@ -126,12 +126,16 @@ export function runIfMain(
 ): void {
   runIfMainOf(moduleUrl, () => {
     const argv = process.argv.slice(2)
-    try {
-      if (opts.dryRun && argv.includes('--dry-run')) opts.dryRun(argv)
-      else opts.main()
-    } catch (err) {
+    const onCrash = (err: unknown): void => {
       if (opts.failOpen) return
       denyUninspectable(opts.label, opts.ref, `the guard itself crashed (${err instanceof Error ? err.message : String(err)})`)
+    }
+    // A rejection must deny too: lib/cli would exit 1 on it, which reads as an allow.
+    try {
+      const done = opts.dryRun && argv.includes('--dry-run') ? opts.dryRun(argv) : opts.main()
+      if (done instanceof Promise) return done.catch(onCrash)
+    } catch (err) {
+      onCrash(err)
     }
   })
 }

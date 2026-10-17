@@ -15,7 +15,7 @@
 //   tsx scripts/hooks/subagent-background-guard.ts         # payload on stdin (Bash and Monitor alike)
 //   tsx scripts/hooks/subagent-background-guard.ts --dry-run --tool Bash \
 //       [--context subagent|main|undeterminable] [--payload '<json>'] [--input '<json>']
-import { denyUninspectable, readHookPayload, requireToolFlag, resolveDryRunInput, runIfMain } from './hook-io.ts'
+import { buildDenyOutput, denyUninspectable, printDryRunResult, readHookPayload, requireToolFlag, resolveDryRunInput, runIfMain, type DenyOutput } from './hook-io.ts'
 import { flagValue } from '../lib/cli.ts'
 
 const LABEL = 'subagent background guard'
@@ -125,15 +125,8 @@ export function formatGuardMessage(f: BackgroundFinding): string {
 
 /** `null` when nothing should be blocked, so `main` writes nothing and the
  *  call proceeds untouched. */
-export function denyOutputFor(finding: BackgroundFinding | null): { hookSpecificOutput: Record<string, string> } | null {
-  if (!finding) return null
-  return {
-    hookSpecificOutput: {
-      hookEventName: 'PreToolUse',
-      permissionDecision: 'deny',
-      permissionDecisionReason: formatGuardMessage(finding),
-    },
-  }
+export function denyOutputFor(finding: BackgroundFinding | null): DenyOutput | null {
+  return finding ? buildDenyOutput(formatGuardMessage(finding)) : null
 }
 
 /** Always exits 0 — the deny travels in stdout, not the exit code. The
@@ -173,13 +166,7 @@ function dryRun(argv: string[]): void {
   }
   const context = (flagValue(argv, '--context') as AgentContext | undefined) ?? detectAgentContext(payload)
   const finding = checkBackgroundedBash(tool, resolveDryRunInput(argv), context) ?? checkMonitorCall(tool, context)
-  console.log(
-    JSON.stringify(
-      { tool, context, decision: finding ? 'deny' : 'allow', reason: finding ? formatGuardMessage(finding) : undefined },
-      null,
-      2,
-    ),
-  )
+  printDryRunResult({ tool, context, decision: finding ? 'deny' : 'allow', reason: finding ? formatGuardMessage(finding) : undefined })
 }
 
 runIfMain(import.meta.url, { main, dryRun, label: LABEL, ref: REF })

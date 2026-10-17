@@ -19,7 +19,6 @@ import {
   type ConflictCandidateIssue,
   type RawConflictIssue,
 } from '../../scripts/github/check-conflicting-issues.ts'
-import { paginate, parseRestPage, type RestPage } from '../../scripts/lib/github-client.ts'
 
 // The motivating case from issue #798: issue #784 instructs deleting
 // `SESSION_TRAILER_GLOBAL` as unused, while PR #789 repurposes it.
@@ -224,66 +223,5 @@ describe('parseChangedFileList()', () => {
   })
   it('returns an empty array for empty input', () => {
     expect(parseChangedFileList('')).toEqual([])
-  })
-})
-
-describe('paginate() over REST pages', () => {
-  const walkPagesByNumber = <T>(pageUrl: (page: number) => string, fetchPage: (url: string) => RestPage): T[] =>
-    paginate<T>(pageUrl, (url) => parseRestPage<T>(fetchPage(url), url))
-
-  // The real shape of GitHub's `rel="next"` on the `pulls` endpoint: the
-  // numeric `repositories/{id}/…` form this environment's agent proxy rejects
-  // (issue #848). A walker that follows it verbatim 403s on page 2.
-  const NUMERIC_NEXT_LINK =
-    '<https://api.github.com/repositories/1300192/pulls/42/files?per_page=100&page=2>; rel="next", ' +
-    '<https://api.github.com/repositories/1300192/pulls/42/files?per_page=100&page=2>; rel="last"'
-
-  const pageUrl = (page: number) =>
-    `https://api.github.com/repos/feffef/terrarium/pulls/42/files?per_page=100&page=${page}`
-
-  /** A fixture fetcher: serves `pages` in order and records every URL asked for. */
-  function fixtureFetcher(pages: RestPage[]): { fetchPage: (url: string) => RestPage; requested: string[] } {
-    const requested: string[] = []
-    let index = 0
-    return {
-      requested,
-      fetchPage: (url) => {
-        requested.push(url)
-        const page = pages[index++]
-        if (!page) throw new Error(`fixture exhausted: unexpected request for ${url}`)
-        return page
-      },
-    }
-  }
-
-  it('reaches page 2 by number instead of following the numeric next link', () => {
-    const { fetchPage, requested } = fixtureFetcher([
-      { status: '200', body: JSON.stringify([{ filename: 'a.ts' }]), linkHeader: NUMERIC_NEXT_LINK },
-      { status: '200', body: JSON.stringify([{ filename: 'b.ts' }]), linkHeader: null },
-    ])
-    expect(walkPagesByNumber(pageUrl, fetchPage)).toEqual([{ filename: 'a.ts' }, { filename: 'b.ts' }])
-    expect(requested).toEqual([pageUrl(1), pageUrl(2)])
-    expect(requested.some((url) => url.includes('/repositories/'))).toBe(false)
-  })
-
-  it('stops after one page when there is no next link', () => {
-    const { fetchPage, requested } = fixtureFetcher([
-      { status: '200', body: JSON.stringify([{ filename: 'a.ts' }]), linkHeader: null },
-    ])
-    expect(walkPagesByNumber(pageUrl, fetchPage)).toEqual([{ filename: 'a.ts' }])
-    expect(requested).toEqual([pageUrl(1)])
-  })
-
-  it('throws an explicit incomplete-scan error on a mid-walk rejection, never the short list', () => {
-    const { fetchPage } = fixtureFetcher([
-      { status: '200', body: JSON.stringify([{ filename: 'a.ts' }]), linkHeader: NUMERIC_NEXT_LINK },
-      { status: '403', body: 'Numeric-ID repository paths are not supported through this proxy', linkHeader: null },
-    ])
-    expect(() => walkPagesByNumber(pageUrl, fetchPage)).toThrow(/INCOMPLETE at page 2 after 1 record/)
-  })
-
-  it('throws an explicit incomplete-scan error on a malformed page body', () => {
-    const { fetchPage } = fixtureFetcher([{ status: '200', body: '<html>nope</html>', linkHeader: null }])
-    expect(() => walkPagesByNumber(pageUrl, fetchPage)).toThrow(/INCOMPLETE at page 1 after 0 record/)
   })
 })

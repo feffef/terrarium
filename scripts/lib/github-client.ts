@@ -97,17 +97,16 @@ export interface RestPage {
   linkHeader: string | null
 }
 
-export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH'
+export type HttpMethod = 'GET' | 'PUT' | 'PATCH'
 
-/** One authenticated request (a GET unless `req` says otherwise). `-D`/`-w`
+/** One authenticated request (a GET unless `opts.method` says otherwise). `-D`/`-w`
  *  split the response into a header file (for `Link`) and a status code; the
  *  body goes to its own temp file. */
 export function curlPage(
   url: string,
   token: string,
   cwd: string,
-  accept = 'application/vnd.github+json',
-  req: { method?: HttpMethod; body?: unknown } = {},
+  { accept = 'application/vnd.github+json', method, json }: { accept?: string; method?: HttpMethod; json?: unknown } = {},
 ): RestPage {
   const dir = mkdtempSync(join(tmpdir(), 'github-client-'))
   const headerFile = join(dir, 'headers')
@@ -123,8 +122,8 @@ export function curlPage(
         headerFile,
         '-w',
         '%{http_code}',
-        ...(req.method ? ['-X', req.method] : []),
-        ...(req.body === undefined ? [] : ['-H', 'Content-Type: application/json', '--data', JSON.stringify(req.body)]),
+        ...(method ? ['-X', method] : []),
+        ...(json === undefined ? [] : ['-H', 'Content-Type: application/json', '--data', JSON.stringify(json)]),
         '-H',
         `Authorization: Bearer ${token}`,
         '-H',
@@ -181,7 +180,7 @@ export function requestJson<T>(a: Access, method: HttpMethod, path: string, fiel
     return (raw.trim() ? JSON.parse(raw) : undefined) as T
   }
   const url = `https://api.github.com/${path}`
-  const { status, body } = curlPage(url, a.token, a.cwd, undefined, { method, body: fields })
+  const { status, body } = curlPage(url, a.token, a.cwd, { method, json: fields })
   if (status[0] !== '2') throw new Error(`GitHub REST API ${method} ${url} failed: HTTP ${status}: ${body}`)
   return (body.length > 0 ? JSON.parse(body) : undefined) as T
 }
@@ -244,7 +243,7 @@ export function listAll<T>(
   const query = (page: number) => new URLSearchParams({ ...params, per_page: String(PER_PAGE), page: String(page) })
   return paginate<T>(
     (page) => `https://api.github.com/${full}?${query(page)}`,
-    (url) => parseRestPage<T>(curlPage(url, token, cwd, accept), url),
+    (url) => parseRestPage<T>(curlPage(url, token, cwd, { accept }), url),
     PER_PAGE,
     hint,
   )

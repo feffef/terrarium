@@ -1,12 +1,17 @@
-import { describe, expect, it } from 'vitest'
+import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { delimiter, join } from 'node:path'
+import { afterEach, describe, expect, it } from 'vitest'
 import {
   decodeHtmlEntities,
   ghRequestArgs,
+  listAll,
   paginate,
   parseNextLink,
   parseOwnerRepo,
   parseRestPage,
   pickFetchStrategy,
+  type RestPage,
 } from '../../scripts/lib/github-client.ts'
 
 describe('paginate()', () => {
@@ -119,5 +124,85 @@ describe('ghRequestArgs()', () => {
   })
   it('keeps a GET query in the path', () => {
     expect(ghRequestArgs('GET', 'repos/o/r/issues?per_page=100')).toEqual(['api', '--method', 'GET', 'repos/o/r/issues?per_page=100'])
+  })
+})
+
+describe('paginate() over REST pages, by number', () => {
+  const walkPagesByNumber = <T>(pageUrl: (page: number) => string, fetchPage: (url: string) => RestPage): T[] =>
+    paginate<T>(pageUrl, (url) => parseRestPage<T>(fetchPage(url), url))
+
+  // The real shape of GitHub's `rel="next"` on the `pulls` endpoint: the
+  // numeric `repositories/{id}/…` form this environment's agent proxy rejects
+  // (issue #848). A walker that follows it verbatim 403s on page 2.
+  const NUMERIC_NEXT_LINK =
+    '<https://api.github.com/repositories/1300192/pulls/42/files?per_page=100&page=2>; rel="next", ' +
+    '<https://api.github.com/repositories/1300192/pulls/42/files?per_page=100&page=2>; rel="last"'
+
+  const pageUrl = (page: number) =>
+    `https://api.github.com/repos/feffef/terrarium/pulls/42/files?per_page=100&page=${page}`
+
+  /** A fixture fetcher: serves `pages` in order and records every URL asked for. */
+  function fixtureFetcher(pages: RestPage[]): { fetchPage: (url: string) => RestPage; requested: string[] } {
+    const requested: string[] = []
+    let index = 0
+    return {
+      requested,
+      fetchPage: (url) => {
+        requested.push(url)
+        const page = pages[index++]
+        if (!page) throw new Error(`fixture exhausted: unexpected request for ${url}`)
+        return page
+      },
+    }
+  }
+
+  it('reaches page 2 by number instead of following the numeric next link', () => {
+    const { fetchPage, requested } = fixtureFetcher([
+      { status: '200', body: JSON.stringify([{ filename: 'a.ts' }]), linkHeader: NUMERIC_NEXT_LINK },
+      { status: '200', body: JSON.stringify([{ filename: 'b.ts' }]), linkHeader: null },
+    ])
+    expect(walkPagesByNumber(pageUrl, fetchPage)).toEqual([{ filename: 'a.ts' }, { filename: 'b.ts' }])
+    expect(requested).toEqual([pageUrl(1), pageUrl(2)])
+    expect(requested.some((url) => url.includes('/repositories/'))).toBe(false)
+  })
+
+  it('stops after one page when there is no next link', () => {
+    const { fetchPage, requested } = fixtureFetcher([
+      { status: '200', body: JSON.stringify([{ filename: 'a.ts' }]), linkHeader: null },
+    ])
+    expect(walkPagesByNumber(pageUrl, fetchPage)).toEqual([{ filename: 'a.ts' }])
+    expect(requested).toEqual([pageUrl(1)])
+  })
+
+  it('throws an explicit incomplete-scan error on a mid-walk rejection, never the short list', () => {
+    const { fetchPage } = fixtureFetcher([
+      { status: '200', body: JSON.stringify([{ filename: 'a.ts' }]), linkHeader: NUMERIC_NEXT_LINK },
+      { status: '403', body: 'Numeric-ID repository paths are not supported through this proxy', linkHeader: null },
+    ])
+    expect(() => walkPagesByNumber(pageUrl, fetchPage)).toThrow(/INCOMPLETE at page 2 after 1 record/)
+  })
+
+  it('throws an explicit incomplete-scan error on a malformed page body', () => {
+    const { fetchPage } = fixtureFetcher([{ status: '200', body: '<html>nope</html>', linkHeader: null }])
+    expect(() => walkPagesByNumber(pageUrl, fetchPage)).toThrow(/INCOMPLETE at page 1 after 0 record/)
+  })
+})
+
+describe('listAll() over REST', () => {
+  let dir: string
+  const path = process.env.PATH
+  afterEach(() => {
+    process.env.PATH = path
+    rmSync(dir, { recursive: true, force: true })
+  })
+
+  it('carries its hint into the error a failed page throws', () => {
+    dir = mkdtempSync(join(tmpdir(), 'fake-curl-'))
+    // A curl that answers HTTP 500 for every request.
+    writeFileSync(join(dir, 'curl'), '#!/bin/sh\nwhile [ $# -gt 0 ]; do [ "$1" = -o ] && : > "$2"; [ "$1" = -D ] && : > "$2"; shift; done\nprintf 500\n')
+    chmodSync(join(dir, 'curl'), 0o755)
+    process.env.PATH = `${dir}${delimiter}${path}`
+    const access = { owner: 'o', repo: 'r', cwd: process.cwd(), strategy: 'rest' as const, token: 't' }
+    expect(() => listAll(access, 'issues', {}, { hint: ' (HINT-MARK)' })).toThrow(/INCOMPLETE at page 1.*HTTP 500.*\(HINT-MARK\)/)
   })
 })

@@ -58,7 +58,7 @@
 import { matchesGlob } from 'node:path'
 import { fail, root, runIfMain } from '../lib/cli.ts'
 import { git } from '../lib/git.ts'
-import { getJson, requestJson, resolveAccess, type Access } from '../lib/github-client.ts'
+import { getJson, paginate, PER_PAGE, requestJson, resolveAccess, type Access } from '../lib/github-client.ts'
 import { findTranscriptContents } from '../session/commit-trailer.ts'
 import { hasAuthorshipMarker, readProvenanceHeader } from '../lib/provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from '../session/transcript-trace.ts'
@@ -330,12 +330,12 @@ type RawPrFile = { filename: string; previous_filename?: string }
 /** Every path the PR touches, a rename's old path included, so moving a file
  *  out of a Human-only path still counts. */
 function readChangedFiles(a: Access, prNumber: number): string[] {
-  const files: string[] = []
-  for (let page = 1; ; page++) {
-    const items = getJson<RawPrFile[]>(a, repoPath(a, `pulls/${prNumber}/files?per_page=100&page=${page}`))
-    for (const i of items) files.push(i.filename, ...(i.previous_filename ? [i.previous_filename] : []))
-    if (items.length < 100) return files
-  }
+  // By number, not `listAll`: its gh path follows `Link`, whose numeric URL the proxy 403s (#848).
+  const items = paginate<RawPrFile>(
+    (page) => repoPath(a, `pulls/${prNumber}/files?per_page=${PER_PAGE}&page=${page}`),
+    (path) => ({ records: getJson<RawPrFile[]>(a, path) }),
+  )
+  return items.flatMap((i) => [i.filename, ...(i.previous_filename ? [i.previous_filename] : [])])
 }
 
 function readHumanMergeGlobsFromMain(cwd: string): string[] {
