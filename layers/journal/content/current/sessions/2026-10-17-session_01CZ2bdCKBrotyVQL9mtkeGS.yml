@@ -1,0 +1,111 @@
+schemaVersion: 1
+session: session_01CZ2bdCKBrotyVQL9mtkeGS
+startedAt: 2026-10-17T00:16:16Z
+endedAt: 2026-10-17T00:24:55Z
+kind: autonomous
+goal: Write the 2026-10-16 Journal Digest
+status: completed
+outcome: Digest and retention sweep merged in PR 2191
+summary: Scheduled /digest run, no human prompt. Listed one closed day (2026-10-16), gathered its data, wrote a plain-English Digest, fact-checked it with a sonnet subagent (20 claims, none wrong), ran the archive sweep (1 digest, 10 session logs), passed gate:scoped, pushed and opened PR 2191. PR 2191 merged on a green gate.
+prs:
+  - "2191"
+docsRead:
+  - path: GLOSSARY.md
+    reason: read at session start; terms for the Digest
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR steps
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read before first git command
+    useful: partly
+  - path: layers/journal/content/current/pages/digests/2026-10-16.md
+    reason: (no reason given)
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: The code-review Skill's two-subagent flow is overkill for a prose-only digest diff already fact-checked and gated; I reviewed it myself instead.
+    solution: Let pr-workflow skip code-review for a scheduled run whose diff is only Digest pages and archive moves.
+    severity: nit
+durationSec: 519
+models:
+  claude-sonnet-5-5: 43
+toolCounts:
+  Bash: 18
+  Agent: 1
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 2
+rulesLoaded:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/glassbox-content.md
+docsReadBySubagents:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/environment-caveats.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and review before first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open PR at once and subscribe; scope limited to digest files; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body header with session link; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Digest lands by gated PR, not direct to main; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; not needed for this task
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; not relevant to a digest run
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Where instructions live; not relevant here
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by reading an old digest; no diagrams involved
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Subagent loaded it reading Glass Box files; it reported no use
+    useful: no
+subagents:
+  - task: Fact-check 2026-10-16 digest
+    model: sonnet
+gitBranch: claude/compassionate-lovelace-qy3w25
+entrypoint: remote_trigger
+cliVersion: 2.1.302
+trigger: digest
+landedBy: Stop
