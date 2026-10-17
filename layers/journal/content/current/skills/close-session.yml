@@ -293,3 +293,12 @@ observations:
       harden the hint further (ADR-0009's accepted trade-off). No new
       instance in this window's 10 sessions. No reverts of close-session
       mechanics in the 2-week sweep. Grade/role unchanged (essential).
+  - date: "2026-10-17"
+    note: >-
+      Self-check (audit-skills behaviour check), Part A (10 usedIn): all logs
+      landed on main with correct session authorship; 3/10 honesty-spot-checked
+      against real merges (PRs #2170/#2171/#2176, #2172, #2173) all honest.
+      Part B (1 notUsedSession, session_01NVG22rfEsjhW9zkcCco6W8): equivalent
+      closure via log-session directly (no PR to open), not a miss - same
+      pattern as prior observations. No new finding. Grade/role unchanged
+      (essential).

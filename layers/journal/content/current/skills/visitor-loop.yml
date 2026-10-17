@@ -355,3 +355,15 @@ observations:
       keep/refine/drop verdicts citing real sources. Owner-memory step held
       again (2/2 since the #1912 fix). No reverts in the 2-week sweep. No
       new silent failure. Grade/role unchanged (routine).
+  - date: "2026-10-17"
+    note: >-
+      Self-check (audit-skills behaviour check): all 9 usedIn sessions
+      checked (1 freshly end-to-end: session_01RKUs8JUM5uASMfiE3hvXRA, PRs
+      #2163/#2164 - 3-model dispatch, refiner step, owner-memory step all
+      ran correctly, 16 candidates each resolved individually, none
+      batched). #1452 reconfirmed CLOSED and holding, 3/3 clean post-fix
+      tests now. Watch item, not escalated: owner-directed rework PR #2178
+      (5h after #2164, same file) sits in the 3-day owner-corrections.ts
+      rework window untested - no visitor-loop run has fired since to pick
+      it up; confirm on the next run whether decisions.md catches it. No
+      new silent failure. Grade/role unchanged (routine).

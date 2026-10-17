@@ -278,3 +278,14 @@ observations:
       worked end to end. Revert sweep (`-i --grep/-G "audit-docs"`, 204
       hits) found no revert of anything this Skill delivered. No new silent
       failure. Grade/role unchanged.
+  - date: "2026-10-17"
+    note: >-
+      Self-check (audit-skills behaviour check): 3 freshly re-verified
+      sessions beyond the 2026-10-16 entry (session_01XxPqcyjVxcgmHTidWtoF1g
+      PRs #2161/#2162, session_017xginqTj2NjZ8XgrbRqvkm PRs #2110/#2111,
+      session_01M9Ryb84DYs5HxKy2Z3cpA2 PRs #1921/#1922), all confirmed merged
+      and scoped as claimed; 7 others corroborated via 2-week revert sweep
+      (clean). Sub-threshold, not escalated: the step-3 pooling-instruction
+      ambiguity ("copied, never retyped") self-caught a 3rd recurrence in
+      session_01XxPqcyjVxcgmHTidWtoF1g - worth a future SKILL.md wording fix
+      if a 4th instance turns up. No new silent failure. Grade/role unchanged.

@@ -163,3 +163,12 @@ observations:
       against docs/agents/issue-tracker.md's Specs section but not yet
       exercised by any session. No new silent failure or missed invocation.
       Grade/role unchanged (specialist).
+  - date: "2026-10-17"
+    note: >-
+      Self-check (audit-skills behaviour check): all 6 usedIn sessions
+      checked, corroborated against two later independent audit-skills runs
+      (b1a4d224, 5b42a8a7) that also found this Skill clean. Direct spot
+      checks: issue #1818 closed via merged PR #1824 as claimed; #1816 and
+      #1786 correctly escalated ready-for-human, never self-closed. No
+      revert of SKILL.md content. No new silent failure. Grade/role
+      unchanged.

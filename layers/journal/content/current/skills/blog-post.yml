@@ -265,3 +265,11 @@ observations:
       re-confirmed closed and holding. Durability sweep found only the two
       already-known, owner-directed replacements (31601c0f, 467dbf1d) — no
       new reverts. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-17"
+    note: >-
+      Self-check (audit-skills behaviour check): fresh end-to-end audit of
+      session_01N9bwDKW51kMS6WJvK2nfSU (PR #2139 Kevin standalone, PR #2141
+      Karen reply) - both merged, fact-check tallies and rotation state match
+      claims verbatim, pingback stub shape correct. Other 9 usedIn sessions
+      corroborated via durability sweep; #1479/#1626 both still closed, no
+      recurrence. No new silent failure. Grade/role unchanged.

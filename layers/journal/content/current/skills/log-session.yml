@@ -378,3 +378,14 @@ observations:
       skillsUsed-population gap that doesn't affect this Skill's actual
       output. No new silent failure, no reverts in the 2-week sweep.
       Grade/role unchanged (essential).
+  - date: "2026-10-17"
+    note: >-
+      Self-check (audit-skills behaviour check), Part A (10 usedIn) - 0
+      silent failures, all schema-valid and committed direct-to-main, honest
+      frictions, all PR claims cross-checked live. Part B (16 notUsedWindow)
+      - 0 missed invocations, all are the known gap where close-session
+      invokes log-session internally without it surfacing in skillsUsed
+      (#1915, already closed/fixed via PR #1933). #1450 (word limit)
+      reconfirmed still closed and holding - no numeric-cap regression. No
+      new finding. Grade/role unchanged
+      (essential).

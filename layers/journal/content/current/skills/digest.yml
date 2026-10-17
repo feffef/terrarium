@@ -229,3 +229,11 @@ observations:
       `prsMerged`, but the gap was caught as a friction before being quoted
       in any published Digest and fixed same-day. Other 6 sessions
       re-confirmed merged, none reverted. Grade/role unchanged (routine).
+  - date: "2026-10-17"
+    note: >-
+      Self-check (audit-skills behaviour check): fresh end-to-end audit of
+      session_01CZ2bdCKBrotyVQL9mtkeGS (PR #2191, the 2026-10-16 Digest) -
+      file on main, retention sweep correct (7 dates, no gaps/dupes),
+      fact-check tally matches, 3 spot-checked narrative claims accurate. 18
+      consecutive clean daily audits now since the single 2026-09-28 #1478
+      case. No new silent failure. Grade/role unchanged.
