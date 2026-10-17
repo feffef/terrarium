@@ -1,14 +1,8 @@
-// Mechanical backstop for issue #694: a dispatched subagent's own backgrounded
-// Bash command can never wake it, so `run_in_background: true` is denied in
-// subagent context — and per issue #964, so is a bare `&` (anywhere in the
-// command text, `nohup … &` included) and a `Monitor` call, the two bypass
-// shapes the original deny message already warned about but never
-// mechanized (and, per issue #995, the `Monitor` half was implemented and
-// tested but never actually wired to a live hook until this fix). The
-// detection contract, the residual fail-opens, and the conventions every
-// guard here shares are in docs/agents/guards.md. Pure core is kept
-// separate from the stdin I/O and exercised by --dry-run, mirroring the
-// sibling guards (docs/agents/guards.md).
+// A dispatched subagent's own backgrounded Bash command can never wake it, so
+// `run_in_background: true`, a bare `&` anywhere in the command text (`nohup … &`
+// included) and a `Monitor` call are denied in subagent context (issues #694,
+// #964, #995). Detection contract, residual fail-opens and shared conventions:
+// docs/agents/guards.md.
 //
 // Usage:
 //   sh scripts/hooks/subagent-background-guard.sh          # the installed Bash hook entry
@@ -42,20 +36,10 @@ export interface BackgroundFinding {
   signal: 'run_in_background' | 'command-text' | 'monitor'
 }
 
-/** True if `command` contains a bare `&` job-control operator ANYWHERE, not
- *  just trailing — `pnpm gate:scoped &`, `nohup long-cmd &`, and
- *  `pnpm gate:scoped & echo started` all background a process the same way;
- *  the tool call returning only waits out the command's foreground portion,
- *  the backgrounded part keeps running detached. Checking only the last
- *  token would miss that last, non-trailing case entirely (issue #964).
- *
- *  Strips quoted/escaped spans, then `&&` chaining and `&>`/`>&`/`<&`
- *  redirection (the common `2>&1` included), and checks what's left for a
- *  bare `&`. Not a full shell parser (issue #964 accepts this trade-off
- *  explicitly): command substitution (`$(...)`/backticks), here-docs, and
- *  ANSI-C quoting (`$'...'`) aren't resolved, so a `&` inside one of those
- *  can still false-positive or false-negative — see docs/agents/guards.md
- *  for the residual list. */
+/** True if `command` has a bare `&` job-control operator anywhere, not just
+ *  trailing. Strips quoted/escaped spans, `&&` and `&>`/`>&`/`<&` redirection
+ *  first. Not a full shell parser (issue #964): command substitution, here-docs
+ *  and `$'...'` aren't resolved; see docs/agents/guards.md for the residual list. */
 export function hasBackgroundOperator(command: string): boolean {
   const unquoted = command.replace(/'[^']*'|"(?:[^"\\]|\\.)*"|\\./g, '')
   const withoutOperators = unquoted.replace(/&&|[<>]&|&>/g, '')

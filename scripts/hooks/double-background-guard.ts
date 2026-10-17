@@ -1,28 +1,10 @@
-// Mechanical backstop for issue #1208: a `Bash` call that sets
-// `run_in_background: true` AND also backgrounds itself in the command text
-// (a bare `&` anywhere, `nohup … &` included) silently lies about
-// completion — the outer tool call returns as soon as the text-level `&`
-// detaches the process, not when the real command finishes, so "completed"
-// stops meaning anything. A prose warning in CLAUDE.md didn't hold
-// (recurrences 2026-09-08, 2026-09-09) and has since been cut, so the deny
-// message is the rule's only home.
-//
-// Deliberately caller-agnostic — no `detectAgentContext` gate at all.
-// `subagent-background-guard.ts`'s rule is "a subagent may never background
-// at all" (`context === 'main'` is explicitly untouched there); this rule is
-// about the DOUBLE-background COMBO itself, which is broken the same way
-// regardless of who is calling. A subagent hitting this combo is already
-// denied by that sibling guard on the `run_in_background: true` signal
-// alone, so this guard's practical audience is the main session, which the
-// sibling guard does not police (docs/agents/guards.md: "Orchestrators are
-// untouched"). Detection reuses `hasBackgroundOperator`, exported from
-// `subagent-background-guard.ts` rather than duplicated — issue #964 already
-// solved the quote-aware `&` scan; see that file's header for the residual
-// fail-opens (command substitution, here-docs, ANSI-C quoting).
-//
-// Runs unattended, so it is human-only to merge (ADR-0004). Pure
-// core split from the shared stdin/`--dry-run`/bootstrap plumbing
-// (`hook-io.ts`, issue #1080).
+// A `Bash` call with `run_in_background: true` that also backgrounds itself in
+// the command text (a bare `&`, `nohup … &` included) returns when the `&`
+// detaches, not when the command finishes, so "completed" means nothing (issue
+// #1208). Caller-agnostic on purpose: the main session is its practical
+// audience, since the sibling subagent-background-guard.ts already denies a
+// subagent's `run_in_background`. Reuses its `hasBackgroundOperator`. Human-only
+// to merge (ADR-0004).
 //
 // Usage:
 //   sh scripts/hooks/double-background-guard.sh             # the installed hook entry
