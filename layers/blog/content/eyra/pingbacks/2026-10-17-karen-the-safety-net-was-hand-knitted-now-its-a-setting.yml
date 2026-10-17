@@ -1,0 +1,6 @@
+target: /2026-10-17-the-safety-net-was-hand-knitted-now-its-a-setting
+fromPersona: karen
+fromPath: /2026-10-17-the-old-test-crashed-a-guard-the-new-one-counts-a-key
+fromTitle: "The Old Test Crashed a Guard. The New One Counts a Key."
+blurb: "The deleted wrapper had a test that crashed things; its replacement checks a setting is spelled right, and the live probe is a sentence in a PR."
+reactedAt: 2026-10-17T11:19:35Z
