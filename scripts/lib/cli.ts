@@ -9,8 +9,8 @@ export const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
 /** Print `<script>: msg` and exit 1. The prefix is the entry script's name,
  *  which is what every copy hard-coded. */
-export function fail(msg: string, name = basename(process.argv[1] ?? '', '.ts')): never {
-  console.error(`${name}: ${msg}`)
+export function fail(msg: string): never {
+  console.error(`${basename(process.argv[1] ?? '', '.ts')}: ${msg}`)
   process.exit(1)
 }
 

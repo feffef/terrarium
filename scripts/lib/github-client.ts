@@ -134,9 +134,13 @@ export function curlGetPage(url: string, token: string, cwd: string, accept = 'a
   }
 }
 
+function assertOk(status: string, url: string): void {
+  if (status[0] !== '2') throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
+}
+
 /** A page's records, and whether another page follows by its `Link` header. */
 export function parseRestPage<T>(page: RestPage, url: string): { records: T[]; more: boolean } {
-  if (page.status[0] !== '2') throw new Error(`GitHub REST API request to ${url} failed: HTTP ${page.status}`)
+  assertOk(page.status, url)
   let records: T[]
   try {
     records = JSON.parse(page.body) as T[]
@@ -146,14 +150,11 @@ export function parseRestPage<T>(page: RestPage, url: string): { records: T[]; m
   return { records, more: parseNextLink(page.linkHeader) !== null }
 }
 
-/** One GET of a `repos/…` path, parsed, via `gh` or `curl`. */
-export function getJson<T>(path: string, cwd: string): T {
-  const token = envToken()
-  const strategy = pickFetchStrategy(hasGhBinary(cwd), Boolean(token))
-  if (strategy === null) throw new Error(NO_ACCESS_MESSAGE)
-  if (strategy === 'gh') {
+/** One GET of a `repos/…` path, parsed, via the access path `resolveAccess` chose. */
+export function getJson<T>(a: Access, path: string): T {
+  if (a.strategy === 'gh') {
     const raw = execFileSync('gh', ['api', '--method', 'GET', path], {
-      cwd,
+      cwd: a.cwd,
       encoding: 'utf8',
       maxBuffer: 256 * 1024 * 1024,
       stdio: ['ignore', 'pipe', 'pipe'], // a failure's stderr rides on the thrown error
@@ -161,8 +162,8 @@ export function getJson<T>(path: string, cwd: string): T {
     return JSON.parse(raw) as T
   }
   const url = `https://api.github.com/${path}`
-  const { status, body } = curlGetPage(url, token!, cwd)
-  if (status[0] !== '2') throw new Error(`GitHub REST API request to ${url} failed: HTTP ${status}`)
+  const { status, body } = curlGetPage(url, a.token, a.cwd)
+  assertOk(status, url)
   return JSON.parse(body) as T
 }
 

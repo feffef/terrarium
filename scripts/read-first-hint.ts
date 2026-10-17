@@ -24,7 +24,7 @@ import { basename, join } from 'node:path'
 import { printDryRunResult, prop, readTranscript, resolveDryRunInput, runIfMain } from './guard-io.ts'
 import { extractTrace, hintText, subagentTranscript } from './session-trace.ts'
 import { buildDocLineIndex, commandWords } from './shell-reads.ts'
-import { root as ROOT } from './lib/cli.ts'
+import { root } from './lib/cli.ts'
 
 interface ReadFirst {
   doc: string
@@ -99,7 +99,7 @@ function hintFor(payload: unknown, dryRun = false): string | null {
   else if (agent === undefined) records = readTranscript(parent)
   else records = readTranscript(subagentTranscript(parent, String(agent))) ?? []
   if (!records) return null
-  const index = buildDocLineIndex(docs.map((r) => ({ path: r.doc, text: readFileSync(join(ROOT, r.doc), 'utf8') })))
+  const index = buildDocLineIndex(docs.map((r) => ({ path: r.doc, text: readFileSync(join(root, r.doc), 'utf8') })))
   const trace = extractTrace(records, process.env, index)
   const skip = seen(records, docs, trace)
   const lines = docs.filter((r) => !skip.has(r.doc)).map(pointer)

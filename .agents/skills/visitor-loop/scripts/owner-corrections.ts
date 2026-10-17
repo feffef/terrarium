@@ -19,7 +19,7 @@ import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { isAiAuthored } from '../../../../scripts/check-triage-drift.ts'
 import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
-import { getJson, paginate, parseOwnerRepo, PER_PAGE, readOriginUrl } from '../../../../scripts/lib/github-client.ts'
+import { getJson, paginate, PER_PAGE, resolveAccess, type Access } from '../../../../scripts/lib/github-client.ts'
 import { root, fail, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const DECISIONS = '.agents/skills/visitor-loop/decisions.md'
@@ -169,11 +169,11 @@ interface RawComment {
 }
 
 /** Every page of `path` (which already has a `?`), stopping early once `done` says so. */
-function allPages<T>(path: string, cwd: string, done: (page: T[]) => boolean = () => false): T[] {
+function allPages<T>(access: Access, path: string, done: (page: T[]) => boolean = () => false): T[] {
   return paginate<T>(
     (page) => `${path}&per_page=${PER_PAGE}&page=${page}`,
     (url) => {
-      const records = getJson<T[]>(url, cwd)
+      const records = getJson<T[]>(access, url)
       return { records, more: records.length >= PER_PAGE && !done(records) }
     },
   )
@@ -224,14 +224,12 @@ function threadNumber(url: string): number {
 export function ownerCorrections(since: string | undefined, cwd = root): Candidate[] {
   fetchOriginMain(cwd, 'origin', undefined, true)
   const cutoff = since ?? lastDecisionsCommit(cwd)
-  const originUrl = readOriginUrl(cwd)
-  const ownerRepo = parseOwnerRepo(originUrl)
-  if (ownerRepo === null) throw new Error(`could not parse owner/repo from origin remote: ${originUrl}`)
-  const repo = `repos/${ownerRepo.owner}/${ownerRepo.repo}`
+  const access = resolveAccess(cwd)
+  const repo = `repos/${access.owner}/${access.repo}`
 
   // A visitor-loop PR can be reworked up to OVERLAP_WINDOW_MS after it merged.
   const floorMs = Date.parse(cutoff) - OVERLAP_WINDOW_MS
-  const rawPulls = allPages<RawPull>(`${repo}/pulls?state=all&sort=updated&direction=desc`, cwd, (page) =>
+  const rawPulls = allPages<RawPull>(access, `${repo}/pulls?state=all&sort=updated&direction=desc`, (page) =>
     Date.parse(page[page.length - 1]!.updated_at) < floorMs,
   ).filter((p) => Date.parse(p.updated_at) >= floorMs)
   const prs = rawPulls.map((p) => toPr(p, cwd))
@@ -239,11 +237,11 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
 
   const sinceQuery = `since=${encodeURIComponent(cutoff)}`
   const raw: Array<RawComment & { thread: number }> = [
-    ...allPages<RawComment>(`${repo}/issues/comments?${sinceQuery}`, cwd).map((c) => ({ ...c, thread: threadNumber(c.issue_url!) })),
-    ...allPages<RawComment>(`${repo}/pulls/comments?${sinceQuery}`, cwd).map((c) => ({ ...c, thread: threadNumber(c.pull_request_url!) })),
+    ...allPages<RawComment>(access, `${repo}/issues/comments?${sinceQuery}`).map((c) => ({ ...c, thread: threadNumber(c.issue_url!) })),
+    ...allPages<RawComment>(access, `${repo}/pulls/comments?${sinceQuery}`).map((c) => ({ ...c, thread: threadNumber(c.pull_request_url!) })),
     ...rawPulls
       .filter((p) => isVisitorLoopPull(p) && Date.parse(p.updated_at) > Date.parse(cutoff))
-      .flatMap((p) => allPages<RawComment>(`${repo}/pulls/${p.number}/reviews?`, cwd).map((r) => ({ ...r, thread: p.number }))),
+      .flatMap((p) => allPages<RawComment>(access, `${repo}/pulls/${p.number}/reviews?`).map((r) => ({ ...r, thread: p.number }))),
   ]
 
   // Only human comments matter, which keeps the per-thread fetch rare.
@@ -252,7 +250,7 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
     const pr = prByNumber.get(c.thread)
     if (pr) return `${pr.title}\n${pr.body ?? ''}`
     if (!threadTexts.has(c.thread)) {
-      const issue = getJson<{ title: string; body: string | null }>(`${repo}/issues/${c.thread}`, cwd)
+      const issue = getJson<{ title: string; body: string | null }>(access, `${repo}/issues/${c.thread}`)
       threadTexts.set(c.thread, `${issue.title}\n${issue.body ?? ''}`)
     }
     return threadTexts.get(c.thread)!
@@ -279,7 +277,7 @@ export function ownerCorrections(since: string | undefined, cwd = root): Candida
     if (prByNumber.has(n)) continue
     let p: RawPull
     try {
-      p = getJson<RawPull>(`${repo}/pulls/${n}`, cwd)
+      p = getJson<RawPull>(access, `${repo}/pulls/${n}`)
     } catch (err) {
       if (/HTTP 404|Not Found/.test(String(err))) continue // #n is an issue, not a PR
       throw err

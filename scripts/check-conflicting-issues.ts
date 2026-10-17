@@ -246,7 +246,7 @@ export async function checkConflictingIssuesForPr(prNumber: number, cwd = root):
   const access = resolveAccess(cwd)
   const files = listAll<RawPrFile>(access, `pulls/${prNumber}/files`, {}, { hint: INCOMPLETE_HINT })
   const changedFiles = files.flatMap((f) => (f.previous_filename ? [f.filename, f.previous_filename] : [f.filename]))
-  const pr = getJson<{ body: string | null }>(`repos/${access.owner}/${access.repo}/pulls/${prNumber}`, cwd)
+  const pr = getJson<{ body: string | null }>(access, `repos/${access.owner}/${access.repo}/pulls/${prNumber}`)
   const excludedIssueNumbers = findClosingIssueNumbers(decodeHtmlEntities(pr.body ?? ''))
   const issues = listOpenIssues(access)
     .map(toConflictCandidateIssue)

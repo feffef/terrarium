@@ -12,8 +12,8 @@ import { parse as parseYaml } from 'yaml'
 import { isContentPath } from './session-trace.ts'
 import { isExternalSession } from '../shared/schemas/session.ts'
 import { SESSION_TRAILER } from './git-helpers.ts'
-import { frontmatterBlock } from './lib/frontmatter.ts'
-import { getJson, paginate, PER_PAGE, resolveAccess } from './lib/github-client.ts'
+import { asRecord, frontmatterBlock } from './lib/frontmatter.ts'
+import { getJson, paginate, PER_PAGE, resolveAccess, type Access } from './lib/github-client.ts'
 import { readProvenanceHeader } from './provenance-header.ts'
 import { ARCHIVED_SESSIONS_DIR, readSessionLogs, SESSIONS_DIR } from './session-logs.ts'
 import { fail, flagValue, root, runIfMain } from './lib/cli.ts'
@@ -747,8 +747,7 @@ function readFrontmatter(text: string, label: string): Record<string, unknown> {
   const block = frontmatterBlock(text)
   if (!block) return {}
   try {
-    const parsed = parseYaml(block.yaml) as Record<string, unknown>
-    return parsed && typeof parsed === 'object' ? parsed : {}
+    return asRecord(parseYaml(block.yaml))
   } catch (err) {
     console.error(
       `audit-skills: warning: ${label}'s SKILL.md frontmatter failed to parse (${err instanceof Error ? err.message.split('\n')[0] : String(err)}) — treating its description as empty`,
@@ -821,22 +820,20 @@ function readLock(cwd = root): Set<string> {
 // every judgement is made by the pure `parseMergedPullRequests`/
 // `findOrphanedSessions` pair, so the comparison stays testable with no network.
 
-const PULLS_PER_PAGE = PER_PAGE
-
 /** `paginate` by page number, stopping on the first page shorter than `perPage`:
  *  `gh api` without `--include` returns no `Link` header to stop on. */
 export function walkPagesUntilShort<T>(
   pageUrl: (page: number) => string,
   fetchPage: (url: string) => T[],
-  perPage = PULLS_PER_PAGE,
+  perPage = PER_PAGE,
 ): T[] {
   return paginate<T>(pageUrl, (url) => ({ records: fetchPage(url) }), perPage)
 }
 
-function readClosedPullRequests(owner: string, repo: string, cwd: string): RawPullRequestApiRecord[] {
+function readClosedPullRequests(access: Access): RawPullRequestApiRecord[] {
   return walkPagesUntilShort(
-    (page) => `repos/${owner}/${repo}/pulls?state=closed&per_page=${PULLS_PER_PAGE}&page=${page}`,
-    (path) => getJson<RawPullRequestApiRecord[]>(path, cwd),
+    (page) => `repos/${access.owner}/${access.repo}/pulls?state=closed&per_page=${PER_PAGE}&page=${page}`,
+    (path) => getJson<RawPullRequestApiRecord[]>(access, path),
   )
 }
 
@@ -847,8 +844,7 @@ function readClosedPullRequests(owner: string, repo: string, cwd: string): RawPu
  *  entitled to make that claim when it could not look. */
 export function readPullRequestSessionRefs(cwd = root): PullRequestScan {
   try {
-    const { owner, repo } = resolveAccess(cwd)
-    const records = readClosedPullRequests(owner, repo, cwd)
+    const records = readClosedPullRequests(resolveAccess(cwd))
     const merged = records.filter((r) => r.merged_at !== null)
     const refs = parseMergedPullRequests(merged)
     return { status: { scanned: true, mergedPullRequests: merged.length, withSession: refs.length }, refs }
