@@ -1,5 +1,5 @@
-// What every script CLI shares (#2185). `hook-io.ts` is Human-only and keeps
-// its own `runIfMain`; this is the one for everything else.
+// What every script CLI shares (#2185). `hooks/hook-io.ts` wraps `runIfMain`
+// for guards, which must deny rather than exit 1 on a crash.
 import { basename, dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 

@@ -9,7 +9,7 @@
 // detection contract and residual fail-opens (`docs/agents/guards.md`) — this
 // file carries none of that, only the mechanical shape.
 import { readFileSync } from 'node:fs'
-import { pathToFileURL } from 'node:url'
+import { flagValue, runIfMain as runIfMainOf } from '../lib/cli.ts'
 import { parseTranscript } from '../session/transcript-trace.ts'
 
 /** `obj[key]` for an untyped payload, `undefined` for anything not an object. */
@@ -55,11 +55,11 @@ export type HookPayloadResult =
   | { kind: 'no-tool' } // valid JSON, but it names no tool_name string
   | { kind: 'ok'; payload: ValidatedPayload }
 
-/** Reads and validates the `PreToolUse` JSON on stdin — the read/parse/shape
- *  check every guard's `main()` repeated verbatim. `none` covers both no stdin
- *  at all and blank stdin; neither is a guard fault, so it applies regardless
- *  of whether the caller fails open or closed. Never throws. */
-export function readHookPayload(): HookPayloadResult {
+/** The hook JSON on stdin, whatever event it is — for the hints that also
+ *  take a `UserPromptSubmit` payload, which names no tool. `none` covers both
+ *  no stdin at all and blank stdin; neither is a guard fault, so it applies
+ *  regardless of whether the caller fails open or closed. Never throws. */
+export function readHookJson(): { kind: 'none' } | { kind: 'invalid' } | { kind: 'ok'; json: unknown } {
   let raw: string
   try {
     raw = readFileSync(0, 'utf8')
@@ -67,15 +67,20 @@ export function readHookPayload(): HookPayloadResult {
     return { kind: 'none' }
   }
   if (!raw.trim()) return { kind: 'none' }
-
-  let payload: PreToolUsePayload
   try {
-    payload = JSON.parse(raw)
+    return { kind: 'ok', json: JSON.parse(raw) }
   } catch {
     return { kind: 'invalid' }
   }
-  if (typeof payload.tool_name !== 'string') return { kind: 'no-tool' }
-  return { kind: 'ok', payload: payload as ValidatedPayload }
+}
+
+/** `readHookJson` plus the shape check every guard's `main()` repeated
+ *  verbatim: the payload must name a `tool_name` string. Never throws. */
+export function readHookPayload(): HookPayloadResult {
+  const read = readHookJson()
+  if (read.kind !== 'ok') return read
+  if (typeof prop(read.json, 'tool_name') !== 'string') return { kind: 'no-tool' }
+  return { kind: 'ok', payload: read.json as ValidatedPayload }
 }
 
 /** The session transcript at `path`, parsed. `null` for a missing path or an
@@ -103,12 +108,12 @@ export function denyUninspectable(label: string, ref: string, detail: string): v
   )
 }
 
-/** The direct-run bootstrap (`if (import.meta.url === pathToFileURL(...))`)
- *  every guard repeats: dispatch to `--dry-run` or `main`, and fail closed on
- *  a crash — unless `failOpen`, which swallows it instead (a hook must never
- *  wedge tool use with its own fault). Must be called with the CALLING
- *  module's own `import.meta.url`: this module's url is never the right one to
- *  compare against `process.argv[1]`. */
+/** The direct-run bootstrap every guard repeats: dispatch to `--dry-run` or
+ *  `main`, and fail closed on a crash — unless `failOpen`, which swallows it
+ *  instead (a hook must never wedge tool use with its own fault). Not
+ *  `lib/cli`'s bare runIfMain: that one prints a stack and exits 1, which the
+ *  harness reads as an allow. Must be called with the CALLING module's own
+ *  `import.meta.url`. */
 export function runIfMain(
   moduleUrl: string,
   opts: {
@@ -119,24 +124,19 @@ export function runIfMain(
     failOpen?: boolean
   },
 ): void {
-  if (moduleUrl !== pathToFileURL(process.argv[1] ?? '').href) return
-  const argv = process.argv.slice(2)
-  try {
-    if (opts.dryRun && argv.includes('--dry-run')) opts.dryRun(argv)
-    else opts.main()
-  } catch (err) {
-    if (opts.failOpen) return
-    denyUninspectable(opts.label, opts.ref, `the guard itself crashed (${err instanceof Error ? err.message : String(err)})`)
-  }
+  runIfMainOf(moduleUrl, () => {
+    const argv = process.argv.slice(2)
+    try {
+      if (opts.dryRun && argv.includes('--dry-run')) opts.dryRun(argv)
+      else opts.main()
+    } catch (err) {
+      if (opts.failOpen) return
+      denyUninspectable(opts.label, opts.ref, `the guard itself crashed (${err instanceof Error ? err.message : String(err)})`)
+    }
+  })
 }
 
 // --- `--dry-run` flag plumbing ----------------------------------------------
-
-/** `argv[i + 1]` for the first occurrence of `name`, or `undefined`. */
-export function flagValue(argv: string[], name: string): string | undefined {
-  const i = argv.indexOf(name)
-  return i >= 0 ? argv[i + 1] : undefined
-}
 
 /** Every guard's `--dry-run` requires `--tool <name>`; prints `usage` and
  *  exits(1) when it's missing. */

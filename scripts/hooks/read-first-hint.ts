@@ -21,7 +21,7 @@
 //     (with no transcript_path, the dry run assumes an empty transcript)
 import { readFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
-import { printDryRunResult, prop, readTranscript, resolveDryRunInput, runIfMain } from './hook-io.ts'
+import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runIfMain } from './hook-io.ts'
 import { extractTrace, hintText, subagentTranscript } from '../session/transcript-trace.ts'
 import { buildDocLineIndex, commandWords } from '../session/shell-reads.ts'
 import { root } from '../lib/cli.ts'
@@ -109,7 +109,9 @@ function hintFor(payload: unknown, dryRun = false): string | null {
 }
 
 function main(): void {
-  const payload: unknown = JSON.parse(readFileSync(0, 'utf8'))
+  const read = readHookPayload()
+  if (read.kind !== 'ok') return
+  const { payload } = read
   const hint = hintFor(payload)
   if (!hint) return
   const event = prop(payload, 'hook_event_name') === 'PostToolUseFailure' ? 'PostToolUseFailure' : 'PostToolUse'

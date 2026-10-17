@@ -24,7 +24,6 @@
 import {
   denyUninspectable,
   buildDenyOutput,
-  flagValue,
   printDryRunResult,
   readHookPayload,
   readTranscript,
@@ -33,6 +32,7 @@ import {
   runIfMain,
   type DenyOutput,
 } from './hook-io.ts'
+import { flagValue } from '../lib/cli.ts'
 import { commandSkillNames } from '../session/transcript-trace.ts'
 
 const LABEL = '/loop-only tool guard'

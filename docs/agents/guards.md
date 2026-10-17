@@ -8,7 +8,6 @@ the conventions they share.
 `scripts/hooks/hook-io.ts` holds the plumbing every `PreToolUse` guard needs (stdin
 to deny-JSON, transcript read, `--dry-run`, direct-run bootstrap). Each guard
 adds only its registry, a pure predicate and `formatGuardMessage`.
-`subagent-background-guard.ts` skips it (quote-aware command scanning).
 
 **A guard's deny message is the instruction:** it names what to do instead, so
 follow it and don't route around it. If it is wrong, say so on the guard's issue

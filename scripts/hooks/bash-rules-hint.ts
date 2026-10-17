@@ -11,9 +11,9 @@
 // Usage:
 //   tsx scripts/hooks/bash-rules-hint.ts                # hook payload on stdin
 //   tsx scripts/hooks/bash-rules-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
-import { existsSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, statSync } from 'node:fs'
 import { dirname, isAbsolute, join, matchesGlob, relative } from 'node:path'
-import { printDryRunResult, prop, readTranscript, resolveDryRunInput, runIfMain } from './hook-io.ts'
+import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runIfMain } from './hook-io.ts'
 import { extractTrace, subagentTranscript } from '../session/transcript-trace.ts'
 import { bashReadPaths } from '../session/shell-reads.ts'
 import { loadRules, type RuleFile } from './skill-rules-hint.ts'
@@ -60,7 +60,9 @@ function hintFor(payload: unknown): string | null {
 }
 
 function main(): void {
-  const payload = JSON.parse(readFileSync(0, 'utf8'))
+  const read = readHookPayload()
+  if (read.kind !== 'ok') return
+  const { payload } = read
   const hint = hintFor(payload)
   const hookEventName = prop(payload, 'hook_event_name') === 'PostToolUseFailure' ? 'PostToolUseFailure' : 'PostToolUse'
   if (hint) process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName, additionalContext: hint } }))

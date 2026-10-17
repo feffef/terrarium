@@ -11,7 +11,7 @@
 //   tsx scripts/hooks/skill-rules-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, matchesGlob } from 'node:path'
-import { printDryRunResult, prop, resolveDryRunInput, runIfMain } from './hook-io.ts'
+import { printDryRunResult, prop, readHookJson, resolveDryRunInput, runIfMain } from './hook-io.ts'
 import { RULES_DIR, ruleBlock, rulePaths } from '../lib/adr-rules.ts'
 
 /** The repo Skill a payload invokes: a Skill tool call, or a prompt that is a
@@ -61,7 +61,9 @@ function hintFor(payload: unknown): string | null {
 // Not readHookPayload: that one wants a tool call, and a slash command's
 // UserPromptSubmit payload has none.
 function main(): void {
-  const payload: unknown = JSON.parse(readFileSync(0, 'utf8'))
+  const read = readHookJson()
+  if (read.kind !== 'ok') return
+  const payload = read.json
   const hint = hintFor(payload)
   if (!hint) return
   const event = prop(payload, 'hook_event_name') === 'UserPromptSubmit' ? 'UserPromptSubmit' : 'PostToolUse'

@@ -15,8 +15,11 @@
 //   tsx scripts/hooks/subagent-background-guard.ts         # payload on stdin (Bash and Monitor alike)
 //   tsx scripts/hooks/subagent-background-guard.ts --dry-run --tool Bash \
 //       [--context subagent|main|undeterminable] [--payload '<json>'] [--input '<json>']
-import { readFileSync } from 'node:fs'
-import { pathToFileURL } from 'node:url'
+import { denyUninspectable, readHookPayload, requireToolFlag, resolveDryRunInput, runIfMain } from './hook-io.ts'
+import { flagValue } from '../lib/cli.ts'
+
+const LABEL = 'subagent background guard'
+const REF = 'issue #694'
 
 /** `undeterminable` is a denial, not a pass — see `checkBackgroundedBash`. */
 export type AgentContext = 'subagent' | 'main' | 'undeterminable'
@@ -133,47 +136,15 @@ export function denyOutputFor(finding: BackgroundFinding | null): { hookSpecific
   }
 }
 
-interface PreToolUsePayload {
-  tool_name?: string
-  tool_input?: unknown
-}
-
-/** Fail-closed's edge, bounded: the pre-filter only forwards
- *  backgrounded-looking calls, so this can never wedge foreground tool use. */
-function denyUninspectable(detail: string): void {
-  process.stdout.write(
-    JSON.stringify({
-      hookSpecificOutput: {
-        hookEventName: 'PreToolUse',
-        permissionDecision: 'deny',
-        permissionDecisionReason:
-          `Blocked by the subagent background guard (issue #694): ${detail}, so this call could not be ` +
-          `checked. The guard fails CLOSED. This is a guard fault, not an authoring mistake — report ` +
-          `it rather than working around it.`,
-      },
-    }),
-  )
-}
-
-/** Always exits 0 — the deny travels in stdout, not the exit code. */
+/** Always exits 0 — the deny travels in stdout, not the exit code. The
+ *  pre-filter only forwards backgrounded-looking calls, so failing closed on an
+ *  unreadable payload can never wedge foreground tool use. */
 export function main(): void {
-  let raw: string
-  try {
-    raw = readFileSync(0, 'utf8')
-  } catch {
-    return // not invoked as a hook (no stdin at all) — nothing was requested
-  }
-  if (!raw.trim()) return // a bare manual run, not a tool call to police
-
-  let payload: PreToolUsePayload
-  try {
-    payload = JSON.parse(raw)
-  } catch {
-    return denyUninspectable('the hook payload was not valid JSON')
-  }
-  if (typeof payload.tool_name !== 'string') {
-    return denyUninspectable('the hook payload named no tool')
-  }
+  const read = readHookPayload()
+  if (read.kind === 'none') return
+  if (read.kind === 'invalid') return denyUninspectable(LABEL, REF, 'the hook payload was not valid JSON')
+  if (read.kind === 'no-tool') return denyUninspectable(LABEL, REF, 'the hook payload named no tool')
+  const { payload } = read
 
   const context = detectAgentContext(payload)
   const finding =
@@ -186,29 +157,22 @@ export function main(): void {
 /** Print the decision the hook would reach, running nothing. `--payload`
  *  derives the context exactly as the hook would; `--context` forces it. */
 function dryRun(argv: string[]): void {
-  const flag = (name: string): string | undefined => {
-    const i = argv.indexOf(name)
-    return i >= 0 ? argv[i + 1] : undefined
-  }
-  const tool = flag('--tool')
-  if (!tool) {
-    console.error('usage: --dry-run --tool <name> [--context subagent|main|undeterminable] [--payload <json>] [--input <json>]')
-    process.exit(1)
-  }
-  const parse = (name: string): unknown => {
-    const rawValue = flag(name)
-    if (rawValue === undefined) return undefined
+  const tool = requireToolFlag(
+    argv,
+    'usage: --dry-run --tool <name> [--context subagent|main|undeterminable] [--payload <json>] [--input <json>]',
+  )
+  const rawPayload = flagValue(argv, '--payload')
+  let payload: unknown = null
+  if (rawPayload !== undefined) {
     try {
-      return JSON.parse(rawValue)
+      payload = JSON.parse(rawPayload)
     } catch {
-      console.error(`${name} must be valid JSON`)
+      console.error('--payload must be valid JSON')
       process.exit(1)
     }
   }
-  const forced = flag('--context') as AgentContext | undefined
-  const context = forced ?? detectAgentContext(parse('--payload') ?? null)
-  const input = parse('--input') ?? {}
-  const finding = checkBackgroundedBash(tool, input, context) ?? checkMonitorCall(tool, context)
+  const context = (flagValue(argv, '--context') as AgentContext | undefined) ?? detectAgentContext(payload)
+  const finding = checkBackgroundedBash(tool, resolveDryRunInput(argv), context) ?? checkMonitorCall(tool, context)
   console.log(
     JSON.stringify(
       { tool, context, decision: finding ? 'deny' : 'allow', reason: finding ? formatGuardMessage(finding) : undefined },
@@ -218,14 +182,4 @@ function dryRun(argv: string[]): void {
   )
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  const argv = process.argv.slice(2)
-  try {
-    if (argv.includes('--dry-run')) dryRun(argv)
-    else main()
-  } catch (err) {
-    // Fail closed: a crash in the guard is a reason to stop, not to wave the
-    // call through — matching the sibling guards.
-    denyUninspectable(`the guard itself crashed (${err instanceof Error ? err.message : String(err)})`)
-  }
-}
+runIfMain(import.meta.url, { main, dryRun, label: LABEL, ref: REF })
