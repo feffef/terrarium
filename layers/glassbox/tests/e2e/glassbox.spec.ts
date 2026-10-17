@@ -19,4 +19,13 @@ describe('glassbox Tenant', async () => {
     expect(html.indexOf('class="directory"')).toBeGreaterThan(0)
     expect(html.indexOf('class="walkthroughs"')).toBeGreaterThan(html.indexOf('class="directory"'))
   })
+
+  it('collects every Lesson\'s Try it exercise on one guide page, and nowhere in drafts', async () => {
+    const html = await $fetch<string>('/t/glassbox/guide/try-it')
+    expect(html).toContain('Try it in your project')
+    expect(html).toContain('Find the doc your agent most often forgets')
+    expect(html).toContain('href="/t/glassbox/guide/claude-code/claude-md"')
+    expect((await $fetch<string>('/t/glassbox/guide')).indexOf('/t/glassbox/guide/try-it')).toBeGreaterThan(0)
+    await expect($fetch('/t/glassbox/drafts/try-it')).rejects.toThrow()
+  })
 })
