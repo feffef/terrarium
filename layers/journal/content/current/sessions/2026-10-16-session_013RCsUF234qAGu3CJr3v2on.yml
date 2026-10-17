@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_013RCsUF234qAGu3CJr3v2on
 startedAt: 2026-10-16T22:56:30Z
-endedAt: 2026-10-16T23:09:10Z
+endedAt: 2026-10-17T02:02:14Z
 kind: interactive
-goal: Propose a cleanup and restructure of scripts/
-status: completed
-outcome: "Filed umbrella issue #2183 with four sub-issues (#2184-#2187)"
-summary: "Human-instructed: scan the whole scripts/ folder via a subagent and propose a cleanup (file layout, moving single-Skill scripts into their Skill, code reuse, simplification). A read-only Explore subagent inventoried all 67 files (callers, imports, tests, duplicates, ADR path pins). I checked the binding ADRs (0004, 0005, 0026, 0029) and the Human-only list, then asked the user four questions; they chose: include Human-only moves, subfolders by area, propose deleting the 7 caller-less scripts, deliver as GitHub issues. I re-verified the dead scripts by repo-wide grep and checked open issues (only #2073 overlaps) and open Prune Trials (github-integration.md and pr-workflow.md are under trial, so the plan limits them to path repoints). Agent-initiated: the four-PR phasing, the concrete lib/ split and layout, and the open questions (hooks/** making two hints Human-only, digest scripts changing gate tier, Tenant checks in validate-content-refs). Nothing was built; everything waits on approval."
-prs: []
+goal: Clean up and restructure the scripts/ folder
+status: in-review
+outcome: "Integration PR #2189 is green and waits for a human merge; it closes #2183-#2187"
+summary: "Human-instructed: scan scripts/ via a subagent and propose a cleanup; the owner answered scoping questions (include Human-only moves, subfolders by area, delete dead scripts, file issues), then asked to rename files to one convention, approved the plan, and asked to implement all four issues on this branch as an integration branch, using Sonnet agents for implementation, a code review per issue, then repeated Opus reviews of the whole branch until clean. Agent-initiated: the four-step phasing (#2184 deletes, #2185 shared lib/, #2186 Skill-local moves, #2187 folders and renames, split into parts A and B), the folder layout and git/ folder, extracting the digest path constants so no e2e spec imports a Skill file, the hook-runner decision (node_modules/.bin/tsx, since pnpm exec costs about a second per call), and a Proposal for the unpushable gate.yml comments. Each step went impl -> two-axis review -> fix -> merge. Reviews caught real problems: blog posts edited to new paths (reverted), a rule glob that silently matched nothing after the move, guards that would fail open on a rejected promise, and a contradiction between two paging policies (the gh path followed Link URLs the proxy blocks). The final Opus review took three rounds plus a one-line confirm before clean. All checks green; the PR needs a human merge because it touches Human-only files."
+prs:
+  - "2189"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: session-start glossary map
@@ -34,7 +35,7 @@ docsRead:
     reason: MCP write tools in cloud; list-open-issues escape for duplicate check
     useful: yes
   - path: docs/agents/guards.md
-    reason: "Subagent: guard conventions (pure core, dry-run, spec per guard, Human-only)"
+    reason: "Subagents: guard conventions, fail-closed, where the one-runner rule now lives"
     useful: yes
   - path: .agents/skills/frictions-to-fixes/survey-brief.md
     reason: Subagent grepped it for script callers only
@@ -45,10 +46,46 @@ docsRead:
   - path: docs/agents/verifying-ui-changes.md
     reason: Subagent grepped it for probe/screenshot callers
     useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: "Before git work: ff-only merges, never rewrite pushed history, Stop-hook unpushed-commit handling; impl agents also used it for commit -F"
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: gate:scoped and code-review before first push; integration-PR final review on the whole diff
+    useful: yes
+  - path: docs/proposals/README.md
+    reason: "Subagent: format for the gate.yml comment Proposal"
+    useful: yes
+  - path: docs/proposals/2187-gate-yml-script-path-comments.md
+    reason: "Subagent: updated its companion PR to #2189"
+    useful: yes
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: "Subagents: ADR edits limited to path repoints, no history notes"
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: "Standards reviewer: blog posts are dated in-character content, so the path edits were reverted"
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: "Subagents: repointed digest script invocations after the move"
+    useful: partly
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: "Subagents: added the missing poll-guest-tickets invocation line"
+    useful: partly
+  - path: tests/unit/github-client.spec.ts
+    reason: (read before editing)
+  - path: .agents/skills/digest/scripts/digest.ts
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/scripts/find-trial-window.ts
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (read before editing)
 skillsUsed:
   - name: close-session
     reason: session only produced a proposal
   - name: log-session
+    reason: (no reason given)
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: code-review
     reason: (no reason given)
 frictions:
   - description: "Filed the umbrella issue with #TBD placeholders for sub-issues, then had to rewrite the whole body once numbers existed."
@@ -57,17 +94,80 @@ frictions:
   - description: Explore subagent's report was very long (~6k tokens); much of the per-file table was not needed for the proposal.
     solution: Brief subagents to return only findings that feed the decision, with the full table written to a scratch file.
     severity: nit
-durationSec: 760
+  - description: "Opened PR #2189 after the first issue landed but did not invoke close-session then, against CLAUDE.md's 'Invoke close-session when you open a PR'; the session log stayed stale for hours."
+    solution: Invoke close-session in the same turn as create_pull_request; a PostToolUse hint on create_pull_request could remind.
+    severity: minor
+  - description: "Subscribed to PR #2188 by guessing the next number before create_pull_request returned #2189; had to unsubscribe and resubscribe."
+    solution: Read the PR number from the create result before subscribing; never predict ids.
+    severity: nit
+  - description: "Posted the subagent's file count (67) in issue #2183 without checking; ls showed 68, so the issue needed a correction. Broke 'Verify before you state'."
+    solution: Recount any number a subagent reports before it goes into an issue.
+    severity: minor
+  - description: "My #2186 brief did not exclude dated content, so the agent rewrote three dated blog posts to new paths; a review caught it and they were reverted."
+    solution: "Every move/rename brief lists dated content (journal, blog, pinned Glass Box pages, docs/research) as untouchable; done from #2187 on."
+    severity: minor
+  - description: A read-only review agent ran prune-friction-ledger.ts without flags to check imports; it rewrote 7 Journal friction files in the worktree, which it then restored.
+    solution: Scripts that write by default should need an explicit --write; until then, review briefs name which scripts must not be run without flags (added from round 2 on).
+    severity: minor
+  - description: validate-adr-rules passes rules whose paths glob matches no file, so ADR-0007's rule silently stopped loading after the move until a review spotted it.
+    solution: Make validate-adr-rules fail on a paths glob that matches no tracked file (tenant-layers.md already has one such glob).
+    severity: moderate
+  - description: Impl agents repeatedly hit the worktree shell guard on compound commands, heredocs and variable expansion, and worked around it with helper scripts; one ran a stale helper left in the shared scratchpad.
+    solution: Briefs tell agents to name scratch helpers uniquely; consider documenting the guard's triggers where dispatch-subagents points.
+    severity: minor
+  - description: Amended my own merge commit with a needless git commit --amend while checking its trailer.
+    solution: Inspect with git log -1 rather than amending.
+    severity: nit
+durationSec: 11144
 models:
-  claude-opus-5-5: 44
+  claude-opus-5-5: 316
 toolCounts:
-  Agent: 1
-  Bash: 11
+  Agent: 26
+  Bash: 56
   Read: 1
-  AskUserQuestion: 1
-  ToolSearch: 1
-  mcp__github__issue_write: 6
-  Skill: 2
+  AskUserQuestion: 2
+  ToolSearch: 3
+  mcp__github__issue_write: 7
+  Skill: 6
+  mcp__github__add_issue_comment: 3
+  TaskCreate: 5
+  TaskUpdate: 10
+  SendMessage: 6
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  ReadNotifications: 12
+  Write: 1
+  Edit: 4
+  mcp__github__update_pull_request: 1
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - scripts/lib/cli.ts
+  - scripts/lib/github-client.ts
+  - tests/unit/list-open-issues.spec.ts
+  - scripts/github/list-open-issues.ts
+  - docs/agents/guards.md
+  - tests/unit/github-client.spec.ts
+  - scripts/hooks/bash-rules-hint.sh
+  - tests/unit/hook-io.spec.ts
+  - layers/glassbox/page-checks.ts
+  - tests/unit/git.spec.ts
+  - scripts/session/transcript-trace.ts
+  - docs/proposals/2187-gate-yml-script-path-comments.md
+  - CLAUDE.md
+  - scripts/git-helpers.ts
+  - scripts/preview.ts
+  - docs/adr/0019-content-load-error-recovery.md
+  - scripts/list-open-issues.ts
+  - scripts/check-triage-drift.ts
+  - scripts/poll-guest-tickets.ts
+  - .agents/skills/visitor-loop/scripts/owner-corrections.ts
+  - tests/unit/cli.spec.ts
+  - tests/unit/git-run.spec.ts
+  - scripts/lib/frontmatter.ts
+  - tests/unit/frontmatter.spec.ts
+  - .agents/skills/guest-build/SKILL.md
+  - scripts/audit-skills.ts
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0004-human-merge.md
@@ -75,33 +175,47 @@ rulesLoaded:
   - .claude/rules/adr-0030.md
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/guards.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0029.md
   - .claude/rules/adr-0005.md
 rulesLoadedBySubagents:
-  - .claude/rules/guards.md
-  - .claude/rules/adr-0001.md
-  - .claude/rules/adr-0005.md
   - .claude/rules/adr-0015.md
-  - .claude/rules/adr-0020.md
-  - .claude/rules/adr-0023.md
-  - .claude/rules/adr-0026.md
-  - .claude/rules/adr-0014.md
-  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0013.md
   - .claude/rules/adr-0028.md
-  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
 docsReadBySubagents:
+  - docs/agents/guards.md
+  - docs/proposals/2187-gate-yml-script-path-comments.md
+  - docs/proposals/README.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
   - .agents/skills/frictions-to-fixes/survey-brief.md
   - .agents/skills/prune-trial/SKILL.md
-  - docs/agents/guards.md
   - docs/agents/verifying-ui-changes.md
+  - layers/blog/GLOSSARY.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004-human-merge.md
-    reason: Its paths are the Human-only list that shaped which PRs need a human merge; subagent confirmed
+    reason: Its paths became folder globs in this PR; it decides the PR needs a human merge
     useful: yes
   - path: .claude/rules/guards.md
     reason: Showed guard/hint path globs a subfolder move must rewrite; subagent found it useful too
@@ -113,13 +227,13 @@ ruleVerdicts:
     reason: ADR See lists must be repointed in the rename PR; summary was enough
     useful: partly
   - path: .claude/rules/adr-0021.md
-    reason: Loaded on the glossary read; nothing about scripts
+    reason: Loaded on glossary reads; no glossary change
     useful: no
   - path: .claude/rules/adr-0027.md
     reason: Led me to check open Prune Trials; two docs under trial get path-only repoints
     useful: yes
   - path: .claude/rules/adr-0022.md
-    reason: Loaded by the open-issues listing; I triaged nothing
+    reason: Loaded on issue listing; no triage
     useful: no
   - path: .claude/rules/adr-0003.md
     reason: A larger redesign needs Trusted approval, so issues say waits on approval; summary enough
@@ -134,39 +248,129 @@ ruleVerdicts:
     reason: Header line on every issue body
     useful: yes
   - path: .claude/rules/adr-0001.md
-    reason: "Subagent: loaded on a multi-file grep; irrelevant to scripts layout"
+    reason: Loaded on subagent reads; not relevant
     useful: no
   - path: .claude/rules/adr-0005.md
-    reason: "Subagent: workflow-location constraint; Skill helper scripts may move"
+    reason: Skill helper scripts may live in the Skill folder; workflows may not
     useful: yes
   - path: .claude/rules/adr-0015.md
-    reason: "Subagent: pins audit-skills.ts and verify-skills-lock.ts paths"
+    reason: Pinned audit-skills and the skills-lock check paths
     useful: partly
   - path: .claude/rules/adr-0020.md
-    reason: "Subagent: trust tiers, not relevant beyond pinning trust.ts"
+    reason: Only pinned trust.ts path; otherwise not relevant
     useful: no
   - path: .claude/rules/adr-0023.md
-    reason: "Subagent: pins poll-guest-tickets and guest-marker paths"
+    reason: Pinned poll-guest-tickets path moved into guest-build
     useful: partly
   - path: .claude/rules/adr-0026.md
-    reason: "Subagent: gate.ts parity constraint; I also read the full ADR"
+    reason: Gate parity between package.json, gate.ts and action.yml shaped every move; summary enough plus the full ADR read earlier
     useful: yes
   - path: .claude/rules/adr-0010.md
-    reason: "Subagent: pins digest.ts and archive-journal-content.ts paths"
+    reason: Pinned digest script paths moved into the Skill
     useful: yes
   - path: .claude/rules/adr-0014.md
-    reason: "Subagent: loaded reading tsconfig; unrelated"
+    reason: Loaded on tsconfig reads; not relevant
     useful: no
   - path: .claude/rules/adr-0018.md
-    reason: "Subagent: loaded on the typecheck test read; unrelated"
+    reason: Loaded on typecheck test read; not relevant
     useful: no
   - path: .claude/rules/adr-0028.md
-    reason: "Subagent: loaded on a tinkerfund grep; unrelated"
+    reason: Loaded on tinkerfund reads; not relevant
+    useful: no
+  - path: .claude/rules/adr-0007.md
+    reason: Spec reviewer found its paths glob matched nothing after the move; repointed to the mermaid scripts
+    useful: yes
+  - path: .claude/rules/adr-0024.md
+    reason: "Subagents: pinned mermaid script paths that had to move"
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: "Subagent: led to the revision pinning check that explained why two Glass Box pages keep old paths"
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on Glass Box page reads; not about script paths
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded when subagents read shared/expand.ts; not relevant
+    useful: no
+  - path: .claude/rules/adr-0013.md
+    reason: Loaded on shared/ reads; not relevant
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded on a blog read; not relevant
     useful: no
 subagents:
   - type: Explore
     task: Explore scripts folder thoroughly
+  - type: general-purpose
+    task: "Impl #2184 delete unused scripts"
+    model: sonnet
+  - type: general-purpose
+    task: "Standards review #2184"
+  - type: general-purpose
+    task: "Spec review #2184"
+  - type: general-purpose
+    task: "Impl #2185 scripts/lib dedup"
+    model: sonnet
+  - type: general-purpose
+    task: "Standards review #2185"
+  - type: general-purpose
+    task: "Spec review #2185"
+  - type: general-purpose
+    task: "Re-review #2185 fix commits"
+  - type: general-purpose
+    task: "Impl #2186 move Skill scripts"
+    model: sonnet
+  - type: general-purpose
+    task: "Standards review #2186"
+  - type: general-purpose
+    task: "Spec review #2186"
+  - type: general-purpose
+    task: "Impl #2187A move+rename scripts"
+    model: sonnet
+  - type: general-purpose
+    task: "Standards review #2187A"
+  - type: general-purpose
+    task: "Spec review #2187A"
+  - type: general-purpose
+    task: "Impl #2187B lib adoption, drop shims"
+    model: sonnet
+  - type: general-purpose
+    task: "Standards review #2187B"
+  - type: general-purpose
+    task: "Spec review #2187B"
+  - type: general-purpose
+    task: Final Opus Standards review
+    model: opus
+  - type: general-purpose
+    task: Final Opus Spec review
+    model: opus
+  - type: general-purpose
+    task: Fix final review findings
+    model: sonnet
+  - type: general-purpose
+    task: Final Opus Standards review r2
+    model: opus
+  - type: general-purpose
+    task: Final Opus Spec review r2
+    model: opus
+  - type: general-purpose
+    task: Fix final review round 2
+    model: sonnet
+  - type: general-purpose
+    task: Final Opus Standards review r3
+    model: opus
+  - type: general-purpose
+    task: Final Opus Spec review r3
+    model: opus
+  - type: general-purpose
+    task: Final Opus confirm review r4
+    model: opus
 gitBranch: claude/sweet-maxwell-v5qgbi
 entrypoint: remote
 cliVersion: 2.1.302
+learnings:
+  - Glass Box pages pin file paths to a revision, so page-checks fails if a pinned page is repointed to a path that does not exist at that revision; such pages keep old paths until their revision is bumped.
+  - The gate's isSkillFile skip of build and e2e is only safe while no e2e spec imports code under .agents/skills/; moving a script into a Skill can silently break that.
+ideas:
+  - "Add an empty-glob check to scripts/gate/validate-adr-rules.ts: every paths glob in .claude/rules must match at least one tracked file, so renames can't silently unload a rule."
 landedBy: Stop
