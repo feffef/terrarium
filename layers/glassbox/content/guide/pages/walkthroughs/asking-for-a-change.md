@@ -1,7 +1,7 @@
 ---
 title: Asking for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
-revision: '1f6fb016361185f92aed44a388093315402b5aa8'
+revision: 'd6efb6184f43c5064a33a08ee34bff4faa3c419d'
 revisionDate: '2026-10-17'
 ---
 
@@ -73,7 +73,7 @@ GitHub Actions runs the Gate on the PR, and that run decides whether it may merg
 
 ## 9. The PR merges
 
-If a reviewer asks for changes, the session pushes again and CI runs again. Then the session posts its verdict on the PR as a comment and merges through `scripts/merge-pr.ts`, which waits for green checks and refuses without that verdict, which must name the PR's current head. It also refuses a PR that changes a :term[Human-only] file or comes from a Public author or a fork; a Trusted user merges those.
+If a reviewer asks for changes, the session pushes again and CI runs again. Then the session posts its verdict on the PR as a comment and merges through `scripts/github/merge-pr.ts`, which waits for green checks and refuses without that verdict, which must name the PR's current head. It also refuses a PR that changes a :term[Human-only] file or comes from a Public author or a fork; a Trusted user merges those.
 
 ::stop-links
 [The Human-only list](/t/glassbox/guide/terrarium-practice/human-only-list)
