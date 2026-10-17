@@ -2,7 +2,7 @@ name: github-search-overflow
 summary: >-
   GitHub searches returned so much text that they flooded the agent's working memory.
 cause: >-
-  mcp__github__search_issues and search_pull_requests return full bodies unless `fields` omits them, so a broad or early query floods context; github-integration.md documents it, but sessions hit it before reading the doc or anyway.
+  mcp__github__search_issues and search_pull_requests return full bodies unless `fields` omits them, so a broad or early query floods context. The guard now denies a search without `fields`; what remains is a Skill step that needs PR bodies and points to no cheap path.
 surface: guard-or-hook
 status: tracked
 ref: "issue #2210 (regression of #1869); issue #1860; PR #1869 (merged 2026-10-13T06:11Z, github-search-fields-guard denies a search without fields)"
@@ -31,11 +31,6 @@ occurrences:
     severity: minor
     description: "A broad search_issues query returned huge issue bodies (Tinkerfund spec), flooding context."
     solution: "Use minimal_output or narrower queries for duplicate searches."
-  - session: session_01RAEu4CBfQptjCtKnJpUw8q
-    date: "2026-10-14"
-    severity: nit
-    description: "Ran git fetch and merge-base before reading git-conventions.md, and a GitHub search before github-integration.md; the search was also denied for missing fields."
-    solution: "Read the trigger docs first; the search guard message was clear."
   - session: session_01N9bwDKW51kMS6WJvK2nfSU
     date: "2026-10-16"
     severity: minor
