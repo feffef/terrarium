@@ -80,6 +80,8 @@ every line that applies.
   worktree (`pr-workflow.md`, "Review before the first push"), resume the
   agent for every fix, later ones included, and review again; it pushes once a
   review is clean, and you open and land the PR (`pr-workflow.md`).
+- To keep a subagent's final reply as a file, run
+  `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`; never retype it.
 - Impl agents do not run `close-session` (its Skill says why) and cannot spawn
   subagents here (the cloud environment sets
   `CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1`): run `/code-review` and any
