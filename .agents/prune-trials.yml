@@ -107,3 +107,27 @@ trials:
       PR only related to, or skipped the pre-push review, and a line the old page
       carried would have prevented it. NOT damage: `merge-pr.ts` refusing and the
       session fixing itself from its message.
+  - problem: >
+      The two background-guard headers (`subagent-background-guard.ts`,
+      `double-background-guard.ts`) cut to the rule, the issue pointers and
+      `docs/agents/guards.md` (-34, comments only; no code changed). Chosen after
+      the search subagent covered the instruction corpus, guard headers and the
+      tracker: the rule failed as prose (#694, #964, #1208) and the guards now
+      hold it. Runners-up: provenance header (overlaps the github-integration
+      trial's territory), read-first triggers (overlaps the close-session trial).
+      Same run judged and deleted the github-integration trial: only nit/minor
+      Frictions. The mass here was small.
+    territory:
+      paths:
+        - "scripts/hooks/subagent-background-guard.ts: header and hasBackgroundOperator comment"
+        - "scripts/hooks/double-background-guard.ts: header"
+      keywords:
+        - double-background
+        - subagent background guard
+    opened: 2026-10-17
+    proven: false
+    check: >
+      Damage is a major or blocker Friction where a session or subagent
+      backgrounded a command, stalled waiting on it, or reported a double-
+      backgrounded run as finished, and the cut header text would have prevented
+      it. NOT damage: a guard denying and the session fixing itself.
