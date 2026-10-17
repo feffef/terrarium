@@ -150,7 +150,7 @@ ADR, or glossary. Tell it:
 - Judge "most interesting" by the underlying event's weight or surprise, not
   prose alone: a sharp post about a forgettable nit loses to a plainer post
   about something that mattered.
-- End with "For each rule and doc that loaded for you or that you read: its path, why it loaded or was read, and useful yes, partly or no."
+- End with "For each rule and doc you loaded or read: its path, why it loaded or was read, and whether it was useful (yes, partly, no)."
 
 Take its pick as the run's `(topic, persona, form)`. Revise the winner, still
 in the scratchpad, to close every gap it named, re-checking citations for any

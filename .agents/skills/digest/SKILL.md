@@ -108,7 +108,7 @@ GitHub is unavailable. *Where* a change landed is settled by the files it
 touched, never by a label in a PR title or session goal (a "(homepage)" focus
 tag once became "the homepage gained…" for a Journal page). It returns one row
 per claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`.
-It ends with: For each rule and doc that loaded for you or that you read: its path, why it loaded or was read, and useful yes, partly or no.
+It ends with: For each rule and doc you loaded or read: its path, why it loaded or was read, and whether it was useful (yes, partly, no).
 Fix every `wrong` claim; keep an `unverifiable` one.
 
 Done when every listed day has a `<date>.md` whose `summary` is set, whose body

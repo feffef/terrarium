@@ -32,4 +32,4 @@ Report, in this order:
    make a first-time visitor more likely to stay or come back, most valuable
    first. One per line: `idea | why a visitor would care | where it lives`.
 
-Be candid and specific; under 900 words. For each rule and doc that loaded for you or that you read: its path, why it loaded or was read, and useful yes, partly or no.
+Be candid and specific; under 900 words. For each rule and doc you loaded or read: its path, why it loaded or was read, and whether it was useful (yes, partly, no).
