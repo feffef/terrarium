@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01P39mjYt8LWVh2TYNyxWdqN
 startedAt: 2026-10-17T00:45:51Z
-endedAt: 2026-10-17T01:11:59Z
+endedAt: 2026-10-17T01:14:02Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "13/13 Skills checked clean, PR #2192 opened with the Inventory update"
-summary: "Scheduled /audit-skills run over the 7-day window (2026-10-10 to 2026-10-17). Gathered the scorecard (scripts/audit-skills.ts) and found every one of the 13 Skills in behaviourChecks had its SKILL.md edited this window (up to 33 edits for frictions-to-fixes), so all 13 got a dedicated read-only Sonnet behaviour-check subagent, dispatched in parallel. Each subagent's central claims were independently re-verified against GitHub/git before being used, per this Skill's own rule that a subagent's report is hearsay until checked. Result: 13/13 clean this run - zero new silent failures, zero new missed invocations, an unusually clean week given the churn; the churn itself turned out to be the trail of fixes landing from prior weeks' audit findings, not fresh instability. Two sub-threshold items were recorded as observations only, not escalated: audit-docs' step-3 pooling-instruction wording self-caught a 3rd ambiguity recurrence with zero damage, and visitor-loop's owner-memory step has an untested owner-correction case (PR #2178) sitting in its 3-day rework window since no visitor-loop run has fired since. Step 3 (closure completeness) was clean: both orphan candidates already carry resolvedBy, the one humanPromptedClosures entry is a session already settled in a prior week's observation, no manually-rescued closures. Step 4 (escalate): nothing cleared the significant/repeated bar, so no new GitHub issue was filed this run - this entire run is agent-initiated (a scheduled trigger, not a human ask), and every action taken (dispatching subagents, writing observations, opening the PR) is within what the audit-skills Skill itself authorizes for a scheduled run, per ADR-0003. Step 5 (tune the Inventory): appended a dated 2026-10-17 observation to each of the 13 checked Skills' Inventory entries, citing the sessions verified, and added one new coverage-gap entry, glassbox-lesson.yml (used once this window, on disk, previously uninventoried) - graded specialist from its own non-model-invoked, per-topic-dispatched structure. No importance grade moved this run (every entry says \"Grade/role unchanged\"); no observation was removed (nothing in any touched file is yet past the 40-day floor). Ran /code-review before the first push (Standards + Spec axes in parallel); the Spec reviewer correctly caught that the new glassbox-lesson entry had justified its grade \"by analogy\" to a different Skill rather than on its own merits - fixed before pushing, verified no scope creep elsewhere. pnpm gate:scoped (build + e2e, 141 tests) and pnpm exec tsx scripts/validate-content.ts both passed before the push. Opened PR #2192, scoped to exactly layers/journal/content/current/skills/*.yml as the Skill's own diff-scope rule requires, subscribed to its activity, and will babysit it to merge."
+status: completed
+outcome: "13/13 Skills checked clean; PR #2192 merged with the Inventory update"
+summary: "Scheduled /audit-skills run over the 7-day window (2026-10-10 to 2026-10-17). Gathered the scorecard (scripts/audit-skills.ts) and found every one of the 13 Skills in behaviourChecks had its SKILL.md edited this window (up to 33 edits for frictions-to-fixes), so all 13 got a dedicated read-only Sonnet behaviour-check subagent, dispatched in parallel. Each subagent's central claims were independently re-verified against GitHub/git before being used, per this Skill's own rule that a subagent's report is hearsay until checked. Result: 13/13 clean this run - zero new silent failures, zero new missed invocations, an unusually clean week given the churn; the churn itself turned out to be the trail of fixes landing from prior weeks' audit findings, not fresh instability. Two sub-threshold items were recorded as observations only, not escalated: audit-docs' step-3 pooling-instruction wording self-caught a 3rd ambiguity recurrence with zero damage, and visitor-loop's owner-memory step has an untested owner-correction case (PR #2178) sitting in its 3-day rework window since no visitor-loop run has fired since. Step 3 (closure completeness) was clean: both orphan candidates already carry resolvedBy, the one humanPromptedClosures entry is a session already settled in a prior week's observation, no manually-rescued closures. Step 4 (escalate): nothing cleared the significant/repeated bar, so no new GitHub issue was filed this run - this entire run is agent-initiated (a scheduled trigger, not a human ask), and every action taken (dispatching subagents, writing observations, opening and merging the PR) is within what the audit-skills Skill itself authorizes for a scheduled run, per ADR-0003. Step 5 (tune the Inventory): appended a dated 2026-10-17 observation to each of the 13 checked Skills' Inventory entries, citing the sessions verified, and added one new coverage-gap entry, glassbox-lesson.yml (used once this window, on disk, previously uninventoried) - graded specialist from its own non-model-invoked, per-topic-dispatched structure. No importance grade moved this run (every entry says \"Grade/role unchanged\"); no observation was removed (nothing in any touched file is yet past the 40-day floor). Ran /code-review before the first push (Standards + Spec axes in parallel); the Spec reviewer correctly caught that the new glassbox-lesson entry had justified its grade \"by analogy\" to a different Skill rather than on its own merits - fixed before pushing, verified no scope creep elsewhere. pnpm gate:scoped (build + e2e, 141 tests) and pnpm exec tsx scripts/validate-content.ts both passed before the push. Opened PR #2192, scoped to exactly layers/journal/content/current/skills/*.yml as the Skill's own diff-scope rule requires. Gate ran green within 4 minutes, no review comments, no Human-only path touched; posted the review verdict naming the head sha and self-merged via scripts/merge-pr.ts (merge commit bf0a7ae0). Unsubscribed from the PR's activity once merged."
 prs:
   - "2192"
 docsRead:
@@ -197,20 +197,27 @@ frictions:
   - description: Several of this run's new YAML observation notes use a plain ASCII hyphen ("-") where sibling entries in the same files use a real em dash, after an Edit-tool old_string mismatch on a line that looked identical forced a plain-ASCII rewrite instead of diagnosing the real cause.
     solution: When an Edit's old_string match fails on a line that visually looks identical, suspect a non-ASCII character (em dash, curly quote) before falling back to a plain-ASCII rewrite - copy the exact bytes from a fresh Read of the file instead.
     severity: nit
-durationSec: 1569
+  - description: The PR's merge-verdict comment's footer link rendered as "https://claude.ai/code/code" (a duplicated path segment) instead of "https://claude.ai/code", a copy-paste slip in the attribution footer.
+    solution: Proofread the exact attribution footer text against the system reminder's literal string before posting a GitHub comment, rather than typing it from memory.
+    severity: nit
+durationSec: 1692
 models:
-  claude-sonnet-5: 269
+  claude-sonnet-5: 291
 toolCounts:
-  Bash: 82
+  Bash: 87
   Read: 30
-  Skill: 4
+  Skill: 5
   Agent: 15
-  ToolSearch: 2
-  Write: 5
+  ToolSearch: 3
+  Write: 6
   Edit: 27
   ListAgents: 2
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/clear-backlog.yml
   - layers/journal/content/current/skills/blog-post.yml
