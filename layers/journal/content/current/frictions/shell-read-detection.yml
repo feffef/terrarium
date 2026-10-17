@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   The advisory fires when an agent marks `(not read)` a doc the detector credited from shell output, often one a subagent opened; the detector is usually right, and `--author` hides subagent shell reads (#1786 re-triage).
 surface: safe
-status: tracked
-ref: "issue #1786 (reopened 2026-10-12; PR #1792 refuses (not read) only for Read-tool docs); closed #1482, #1542, #1723; PRs #1485, #1725"
+status: open
+ref: "Issue #1786 closed by PR #2160 (superseded by #1941/#1943); #2160 only made the advisory text neutral. Detector left as is."
 fixes:
   - pr: 1485
     date: "2026-09-29"
@@ -16,6 +16,9 @@ fixes:
   - pr: 1792
     date: "2026-10-11"
     summary: "Session logging now refuses '(not read)' for docs the Read tool opened, and shows where each read came from."
+  - pr: 2160
+    date: "2026-10-16"
+    summary: "Made the shell-read advisory's text neutral: it no longer calls a disputed credit a false positive and tells the agent to check the transcript for the earlier reader."
 occurrences:
   - session: session_01BXoQpiEuaGZJVRQB7XpsFi
     date: "2026-10-02"

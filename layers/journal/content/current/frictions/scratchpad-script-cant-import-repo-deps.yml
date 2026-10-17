@@ -19,3 +19,8 @@ occurrences:
     severity: nit
     description: "Scratch analysis script failed: yaml package not resolvable from the scratchpad, needed an absolute import path"
     solution: "Import /home/user/terrarium/node_modules/yaml directly, or run scripts via tsx from the repo root"
+  - session: session_01RKUs8JUM5uASMfiE3hvXRA
+    date: "2026-10-16"
+    severity: minor
+    description: "First Playwright script failed twice: scratchpad .ts is CJS under tsx, and playwright-core would not resolve from outside the repo."
+    solution: "The Skill could point at scripts/probe.ts first, or the doc could say scratchpad scripts need .mts plus absolute imports."

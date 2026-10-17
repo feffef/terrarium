@@ -26,3 +26,13 @@ occurrences:
     severity: nit
     description: "The impl agent's Bash commands hit the worktree guard on compound commands and a pipe, the same behaviour fix 1 addresses."
     solution: "The new clause in the build workflow brief; the guard itself is outside the repo."
+  - session: session_013RCsUF234qAGu3CJr3v2on
+    date: "2026-10-16"
+    severity: minor
+    description: "Impl agents repeatedly hit the worktree shell guard on compound commands, heredocs and variable expansion, and worked around it with helper scripts; one ran a stale helper left in the shared scratchpad."
+    solution: "Briefs tell agents to name scratch helpers uniquely; consider documenting the guard's triggers where dispatch-subagents points."
+  - session: session_018sAirSgDY1Nv82JVogjcyR
+    date: "2026-10-16"
+    severity: minor
+    description: "The harness refused the impl agent's git commands when the word git appeared twice (a branch or file name), so it renamed its branch and logs."
+    solution: "Note the guard's trigger in dispatch-subagents section 3 beside the one-git-command-per-call line."

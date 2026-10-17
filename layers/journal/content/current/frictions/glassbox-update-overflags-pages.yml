@@ -1,0 +1,16 @@
+name: glassbox-update-overflags-pages
+summary: "The glassbox-update script flags most guide pages whenever a directory they cite changes, so reviewers sweep pages that need no edit."
+cause: ".agents/skills/glassbox-update/scripts/glassbox-update.ts matches a page whose cited path ends in \"/\" against any changed file under it (line ~77), and pins pages with changed paths but no edited range. Signals: \"directory-level paths\", \"flagged pages look done before they are reviewed\"."
+surface: safe
+status: open
+occurrences:
+  - session: session_01C8c4U7TDuWnJwenPUWYxrP
+    date: "2026-10-15"
+    severity: minor
+    description: "The glassbox-update script flags pages by directory-level paths such as .claude/rules/, so most flagged pages needed no edit and 17 pages took a four-agent sweep."
+    solution: "Have the script report changed files the page's prose or Excerpt names, not whole directories."
+  - session: session_015Bv9LjWV7VZhFbpkfKcPqW
+    date: "2026-10-16"
+    severity: nit
+    description: "glassbox-update script pins pages that have changed paths but no edited range, so flagged pages look done before they are reviewed."
+    solution: "Report flagged pages after --write too, or pin only after review."

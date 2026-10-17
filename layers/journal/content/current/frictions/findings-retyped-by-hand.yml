@@ -57,3 +57,8 @@ occurrences:
     severity: minor
     description: "Subagents could not write result files, so I retyped three large JSON hand-backs into scratch files to merge them; slow and error-prone."
     solution: "Have a brief ask for the result in a fixed schema and let a script ingest a subagent's final message, or allow subagents scratch writes."
+  - session: session_01XxPqcyjVxcgmHTidWtoF1g
+    date: "2026-10-16"
+    severity: moderate
+    description: "audit-docs says pool findings by copying files, but subagents cannot Write report files; two reviewers first claimed files they never wrote."
+    solution: "State in audit-docs that reviewers and checkers return findings as text and the pool is built from their replies."

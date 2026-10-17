@@ -14,3 +14,8 @@ occurrences:
     severity: moderate
     description: "I dispatched 20 agents before settling paragraph length and per-reason ownership, so a second 5-agent polish pass was needed."
     solution: "Settle length bound and an ownership map of shared reasons in the first brief (dispatch-subagents §1)."
+  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
+    date: "2026-10-16"
+    severity: nit
+    description: "The first backfill plan used an index, the user then preferred full text; the index commits and schema were built and thrown away within one PR."
+    solution: "When a data-shape choice is cheap to ask about, ask it before building; I only answered with a size comparison afterwards."

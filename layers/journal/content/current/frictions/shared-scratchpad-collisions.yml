@@ -1,0 +1,21 @@
+name: shared-scratchpad-collisions
+summary: "Parallel subagents share one scratchpad, so one overwrites or runs another agent's helper files."
+cause: "Dispatched agents write helper scripts and drafts to the same scratchpad directory; a stale or foreign script runs or is overwritten. Signals: \"shared the scratchpad\", \"stale helper\", \"overwrote another's helper script\"."
+surface: safe
+status: open
+occurrences:
+  - session: session_01Fay2GiWTwxDKnnqS9DznHk
+    date: "2026-10-16"
+    severity: minor
+    description: "Polish agents shared the scratchpad; one agent's apply script picked up another agent's draft files and errored."
+    solution: "Name each agent's scratch subfolder uniquely in the brief (dispatch-subagents §3 already says so; I missed it)."
+  - session: session_0186ZdoCGUVDeZj95qNZAjiv
+    date: "2026-10-16"
+    severity: minor
+    description: "Subagents shared one scratchpad; one overwrote another's helper script and a stray run rewrote other pages. I had to check the whole diff for strays."
+    solution: "Tell subagents to use a per-agent subfolder of the scratchpad, or edit with Edit instead of scripts."
+  - session: session_013RCsUF234qAGu3CJr3v2on
+    date: "2026-10-16"
+    severity: minor
+    description: "Impl agents repeatedly hit the worktree shell guard on compound commands, heredocs and variable expansion, and worked around it with helper scripts; one ran a stale helper left in the shared scratchpad."
+    solution: "Briefs tell agents to name scratch helpers uniquely; consider documenting the guard's triggers where dispatch-subagents points."

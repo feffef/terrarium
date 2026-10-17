@@ -312,3 +312,48 @@ occurrences:
     severity: minor
     description: "Did not grep docs/adr for ADRs binding Excerpt.vue before changing it"
     solution: "Run grep -l Excerpt docs/adr/* before editing, as CLAUDE.md asks"
+  - session: session_018pjaBqTXahmE3DFhAbkide
+    date: "2026-10-16"
+    severity: minor
+    description: "Recommended fixes without first grepping docs/adr for the guard and gate, as CLAUDE.md asks before a recommendation."
+    solution: "Run grep -l on the paths in docs/adr before proposing a change."
+  - session: session_01WynjtDHvk8MajTsgr59Ckt
+    date: "2026-10-16"
+    severity: minor
+    description: "Recommended placement in chat before reading the ADRs my grep found (0025, 0028), against CLAUDE.md's plan-or-recommend rule"
+    solution: "Nothing contradicted it later, but reading ADR-0025 first would have surfaced the Catalog question myself instead of in round two"
+  - session: 5ba40529-d06b-4b13-a44a-a01292148909
+    date: "2026-10-16"
+    severity: nit
+    description: "Skipped reading GLOSSARY-MAP.md and GLOSSARY.md at session start, as CLAUDE.md requires"
+    solution: "Low impact here since nothing was written; the glossary read could be enforced by a SessionStart hint"
+  - session: session_017KwEjDERgWLRvZYsewWp4Q
+    date: "2026-10-16"
+    severity: nit
+    description: "Recommended a fix in chat without first grepping docs/adr for ADRs that bind git-conventions.md, as CLAUDE.md asks before recommending a change."
+    solution: "Run grep -l on the target path before the first recommendation; ADR-0004 and ADR-0003 turned out to be the relevant ones and were already loaded."
+  - session: session_01JuCbPDE6DkKs6mTCFAKQNr
+    date: "2026-10-16"
+    severity: nit
+    description: "Recommended placement options without first grepping docs/adr for the Glass Box landing, as CLAUDE.md asks before recommending a change."
+    solution: "Run grep -l glassbox docs/adr/* before offering design options."
+  - session: session_01CzkKVxSTE7a4amfXnxrvF9
+    date: "2026-10-16"
+    severity: minor
+    description: "Offered a prune trial as option 3 before reading ADR-0027, which forbids trials on summary rules; broke CLAUDE.md's grep-and-read-before-recommending step"
+    solution: "Grep docs/adr for the mechanism named in each option before offering it; I corrected it one turn later"
+  - session: session_01Fay2GiWTwxDKnnqS9DznHk
+    date: "2026-10-16"
+    severity: nit
+    description: "Did not open the full ADRs whose summary rules loaded (0004, 0005, 0021, 0029, 0030) though each says to when relevant."
+    solution: "The summaries sufficed for this content task; the rule wording could say which tasks need the full ADR."
+  - session: session_01XxPqcyjVxcgmHTidWtoF1g
+    date: "2026-10-16"
+    severity: minor
+    description: "Skipped reading the full ADRs behind the 0003, 0004, 0009, 0017 and 0027 rule summaries; relied on summaries and pr-workflow.md."
+    solution: "None needed; the summaries were enough, no harm came of it."
+  - session: session_018sAirSgDY1Nv82JVogjcyR
+    date: "2026-10-16"
+    severity: nit
+    description: "I did not open ADR-0004's full text before pushing, although its rule says to; I relied on pr-workflow.md, which carries the same steps."
+    solution: "Let the ADR-0004 summary rule say pr-workflow.md suffices for pushing."

@@ -4,8 +4,12 @@ summary: >-
 cause: >-
   .claude/workflows/clear-backlog-explore.js unions issues by any shared file or relatedTo link with union-find, so the connected component can hold issues that share no file with each other. Signals: "chained", "grouping bundled", regroup by hand.
 surface: safe
-status: tracked
-ref: "issue #2147"
+status: open
+ref: "Issue #2147 closed by PR #2158 (merged 2026-10-16); no test exercises the grouping."
+fixes:
+  - pr: 2158
+    date: "2026-10-16"
+    summary: "Replaced union-find grouping with a greedy pass: an issue joins a group only if it directly overlaps every member."
 occurrences:
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"

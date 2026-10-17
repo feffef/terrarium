@@ -21,3 +21,8 @@ occurrences:
     severity: minor
     description: "First draft repeated ADR-0028's varies point as a watch item and kept a second copy of the Tinkerfund excerpt in the content database Lesson; code-review caught both"
     solution: "Before writing What to watch for, grep sibling Lessons and the linked ADR for each point (EVERY-PAGE.md already says so)"
+  - session: session_01WynjtDHvk8MajTsgr59Ckt
+    date: "2026-10-16"
+    severity: minor
+    description: "First commit wrote the publishedAt rule twice (EVERY-PAGE.md and the Glass Box glossary) and left EVERY-PAGE.md saying frontmatter holds four fields only"
+    solution: "Search the edited doc for statements the new rule contradicts before committing; code-review caught both"

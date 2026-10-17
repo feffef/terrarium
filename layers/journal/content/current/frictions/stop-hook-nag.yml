@@ -16,6 +16,9 @@ fixes:
   - pr: 2123
     date: "2026-10-16"
     summary: "git-conventions now says no push is needed when the Stop hook counts main's commits and origin/main..HEAD is empty."
+  - pr: 2188
+    date: "2026-10-16"
+    summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
   - session: session_01BK3hyL2f3mxedQimjd719K
     date: "2026-10-02"
@@ -332,3 +335,28 @@ occurrences:
     severity: nit
     description: "The Stop hook asked to push unpushed commits twice before the ADR-0004 gate and code-review were done."
     solution: "None needed; the rule said to wait, and I did."
+  - session: session_01XxPqcyjVxcgmHTidWtoF1g
+    date: "2026-10-16"
+    severity: nit
+    description: "Stop hook asked me to commit and push while the gate and code-review were still pending; ADR-0004 says finish them first."
+    solution: "Let the Stop hook skip the nag while a background gate is running."
+  - session: session_01CzkKVxSTE7a4amfXnxrvF9
+    date: "2026-10-16"
+    severity: nit
+    description: "The Stop hook asked to push four times while gate:scoped and code-review were still running; each needed a reply"
+    solution: "Let the hook stay quiet while a background gate or review runs"
+  - session: session_0186ZdoCGUVDeZj95qNZAjiv
+    date: "2026-10-16"
+    severity: nit
+    description: "Stop hook asked to commit and push four times while subagents were mid-rewrite, conflicting with ADR-0004 gate and review before first push."
+    solution: "Have the hook skip when background subagents are running."
+  - session: session_017KwEjDERgWLRvZYsewWp4Q
+    date: "2026-10-16"
+    severity: nit
+    description: "The Stop hook asked to push my own ungated doc commit while the user had asked me to wait."
+    solution: "Known harness-side stop-hook-nag; held the push until gate and review passed."
+  - session: session_018sAirSgDY1Nv82JVogjcyR
+    date: "2026-10-16"
+    severity: nit
+    description: "The Stop hook asked me to push the unpushed survey commit before the gate and review ADR-0004 requires; I declined."
+    solution: "Have the hook skip the nag while a frictions-to-fixes ledger branch awaits its gate."
