@@ -2,7 +2,8 @@ name: frictions-to-fixes-skill-gaps
 summary: "The frictions-to-fixes Skill leaves recurring situations unspecified, so the run asks the owner or improvises."
 cause: "SKILL.md does not say what to do when each top regression already has an open issue, that the ledger PR may open before design, or how a ledger ref names a PR that does not exist yet; the user is asked or the run improvises. Signals: \"the Skill says ... but not what to do\", \"had to ask the user how many\"."
 surface: safe
-status: open
+status: tracked
+ref: "branch frictions-doc-fixes-20261017 (doc fix, 2026-10-17 run)"
 fixes:
   - pr: 2149
     date: "2026-10-16"
@@ -26,11 +27,6 @@ occurrences:
     severity: nit
     description: "Ledger refs for the three tracked entries could not name this run's PR, because it did not exist when the ledger was edited."
     solution: "Let a ledger ref hold a branch name now, and have the next run record the PR number in fixes, as the Skill already says."
-  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
-    date: "2026-10-16"
-    severity: minor
-    description: "I searched for the latest frictions-to-fixes run by trigger and goal only and missed a manual run at 11:25 UTC; the owner had to point it out and the first audit was a baseline of an older run."
-    solution: "Find skill runs by trigger, goal, and the PRs/ledger commits they landed, or list session logs after a given merge time."
   - session: session_018pjaBqTXahmE3DFhAbkide
     date: "2026-10-16"
     severity: minor

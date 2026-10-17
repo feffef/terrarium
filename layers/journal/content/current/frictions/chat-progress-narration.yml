@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   Harness status nudges pull sessions into narrating subagent progress in chat, though clear-backlog says the chat holds only questions and the report.
 surface: outside
-status: open
+status: tracked
+ref: "issue #2211 (regression of #1852)"
 fixes:
   - pr: 1852
     date: "2026-10-12"
