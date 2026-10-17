@@ -10,3 +10,13 @@ occurrences:
     severity: moderate
     description: "Parallel content PRs conflicted repeatedly on shared Where next lists and Opening a page chips; keeping both sides re-grew lists past the cap"
     solution: "Cap Where next and stop chips in the contract from the start (now done), and merge content PRs serially"
+  - session: e34491a0-8237-4285-88b7-1a0b73cd29e7
+    date: "2026-10-16"
+    severity: nit
+    description: "After #2179 merged, PR #2177 conflicted on an adjacent guards.md roster row another PR had reworded"
+    solution: "Expected with a shared table; merging main into the branch resolved it in one step"
+  - session: session_01JuCbPDE6DkKs6mTCFAKQNr
+    date: "2026-10-16"
+    severity: minor
+    description: "Main restructured the same landing while the PR was open, causing a merge conflict the owner had to point out."
+    solution: "Fetch origin main and check for recent edits to the files right before pushing or asking to merge."

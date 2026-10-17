@@ -11,21 +11,6 @@ fixes:
     date: "2026-10-10"
     summary: "Removed the guard that blocked the no-op background flag on subagent dispatch, so it no longer denies calls."
 occurrences:
-  - session: session_01C48djYtfD6dTcY8aESJJUD
-    date: "2026-10-02"
-    severity: nit
-    description: "Agent tool rejected run_in_background false, a flag the blog-post Skill's wording implies for the outside reader."
-    solution: "Tell the Skill to omit the flag and wait for the notification."
-  - session: session_01THQSrDDRRLKHVMDaXPjAdk
-    date: "2026-10-02"
-    severity: nit
-    description: "Dispatched the Explore agent with run_in_background: false; the Agent-background-flag guard denied it and I re-dispatched."
-    solution: "Guard worked as designed; omit the flag on Agent calls."
-  - session: session_01WPQb6E2oWX3cJzcN11hAW5
-    date: "2026-10-02"
-    severity: nit
-    description: "Agent tool call with run_in_background false was denied by the Agent-background-flag guard (#835), costing a retry for both review subagents"
-    solution: "Omit run_in_background on Agent calls; the guard message already says so"
   - session: session_014weUowmS8AnzoS1SBQswzm
     date: "2026-10-03"
     severity: nit

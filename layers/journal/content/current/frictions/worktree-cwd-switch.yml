@@ -1,0 +1,21 @@
+name: worktree-cwd-switch
+summary: "A session's working directory moves into a worktree it dispatched, so session closure refuses and later commands run in the wrong place."
+cause: "Entering an impl agent's or probe's worktree (cd, or the harness moving the primary directory) makes log-session/close-session refuse from a linked worktree and leaves the shell in a deleted directory after removal. Signals: 'cd back to the main checkout', 'refuses from a linked worktree', 'deleted directory'."
+surface: safe
+status: tracked
+occurrences:
+  - session: session_01GLWVkt3R3EnHJj5XpQEJQt
+    date: "2026-10-15"
+    severity: nit
+    description: "log-session and close-session refuse from a linked worktree; after the impl agent's worktree became my cwd I had to cd back to the main checkout."
+    solution: "Say in dispatch-subagents §5 to cd back before close-session."
+  - session: session_018sAirSgDY1Nv82JVogjcyR
+    date: "2026-10-16"
+    severity: minor
+    description: "The primary working directory switched to the impl agent's worktree and back mid-run, while log-session refuses to author from a linked worktree; I had to track where each command ran."
+    solution: "Have dispatch-subagents tell the orchestrator to use absolute paths and re-check pwd after a worktree agent returns."
+  - session: session_01CzkKVxSTE7a4amfXnxrvF9
+    date: "2026-10-16"
+    severity: nit
+    description: "cd'd into the probe's worktree to check it, which moved the session's working directory there; removing the worktree then left the shell in a deleted directory"
+    solution: "Inspect a subagent worktree with git -C <path>, never cd, as dispatch-subagents section 5 hints"
