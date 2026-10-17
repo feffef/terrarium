@@ -30,7 +30,7 @@ import { createHash } from 'node:crypto'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
-import { root, isMain } from './lib/cli.ts'
+import { root, runIfMain } from './lib/cli.ts'
 
 /** Where pack Skills live on disk. */
 export const SKILLS_DIR = '.agents/skills'
@@ -228,6 +228,4 @@ function main(argv: string[]): void {
   process.exit(1)
 }
 
-if (isMain(import.meta.url)) {
-  main(process.argv.slice(2))
-}
+runIfMain(import.meta.url, () => main(process.argv.slice(2)))

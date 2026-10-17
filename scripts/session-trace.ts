@@ -46,7 +46,7 @@ import {
   type ShellCommand,
 } from './shell-reads.ts'
 import { ruleAdr, ruleBlockFiles } from './lib/adr-rules.ts'
-import { isMain, root } from './lib/cli.ts'
+import { root, runIfMain } from './lib/cli.ts'
 
 export { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../shared/trace-fields.ts'
 
@@ -888,6 +888,4 @@ function main(): void {
   console.log(JSON.stringify(folded, null, 2))
 }
 
-if (isMain(import.meta.url)) {
-  main()
-}
+runIfMain(import.meta.url, main)

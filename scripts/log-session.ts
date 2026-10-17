@@ -64,7 +64,7 @@ import { canonicalizeInstructionPath, isInstructionDoc, type DocLineIndex } from
 import { fail, flagValue, root, runIfMain } from './lib/cli.ts'
 
 // Specs import these from here.
-export { findTruncatedScalars, validateEntry, type SessionEntry, type TruncatedScalar } from './session-logs.ts'
+export { findTruncatedScalars, validateEntry } from './session-logs.ts'
 
 /** The `schemaVersion` newly authored logs should carry; evolution policy: ADR-0009. */
 export const CURRENT_SESSIONS_SCHEMA_VERSION = 1
@@ -910,10 +910,6 @@ function readStdin(): string {
  *  bug must not wedge teardown (PR #148); errors go to stderr only. */
 function landMain(argv: string[]): void {
   const dryRun = argv.includes('--dry-run')
-  const arg = (flag: string): string | undefined => {
-    const i = argv.indexOf(flag)
-    return i >= 0 ? argv[i + 1] : undefined
-  }
 
   // Payload on stdin (hook); argv overrides help testing. `hook_event_name` is
   // the registration that fired us — recorded on the entry (issue #865).
@@ -926,8 +922,8 @@ function landMain(argv: string[]): void {
       /* not JSON — rely on argv */
     }
   }
-  const transcriptPath = arg('--transcript') ?? payload.transcript_path
-  const scratchPath = arg('--scratch') ?? join(root, SCRATCH_FILE)
+  const transcriptPath = flagValue(argv, '--transcript') ?? payload.transcript_path
+  const scratchPath = flagValue(argv, '--scratch') ?? join(root, SCRATCH_FILE)
   const landedBy = payload.hook_event_name
 
   // The wrap-up signal: no scratch ⇒ either the session never declared closure

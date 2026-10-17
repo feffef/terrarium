@@ -14,7 +14,7 @@
 //   pnpm exec tsx scripts/validate-adr-rules.ts [--write]
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { root, isMain } from './lib/cli.ts'
+import { root, runIfMain } from './lib/cli.ts'
 import {
   ADR_DIR,
   adrHash,
@@ -29,7 +29,22 @@ import {
 } from './lib/adr-rules.ts'
 
 // The Human-only hints and merge-pr.ts, and the specs, import the library through here.
-export * from './lib/adr-rules.ts'
+export {
+  adrHash,
+  adrTokens,
+  findAdrRuleProblems,
+  newFormatProblems,
+  RULES_DIR,
+  ruleAdr,
+  ruleBlock,
+  ruleBlockFiles,
+  ruleDocPaths,
+  ruleHash,
+  rulePaths,
+  staleRules,
+  withRuleHash,
+  withRuleTokens,
+} from './lib/adr-rules.ts'
 
 function load(): AdrRuleInput {
   const adrs: Record<string, string> = {}
@@ -71,4 +86,4 @@ function main(): void {
   console.log(`validate-adr-rules: PASS — ${Object.keys({ ...input.rules, ...input.otherRules?.files }).length} rule(s)`)
 }
 
-if (isMain(import.meta.url)) main()
+runIfMain(import.meta.url, main)

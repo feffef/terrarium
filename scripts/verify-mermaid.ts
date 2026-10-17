@@ -10,8 +10,8 @@
 import { existsSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { svgHazard } from '../app/utils/svg.ts'
-import { committedSvgKeys, discoverDiagrams, root, svgPathFor } from './mermaid-lib.ts'
-import { isMain } from './lib/cli.ts'
+import { committedSvgKeys, discoverDiagrams, svgPathFor } from './mermaid-lib.ts'
+import { root, runIfMain } from './lib/cli.ts'
 
 export interface MermaidDrift {
   /** Source diagrams whose committed SVG is absent — render is stale/missing. */
@@ -65,6 +65,4 @@ async function main(): Promise<void> {
   process.exit(1)
 }
 
-if (isMain(import.meta.url)) {
-  await main()
-}
+runIfMain(import.meta.url, main)

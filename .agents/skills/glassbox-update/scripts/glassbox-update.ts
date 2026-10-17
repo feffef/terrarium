@@ -7,7 +7,7 @@ import { glassboxTerms } from '../../../../layers/glassbox/page-checks.ts'
 import { glassboxPageRefs, glassboxRelineRefs, rangeText, shiftLines, type LineRange } from '../../../../layers/glassbox/page-refs.ts'
 import { fetchOriginMain, git } from '../../../../scripts/git-helpers.ts'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
-import { flagValue, isMain, root } from '../../../../scripts/lib/cli.ts'
+import { flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const pagesDir = (space: string) => `layers/glassbox/content/${space}/pages`
 
@@ -113,20 +113,17 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
   return report
 }
 
-if (isMain(import.meta.url)) {
-  try {
-    const argv = process.argv.slice(2)
-    const write = argv.includes('--write')
-    const spacesArg = flagValue(argv, '--spaces')
-    const spaces = spacesArg?.split(',').filter(Boolean)
-    if (argv.includes('--spaces') && (spacesArg?.startsWith('--') || !spaces?.length)) throw new Error('--spaces needs a comma-separated list, e.g. guide,drafts')
-    const to = flagValue(argv, '--to')
-    // Pin only to the commit the agent reviewed; a fresh fetch could pass unread changes.
-    if (write && !to) throw new Error('--write needs --to <sha>, the `main` of the report you reviewed')
-    if (!to) fetchOriginMain(root)
-    process.stdout.write(`${JSON.stringify(glassboxUpdate(root, { main: to ?? 'origin/main', write, spaces }), null, 2)}\n`)
-  } catch (err) {
-    console.error(`glassbox-update: ${err instanceof Error ? err.message : String(err)}`)
-    process.exit(1)
-  }
+function main(): void {
+  const argv = process.argv.slice(2)
+  const write = argv.includes('--write')
+  const spacesArg = flagValue(argv, '--spaces')
+  const spaces = spacesArg?.split(',').filter(Boolean)
+  if (argv.includes('--spaces') && (spacesArg?.startsWith('--') || !spaces?.length)) throw new Error('--spaces needs a comma-separated list, e.g. guide,drafts')
+  const to = flagValue(argv, '--to')
+  // Pin only to the commit the agent reviewed; a fresh fetch could pass unread changes.
+  if (write && !to) throw new Error('--write needs --to <sha>, the `main` of the report you reviewed')
+  if (!to) fetchOriginMain(root)
+  process.stdout.write(`${JSON.stringify(glassboxUpdate(root, { main: to ?? 'origin/main', write, spaces }), null, 2)}\n`)
 }
+
+runIfMain(import.meta.url, main)

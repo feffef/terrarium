@@ -10,7 +10,7 @@
 import { Document, Scalar } from 'yaml'
 import { flattenText } from './session-frictions.ts'
 import { readSessionLogs } from './session-logs.ts'
-import { root, isMain } from './lib/cli.ts'
+import { root, runIfMain } from './lib/cli.ts'
 
 export function occurrenceBlock(log: Record<string, unknown>, index: number): string {
   const frictions = Array.isArray(log.frictions) ? log.frictions : []
@@ -39,11 +39,4 @@ function main(): void {
   }
 }
 
-if (isMain(import.meta.url)) {
-  try {
-    main()
-  } catch (err) {
-    console.error(`ledger-occurrence: ${err instanceof Error ? err.message : String(err)}`)
-    process.exit(1)
-  }
-}
+runIfMain(import.meta.url, main)

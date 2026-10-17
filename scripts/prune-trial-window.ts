@@ -33,7 +33,7 @@ import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { fetchOriginMain } from './git-helpers.ts'
-import { root, isMain } from './lib/cli.ts'
+import { root, runIfMain } from './lib/cli.ts'
 
 const LEDGER_PATH = '.agents/prune-trials.yml'
 const WINDOW_MS = 3 * 24 * 60 * 60 * 1000 // the trial window (ADR-0027); this constant is its home
@@ -202,6 +202,4 @@ function main(): void {
   for (const w of buildWindows(selected)) console.log(formatWindow(w) + '\n')
 }
 
-if (isMain(import.meta.url)) {
-  main()
-}
+runIfMain(import.meta.url, main)

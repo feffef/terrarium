@@ -23,12 +23,11 @@ import {
   type Diagram,
   committedSvgKeys,
   discoverDiagrams,
-  root,
   svgPathFor,
   SVG_DIR,
 } from './mermaid-lib.ts'
 import { diffMermaid } from './verify-mermaid.ts'
-import { isMain } from './lib/cli.ts'
+import { isMain, root } from './lib/cli.ts'
 
 // A unique, deliberately-unusual sentinel hex per colour token — far from any
 // palette or author `classDef` colour so the rewrite can't hit a real value.

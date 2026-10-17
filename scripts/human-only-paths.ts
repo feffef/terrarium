@@ -6,7 +6,7 @@ import { matchesGlob } from 'node:path'
 import { git } from './git-helpers.ts'
 import { HUMAN_MERGE_RULE } from './merge-pr.ts'
 import { rulePaths } from './lib/adr-rules.ts'
-import { isMain } from './lib/cli.ts'
+import { runIfMain } from './lib/cli.ts'
 
 /** Throws when main's rule is missing or yields no globs: fail closed, like `humanMergeRefusal`. */
 export function humanOnlyPaths(cwd: string): string[] {
@@ -16,11 +16,6 @@ export function humanOnlyPaths(cwd: string): string[] {
   return files.filter((f) => globs.some((g) => matchesGlob(f, g)))
 }
 
-if (isMain(import.meta.url)) {
-  try {
-    console.log(humanOnlyPaths(process.argv[2] ?? process.cwd()).join('\n'))
-  } catch (err) {
-    console.error(`human-only-paths: ${(err as Error).message}`)
-    process.exit(1)
-  }
-}
+runIfMain(import.meta.url, () => {
+  console.log(humanOnlyPaths(process.argv[2] ?? process.cwd()).join('\n'))
+})

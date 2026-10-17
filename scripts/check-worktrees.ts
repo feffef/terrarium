@@ -25,7 +25,7 @@ import { copyFileSync, existsSync, mkdtempSync, rmSync, statSync, utimesSync } f
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { git } from './git-helpers.ts'
-import { root, isMain } from './lib/cli.ts'
+import { root, runIfMain } from './lib/cli.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -318,6 +318,4 @@ function main(): void {
   process.exit(1)
 }
 
-if (isMain(import.meta.url)) {
-  main()
-}
+runIfMain(import.meta.url, main)

@@ -50,7 +50,7 @@ import { TINKERFUND_OFFSET, resolveTinkerfundOffset } from '../layers/tinkerfund
 import type { campaign, pledge, updateLog } from '../layers/tinkerfund/schemas.ts'
 import { splitFrontmatter } from './lib/frontmatter.ts'
 import { parseDocument } from './validate-content.ts'
-import { isMain } from './lib/cli.ts'
+import { runIfMain } from './lib/cli.ts'
 
 export interface RefViolation {
   /** The collection key (e.g. `atlas_canopy_pages`) or interactions/observations key. */
@@ -800,6 +800,4 @@ function main(): void {
   if (report.violations.length > 0) process.exit(1)
 }
 
-if (isMain(import.meta.url)) {
-  main()
-}
+runIfMain(import.meta.url, main)

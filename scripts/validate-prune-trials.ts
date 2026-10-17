@@ -21,7 +21,7 @@
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
-import { root, isMain } from './lib/cli.ts'
+import { root, runIfMain } from './lib/cli.ts'
 
 export const LEDGER_PATH = '.agents/prune-trials.yml'
 
@@ -60,6 +60,4 @@ function main(): void {
   if (!result.ok) process.exit(1)
 }
 
-if (isMain(import.meta.url)) {
-  main()
-}
+runIfMain(import.meta.url, main)

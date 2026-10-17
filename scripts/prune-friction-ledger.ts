@@ -17,7 +17,7 @@ import { join } from 'node:path'
 import { isMap, isSeq, parse as parseYaml, parseDocument } from 'yaml'
 import { LEDGER_HORIZON_DAYS, ledgerFixState } from '../layers/journal/app/utils/ledger.ts'
 import { LEDGER_DIR } from './session-frictions.ts'
-import { flagValue, isMain, root } from './lib/cli.ts'
+import { fail, flagValue, root, runIfMain } from './lib/cli.ts'
 
 /** The oldest occurrence date the horizon keeps. */
 export function horizonStart(today: string): string {
@@ -99,19 +99,18 @@ export function sharedFrictions(cwd = root): string[] {
   return [...holders].filter(([, names]) => names.length > 1).map(([key, names]) => `${names.join(', ')}: ${key}`)
 }
 
-if (isMain(import.meta.url)) {
+function main(): void {
   const todayArg = process.argv.includes('--today') ? flagValue(process.argv, '--today') ?? '' : undefined
   const today = todayArg ?? new Date().toISOString().slice(0, 10)
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(today)) {
-    console.error('prune-friction-ledger: --today must be YYYY-MM-DD')
-    process.exit(1)
-  }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(today)) fail('--today must be YYYY-MM-DD')
   if (process.argv.includes('--summary')) {
     console.log(summarizeLedger(today).join('\n'))
     const shared = sharedFrictions()
     if (shared.length) console.log(`\nfrictions in two clusters (keep only when the text names both causes):\n${shared.join('\n')}`)
-    process.exit(0)
+    return
   }
   const report = pruneLedger(today)
   console.log(report.length ? report.join('\n') : `prune-friction-ledger: nothing before ${horizonStart(today)}`)
 }
+
+runIfMain(import.meta.url, main)

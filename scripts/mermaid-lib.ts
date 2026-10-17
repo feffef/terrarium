@@ -16,7 +16,6 @@ import {
 } from '../app/utils/mermaid.ts'
 import { root } from './lib/cli.ts'
 
-export { root }
 
 /** Where committed, theme-adaptive SVGs live — bundled into the client by the
  *  component's `import.meta.glob` (app/components/MermaidDiagram.vue). */

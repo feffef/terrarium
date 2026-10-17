@@ -36,7 +36,6 @@ import { decodeHtmlEntities, listAll, NO_ACCESS_MESSAGE, resolveAccess, type Acc
 export {
   decodeHtmlEntities,
   envToken,
-  getJson,
   hasGhBinary,
   parseNextLink,
   parseOwnerRepo,

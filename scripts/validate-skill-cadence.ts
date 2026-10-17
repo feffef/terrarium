@@ -20,7 +20,7 @@ import { globSync } from 'node:fs'
 import { join } from 'node:path'
 import { expand, loadManifests, root, type ExpandedCollection } from '../shared/expand.ts'
 import { parseDocument } from './validate-content.ts'
-import { isMain } from './lib/cli.ts'
+import { runIfMain } from './lib/cli.ts'
 
 export interface CadenceViolation {
   file: string
@@ -132,6 +132,4 @@ function main(): void {
   if (violations.length > 0) process.exit(1)
 }
 
-if (isMain(import.meta.url)) {
-  main()
-}
+runIfMain(import.meta.url, main)
