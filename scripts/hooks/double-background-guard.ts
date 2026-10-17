@@ -22,7 +22,7 @@
 //
 // Runs unattended, so it is human-only to merge (ADR-0004). Pure
 // core split from the shared stdin/`--dry-run`/bootstrap plumbing
-// (`guard-io.ts`, issue #1080).
+// (`hook-io.ts`, issue #1080).
 //
 // Usage:
 //   sh scripts/hooks/double-background-guard.sh             # the installed hook entry

@@ -323,7 +323,7 @@ describe('for VAR in <literal-list>; do … ; done — issue #1305', () => {
 })
 
 describe('resolveGlob — resolving a glob against the real tree (issue #1246)', () => {
-  // A stand-in for session-trace.ts's fs-backed resolver: it "sees" a fixed set
+  // A stand-in for transcript-trace.ts's fs-backed resolver: it "sees" a fixed set
   // of real files and returns the single match, mirroring what a real repo
   // tree would do for `docs/adr/NNNN-*.md`-shaped tokens.
   const REPO_FILES = ['docs/adr/0017-one-thing.md', 'docs/adr/0018-another-thing.md']

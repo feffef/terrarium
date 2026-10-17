@@ -199,7 +199,7 @@ export function parseChangedFileList(raw: string): string[] {
 // ── GitHub / git shell (thin) ────────────────────────────────────────────────
 
 /** Changed files between two refs, resolved entirely locally — no GitHub call
- *  at all, mirroring how `merged-since.ts` stays git-only where it can. */
+ *  at all, mirroring how `list-merges-since.ts` stays git-only where it can. */
 export function changedFilesFromGitDiff(base: string, head: string, cwd = root): string[] {
   const raw = execFileSync('git', ['diff', '--name-only', '--no-renames', `${base}...${head}`], { cwd, encoding: 'utf8' })
   return parseChangedFileList(raw)

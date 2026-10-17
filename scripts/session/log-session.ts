@@ -1,7 +1,7 @@
 // The session-log lander (ADR-0009): the single enforcement point of the
 // "session logs commit directly to `main`" boundary, and the only module that
 // lands one. It validates the authored half, stitches it with the mechanical
-// trace (derived by session-trace.ts), and commits *that one file* to `main`
+// trace (derived by transcript-trace.ts), and commits *that one file* to `main`
 // without a PR — never the session's other, possibly uncommitted, working-copy
 // changes. `session-end.ts` merged in here (issue #865): authoring and landing
 // were one flow split across two files.
@@ -240,11 +240,11 @@ function sessionIdFromRelPath(relPath: string): string {
   return basename(relPath, '.yml').replace(/^\d{4}-\d{2}-\d{2}-/, '')
 }
 
-/** The busiest model recorded on the stitched entry at `absPath` (session-trace.ts's
+/** The busiest model recorded on the stitched entry at `absPath` (transcript-trace.ts's
  *  `models`: model id → assistant-turn count), or a generic fallback for an
  *  authored-only entry from before the trace existed. The trailer still needs a
  *  value (ADR-0017). The busiest-model pick
- *  and the id→display formatting are single-homed in session-trace.ts (issue #346),
+ *  and the id→display formatting are single-homed in transcript-trace.ts (issue #346),
  *  reused here and by the commit-msg footer guard. */
 function deriveModelName(absPath: string): string {
   let parsed: unknown
@@ -281,7 +281,7 @@ export function buildLogCommit(
     const subject = `journal(sessions): log ${basename(relPath, '.yml')}`
     // Separate `-m` paragraph, per ADR-0017 — a trailer needs its own paragraph or git
     // won't recognize it as one. The footer format is single-homed in
-    // `provenance-footer.ts` (issue #346), shared with the commit-msg guard.
+    // `commit-trailer.ts` (issue #346), shared with the commit-msg guard.
     const trailer = provenanceFooter(
       deriveModelName(absPath),
       sessionUrl(sessionIdFromRelPath(relPath)),

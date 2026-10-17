@@ -108,7 +108,7 @@ describe('newFormatProblems (ADR-0030)', () => {
 describe('non-ADR rules (ADR-0029)', () => {
   const exists = (p: string) => p === 'docs/agents/guards.md'
   const check = (files: Record<string, string>) => findAdrRuleProblems({ adrs: {}, rules: {}, otherRules: { files, exists } })
-  const scoped = (body: string) => `---\npaths:\n  - "scripts/*-guard.ts"\n---\n${body}`
+  const scoped = (body: string) => `---\npaths:\n  - "scripts/hooks/*-guard.ts"\n---\n${body}`
 
   it('passes a rule with paths whose docs exist, with no adr hash and no "no matching ADR"', () => {
     expect(check({ 'guards.md': scoped('# Guards\n\nSee docs/agents/guards.md.\n') })).toEqual([])

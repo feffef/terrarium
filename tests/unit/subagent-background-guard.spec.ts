@@ -16,8 +16,8 @@ import {
 import { envWithTsxShim, runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const SCRIPT = join(root, 'scripts', 'subagent-background-guard.ts')
-const PREFILTER = join(root, 'scripts', 'subagent-background-guard.sh')
+const SCRIPT = join(root, 'scripts', 'hooks', 'subagent-background-guard.ts')
+const PREFILTER = join(root, 'scripts', 'hooks', 'subagent-background-guard.sh')
 
 /** A dispatched subagent's PreToolUse payload, in the exact shape observed
  *  live (the probe recorded in docs/agents/guards.md). */

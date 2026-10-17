@@ -135,7 +135,7 @@ describe('changedPaths() — fetch-degrade path (#451)', () => {
   // other subcommand, so `merge-base`/`diff`/`ls-files` still see the real
   // repo). `changedPaths()`'s fetch is wrapped in a bare `catch {}` — any
   // thrown error, including the "timed out" one `fetchOriginMain` raises on
-  // a real timeout (unit-tested directly in git-helpers.spec.ts), takes the
+  // a real timeout (unit-tested directly in git.spec.ts), takes the
   // same degrade path, so a fast failure exercises the same catch branch a
   // slow 10s timeout would, without paying for the wait.
   it('degrades to a usable result instead of throwing when the fetch fails', () => {

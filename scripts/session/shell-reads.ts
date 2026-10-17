@@ -8,7 +8,7 @@
 // CONTENTS INTO THE SESSION. That is a claim about the command, not about the
 // agent's attention — which makes it checkable against the transcript, so a
 // wrong entry is an extractor bug, not a different kind of evidence. Its output
-// is a floor, exactly as `filesRead` already is (see session-trace.ts's header).
+// is a floor, exactly as `filesRead` already is (see transcript-trace.ts's header).
 //
 // Credit comes from the command's OUTPUT (`scanShellReadsByOutput`); the
 // command parser (`scanShellReads`) only explains a near-miss in the advisory
@@ -462,7 +462,7 @@ function readerArgs(verb: string, tokens: Token[]): { skip?: SkipRule; text: str
  *  they're pointed at and stay ungated *in the general case*.
  *
  *  Issue #1327 considered widening this set to `cat`/`sed`/`awk`/`head`/`tail`
- *  too, but the real caller (`session-trace.ts`'s `bashCommandsOf`) pairs
+ *  too, but the real caller (`transcript-trace.ts`'s `bashCommandsOf`) pairs
  *  EVERY Bash command with an output string, defaulting to `''` for one whose
  *  `tool_result` is simply missing from a transcript (a torn transcript, or a
  *  test fixture that never wires one up) — not `undefined`. Widening this set
@@ -475,7 +475,7 @@ const OUTPUT_FILTERED_VERBS = new Set(['grep', 'rg'])
 /** One command, optionally paired with the text its own `tool_result` carried.
  *  A bare string means "output unknown" — gating is skipped, same as before
  *  #1247, which is what every pre-existing caller/test still passes. The real
- *  caller (session-trace.ts's `bashCommandsOf`) always supplies the pair. */
+ *  caller (transcript-trace.ts's `bashCommandsOf`) always supplies the pair. */
 export type ShellCommand = string | { command: string; output?: string }
 
 function normalizeShellCommand(entry: ShellCommand): { command: string; output?: string } {
@@ -557,7 +557,7 @@ function redirectsStderrToDevNull(tokens: Token[]): boolean {
  *  plain strings): when supplied, a token otherwise rejected as a glob/variable is
  *  handed to it, and a single resolved match is credited exactly like a literal
  *  path. `undefined` (0 or 2+ matches) falls through to today's near-miss — never
- *  guessed between candidates (issue #1246). The real caller (session-trace.ts)
+ *  guessed between candidates (issue #1246). The real caller (transcript-trace.ts)
  *  injects an `fs`-backed implementation; tests exercise the pure default.
  *
  *  Each `commands` entry may pair a command with its own `tool_result` output
@@ -820,7 +820,7 @@ export interface DocText {
 
 /** Distinctive line → the one instruction doc it belongs to. Built from doc
  *  text, never from a filesystem, so it stays pure; `loadDocLineIndex` in
- *  session-trace.ts is the fs-backed builder. */
+ *  transcript-trace.ts is the fs-backed builder. */
 export interface DocLineIndex {
   byLine: Map<string, string>
   /** Each doc's count of distinctive lines, so a doc shorter than `MIN_LINES_SHOWN` can still be credited in full. */

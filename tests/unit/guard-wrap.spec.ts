@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const WRAPPER = join(root, 'scripts', 'guard-wrap.sh')
+const WRAPPER = join(root, 'scripts', 'hooks', 'guard-wrap.sh')
 
 /** Runs the wrapper with `sh`, feeding `stdin` through untouched — the same
  *  shape `.claude/settings.json` invokes it with. */

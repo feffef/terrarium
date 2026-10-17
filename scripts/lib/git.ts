@@ -10,7 +10,7 @@ const RECORD_SEP = '\x1e'
  *  and body untouched, timestamp still in whatever offset the committer's
  *  git client used. Not every commit a merge-log reader turns up is a PR
  *  merge (a manually-crafted merge commit can still slip through) — that
- *  filtering is each caller's own job (see `recent-prs.ts`'s `toRecentPr`). */
+ *  filtering is each caller's own job (see `list-recent-prs.ts`'s `toRecentPr`). */
 export interface RawMergeCommit {
   hash: string
   isoCommitTime: string
@@ -112,7 +112,7 @@ export function setOriginHead(cwd: string, remote = 'origin'): void {
  *  Bounded by `timeoutMs` (default `FETCH_TIMEOUT_MS`); on timeout, throws a
  *  clear "fetch timed out" error instead of the generic "Command failed" one
  *  `execFileSync` would raise on its own. What a caller does with that error
- *  is its own call: `merged-since.ts`/`recent-prs.ts` let it propagate as
+ *  is its own call: `list-merges-since.ts`/`list-recent-prs.ts` let it propagate as
  *  fatal (a result computed against an unconfirmed-fresh ref is worse than no
  *  result); `gate.ts`'s `changedPaths` and `log-session.ts`'s `mainVersion`
  *  both catch it and degrade to best-effort instead.

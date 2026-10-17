@@ -1,6 +1,6 @@
 #!/bin/sh
 # Standard `.claude/settings.json` wiring for a FAIL-CLOSED `PreToolUse` guard
-# (issue #1223). `runIfMain` (`guard-io.ts`) only fail-closes a crash INSIDE its
+# (issue #1223). `runIfMain` (`hook-io.ts`) only fail-closes a crash INSIDE its
 # own try/catch; a crash before that point — `pnpm exec tsx` failing to cold
 # start, a module-resolution error, a throw during import/top-level evaluation
 # — exits nonzero with no stdout at all. The old wiring, "<guard> || true",
@@ -26,16 +26,16 @@
 # entry no longer needs `|| true` layered on top (which would only reintroduce
 # the same swallow-and-allow risk one level up, for `sh`/this file itself
 # rather than the wrapped guard). Never wire `deferred-tool-guard.ts` through
-# this — it is deliberately fail-OPEN (`guard-io.ts`'s `failOpen: true`) and
+# this — it is deliberately fail-OPEN (`hook-io.ts`'s `failOpen: true`) and
 # must keep its existing bare `|| true` wiring.
 #
 # Usage:
-#   sh scripts/guard-wrap.sh <guard-name> -- <guard command...>
+#   sh scripts/hooks/guard-wrap.sh <guard-name> -- <guard command...>
 #
 # Manual probe (paste both into a PR touching this file — a shell-boundary
 # behavior a unit test can't fully observe, per docs/agents/guards.md):
-#   printf '{}' | sh scripts/guard-wrap.sh test-guard -- sh -c 'exit 0'
-#   printf '{}' | sh scripts/guard-wrap.sh test-guard -- sh -c 'exit 1'
+#   printf '{}' | sh scripts/hooks/guard-wrap.sh test-guard -- sh -c 'exit 0'
+#   printf '{}' | sh scripts/hooks/guard-wrap.sh test-guard -- sh -c 'exit 1'
 set -u
 
 guard_name=$1
@@ -46,7 +46,7 @@ out=$("$@")
 status=$?
 
 if [ "$status" -ne 0 ] && [ -z "$out" ]; then
-  printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Blocked by scripts/guard-wrap.sh (issue #1223): the %s guard process exited %s with no output, before it could reach its own fail-closed try/catch (runIfMain, guard-io.ts) — e.g. a tsx cold-start or module-load-time crash, not a genuine allow decision. The guard fails CLOSED. This is a guard fault, not an authoring mistake — report it rather than working around it."}}' "$guard_name" "$status"
+  printf '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Blocked by scripts/hooks/guard-wrap.sh (issue #1223): the %s guard process exited %s with no output, before it could reach its own fail-closed try/catch (runIfMain, hook-io.ts) — e.g. a tsx cold-start or module-load-time crash, not a genuine allow decision. The guard fails CLOSED. This is a guard fault, not an authoring mistake — report it rather than working around it."}}' "$guard_name" "$status"
 else
   printf '%s' "$out"
 fi

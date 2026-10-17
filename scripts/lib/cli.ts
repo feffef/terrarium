@@ -1,4 +1,4 @@
-// What every script CLI shares (#2185). `guard-io.ts` is Human-only and keeps
+// What every script CLI shares (#2185). `hook-io.ts` is Human-only and keeps
 // its own `runIfMain`; this is the one for everything else.
 import { basename, dirname, resolve } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'

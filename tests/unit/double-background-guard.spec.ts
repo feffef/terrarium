@@ -16,8 +16,8 @@ import { checkDoubleBackground, denyOutputFor, formatGuardMessage } from '../../
 import { envWithTsxShim, runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const SCRIPT = join(root, 'scripts', 'double-background-guard.ts')
-const PREFILTER = join(root, 'scripts', 'double-background-guard.sh')
+const SCRIPT = join(root, 'scripts', 'hooks', 'double-background-guard.ts')
+const PREFILTER = join(root, 'scripts', 'hooks', 'double-background-guard.sh')
 
 /** A PreToolUse payload in the shape the harness sends for a Bash call —
  *  identity fields present but irrelevant here, since this guard is

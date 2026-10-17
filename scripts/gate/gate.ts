@@ -86,7 +86,7 @@ function lines(out: string): string[] {
 // contract still holds on that branch. Why classifying off a shallow clone is
 // unsafe at all: docs/agents/git-conventions.md, and #849.
 // `quiet` suppresses the underlying fetch's own progress/branch-listing
-// output (git-helpers.ts's `unshallow`/`fetchOriginMain`) — `--dry` passes
+// output (git.ts's `unshallow`/`fetchOriginMain`) — `--dry` passes
 // this so its decision isn't buried under it (#930).
 export function changedPaths(cwd: string = root, quiet = false): string[] | null {
   try {

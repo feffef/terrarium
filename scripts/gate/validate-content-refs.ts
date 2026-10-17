@@ -1,9 +1,9 @@
 // Referential-integrity + MDC structural checks (issue #446), a sibling to
-// `validate-content.ts` in the same fast pre-build step. Where that script
+// `validate-content-schema.ts` in the same fast pre-build step. Where that script
 // validates each Document's *shape* against its Collection's Zod schema in
 // isolation, this one validates *cross-references between* Documents, and a
 // page's Markdown **body** — neither of which a per-document `safeParse` can
-// see. Two things sail through `validate-content.ts` today that this catches:
+// see. Two things sail through `validate-content-schema.ts` today that this catches:
 //
 //   - A food-web `interactions` edge (or an `observations.specimen`) naming a
 //     slug that isn't a real Specimen `pages` Document in the same Biome —
@@ -36,7 +36,7 @@
 // a Tinkerfund-shaped one (a `pages` Document with `campaign`, or a `backer`
 // collection) — it is a no-op for `journal`/`blog`, which have none of these.
 //
-// Usage:  pnpm validate:content   (runs this after validate-content.ts;
+// Usage:  pnpm validate:content   (runs this after validate-content-schema.ts;
 //         see package.json)       Exits 0 if every reference resolves and
 //                                 every Specimen body is structurally sound,
 //                                 1 otherwise.
@@ -535,7 +535,7 @@ function checkArtifacts(
 }
 
 // ── Campaigns and Pledges (Tinkerfund, issue #1366) ─────────────────────────
-// validate-content.ts has already checked each Document's shape, so this
+// validate-content-schema.ts has already checked each Document's shape, so this
 // reads the fields it needs without re-checking their types.
 
 type TinkerfundCampaign = z.infer<typeof campaign>
@@ -698,7 +698,7 @@ function phaseNamesOf(frontmatter: Record<string, unknown>): Set<string> {
 
 /** Group expanded collections by (tenant, space) and run the referential +
  *  structural checks on every group that has a `pages` Collection — pure aside
- *  from the file reads, mirroring `validateContent()` in `validate-content.ts`. */
+ *  from the file reads, mirroring `validateContent()` in `validate-content-schema.ts`. */
 export function validateReferences(cols: ExpandedCollection[], projectRoot = root): RefReport {
   const violations: RefViolation[] = []
   let filesChecked = 0

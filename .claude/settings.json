@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm exec tsx scripts/deferred-tool-guard.ts || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm exec tsx scripts/hooks/deferred-tool-guard.ts || true"
           }
         ]
       },
@@ -26,7 +26,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh loop-only-tool-guard -- pnpm exec tsx scripts/loop-only-tool-guard.ts"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh loop-only-tool-guard -- pnpm exec tsx scripts/hooks/loop-only-tool-guard.ts"
           }
         ]
       },
@@ -35,7 +35,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh skill-inline-guard -- pnpm exec tsx scripts/skill-inline-guard.ts"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh skill-inline-guard -- pnpm exec tsx scripts/hooks/skill-inline-guard.ts"
           }
         ]
       },
@@ -44,15 +44,15 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh subagent-background-guard -- sh scripts/subagent-background-guard.sh"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh subagent-background-guard -- sh scripts/hooks/subagent-background-guard.sh"
           },
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh double-background-guard -- sh scripts/double-background-guard.sh"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh double-background-guard -- sh scripts/hooks/double-background-guard.sh"
           },
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh github-provenance-guard -- sh scripts/github-provenance-guard.sh"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh github-provenance-guard -- sh scripts/hooks/github-provenance-guard.sh"
           }
         ]
       },
@@ -61,7 +61,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh subagent-background-guard -- pnpm exec tsx scripts/subagent-background-guard.ts"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh subagent-background-guard -- pnpm exec tsx scripts/hooks/subagent-background-guard.ts"
           }
         ]
       },
@@ -70,7 +70,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh workflow-edit-guard -- sh scripts/workflow-edit-guard.sh"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh workflow-edit-guard -- sh scripts/hooks/workflow-edit-guard.sh"
           }
         ]
       },
@@ -79,7 +79,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh github-provenance-guard -- pnpm exec tsx scripts/github-provenance-guard.ts"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh github-provenance-guard -- pnpm exec tsx scripts/hooks/github-provenance-guard.ts"
           }
         ]
       },
@@ -88,7 +88,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/guard-wrap.sh github-search-fields-guard -- pnpm exec tsx scripts/github-search-fields-guard.ts"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh github-search-fields-guard -- pnpm exec tsx scripts/hooks/github-search-fields-guard.ts"
           }
         ]
       }
@@ -99,11 +99,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/stale-info-hint.sh || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/stale-push-hint.sh || true"
           },
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/bash-rules-hint.sh || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/bash-rules-hint.sh || true"
           }
         ]
       },
@@ -112,7 +112,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/read-first-hint.sh || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/read-first-hint.sh || true"
           }
         ]
       },
@@ -121,7 +121,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm exec tsx scripts/skill-rules-hint.ts || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm exec tsx scripts/hooks/skill-rules-hint.ts || true"
           }
         ]
       }
@@ -132,11 +132,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/stale-info-hint.sh || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/stale-push-hint.sh || true"
           },
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/bash-rules-hint.sh || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/bash-rules-hint.sh || true"
           }
         ]
       },
@@ -145,7 +145,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/read-first-hint.sh || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/read-first-hint.sh || true"
           }
         ]
       }
@@ -156,7 +156,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm install && (pnpm exec tsx scripts/unshallow-on-start.ts || true)"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm install && (pnpm exec tsx scripts/hooks/unshallow-on-start.ts || true)"
           }
         ]
       },
@@ -165,7 +165,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && [ -f .session-logs/pending.scratch.json ] && pnpm exec tsx scripts/log-session.ts --land || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && [ -f .session-logs/pending.scratch.json ] && pnpm exec tsx scripts/session/log-session.ts --land || true"
           }
         ]
       }
@@ -176,7 +176,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && [ -f .session-logs/pending.scratch.json ] && pnpm exec tsx scripts/log-session.ts --land || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && [ -f .session-logs/pending.scratch.json ] && pnpm exec tsx scripts/session/log-session.ts --land || true"
           }
         ]
       }
@@ -187,7 +187,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm exec tsx scripts/log-session.ts --land"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm exec tsx scripts/session/log-session.ts --land"
           }
         ]
       }
@@ -197,7 +197,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm exec tsx scripts/skill-rules-hint.ts || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && pnpm exec tsx scripts/hooks/skill-rules-hint.ts || true"
           }
         ]
       }

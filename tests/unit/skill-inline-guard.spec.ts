@@ -13,7 +13,7 @@ import { checkSkillInlineCall, denyOutputFor, formatGuardMessage } from '../../s
 import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const SCRIPT = join(root, 'scripts', 'skill-inline-guard.ts')
+const SCRIPT = join(root, 'scripts', 'hooks', 'skill-inline-guard.ts')
 
 /** A transcript `user` record carrying a slash-command expansion, in the exact
  *  shape a live transcript uses — the same fixture shape as

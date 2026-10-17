@@ -28,7 +28,7 @@
 // a well-formed call (a guard must never wedge normal tool use).
 //
 // Pure core (`checkToolCall`, `denyOutputFor`) is kept separate from the
-// shared stdin/bootstrap plumbing (`guard-io.ts`, issue #1080) — the one guard
+// shared stdin/bootstrap plumbing (`hook-io.ts`, issue #1080) — the one guard
 // there wired with `failOpen: true`, since it must never deny a call it could
 // not positively identify.
 //

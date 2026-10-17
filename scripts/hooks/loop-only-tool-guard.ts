@@ -12,7 +12,7 @@
 // re-sent `/audit-docs` mid-PR-review had it not been cancelled (#814).
 //
 // Pure core (`detectSessionMode`, `checkLoopOnlyToolCall`) is kept separate from
-// the shared stdin/`--dry-run`/bootstrap plumbing (`guard-io.ts`, issue #1080);
+// the shared stdin/`--dry-run`/bootstrap plumbing (`hook-io.ts`, issue #1080);
 // `--dry-run` exercises the same core by hand, so the decision is inspectable
 // without a live tool call (an unattended hook is human-only to merge,
 // ADR-0004; `--dry-run` keeps that review tractable).

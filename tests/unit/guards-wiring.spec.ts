@@ -11,11 +11,11 @@ const settings = JSON.parse(readFileSync(join(root, '.claude', 'settings.json'),
 const commands: string[] = settings.hooks.PreToolUse.flatMap((h: { hooks: { command: string }[] }) =>
   h.hooks.map((c) => c.command),
 )
-const guards = globSync('scripts/*-guard.ts', { cwd: root }).map((f) => basename(f, '.ts'))
+const guards = globSync('scripts/hooks/*-guard.ts', { cwd: root }).map((f) => basename(f, '.ts'))
 
-describe('every scripts/*-guard.ts is wired', () => {
+describe('every scripts/hooks/*-guard.ts is wired', () => {
   it.each(guards)('%s runs from a PreToolUse hook', (guard) => {
-    const wired = commands.filter((c) => c.includes(`scripts/${guard}.`))
+    const wired = commands.filter((c) => c.includes(`scripts/hooks/${guard}.`))
     expect(wired, `no PreToolUse hook runs ${guard}`).not.toHaveLength(0)
     if (!FAIL_OPEN.includes(guard)) for (const c of wired) expect(c).toContain(`guard-wrap.sh ${guard} --`)
   })

@@ -5,7 +5,7 @@
 // this has actually been violated before, so this check is scoped to that
 // collection rather than content-wide.
 //
-// Sibling to `validate-content.ts`/`validate-content-refs.ts` in the same
+// Sibling to `validate-content-schema.ts`/`validate-content-refs.ts` in the same
 // `validate:content` chain (package.json), kept as its own small script
 // rather than folded into `validate-content-refs.ts` — that script's scope is
 // documented narrowly (Atlas/Midden referential integrity); this check has no

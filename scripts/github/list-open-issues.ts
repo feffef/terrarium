@@ -3,13 +3,13 @@
 // full issue bodies with no compact mode and have overflowed the tool's own
 // output-token ceiling four times across a recent 20-session survey window
 // (issue #494) — into a direct, compact `gh api` lookup. Mirrors
-// `recent-prs.ts`'s fix for the same overflow shape on the PR side (issue
+// `list-recent-prs.ts`'s fix for the same overflow shape on the PR side (issue
 // #319).
 //
 // Deliberate scope limit: only `number`/`title`/`labels`/`updatedAt` — the
 // same allowlist `gh issue list --json number,title,labels,updatedAt` would
 // give. No body, no comments, no author (out of scope, same reasoning as
-// `recent-prs.ts`).
+// `list-recent-prs.ts`).
 //
 // `gh issue list` itself goes through GitHub's GraphQL API, which this
 // environment's proxy can reject for anything outside a pinned PR-review

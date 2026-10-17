@@ -31,7 +31,7 @@ import {
 import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const SCRIPT = join(root, 'scripts', 'github-provenance-guard.ts')
+const SCRIPT = join(root, 'scripts', 'hooks', 'github-provenance-guard.ts')
 
 const COMMENT = 'mcp__github__add_issue_comment'
 const header = (id: string): string => `\u{1F916} [Claude Opus 5](https://claude.ai/code/${id})`
@@ -423,7 +423,7 @@ describe('the CLI as the PreToolUse hook would invoke it (stdin JSON → stdout 
   it('END TO END #1900: denies a Bash `gh api` body without the header, through the sh pre-filter', () => {
     writeTranscript('session_REAL')
     const run = (command: string): string =>
-      execFileSync('sh', [join(root, 'scripts', 'github-provenance-guard.sh')], {
+      execFileSync('sh', [join(root, 'scripts', 'hooks', 'github-provenance-guard.sh')], {
         cwd: root,
         input: JSON.stringify({ tool_name: 'Bash', tool_input: { command }, transcript_path: transcriptPath, cwd: scratch }),
         env: { ...process.env, CLAUDE_CODE_REMOTE_SESSION_ID: '' },

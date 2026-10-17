@@ -37,7 +37,7 @@
 // visible follow-up correction, never a rewrite of the original.
 //
 // Pure core (`checkGithubProvenance`) is kept separate from the shared
-// stdin/bootstrap plumbing (`guard-io.ts`, issue #1080) and this guard's own
+// stdin/bootstrap plumbing (`hook-io.ts`, issue #1080) and this guard's own
 // transcript-ground-truth resolution (`main`).
 //
 // Second condition, same registry (issue #886): GitHub silently strips a bare
@@ -81,12 +81,12 @@ const REF = 'ADR-0017'
 
 /** A global copy of `SESSION_TRAILER` for `matchAll` — the last-match rule needs
  *  every occurrence (issue #692). Built locally rather than adding the `g` flag
- *  to the shared export: `provenance-footer.ts` calls `SESSION_TRAILER.test()`,
+ *  to the shared export: `commit-trailer.ts` calls `SESSION_TRAILER.test()`,
  *  which is stateful (`lastIndex`) on a global regex and would break under
  *  repeated calls.
  *
  *  **Not dead code, despite issue #784.** That issue scheduled the removal of
- *  this constant and its `git-helpers` import along with the legacy
+ *  this constant and its `git` import along with the legacy
  *  body-surface fallback, on the correct premise that nothing would use it once
  *  bodies required the header. Removing that fallback (ADR-0017)
  *  gave the trailer a new, permanent job: reading the COMMIT surface, where

@@ -19,7 +19,7 @@ import {
 import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const SCRIPT = join(root, 'scripts', 'deferred-tool-guard.ts')
+const SCRIPT = join(root, 'scripts', 'hooks', 'deferred-tool-guard.ts')
 
 /** Run the guard exactly as the PreToolUse hook would: JSON on stdin, capture
  *  stdout. Returns the parsed deny object, or null when the guard stayed silent

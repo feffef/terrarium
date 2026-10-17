@@ -16,13 +16,13 @@
     "lint": "eslint . --cache --cache-strategy content --cache-location node_modules/.cache/eslint/",
     "test": "nuxt prepare && vitest run tests/unit",
     "test:e2e": "vitest run tests/e2e",
-    "validate:content": "tsx scripts/validate-content.ts && tsx scripts/validate-content-refs.ts && tsx scripts/validate-skill-cadence.ts && tsx scripts/validate-prune-trials.ts && tsx scripts/validate-adr-rules.ts",
-    "verify:skills-lock": "tsx scripts/verify-skills-lock.ts",
-    "verify:mermaid": "tsx scripts/verify-mermaid.ts",
-    "render:mermaid": "tsx scripts/render-mermaid.ts",
-    "check:worktrees": "tsx scripts/check-worktrees.ts",
+    "validate:content": "tsx scripts/gate/validate-content-schema.ts && tsx scripts/gate/validate-content-refs.ts && tsx scripts/gate/validate-skill-cadence.ts && tsx scripts/gate/validate-prune-trials.ts && tsx scripts/gate/validate-adr-rules.ts",
+    "verify:skills-lock": "tsx scripts/gate/validate-skills-lock.ts",
+    "verify:mermaid": "tsx scripts/gate/validate-mermaid-svgs.ts",
+    "render:mermaid": "tsx scripts/gate/render-mermaid.ts",
+    "check:worktrees": "tsx scripts/git/check-worktrees.ts",
     "gate": "pnpm verify:skills-lock && pnpm verify:mermaid && pnpm lint && pnpm typecheck && pnpm validate:content && pnpm test && pnpm build && pnpm test:e2e",
-    "gate:scoped": "tsx scripts/gate.ts"
+    "gate:scoped": "tsx scripts/gate/gate.ts"
   },
   "dependencies": {
     "@nuxt/content": "^3.16.1",

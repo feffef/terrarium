@@ -16,7 +16,7 @@
 //                           positive silently drops a real human comment.
 //
 // Commits are NOT covered here: a commit message renders no markdown, and the
-// harness's own template emits the two-line trailer that `provenance-footer.ts`
+// harness's own template emits the two-line trailer that `commit-trailer.ts`
 // backstops.
 
 /** The bot icon opening the header. */
@@ -24,7 +24,7 @@ export const BOT_ICON = '🤖'
 
 /** The ADR-0017 provenance header: bot icon, a label, linked to the session.
  *  The single code home for the format — `reconstructFooterValues()`
- *  (provenance-footer.ts) resolves both arguments for the current session, so a
+ *  (commit-trailer.ts) resolves both arguments for the current session, so a
  *  caller never hand-assembles either (CLAUDE.md: never reconstruct an
  *  identifier from memory). */
 export function provenanceHeader(label: string, sessionUrl: string): string {

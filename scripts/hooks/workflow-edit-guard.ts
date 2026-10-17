@@ -9,7 +9,7 @@
 //
 // Runs unattended, so it is human-only to merge (ADR-0004). Pure
 // core (below) split from the shared stdin/`--dry-run`/bootstrap plumbing
-// (`guard-io.ts`, issue #1080), per docs/agents/guards.md.
+// (`hook-io.ts`, issue #1080), per docs/agents/guards.md.
 //
 // Usage:
 //   sh scripts/hooks/workflow-edit-guard.sh                 # the installed hook entry

@@ -484,7 +484,7 @@ export function resolveGroundTruthFromTranscript(
 /** `claude-opus-4-8` → `Claude Opus 4.8` — the display wording the harness's own
  *  commit template uses for the `Co-Authored-By:` line (ADR-0017). Moved here from
  *  `log-session.ts` (issue #346) so the direct-to-`main` log-commit footer and the
- *  commit-msg footer guard (`provenance-footer.ts`) share one formatter, never fork it. */
+ *  commit-msg footer guard (`commit-trailer.ts`) share one formatter, never fork it. */
 export function formatModelId(id: string): string {
   const m = /^claude-([a-z]+)-(.+)$/.exec(id)
   if (!m) return id

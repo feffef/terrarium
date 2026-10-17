@@ -22,7 +22,7 @@ import { toUtcIso } from './list-merges-since.ts'
 import { root, fail, runIfMain } from '../lib/cli.ts'
 
 // Re-exported so an existing importer of `RawMergeCommit` from this module
-// (its original home) keeps working now that `git-helpers.ts` owns it
+// (its original home) keeps working now that `git.ts` owns it
 // (issue #448 code review — single-homing the shared merge-log reader).
 export type { RawMergeCommit } from '../lib/git.ts'
 

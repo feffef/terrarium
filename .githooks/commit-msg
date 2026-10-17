@@ -2,7 +2,7 @@
 # ADR-0017 provenance-footer backstop (issue #346). The harness's commit-message
 # template does not reliably inject the two-line footer on cloud `git commit -m`;
 # this hook appends it when absent, reconstructing the values repo-side (see
-# scripts/provenance-footer.ts). Installed via `core.hooksPath .githooks`, set in
+# scripts/session/commit-trailer.ts). Installed via `core.hooksPath .githooks`, set in
 # package.json's `postinstall` (which runs on every `pnpm install`).
 #
 # FAILS OPEN: any error — no tsx binary resolvable, a script bug, a missing
@@ -19,5 +19,5 @@ root=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
 # silently lost the trailer, hit twice in one day).
 common_dir=$(git rev-parse --git-common-dir 2>/dev/null) || exit 0
 main_root=$(cd "$(dirname "$common_dir")" && pwd) || exit 0
-"$main_root/node_modules/.bin/tsx" "$root/scripts/provenance-footer.ts" "$1" >/dev/null 2>&1 || exit 0
+"$main_root/node_modules/.bin/tsx" "$root/scripts/session/commit-trailer.ts" "$1" >/dev/null 2>&1 || exit 0
 exit 0

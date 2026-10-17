@@ -19,7 +19,7 @@ import {
 import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const SCRIPT = join(root, 'scripts', 'loop-only-tool-guard.ts')
+const SCRIPT = join(root, 'scripts', 'hooks', 'loop-only-tool-guard.ts')
 
 /** A transcript `user` record carrying a slash-command expansion, in the exact
  *  shape a live transcript uses (verified against a real jsonl, not guessed). */

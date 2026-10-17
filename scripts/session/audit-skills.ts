@@ -90,7 +90,7 @@ export interface OnDiskSkill {
   description: string
   /** False when its frontmatter sets `disable-model-invocation: true`. */
   modelInvoked: boolean
-  /** `scripts/*.ts` paths its SKILL.md names — its resources, watched for
+  /** `scripts/` paths (any depth) its SKILL.md names — its resources, watched for
    *  changes alongside its own folder. */
   scripts: string[]
 }
@@ -219,7 +219,7 @@ export interface Scorecard {
    *  topic-scoped doc reads 0 because that work didn't come up; a shell read
    *  is credited only when its output shows the doc (`shell-reads.ts`' header
    *  lists the gaps); and since subagent reads
-   *  are folded into the parent's list (`session-trace.ts`'s
+   *  are folded into the parent's list (`transcript-trace.ts`'s
    *  `foldSubagentTrace`), "opened" can mean a subagent opened it, not the
    *  session that hit the friction. Never a finding alone. */
   docReadCounts: Record<string, number>
@@ -388,7 +388,7 @@ export function toSession(raw: Record<string, unknown>, file: string, skillNames
       .filter((u: Record<string, unknown>) => HUMAN_INVOKED.test(String(u.reason ?? '')))
       .map((u: Record<string, unknown>) => String(u.name)),
     humanPromptedClosure: hasHumanPromptedClosure(frictions.map((fr: Record<string, unknown>) => String(fr.description ?? ''))),
-    // session-trace.ts's noise rule, reapplied on read to clean older logs.
+    // transcript-trace.ts's noise rule, reapplied on read to clean older logs.
     docsRead: (Array.isArray(raw.docsRead) ? raw.docsRead : [])
       .map((d: Record<string, unknown>) => String(d.path ?? ''))
       .filter(isContentPath),
@@ -460,7 +460,7 @@ export function parseSessionTrailers(raw: string): SessionTrailerRef[] {
  *  unanchored `SESSION_TRAILER` matched it, inventing an orphan for the elided
  *  id `session_01…\`)`. That is issue #692's class of bug — a quoted marker read
  *  as authorship — and `SESSION_TRAILER` stays as-is because other readers
- *  (`provenance-footer.ts`, `github-provenance-guard.ts`) want its looser reach. */
+ *  (`commit-trailer.ts`, `github-provenance-guard.ts`) want its looser reach. */
 function legacyTrailerSession(body: string): string | undefined {
   for (const line of body.split('\n')) {
     if (!/^Claude-Session:/.test(line)) continue

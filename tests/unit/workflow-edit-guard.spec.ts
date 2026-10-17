@@ -19,8 +19,8 @@ import {
 import { envWithTsxShim, runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const SCRIPT = join(root, 'scripts', 'workflow-edit-guard.ts')
-const PREFILTER = join(root, 'scripts', 'workflow-edit-guard.sh')
+const SCRIPT = join(root, 'scripts', 'hooks', 'workflow-edit-guard.ts')
+const PREFILTER = join(root, 'scripts', 'hooks', 'workflow-edit-guard.sh')
 /** The guard denies only in a cloud session (issue #2174), so its CLI runs get one. */
 const CLOUD = { CLAUDE_CODE_REMOTE_SESSION_ID: 'cse_01TestCloudSession' }
 const cloudEnv = (): NodeJS.ProcessEnv => ({ ...process.env, ...CLOUD })

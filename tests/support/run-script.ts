@@ -52,11 +52,11 @@ export const FORWARDED = 'tsx-ran'
  *  without paying a tsx start per case. Returns the pre-filter's stdout. */
 export function prefilterReaching(script: string): (input: string) => string {
   const dir = tempDir('prefilter-')
-  mkdirSync(join(dir, 'scripts'))
+  mkdirSync(join(dir, 'scripts/hooks'), { recursive: true })
   mkdirSync(join(dir, 'node_modules/.bin'), { recursive: true })
-  copyFileSync(join(root, 'scripts', script), join(dir, 'scripts', script))
+  copyFileSync(join(root, 'scripts/hooks', script), join(dir, 'scripts/hooks', script))
   const tsx = join(dir, 'node_modules/.bin/tsx')
   writeFileSync(tsx, `#!/bin/sh\ncat >/dev/null\nprintf '${FORWARDED}'\n`)
   chmodSync(tsx, 0o755)
-  return (input) => execFileSync('sh', [join('scripts', script)], { cwd: dir, input, encoding: 'utf8' })
+  return (input) => execFileSync('sh', [join('scripts/hooks', script)], { cwd: dir, input, encoding: 'utf8' })
 }

@@ -7,7 +7,7 @@ import { checkSearchFields, denyOutputFor, SEARCH_FIELDS_TOOLS } from '../../scr
 import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
-const SCRIPT = join(root, 'scripts', 'github-search-fields-guard.ts')
+const SCRIPT = join(root, 'scripts', 'hooks', 'github-search-fields-guard.ts')
 
 describe('checkSearchFields() — the pure predicate', () => {
   describe.each(SEARCH_FIELDS_TOOLS)('%s', (tool) => {

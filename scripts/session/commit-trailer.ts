@@ -101,7 +101,7 @@ function coAuthorModelName(text: string): string | null {
 
 /** True when BOTH footer lines are already present (harness template fired, or a
  *  `git commit -F` path already appended them). The `Claude-Session:` half reuses
- *  the single-homed `SESSION_TRAILER` pattern (git-helpers.ts) rather than coining
+ *  the single-homed `SESSION_TRAILER` pattern (git.ts) rather than coining
  *  a second one. Drives the idempotency guarantee: never double-append. */
 export function hasProvenanceFooter(message: string): boolean {
   return COAUTHOR_LINE.test(message) && SESSION_TRAILER.test(message)
