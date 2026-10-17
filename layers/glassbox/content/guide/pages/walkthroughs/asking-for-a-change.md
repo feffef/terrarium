@@ -1,7 +1,7 @@
 ---
 title: Asking for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
-revision: '8ac5621f974770abfe88f714f788215d9d74437b'
+revision: 'dc065a0d75b4be568e3efc8cff6e54334166edab'
 revisionDate: '2026-10-17'
 ---
 
@@ -89,7 +89,7 @@ Once the PR has merged, the session runs `close-session` again and marks its log
 
 ## A real case
 
-On 15 October 2026 a Trusted user asked a session to install the `retro` Skill from the `mattpocock/skills` pack. The session installed it with the skills CLI, moved it into `.agents/skills/` with a link in `.claude/skills/`, and opened PR #2089: four files, among them :file[.agents/skills/retro/SKILL.md], and no Human-only path. It ran `pnpm gate:scoped` but skipped `code-review`, since the diff was an unmodified copy of upstream, and its verdict comment said it was merging on that user's instruction. CI's Gate went green and the PR merged within four minutes of opening.
+On 15 October 2026 a Trusted user asked a session to install the `retro` Skill from the `mattpocock/skills` pack. The session installed it with the skills CLI, moved it into `.agents/skills/` with a link in `.claude/skills/`, and opened [PR #2089](https://github.com/feffef/terrarium/pull/2089): four files, among them :file[.agents/skills/retro/SKILL.md], and no Human-only path. It ran `pnpm gate:scoped` but skipped `code-review`, since the diff was an unmodified copy of upstream, and its verdict comment said it was merging on that user's instruction. CI's Gate went green and the PR merged within four minutes of opening.
 
 ## Where next
 

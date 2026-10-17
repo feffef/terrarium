@@ -104,8 +104,8 @@
   initial-value: 0px;
 }
 @keyframes gb-scroll-cue {
-  from { --gb-fade: 48px; }
-  95% { --gb-fade: 48px; }
+  from { --gb-fade: 96px; }
+  95% { --gb-fade: 96px; }
   to { --gb-fade: 0px; }
 }
 body:has(.gb) { margin: 0; }

@@ -3,7 +3,7 @@ defineProps<{ date: string; placement: 'header' | 'end'; source?: string }>()
 </script>
 
 <template>
-  <p class="updated" :class="placement">Last updated <time :datetime="date">{{ formatGlassboxDate(date) }}</time><template v-if="source"> · <a :href="source">Source ↗</a></template></p>
+  <p class="updated" :class="placement">Last updated <time :datetime="date">{{ formatGlassboxDate(date) }}</time><template v-if="source"> · <a :href="source" title="This page's file on main, which may be newer than this edition">Latest source on GitHub ↗</a></template></p>
 </template>
 
 <style scoped>
