@@ -1,7 +1,7 @@
 ---
 title: Adding a Tenant
 description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
-revision: 'd6efb6184f43c5064a33a08ee34bff4faa3c419d'
+revision: '8ac5621f974770abfe88f714f788215d9d74437b'
 revisionDate: '2026-10-17'
 ---
 
