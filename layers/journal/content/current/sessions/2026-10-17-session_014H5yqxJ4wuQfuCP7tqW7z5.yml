@@ -1,0 +1,291 @@
+schemaVersion: 1
+session: session_014H5yqxJ4wuQfuCP7tqW7z5
+startedAt: 2026-10-17T06:39:10Z
+endedAt: 2026-10-17T07:11:05Z
+kind: interactive
+goal: Clear the issue backlog in one clear-backlog run
+status: in-review
+outcome: 8 issues triaged, 1 closed as done, 6 built into 5 PRs, 1 parked until 2026-10-23
+summary: "The owner started /clear-backlog. No issue was ready-for-agent, so the default sweep picked 8 eligible issues. I left out #2073 and #2167 as hook-wiring changes, as the Skill says; the owner then said to include them (human-instructed). The explore workflow closed #2075 as done (the owner had created the Routine) and returned 7 grill questions. The owner accepted every pick (human-instructed): #2073 onFailure block, #2196 save-handback script, #2195 premise bullet rewritten to fire at proposing time, #2201 verdict ask in blind briefs plus guide-only wording, #2193 directory cites compare listings, #2167 split (ADR-0021 paths now, hook removal after the prune trial), #2190 kept open until 2026-10-23. The build workflow produced five branches that passed review. PRs: #2204 (guards, human merge, live crash probe still owed), #2205 (save-handback), #2206 (#2195 and #2201; the Merge-your-own-PR bullet was joined to one line to keep the line count), #2207 (glassbox dir cites), #2208 (ADR-0021 paths, human merge)."
+prs:
+  - "2204"
+  - "2205"
+  - "2206"
+  - "2207"
+  - "2208"
+docsRead:
+  - path: GLOSSARY.md
+    reason: session-start read; terms for Routine, Workflow and Trusted
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: session-start read
+    useful: partly
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: step 1 sweep set and eligibility rules
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: before git fetch; confirmed origin/main...HEAD diffs
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: label updates replace the set; comments via add_issue_comment
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: landing recipe and verdict-comment step before merge-pr.ts
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: label strings
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: before labelling; supersession and prune-trial check
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: "to decide whether #2073 and #2167 count as guard or hook-wiring changes"
+    useful: yes
+  - path: .agents/skills/grilling/SKILL.md
+    reason: round format
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/scripts/glassbox-update.ts
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: the owner's command
+  - name: close-session
+    reason: PR-open log
+  - name: writing-for-agents
+    reason: (no reason given)
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: My first git command ran before I read git-conventions.md; a hook flagged it after the fact. The command was read-only.
+    solution: Nothing needed; the hook's late reminder did its job.
+    severity: nit
+  - description: The clear-backlog Skill leaves hook-wiring issues out by default, and the owner had to tell me to include them.
+    solution: Ask about that exclusion at the start of the run, or drop it when a Trusted owner starts the run, since a human merge already controls those files.
+    severity: minor
+  - description: Workflow results are nested JSON in .output files, so reading them took a one-off node script each time.
+    solution: A small script that prints a clear-backlog run's results (outcome, question, decisions, judgement calls) from the .output file.
+    severity: nit
+durationSec: 1914
+models:
+  claude-opus-5-5: 87
+toolCounts:
+  Bash: 21
+  Read: 1
+  Workflow: 3
+  ToolSearch: 3
+  PushNotification: 1
+  mcp__github__add_issue_comment: 7
+  mcp__github__issue_write: 5
+  mcp__github__create_pull_request: 5
+  mcp__claude-code-remote__subscribe_pr_activity: 5
+  Skill: 1
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - .claude/rules/adr-0021.md
+  - tests/unit/save-handback.spec.ts
+  - scripts/session/save-handback.ts
+  - .agents/skills/audit-docs/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/guards.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+docsReadBySubagents:
+  - .agents/skills/triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/visitor-loop/refiner-brief.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - layers/glassbox/GLOSSARY.md
+  - docs/agents/environment-caveats.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/0021-multi-context-domain-docs.md
+subagents:
+  - type: workflow-subagent
+    task: "triage #2201"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2190"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2193"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2196"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2075"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2195"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build adr-0021-planning-skill-paths
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards premise-and-verdict-asks r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build premise-and-verdict-asks
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Spec premise-and-verdict-asks r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec premise-and-verdict-asks r3
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build save-handback-script
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards glassbox-update-dir-cites r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards guards-onfailure-block r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec guards-onfailure-block r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix premise-and-verdict-asks r2
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards premise-and-verdict-asks r3
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix save-handback-script r1
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Spec save-handback-script r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec guards-onfailure-block r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards save-handback-script r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build glassbox-update-dir-cites
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: fix premise-and-verdict-asks r1
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards premise-and-verdict-asks r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards save-handback-script r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec adr-0021-planning-skill-paths r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards guards-onfailure-block r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards adr-0021-planning-skill-paths r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec save-handback-script r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec premise-and-verdict-asks r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build guards-onfailure-block
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec glassbox-update-dir-cites r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix guards-onfailure-block r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2073"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2167"
+    model: claude-opus-5-5
+gitBranch: ccr-64096a49-qt3ry9
+entrypoint: remote_mobile
+cliVersion: 2.1.302
+landedBy: Stop
