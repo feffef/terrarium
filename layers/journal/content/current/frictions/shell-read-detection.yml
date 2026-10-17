@@ -20,16 +20,6 @@ fixes:
     date: "2026-10-16"
     summary: "Made the shell-read advisory's text neutral: it no longer calls a disputed credit a false positive and tells the agent to check the transcript for the earlier reader."
 occurrences:
-  - session: session_01BXoQpiEuaGZJVRQB7XpsFi
-    date: "2026-10-02"
-    severity: moderate
-    description: "SHELL-READ-DETECTION miss: command 'cd /home/user/terrarium/docs/adr && for f in 000*.md; do echo \"=== $f\"; cat \"$f\"; done' (and 001*, 002*) streamed every docs/adr/00NN-*.md ADR, but none appear as detected or rejected"
-    solution: "Teach the extractor to resolve a for-loop glob fed to cat relative to the cd target; note the output was also read back via Read on a tool-results file, which credits no ADR path either"
-  - session: session_01VC6tZCm3HYs9BsJ7JrQQ5Z
-    date: "2026-10-02"
-    severity: moderate
-    description: "SHELL-READ-DETECTION miss: a subagent's glob loop `for f in docs/adr/0001* docs/adr/0006* docs/adr/0021* docs/adr/0028*; do echo \"=== $f\"; cat \"$f\"; done` was rejected as 'not a reader command', so docs/adr/0001-single-container-baked-multitenancy.md is uncredited (0006/0021/0028 were credited by other commands); a sibling loop with `cat docs/adr/$f-*.md` WAS counted"
-    solution: "Teach the detector that a `for ... in <globs>; do cat \"$f\"` loop reads each glob's expansion, as it already does for the `$f-*.md` form"
   - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
     date: "2026-10-03"
     severity: moderate

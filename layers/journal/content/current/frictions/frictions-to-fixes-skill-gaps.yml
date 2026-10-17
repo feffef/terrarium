@@ -2,7 +2,7 @@ name: frictions-to-fixes-skill-gaps
 summary: "The frictions-to-fixes Skill leaves recurring situations unspecified, so the run asks the owner or improvises."
 cause: "SKILL.md does not say what to do when each top regression already has an open issue, that the ledger PR may open before design, or how a ledger ref names a PR that does not exist yet; the user is asked or the run improvises. Signals: \"the Skill says ... but not what to do\", \"had to ask the user how many\"."
 surface: safe
-status: open
+status: tracked
 fixes:
   - pr: 2149
     date: "2026-10-16"
