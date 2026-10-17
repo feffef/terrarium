@@ -16,8 +16,7 @@ import { dirname, isAbsolute, join, matchesGlob, relative } from 'node:path'
 import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runIfMain } from './hook-io.ts'
 import { extractTrace, subagentTranscript } from '../session/transcript-trace.ts'
 import { bashReadPaths } from '../session/shell-reads.ts'
-import { loadRules, type RuleFile } from './skill-rules-hint.ts'
-import { RULES_DIR, ruleBlock, rulePaths } from '../lib/adr-rules.ts'
+import { loadRules, RULES_DIR, ruleBlock, rulePaths, type RuleFile } from '../lib/adr-rules.ts'
 
 /** `loaded` gives the `.claude/rules/<file>` keys already in the session; it
  *  runs only on a match, so a miss never reads the transcript. A directory is a

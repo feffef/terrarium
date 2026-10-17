@@ -5,8 +5,7 @@
 //
 // Usage: pnpm exec tsx .agents/skills/close-session/scripts/always-loaded.ts
 import { readFileSync } from 'node:fs'
-import { loadRules } from '../../../../scripts/hooks/skill-rules-hint.ts'
-import { RULES_DIR, rulePaths } from '../../../../scripts/lib/adr-rules.ts'
+import { loadRules, RULES_DIR, rulePaths } from '../../../../scripts/lib/adr-rules.ts'
 import { runIfMain } from '../../../../scripts/lib/cli.ts'
 
 export function alwaysLoadedText(claudeMd: string, rules: { file: string; text: string }[]): string {

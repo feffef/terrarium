@@ -1,12 +1,26 @@
 // The ADR-rule parsing library: hashes, rule frontmatter, the pointer line and
-// the checks over them. `scripts/gate/validate-adr-rules.ts` is the gate CLI on top;
-// the hints and transcript-trace import this directly.
+// the checks over them. `scripts/gate/validate-adr-rules.ts` is the gate CLI on top.
 import { createHash } from 'node:crypto'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { frontmatterBlock } from './frontmatter.ts'
 
 export const ADR_DIR = 'docs/adr'
 export const RULES_DIR = '.claude/rules'
+
+export interface RuleFile {
+  file: string
+  text: string
+}
+
+/** Every rule file in `dir`; none when the directory is missing. */
+export function loadRules(dir = RULES_DIR): RuleFile[] {
+  if (!existsSync(dir)) return []
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.md'))
+    .map((file) => ({ file, text: readFileSync(join(dir, file), 'utf8') }))
+}
 
 export const adrHash = (text: string) => createHash('sha256').update(text).digest('hex').slice(0, 12)
 
