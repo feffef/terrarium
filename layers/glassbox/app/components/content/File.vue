@@ -18,6 +18,7 @@ const path = () => glassboxSlotText(slots)
   color: var(--gb-accent);
   text-decoration: underline 1px dotted;
   text-underline-offset: 4px;
+  overflow-wrap: anywhere;
 }
 span.file {
   color: inherit;
