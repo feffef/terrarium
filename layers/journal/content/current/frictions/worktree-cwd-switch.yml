@@ -2,7 +2,11 @@ name: worktree-cwd-switch
 summary: "A session's working directory moves into a worktree it dispatched, so session closure refuses and later commands run in the wrong place."
 cause: "Entering an impl agent's or probe's worktree (cd, or the harness moving the primary directory) makes log-session/close-session refuse from a linked worktree and leaves the shell in a deleted directory after removal. Signals: 'cd back to the main checkout', 'refuses from a linked worktree', 'deleted directory'."
 surface: safe
-status: tracked
+status: open
+fixes:
+  - pr: 2198
+    date: "2026-10-17"
+    summary: "log-session worktree refusal now says to cd back when the directory only drifted into an agent worktree."
 occurrences:
   - session: session_01GLWVkt3R3EnHJj5XpQEJQt
     date: "2026-10-15"
