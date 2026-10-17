@@ -53,13 +53,13 @@ act, once per session.
 - **Stay on the branch your session started on.** If that is `main`, fetch
   `origin main` and cut a new branch first.
 - **Invoke `close-session`** when you open a PR, and when a session only answers a question.
-- **Merge your own PR** with `scripts/github/merge-pr.ts <number>` once the ADR-0004
-  rule allows it.
+- **Merge your own PR** with `scripts/github/merge-pr.ts <number>` once ADR-0004 allows it.
 - **Verify before you state.** Only call something settled (an id, a count, a
   cause, another session's claim) if you checked it this turn against the
   source. A count is a fact only after you read every item.
-- **Question the premise.** Before you implement or harden a change, ask whether
-  it should exist and how big it needs to be; add no design beyond the issue.
+- **Question the premise.** Before you recommend, implement or harden a change,
+  give each part a reason of your own from the current goal; drop the parts you
+  can't, and add nothing beyond the ask.
 - **One home per fact.** Write each fact once; elsewhere, point to it. When a
   fact and reality differ, fix its home.
 - **Code comments say WHY, never WHAT.** Default to no comment. When the why

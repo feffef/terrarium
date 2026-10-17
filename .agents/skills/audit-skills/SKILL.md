@@ -83,7 +83,7 @@ this:
 > Report every finding labelled silent failure or missed invocation, with its
 > session ids, quoted evidence, what the Skill promised against what happened,
 > and your best guess at why. If there are none, say how many sessions you
-> checked.
+> checked. For each rule and doc that loaded for you or that you read: its path, why it loaded or was read, and useful yes, partly or no.
 
 A subagent's report is hearsay until you have verified it (CLAUDE.md). Check
 each finding against the source it cites before you use it, and check one
