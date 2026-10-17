@@ -116,7 +116,7 @@ of the survey's commit (§1), commit:
 
 - `status: tracked` for what this run files or dispatches, with the issue in
   `ref` for a filed fix (a dispatched fix gets its PR in §8);
-- then the result of `pnpm exec tsx scripts/prune-friction-ledger.ts`, which
+- then the result of `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts`, which
   drops every occurrence before the horizon and deletes an entry left with none
   (git keeps them).
 

@@ -3,14 +3,14 @@
 // checks it (whitespace-normalised text, the session's UTC start date), so the
 // `frictions-to-fixes` survey never retypes it.
 //
-// Usage:  tsx scripts/ledger-occurrence.ts <session> <index> [<session> <index> ...]
+// Usage:  tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts <session> <index> [<session> <index> ...]
 //   `index` is the friction's position in the log's `frictions` list, as
 //   `session-frictions.ts --compact` prints it. Output is ready to paste under
 //   a cluster's `occurrences:`.
 import { Document, Scalar } from 'yaml'
-import { flattenText } from './session-frictions.ts'
-import { readSessionLogs } from './session-logs.ts'
-import { root, runIfMain } from './lib/cli.ts'
+import { flattenText } from '../../../../scripts/session-frictions.ts'
+import { readSessionLogs } from '../../../../scripts/session-logs.ts'
+import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 export function occurrenceBlock(log: Record<string, unknown>, index: number): string {
   const frictions = Array.isArray(log.frictions) ? log.frictions : []
@@ -30,7 +30,7 @@ export function occurrenceBlock(log: Record<string, unknown>, index: number): st
 
 function main(): void {
   const argv = process.argv.slice(2)
-  if (argv.length === 0 || argv.length % 2) throw new Error('usage: tsx scripts/ledger-occurrence.ts <session> <index> [<session> <index> ...]')
+  if (argv.length === 0 || argv.length % 2) throw new Error('usage: tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts <session> <index> [<session> <index> ...]')
   const logs = new Map(readSessionLogs(root, { archived: true }).map(({ data }) => [String(data.session), data]))
   for (let i = 0; i < argv.length; i += 2) {
     const log = logs.get(argv[i]!)

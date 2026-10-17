@@ -14,7 +14,7 @@ import {
   rawProblemFirstLines,
   selectTrials,
   type TrialWithSearchKey,
-} from '../../scripts/prune-trial-window.ts'
+} from '../../scripts/find-trial-window.ts'
 
 const LEDGER = `# header comment, ordinary YAML below
 trials:

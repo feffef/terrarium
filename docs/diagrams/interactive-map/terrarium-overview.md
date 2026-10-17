@@ -870,7 +870,7 @@ Every panel has the same rows, in this order. An empty row is hidden.
 | `scripts` | `scripts/` | – |
 | `code` | `app/`, `modules/`, `shared/`, `nuxt.config.ts`, `content.config.ts`, `layers/<tenant>/app/`, `layers/<tenant>/nuxt.config.ts`, `layers/<tenant>/tenant.config.ts`, `layers/<tenant>/tests/`, `tests/` | ADR-0001, ADR-0018 |
 | `content` | `layers/<tenant>/content/` | ADR-0001, ADR-0002 |
-| `journal` | `scripts/archive-journal-content.ts` | ADR-0009, ADR-0010 |
+| `journal` | `.agents/skills/digest/scripts/archive-journal-content.ts` | ADR-0009, ADR-0010 |
 | `logs` | `layers/journal/content/*/sessions/`, `shared/schemas/session.ts`, `scripts/log-session.ts` | ADR-0009 |
 | `inventory` | `layers/journal/content/*/skills/` | ADR-0015 |
 | `issues` | `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `.agents/skills/triage/`, `.agents/skills/auto-triage/` | ADR-0020, ADR-0022 |

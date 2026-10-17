@@ -21,7 +21,7 @@ export interface SessionLog {
 }
 
 /** A filename in both folders yields only its `current` copy: the archiver can
- *  amend a log back into `current` (scripts/archive-journal-content.ts). */
+ *  amend a log back into `current` (.agents/skills/digest/scripts/archive-journal-content.ts). */
 export function readSessionLogs(cwd: string, { archived }: { archived: boolean }): SessionLog[] {
   const seen = new Set<string>()
   const out: SessionLog[] = []

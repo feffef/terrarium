@@ -13,7 +13,7 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   `occurrence` so far. Append each friction in the window that matches an
   entry, whatever its severity; a session counts once, at its highest
   severity. An occurrence is the block
-  `pnpm exec tsx scripts/ledger-occurrence.ts <session> <index> [<session> <index> …]`
+  `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts <session> <index> [<session> <index> …]`
   prints (the friction's text copied from the log; a content test checks the
   copy), never retyped; pass all pairs in one call, as each takes seconds. A
   friction sits in one cluster unless its text names two causes. A new entry needs a cause seen twice, or one `moderate`, `major` or
@@ -26,7 +26,7 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   recurrence is its occurrences within it, counting only sessions that started
   after its fix merged when it has one. Write the ledger changes (new entries, appended occurrences,
   status changes) to the entry files. Survey the ledger with
-  `pnpm exec tsx scripts/prune-friction-ledger.ts --summary` (one line per entry
+  `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts --summary` (one line per entry
   with its fixes and its state; it lists the frictions two clusters share, for
   you to re-judge);
   open an entry file only for its evidence.
@@ -125,7 +125,7 @@ sources by issue or PR number or commit hash only, without copying their text; *
 **(c) your own frictions** from the run; **(d) the ledger changes**, each with its evidence, and the hash of the one
 commit on the current branch that holds them (`git commit -F <file>`; don't push
 or switch branches). Write each entry as the schema reads (never invented keys
-such as `fixes_append`), with occurrence blocks as `ledger-occurrence.ts`
+such as `fixes_append`), with occurrence blocks as `print-ledger-occurrence.ts`
 printed them; **(e) the regressions**: every cluster
 `--summary` shows as `still recurring`, with its count since the latest PR and its highest severity since; and
 **(f) each friction `--summary` lists in two clusters**, moved or kept because its text names

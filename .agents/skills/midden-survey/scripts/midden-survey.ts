@@ -107,7 +107,7 @@ export function parseDeletionLog(raw: string): DeletionLog {
  * Paths whose deletion is process residue, not discarded work — never Midden
  * candidates, so screened before any judgment:
  *  - `layers/journal/content/` — session logs and digests are archived by
- *    moving files (`scripts/archive-journal-content.ts`), so deletions there are churn —
+ *    moving files (`.agents/skills/digest/scripts/archive-journal-content.ts`), so deletions there are churn —
  *    except its `skills/` subtree (the Skill Inventory), authored content
  *    that is never archived by move (#1043);
  *  - `.claude/skills/` — symlinks mirroring `.agents/skills/`, where the real

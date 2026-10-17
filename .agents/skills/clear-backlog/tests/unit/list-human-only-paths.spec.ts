@@ -1,8 +1,8 @@
 import { rmSync } from 'node:fs'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
-import { HUMAN_MERGE_RULE } from '../../scripts/merge-pr.ts'
-import { humanOnlyPaths } from '../../scripts/human-only-paths.ts'
-import { commitFile, createGitFixture, git, type GitFixture } from '../support/git-fixture.ts'
+import { HUMAN_MERGE_RULE } from '../../../../../scripts/merge-pr.ts'
+import { humanOnlyPaths } from '../../scripts/list-human-only-paths.ts'
+import { commitFile, createGitFixture, git, type GitFixture } from '../../../../../tests/support/git-fixture.ts'
 
 const RULE = '---\npaths:\n  - ".claude/rules/**"\n  - "scripts/merge-pr.ts"\n---\n# rule\n'
 

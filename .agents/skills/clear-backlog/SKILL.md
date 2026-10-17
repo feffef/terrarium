@@ -127,7 +127,7 @@ branch, or its question or failure is in the report.
 
 Push each `ready-to-push` branch from its worktree and open its PR with the
 branch's decisions, its remaining judgement calls, any cherry-picked PR, and
-the Human-only paths that `pnpm exec tsx scripts/human-only-paths.ts
+the Human-only paths that `pnpm exec tsx .agents/skills/clear-backlog/scripts/list-human-only-paths.ts
 <worktree>` prints (a non-zero exit means the list couldn't be read: stop
 and report it); at the first PR open, invoke `close-session`
 (`in-review`). Land it with `docs/agents/pr-workflow.md`. For a later

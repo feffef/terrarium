@@ -5,10 +5,10 @@
 // parsed this file, so the corruption shipped unnoticed (whatever produced it
 // used a lenient YAML parser that silently mangled the merged entry instead
 // of erroring) and only surfaced later, on an unrelated branch, when
-// `scripts/prune-trial-window.ts` — which uses the strict `yaml` package —
+// `.agents/skills/prune-trial/scripts/find-trial-window.ts` — which uses the strict `yaml` package —
 // threw a `DUPLICATE_KEY` parse error.
 //
-// This script mirrors `prune-trial-window.ts`'s use of `yaml`'s `parse()`.
+// This script mirrors `find-trial-window.ts`'s use of `yaml`'s `parse()`.
 // That parser rejects a duplicate key in ANY mapping by default (verified:
 // `DUPLICATE_KEY`), and a merged-entry corruption is exactly a duplicate key
 // inside one trial's own mapping — so a single clean strict parse already
@@ -31,7 +31,7 @@ export interface PruneTrialsValidation {
 }
 
 /** Parses the ledger's raw YAML text with the same strict parser
- *  `prune-trial-window.ts` uses. Pure — no file I/O — so it's directly
+ *  `find-trial-window.ts` uses. Pure — no file I/O — so it's directly
  *  testable against a fixture string. */
 export function validatePruneTrialsYaml(yamlText: string): PruneTrialsValidation {
   let doc: unknown

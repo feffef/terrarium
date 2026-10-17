@@ -25,15 +25,15 @@
 // read `judgeable from:` below as something to hit precisely.
 //
 // Usage:
-//   tsx scripts/prune-trial-window.ts                # every open trial in the ledger
-//   tsx scripts/prune-trial-window.ts <problem-substr> # just the trial(s) whose
+//   tsx .agents/skills/prune-trial/scripts/find-trial-window.ts                # every open trial in the ledger
+//   tsx .agents/skills/prune-trial/scripts/find-trial-window.ts <problem-substr> # just the trial(s) whose
 //                                                        # problem text contains this
 import { readFileSync } from 'node:fs'
 import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
-import { fetchOriginMain } from './git-helpers.ts'
-import { root, runIfMain } from './lib/cli.ts'
+import { fetchOriginMain } from '../../../../scripts/git-helpers.ts'
+import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const LEDGER_PATH = '.agents/prune-trials.yml'
 const WINDOW_MS = 3 * 24 * 60 * 60 * 1000 // the trial window (ADR-0027); this constant is its home

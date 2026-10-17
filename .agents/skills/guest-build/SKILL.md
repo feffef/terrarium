@@ -37,8 +37,9 @@ the sole merge authority for guest work.
 Scan open issues labelled `ready-for-agent`. **Skip any that already has an open
 or merged linked PR** — check before dispatching, so a tight loop never
 double-builds a story already in flight. **Also skip any that already carries a
-fresh `guest-in-flight` marker** — see "Concurrency" below; `poll-guest-tickets.ts`
-already applies both skips.
+fresh `guest-in-flight` marker** — see "Concurrency" below;
+`pnpm exec tsx .agents/skills/guest-build/scripts/poll-guest-tickets.ts` prints
+the candidates (JSON; `[]` when none) and already applies both skips.
 
 ## Concurrency — the `guest-in-flight` marker
 

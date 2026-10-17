@@ -17,7 +17,7 @@
 // (truncated to its UTC calendar date), not its filename — the two can differ
 // when a session starts one day and ends the next.
 //
-// Usage:  tsx scripts/archive-journal-content.ts [--write]
+// Usage:  tsx .agents/skills/digest/scripts/archive-journal-content.ts [--write]
 //   (no flag) — print a report of what WOULD move, touch nothing
 //   --write   — actually `git mv` the aged-out files (preserves history);
 //               leaves the moves staged/unstaged for a normal reviewed
@@ -27,8 +27,8 @@ import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
-import { ARCHIVED_DIGESTS_DIR, ARCHIVED_SESSIONS_DIR, DIGESTS_DIR, SESSIONS_DIR } from './session-logs.ts'
-import { root, runIfMain } from './lib/cli.ts'
+import { ARCHIVED_DIGESTS_DIR, ARCHIVED_SESSIONS_DIR, DIGESTS_DIR, SESSIONS_DIR } from '../../../../scripts/session-logs.ts'
+import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 /** How many dates' worth of each kind stay on `current` after a sweep — 7
  *  Digests, and every session log belonging to the newest 7 session dates. */

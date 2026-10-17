@@ -32,7 +32,7 @@
 // occurrence (same session, same description) and then every session with no
 // friction left, so a session the ledger cites once is still surveyed for the
 // rest. Each friction keeps its `index` in the log, the handle
-// `scripts/ledger-occurrence.ts` takes.
+// `.agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts` takes.
 //
 // --out PATH always writes the JSON to PATH instead of the shared tmpdir
 // default, regardless of size — for a caller that wants the output at a

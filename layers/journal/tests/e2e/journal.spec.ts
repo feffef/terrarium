@@ -23,7 +23,7 @@ const SESSION_URL = /^https:\/\/claude\.ai\/code\/session_/
 
 // The `current` Space's Digest dates, oldest first — read live rather than
 // hardcoded so these assertions stay valid regardless of which dates
-// scripts/archive-journal-content.ts has moved out to `archived` (issue: the
+// .agents/skills/digest/scripts/archive-journal-content.ts has moved out to `archived` (issue: the
 // retention sweep ages a hardcoded date like 2026-07-04 out of `current` over
 // time).
 const repoRoot = fileURLToPath(new URL('../../../../', import.meta.url))
@@ -44,7 +44,7 @@ function currentSessions(): Record<string, unknown>[] {
 // Pick one `external: true` session's `goal` text (if any) and one ordinary
 // session's, live from `current`, rather than hardcoding a specific session id
 // — the same "read live" fix as currentDigestDates() above, for the same
-// reason: the retention sweep (scripts/archive-journal-content.ts) can move
+// reason: the retention sweep (.agents/skills/digest/scripts/archive-journal-content.ts) can move
 // any given session out to `archived`. `external` is genuinely rare (only
 // created when a fork PR lands, ADR-0009) and can age out of the
 // window entirely with no replacement yet landed — the fork-PR #631 salvage
@@ -353,7 +353,7 @@ describe('journal Tenant', async () => {
 
   // The archived Space dashboard must render cleanly on the same component
   // as `current` — no crash, no fallthrough to a not-found. Once
-  // scripts/archive-journal-content.ts moves real sessions/digests in,
+  // .agents/skills/digest/scripts/archive-journal-content.ts moves real sessions/digests in,
   // `archived` is no longer reliably empty, so this doesn't assert the
   // specific empty-state copy anymore (that would need a synthetic/mocked
   // fixture — this repo has no component-test infra for that yet).
@@ -545,7 +545,7 @@ describe('journal Tenant', async () => {
   // Deep-linking: loading the page with an item's anchor as the URL hash opens
   // that item on the client (the server never sees the fragment) AND scrolls it
   // into the viewport. Targets the oldest Digest still on `current` (read live,
-  // not hardcoded — scripts/archive-journal-content.ts ages old dates out) —
+  // not hardcoded — .agents/skills/digest/scripts/archive-journal-content.ts ages old dates out) —
   // it's last in the list, so it's below the fold on load, and the assertion
   // that `window.scrollY` actually moved proves the target genuinely needed
   // scrolling rather than being coincidentally already visible. The `<li>`'s id

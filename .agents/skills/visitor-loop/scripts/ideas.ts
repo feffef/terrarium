@@ -5,7 +5,7 @@
 // mechanical path only; a new runtime dependency would also escalate the
 // merge bar, ADR-0004).
 //
-// Mirrors `scripts/digest.ts`'s split: pure, unit-tested core (keyword
+// Mirrors `.agents/skills/digest/scripts/digest.ts`'s split: pure, unit-tested core (keyword
 // extraction, overlap scoring, clustering) behind a thin FS/CLI shell.
 //
 // Usage:  tsx .agents/skills/visitor-loop/scripts/ideas.ts gather [--threshold <n>] [--days <n>]

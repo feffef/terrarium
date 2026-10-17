@@ -20,7 +20,7 @@
 //
 // Fetch strategy (`gh`, else `curl`): `lib/github-client.ts`.
 //
-// Usage:  tsx scripts/poll-guest-tickets.ts
+// Usage:  tsx .agents/skills/guest-build/scripts/poll-guest-tickets.ts
 //   Prints the guest-authored, not-yet-linked `ready-for-agent` issues as
 //   compact JSON: [{ number, title, authorAssociation, htmlUrl }, ...].
 //   Empty array when there's nothing for guest-build to do.
@@ -32,11 +32,11 @@
 // timeline fetch below already covers this for free — the Timeline API's
 // `labeled` events carry the same `created_at`/`label` shape the marker
 // check needs, so no second API call is added for it.
-import { decodeHtmlEntities, listAll, resolveAccess } from './lib/github-client.ts'
-import type { RawIssueApiRecord } from './list-open-issues.ts'
-import { hasMarker, isMarkerFresh } from './guest-marker.ts'
-import { PUBLIC_ASSOCIATIONS } from './trust.ts'
-import { root, runIfMain } from './lib/cli.ts'
+import { decodeHtmlEntities, listAll, resolveAccess } from '../../../../scripts/lib/github-client.ts'
+import type { RawIssueApiRecord } from '../../../../scripts/list-open-issues.ts'
+import { hasMarker, isMarkerFresh } from '../../../../scripts/guest-marker.ts'
+import { PUBLIC_ASSOCIATIONS } from '../../../../scripts/trust.ts'
+import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const READY_FOR_AGENT_LABEL = 'ready-for-agent'
 

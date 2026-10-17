@@ -87,7 +87,7 @@ export const frictionClusterSchema = z
           severity: sessionSchema.shape.frictions.element.shape.severity,
           // A copy of the session's friction this occurrence is about, whose
           // severity is `severity`, so a later run can re-cluster without
-          // reading the session logs (`scripts/ledger-occurrence.ts` prints it).
+          // reading the session logs (`.agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts` prints it).
           description: z.string(),
           solution: z.string(),
         }),

@@ -2,7 +2,7 @@
 // every occurrence dated before it and deletes an entry left with none, so the
 // ledger never carries history git already keeps.
 //
-// Usage:  tsx scripts/prune-friction-ledger.ts [--today YYYY-MM-DD]
+// Usage:  tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts [--today YYYY-MM-DD]
 //   Edits `layers/journal/content/current/frictions/*.yml` in place and prints
 //   what it dropped. `--today` defaults to the current UTC date.
 //   `--summary` edits nothing and prints one line per entry: name, state (the
@@ -15,9 +15,9 @@
 import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { isMap, isSeq, parse as parseYaml, parseDocument } from 'yaml'
-import { LEDGER_HORIZON_DAYS, ledgerFixState } from '../layers/journal/app/utils/ledger.ts'
-import { LEDGER_DIR } from './session-frictions.ts'
-import { fail, flagValue, root, runIfMain } from './lib/cli.ts'
+import { LEDGER_HORIZON_DAYS, ledgerFixState } from '../../../../layers/journal/app/utils/ledger.ts'
+import { LEDGER_DIR } from '../../../../scripts/session-frictions.ts'
+import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 /** The oldest occurrence date the horizon keeps. */
 export function horizonStart(today: string): string {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { occurrenceBlock } from '../../scripts/ledger-occurrence.ts'
+import { occurrenceBlock } from '../../scripts/print-ledger-occurrence.ts'
 
 describe('occurrenceBlock()', () => {
   const log = {

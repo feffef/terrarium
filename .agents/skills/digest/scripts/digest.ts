@@ -6,7 +6,7 @@
 // low token cost). The UTC-boundary and attribution logic lives in pure,
 // unit-tested functions; the git/FS IO is a thin shell around them.
 //
-// Usage:  tsx scripts/digest.ts <command> [args]
+// Usage:  tsx .agents/skills/digest/scripts/digest.ts <command> [args]
 //   list [--now <iso>]     print closed UTC days that have activity but no digest
 //   gather <YYYY-MM-DD>     print one day's materials as JSON
 //
@@ -23,8 +23,8 @@ import { execFileSync } from 'node:child_process'
 import { existsSync, readdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR, readSessionLogs } from './session-logs.ts'
-import { fail, flagValue, resolveOutputTarget as outputTarget, root, runIfMain } from './lib/cli.ts'
+import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR, readSessionLogs } from '../../../../scripts/session-logs.ts'
+import { fail, flagValue, resolveOutputTarget as outputTarget, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
