@@ -1,0 +1,175 @@
+schemaVersion: 1
+session: session_01BZfZ9Ro87HdnHqwjc2j6m2
+startedAt: 2026-10-17T06:38:43Z
+endedAt: 2026-10-17T06:53:01Z
+kind: autonomous
+goal: Weekly update of the Glass Box guide to the latest main
+status: in-review
+outcome: "PR 2203 opened: guide re-pinned to d6efb61, 12 pages repointed after the scripts/ reorganisation, terms unchanged"
+summary: "Scheduled glassbox-update run, no human prompt. The script flagged 18 pages and 22 terms against 90 new commits, mostly the scripts/ move into gate/, hooks/, session/, github/, git/ and lib/. Six subagents re-checked pages in groups and the terms; most edits were path repoints and four Excerpt updates, plus one dropped unsupported history claim in the skills page. No term definition moved. Script reports no pages left; page tests, validate:content and gate:scoped are green, 12 changed pages were built and shot, code-review (Standards and Spec) found nothing. Open: Drafts Space pages still cite old script paths, outside this run's default scope. All work was agent-initiated by the schedule."
+prs:
+  - "2203"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: page shapes and Excerpt rules
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin and Check steps
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: scheduled-run closing steps; read only the relevant sections
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read late, after first git commands; changed nothing
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: not read before the first GitHub call; hook reminded after
+    useful: no
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts review usage
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL-MECHANICS.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: pre-push Standards and Spec review
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+  - name: glassbox-update
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git fetch and other git commands before reading docs/agents/git-conventions.md, which CLAUDE.md requires first.
+    solution: A hook reminder arrived only after the first command; loading it at session start would have avoided it.
+    severity: nit
+  - description: First GitHub call (create_pull_request) came before reading docs/agents/github-integration.md.
+    solution: Read it before the PR step; the hook reminder only came after the call.
+    severity: nit
+  - description: Read only parts of docs/agents/pr-workflow.md (grep and head) before pushing instead of in full.
+    solution: Read it in full once the first push is near.
+    severity: nit
+durationSec: 858
+models:
+  claude-sonnet-5-5: 68
+toolCounts:
+  Bash: 19
+  Agent: 8
+  ListAgents: 1
+  Read: 2
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL-MECHANICS.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/0005-skill-model.md
+  - docs/agents/guards.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/guest-contributions.md
+  - .agents/skills/close-session/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to the PR and stay within the Skill's scope; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; did not apply to a content re-pin
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; did not apply here
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rules load by path; did not apply here
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as code; did not apply here
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept volatile facts out of page prose; subagents confirmed no violation
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on page reads; no diagram changed
+    useful: no
+subagents:
+  - task: Update claude-code 01-03
+  - task: Update hooks, subagents, deploy
+  - task: Update git-github and walkthroughs
+  - task: Update nuxt pages
+  - task: Update terrarium-practice pages
+  - task: Re-check Glass Box terms
+  - task: Standards review of glassbox update
+  - task: Spec review of glassbox update
+gitBranch: claude/ecstatic-euler-9456jt
+entrypoint: remote_trigger
+cliVersion: 2.1.302
+trigger: glassbox-update
+ideas:
+  - Make glassbox-update's script flag Drafts pages too when a rename moves cited paths, so drafts do not silently go stale between runs
+landedBy: Stop
