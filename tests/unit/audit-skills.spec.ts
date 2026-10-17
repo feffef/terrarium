@@ -163,6 +163,8 @@ describe('scriptsNamedIn() / parseLandings() / pickSkillChanges() — a run answ
   it('finds the scripts a SKILL.md names, once each', () => {
     const md = 'Run `pnpm exec tsx scripts/owner-corrections.ts` then `scripts/ideas.ts gather`; `scripts/owner-corrections.ts` again. Not scripts/notes.md.'
     expect(scriptsNamedIn(md)).toEqual(['scripts/owner-corrections.ts', 'scripts/ideas.ts'])
+    const local = 'Run `pnpm exec tsx .agents/skills/digest/scripts/digest.ts`, then scripts/lib/cli.ts and `scripts/hooks/a.ts`.'
+    expect(scriptsNamedIn(local)).toEqual(['.agents/skills/digest/scripts/digest.ts', 'scripts/lib/cli.ts', 'scripts/hooks/a.ts'])
   })
 
   // Mirrors `git log --first-parent --name-only --pretty=format:REC%H SEP %cI`.

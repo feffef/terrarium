@@ -301,9 +301,10 @@ export function buildSkillRows(
   })
 }
 
-/** The `scripts/*.ts` paths a SKILL.md names, deduplicated, in order of first mention. */
+/** The `scripts/**.ts` and `.agents/skills/<name>/scripts/**.ts` paths a SKILL.md names, whole,
+ *  deduplicated, in order of first mention. */
 export function scriptsNamedIn(skillMd: string): string[] {
-  return [...new Set(skillMd.match(/\bscripts\/[\w.-]+\.ts\b/g) ?? [])]
+  return [...new Set(skillMd.match(/(?<![\w./-])(?:\.agents\/skills\/[\w-]+\/)?scripts\/(?:[\w-]+\/)*[\w.-]+\.ts\b/g) ?? [])]
 }
 
 /** Expects `readLandings`' `git log --name-only` format: a header line (`sha`
