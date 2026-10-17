@@ -159,7 +159,7 @@ function printReport(report: ValidationReport): void {
   }
   const status = report.violations.length === 0 ? 'PASS' : 'FAIL'
   console.log(
-    `\nvalidate-content: ${status} — ${report.collectionsChecked} collections, ` +
+    `\nvalidate-content-schema: ${status} — ${report.collectionsChecked} collections, ` +
       `${report.documentsChecked} documents checked, ${report.violations.length} violation(s)`,
   )
 }

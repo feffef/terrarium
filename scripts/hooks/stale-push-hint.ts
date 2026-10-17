@@ -59,4 +59,4 @@ function dryRun(argv: string[]): void {
   printDryRunResult({ hint: staleInfoHint(resolveDryRunInput(argv)) })
 }
 
-runIfMain(import.meta.url, { main, dryRun, label: 'stale-info hint', ref: 'issue #1610', failOpen: true })
+runIfMain(import.meta.url, { main, dryRun, label: 'stale-push hint', ref: 'issue #1610', failOpen: true })

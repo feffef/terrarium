@@ -1,4 +1,4 @@
-// Unit tests for the merged-since helper's pure core — the after-instant
+// Unit tests for the list-merges-since helper's pure core — the after-instant
 // filter, the UTC normalization, and the isMerge classification, where
 // correctness bugs would hide. The git shell is a thin wrapper over these,
 // exercised by running the script directly (`tsx scripts/git/list-merges-since.ts`).

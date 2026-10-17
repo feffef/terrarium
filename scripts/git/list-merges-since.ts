@@ -1,4 +1,4 @@
-// The merged-since helper: turns the `frictions-to-fixes` survey's
+// The list-merges-since helper: turns the `frictions-to-fixes` survey's
 // already-fixed/regression screening (SKILL.md §2) from manual git-timestamp
 // archaeology into a direct comparison. Session logs carry `startedAt` in UTC
 // ISO (`...Z`); git commit/merge timestamps come back in the committer's
@@ -105,7 +105,7 @@ const FIELD_SEP = '\x1f'
  *  it only needs to not exclude anything the caller still wants (issue #412:
  *  one bounded `git log`, not one unbounded call per instant). */
 function readCommits(cwd = root, sinceBoundUtcIso?: string): RawCommit[] {
-  // See `fetchOriginMain`'s doc comment (./git-helpers.ts) for why this is
+  // See `fetchOriginMain`'s doc comment (../lib/git.ts) for why this is
   // called before every read, and why a failure here is left fatal.
   fetchOriginMain(cwd)
   const args = ['log', 'origin/main', '--date=iso-strict', `--format=%H${FIELD_SEP}%cd${FIELD_SEP}%s`]

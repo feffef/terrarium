@@ -1,4 +1,4 @@
-// The session-trace extractor (ADR-0009): the deterministic half of a
+// The transcript-trace extractor (ADR-0009): the deterministic half of a
 // session log. It reads a Claude session's transcript jsonl and derives the
 // MECHANICAL trace — timings, models, tool counts, files read/edited, subagents,
 // and provenance — purely from the recorded tool calls. Nothing here is

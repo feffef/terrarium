@@ -1,4 +1,4 @@
-// Unit coverage for the session-trace extractor + stitch (ADR-0009) —
+// Unit coverage for the transcript-trace extractor + stitch (ADR-0009) —
 // the pure, deterministic core that turns a transcript into the mechanical half
 // of a session log and merges it with the authored scratch. The git plumbing
 // lives in log-session.ts (already covered); here we pin the derivation and the

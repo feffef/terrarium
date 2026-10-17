@@ -1,5 +1,5 @@
 // Shared, unit-tested git-log helpers reused across the git-log-based scripts
-// (audit-skills, gate:scoped, merged-since, recent-prs) — single-homes guards
+// (audit-skills, gate:scoped, list-merges-since, list-recent-prs) — single-homes guards
 // that would otherwise be re-derived, and re-broken, per script (#451).
 import { execFileSync, type StdioOptions } from 'node:child_process'
 

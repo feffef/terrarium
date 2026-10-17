@@ -1,4 +1,4 @@
-// The recent-prs helper: turns "which PRs merged, in what order, when"
+// The list-recent-prs helper: turns "which PRs merged, in what order, when"
 // archaeology from a GitHub MCP `list_pull_requests`/`search_issues` call
 // (which returns full bodies and can overflow the tool's own output-token
 // ceiling — issue #319 saw ~58,700 chars for the last 20 PRs) into a direct,

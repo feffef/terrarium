@@ -50,11 +50,11 @@ async function main(): Promise<void> {
     .filter((rel) => existsSync(join(root, rel)) && statSync(join(root, rel)).size === 0)
 
   if (drift.missing.length === 0 && drift.orphaned.length === 0 && empty.length === 0 && unsafe.length === 0) {
-    console.log(`verify-mermaid: PASS — ${diagrams.length} diagram(s) match their committed SVGs`)
+    console.log(`validate-mermaid-svgs: PASS — ${diagrams.length} diagram(s) match their committed SVGs`)
     return
   }
 
-  console.error('\nverify-mermaid: FAIL — committed mermaid SVGs are out of sync (ADR-0024).')
+  console.error('\nvalidate-mermaid-svgs: FAIL — committed mermaid SVGs are out of sync (ADR-0024).')
   for (const m of drift.missing) console.error(`  MISSING   ${svgPathFor(m.key)} — for ${m.file}`)
   for (const f of empty) console.error(`  EMPTY     ${f} — committed SVG is zero bytes`)
   for (const u of unsafe) console.error(`  UNSAFE    ${u.file} — ${u.hazard}`)

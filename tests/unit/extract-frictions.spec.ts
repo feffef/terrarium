@@ -1,4 +1,4 @@
-// Unit tests for the session-frictions helper's pure core — the recency-window
+// Unit tests for the extract-frictions helper's pure core — the recency-window
 // ordering and the raw-log → triage-record reduction where correctness bugs
 // would hide. The FS IO is a thin shell over these and is exercised by running
 // the `frictions-to-fixes` Skill.

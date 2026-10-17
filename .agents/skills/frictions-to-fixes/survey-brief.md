@@ -58,7 +58,7 @@ Ledger, which you commit (Report, (d)). The scratchpad is
 - **Steer the budget at the unfixed tail.** A large share of the window's frictions are usually already resolved by a later in-window session or a merged fix. Screen those out fast as a `drop` (Screen, below) instead of re-deriving their history; save the deep archaeology for candidates with no in-window resolution.
 - **Read the window's session logs** via `pnpm exec tsx scripts/session/extract-frictions.ts`
   (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
-  `/tmp/session-frictions-output.json` and stdout gets only a notice — read the file, or
+  `/tmp/extract-frictions-output.json` and stdout gets only a notice — read the file, or
   pass `--out PATH`; don't parse stdout. Use `--compact --unledgered` (the latter drops every friction the ledger already carries, and a session with none left; `--compact` keeps `docsRead` paths,
   `subagents` and each friction's `index`, drops prose) and re-read a full log via its `file` only when a candidate needs it. This is a **recency window, not a
   sample** — read every session in it, don't chase frictions from older,

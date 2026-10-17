@@ -1,4 +1,4 @@
-// Coverage for the stale-info push hint (issue #1610; contract in
+// Coverage for the stale-push hint (issue #1610; contract in
 // `scripts/hooks/stale-push-hint.ts`).
 import { spawnSync } from 'node:child_process'
 import { dirname, resolve } from 'node:path'

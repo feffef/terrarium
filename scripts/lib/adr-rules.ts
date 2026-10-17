@@ -1,6 +1,6 @@
 // The ADR-rule parsing library: hashes, rule frontmatter, the pointer line and
 // the checks over them. `scripts/gate/validate-adr-rules.ts` is the gate CLI on top;
-// the hints and session-trace import this directly.
+// the hints and transcript-trace import this directly.
 import { createHash } from 'node:crypto'
 import { parse as parseYaml } from 'yaml'
 import { frontmatterBlock } from './frontmatter.ts'
@@ -21,7 +21,7 @@ export function rulePaths(ruleText: string): string[] {
 /** The text Claude Code shows for a rule: everything after its frontmatter. */
 export const ruleBody = (ruleText: string) => ruleText.slice(frontmatterBlock(ruleText)?.length ?? 0)
 
-/** A rule as the hints inject it. session-trace parses the header back with
+/** A rule as the hints inject it. transcript-trace parses the header back with
  *  `ruleBlockFiles` to record the rule as loaded, so both live here. */
 export const ruleBlock = (file: string, ruleText: string) =>
   `Contents of ${RULES_DIR}/${file}:\n\n${ruleBody(ruleText).trim()}`

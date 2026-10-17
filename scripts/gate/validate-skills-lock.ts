@@ -204,7 +204,7 @@ function main(argv: string[]): void {
   if (argv.includes('--write')) {
     const { pinned, uncataloged, missing } = write()
     console.log(
-      `verify-skills-lock: pinned ${pinned.length} pack Skill(s) in the Skill Inventory` +
+      `validate-skills-lock: pinned ${pinned.length} pack Skill(s) in the Skill Inventory` +
         (uncataloged.length ? `; ${uncataloged.length} not yet in the Inventory, so unpinned: ${uncataloged.join(', ')}` : '') +
         (missing.length ? `; ${missing.length} missing on disk: ${missing.join(', ')}` : ''),
     )
@@ -212,11 +212,11 @@ function main(argv: string[]): void {
   }
   const { checked, findings } = verify()
   if (findings.length === 0) {
-    console.log(`verify-skills-lock: PASS — ${checked} external pack Skill(s) match their pins`)
+    console.log(`validate-skills-lock: PASS — ${checked} external pack Skill(s) match their pins`)
     return
   }
   console.error(
-    `\nverify-skills-lock: FAIL — external pack Skills are off limits to edit (ADR-0015).\n` +
+    `\nvalidate-skills-lock: FAIL — external pack Skills are off limits to edit (ADR-0015).\n` +
       `A SKILL.md for a pack Skill (keyed in ${SKILLS_LOCK}) drifted from, or lacks, its Inventory pin:\n`,
   )
   for (const f of findings) console.error(reportLine(f))

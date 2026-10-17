@@ -1,4 +1,4 @@
-// Unit tests for the recent-prs helper's pure core — PR-number parsing,
+// Unit tests for the list-recent-prs helper's pure core — PR-number parsing,
 // title extraction (with its subject-line fallback), the merge-commit
 // filter, and the newest-first/limit behavior — where correctness bugs
 // would hide. The git shell is a thin wrapper over these, exercised by

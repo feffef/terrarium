@@ -1,4 +1,4 @@
-// The session-frictions helper: the deterministic half of the `frictions-to-fixes`
+// The extract-frictions helper: the deterministic half of the `frictions-to-fixes`
 // Skill's survey step. It does ONLY the mechanical gathering — parse every session
 // log, sort by `startedAt` (a filename/`ls` sort is not reliably chronological,
 // §1 of the Skill), and pick the recency window — and emits each
@@ -259,7 +259,7 @@ export function survey(start?: number, cwd = root, now = Date.now()): { since: n
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-export const OUTPUT_FILE_PATH = join(tmpdir(), 'session-frictions-output.json')
+export const OUTPUT_FILE_PATH = join(tmpdir(), 'extract-frictions-output.json')
 export const resolveOutputTarget = (argv: string[], jsonLength: number) =>
   outputTarget(argv, jsonLength, OUTPUT_FILE_PATH)
 
@@ -281,9 +281,9 @@ function main(): void {
   const target = resolveOutputTarget(argv, json.length)
   if (target) {
     writeFileSync(target, json + '\n')
-    process.stdout.write(`session-frictions: ${sessions.length} sessions since ${since}, ${json.length} bytes, written to ${target}\n`)
+    process.stdout.write(`extract-frictions: ${sessions.length} sessions since ${since}, ${json.length} bytes, written to ${target}\n`)
   } else {
-    console.error(`session-frictions: window starts ${since}`)
+    console.error(`extract-frictions: window starts ${since}`)
     process.stdout.write(json + '\n')
   }
 }
