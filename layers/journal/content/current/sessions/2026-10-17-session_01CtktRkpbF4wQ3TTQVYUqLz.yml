@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CtktRkpbF4wQ3TTQVYUqLz
 startedAt: 2026-10-17T09:47:52Z
-endedAt: 2026-10-17T10:12:12Z
+endedAt: 2026-10-17T10:57:44Z
 kind: interactive
 goal: Sync Glass Box drafts pages with the code
-status: in-review
-outcome: "All 36 drafts pages re-checked and pinned to 75deb948; PR #2219 open"
-summary: The user invoked /glassbox-update with the argument "briefs only". That is not a Glass Box term, so I asked what it meant; the user answered "Drafts", which I took as running the Skill on the drafts Space only (human-instructed scope). Everything else was agent-initiated, following the Skill. The report flagged all 36 drafts pages and 25 Terms over 425 commits, mostly because b1f1e05e split scripts/ into area folders. I committed the step-2 advance, then dispatched six agents on disjoint page sets in the shared checkout (file edits only, no git writes), with a common brief, the old-to-new script map and the commit list. Five pages changed what they teach (fail-closed guards now use onFailure, the workflow scope is cloud-only, ADR trials need a Trusted user, frictions-to-fixes gained a design subagent); the rest needed path or Excerpt fixes or nothing. All Terms still matched. Layer test, validate:content and gate:scoped were green; the two-axis code-review found one judgement call, which I fixed. A seventh agent reviews the 76 screenshots; I pushed before it returned.
+status: completed
+outcome: "All 36 drafts pages re-checked and pinned to 75deb948; PR #2219 merged"
+summary: "The user invoked /glassbox-update with the argument \"briefs only\". That is not a Glass Box term, so I asked what it meant; the user answered \"Drafts\", which I took as running the Skill on the drafts Space only (human-instructed scope). Everything else was agent-initiated, following the Skill. The report flagged all 36 drafts pages and 25 Terms over 425 commits, mostly because b1f1e05e split scripts/ into area folders. I committed the step-2 advance, then dispatched six agents on disjoint page sets in the shared checkout (file edits only, no git writes), with a common brief, the old-to-new script map and the commit list. Five pages changed what they teach (fail-closed guards now use onFailure, the workflow scope is cloud-only, ADR trials need a Trusted user, frictions-to-fixes gained a design subagent); the rest needed path or Excerpt fixes or nothing. All Terms still matched. Layer test, validate:content and gate:scoped were green; code-review found one judgement call, which I fixed. A seventh agent reviewing 76 screenshots one image at a time ran about 50 minutes and 1,200 tool calls; the user reported the session became impossible to open in the app and investigated from another session, which relayed a request to stop it. I stopped it, checked the key pages myself, found one pre-existing mobile overflow (a long :file chip on mdc-components, outside this run's paths), posted my verdict and merged PR #2219."
 prs:
   - "2219"
 docsRead:
@@ -132,18 +132,30 @@ frictions:
   - description: Most drafts pages have no publishedAt, so agents disagreed whether a teaching change should add one; I had to reconcile one page by hand
     solution: EVERY-PAGE.md Pin could say plainly to add publishedAt when absent and the teaching changes
     severity: nit
-durationSec: 1459
+  - description: The screenshot-review subagent read 76 full-page shots one by one, hit image request limits, looped for ~50 minutes and 1,200 tool calls, and left the session unopenable in the app
+    solution: Check mobile overflow by image width in a script, and look at only the shots of pages whose teaching changed; EVERY-PAGE.md Check could say so for bulk runs, and dispatch briefs should cap image reads
+    severity: major
+  - description: nuxt-content/mdc-components scrolls sideways on mobile because a long :file chip path does not wrap; pre-existing, outside this run's paths
+    solution: "Let the Glass Box :file chip wrap (overflow-wrap: anywhere) in its component; file an issue"
+    severity: minor
+durationSec: 4191
 models:
-  claude-opus-5-5: 113
+  claude-opus-5-5: 153
 toolCounts:
-  Bash: 30
-  Read: 1
+  Bash: 36
+  Read: 5
   Skill: 4
   Agent: 9
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 1
+  SendMessage: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__claude-code-remote__send_message: 1
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0005.md
