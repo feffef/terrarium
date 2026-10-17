@@ -24,7 +24,7 @@ import { existsSync, readdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { ARCHIVED_DIGESTS_DIR, DIGESTS_DIR, readSessionLogs } from '../../../../scripts/session/journal-files.ts'
-import { fail, flagValue, resolveOutputTarget as outputTarget, root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { fail, flagValue, resolveOutputTarget, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -238,9 +238,7 @@ export function cmdGather(date: string, cwd = root): DayMaterials {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-export const OUTPUT_FILE_PATH = join(tmpdir(), 'digest-gather-output.json')
-export const resolveOutputTarget = (argv: string[], jsonLength: number) =>
-  outputTarget(argv, jsonLength, OUTPUT_FILE_PATH)
+const OUTPUT_FILE_PATH = join(tmpdir(), 'digest-gather-output.json')
 
 function main(): void {
   const argv = process.argv.slice(2)
@@ -254,7 +252,7 @@ function main(): void {
     const date = argv[1]
     if (!date || !/^\d{4}-\d{2}-\d{2}$/.test(date)) fail('gather requires a YYYY-MM-DD date')
     const json = JSON.stringify(cmdGather(date), null, 2)
-    const target = resolveOutputTarget(argv, json.length)
+    const target = resolveOutputTarget(argv, json.length, OUTPUT_FILE_PATH)
     if (target) {
       writeFileSync(target, json + '\n')
       process.stdout.write(`digest: ${json.length} bytes, written to ${target}\n`)

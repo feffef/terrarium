@@ -821,20 +821,12 @@ function readLock(cwd = root): Set<string> {
 // every judgement is made by the pure `parseMergedPullRequests`/
 // `findOrphanedSessions` pair, so the comparison stays testable with no network.
 
-/** `paginate` by page number, stopping on the first page shorter than `perPage`:
- *  `gh api` without `--include` returns no `Link` header to stop on. */
-export function walkPagesUntilShort<T>(
-  pageUrl: (page: number) => string,
-  fetchPage: (url: string) => T[],
-  perPage = PER_PAGE,
-): T[] {
-  return paginate<T>(pageUrl, (url) => ({ records: fetchPage(url) }), perPage)
-}
-
+/** `gh api` without `--include` returns no `Link` header, so a page shorter
+ *  than `PER_PAGE` is the last. */
 function readClosedPullRequests(access: Access): RawPullRequestApiRecord[] {
-  return walkPagesUntilShort(
+  return paginate<RawPullRequestApiRecord>(
     (page) => `repos/${access.owner}/${access.repo}/pulls?state=closed&per_page=${PER_PAGE}&page=${page}`,
-    (path) => getJson<RawPullRequestApiRecord[]>(access, path),
+    (path) => ({ records: getJson<RawPullRequestApiRecord[]>(access, path) }),
   )
 }
 

@@ -18,9 +18,8 @@ import {
   recoverDroppedScratch,
   schemaErrors,
   scratchHashOf,
-  validateEntry,
 } from '../../scripts/session/log-session.ts'
-import { SESSIONS_DIR } from '../../scripts/session/journal-files.ts'
+import { SESSIONS_DIR, validateEntry } from '../../scripts/session/journal-files.ts'
 import { extractTrace, parseTranscript, stitch, STAGING_DIR, type AuthoredScratch } from '../../scripts/session/transcript-trace.ts'
 
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../..')

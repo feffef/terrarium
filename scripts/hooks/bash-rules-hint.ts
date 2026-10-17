@@ -17,7 +17,7 @@ import { printDryRunResult, prop, readTranscript, resolveDryRunInput, runIfMain 
 import { extractTrace, subagentTranscript } from '../session/transcript-trace.ts'
 import { bashReadPaths } from '../session/shell-reads.ts'
 import { loadRules, type RuleFile } from './skill-rules-hint.ts'
-import { RULES_DIR, ruleBlock, rulePaths } from '../gate/validate-adr-rules.ts'
+import { RULES_DIR, ruleBlock, rulePaths } from '../lib/adr-rules.ts'
 
 /** `loaded` gives the `.claude/rules/<file>` keys already in the session; it
  *  runs only on a match, so a miss never reads the transcript. A directory is a

@@ -9,8 +9,8 @@ import {
   parsePrNumber,
   recentPrs,
   toRecentPr,
-  type RawMergeCommit,
 } from '../../scripts/git/list-recent-prs.ts'
+import type { RawMergeCommit } from '../../scripts/lib/git.ts'
 
 describe('parsePrNumber()', () => {
   it('extracts the PR number from a standard GitHub merge-commit subject', () => {

@@ -24,24 +24,11 @@
 // does the helper exit, with an actionable message pointing at the MCP
 // fallback rather than a bare ENOENT.
 //
-// The names re-exported below keep `merge-pr.ts` (Human-only) and the specs
-// importing from here.
-//
 // Usage:  tsx scripts/github/list-open-issues.ts [N]
 //   Prints up to N open issues (default 50) as JSON:
 //   { number, title, labels, updatedAt }. Newest-updated-first.
 import { fail, root, runIfMain } from '../lib/cli.ts'
 import { decodeHtmlEntities, listAll, NO_ACCESS_MESSAGE, resolveAccess, type Access } from '../lib/github-client.ts'
-
-export {
-  decodeHtmlEntities,
-  envToken,
-  hasGhBinary,
-  parseNextLink,
-  parseOwnerRepo,
-  pickFetchStrategy,
-  type FetchStrategy,
-} from '../lib/github-client.ts'
 
 const DEFAULT_LIMIT = 50
 

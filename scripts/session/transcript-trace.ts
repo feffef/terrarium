@@ -48,8 +48,6 @@ import {
 import { ruleAdr, ruleBlockFiles } from '../lib/adr-rules.ts'
 import { root, runIfMain } from '../lib/cli.ts'
 
-export { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../../shared/trace-fields.ts'
-
 /** The one authored-scratch file per container (one session per container in the
  *  remote model). Gitignored — its home is `main`, written by the `--author` mode
  *  of log-session.ts and consumed by the SessionEnd handler. Single-homed here so

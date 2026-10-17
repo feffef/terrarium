@@ -16,11 +16,10 @@ import {
   findDeletionKeywords,
   parseChangedFileList,
   toConflictCandidateIssue,
-  walkPagesByNumber,
   type ConflictCandidateIssue,
   type RawConflictIssue,
-  type RestPage,
 } from '../../scripts/github/check-conflicting-issues.ts'
+import { paginate, parseRestPage, type RestPage } from '../../scripts/lib/github-client.ts'
 
 // The motivating case from issue #798: issue #784 instructs deleting
 // `SESSION_TRAILER_GLOBAL` as unused, while PR #789 repurposes it.
@@ -228,7 +227,10 @@ describe('parseChangedFileList()', () => {
   })
 })
 
-describe('walkPagesByNumber()', () => {
+describe('paginate() over REST pages', () => {
+  const walkPagesByNumber = <T>(pageUrl: (page: number) => string, fetchPage: (url: string) => RestPage): T[] =>
+    paginate<T>(pageUrl, (url) => parseRestPage<T>(fetchPage(url), url))
+
   // The real shape of GitHub's `rel="next"` on the `pulls` endpoint: the
   // numeric `repositories/{id}/…` form this environment's agent proxy rejects
   // (issue #848). A walker that follows it verbatim 403s on page 2.

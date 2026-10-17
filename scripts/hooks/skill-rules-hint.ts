@@ -12,7 +12,7 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, matchesGlob } from 'node:path'
 import { printDryRunResult, prop, resolveDryRunInput, runIfMain } from './hook-io.ts'
-import { RULES_DIR, ruleBlock, rulePaths } from '../gate/validate-adr-rules.ts'
+import { RULES_DIR, ruleBlock, rulePaths } from '../lib/adr-rules.ts'
 
 /** The repo Skill a payload invokes: a Skill tool call, or a prompt that is a
  *  slash command. Namespaced Skills (`plugin:name`) are not ours. */

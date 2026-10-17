@@ -5,7 +5,6 @@
 // merge rules, and prove a stitched entry satisfies the frozen schema.
 import { describe, expect, it } from 'vitest'
 import {
-  DERIVED_REASON,
   NOT_READ_REASON,
   DERIVED_REASON_COMMAND,
   DERIVED_REASON_EDITED,
@@ -24,7 +23,8 @@ import {
   subagentTranscriptPaths,
   type AuthoredScratch,
 } from '../../scripts/session/transcript-trace.ts'
-import { validateEntry } from '../../scripts/session/log-session.ts'
+import { validateEntry } from '../../scripts/session/journal-files.ts'
+import { DERIVED_REASON } from '../../shared/trace-fields.ts'
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { buildDocLineIndex } from '../../scripts/session/shell-reads.ts'
 import { tmpdir } from 'node:os'

@@ -28,24 +28,6 @@ import {
   type AdrRuleInput,
 } from '../lib/adr-rules.ts'
 
-// The Human-only hints and merge-pr.ts, and the specs, import the library through here.
-export {
-  adrHash,
-  adrTokens,
-  findAdrRuleProblems,
-  newFormatProblems,
-  RULES_DIR,
-  ruleAdr,
-  ruleBlock,
-  ruleBlockFiles,
-  ruleDocPaths,
-  ruleHash,
-  rulePaths,
-  staleRules,
-  withRuleHash,
-  withRuleTokens,
-} from '../lib/adr-rules.ts'
-
 function load(): AdrRuleInput {
   const adrs: Record<string, string> = {}
   for (const f of readdirSync(join(root, ADR_DIR))) {

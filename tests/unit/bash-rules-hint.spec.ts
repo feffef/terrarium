@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { bashRulesHint } from '../../scripts/hooks/bash-rules-hint.ts'
 import type { RuleFile } from '../../scripts/hooks/skill-rules-hint.ts'
-import { ruleBlockFiles } from '../../scripts/gate/validate-adr-rules.ts'
+import { ruleBlockFiles } from '../../scripts/lib/adr-rules.ts'
 import { FORWARDED, prefilterReaching } from '../support/run-script.ts'
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..')

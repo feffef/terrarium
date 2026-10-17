@@ -3,6 +3,7 @@
 // signals. The FS/GitHub IO is a thin shell over these, exercised by running
 // the Skill.
 import { describe, expect, it } from 'vitest'
+import { paginate } from '../../scripts/lib/github-client.ts'
 import {
   buildDocReadCounts,
   buildSkillRows,
@@ -30,7 +31,6 @@ import {
   SEP,
   tallyUsage,
   toSession,
-  walkPagesUntilShort,
   type CommitFileChange,
   type InventoryEntry,
   type Landing,
@@ -862,7 +862,7 @@ describe('findManuallyRescuedClosures()', () => {
   })
 })
 
-describe('walkPagesUntilShort() — paging by number, never following Link (issue #1514)', () => {
+describe('paginate() — paging by number, never following Link (issue #1514)', () => {
   const pageUrl = (page: number) => `repos/o/r/pulls?state=closed&per_page=2&page=${page}`
 
   function fetcher(pages: number[][]) {
@@ -876,13 +876,13 @@ describe('walkPagesUntilShort() — paging by number, never following Link (issu
 
   it('requests page 1, 2, … on our own repos/{owner}/{repo} URL and stops on the first short page', () => {
     const { requested, fetchPage } = fetcher([[1, 2], [3, 4], [5]])
-    expect(walkPagesUntilShort<number>(pageUrl, fetchPage, 2)).toEqual([1, 2, 3, 4, 5])
+    expect(paginate<number>(pageUrl, (url) => ({ records: fetchPage(url) }), 2)).toEqual([1, 2, 3, 4, 5])
     expect(requested).toEqual([pageUrl(1), pageUrl(2), pageUrl(3)])
   })
 
   it('stops on an empty page when the last full page was exactly per_page long', () => {
     const { requested, fetchPage } = fetcher([[1, 2]])
-    expect(walkPagesUntilShort<number>(pageUrl, fetchPage, 2)).toEqual([1, 2])
+    expect(paginate<number>(pageUrl, (url) => ({ records: fetchPage(url) }), 2)).toEqual([1, 2])
     expect(requested).toEqual([pageUrl(1), pageUrl(2)])
   })
 
@@ -891,7 +891,7 @@ describe('walkPagesUntilShort() — paging by number, never following Link (issu
       if (url === pageUrl(1)) return [1, 2]
       throw new Error('HTTP 403')
     }
-    expect(() => walkPagesUntilShort<number>(pageUrl, fetchPage, 2)).toThrow(
+    expect(() => paginate<number>(pageUrl, (url) => ({ records: fetchPage(url) }), 2)).toThrow(
       /INCOMPLETE at page 2 after 2 record\(s\).*HTTP 403/,
     )
   })

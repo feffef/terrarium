@@ -46,7 +46,7 @@ import { parse as parseYaml } from 'yaml'
 import { isExternalSession } from '../../shared/schemas/session.ts'
 import type { SubagentRef } from './transcript-trace.ts'
 import { readSessionLogs } from './journal-files.ts'
-import { fail, flagValue, resolveOutputTarget as outputTarget, root, runIfMain } from '../lib/cli.ts'
+import { fail, flagValue, resolveOutputTarget, root, runIfMain } from '../lib/cli.ts'
 
 /** 48 hours lets a friction too minor for its own ledger entry be seen
  *  recurring across two daily runs; reaching back that far from the ledger's
@@ -259,9 +259,7 @@ export function survey(start?: number, cwd = root, now = Date.now()): { since: n
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
-export const OUTPUT_FILE_PATH = join(tmpdir(), 'extract-frictions-output.json')
-export const resolveOutputTarget = (argv: string[], jsonLength: number) =>
-  outputTarget(argv, jsonLength, OUTPUT_FILE_PATH)
+const OUTPUT_FILE_PATH = join(tmpdir(), 'extract-frictions-output.json')
 
 function main(): void {
   const argv = process.argv.slice(2)
@@ -278,7 +276,7 @@ function main(): void {
   const sessions = argv.includes('--unledgered') ? dropLedgered(all) : all
   const since = new Date(startMs).toISOString()
   const json = argv.includes('--compact') ? formatCompact(sessions.map(toCompactSession)) : JSON.stringify(sessions, null, 2)
-  const target = resolveOutputTarget(argv, json.length)
+  const target = resolveOutputTarget(argv, json.length, OUTPUT_FILE_PATH)
   if (target) {
     writeFileSync(target, json + '\n')
     process.stdout.write(`extract-frictions: ${sessions.length} sessions since ${since}, ${json.length} bytes, written to ${target}\n`)

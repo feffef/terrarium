@@ -53,9 +53,6 @@ export interface ValidationReport {
   violations: SchemaViolation[]
 }
 
-// Exported from here too: `layers/glassbox/tests/unit/glassbox-pages.spec.ts` imports it.
-export { splitFrontmatter }
-
 /** A page schema's fields are always optional additions on top of
  *  `@nuxt/content`'s built-ins (title/description/body/seo/…), which this
  *  script does not re-validate: those are synthesized by `@nuxt/content`

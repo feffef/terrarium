@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { adrHash, adrTokens, findAdrRuleProblems, newFormatProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash, withRuleTokens } from '../../scripts/gate/validate-adr-rules.ts'
+import { adrHash, adrTokens, findAdrRuleProblems, newFormatProblems, ruleAdr, ruleDocPaths, ruleHash, staleRules, withRuleHash, withRuleTokens } from '../../scripts/lib/adr-rules.ts'
 
 const ADR = '# ADR-0024: Mermaid\n\nDecision text.\n'
 const stamped = (body: string) => withRuleHash(body, adrHash(ADR))

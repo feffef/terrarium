@@ -11,14 +11,13 @@ import {
   authorMain,
   CURRENT_SESSIONS_SCHEMA_VERSION,
   expectedFilename,
-  findTruncatedScalars,
   land,
   loadAuthorContext,
   mergeAuthored,
   reportUnexplainedReads,
   validateAuthored,
-  validateEntry,
 } from '../../scripts/session/log-session.ts'
+import { findTruncatedScalars, validateEntry } from '../../scripts/session/journal-files.ts'
 import type { AuthoredScratch } from '../../scripts/session/transcript-trace.ts'
 
 const valid = {

@@ -23,7 +23,7 @@ import {
   verdictRefusal,
   type RawCheckRun,
 } from '../../scripts/github/merge-pr.ts'
-import { rulePaths } from '../../scripts/gate/validate-adr-rules.ts'
+import { rulePaths } from '../../scripts/lib/adr-rules.ts'
 
 describe('verdictFromCheckRuns()', () => {
   it('is pending when there are no check runs yet', () => {

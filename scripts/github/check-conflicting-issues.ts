@@ -40,12 +40,8 @@ import {
   decodeHtmlEntities,
   getJson,
   listAll,
-  paginate,
-  parseRestPage,
-  PER_PAGE,
   resolveAccess,
   type Access,
-  type RestPage,
 } from '../lib/github-client.ts'
 import { root, fail, runIfMain } from '../lib/cli.ts'
 
@@ -205,20 +201,11 @@ export function changedFilesFromGitDiff(base: string, head: string, cwd = root):
   return parseChangedFileList(raw)
 }
 
-export type { RestPage }
-
 // Every mid-walk failure says *incomplete*, not just *failed*: this check's
 // whole output is "these open issues conflict", and a caller who reads a
 // truncated walk as a finished one concludes "no conflict" about issues it
 // never looked at (issue #848).
 const INCOMPLETE_HINT = ' — no conflict verdict can be drawn from a partial read.'
-
-/** `paginate` over our own `repos/{owner}/{repo}` URL with the `Link` header as
- *  the only "another page" signal (issue #848), driven by a fixture with no
- *  network in the spec. */
-export function walkPagesByNumber<T>(pageUrl: (page: number) => string, fetchPage: (url: string) => RestPage): T[] {
-  return paginate<T>(pageUrl, (url) => parseRestPage<T>(fetchPage(url), url), PER_PAGE, INCOMPLETE_HINT)
-}
 
 interface RawPrFile {
   filename: string

@@ -16,7 +16,7 @@
 // see `list-open-issues.ts`'s header) when the `gh` binary is present, a
 // direct authenticated REST call via `curl` (not `fetch` — issue #567) when it
 // is not. The strategy switch itself (`pickFetchStrategy`, `hasGhBinary`,
-// `envToken`) is single-homed in `list-open-issues.ts` and imported below.
+// `envToken`) is single-homed in `lib/github-client.ts` and imported below.
 //
 // Usage:  tsx scripts/github/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]
 //   Refuses up front for a fork or Public-authored PR, a PR labelled
@@ -68,12 +68,12 @@ import {
   parseOwnerRepo,
   pickFetchStrategy,
   type FetchStrategy,
-} from './list-open-issues.ts'
+} from '../lib/github-client.ts'
 import { findTranscriptContents } from '../session/commit-trailer.ts'
 import { hasAuthorshipMarker, readProvenanceHeader } from '../lib/provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from '../session/transcript-trace.ts'
 import { TRUSTED_ASSOCIATIONS } from '../lib/author-trust.ts'
-import { rulePaths } from '../gate/validate-adr-rules.ts'
+import { rulePaths } from '../lib/adr-rules.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 

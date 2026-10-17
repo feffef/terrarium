@@ -63,9 +63,6 @@ import {
 import { canonicalizeInstructionPath, isInstructionDoc, type DocLineIndex } from './shell-reads.ts'
 import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
 
-// Specs import these from here.
-export { findTruncatedScalars, validateEntry } from './journal-files.ts'
-
 /** The `schemaVersion` newly authored logs should carry; evolution policy: ADR-0009. */
 export const CURRENT_SESSIONS_SCHEMA_VERSION = 1
 
