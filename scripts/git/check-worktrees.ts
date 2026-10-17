@@ -20,11 +20,10 @@
 //   harmless cruft, not unrescued work. Likewise a dirty linked worktree whose
 //   content already equals a pushed commit's tree (issue #1585: a sibling moved
 //   its branch ref, so it reads as a reversed diff of work already on the remote).
-import { execFileSync } from 'node:child_process'
 import { copyFileSync, existsSync, mkdtempSync, rmSync, statSync, utimesSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
-import { git } from '../lib/git.ts'
+import { git, tryGit } from '../lib/git.ts'
 import { root, runIfMain } from '../lib/cli.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────
@@ -186,12 +185,9 @@ export function sweep(states: WorktreeState[]): SweepResult {
 /** Like `git()`, but for a probe that's *expected* to fail some of the time
  *  (e.g. no upstream configured) — `null` on failure instead of throwing, and
  *  stderr suppressed so an expected failure doesn't read as a live error. */
-function tryGit(args: string[], cwd: string): string | null {
-  try {
-    return execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim()
-  } catch {
-    return null
-  }
+function probe(args: string[], cwd: string): string | null {
+  const r = tryGit(args, cwd)
+  return r.ok ? r.out.trim() : null
 }
 
 function isDirty(path: string): boolean {
@@ -204,14 +200,14 @@ function isDirty(path: string): boolean {
  *  contained in a pushed branch is rescued. `null` when there is no
  *  `origin/main` to compare against. */
 export function unpushedCount(path: string): number | null {
-  const upstream = tryGit(['rev-parse', '--abbrev-ref', '@{upstream}'], path)
+  const upstream = probe(['rev-parse', '--abbrev-ref', '@{upstream}'], path)
   if (upstream !== null) {
-    const count = tryGit(['rev-list', '--count', `${upstream}..HEAD`], path)
+    const count = probe(['rev-list', '--count', `${upstream}..HEAD`], path)
     return count === null ? null : Number.parseInt(count, 10)
   }
-  const mergeBase = tryGit(['merge-base', 'origin/main', 'HEAD'], path)
+  const mergeBase = probe(['merge-base', 'origin/main', 'HEAD'], path)
   if (mergeBase === null) return null
-  const count = tryGit(['rev-list', '--count', 'HEAD', '--not', '--remotes'], path)
+  const count = probe(['rev-list', '--count', 'HEAD', '--not', '--remotes'], path)
   return count === null ? null : Number.parseInt(count, 10)
 }
 
@@ -223,12 +219,7 @@ export function unpushedCount(path: string): number | null {
  *  to parse; any nonzero exit — not an ancestor, or no `origin/main` ref at
  *  all — reads as "not (provably) merged," never a false positive. */
 function isMergedToMain(head: string, cwd: string): boolean {
-  try {
-    execFileSync('git', ['merge-base', '--is-ancestor', head, 'origin/main'], { cwd, stdio: 'ignore' })
-    return true
-  } catch {
-    return false
-  }
+  return tryGit(['merge-base', '--is-ancestor', head, 'origin/main'], cwd).ok
 }
 
 /** Snapshots the worktree's content as a tree via a throwaway index copy (the
@@ -247,9 +238,9 @@ export function contentMatchesRemoteCommit(path: string): boolean {
       utimesSync(index, atime, mtime)
     }
     const env = { ...process.env, GIT_INDEX_FILE: index }
-    execFileSync('git', ['add', '-A'], { cwd: path, env, stdio: 'ignore' })
-    const tree = execFileSync('git', ['write-tree'], { cwd: path, env, encoding: 'utf8' }).trim()
-    return (tryGit(['log', '--remotes', '--format=%T'], path) ?? '').split('\n').includes(tree)
+    git(['add', '-A'], path, { env, stdio: 'ignore' })
+    const tree = git(['write-tree'], path, { env }).trim()
+    return (probe(['log', '--remotes', '--format=%T'], path) ?? '').split('\n').includes(tree)
   } catch {
     return false
   } finally {

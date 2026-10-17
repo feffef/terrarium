@@ -7,6 +7,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { git } from './git.ts'
 
 export type FetchStrategy = 'gh' | 'rest'
 
@@ -68,7 +69,7 @@ export function envToken(): string | undefined {
 }
 
 export function readOriginUrl(cwd: string): string {
-  return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
+  return git(['remote', 'get-url', 'origin'], cwd).trim()
 }
 
 /** Where to read and how: the origin's repo plus the usable access path. */

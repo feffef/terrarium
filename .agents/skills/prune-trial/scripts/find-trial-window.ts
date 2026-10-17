@@ -30,10 +30,9 @@
 //   tsx .agents/skills/prune-trial/scripts/find-trial-window.ts <problem-substr>
 //     just the trial(s) whose problem text contains this
 import { readFileSync } from 'node:fs'
-import { execFileSync } from 'node:child_process'
 import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
-import { fetchOriginMain } from '../../../../scripts/lib/git.ts'
+import { fetchOriginMain, git } from '../../../../scripts/lib/git.ts'
 import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 const LEDGER_PATH = '.agents/prune-trials.yml'
@@ -137,19 +136,9 @@ const FIELD_SEP = '\x1f'
 /** The newest first-parent `origin/main` commit that changed how often
  *  `problemText` appears in the ledger (see the header). `null` when none. */
 function findLandingCommit(problemText: string, cwd = root): LandingCommit | null {
-  const out = execFileSync(
-    'git',
-    [
-      'log',
-      'origin/main',
-      '--first-parent',
-      '-1',
-      `--format=%H${FIELD_SEP}%cI`,
-      `-S${problemText}`,
-      '--',
-      LEDGER_PATH,
-    ],
-    { cwd, encoding: 'utf8' },
+  const out = git(
+    ['log', 'origin/main', '--first-parent', '-1', `--format=%H${FIELD_SEP}%cI`, `-S${problemText}`, '--', LEDGER_PATH],
+    cwd,
   ).trim()
   const [hash = '', isoCommitTime = ''] = out.split(FIELD_SEP)
   if (!hash || !isoCommitTime) return null

@@ -5,13 +5,12 @@
 // with the Skill's session.
 //
 // Usage:  tsx scripts/session/audit-skills.ts [--days N]
-import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { isContentPath } from './transcript-trace.ts'
 import { isExternalSession } from '../../shared/schemas/session.ts'
-import { SESSION_TRAILER } from '../lib/git.ts'
+import { git, SESSION_TRAILER } from '../lib/git.ts'
 import { asRecord, frontmatterBlock } from '../lib/frontmatter.ts'
 import { listAll, resolveAccess, type Access } from '../lib/github-client.ts'
 import { readProvenanceHeader } from '../lib/provenance-header.ts'
@@ -692,11 +691,7 @@ function readKnownSessionIds(cwd = root): Set<string> {
 export function readSessionTrailers(cwd = root, days = WORK_COMMIT_SCAN_DAYS): SessionTrailerRef[] {
   let raw: string
   try {
-    raw = execFileSync(
-      'git',
-      ['log', 'origin/main', `--since=${days} days ago`, `--pretty=format:${REC}%H${SEP}%aI%n%B`],
-      { cwd, encoding: 'utf8' },
-    )
+    raw = git(['log', 'origin/main', `--since=${days} days ago`, `--pretty=format:${REC}%H${SEP}%aI%n%B`], cwd)
   } catch {
     return []
   }
@@ -711,11 +706,7 @@ export function readSessionTrailers(cwd = root, days = WORK_COMMIT_SCAN_DAYS): S
 export function readCommitFileChanges(cwd = root): CommitFileChange[] {
   let raw: string
   try {
-    raw = execFileSync(
-      'git',
-      ['log', 'origin/main', '--first-parent', '--name-status', `--pretty=format:${REC}%H${SEP}%aI`],
-      { cwd, encoding: 'utf8' },
-    )
+    raw = git(['log', 'origin/main', '--first-parent', '--name-status', `--pretty=format:${REC}%H${SEP}%aI`], cwd)
   } catch {
     return []
   }
@@ -728,11 +719,7 @@ export function readCommitFileChanges(cwd = root): CommitFileChange[] {
 export function readLandings(cwd = root, since: string): Landing[] {
   let raw: string
   try {
-    raw = execFileSync(
-      'git',
-      ['log', 'origin/main', '--first-parent', `--since=${since}`, '--name-only', `--pretty=format:${REC}%H${SEP}%cI`, '--', SKILLS_DIR, 'scripts'],
-      { cwd, encoding: 'utf8' },
-    )
+    raw = git(['log', 'origin/main', '--first-parent', `--since=${since}`, '--name-only', `--pretty=format:${REC}%H${SEP}%cI`, '--', SKILLS_DIR, 'scripts'], cwd)
   } catch {
     return []
   }

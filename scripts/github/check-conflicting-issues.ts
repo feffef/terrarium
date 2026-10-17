@@ -35,7 +35,7 @@
 //   Prints any hits as JSON: { issueNumber, issueTitle, issueUrl, filePath,
 //   matchedKeyword }[]. Empty array (`[]`) means no hits — still exits 0
 //   either way; this is advisory, never a failing gate.
-import { execFileSync } from 'node:child_process'
+import { git } from '../lib/git.ts'
 import {
   decodeHtmlEntities,
   getJson,
@@ -197,7 +197,7 @@ export function parseChangedFileList(raw: string): string[] {
 /** Changed files between two refs, resolved entirely locally — no GitHub call
  *  at all, mirroring how `list-merges-since.ts` stays git-only where it can. */
 export function changedFilesFromGitDiff(base: string, head: string, cwd = root): string[] {
-  const raw = execFileSync('git', ['diff', '--name-only', '--no-renames', `${base}...${head}`], { cwd, encoding: 'utf8' })
+  const raw = git(['diff', '--name-only', '--no-renames', `${base}...${head}`], cwd)
   return parseChangedFileList(raw)
 }
 

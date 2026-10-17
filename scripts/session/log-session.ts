@@ -33,7 +33,7 @@ import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
 import { z } from 'zod'
 import { ruleVerdict, usefulVerdict } from '../../shared/schemas/session.ts'
 import { sessionUrl } from '../../shared/session-url.ts'
-import { fetchOriginMain, git } from '../lib/git.ts'
+import { fetchOriginMain, git, tryGit } from '../lib/git.ts'
 import { FALLBACK_MODEL, provenanceFooter } from './commit-trailer.ts'
 import { findTruncatedScalars, SESSIONS_DIR, truncationError, validateEntry, type SessionEntry } from './journal-files.ts'
 import {
@@ -202,8 +202,8 @@ export function mergeAuthored(existing: AuthoredScratch | undefined, incoming: A
  *    subagent marker), not a git-worktree check. */
 export function isLinkedWorktree(cwd: string): boolean {
   try {
-    const gitDir = execFileSync('git', ['rev-parse', '--git-dir'], { cwd, encoding: 'utf8' }).trim()
-    const commonDir = execFileSync('git', ['rev-parse', '--git-common-dir'], { cwd, encoding: 'utf8' }).trim()
+    const gitDir = git(['rev-parse', '--git-dir'], cwd).trim()
+    const commonDir = git(['rev-parse', '--git-common-dir'], cwd).trim()
     return resolve(cwd, gitDir) !== resolve(cwd, commonDir)
   } catch {
     return false
@@ -382,15 +382,8 @@ function mainVersion(relPath: string, remote: string): string | null {
   } catch {
     /* offline / no remote / timed out — fall through; the push loop will surface it */
   }
-  try {
-    return execFileSync('git', ['show', `${remote}/main:${relPath}`], {
-      cwd: root,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'], // quiet: a missing path is expected, not an error
-    })
-  } catch {
-    return null // not yet on main
-  }
+  const shown = tryGit(['show', `${remote}/main:${relPath}`], root)
+  return shown.ok ? shown.out : null // a missing path is expected: not yet on main
 }
 
 const SCHEMA_DIR = 'shared/schemas'
@@ -421,7 +414,7 @@ export function schemaErrors(schemaFile: string, entry: unknown): string | null 
  *  `mainVersion`. Errors, or null when it passes. */
 function mainSchemaErrors(entry: unknown, remote: string): string | null {
   const show = (args: string[]) =>
-    execFileSync('git', args, { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] })
+    git(args, root, { stdio: ['ignore', 'pipe', 'ignore'] })
   let files: Record<string, string>
   try {
     const paths = show(['ls-tree', '-r', '--name-only', `${remote}/main`, `${SCHEMA_DIR}/`]).split('\n').filter(Boolean)

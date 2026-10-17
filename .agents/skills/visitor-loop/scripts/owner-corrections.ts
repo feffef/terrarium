@@ -15,10 +15,9 @@
 //   "Human": bot accounts are excluded by account type; among the rest,
 //   ADR-0017 provenance (`isAiAuthored`) separates agent writes, which land
 //   under the owner's login, from the owner's own.
-import { execFileSync } from 'node:child_process'
 import { readFileSync } from 'node:fs'
 import { isAiAuthored } from '../../../../scripts/github/check-triage-drift.ts'
-import { fetchOriginMain } from '../../../../scripts/lib/git.ts'
+import { fetchOriginMain, git } from '../../../../scripts/lib/git.ts'
 import { getJson, listAll, resolveAccess } from '../../../../scripts/lib/github-client.ts'
 import { root, fail, runIfMain } from '../../../../scripts/lib/cli.ts'
 
@@ -169,16 +168,13 @@ interface RawComment {
 }
 
 function lastDecisionsCommit(cwd: string): string {
-  return execFileSync('git', ['log', '-1', '--format=%cI', 'origin/main', '--', DECISIONS], {
-    cwd,
-    encoding: 'utf8',
-  }).trim()
+  return git(['log', '-1', '--format=%cI', 'origin/main', '--', DECISIONS], cwd).trim()
 }
 
 function mergeFiles(sha: string | null, cwd: string): string[] {
   if (!sha) return []
   try {
-    const raw = execFileSync('git', ['diff', '--no-renames', '--name-only', `${sha}^1`, sha], { cwd, encoding: 'utf8' })
+    const raw = git(['diff', '--no-renames', '--name-only', `${sha}^1`, sha], cwd)
     return raw.split('\n').filter(Boolean)
   } catch {
     return [] // a sha not on main; a rebase merge's sha is only its last commit, so it undercounts instead

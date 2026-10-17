@@ -1,11 +1,32 @@
-// Unit tests for the shared git-log helpers — the fetch-timeout degrade path (#451), where every
-// git-log-based script's correctness bugs would otherwise be re-derived.
+// Unit tests for the shared git helpers — the runner and the fetch-timeout degrade path (#451).
 import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { afterEach, describe, expect, it } from 'vitest'
-import { fetchOriginMain, FETCH_TIMEOUT_MS, hasOriginHead, isFetchTimeout, isShallowRepository, setOriginHead, unshallow, UNSHALLOW_TIMEOUT_MS } from '../../scripts/lib/git.ts'
+import { afterAll, afterEach, describe, expect, it } from 'vitest'
+import { fetchOriginMain, FETCH_TIMEOUT_MS, git as run, hasOriginHead, isFetchTimeout, isShallowRepository, setOriginHead, tryGit, unshallow, UNSHALLOW_TIMEOUT_MS } from '../../scripts/lib/git.ts'
 import { commitFile, createGitFixture, git, shallowClone } from '../support/git-fixture.ts'
+
+describe('git() and tryGit()', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'git-run-'))
+  afterAll(() => rmSync(dir, { recursive: true, force: true }))
+
+  it('git() runs in the given cwd and returns stdout untrimmed', () => {
+    run(['init', '-q'], dir)
+    expect(run(['rev-parse', '--is-inside-work-tree'], dir)).toBe('true\n')
+  })
+
+  it('git() throws on a non-zero exit', () => {
+    expect(() => run(['rev-parse', '--verify', 'no-such-ref'], dir, { stdio: 'pipe' })).toThrow()
+  })
+
+  it('tryGit() reports stdout on success, and the exit status on failure instead of throwing', () => {
+    expect(tryGit(['rev-parse', '--is-inside-work-tree'], dir)).toEqual({ ok: true, out: 'true\n', status: 0 })
+    const failed = tryGit(['rev-parse', '--verify', 'no-such-ref'], dir)
+    expect(failed.ok).toBe(false)
+    expect(failed.out).toBe('')
+    expect(failed.status).toBeGreaterThan(0)
+  })
+})
 
 describe('isFetchTimeout()', () => {
   it('is true for an execFileSync timeout error (code: ETIMEDOUT)', () => {

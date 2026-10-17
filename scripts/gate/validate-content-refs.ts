@@ -40,7 +40,7 @@
 //         see package.json)       Exits 0 if every reference resolves and
 //                                 every Specimen body is structurally sound,
 //                                 1 otherwise.
-import { execFileSync } from 'node:child_process'
+import { tryGit } from '../lib/git.ts'
 import { globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import type { z } from 'zod'
@@ -399,11 +399,8 @@ export function checkProvenance(provenance: unknown, projectRoot: string): strin
       } else {
         // Best-effort confirmation only — see the block comment above for why a
         // failed lookup here never becomes a violation.
-        try {
-          execFileSync('git', ['cat-file', '-e', `${hash}^{commit}`], { cwd: projectRoot, stdio: 'ignore' })
-        } catch {
-          // Not found on this (possibly shallow) clone — not evidence of a typo.
-        }
+        // Not found on this (possibly shallow) clone is not evidence of a typo.
+        tryGit(['cat-file', '-e', `${hash}^{commit}`], projectRoot)
       }
       if (typeof p.path === 'string') msgs.push(...checkPath('provenance.path', p.path))
       return msgs
@@ -457,16 +454,9 @@ export function commitDateWithinSeason(isoCommitDate: string, season: Pick<DigSe
 function checkTerminalCommitSeason(field: string, hash: string, stratum: unknown, projectRoot: string): string[] {
   const season = typeof stratum === 'string' ? digSeasonOf(stratum) : undefined
   if (!season) return [] // an unknown stratum is already checkStratum's finding
-  let isoCommitDate: string
-  try {
-    isoCommitDate = execFileSync('git', ['show', '-s', '--format=%cI', `${hash}^{commit}`], {
-      cwd: projectRoot,
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'ignore'],
-    }).trim()
-  } catch {
-    return [] // not found on this (possibly shallow) clone — not evidence of anything
-  }
+  const shown = tryGit(['show', '-s', '--format=%cI', `${hash}^{commit}`], projectRoot)
+  if (!shown.ok) return [] // not found on this (possibly shallow) clone — not evidence of anything
+  const isoCommitDate = shown.out.trim()
   if (!commitDateWithinSeason(isoCommitDate, season)) {
     return [
       `${field}: commit ${hash} is dated ${isoCommitDate.slice(0, 10)}, outside its "${season.slug}" season (${season.start} – ${season.end ?? 'open'})`,

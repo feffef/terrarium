@@ -1,6 +1,5 @@
-// Shared, unit-tested git-log helpers reused across the git-log-based scripts
-// (audit-skills, gate:scoped, list-merges-since, list-recent-prs) — single-homes guards
-// that would otherwise be re-derived, and re-broken, per script (#451).
+// Shared git helpers: one place for the guards that would otherwise be
+// re-derived, and re-broken, per script (#451).
 import { execFileSync, type StdioOptions } from 'node:child_process'
 
 const FIELD_SEP = '\x1f'
@@ -30,6 +29,21 @@ export const FETCH_TIMEOUT_MS = 10_000
  *  otherwise. */
 export function git(args: string[], cwd?: string, opts: { env?: NodeJS.ProcessEnv; stdio?: StdioOptions } = {}): string {
   return execFileSync('git', args, { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024, ...opts })
+}
+
+/** Like `git()`, for a probe expected to fail some of the time (no upstream, a
+ *  missing path): never throws, and stderr is silenced so an expected failure
+ *  doesn't read as a live error. `status` is git's exit code, -1 if it has none. */
+export function tryGit(
+  args: string[],
+  cwd?: string,
+  opts: { env?: NodeJS.ProcessEnv } = {},
+): { ok: boolean; out: string; status: number } {
+  try {
+    return { ok: true, out: git(args, cwd, { ...opts, stdio: ['ignore', 'pipe', 'ignore'] }), status: 0 }
+  } catch (error) {
+    return { ok: false, out: '', status: (error as { status?: number }).status ?? -1 }
+  }
 }
 
 /** True when `err` (thrown by a `timeout`-bounded `execFileSync` git call)

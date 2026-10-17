@@ -25,8 +25,7 @@
 // JSON, breaking any JSON parser. Redirect stdout and stderr separately
 // (e.g. `... > out.json 2> err.log`) when the output needs to be parsed as
 // JSON.
-import { execFileSync } from 'node:child_process'
-import { fetchOriginMain } from '../lib/git.ts'
+import { fetchOriginMain, git } from '../lib/git.ts'
 import { root, fail, runIfMain } from '../lib/cli.ts'
 
 // ── Types ───────────────────────────────────────────────────────────────────
@@ -110,7 +109,7 @@ function readCommits(cwd = root, sinceBoundUtcIso?: string): RawCommit[] {
   fetchOriginMain(cwd)
   const args = ['log', 'origin/main', '--date=iso-strict', `--format=%H${FIELD_SEP}%cd${FIELD_SEP}%s`]
   if (sinceBoundUtcIso) args.push(`--since=${sinceBoundUtcIso}`)
-  const raw = execFileSync('git', args, { cwd, encoding: 'utf8' })
+  const raw = git(args, cwd)
   return raw
     .split('\n')
     .filter((line) => line.length > 0)

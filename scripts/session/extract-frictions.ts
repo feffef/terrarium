@@ -38,7 +38,7 @@
 // default, regardless of size — for a caller that wants the output at a
 // specific location (e.g. its own scratchpad, to avoid colliding with a
 // parallel run) rather than the shared default.
-import { execFileSync } from 'node:child_process'
+import { tryGit } from '../lib/git.ts'
 import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -228,12 +228,8 @@ function readSessions(cwd = root): TriageSession[] {
 /** `null` when no commit is visible (none yet, a shallow clone, no git):
  *  the window then falls back to `WINDOW_HOURS` before now. */
 function lastLedgerCommit(cwd: string): number | null {
-  try {
-    const out = execFileSync('git', ['log', '-1', '--format=%cI', '--', LEDGER_DIR], { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim()
-    return out ? Date.parse(out) : null
-  } catch {
-    return null
-  }
+  const out = tryGit(['log', '-1', '--format=%cI', '--', LEDGER_DIR], cwd).out.trim()
+  return out ? Date.parse(out) : null
 }
 
 /** The frictions the Friction Ledger does not carry yet, by session; a session

@@ -23,7 +23,7 @@
 //               leaves the moves staged/unstaged for a normal reviewed
 //               commit — this is content restructuring, not a session log,
 //               so it doesn't qualify for ADR-0009's direct-to-main exception
-import { execFileSync } from 'node:child_process'
+import { git } from '../../../../scripts/lib/git.ts'
 import { existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
@@ -159,7 +159,7 @@ function gitMv(cwd: string, srcRel: string, destRel: string): void {
       `archive-journal-content: ${destRel} already exists from an earlier archive pass — overwriting with the current (amended) copy`,
     )
   }
-  execFileSync('git', ['mv', '--force', srcRel, destRel], { cwd })
+  git(['mv', '--force', srcRel, destRel], cwd)
 }
 
 /** Apply a plan's archive lists via `git mv`. Leaves the moves staged for a

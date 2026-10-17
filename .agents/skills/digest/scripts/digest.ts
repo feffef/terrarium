@@ -19,7 +19,7 @@
 // (The index overview needs no command: the Journal's Space landing is a live
 // dashboard that queries the digest pages directly — a new Digest appears with
 // no baking. See ADR-0010.)
-import { execFileSync } from 'node:child_process'
+import { git } from '../../../../scripts/lib/git.ts'
 import { existsSync, readdirSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -160,11 +160,7 @@ const SEP = '\x1f' // field separator (unit sep)
 const REC = '\x1e' // record separator
 
 function readCommits(cwd = root): Commit[] {
-  const out = execFileSync(
-    'git',
-    ['log', '--first-parent', `--pretty=format:%H${SEP}%cI${SEP}%P${SEP}%s${SEP}%b${REC}`],
-    { cwd, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 },
-  )
+  const out = git(['log', '--first-parent', `--pretty=format:%H${SEP}%cI${SEP}%P${SEP}%s${SEP}%b${REC}`], cwd)
   return out
     .split(REC)
     .map((r) => r.trim())
