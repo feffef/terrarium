@@ -5,8 +5,7 @@
 // transport and the `git diff` shell are thin wrappers over these, not
 // exercised here — same split `check-triage-drift.spec.ts` uses for its sibling
 // script. The shared `gh`/`rest` strategy decision (`pickFetchStrategy`,
-// `parseNextLink`) is single-homed in `list-open-issues.ts` (issue #505) and
-// tested there.
+// `parseNextLink`) is single-homed in `scripts/lib/github-client.ts`.
 import { describe, expect, it } from 'vitest'
 import {
   bodyMentionsFilePath,

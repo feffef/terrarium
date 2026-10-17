@@ -318,7 +318,6 @@ function main(): void {
   process.exit(1)
 }
 
-// Only run when executed directly (not when imported by the unit test).
 if (isMain(import.meta.url)) {
   main()
 }

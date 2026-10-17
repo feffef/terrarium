@@ -1,8 +1,8 @@
 // Unit tests for the list-open-issues helper's pure core — HTML-entity
 // decoding, the pull-request filter, the newest-first/limit behavior,
 // owner/repo parsing off a git remote URL, and the shared `gh`/`rest`
-// fetch-strategy decision (`pickFetchStrategy`, `parseNextLink`) this module is
-// the single home for (issue #505). The `gh api` / REST `curl` shell is a thin
+// fetch-strategy decision (`pickFetchStrategy`, `parseNextLink`), now homed in
+// `scripts/lib/github-client.ts` and re-exported here (issue #505). The `gh api` / REST `curl` shell is a thin
 // wrapper over these, exercised by running the script directly
 // (`tsx scripts/list-open-issues.ts`).
 import { describe, expect, it } from 'vitest'

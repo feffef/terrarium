@@ -1067,5 +1067,4 @@ function main(): void {
   land(relPath, absPath, remote, { dryRun })
 }
 
-// Only run when executed directly (not when imported by the unit test).
 runIfMain(import.meta.url, main)

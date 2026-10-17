@@ -232,5 +232,4 @@ async function main(): Promise<void> {
   process.stdout.write(JSON.stringify(flagged, null, 2) + '\n')
 }
 
-// Only run when executed directly (not when imported by the unit test).
 runIfMain(import.meta.url, main)

@@ -170,7 +170,6 @@ function main(): void {
   if (report.violations.length > 0) process.exit(1)
 }
 
-// Only run when executed directly (not when imported by the unit test).
 if (isMain(import.meta.url)) {
   main()
 }

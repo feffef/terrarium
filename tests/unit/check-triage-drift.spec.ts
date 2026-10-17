@@ -3,8 +3,7 @@
 // phrase matcher, the most-recent-AI-comment pick, and the per-issue drift
 // check. The `gh api` / REST shell is a thin wrapper over these, exercised by
 // running the script directly. The shared `gh`/`rest` strategy decision
-// (`pickFetchStrategy`, `parseNextLink`) is single-homed in `list-open-issues.ts`
-// (issue #505) and tested there.
+// (`pickFetchStrategy`, `parseNextLink`) is single-homed in `scripts/lib/github-client.ts`.
 import { describe, expect, it } from 'vitest'
 import {
   CANONICAL_LABELS,
