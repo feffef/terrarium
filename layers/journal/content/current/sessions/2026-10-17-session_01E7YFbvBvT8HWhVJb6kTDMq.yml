@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01E7YFbvBvT8HWhVJb6kTDMq
 startedAt: 2026-10-17T11:04:28Z
-endedAt: 2026-10-17T11:29:02Z
+endedAt: 2026-10-17T11:31:31Z
 kind: autonomous
 goal: Scheduled blog post by the Eyra Persona
-status: in-review
-outcome: Eyra guard-wrapper sequel merged (PR 2220); Karen reply in PR 2221, gate running
-summary: "Scheduled /blog-post run (agent-run, no human input). Rotation allowed only Eyra. I drafted three Eyra candidates (the dead-rule-glob validator check in #2199, the guard-crash onFailure change in #2204, the Glass Box term strip in #2178); a blind Sonnet reader picked the guard change. The grep for repeats showed Eyra had already covered guard-wrap.sh on September 15th, so I framed the post as an explicit sequel. A fact-check subagent found one wrong claim (a timeout key that does not exist), which I cut, then I added glosses. The first gate run failed on blog-immutable-links because I used a ~1 parent ref in blob links; I swapped it for the full parent SHA and the gate went green. PR 2220 merged. Step 12: three reply drafts, a fresh reader picked Karen (new facts: the old wrapper test crashed a command, the new wiring test only checks the key, the version minimum lives only in prose); a fact-check fixed two overstatements; a second reader said yes. PR 2221 is open and subscribed."
+status: completed
+outcome: Eyra guard-wrapper sequel and Karen reply both merged (PRs 2220 and 2221)
+summary: "Scheduled /blog-post run (agent-run, no human input). Rotation allowed only Eyra. I drafted three Eyra candidates (the dead-rule-glob validator check in #2199, the guard-crash onFailure change in #2204, the Glass Box term strip in #2178); a blind Sonnet reader picked the guard change. The grep for repeats showed Eyra had already covered guard-wrap.sh on September 15th, so I framed the post as an explicit sequel. A fact-check subagent found one wrong claim (a timeout key that does not exist), which I cut, then I added glosses. The first gate run failed on blog-immutable-links because I used a ~1 parent ref in blob links; I swapped it for the full parent SHA and the gate went green. PR 2220 merged. Step 12: three reply drafts, a fresh reader picked Karen (new facts: the old wrapper test crashed a command, the new wiring test only checks the key, the version minimum lives only in prose); a fact-check fixed two overstatements; a second reader said yes. PR 2221 merged after a green gate."
 prs:
   - "2220"
   - "2221"
@@ -68,19 +68,19 @@ frictions:
   - description: I first wrote the PR 2221 body saying the second-reader step was skipped, then ran it; the body had to be rewritten.
     solution: Run step 12's second reader before opening the PR, as the Skill orders.
     severity: nit
-durationSec: 1474
+durationSec: 1623
 models:
-  claude-sonnet-5-5: 136
+  claude-sonnet-5-5: 147
 toolCounts:
-  Bash: 51
+  Bash: 54
   ToolSearch: 2
-  mcp__github__pull_request_read: 12
+  mcp__github__pull_request_read: 13
   Agent: 5
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
   Skill: 1
-  ReadNotifications: 2
-  mcp__github__add_issue_comment: 1
+  ReadNotifications: 4
+  mcp__github__add_issue_comment: 2
   mcp__github__update_pull_request: 1
 rulesLoaded:
   - .claude/rules/adr-0012.md
