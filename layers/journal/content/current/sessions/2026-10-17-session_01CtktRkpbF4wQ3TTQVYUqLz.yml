@@ -1,0 +1,267 @@
+schemaVersion: 1
+session: session_01CtktRkpbF4wQ3TTQVYUqLz
+startedAt: 2026-10-17T09:47:52Z
+endedAt: 2026-10-17T10:12:12Z
+kind: interactive
+goal: Sync Glass Box drafts pages with the code
+status: in-review
+outcome: "All 36 drafts pages re-checked and pinned to 75deb948; PR #2219 open"
+summary: The user invoked /glassbox-update with the argument "briefs only". That is not a Glass Box term, so I asked what it meant; the user answered "Drafts", which I took as running the Skill on the drafts Space only (human-instructed scope). Everything else was agent-initiated, following the Skill. The report flagged all 36 drafts pages and 25 Terms over 425 commits, mostly because b1f1e05e split scripts/ into area folders. I committed the step-2 advance, then dispatched six agents on disjoint page sets in the shared checkout (file edits only, no git writes), with a common brief, the old-to-new script map and the commit list. Five pages changed what they teach (fail-closed guards now use onFailure, the workflow scope is cloud-only, ADR trials need a Trusted user, frictions-to-fixes gained a design subagent); the rest needed path or Excerpt fixes or nothing. All Terms still matched. Layer test, validate:content and gate:scoped were green; the two-axis code-review found one judgement call, which I fixed. A seventh agent reviews the 76 screenshots; I pushed before it returned.
+prs:
+  - "2219"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson/Walkthrough/Excerpt contracts for the re-check
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin and publishedAt rules; subagents agreed
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; commit -F
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push; closing a scheduled run's PR
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP write path, get_check_runs for polling
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts review gives the four shots
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session start
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session start; Term sources
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: Agent D and the Spec reviewer checked the ADR-trial claims against it at the commit
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: Agent E checked the walkthrough's new design-subagent stop against it
+    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: Agent C diffed it for page claims; only rewording
+    useful: partly
+  - path: docs/agents/mdc-when-to-use.md
+    reason: Agent C diffed it; cited section unchanged
+    useful: partly
+  - path: docs/agents/domain.md
+    reason: Agent D diffed it for the glossaries page; rules unchanged
+    useful: partly
+  - path: layers/blog/GLOSSARY.md
+    reason: Term sources for persona and pingback; still match
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: Spot-checked the design subagent step for the friction walkthrough
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: The run's spec; the Spec reviewer used it
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: Agent A and I confirmed onFailure and its minimum version
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: Agents D and E checked trial bounds and severities against it
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: Agents D and E confirmed walkthrough claims still hold
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: Agents diffed it; only path repoints
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: Agents A and D confirmed cited caveats unchanged
+    useful: partly
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: Agent B found the cloud-only workflow scope change in it
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: Agent D confirmed the Excerpt still matches
+    useful: partly
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: Agent B confirmed nothing contradicts the provenance page
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: Agents B and D found only path repoints
+    useful: partly
+  - path: docs/proposals/README.md
+    reason: Agent B confirmed the Proposal wording for cloud sessions
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: Agent B confirmed the invariants page's claim still holds
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: Agent E checked the survey commits only Ledger changes
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: Agent E read it for the walkthrough's fix stop
+    useful: partly
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-update
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: brief shape for six parallel re-check agents
+  - name: code-review
+    reason: Standards + Spec before first push
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The Skill argument 'briefs only' matched no Glass Box term or Skill mode, costing a clarifying round-trip before any work
+    solution: glassbox-update could list its accepted arguments (Space names) so a typo is caught by the user or Skill
+    severity: nit
+  - description: The Stop hook asked to commit and push about ten times while subagents were mid-edit and before gate and review, adding noise
+    solution: Stop hook could stay quiet while background agents run, or ADR-0004's precedence over it could be noted in the hook message
+    severity: minor
+  - description: I pushed and opened the PR before the screenshot-review agent returned, so the PR's screenshot line claims shots taken, not reviewed
+    solution: Wait for the shot review before pushing, or start it right after the build, in parallel with gate:scoped earlier
+    severity: minor
+  - description: The Spec review subagent was denied running glassbox-update.ts by the auto-mode classifier, so it could not confirm step 4's done check itself
+    solution: Paste the done-check output into review briefs; I had already run it
+    severity: nit
+  - description: Most drafts pages have no publishedAt, so agents disagreed whether a teaching change should add one; I had to reconcile one page by hand
+    solution: EVERY-PAGE.md Pin could say plainly to add publishedAt when absent and the teaching changes
+    severity: nit
+durationSec: 1459
+models:
+  claude-opus-5-5: 113
+toolCounts:
+  Bash: 30
+  Read: 1
+  Skill: 4
+  Agent: 9
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0027.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-update/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/agents/environment-caveats.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/agents/issue-tracker.md
+  - docs/proposals/README.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/domain.md
+  - layers/blog/GLOSSARY.md
+  - docs/adr/0027-prune-trials.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept versions and ids out of rewritten prose; subagents agreed it guided the new sentences
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR without asking once pushed; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line on the PR body; trailer checked on commits
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: This log goes straight to main; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Agent D reported its change was the key finding for the prune-trials page; I checked the ADR at the commit
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed content pages are not Human-only so the PR may self-merge
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on page reads; no diagram changed this run
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded reading Skill files; nothing about Skills changed here
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Agent F reported it confirmed where Term source glossaries live
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded via bash reads; no rule placement decision in this run
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded for agent B on a file read; nothing in this run touched its subject
+    useful: no
+  - path: .claude/rules/adr-0013.md
+    reason: Loaded for agent B on a file read; no manifest change in this run
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded for agent E via a grep over layer files; no routing change here
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded for agent E via a grep; pages kept their existing MDC blocks
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded for agent E via a grep; no layer code changed
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Recheck claude-code drafts
+  - type: general-purpose
+    task: Recheck git-github/testing/ts drafts
+  - type: general-purpose
+    task: Recheck nuxt drafts
+  - type: general-purpose
+    task: Recheck skill-pack/practice drafts
+  - type: general-purpose
+    task: Recheck walkthrough drafts
+  - type: general-purpose
+    task: Recheck zod drafts and terms
+  - type: general-purpose
+    task: Review drafts page screenshots
+  - type: general-purpose
+    task: Standards review of drafts diff
+  - type: general-purpose
+    task: Spec review of drafts diff
+gitBranch: ccr-7a61668b-2310vh
+entrypoint: remote_mobile
+cliVersion: 2.1.302
+landedBy: Stop
