@@ -115,18 +115,20 @@ time, so a Campaign holds its state forever: pick offsets for the state, not a d
 
 A new category is `categories/<slug>.yml`: `name`, a `blurb`, an icon ≤ 1024 B
 on a 24×24 viewBox, and an `order`; the header menu and Discover pick it up. Its
-blurb follows the shelf-label pattern — a plain scope, then one dry qualifier:
+blurb follows the shelf-label pattern — a plain scope, then one dry qualifier;
+read the existing ones in `layers/tinkerfund/content/prod/categories/*.yml`. The
+shelves and the inventions each invites:
 
-| Category | Blurb | Inventions it invites |
-|---|---|---|
-| Kitchen | Tools for cooking, eating and stirring, in one direction or another. | over-specified utensils |
-| Desk | Instruments for the working day, each with fewer features than expected. | reductions to one function |
-| Outdoors | Equipment for weather, daylight and the space between them. | sensors for the obvious |
-| Bathroom | Fixtures for the start and end of the day, calibrated to the minute. | timers, meters, soap telemetry |
-| Garden | Tools for growing things, and for confirming that they are growing. | monitors for slow events |
-| Travel | Luggage and accessories for arriving, roughly as planned. | redundancy for the reliable |
-| Sleep | Equipment for the eight hours in which nothing is expected of you. | measuring the unmeasurable |
-| Pets | Accessories for animals, who were not consulted. | human logic imposed on cats |
+| Category | Inventions it invites |
+|---|---|
+| Kitchen | over-specified utensils |
+| Desk | reductions to one function |
+| Outdoors | sensors for the obvious |
+| Bathroom | timers, meters, soap telemetry |
+| Garden | monitors for slow events |
+| Travel | redundancy for the reliable |
+| Sleep | measuring the unmeasurable |
+| Pets | human logic imposed on cats |
 
 A Promotion (`promotions/<slug>.yml`) targets one Campaign or the whole shop, as
 a percentage or a fixed EUR amount, from `start` to an optional `end`; a `code`

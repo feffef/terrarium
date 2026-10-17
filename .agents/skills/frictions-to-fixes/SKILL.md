@@ -49,7 +49,8 @@ The subagent labels every candidate **never-fixed**, **drop**, **open-already** 
   only for an open Prune Trial is the exception: after the usual tracker search,
   file it, naming the trial.
 - **Open already**: don't file a duplicate. One the subagent flags idle (no
-  commit or comment within the ledger's horizon) is yours to pick up or escalate.
+  commit or comment within the ledger's horizon, `LEDGER_HORIZON_DAYS` in
+  `layers/journal/app/utils/ledger.ts`) is yours to pick up or escalate.
 - **Regression** (its fix merged and the friction recurred): never picked or
   dispatched — a change that already failed once needs human eyes, not a second
   run of the same idea. File a distinct issue that flags the earlier fix as

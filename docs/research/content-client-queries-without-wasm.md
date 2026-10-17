@@ -224,8 +224,7 @@ interaction-only prefetch, a short no-`swr` cache on `/` and `/t/**`) and
 **What it keeps**
 
 - Navigation is still a client router navigation (`beforeResolve`), so
-  in-memory state such as Tinkerfund's cart survives. The plugin merges only
-  `payload.data`.
+  in-memory state such as Tinkerfund's cart survives.
 - The interaction with view-transition timing was **not verified**, visually or
   otherwise.
 

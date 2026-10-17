@@ -40,11 +40,7 @@ product behavior:
 - **Releases**: become publicly downloadable, same visibility scope as code.
 - **Wiki**: follows the repository's visibility — a public repo's wiki is
   public too (there is no independent wiki-visibility toggle).
-- **Deleted-but-in-history content**: anything ever committed — even if later
-  deleted in a subsequent commit — remains fully recoverable from Git history
-  once the repo is public, because Git history itself becomes visible (see
-  above). This is the same fact that makes "just delete the secret in a new
-  commit" not a real fix — see §4.
+- **Deleted content**: anything ever committed stays fully recoverable from the now-visible Git history (see above), even after a later commit deletes it. This is why "just delete the secret in a new commit" is no fix (§4).
 - **Contributor emails in commits**: each commit's author/committer email is
   part of the commit object and becomes visible with the rest of the history.
   GitHub's own mitigation is account-level, not repo-level: **[Setting your
@@ -57,12 +53,12 @@ product behavior:
   those remain in the public history exactly as committed (again, §4's
   history-rewrite caveats apply if you want to try to remove them).
 
-**Practical read**: assume *everything* — every commit ever made (including on
-deleted branches still reachable via refs, forks, or PRs), every issue/PR/comment,
-every Actions log, every release — becomes world-readable at once. Before the
-switch, audit history for secrets (§2) and for anything (internal URLs, employee
-names in old commit messages, unreleased roadmap discussion in issues, etc.)
-written for a private audience.
+**Practical read**: assume everything becomes world-readable at once: every commit
+ever made (including on deleted branches still reachable via refs, forks, or PRs),
+every issue/PR/comment, every Actions log, every release. Before the switch, audit
+history for secrets (§2) and for anything written for a private audience (internal
+URLs, employee names in old commit messages, unreleased roadmap discussion in
+issues, etc.).
 
 ---
 

@@ -82,7 +82,7 @@ Issues and PRs share one number space, so a bare `#42` may be either. Try
 `gh pr view 42`, then fall back to `gh issue view 42`.
 
 A reviewing agent's verdict-posting, review-thread and closing-keyword rules
-(including the multi-issue `Closes` failure mode and `merge-pr.ts`'s self-heal)
+(and what `merge-pr.ts` does about a named issue GitHub left open)
 are in `docs/agents/pr-workflow.md` (recipe step 4 for verdicts).
 
 **A "you already have a pending review" error is stop-and-ask, never `delete_pending`:** see "Write traps" in [`github-integration.md`](./github-integration.md).

@@ -38,15 +38,7 @@ We keep mermaid syntax, so **(a)**.
 
 ## Why commit the SVGs (not render during CI)
 
-Rendering during every CI build would drag Chromium into CI and require adding
-a step to the Gate's own layered steps (`.github/actions/gate/action.yml`,
-ADR-0026). Committing the
-rendered SVGs and drift-checking them instead:
-
-- keeps the browser out of CI **and** prod — only the author's machine renders;
-- makes each diagram **reviewable in the PR diff**;
-- mirrors the repo's existing `verify:skills-lock` drift-check pattern (a
-  committed artifact + a gate step that fails on staleness).
+ADR-0024 (Why, Rejected alternatives) holds the rationale; rendering in CI would also need a new step in the gate's layered steps (`.github/actions/gate/action.yml`, ADR-0026). One point only this note makes: the drift check mirrors the repo's existing `verify:skills-lock` pattern (a committed artifact plus a gate step that fails on staleness).
 
 ## How theming survives as a static SVG
 
@@ -94,16 +86,9 @@ flowchart, so their baked colours are harmless.
 | `mermaid-isomorphic` (build-time) | `playwright` | Same idea, heavier dep than rolling it. |
 | `@mermaid-js/mermaid-cli` (`mmdc`) | `puppeteer` | Official, but adds Puppeteer + a subprocess. |
 | Kroki (self-host / public) | a running service | Relocates the browser into another container; more infra. |
-| `@viz-js/viz` (Graphviz WASM) | `@viz-js/viz` | The only truly browserless renderer, but **DOT-only** — changes authoring syntax, drops diagram types. |
-| jsdom / `svgdom` shims, `@resvg/resvg-js` | — | Not viable for mermaid: no real text layout; resvg only rasterises. |
+| `@viz-js/viz` (Graphviz WASM) | `@viz-js/viz` | Option (b) above: the only truly browserless renderer, but DOT-only. |
+| jsdom / `svgdom` shims, `@resvg/resvg-js` | — | Not viable for mermaid (see Key finding): no real text layout. |
 
-## Implementation shape (as shipped — see ADR-0024)
+## Implementation shape (as shipped — see ADR-0024 `## See` for the files)
 
-- `scripts/render-mermaid.ts` — author-time; the only browser step.
-- `scripts/verify-mermaid.ts` — drift gate; reads files only, wired into the gate
-  floor.
-- `app/utils/mermaid.ts` — the single home of the token contract, content-hash
-  key, and fence extractor.
-- `app/components/MermaidDiagram.vue` — looks the committed SVG up by content-hash
-  and injects it via `v-html`; SSR-rendered; `<pre>` fallback on a miss.
-- `mermaid` moved to `devDependencies` (author-time tool only).
+Beyond that list: `app/utils/mermaid.ts` also holds the fence extractor; `verify-mermaid.ts` is wired into the gate floor (`scripts/gate.ts` FLOOR); the component is SSR-rendered and falls back to a `<pre>` on a miss.
