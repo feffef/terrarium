@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01Sm7rZKVibYfwdy8ibzEFge
 startedAt: 2026-10-17T13:13:52Z
-endedAt: 2026-10-17T13:21:19Z
+endedAt: 2026-10-17T14:36:07Z
 kind: autonomous
 goal: Scheduled prune of the Platform's agent instructions
-status: in-review
-outcome: One trial judged and deleted; background-guard headers cut by 34 lines; PR 2223 open for a human merge
+status: completed
+outcome: One trial judged and deleted; background-guard headers cut by 34 lines; PR 2223 merged
 summary: Scheduled /prune-trial run, agent-initiated by the schedule. Judged the github-integration trial (only nit/minor Frictions, no regression) and deleted it. A search subagent found the failed-prose candidates; the provenance and read-first candidates overlapped open-trial territory, so I cut the two background-guard script headers to rule plus pointers (-34, comments only). A Sonnet probe at the pinned SHA answered correctly, gate:scoped passed, and PR 2223 is open. It touches Human-only hook files, so a human merges. I reviewed the comment-only diff by hand instead of running two code-review subagents. The prose mass was small.
 prs:
   - "2223"
@@ -45,18 +45,19 @@ frictions:
   - description: Ran git fetch and the frictions extract before reading docs/agents/git-conventions.md; the hook flagged it after the call.
     solution: Read the doc at session start for scheduled runs.
     severity: nit
-durationSec: 447
+durationSec: 4935
 models:
-  claude-sonnet-5-5: 53
+  claude-sonnet-5-5: 63
 toolCounts:
   Read: 5
-  Bash: 18
+  Bash: 19
   Agent: 2
   Skill: 3
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   PushNotification: 1
+  ReadNotifications: 4
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
