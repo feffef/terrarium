@@ -149,7 +149,7 @@ function assertOk({ status, body }: RestPage, method: HttpMethod, url: string): 
   if (status[0] !== '2') throw new Error(`GitHub REST API ${method} ${url} failed: HTTP ${status}: ${body}`)
 }
 
-/** The one `gh` runner:`args` after `gh`, stdout returned. A failure's stderr
+/** The one `gh` runner: `args` after `gh`, stdout returned. A failure's stderr
  *  rides on the thrown error. */
 function runGh(args: string[], cwd: string): string {
   return execFileSync('gh', args, {
