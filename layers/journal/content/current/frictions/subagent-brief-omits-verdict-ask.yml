@@ -11,6 +11,9 @@ fixes:
   - pr: 2060
     date: "2026-10-15"
     summary: A CLAUDE.md line asks every subagent brief for verdicts in its final reply; the later SendMessage step is removed.
+  - pr: 2206
+    date: "2026-10-17"
+    summary: "The blind-reader briefs in the blog, visitor-loop, digest, audit-skills and midden Skills now end with the rule and doc verdict request."
 occurrences:
   - session: session_01BdQnbVQmdfrD1PPyZTnL9w
     date: "2026-10-14"

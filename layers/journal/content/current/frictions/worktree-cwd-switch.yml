@@ -23,3 +23,8 @@ occurrences:
     severity: nit
     description: "cd'd into the probe's worktree to check it, which moved the session's working directory there; removing the worktree then left the shell in a deleted directory"
     solution: "Inspect a subagent worktree with git -C <path>, never cd, as dispatch-subagents section 5 hints"
+  - session: session_01J4ze3DvsZhXeP78iyRnbSd
+    date: "2026-10-17"
+    severity: nit
+    description: "A cd into an impl agent's worktree left my shell there; the next merge-pr and ledger edits ran in the wrong checkout until the harness noted it."
+    solution: "Use absolute paths or git -C instead of cd when inspecting a worktree."

@@ -101,3 +101,8 @@ occurrences:
     severity: minor
     description: "The #1844 build agent saw every owner pick and treated pick 2a's no-verdict wording request as binding on its own merge-pr.ts messages."
     solution: "clear-backlog-build should pass each branch only its own picks, not the whole relayed owner reply."
+  - session: session_014H5yqxJ4wuQfuCP7tqW7z5
+    date: "2026-10-17"
+    severity: minor
+    description: "The clear-backlog Skill leaves hook-wiring issues out by default, and the owner had to tell me to include them."
+    solution: "Ask about that exclusion at the start of the run, or drop it when a Trusted owner starts the run, since a human merge already controls those files."

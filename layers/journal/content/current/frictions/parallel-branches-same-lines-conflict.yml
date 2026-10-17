@@ -20,3 +20,8 @@ occurrences:
     severity: minor
     description: "Main restructured the same landing while the PR was open, causing a merge conflict the owner had to point out."
     solution: "Fetch origin main and check for recent edits to the files right before pushing or asking to merge."
+  - session: session_013RCsUF234qAGu3CJr3v2on
+    date: "2026-10-16"
+    severity: minor
+    description: "main landed the empty-glob check in the old scripts/validate-adr-rules.ts while this branch had split it, giving a content conflict plus a spec whose new fixtures used the old flat layout."
+    solution: "Land large file moves quickly, or announce them so parallel PRs target the new layout."

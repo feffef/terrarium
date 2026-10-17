@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   mcp__github__search_issues and search_pull_requests return full bodies unless `fields` omits them, so a broad or early query floods context; github-integration.md documents it, but sessions hit it before reading the doc or anyway.
 surface: guard-or-hook
-status: open
-ref: "issue #1860; PR #1869 (merged 2026-10-13T06:11Z, github-search-fields-guard denies a search without fields)"
+status: tracked
+ref: "issue #2210 (regression of #1869); issue #1860; PR #1869 (merged 2026-10-13T06:11Z, github-search-fields-guard denies a search without fields)"
 fixes:
   - pr: 1869
     date: "2026-10-13"

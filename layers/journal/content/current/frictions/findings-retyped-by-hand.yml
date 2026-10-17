@@ -16,6 +16,9 @@ fixes:
   - pr: 2060
     date: "2026-10-15"
     summary: "Every helper agent is asked for its verdicts in its final reply; audit-docs pools findings from hand-backs."
+  - pr: 2205
+    date: "2026-10-17"
+    summary: "A save-handback script writes a subagent's final reply to a file verbatim; audit-docs and dispatch-subagents point to it."
 occurrences:
   - session: session_01GxJXNFxh3SQh8q1nkReAxJ
     date: "2026-10-04"
@@ -62,3 +65,8 @@ occurrences:
     severity: moderate
     description: "audit-docs says pool findings by copying files, but subagents cannot Write report files; two reviewers first claimed files they never wrote."
     solution: "State in audit-docs that reviewers and checkers return findings as text and the pool is built from their replies."
+  - session: session_01PHx8z77pGDJT7vmfA7P6Sw
+    date: "2026-10-17"
+    severity: minor
+    description: "Reviewer findings arrive only as chat replies; pooling them into one file means retyping some, against the copy-never-retype step."
+    solution: "Brief each reviewer to write its full findings file, and verify the file is non-stub before it replies."

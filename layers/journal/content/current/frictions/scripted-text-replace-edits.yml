@@ -1,0 +1,18 @@
+name: scripted-text-replace-edits
+summary: >-
+  Agents edited files with a Python replace or regex instead of the Edit tool, and a greedy pattern once deleted the rest of a file.
+cause: >-
+  A small text change is made with a `python` string or `re.sub` replace in Bash instead of Read plus Edit (CLAUDE.md's Read-tool rule); a DOTALL pattern over a stylesheet ate the rest of it, and the same habit lands silently when the pattern is right. Signals: "python replace", "re.sub", "DOTALL", file contents missing after a scripted edit.
+surface: safe
+status: open
+occurrences:
+  - session: session_01JuCbPDE6DkKs6mTCFAKQNr
+    date: "2026-10-16"
+    severity: minor
+    description: "A python re.sub with DOTALL for the old CSS block ate the rest of the stylesheet; the build failed and I restored it from git."
+    solution: "Replace exact strings with asserts, never a greedy DOTALL regex over a file."
+  - session: session_011RZgGTE5Mh25D2ZNoKqfAM
+    date: "2026-10-16"
+    severity: nit
+    description: "Edited SKILL.md and the workflow script with a python replace instead of Read plus Edit, against CLAUDE.md's Read-tool rule; the edit landed fine."
+    solution: "Use Read then Edit for small text fixes in a worktree."

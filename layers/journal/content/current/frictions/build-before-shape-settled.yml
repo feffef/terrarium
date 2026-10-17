@@ -2,7 +2,8 @@ name: build-before-shape-settled
 summary: The main agent started builds or a many-agent fan-out before the design was settled, and the work had to be redone.
 cause: Orchestrator briefs build or polish agents (1947 subagent-verdict UI; 20 Glass Box polish agents) before asking the owner or fixing the shape, forcing a redesign PR or a second polish pass. dispatch-subagents SKILL.md line 12 says to settle choices with grilling first.
 surface: safe
-status: open
+status: tracked
+ref: "branch frictions-doc-fixes-20261017 (doc fix, 2026-10-17 run)"
 occurrences:
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"
@@ -19,3 +20,8 @@ occurrences:
     severity: nit
     description: "The first backfill plan used an index, the user then preferred full text; the index commits and schema were built and thrown away within one PR."
     solution: "When a data-shape choice is cheap to ask about, ask it before building; I only answered with a size comparison afterwards."
+  - session: session_01WynjtDHvk8MajTsgr59Ckt
+    date: "2026-10-16"
+    severity: minor
+    description: "Shipped homepage copy calling the guide finished pages without asking what the guide means to the owner; it needed a follow-up PR"
+    solution: "When copy characterises a Tenant's content, check the framing with the owner before building; the glossary's polished wording was out of date"

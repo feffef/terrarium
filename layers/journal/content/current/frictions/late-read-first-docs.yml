@@ -269,3 +269,23 @@ occurrences:
     severity: nit
     description: "Dispatched two review subagents that ran read-only git diff in a worktree without loading dispatch-subagents first"
     solution: "Load dispatch-subagents whenever a brief names a worktree, even for read-only git"
+  - session: session_01J4ze3DvsZhXeP78iyRnbSd
+    date: "2026-10-17"
+    severity: nit
+    description: "Ran git branch --show-current before reading git-conventions.md, though CLAUDE.md allows only status and diff first; the hook then reminded me."
+    solution: "Use git status alone, which already prints the branch."
+  - session: session_01PHx8z77pGDJT7vmfA7P6Sw
+    date: "2026-10-17"
+    severity: nit
+    description: "Read github-integration.md, issue-tracker.md and triage-labels.md only after already listing issues with a script; late reads cost a few tokens."
+    solution: "Read the GitHub docs before the duplicate check, in the same step."
+  - session: session_01BZfZ9Ro87HdnHqwjc2j6m2
+    date: "2026-10-17"
+    severity: nit
+    description: "Ran git fetch and other git commands before reading docs/agents/git-conventions.md, which CLAUDE.md requires first."
+    solution: "A hook reminder arrived only after the first command; loading it at session start would have avoided it."
+  - session: session_014H5yqxJ4wuQfuCP7tqW7z5
+    date: "2026-10-17"
+    severity: nit
+    description: "My first git command ran before I read git-conventions.md; a hook flagged it after the fact. The command was read-only."
+    solution: "Nothing needed; the hook's late reminder did its job."

@@ -6,6 +6,10 @@ cause: >-
 surface: guard-or-hook
 status: tracked
 ref: "issue #2146: the owner decides whether these need a new mechanism; its accepted late reads and PRs #1793/#2066 moved to late-read-first-docs"
+fixes:
+  - pr: 2165
+    date: "2026-10-16"
+    summary: "Each ADR summary rule now says when to read its full ADR, naming what only the ADR holds."
 occurrences:
   - session: session_01NyDGTR1fuP22hPo7XghCfz
     date: "2026-10-07"
