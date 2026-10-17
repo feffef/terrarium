@@ -40,6 +40,9 @@ under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
   `deferred-tool-guard`, which lets it go ahead. `scripts/hooks/guard-wrap.sh` wraps
   every guard but `deferred-tool-guard.ts` (#1223); that guard and all four hints
   use a bare `|| true`.
+- **Run tsx as `node_modules/.bin/tsx`,** never `pnpm exec tsx`, in every hook
+  command and `.sh` pre-filter: `pnpm exec` adds about a second per call. Only
+  the SessionStart `pnpm install` stays.
 - **Matcher-scoped, never `"*"`.** Each `tsx` start (~0.3s) would hit every
   Read/Edit/Bash call. The `Bash`, `Edit` and `Write` guards add an `sh`
   pre-filter so only a payload that could match pays it.

@@ -7,4 +7,4 @@
 # docs/agents/guards.md.
 payload=$(cat)
 printf '%s' "$payload" | grep -qE '"run_in_background"[[:space:]]*:[[:space:]]*true|&' || exit 0
-printf '%s' "$payload" | pnpm exec tsx scripts/hooks/subagent-background-guard.ts
+printf '%s' "$payload" | node_modules/.bin/tsx scripts/hooks/subagent-background-guard.ts

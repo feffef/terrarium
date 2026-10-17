@@ -7,4 +7,4 @@
 # that file's header.
 payload=$(cat)
 printf '%s' "$payload" | grep -q '\.github/workflows/' || exit 0
-printf '%s' "$payload" | pnpm exec tsx scripts/hooks/workflow-edit-guard.ts
+printf '%s' "$payload" | node_modules/.bin/tsx scripts/hooks/workflow-edit-guard.ts

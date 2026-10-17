@@ -7,4 +7,4 @@
 payload=$(cat)
 printf '%s' "$payload" | grep -qE '"run_in_background"[[:space:]]*:[[:space:]]*true' || exit 0
 printf '%s' "$payload" | grep -q '&' || exit 0
-printf '%s' "$payload" | pnpm exec tsx scripts/hooks/double-background-guard.ts
+printf '%s' "$payload" | node_modules/.bin/tsx scripts/hooks/double-background-guard.ts

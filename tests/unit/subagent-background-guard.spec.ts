@@ -13,7 +13,7 @@ import {
   detectAgentContext,
   formatGuardMessage,
 } from '../../scripts/hooks/subagent-background-guard.ts'
-import { envWithTsxShim, runTsx } from '../support/run-script.ts'
+import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const SCRIPT = join(root, 'scripts', 'hooks', 'subagent-background-guard.ts')
@@ -252,7 +252,6 @@ describe('the subagent-background-guard.sh hot-path pre-filter', () => {
   function runPrefilter(payload: unknown): string {
     return execFileSync('sh', [PREFILTER], {
       cwd: root,
-      env: envWithTsxShim(),
       input: typeof payload === 'string' ? payload : JSON.stringify(payload),
       encoding: 'utf8',
     }).trim()

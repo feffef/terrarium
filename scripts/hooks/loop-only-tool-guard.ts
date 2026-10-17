@@ -192,7 +192,7 @@ function dryRun(argv: string[]): void {
  *
  *  **The residual fail-open this cannot close** (identical to
  *  `github-provenance-guard.ts`, recorded there too): the hook is invoked as
- *  `pnpm exec tsx … || true`, so if tsx or pnpm is unavailable the command dies
+ *  `node_modules/.bin/tsx … || true`, so if tsx is unavailable the command dies
  *  before this file is evaluated, producing no stdout and therefore no deny.
  *  Closing that needs a change of invocation, not of this script. */
 export function main(): void {

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Standard `.claude/settings.json` wiring for a FAIL-CLOSED `PreToolUse` guard
 # (issue #1223). `runIfMain` (`hook-io.ts`) only fail-closes a crash INSIDE its
-# own try/catch; a crash before that point — `pnpm exec tsx` failing to cold
+# own try/catch; a crash before that point — tsx failing to cold
 # start, a module-resolution error, a throw during import/top-level evaluation
 # — exits nonzero with no stdout at all. The old wiring, "<guard> || true",
 # swallowed that exit code, so the harness saw the hook "succeed" with no

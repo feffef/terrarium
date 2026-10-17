@@ -6,4 +6,4 @@
 # parses the command and denies only a body it finds.
 payload=$(cat)
 printf '%s' "$payload" | grep -qE 'gh([[:space:]]|\\[nt]?)+api|api\.github\.com' || exit 0
-printf '%s' "$payload" | pnpm exec tsx scripts/hooks/github-provenance-guard.ts
+printf '%s' "$payload" | node_modules/.bin/tsx scripts/hooks/github-provenance-guard.ts

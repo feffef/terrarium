@@ -24,3 +24,18 @@ describe('every scripts/hooks/*-guard.ts is wired', () => {
     expect(guards.length).toBeGreaterThan(5)
   })
 })
+
+describe('every hook runs tsx directly (docs/agents/guards.md)', () => {
+  const all: string[] = Object.values(settings.hooks).flatMap((groups) =>
+    (groups as { hooks: { command: string }[] }[]).flatMap((g) => g.hooks.map((c) => c.command)),
+  )
+  const prefilters = globSync('scripts/hooks/*.sh', { cwd: root }).map((f) => [f, readFileSync(join(root, f), 'utf8')])
+
+  it.each(all.map((c) => [c]))('%s', (command) => {
+    expect(command).not.toContain('pnpm exec')
+  })
+
+  it.each(prefilters)('%s', (_file, text) => {
+    expect(text).not.toContain('pnpm exec')
+  })
+})

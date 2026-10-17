@@ -16,7 +16,7 @@ import {
   formatGuardMessage,
   isCloudSession,
 } from '../../scripts/hooks/workflow-edit-guard.ts'
-import { envWithTsxShim, runTsx } from '../support/run-script.ts'
+import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const SCRIPT = join(root, 'scripts', 'hooks', 'workflow-edit-guard.ts')
@@ -190,7 +190,7 @@ describe('the workflow-edit-guard.sh hot-path pre-filter', () => {
   function runPrefilter(payload: unknown): string {
     return execFileSync('sh', [PREFILTER], {
       cwd: root,
-      env: { ...envWithTsxShim(), ...CLOUD },
+      env: { ...process.env, ...CLOUD },
       input: typeof payload === 'string' ? payload : JSON.stringify(payload),
       encoding: 'utf8',
     }).trim()

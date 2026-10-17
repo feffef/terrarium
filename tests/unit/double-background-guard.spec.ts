@@ -13,7 +13,7 @@ import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { checkDoubleBackground, denyOutputFor, formatGuardMessage } from '../../scripts/hooks/double-background-guard.ts'
-import { envWithTsxShim, runTsx } from '../support/run-script.ts'
+import { runTsx } from '../support/run-script.ts'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const SCRIPT = join(root, 'scripts', 'hooks', 'double-background-guard.ts')
@@ -171,7 +171,6 @@ describe('the double-background-guard.sh hot-path pre-filter', () => {
   function runPrefilter(payload: unknown): string {
     return execFileSync('sh', [PREFILTER], {
       cwd: root,
-      env: envWithTsxShim(),
       input: typeof payload === 'string' ? payload : JSON.stringify(payload),
       encoding: 'utf8',
     }).trim()

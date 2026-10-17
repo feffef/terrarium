@@ -7,7 +7,7 @@
 // opt-in. Fails closed on an unparseable payload (docs/agents/guards.md).
 //
 // Usage:
-//   sh scripts/hooks/guard-wrap.sh github-search-fields-guard -- pnpm exec tsx scripts/hooks/github-search-fields-guard.ts   # the installed hook entry
+//   sh scripts/hooks/guard-wrap.sh github-search-fields-guard -- node_modules/.bin/tsx scripts/hooks/github-search-fields-guard.ts   # the installed hook entry
 //   tsx scripts/hooks/github-search-fields-guard.ts            # hook: payload on stdin
 //   tsx scripts/hooks/github-search-fields-guard.ts --dry-run --tool mcp__github__search_issues --input '<json>'
 import {

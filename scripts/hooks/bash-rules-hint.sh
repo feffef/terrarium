@@ -2,8 +2,7 @@
 # Pre-filter for scripts/hooks/bash-rules-hint.ts (issue #1764): only a reader in a
 # command that may be compound or multi-file pays the tsx start. It reads
 # `command` after the first "tool_input" key, which response text cannot fake,
-# and errs toward running tsx, which re-checks. tsx runs directly because
-# `pnpm exec` adds about a second per Bash call.
+# and errs toward running tsx, which re-checks.
 payload=$(cat)
 command=$(printf '%s' "$payload" | awk '!f && (i = index($0, "\"tool_input\"")) { $0 = substr($0, i); f = 1 } f' |
   grep -oE '"command" *: *"([^"\\]|\\.)*"' | head -n1)
