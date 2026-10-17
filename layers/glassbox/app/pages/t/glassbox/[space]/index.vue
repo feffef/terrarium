@@ -150,8 +150,7 @@ section { margin-bottom: 56px; }
 }
 .folder { align-self: flex-end; margin-top: auto; font: 400 11.5px var(--gb-mono); color: var(--gb-muted); text-decoration: underline 1px dotted; text-underline-offset: 3px; }
 
-.directory h2 { margin-bottom: 6px; }
-.try-it { margin: 0 0 16px; font-size: 14px; color: var(--gb-muted); }
+.try-it { margin: -8px 0 16px; font-size: 14px; color: var(--gb-muted); }
 
 /* The term strip: chips like Term.vue's inline terms, one definition open at a time. */
 .words { margin-bottom: 40px; }

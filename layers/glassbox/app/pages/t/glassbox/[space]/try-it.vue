@@ -2,7 +2,7 @@
 const route = useRoute()
 const { pagesKey, space } = useSpace('glassbox')
 const base = `/t/glassbox/${space}`
-// Only the guide holds finished Lessons (layers/glassbox/GLOSSARY.md); drafts are left alone.
+// Drafts are left alone: the exercises collected here are the guide's.
 if (space !== 'guide') throw createError({ statusCode: 404, statusMessage: 'Not found', fatal: true })
 
 // Each Lesson stays the one home of its exercise; only those sections travel in the payload (ADR-0028).
@@ -14,7 +14,7 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
       name: subject.name,
       lessons: subject.lessons.flatMap((lesson) => {
         const value = glassboxTryIt(lesson.body.value)
-        return value.length ? [{ path: lesson.path, title: lesson.title, body: { ...lesson.body, value } }] : []
+        return value.length ? [{ path: lesson.path, title: lesson.title, body: { type: lesson.body.type, value } }] : []
       }),
     }))
     .filter((subject) => subject.lessons.length)
