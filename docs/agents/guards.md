@@ -37,9 +37,11 @@ under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
 
 - **A crash.** If a hint crashes, the action goes ahead. If a guard crashes, or
   can't read its context or payload, the action is blocked, except
-  `deferred-tool-guard`, which lets it go ahead. `scripts/hooks/guard-wrap.sh` wraps
-  every guard but `deferred-tool-guard.ts` (#1223); that guard and all four hints
-  use a bare `|| true`.
+  `deferred-tool-guard`, which lets it go ahead. Every other guard's hook entry
+  sets `"onFailure": "block"`, which blocks the call when the hook crashes,
+  can't start or times out (#2073); it needs Claude Code v2.1.295 or later, and
+  an older CLI ignores it and lets the call go ahead. `deferred-tool-guard` and
+  all four hints use a bare `|| true`.
 - **Run tsx as `node_modules/.bin/tsx`,** never `pnpm exec tsx`, in every hook
   command and `.sh` pre-filter: `pnpm exec` adds about a second per call. Only
   the SessionStart `pnpm install` stays.

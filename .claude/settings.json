@@ -26,7 +26,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh loop-only-tool-guard -- node_modules/.bin/tsx scripts/hooks/loop-only-tool-guard.ts"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && node_modules/.bin/tsx scripts/hooks/loop-only-tool-guard.ts",
+            "onFailure": "block"
           }
         ]
       },
@@ -35,7 +36,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh skill-inline-guard -- node_modules/.bin/tsx scripts/hooks/skill-inline-guard.ts"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && node_modules/.bin/tsx scripts/hooks/skill-inline-guard.ts",
+            "onFailure": "block"
           }
         ]
       },
@@ -44,15 +46,18 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh subagent-background-guard -- sh scripts/hooks/subagent-background-guard.sh"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/subagent-background-guard.sh",
+            "onFailure": "block"
           },
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh double-background-guard -- sh scripts/hooks/double-background-guard.sh"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/double-background-guard.sh",
+            "onFailure": "block"
           },
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh github-provenance-guard -- sh scripts/hooks/github-provenance-guard.sh"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/github-provenance-guard.sh",
+            "onFailure": "block"
           }
         ]
       },
@@ -61,7 +66,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh subagent-background-guard -- node_modules/.bin/tsx scripts/hooks/subagent-background-guard.ts"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && node_modules/.bin/tsx scripts/hooks/subagent-background-guard.ts",
+            "onFailure": "block"
           }
         ]
       },
@@ -70,7 +76,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh workflow-edit-guard -- sh scripts/hooks/workflow-edit-guard.sh"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/workflow-edit-guard.sh",
+            "onFailure": "block"
           }
         ]
       },
@@ -79,7 +86,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh github-provenance-guard -- node_modules/.bin/tsx scripts/hooks/github-provenance-guard.ts"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && node_modules/.bin/tsx scripts/hooks/github-provenance-guard.ts",
+            "onFailure": "block"
           }
         ]
       },
@@ -88,7 +96,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && sh scripts/hooks/guard-wrap.sh github-search-fields-guard -- node_modules/.bin/tsx scripts/hooks/github-search-fields-guard.ts"
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && node_modules/.bin/tsx scripts/hooks/github-search-fields-guard.ts",
+            "onFailure": "block"
           }
         ]
       }

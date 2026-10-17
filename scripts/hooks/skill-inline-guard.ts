@@ -96,9 +96,7 @@ function dryRun(argv: string[]): void {
   printDryRunResult({ tool, decision: finding ? 'deny' : 'allow', reason: finding ? formatGuardMessage(finding) : undefined })
 }
 
-/** Always exits 0 — the deny travels in stdout, not the exit code. Same
- *  residual fail-open as every guard on this plumbing: the hook is invoked
- *  `|| true`, so a missing `tsx`/`pnpm` dies before this file runs at all. */
+/** Always exits 0 — the deny travels in stdout, not the exit code. */
 export function main(): void {
   const result = readHookPayload()
   if (result.kind === 'none') return

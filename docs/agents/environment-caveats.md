@@ -102,7 +102,7 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   stderr to `/dev/null` when parsing `--output-format json`.
 - **A stale `TMPDIR` makes every guard crash.** A resumed terminal can keep
   `TMPDIR` pointing at another user's folder (e.g. `/var/folders/zz/...`), so
-  every `tsx` guard exits with EACCES, `scripts/hooks/guard-wrap.sh` denies with
-  "exited 1 with no output", and nearly every tool call is blocked. Not a repo
+  every `tsx` guard exits with EACCES, its `"onFailure": "block"` blocks the
+  call, and nearly every tool call is blocked. Not a repo
   bug: ask the owner to restart Claude Code from a shell with a fresh `TMPDIR`.
   (session 92148909)
