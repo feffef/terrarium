@@ -43,7 +43,7 @@
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { homedir } from 'node:os'
 import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { isMain } from '../lib/cli.ts'
 import { sessionUrl as sessionUrlOf } from '../../shared/session-url.ts'
 import { SESSION_TRAILER } from '../lib/git.ts'
 import {
@@ -335,7 +335,7 @@ function main(): void {
   }
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+if (isMain(import.meta.url)) {
   try {
     main()
   } catch {
