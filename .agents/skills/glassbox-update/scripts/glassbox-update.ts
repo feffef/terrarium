@@ -57,6 +57,13 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
   const mainDate = run('show', '-s', '--format=%cI', main).slice(0, 10)
   const mainDeps = dependencies(run('show', `${main}:package.json`))
   const terms = glassboxTerms(cwd)
+  // A cited directory counts as changed only when its immediate listing differs (#2193).
+  const listings = new Map<string, string>()
+  const listing = (rev: string, dir: string) => {
+    const key = `${rev}:${dir}`
+    if (!listings.has(key)) listings.set(key, run('ls-tree', '--name-only', rev, dir))
+    return listings.get(key)
+  }
 
   const report: UpdateReport = { main, mainDate, pages: [], terms: [], versions: {} }
   for (const space of new Set(spaces)) {
@@ -72,7 +79,7 @@ export function glassboxUpdate(cwd = root, { main: mainRef = 'origin/main', writ
 
     const changed = run('diff', '--name-only', '--no-renames', revision, main).split('\n').filter(Boolean)
     const changedPaths = [...new Set(refs.files.map((r) => r.path))]
-      .filter((p) => changed.some((c) => c === p || (p.endsWith('/') && c.startsWith(p))))
+      .filter((p) => (p.endsWith('/') ? listing(revision, p) !== listing(main, p) : changed.includes(p)))
     const update: PageUpdate = { space, file, revision, changedPaths, shifted: [], edited: [] }
     const shifts = new Map<string, LineRange>()
     const seen = new Set<string>()

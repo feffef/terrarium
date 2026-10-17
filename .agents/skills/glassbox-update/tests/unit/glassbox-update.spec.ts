@@ -31,12 +31,18 @@ describe('glassboxUpdate over a fixture repo history', () => {
     dir = fixture.work
     write('src/a.ts', lines(10))
     write('src/b.ts', lines(3))
+    write('lib/x.ts', lines(2))
+    write('pkg/y.ts', lines(2))
     write('GLOSSARY.md', '### Space\nA variant.\n')
     write('package.json', deps('^3.1.0', '^3.0.0', '^0.3.0'))
     base = commit('2026-01-01T12:00:00+00:00')
 
     // Two lines added at the top, and old line 6 rewritten: 1-2 shifts, 5-6 holds the edit.
     write('src/a.ts', lines(10).replace('line 6\n', 'line six\n').replace(/^/, 'new 1\nnew 2\n'))
+    write('lib/x.ts', lines(3))
+    write('pkg/z.ts', lines(2))
+    write(`${pagesDir}/claude-code/04.dir-edited.md`, page(base, 'See :file[lib/].'))
+    write(`${pagesDir}/claude-code/05.dir-grown.md`, page(base, 'See :file[pkg/].'))
     write('GLOSSARY.md', '### Space\nAn isolated variant.\n')
     write('package.json', deps('^4.0.2', '^3.2.0', '^0.4.0'))
     write(`${pagesDir}/claude-code/01.shifted.md`, page(base, shiftedBody('1-2')))
@@ -53,9 +59,16 @@ describe('glassboxUpdate over a fixture repo history', () => {
     expect(report.main).toBe(main)
     expect(report.mainDate).toBe('2026-02-03')
     expect(report.pages.map((p) => [p.file, p.changedPaths])).toEqual([
-      ['claude-code/01.shifted.md', ['src/a.ts', 'src/']],
+      ['claude-code/01.shifted.md', ['src/a.ts']],
       ['claude-code/02.edited.md', ['src/a.ts']],
+      ['claude-code/05.dir-grown.md', ['pkg/']],
     ])
+  })
+
+  it('flags a cited directory only when its listing changed, not when a file under it is edited', () => {
+    const flagged = report.pages.map((p) => p.file)
+    expect(flagged).not.toContain('claude-code/04.dir-edited.md')
+    expect(flagged).toContain('claude-code/05.dir-grown.md')
   })
 
   it('covers only the guide Space unless given others', () => {
