@@ -6,13 +6,14 @@
 //   pnpm exec tsx scripts/gate/gate.ts --decide --base <ref> [--head <ref>]
 //     — decision only, for CI to guard its own heavy steps on (#445; the CI
 //       half now lives in .github/actions/gate/action.yml — ADR-0026)
-import { execFileSync, spawnSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
 import { appendFileSync, linkSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { root } from '../../shared/expand.ts'
-import { fetchOriginMain, isShallowRepository, unshallow } from '../lib/git.ts'
+import { flagValue } from '../lib/cli.ts'
+import { fetchOriginMain, git, isShallowRepository, unshallow } from '../lib/git.ts'
 
 export const FLOOR = ['verify:skills-lock', 'verify:mermaid', 'lint', 'typecheck', 'validate:content'] as const
 export const HEAVY = ['test', 'build', 'test:e2e'] as const
@@ -65,10 +66,6 @@ export function planSteps(scope: Scope): string[] {
   return [...FLOOR, ...HEAVY].filter((s) => !skipped.includes(s))
 }
 
-function git(args: string[], cwd: string = root): string {
-  return execFileSync('git', args, { cwd, encoding: 'utf8' }).trim()
-}
-
 function lines(out: string): string[] {
   return out.split('\n').map((l) => l.trim()).filter(Boolean)
 }
@@ -110,7 +107,7 @@ export function changedPaths(cwd: string = root, quiet = false): string[] | null
     }
     let base: string
     try {
-      base = git(['merge-base', 'origin/main', 'HEAD'], cwd)
+      base = git(['merge-base', 'origin/main', 'HEAD'], cwd).trim()
     } catch {
       return null
     }
@@ -136,9 +133,9 @@ export function changedPathsBetween(baseRef: string, headRef = 'HEAD'): string[]
     // two differ. On actions/checkout's default depth this costs a full gate
     // only if `fetch-depth: 0` is ever dropped, which is the intended backstop.
     if (isShallowRepository(root)) return null
-    const base = git(['merge-base', baseRef, headRef])
+    const base = git(['merge-base', baseRef, headRef], root).trim()
     if (!base) return null
-    return lines(git(['diff', '--name-only', '--no-renames', `${base}..${headRef}`]))
+    return lines(git(['diff', '--name-only', '--no-renames', `${base}..${headRef}`], root))
   } catch {
     return null
   }
@@ -271,11 +268,6 @@ See docs/agents/environment-caveats.md for details.`)
     }
     process.exit(r.status)
   }
-}
-
-function flagValue(args: string[], name: string): string | undefined {
-  const i = args.indexOf(name)
-  return i === -1 ? undefined : args[i + 1]
 }
 
 function decide(args: string[]): void {
