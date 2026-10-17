@@ -97,9 +97,18 @@ export interface RestPage {
   linkHeader: string | null
 }
 
-/** One authenticated GET. `-D`/`-w` split the response into a header file (for
- *  `Link`) and a status code; the body goes to its own temp file. */
-export function curlGetPage(url: string, token: string, cwd: string, accept = 'application/vnd.github+json'): RestPage {
+export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH'
+
+/** One authenticated request (a GET unless `req` says otherwise). `-D`/`-w`
+ *  split the response into a header file (for `Link`) and a status code; the
+ *  body goes to its own temp file. */
+export function curlPage(
+  url: string,
+  token: string,
+  cwd: string,
+  accept = 'application/vnd.github+json',
+  req: { method?: HttpMethod; body?: unknown } = {},
+): RestPage {
   const dir = mkdtempSync(join(tmpdir(), 'github-client-'))
   const headerFile = join(dir, 'headers')
   const bodyFile = join(dir, 'body')
@@ -114,6 +123,8 @@ export function curlGetPage(url: string, token: string, cwd: string, accept = 'a
         headerFile,
         '-w',
         '%{http_code}',
+        ...(req.method ? ['-X', req.method] : []),
+        ...(req.body === undefined ? [] : ['-H', 'Content-Type: application/json', '--data', JSON.stringify(req.body)]),
         '-H',
         `Authorization: Bearer ${token}`,
         '-H',
@@ -150,21 +161,34 @@ export function parseRestPage<T>(page: RestPage, url: string): { records: T[]; m
   return { records, more: parseNextLink(page.linkHeader) !== null }
 }
 
-/** One GET of a `repos/…` path, parsed, via the access path `resolveAccess` chose. */
-export function getJson<T>(a: Access, path: string): T {
+/** `gh api` arguments for one request; a body is flat string fields (`-f`), which
+ *  GitHub reads as the JSON body of a write. */
+export function ghRequestArgs(method: HttpMethod, path: string, fields: Record<string, string> = {}): string[] {
+  return ['api', '--method', method, path, ...Object.entries(fields).flatMap(([k, v]) => ['-f', `${k}=${v}`])]
+}
+
+/** One request to a `repos/…` path with an optional flat-string JSON body (a
+ *  merge, a close), parsed (`undefined` for an empty reply), via the access path
+ *  `resolveAccess` chose. A failure's message carries GitHub's reply. */
+export function requestJson<T>(a: Access, method: HttpMethod, path: string, fields?: Record<string, string>): T {
   if (a.strategy === 'gh') {
-    const raw = execFileSync('gh', ['api', '--method', 'GET', path], {
+    const raw = execFileSync('gh', ghRequestArgs(method, path, fields), {
       cwd: a.cwd,
       encoding: 'utf8',
       maxBuffer: 256 * 1024 * 1024,
       stdio: ['ignore', 'pipe', 'pipe'], // a failure's stderr rides on the thrown error
     })
-    return JSON.parse(raw) as T
+    return (raw.trim() ? JSON.parse(raw) : undefined) as T
   }
   const url = `https://api.github.com/${path}`
-  const { status, body } = curlGetPage(url, a.token, a.cwd)
-  assertOk(status, url)
-  return JSON.parse(body) as T
+  const { status, body } = curlPage(url, a.token, a.cwd, undefined, { method, body: fields })
+  if (status[0] !== '2') throw new Error(`GitHub REST API ${method} ${url} failed: HTTP ${status}: ${body}`)
+  return (body.length > 0 ? JSON.parse(body) : undefined) as T
+}
+
+/** One GET of a `repos/…` path, parsed. */
+export function getJson<T>(a: Access, path: string): T {
+  return requestJson<T>(a, 'GET', path)
 }
 
 /** Walks pages by NUMBER on our own URL and never follows GitHub's `Link` URL:
@@ -220,7 +244,7 @@ export function listAll<T>(
   const query = (page: number) => new URLSearchParams({ ...params, per_page: String(PER_PAGE), page: String(page) })
   return paginate<T>(
     (page) => `https://api.github.com/${full}?${query(page)}`,
-    (url) => parseRestPage<T>(curlGetPage(url, token, cwd, accept), url),
+    (url) => parseRestPage<T>(curlPage(url, token, cwd, accept), url),
     PER_PAGE,
     hint,
   )

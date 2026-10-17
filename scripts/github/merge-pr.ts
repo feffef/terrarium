@@ -10,13 +10,11 @@
 // (green/red/timeout), then merge directly on green — no `enable_pr_auto_merge`
 // call at all.
 //
-// Fetch/merge strategy mirrors `list-open-issues.ts`'s `gh`/`rest` switch
-// (issue #505's `gh`-less fallback): `gh api` (never `gh pr`/`gh issue`, which
-// route through GraphQL and can hit this environment's proxy restrictions —
-// see `list-open-issues.ts`'s header) when the `gh` binary is present, a
-// direct authenticated REST call via `curl` (not `fetch` — issue #567) when it
-// is not. The strategy switch itself (`pickFetchStrategy`, `hasGhBinary`,
-// `envToken`) is single-homed in `lib/github-client.ts` and imported below.
+// Fetch/merge strategy is `lib/github-client.ts`'s `gh`/`rest` switch (issue
+// #505's `gh`-less fallback): `gh api` (never `gh pr`/`gh issue`, which route
+// through GraphQL and can hit this environment's proxy restrictions — see
+// `list-open-issues.ts`'s header) when the `gh` binary is present, a direct
+// authenticated REST call via `curl` (not `fetch` — issue #567) when it is not.
 //
 // Usage:  tsx scripts/github/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]
 //   Refuses up front for a fork or Public-authored PR, a PR labelled
@@ -57,25 +55,15 @@
 // closing keyword and closes any GitHub's auto-close left open — a
 // self-healing safety net that doesn't depend on ever nailing the exact
 // GitHub-side trigger.
-import { execFileSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
-import { dirname, join, matchesGlob, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
-import {
-  envToken,
-  hasGhBinary,
-  parseOwnerRepo,
-  pickFetchStrategy,
-  type FetchStrategy,
-} from '../lib/github-client.ts'
+import { matchesGlob } from 'node:path'
+import { fail, root, runIfMain } from '../lib/cli.ts'
+import { git } from '../lib/git.ts'
+import { getJson, requestJson, resolveAccess, type Access } from '../lib/github-client.ts'
 import { findTranscriptContents } from '../session/commit-trailer.ts'
 import { hasAuthorshipMarker, readProvenanceHeader } from '../lib/provenance-header.ts'
 import { resolveGroundTruthFromTranscript } from '../session/transcript-trace.ts'
 import { TRUSTED_ASSOCIATIONS } from '../lib/author-trust.ts'
 import { rulePaths } from '../lib/adr-rules.ts'
-
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
 const DEFAULT_INTERVAL_MS = 15_000
 const DEFAULT_TIMEOUT_MS = 20 * 60_000
@@ -288,10 +276,6 @@ export async function pollUntilResolved(
 
 // ── GitHub shell (thin) ──────────────────────────────────────────────────────
 
-function readOriginUrl(cwd: string): string {
-  return execFileSync('git', ['remote', 'get-url', 'origin'], { cwd, encoding: 'utf8' }).trim()
-}
-
 /** The fields this script reads off one `pulls/{number}` GET: the head SHA
  *  (polled, then pinned on the merge), the body (issue #983), and the origin
  *  and labels `prOriginRefusal` checks. */
@@ -321,171 +305,34 @@ export function prMetaFromPull(pr: RawPull): PrMeta {
   }
 }
 
-function readPrMetaViaGh(owner: string, repo: string, prNumber: number, cwd: string): PrMeta {
-  const raw = execFileSync('gh', ['api', '--method', 'GET', `repos/${owner}/${repo}/pulls/${prNumber}`], {
-    cwd,
-    encoding: 'utf8',
-  })
-  return prMetaFromPull(JSON.parse(raw) as RawPull)
+const repoPath = (a: Access, path: string): string => `repos/${a.owner}/${a.repo}/${path}`
+
+function readPrMeta(a: Access, prNumber: number): PrMeta {
+  return prMetaFromPull(getJson<RawPull>(a, repoPath(a, `pulls/${prNumber}`)))
 }
 
-function readCheckRunsViaGh(owner: string, repo: string, sha: string, cwd: string): RawCheckRun[] {
-  const raw = execFileSync(
-    'gh',
-    [
-      'api',
-      '--method',
-      'GET',
-      `repos/${owner}/${repo}/commits/${sha}/check-runs`,
-      '-f',
-      'per_page=100',
-      '--jq',
-      '.check_runs',
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-  return JSON.parse(raw) as RawCheckRun[]
+function readCheckRuns(a: Access, sha: string): RawCheckRun[] {
+  return getJson<{ check_runs: RawCheckRun[] }>(a, repoPath(a, `commits/${sha}/check-runs?per_page=100`)).check_runs
 }
 
-function mergePrViaGh(owner: string, repo: string, prNumber: number, mergeMethod: MergeMethod, sha: string, cwd: string): string {
-  return execFileSync(
-    'gh',
-    [
-      'api',
-      '--method',
-      'PUT',
-      `repos/${owner}/${repo}/pulls/${prNumber}/merge`,
-      ...Object.entries(mergeRequestFields(mergeMethod, sha)).flatMap(([k, v]) => ['-f', `${k}=${v}`]),
-      '--jq',
-      '.sha',
-    ],
-    { cwd, encoding: 'utf8' },
-  ).trim()
-}
-
-// `curl`, not Node's built-in `fetch`: same proxy-auth reason
-// `poll-guest-tickets.ts`'s `curlGetPage` documents (issue #567). Unlike the
-// sibling scripts' `curlGetPage`, this also needs a `PUT` with a JSON body
-// (the merge call) — folded into one helper since none of this script's REST
-// reads need `Link` pagination (one `per_page=100` page covers a PR).
-function curlRequestJson(
-  method: 'GET' | 'PUT' | 'PATCH',
-  url: string,
-  token: string,
-  cwd: string,
-  body?: unknown,
-): unknown {
-  const dir = mkdtempSync(join(tmpdir(), 'merge-pr-'))
-  const bodyFile = join(dir, 'body')
-  try {
-    const args = [
-      '-sS',
-      '-o',
-      bodyFile,
-      '-w',
-      '%{http_code}',
-      '-X',
-      method,
-      '-H',
-      `Authorization: Bearer ${token}`,
-      '-H',
-      'Accept: application/vnd.github+json',
-      '-H',
-      'User-Agent: terrarium-merge-pr',
-    ]
-    if (body !== undefined) {
-      args.push('-H', 'Content-Type: application/json', '--data', JSON.stringify(body))
-    }
-    args.push(url)
-    const status = execFileSync('curl', args, { cwd, encoding: 'utf8' }).trim()
-    const responseBody = readFileSync(bodyFile, 'utf8')
-    if (status[0] !== '2') {
-      throw new Error(`GitHub REST API ${method} ${url} failed: HTTP ${status}: ${responseBody}`)
-    }
-    return responseBody.length > 0 ? JSON.parse(responseBody) : undefined
-  } finally {
-    rmSync(dir, { recursive: true, force: true })
-  }
-}
-
-function readPrMetaViaRest(owner: string, repo: string, prNumber: number, token: string, cwd: string): PrMeta {
-  return prMetaFromPull(
-    curlRequestJson('GET', `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}`, token, cwd) as RawPull,
-  )
-}
-
-function readCheckRunsViaRest(owner: string, repo: string, sha: string, token: string, cwd: string): RawCheckRun[] {
-  const result = curlRequestJson(
-    'GET',
-    `https://api.github.com/repos/${owner}/${repo}/commits/${sha}/check-runs?per_page=100`,
-    token,
-    cwd,
-  ) as { check_runs: RawCheckRun[] }
-  return result.check_runs
-}
-
-function mergePrViaRest(
-  owner: string,
-  repo: string,
-  prNumber: number,
-  mergeMethod: MergeMethod,
-  sha: string,
-  token: string,
-  cwd: string,
-): string {
-  const result = curlRequestJson(
-    'PUT',
-    `https://api.github.com/repos/${owner}/${repo}/pulls/${prNumber}/merge`,
-    token,
-    cwd,
-    mergeRequestFields(mergeMethod, sha),
-  ) as { sha: string }
-  return result.sha
+function mergePr(a: Access, prNumber: number, mergeMethod: MergeMethod, sha: string): string {
+  return requestJson<{ sha: string }>(a, 'PUT', repoPath(a, `pulls/${prNumber}/merge`), mergeRequestFields(mergeMethod, sha)).sha
 }
 
 type RawIssue = { state: string; labels: { name: string }[] }
 
-function closeIssueViaGh(owner: string, repo: string, issueNumber: number, cwd: string): void {
-  execFileSync(
-    'gh',
-    [
-      'api',
-      '--method',
-      'PATCH',
-      `repos/${owner}/${repo}/issues/${issueNumber}`,
-      '-f',
-      'state=closed',
-      '-f',
-      'state_reason=completed',
-    ],
-    { cwd, encoding: 'utf8' },
-  )
-}
-
-function closeIssueViaRest(owner: string, repo: string, issueNumber: number, token: string, cwd: string): void {
-  curlRequestJson(
-    'PATCH',
-    `https://api.github.com/repos/${owner}/${repo}/issues/${issueNumber}`,
-    token,
-    cwd,
-    { state: 'closed', state_reason: 'completed' },
-  )
+function closeIssue(a: Access, issueNumber: number): void {
+  requestJson(a, 'PATCH', repoPath(a, `issues/${issueNumber}`), { state: 'closed', state_reason: 'completed' })
 }
 
 type RawPrFile = { filename: string; previous_filename?: string }
 
 /** Every path the PR touches, a rename's old path included, so moving a file
  *  out of a Human-only path still counts. */
-function readChangedFiles(strategy: FetchStrategy, owner: string, repo: string, prNumber: number, cwd: string): string[] {
-  const url = `repos/${owner}/${repo}/pulls/${prNumber}/files`
+function readChangedFiles(a: Access, prNumber: number): string[] {
   const files: string[] = []
   for (let page = 1; ; page++) {
-    const items =
-      strategy === 'gh'
-        ? (JSON.parse(
-            execFileSync('gh', ['api', '--method', 'GET', url, '-f', 'per_page=100', '-f', `page=${page}`], { cwd, encoding: 'utf8' }),
-          ) as RawPrFile[])
-        : (curlRequestJson('GET', `https://api.github.com/${url}?per_page=100&page=${page}`, envToken()!, cwd) as RawPrFile[])
+    const items = getJson<RawPrFile[]>(a, repoPath(a, `pulls/${prNumber}/files?per_page=100&page=${page}`))
     for (const i of items) files.push(i.filename, ...(i.previous_filename ? [i.previous_filename] : []))
     if (items.length < 100) return files
   }
@@ -493,47 +340,29 @@ function readChangedFiles(strategy: FetchStrategy, owner: string, repo: string, 
 
 function readHumanMergeGlobsFromMain(cwd: string): string[] {
   try {
-    execFileSync('git', ['fetch', 'origin', 'main'], { cwd, stdio: 'ignore' })
-    return rulePaths(execFileSync('git', ['show', `origin/main:${HUMAN_MERGE_RULE}`], { cwd, encoding: 'utf8' }))
+    git(['fetch', 'origin', 'main'], cwd, { stdio: 'ignore' })
+    return rulePaths(git(['show', `origin/main:${HUMAN_MERGE_RULE}`], cwd))
   } catch {
     return []
   }
-}
-
-function readPrMeta(strategy: FetchStrategy, owner: string, repo: string, prNumber: number, cwd: string): PrMeta {
-  if (strategy === 'gh') return readPrMetaViaGh(owner, repo, prNumber, cwd)
-  return readPrMetaViaRest(owner, repo, prNumber, envToken()!, cwd)
 }
 
 type RawVerdictBody = { body: string | null; author_association: string }
 
 /** The PR's review and conversation-comment bodies — one `per_page=100` page
  *  each, like the check runs. */
-function readVerdictBodies(strategy: FetchStrategy, owner: string, repo: string, prNumber: number, cwd: string): VerdictBody[] {
-  return [`pulls/${prNumber}/reviews`, `issues/${prNumber}/comments`].flatMap((path) => {
-    const url = `repos/${owner}/${repo}/${path}`
-    const items =
-      strategy === 'gh'
-        ? (JSON.parse(
-            execFileSync('gh', ['api', '--method', 'GET', url, '-f', 'per_page=100'], { cwd, encoding: 'utf8' }),
-          ) as RawVerdictBody[])
-        : (curlRequestJson('GET', `https://api.github.com/${url}?per_page=100`, envToken()!, cwd) as RawVerdictBody[])
-    return items.map((i) => ({ body: i.body ?? '', authorAssociation: i.author_association }))
-  })
+function readVerdictBodies(a: Access, prNumber: number): VerdictBody[] {
+  return [`pulls/${prNumber}/reviews`, `issues/${prNumber}/comments`].flatMap((path) =>
+    getJson<RawVerdictBody[]>(a, repoPath(a, `${path}?per_page=100`)).map((i) => ({
+      body: i.body ?? '',
+      authorAssociation: i.author_association,
+    })),
+  )
 }
 
-function readIssue(strategy: FetchStrategy, owner: string, repo: string, issueNumber: number, cwd: string): IssueFacts {
-  const url = `repos/${owner}/${repo}/issues/${issueNumber}`
-  const issue =
-    strategy === 'gh'
-      ? (JSON.parse(execFileSync('gh', ['api', '--method', 'GET', url], { cwd, encoding: 'utf8' })) as RawIssue)
-      : (curlRequestJson('GET', `https://api.github.com/${url}`, envToken()!, cwd) as RawIssue)
+function readIssue(a: Access, issueNumber: number): IssueFacts {
+  const issue = getJson<RawIssue>(a, repoPath(a, `issues/${issueNumber}`))
   return { number: issueNumber, state: issue.state, labels: issue.labels.map((l) => l.name) }
-}
-
-function closeIssue(strategy: FetchStrategy, owner: string, repo: string, issueNumber: number, cwd: string): void {
-  if (strategy === 'gh') return closeIssueViaGh(owner, repo, issueNumber, cwd)
-  return closeIssueViaRest(owner, repo, issueNumber, envToken()!, cwd)
 }
 
 const realDelay = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms))
@@ -579,24 +408,6 @@ export async function reconcileClosingKeywords(
   return { closed, failed }
 }
 
-function readCheckRuns(strategy: FetchStrategy, owner: string, repo: string, sha: string, cwd: string): RawCheckRun[] {
-  if (strategy === 'gh') return readCheckRunsViaGh(owner, repo, sha, cwd)
-  return readCheckRunsViaRest(owner, repo, sha, envToken()!, cwd)
-}
-
-function mergePr(
-  strategy: FetchStrategy,
-  owner: string,
-  repo: string,
-  prNumber: number,
-  mergeMethod: MergeMethod,
-  sha: string,
-  cwd: string,
-): string {
-  if (strategy === 'gh') return mergePrViaGh(owner, repo, prNumber, mergeMethod, sha, cwd)
-  return mergePrViaRest(owner, repo, prNumber, mergeMethod, sha, envToken()!, cwd)
-}
-
 // ── Command ──────────────────────────────────────────────────────────────────
 
 export async function mergePrWhenGreen(
@@ -604,25 +415,17 @@ export async function mergePrWhenGreen(
   opts: PollOptions & { mergeMethod: MergeMethod },
   cwd = root,
 ): Promise<MergeResult> {
-  const originUrl = readOriginUrl(cwd)
-  const ownerRepo = parseOwnerRepo(originUrl)
-  if (ownerRepo === null) {
-    throw new Error(`could not parse owner/repo from origin remote: ${originUrl}`)
-  }
-  const strategy = pickFetchStrategy(hasGhBinary(cwd), Boolean(envToken()))
-  if (strategy === null) {
-    throw new Error('no GitHub access path available: `gh` is not installed and neither GH_TOKEN nor GITHUB_TOKEN is set')
-  }
-  const { owner, repo } = ownerRepo
+  const access = resolveAccess(cwd)
+  const { owner, repo } = access
 
-  const meta = readPrMeta(strategy, owner, repo, prNumber, cwd)
+  const meta = readPrMeta(access, prNumber)
   const originRefusal = prOriginRefusal(meta, owner, repo)
   if (originRefusal !== null) {
     return { pr: prNumber, verdict: 'untrusted-origin', merged: false, message: originRefusal }
   }
 
   const humanRefusal = humanMergeRefusal(
-    readChangedFiles(strategy, owner, repo, prNumber, cwd),
+    readChangedFiles(access, prNumber),
     readHumanMergeGlobsFromMain(cwd),
   )
   if (humanRefusal !== null) {
@@ -630,7 +433,7 @@ export async function mergePrWhenGreen(
   }
 
   const closesReadyForHuman = readyForHumanRefusal(
-    parseClosingKeywordIssues(meta.body).map((n) => readIssue(strategy, owner, repo, n, cwd)),
+    parseClosingKeywordIssues(meta.body).map((n) => readIssue(access, n)),
   )
   if (closesReadyForHuman !== null) {
     return { pr: prNumber, verdict: 'closes-ready-for-human', merged: false, message: closesReadyForHuman }
@@ -638,13 +441,13 @@ export async function mergePrWhenGreen(
 
   const sessionId = resolveGroundTruthFromTranscript(findTranscriptContents(process.env) ?? '')
   const { sha, body: prBody } = meta
-  const noVerdict = verdictRefusal(readVerdictBodies(strategy, owner, repo, prNumber, cwd), sessionId, sha)
+  const noVerdict = verdictRefusal(readVerdictBodies(access, prNumber), sessionId, sha)
   if (noVerdict !== null) {
     return { pr: prNumber, verdict: 'no-verdict', merged: false, message: noVerdict }
   }
 
   const { verdict, runs } = await pollUntilResolved(
-    async () => readCheckRuns(strategy, owner, repo, sha, cwd),
+    async () => readCheckRuns(access, sha),
     opts,
   )
 
@@ -667,7 +470,7 @@ export async function mergePrWhenGreen(
 
   let mergeCommitSha: string
   try {
-    mergeCommitSha = mergePr(strategy, owner, repo, prNumber, opts.mergeMethod, sha, cwd)
+    mergeCommitSha = mergePr(access, prNumber, opts.mergeMethod, sha)
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err)
     return {
@@ -683,8 +486,8 @@ export async function mergePrWhenGreen(
   // merge into a reported failure; it's folded into the message instead.
   const { closed, failed } = await reconcileClosingKeywords(
     prBody,
-    (issueNumber) => readIssue(strategy, owner, repo, issueNumber, cwd).state,
-    (issueNumber) => closeIssue(strategy, owner, repo, issueNumber, cwd),
+    (issueNumber) => readIssue(access, issueNumber).state,
+    (issueNumber) => closeIssue(access, issueNumber),
   )
   const reconcileNote =
     closed.length > 0
@@ -702,11 +505,6 @@ export async function mergePrWhenGreen(
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
-
-function fail(msg: string): never {
-  console.error(`merge-pr: ${msg}`)
-  process.exit(1)
-}
 
 function parseArgsOrFail(argv: string[]): {
   prNumber: number
@@ -750,7 +548,4 @@ async function main(): Promise<void> {
   if (!result.merged) process.exitCode = 1
 }
 
-// Only run when executed directly (not when imported by the unit test).
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  main().catch((err) => fail(err instanceof Error ? err.message : String(err)))
-}
+runIfMain(import.meta.url, () => main().catch((err) => fail(err instanceof Error ? err.message : String(err))))

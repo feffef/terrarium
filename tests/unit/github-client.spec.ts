@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   decodeHtmlEntities,
+  ghRequestArgs,
   paginate,
   parseNextLink,
   parseOwnerRepo,
@@ -107,5 +108,16 @@ describe('parseNextLink()', () => {
   })
   it('returns null for a null header', () => {
     expect(parseNextLink(null)).toBeNull()
+  })
+})
+
+describe('ghRequestArgs()', () => {
+  it('sends a write body as flat -f fields', () => {
+    expect(ghRequestArgs('PUT', 'repos/o/r/pulls/1/merge', { merge_method: 'merge', sha: 'abc' })).toEqual([
+      'api', '--method', 'PUT', 'repos/o/r/pulls/1/merge', '-f', 'merge_method=merge', '-f', 'sha=abc',
+    ])
+  })
+  it('keeps a GET query in the path', () => {
+    expect(ghRequestArgs('GET', 'repos/o/r/issues?per_page=100')).toEqual(['api', '--method', 'GET', 'repos/o/r/issues?per_page=100'])
   })
 })
