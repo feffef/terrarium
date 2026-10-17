@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-11"
     summary: "Removed the check that blocked whole commands for ending in a pipe to tail or head."
 occurrences:
-  - session: session_01BXoQpiEuaGZJVRQB7XpsFi
-    date: "2026-10-02"
-    severity: nit
-    description: "Piped gate:scoped --dry into tail and was denied by the tail-pipe guard despite CLAUDE.md stating the rule"
-    solution: "Redirect to a scratch log first; the guard message already says how"
-  - session: session_01WPQb6E2oWX3cJzcN11hAW5
-    date: "2026-10-02"
-    severity: minor
-    description: "A combined Bash call (python edits plus vitest piped to tail) was blocked whole by the tail-pipe guard, so the edits silently never ran and I briefly read the stale test pass as covering them"
-    solution: "Keep state-changing edits and guarded test commands in separate calls; check git diff --stat after a denied call"
   - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
     date: "2026-10-03"
     severity: nit

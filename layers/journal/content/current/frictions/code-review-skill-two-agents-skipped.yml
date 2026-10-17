@@ -71,3 +71,13 @@ occurrences:
     severity: nit
     description: "The code-review Skill mandates two parallel sub-agents, disproportionate for a one-file prose post already fact-checked; I reviewed inline."
     solution: "Let pr-workflow allow an inline review for a single-file content diff."
+  - session: session_018sAirSgDY1Nv82JVogjcyR
+    date: "2026-10-16"
+    severity: minor
+    description: "The code-review Skill ran two Sonnet subagents on a 6-line doc diff, costing about 120k tokens for judgement-call-only findings."
+    solution: "Let the Skill run Standards alone for a doc-only diff under about 20 lines."
+  - session: session_01CZ2bdCKBrotyVQL9mtkeGS
+    date: "2026-10-17"
+    severity: nit
+    description: "The code-review Skill's two-subagent flow is overkill for a prose-only digest diff already fact-checked and gated; I reviewed it myself instead."
+    solution: "Let pr-workflow skip code-review for a scheduled run whose diff is only Digest pages and archive moves."

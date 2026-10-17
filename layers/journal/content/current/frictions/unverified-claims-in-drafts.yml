@@ -236,3 +236,23 @@ occurrences:
     severity: minor
     description: "Agreed with the user that the survey cannot know which files a fix touches without checking; three run transcripts showed it routinely did"
     solution: "Verify a claim about how a Skill runs against a recent run's transcript before agreeing to redesign around it"
+  - session: session_018pjaBqTXahmE3DFhAbkide
+    date: "2026-10-16"
+    severity: minor
+    description: "First draft of the deny message paraphrased the owner-approved sentence and added an unverified 'you are notified' claim, false for subagents; code-review caught both."
+    solution: "Paste approved wording verbatim and add nothing the owner did not approve."
+  - session: session_013RCsUF234qAGu3CJr3v2on
+    date: "2026-10-16"
+    severity: minor
+    description: "Posted the subagent's file count (67) in issue #2183 without checking; ls showed 68, so the issue needed a correction. Broke 'Verify before you state'."
+    solution: "Recount any number a subagent reports before it goes into an issue."
+  - session: session_01WynjtDHvk8MajTsgr59Ckt
+    date: "2026-10-16"
+    severity: minor
+    description: "Wrote a glossary claim that nothing leads with Walkthroughs while the guide landing still shows Start here"
+    solution: "Grep the Tenant for the thing a new glossary rule describes before writing it; code-review caught it"
+  - session: session_015vXkKcdLwYRQqKKVJ8BLJJ
+    date: "2026-10-16"
+    severity: minor
+    description: "Grilling Q1 relayed the triage agent's pick (no schema change) without checking how the system would know a cause was accepted; the owner caught it"
+    solution: "Before relaying a pick, check that it can be carried out with the data that exists; picks that rely on free-text conventions are a warning sign"

@@ -46,3 +46,8 @@ occurrences:
     severity: nit
     description: "Building on the session branch made the worktree use a local branch named worktree-wf_..., so it needed a refspec push to reach claude/upbeat-albattani-2ryjxo."
     solution: "clear-backlog-build could detect a branch already checked out and push HEAD to the named branch itself."
+  - session: 1c810a28-81d4-417d-ac20-af374c985683
+    date: "2026-10-16"
+    severity: nit
+    description: "Cut a new branch in a worktree instead of staying on the session's start branch claude/2174-local-workflow-edits"
+    solution: "Justified: the user asked for a worktree and the start branch was unrelated work; CLAUDE.md could name the worktree case"
