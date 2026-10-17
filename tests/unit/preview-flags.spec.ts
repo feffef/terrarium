@@ -4,7 +4,8 @@
 // Keeps the positional `<route> <out> [WxH]` parsing unaware of the flags, so
 // this is where the extraction contract is pinned.
 import { describe, expect, it } from 'vitest'
-import { extractFlag, extractSwitch, parseScheme } from '../../scripts/ui/screenshot.ts'
+import { extractFlag, extractSwitch } from '../../scripts/lib/cli.ts'
+import { parseScheme } from '../../scripts/ui/screenshot.ts'
 import { reviewShots } from '../../scripts/ui/preview.ts'
 
 describe('extractFlag()', () => {

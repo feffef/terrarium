@@ -10,9 +10,7 @@ import { spawnSync } from 'node:child_process'
 import { appendFileSync, linkSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { pathToFileURL } from 'node:url'
-import { root } from '../../shared/expand.ts'
-import { flagValue } from '../lib/cli.ts'
+import { flagValue, root, runIfMain } from '../lib/cli.ts'
 import { fetchOriginMain, git, isShallowRepository, unshallow } from '../lib/git.ts'
 
 export const FLOOR = ['verify:skills-lock', 'verify:mermaid', 'lint', 'typecheck', 'validate:content'] as const
@@ -298,6 +296,4 @@ function main(): void {
   console.log('gate:scoped: ✓ all planned steps passed')
 }
 
-if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
-  main()
-}
+runIfMain(import.meta.url, main)

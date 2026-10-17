@@ -9,7 +9,7 @@
 // detection contract and residual fail-opens (`docs/agents/guards.md`) — this
 // file carries none of that, only the mechanical shape.
 import { readFileSync } from 'node:fs'
-import { flagValue, runIfMain as runIfMainOf } from '../lib/cli.ts'
+import { flagValue, isMain } from '../lib/cli.ts'
 import { parseTranscript } from '../session/transcript-trace.ts'
 
 /** `obj[key]` for an untyped payload, `undefined` for anything not an object. */
@@ -109,11 +109,10 @@ export function denyUninspectable(label: string, ref: string, detail: string): v
 }
 
 /** The direct-run bootstrap every guard repeats: dispatch to `--dry-run` or
- *  `main`, and fail closed on a crash — unless `failOpen`, which swallows it
- *  instead (a hook must never wedge tool use with its own fault). Not
- *  `lib/cli`'s bare runIfMain: that one prints a stack and exits 1, which the
- *  harness reads as an allow. Must be called with the CALLING module's own
- *  `import.meta.url`. */
+ *  `main`. A crash or rejection denies (fails closed) unless `failOpen`, which
+ *  stays silent (a hook must never wedge tool use with its own fault). It does
+ *  not use `lib/cli`'s `runIfMain`, which exits 1 on a crash, and the harness
+ *  reads that as an allow. Call it with the CALLING module's `import.meta.url`. */
 export function runIfMain(
   moduleUrl: string,
   opts: {
@@ -124,20 +123,18 @@ export function runIfMain(
     failOpen?: boolean
   },
 ): void {
-  runIfMainOf(moduleUrl, () => {
-    const argv = process.argv.slice(2)
-    const onCrash = (err: unknown): void => {
-      if (opts.failOpen) return
-      denyUninspectable(opts.label, opts.ref, `the guard itself crashed (${err instanceof Error ? err.message : String(err)})`)
-    }
-    // A rejection must deny too: lib/cli would exit 1 on it, which reads as an allow.
-    try {
-      const done = opts.dryRun && argv.includes('--dry-run') ? opts.dryRun(argv) : opts.main()
-      if (done instanceof Promise) return done.catch(onCrash)
-    } catch (err) {
-      onCrash(err)
-    }
-  })
+  if (!isMain(moduleUrl)) return
+  const argv = process.argv.slice(2)
+  const onCrash = (err: unknown): void => {
+    if (opts.failOpen) return
+    denyUninspectable(opts.label, opts.ref, `the guard itself crashed (${err instanceof Error ? err.message : String(err)})`)
+  }
+  try {
+    const done = opts.dryRun && argv.includes('--dry-run') ? opts.dryRun(argv) : opts.main()
+    if (done instanceof Promise) done.catch(onCrash)
+  } catch (err) {
+    onCrash(err)
+  }
 }
 
 // --- `--dry-run` flag plumbing ----------------------------------------------

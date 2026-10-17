@@ -19,7 +19,8 @@
 //   pnpm exec tsx scripts/ui/eval-in-page.ts http://localhost:3000/t/journal/current \
 //     "getComputedStyle(document.querySelector('.foo')).color"
 import { launchChromium } from '../lib/chromium.ts'
-import { extractFlag, parseSize } from './screenshot.ts'
+import { extractFlag, fail, runIfMain } from '../lib/cli.ts'
+import { parseSize } from './screenshot.ts'
 
 const DEFAULT_WAIT_MS = 300
 
@@ -50,8 +51,7 @@ async function main(): Promise<void> {
   if (waitMsArg !== undefined) {
     const parsed = Number(waitMsArg)
     if (!Number.isInteger(parsed) || parsed < 0) {
-      console.error(`Invalid --wait-ms "${waitMsArg}" — expected a non-negative integer (ms).`)
-      process.exit(1)
+      fail(`Invalid --wait-ms "${waitMsArg}" — expected a non-negative integer (ms).`)
     }
     waitMs = parsed
   }
@@ -60,25 +60,22 @@ async function main(): Promise<void> {
   if (viewportArg !== undefined) {
     const size = parseSize(viewportArg)
     if (!size) {
-      console.error(`Invalid --viewport "${viewportArg}" — expected <width>x<height>, e.g. 390x844.`)
-      process.exit(1)
+      fail(`Invalid --viewport "${viewportArg}" — expected <width>x<height>, e.g. 390x844.`)
     }
     const [width, height] = size.split(',').map(Number) as [number, number]
     viewport = { width, height }
   }
 
   if (!url || !expression) {
-    console.error(USAGE)
-    process.exit(1)
+    fail(USAGE)
   }
 
   try {
     const result = await evaluate(url, expression, waitMs, viewport)
     console.log(result === undefined ? 'undefined' : typeof result === 'object' && result !== null ? JSON.stringify(result, null, 2) : String(result))
   } catch (err) {
-    console.error(err instanceof Error ? err.message : String(err))
-    process.exit(1)
+    fail(err instanceof Error ? err.message : String(err))
   }
 }
 
-main()
+runIfMain(import.meta.url, main)

@@ -18,10 +18,9 @@
 // `PLAYWRIGHT_BROWSERS_PATH` (falling back to the conventional
 // `/opt/pw-browsers` default some environments set) — never a hardcoded
 // absolute path baked into the script.
-import { realpathSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import type { Page } from 'playwright-core'
 import { launchChromium } from '../lib/chromium.ts'
+import { extractFlag, runIfMain } from '../lib/cli.ts'
 
 // A fixed pre-capture wait so client-only/async content (a dynamically-imported
 // mermaid diagram, a chart) has rendered before the shutter fires — a bare
@@ -37,30 +36,6 @@ const USAGE =
   "  --scheme light|dark  emulate the visitor's colour scheme."
 
 export type ColorScheme = 'light' | 'dark'
-
-/** Pull a `--flag value` pair out of `args`, returning the value (last wins if
- *  repeated) and the args with every occurrence removed. Keeps the positional
- *  parsing downstream unaware of the value-taking flags. */
-export function extractFlag(args: string[], flag: string): { value: string | undefined; rest: string[] } {
-  const rest: string[] = []
-  let value: string | undefined
-  for (let i = 0; i < args.length; i++) {
-    const arg = args[i]
-    if (arg === flag) {
-      value = args[i + 1] // may be undefined if the flag is trailing; validated by the caller
-      i++ // consume the value too
-    }
-    else if (arg !== undefined) {
-      rest.push(arg)
-    }
-  }
-  return { value, rest }
-}
-
-/** Pull a boolean `--flag` out of `args`, reporting whether it was present. */
-export function extractSwitch(args: string[], flag: string): { on: boolean; rest: string[] } {
-  return { on: args.includes(flag), rest: args.filter((arg) => arg !== flag) }
-}
 
 /** An absent `--scheme` leaves Chromium's default; a bad one throws a usage message. */
 export function parseScheme(value: string | undefined): ColorScheme | undefined {
@@ -182,22 +157,4 @@ async function main(): Promise<void> {
   }
 }
 
-// Only run the CLI when this file is invoked directly, not when another script
-// (e.g. `scripts/ui/preview.ts`) imports `captureScreenshot` — otherwise this
-// `main()` would run on import and consume the importer's argv (issue #240).
-function invokedDirectly(): boolean {
-  const entry = process.argv[1]
-  if (!entry) return false
-  try {
-    return realpathSync(entry) === realpathSync(fileURLToPath(import.meta.url))
-  } catch {
-    return false
-  }
-}
-
-if (invokedDirectly()) {
-  main().catch((err) => {
-    console.error(err instanceof Error ? err.stack ?? err.message : String(err))
-    process.exit(1)
-  })
-}
+runIfMain(import.meta.url, main)

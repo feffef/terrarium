@@ -40,15 +40,13 @@
 // overlay makes it wrong for a trusted screenshot — see docs/agents/verifying-ui-changes.md).
 import { spawn, type ChildProcess } from 'node:child_process'
 import { createServer } from 'node:net'
-import { existsSync, mkdirSync, openSync, closeSync, readFileSync, realpathSync, rmSync } from 'node:fs'
+import { existsSync, mkdirSync, openSync, closeSync, readFileSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { tmpdir } from 'node:os'
-import { fileURLToPath } from 'node:url'
+import { extractFlag, extractSwitch, runIfMain } from '../lib/cli.ts'
 import {
   captureScreenshot,
   captureScreenshotWaitingFor,
-  extractFlag,
-  extractSwitch,
   parseScheme,
   parseSize,
   type CaptureOptions,
@@ -426,25 +424,5 @@ async function main(): Promise<number> {
   }
 }
 
-// Run the CLI only when invoked directly — not when another script imports
-// `startPreview`/`stopPreview` (importing must not run `main()` and consume the
-// importer's argv, the same trap guarded in `scripts/ui/screenshot.ts`).
-function invokedDirectly(): boolean {
-  const entry = process.argv[1]
-  if (!entry) return false
-  try {
-    return realpathSync(entry) === realpathSync(fileURLToPath(import.meta.url))
-  } catch {
-    return false
-  }
-}
-
-if (invokedDirectly()) {
-  main().then(
-    (code) => process.exit(code),
-    (err) => {
-      console.error(err instanceof Error ? err.stack ?? err.message : String(err))
-      process.exit(1)
-    },
-  )
-}
+// Importers (`startPreview`/`stopPreview`) must not run `main()` on import.
+runIfMain(import.meta.url, async () => process.exit(await main()))

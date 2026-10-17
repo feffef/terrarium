@@ -1,7 +1,8 @@
-// What every script CLI shares (#2185). `hooks/hook-io.ts` wraps `runIfMain`
-// for guards, which must deny rather than exit 1 on a crash.
+// What every script CLI shares (#2185). Guards use `hooks/hook-io.ts` instead:
+// they must deny on a crash, where `runIfMain` here exits 1.
+import { realpathSync } from 'node:fs'
 import { basename, dirname, resolve } from 'node:path'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fileURLToPath } from 'node:url'
 
 // Not re-exported from shared/expand.ts: that pulls in jiti and zod, ~45ms on
 // every hint run that reaches this module through validate-adr-rules.ts.
@@ -14,9 +15,16 @@ export function fail(msg: string): never {
   process.exit(1)
 }
 
-/** True when the module at `importMetaUrl` is the script being run, not imported. */
+/** True when the module at `importMetaUrl` is the script being run, not imported.
+ *  Compares real paths so a symlinked entry (`.claude/skills/…`) still matches. */
 export function isMain(importMetaUrl: string): boolean {
-  return importMetaUrl === pathToFileURL(process.argv[1] ?? '').href
+  const entry = process.argv[1]
+  if (!entry) return false
+  try {
+    return realpathSync(entry) === realpathSync(fileURLToPath(importMetaUrl))
+  } catch {
+    return false
+  }
 }
 
 /** Run `main` when executed directly. Expected failures call `fail`, which
@@ -36,6 +44,29 @@ export function runIfMain(importMetaUrl: string, main: () => void | Promise<void
 export function flagValue(argv: string[], name: string): string | undefined {
   const i = argv.indexOf(name)
   return i >= 0 ? argv[i + 1] : undefined
+}
+
+/** Pull a `--flag value` pair out of `argv`, returning the value (last wins if
+ *  repeated) and the args with every occurrence removed. Keeps positional
+ *  parsing downstream unaware of the value-taking flags. */
+export function extractFlag(argv: string[], flag: string): { value: string | undefined; rest: string[] } {
+  const rest: string[] = []
+  let value: string | undefined
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i]
+    if (arg === flag) {
+      value = argv[i + 1] // undefined if the flag is trailing; validated by the caller
+      i++ // consume the value too
+    } else if (arg !== undefined) {
+      rest.push(arg)
+    }
+  }
+  return { value, rest }
+}
+
+/** Pull a boolean `--flag` out of `argv`, reporting whether it was present. */
+export function extractSwitch(argv: string[], flag: string): { on: boolean; rest: string[] } {
+  return { on: argv.includes(flag), rest: argv.filter((arg) => arg !== flag) }
 }
 
 // Below common inline-capture caps (issue #976 cites ~30KB overflows), with
