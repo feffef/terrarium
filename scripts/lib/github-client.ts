@@ -1,4 +1,4 @@
-// The one GitHub client the issue/PR scripts share (#2185): a `gh` path and a
+// The one GitHub client the issue/PR scripts share: a `gh` path and a
 // `curl` fallback for `gh`-less remote sessions (#505). `curl`, not Node's
 // `fetch`: outbound HTTPS goes through an agent proxy that `curl` honors and
 // undici only honors with `NODE_USE_ENV_PROXY=1` set before the process
@@ -149,7 +149,7 @@ function assertOk({ status, body }: RestPage, method: HttpMethod, url: string): 
   if (status[0] !== '2') throw new Error(`GitHub REST API ${method} ${url} failed: HTTP ${status}: ${body}`)
 }
 
-/** The one `gh api` call: `args` after `gh`, stdout returned. A failure's stderr
+/** The one `gh` runner:`args` after `gh`, stdout returned. A failure's stderr
  *  rides on the thrown error. */
 function runGh(args: string[], cwd: string): string {
   return execFileSync('gh', args, {
@@ -195,8 +195,7 @@ export function requestJson<T>(a: Access, method: HttpMethod, path: string, fiel
   const url = `https://api.github.com/${full}`
   const page = curlPage(url, a.token, a.cwd, { method, json: fields })
   assertOk(page, method, url)
-  const { body } = page
-  return (body.length > 0 ? JSON.parse(body) : undefined) as T
+  return (page.body.length > 0 ? JSON.parse(page.body) : undefined) as T
 }
 
 /** One GET of a repo-relative path, parsed. */

@@ -5,7 +5,7 @@ import { basename, dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 // Not re-exported from shared/expand.ts: that pulls in jiti and zod, ~45ms on
-// every hook run, and every hook imports this module.
+// every hook run, and every guard and hint imports this module.
 export const root = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
 /** Print `<script>: msg` and exit 1. The prefix is the entry script's name. */
