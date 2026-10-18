@@ -1,7 +1,7 @@
 name: flaky-e2e-matcher-timeouts
 summary: >-
-  A browser test clicked a card while the page was still moving, so the click sometimes missed and unrelated changes failed until a re-run.
-cause: "The Journal accordion e2e clicked a session card while the digest it had just opened was still expanding (160 ms), which moved the card below it under Playwright's click, so the click could miss the head and aria-expanded never flipped (not reproduced locally). A longer expect.poll timeout (10 s since PR #1919) can't help. Signal: an unrelated PR fails journal.spec.ts's accordion test or another click right after an open, and passes on re-run."
+  A browser test sometimes failed on unrelated changes until a re-run, most likely because it clicked a card while the page was still moving and the click missed.
+cause: "Most likely (not reproduced: all 120 runs under Chromium CPU throttling passed: the old test 40 at 6x and 40 at 20x, the fixed one 40 at 20x): the Journal accordion e2e clicked a session card while the digest it had just opened was still expanding (160 ms), so the card moved. Playwright waits for a stable box before it clicks, so a miss needs motion that survives that check, such as a late shift near the end of the ease. A longer expect.poll timeout (10 s since PR #1919) can't help. Signal: an unrelated PR fails journal.spec.ts's accordion test or another click right after an open, and passes on re-run."
 surface: safe
 status: tracked
 ref: "issue #2231 (regression of PR #1919)"
