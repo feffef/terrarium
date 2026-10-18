@@ -57,7 +57,6 @@ useSeoMeta({ description: () => landing.value?.description })
 
     <section v-if="data?.directory.length" class="directory">
       <h2>Subjects</h2>
-      <p v-if="space === 'guide'" class="try-it"><NuxtLink :to="`${base}/try-it`">Try it in your project</NuxtLink>: the exercise from every Lesson, on one page.</p>
       <div class="cards">
         <section v-for="subject in data.directory" :id="subject.slug" :key="subject.slug" class="card gb-pane">
           <div class="card-head">
@@ -149,8 +148,6 @@ section { margin-bottom: 56px; }
   color: var(--gb-muted);
 }
 .folder { align-self: flex-end; margin-top: auto; font: 400 11.5px var(--gb-mono); color: var(--gb-muted); text-decoration: underline 1px dotted; text-underline-offset: 3px; }
-
-.try-it { margin: -8px 0 16px; font-size: 14px; color: var(--gb-muted); }
 
 /* The term strip: chips like Term.vue's inline terms, one definition open at a time. */
 .words { margin-bottom: 40px; }
