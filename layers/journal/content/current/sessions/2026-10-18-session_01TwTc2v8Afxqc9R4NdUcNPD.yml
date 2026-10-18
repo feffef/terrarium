@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01TwTc2v8Afxqc9R4NdUcNPD
 startedAt: 2026-10-18T13:15:26Z
-endedAt: 2026-10-18T13:18:15Z
+endedAt: 2026-10-18T13:50:22Z
 kind: interactive
 goal: Analyse the cost of the scheduled Routine runs
 status: completed
 outcome: Answered in chat with per-Routine cost findings; no code or PR
-summary: "The user asked, in one human prompt, for the cost usage of the Routines stored in the new collection, with key findings and learnings. I read the glossary, found the Journal `routines` collection, and asked the user (their stated preference) which collection, metrics, scope and output they meant. They chose Journal routines, tokens and dollars, cost per Routine plus outliers and drivers, and a chat-only answer. I analysed 207 runs across 8 Routines with a scratchpad script. Findings: one visitor-loop run cost $121 (9% of all spend); audit-skills cost rose about 17x since late September and is now the most expensive; cache-read tokens drive cost; duration does not. The 30-run cap drops the oldest rows, so trends cover only what survived. Everything was human-instructed; the scratchpad analysis and the closing log were agent-initiated."
+summary: "The user asked, in one human prompt, for the cost usage of the Routines in the new Journal collection, then in a human follow-up asked me to correlate the cost changes with events in the Skill Inventory. I asked clarifying questions first (their stated preference); they chose Journal routines, tokens and dollars, per-Routine cost plus outliers, and a chat-only answer. I analysed 207 runs with a scratchpad script, then matched cost shifts against Inventory observations and Skill git history. Findings: audit-skills jumped 8x with its 09-27 rewrite; the 09-29 drop across all Routines lines up with a model change (claude-sonnet-5 to claude-sonnet-5-5, verified for audit-docs only), not a Skill edit; the \x11 visitor-loop run was 1,346 Bash calls polling builds. Everything was human-instructed; the scratchpad analysis and the closing log were agent-initiated. No code or PR."
 prs: []
 docsRead:
   - path: GLOSSARY-MAP.md
@@ -17,6 +17,9 @@ docsRead:
     useful: yes
   - path: layers/journal/tenant.config.ts
     reason: routineSchema fields and the 30-run cap context
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read late, after the first git log; later git calls used origin/main scoping from it
     useful: yes
 skillsUsed:
   - name: close-session
@@ -30,15 +33,18 @@ frictions:
   - description: Gave recommendations on Routine cost before checking the ADRs that bind them, as CLAUDE.md asks. ADR-0015 loaded only afterwards via a hook; no conflict found.
     solution: Run grep -l on docs/adr before recommending a change.
     severity: nit
-durationSec: 168
+  - description: First dump of eight Skill Inventory entries was 36KB and truncated; a second query for observations was 137KB. Cost two extra calls before I filtered to recent dates.
+    solution: Filter Inventory observations by date and truncate notes on the first query.
+    severity: nit
+durationSec: 2096
 models:
-  claude-sonnet-5-5: 25
+  claude-sonnet-5-5: 49
 toolCounts:
-  Read: 2
+  Read: 3
   Grep: 1
-  Bash: 8
+  Bash: 17
   AskUserQuestion: 1
-  Skill: 2
+  Skill: 3
   Write: 1
 rulesLoaded:
   - .claude/rules/adr-0021.md
@@ -47,6 +53,8 @@ rulesLoaded:
   - .claude/rules/mdc-when-to-use.md
   - .claude/rules/tenant-layers.md
   - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -83,10 +91,17 @@ ruleVerdicts:
   - path: .claude/rules/tenant-layers.md
     reason: Layer coding rules loaded on reading a layer file; I wrote no code.
     useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded on reading the Skill Inventory; prune-trial context, did not change my analysis.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading the Skill Inventory; about rule placement, unrelated to cost analysis.
+    useful: no
 gitBranch: ccr-d927423c-8hxohb
 entrypoint: remote_mobile
 cliVersion: 2.1.302
 learnings:
   - Routine run records are capped at 30 per Routine (RUNS_KEPT), so the oldest and often most expensive rows are dropped and trends cover only the survivors.
   - Routine cost tracks cache-read tokens, not wall-clock time; a 6.6 hour audit-docs run cost only $12.
+  - A platform-wide cost step on one date across all Routines points to a model or environment change; check the sessions' models field before attributing it to a Skill edit.
 landedBy: Stop
