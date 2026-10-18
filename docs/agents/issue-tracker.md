@@ -37,6 +37,11 @@ name resolution, see [`github-integration.md`](./github-integration.md).
   branch your session started on"): flag it upfront and ask whether separate
   branches are allowed. Don't bundle unrelated issues into one PR and wait for
   an objection after the push.
+- **Filing an issue.** Write what would be costly to derive again: the
+  background, what you checked and found, and why it matters. Make clear which
+  statements are verified fact (with their source) and which are assumption or
+  working theory, so triage doesn't build on a guess. Labels:
+  [`triage-labels.md`](./triage-labels.md).
 - **Create**: `gh issue create --title "..." --body "..."` (heredoc for multi-line bodies).
 - **Read**: `gh issue view <number> --comments`, filtering comments with `jq` and fetching labels too.
 - **List**: `gh issue list --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'`, with `--label` / `--state` filters as needed.

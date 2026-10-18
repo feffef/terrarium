@@ -103,9 +103,10 @@ PR's description; they wait in the ledger for the next run. A fix neither filed
 nor listed ages out of the window, and the next run rediscovers and re-drops it.
 Search the tracker first to avoid duplicates. A group of related frictions is
 one issue. Each issue holds the **problem** with its evidence (quote every
-logging session and severity) and the **design**. Label a fix blocked only by a
-human-only surface `ready-for-human` (an agent may still write the fix; only
-the merge needs a human), except a guard fix: `docs/agents/guards.md` routes it.
+logging session and severity) and the **design**. Write it per
+`docs/agents/issue-tracker.md`'s "Filing an issue" and label it `needs-triage`,
+including a fix blocked only by a human-only surface or a guard
+(`docs/agents/guards.md`).
 
 A dispatched fix gets **no issue**: it is reviewed and merged inside this run
 (§6–§7), so an issue would only be closed by its own merge minutes later. Carry

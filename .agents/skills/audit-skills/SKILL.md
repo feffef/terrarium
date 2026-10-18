@@ -136,10 +136,12 @@ For each other finding that clears that bar:
 - Search open issues first: the session id for a closure finding,
   `audit-skills <skill>` for a Skill finding.
 - **Match found**: comment with only the evidence the thread does not
-  already cite. A concern that recurs across runs belongs on one thread.
-- **No match**: file one `needs-triage` issue naming the Skill (or session),
-  whether it is a silent failure or a missed invocation, the session ids, the
-  quoted evidence, promised against delivered, and your hypothesis.
+  already cite. A concern that recurs across runs belongs on one thread. A comment
+  that adds a significant fact the thread lacks also sets `needs-triage`.
+- **No match**: file one `needs-triage` issue (`docs/agents/issue-tracker.md`'s
+  "Filing an issue") naming the Skill (or session), whether it is a silent
+  failure or a missed invocation, the session ids, the quoted evidence,
+  promised against delivered, and your hypothesis.
 - **Human-nudged closures** go on one standing thread per trend, never one
   issue per session.
 
