@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01DeVdzgpEMamftEbbyv26qd
 startedAt: 2026-10-18T00:16:11Z
-endedAt: 2026-10-18T00:21:32Z
+endedAt: 2026-10-18T00:24:45Z
 kind: autonomous
 goal: Write the 2026-10-17 Journal Digest
-status: in-review
-outcome: Digest and retention sweep opened as PR 2227, gate green, awaiting CI
+status: completed
+outcome: Digest and retention sweep merged in PR 2227
 summary: "Scheduled /digest run (agent-executed, no human ask). Gathered 2026-10-17, wrote the Digest, fact-checked it with a sonnet subagent (no wrong claims, two wording fixes), ran the archive sweep (1 digest, 16 sessions), gate:scoped green, opened PR 2227. Skipped the code-review Skill: prose-only diff already fact-checked and gated."
 prs:
   - "2227"
@@ -41,11 +41,11 @@ frictions:
   - description: Read github-integration.md only after creating the PR; CLAUDE.md requires it before the first GitHub operation.
     solution: Read it at session start for scheduled PR runs.
     severity: nit
-durationSec: 321
+durationSec: 513
 models:
-  claude-sonnet-5-5: 32
+  claude-sonnet-5-5: 51
 toolCounts:
-  Bash: 10
+  Bash: 13
   Read: 3
   Write: 1
   Edit: 1
@@ -53,7 +53,12 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-17.md
 rulesLoaded:
