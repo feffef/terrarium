@@ -30,9 +30,7 @@ it; it is user-invoked) in its default mode, and add every open
 `ready-for-agent` issue. Only when that set is empty, resolve it in
 `full-sweep` mode instead; the owner starting this run is the human direction
 that mode needs. Either way, leave out every issue with a `wayfinder:*` label;
-the `wayfinder` Skill drives those with the owner. Leave out too every issue
-whose fix changes a guard or `.claude/settings.json`'s hook wiring
-(`docs/agents/guards.md`); the report lists it.
+the `wayfinder` Skill drives those with the owner.
 
 Run `clear-backlog-explore` with
 `{ session, issues: [{ number, mode, notes?, reserved? }] }`. `mode` is
