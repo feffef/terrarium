@@ -1,0 +1,171 @@
+schemaVersion: 1
+session: session_019Ws4gsdRWPiAvCXBi55qac
+startedAt: 2026-10-18T15:45:44Z
+endedAt: 2026-10-18T15:56:45Z
+kind: interactive
+goal: Only triage Skills may label issues ready-for-*
+status: in-review
+outcome: "PR 2254 open: routine Skills file needs-triage, issue bodies separate fact from assumption; awaits CI and a human merge"
+summary: 'The owner asked (direct ask) to stop routine Skills filing issues as ready-for-human, to leave that to auto-triage and clear-backlog, and to make filed issues carry costly-to-derive background that separates fact from working theory. Per their preference I first surveyed which instructions needed changes and asked four questions; they answered (agent-initiated parts: none beyond the ask). Finding: only frictions-to-fixes labeled ready-for-human; other filing Skills already said needs-triage but each specified its own body. I homed the label ownership in triage-labels.md and a free-form body standard in issue-tracker.md, then pointed the Skills at them. Code-review (Standards + Spec subagents) found a duplicated rule and a vague "significant" test; fixed both. Left open: pack Skills to-spec, to-tickets and wayfinder still apply ready-for-agent (ADR-0015 forbids editing them), and already-created ready-for-human issues are not relabeled.'
+prs:
+  - "2254"
+docsRead:
+  - path: docs/agents/triage-labels.md
+    reason: label roles; had no rule on who sets ready-*
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: no issue-body standard existed; became the home for one
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-first-push steps and Stop hook override
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit hygiene (-F file, trailer check)
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface before creating the PR
+    useful: partly
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: subagent rubric for Standards review; useful per its report
+    useful: yes
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: (not read) only a subagent grepped it
+    useful: no
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
+skillsUsed:
+  - name: writing-for-agents
+    reason: standard for editing Skills and docs; subagent used it as review rubric
+  - name: code-review
+    reason: required before first push; found duplicated rule
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: A cd into .agents/skills moved the primary working dir, so a following relative path (docs/adr/0022) failed to resolve.
+    solution: Use absolute paths or a subshell; do not cd in Bash.
+    severity: nit
+  - description: Stop hook asked to push before code-review findings were fixed; it conflicts with ADR-0004 and had to be overridden by memory of the rule.
+    solution: Make the Stop hook skip the push nag while a review is pending, or cite ADR-0004 in its message.
+    severity: nit
+durationSec: 661
+models:
+  claude-sonnet-5-5: 80
+toolCounts:
+  Read: 7
+  Grep: 4
+  Bash: 16
+  Skill: 4
+  Edit: 16
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - docs/agents/triage-labels.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/agents/guards.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/wayfinder/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push despite the Stop hook; summary was enough, did not open the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to the PR right after push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Close-session logging rule; summary was enough, no ADR needed
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and the commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: About glossary layout; this change touched no glossary terms
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Cut-before-add steered me to remove the ready-for-human sentence; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the Skill edits; confirmed the rule belongs in docs/agents; subagent also found it partly useful
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: Defines what the sweep may label, confirming other Skills should not; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill location; edits stayed inside existing Skills, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Pack Skills cannot be edited, which is why to-spec, to-tickets and wayfinder stayed unchanged; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Navigation payloads; unrelated to this docs-only change
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: ADR rewrite rule; I changed no ADR
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Requester trust; the change involved no Public input
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Digest rule; loaded by reading digest Skill, unrelated
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Blog pingbacks; unrelated
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read its path list; none of my files were Human-only, so it only prompted the check
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+  - type: general-purpose
+    task: Spec review of diff
+gitBranch: ccr-b4b5768b-5z1wz7
+entrypoint: remote_mobile
+cliVersion: 2.1.302
+ideas:
+  - Add a check (extend check-triage-drift.ts) that flags open issues whose first label was ready-* set by a non-triage Skill's session, so label ownership is enforced, not just documented
+landedBy: Stop
