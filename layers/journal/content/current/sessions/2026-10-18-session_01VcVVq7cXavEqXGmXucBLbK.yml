@@ -1,0 +1,135 @@
+schemaVersion: 1
+session: session_01VcVVq7cXavEqXGmXucBLbK
+startedAt: 2026-10-18T13:10:22Z
+endedAt: 2026-10-18T13:18:46Z
+kind: autonomous
+goal: Scheduled prune trial of the Platform's instructions
+status: in-review
+outcome: "No trial judgeable yet; opened one new trial pruning the provenance guard's comments (-89), PR #2252 awaiting a human merge"
+summary: Scheduled /prune-trial run, nothing human-instructed. The window script showed all four open trials landed 2026-10-16 to 10-18 and not yet judgeable, so none was judged. A search subagent covered the instruction corpus, guard headers and the tracker and ranked failed-prose candidates; I took the github-provenance-guard.ts header and doc comments (rule failed five times as prose, now held by the guard), cut them comments-only (-89), added the ledger entry, and a Sonnet probe pinned to the post-prune SHA answered five situations from the surviving text (it flagged the exact trailer shape as not visible in the first 80 lines, which the guard's deny message supplies). gate:scoped green, unit spec 84/84. I ran code-review as a lean self-check (comments-only diff, verified no code lines changed) rather than two subagents. The PR touches scripts/hooks, so it waits for a human merge.
+prs:
+  - "2252"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: read only after create_pull_request, on the hook's nudge; nothing in it changed the call
+    useful: no
+  - path: docs/agents/pr-workflow.md
+    reason: pre-push review steps and scheduled-run PR closing
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read before first git command; nothing applied
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: "subagent: roster of guards, issues and conventions for the candidate search"
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: "subagent: workflow-edit and deferred-tool caveats for runner-ups"
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; no glossary term was needed
+    useful: no
+  - path: GLOSSARY.md
+    reason: session-start read; Prune Trial and Rule terms matched the Skill
+    useful: partly
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: scripts/hooks/github-provenance-guard.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Read github-integration.md only after my first GitHub operation (create_pull_request), against CLAUDE.md's read-first trigger; the hook nudged it.
+    solution: None needed; the call was right and the doc did not change it.
+    severity: nit
+  - description: Ran code-review as a lean self-check instead of the Skill's two parallel subagents, because the diff was comments-only.
+    solution: Let the code-review Skill say when a comments-only diff may skip the subagents.
+    severity: nit
+durationSec: 504
+models:
+  claude-sonnet-5-5: 70
+toolCounts:
+  Read: 9
+  Bash: 14
+  Agent: 2
+  Grep: 1
+  Edit: 13
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  PushNotification: 1
+filesEdited:
+  - scripts/hooks/github-provenance-guard.ts
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and review before the first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log-to-main and close-session invocation; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR unasked and stay within the Skill's scope; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on the PR body and commit trailer; summary enough, and it was this run's subject
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Defined trial territory and probe rules for the prune; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded by a hook; only confirmed rules stay short, not needed for the prune
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR rewrites; this run edited no ADR
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: About glossary placement; no glossary term was added
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: About Public input; every input here was Trusted
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: About the guest pipeline; did not apply
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Only pointed to docs/agents/guards.md, which the subagent read
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed scripts/hooks/** is Human-only so the PR waits for a human merge
+    useful: yes
+subagents:
+  - type: general-purpose
+    task: Find failed-prose prune candidate
+  - type: general-purpose
+    task: Probe pruned guard header
+    model: sonnet
+gitBranch: claude/practical-rubin-lqu67a
+entrypoint: remote_trigger
+cliVersion: 2.1.302
+trigger: prune-trial
+landedBy: Stop
