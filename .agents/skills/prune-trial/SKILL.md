@@ -111,7 +111,7 @@ reword all of it. The file is the trial's territory. It gets the same ledger
 entry and §4 probe as a prune.
 
 When §4's probe fails, or a landed trial's verdict in §1 showed real damage,
-the behaviour has proven it needs a hook. **File an issue proposing it**; a
+the behaviour has proven it needs a hook. **File a `needs-triage` issue proposing it**; a
 session with a human present builds it, because a scheduled run can't wire
 `.claude/settings.json` (`docs/agents/guards.md`). The issue names the
 behaviour, the trial or verdict that proved it, the wrong shape to fire on, and
@@ -158,7 +158,7 @@ Three exceptions and one refusal:
 - **External pack Skills** (`skills-lock.json`) — the Gate rejects the edit.
 - **Session logs** — the record, not instructions.
 - **Retiring a Skill or a Routine, including your own** — file a `needs-triage`
-  issue, never act; `audit-skills` records the same class of signal as an
+  issue (`docs/agents/issue-tracker.md`'s "Filing an issue"), never act; `audit-skills` records the same class of signal as an
   `ideas` entry, so look for one and cite it rather than filing twice. Nothing breaks when a Skill stops running, so no verdict could tell you
   it was a mistake. Two runs in a row that open no trial (a failed probe aside) is the
   signal to file yours.

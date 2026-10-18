@@ -117,7 +117,7 @@ survey gets a comment, not a duplicate). For each surviving candidate:
 
 Leave `condition`, `stratum`, `site` and the `catalogNote` out of the issue —
 the catalogue run authors them from the primary sources, not from this
-report. Label the issue `needs-triage`, list any Gate-B exclusions from §3 at
+report. Label the issue `needs-triage` (body per `docs/agents/issue-tracker.md`'s "Filing an issue"), list any Gate-B exclusions from §3 at
 the end, and carry the provenance header.
 
 Filing the issue is where this Skill stops. When any candidate survived,

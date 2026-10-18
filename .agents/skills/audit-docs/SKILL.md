@@ -173,7 +173,8 @@ more specific ADR unless git history or the code shows it is a leftover. File
 an issue only when neither settles it.
 
 File a `needs-triage` issue for one thing only: two sources state conflicting
-facts and no primary source (code, schemas, ADRs) settles which is true. Give
+facts and no primary source (code, schemas, ADRs) settles which is true. Write
+it per `docs/agents/issue-tracker.md`'s "Filing an issue": give
 both readings and your best guess, leave that finding, and move on. Check for
 an open duplicate first (`scripts/github/list-open-issues.ts` or a scoped
 `list_issues`; `docs/agents/github-integration.md`), never re-file one, and open with the
