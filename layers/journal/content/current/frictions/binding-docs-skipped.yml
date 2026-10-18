@@ -361,3 +361,18 @@ occurrences:
     severity: nit
     description: "I did not open ADR-0004's full text before pushing, although its rule says to; I relied on pr-workflow.md, which carries the same steps."
     solution: "Let the ADR-0004 summary rule say pr-workflow.md suffices for pushing."
+  - session: session_012NmfdSNbbPD9T5LPAwmdYG
+    date: "2026-10-15"
+    severity: nit
+    description: "Started the clear-backlog-build workflow (worktrees, git) without invoking dispatch-subagents first, as CLAUDE.md's trigger requires."
+    solution: "clear-backlog §3 could say whether its workflow satisfies the dispatch-subagents trigger."
+  - session: session_01JygBaHorymh1xgVBsaTh3E
+    date: "2026-10-17"
+    severity: minor
+    description: "Recommended grilling picks without the CLAUDE.md grep -l of docs/adr for each changed path."
+    solution: "Run grep -l on the fix paths before writing a grilling pick."
+  - session: session_01GVmwHZQthucdGcVwe3HAUL
+    date: "2026-10-17"
+    severity: nit
+    description: "Skipped reading GLOSSARY-MAP.md and GLOSSARY.md at session start (CLAUDE.md) because the task was an ops question"
+    solution: "Low impact here; a lighter trigger for pure-ops sessions would avoid the skip being a rule break"

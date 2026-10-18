@@ -4,12 +4,15 @@ summary: >-
 cause: >-
   Harness status nudges pull sessions into narrating subagent progress in chat, though clear-backlog says the chat holds only questions and the report.
 surface: outside
-status: tracked
-ref: "issue #2211 (regression of #1852)"
+status: open
+ref: "issue #2211 closed by PR #2215, which dropped the silent-chat rule (owner pick)"
 fixes:
   - pr: 1852
     date: "2026-10-12"
     summary: "clear-backlog now keeps chat to owner questions and handles PR events and finished agents silently."
+  - pr: 2215
+    date: "2026-10-17"
+    summary: "Dropped clear-backlog's rule that the chat holds only questions and the report, so no rule is left to break."
 occurrences:
   - session: session_01STVS35HcxNZp7dQ1pPnrhW
     date: "2026-10-13"
@@ -21,3 +24,8 @@ occurrences:
     severity: minor
     description: "The owner asked for less progress-update spam mid-session; my early replies narrated subagent status."
     solution: "Reply only with findings and questions while agents run."
+  - session: session_01JygBaHorymh1xgVBsaTh3E
+    date: "2026-10-17"
+    severity: nit
+    description: "Posted short status lines after agent hand-backs while the silent-chat rule still stood, partly after harness nudges and partly not."
+    solution: "Moot once #2215 drops the rule."

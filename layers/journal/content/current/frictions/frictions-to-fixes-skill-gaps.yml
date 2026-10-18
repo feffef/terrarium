@@ -39,3 +39,8 @@ occurrences:
     severity: minor
     description: "Survey brief says --unledgered drops carried frictions, yet 7 blocks for sessions already in a cluster reappeared and only surfaced at validate time (survey agent's friction)."
     solution: "Have the brief say to skip a session already present in the target cluster, or filter by session in the script."
+  - session: session_01Sc82qSCs4NVP3igf9SaGXM
+    date: "2026-10-17"
+    severity: minor
+    description: "The survey subagent reported that the brief gives no cheap way to find merged PRs missing from the ledger and no helper to append occurrences, so it did both by hand."
+    solution: "Add a script that lists merged PRs absent from every ledger fixes entry, and one that appends print-ledger-occurrence output."

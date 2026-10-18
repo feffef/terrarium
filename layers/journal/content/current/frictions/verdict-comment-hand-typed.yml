@@ -1,0 +1,24 @@
+name: verdict-comment-hand-typed
+summary: >-
+  Agents typed commit SHAs and links into a merge-verdict comment by hand and got them wrong.
+cause: >-
+  The verdict comment's Reviewed SHA or footer link is written from memory or from a short hash instead of copied from git rev-parse or the session id, so it is wrong until compared and corrected. Signals: 'typed the Reviewed SHA from memory', 'made-up full commit SHA', 'duplicated path segment' in the footer link.
+surface: safe
+status: open
+fixes: []
+occurrences:
+  - session: session_01Sc82qSCs4NVP3igf9SaGXM
+    date: "2026-10-17"
+    severity: nit
+    description: "Wrote a made-up full commit SHA in a PR verdict comment after seeing only the short hash; I caught it before merging and edited the comment to the real SHA."
+    solution: "Take the full head SHA from git rev-parse before writing the Reviewed line."
+  - session: session_01CXxyUmwkN3Rx5DTSK2s391
+    date: "2026-10-17"
+    severity: nit
+    description: "Typed the Reviewed SHA in the verdict comment from memory and got the tail wrong; caught it by comparing with git rev-parse and posted a correction."
+    solution: "Have the verdict comment built from the git rev-parse output, or have merge-pr.ts print the line to paste."
+  - session: session_01P39mjYt8LWVh2TYNyxWdqN
+    date: "2026-10-17"
+    severity: nit
+    description: "The PR's merge-verdict comment's footer link rendered as \"https://claude.ai/code/code\" (a duplicated path segment) instead of \"https://claude.ai/code\", a copy-paste slip in the attribution footer."
+    solution: "Proofread the exact attribution footer text against the system reminder's literal string before posting a GitHub comment, rather than typing it from memory."

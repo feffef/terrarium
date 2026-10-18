@@ -340,3 +340,18 @@ occurrences:
     severity: nit
     description: "The Stop hook asked me to push the unpushed survey commit before the gate and review ADR-0004 requires; I declined."
     solution: "Have the hook skip the nag while a frictions-to-fixes ledger branch awaits its gate."
+  - session: session_01CtktRkpbF4wQ3TTQVYUqLz
+    date: "2026-10-17"
+    severity: minor
+    description: "The Stop hook asked to commit and push about ten times while subagents were mid-edit and before gate and review, adding noise"
+    solution: "Stop hook could stay quiet while background agents run, or ADR-0004's precedence over it could be noted in the hook message"
+  - session: session_01CXxyUmwkN3Rx5DTSK2s391
+    date: "2026-10-17"
+    severity: nit
+    description: "The Stop hook asked for a push twice while the review was running; ADR-0004 required waiting."
+    solution: "Let the hook skip the nag while a code-review run is in flight."
+  - session: session_01Sc82qSCs4NVP3igf9SaGXM
+    date: "2026-10-17"
+    severity: nit
+    description: "The Stop hook asked me to push the survey commit before the ledger work was done, which conflicts with ADR-0004's review-before-push order."
+    solution: "Have the hook stay quiet while an open Skill step still owes the gate."

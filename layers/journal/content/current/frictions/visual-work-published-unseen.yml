@@ -49,3 +49,8 @@ occurrences:
     severity: minor
     description: "My first feature, a landing diagram, was dropped late because owner decisions in old issues rejected it, and I rewrote the flowchart twice for the 390px width."
     solution: "Have visitor-loop step 3 grep the design resolutions on the focus Tenant before choosing a feature."
+  - session: session_01CtktRkpbF4wQ3TTQVYUqLz
+    date: "2026-10-17"
+    severity: minor
+    description: "I pushed and opened the PR before the screenshot-review agent returned, so the PR's screenshot line claims shots taken, not reviewed"
+    solution: "Wait for the shot review before pushing, or start it right after the build, in parallel with gate:scoped earlier"

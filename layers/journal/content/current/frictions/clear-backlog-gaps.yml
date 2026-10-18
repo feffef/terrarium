@@ -106,3 +106,8 @@ occurrences:
     severity: minor
     description: "The clear-backlog Skill leaves hook-wiring issues out by default, and the owner had to tell me to include them."
     solution: "Ask about that exclusion at the start of the run, or drop it when a Trusted owner starts the run, since a human merge already controls those files."
+  - session: session_01JygBaHorymh1xgVBsaTh3E
+    date: "2026-10-17"
+    severity: minor
+    description: "clear-backlog-build failed at once because I passed picks as a string; the Skill says 'the agreed picks' without naming the array shape."
+    solution: "Say 'picks: an array of strings' in clear-backlog §3, or have the script accept a string."

@@ -1,0 +1,14 @@
+name: screenshot-review-runaway
+summary: >-
+  A subagent told to review every screenshot read them one at a time until image limits stalled it for about 50 minutes.
+cause: >-
+  A screenshot-review subagent is briefed to look at all shots of a bulk run (glassbox-update, preview.ts review output), reads each full-page image separately, hits image request limits and loops; nothing caps image reads in the brief or in EVERY-PAGE.md's Check. Signals: 'image request limits', 'read 76 shots', hundreds of tool calls, session unopenable.
+surface: safe
+status: open
+fixes: []
+occurrences:
+  - session: session_01CtktRkpbF4wQ3TTQVYUqLz
+    date: "2026-10-17"
+    severity: major
+    description: "The screenshot-review subagent read 76 full-page shots one by one, hit image request limits, looped for ~50 minutes and 1,200 tool calls, and left the session unopenable in the app"
+    solution: "Check mobile overflow by image width in a script, and look at only the shots of pages whose teaching changed; EVERY-PAGE.md Check could say so for bulk runs, and dispatch briefs should cap image reads"

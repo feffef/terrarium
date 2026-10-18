@@ -256,3 +256,18 @@ occurrences:
     severity: minor
     description: "Grilling Q1 relayed the triage agent's pick (no schema change) without checking how the system would know a cause was accepted; the owner caught it"
     solution: "Before relaying a pick, check that it can be carried out with the data that exists; picks that rely on free-text conventions are a warning sign"
+  - session: session_01JygBaHorymh1xgVBsaTh3E
+    date: "2026-10-17"
+    severity: minor
+    description: "I excluded #2209 and #2210 as guard changes from the issue text alone; only the owner's request for a transcript look showed neither needed one."
+    solution: "Before excluding an issue for its fix's surface, check the cited sessions; the issue's candidate fix is not the root cause."
+  - session: session_01BePy3Sj8TRHv7YGtPqnpfB
+    date: "2026-10-17"
+    severity: minor
+    description: "My Hooks rewrite claimed every guard sets onFailure though the page itself said one fails open; only the late code-review caught it"
+    solution: "Check the rewritten claim against the page's own other lines (EVERY-PAGE.md Test the lede) before committing"
+  - session: session_01GVmwHZQthucdGcVwe3HAUL
+    date: "2026-10-17"
+    severity: nit
+    description: "Relayed the other session's merge and request-limit claims without checking them (CLAUDE.md: verify before you state); labelled them unverified"
+    solution: "Check the PR merge state via GitHub before relaying"

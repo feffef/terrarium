@@ -81,3 +81,23 @@ occurrences:
     severity: nit
     description: "The code-review Skill's two-subagent flow is overkill for a prose-only digest diff already fact-checked and gated; I reviewed it myself instead."
     solution: "Let pr-workflow skip code-review for a scheduled run whose diff is only Digest pages and archive moves."
+  - session: session_01Sc82qSCs4NVP3igf9SaGXM
+    date: "2026-10-17"
+    severity: minor
+    description: "Skipped the code-review Skill before the first push of both PRs, self-reviewing two small diffs instead, against ADR-0004 and pr-workflow."
+    solution: "Say in frictions-to-fixes section 7 whether a self-review of a tiny doc diff may replace the code-review Skill."
+  - session: session_01BePy3Sj8TRHv7YGtPqnpfB
+    date: "2026-10-17"
+    severity: minor
+    description: "Pushed the branch without running the code-review Skill first (ADR-0004 rule, pr-workflow Review before the first push); only gate:scoped and page tests ran"
+    solution: "glassbox-update step 6 could say whether the page checks count as its own review, as midden-catalogue's does"
+  - session: session_01E7YFbvBvT8HWhVJb6kTDMq
+    date: "2026-10-17"
+    severity: nit
+    description: "pr-workflow wants the code-review Skill before first push; I reviewed the single prose file inline instead, as earlier blog PRs did."
+    solution: "blog-post step 11 could say plainly that an inline review is allowed for a one-file post."
+  - session: session_01DeVdzgpEMamftEbbyv26qd
+    date: "2026-10-18"
+    severity: nit
+    description: "Skipped the code-review Skill before the first push, self-reviewing a prose-only fact-checked digest diff against ADR-0004 and pr-workflow."
+    solution: "Let the digest Skill say the fact-check plus gate counts as the review for digest PRs."

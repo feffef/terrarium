@@ -1,0 +1,19 @@
+name: pr-number-guessed-before-create
+summary: >-
+  Agents subscribed to a pull request by guessing its number before the create call returned, then had to resubscribe.
+cause: >-
+  The session calls subscribe_pr_activity with the expected next PR number in the same turn as create_pull_request, and the guess is off by one when another PR lands first. Signals: 'guessing the next number', 'unsubscribe and resubscribe'.
+surface: safe
+status: open
+fixes: []
+occurrences:
+  - session: session_013RCsUF234qAGu3CJr3v2on
+    date: "2026-10-16"
+    severity: nit
+    description: "Subscribed to PR #2188 by guessing the next number before create_pull_request returned #2189; had to unsubscribe and resubscribe."
+    solution: "Read the PR number from the create result before subscribing; never predict ids."
+  - session: session_01CtktRkpbF4wQ3TTQVYUqLz
+    date: "2026-10-17"
+    severity: nit
+    description: "I subscribed to PR #2221 by guessing the new PR number before reading the create result (it was #2222), then had to unsubscribe and resubscribe"
+    solution: "Wait for create_pull_request's result before subscribing"

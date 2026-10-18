@@ -17,3 +17,8 @@ occurrences:
     severity: minor
     description: "Polled a long-running background gate with many no-op Bash echo calls instead of simply waiting for its own completion notification, wasting turns"
     solution: "After starting a run_in_background command, stop calling tools and let the completion notification arrive rather than polling"
+  - session: session_01Sr3uwZro23NY3Z4sk5ojsM
+    date: "2026-10-18"
+    severity: nit
+    description: "Called ScheduleWakeup to wait on a running subagent instead of just ending the turn; it was blocked outright by the /loop-only tool guard (issue #814), since this is not a /loop session."
+    solution: "No cost beyond one wasted tool call - the guard's error message was clear and I ended the turn correctly afterward. Remember that a dispatched Agent-tool subagent self-notifies on completion; no wait/poll tool is ever needed for it."
