@@ -67,7 +67,9 @@ Done when all three reports are in; resume a stalled visitor with
 
 ## 3. Tally consensus
 
-Merge the three reports into one tally in your scratchpad:
+Findings and ideas cover content (wording, thin or missing pages, new entries) as
+much as application behaviour; weigh both alike. Merge the three reports into one
+tally in your scratchpad:
 
 - **Findings.** Cluster reports of the *same problem on the same page or
   component*, however worded. A cluster raised by ≥2 visitors is consensus.
