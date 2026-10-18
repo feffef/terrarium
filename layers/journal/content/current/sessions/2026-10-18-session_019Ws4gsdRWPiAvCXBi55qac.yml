@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_019Ws4gsdRWPiAvCXBi55qac
 startedAt: 2026-10-18T15:45:44Z
-endedAt: 2026-10-18T15:56:45Z
+endedAt: 2026-10-18T16:01:05Z
 kind: interactive
 goal: Only triage Skills may label issues ready-for-*
-status: in-review
-outcome: "PR 2254 open: routine Skills file needs-triage, issue bodies separate fact from assumption; awaits CI and a human merge"
+status: completed
+outcome: "PR 2254 merged: routine Skills file needs-triage, issue bodies separate fact from assumption"
 summary: 'The owner asked (direct ask) to stop routine Skills filing issues as ready-for-human, to leave that to auto-triage and clear-backlog, and to make filed issues carry costly-to-derive background that separates fact from working theory. Per their preference I first surveyed which instructions needed changes and asked four questions; they answered (agent-initiated parts: none beyond the ask). Finding: only frictions-to-fixes labeled ready-for-human; other filing Skills already said needs-triage but each specified its own body. I homed the label ownership in triage-labels.md and a free-form body standard in issue-tracker.md, then pointed the Skills at them. Code-review (Standards + Spec subagents) found a duplicated rule and a vague "significant" test; fixed both. Left open: pack Skills to-spec, to-tickets and wayfinder still apply ready-for-agent (ADR-0015 forbids editing them), and already-created ready-for-human issues are not relabeled.'
 prs:
   - "2254"
@@ -65,19 +65,20 @@ frictions:
   - description: Stop hook asked to push before code-review findings were fixed; it conflicts with ADR-0004 and had to be overridden by memory of the rule.
     solution: Make the Stop hook skip the push nag while a review is pending, or cite ADR-0004 in its message.
     severity: nit
-durationSec: 661
+durationSec: 921
 models:
-  claude-sonnet-5-5: 80
+  claude-sonnet-5-5: 92
 toolCounts:
   Read: 7
   Grep: 4
-  Bash: 16
+  Bash: 18
   Skill: 4
   Edit: 16
   Agent: 2
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 3
 filesEdited:
   - docs/agents/triage-labels.md
   - docs/agents/issue-tracker.md
