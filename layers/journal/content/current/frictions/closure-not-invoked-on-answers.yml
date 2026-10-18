@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A session skips close-session when it is due (after answering a question, or at PR-open) and the user has to ask whether it was logged.
 surface: safe
-status: tracked
-ref: "issue #2209 (regression of #1868); PR #1801 (answers case); PR #1821 (PR-open case, regressed); issue #1859 closed by PR #1868 (merged 2026-10-13T06:11Z, read-first-hint reminds close-session after a PR opens)"
+status: open
+ref: "issue #2209 closed 2026-10-17; PR #2217 fixed only the PR-open half, the answer-only half was left out of scope by the owner; PR #1801 (answers case); PR #1821 (PR-open case, regressed); issue #1859 closed by PR #1868 (merged 2026-10-13T06:11Z, read-first-hint reminds close-session after a PR opens)"
 fixes:
   - pr: 1801
     date: "2026-10-12"
@@ -16,6 +16,9 @@ fixes:
   - pr: 1868
     date: "2026-10-13"
     summary: "The read-first hint now reminds the session to run close-session after it opens a PR."
+  - pr: 2217
+    date: "2026-10-17"
+    summary: "The read-first hint now looks only at the transcript after the latest PR creation, so it reminds about close-session on every PR."
 occurrences:
   - session: session_01DRBxySwYL4HR4xEEJc3CXX
     date: "2026-10-11"

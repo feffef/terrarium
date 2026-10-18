@@ -20,16 +20,6 @@ fixes:
     date: "2026-10-16"
     summary: "Made the shell-read advisory's text neutral: it no longer calls a disputed credit a false positive and tells the agent to check the transcript for the earlier reader."
 occurrences:
-  - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
-    date: "2026-10-03"
-    severity: moderate
-    description: "SHELL-READ-DETECTION miss. Command: git switch -c claude/445-apply-gate-shell origin/main && cat docs/proposals/879-gate-yml-thin-shell.md && cat docs/proposals/README.md. Expected path: docs/proposals/879-gate-yml-thin-shell.md, reported 'named but output shows no line'. Its full text was printed (README after it was credited). Possibly because the file was deleted from the working tree later in the session."
-    solution: "Have the detector match output against the file's content at read time (or from git HEAD) when the path no longer exists on disk."
-  - session: session_01SWRyFbuNXxVWi47tGB8GX6
-    date: "2026-10-03"
-    severity: moderate
-    description: "SHELL-READ-DETECTION false positive: `diff .agents/skills/setup-matt-pocock-skills/triage-labels.md docs/agents/triage-labels.md` credited .agents/skills/setup-matt-pocock-skills/triage-labels.md, but the output held only `>` add-hunks from the right-hand file, so no line of the left-hand file was ever shown."
-    solution: "diff credits both positionals unconditionally; credit only the side whose lines appear in the output (`<` for left, `>` for right), or adopt the output-matching derivation measured in docs/research/shell-reads-by-output-matching.md, which gets this case right."
   - session: session_01LEQpnXw4SeWsfw4THR5NbX
     date: "2026-10-04"
     severity: moderate

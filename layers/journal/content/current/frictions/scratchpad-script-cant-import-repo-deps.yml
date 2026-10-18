@@ -24,3 +24,8 @@ occurrences:
     severity: minor
     description: "First Playwright script failed twice: scratchpad .ts is CJS under tsx, and playwright-core would not resolve from outside the repo."
     solution: "The Skill could point at scripts/probe.ts first, or the doc could say scratchpad scripts need .mts plus absolute imports."
+  - session: session_01CXxyUmwkN3Rx5DTSK2s391
+    date: "2026-10-17"
+    severity: nit
+    description: "A Playwright script with top-level await in a .ts file failed under tsx (cjs); renamed to .mts."
+    solution: "Mention in verifying-ui-changes.md that hand-rolled scripts use .mts."

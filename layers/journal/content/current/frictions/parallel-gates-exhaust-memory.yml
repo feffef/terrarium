@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-12"
     summary: "Skill-only changes no longer queue for a heavy-test slot."
 occurrences:
-  - session: session_01548Bi1ZiGcknAp8CMLNMZB
-    date: "2026-10-03"
-    severity: moderate
-    description: "Five parallel full gates in one container exhausted memory: test:e2e died with a setup-hook timeout or worker SIGKILL on #1566, #1567 and #1569 while every other step passed; e2e alone or CI passed each time"
-    solution: "Record in docs/agents/environment-caveats.md: test:e2e SIGKILL/hook timeout under concurrent gates is memory pressure; serialize heavy gates across parallel impl agents or re-run e2e alone before diagnosing"
   - session: session_018i6d2BQPkf9cq6jSEqCNSX
     date: "2026-10-10"
     severity: minor

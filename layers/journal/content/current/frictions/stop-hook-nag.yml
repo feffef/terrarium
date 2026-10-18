@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   The Stop hook demands commit and push on every turn while a gate, build or fact-check subagent is still running, against ADR-0004's push-after-gate rule.
 surface: outside
-status: open
-ref: "issue #1653 (closed not-planned 2026-10-10: harness-side stop-hook-git-check.sh); PRs #1588, #1612 (caveat docs)"
+status: tracked
+ref: "issue #2233 (regression of PR #2188); issue #1653 (closed not-planned 2026-10-10: harness-side stop-hook-git-check.sh); PRs #1588, #1612 (caveat docs)"
 fixes:
   - pr: 1588
     date: "2026-10-04"
@@ -20,36 +20,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_01CbWrei9SvmrH9vjNx2MB2f
-    date: "2026-10-03"
-    severity: nit
-    description: "Stop hook demanded commit and push while the gate was still running, pressuring against the recipe's green-before-commit order."
-    solution: "Have the stop hook skip while a backgrounded gate log is unfinished."
-  - session: session_01DtFw6GBViQZp25jvQV7gEF
-    date: "2026-10-03"
-    severity: nit
-    description: "The stop hook demanded commit-and-push several times while the full gate was still running, pushing toward an unverified push"
-    solution: "Have the hook tolerate a running gate:scoped, or say verify-then-push rather than push"
-  - session: session_01JUVBufFxrv8bKoVBV5rgYN
-    date: "2026-10-03"
-    severity: minor
-    description: "The Stop hook demanded a commit and push twice while the fact-check and gate were still running, forcing two commits on a single-post PR."
-    solution: "Already tracked as a recurrent friction (Stop hook vs a running gate). It needs the human-only settings.json hook change."
-  - session: session_01JzzBErytZGXxGg7v9vqZts
-    date: "2026-10-03"
-    severity: nit
-    description: "The Stop hook flagged the untracked post as uncommitted while the fact-check subagent was still running, before the commit was due."
-    solution: "The hook cannot know a subagent is pending; waiting then committing was correct. A hook note about pending background agents would remove the nag."
-  - session: session_01P7a2zqJxuariDNfYqWQRHs
-    date: "2026-10-03"
-    severity: moderate
-    description: "The Stop hook demanded commit-and-push on every turn while subagents were mid-edit on files, forcing repeated 'not yet' turns."
-    solution: "The stop-hook git check could tolerate files a still-running background agent is editing, or I could have dispatched agents into worktrees."
-  - session: session_01WoSzRemGryY3vGQMWf2347
-    date: "2026-10-03"
-    severity: nit
-    description: "Stop hook demanded commit and push while the fact-check and gate were still running, forcing an early push and a follow-up wording commit."
-    solution: "Stop hook should skip while a background command is running."
   - session: session_016o8vxfkAFpgZMedEsKZqKT
     date: "2026-10-04"
     severity: nit
@@ -340,3 +310,18 @@ occurrences:
     severity: nit
     description: "The Stop hook asked me to push the unpushed survey commit before the gate and review ADR-0004 requires; I declined."
     solution: "Have the hook skip the nag while a frictions-to-fixes ledger branch awaits its gate."
+  - session: session_01CtktRkpbF4wQ3TTQVYUqLz
+    date: "2026-10-17"
+    severity: minor
+    description: "The Stop hook asked to commit and push about ten times while subagents were mid-edit and before gate and review, adding noise"
+    solution: "Stop hook could stay quiet while background agents run, or ADR-0004's precedence over it could be noted in the hook message"
+  - session: session_01CXxyUmwkN3Rx5DTSK2s391
+    date: "2026-10-17"
+    severity: nit
+    description: "The Stop hook asked for a push twice while the review was running; ADR-0004 required waiting."
+    solution: "Let the hook skip the nag while a code-review run is in flight."
+  - session: session_01Sc82qSCs4NVP3igf9SaGXM
+    date: "2026-10-17"
+    severity: nit
+    description: "The Stop hook asked me to push the survey commit before the ledger work was done, which conflicts with ADR-0004's review-before-push order."
+    solution: "Have the hook stay quiet while an open Skill step still owes the gate."

@@ -84,3 +84,8 @@ occurrences:
     severity: minor
     description: "nitro.build, v2.nitro.build and nuxt.com were unreachable (DNS fail via WebFetch, curl 000), so docs URLs could not be fetched directly"
     solution: "EVERY-PAGE.md's fallback worked: sparse clone of nitrojs/nitro v2 docs, npm pack @nuxt/docs, web search for exact URLs"
+  - session: session_01CtktRkpbF4wQ3TTQVYUqLz
+    date: "2026-10-17"
+    severity: nit
+    description: "The Spec review subagent was denied running glassbox-update.ts by the auto-mode classifier, so it could not confirm step 4's done check itself"
+    solution: "Paste the done-check output into review briefs; I had already run it"

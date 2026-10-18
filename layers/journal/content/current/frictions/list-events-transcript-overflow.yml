@@ -1,0 +1,20 @@
+name: list-events-transcript-overflow
+summary: >-
+  Reading another session's transcript with list_events floods or stalls the agent when that session holds many screenshots.
+cause: >-
+  The claude-code-remote list_events tool returns every event including base64 images, so a screenshot-heavy session is about 14 MB per page and paging it is slow; github-integration.md calls it token-heavy but gives no safe recipe. Signals: list_events, get_session, 'MB per page', a subagent skipping a long transcript.
+surface: safe
+status: tracked
+ref: "frictions-to-fixes 2026-10-18 grouped doc PR"
+fixes: []
+occurrences:
+  - session: session_01GVmwHZQthucdGcVwe3HAUL
+    date: "2026-10-17"
+    severity: moderate
+    description: "list_events on a screenshot-heavy session returned 14MB per page (base64 images), forcing file dumps and a custom parser"
+    solution: "list_events could offer a flag to strip image content from tool results"
+  - session: session_018pjaBqTXahmE3DFhAbkide
+    date: "2026-10-16"
+    severity: nit
+    description: "One session-reading subagent skipped a 3.6 h transcript because paging list_events was too slow, so one occurrence came from its log only."
+    solution: "list_events with kinds filtering still pages the whole transcript; a search-by-tool filter would help for long sessions."

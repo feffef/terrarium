@@ -289,3 +289,38 @@ occurrences:
     severity: nit
     description: "My first git command ran before I read git-conventions.md; a hook flagged it after the fact. The command was read-only."
     solution: "Nothing needed; the hook's late reminder did its job."
+  - session: session_01JygBaHorymh1xgVBsaTh3E
+    date: "2026-10-17"
+    severity: nit
+    description: "First git command (rev-parse) ran before reading git-conventions.md; the hook flagged it."
+    solution: "Read git-conventions.md before any git beyond status and diff."
+  - session: session_01BePy3Sj8TRHv7YGtPqnpfB
+    date: "2026-10-17"
+    severity: nit
+    description: "Ran git log --all --grep before reading git-conventions.md, which CLAUDE.md requires before any git log used to draw a conclusion"
+    solution: "Use Grep on the tree for a name check; the read-first hint caught it right after"
+  - session: session_01E7YFbvBvT8HWhVJb6kTDMq
+    date: "2026-10-17"
+    severity: nit
+    description: "I ran git log before reading git-conventions.md and the first MCP call before github-integration.md; hooks reminded me after the fact."
+    solution: "Read the trigger docs in the first tool batch of a scheduled run."
+  - session: session_01Sm7rZKVibYfwdy8ibzEFge
+    date: "2026-10-17"
+    severity: nit
+    description: "Ran git fetch and the frictions extract before reading docs/agents/git-conventions.md; the hook flagged it after the call."
+    solution: "Read the doc at session start for scheduled runs."
+  - session: session_01CXxyUmwkN3Rx5DTSK2s391
+    date: "2026-10-17"
+    severity: nit
+    description: "First batch of six search_issues calls was blocked for lacking the fields argument, wasting a round trip; github-integration.md was read only after that."
+    solution: "Read github-integration.md before the first GitHub call; the Skill's step 3 could name the fields requirement."
+  - session: session_01DeVdzgpEMamftEbbyv26qd
+    date: "2026-10-18"
+    severity: nit
+    description: "Read github-integration.md only after creating the PR; CLAUDE.md requires it before the first GitHub operation."
+    solution: "Read it at session start for scheduled PR runs."
+  - session: session_01Sr3uwZro23NY3Z4sk5ojsM
+    date: "2026-10-18"
+    severity: minor
+    description: "Read docs/agents/git-conventions.md and docs/agents/github-integration.md only after a PostToolUse hook flagged each, following my first git fetch and first GitHub search call respectively, rather than before (CLAUDE.md's 'before your first git/GitHub operation' rule)."
+    solution: "No damage either time (both calls were already compliant with the docs' own guidance), but it was luck, not foresight. Check the 'docs you must read first' triggers against the next tool call before making it, not after a hook reminder."
