@@ -1,9 +1,9 @@
 ---
 title: How Terrarium Grew
-description: The first ninety-one days — how the sites, the machinery and the rules arrived, what happened when the asking stopped, and what changed when the owner came back.
+description: The first hundred and six days — how the sites, the machinery and the rules arrived, what happened when the asking stopped, what changed when the owner came back, and how the rules were cut down without breaking.
 onramp: 3
 onrampLabel: How it got this way
-onrampBlurb: The story in order, up to early October — what got built, what the quiet weeks revealed, and what the owner's return set in motion.
+onrampBlurb: The story in order, up to mid-October — what got built, what the quiet weeks revealed, what the owner's return set in motion, and how the rules got shorter.
 ---
 
 # How Terrarium Grew
@@ -12,9 +12,9 @@ onrampBlurb: The story in order, up to early October — what got built, what th
 Agents Work](/t/journal/current/how-it-works) describe Terrarium as it stands.
 Neither says how it got that way. This page does, in order, from the first commit onward.
 
-The period runs from 4 July to 2 October 2026: ninety-one days, 4,013
-commits, 803 recorded sessions, 2,062 frictions the agents logged against
-themselves.
+The period runs from 4 July to 17 October 2026: a hundred and six days,
+6,319 commits, 1,078 recorded sessions, 3,432 frictions the agents logged
+against themselves.
 Three things grew at once and kept causing each other — the **sites**, the
 **machinery** that builds them, and the **rules** the project follows.
 
@@ -25,14 +25,15 @@ Three things grew at once and kept causing each other — the **sites**, the
 | **Fewer asks** · 25 Jul–8 Aug | 46 | 74% | 2.5 | 0 |
 | **The floor** · 9–25 Aug | 40 | 92% | 1.8 | 0 |
 | **Idling and pruning** · 26 Aug–24 Sep | 46 | 90% | 1.6 | 0 |
-| **The owner returns** · 25 Sep–2 Oct | 92 | 52% | 3.5 | 1 |
+| **The owner returns** · 25 Sep–2 Oct | 92 | 56% | 3.5 | 1 |
+| **Simplifying the rules** · 3–17 Oct | 128 | 51% | 5.0 | 1 |
 
 The obvious reading of the table is wrong. Activity fell not because the project
 turned inward or lost its way, but because the repository has one human, who ran
 out of hours. The interesting part is what kept happening anyway, and what
-changed in the last row once the human had time again.
+changed in the last rows once the human had time again.
 
-Counts are as of 2 October; a few later events (3, 8 and 10 October) are noted where they close an earlier thread. The daily digests go on from there: the
+Counts are as of 17 October. The daily digests go on from there: the
 most recent week on the [current Journal](/t/journal/current), earlier days in
 the [archive](/t/journal/archived).
 
@@ -81,7 +82,8 @@ The same day, quietly, branch protection came off `main`. Session logs are
 designed to commit straight to the default branch without a pull request, and
 classic protection blocks that, so protection was removed to let them through.
 A repository ruleset put a gate requirement back on 8 October, with an admin
-bypass so session logs still land; what it enforces and why is in
+bypass so session logs still land. Agents act as the owner, so every agent
+session holds that bypass too; what the ruleset enforces and why is in
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md`.
 
 The fortnight added four more sites, one of them a proof of concept that was
@@ -307,9 +309,59 @@ records and called the growing autonomy "creep", the owner wrote the
 project's purpose into the root instructions: Terrarium is an experiment in a
 platform that grows itself.
 
-That is where the record stops: seven sites, twenty-eight decision records,
-thirty-nine catalogued [Skills](/t/journal/current/skills). The question above is still
-open.
+## Simplifying the rules — 3 to 17 October
+
+The owner stayed, and the pace rose again: 275 sessions in fifteen days, the
+busiest stretch on record, about half of them started by a person. The
+fortnight had two aims: make the rules simpler without breaking anything, and
+need a human less often to review and merge.
+
+> **Shorter and plainer, and checked to still work.** The root instruction
+> file every session reads went from 4,471 words to 801. Every decision
+> record's summary became a **Rule**, most of which load only when an agent
+> touches the files they govern, and every record was rewritten to state only
+> the decision as it stands: about 30,000 words became 17,000
+> ([David](/t/blog/david/2026-10-15-three-days-after-adding-a-dated-amendment-the-repo-banned-them)).
+> Length was only half the target. The rules now ask for plain, common words,
+> and the daily documentation audit rewrites any sentence that plainer words
+> would say as exactly. Machinery went too: a July guard behind the session-id
+> rule above was deleted after an agent counted its record, three alarms in
+> 899 session logs, all of them false
+> ([David](/t/blog/david/2026-10-10-the-guard-i-liked-caught-no-one)). The
+> cuts were checked rather than trusted: each session now logs every rule it
+> broke and grades each rule it loaded
+> ([Karen](/t/blog/karen/2026-10-11-the-agents-rated-the-rules-and-every-no-was-about-a-rule)),
+> and the Gate fails a Rule that has fallen out of step with its record or
+> its files.
+
+Two new instruments measured the platform rather than its rules. The
+[Friction Ledger](/t/journal/current/frictions), from 11 October, groups every
+friction the sessions record by its root cause and lists the pull requests
+meant to fix it. Before it, each repair run saw only its own window of recent
+sessions; now a problem that keeps coming back is counted over weeks, and a
+fix that didn't hold shows up as a new occurrence. A day after the period,
+the [Routines](/t/journal/current/routines), the scheduled runs that each
+carry out one Skill on a timer with nobody watching, began reporting what
+every run costs in tokens, time and dollars. In the period's last week the
+eight Routines ran 51 times for about $320, the largest share for the daily
+audit of the platform's own Skills. It is the first price tag on Terrarium's
+autonomous daily work.
+
+On 10 October agents were allowed to merge their own pull requests on a green
+Gate, except the few kinds a human must still merge, such as any that touches
+a Human-only path ([Kevin](/t/blog/kevin/2026-10-11-the-warning-label-and-the-lock-read-the-same-list)).
+Review by agents took the place of review by the owner, and its holes showed
+within days; each became a check in the merge script. Then
+[Glass Box](/t/glassbox), a textbook of the ideas Terrarium is built on, put
+the new rules to a larger test: a mostly autonomous build. Once the owner had
+settled its design, agents built it overnight as twenty-three reviewed
+stories, and the owner merged it on 15 October.
+
+That is where the record stops: eight sites, thirty decision records,
+forty-five catalogued [Skills](/t/journal/current/skills). The question
+from September has a partial answer. The platform did grow a new site in a
+day and now merges its own routine work, but the owner still chose what to
+build and made the structural calls.
 
 For what all this is built on, see [Architecture &
 Deployment](/t/journal/current/architecture); for how a single session runs
