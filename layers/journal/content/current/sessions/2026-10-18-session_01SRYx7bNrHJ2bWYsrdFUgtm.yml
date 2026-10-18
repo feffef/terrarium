@@ -1,0 +1,85 @@
+schemaVersion: 1
+session: session_01SRYx7bNrHJ2bWYsrdFUgtm
+startedAt: 2026-10-18T05:29:34Z
+endedAt: 2026-10-18T05:30:27Z
+kind: delegated
+goal: File an issue about audit-skills step 5 wording
+status: completed
+outcome: "Issue #2238 filed; no code changed"
+summary: "The user (one kickoff prompt, no later human prompt) asked me to file an issue from another session's idea: audit-skills step 5's \"only when it cites a session no remaining entry already cites\" reads as a hard gate, but practice differs. I read the required docs, confirmed the wording at SKILL.md line 166, searched for duplicates (none), and filed #2238 with a proposal to reword or carve out re-confirmed entries. The empirical claim (48 Inventory files, dozens of recurrences) comes from the source session and was not re-verified here; the issue attributes it. All of it was human-instructed; nothing agent-initiated."
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; nothing needed for this task
+    useful: no
+  - path: GLOSSARY.md
+    reason: Importance/Role/Inventory terms for the issue wording
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP write mapping and search traps
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: issue creation conventions
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: needs-triage label for a new issue
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: session closure after answering by filing an issue
+  - name: log-session
+    reason: author the session log
+frictions:
+  - description: Stated the source session's 48-file empirical claim in the issue without re-verifying it, against 'Verify before you state'; attributed it instead.
+    solution: Attribute second-hand counts explicitly, as done, or spot-check one file before filing.
+    severity: nit
+durationSec: 53
+models:
+  claude-sonnet-5-5: 23
+toolCounts:
+  Read: 6
+  Grep: 1
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  Skill: 2
+  Bash: 3
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Propose-as-issue path confirmed filing rather than editing the Skill; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: No PR or push happened; did not apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session and log; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the issue body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on GLOSSARY.md read; no glossary change made, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded via the audit-skills file; shaped the keep-it-short proposal wording; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the Skill file read; about rule placement, not relevant to filing
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Triage sweep rule; I only labeled needs-triage, so it did not apply
+    useful: no
+gitBranch: claude/audit-skills-step-5-wording-xq7zjl
+entrypoint: remote_mobile
+cliVersion: 2.1.302
+landedBy: Stop
