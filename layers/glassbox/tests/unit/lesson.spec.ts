@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { MinimarkNode } from '@nuxt/content'
-import { glassboxLessonSections, glassboxTryIt } from '../../app/utils/lesson.ts'
+import { glassboxLessonSections } from '../../app/utils/lesson.ts'
 
 const h2 = (id: string, text: string): MinimarkNode => ['h2', { id }, text]
 const h3 = (id: string, text: string): MinimarkNode => ['h3', { id }, text]
@@ -56,24 +56,5 @@ describe('glassboxLessonSections', () => {
       ['div', { class: 'gb-cards' }, ['div', { class: 'gb-card' }, h3('what-to-watch-for', 'What to watch for'), ['p', {}, 'Trap.']]],
       h3('more', 'More'),
     ])
-  })
-})
-
-describe('glassboxTryIt', () => {
-  it('returns the nodes between the Try it heading and the next h2', () => {
-    expect(glassboxTryIt([
-      h2('in-terrarium', 'In Terrarium'),
-      ['p', {}, 'How.'],
-      h2('try-it-in-your-project', 'Try it in your project'),
-      ['p', {}, 'Step.'],
-      ['pre', {}, 'code'],
-      h2('where-next', 'Where next'),
-      ['p', {}, 'Next.'],
-    ])).toEqual([['p', {}, 'Step.'], ['pre', {}, 'code']])
-  })
-
-  it('runs to the end when the section is last, and is empty without one', () => {
-    expect(glassboxTryIt([h2('try-it-in-your-project', 'Try it'), ['p', {}, 'Step.']])).toEqual([['p', {}, 'Step.']])
-    expect(glassboxTryIt([h2('in-terrarium', 'In Terrarium'), ['p', {}, 'How.']])).toEqual([])
   })
 })
