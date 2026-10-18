@@ -143,8 +143,7 @@ export interface SkillRow {
    *  each behaviour-checked Skill this is non-empty for. */
   changes: Landing[]
 }
-/** One Routine's windowed runs (issue #2239). The agent looks up each id's
- *  usage with `get_session`; that usage includes the session's subagents' tokens. */
+/** One Routine's windowed runs; the agent looks up each id's usage (issue #2239). */
 export interface RoutineRuns {
   routine: string
   sessions: string[]

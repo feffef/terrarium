@@ -42,8 +42,7 @@ context. It returns, per run, the model (`session_context.model`, else
 `external_metadata.last_served_model`), `input_tokens`, `output_tokens`,
 `cache_read_tokens`, `cache_write_tokens` and `cost_usd` as the API gives
 them, and per Routine their means and totals plus the min and max of cost.
-These include subagents' tokens. Put the per-Routine table in this run's
-session-log summary.
+Put the per-Routine table in this run's session-log summary.
 
 Done when you hold the scorecard and the usage of every `routineRuns` id.
 
