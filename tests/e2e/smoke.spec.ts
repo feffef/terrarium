@@ -61,6 +61,9 @@ describe('L2 smoke render', async () => {
       const page = await createPage()
       try {
         await page.goto(url('/t/blog'), { waitUntil: 'hydration' })
+        // Warm the cached render so the 8s wait below measures navigation, not a cold render.
+        const { id } = await $fetch<{ id: string }>('/_nuxt/builds/latest.json')
+        await $fetch(`/_payload.json?_b=${id}`, { responseType: 'text' })
         const requests: string[] = []
         page.on('request', (request) => requests.push(request.url()))
         await page.locator('a[href="/"]').first().click()
