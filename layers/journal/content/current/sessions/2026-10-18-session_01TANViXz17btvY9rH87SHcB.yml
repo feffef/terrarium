@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01TANViXz17btvY9rH87SHcB
 startedAt: 2026-10-18T17:53:27Z
-endedAt: 2026-10-18T19:17:27Z
+endedAt: 2026-10-18T19:20:51Z
 kind: interactive
 goal: Remove the session-log explainer and the Glass Box Try-it page
-status: in-review
-outcome: Both pages removed and logged as visitor-loop decisions; PR open, local gate red on e2e timeouts
-summary: The owner asked to remove the Journal's "How to Read a Session Log" page and its on-ramp card, to log that as a visitor-loop decision, and to remove the Glass Box "Try it in your project" page and link the same way (human-instructed). I deleted both pages, the landing link and CSS, the unused glassboxTryIt helper and its tests, and updated the Journal tour test to 5 steps. I kept each Lesson's own Try-it section, reading "page and link" as the collected page only (agent judgement, flagged to the owner). Two lines went into visitor-loop decisions.md. The local gate stayed red on browser page-load timeouts (home page first render about 32s on this box) in tests that do not touch the diff; I did not rebuild main to prove the baseline. The owner chose to run code-review (no blocking findings) and then push; I pushed, then opened the PR only after the owner reminded me ADR-0003 requires it.
+status: completed
+outcome: Both pages removed and logged as visitor-loop decisions; PR merged after CI's gate went green
+summary: The owner asked to remove the Journal's "How to Read a Session Log" page and its on-ramp card, to log that as a visitor-loop decision, and to remove the Glass Box "Try it in your project" page and link the same way (human-instructed). I deleted both pages, the landing link and CSS, the unused glassboxTryIt helper and its tests, and updated the Journal tour test to 5 steps. I kept each Lesson's own Try-it section, reading "page and link" as the collected page only (agent judgement, flagged to the owner). Two lines went into visitor-loop decisions.md. The local gate stayed red on browser page-load timeouts (home page first render about 32s on this box) in tests that do not touch the diff; I did not rebuild main to prove the baseline. The owner chose to run code-review (no blocking findings) and then push; I pushed, then opened the PR only after the owner reminded me ADR-0003 requires it. CI's gate went green on the PR head; I posted my verdict and merged it with merge-pr.ts (agent-initiated, allowed by ADR-0004 since no Human-only file changed).
 prs:
   - "2257"
 docsRead:
@@ -58,15 +58,15 @@ frictions:
   - description: The Stop hook asked to commit and push six times while the gate and review were deliberately pending, adding noise.
     solution: Let the hook skip when a background gate run or review subagent is in progress.
     severity: nit
-durationSec: 5040
+durationSec: 5244
 models:
-  claude-sonnet-5-5: 106
+  claude-sonnet-5-5: 133
 toolCounts:
   Read: 8
   Grep: 4
-  Bash: 26
-  Edit: 10
-  ToolSearch: 2
+  Bash: 32
+  Edit: 12
+  ToolSearch: 3
   mcp__github__search_issues: 1
   mcp__github__issue_read: 1
   Skill: 3
@@ -75,6 +75,10 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/app/utils/lesson.ts
   - layers/glassbox/app/pages/t/glassbox/[space]/index.vue
@@ -92,6 +96,8 @@ rulesLoaded:
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0006.md
   - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -101,7 +107,6 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0002.md
   - .claude/rules/mdc-when-to-use.md
   - .claude/rules/adr-0008.md
-  - .claude/rules/adr-0004-human-merge.md
 docsReadBySubagents:
   - layers/glassbox/GLOSSARY.md
 ruleVerdicts:
@@ -156,6 +161,9 @@ ruleVerdicts:
   - path: .claude/rules/adr-0004-human-merge.md
     reason: Human-only list; no changed path is on it, so the PR can be merged by the agent
     useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: ADR history rule; loaded when I read a human-merge file, no ADR was edited, did not apply
+    useful: no
 subagents:
   - type: general-purpose
     task: Standards review of diff
