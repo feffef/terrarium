@@ -38,11 +38,9 @@ every field.
 
 Then dispatch one Sonnet subagent to call `get_session` (claude-code-remote
 MCP) on every id in `routineRuns`, so the raw responses stay out of your
-context. It returns, per run, the model (`session_context.model`, else
-`external_metadata.last_served_model`), `input_tokens`, `output_tokens`,
-`cache_read_tokens`, `cache_write_tokens` and `cost_usd` as the API gives
-them, and per Routine their means and totals plus the min and max of cost.
-Put the per-Routine table in this run's session-log summary.
+context. It returns, per run, the `created_at` UTC day, `input_tokens`,
+`output_tokens`, `cache_read_tokens`, `cache_write_tokens` and `cost_usd` as
+the API gives them.
 
 Done when you hold the scorecard and the usage of every `routineRuns` id.
 
@@ -175,8 +173,9 @@ window's.
   re-confirmation is not appended. Remove every entry dated more
   than 40 days before today; git keeps the history. Leave the other entries as
   they are. If none remain, the field is `[]`.
-- **`runUsage`**: on the entry of each Skill a Routine is named for, set
-  step 1's per-run means with `asOf: <today, UTC>`.
+- **`runCosts`**: on the entry of the Skill each Routine is named for, append
+  a row for each step 1 run whose session id isn't listed yet, and remove rows
+  dated more than 40 days before today.
 - **Coverage gaps**: create an entry for a Skill that is used but not
   inventoried (`category` is `general-engineering` for a pack Skill,
   `platform-operation` for our own). Propose removing an entry whose Skill is

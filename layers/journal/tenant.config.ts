@@ -44,20 +44,23 @@ export const skillSchema = z
         note: z.string(),
       }),
     ),
-    // `audit-skills`' latest per-run mean over the scheduled runs of the
-    // Routine named for this Skill, from the session API's `usage`, which
-    // includes subagents' tokens (issue #2239). Not rendered on the site.
-    runUsage: z
-      .object({
-        asOf: utcDate,
-        runs: z.number().int().positive(),
-        inputTokens: z.number().nonnegative(),
-        outputTokens: z.number().nonnegative(),
-        cacheReadTokens: z.number().nonnegative(),
-        cacheWriteTokens: z.number().nonnegative(),
-        costUsd: z.number().nonnegative(),
-      })
-      .strict()
+    // `audit-skills`' row per scheduled run of the Routine named for this
+    // Skill, from the session API's `usage`, which includes subagents' tokens
+    // (issue #2239); `date` is the run's start. Not rendered on the site.
+    runCosts: z
+      .array(
+        z
+          .object({
+            session: z.string(),
+            date: utcDate,
+            inputTokens: z.number().nonnegative(),
+            outputTokens: z.number().nonnegative(),
+            cacheReadTokens: z.number().nonnegative(),
+            cacheWriteTokens: z.number().nonnegative(),
+            costUsd: z.number().nonnegative(),
+          })
+          .strict(),
+      )
       .optional(),
   })
   .strict()
