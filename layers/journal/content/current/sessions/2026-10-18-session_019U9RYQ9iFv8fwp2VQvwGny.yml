@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019U9RYQ9iFv8fwp2VQvwGny
 startedAt: 2026-10-18T04:03:19Z
-endedAt: 2026-10-18T04:23:37Z
+endedAt: 2026-10-18T04:26:18Z
 kind: autonomous
 goal: Scheduled audit of the Platform's docs against the code
-status: in-review
-outcome: Opened PR 2237 with checker-confirmed doc fixes; awaiting green CI and merge
-summary: "Scheduled /audit-docs run (no human prompt; the schedule is the only instruction, everything else was agent-initiated within the Skill's scope). Concision family this run was skills (the research family ran on 10-17). A large scripts/ reorganisation landed in the last 48h, so most Drift findings were stale script paths in docs/research, tests/README.md and one Inventory role. Five reviewer agents (freshness, single-home, two concision halves, coherence) returned about 45 findings; I pooled and deduped them and three checkers re-derived each one (no WRONG; several CONFIRMED-BUT with tightened text, and I dropped two as zero-gain: atlas \"Get both right\" and the guest-build step 2/4 pointers). PR 2237 carries the fixes. Left alone on purpose: the CLAUDE.md \"Ask before building\" scheduled-run carve-out (a judgement call), the pr-workflow Dependabot sentence (open prune-trial territory), and the stale-info-hint name in prune-trials.yml. Gate green; code-review found two small items I fixed before the first push."
+status: completed
+outcome: Merged PR 2237 with checker-confirmed doc fixes after a green gate
+summary: "Scheduled /audit-docs run (no human prompt; the schedule is the only instruction, everything else was agent-initiated within the Skill's scope). Concision family this run was skills (the research family ran on 10-17). A large scripts/ reorganisation landed in the last 48h, so most Drift findings were stale script paths in docs/research, tests/README.md and one Inventory role. Five reviewer agents (freshness, single-home, two concision halves, coherence) returned about 45 findings; I pooled and deduped them and three checkers re-derived each one (no WRONG; several CONFIRMED-BUT with tightened text, and I dropped two as zero-gain: atlas \"Get both right\" and the guest-build step 2/4 pointers). PR 2237 carried the fixes and merged on a green gate. Left alone on purpose: the CLAUDE.md \"Ask before building\" scheduled-run carve-out (a judgement call), the pr-workflow Dependabot sentence (open prune-trial territory), and the stale-info-hint name in prune-trials.yml. Gate green; code-review found two small items I fixed before the first push."
 prs:
   - "2237"
 docsRead:
@@ -224,23 +224,24 @@ frictions:
   - description: The Stop hook asked to commit and push uncommitted changes while checkers were still running and the gate and review were not done.
     solution: Let the hook skip when a scheduled run's PR steps are still pending.
     severity: nit
-durationSec: 1217
+durationSec: 1378
 models:
-  claude-sonnet-5-5: 156
+  claude-sonnet-5-5: 168
 toolCounts:
-  Bash: 27
+  Bash: 29
   Read: 21
   Write: 2
   Agent: 10
-  ReadNotifications: 11
+  ReadNotifications: 13
   Edit: 18
   Grep: 1
   Skill: 2
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/digest/SKILL.md
   - .agents/skills/auto-triage/SKILL.md
