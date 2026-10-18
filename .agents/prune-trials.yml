@@ -52,7 +52,7 @@ trials:
       loading where it didn't apply. Since this trial cuts an ADR, a major or
       blocker verdict restores the cut text in both files.
   - problem: >
-      `close-session` SKILL.md rewritten plainly, 60 lines to 46 (-14): the
+      `close-session` SKILL.md rewritten plainly, 59 lines to 40 (-19): the
       three logging conditions and the PR-open sequence cut to one goal-shaped
       paragraph and a numbered list, every rule kept (re-read, log, re-invoke,
       HUMAN-PROMPTED-CLOSURE, no worktree self-invoke). The rule failed as prose:
