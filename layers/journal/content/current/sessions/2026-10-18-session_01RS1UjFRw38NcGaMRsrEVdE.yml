@@ -1,0 +1,136 @@
+schemaVersion: 1
+session: session_01RS1UjFRw38NcGaMRsrEVdE
+startedAt: 2026-10-18T11:08:45Z
+endedAt: 2026-10-18T11:22:53Z
+kind: autonomous
+goal: "Scheduled blog post: one David post"
+status: in-review
+outcome: David post on the cost-record story is in PR 2248, gate green; the reply decision is still open
+summary: Agent-initiated by the schedule, with no human prompt. Rotation allowed only David. I drafted three David candidates (cost-record redesign from issue 2239, the blog-post step-2 search overflow, the dead-glob rule check). A blind Sonnet read picked the cost-record story as the heaviest event. The fact-check returned 34 rows with 5 wrong or overstated and 1 unverifiable, all fixed or cut; my later edits are listed unchecked in the PR. The first gate run failed the Journal accordion e2e, which this diff does not touch and PR 2246 also reported; a second run was green. Opened PR 2248. The step 12 reply decision and merge are still to do.
+prs:
+  - "2248"
+docsRead:
+  - path: GLOSSARY.md
+    reason: session-start read; Observability and Tenant terms
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; Blog glossary pointer
+    useful: partly
+  - path: layers/blog/GLOSSARY.md
+    reason: who a post is for; gloss rules
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: hook-prompted after first git command; nothing changed
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run PR, review-before-push
+    useful: yes
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: voice and palette
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the Skill's steps; read via the loaded skill text
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: hook-prompted; subagent fact-checker also read it, partly useful
+    useful: partly
+  - path: layers/blog/content/david/pages/2026-10-18-the-cost-ledger-changed-shape-twice-in-under-three-hours.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled task itself
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: author the in-review log
+frictions:
+  - description: Read docs/agents/github-integration.md only after the hook prompted it, following my first GitHub call; the call itself was fine.
+    solution: None needed; the hook nudge works.
+    severity: nit
+  - description: First gate:scoped run failed on the Journal accordion e2e, unrelated to a prose-only diff; re-run was green, costing about a minute.
+    solution: Fix or quarantine-by-repair the flaky accordion e2e test.
+    severity: minor
+durationSec: 848
+models:
+  claude-sonnet-5-5: 88
+toolCounts:
+  Bash: 31
+  Read: 1
+  mcp__github__pull_request_read: 12
+  mcp__github__issue_read: 3
+  Agent: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/mermaid-lanes.md
+docsReadBySubagents:
+  - docs/agents/github-integration.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Gate-before-push and who merges; summary was enough, pr-workflow covered the steps.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and subscribe; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback rule; no reaction this run, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; loaded on reading the glossary, did not change anything.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as code; not touched this run.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; not applicable to a blog post.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule loading; not applicable.
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded when the fact-checker read the routines files; confirmed audit-skills writes run costs, subagent report.
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest ADR loaded on reading the blog config; not relevant.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: MDC fit; not relevant to a prose post.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Layer rules loaded when I read a rule file for the dead-glob candidate; unrelated to the winner.
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded only for the subagent; it reported it not useful.
+    useful: no
+subagents:
+  - task: Blind read of three posts
+    model: sonnet
+  - task: Fact-check blog post
+    model: sonnet
+gitBranch: claude/zen-heisenberg-30imm4
+entrypoint: remote_trigger
+cliVersion: 2.1.302
+trigger: blog-post
+landedBy: Stop
