@@ -172,8 +172,7 @@ rim only say where in our shared year each falls.").
 Then one phase-note per THIS specimen's own phenology phase, in order of ascending
 `span` start — each a short paragraph of what the creature does in that phase. The
 `of=` value is the phase's `name` from frontmatter (below). The dial is the essay's
-phase selector: it shows one note at a time, and the specimen's phases partition
-the year so there is always exactly one. A `::sighting{date}` that quotes a real
+phase selector: it shows one note at a time. A `::sighting{date}` that quotes a real
 dated observation nests inside the phase whose span contains its date.
 
 ::sighting{date="2026-06-20"}

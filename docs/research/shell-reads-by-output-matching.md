@@ -1,7 +1,7 @@
 # Deriving `docsReadViaShell` from command output instead of command text
 
 Can the shell-read detector behind `docsReadViaShell` (ADR-0009,
-`scripts/shell-reads.ts`) stop parsing the Bash command string and
+`scripts/session/shell-reads.ts`) stop parsing the Bash command string and
 instead credit an instruction doc when lines of that doc appear in the
 command's own `tool_result`? And would that close the SHELL-READ-DETECTION
 frictions the Journal has accumulated, or only trade them for new ones?
@@ -11,7 +11,7 @@ frictions the Journal has accumulated, or only trade them for new ones?
 following commit; `git show aa86e131:scripts/shell-reads-by-output.prototype.ts`
 to read it). Every number in the results table is that script's printed
 output; anything else that is a count over the logs or an ad-hoc probe says so.
-**Status: adopted (issue #1545, ADR-0009).** `scripts/shell-reads.ts` now credits a
+**Status: adopted (issue #1545, ADR-0009).** `scripts/session/shell-reads.ts` now credits a
 doc from the command's output; the numbers below are the 2026-10-03 measurement
 of the old command-text detector against the prototype.
 

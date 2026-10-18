@@ -10,12 +10,12 @@ Keep the repo's prose honest against the code, and plain enough to act on.
 Agents act on documented state, so a stale or muddled doc is a **behavioural**
 bug. This self-improvement Skill runs **without
 interaction**: it fact-checks each finding, fixes it, and self-merges its own
-gated PR on green. It files an issue only when it can't tell which of two
-conflicting facts is true.
+gated PR on green.
 
 > **Bounded.** The self-merged PR carries only fact-checked fixes that touch no
 > human-only surface (the `paths` of `.claude/rules/adr-0004-human-merge.md`). It edits only *Live*
-> docs — never an ADR, a historical record or a pack template.
+> docs (and a wrong fact in a Digest) — never a session log, a blog post or a
+> pack template; an ADR fix goes only in the separate escalation PR (step 8).
 
 > **Keep it short** (CLAUDE.md) governs every edit this run makes.
 

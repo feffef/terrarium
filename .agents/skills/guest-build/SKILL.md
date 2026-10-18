@@ -65,8 +65,8 @@ against #555 before a human stepped in).
 
 1. **Read and re-screen.** Read the issue and `guest-intake`'s confirmed summary,
    then run ADR-0023's checks on the actual work. If one hits, escalate to the
-   owner (`ready-for-human` + a comment naming why, dropping the marker in the
-   same update) and move on.
+   owner (`ready-for-human` + a comment naming why; release the marker per
+   Concurrency) and move on.
 2. **Claim the marker, then dispatch one Sonnet impl agent** (`model: sonnet`,
    `isolation: 'worktree'`) with a self-contained brief per `dispatch-subagents` and
    `frictions-to-fixes` §6: read the issue, branch from `origin/main`,
@@ -91,6 +91,5 @@ Fire this Skill by name on an interval — a Routine (survives teardown) or `/lo
 (within a live session). The skip-already-built and skip-already-marked rules
 above keep a tight interval cheap.
 
-Every issue/PR comment carries the ADR-0017 provenance header (a no-exemptions
-convention that already discloses AI authorship) and nothing else — no AI-triage
-disclaimer. See `docs/agents/github-integration.md` for the MCP-tool mechanics.
+Comments carry the ADR-0017 header and no AI-triage disclaimer (the override
+`auto-triage` states). MCP mechanics: `docs/agents/github-integration.md`.

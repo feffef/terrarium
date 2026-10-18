@@ -19,16 +19,13 @@ are wrapping up and runs the closing sequence, which calls this one. Invoke
 `log-session` directly only to **update** a log you already authored (a new
 friction, a changed outcome).
 
-Whichever way you arrive here, a log records the session at **Session closure**
-(GLOSSARY.md's glossary term — self-judged, not the same as merged) — its
-active work **complete and in a coherent, honest state**. A log honestly
-records an in-review PR when that's the state closure was reached in.
+A log records the session at **Session closure** (GLOSSARY.md; self-judged, not
+the same as merged): active work **complete and in a coherent, honest state**.
 
-**Opening a gated PR is a closure point — log at that moment** (the ADR-0003
-rule says when a PR opens).
-Its `status` is then **`in-review`** — the PR is open but not merged — never
-`completed`, which is reserved for work that actually landed (`close-session`
-finalizes it on merge) or a session that needed no PR at all.
+**Opening a gated PR is a closure point — log then** (ADR-0003 says when a PR
+opens). Its `status` is `in-review` (PR open, not merged), never `completed`,
+which is for work that landed (`close-session` finalizes it on merge) or a
+session that needed no PR.
 
 **The other three values, defined:** `partial` — some but not all of the goal
 landed, and what shipped is usable on its own; `blocked` — stopped by something

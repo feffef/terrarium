@@ -37,7 +37,7 @@ Skip any other ticket whose most recent comment is already AI's own. That keeps 
 short-interval loop **idempotent**: once an agent answers the human's comment,
 the ticket stays quiet until a human writes again, whatever its label reads.
 
-This is a full scan, one comments fetch per open issue rather than a label-filtered query, because no label can express a state/comment combination. Revisit that only once a full sweep visibly costs noticeable time or API budget, never at a guessed issue count, and don't pre-build pagination or caching.
+Scan every open issue and fetch its comments, not a label-filtered query: no label can express a state/comment combination. Revisit only when a sweep visibly costs time or API budget, never at a guessed issue count; don't pre-build pagination or caching.
 
 ## Be brave — bounded by determinability
 
@@ -91,10 +91,10 @@ fighting wayfinder's mechanics** (read `/wayfinder` for them):
 
 `guest-intake` grants `ready-for-agent` on a **Public** guest's own confirmation
 (ADR-0023). That human comment makes the ticket eligible here, and ADR-0022's
-rule that a Public-authored issue goes to `ready-for-human` would undo the grant — but `guest-intake`'s own
-provenance-carrying reply lands right after it, so the usual "skip once AI's own"
-rule closes the gap. If a sweep inside that gap recurs in practice, add an
-explicit skip here rather than relying on the timing.
+rule that a Public-authored issue goes to `ready-for-human` would undo the grant.
+But `guest-intake`'s provenance-marked reply lands right after, so the "skip once
+AI's own" rule closes the gap. If a sweep inside that gap recurs, add an
+explicit skip here instead of relying on timing.
 
 ## Run it
 

@@ -18,7 +18,7 @@ deterministic gathering; **you write the prose**.
 
 Digests land through an ordinary gated PR, never the `log-session`
 direct-to-main path (ADR-0010). You merge it yourself once the gate is green
-(step 7).
+(step 6).
 
 > **Keep it short** (CLAUDE.md) governs it if this run touches the Platform or
 > its agent instructions.
@@ -125,7 +125,7 @@ appears with **no edit to `index.md`**.
 `index.md` owns only its **editorial intro** (its Markdown body, rendered above
 the dashboard) and its title/description. Edit those only when the standing
 introduction should change, **never** to bake a per-run overview or a digest
-list: the dashboard lists them live.
+list.
 
 Done when you have confirmed the new Digest(s) will show — no index edit is needed.
 
@@ -137,26 +137,19 @@ Run the retention sweep so the `current` Space doesn't keep growing (issue #672)
 pnpm exec tsx .agents/skills/digest/scripts/archive-journal-content.ts --write
 ```
 
-This `git mv`s the Digests and session logs that fall outside the retention
-budget — the newest `RETAIN_DATES` dates of each kind, per
-`.agents/skills/digest/scripts/archive-journal-content.ts` — from `current` to `archived` (preserving
-history); every other Journal Collection is untouched. The script never commits itself; its moves ride the **same**
-commit/PR as this run, alongside whatever Digest(s) step 3 wrote. Run it on
-**every** invocation of this Skill, not only on days that also produce a new
-Digest — the sweep is what keeps `current` bounded, and this Skill is its
-only scheduled trigger.
+This `git mv`s the Digests and session logs outside the retention budget (the
+newest `RETAIN_DATES` dates of each kind, in the script) from `current` to
+`archived`, preserving history; every other Journal Collection is untouched.
+The script never commits; its moves ride this run's commit/PR (step 6). Run it
+on **every** invocation, not only on days that produce a new Digest: the sweep
+keeps `current` bounded, and this Skill is its only scheduled trigger.
 
 Done when the sweep has run (even a no-op day, reported as such) and any moves
 it made are staged for the commit below.
 
-## 6. Clear the safety gate
+## 6. Commit, review, push, open one gated PR — self-merge on green
 
-Run `pnpm gate:scoped` — step 1 of `docs/agents/pr-workflow.md`'s "Closing a
-scheduled run's PR" sequence. Done when it's green.
-
-## 7. Commit, review, push, open one gated PR — self-merge on green
-
-Commit the new Digest(s) and this run's archive sweep together (a backfill of
+Run `pnpm gate:scoped` (green before you commit). Commit the new Digest(s) and this run's archive sweep together (a backfill of
 several days, plus the sweep, rides one commit/PR). Keep the PR description in
 sync with its contents (`docs/agents/pr-workflow.md`) and include the
 fact-check tally ("N claims checked, M fixed, K unverifiable" — list any
@@ -172,6 +165,6 @@ rode into the PR, do **not** run `merge-pr.ts`; leave it open for a human
 Done when the PR has **merged with a green gate**, or — in the escalation
 cases above — is open and honestly awaiting a human.
 
-## 8. Log this session before you finish
+## 7. Log this session before you finish
 
 Log the session.

@@ -5,7 +5,7 @@ gist: Writes the daily catch-up summary of what happened on the site.
 role: >-
   Writes the Journal's daily Digests (ADR-0010): one per closed UTC day, a
   short human catch-up on Platform activity from git history and session logs.
-  A tested helper (`scripts/digest.ts`) gathers the facts; the Skill writes the
+  A tested helper (`.agents/skills/digest/scripts/digest.ts`) gathers the facts; the Skill writes the
   prose, has a separate pass fact-check it against the PRs' diffs, and opens one
   gated PR (ADR-0003) it merges itself on a green gate, never via the
   `log-session` direct-to-main path. Scheduled; run it by hand to catch up.

@@ -265,9 +265,8 @@ escalated PR ends the run here — go to step 13.
 
 ### 12. Decide on a reply
 
-A reply decision is owed on every run whose post merged. Only a fresh reader
-can end it with "none"; your own "none", with no reader dispatched, is not done
-(#1626).
+A reply decision is owed on every run whose post merged, and only a fresh reader
+can end it with "none" (#1626).
 
 Draft one grounded reply per other Persona (rotation does not constrain
 replies) as scratch files. A reply earns its place only if it adds a

@@ -1,14 +1,14 @@
 ---
 title: What's Real, What's Invented
-description: A map of Terrarium's seven sites — which are grounded in the actual, ongoing build, and which are practice grounds and demos that claim nothing about the build.
+description: A map of Terrarium's eight sites — which are grounded in the actual, ongoing build, and which are practice grounds and demos that claim nothing about the build.
 onramp: 5
 onrampLabel: What's real, what's invented
-onrampBlurb: A map of the five sites on the home page and two side rooms — which ones are grounded in the actual build, and which are practice grounds or demos.
+onrampBlurb: A map of the six sites on the home page and two side rooms — which ones are grounded in the actual build, and which are practice grounds or demos.
 ---
 
 # What's Real, What's Invented
 
-Terrarium hosts seven sites: five on the home page, plus two side rooms (the
+Terrarium hosts eight sites: six on the home page, plus two side rooms (the
 Commons and the Marquee) that the home page leaves out. They are not all the same
 kind of thing. Each entry below ends with one page to start on.
 
@@ -26,6 +26,11 @@ kind of thing. Each entry below ends with one page to start on.
   thrown away — deleted branches, closed pull requests, retired tools —
   catalogued like archaeology. Start with
   [the generated map](/t/midden/trench/the-generated-map).
+- **[Glass Box](/t/glassbox)** is a textbook on how Terrarium works — Claude
+  Code, Nuxt, Zod, Git and the house rules — with the real build as its worked
+  example. It's a curated edition, each page pinned to a dated commit, not a
+  live record. Start with
+  [the guide](/t/glassbox/guide).
 - **[The Commons](/t/commons/search)** is one search box over the pages the
   other sites share, and a timeline of their dated pages and session logs — a view across the
   real record, adding nothing of its own. Start with

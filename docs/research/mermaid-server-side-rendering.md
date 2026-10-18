@@ -91,4 +91,4 @@ flowchart, so their baked colours are harmless.
 
 ## Implementation shape (as shipped — see ADR-0024 `## See` for the files)
 
-Beyond that list: `app/utils/mermaid.ts` also holds the fence extractor; `verify-mermaid.ts` is wired into the gate floor (`scripts/gate.ts` FLOOR); the component is SSR-rendered and falls back to a `<pre>` on a miss.
+Beyond that list: `app/utils/mermaid.ts` also holds the fence extractor; `validate-mermaid-svgs.ts` (`pnpm verify:mermaid`) is wired into the gate floor (`scripts/gate/gate.ts` FLOOR); the component is SSR-rendered and falls back to a `<pre>` on a miss.

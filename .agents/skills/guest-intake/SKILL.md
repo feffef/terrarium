@@ -9,8 +9,8 @@ disable-model-invocation: true
 Greet the **guests** on the issue tracker and run a **bounded** requirements
 session with each — entirely through GitHub comments — until their idea is
 confirmed, then hand it to `guest-build` by stamping `ready-for-agent`. The
-guest-demo counterpart to `auto-triage`: built to run by hand or be fired on a
-tight interval (a Routine or `/loop`), and the goal is to be **responsive**.
+guest-demo counterpart to `auto-triage`; be **responsive**, and run it by hand
+or on a tight interval (see "Loop it").
 
 **Policy: [ADR-0023](../../../docs/adr/0023-guest-driven-demo-pipeline.md).**
 Read it first. This Skill is the steps. Stop running it and guests may still
@@ -31,8 +31,7 @@ This Skill adds only the guest loop.
 The three labels it moves between — `needs-info`, `ready-for-agent`, and
 `ready-for-human` — are defined in `docs/agents/triage-labels.md`, and every
 transition it needs is spelled out below. Comments carry only the ADR-0017
-provenance header — no AI-triage disclaimer, same as `guest-build` (see its
-"Run it" section for why).
+provenance header — no AI-triage disclaimer (as in `auto-triage`).
 
 ## What it acts on — guest activity
 
@@ -75,15 +74,15 @@ with a guest is neither, so this Skill is **bounded**:
 
 ## Not a build-time fit? Reframe, don't just reject
 
-Some ideas are a good story but a bad fit for a platform that serves only
-content built from committed files, with no store visitors write to
-(ADR-0001). The tell: the idea needs something to
+Some ideas don't fit a platform that serves only content built from
+committed files, with no store visitors write to (ADR-0001). The tell: the
+idea needs something to
 persist past the visitor's own visit for *other* visitors to see (an account,
 a login, a comment or review, a shopping cart, a live chat), needs a fresh
 runtime fetch of outside data (a live feed, an API call nothing here already
 integrates), or needs a file upload. None of those have a server-side write
-path on this platform, and giving them one would mean a new dependency —
-which the confirm-time screen below escalates anyway.
+path on this platform, and adding one means a new dependency, which the
+confirm-time screen below escalates anyway.
 
 When a guest's raw idea lands there, don't quietly build a watered-down version
 of it and don't just reject it either. In the same comment:
@@ -106,9 +105,8 @@ of it and don't just reject it either. In the same comment:
    - **Scope it as a new page, Space, or Tenant fit-out** — if the idea is
      really "a new part of the site" rather than a live feature, propose
      building that static area instead.
-3. **Ask them to pick one (or none)** — that pick *is* the confirmation ask for
-   this issue; still needs their explicit choice before anything is
-   green-lit. Keep `needs-info` until they answer.
+3. **Ask them to pick one (or none)** — that pick *is* the confirmation ask;
+   nothing is green-lit without their explicit choice.
 
 This is a capability limit, not ADR-0023's checks below: reframe as soon as
 the raw idea hits the wall, even before round 3. Once
@@ -121,8 +119,7 @@ When the idea is clear (or after round 3), post a summary of the requested
 **functionality** in the Tenant's ubiquitous language (`/domain-modeling`,
 `GLOSSARY.md`) — what the site will do for a visitor — and ask the guest to
 confirm. **No technical or internal detail**: describe the behaviour, never the
-Collection keys, the manifest, or the routing. Keep the issue `needs-info` until
-they answer. If the idea hit the build-time wall above, this summary is of
+Collection keys, the manifest, or the routing. If the idea hit the build-time wall above, this summary is of
 whichever reframed proposal they picked, not the original ask.
 
 ## On confirm — green-light, or screen
