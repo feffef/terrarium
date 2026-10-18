@@ -17,7 +17,8 @@ aims at two gaps that frictions never reveal:
 Keeping the **Skill Inventory** (`layers/journal/content/current/skills/`) in
 line with real usage is a by-product of the same evidence.
 
-This Skill writes only Inventory `.yml` entries and GitHub issues (ADR-0015).
+This Skill writes only Inventory `.yml` entries, Routine run costs and GitHub
+issues (ADR-0015).
 A finding that clears step 4's bar becomes an issue; the rest become
 observations.
 
@@ -37,12 +38,11 @@ narrows that). The `Scorecard` type in `scripts/session/audit-skills.ts` documen
 every field.
 
 Then dispatch one Sonnet subagent to call `get_session` (claude-code-remote
-MCP) on every id in `routineRuns`, so the raw responses stay out of your
-context. It returns, per run, the `created_at` UTC day, `input_tokens`,
-`output_tokens`, `cache_read_tokens`, `cache_write_tokens` and `cost_usd` as
-the API gives them.
+MCP) on every `session` in `routineRuns`, so the raw responses stay out of
+your context. It returns, per run, `input_tokens`, `output_tokens`,
+`cache_read_tokens`, `cache_write_tokens` and `cost_usd` as the API gives them.
 
-Done when you hold the scorecard and the usage of every `routineRuns` id.
+Done when you hold the scorecard and the usage of every `routineRuns` session.
 
 ## 2. Check behaviour — one subagent per Skill in `behaviourChecks`
 
@@ -173,9 +173,12 @@ window's.
   re-confirmation is not appended. Remove every entry dated more
   than 40 days before today; git keeps the history. Leave the other entries as
   they are. If none remain, the field is `[]`.
-- **`runCosts`**: on the entry of the Skill each Routine is named for, append
-  a row for each step 1 run whose session id isn't listed yet, and remove rows
-  dated more than 40 days before today.
+- **Routine runs**: in `layers/journal/content/current/routines/<routine>.yml`
+  (create it with `name: <routine>` and `runs: []` if absent), append a row for
+  each step 1 run whose `session` isn't listed yet: its `routineRuns` entry
+  (`session`, `startedAt`, `durationSeconds`) plus the usage. Then run
+  `pnpm exec tsx scripts/session/prune-routine-runs.ts`, which keeps the newest
+  30 per Routine.
 - **Coverage gaps**: create an entry for a Skill that is used but not
   inventoried (`category` is `general-engineering` for a pack Skill,
   `platform-operation` for our own). Propose removing an entry whose Skill is
@@ -191,7 +194,8 @@ or PR state your observations cite matches a live read this run.
 
 If step 5 changed nothing, there is no PR. Otherwise follow
 `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR". The
-diff touches only `layers/journal/content/current/skills/*.yml`, every grade
+diff touches only `layers/journal/content/current/skills/*.yml` and
+`routines/*.yml`, every grade
 change cites its ≥2 sessions, and every removed observation is past 40 days.
 Anything else in the diff means you leave the PR open for a human.
 

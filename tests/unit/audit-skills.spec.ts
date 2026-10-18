@@ -210,9 +210,10 @@ describe('pickRoutineRuns()', () => {
       sess({ session: 'i1' }),
       sess({ session: 'd1', trigger: 'digest' }),
     ]
+    const at = { session: expect.any(String), startedAt: '2026-07-05T09:00:00Z', durationSeconds: 3600 }
     expect(pickRoutineRuns(sessions)).toEqual([
-      { routine: 'audit-skills', sessions: ['a1'] },
-      { routine: 'digest', sessions: ['d2', 'd1'] },
+      { routine: 'audit-skills', runs: [{ ...at, session: 'a1' }] },
+      { routine: 'digest', runs: [{ ...at, session: 'd2' }, { ...at, session: 'd1' }] },
     ])
   })
 })

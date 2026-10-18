@@ -1,0 +1,242 @@
+name: audit-docs
+runs:
+  - session: session_01YEY83rpsAKUx42XEczBfnG
+    startedAt: 2026-09-19T04:08:14Z
+    durationSeconds: 1147
+    inputTokens: 390
+    outputTokens: 124389
+    cacheReadTokens: 22557819
+    cacheWriteTokens: 649943
+    costUsd: 7.5879908
+  - session: session_0136594mCYfyW3Y69nvT1mc4
+    startedAt: 2026-09-20T04:08:14Z
+    durationSeconds: 1007
+    inputTokens: 357
+    outputTokens: 118322
+    cacheReadTokens: 21979908
+    cacheWriteTokens: 764064
+    costUsd: 7.7397446
+  - session: session_01MH8GUN2QCMr3aZGEwN2Qb2
+    startedAt: 2026-09-21T04:08:23Z
+    durationSeconds: 1688
+    inputTokens: 578
+    outputTokens: 170505
+    cacheReadTokens: 47322803
+    cacheWriteTokens: 1017386
+    costUsd: 13.9971901
+  - session: session_01S3vBH6Vqxa26Gr35CHwgsz
+    startedAt: 2026-09-22T04:08:29Z
+    durationSeconds: 1154
+    inputTokens: 391
+    outputTokens: 149447
+    cacheReadTokens: 29877759
+    cacheWriteTokens: 1022693
+    costUsd: 10.2977418
+  - session: session_011Bc6anpFPFoyyRCizp9Zx3
+    startedAt: 2026-09-23T04:01:31Z
+    durationSeconds: 1140
+    inputTokens: 381
+    outputTokens: 126430
+    cacheReadTokens: 26051261
+    cacheWriteTokens: 874757
+    costUsd: 8.8898737
+  - session: session_01JoJbvtqQS2mYndK9DN7VXQ
+    startedAt: 2026-09-24T04:01:13Z
+    durationSeconds: 970
+    inputTokens: 317
+    outputTokens: 99115
+    cacheReadTokens: 18848883
+    cacheWriteTokens: 723598
+    costUsd: 6.7672146
+  - session: session_01758bqHEsb6P5mXAHymjmsy
+    startedAt: 2026-09-25T04:00:59Z
+    durationSeconds: 1230
+    inputTokens: 395
+    outputTokens: 127139
+    cacheReadTokens: 25145760
+    cacheWriteTokens: 868872
+    costUsd: 8.7061185
+  - session: session_01EJbTDDTwGJttwa6Sj8LLNH
+    startedAt: 2026-09-26T04:01:24Z
+    durationSeconds: 1189
+    inputTokens: 415
+    outputTokens: 119173
+    cacheReadTokens: 27208851
+    cacheWriteTokens: 719433
+    costUsd: 8.6632887
+  - session: session_01UAmBCUoSXva1vKut9gFfsr
+    startedAt: 2026-09-27T04:01:16Z
+    durationSeconds: 1278
+    inputTokens: 407
+    outputTokens: 128416
+    cacheReadTokens: 27774123
+    cacheWriteTokens: 928538
+    costUsd: 9.4022956
+  - session: session_01E7nzKhxh1riVDMpn8YytKM
+    startedAt: 2026-09-28T04:01:38Z
+    durationSeconds: 1539
+    inputTokens: 487
+    outputTokens: 151216
+    cacheReadTokens: 35427547
+    cacheWriteTokens: 921274
+    costUsd: 11.1639504
+  - session: session_01SMWeh3VabxWtpXBdoMbpqF
+    startedAt: 2026-09-29T04:01:33Z
+    durationSeconds: 828
+    inputTokens: 311
+    outputTokens: 91670
+    cacheReadTokens: 14411985
+    cacheWriteTokens: 612959
+    costUsd: 5.5050875
+  - session: session_01RA14XShYErE96EXs3TMX3c
+    startedAt: 2026-09-30T04:01:01Z
+    durationSeconds: 856
+    inputTokens: 174
+    outputTokens: 34879
+    cacheReadTokens: 7800275
+    cacheWriteTokens: 333760
+    costUsd: 2.909817
+  - session: session_01Hi7Hh6P81Pdy936F6AmDzP
+    startedAt: 2026-10-01T04:00:50Z
+    durationSeconds: 1116
+    inputTokens: 259
+    outputTokens: 83425
+    cacheReadTokens: 12508363
+    cacheWriteTokens: 581287
+    costUsd: 4.9475046
+  - session: session_01BEQMve6mV2yNDTMmjiCAYL
+    startedAt: 2026-10-02T04:00:50Z
+    durationSeconds: 1581
+    inputTokens: 316
+    outputTokens: 124724
+    cacheReadTokens: 24083625
+    cacheWriteTokens: 787648
+    costUsd: 8.1822815
+  - session: session_01CbWrei9SvmrH9vjNx2MB2f
+    startedAt: 2026-10-03T04:00:53Z
+    durationSeconds: 1421
+    inputTokens: 383
+    outputTokens: 127242
+    cacheReadTokens: 28194926
+    cacheWriteTokens: 792918
+    costUsd: 9.0743882
+  - session: session_01JrdPvboL7hEVfdfvTyfSCb
+    startedAt: 2026-10-04T04:01:42Z
+    durationSeconds: 1342
+    inputTokens: 333
+    outputTokens: 86583
+    cacheReadTokens: 18626466
+    cacheWriteTokens: 575881
+    costUsd: 6.2369272
+  - session: session_01EPZv5jBQyJYPqy8eVn8e8h
+    startedAt: 2026-10-05T04:01:10Z
+    durationSeconds: 930
+    inputTokens: 384
+    outputTokens: 103482
+    cacheReadTokens: 24369511
+    cacheWriteTokens: 666189
+    costUsd: 7.7612612
+  - session: session_01L6ePb5aMsH4u53XnEs7FLQ
+    startedAt: 2026-10-06T04:00:49Z
+    durationSeconds: 498
+    inputTokens: 198
+    outputTokens: 55443
+    cacheReadTokens: 9191466
+    cacheWriteTokens: 498487
+    costUsd: 3.8209147
+  - session: session_01N6jqFrkCMkEm3g6kJW9Zqk
+    startedAt: 2026-10-07T04:01:01Z
+    durationSeconds: 23851
+    inputTokens: 388
+    outputTokens: 238179
+    cacheReadTokens: 27468513
+    cacheWriteTokens: 1360365
+    costUsd: 12.0166151
+  - session: session_017tt8CbwHqFWqw7PJZ7u7AL
+    startedAt: 2026-10-08T04:01:44Z
+    durationSeconds: 1461
+    inputTokens: 434
+    outputTokens: 236668
+    cacheReadTokens: 24649316
+    cacheWriteTokens: 942210
+    costUsd: 9.9576987
+  - session: session_01Jo3m1r8fyuGvjtRE9qDrPH
+    startedAt: 2026-10-09T04:01:11Z
+    durationSeconds: 1455
+    inputTokens: 507
+    outputTokens: 200437
+    cacheReadTokens: 24423531
+    cacheWriteTokens: 1115444
+    costUsd: 9.8869767
+  - session: session_01Tcn6x6mZizT14rJuQqYivt
+    startedAt: 2026-10-10T04:01:27Z
+    durationSeconds: 1505
+    inputTokens: 359
+    outputTokens: 157005
+    cacheReadTokens: 20318198
+    cacheWriteTokens: 876094
+    costUsd: 5.9716483
+  - session: session_01GbMt1vGTDZpQxZ3h4pNsF8
+    startedAt: 2026-10-11T04:00:50Z
+    durationSeconds: 1343
+    inputTokens: 573
+    outputTokens: 199643
+    cacheReadTokens: 34346021
+    cacheWriteTokens: 1217493
+    costUsd: 9.1857511
+  - session: session_01Dz52W6wWZWUgKwPtdxabzJ
+    startedAt: 2026-10-12T04:01:46Z
+    durationSeconds: 1590
+    inputTokens: 582
+    outputTokens: 208741
+    cacheReadTokens: 45345702
+    cacheWriteTokens: 1189967
+    costUsd: 9.8776302
+  - session: session_01FJuuzCvFL2h6ueukNEqi1R
+    startedAt: 2026-10-13T04:01:46Z
+    durationSeconds: 1248
+    inputTokens: 524
+    outputTokens: 197299
+    cacheReadTokens: 28016596
+    cacheWriteTokens: 1094832
+    costUsd: 7.7177451
+  - session: session_01M9Ryb84DYs5HxKy2Z3cpA2
+    startedAt: 2026-10-14T04:01:02Z
+    durationSeconds: 1270
+    inputTokens: 588
+    outputTokens: 201355
+    cacheReadTokens: 37934319
+    cacheWriteTokens: 1342681
+    costUsd: 9.7126214
+  - session: session_011HBcCLzMW7CshmqnHLnegb
+    startedAt: 2026-10-15T04:01:24Z
+    durationSeconds: 1305
+    inputTokens: 421
+    outputTokens: 199875
+    cacheReadTokens: 24038473
+    cacheWriteTokens: 1282256
+    costUsd: 7.8514178
+  - session: session_017xginqTj2NjZ8XgrbRqvkm
+    startedAt: 2026-10-16T04:01:14Z
+    durationSeconds: 5642
+    inputTokens: 492
+    outputTokens: 235089
+    cacheReadTokens: 36502214
+    cacheWriteTokens: 1421777
+    costUsd: 10.2838759
+  - session: session_01PHx8z77pGDJT7vmfA7P6Sw
+    startedAt: 2026-10-17T04:01:53Z
+    durationSeconds: 1198
+    inputTokens: 458
+    outputTokens: 176981
+    cacheReadTokens: 31588978
+    cacheWriteTokens: 1030819
+    costUsd: 7.7473463
+  - session: session_019U9RYQ9iFv8fwp2VQvwGny
+    startedAt: 2026-10-18T04:03:19Z
+    durationSeconds: 1379
+    inputTokens: 481
+    outputTokens: 190467
+    cacheReadTokens: 31617156
+    cacheWriteTokens: 1083404
+    costUsd: 8.1081721
