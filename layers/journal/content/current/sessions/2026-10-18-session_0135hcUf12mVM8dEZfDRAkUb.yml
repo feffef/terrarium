@@ -1,0 +1,213 @@
+schemaVersion: 1
+session: session_0135hcUf12mVM8dEZfDRAkUb
+startedAt: 2026-10-18T02:07:40Z
+endedAt: 2026-10-18T02:36:44Z
+kind: autonomous
+goal: "Scheduled run: turn logged frictions into fixes"
+status: completed
+outcome: Ledger updated, 3 regression issues filed, one grouped doc fix merged; all three PRs merged
+summary: "Scheduled frictions-to-fixes run (agent-initiated; no human input). A survey subagent screened 42 sessions (2026-10-15..18), appended occurrences, created four new clusters and recorded fixes #2215-#2217. I filed regression issues #2231-#2233 (flaky-e2e, clear-backlog-gaps, stop-hook-nag). A design agent covered four never-fixed picks and recommended two doc fixes (screenshot-review image-read cap; transcript-reading recipe) and no fix for the other two (verdict-comment-hand-typed, pr-number-guessed-before-create: every home is Human-only or in a Prune Trial). A Sonnet impl agent built both as one doc branch; code-review found an EVERY-PAGE.md contradiction, fixed in a follow-up. Merged ledger PR #2234, doc PR #2235, closing ledger PR #2236."
+prs:
+  - "2234"
+  - "2235"
+  - "2236"
+docsRead:
+  - path: GLOSSARY.md
+    reason: session-start read; only the Friction terms mattered
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: commit -F and fetch-before-diff advice
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: tool names and search overflow notes before filing issues
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: read before filing the regression issues
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and verdict recipe
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: impl agent edited it; reviewers found a contradiction there
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: Standards reviewer's house rules check
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: "Standards reviewer: only the pruning section applied"
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: "design agent: confirmed it has no bulk-review guidance"
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: survey and design agents read step 5; edited in the fix
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "design agent: hook roster, Human-only confirmation"
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: design agent skimmed it
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: worktree/brief checklist for the impl agent
+  - name: code-review
+    reason: pre-push review of the doc branch; it caught a real contradiction
+  - name: close-session
+    reason: (no reason given)
+frictions:
+  - description: The Stop hook demanded a push about seven times while reviews were running and ADR-0004 required gate and review first.
+    solution: Known stop-hook-nag cause; the hook cannot see running subagents or the review-before-push rule.
+    severity: nit
+  - description: design-brief.md opens with a dangling fragment after {PICKS} and its session-log glob matches nothing; the design agent lost rounds on both.
+    solution: Rewrite the brief's first lines and give the real glob (*session_<id>*.yml).
+    severity: minor
+  - description: The Skill says the survey agent works from a read of the extract file, but the compact output was still 90 KB with long docsRead arrays.
+    solution: Have extract-frictions --compact drop docsRead.
+    severity: nit
+  - description: Hook-injected rule files (adr-0005, adr-0021, adr-0029 and others) loaded after plain reads of unrelated docs, adding context with no bearing.
+    solution: Narrow those rules' paths.
+    severity: nit
+  - description: The impl agent's scratch subfolder did not exist, so its first gate redirect failed; the Skill's brief does not say to create it.
+    solution: Add mkdir -p of the scratch subfolder to the impl-brief.
+    severity: nit
+  - description: Skill section 5 says to track picks in the ledger before the fix PR exists, then section 8 resets them; the ref text for a dispatched fix is unspecified.
+    solution: State the ref wording for a dispatched, not-yet-merged fix.
+    severity: nit
+durationSec: 1744
+models:
+  claude-sonnet-5-5: 101
+toolCounts:
+  Bash: 31
+  Agent: 5
+  ToolSearch: 1
+  mcp__github__issue_write: 3
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 2
+  Skill: 2
+  ReadNotifications: 1
+  SendMessage: 1
+  mcp__github__add_issue_comment: 3
+  PushNotification: 1
+filesEdited:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - docs/agents/github-integration.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-update/SKILL.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate and code-review before first push despite the Stop hook; summary was enough, no full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes straight to main via close-session; summary sufficed, ADR not opened.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to PRs at once; a scheduled run needed no full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line on every GitHub body and commit trailer; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by reading Skill files; the design agent edited Skills, no new fact for me.
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Confirmed pack Skills are off limits when screening; the edited Skills are ours.
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Prune Trial screening blocked fixes for two picks; I did not open the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded by reading the glossary map; irrelevant to a ledger run.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded after reading a docs/agents file; no bearing on this work.
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by reading a ledger file; no diagram involved.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed none of my paths were Human-only so I could self-merge.
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded for a subagent's tenant-config read; irrelevant.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded for a subagent's read; irrelevant.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded for a subagent's read; irrelevant.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded for a subagent's tenant-config read; irrelevant.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded for a subagent's read; irrelevant.
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Subagent used it to confirm hook wiring is Human-only; helped the no-fix calls.
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Design fixes for picks
+  - type: general-purpose
+    task: Implement grouped doc fixes
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of doc diff
+  - type: general-purpose
+    task: Spec review of doc diff
+gitBranch: claude/eager-ptolemy-10k2by
+entrypoint: remote_trigger
+cliVersion: 2.1.302
+trigger: frictions-to-fixes
+ideas:
+  - Give the survey a --since-ledger flag so later runs skip sessions already clustered.
+landedBy: Stop
