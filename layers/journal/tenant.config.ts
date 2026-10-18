@@ -53,7 +53,6 @@ export const skillSchema = z
 // subagents' tokens, and `scripts/session/prune-routine-runs.ts` keeps the newest.
 export const routineSchema = z
   .object({
-    // The Routine, named for the Skill it runs.
     name: z.string(),
     runs: z.array(
       z
@@ -170,7 +169,7 @@ export default defineTenant({
     // validates authored logs against that same shared schema.
     sessions: { type: 'data', kind: 'session', source: '**/*.yml' },
     // Cost of each scheduled Routine run, kept apart from the Inventory because
-    // only Skills a Routine runs have it. Content lives in `current` only.
+    // only Skills a Routine runs have it.
     routines: {
       type: 'data',
       source: '**/*.yml',

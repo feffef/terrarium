@@ -4,8 +4,8 @@ We never edit a Skill installed from the outside pack, and the gate checks each
 one that has a Skill Inventory entry. The Skill Inventory records each Skill's
 role and importance to this project, and is where a pack Skill gets our notes.
 The `audit-skills` Skill checks that our own Skills fire and do their job, and
-keeps the Inventory in line with that evidence; it edits only Inventory entries
-and issues.
+keeps the Inventory in line with that evidence; it edits only Inventory entries,
+Routine run costs and issues.
 
 ## Scope
 
@@ -26,8 +26,8 @@ and issues.
   this project, not a copy of its own description, with no PR, issue or
   session ids. Those go in `observations`, the audit's own record, which the
   site does not show and which keeps only recent history.
-- **What `audit-skills` may change:** Inventory entries, and issues it files
-  or comments on. It never edits a Skill. A finding about one of our Skills
+- **What `audit-skills` may change:** Inventory entries, the Routine run
+  costs in the Journal's `routines` Collection, and issues it files or comments on. It never edits a Skill. A finding about one of our Skills
   becomes an issue when it matters enough, and otherwise an observation, so a
   later run sees it repeat. Such an issue goes through ordinary triage, and
   its fix merges like any PR. Ideas for a new, split or retired Skill are only

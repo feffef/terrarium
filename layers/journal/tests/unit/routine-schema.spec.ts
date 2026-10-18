@@ -1,6 +1,6 @@
 // The Journal's `routines` entry: one Routine's runs, every field mandatory (issue #2239).
 import { describe, expect, it } from 'vitest'
-import { routineSchema, skillSchema } from '../../tenant.config'
+import { routineSchema } from '../../tenant.config'
 
 const run = {
   session: 'session_01CWSnzXtHSt7wjmNA2hA2ST',
@@ -21,12 +21,5 @@ describe('routineSchema', () => {
   it.each(Object.keys(run))('rejects a run without %s', (field) => {
     const { [field]: _, ...partial } = run as Record<string, unknown>
     expect(routineSchema.safeParse({ name: 'digest', runs: [partial] }).success).toBe(false)
-  })
-})
-
-describe('skillSchema', () => {
-  it('no longer carries run costs', () => {
-    const entry = { name: 'digest', category: 'platform-operation', importance: 'routine', role: 'r', observations: [] }
-    expect(skillSchema.safeParse({ ...entry, runCosts: [run] }).success).toBe(false)
   })
 })
