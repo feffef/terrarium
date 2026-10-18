@@ -163,7 +163,8 @@ window's.
 - **`observations`** hold 40 days of history. Append
   `{ date: <today, UTC>, note: <citations> }` for every grade or role change,
   verified or unverified finding (say which), or idea, but only when it cites
-  a session no remaining entry already cites. Remove every entry dated more
+  a session, PR, issue or finding no remaining entry already cites; a bare
+  re-confirmation is not appended. Remove every entry dated more
   than 40 days before today; git keeps the history. Leave the other entries as
   they are. If none remain, the field is `[]`.
 - **Coverage gaps**: create an entry for a Skill that is used but not
