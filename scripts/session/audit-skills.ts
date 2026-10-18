@@ -146,7 +146,7 @@ export interface SkillRow {
 /** One Routine's windowed runs; the agent looks up each id's usage (issue #2239). */
 export interface RoutineRuns {
   routine: string
-  sessions: string[]
+  runs: { session: string; startedAt: string; durationSeconds: number }[]
 }
 
 /** issue #349's orphaned-session signal. */
@@ -353,9 +353,13 @@ export function pickBehaviourChecks(rows: readonly SkillRow[], minUses = BEHAVIO
 
 /** Routine-fired sessions grouped by Routine, sorted by name, keeping input order within one. */
 export function pickRoutineRuns(sessions: readonly Session[]): RoutineRuns[] {
-  const byRoutine = new Map<string, string[]>()
-  for (const s of sessions) if (s.trigger) byRoutine.set(s.trigger, [...(byRoutine.get(s.trigger) ?? []), s.session])
-  return [...byRoutine].sort(([a], [b]) => a.localeCompare(b)).map(([routine, ids]) => ({ routine, sessions: ids }))
+  const byRoutine = new Map<string, RoutineRuns['runs']>()
+  for (const s of sessions) {
+    if (!s.trigger) continue
+    const durationSeconds = Math.round((Date.parse(s.endedAt) - Date.parse(s.startedAt)) / 1000)
+    byRoutine.set(s.trigger, [...(byRoutine.get(s.trigger) ?? []), { session: s.session, startedAt: s.startedAt, durationSeconds }])
+  }
+  return [...byRoutine].sort(([a], [b]) => a.localeCompare(b)).map(([routine, runs]) => ({ routine, runs }))
 }
 
 /** Path → how many sessions opened it; a session reading a path twice counts once. */

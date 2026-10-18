@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
 import { sessionSchema } from '../../shared/schemas/session'
+import { utcTimestamp } from '../../shared/schemas/timestamp'
 
 // A plain UTC calendar date. Used where
 // a fact is date-scoped (at most one entry per day) rather than ordered within a
@@ -44,24 +45,29 @@ export const skillSchema = z
         note: z.string(),
       }),
     ),
-    // `audit-skills`' row per scheduled run of the Routine named for this
-    // Skill, from the session API's `usage`, which includes subagents' tokens
-    // (issue #2239); `date` is the run's start. Not rendered on the site.
-    runCosts: z
-      .array(
-        z
-          .object({
-            session: z.string(),
-            date: utcDate,
-            inputTokens: z.number().nonnegative(),
-            outputTokens: z.number().nonnegative(),
-            cacheReadTokens: z.number().nonnegative(),
-            cacheWriteTokens: z.number().nonnegative(),
-            costUsd: z.number().nonnegative(),
-          })
-          .strict(),
-      )
-      .optional(),
+  })
+  .strict()
+
+// One Routine's runs, with the cost each took (GLOSSARY.md, issue #2239).
+// `audit-skills` appends rows from the session API's `usage`, which includes
+// subagents' tokens, and `scripts/session/prune-routine-runs.ts` keeps the newest.
+export const routineSchema = z
+  .object({
+    name: z.string(),
+    runs: z.array(
+      z
+        .object({
+          session: z.string(),
+          startedAt: utcTimestamp,
+          durationSeconds: z.number().int().nonnegative(),
+          inputTokens: z.number().nonnegative(),
+          outputTokens: z.number().nonnegative(),
+          cacheReadTokens: z.number().nonnegative(),
+          cacheWriteTokens: z.number().nonnegative(),
+          costUsd: z.number().nonnegative(),
+        })
+        .strict(),
+    ),
   })
   .strict()
 
@@ -162,6 +168,13 @@ export default defineTenant({
     // the Catalog without re-declaring the schema. `scripts/session/log-session.ts`
     // validates authored logs against that same shared schema.
     sessions: { type: 'data', kind: 'session', source: '**/*.yml' },
+    // Cost of each scheduled Routine run, kept apart from the Inventory because
+    // only Skills a Routine runs have it.
+    routines: {
+      type: 'data',
+      source: '**/*.yml',
+      schema: routineSchema,
+    },
     frictions: {
       type: 'data',
       source: '**/*.yml',
