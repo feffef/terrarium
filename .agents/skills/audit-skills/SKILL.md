@@ -36,7 +36,15 @@ It prints JSON for the last 7 days of session logs (`--days N` widens or
 narrows that). The `Scorecard` type in `scripts/session/audit-skills.ts` documents
 every field.
 
-Done when you hold the scorecard.
+Then dispatch one Sonnet subagent to call `get_session` (claude-code-remote
+MCP) on every id in `routineRuns`, so the raw responses stay out of your
+context. It returns, per run, the model (`session_context.model`, else
+`external_metadata.last_served_model`), `input_tokens`, `output_tokens`,
+`cache_read_tokens`, `cache_write_tokens` and `cost_usd` as the API gives
+them, and per Routine their means and totals plus the min and max of cost.
+Put the per-Routine table in this run's session-log summary.
+
+Done when you hold the scorecard and the usage of every `routineRuns` id.
 
 ## 2. Check behaviour — one subagent per Skill in `behaviourChecks`
 
@@ -167,6 +175,8 @@ window's.
   re-confirmation is not appended. Remove every entry dated more
   than 40 days before today; git keeps the history. Leave the other entries as
   they are. If none remain, the field is `[]`.
+- **`runUsage`**: on the entry of each Skill a Routine is named for, set
+  step 1's per-run means with `asOf: <today, UTC>`.
 - **Coverage gaps**: create an entry for a Skill that is used but not
   inventoried (`category` is `general-engineering` for a pack Skill,
   `platform-operation` for our own). Propose removing an entry whose Skill is

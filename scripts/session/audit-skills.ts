@@ -82,9 +82,11 @@ export interface Session {
   humanPromptedClosure: boolean
   /** `docsRead` paths, feeding `docReadCounts`. */
   docsRead: string[]
+  /** The Routine that fired it (`entrypoint: remote_trigger`), else null. */
+  trigger: string | null
 }
 /** A windowed session as printed — what the Skill judges "kind of work" from. */
-export type WindowSession = Omit<Session, 'humanPromptedClosure' | 'docsRead' | 'mentioned' | 'humanInvoked'>
+export type WindowSession = Omit<Session, 'humanPromptedClosure' | 'docsRead' | 'mentioned' | 'humanInvoked' | 'trigger'>
 export interface OnDiskSkill {
   description: string
   /** False when its frontmatter sets `disable-model-invocation: true`. */
@@ -140,6 +142,11 @@ export interface SkillRow {
    *  untested by it, not broken (#1479, #1515). The CLI warns on stderr for
    *  each behaviour-checked Skill this is non-empty for. */
   changes: Landing[]
+}
+/** One Routine's windowed runs; the agent looks up each id's usage (issue #2239). */
+export interface RoutineRuns {
+  routine: string
+  sessions: string[]
 }
 
 /** issue #349's orphaned-session signal. */
@@ -197,6 +204,7 @@ export interface Scorecard {
   since: string
   window: WindowSession[]
   skills: SkillRow[]
+  routineRuns: RoutineRuns[]
   /** Own Skills used in ≥ `BEHAVIOUR_CHECK_MIN_USES` windowed sessions. */
   behaviourChecks: string[]
   orphanedSessions: OrphanedSession[]
@@ -343,6 +351,13 @@ export function pickBehaviourChecks(rows: readonly SkillRow[], minUses = BEHAVIO
   return rows.filter((r) => r.onDisk && !r.external && r.useCount >= minUses).map((r) => r.name)
 }
 
+/** Routine-fired sessions grouped by Routine, sorted by name, keeping input order within one. */
+export function pickRoutineRuns(sessions: readonly Session[]): RoutineRuns[] {
+  const byRoutine = new Map<string, string[]>()
+  for (const s of sessions) if (s.trigger) byRoutine.set(s.trigger, [...(byRoutine.get(s.trigger) ?? []), s.session])
+  return [...byRoutine].sort(([a], [b]) => a.localeCompare(b)).map(([routine, ids]) => ({ routine, sessions: ids }))
+}
+
 /** Path → how many sessions opened it; a session reading a path twice counts once. */
 export function buildDocReadCounts(sessions: readonly Session[]): Record<string, number> {
   const counts = new Map<string, number>()
@@ -391,6 +406,7 @@ export function toSession(raw: Record<string, unknown>, file: string, skillNames
     docsRead: (Array.isArray(raw.docsRead) ? raw.docsRead : [])
       .map((d: Record<string, unknown>) => String(d.path ?? ''))
       .filter(isContentPath),
+    trigger: raw.entrypoint === 'remote_trigger' && raw.trigger ? String(raw.trigger) : null,
   }
 }
 
@@ -843,6 +859,7 @@ export function scorecard(windowDays = DEFAULT_WINDOW_DAYS, cwd = root, now = Da
     since,
     window: window.map(({ session, file, kind, goal, startedAt, endedAt, skillsUsed }) => ({ session, file, kind, goal, startedAt, endedAt, skillsUsed })),
     skills,
+    routineRuns: pickRoutineRuns(window),
     behaviourChecks: pickBehaviourChecks(skills),
     orphanedSessions: orphans.orphaned,
     orphanScan: scan.status,
