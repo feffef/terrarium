@@ -265,7 +265,32 @@ describe('journal Tenant', async () => {
     if (ordinaryIdea) expect(await $fetch('/t/journal/current/ideas')).toContain(ordinaryIdea)
   })
 
+  it('serves the Routine costs page with one chart per Routine and the weekly table', async () => {
+    const html = await $fetch('/t/journal/current/routines')
+    expect(html).toMatch(/class="jd[\s"]/)
+    expect(html).toContain('Routine costs')
+    expect(html).toContain('significantly lower')
+    expect(html).toContain('Week starting (Monday, UTC)')
+    expect(html).toContain('aria-label="audit-skills: Cost (USD) per run')
+    expect(html).not.toContain('No Routine named')
+    expect(html).not.toMatch(/No document at <code[\s>]/)
+    // Another Space has no routines, so it must render the empty state.
+    expect(await $fetch('/t/journal/archived/routines')).toContain('No Routine runs are recorded')
+    expect(await $fetch('/t/journal/current')).toContain('href="/t/journal/current/routines"')
+  })
+
+  it('switches every chart and the table to another metric at once', async () => {
+    await withRendered('/t/journal/current/routines', async (page) => {
+      await page.getByRole('button', { name: 'Output tokens' }).click()
+      await page.waitForFunction(
+        "[...document.querySelectorAll('.rc-svg')].every((s) => s.getAttribute('aria-label')?.includes('Output tokens per run'))",
+      )
+      expect(await page.locator('.rw tfoot td').first().textContent()).not.toContain('$')
+    })
+  })
+
   it('hydrates the sub pages with no unresolved components', async () => {
+    await expectCleanHydration('/t/journal/current/routines')
     await expectCleanHydration('/t/journal/current/skills')
     await expectCleanHydration('/t/journal/current/ideas')
     await expectCleanHydration('/t/journal/current/frictions')

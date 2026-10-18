@@ -34,4 +34,8 @@ A daily catch-up on Platform activity across all Tenants, condensed from git his
 
 - **`layers/journal/app/pages/t/journal/[space]/`** — the pages a visitor sees:
   `index.vue` (digests, stats, session feed), `skills.vue` (Skill Inventory),
-  `ideas.vue` (ideas and learnings) and `frictions.vue` (the Friction Ledger), none a Markdown render of any single file.
+  `ideas.vue` (ideas and learnings), `frictions.vue` (the Friction Ledger) and
+  `routines.vue` (Routine run costs), none a Markdown render of any single file.
+- **`layers/journal/app/components/content/`** — the `::routine-chart` and
+  `::routine-weekly-table` blocks that `content/current/pages/routines.md` uses;
+  edit that file's prose without touching the page component.
