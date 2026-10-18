@@ -1,0 +1,105 @@
+schemaVersion: 1
+session: session_01C2XPRCDijGcdz27Kw6gi3s
+startedAt: 2026-10-18T12:13:02Z
+endedAt: 2026-10-18T12:17:55Z
+kind: interactive
+goal: Make Glass Box a regular visitor-loop focus
+status: in-review
+outcome: "PR opened: glassbox is now rotation row 5, replacing mobile; awaiting CI and merge"
+summary: The user asked (direct ask) that the visitor-loop Skill stop pinning its focus to glassbox and instead include it in the daily rotation. Per the user's stated preference I asked two questions first; they chose to replace an existing row (the mobile row) and to keep glassbox's entry, note and drafts exclusion. I removed the pinned-focus paragraph and the mobile-specific feature hint, kept 7 rows so the modulo and anchor are unchanged, ran gate:scoped (green), reviewed the 3-line diff inline instead of dispatching the two code-review sub-agents, pushed, opened the PR and posted a verdict. Everything was human-instructed; nothing was agent-initiated beyond removing the now-dead mobile hint in step 3.
+prs:
+  - "2251"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; no term needed for this change
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session-start read; confirmed Skill and Routine terms
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: commit via -F file, check trailer landed
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: gate and review before first push, verdict comment
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: write via MCP tools
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: the file being edited
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: authoring format for this log
+    useful: yes
+skillsUsed:
+  - name: code-review
+    reason: run inline on a 3-line prose diff
+  - name: close-session
+    reason: (no reason given)
+frictions:
+  - description: code-review Skill mandates two parallel sub-agents; I reviewed a 3-line prose diff inline instead, deviating from the Skill's steps.
+    solution: Let code-review state a size threshold below which an inline review is fine.
+    severity: nit
+durationSec: 293
+models:
+  claude-sonnet-5-5: 36
+toolCounts:
+  Bash: 12
+  Read: 2
+  AskUserQuestion: 2
+  Skill: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before first push; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to invoke close-session on PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR unasked and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR and comment; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary-split rule; not relevant to a Skill edit
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed Skills change through a gated PR; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Pushed me to cut the pin text rather than add instructions; no open trial covered it
+    useful: partly
+  - path: .claude/rules/adr-0028.md
+    reason: Navigation payload caching; unrelated to this prose edit
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rules-loading policy; unrelated to this task
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read the Skill grep; Skill file is not Human-only, so no effect
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: ADR-history rule; unrelated, no ADR was edited
+    useful: no
+gitBranch: ccr-10dd4486-b2qfqw
+entrypoint: remote_mobile
+cliVersion: 2.1.302
+landedBy: Stop
