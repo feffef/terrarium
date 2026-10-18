@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_018Uhxo4D5VcScugLrS35r4w
 startedAt: 2026-10-18T22:27:36Z
-endedAt: 2026-10-18T23:43:34Z
+endedAt: 2026-10-18T23:46:56Z
 kind: interactive
 goal: Add a 3–17 October period to the Journal History page
-status: in-review
-outcome: "Period merged in PR #2259; follow-up PR #2260 links each table row to its section"
+status: completed
+outcome: "Period merged in PR #2259; table rows link to their sections via PR #2260, also merged"
 summary: "Human-instructed: the owner asked for a new History period after reading the current page, an Explore agent over the daily digests since 2 Oct (sessions, issues, PRs), and later a second agent collecting the best blog posts. Over clarifying questions the owner chose an end date of 17 Oct, a full refresh of the page framing, and an agent-proposed angle. After my outline (centred on agents merging their own work) the owner reframed it: the focus was simplifying the rules (CLAUDE.md and the ADRs), in size and in plain language, while making sure things still work, with less human review as a second goal. I rewrote the section around that. Agent-initiated: correcting the \"owner returns\" row from 52% to 56% (that row had counted only autonomous sessions), and noting that the 8 Oct ruleset bypass covers every agent session. Stats were recomputed from the session logs with the method that reproduces the earlier rows. The two code-review axes (Standards; Spec as a full fact-check) found nine overstated or slightly wrong claims (dates, ADR word counts, which guard was deleted, \"nine in ten\"), all fixed before the first push. I kept the PR unmerged for the owner to read. Human-instructed follow-ups: cut the section to the length of the others (775 to about 450 words), frame Glass Box as a test of the new rules on a mostly autonomous build, and explain the Friction Ledger and Routine costs (about $320 for 51 runs in 11-17 Oct, computed from the routines collection) with links to their pages. The owner merged the PR. Then, at the owner's ask, PR #2260 links each period name in the table to its section anchor (ids read from the built content database, checked in a dev build with Playwright)."
 prs:
   - "2259"
@@ -72,16 +72,19 @@ frictions:
   - description: Read 'link the concepts' as 'link the pages'; it took two more owner prompts to land on explaining both concepts with links
     solution: Ask one clarifying question when a short instruction has two readings
     severity: minor
-durationSec: 4558
+  - description: Typed the review verdict's head SHA from memory and got its tail wrong; merge-pr.ts refused the merge until the comment was corrected
+    solution: Paste the SHA from git rev-parse HEAD into the verdict rather than retyping it; the script's exact-SHA check worked as designed
+    severity: nit
+durationSec: 4760
 models:
-  claude-opus-5-5: 224
+  claude-opus-5-5: 236
 toolCounts:
-  Bash: 77
+  Bash: 80
   Agent: 5
   AskUserQuestion: 2
-  ReadNotifications: 13
+  ReadNotifications: 15
   Skill: 3
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 4
@@ -90,6 +93,8 @@ toolCounts:
   mcp__github__update_pull_request: 1
   mcp__claude-code-remote__delete_trigger: 1
   Read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__update_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/history.md
 rulesLoaded:
