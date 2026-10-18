@@ -19,6 +19,7 @@ import {
   parseMergedPullRequests,
   parseSessionTrailers,
   pickBehaviourChecks,
+  pickRoutineRuns,
   pickSkillChanges,
   pickWindow,
   pullRequestSessionRef,
@@ -53,6 +54,7 @@ function sess(over: Partial<Session> = {}): Session {
     humanInvoked: [],
     humanPromptedClosure: false,
     docsRead: [],
+    trigger: null,
     ...over,
   }
 }
@@ -200,6 +202,21 @@ describe('pickBehaviourChecks()', () => {
   })
 })
 
+describe('pickRoutineRuns()', () => {
+  it('groups Routine-fired sessions by Routine, sorted by name, and skips the rest', () => {
+    const sessions = [
+      sess({ session: 'd2', trigger: 'digest' }),
+      sess({ session: 'a1', trigger: 'audit-skills' }),
+      sess({ session: 'i1' }),
+      sess({ session: 'd1', trigger: 'digest' }),
+    ]
+    expect(pickRoutineRuns(sessions)).toEqual([
+      { routine: 'audit-skills', sessions: ['a1'] },
+      { routine: 'digest', sessions: ['d2', 'd1'] },
+    ])
+  })
+})
+
 describe('buildDocReadCounts()', () => {
   it('counts sessions per path, descending, and never a doc twice for one session', () => {
     const sessions = [
@@ -236,6 +253,7 @@ describe('toSession() — external exclusion (ADR-0009)', () => {
       humanInvoked: [],
       humanPromptedClosure: true,
       docsRead: ['CLAUDE.md'],
+      trigger: null,
     })
   })
 
@@ -255,6 +273,12 @@ describe('toSession() — external exclusion (ADR-0009)', () => {
     const s = toSession(raw, 'f.yml', names)!
     expect(s.mentioned.sort()).toEqual(['code-review', 'grill-with-docs', 'tdd'])
     expect(s.humanInvoked).toEqual(['grill-with-docs', 'tdd'])
+  })
+
+  it('names the Routine only for a Routine-fired log (entrypoint remote_trigger)', () => {
+    const fired = { session: 's', endedAt: '2026-07-20T00:00:00Z', entrypoint: 'remote_trigger', trigger: 'digest' }
+    expect(toSession(fired, 'f.yml', skillNames)?.trigger).toBe('digest')
+    expect(toSession({ ...fired, entrypoint: 'cli' }, 'f.yml', skillNames)?.trigger).toBeNull()
   })
 
   it('tolerates a log with no docsRead at all (older logs predate the field)', () => {
