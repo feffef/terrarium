@@ -1,0 +1,106 @@
+schemaVersion: 1
+session: session_01DeVdzgpEMamftEbbyv26qd
+startedAt: 2026-10-18T00:16:11Z
+endedAt: 2026-10-18T00:21:32Z
+kind: autonomous
+goal: Write the 2026-10-17 Journal Digest
+status: in-review
+outcome: Digest and retention sweep opened as PR 2227, gate green, awaiting CI
+summary: "Scheduled /digest run (agent-executed, no human ask). Gathered 2026-10-17, wrote the Digest, fact-checked it with a sonnet subagent (no wrong claims, two wording fixes), ran the archive sweep (1 digest, 16 sessions), gate:scoped green, opened PR 2227. Skipped the code-review Skill: prose-only diff already fact-checked and gated."
+prs:
+  - "2227"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR steps
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch and commit hygiene
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read after the first MCP-free steps; nothing new needed
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; no term needed for a digest
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session-start read; no term needed for a digest
+    useful: partly
+  - path: layers/journal/content/current/pages/digests/2026-10-17.md
+    reason: (read before editing)
+skillsUsed:
+  - name: digest
+    reason: the scheduled task itself
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped the code-review Skill before the first push, self-reviewing a prose-only fact-checked digest diff against ADR-0004 and pr-workflow.
+    solution: Let the digest Skill say the fact-check plus gate counts as the review for digest PRs.
+    severity: nit
+  - description: Read github-integration.md only after creating the PR; CLAUDE.md requires it before the first GitHub operation.
+    solution: Read it at session start for scheduled PR runs.
+    severity: nit
+durationSec: 321
+models:
+  claude-sonnet-5-5: 32
+toolCounts:
+  Bash: 10
+  Read: 3
+  Write: 1
+  Edit: 1
+  Agent: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-10-17.md
+rulesLoaded:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Gate before push and merge conditions; summary was enough, did not open the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to log via close-session; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR at once and subscribe; scheduled run limits; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on PR body and commit trailer; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Confirmed digests land by gated PR and are never rewritten; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; loaded by reading the glossary, did not affect a digest
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; irrelevant to a digest
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Where instructions live; irrelevant to a digest
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by reading a digest page; no diagram involved
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Fact-check digest
+    model: sonnet
+gitBranch: claude/compassionate-lovelace-uqyy65
+entrypoint: remote_trigger
+cliVersion: 2.1.302
+trigger: digest
+landedBy: Stop
