@@ -49,13 +49,8 @@ export function routineChartCap(routines: readonly RoutineDoc[], metric: Routine
   return max > p95 * 2 ? p95 * 1.25 : max
 }
 
-/** The Monday (UTC) of the week a timestamp falls in, as `YYYY-MM-DD`. */
-export function routineWeekStart(iso: string): string {
-  const d = new Date(iso)
-  d.setUTCHours(0, 0, 0, 0)
-  d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7))
-  return d.toISOString().slice(0, 10)
-}
+const DAY_MS = 86_400_000
+const WINDOW_MS = 7 * DAY_MS
 
 export interface RoutineWeekRow {
   name: string
@@ -64,35 +59,28 @@ export interface RoutineWeekRow {
 }
 
 export interface RoutineWeekTable {
-  /** Week-start dates, oldest first, with no gaps. */
+  /** The UTC date each seven-day window ends on, oldest first. */
   weeks: string[]
   rows: RoutineWeekRow[]
   totals: number[]
   grandTotal: number
 }
 
-/** Each Routine's `metric` summed per UTC week, complete weeks only: the first
- *  week is dropped unless the oldest run is on its Monday (older runs were
- *  pruned), the last unless the newest run is on its Sunday (still running). */
+/** Each Routine's `metric` summed over consecutive seven-day windows, newest
+ *  window ending at the newest run (not the clock, so server and browser render
+ *  the same table). Only windows that start at or after the oldest run are
+ *  kept: older runs are pruned, so an earlier window would be incomplete. */
 export function routineWeekTable(routines: readonly RoutineDoc[], metric: RoutineMetric): RoutineWeekTable {
-  const starts = routines.flatMap((r) => r.runs.map((run) => run.startedAt)).sort()
-  const weeks: string[] = []
-  if (starts.length) {
-    const first = routineWeekStart(starts[0]!)
-    const last = routineWeekStart(starts[starts.length - 1]!)
-    for (let w = first; w <= last; ) {
-      weeks.push(w)
-      const next = new Date(w)
-      next.setUTCDate(next.getUTCDate() + 7)
-      w = next.toISOString().slice(0, 10)
-    }
-    if (new Date(starts[0]!).getUTCDay() !== 1) weeks.shift()
-    if (new Date(starts[starts.length - 1]!).getUTCDay() !== 0) weeks.pop()
-  }
+  const times = routines.flatMap((r) => r.runs.map((run) => Date.parse(run.startedAt)))
+  const end = times.length ? Math.max(...times) : 0
+  const count = times.length ? Math.floor((end - Math.min(...times)) / WINDOW_MS) : 0
+  const weeks = Array.from({ length: count }, (_, i) =>
+    new Date(end - WINDOW_MS * (count - 1 - i)).toISOString().slice(0, 10),
+  )
   const rows = routines.map((r) => {
     const cells = weeks.map(() => 0)
     for (const run of r.runs) {
-      const i = weeks.indexOf(routineWeekStart(run.startedAt))
+      const i = count - 1 - Math.floor((end - Date.parse(run.startedAt)) / WINDOW_MS)
       if (i >= 0) cells[i]! += run[metric]
     }
     return { name: r.name, cells, total: cells.reduce((a, b) => a + b, 0) }

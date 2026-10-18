@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vitest'
 import {
   formatRoutineMetric,
   routineChartCap,
-  routineWeekStart,
   routineWeekTable,
 } from '../../app/utils/routineRuns.ts'
 
@@ -18,50 +17,40 @@ const run = (startedAt: string, costUsd: number, outputTokens = 0) => ({
   costUsd,
 })
 
-describe('routineWeekStart', () => {
-  it('maps any day to its Monday, in UTC', () => {
-    expect(routineWeekStart('2026-10-12T00:00:00Z')).toBe('2026-10-12') // Monday
-    expect(routineWeekStart('2026-10-18T23:59:00Z')).toBe('2026-10-12') // Sunday
-    expect(routineWeekStart('2026-10-19T00:01:00Z')).toBe('2026-10-19')
-  })
-})
-
 describe('routineWeekTable', () => {
   const routines = [
     {
       name: 'a',
-      runs: [run('2026-10-05T04:00:00Z', 1), run('2026-10-19T04:00:00Z', 2), run('2026-10-20T04:00:00Z', 3), run('2026-10-25T04:00:00Z', 4)],
+      runs: [run('2026-10-01T04:00:00Z', 1), run('2026-10-08T04:00:00Z', 2), run('2026-10-10T04:00:00Z', 3), run('2026-10-22T04:00:00Z', 4)],
     },
-    { name: 'b', runs: [run('2026-10-13T04:00:00Z', 4)] },
+    { name: 'b', runs: [run('2026-10-16T04:00:00Z', 4)] },
   ]
 
-  it('sums per week, fills the gap week and totals rows and columns', () => {
+  it('sums seven-day windows ending at the newest run, and totals rows and columns', () => {
     const t = routineWeekTable(routines, 'costUsd')
-    expect(t.weeks).toEqual(['2026-10-05', '2026-10-12', '2026-10-19'])
+    expect(t.weeks).toEqual(['2026-10-08', '2026-10-15', '2026-10-22'])
+    // a: the 10-01 run is exactly at the first window's start, so it belongs to the one before it.
     expect(t.rows).toEqual([
-      { name: 'a', cells: [1, 0, 9], total: 10 },
-      { name: 'b', cells: [0, 4, 0], total: 4 },
+      { name: 'a', cells: [2, 3, 4], total: 9 },
+      { name: 'b', cells: [0, 0, 4], total: 4 },
     ])
-    expect(t.totals).toEqual([1, 4, 9])
-    expect(t.grandTotal).toBe(14)
+    expect(t.totals).toEqual([2, 3, 8])
+    expect(t.grandTotal).toBe(13)
   })
 
-  it('drops an incomplete first and last week', () => {
-    const t = routineWeekTable(
-      [{ name: 'a', runs: [run('2026-09-17T04:00:00Z', 5), run('2026-09-22T04:00:00Z', 1), run('2026-09-29T04:00:00Z', 2), run('2026-10-07T04:00:00Z', 7)] }],
-      'costUsd',
-    )
-    expect(t.weeks).toEqual(['2026-09-21', '2026-09-28'])
-    expect(t.rows[0]!.cells).toEqual([1, 2])
+  it('keeps only windows that start at or after the oldest run', () => {
+    const t = routineWeekTable([{ name: 'a', runs: [run('2026-10-01T04:00:00Z', 1), run('2026-10-21T03:00:00Z', 2)] }], 'costUsd')
+    expect(t.weeks).toEqual(['2026-10-14', '2026-10-21'])
   })
 
   it('sums the metric it is given', () => {
-    const t = routineWeekTable([{ name: 'a', runs: [run('2026-10-05T04:00:00Z', 1, 500), run('2026-10-11T04:00:00Z', 1, 250)] }], 'outputTokens')
+    const t = routineWeekTable([{ name: 'a', runs: [run('2026-10-01T03:00:00Z', 1, 900), run('2026-10-02T04:00:00Z', 1, 500), run('2026-10-08T04:00:00Z', 1, 250)] }], 'outputTokens')
     expect(t.rows[0]!.cells).toEqual([750])
   })
 
-  it('is empty without runs', () => {
+  it('is empty without a full window of runs', () => {
     expect(routineWeekTable([{ name: 'a', runs: [] }], 'costUsd')).toEqual({ weeks: [], rows: [{ name: 'a', cells: [], total: 0 }], totals: [], grandTotal: 0 })
+    expect(routineWeekTable([{ name: 'a', runs: [run('2026-10-01T04:00:00Z', 1), run('2026-10-05T04:00:00Z', 1)] }], 'costUsd').weeks).toEqual([])
   })
 })
 

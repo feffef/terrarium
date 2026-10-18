@@ -270,7 +270,7 @@ describe('journal Tenant', async () => {
     expect(html).toMatch(/class="jd[\s"]/)
     expect(html).toContain('Routine costs')
     expect(html).toContain('significantly lower')
-    expect(html).toContain('Week starting (Monday, UTC)')
+    expect(html).toContain('Seven days ending (UTC)')
     expect(html).toContain('aria-label="audit-skills: Cost (USD) per run')
     expect(html).not.toContain('No Routine named')
     expect(html).not.toMatch(/No document at <code[\s>]/)

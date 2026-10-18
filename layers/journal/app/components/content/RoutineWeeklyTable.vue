@@ -1,6 +1,6 @@
 <script setup lang="ts">
-// `::routine-weekly-table` — every Routine's chosen metric summed per UTC week
-// (weeks start on Monday), with row and column totals.
+// `::routine-weekly-table` — every Routine's chosen metric summed per seven-day
+// window, with row and column totals.
 const routines = useRoutineData()
 const metric = useRoutineMetric()
 
@@ -11,7 +11,7 @@ const fmt = (v: number) => formatRoutineMetric(metric.value, v)
 <template>
   <div v-if="table.weeks.length" class="jd-table-scroll rw">
     <table>
-      <caption class="rw-cap">Week starting (Monday, UTC)</caption>
+      <caption class="rw-cap">Seven days ending (UTC)</caption>
       <thead>
         <tr>
           <th scope="col">Routine</th>

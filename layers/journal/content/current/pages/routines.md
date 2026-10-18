@@ -36,7 +36,8 @@ top is a run that went past it. Only the newest runs of each Routine are kept.
 
 ## Week by week
 
-The same metric, summed per week. Only complete weeks are shown.
+The same metric, summed over consecutive seven-day windows, the newest ending at
+the latest run. Only complete windows are shown.
 
 ::routine-weekly-table
 ::
