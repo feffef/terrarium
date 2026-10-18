@@ -87,10 +87,11 @@ Merge the three reports into one tally in your scratchpad:
   it prints every candidate owner correction since the last `decisions.md`
   commit (human reviews of `visitor-loop` PRs, merged PRs that revert or
   rework one, human issue comments about one). Read each candidate and
-  resolve it on its own tally line that names it first (a PR by `#N` or URL, a
-  comment by its URL): a rejected approach or standing preference becomes one
-  new line in `decisions.md` (committed with step 5's PR; say "decisions.md" on
-  the tally line); anything else is marked *not a ruling (why)*.
+  resolve it on a tally line that names it (a PR by `#N` or URL, a comment
+  by its URL; one line may name several): a rejected approach or standing
+  preference becomes one new line in `decisions.md` (committed with step 5's
+  PR; say "decisions.md" on the tally line); anything else is marked *not a
+  ruling (why)*.
 - **Filters.** Then drop anything [`decisions.md`](decisions.md) rules out,
   anything an open or closed issue/PR already covers (search first; record
   each result in the tally — the match by number, or the query and *no match*),
