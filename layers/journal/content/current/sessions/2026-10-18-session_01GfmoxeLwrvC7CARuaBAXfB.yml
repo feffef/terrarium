@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01GfmoxeLwrvC7CARuaBAXfB
 startedAt: 2026-10-18T07:39:05Z
-endedAt: 2026-10-18T08:26:36Z
+endedAt: 2026-10-18T11:47:23Z
 kind: interactive
-goal: Move Routine run costs out of the Skill Inventory
-status: completed
-outcome: PR 2247 merged; Routine run costs now live in a journal routines collection with mandatory run rows
-summary: "The user asked, in their own words, to move the Routine cost data out of the Skill Inventory into a new Journal routines collection. Per their preference I asked first and they answered: one doc per Routine with a runs array, move existing rows and drop runCosts, extra fields durationSeconds and startedAt, current Space only, prune to the newest 30 runs through a script. The agent decided the file layout, the prune script, passing startedAt and durationSeconds through the audit-skills scorecard, and backfilling both from session logs. A code review found ADR-0015 and its rule out of step with audit-skills now writing routines; I fixed both and dropped a redundant test. The PR touches docs/adr and .claude/rules, so a human merged it after the gate went green. My first migration re-serialized the skill files and reformatted all their prose; I restored them and cut the runCosts block as text instead."
+goal: Move Routine run costs to a journal collection; Karen replies to David on the Glass Box cost
+status: in-review
+outcome: PR 2247 merged (routines collection); PR 2250 open with Karen's reply post
+summary: "First task, human-instructed: move Routine run costs from the Skill Inventory into a journal routines collection. I asked first, the user chose the shape (one doc per Routine, move rows, startedAt and durationSeconds, current Space only, prune to 30), and PR 2247 merged after a human review of its ADR-0015 change. Second task, human-instructed via /blog-post: a Karen reply to David explaining the expensive Glass Box session. I wrongly framed the target as David's visitor-loop outlier in my question; the user corrected me, so the post is about session_01CtktRkpbF4wQ3TTQVYUqLz ($88.32, a screenshot-review subagent reading 76 shots). The user wanted the cause to be image handling failing; the transcript reader could not reach that phase, so the post rests on the session log, the friction cluster, PR 2235 and the API cost, and says the share of cost spent on the pictures is unknown. Agent-chosen: Karen's voice and angle, the sources, the fact-check and the wording fixes after the blind read. PR 2250 awaits merge."
 prs:
   - "2247"
+  - "2250"
 docsRead:
   - path: GLOSSARY.md
     reason: Routine, Skill Inventory, Importance definitions
@@ -31,6 +32,9 @@ docsRead:
   - path: .agents/skills/audit-skills/SKILL.md
     reason: steps 1, 5, 6 held the runCosts instructions I rewrote
     useful: yes
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: Karen's voice and do/don't list for the draft
+    useful: yes
   - path: layers/journal/content/current/skills/digest.yml
     reason: (no reason given)
   - path: layers/journal/tenant.config.ts
@@ -41,11 +45,17 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts
     reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-10-18-the-priciest-session-never-made-the-cost-ledger.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-17-session_01CtktRkpbF4wQ3TTQVYUqLz.yml
+    reason: (no reason given)
 skillsUsed:
   - name: code-review
     reason: Standards and Spec review before the first push
   - name: close-session
     reason: PR opened
+  - name: blog-post
+    reason: user invoked it for the Karen reply
   - name: log-session
     reason: (no reason given)
 frictions:
@@ -61,21 +71,28 @@ frictions:
   - description: Spawned two review subagents without invoking the dispatch-subagents Skill, which CLAUDE.md names for subagents that touch git; they only ran read-only git diff.
     solution: Say in CLAUDE.md that read-only subagents need no Skill, or invoke it anyway.
     severity: nit
-durationSec: 2851
+  - description: My first Angle question described David's visitor-loop outlier as the target of the reply, though the user meant the Glass Box drafts session, so the investigation took a detour until corrected.
+    solution: Search the ledger and logs for the named session type before offering choices, and ask which session in plain words.
+    severity: moderate
+  - description: A subagent could not reach the screenshot phase of the stuck session through list_events, so image handling as the cause stayed unconfirmed after a full run.
+    solution: The transcript recipe could say pages span only minutes and to expect the log, not the transcript, to hold late phases.
+    severity: nit
+durationSec: 14898
 models:
-  claude-sonnet-5-5: 108
+  claude-sonnet-5-5: 181
 toolCounts:
   Read: 12
-  Grep: 3
-  Bash: 27
-  AskUserQuestion: 2
-  Skill: 4
-  Agent: 2
+  Grep: 4
+  Bash: 44
+  AskUserQuestion: 4
+  Skill: 5
+  Agent: 5
   ToolSearch: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   ReadNotifications: 4
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 5
+  mcp__claude-code-remote__get_session: 2
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0015.md
@@ -89,6 +106,8 @@ rulesLoaded:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0025.md
   - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/mermaid-lanes.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -143,11 +162,26 @@ ruleVerdicts:
   - path: .claude/rules/adr-0030.md
     reason: Told me to rewrite the ADR in place and re-stamp the hash; the summary was enough.
     useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback goes in David's Space in the same PR; the summary was enough
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by reading a post; no diagram involved
+    useful: no
 subagents:
   - type: general-purpose
     task: Standards review of diff
   - type: general-purpose
     task: Spec review of diff
+  - type: general-purpose
+    task: Read stuck session transcript
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check Karen's post
+    model: sonnet
+  - type: general-purpose
+    task: Blind read of Karen's post
+    model: sonnet
 gitBranch: ccr-caf968a5-v5wawo
 entrypoint: remote_mobile
 cliVersion: 2.1.302
