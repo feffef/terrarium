@@ -82,7 +82,8 @@ side by side, shorter labels) or drop it.
 clone lacks `revision`. Then run
 `pnpm exec vitest run layers/glassbox/tests/unit/glassbox-pages.spec.ts` and
 `pnpm validate:content`. After `pnpm build`, shoot the page with
-`scripts/ui/preview.ts review <route> <out-dir>` and look at all four shots
+`scripts/ui/preview.ts review <route> <out-dir>` and, only if the page's teaching changed
+(a path or wording fix needs none), look at all four shots
 (`docs/agents/verifying-ui-changes.md`). Retake the shots after
 the last content edit. Done when both are green and each shot matches the
 page's shape in the glossary.
