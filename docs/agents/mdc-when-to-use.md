@@ -22,8 +22,9 @@ or leaving the Markdown file.** The lens for every decision below is
 *author-facing, in-prose composition*.
 
 Using MDC in a layer needs a `components/content/` dir and a new SFC
-(mechanics: the research doc's §13). Atlas, glassbox and midden have one;
-Journal has none (its components sit in the prefixed `components/journal/` dir).
+(mechanics: the research doc's §13). Atlas, glassbox, midden and the Journal
+(its routine chart blocks) have one; the rest of the Journal's components sit in
+the prefixed `components/journal/` dir.
 
 ## The validation caveat (important in this repo)
 
