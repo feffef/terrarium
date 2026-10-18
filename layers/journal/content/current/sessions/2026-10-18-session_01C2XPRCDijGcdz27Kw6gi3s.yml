@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01C2XPRCDijGcdz27Kw6gi3s
 startedAt: 2026-10-18T12:13:02Z
-endedAt: 2026-10-18T12:17:55Z
+endedAt: 2026-10-18T12:21:44Z
 kind: interactive
 goal: Make Glass Box a regular visitor-loop focus
-status: in-review
-outcome: "PR opened: glassbox is now rotation row 5, replacing mobile; awaiting CI and merge"
-summary: The user asked (direct ask) that the visitor-loop Skill stop pinning its focus to glassbox and instead include it in the daily rotation. Per the user's stated preference I asked two questions first; they chose to replace an existing row (the mobile row) and to keep glassbox's entry, note and drafts exclusion. I removed the pinned-focus paragraph and the mobile-specific feature hint, kept 7 rows so the modulo and anchor are unchanged, ran gate:scoped (green), reviewed the 3-line diff inline instead of dispatching the two code-review sub-agents, pushed, opened the PR and posted a verdict. Everything was human-instructed; nothing was agent-initiated beyond removing the now-dead mobile hint in step 3.
+status: completed
+outcome: "PR 2251 merged: glassbox is rotation row 5 (replacing mobile); content counts like features"
+summary: The user asked (direct ask) that the visitor-loop Skill stop pinning its focus to glassbox and instead include it in the daily rotation. Per the user's stated preference I asked two questions first; they chose to replace an existing row (the mobile row) and to keep glassbox's entry, note and drafts exclusion. I removed the pinned-focus paragraph and the mobile-specific feature hint, kept 7 rows so the modulo and anchor are unchanged, ran gate:scoped (green), reviewed the 3-line diff inline instead of dispatching the two code-review sub-agents, pushed, opened the PR and posted a verdict. A second human ask added a sentence to step 3 so findings and ideas weigh content like application behaviour; the PR was merged on a green gate. Everything was human-instructed; nothing was agent-initiated beyond removing the now-dead mobile hint in step 3.
 prs:
   - "2251"
 docsRead:
@@ -31,6 +31,9 @@ docsRead:
   - path: .agents/skills/log-session/SKILL.md
     reason: authoring format for this log
     useful: yes
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: checked it already asks visitors for wording fixes and content ideas
+    useful: yes
 skillsUsed:
   - name: code-review
     reason: run inline on a 3-line prose diff
@@ -40,18 +43,21 @@ frictions:
   - description: code-review Skill mandates two parallel sub-agents; I reviewed a 3-line prose diff inline instead, deviating from the Skill's steps.
     solution: Let code-review state a size threshold below which an inline review is fine.
     severity: nit
-durationSec: 293
+durationSec: 522
 models:
-  claude-sonnet-5-5: 36
+  claude-sonnet-5-5: 59
 toolCounts:
-  Bash: 12
+  Bash: 19
   Read: 2
   AskUserQuestion: 2
   Skill: 2
   ToolSearch: 1
   mcp__github__create_pull_request: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__update_pull_request: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0005.md
