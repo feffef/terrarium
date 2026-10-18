@@ -1,69 +1,24 @@
-// The single mechanical enforcement point for ADR-0017 provenance on every
-// agent-authored artefact that leaves this session through a tool call. It is
-// the repo's only agent-facing home for the rule: the deny message below is
-// written to teach the format at the moment of the mistake, because five
-// recorded recurrences (#387, #605, #628, #723, #788) each happened to a
-// session that had prose available and did not apply it.
+// ADR-0017 provenance guard. Blocks a GitHub write (MCP, or Bash `gh api` /
+// `curl`) whose text lacks a session URL naming THIS session, in the shape its
+// surface prescribes: a first-line `🤖 [Model](<session-url>)` header on a body,
+// a last-lines `Claude-Session:` trailer on an MCP-API commit message (no local
+// git hook sees those). Prose failed five times (#387, #605, #628, #723, #788),
+// so the deny message teaches the format and is the rule's agent-facing home.
 //
-// What it enforces (ADR-0017):
-// **an agent-authored artefact carries a full session URL naming THIS session,
-// in the shape its surface prescribes.** Two surfaces, two shapes, checked by
-// one registry (`GITHUB_PROVENANCE_TOOLS`):
+// Findings: `missing` (#737), `mismatch` (#628), `malformed` (#788),
+// `unverified` and `uninspectable` (ground truth or a Bash body can't be read:
+// fail CLOSED). Also denies a bare `<...>` span in a title or body, which GitHub
+// silently strips (#886). A posted comment can't be fixed here: post a visible
+// follow-up correction.
 //
-//   • `body`   — GitHub prose (issues, PRs, comments, reviews). The provenance
-//     header, FIRST line: `🤖 [Model](<session-url>)`.
-//   • `commit` — an MCP-API commit message (`create_or_update_file`,
-//     `push_files`), which bypasses local git so neither the harness template
-//     nor `.githooks/commit-msg` can reach it. The two-line trailer, last.
+// The Bash entry (#1900) fail-opens on: `gh api` or `curl` run by a script,
+// alias, `xargs` or a shell other than `sh`/`bash`/`zsh`/`dash -c` or `eval`;
+// GraphQL mutations and `gh issue` / `gh pr --body`; shell-built curl URLs,
+// combined short flags (`-sd`), a file changed after the check; lines after a
+// quoted `<<WORD` (`shell-reads.ts` takes it for a heredoc); payloads the `sh`
+// pre-filter drops (it forwards only `gh … api` or `api.github.com`).
 //
-// Four findings:
-//   • `missing`    — no session URL at all (#737). Both observed misses of that
-//     class, PRs #755 and #782, were body-less or provenance-less posts.
-//   • `mismatch`   — names a session, but not this one. The original #628
-//     regression, and the one all five recurrences share.
-//   • `malformed`  — names THIS session, but not in the surface's shape. PR
-//     #788: a correct id written as `**Session:** <url>`, which every
-//     format-agnostic version of this guard passed. Any other shape is
-//     blocked; ADR-0017 says why.
-//   • `unverified` — ground truth is unresolvable, so compliance cannot be
-//     established. Denied, not passed: fail-CLOSED (ADR-0017).
-//
-// Verifying is cheap and near-total: `resolveGroundTruthSessionId` prefers
-// `CLAUDE_CODE_REMOTE_SESSION_ID` and falls back to the transcript's own
-// `sessionId`, so `unverified` requires BOTH to be absent.
-//
-// Nothing here can fix an already-posted body. A PR description is editable
-// (`update_pull_request`); a comment is not, and its standing remedy is a
-// visible follow-up correction, never a rewrite of the original.
-//
-// Pure core (`checkGithubProvenance`) is kept separate from the shared
-// stdin/bootstrap plumbing (`hook-io.ts`, issue #1080) and this guard's own
-// transcript-ground-truth resolution (`main`).
-//
-// Second condition, same registry (issue #886): GitHub silently strips a bare
-// `<...>` span in a title or body as an unrecognized HTML tag, no error shown.
-// A doc-only fix (#779) did not hold across two further recurrences, so
-// `checkAngleBrackets` catches it here instead — the registry that already
-// enumerates every GitHub-write tool is the natural extension point.
-//
-// Third entry point (issue #1900): a Bash call that sends a GitHub body through
-// `gh api` (a `body` field, or the `body` of an `--input` file) or `curl` to
-// `api.github.com` (a data flag's JSON `body`) is judged exactly like an MCP
-// body (`checkBashGithubWrite`). A file it can read is checked; a body it cannot
-// read (stdin, a shell variable, a command substitution) is denied. Fail-opens,
-// since this reads a command string, not a running shell:
-//   • `gh api` or `curl` run by a script, an alias, `xargs`, or a shell the
-//     command names other than `sh`/`bash`/`zsh`/`dash -c` or `eval`.
-//   • a GraphQL mutation (`gh api graphql -f query=…`), and the `gh issue` /
-//     `gh pr --body` subcommands: out of scope in #1900.
-//   • a `curl` URL built by the shell, combined short flags (`-sd`), and a
-//     file changed between this check and the call.
-//   • lines after a `<<WORD` written inside quotes, up to a `WORD` line:
-//     `shell-reads.ts`, whose words this reads, takes them for a heredoc.
-//   • the `sh` pre-filter forwards only payloads naming `gh … api` or
-//     `api.github.com`.
-//
-// Usage (normally invoked by the PreToolUse hook with the payload on stdin):
+// Usage (normally the PreToolUse hook, payload on stdin):
 //   tsx scripts/hooks/github-provenance-guard.ts
 //   sh scripts/hooks/github-provenance-guard.sh     # the Bash hook entry
 import { readFileSync } from 'node:fs'
@@ -79,19 +34,10 @@ import { shellSegments, type Token } from '../session/shell-reads.ts'
 const LABEL = 'provenance guard'
 const REF = 'ADR-0017'
 
-/** A global copy of `SESSION_TRAILER` for `matchAll` — the last-match rule needs
- *  every occurrence (issue #692). Built locally rather than adding the `g` flag
- *  to the shared export: `commit-trailer.ts` calls `SESSION_TRAILER.test()`,
- *  which is stateful (`lastIndex`) on a global regex and would break under
- *  repeated calls.
- *
- *  **Not dead code, despite issue #784.** That issue scheduled the removal of
- *  this constant and its `git` import along with the legacy
- *  body-surface fallback, on the correct premise that nothing would use it once
- *  bodies required the header. Removing that fallback (ADR-0017)
- *  gave the trailer a new, permanent job: reading the COMMIT surface, where
- *  the two-line trailer is still the prescribed marker. Deleting this now
- *  silently unenforces MCP-API commits. */
+/** A global copy of `SESSION_TRAILER` for `matchAll` (the last match is the
+ *  message's own, #692). Local because `commit-trailer.ts` calls `.test()` on
+ *  the shared one, which a `g` flag would make stateful. Not dead code despite
+ *  #784: it reads the COMMIT surface. */
 const SESSION_TRAILER_GLOBAL = new RegExp(SESSION_TRAILER.source, 'g')
 
 /** Which marker shape a surface prescribes. A commit message renders no
@@ -111,24 +57,19 @@ export interface ProvenanceTool {
   /** Default `body`. */
   surface?: ProvenanceSurface
   /** Whether THIS call must carry the text at all. Default: always. Set it for
-   *  a tool whose call can legitimately have none — a label- or state-only
-   *  `issue_write` update, an approve-without-comment review — so the guard
-   *  never wedges those. Without it, "no text" was an unconditional pass, which
-   *  let a body-less `create_pull_request` post with zero provenance (#737). */
+   *  a call that may legitimately have none (a label-only `issue_write`, a bare
+   *  approval) so the guard never wedges it (#737). */
   required?: (input: Record<string, unknown>) => boolean
 }
 
-/** The registry: every tool call an agent uses to publish authored text outside
- *  this session. Add a row here when a new provenance-carrying surface appears
- *  — that is the whole extension mechanism, and the reason this file can be the
- *  rule's only home. */
+/** Every tool call an agent uses to publish authored text outside this
+ *  session. Add a row when a new surface appears. */
 export const GITHUB_PROVENANCE_TOOLS: readonly ProvenanceTool[] = [
   // A comment IS its body — one with none is malformed, not exempt.
   { tool: 'mcp__github__add_issue_comment' },
   { tool: 'mcp__github__add_reply_to_pull_request_comment' },
   { tool: 'mcp__github__add_comment_to_pending_review' },
-  // `body` is optional in the schema, but a PR published with an empty
-  // description is exactly the #737 case — both observed misses were PR bodies.
+  // `body` is optional in the schema, but an empty PR body is the #737 case.
   { tool: 'mcp__github__create_pull_request' },
   // Creating an issue publishes prose; updating one may only touch labels/state.
   { tool: 'mcp__github__issue_write', required: (input) => input.method === 'create' },
@@ -137,16 +78,11 @@ export const GITHUB_PROVENANCE_TOOLS: readonly ProvenanceTool[] = [
   // A review can be submitted with no comment (a bare approval).
   { tool: 'mcp__github__pull_request_review_write', required: () => false },
 
-  // MCP-API commits: the one surface that was covered by nothing (issue #723).
-  // They bypass local git, so `.githooks/commit-msg` never sees them, and their
-  // `message` is a commit message — hence the trailer, not the header. Both
-  // schemas mark `message` required, so the default always-required holds.
+  // MCP-API commits bypass `.githooks/commit-msg` (#723): trailer, not header.
   { tool: 'mcp__github__create_or_update_file', field: 'message', surface: 'commit' },
   { tool: 'mcp__github__push_files', field: 'message', surface: 'commit' },
-  // `merge_pull_request` is deliberately absent: `scripts/github/merge-pr.ts` is this
-  // repo's sole merge path (see its header) and merges via `gh api`/REST
-  // without passing a commit message at all, so there is no agent-authored text
-  // to police. Add a row here the day that stops being true.
+  // `merge_pull_request` is absent: `scripts/github/merge-pr.ts` is the sole
+  // merge path and passes no commit message.
 ]
 
 /** `missing` — no session URL at all (#737); `mismatch` — a session URL naming
@@ -166,12 +102,9 @@ export interface ProvenanceFinding {
   detail?: string
 }
 
-/** Adjudicate `text` against `truth` once the designated slot has been read.
- *  Shared by both surfaces because only the slot differs, never the verdict:
- *  a slot naming someone else is a `mismatch`; no slot but our own URL loose in
- *  the text is a `malformed` (the agent marked authorship in the wrong shape);
- *  no session URL anywhere is `missing`; anything else is another session's URL
- *  and therefore a `mismatch`. */
+/** Judge `text` against `truth` once the surface's slot has been read: a slot
+ *  naming someone else is a `mismatch`; no slot but our URL loose in the text
+ *  is `malformed`; no session URL at all is `missing`; only another's, `mismatch`. */
 function adjudicate(
   slotId: string | undefined,
   text: string,
@@ -188,14 +121,10 @@ function adjudicate(
   return { kind: 'mismatch', tool, surface, found: ids.at(-1)!, expected: truth }
 }
 
-/** The pure, unit-testable core: does this call's authored text carry a full
- *  session URL naming the resolved ground truth, in its surface's shape?
- *
- *  Returns `null` only for something compliant or genuinely out of scope — a
- *  tool outside the registry, an unreadable `tool_input`, or a call with no
- *  text at all where that is legitimate (a label-only `issue_write`; see
- *  `ProvenanceTool.required`). Everything else, INCLUDING unresolvable ground
- *  truth, yields a finding: this guard fails closed. Never throws. */
+/** The pure core: does this call's text carry a session URL naming the
+ *  resolved ground truth, in its surface's shape? `null` only for a compliant
+ *  or out-of-scope call (see `ProvenanceTool.required`); anything else,
+ *  unresolvable ground truth included, is a finding. Never throws. */
 export function checkGithubProvenance(
   toolName: string,
   toolInput: unknown,
@@ -211,10 +140,8 @@ export function checkGithubProvenance(
   const text = typeof raw === 'string' ? raw : ''
 
   if (text.trim() === '') {
-    // Nothing authored: a violation only for a call that should have published
-    // text. Judged before ground truth, so a no-text call that is legitimately
-    // exempt passes even where nothing is resolvable — the triage sweep must
-    // never wedge on a label-only update.
+    // Judged before ground truth so an exempt no-text call passes even where
+    // nothing resolves.
     return (entry.required ?? (() => true))(input)
       ? { kind: 'missing', tool: toolName, surface, expected: groundTruthId ?? undefined }
       : null
@@ -224,10 +151,8 @@ export function checkGithubProvenance(
   // cannot be established, so the call does not proceed.
   if (!groundTruthId) return { kind: 'unverified', tool: toolName, surface }
 
-  // Read the surface's designated slot FIRST, so text that has one is judged on
-  // that slot alone — authored text may legitimately quote another session's
-  // URL as evidence (issue #692), and a quote must neither satisfy nor break
-  // the check.
+  // Judge the surface's slot alone: a quoted foreign URL must neither satisfy
+  // nor break the check (#692).
   if (surface === 'commit') {
     // The LAST `Claude-Session:` trailer is the message's own; earlier ones are
     // citations (#692).
@@ -249,10 +174,8 @@ function prescribedMarker(surface: ProvenanceSurface, url: string): string {
       `you must not name your model (#1422).`
 }
 
-/** The corrective message shown to the agent when the guard blocks. This is the
- *  rule's teaching surface, not a pointer to one: it names the offending tool,
- *  the real session id, and the exact marker to paste, so it works for an agent
- *  that has read no doc at all — which every recorded recurrence was. */
+/** The deny message: names the tool, the real session id and the exact marker
+ *  to paste, so it works for an agent that has read no doc. */
 export function formatGuardMessage(f: ProvenanceFinding): string {
   const message = formatFinding(f)
   return f.tool.startsWith('Bash') ? `${message}\n\n${USE_MCP}` : message
@@ -285,10 +208,7 @@ function formatFinding(f: ProvenanceFinding): string {
     )
   }
 
-  // `expected` is absent only on a text-less-but-required call in an
-  // environment that resolved no ground truth. Never interpolate `undefined`
-  // into a URL an agent is being told to paste verbatim — a literal
-  // `.../undefined` is exactly the fabricated-identifier class this guards.
+  // `expected` can be absent; never paste `.../undefined` as a session URL.
   const url = f.expected ? sessionUrl(f.expected) : '<the session URL resolved from your system prompt>'
   const paste = prescribedMarker(f.surface, url)
   const verbatim = f.expected
@@ -516,20 +436,11 @@ export function checkBashGithubWrite(
 
 const SHELL = /(?:^|\/)(?:ba|z|da)?sh$/
 
-/** Reads the hook JSON on stdin, resolves ground truth, runs the pure check,
- *  and writes a deny control object to stdout for any finding.
- *
- *  Always exits 0 — the deny travels in stdout, not the exit code — but unlike
- *  its predecessor it fails CLOSED: an unreadable payload, an unresolvable
- *  ground truth, or a crash in the check all deny rather than pass.
- *
- *  Ground truth is resolved even with no `transcript_path`:
- *  `resolveGroundTruthSessionId` prefers `CLAUDE_CODE_REMOTE_SESSION_ID`, which
- *  is set in this repo's own environment, so an absent transcript alone is not
- *  a verification failure. The old early-return here skipped that env lookup
- *  entirely and passed such calls unchecked.
- *
- *  A crash before this runs is blocked by the hook entry's `"onFailure": "block"`. */
+/** Reads the hook JSON on stdin, resolves ground truth, runs the checks, and
+ *  writes a deny object to stdout for any finding. Always exits 0 (the deny
+ *  travels in stdout) and fails CLOSED. Ground truth is resolved even with no
+ *  `transcript_path`: the env var may carry it. A crash before this runs is
+ *  blocked by the hook entry's `"onFailure": "block"`. */
 export function main(): void {
   const result = readHookPayload()
   if (result.kind === 'none') return
