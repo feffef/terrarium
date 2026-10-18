@@ -72,9 +72,10 @@ every line that applies.
   otherwise). `pnpm gate:scoped` waits for a slot (`HEAVY_SLOTS`); plain
   `pnpm gate` does not. Rerun an exit-137 run alone before diagnosing.
 - A screenshot agent shoots as soon as `pnpm build` succeeds, not after the gate
-  (issue #683). Its brief caps its image Reads (about 12 per agent; more pages,
-  more agents) and says to stop and report at the first image "request limit"
-  error, not retry.
+  (issue #683).
+- A screenshot agent's brief caps its image Reads (about 12 per agent; more
+  pages, more agents) and says to stop and report at the first image "request
+  limit" error, not retry.
 
 **Scope and trust**
 - Impl agents never call `merge-pr.ts`, whatever pre-authorization the brief
