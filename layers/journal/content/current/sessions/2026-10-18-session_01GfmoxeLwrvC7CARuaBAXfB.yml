@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GfmoxeLwrvC7CARuaBAXfB
 startedAt: 2026-10-18T07:39:05Z
-endedAt: 2026-10-18T07:55:27Z
+endedAt: 2026-10-18T08:26:36Z
 kind: interactive
 goal: Move Routine run costs out of the Skill Inventory
-status: in-review
-outcome: PR 2247 opens a journal routines collection with mandatory run rows; waits for a human merge
-summary: "The user asked, in their own words, to move the Routine cost data out of the Skill Inventory into a new Journal routines collection. Per their preference I asked first and they answered: one doc per Routine with a runs array, move existing rows and drop runCosts, extra fields durationSeconds and startedAt, current Space only, prune to the newest 30 runs through a script. The agent decided the file layout, the prune script, passing startedAt and durationSeconds through the audit-skills scorecard, and backfilling both from session logs. A code review found ADR-0015 and its rule out of step with audit-skills now writing routines; I fixed both and dropped a redundant test. The PR touches docs/adr and .claude/rules, so a human must merge it. My first migration re-serialized the skill files and reformatted all their prose; I restored them and cut the runCosts block as text instead."
+status: completed
+outcome: PR 2247 merged; Routine run costs now live in a journal routines collection with mandatory run rows
+summary: "The user asked, in their own words, to move the Routine cost data out of the Skill Inventory into a new Journal routines collection. Per their preference I asked first and they answered: one doc per Routine with a runs array, move existing rows and drop runCosts, extra fields durationSeconds and startedAt, current Space only, prune to the newest 30 runs through a script. The agent decided the file layout, the prune script, passing startedAt and durationSeconds through the audit-skills scorecard, and backfilling both from session logs. A code review found ADR-0015 and its rule out of step with audit-skills now writing routines; I fixed both and dropped a redundant test. The PR touches docs/adr and .claude/rules, so a human merged it after the gate went green. My first migration re-serialized the skill files and reformatted all their prose; I restored them and cut the runCosts block as text instead."
 prs:
   - "2247"
 docsRead:
@@ -61,19 +61,21 @@ frictions:
   - description: Spawned two review subagents without invoking the dispatch-subagents Skill, which CLAUDE.md names for subagents that touch git; they only ran read-only git diff.
     solution: Say in CLAUDE.md that read-only subagents need no Skill, or invoke it anyway.
     severity: nit
-durationSec: 982
+durationSec: 2851
 models:
-  claude-sonnet-5-5: 91
+  claude-sonnet-5-5: 108
 toolCounts:
   Read: 12
   Grep: 3
-  Bash: 26
+  Bash: 27
   AskUserQuestion: 2
-  Skill: 3
+  Skill: 4
   Agent: 2
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 2
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0015.md
