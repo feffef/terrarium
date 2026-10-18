@@ -1,0 +1,92 @@
+schemaVersion: 1
+session: session_01TwTc2v8Afxqc9R4NdUcNPD
+startedAt: 2026-10-18T13:15:26Z
+endedAt: 2026-10-18T13:18:15Z
+kind: interactive
+goal: Analyse the cost of the scheduled Routine runs
+status: completed
+outcome: Answered in chat with per-Routine cost findings; no code or PR
+summary: "The user asked, in one human prompt, for the cost usage of the Routines stored in the new collection, with key findings and learnings. I read the glossary, found the Journal `routines` collection, and asked the user (their stated preference) which collection, metrics, scope and output they meant. They chose Journal routines, tokens and dollars, cost per Routine plus outliers and drivers, and a chat-only answer. I analysed 207 runs across 8 Routines with a scratchpad script. Findings: one visitor-loop run cost $121 (9% of all spend); audit-skills cost rose about 17x since late September and is now the most expensive; cache-read tokens drive cost; duration does not. The 30-run cap drops the oldest rows, so trends cover only what survived. Everything was human-instructed; the scratchpad analysis and the closing log were agent-initiated."
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: required session-start read; located Journal Tenant
+    useful: yes
+  - path: GLOSSARY.md
+    reason: defined Routine, Journal and Session terms used in the answer
+    useful: yes
+  - path: layers/journal/tenant.config.ts
+    reason: routineSchema fields and the 30-run cap context
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: session only answered a question
+  - name: log-session
+    reason: author the session log
+frictions:
+  - description: Ran `git log` to find the routines commit before reading docs/agents/git-conventions.md, which CLAUDE.md requires first. No impact; a hook reminded me.
+    solution: Read git-conventions.md before the first git command beyond status and diff.
+    severity: nit
+  - description: Gave recommendations on Routine cost before checking the ADRs that bind them, as CLAUDE.md asks. ADR-0015 loaded only afterwards via a hook; no conflict found.
+    solution: Run grep -l on docs/adr before recommending a change.
+    severity: nit
+durationSec: 168
+models:
+  claude-sonnet-5-5: 25
+toolCounts:
+  Read: 2
+  Grep: 1
+  Bash: 8
+  AskUserQuestion: 1
+  Skill: 2
+  Write: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0015.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded when I read the routines files; confirms audit-skills owns Routine run costs. Summary was enough.
+    useful: partly
+  - path: .claude/rules/adr-0004.md
+    reason: Gate and merge rules; no push or PR this session, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session after answering; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: PR-opening rule; no PR was needed for a chat answer.
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header for GitHub writes; I made none.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary layout; I changed no terms, so unrelated.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest rule loaded on reading tenant.config.ts; confirmed the collection is manifest-defined, summary enough.
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: Journal is the logbook; context for where routines live, summary enough.
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: About MDC and new Collections; unrelated to this analysis.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Layer coding rules loaded on reading a layer file; I wrote no code.
+    useful: no
+gitBranch: ccr-d927423c-8hxohb
+entrypoint: remote_mobile
+cliVersion: 2.1.302
+learnings:
+  - Routine run records are capped at 30 per Routine (RUNS_KEPT), so the oldest and often most expensive rows are dropped and trends cover only the survivors.
+  - Routine cost tracks cache-read tokens, not wall-clock time; a 6.6 hour audit-docs run cost only $12.
+landedBy: Stop
