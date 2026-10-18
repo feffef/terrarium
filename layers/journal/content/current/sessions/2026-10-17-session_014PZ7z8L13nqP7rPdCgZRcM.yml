@@ -1,0 +1,157 @@
+schemaVersion: 1
+session: session_014PZ7z8L13nqP7rPdCgZRcM
+startedAt: 2026-10-17T20:47:08Z
+endedAt: 2026-10-18T05:47:20Z
+kind: interactive
+goal: Work out how to get token usage of scheduled Routine runs
+status: completed
+outcome: Usage is available per session through the session API; weekly Routine comparison done and issue 2239 filed for audit-skills
+summary: "The user asked whether token usage of a scheduled Routine run such as frictions-to-fixes is easy to extract. I found session logs hold no usage and transcript-trace.ts never reads it, then proved the session API (get_session) returns input, output, cache read and cache write tokens plus cost for any session, scheduled ones included. Human-instructed: the proof of concept, the requirement of all token categories including subagents per run, the decision to NOT store usage in session logs but look it up afterwards through the API, the comparison of all Routine runs of the last week (58 runs, about 360 USD, audit-skills 41 percent), and filing the issue. Agent-initiated: I started editing the transcript trace and session schema to record tokens in the logs, a design the user had not chosen; the user interrupted twice, I reverted everything, and nothing in the repo changed. The weekly numbers came from one Sonnet subagent that fetched all 58 sessions into a CSV in the scratchpad. Still open and recorded in issue 2239: whether a session's usage includes its subagents (a probe subagent's tokens did not show up in the parent's counter, which may simply refresh rarely), and whether the Inventory figure should cover Routine-fired runs only. No code or PR was produced."
+prs: []
+docsRead:
+  - path: GLOSSARY.md
+    reason: required session-start read; terms Routine, Session, Skill Inventory
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: required session-start read
+    useful: partly
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: checked whether a new session-log field is allowed (optional fields are); moot after the user chose API lookup
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: read before my first git command beyond status
+    useful: no
+  - path: docs/agents/github-integration.md
+    reason: read before filing the issue; confirmed MCP writes and the ADR-0017 header
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: read before filing; no spec or label rule beyond needs-triage
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: chose needs-triage for a proposal not yet approved
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: showed where the scorecard lookup (step 1) and Inventory write (step 5) would go; seen through a sed in a shell command
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: session only answered questions and filed an issue
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: I began editing the session schema and transcript trace to record tokens in session logs before the user had chosen where the numbers live; they interrupted and I reverted all of it.
+    solution: When the user's answer leaves the storage choice open, ask it as a single question before editing (the grilling and ask-before-building rules), not after reading code.
+    severity: moderate
+  - description: The first probe subagent brief said use no other tools and did not ask for the per-rule verdicts or a scratchpad subfolder that CLAUDE.md requires of every subagent brief.
+    solution: Put the CLAUDE.md subagent-brief lines in a reusable snippet or a dispatch-subagents checklist so a one-off probe still carries them.
+    severity: nit
+  - description: The session API usage counter did not change after a subagent ran, so I could not verify whether subagent tokens are counted; the counter refreshes at an unclear cadence.
+    solution: Document in docs/agents/github-integration.md (or a new note) when get_session usage refreshes and whether it includes subagents, once measured on a finished Routine run.
+    severity: minor
+  - description: Before recommending the audit-skills change I did not run the grep for ADRs that bind it, nor read ADR-0015 in full.
+    solution: Run the ADR grep from CLAUDE.md before proposing a design, even in chat.
+    severity: nit
+durationSec: 32413
+models:
+  claude-sonnet-5-5: 94
+toolCounts:
+  Read: 3
+  Grep: 8
+  Glob: 2
+  Bash: 20
+  mcp__claude-code-remote__list_sessions: 1
+  mcp__claude-code-remote__list_triggers: 1
+  mcp__claude-code-remote__get_session: 5
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Gate and merge rules; no PR was opened, so it did not bite and the summary was enough
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Confirmed optional fields may be added to session logs; I read the full ADR to check the schema-grows rule
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to propose new work as an issue rather than build it; confirmed filing issue 2239, summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header line on the issue body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded by reading GLOSSARY.md; about glossary placement, irrelevant to this question
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded after reading shared and tenant config files; no PR, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded by reading shared files; about cross-Tenant reads, unrelated to token usage
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with the ADR-0009 read; about ADR wording, unrelated to this task
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded with an ADR read; about Prune Trials, unrelated to this task
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on touching the audit-skills Skill folder; Skills are Platform code, not needed beyond that
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded on reading audit-skills; says it edits only Inventory entries and issues, which shaped the issue wording, full ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded when I read the Journal tenant config; I did not change a manifest, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded on reading Journal files; reminded me logs are not regenerated, summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded alongside other rules; about where instructions live, unrelated to this task
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded by reading a layer file; about MDC content, unrelated
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded by reading a layer config; about Tenant layer conventions, unrelated
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded when I read the triage docs; about the auto-triage sweep, did not apply to filing a needs-triage issue
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Token accounting probe
+    model: sonnet
+  - type: general-purpose
+    task: Look up Routine run usage
+    model: sonnet
+gitBranch: ccr-1163143e-mu706y
+entrypoint: remote_mobile
+cliVersion: 2.1.302
+learnings:
+  - get_session on a Routine run's session id returns usage (input, output, cache read, cache write, cost_usd) and origin scheduled_trigger; both cse_ and session_ ids resolve. input_tokens is only the uncached tail, so cache read and write carry the volume.
+ideas:
+  - "Add a Routine cost panel to the Journal Tenant: audit-skills writes per-Routine mean tokens and cost per run into the Skill Inventory, and the Journal renders a weekly cost-by-Routine chart so an expensive Routine (audit-skills is about 41 percent of spend) is noticed before it grows."
+landedBy: Stop
