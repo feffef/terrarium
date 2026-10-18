@@ -370,10 +370,12 @@ describe('journal Tenant', async () => {
     const route = '/t/journal/current'
     await withRendered(route, async (page) => {
       // The digest body ships only in the useAsyncData payload until a click mounts
-      // it (the accordion defaults closed), so a real click must make it visible.
+      // it (the accordion defaults closed), so a click must make it visible.
+      // openAndAwaitPin waits out the digest's pin, which outlasts its expand:
+      // while the digest grows it moves the card below it under the card
+      // click, which then misses the head (issue #2231).
       expect(await page.locator('.digest-body').count()).toBe(0) // collapsed: not mounted
-      await page.locator('.digest .drow').first().click()
-      await page.locator('.digest-body').first().waitFor({ state: 'visible' })
+      await openAndAwaitPin(page, page.locator('.digest .drow').first(), page.locator('.digest-body').first())
       expect(await page.locator('.digest-body').count()).toBe(1)
       // Opening a session card must collapse the open digest. Click the head
       // via its `.goal` heading — never `.head` itself: a real click aims at

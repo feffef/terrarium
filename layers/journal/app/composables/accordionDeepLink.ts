@@ -3,7 +3,7 @@
 // adopts it by calling it rather than re-implementing it — which is exactly how
 // the scroll contract gets re-broken. Its four behaviours (one-at-a-time open,
 // hash mirror, deep-link-load scroll, click-open pin) are guarded end-to-end by
-// four e2e in `layers/journal/tests/e2e/journal.e2e.ts`; the pin's own timing is
+// four e2e in `layers/journal/tests/e2e/journal.spec.ts`; the pin's own timing is
 // tuned and NOT simplifiable — read pinTopAcrossTransition's header in
 // ../utils/expandTransition.ts before touching it.
 //

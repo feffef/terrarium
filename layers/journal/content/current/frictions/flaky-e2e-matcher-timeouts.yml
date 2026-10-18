@@ -1,7 +1,7 @@
 name: flaky-e2e-matcher-timeouts
 summary: >-
-  Browser tests gave up after one second, so slow pages failed unrelated changes and passed on a retry.
-cause: e2e specs assert with vitest's expect.poll, whose default timeout is 1000 ms (vitest.config.ts does not raise it), so slow hydration or a loaded gate fails an unrelated PR and passes on re-run.
+  A browser test clicked a card while the page was still moving, so the click sometimes missed and unrelated changes failed until a re-run.
+cause: "The Journal accordion e2e clicked a session card while the digest it had just opened was still expanding (160 ms), which moved the card below it under Playwright's click, so the click could miss the head and aria-expanded never flipped (not reproduced locally). A longer expect.poll timeout (10 s since PR #1919) can't help. Signal: an unrelated PR fails journal.spec.ts's accordion test or another click right after an open, and passes on re-run."
 surface: safe
 status: tracked
 ref: "issue #2231 (regression of PR #1919)"
