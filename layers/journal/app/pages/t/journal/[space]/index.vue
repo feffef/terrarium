@@ -36,7 +36,8 @@ const { data } = await useAsyncData(route.path, async () => {
   // Newest-first, ordered in SQL rather than re-sorted client-side.
   const sessions = await queryCollection(collections.sessions).order('endedAt', 'DESC').all()
   const ledgerSize = await queryCollection(collections.frictions).count()
-  return { pages, skills, sessions, ledgerSize }
+  const routineCount = await queryCollection(collections.routines).count()
+  return { pages, skills, sessions, ledgerSize, routineCount }
 })
 
 // `.all()` returns the full page Documents with their parsed body, so the root's
@@ -52,7 +53,7 @@ const digests = computed(() => digestList(allPages.value))
 // adding or reordering a door needs no edit here. Isolation-respecting: sourced
 // from THIS Space's own `pages`, so a page must exist in-Space to surface — the
 // archived Space, lacking these pages, shows none. The Friction Ledger is a
-// Vue page, not a Document, so its door is added here, last.
+// Vue page, not a Document, so its door is added here, as is the Routine costs one.
 const onrampCards = computed(() => [
   ...onrampSteps(allPages.value).map((s, i, all) => ({
     key: s.path,
@@ -68,6 +69,15 @@ const onrampCards = computed(() => [
         title: 'What went wrong recently',
         blurb: 'The Friction Ledger: recent recurring pain-points agents logged, grouped by cause, worst and most frequent first, fixed ones included.',
         to: `/t/${tenant}/${space}/frictions`,
+      }]
+    : []),
+  ...(data.value?.routineCount
+    ? [{
+        key: 'routines',
+        kicker: 'Also worth a look',
+        title: 'What the scheduled runs cost',
+        blurb: 'Every Routine run as a chart, plus a weekly table. Switch between dollars, tokens and time.',
+        to: `/t/${tenant}/${space}/routines`,
       }]
     : []),
 ])
