@@ -39,20 +39,7 @@ provide(glassboxRevisionKey, computed(() => page.value ?? undefined))
 const source = computed(() => page.value ? glassboxFileUrl(`layers/glassbox/content/${space}/pages/${page.value.stem}.md`, 'main') : undefined)
 provide(glassboxTermsKey, computed(() => data.value?.terms ?? {}))
 
-const menuOpen = ref(false)
-const menuButton = useTemplateRef<HTMLButtonElement>('menuButton')
-watch(() => route.path, () => { menuOpen.value = false })
-
-async function openMenu() {
-  menuOpen.value = true
-  await nextTick()
-  document.querySelector<HTMLElement>('#gb-nav .close')?.focus()
-}
-function closeMenu() {
-  if (!menuOpen.value) return
-  menuOpen.value = false
-  menuButton.value?.focus()
-}
+const { menuOpen, openMenu, closeMenu } = useGlassboxMenu()
 
 useHead(() => ({ title: `${page.value?.title ?? 'Not found'} · glassbox` }))
 useSeoMeta({ description: () => page.value?.description })
