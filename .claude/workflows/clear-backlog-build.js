@@ -8,7 +8,7 @@ export const meta = {
   ],
 }
 
-// args: { session: 'session_…', branches: [{ name, issues: [n], brief, picks?: [string],
+// args: { session: 'session_…', branches: [{ name, issues: [n], brief, picks?: [string] | string,
 //   model?: 'sonnet', cherryPick?: prNumber, worktree?: path, question?: string, answer?: string }] }
 if (!args || !args.session) throw new Error('args.session (this session id, session_…) is required for the provenance header')
 const HEADER = `🤖 [Claude](https://claude.ai/code/${args.session})`
@@ -74,11 +74,12 @@ const tagged = (r, agent) => ((r && r.verdicts) || []).map(v => ({ ...v, agent }
 const slug = b => b.name.replace(/[^a-z0-9]+/gi, '-')
 
 function common(b) {
+  const picks = [].concat(b.picks || [])
   return `Repo feffef/terrarium. Branch \`${b.name}\` implements ${b.issues.map(n => `#${n}`).join(', ')}.
 
 ## Brief
 ${b.brief}
-${b.picks && b.picks.length ? `\n## Owner's agreed picks (binding)\n${b.picks.map(p => `- ${p}`).join('\n')}\n` : ''}${b.answer ? `\n## Owner's answer to "${b.question}"\n${b.answer}\n` : ''}`
+${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`).join('\n')}\n` : ''}${b.answer ? `\n## Owner's answer to "${b.question}"\n${b.answer}\n` : ''}`
 }
 
 function rules(b) {
