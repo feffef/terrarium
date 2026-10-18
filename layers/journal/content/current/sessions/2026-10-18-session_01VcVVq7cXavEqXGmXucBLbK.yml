@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01VcVVq7cXavEqXGmXucBLbK
 startedAt: 2026-10-18T13:10:22Z
-endedAt: 2026-10-18T13:18:46Z
+endedAt: 2026-10-18T13:52:14Z
 kind: autonomous
 goal: Scheduled prune trial of the Platform's instructions
-status: in-review
-outcome: "No trial judgeable yet; opened one new trial pruning the provenance guard's comments (-89), PR #2252 awaiting a human merge"
+status: completed
+outcome: "No trial judgeable yet; opened one new trial pruning the provenance guard comments (-89), PR #2252 merged"
 summary: Scheduled /prune-trial run, nothing human-instructed. The window script showed all four open trials landed 2026-10-16 to 10-18 and not yet judgeable, so none was judged. A search subagent covered the instruction corpus, guard headers and the tracker and ranked failed-prose candidates; I took the github-provenance-guard.ts header and doc comments (rule failed five times as prose, now held by the guard), cut them comments-only (-89), added the ledger entry, and a Sonnet probe pinned to the post-prune SHA answered five situations from the surviving text (it flagged the exact trailer shape as not visible in the first 80 lines, which the guard's deny message supplies). gate:scoped green, unit spec 84/84. I ran code-review as a lean self-check (comments-only diff, verified no code lines changed) rather than two subagents. The PR touches scripts/hooks, so it waits for a human merge.
 prs:
   - "2252"
@@ -51,12 +51,12 @@ frictions:
   - description: Ran code-review as a lean self-check instead of the Skill's two parallel subagents, because the diff was comments-only.
     solution: Let the code-review Skill say when a comments-only diff may skip the subagents.
     severity: nit
-durationSec: 504
+durationSec: 2513
 models:
-  claude-sonnet-5-5: 70
+  claude-sonnet-5-5: 79
 toolCounts:
   Read: 9
-  Bash: 14
+  Bash: 15
   Agent: 2
   Grep: 1
   Edit: 13
@@ -65,6 +65,7 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   PushNotification: 1
+  ReadNotifications: 3
 filesEdited:
   - scripts/hooks/github-provenance-guard.ts
 rulesLoaded:
