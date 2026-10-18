@@ -289,3 +289,18 @@ observations:
       ambiguity ("copied, never retyped") self-caught a 3rd recurrence in
       session_01XxPqcyjVxcgmHTidWtoF1g - worth a future SKILL.md wording fix
       if a 4th instance turns up. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-18"
+    note: >-
+      Self-check (audit-skills behaviour check): 9 of 10 usedIn sessions
+      already thoroughly verified by prior entries; the newest,
+      session_011HBcCLzMW7CshmqnHLnegb (2026-10-15, PR #2038), freshly
+      verified end-to-end and added as a 4th corroborating instance of the
+      step-3 pooling-instruction gap ("copied, never retyped" was
+      unmeetable since subagent hand-backs arrive only as messages, not
+      files) — this instance predates the fix, not a new open occurrence.
+      Issue #2196 (the tracked regression) confirmed CLOSED, fixed via
+      merged PR #2205 (`scripts/session/save-handback.ts`, landed
+      2026-10-17T07:13:57Z); current SKILL.md already cites the script. No
+      usedIn session ran after the fix landed, so it is untested live yet -
+      worth confirming next run. No reverts of audit-docs-delivered content
+      in the 2-week sweep. No new silent failure. Grade/role unchanged.

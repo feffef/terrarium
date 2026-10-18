@@ -302,3 +302,18 @@ observations:
       closure via log-session directly (no PR to open), not a miss - same
       pattern as prior observations. No new finding. Grade/role unchanged
       (essential).
+  - date: "2026-10-18"
+    note: >-
+      Self-check (audit-skills behaviour check), Part A (10 usedIn, all
+      2026-10-11, graded against the pre-10-12 SKILL.md text in force at
+      their startedAt): all 10 logs real, non-stub, correctly committed on
+      main, every claimed PR (#1762, #1766-1768, #1753, #1756-1758, #1760)
+      confirmed merged. No omitted frictions - several sessions honestly
+      self-log the "user had to ask if it was logged" failure this audit
+      looks for, including a genuine log-session mechanism bug (a container
+      resume rolling back two log updates, self-reported). Part B (1
+      notUsed, session_01NVG22rfEsjhW9zkcCco6W8): re-confirmed equivalent
+      closure (log present via log-session direct, no PR warranted per the
+      owner's own kickoff) - the 9th consecutive run reaching this verdict
+      on the same session id. No new finding. Grade/role unchanged
+      (essential).

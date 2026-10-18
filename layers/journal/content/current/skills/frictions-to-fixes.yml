@@ -276,3 +276,16 @@ observations:
       diff-matched; no PR touched a Human-only path. #1449 reconfirmed still
       CLOSED (wontfix), no recurrence. No reverts in the 2-week sweep. No new
       silent failure. Grade/role unchanged.
+  - date: "2026-10-18"
+    note: >-
+      Self-check (audit-skills behaviour check): 10/10 usedIn sessions
+      checked, 3 freshly re-verified end-to-end against live GitHub + main
+      (PRs #1801/#1845, #1820/#1821/#1819, #1917-1920), 7 corroborated
+      against the existing verified trail with no contradiction. Ledger
+      data-hygiene follow-through confirmed: `shell-read-detection.yml` and
+      `reviewer-line-ranges-off.yml` both show their stale `ref` fields were
+      since corrected, not left dangling. The 3 already-known failure shapes
+      (#1676/#1684, #2024, #2104's GitHub-native-auto-close bypass) all
+      re-confirmed correctly tracked, not recurring undetected. No reverts
+      of this Skill's ledger/fix work in the 2-week sweep. No new silent
+      failure. Grade/role unchanged.

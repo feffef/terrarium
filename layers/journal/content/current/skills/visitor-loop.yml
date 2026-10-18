@@ -367,3 +367,29 @@ observations:
       rework window untested - no visitor-loop run has fired since to pick
       it up; confirm on the next run whether decisions.md catches it. No
       new silent failure. Grade/role unchanged (routine).
+  - date: "2026-10-18"
+    note: >-
+      Self-check (audit-skills behaviour check): 8 of 9 usedIn sessions
+      already thoroughly verified by prior entries; the newest,
+      session_01CXxyUmwkN3Rx5DTSK2s391 (PR #2225, 2026-10-17), freshly
+      verified end to end. REPEATED finding, escalated as issue #2229: PR
+      #2225's owner-memory tally batched 14 candidates (#2159 through
+      #2108) onto one shared-verdict line - the exact shape #1721 and #1912
+      were filed to stop. Reconstructed the tally text and ran it through
+      the live `owner-corrections.ts --check` logic: it resolves only
+      `#2159`, the other 13 come back unresolved, so `--check` would have
+      failed against this exact published text though the PR claims it
+      passed. Root cause confirmed still live in `unresolved()`
+      (line ~135): `l.match()` with no global flag credits only the first
+      `#N`/URL per "not a ruling" line. #1912's fix (PR #1931) only built
+      half of its own two named options - pasting the tally verbatim into
+      the PR body - and left hardening the regex itself "pending a human
+      decision," so the root cause survived #1912's closure and recurred a
+      3rd/4th time. 2026-10-16/17's "2/2 clean since the #1912 fix" grade
+      was premature - the gate was never actually re-exercised against a
+      batched line until now. Rest of the pipeline (3-model dispatch,
+      consensus, refiner, code-review, merge, decisions.md carry-forward of
+      #2178/#2171/#2176) all checked out. No new silent failure beyond this
+      one. Grade/role unchanged (routine) - the dispatch/consensus/build
+      mechanics remain sound; only the owner-memory mechanical gate is
+      broken.

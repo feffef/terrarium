@@ -172,3 +172,18 @@ observations:
       #1786 correctly escalated ready-for-human, never self-closed. No
       revert of SKILL.md content. No new silent failure. Grade/role
       unchanged.
+  - date: "2026-10-18"
+    note: >-
+      Self-check (audit-skills behaviour check): all 4 usedIn sessions
+      re-verified, 16 issues/claims checked directly against live GitHub
+      state across them; every label/closure/escalation matched what the
+      Skill promised when each session ran, none later reverted. #1786's
+      full lifecycle traced end to end (re-opened/re-escalated twice,
+      finally closed by owner decision via PR #2160) as a good example of
+      the judgment-call machinery working, not a failure. One minor,
+      non-blocking note, not escalated: session_01CasnQoauTyLNUxd74agJsP's
+      log `summary` says "#1770 stays open" but GitHub shows that same
+      session closed it ~4 minutes after its logged `endedAt` with a
+      reasoned comment - a stale summary sentence, not a mislabeling (the
+      actual triage action was correct). No reverts in the 2-week sweep. No
+      new silent failure. Grade/role unchanged.

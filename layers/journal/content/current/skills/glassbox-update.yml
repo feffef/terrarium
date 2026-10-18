@@ -26,3 +26,13 @@ observations:
       pins/excerpts/citations verified word-for-word against source at each
       pinned commit. No reverts. No new silent failure. Grade unchanged
       (specialist).
+  - date: "2026-10-18"
+    note: >-
+      Self-check (audit-skills behaviour check): all 6 usedIn sessions
+      checked, 3 freshly verified beyond the prior entry (PR #2203 guide
+      re-pin; PR #2218 guide re-pin + stale guard-wrap.sh fix; PR #2219 +
+      PR #2222 CSS fix). Every pinned revision hash confirmed real, every
+      cited `:file[...]`/excerpt block confirmed to exist at its exact
+      pinned commit with the exact quoted line range, no misdescribed
+      claim found. No reverts of any glassbox-update PR's content in the
+      2-week sweep. No new silent failure. Grade unchanged (specialist).

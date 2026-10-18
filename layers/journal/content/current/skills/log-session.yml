@@ -389,3 +389,15 @@ observations:
       reconfirmed still closed and holding - no numeric-cap regression. No
       new finding. Grade/role unchanged
       (essential).
+  - date: "2026-10-18"
+    note: >-
+      Self-check (audit-skills behaviour check), Part A (10/10 usedIn,
+      split and graded against the correct pre/post-SKILL.md-change text
+      for each session's startedAt): all 10 logs real, schema-complete,
+      honestly record every friction their own narrative implies, including
+      several self-critical ones (failure to self-invoke close-session, a
+      shipped-content quality miss). Part B (19/19 notUsed): all carry
+      close-session in skillsUsed and have a real, non-stub log on main -
+      the already-tracked close-session-to-log-session transitive-invocation
+      gap (#1915), not a genuine miss. No new silent failure, no new missed
+      invocation. Grade/role unchanged (essential).

@@ -358,3 +358,21 @@ observations:
       clause) reconfirmed still resolved by the earlier prune, not restored.
       No reverts in the 2-week sweep. No new silent failure. Grade/role
       unchanged.
+  - date: "2026-10-18"
+    note: >-
+      Self-check (audit-skills behaviour check): all 8 usedIn sessions
+      checked. REPEATED finding, escalated as issue #2228: the 2026-10-16
+      observation's line-delta discrepancy (session_0147UencKKZS3WLHvsbgywp7,
+      PR #2063, close-session SKILL.md prune) independently re-derived from
+      source again this run - PR title/body/live ledger entry still say
+      "60→46, -14" but `git show --numstat 97721ad0` confirms the real
+      delta is 59→40, -19 - and it is STILL uncorrected in the open,
+      unjudged `.agents/prune-trials.yml` entry two runs later. Two
+      independent audits now agree; filed since the trial's eventual
+      verdict risks being judged against a wrong baseline. Ledger otherwise
+      healthy: 4 open trials, all correctly "not yet judgeable," no
+      reverts in the 2-week sweep. Human-merge compliance held on every
+      Human-only-touching PR checked (#2223, #2165/#2168), and PR #1813's
+      2026-10-12 self-merge via the then-existing `--prune-trial` flag
+      reconfirmed compliant with the rule in force at the time. Grade/role
+      unchanged.

@@ -237,3 +237,15 @@ observations:
       fact-check tally matches, 3 spot-checked narrative claims accurate. 18
       consecutive clean daily audits now since the single 2026-09-28 #1478
       case. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-18"
+    note: >-
+      Self-check (audit-skills behaviour check): fresh end-to-end audit of
+      session_01DeVdzgpEMamftEbbyv26qd (PR #2227, the 2026-10-17 Digest) -
+      merged, archive/retention sweep correct (7 consecutive dates, no
+      gaps/dupes), re-ran `digest.ts gather 2026-10-17` from scratch and the
+      rollup matched the published footer exactly (including the "worst"
+      claim, traced to the real friction it cites), 4 narrative claims
+      spot-checked against live PR bodies all accurate, genuine dispatched
+      fact-check subagent entry in the log. 19 consecutive clean daily
+      audits now. No reverts in the 2-week sweep. No new silent failure.
+      Grade/role unchanged.
