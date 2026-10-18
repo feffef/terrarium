@@ -1,0 +1,463 @@
+schemaVersion: 1
+session: session_019U9RYQ9iFv8fwp2VQvwGny
+startedAt: 2026-10-18T04:03:19Z
+endedAt: 2026-10-18T04:23:37Z
+kind: autonomous
+goal: Scheduled audit of the Platform's docs against the code
+status: in-review
+outcome: Opened PR 2237 with checker-confirmed doc fixes; awaiting green CI and merge
+summary: "Scheduled /audit-docs run (no human prompt; the schedule is the only instruction, everything else was agent-initiated within the Skill's scope). Concision family this run was skills (the research family ran on 10-17). A large scripts/ reorganisation landed in the last 48h, so most Drift findings were stale script paths in docs/research, tests/README.md and one Inventory role. Five reviewer agents (freshness, single-home, two concision halves, coherence) returned about 45 findings; I pooled and deduped them and three checkers re-derived each one (no WRONG; several CONFIRMED-BUT with tightened text, and I dropped two as zero-gain: atlas \"Get both right\" and the guest-build step 2/4 pointers). PR 2237 carries the fixes. Left alone on purpose: the CLAUDE.md \"Ask before building\" scheduled-run carve-out (a judgement call), the pr-workflow Dependabot sentence (open prune-trial territory), and the stale-info-hint name in prune-trials.yml. Gate green; code-review found two small items I fixed before the first push."
+prs:
+  - "2237"
+docsRead:
+  - path: GLOSSARY.md
+    reason: session-start read; terms for tiers and Skills
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; no finding came from it
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history, commit via -F
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR sequence
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before PR creation; MCP write route
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief rules for the read-only reviewer and checker agents
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the Skill under run; also the spec for the Bounded-note finding
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: PR-open closing steps; reviewers saw it as prune-trial territory
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: prose style source for the Standards reviewer
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: concision family file; one rewrite
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: concision family file; no change
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: concision family file; no change
+    useful: partly
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: concision family file; no change
+    useful: partly
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: concision family file; no change
+    useful: partly
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/glassbox-walkthrough/SKILL.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: concision family file; dated rulings kept
+    useful: no
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: concision family file; no change
+    useful: no
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: concision family file; no change
+    useful: no
+  - path: docs/agents/guest-contributions.md
+    reason: single-home and coherence sweep; no finding
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: single-home sweep; no finding
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: single-home sweep; no finding
+    useful: partly
+  - path: docs/agents/domain.md
+    reason: single-home sweep; no finding
+    useful: partly
+  - path: docs/agents/mdc-when-to-use.md
+    reason: stale-path check; clean
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: single-home sweep; no finding
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: drift check against settings.json; clean
+    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: reachability check; clean
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: source of two fixes (stale versions, Journal fact)
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: coherence check of log rules
+    useful: partly
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: coherence check of who may change what
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: coherence check of merge rules
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: coherence check
+    useful: partly
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: coherence check
+    useful: partly
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: coherence check; Dependabot sentence
+    useful: yes
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: checked guest-intake and auto-triage rewrites
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: coherence check
+    useful: no
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: coherence check
+    useful: no
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: stale-path fix source
+    useful: yes
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: stale-path fix source
+    useful: yes
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: stale-path fix source
+    useful: yes
+  - path: docs/research/public-readiness-review.md
+    reason: stale-path check
+    useful: no
+  - path: docs/proposals/README.md
+    reason: Live tier check
+    useful: no
+  - path: layers/commons/GLOSSARY.md
+    reason: consistency check with root glossary
+    useful: no
+  - path: layers/glassbox/GLOSSARY.md
+    reason: facts for the Glass Box bullet
+    useful: yes
+  - path: layers/journal/GLOSSARY.md
+    reason: What lives where pointer target
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: "edited: dashboard and archive paragraphs, merged gate step"
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "edited: two rewrites; confirmed override home"
+    useful: yes
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: "edited: one dial sentence"
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: "edited: reply-decision sentence"
+    useful: yes
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: "edited: comment paragraph and step 1"
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "edited: section refs, issue paragraph, done-when"
+    useful: yes
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: "edited: intro, needs-info, ADR-0001 paragraph"
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: edited closure paragraphs; also its authoring recipe
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: "edited: one pointer line"
+    useful: yes
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled task itself
+  - name: code-review
+    reason: pre-push review of the committed diff
+  - name: close-session
+    reason: PR-open log
+frictions:
+  - description: save-handback.ts failed on every reviewer because they delivered their report as a hand-back message, not final text, so I retyped the pool by hand.
+    solution: Have save-handback read SubagentHandback messages too, or tell audit-docs briefs to end with a plain final reply.
+    severity: minor
+  - description: Ran git fetch in the same parallel batch as the git-conventions read, so the doc was not read before my first git command.
+    solution: Read the trigger doc alone first, then start git.
+    severity: nit
+  - description: The Stop hook asked to commit and push uncommitted changes while checkers were still running and the gate and review were not done.
+    solution: Let the hook skip when a scheduled run's PR steps are still pending.
+    severity: nit
+durationSec: 1217
+models:
+  claude-sonnet-5-5: 156
+toolCounts:
+  Bash: 27
+  Read: 21
+  Write: 2
+  Agent: 10
+  ReadNotifications: 11
+  Edit: 18
+  Grep: 1
+  Skill: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - layers/journal/content/current/pages/real-and-invented.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0024.md
+docsReadBySubagents:
+  - docs/agents/guest-contributions.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - docs/agents/domain.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - docs/agents/tenant-layers.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0004-objective-safety-gate.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/proposals/README.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/research/public-readiness-review.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - layers/commons/GLOSSARY.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/shell-reads-by-output-matching.md
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/blog-post/personas/eyra.md
+  - .agents/skills/blog-post/personas/david.md
+  - .agents/skills/blog-post/personas/karen.md
+  - .agents/skills/blog-post/personas/kevin.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - .agents/skills/glassbox-walkthrough/SKILL.md
+  - .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/visitor-loop/visitor-brief.md
+  - .agents/skills/visitor-loop/refiner-brief.md
+  - layers/journal/GLOSSARY.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: checked no edited path is Human-only
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: loaded on reading guards.md; clean
+    useful: partly
+  - path: .claude/rules/adr-0011.md
+    reason: loaded by a subagent read; not relevant
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: gate/CI parity; not relevant to prose edits
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: loaded by a subagent read; not relevant
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: loaded by a subagent read; not relevant
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: loaded by a subagent read; not relevant
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: loaded by a subagent read; not relevant
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: loaded by a subagent read; not relevant
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: home page is a curated showcase, helped count sites
+    useful: partly
+  - path: .claude/rules/adr-0028.md
+    reason: loaded by a subagent read; not relevant
+    useful: no
+  - path: .claude/rules/adr-0024.md
+    reason: loaded by a subagent read; not relevant
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: "three PRs and approval rule: scheduled run changes only its Skill's scope, summary was enough"
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: made me run gate:scoped and code-review before the first push, summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: provenance header on the PR body and commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: "Skills are code: kept pack Skills untouched; summary enough"
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: pack Skills and Inventory role rules, relevant to the digest.yml fix; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: glossary placement; not needed this run
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: told me to leave open prune-trial territory alone; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: reachability of docs/agents docs; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: ADR rewrite rules; no ADR edited
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Digest rules; confirmed digest edits keep its Digest-page and index rules
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: triage-sweep rule; checked auto-triage rewrite
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: trust tiers; checked Dependabot sentence conflict
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Blog pingbacks; not relevant to this run
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: baked content; checked the guest-intake wording
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: guest pipeline; checked guest-build and guest-intake edits
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: loaded by a read; no diagram edited
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Audit: freshness lenses"
+  - type: general-purpose
+    task: "Audit: single-home lenses"
+  - type: general-purpose
+    task: "Audit: concision, skills A"
+  - type: general-purpose
+    task: "Audit: concision, skills B"
+  - type: general-purpose
+    task: "Audit: coherence lenses"
+  - type: general-purpose
+    task: Fact-check pool P1-P14
+  - type: general-purpose
+    task: Fact-check pool V1-V8
+  - type: general-purpose
+    task: Fact-check pool V9-V16
+  - type: general-purpose
+    task: "Code review: Standards axis"
+  - type: general-purpose
+    task: "Code review: Spec axis"
+gitBranch: claude/festive-mayer-epotlm
+entrypoint: remote_trigger
+cliVersion: 2.1.302
+trigger: audit-docs
+learnings:
+  - A subagent hand-back arrives as a message, so the final reply is not stored where save-handback looks.
+landedBy: Stop
