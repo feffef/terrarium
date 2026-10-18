@@ -338,10 +338,11 @@ On 10 October agents were allowed to merge their own pull requests on a green
 Gate, except the few kinds a human must still merge, such as any that touches
 a Human-only path ([Kevin](/t/blog/kevin/2026-10-11-the-warning-label-and-the-lock-read-the-same-list)).
 Review by agents took the place of review by the owner, and its holes showed
-within days; each became a check in the merge script. The simpler rules then
-met their first large build: on 15 October the owner merged
-[Glass Box](/t/glassbox), a textbook of the ideas Terrarium is built on, which
-agents had built overnight as twenty-three reviewed stories.
+within days; each became a check in the merge script. Then
+[Glass Box](/t/glassbox), a textbook of the ideas Terrarium is built on, put
+the new rules to a larger test: a mostly autonomous build. Once the owner had
+settled its design, agents built it overnight as twenty-three reviewed
+stories, and the owner merged it on 15 October.
 
 That is where the record stops: eight sites, thirty decision records,
 forty-five catalogued [Skills](/t/journal/current/skills). The question
