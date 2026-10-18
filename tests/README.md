@@ -7,7 +7,7 @@ Where each test lives, and the non-obvious e2e rules. Every spec reuses one buil
 - **Platform tests** — exercise `shared/`, `scripts/`, `modules/`, routing, the
   isolation invariant, or the cross-Tenant smoke — live here under `tests/`:
   - `tests/unit/` — L0/L3 fast tests. (L1 — content validation — is `pnpm
-    validate:content`, a separate script; `validate-content.spec.ts` here only
+    validate:content`, a separate script; `validate-content-schema.spec.ts` here only
     unit-tests the validator against synthetic fixtures, not real content.)
   - `tests/e2e/` — the L2 smoke render (see below).
   - `tests/support/` — shared test helpers (not specs; never collected alone).

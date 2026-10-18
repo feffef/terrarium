@@ -34,7 +34,7 @@ ledger, which it commits on the session's branch. It runs in your checkout, not 
 worktree; touch no git state until it returns.
 
 Its report holds **(a)** the ranked actionable candidates, **(b)** a dropped list,
-**(c)** the subagent's own frictions (they belong in this session's log too, §7),
+**(c)** the subagent's own frictions (they belong in this session's log too, §8),
 **(d)** the ledger changes and the commit that holds them, **(e)** the
 regressions, and **(f)** the frictions two clusters share. Done when it has
 returned all six.
@@ -82,7 +82,7 @@ the survey reported on it) and the scratchpad path filled in. It reads
 the full session log of every occurrence, explores the source, and returns, per
 fix: the problem with its evidence, one precise design, a risk assessment and a
 recommendation (dispatch or issue), plus its own frictions (they belong in this
-session's log too, §7). It
+session's log too, §8). It
 designs only — it files no issues, opens no PRs, changes no code.
 
 Done when every pick has a design and a recommendation.
@@ -96,17 +96,16 @@ A fix is never dispatched when it touches a human-only surface (the `paths` of
 hook wiring (`docs/agents/guards.md`'s own rule, since editing it needs a
 human-attended session), or when it turns on a design choice a human should make.
 
-**File an issue** for each fix you don't dispatch, at most **three** per run
-(§2's regression issues are separate and don't count),
-the highest-ranked first (one blocked only by a human-only surface doesn't count
-against the cap); list the rest in the description of the ledger PR,
-where they wait in the ledger for the next run. A
-group of related frictions is one issue, not several. Each issue holds the **problem** with its evidence (quote the logging
-sessions + severities — for a group, all of them) and the **design**. Search the tracker first to avoid duplicates. Label
-one blocked only by a human-only surface `ready-for-human` (an agent may still
-write the fix; only the merge needs a human), except a guard fix:
-`docs/agents/guards.md` routes it. Otherwise it ages out of the window
-untracked, and the next run rediscovers and re-drops it.
+**File an issue** for each fix you don't dispatch: at most **three** per run,
+highest-ranked first (§2's regression issues and fixes blocked only by a
+human-only surface don't count against the cap). List the rest in the ledger
+PR's description; they wait in the ledger for the next run. A fix neither filed
+nor listed ages out of the window, and the next run rediscovers and re-drops it.
+Search the tracker first to avoid duplicates. A group of related frictions is
+one issue. Each issue holds the **problem** with its evidence (quote every
+logging session and severity) and the **design**. Label a fix blocked only by a
+human-only surface `ready-for-human` (an agent may still write the fix; only
+the merge needs a human), except a guard fix: `docs/agents/guards.md` routes it.
 
 A dispatched fix gets **no issue**: it is reviewed and merged inside this run
 (§6–§7), so an issue would only be closed by its own merge minutes later. Carry
@@ -191,10 +190,8 @@ not a bystander waiting for a human. For each branch:
      dated today, so the ledger updates when a human merges it; the next run's
      survey corrects the date.
 
-A PR is finished only when **merged** (by you) or **escalated/abandoned**, not at push time (the ADR-0003 rule).
-
-Done when every dispatched PR carries a posted review comment and is merged or
-escalated/abandoned.
+Done when every dispatched PR carries a posted review comment and is merged (by
+you), escalated or abandoned, not merely pushed (ADR-0003).
 
 ## 8. Close the ledger
 

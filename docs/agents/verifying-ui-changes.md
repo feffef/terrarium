@@ -26,9 +26,9 @@ layout bug, or asserting a style took effect.
 - **A URL that is already serving:** `scripts/ui/screenshot.ts <url> <out.png> [WxH]`
   drives the pre-installed Chromium directly.
 
-**Browser facts verified against** (from `node_modules`; re-check if they've
-moved): `playwright-core` **1.64.0**, `nuxt` **4.6.1**. Entries from a specific
-session cite it.
+**Browser facts** hold for the `playwright-core` and `nuxt` versions in
+`package.json`; re-check them after a bump. Entries from a specific session
+cite it.
 
 ## The methodology
 
@@ -74,10 +74,10 @@ session cite it.
   Agree the reader and the question it answers, and show a rough draft for a
   quick reaction before you polish and publish. Passing gates is necessary, not
   sufficient.
-- **The journal Space landing is a custom dashboard, not a Markdown render** —
-  see `layers/journal/GLOSSARY.md`'s "What lives where" for what it renders.
-  Editing `index.md` alone will not change what most of that page shows; check
-  the `.vue` file too.
+- **A Space landing may be a custom `.vue` dashboard, not a Markdown render.**
+  Editing `index.md` alone may not change what most of the page shows; check the
+  layer's `app/pages/` and its glossary's "What lives where" (the Journal's,
+  `layers/journal/GLOSSARY.md`, has one).
 - **Before shipping a `display: none` (or hide-at-breakpoint) rule, check what
   it hides.** Decorative or redundant markup is fine. If it hides the only
   rendering of real data (e.g. a dataset dimension with no other place at that

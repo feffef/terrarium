@@ -1,7 +1,7 @@
 # Branch protection vs. rulesets vs. autonomous session-log commits (issue #348)
 
 A reference note for the tension issue #348 names: ADR-0009 has
-`scripts/log-session.ts` push each session's log commit **directly to `main`**
+`scripts/session/log-session.ts` push each session's log commit **directly to `main`**
 (no PR — a deliberate, bounded exception, scoped to exactly one file under
 `layers/journal/content/current/sessions/`). Classic branch protection on
 `main` blocks that direct push. The maintainer removed protection on
@@ -22,7 +22,7 @@ their `{% data reusables/… %}` includes) in the public
 code search. Each fact is cited to the docs.github.com page it renders on plus
 the source file it was pulled from.
 
-**Repo context** (it decides the bypass-scope question): the session-log push does **not** run in a GitHub Actions workflow. `scripts/log-session.ts` runs inside the authoring session and pushes over plain `git` with that session's credentials (`.claude/settings.json` hooks just invoke the script). Per **ADR-0017**, agents act on GitHub through the owner's own account, so GitHub cannot tell an agent's post from the owner's; a separate bot account (issue #124) is "set aside, not ruled out". `git log` shows every landed session-log commit authored as `Claude <noreply@anthropic.com>` (the harness's commit-template identity) and pushed with the connector-injected `GH_TOKEN`/`GITHUB_TOKEN`, which per ADR-0017 is the **repo owner's own personal GitHub credential**, shared with every other action the owner's sessions take. This drives the answer to Q2.
+**Repo context** (it decides the bypass-scope question): the session-log push does **not** run in a GitHub Actions workflow. `scripts/session/log-session.ts` runs inside the authoring session and pushes over plain `git` with that session's credentials (`.claude/settings.json` hooks just invoke the script). Per **ADR-0017**, agents act on GitHub through the owner's own account, so GitHub cannot tell an agent's post from the owner's; a separate bot account (issue #124) is "set aside, not ruled out". `git log` shows every landed session-log commit authored as `Claude <noreply@anthropic.com>` (the harness's commit-template identity) and pushed with the connector-injected `GH_TOKEN`/`GITHUB_TOKEN`, which per ADR-0017 is the **repo owner's own personal GitHub credential**, shared with every other action the owner's sessions take. This drives the answer to Q2.
 
 ---
 
@@ -124,7 +124,7 @@ paths, they don't *exempt* them from other rules:
 >   extensions/size.
 > — [Available rules for rulesets](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets)
 
-There is no rule that says "require status checks/PR review for everything *except* commits touching `layers/journal/content/current/sessions/**`." The closest workaround is what this repo already does: **push path-scoping down to the pushing mechanism**. `scripts/log-session.ts`'s `SESSIONS_DIR` guard and `buildLogCommit`'s "commit changes exactly one path, or refuse" assertion (the `changed.length !== 1` check) *are* the path-scoping; GitHub-side config can only answer "does this actor bypass the whole rule," never "only for this path." So the one script that ADR-0009 says "holds the boundary" is the only path-level enforcement available; the §2 bypass entry is a coarser, unavoidable complement, never a substitute.
+There is no rule that says "require status checks/PR review for everything *except* commits touching `layers/journal/content/current/sessions/**`." The closest workaround is what this repo already does: **push path-scoping down to the pushing mechanism**. `scripts/session/log-session.ts`'s `SESSIONS_DIR` guard and `buildLogCommit`'s "commit changes exactly one path, or refuse" assertion (the `changed.length !== 1` check) *are* the path-scoping; GitHub-side config can only answer "does this actor bypass the whole rule," never "only for this path." So the one script that ADR-0009 says "holds the boundary" is the only path-level enforcement available; the §2 bypass entry is a coarser, unavoidable complement, never a substitute.
 
 ## 4. What actually enables "Enable auto-merge" — verified against the issue's claim
 
@@ -167,7 +167,7 @@ Read plainly: a **direct push** of a brand-new commit to a required-status-check
 branch is blocked in practice for *any* authenticated actor (not just PATs vs.
 `GITHUB_TOKEN`) unless that commit's SHA already carries a passing check run —
 which a freshly `commit-tree`'d session-log commit (as `buildLogCommit` in
-`scripts/log-session.ts` produces) never does, since it was never run through
+`scripts/session/log-session.ts` produces) never does, since it was never run through
 CI. So restoring **any** required status check on `main` would re-block
 session-log commits again regardless of which credential pushes them, unless
 that credential is on the bypass list (§2) — `contents: write` permission
@@ -213,7 +213,7 @@ bullets hold only the reasons.
   for the lander: issue #1689 (a GitHub App as the sole "Always" bypass, the
   owner reduced to "For pull requests only").
 - **Left off, each would break the workflow:** linear history
-  (`scripts/merge-pr.ts` and humans use merge commits), signed commits
+  (`scripts/github/merge-pr.ts` and humans use merge commits), signed commits
   (session-log commits land unsigned).
 - Agents' self-merges, human merges and the Dependabot workflow (once
   proposal #1633 is applied) all

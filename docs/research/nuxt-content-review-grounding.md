@@ -94,7 +94,7 @@ rejected. A file whose *parsing* throws (e.g. malformed YAML) is skipped with
 a logged warning — `"<id>" is ignored because parsing is failed`
 (`module.mjs:3329`) — and the build continues. Invalid frontmatter therefore
 does **not** fail the build. (This is why this repo's
-`scripts/validate-content.ts` exists — it is the only thing that actually
+`scripts/gate/validate-content-schema.ts` exists — it is the only thing that actually
 runs documents through the Zod schema.)
 
 **Validator support** (Content `docs/2.collections/4.validators.md`): "Zod v3
