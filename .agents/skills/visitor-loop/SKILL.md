@@ -30,9 +30,7 @@ human (ADR-0003).
 
 Each run looks hard at one part of the Platform, so all three visitors see the
 same thing and their findings can agree. A focus given as the Skill's argument
-wins. Otherwise, through 2026-10-31 (UTC) the focus is `glassbox`: entry
-`/t/glassbox/guide`, note "Stay inside /t/glassbox/guide." Its fixes and feature
-leave the `drafts` Space alone. After that, take row
+wins. Otherwise take row
 `$(( ($(date -u +%s)/86400 - $(date -u -d 2026-09-29 +%s)/86400) % 7 ))`:
 
 | # | Focus | Entry | Note |
@@ -42,7 +40,7 @@ leave the `drafts` Space alone. After that, take row
 | 2 | journal | `/t/journal/current` | |
 | 3 | midden | `/t/midden` | |
 | 4 | tinkerfund | `/t/tinkerfund` | |
-| 5 | mobile | `/` | Browse the whole visit at 390px width. |
+| 5 | glassbox | `/t/glassbox/guide` | Stay inside /t/glassbox/guide. Fixes and the feature leave the `drafts` Space alone. |
 | 6 | homepage | `/` | |
 
 Both PR titles start `visitor-loop (<focus>): …` — on a pinned branch that is how
@@ -69,7 +67,9 @@ Done when all three reports are in; resume a stalled visitor with
 
 ## 3. Tally consensus
 
-Merge the three reports into one tally in your scratchpad:
+Findings and ideas cover content (wording, thin or missing pages, new entries) as
+much as application behaviour; weigh both alike. Merge the three reports into one
+tally in your scratchpad:
 
 - **Findings.** Cluster reports of the *same problem on the same page or
   component*, however worded. A cluster raised by ≥2 visitors is consensus.
@@ -78,8 +78,7 @@ Merge the three reports into one tally in your scratchpad:
   with the reason.
 - **Feature.** Ideas need no consensus. Weigh every visitor's ideas and pick
   the **one** you judge best: the most visible payoff for a first-time
-  visitor that fits the remit, a single PR and today's focus (on `mobile`, a
-  narrow-screen improvement anywhere). Consensus fixes may land anywhere.
+  visitor that fits the remit, a single PR and today's focus. Consensus fixes may land anywhere.
   A newcomer-orientation feature that can't touch the homepage hero can go on
   a Journal page with `onramp` frontmatter, which lists it in the "New here?"
   cards with no code change (#1475).
