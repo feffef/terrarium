@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-17"
     summary: "The premise rule now fires when a change is recommended, implemented or hardened, and drops any part with no reason from the current goal."
 occurrences:
-  - session: session_01548Bi1ZiGcknAp8CMLNMZB
-    date: "2026-10-03"
-    severity: moderate
-    description: "#1549 was triaged ready-for-agent and implemented without anyone asking whether a zod major bump had any benefit; the owner caught that it was cost-only after a full impl + review cycle"
-    solution: "Triage of dependency-sweep majors should state the concrete benefit in the brief, and route a no-benefit bump with a transitive-dependency mismatch to ready-for-human"
   - session: session_016o8vxfkAFpgZMedEsKZqKT
     date: "2026-10-04"
     severity: moderate

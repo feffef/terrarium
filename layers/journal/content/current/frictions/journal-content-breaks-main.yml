@@ -17,16 +17,6 @@ fixes:
     date: "2026-10-16"
     summary: "Removed a browser-test assertion that an archived session log's wording could turn red."
 occurrences:
-  - session: a1af4e46-8293-4f33-bf41-c956bd7f6306
-    date: "2026-10-03"
-    severity: major
-    description: "This session's own log (local CLI, bare-UUID id) turned main's gate red. Two journal e2e tests assumed the newest card's session id starts with session_. I did not notice until the user asked, about 20 minutes after the log landed."
-    solution: "After the Stop hook lands a log, check the next main gate run. Make tests that read the newest real Document data-independent (done in #1575)."
-  - session: session_01DU7WbYNfKmdNgRpry9qzeV
-    date: "2026-10-03"
-    severity: moderate
-    description: "Local gate:scoped fails on main content: a session log (2026-10-03-a1af4e46…) has a non-session_ id, breaking two journal e2e chip tests unrelated to this PR."
-    solution: "The lander or schema should reject or normalise non-session_ ids; or the e2e test should pick a card with a session_ link."
   - session: session_01CF4k9jXS9wLrcPVsGduZmn
     date: "2026-10-08"
     severity: moderate

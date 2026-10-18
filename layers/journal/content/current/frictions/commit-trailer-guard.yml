@@ -11,31 +11,6 @@ fixes:
     date: "2026-10-10"
     summary: "Removed the commit-trailer guard, so hand-written trailers are no longer denied; recognised current models."
 occurrences:
-  - session: session_0168r95gLDEqJ8JBEV6UuUbo
-    date: "2026-10-03"
-    severity: minor
-    description: "Hand-wrote the commit trailer because a system reminder said to; the commit-trailer guard denied the whole call."
-    solution: "Follow CLAUDE.md over the harness reminder: commit with subject/body only."
-  - session: session_01CbWrei9SvmrH9vjNx2MB2f
-    date: "2026-10-03"
-    severity: minor
-    description: "The harness attribution reminder says to hand-write commit trailers, but the commit-trailer guard denied that exact message and the whole chained call."
-    solution: "Make the harness reminder and the repo guard agree; the reminder should say nothing for this repo."
-  - session: session_01DU7WbYNfKmdNgRpry9qzeV
-    date: "2026-10-03"
-    severity: nit
-    description: "First commit attempt hand-wrote the Co-Authored-By and Claude-Session trailer because the system reminder said to; the commit-trailer guard denied it."
-    solution: "Already guarded; the CLAUDE.md rule and guard deny message cover it."
-  - session: session_01JUVBufFxrv8bKoVBV5rgYN
-    date: "2026-10-03"
-    severity: nit
-    description: "Hand-wrote the commit trailer from the system-reminder's attribution instruction and was denied by the commit-trailer guard. The harness reminder and the repo convention conflict."
-    solution: "Follow the repo guard: never hand-write trailers, whatever the harness reminder says."
-  - session: session_01JzzBErytZGXxGg7v9vqZts
-    date: "2026-10-03"
-    severity: minor
-    description: "First commit attempt hand-wrote the attribution trailer from the system reminder and the commit-trailer guard denied it, because the repo forbids hand-written trailers."
-    solution: "The harness attribution reminder and CLAUDE.md conflict; the blog-post Skill could say commit with no trailer."
   - session: session_0163x7FmxRtXcQALXQ6UdygK
     date: "2026-10-04"
     severity: nit

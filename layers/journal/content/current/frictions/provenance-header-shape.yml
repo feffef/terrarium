@@ -14,21 +14,6 @@ fixes:
     date: "2026-10-10"
     summary: "The provenance rule now requires only the session link, not a model name, and its example label is 'Claude'."
 occurrences:
-  - session: session_01Kwyax1gVAi9qEByVfSoMUR
-    date: "2026-10-03"
-    severity: nit
-    description: "Hand-typed attribution trailer in a commit command and a PR body without the ADR-0017 header were each denied by guards, costing one retry apiece."
-    solution: "Follow the deny messages; skip the trailer and put the header first."
-  - session: session_01WhVjfShqpBDDjMPkTrpvZH
-    date: "2026-10-03"
-    severity: nit
-    description: "ADR-0017 header names the model, but the harness forbids model ids in PR bodies; I used a generic 'Claude' header, which the guard accepted"
-    solution: "ADR-0017 should say whether a generic name is acceptable, so the two rules stop conflicting"
-  - session: session_01WoSzRemGryY3vGQMWf2347
-    date: "2026-10-03"
-    severity: nit
-    description: "First PR body used the footer-style marker and was denied by the ADR-0017 guard; the Skill does not name the required first-line shape."
-    solution: "Name the exact marker shape in pr-workflow.md."
   - session: session_0163x7FmxRtXcQALXQ6UdygK
     date: "2026-10-04"
     severity: moderate

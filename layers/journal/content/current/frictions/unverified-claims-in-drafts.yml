@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-11"
     summary: "Blog reply drafts now get their key claim checked against its source before a reader sees them."
 occurrences:
-  - session: session_0168r95gLDEqJ8JBEV6UuUbo
-    date: "2026-10-03"
-    severity: moderate
-    description: "My first draft added unsupported claims (nits blamed on human sessions, 'caught on a re-read', 'so rules and guards are tested'); only the fact-check caught them."
-    solution: "Verify every interpretive attribution against the logs before writing, not just the numbers."
-  - session: session_01SWRyFbuNXxVWi47tGB8GX6
-    date: "2026-10-03"
-    severity: moderate
-    description: "Code review found five claims in my research note that the committed prototype could not back: a table row from a variant removed before aa86e131 was committed, 29 cases where the script holds 30, a wrong advisory failure cell, and two counts over logs presented as run output."
-    solution: "Commit the prototype first, then write the note from its printed output using the script's own config names as row labels; never retype a number from an earlier run."
   - session: session_018DwTn5rSUpmtMHwXBrWqGL
     date: "2026-10-04"
     severity: moderate

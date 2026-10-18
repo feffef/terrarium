@@ -3,8 +3,8 @@ summary: >-
   Browser tests gave up after one second, so slow pages failed unrelated changes and passed on a retry.
 cause: e2e specs assert with vitest's expect.poll, whose default timeout is 1000 ms (vitest.config.ts does not raise it), so slow hydration or a loaded gate fails an unrelated PR and passes on re-run.
 surface: safe
-status: open
-ref: "PR #1919 (merged 2026-10-14T02:22Z)"
+status: tracked
+ref: "issue #2231 (regression of PR #1919)"
 fixes:
   - pr: 1919
     date: "2026-10-14"

@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A screenshot-review subagent is briefed to look at all shots of a bulk run (glassbox-update, preview.ts review output), reads each full-page image separately, hits image request limits and loops; nothing caps image reads in the brief or in EVERY-PAGE.md's Check. Signals: 'image request limits', 'read 76 shots', hundreds of tool calls, session unopenable.
 surface: safe
-status: open
+status: tracked
+ref: "frictions-to-fixes 2026-10-18 grouped doc PR"
 fixes: []
 occurrences:
   - session: session_01CtktRkpbF4wQ3TTQVYUqLz

@@ -6,11 +6,6 @@ cause: >-
 surface: safe
 status: open
 occurrences:
-  - session: session_01TiCx5GDdDdFGwCEs6xxr89
-    date: "2026-10-03"
-    severity: moderate
-    description: "An impl agent's `git checkout -B <session-branch>` in its worktree moved the branch my primary checkout had checked out, leaving my tree looking like a reversed diff of its commits"
-    solution: "Detach the orchestrator checkout before dispatching agents that push the same branch; worth a line in dispatch-subagents for single-branch serial integration"
   - session: session_01Dz52W6wWZWUgKwPtdxabzJ
     date: "2026-10-12"
     severity: nit

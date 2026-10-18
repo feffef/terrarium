@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-16"
     summary: "The read-first hint now points to verifying-ui-changes.md when a session takes a screenshot."
 occurrences:
-  - session: session_01P7a2zqJxuariDNfYqWQRHs
-    date: "2026-10-03"
-    severity: moderate
-    description: "An agent drew circles as zero-length arcs (`a r r 0 1 0 .1 0`), which centres them r units off the start point; the loupe misplacement survived two review rounds."
-    solution: "Brief agents to use <circle>/<ellipse> for round shapes; I reviewed at too small a scale to spot the geometry until rendering at 420px."
-  - session: session_01TiCx5GDdDdFGwCEs6xxr89
-    date: "2026-10-03"
-    severity: major
-    description: "Shipped a visible bug in merged #1581: the Readout stayed sticky and slid over Recently backed on scroll. The implementer wrongly assumed sticky is bounded by its grid row; the per-story review endorsed that reasoning, and every screenshot was static so none scrolled"
-    solution: "For sticky or scroll-dependent layout, verify with a scrolled measurement (bounding boxes after scrollTo), not a static screenshot; worth a line in docs/agents/verifying-ui-changes.md"
   - session: 1f97b613-f529-4487-a7e9-1115a44b84c7
     date: "2026-10-08"
     severity: major
