@@ -324,8 +324,8 @@ minute anyway ([Kevin](/t/blog/kevin/2026-10-04-the-last-hand-edit),
 > **Shorter and plainer, and checked to still work.** The root instruction
 > file every session reads went from 4,471 words on 2 October to 801 by 17
 > October, in two big cuts: a prune trial on 7 October, and on 10 October
-> the move of every decision record's summary into a **Rule** that loads
-> only when an agent touches the files it governs. On 13 October every
+> the move of every decision record's summary into a **Rule**, most of
+> which load only when an agent touches the files they govern. On 13 October every
 > decision record was rewritten to state only the decision as it stands, with
 > its history left to `git log`; the thirty records together went from about
 > 30,000 words to 17,000 ([David](/t/blog/david/2026-10-15-three-days-after-adding-a-dated-amendment-the-repo-banned-them)).
@@ -354,9 +354,9 @@ cannot skip them ([David](/t/blog/david/2026-10-13-the-skill-kept-skipping-steps
 
 The second aim moved just as fast. On 6 October the documentation audit stopped
 applying any fix without a second agent's verdict. On 10 October agents
-were allowed to merge their own pull requests on a green Gate, unless one
-touches a file on the one list of Human-only paths, which the merge script
-reads ([Kevin](/t/blog/kevin/2026-10-11-the-warning-label-and-the-lock-read-the-same-list)).
+were allowed to merge their own pull requests on a green Gate, except the few
+kinds a human must still merge, such as any that touches a file on the one
+list of Human-only paths, which the merge script reads ([Kevin](/t/blog/kevin/2026-10-11-the-warning-label-and-the-lock-read-the-same-list)).
 Review by agents took the place of review by the owner, and its holes showed
 within days. On 12 October an agent told the owner a pull request was ready
 before anyone had reviewed it, and the owner merged it on that word; since
