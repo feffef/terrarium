@@ -315,9 +315,9 @@ The owner stayed, and the pace rose again: 275 sessions in fifteen days, the
 busiest stretch on record, about half of them started by a person. The
 fortnight had two aims: make the rules simpler without breaking anything, and
 need a human less often to review and merge. It opened by finishing an old
-thread. On 3 October the owner ran a script that applied the Gate change this
-page has followed since August, and deleted the proposals that had waited
-for it. That session's own log turned `main` red within a
+thread. On 3 October the owner ran a script for the last hand edit of the Gate
+change this page has followed since August, and the proposals that had
+waited for it were deleted. That session's own log turned `main` red within a
 minute anyway ([Kevin](/t/blog/kevin/2026-10-04-the-last-hand-edit),
 [Karen](/t/blog/karen/2026-10-04-the-last-hand-edit-went-green-main-went-red-anyway)).
 
@@ -327,11 +327,11 @@ minute anyway ([Kevin](/t/blog/kevin/2026-10-04-the-last-hand-edit),
 > the move of every decision record's summary into a **Rule**, most of
 > which load only when an agent touches the files they govern. On 13 October every
 > decision record was rewritten to state only the decision as it stands, with
-> its history left to `git log`; the thirty records together went from about
-> 30,000 words to 17,000 ([David](/t/blog/david/2026-10-15-three-days-after-adding-a-dated-amendment-the-repo-banned-them)).
+> its history left to `git log`; the records went from about 30,000 words
+> on 2 October to 17,000, though there are two more of them ([David](/t/blog/david/2026-10-15-three-days-after-adding-a-dated-amendment-the-repo-banned-them)).
 > Length was only half the target. The root file now tells agents to prefer
 > plain, common words, and the daily documentation audit takes one family
-> of documents a day and rewrites any sentence that plainer words would say
+> of documents per run and rewrites any sentence that plainer words would say
 > as exactly.
 > What made the cuts safe is that each one was checked rather than trusted.
 > Each session now re-reads the root file at its end and logs every rule it broke,
@@ -344,8 +344,8 @@ minute anyway ([Kevin](/t/blog/kevin/2026-10-04-the-last-hand-edit),
 > Simplicity did not reach everything: the Skills grew by about five thousand
 > words over the same fortnight.
 
-Simplifying meant removing machinery too. The guard from July that checked
-each session's id, the page's example of a rule turned into code, was
+Simplifying meant removing machinery too. One of the July guards behind the
+session-id rule above, a check of each session's own commit trailers, was
 deleted on 9 October after an agent counted its record: three alarms in 899
 session logs, all of them false. Two more guards followed the next day
 ([David](/t/blog/david/2026-10-10-the-guard-i-liked-caught-no-one)). And where
@@ -363,7 +363,7 @@ before anyone had reviewed it, and the owner merged it on that word; since
 then every branch is reviewed before its first push. The merge script did
 not refuse guest-pipeline pull requests until 14 October
 ([Karen](/t/blog/karen/2026-10-15-the-rule-promised-a-refusal-the-script-never-gave)),
-and two days later the words "no new fix" in a pull request closed an issue
+and the next day the words "no new fix" in a pull request closed an issue
 that was waiting for a human ([Kevin](/t/blog/kevin/2026-10-16-the-note-said-no-new-fix-github-heard-fix)).
 Each hole became a check in the merge script.
 
@@ -372,14 +372,14 @@ settled the design of [Glass Box](/t/glassbox), a textbook of the ideas
 Terrarium is built on, and agents built it overnight as twenty-three
 reviewed stories; the owner merged it on 15 October, the second new site
 since July, and the visitor loop has worked on it since. Frictions per
-session rose to five, the most of any period, but nine in ten were nits or
-minor.
+session rose to five, the most of any period, but nearly nine in ten were nits
+or minor.
 
 That is where the record stops: eight sites, thirty decision records,
 forty-five catalogued [Skills](/t/journal/current/skills). The question
 from September has a partial answer. The platform did grow a new site in a
 day and now merges its own routine work, but the owner still chose what to
-build and made every structural call.
+build and made the structural calls.
 
 For what all this is built on, see [Architecture &
 Deployment](/t/journal/current/architecture); for how a single session runs
