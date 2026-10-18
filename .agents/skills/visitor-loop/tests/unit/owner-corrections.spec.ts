@@ -171,11 +171,11 @@ describe('unresolved', () => {
     expect(unresolved(both, '10 candidates, all reworks, not rulings')).toEqual(both)
   })
 
-  it('resolves only the first #N or URL on a line, so one line resolves one candidate', () => {
+  it('resolves every #N or URL a line names, so one line can dismiss several candidates', () => {
     const second: Pr = { ...PR_1494, number: 1495, url: 'https://github.com/feffef/terrarium/pull/1495' }
     const two = findCandidates('2026-09-29T20:00:00Z', [VL_1492, PR_1494, second], [])
-    expect(unresolved(two, '- #1700 reworks #1494: not a ruling')).toEqual(two)
-    expect(unresolved(two, '- #1494, #1495: not a ruling (lockfile)')).toEqual([two[1]])
+    expect(unresolved(two, '- #1700: not a ruling')).toEqual(two)
+    expect(unresolved(two, '- #1494, #1495: not a ruling (lockfile)')).toEqual([])
   })
 
   it('accepts a URL followed by punctuation', () => {
