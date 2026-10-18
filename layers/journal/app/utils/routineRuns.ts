@@ -71,22 +71,30 @@ export interface RoutineWeekTable {
   grandTotal: number
 }
 
-/** Each Routine's `metric` summed per UTC week. */
+/** Each Routine's `metric` summed per UTC week, complete weeks only: the first
+ *  week is dropped unless the oldest run is on its Monday (older runs were
+ *  pruned), the last unless the newest run is on its Sunday (still running). */
 export function routineWeekTable(routines: readonly RoutineDoc[], metric: RoutineMetric): RoutineWeekTable {
-  const starts = routines.flatMap((r) => r.runs.map((run) => routineWeekStart(run.startedAt))).sort()
+  const starts = routines.flatMap((r) => r.runs.map((run) => run.startedAt)).sort()
   const weeks: string[] = []
   if (starts.length) {
-    const last = starts[starts.length - 1]!
-    for (let w = starts[0]!; w <= last; ) {
+    const first = routineWeekStart(starts[0]!)
+    const last = routineWeekStart(starts[starts.length - 1]!)
+    for (let w = first; w <= last; ) {
       weeks.push(w)
       const next = new Date(w)
       next.setUTCDate(next.getUTCDate() + 7)
       w = next.toISOString().slice(0, 10)
     }
+    if (new Date(starts[0]!).getUTCDay() !== 1) weeks.shift()
+    if (new Date(starts[starts.length - 1]!).getUTCDay() !== 0) weeks.pop()
   }
   const rows = routines.map((r) => {
     const cells = weeks.map(() => 0)
-    for (const run of r.runs) cells[weeks.indexOf(routineWeekStart(run.startedAt))]! += run[metric]
+    for (const run of r.runs) {
+      const i = weeks.indexOf(routineWeekStart(run.startedAt))
+      if (i >= 0) cells[i]! += run[metric]
+    }
     return { name: r.name, cells, total: cells.reduce((a, b) => a + b, 0) }
   })
   const totals = weeks.map((_, i) => rows.reduce((a, row) => a + row.cells[i]!, 0))

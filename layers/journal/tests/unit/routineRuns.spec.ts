@@ -28,7 +28,10 @@ describe('routineWeekStart', () => {
 
 describe('routineWeekTable', () => {
   const routines = [
-    { name: 'a', runs: [run('2026-10-06T04:00:00Z', 1), run('2026-10-19T04:00:00Z', 2), run('2026-10-20T04:00:00Z', 3)] },
+    {
+      name: 'a',
+      runs: [run('2026-10-05T04:00:00Z', 1), run('2026-10-19T04:00:00Z', 2), run('2026-10-20T04:00:00Z', 3), run('2026-10-25T04:00:00Z', 4)],
+    },
     { name: 'b', runs: [run('2026-10-13T04:00:00Z', 4)] },
   ]
 
@@ -36,15 +39,24 @@ describe('routineWeekTable', () => {
     const t = routineWeekTable(routines, 'costUsd')
     expect(t.weeks).toEqual(['2026-10-05', '2026-10-12', '2026-10-19'])
     expect(t.rows).toEqual([
-      { name: 'a', cells: [1, 0, 5], total: 6 },
+      { name: 'a', cells: [1, 0, 9], total: 10 },
       { name: 'b', cells: [0, 4, 0], total: 4 },
     ])
-    expect(t.totals).toEqual([1, 4, 5])
-    expect(t.grandTotal).toBe(10)
+    expect(t.totals).toEqual([1, 4, 9])
+    expect(t.grandTotal).toBe(14)
+  })
+
+  it('drops an incomplete first and last week', () => {
+    const t = routineWeekTable(
+      [{ name: 'a', runs: [run('2026-09-17T04:00:00Z', 5), run('2026-09-22T04:00:00Z', 1), run('2026-09-29T04:00:00Z', 2), run('2026-10-07T04:00:00Z', 7)] }],
+      'costUsd',
+    )
+    expect(t.weeks).toEqual(['2026-09-21', '2026-09-28'])
+    expect(t.rows[0]!.cells).toEqual([1, 2])
   })
 
   it('sums the metric it is given', () => {
-    const t = routineWeekTable([{ name: 'a', runs: [run('2026-10-06T04:00:00Z', 1, 500), run('2026-10-07T04:00:00Z', 1, 250)] }], 'outputTokens')
+    const t = routineWeekTable([{ name: 'a', runs: [run('2026-10-05T04:00:00Z', 1, 500), run('2026-10-11T04:00:00Z', 1, 250)] }], 'outputTokens')
     expect(t.rows[0]!.cells).toEqual([750])
   })
 
