@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01TANViXz17btvY9rH87SHcB
 startedAt: 2026-10-18T17:53:27Z
-endedAt: 2026-10-18T20:40:42Z
+endedAt: 2026-10-18T20:44:00Z
 kind: interactive
 goal: Remove the session-log explainer and the Glass Box Try-it page
-status: in-review
-outcome: Pages removed and merged (2257); follow-up PR 2258 fixes the smoke navigation test that failed on main, in CI
+status: completed
+outcome: Pages removed and merged (2257); smoke navigation test fix merged (2258) after CI gate went green
 summary: The owner asked to remove the Journal's "How to Read a Session Log" page and its on-ramp card, to log that as a visitor-loop decision, and to remove the Glass Box "Try it in your project" page and link the same way (human-instructed). I deleted both pages, the landing link and CSS, the unused glassboxTryIt helper and its tests, and updated the Journal tour test to 5 steps. I kept each Lesson's own Try-it section, reading "page and link" as the collected page only (agent judgement, flagged to the owner). Two lines went into visitor-loop decisions.md. The local gate stayed red on browser page-load timeouts (home page first render about 32s on this box) in tests that do not touch the diff; I did not rebuild main to prove the baseline. The owner chose to run code-review (no blocking findings) and then push; I pushed, then opened the PR only after the owner reminded me ADR-0003 requires it. CI's gate went green on the PR head; I posted my verdict and merged it with merge-pr.ts (agent-initiated, allowed by ADR-0004 since no Human-only file changed). The owner then asked me to run the gate on main and, when one smoke test failed there, to try to fix it as the known flaky e2e. It was a different test from the ticket (#2231 is the Journal accordion). I found the cause (the click fetches a cache entry keyed by ?_b=<build id> that was cold; its first render is slower than the 8s wait), warmed that exact URL in the test, and opened PR 2258 (agent-initiated fix, owner-requested). A reviewer's cache-key concern changed the first version.
 prs:
   - "2257"
@@ -67,13 +67,13 @@ frictions:
   - description: My first warm-up fetched /_payload.json, but the browser asks for /_payload.json?_b=<build id>, a separate cache entry; a reviewer caught it, so the first version only worked indirectly.
     solution: Check the exact URL a test's browser requests (assert on the request list) before building a warm-up around it.
     severity: nit
-durationSec: 10035
+durationSec: 10233
 models:
-  claude-sonnet-5-5: 207
+  claude-sonnet-5-5: 220
 toolCounts:
   Read: 9
   Grep: 4
-  Bash: 57
+  Bash: 59
   Edit: 14
   ToolSearch: 3
   mcp__github__search_issues: 1
@@ -84,10 +84,10 @@ toolCounts:
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
   Write: 1
-  ReadNotifications: 3
-  mcp__github__pull_request_read: 3
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 6
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
 filesEdited:
   - layers/glassbox/app/utils/lesson.ts
   - layers/glassbox/app/pages/t/glassbox/[space]/index.vue
