@@ -542,3 +542,41 @@ observations:
       manuallyRescuedClosures empty. Coverage gap found and added:
       `glassbox-lesson` (1 use, session_01NFv67izdzVGrFHb2EVwZJ2's Glass Box
       Nitro Lesson, verified merged). Grade/role unchanged (routine).
+  - date: "2026-10-18"
+    note: >-
+      Self-check: dispatched 13 behaviour-check subagents this run (same 13
+      behaviourChecks entries as 2026-10-17), each report independently
+      verified against primary sources before use. 10/13 came back fully
+      clean. Three verified findings this run, across three Skills:
+      (1) audit-skills' own 2026-10-11 run (PR #1753) and 2026-10-12 run
+      (PR #1799) both silently skipped ADR-0004's mandatory code-review
+      step before self-merging — confirmed via both sessions' logs (no
+      code-review in skillsUsed/docsRead/frictions, a 4-vs-3 Skill-tool-count
+      mismatch) and by the fact every run from 2026-10-13 onward reliably
+      lists `code-review` in skillsUsed. Not escalated as a new issue: this
+      is the exact platform-wide gap issue #1844 ("Require a code review
+      before an agent self-merges its PR," filed 2026-10-12 at the owner's
+      request) already covers, closed completed via merged PR #2058, which
+      now makes merge-pr.ts require a posted review verdict — the gap is
+      historical, caused no bad content, and the mechanical fix holds on
+      every later run checked. (2) prune-trial and visitor-loop each had one
+      verified, repeated finding escalated as new issues: #2228 (PR #2063's
+      self-reported line delta is wrong, 59→40/-19 not 60→46/-14, still
+      uncorrected in the open ledger entry after a 2026-10-16 observation
+      already flagged it) and #2229 (owner-corrections.ts's `unresolved()`
+      still credits only the first #N per line - confirmed live in the
+      script - letting PR #2225 batch 14 candidates onto one line
+      undetected, a 3rd/4th recurrence of #1515/#1721/#1912's root cause
+      that #1912's fix, PR #1931, only half-addressed). Step 3 closure
+      completeness: orphan scan clean (scanned: true, 1436 merged PRs, 1281
+      with a session), both orphan candidates carry `resolvedBy` (left
+      alone), orphanSuppressionLog both entries plausible
+      (`resolved-annotation`), humanPromptedClosures' one entry
+      (session_014uXxmT6359K4Z42a6We6Gh) already settled 2026-10-13,
+      manuallyRescuedClosures empty. No coverage gaps (3 on-disk,
+      not-yet-used Skills - glassbox-walkthrough, implement-spec, wait-what
+      - correctly left uninventoried per useCount: 0). No stale observations
+      past the 40-day window in any of the 13 files. Grade/role unchanged
+      (routine) - neither finding shows this Skill itself missing its own
+      delivery; both are findings about other Skills/mechanisms it exists to
+      catch.

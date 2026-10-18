@@ -86,3 +86,19 @@ observations:
       (PRs #2159/#2160) all confirmed merged, scoped as claimed, correct
       self-merge-vs-human-merge split, posted `Reviewed: <sha>` verdicts
       before merge. No reverts. Grade unchanged (specialist).
+  - date: "2026-10-18"
+    note: >-
+      Self-check (audit-skills behaviour check): all 10 usedIn sessions
+      checked, 27 PRs + 3 issues cross-verified against live GitHub - no new
+      silent failures. Both known failures (session_015LwBgLjaCn36ayZedges6G's
+      skipped §1 explore, fixed via merged PR #1864; session_017NBxJhtBSd9AoCwTzsg6pM's
+      unreviewed 3m15s self-merge, which itself produced issue #1844, closed
+      via merged PR #2058) reconfirmed still fixed, not reverted. PR
+      #2211/#2215 ("Drop clear-backlog silent-chat rule") is a deliberate,
+      owner-approved removal via grilling, not a silent regression. Worth
+      watching, not escalated: `clear-backlog-build`'s self-reported
+      `gatePassed`/Human-only fields have been wrong more than once (always
+      caught before merge); PR #1948 landed a structural fix (read
+      Human-only paths from the diff, not from build agents) but
+      `gatePassed` itself still relies on self-report per the workflow's
+      schema. No new finding. Grade unchanged (specialist).

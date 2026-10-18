@@ -273,3 +273,16 @@ observations:
       claims verbatim, pingback stub shape correct. Other 9 usedIn sessions
       corroborated via durability sweep; #1479/#1626 both still closed, no
       recurrence. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-18"
+    note: >-
+      Self-check (audit-skills behaviour check): fresh end-to-end audit of
+      session_01E7YFbvBvT8HWhVJb6kTDMq (2026-10-17, PR #2220 Eyra standalone
+      sequel + PR #2221 Karen reply) - both merged, frontmatter/blogTags
+      valid, pingback stub matches schema, voice non-authoritative per
+      GLOSSARY, core factual claims against real PR #2204 verified accurate,
+      fact-check tallies present (25/1, 37/2), step-12 reader+second-reader
+      chain genuine. Re-verified session_01N9bwDKW51kMS6WJvK2nfSU
+      independently beyond the existing entry - still clean. #1479/#1626
+      re-confirmed via live issue_read (closed/completed, #1626 via a real
+      merged fix PR #1662). Deletion sweep found only the two already-known
+      disclosed deletions. No new silent failure. Grade/role unchanged.

@@ -357,3 +357,19 @@ observations:
       this Skill's own grading rule excludes (outcome delivered, just
       untagged). No reverts of this Skill's own mechanics. Grade/role
       unchanged (essential).
+  - date: "2026-10-18"
+    note: >-
+      Self-check (audit-skills behaviour check): 10/10 usedIn verified (no
+      stranded work, no merge-pr.ts dispatched to a subagent, no new
+      branch/worktree collision beyond the already-known owner-accepted
+      #1480 recurrence and the self-caught #1480-adjacent nit in
+      session_01BLrfuHbMMEmjZZ7STpe1AN, both already tracked). Of 122
+      notUsed sessions, 64 ruled out by goal alone, 58 flagged plausible, 12
+      opened in full spanning every category (clear-backlog, visitor-loop,
+      the 48-subagent ADR-rewrite-prep run, frictions-to-fixes,
+      audit-docs/audit-skills, prune-trial, glassbox-update) - all clean,
+      every git-touching dispatch either strictly read-only, correctly
+      isolated, or (for clear-backlog) routed through the Workflow tool
+      rather than this Skill's own Agent-tool remit, a shape the 2026-10-15
+      entry already names. No new silent failure, no new missed invocation.
+      Grade/role unchanged (essential).
