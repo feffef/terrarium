@@ -289,7 +289,7 @@ function main(): void {
     process.stdout.write(JSON.stringify(candidates, null, 2) + '\n')
   } else {
     const missing = unresolved(candidates, readFileSync(tallyFile, 'utf8'))
-    if (missing.length > 0) fail(`unresolved candidates (give each its own line):\n${missing.map((c) => `  ${c.url} ${c.excerpt}`).join('\n')}`)
+    if (missing.length > 0) fail(`unresolved candidates (name each by #N or URL on a "not a ruling" or "decisions.md" line):\n${missing.map((c) => `  ${c.url} ${c.excerpt}`).join('\n')}`)
     console.log(`owner-corrections: all ${new Set(candidates.map((c) => c.url)).size} candidates resolved`)
   }
 }
