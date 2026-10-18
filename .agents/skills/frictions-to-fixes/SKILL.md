@@ -105,8 +105,8 @@ Search the tracker first to avoid duplicates. A group of related frictions is
 one issue. Each issue holds the **problem** with its evidence (quote every
 logging session and severity) and the **design**. Write it per
 `docs/agents/issue-tracker.md`'s "Filing an issue" and label it `needs-triage`,
-including a fix blocked only by a human-only surface (triage decides; only the
-merge needs a human). A guard fix: `docs/agents/guards.md` routes it.
+including a fix blocked only by a human-only surface or a guard
+(`docs/agents/guards.md`).
 
 A dispatched fix gets **no issue**: it is reviewed and merged inside this run
 (§6–§7), so an issue would only be closed by its own merge minutes later. Carry

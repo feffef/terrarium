@@ -54,7 +54,7 @@ under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
 - **Never dispatch an unattended or scheduled session to change a guard,
   `.claude/settings.json`'s hook wiring included:** the edit raises a permission
   prompt that no human is present to grant. A routine that finds such a fix files
-  the issue with the fix and stops; a human-attended session builds it. This
+  a `needs-triage` issue with the fix and stops; a human-attended session builds it. This
   limits who implements, not how triage routes: an issue with a settled design is
   still `ready-for-agent`.
 - **A unit test asserts the property, not hand-picked substrings.** A regex on a

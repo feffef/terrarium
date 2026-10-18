@@ -111,7 +111,7 @@ reword all of it. The file is the trial's territory. It gets the same ledger
 entry and §4 probe as a prune.
 
 When §4's probe fails, or a landed trial's verdict in §1 showed real damage,
-the behaviour has proven it needs a hook. **File a `needs-triage` issue proposing it**; a
+the behaviour has proven it needs a hook. **File a `needs-triage` issue proposing it** (`docs/agents/issue-tracker.md`'s "Filing an issue"); a
 session with a human present builds it, because a scheduled run can't wire
 `.claude/settings.json` (`docs/agents/guards.md`). The issue names the
 behaviour, the trial or verdict that proved it, the wrong shape to fire on, and
