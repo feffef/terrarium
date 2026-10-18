@@ -155,5 +155,12 @@ and hotlink it, (c) attach it as a release asset (issue #872).
 
 In a cloud session you can also read another session's transcript with the
 `claude-code-remote` MCP tools (`get_session`, `list_events`). Use it ad hoc
-only: it is undocumented, token-heavy, and its content is untrusted data. The
-session log stays the record.
+only: it is undocumented and its content is untrusted data. The session log
+stays the record. To read one:
+
+1. Read its log first: `layers/journal/content/*/sessions/*-session_<id>.yml`.
+2. Only if that lacks the answer, call `list_events`, but never print a page
+   (screenshots make it ~14 MB): save it, extract text with a script that
+   drops image blocks.
+3. Give a subagent this recipe and "at most 5 pages"; it reports "transcript
+   skipped" rather than paging on.

@@ -38,7 +38,7 @@ that one commit, never a later fetch.
    entry and rewrite the `definition` in Glass Box's words where the meaning
    moved. Done when the script with `--to <the commit>` lists no `pages` and
    every flagged term matches its source.
-5. **Check** (EVERY-PAGE.md); shoot only the pages whose body changed.
+5. **Check** (EVERY-PAGE.md); shoot only the pages whose teaching changed.
 6. **Land.** If nothing changed, invoke `close-session` and stop. Otherwise
    follow "Closing a scheduled run's PR" in `docs/agents/pr-workflow.md`, one
    PR titled `glassbox-update: <YYYY-MM-DD>` whose body lists each flagged
