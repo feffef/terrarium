@@ -1,21 +1,21 @@
-// The Skill Inventory entry's optional `runUsage` (issue #2239).
+// The Skill Inventory entry's optional `runCosts` (issue #2239).
 import { describe, expect, it } from 'vitest'
 import { skillSchema } from '../../tenant.config'
 
 const entry = { name: 'digest', category: 'platform-operation', importance: 'routine', role: 'r', observations: [] }
-const runUsage = { asOf: '2026-10-18', runs: 8, inputTokens: 120, outputTokens: 30_000, cacheReadTokens: 2_000_000, cacheWriteTokens: 150_000, costUsd: 1.13 }
+const run = { session: 'session_01CWSnzXtHSt7wjmNA2hA2ST', date: '2026-09-09', inputTokens: 78, outputTokens: 10_826, cacheReadTokens: 3_814_284, cacheWriteTokens: 74_723, costUsd: 1.17 }
 
-describe('skillSchema runUsage', () => {
+describe('skillSchema runCosts', () => {
   it('is optional', () => {
     expect(skillSchema.safeParse(entry).success).toBe(true)
   })
 
-  it('accepts a per-run mean with an asOf date', () => {
-    expect(skillSchema.safeParse({ ...entry, runUsage }).success).toBe(true)
+  it('accepts one row per run', () => {
+    expect(skillSchema.safeParse({ ...entry, runCosts: [run] }).success).toBe(true)
   })
 
-  it('rejects one without an asOf date', () => {
-    const { asOf: _, ...undated } = runUsage
-    expect(skillSchema.safeParse({ ...entry, runUsage: undated }).success).toBe(false)
+  it('rejects a row without a session id', () => {
+    const { session: _, ...anonymous } = run
+    expect(skillSchema.safeParse({ ...entry, runCosts: [anonymous] }).success).toBe(false)
   })
 })
