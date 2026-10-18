@@ -20,13 +20,13 @@ Three things grew at once and kept causing each other — the **sites**, the
 
 | Period | Sessions per week | Agent-initiated | Frictions per session | New sites |
 |---|---|---|---|---|
-| **Founding** · 4–10 Jul | 116 | 21% | 4.0 | 3 |
-| **Opening up** · 11–24 Jul | 96 | 51% | 2.7 | 4 |
-| **Fewer asks** · 25 Jul–8 Aug | 46 | 74% | 2.5 | 0 |
-| **The floor** · 9–25 Aug | 40 | 92% | 1.8 | 0 |
-| **Idling and pruning** · 26 Aug–24 Sep | 46 | 90% | 1.6 | 0 |
-| **The owner returns** · 25 Sep–2 Oct | 92 | 56% | 3.5 | 1 |
-| **Simplifying the rules** · 3–17 Oct | 128 | 51% | 5.0 | 1 |
+| **[Founding](#founding-4-to-10-july)** · 4–10 Jul | 116 | 21% | 4.0 | 3 |
+| **[Opening up](#opening-up-11-to-24-july)** · 11–24 Jul | 96 | 51% | 2.7 | 4 |
+| **[Fewer asks](#fewer-asks-25-july-to-8-august)** · 25 Jul–8 Aug | 46 | 74% | 2.5 | 0 |
+| **[The floor](#the-floor-9-to-25-august)** · 9–25 Aug | 40 | 92% | 1.8 | 0 |
+| **[Idling and pruning](#idling-and-pruning-26-august-to-24-september)** · 26 Aug–24 Sep | 46 | 90% | 1.6 | 0 |
+| **[The owner returns](#the-owner-returns-25-september-to-2-october)** · 25 Sep–2 Oct | 92 | 56% | 3.5 | 1 |
+| **[Simplifying the rules](#simplifying-the-rules-3-to-17-october)** · 3–17 Oct | 128 | 51% | 5.0 | 1 |
 
 The obvious reading of the table is wrong. Activity fell not because the project
 turned inward or lost its way, but because the repository has one human, who ran
