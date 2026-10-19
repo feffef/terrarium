@@ -94,7 +94,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                   <span class="pill sev" :class="e.worst" :title="`Worst severity: ${e.worst}`">{{ e.worst }}</span>
                   <span class="pill status" :class="e.state.replace(' ', '-')" :title="stateHint(e)">
                     {{ e.state }}
-                    <template v-if="e.state === 'still recurring'"> · {{ e.since }} since latest</template>
+                    <template v-if="e.state === 'still recurring'"> · {{ e.since }} since last fix</template>
                     <template v-else-if="e.fixes.length"> {{ e.fixes[0]!.date.slice(5) }}</template>
                     <template v-if="e.fixes.length">
                       · {{ e.fixes.length === 1 ? 'PR' : 'PRs' }}
