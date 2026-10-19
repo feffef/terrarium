@@ -90,9 +90,10 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
 
 ## Self-verification
 
-- **Give any command that can take over 2 minutes** (the gate, a build, e2e) a
-  `timeout` that outlasts it or `run_in_background: true` (a dispatched subagent
-  can't background: `dispatch-subagents` §3); redirect output to a file.
+- **Start any command that can take over 2 minutes** (`pnpm gate:scoped`, a
+  build, e2e) with `run_in_background: true`, output redirected to a file: the
+  Bash tool caps a foreground timeout at 600s. A dispatched subagent can't
+  background: `dispatch-subagents` §3.
 - **Never use `pkill`,** and never chain a kill with `&&` or `;` (the commands
   after it can silently not run). Stop a preview or dev server with
   `scripts/ui/preview.ts stop <pid>`.
