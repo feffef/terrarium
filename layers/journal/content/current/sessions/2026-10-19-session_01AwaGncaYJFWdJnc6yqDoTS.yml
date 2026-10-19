@@ -1,0 +1,169 @@
+schemaVersion: 1
+session: session_01AwaGncaYJFWdJnc6yqDoTS
+startedAt: 2026-10-19T10:33:13Z
+endedAt: 2026-10-19T11:02:30Z
+kind: interactive
+goal: Review the adr-check Skill and trim its prune-trial step
+status: in-review
+outcome: Reviewed adr-check; PR 2287 makes it print only open trial territories
+summary: 'The owner asked me to look at the adr-check Skill and the issue, PR and session it came from (#2146, PR #2284, session 01BTtvaF). I summarised that history and asked what they wanted; they chose a review. I ran adr-check on the review itself. Its main findings: a Skill can be skipped as easily as the CLAUDE.md line it replaced; one run cost about 13k tokens even for a chat opinion; "Question the premise" now only reaches agents that run the whole Skill; and subagents in a fresh worktree may fail at its tsx step. No session since the merge has used it yet, so there is no evidence either way. The owner then asked which parts of prune-trials.yml matter generally and whether a script could extract them. I said only `territory` binds other sessions, prototyped an extract (829 bytes instead of 8.5 KB), and found an unquoted `Reviewed:` keyword that YAML read as a mapping. The owner said "Only territory", which I took as the go-ahead to build it. Owner-instructed: the review, and the territory-only extract. Agent-initiated: renaming the script to binding.ts so steps 1 and 2 share one run, putting the keyword fix in the same PR (I said so and offered to split it), and the review-driven fixes (ADR-0027 wording in step 2, tolerating missing fields, a blank line between trials, reusing the ledger path). Left out: a gate check that territory keywords are strings. PR #2287 is open and the gate is green locally.'
+prs:
+  - "2287"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: "session start: glossary map"
+    useful: partly
+  - path: GLOSSARY.md
+    reason: "session start: Prune Trial, Rule and Friction terms used in the review"
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: before git log; amend only the tip, fetch before trusting history
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: before GitHub reads; HTML-entity bodies, search needs owner and repo
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: before push; check no PR exists, gate and review first
+    useful: yes
+  - path: .agents/skills/adr-check/SKILL.md
+    reason: the Skill under review and the file changed
+    useful: yes
+  - path: .agents/prune-trials.yml
+    reason: the ledger whose territories the Skill now prints; found the unquoted keyword
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: "adr-check: where instructions live; checked the Skill and UI rule against it"
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "adr-check: only territory binds other sessions; set step 2 wording (the Spec subagent cited it too)"
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: "adr-check: Skill placement; nothing in the change touched it (Standards subagent agreed)"
+    useful: no
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: "adr-check: one home per fact; only that principle applied"
+    useful: partly
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01BTtvaFQckiQwtGZsasWPJH.yml
+    reason: "the origin session's log: owner decisions and open judgement calls"
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: before editing adr-check; led me to state step 2 positively. The Standards subagent rated it partly
+    useful: partly
+  - path: .agents/skills/adr-check/scripts/adr-summaries.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: adr-check
+    reason: before the review opinion and the build; also tested it in use
+  - name: writing-for-agents
+    reason: before editing the adr-check SKILL.md
+  - name: code-review
+    reason: pre-push Standards and Spec review of the branch
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+  - name: model
+    reason: (invoked as a slash command)
+frictions:
+  - description: I gave a light opinion on adr-check (a Skill is as skippable as a line) in my first reply, before running adr-check as CLAUDE.md requires.
+    solution: Run adr-check before any evaluative remark on a change, even in a context-gathering reply.
+    severity: nit
+  - description: gate:scoped started on the first commit; review fixes were amended in mid-run, so I ran the gate a second time (about 5 extra minutes). The origin session logged the same.
+    solution: Run code-review before starting gate:scoped, so amends land before the gate.
+    severity: minor
+  - description: The Stop hook asked twice to push while gate:scoped was still running; I declined per ADR-0004.
+    solution: Accepted cost (stop-hook-nag, PR 2278).
+    severity: nit
+  - description: "One adr-check run for a chat review cost about 13k tokens: 6k summaries, 3k trial ledger, 4k full ADRs."
+    solution: PR 2287 cuts the ledger part; a lighter path for chat opinions is still open.
+    severity: minor
+  - description: My first wording for adr-check step 2 was stricter than ADR-0027 and would have blocked an allowed repoint; the Spec review caught it.
+    solution: Quote the ADR's own verbs when restating its duty in a Skill.
+    severity: nit
+  - description: The first tool call, a find for the Skill folder, was rejected by the user without a stated reason.
+    solution: Use Glob for a file lookup, as the harness prefers.
+    severity: nit
+durationSec: 1757
+models:
+  claude-sonnet-5-5: 7
+  claude-opus-5-5: 140
+toolCounts:
+  Read: 14
+  Bash: 33
+  Glob: 3
+  ToolSearch: 2
+  mcp__github__issue_read: 2
+  mcp__github__pull_request_read: 3
+  Skill: 5
+  Grep: 3
+  Write: 3
+  Edit: 6
+  Agent: 2
+  mcp__github__search_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/adr-check/tests/unit/binding.spec.ts
+  - .agents/skills/adr-check/scripts/binding.ts
+  - .agents/prune-trials.yml
+  - .agents/skills/adr-check/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR right after the push and subscribed; the owner's chat answer was the approval; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Held the push until gate:scoped and code-review were green despite two Stop-hook nags; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: This log goes straight to main via close-session; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line on the PR body and the commit trailer check
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Confirmed the keyword quote fix isn't trial-territory text; opened the full ADR to word step 2
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on the Skill folder; the Skill stayed in place, so it changed nothing
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on CLAUDE.md reads; opened the full ADR to judge whether a Skill fits its homes
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on an ADR read; no ADR changed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Read its paths to confirm the PR touches no Human-only file, so an agent may merge it
+    useful: yes
+subagents:
+  - type: general-purpose
+    task: Standards review adr-check territories
+  - type: general-purpose
+    task: Spec review adr-check territories
+gitBranch: ccr-a038c334-wzpkbc
+entrypoint: remote_mobile
+cliVersion: 2.1.303
+learnings:
+  - An unquoted YAML list item ending in a colon (`- Reviewed:`) parses as a one-key mapping, not a string; a strict parse still succeeds, so the gate's YAML check misses it.
+ideas:
+  - Extend validate-prune-trials.ts to check every trial's territory paths and keywords are strings, so an unquoted `Reviewed:`-style keyword fails the gate instead of printing as an object.
+  - "Have log-session flag a session that opened a PR or recommended a change without invoking adr-check, giving the Skill a mechanical backstop and the #2146 experiment a measurable signal."
+landedBy: Stop
