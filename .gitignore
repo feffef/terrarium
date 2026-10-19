@@ -36,4 +36,4 @@ dist
 .guest-intake-scan-state.json
 
 # Throwaway scripts that import repo packages (see CLAUDE.md); never committed
-.scratch/
+.throwaway/

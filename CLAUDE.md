@@ -90,7 +90,7 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
 
 ## Self-verification
 
-- **Put throwaway scripts that import repo packages in `.scratch/`**
+- **Put throwaway scripts that import repo packages in `.throwaway/`**
   (git-ignored); in the scratchpad they can't resolve `node_modules`.
 - **Give any command that can take over 2 minutes** (the gate, a build, e2e) a
   `timeout` that outlasts it or `run_in_background: true` (a dispatched subagent

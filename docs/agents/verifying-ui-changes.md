@@ -59,7 +59,7 @@ cite it.
   `scripts/ui/screenshot.ts` uses with
   `chromium.launch({ executablePath: resolveChromiumPath() })`, importing
   `resolveChromiumPath()` from `scripts/lib/chromium.ts` (don't re-derive the
-  `PLAYWRIGHT_BROWSERS_PATH` lookup). Write it in `.scratch/` (CLAUDE.md).
+  `PLAYWRIGHT_BROWSERS_PATH` lookup). Write it in `.throwaway/` (CLAUDE.md).
   Pass `page.evaluate(...)` its body as a **string**: `tsx`/esbuild's
   `keepNames` injects a `__name` helper that exists only in Node, so a
   function reference throws `__name is not defined` in the page.
