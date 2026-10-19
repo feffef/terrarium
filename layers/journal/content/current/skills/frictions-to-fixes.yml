@@ -289,3 +289,14 @@ observations:
       re-confirmed correctly tracked, not recurring undetected. No reverts
       of this Skill's ledger/fix work in the 2-week sweep. No new silent
       failure. Grade/role unchanged.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 10/10 usedInLogs sessions
+      checked; 3 newest (session_0135hcUf12mVM8dEZfDRAkUb PRs #2234-#2236,
+      session_01Sc82qSCs4NVP3igf9SaGXM PRs #2212-#2214, session_01J4ze3DvsZhXeP78iyRnbSd
+      PRs #2194/#2197-#2200/#2199) freshly end-to-end verified against
+      live GitHub (23 PRs, 18 issues, all real with correct dispositions);
+      7 others reconfirmed via prior entries plus fresh issue spot-checks.
+      Ledger data-hygiene clean - no stale `ref`/`fixedOn` fields, confirms
+      the earlier #2024 bug stayed fixed. No reverts in the 2-week sweep.
+      No new silent failure. Grade/role unchanged.

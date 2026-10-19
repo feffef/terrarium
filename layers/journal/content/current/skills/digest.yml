@@ -249,3 +249,18 @@ observations:
       fact-check subagent entry in the log. 19 consecutive clean daily
       audits now. No reverts in the 2-week sweep. No new silent failure.
       Grade/role unchanged.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), session_01XueFVQyVySVEKHxSHTFeTh
+      (2026-10-19, the 2026-10-18 Digest, PR #2261) freshly audited
+      end-to-end: `layers/journal/content/current/pages/digests/2026-10-18.md`
+      exists with real narrative content (confirmed on disk), rollup
+      numbers independently re-derived via `digest.ts gather 2026-10-18`
+      match the published footer exactly, 4 narrative claims spot-checked
+      against live PR bodies all accurate, the day's "worst" friction claim
+      checked against its own primary session log and correctly picked,
+      retention sweep (2026-10-11 Digest + 21 logs moved to archived)
+      verified on disk, not just claimed. 20 consecutive clean daily audits
+      now; the only historical case (2026-09-28, PR #1478) remains closed.
+      No reverts in the 2-week sweep. No new silent failure. Grade/role
+      unchanged.

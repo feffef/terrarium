@@ -401,3 +401,18 @@ observations:
       the already-tracked close-session-to-log-session transitive-invocation
       gap (#1915), not a genuine miss. No new silent failure, no new missed
       invocation. Grade/role unchanged (essential).
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 33 sessions checked (10
+      usedInLogs read in full + 23 nonUsersInWindow) plus a 658-commit
+      2-week sweep for cross-session log edits. All 10 usedInLogs logs
+      schema-complete with honest, often self-critical frictions and
+      correct `Claude-Session:` commit trailers (multi-commit files all
+      self-amended by their own session, not edited by another). The sweep
+      found 2 apparent cross-session edits, both a disclosed,
+      owner-approved one-off schema migration (session_015dUGRadEQP1bvv6KytKLXT
+      migrating session_01NVG22rfEsjhW9zkcCco6W8's log) - not an undisclosed
+      violation. All 23 nonUsersInWindow sessions have a real, committed,
+      non-stub log (via close-session's transitive invocation, the
+      already-tracked #1915 tagging gap). No new silent failure, no new
+      missed invocation. Grade/role unchanged (essential).
