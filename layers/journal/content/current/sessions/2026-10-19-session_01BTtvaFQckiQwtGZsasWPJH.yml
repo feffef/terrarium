@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01BTtvaFQckiQwtGZsasWPJH
 startedAt: 2026-10-19T08:29:58Z
-endedAt: 2026-10-19T09:58:12Z
+endedAt: 2026-10-19T10:06:03Z
 kind: interactive
 goal: Full clear-backlog sweep over all 16 open issues
 status: completed
@@ -178,9 +178,11 @@ skillsUsed:
     reason: "pre-push review of the #2233 branch"
   - name: close-session
     reason: (no reason given)
-  - name: tdd
-    reason: (no reason given)
   - name: writing-for-agents
+    reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
+  - name: tdd
     reason: (no reason given)
 frictions:
   - description: Echoed a prefix of GH_TOKEN in a Bash command while checking the gh setup; the auto-mode classifier denied it as credential materialization.
@@ -207,16 +209,31 @@ frictions:
   - description: "The Stop hook asked twice to push while the #2146 gate was still running; I declined per the ADR-0004 rule."
     solution: Accepted cost (stop-hook-nag, PR 2278).
     severity: nit
-durationSec: 5294
+  - description: "pr-workflow.md lines 82-83 still say merge-pr.ts refuses Dependabot PRs, false since #2283; ADR-0027 forbids rewording text in an open prune trial's territory, even a fact a merged PR made false."
+    solution: Let a change correct a fact in trial territory when a merged PR made it false, logging a Friction; or fix this line with the trial owner's OK.
+    severity: moderate
+  - description: Nothing checks that owner-approved issues are relabelled ready-for-agent before clear-backlog-build runs; merge-pr.ts caught it only after two PRs were built and gated.
+    solution: clear-backlog-build.js checks each branch issue's ready-for-agent label first and returns needs-owner when it is missing.
+    severity: minor
+  - description: Both clear-backlog workflows return 57-88 KB that the tool result truncates; I hand-wrote node -e parsers three times, for triage results, build statuses and the log's merged verdicts, and shell quoting broke one.
+    solution: A clear-backlog run-summary.ts with --triage, --build and --verdicts modes that the Skill names in sections 1, 3 and 4.
+    severity: minor
+  - description: Whether path-scoped rules in .claude/rules support @imports, and whether they load lazily, is undocumented; the owner asked and I could not test it in-session.
+    solution: A research run in a fresh session with the InstructionsLoaded hook, recorded in docs/research/.
+    severity: nit
+  - description: Each GitHub subscription or PR event arrived wrapped in about 5k tokens of identical harness instructions; with five PRs it was the run's largest repeated cost.
+    solution: "Harness-side: send the handling instructions once per session, not per event."
+    severity: minor
+durationSec: 5766
 models:
-  claude-opus-5-5: 279
+  claude-opus-5-5: 286
 toolCounts:
-  Bash: 81
+  Bash: 82
   Read: 1
   Workflow: 2
   ToolSearch: 4
   PushNotification: 2
-  Skill: 3
+  Skill: 4
   Agent: 9
   mcp__github__add_issue_comment: 14
   mcp__github__issue_write: 8
