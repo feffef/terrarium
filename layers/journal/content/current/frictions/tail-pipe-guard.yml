@@ -11,21 +11,6 @@ fixes:
     date: "2026-10-11"
     summary: "Removed the check that blocked whole commands for ending in a pipe to tail or head."
 occurrences:
-  - session: session_016RHjBGGBWx1EUSJbEjRR15
-    date: "2026-10-04"
-    severity: nit
-    description: "Piped test and typecheck output into tail in one Bash call and the tail-pipe guard denied the whole command, including the python edit chained before it"
-    solution: "Redirect to a log file from the start, as CLAUDE.md says"
-  - session: session_01HSTMSUy4WCqqRtVVakyZm3
-    date: "2026-10-04"
-    severity: nit
-    description: "Piped `vitest run ... | tail` was denied by the tail-pipe guard, costing the whole edit-and-test command a retry."
-    solution: "Habit: redirect to a scratch log from the start. The guard is right; the cost is the lost combined command."
-  - session: session_01JrdPvboL7hEVfdfvTyfSCb
-    date: "2026-10-04"
-    severity: nit
-    description: "Passed run_in_background false to Agent and a tail pipe to Bash; both guards denied and cost a retry each."
-    solution: "Skill/CLAUDE.md already say this; just omit the flag and redirect to a file."
   - session: session_01AbPzFC2mns85YxwqznmJUe
     date: "2026-10-05"
     severity: nit

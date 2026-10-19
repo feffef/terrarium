@@ -14,31 +14,6 @@ fixes:
     date: "2026-10-10"
     summary: "The provenance rule now requires only the session link, not a model name, and its example label is 'Claude'."
 occurrences:
-  - session: session_0163x7FmxRtXcQALXQ6UdygK
-    date: "2026-10-04"
-    severity: moderate
-    description: "Provenance header built from the repo's own helpers (provenanceHeader + sessionUrl(CLAUDE_CODE_REMOTE_SESSION_ID)) rendered a cse_ URL; the ADR-0017 guard rejected it and demanded the session_ shape"
-    solution: "Make shared/session-url.ts and the guard agree on one id prefix, or have sessionUrl normalise cse_ to session_; until then the guard's deny text is the only reliable source of the header"
-  - session: session_01GxJXNFxh3SQh8q1nkReAxJ
-    date: "2026-10-04"
-    severity: nit
-    description: "First create_pull_request call was denied by the provenance guard because the session marker needs a specific shape and position; I only learned the shape from the denial."
-    solution: "Put the exact first-line marker shape (robot emoji, bracketed label, session URL) in CLAUDE.md or the PR workflow doc, not only in the deny message."
-  - session: session_01NRVHQoPm4cP1F7iVUvh9rJ
-    date: "2026-10-04"
-    severity: nit
-    description: "The ADR-0017 provenance guard denied my first PR comment because I wrote the header marker from memory instead of the session URL form."
-    solution: "Already guarded and the deny message names the fix."
-  - session: session_01WTye1srGoMxeqDp8bCMHT6
-    date: "2026-10-04"
-    severity: nit
-    description: "First PR body used the wrong provenance header shape and the guard denied it; the deny message fixed it in one retry."
-    solution: "None needed; guard worked as designed."
-  - session: session_01XMzcTEcNXy3sKiUWtEKGLW
-    date: "2026-10-04"
-    severity: nit
-    description: "The PR provenance guard rejected the first PR body, and the exact header shape is not in pr-workflow.md; I had to learn it from the deny message."
-    solution: "Put the marker shape in pr-workflow.md next to the header rule."
   - session: session_011L5Vf6kXGJ1jQTwrKjFTTL
     date: "2026-10-05"
     severity: nit

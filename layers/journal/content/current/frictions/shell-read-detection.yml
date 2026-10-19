@@ -20,11 +20,6 @@ fixes:
     date: "2026-10-16"
     summary: "Made the shell-read advisory's text neutral: it no longer calls a disputed credit a false positive and tells the agent to check the transcript for the earlier reader."
 occurrences:
-  - session: session_01LEQpnXw4SeWsfw4THR5NbX
-    date: "2026-10-04"
-    severity: moderate
-    description: "SHELL-READ-DETECTION miss: command `grep -n -i -E \"44rem|narrow|owner-correct|owner correct\" .agents/skills/visitor-loop/decisions.md | head` printed line 8 of that file (\"On narrow screens the Blog's persona/tag panel stays above the posts...\"), yet the report lists .agents/skills/visitor-loop/decisions.md as named but showing no line (the command it cites is a different one, so which command was matched is unclear)."
-    solution: "Check whether grep -n output with its line-number prefix is matched against the doc, and whether the report picks the first command that names a path rather than the one that showed it."
   - session: session_01CF4k9jXS9wLrcPVsGduZmn
     date: "2026-10-08"
     severity: moderate

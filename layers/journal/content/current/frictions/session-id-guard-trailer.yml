@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-09"
     summary: "Removed the end-of-session check that wrongly blamed the session for commits it did not make."
 occurrences:
-  - session: session_01NRVHQoPm4cP1F7iVUvh9rJ
-    date: "2026-10-04"
-    severity: blocker
-    description: "issue #387: Claude-Session trailer mismatch on this session's own commit(s): session-id-guard: fabricated or mismatched Claude-Session trailer(s) on this session's own commit(s) (issue #387 — CLAUDE.md: never predict/reconstruct a session id): 32ef9ef556f3: Claude-Session trailer says session_016RHjBGGBWx1EUSJbEjRR15, expected session_01NRVHQoPm4cP1F7iVUvh9rJ 55ecc4279d50: Claude-Session trailer says session_016RHjBGGBWx1EUSJbEjRR15, expected session_01NRVHQoPm4cP1F7iVUvh9rJ 0b5e1ea6bcf3: Claude-Session trailer says session_016RHjBGGBWx1EUSJbEjRR15, expected session_01NRVHQoPm4cP1F7iVUvh9rJ"
-    solution: "Investigate the offending commit(s): CLAUDE.md forbids predicting/reconstructing a session id (never copy one seen elsewhere in context) — resolve the real id from $CLAUDE_CODE_REMOTE_SESSION_ID or the transcript at the moment of writing, and escalate per issue #387 if the divergence is unexplained."
   - session: 355d2d64-55fc-4515-81c1-e831f8b84601
     date: "2026-10-08"
     severity: blocker

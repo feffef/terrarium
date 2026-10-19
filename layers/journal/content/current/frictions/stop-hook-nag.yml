@@ -20,41 +20,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_016o8vxfkAFpgZMedEsKZqKT
-    date: "2026-10-04"
-    severity: nit
-    description: "Committed only after the Stop hook nagged about uncommitted changes, while the gate was still running."
-    solution: "Commit as soon as the edit is done, then run the gate."
-  - session: session_018DwTn5rSUpmtMHwXBrWqGL
-    date: "2026-10-04"
-    severity: nit
-    description: "Stop hook asked twice to commit untracked files while the post was still awaiting fact-check and the gate, so committing then would have been premature."
-    solution: "Let the stop-hook git check skip when a background command is still running, or accept it as noise."
-  - session: session_01GxJXNFxh3SQh8q1nkReAxJ
-    date: "2026-10-04"
-    severity: nit
-    description: "The Stop hook demanded commit and push while the background gate was still running, which pushes toward committing before verification."
-    solution: "Have the stop hook skip or defer while a gate:scoped run for the same tree is in progress."
-  - session: session_01LEQpnXw4SeWsfw4THR5NbX
-    date: "2026-10-04"
-    severity: nit
-    description: "The Stop hook demanded an unpushed-commit push while the gate was still running and before the PR existed, so I pushed ahead of the gate."
-    solution: "The hook could tolerate a commit whose gate is running in the background, as an earlier session also suggested."
-  - session: session_01MBV1mwgJPMcnYw7J9eXMmG
-    date: "2026-10-04"
-    severity: minor
-    description: "Stop hook nagged for commits mid-run while the fact-check subagent was still pending, forcing early local commits."
-    solution: "Let the stop hook tolerate a running subagent."
-  - session: session_01QS72zRhKidx1uP468fuAFK
-    date: "2026-10-04"
-    severity: minor
-    description: "Stop hook demanded commits and pushes mid-run while builds and gates were still running, forcing early commits before verification finished."
-    solution: "Have the stop hook skip when a background command is still running, or accept a WIP-commit convention."
-  - session: session_01XMzcTEcNXy3sKiUWtEKGLW
-    date: "2026-10-04"
-    severity: nit
-    description: "I went idle waiting on the gate and subagent, drawing two stop-hook nags about uncommitted changes."
-    solution: "Commit the digest to the branch before the gate, then amend-free follow-up commit for fact-check fixes."
   - session: session_011L5Vf6kXGJ1jQTwrKjFTTL
     date: "2026-10-05"
     severity: nit
