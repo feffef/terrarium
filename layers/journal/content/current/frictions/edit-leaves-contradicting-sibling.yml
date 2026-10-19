@@ -26,3 +26,18 @@ occurrences:
     severity: nit
     description: "Inserting a step into a numbered Skill forced renumbering and six cross-reference edits; two were nearly missed."
     solution: "Name steps by heading instead of number in visitor-loop so inserts don't ripple."
+  - session: session_01S1WwkpNHDfbvKAf5T1afKq
+    date: "2026-10-08"
+    severity: moderate
+    description: "My first Part 2 rewrite had internal contradictions that all three cold checkers caught (multi-target steps, one file listed on two nodes, accent count, an over-complex feature set). The merge of 10 proposals wasn't self-checked."
+    solution: "After merging many proposals, run one adversarial consistency pass myself, or with one agent, before the cold check."
+  - session: session_01NqN7omu3o4kxoGeQzzSXhK
+    date: "2026-10-15"
+    severity: minor
+    description: "Build agents' decisions contradicted themselves: 2071 said the 22.13 claim was both verified and unverified; 2069 said expand-transition was left excluded, then kept re-included"
+    solution: "Have the fix agent rewrite decisions whole each round instead of appending, so stale lines drop out"
+  - session: session_01BePy3Sj8TRHv7YGtPqnpfB
+    date: "2026-10-17"
+    severity: minor
+    description: "My Hooks rewrite claimed every guard sets onFailure though the page itself said one fails open; only the late code-review caught it"
+    solution: "Check the rewritten claim against the page's own other lines (EVERY-PAGE.md Test the lede) before committing"

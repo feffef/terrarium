@@ -50,3 +50,23 @@ occurrences:
     severity: minor
     description: "The 12 behaviour-check subagent briefs didn't ask each subagent to name a specific new session/PR/issue id directly in its summary prose (vs. a parenthetical count like '7/7 sessions') - two of the 12 Inventory entries I drafted from their reports were bare re-confirmations with no visible new citation, caught only by the Spec-axis code-review pass rather than earlier."
     solution: "When drafting an Inventory observation from a subagent's report, name the specific session/PR/issue id in the note's own prose before code-review has to catch a missing citation."
+  - session: session_018i6d2BQPkf9cq6jSEqCNSX
+    date: "2026-10-10"
+    severity: minor
+    description: "My #868 resolution and #1730 brief called the Journal leak test ADR-0004 L2; it is L3 (isolation invariant). A reviewer caught it, costing one fix round and a correction comment"
+    solution: "Verify level/term definitions against the ADR before stating them in a brief"
+  - session: session_01BLrfuHbMMEmjZZ7STpe1AN
+    date: "2026-10-11"
+    severity: nit
+    description: "Two facts in my briefs were wrong: the content DB path (`.output/server/contents.sqlite`, actually `.data/content/contents.sqlite`) copied from an earlier agent's claim, and a stale unit-file count (99, actually 101); the agents caught both."
+    solution: "Re-check a subagent's factual claim against the source before pasting it into the next brief, as dispatch-subagents already says."
+  - session: session_01La82mxqduxHnRS9jRfNHmU
+    date: "2026-10-12"
+    severity: minor
+    description: "My triage brief said the 16:43Z resets undid dry-run-1 answers, but only 4 issues had resets; 8 subagents each flagged the ambiguity"
+    solution: "Check which issues carry a reset before writing a shared brief; the Skill could say how a prior run's answers bind"
+  - session: session_01KVh6e6JUAssZvPRbuN5YDr
+    date: "2026-10-15"
+    severity: minor
+    description: "Told the implementer not to edit asking-for-a-change.md because PR 2099 was open, repeating the Fable agent's claim without checking; 2099 was already merged and the page needed the edit."
+    solution: "Check a PR's state with pull_request_read before putting it in a brief."

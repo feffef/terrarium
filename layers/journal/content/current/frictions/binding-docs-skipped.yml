@@ -381,3 +381,8 @@ occurrences:
     severity: nit
     description: "Gave recommendations on Routine cost before checking the ADRs that bind them, as CLAUDE.md asks. ADR-0015 loaded only afterwards via a hook; no conflict found."
     solution: "Run grep -l on docs/adr before recommending a change."
+  - session: session_01RBVYHX1FsYogHEgzgyRV6P
+    date: "2026-10-14"
+    severity: nit
+    description: "Told the owner the sidebar fits ADR-0028 from the spec's summary without reading ADR-0028 in full"
+    solution: "Grep and read binding ADRs before giving an opinion, as CLAUDE.md asks"

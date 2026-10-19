@@ -1,0 +1,63 @@
+name: relayed-subagent-claims
+summary: >-
+  Agents passed on a helper agent's or another session's claim or count as fact without checking it.
+cause: >-
+  A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
+surface: safe
+status: open
+occurrences:
+  - session: session_01CasnQoauTyLNUxd74agJsP
+    date: "2026-10-11"
+    severity: minor
+    description: "Triage subagent for #1752 posted a wrong claim then edited its comment, and the #1770 agent's Verified section overstated that referenced issues were read; I relayed both without checking the comments."
+    solution: "Verify each triage comment's Verified section against the issue before reporting, or brief agents to read every cited issue."
+  - session: session_01V3bxJaTSH8AWjrtSoBhNxK
+    date: "2026-10-11"
+    severity: moderate
+    description: "Broke CLAUDE.md 'Verify before you state' — my first answer relayed subagent counts (about 35 fixes, about 210 papercut frictions, three guards removed) without checking each; the ADR-0017 change was an amendment, not a guard removal."
+    solution: "Mark subagent-derived counts as approximate or recount them from the extract before stating them."
+  - session: session_01LuXuScHA2QsY4RXipy9nAt
+    date: "2026-10-11"
+    severity: minor
+    description: "The survey subagent stated that PR 1775 rewrote scripts/shell-reads.ts and called it a regression of that PR; git log showed no such change. It also admitted it never read the mechanism source."
+    solution: "The Skill brief already asks to read mechanism source for detector claims; make the survey brief require citing the commit for any 'PR X changed file Y' claim."
+  - session: session_01LtYEkEsZ2cxf4uRFJvq4n9
+    date: "2026-10-12"
+    severity: minor
+    description: "Ledger occurrences were appended from the subagent's tally and I reviewed only the diff, not each session id against the logs, so the counts rest on one agent's reading."
+    solution: "Have the survey write the ledger changes via a script reading the logs, so the PR reviewer can re-run it."
+  - session: session_01596W4GVWwvN1kfaHsV4ax8
+    date: "2026-10-12"
+    severity: nit
+    description: "I relayed subagent claims (for example the #1818 cause) without re-checking them against the source myself."
+    solution: "Spot-check one claim per hand-back, or have briefs require cited lines."
+  - session: session_017NBxJhtBSd9AoCwTzsg6pM
+    date: "2026-10-12"
+    severity: moderate
+    description: "#1834's premise (a missing commit trailer) came from an earlier subagent's guess relayed unchecked; it cost a triage plus an investigation."
+    solution: "Verify subagent causal claims against the transcript before filing them as issues (CLAUDE.md 'Verify before you state')."
+  - session: session_01E2zbWEQmuUrEhWvbzNpBba
+    date: "2026-10-15"
+    severity: minor
+    description: "The harvest's rater panel twice rated already-done or moot items highly (#96 stale gate, #70 guards that no longer exist); only my own code check caught it."
+    solution: "Brief raters to verify each premise in code before scoring."
+  - session: session_013RCsUF234qAGu3CJr3v2on
+    date: "2026-10-16"
+    severity: minor
+    description: "Posted the subagent's file count (67) in issue #2183 without checking; ls showed 68, so the issue needed a correction. Broke 'Verify before you state'."
+    solution: "Recount any number a subagent reports before it goes into an issue."
+  - session: session_015vXkKcdLwYRQqKKVJ8BLJJ
+    date: "2026-10-16"
+    severity: minor
+    description: "Grilling Q1 relayed the triage agent's pick (no schema change) without checking how the system would know a cause was accepted; the owner caught it"
+    solution: "Before relaying a pick, check that it can be carried out with the data that exists; picks that rely on free-text conventions are a warning sign"
+  - session: session_01GVmwHZQthucdGcVwe3HAUL
+    date: "2026-10-17"
+    severity: nit
+    description: "Relayed the other session's merge and request-limit claims without checking them (CLAUDE.md: verify before you state); labelled them unverified"
+    solution: "Check the PR merge state via GitHub before relaying"
+  - session: session_01SRYx7bNrHJ2bWYsrdFUgtm
+    date: "2026-10-18"
+    severity: nit
+    description: "Stated the source session's 48-file empirical claim in the issue without re-verifying it, against 'Verify before you state'; attributed it instead."
+    solution: "Attribute second-hand counts explicitly, as done, or spot-check one file before filing."
