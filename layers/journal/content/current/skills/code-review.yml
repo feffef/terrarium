@@ -2,7 +2,7 @@ name: code-review
 category: general-engineering
 importance: essential
 installedSha256: 09eb147f793e4647949edd32dbad278f0554dfb56e0d46b699cd4c2c55bf0357
-gist: Checks a change against the repo's rules and the original ask before it lands.
+gist: Checks a change against repo rules and the original ask before landing.
 role: >-
   Review the working diff (Standards+Spec) before every code-landing gated PR
   (ADR-0003/0004); it routinely catches bugs self-review missed. A spec-reviewer

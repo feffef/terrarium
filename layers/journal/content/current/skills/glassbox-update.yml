@@ -1,7 +1,7 @@
 name: glassbox-update
 category: platform-operation
 importance: specialist
-gist: Keeps every Glass Box guide page pinned to what the code now does.
+gist: Keeps every Glass Box guide page pinned to what the code does.
 role: >-
   The one-way code-to-pages sync for the Glass Box textbook: re-pins every
   guide page (drafts opt-in) and term to a commit, flags the ones whose prose

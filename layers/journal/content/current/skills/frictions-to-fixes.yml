@@ -6,10 +6,9 @@ role: >-
   The consuming half of the self-improvement loop `log-session` feeds. Keeps
   the Friction Ledger (every logged friction by root cause, with the PRs that
   tried to fix it), picks up to 10 frictions, has a design agent design
-  each fix and rate its risk, files the risky ones as issues, dispatches impl
-  agents for the rest, reviews
-  and merges their gated PRs itself, and escalates only genuinely high-risk
-  changes. Reach for it when frictions pile up.
+  and risk-rate each fix, files the risky ones as issues, dispatches impl
+  agents for the rest, reviews and merges their gated PRs itself, and escalates
+  only genuinely high-risk changes. Reach for it when frictions pile up.
 observations:
   - date: 2026-09-28
     note: >-
