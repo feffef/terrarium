@@ -1,0 +1,159 @@
+schemaVersion: 1
+session: session_01XWMuHGcaNTvRPHfYb9T7z2
+startedAt: 2026-10-19T11:46:49Z
+endedAt: 2026-10-19T12:03:02Z
+kind: interactive
+goal: Chart a wayfinder map for a transcript-search Skill
+status: completed
+outcome: "Map #2291 charted with 6 tickets; 3 research tickets resolved, a grilling ticket is next"
+summary: "Human-instructed: the user invoked /wayfinder asking for a Skill that helps sessions search other cloud sessions' transcripts (list_events and related tools), to collect use cases from session logs, and to research other raw-data sources. Two grilling rounds with the user settled the destination (an approved spec, not the built Skill), read-only tools only, context tokens as the efficiency target, logs-to-find-sessions, cost lookups staying in audit-skills, and the ticket set; the user agreed to all recommendations. I charted map #2291 with tickets #2292-#2296, wired native blocking, and resolved the three research tickets via background subagents (use cases from ~25 session logs; live probing of list_events limits; alternative sources). Research notes sit on never-merged research/cloud-session-transcript-tools and research/raw-session-data-sources branches. Agent-initiated: ticket #2298 (should our hooks mirror raw transcripts?), graduated from the sources finding that no documented route lets a script read another session's transcript, now blocking the shape prototype. Surprises: get_event does not return what its description promises; results over"
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start vocabulary
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Session, Skill, Routine, Friction terms
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: "wayfinding operations: sub-issues, blocking curl recipe"
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool map; its transcript-reading recipe is prior art the Skill replaces
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: confirmed wayfinder tickets carry no triage labels
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; commit -F for messages
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: where a new Skill and its workflow live
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: "subagent: permission-stream-closed caveat for remote MCP calls"
+    useful: partly
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: "subagents: step 1 already reads get_session usage; kept out of the new Skill's scope"
+    useful: yes
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: "subagent: research note format"
+    useful: partly
+  - path: .agents/skills/research/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: wayfinder
+    reason: user invoked it to chart the effort
+  - name: grilling
+    reason: two rounds to fix destination and ticket set
+  - name: domain-modeling
+    reason: wayfinder requires it; no glossary term resolved yet
+  - name: adr-check
+    reason: binding ADRs before recommending scope
+  - name: dispatch-subagents
+    reason: brief rules for the research subagents
+  - name: research
+    reason: "subagents resolved #2293 and #2294 with it"
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read GLOSSARY-MAP.md and GLOSSARY.md via cat piped to head -300, which cut GLOSSARY.md short, so the session-start glossary read was incomplete
+    solution: Read the glossary files whole with the Read tool, not a capped pipe
+    severity: nit
+  - description: The sources research brief told the subagent to inspect MCP config and env var names; it drifted into probing how the CLI's worker credential is sourced until the classifier blocked it
+    solution: "Research briefs that touch auth should say: never investigate credential sourcing; report the endpoint and stop"
+    severity: minor
+  - description: Moving subagent research notes onto research branches took a save-handback, sed strip of the fence, a worktree per branch and a manual redaction pass
+    solution: A small script that turns a hand-back's fenced Markdown into a commit on a named research branch
+    severity: minor
+  - description: First Explore brief omitted the CLAUDE.md line about a per-subagent scratchpad subfolder (it wrote nothing, so no harm)
+    solution: Keep a brief template with the verdict and scratchpad lines
+    severity: nit
+durationSec: 974
+models:
+  claude-opus-5-5: 81
+toolCounts:
+  Bash: 25
+  Skill: 6
+  Agent: 3
+  ToolSearch: 1
+  mcp__github__issue_write: 12
+  mcp__github__add_issue_comment: 3
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - docs/agents/environment-caveats.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/research/shell-reads-by-output-matching.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: No PR in a wayfinder charting session, so the gate and merge rules did not apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session even with no PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed a new Skill is new work needing approval, so the map ends at an approved spec, and research branches get no PR
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Made every issue and comment start with this session's header line; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with wayfinder and domain-modeling; no glossary term was added yet
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with domain-modeling; no ADR written
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when reading ADR files; nothing was changed
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded on reads; no open trial overlaps the transcript-reading recipe the Skill will replace
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded with triage-labels.md; wayfinder tickets carry no triage labels
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading docs; will matter when the spec moves the github-integration recipe, not yet
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Set where the future Skill and any workflow script live; read the full ADR for the workflow-file detail
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Only a subagent loaded it; it reported no edits so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Only subagents loaded it on reading audit-skills; it reported no relevance
+    useful: no
+subagents:
+  - type: Explore
+    task: Find session-log uses of list_events
+  - type: general-purpose
+    task: Research transcript tool behaviour
+  - type: general-purpose
+    task: Research other raw session sources
+gitBranch: ccr-2f40048a-ps9fi6
+entrypoint: remote_mobile
+cliVersion: 2.1.303
+learnings:
+  - list_events kinds filter matching nothing (keep_alive) gives a ~150-char cursor-only walk per 100 events, the cheap way to reach a session's oldest page
+  - MCP results of ~90k chars or more spill to tool-results/*.txt that a script can parse; smaller pages land inline in context
+ideas:
+  - Add a scripts/session/handback-to-research-branch.ts that takes an agent id, a branch and a path, extracts the fenced note from save-handback output, and commits it to a never-merged research branch, so wayfinder research tickets close in one command
+landedBy: Stop
