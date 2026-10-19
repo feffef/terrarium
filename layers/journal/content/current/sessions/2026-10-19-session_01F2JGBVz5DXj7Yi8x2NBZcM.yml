@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01F2JGBVz5DXj7Yi8x2NBZcM
 startedAt: 2026-10-19T09:12:33Z
-endedAt: 2026-10-19T09:24:41Z
+endedAt: 2026-10-19T09:25:38Z
 kind: interactive
 goal: Place one session learning (MDC blocks sharing page data) in its doc home
-status: in-review
-outcome: "PR 2279 open: one bullet in the MDC when-to-use doc, gate green, review clean"
-summary: "The kickoff asked me to check a learning from session_01TwTc2v8Afxqc9R4NdUcNPD against code and docs, find its one home, and propose the exact edit before changing anything. I verified that routineData.ts provides and injects the shared Routine load and metric state, and that Glass Box does the same. I proposed one bullet in docs/agents/mdc-when-to-use.md, plus a reword of a neighbouring bullet. The human then approved both and asked for the Routine costs components as the example (human-instructed). I made the edit, ran gate:scoped (green) and code-review with Standards and Spec subagents (no breach). Agent-initiated: trimming the duplicated metric-switch detail the Standards review flagged, then amending the unpushed commit, pushing and opening PR 2279, which ADR-0003 requires. I kept the bullet despite a category-mismatch note, since it settles a use-MDC decision. I did not re-run the review after that small trim."
+status: completed
+outcome: "PR 2279 merged: one bullet in the MDC when-to-use doc, gate green, review clean"
+summary: "The kickoff asked me to check a learning from session_01TwTc2v8Afxqc9R4NdUcNPD against code and docs, find its one home, and propose the exact edit before changing anything. I verified that routineData.ts provides and injects the shared Routine load and metric state, and that Glass Box does the same. I proposed one bullet in docs/agents/mdc-when-to-use.md, plus a reword of a neighbouring bullet. The human then approved both and asked for the Routine costs components as the example (human-instructed). I made the edit, ran gate:scoped (green) and code-review with Standards and Spec subagents (no breach). Agent-initiated: trimming the duplicated metric-switch detail the Standards review flagged, then amending the unpushed commit, pushing and opening PR 2279, which ADR-0003 requires, then merging it on green CI after posting a verdict. I kept the bullet despite a category-mismatch note, since it settles a use-MDC decision. I did not re-run the review after that small trim."
 prs:
   - "2279"
 docsRead:
@@ -53,19 +53,23 @@ frictions:
   - description: Amended the commit after code-review to trim one sentence, then pushed without re-running review, since the change was a pure deletion in a docs file.
     solution: State in pr-workflow whether a review-driven trim needs a re-review.
     severity: nit
-durationSec: 728
+durationSec: 785
 models:
-  claude-sonnet-5-5: 62
+  claude-sonnet-5-5: 81
 toolCounts:
-  Bash: 13
+  Bash: 17
   Read: 8
   Edit: 2
   Skill: 3
   Agent: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/agents/mdc-when-to-use.md
 rulesLoaded:
