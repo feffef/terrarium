@@ -60,8 +60,8 @@ each kind of instruction has one home.
 
 - When sessions miss a file-bound line in `CLAUDE.md`, the default fix is to
   move it into a rule.
-- A plan often comes before any file is opened, so `CLAUDE.md` keeps the step
-  to search `docs/adr/` before recommending a change.
+- A plan often comes before any file is opened, so `CLAUDE.md` points to the
+  Skill that finds the binding ADRs before a plan or recommendation.
 - A rule that loads where it doesn't apply is logged as a Friction, so a
   too-broad glob gets narrowed.
 
