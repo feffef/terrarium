@@ -34,7 +34,7 @@ the paths as evidence. **"Opened" can mean a subagent opened it:** subagent read
   the single home for why (three separate reasons it undercounts). Read it before
   citing a count.
 - **Explore the source** the fix would change, and any ADR that binds it
-  (`pnpm exec tsx .agents/skills/adr-check/scripts/adr-summaries.ts` prints every summary), until the design is concrete.
+  (the `adr-check` Skill finds and reads them), until the design is concrete.
 - **Off limits:** prose inside an open Prune Trial's territory
   (`.agents/prune-trials.yml`; ADR-0027), an external pack Skill's `SKILL.md` (a `skills-lock.json`
   name; ADR-0015), an ADR, a Historical record (session logs, blog posts) and a
