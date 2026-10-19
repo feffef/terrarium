@@ -102,6 +102,17 @@ describe('L2 smoke render', async () => {
       }
     })
 
+    it('tags each showcase card real or invented', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/'), { waitUntil: 'hydration' })
+        const tags = await page.locator('.tile .reality').allTextContents()
+        expect(tags).toEqual(['real', 'real, in character', 'real', 'invented', 'invented'])
+      } finally {
+        await page.close()
+      }
+    })
+
     it('shows Tinkerfund’s two Spaces and a Campaign of the day in its own colours', async () => {
       const page = await createPage()
       try {
