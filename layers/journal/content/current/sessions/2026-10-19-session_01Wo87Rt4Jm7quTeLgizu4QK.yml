@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Wo87Rt4Jm7quTeLgizu4QK
 startedAt: 2026-10-19T08:06:31Z
-endedAt: 2026-10-19T08:22:37Z
+endedAt: 2026-10-19T08:23:48Z
 kind: interactive
 goal: Make audit-skills observation notes short and non-copied
-status: in-review
-outcome: PR 2275 rewrites the step 5 observations bullet; gate and review passed, awaiting CI and merge
-summary: "Started from a /grill-with-docs idea (from another session) that audit-skills step 5's wording gates Inventory observations too strictly. Grilling showed commit ec14392b had already reworded the gate a day earlier, and a subagent count showed re-confirmations without new ids were only ~13% of entries, so the user (human-instructed) dropped that part. The user then added a new ask: stop agents copying earlier observations and use a short free-format note, soft cap 100 words, no repeated git facts but key commit/issue/PR references allowed. I proposed wording, the user said go ahead, and I edited only the SKILL.md bullet. Two code-review subagents caught that I had loosened the append condition (the user had said existing rules stay) and some length and ambiguity issues; I restored the original condition and tightened the text before pushing. Opening the PR and subscribing were agent-initiated per ADR-0003. Still open: CI result and the merge, which I may do myself since it is a Skill prose edit."
+status: completed
+outcome: "PR 2275 merged: step 5 observations bullet rewritten, gate green"
+summary: "Started from a /grill-with-docs idea (from another session) that audit-skills step 5's wording gates Inventory observations too strictly. Grilling showed commit ec14392b had already reworded the gate a day earlier, and a subagent count showed re-confirmations without new ids were only ~13% of entries, so the user (human-instructed) dropped that part. The user then added a new ask: stop agents copying earlier observations and use a short free-format note, soft cap 100 words, no repeated git facts but key commit/issue/PR references allowed. I proposed wording, the user said go ahead, and I edited only the SKILL.md bullet. Two code-review subagents caught that I had loosened the append condition (the user had said existing rules stay) and some length and ambiguity issues; I restored the original condition and tightened the text before pushing. Opening the PR and subscribing were agent-initiated per ADR-0003. CI went green; I posted a verdict and merged it myself with merge-pr.ts (a Skill prose edit, not Human-only)."
 prs:
   - "2275"
 docsRead:
@@ -37,6 +37,9 @@ docsRead:
   - path: docs/adr/0027-prune-trials.md
     reason: Standards subagent read it for cut before you add; it reported partly
     useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: grepped to confirm a Skill prose edit is not untested behaviour needing a human merge
+    useful: yes
   - path: CLAUDE.md
     reason: (no reason given)
 skillsUsed:
@@ -59,15 +62,15 @@ frictions:
   - description: First gate:scoped call combined run_in_background with a trailing ampersand; the double-background guard blocked it.
     solution: CLAUDE.md could say plainly to use run_in_background alone, no ampersand.
     severity: nit
-durationSec: 966
+durationSec: 1037
 models:
-  claude-sonnet-5-5: 71
+  claude-sonnet-5-5: 88
 toolCounts:
-  Skill: 5
+  Skill: 6
   Read: 7
   Glob: 2
   Grep: 1
-  Bash: 15
+  Bash: 19
   Agent: 3
   Edit: 2
   mcp__github__list_pull_requests: 1
@@ -75,6 +78,9 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/skills/audit-skills/SKILL.md
 rulesLoaded:
@@ -96,6 +102,8 @@ rulesGlobal:
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0027.md
 docsReadBySubagents:
   - .agents/skills/writing-for-agents/SKILL.md
