@@ -49,6 +49,10 @@ composition**:
   agents) to compose from reusable blocks without touching Vue.
 - **One block with rich content** — a slot that holds formatted Markdown
   (emphasis, links, nested blocks) is exactly what slots are for.
+- **Blocks that share page data** — a block gets only what the Markdown names
+  (a Routine name, say). The page component loads the data once and `provide()`s
+  it; the blocks `inject()` it. Example: the Journal's `RoutineChart` and
+  `RoutineWeeklyTable` (`composables/routineData.ts`).
 
 ## When MDC is the wrong tool
 
@@ -70,8 +74,7 @@ code) when:
   page*, for content that used to be a small array, you've added moving parts,
   not removed them.
 - **Logic must wrap the block** — filtering, gating on other data, ordering.
-  That logic lives naturally in the SFC/computed, not in a body node the layout
-  has to reach into.
+  That logic lives naturally in the SFC/computed, not in a body node.
 
 ## Decision checklist
 
