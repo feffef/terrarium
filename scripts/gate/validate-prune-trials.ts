@@ -17,7 +17,8 @@
 //
 // Usage: pnpm validate:content (runs after the other three checks; see
 //   package.json). Exits 0 (silent beyond the summary line) when the ledger
-//   parses cleanly, 1 with the parser's own error otherwise.
+//   parses cleanly and every trial's territory lists strings, 1 with the
+//   error otherwise.
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { parse as parseYaml } from 'yaml'
@@ -44,7 +45,29 @@ export function validatePruneTrialsYaml(yamlText: string): PruneTrialsValidation
   if (trials !== undefined && !Array.isArray(trials)) {
     return { ok: false, error: '"trials:" must be a list when present' }
   }
+  for (const [i, trial] of (trials ?? []).entries()) {
+    const error = territoryError(trial)
+    if (error) return { ok: false, error: `${trialLabel(trial, i)}: ${error}` }
+  }
   return { ok: true }
+}
+
+// An unquoted `- Reviewed:` list item parses as the mapping `{Reviewed: null}`,
+// which `binding.ts` then prints to every agent as JSON (issue #2288).
+function territoryError(trial: unknown): string | undefined {
+  const territory = (trial as { territory?: Record<string, unknown> } | null)?.territory
+  for (const key of ['paths', 'keywords']) {
+    const list = territory?.[key]
+    if (!Array.isArray(list)) return `territory.${key} must be a list`
+    const at = list.findIndex((item) => typeof item !== 'string')
+    if (at >= 0) return `territory.${key} holds a non-string item ${JSON.stringify(list[at])}`
+  }
+}
+
+function trialLabel(trial: unknown, index: number): string {
+  const problem = (trial as { problem?: unknown } | null)?.problem
+  const start = typeof problem === 'string' ? problem.trim().replace(/\s+/g, ' ').slice(0, 50) : ''
+  return start ? `trial ${index} ("${start}")` : `trial ${index}`
 }
 
 // ── CLI ─────────────────────────────────────────────────────────────────────
@@ -53,7 +76,7 @@ function main(): void {
   const yamlText = readFileSync(resolve(root, LEDGER_PATH), 'utf8')
   const result = validatePruneTrialsYaml(yamlText)
   if (!result.ok) {
-    console.error(`\n${LEDGER_PATH} failed to parse:\n  ${result.error}`)
+    console.error(`\n${LEDGER_PATH} failed validation:\n  ${result.error}`)
   }
   const status = result.ok ? 'PASS' : 'FAIL'
   console.log(`\nvalidate-prune-trials: ${status}`)

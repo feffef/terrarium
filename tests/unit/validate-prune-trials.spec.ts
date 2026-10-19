@@ -11,6 +11,8 @@ trials:
     territory:
       paths:
         - CLAUDE.md
+      keywords:
+        - "pkill"
     opened: 2026-08-23
     proven: true
     check: >
@@ -20,6 +22,8 @@ trials:
     territory:
       paths:
         - docs/adr/0009-session-logs-commit-directly-to-main.md
+      keywords:
+        - "amendment"
     opened: 2026-08-25
     proven: true
     check: >
@@ -75,5 +79,45 @@ describe('validatePruneTrialsYaml()', () => {
   it('rejects a "trials:" value that is not a list', () => {
     const result = validatePruneTrialsYaml('trials: "not a list"\n')
     expect(result).toEqual({ ok: false, error: '"trials:" must be a list when present' })
+  })
+
+  describe('territory shape', () => {
+    const trial = (territory: string) => `trials:
+  - problem: >
+      Wall of prose.
+${territory}    opened: 2026-08-23
+`
+
+    it('rejects an unquoted trailing-colon keyword, naming the trial and the item', () => {
+      const result = validatePruneTrialsYaml(
+        trial('    territory:\n      paths:\n        - CLAUDE.md\n      keywords:\n        - Reviewed:\n'),
+      )
+      expect(result.ok).toBe(false)
+      expect(result.error).toContain('trial 0')
+      expect(result.error).toContain('Wall of prose')
+      expect(result.error).toContain('{"Reviewed":null}')
+    })
+
+    it('rejects a trial with no territory', () => {
+      const result = validatePruneTrialsYaml(trial(''))
+      expect(result.ok).toBe(false)
+      expect(result.error).toContain('territory.paths')
+    })
+
+    it('rejects a territory with no paths', () => {
+      const result = validatePruneTrialsYaml(trial('    territory:\n      keywords:\n        - a\n'))
+      expect(result.ok).toBe(false)
+      expect(result.error).toContain('territory.paths')
+    })
+
+    it('rejects a territory with no keywords', () => {
+      const result = validatePruneTrialsYaml(trial('    territory:\n      paths:\n        - a\n'))
+      expect(result.ok).toBe(false)
+      expect(result.error).toContain('territory.keywords')
+    })
+
+    it('accepts a ledger with no trials key', () => {
+      expect(validatePruneTrialsYaml('# nothing open\n')).toEqual({ ok: true })
+    })
   })
 })
