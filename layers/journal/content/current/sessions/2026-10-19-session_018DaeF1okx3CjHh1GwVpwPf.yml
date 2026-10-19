@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_018DaeF1okx3CjHh1GwVpwPf
 startedAt: 2026-10-19T16:48:11Z
-endedAt: 2026-10-19T17:07:41Z
+endedAt: 2026-10-19T17:10:51Z
 kind: autonomous
 goal: "Visitor-loop run on the homepage: three blind visitors, one feature"
-status: in-review
-outcome: "No consensus fix survived; feature PR #2303 (real/invented tags on homepage cards) open, gate green"
-summary: "Scheduled visitor-loop run (all agent-initiated; no human instruction). Focus was the homepage. Served a production build and sent sonnet, fable and opus visitors. Three consensus clusters came back (footer omits Glass Box; /t/glassbox vs /guide \"same page\"; Blog posts assume insider context); all were dropped, on decisions.md's footer ruling, because /t/glassbox is a 302 redirect, and because published posts are authored history. So there was no fix PR. My first feature pick (a counts pulse in the hero digest list) was dropped by the refiner: the hero is owner-protected and no merged-PR count exists. I built the refiner's replacement, a small real/invented tag beside each homepage card title (opus's idea), with an e2e test, DOM screenshots at 1280 and 390, gate:scoped green, and a code-review whose one important finding (inaccurate prop comment) I fixed. PR #2303 is open and subscribed; merge is still to come."
+status: completed
+outcome: "No consensus fix survived; feature PR #2303 (real/invented tags on homepage cards) merged"
+summary: "Scheduled visitor-loop run (all agent-initiated; no human instruction). Focus was the homepage. Served a production build and sent sonnet, fable and opus visitors. Three consensus clusters came back (footer omits Glass Box; /t/glassbox vs /guide \"same page\"; Blog posts assume insider context); all were dropped, on decisions.md's footer ruling, because /t/glassbox is a 302 redirect, and because published posts are authored history. So there was no fix PR. My first feature pick (a counts pulse in the hero digest list) was dropped by the refiner: the hero is owner-protected and no merged-PR count exists. I built the refiner's replacement, a small real/invented tag beside each homepage card title (opus's idea), with an e2e test, DOM screenshots at 1280 and 390, gate:scoped green, and a code-review whose one important finding (inaccurate prop comment) I fixed. PR #2303 merged on a green gate."
 prs:
   - "2303"
 docsRead:
@@ -67,11 +67,11 @@ frictions:
   - description: Tried a Bash call that was both run_in_background and ended in a shell backgrounding; the double-background guard blocked it and a sleep was blocked too.
     solution: "The Skill text for visitor-loop could say once: wait for subagents by ending the turn, run gates with run_in_background only."
     severity: nit
-durationSec: 1170
+durationSec: 1360
 models:
-  claude-sonnet-5-5: 88
+  claude-sonnet-5-5: 98
 toolCounts:
-  Bash: 33
+  Bash: 35
   Agent: 6
   ToolSearch: 1
   mcp__github__search_issues: 3
@@ -80,7 +80,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
+  ReadNotifications: 2
 rulesLoaded:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0005.md
