@@ -59,10 +59,7 @@ cite it.
   `scripts/ui/screenshot.ts` uses with
   `chromium.launch({ executablePath: resolveChromiumPath() })`, importing
   `resolveChromiumPath()` from `scripts/lib/chromium.ts` (don't re-derive the
-  `PLAYWRIGHT_BROWSERS_PATH` lookup). Three gotchas: (1) `tsx` runs it as CJS,
-  so wrap top-level `await` in an `async` IIFE; (2) write it **inside the repo
-  tree** so imports resolve against this repo's `node_modules`
-  (`playwright-core`, `yaml` and other devDependencies aren't global); (3) pass
+  `PLAYWRIGHT_BROWSERS_PATH` lookup). Write it in `.scratch/` (CLAUDE.md). One gotcha: pass
   `page.evaluate(...)` its body as a **string**: `tsx`/esbuild's `keepNames`
   injects a `__name` helper that exists only in Node, so a function reference
   throws `__name is not defined` in the page.

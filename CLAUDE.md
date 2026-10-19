@@ -90,6 +90,8 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
 
 ## Self-verification
 
+- **Write a throwaway script that imports repo packages in `.scratch/`** (git-ignored,
+  in the repo); one in the scratchpad can't resolve `node_modules`.
 - **Give any command that can take over 2 minutes** (the gate, a build, e2e) a
   `timeout` that outlasts it or `run_in_background: true` (a dispatched subagent
   can't background: `dispatch-subagents` §3); redirect output to a file.
