@@ -7,13 +7,18 @@ import { basename } from 'node:path'
 import { fail, runIfMain } from '../lib/cli.ts'
 import { findLatestTranscript, parseTranscript, subagentTranscriptPaths } from './transcript-trace.ts'
 
-/** The text of the last assistant record, or undefined when it holds none or ends on a tool call (mid-run). */
+/**
+ * The text of the last assistant record, or undefined when it holds none or ends on another tool call (mid-run).
+ * The hand-back itself is a SubagentHandback tool call, whose message is the reply (#2262).
+ */
 function finalText(jsonl: string): string | undefined {
   const last = parseTranscript(jsonl).findLast((r) => r.type === 'assistant')
   const content = (last?.message as { content?: unknown } | undefined)?.content
-  const texts = Array.isArray(content) ? content.filter((c) => c?.type === 'text' && typeof c.text === 'string') : []
-  if (!Array.isArray(content) || content.some((c) => c?.type === 'tool_use')) return undefined
-  return texts.at(-1)?.text
+  if (!Array.isArray(content)) return undefined
+  const handback = content.find((c) => c?.type === 'tool_use' && c.name === 'SubagentHandback')
+  if (typeof handback?.input?.message === 'string') return handback.input.message
+  if (content.some((c) => c?.type === 'tool_use')) return undefined
+  return content.filter((c) => c?.type === 'text' && typeof c.text === 'string').at(-1)?.text
 }
 
 export function saveHandback(parentTranscript: string, agentId: string, out: string): void {
