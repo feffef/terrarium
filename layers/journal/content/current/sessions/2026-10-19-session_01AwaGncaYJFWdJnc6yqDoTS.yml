@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01AwaGncaYJFWdJnc6yqDoTS
 startedAt: 2026-10-19T10:33:13Z
-endedAt: 2026-10-19T11:27:22Z
+endedAt: 2026-10-19T11:36:04Z
 kind: interactive
 goal: Review the adr-check Skill and trim its prune-trial step
 status: completed
 outcome: Reviewed adr-check; merged PR 2287 so it prints only open trial territories
-summary: "The owner asked me to look at the adr-check Skill and the issue, PR and session it came from (#2146, PR #2284, session 01BTtvaF). I summarised that history and asked what they wanted; they chose a review. I ran adr-check on the review itself. Its main findings: a Skill can be skipped as easily as the CLAUDE.md line it replaced; one run cost about 13k tokens even for a chat opinion; \"Question the premise\" now only reaches agents that run the whole Skill; and subagents in a fresh worktree may fail at its tsx step. No session since the merge has used it yet, so there is no evidence either way. The owner then asked which parts of prune-trials.yml matter generally and whether a script could extract them. I said only `territory` binds other sessions, prototyped an extract (829 bytes instead of 8.5 KB), and found an unquoted `Reviewed:` keyword that YAML read as a mapping. The owner said \"Only territory\", which I took as the go-ahead to build it. Owner-instructed: the review, and the territory-only extract. Agent-initiated: renaming the script to binding.ts so steps 1 and 2 share one run, putting the keyword fix in the same PR (I said so and offered to split it), and the review-driven fixes (ADR-0027 wording in step 2, tolerating missing fields, a blank line between trials, reusing the ledger path). Left out: a gate check that territory keywords are strings. PR #2287 merged on a green gate after my verdict. In a /retro the owner then asked me to file the gate-check idea (issue #2288) and to test whether workflow subagents can use adr-check, using one clear-backlog-explore run on #2288. The transcript shows the triage agent invoked the Skill and binding.ts ran in the main checkout, but it piped the output through tail -30 and chained cat of ADR-0027 and ADR-0004 in the same command, so it chose which ADRs to read before seeing any summary; it saw only ADR-0030's summary and the territories. Its picks were right this time. As a normal run's side effects, it labelled #2288 ready-for-agent and posted an Agent Brief."
+summary: "The owner asked me to look at the adr-check Skill and the issue, PR and session it came from (#2146, PR #2284, session 01BTtvaF). I summarised that history and asked what they wanted; they chose a review. I ran adr-check on the review itself. Its main findings: a Skill can be skipped as easily as the CLAUDE.md line it replaced; one run cost about 13k tokens even for a chat opinion; \"Question the premise\" now only reaches agents that run the whole Skill; and subagents in a fresh worktree may fail at its tsx step. No session since the merge has used it yet, so there is no evidence either way. The owner then asked which parts of prune-trials.yml matter generally and whether a script could extract them. I said only `territory` binds other sessions, prototyped an extract (829 bytes instead of 8.5 KB), and found an unquoted `Reviewed:` keyword that YAML read as a mapping. The owner said \"Only territory\", which I took as the go-ahead to build it. Owner-instructed: the review, and the territory-only extract. Agent-initiated: renaming the script to binding.ts so steps 1 and 2 share one run, putting the keyword fix in the same PR (I said so and offered to split it), and the review-driven fixes (ADR-0027 wording in step 2, tolerating missing fields, a blank line between trials, reusing the ledger path). Left out: a gate check that territory keywords are strings. PR #2287 merged on a green gate after my verdict. In a /retro the owner then asked me to file the gate-check idea (issue #2288) and to test whether workflow subagents can use adr-check, using one clear-backlog-explore run on #2288. The transcript shows the triage agent invoked the Skill and binding.ts ran in the main checkout, but it piped the output through tail -30 and chained cat of ADR-0027 and ADR-0004 in the same command, so it chose which ADRs to read before seeing any summary; it saw only ADR-0030's summary and the territories. Its picks were right this time. As a normal run's side effects, it labelled #2288 ready-for-agent and posted an Agent Brief. The owner then asked for a hint on #2286 (the dated adr-check review) with an exact recipe for finding such calls. A subagent showed list_events holds main-session and Agent-tool subagent calls but not workflow agents' calls; the trace code shows session logs fold every agent's Skill calls into skillsUsed but keep no Bash text. I posted that recipe, the rename and the truncation finding on #2286."
 prs:
   - "2287"
 docsRead:
@@ -99,33 +99,34 @@ frictions:
   - description: The first tool call, a find for the Skill folder, was rejected by the user without a stated reason.
     solution: Use Glob for a file lookup, as the harness prefers.
     severity: nit
-durationSec: 3248
+durationSec: 3771
 models:
   claude-sonnet-5-5: 7
-  claude-opus-5-5: 200
+  claude-opus-5-5: 232
 toolCounts:
   Read: 16
-  Bash: 43
+  Bash: 51
   Glob: 3
   ToolSearch: 4
-  mcp__github__issue_read: 2
+  mcp__github__issue_read: 4
   mcp__github__pull_request_read: 6
   Skill: 5
   Grep: 3
   Write: 3
   Edit: 6
-  Agent: 2
+  Agent: 3
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   ReadNotifications: 3
   mcp__claude-code-remote__send_later: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__delete_trigger: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
   mcp__github__search_issues: 1
   mcp__github__issue_write: 1
   Workflow: 1
+  mcp__claude-code-remote__list_events: 1
 filesEdited:
   - .agents/skills/adr-check/tests/unit/binding.spec.ts
   - .agents/skills/adr-check/scripts/binding.ts
@@ -193,6 +194,8 @@ subagents:
     task: Standards review adr-check territories
   - type: general-purpose
     task: Spec review adr-check territories
+  - type: general-purpose
+    task: Check list_events for workflow agent calls
   - type: workflow-subagent
     task: "triage #2288"
     model: claude-opus-5-5
@@ -202,6 +205,7 @@ cliVersion: 2.1.303
 learnings:
   - An unquoted YAML list item ending in a colon (`- Reviewed:`) parses as a one-key mapping, not a string; a strict parse still succeeds, so the gate's YAML check misses it.
   - A clear-backlog-explore triage agent invokes adr-check but may truncate binding.ts with tail and pick ADRs from its own knowledge in the same command, so step 1's read-every-summary goal is not enforced.
+  - list_events shows the main session's and Agent-tool subagents' tool calls (agent_id, parent_tool_use_id) but not a workflow agent's; only sampled task_progress snapshots of those remain once the container is gone.
 ideas:
   - Extend validate-prune-trials.ts to check every trial's territory paths and keywords are strings, so an unquoted `Reviewed:`-style keyword fails the gate instead of printing as an object.
   - "Have log-session flag a session that opened a PR or recommended a change without invoking adr-check, giving the Skill a mechanical backstop and the #2146 experiment a measurable signal."
