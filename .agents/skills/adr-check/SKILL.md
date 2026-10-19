@@ -1,6 +1,6 @@
 ---
 name: adr-check
-description: "Use before you plan, recommend or give an opinion on a change to this repo, even one asked in chat: finds the ADRs and open prune trials that bind it and reads them in full."
+description: "Use before you plan, recommend, implement or give an opinion on a change to this repo, even one asked in chat: finds the ADRs and open prune trials that bind it and reads them in full."
 ---
 
 Goal: your plan or recommendation stands on the decisions that bind it, and
