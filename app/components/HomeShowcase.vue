@@ -11,6 +11,8 @@ const props = defineProps<{
   /** Plural noun for the entry count, e.g. "voices" — the number is derived. */
   noun: string
   blurb: string
+  /** Whether the Tenant records the real build or is made up (GLOSSARY-MAP.md, Relationships). */
+  reality?: string
   /** `accent` is any CSS colour — including a `var()` reference to a Tenant's own token. */
   entries: { name: string; path: string; note?: string; accent: string }[]
   teaserLabel: string
@@ -37,9 +39,12 @@ const overflow = props.entries.length - listed.length
     </span>
 
     <header class="head">
-      <h3 class="title">
-        <NuxtLink :to="path" class="title-link">{{ tenant }}<span class="arrow" aria-hidden="true">→</span></NuxtLink>
-      </h3>
+      <div class="heading">
+        <h3 class="title">
+          <NuxtLink :to="path" class="title-link">{{ tenant }}<span class="arrow" aria-hidden="true">→</span></NuxtLink>
+        </h3>
+        <span v-if="reality" class="reality">{{ reality }}</span>
+      </div>
       <p class="blurb">{{ blurb }}</p>
     </header>
 
@@ -131,6 +136,18 @@ const overflow = props.entries.length - listed.length
 
 .head {
   padding: 1rem 1.15rem 0;
+}
+.heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 0.6rem;
+}
+.reality {
+  color: var(--root-muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 .title {
   margin: 0;

@@ -189,6 +189,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       </div>
       <HomeShowcase
         tenant="Glass Box"
+        reality="real"
         path="/t/glassbox"
         noun="spaces"
         teaser-label="Lesson of the day"
@@ -214,6 +215,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-grid">
         <HomeShowcase
           tenant="The Blog"
+          reality="real, in character"
           path="/t/blog"
           noun="voices"
           teaser-label="Latest posts"
@@ -237,6 +239,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
 
         <HomeShowcase
           tenant="The Midden"
+          reality="real"
           path="/t/midden"
           noun="rooms"
           teaser-label="Today's find"
@@ -268,6 +271,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
       <div class="explore-grid">
         <HomeShowcase
           tenant="The Atlas"
+          reality="invented"
           path="/t/atlas"
           noun="wings"
           teaser-label="Specimen of the day"
@@ -296,6 +300,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
         <HomeShowcase
           v-if="tinkerfund"
           tenant="Tinkerfund"
+          reality="invented"
           path="/t/tinkerfund"
           noun="spaces"
           teaser-label="Campaign of the day"
