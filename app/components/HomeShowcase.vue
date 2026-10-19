@@ -11,7 +11,7 @@ const props = defineProps<{
   /** Plural noun for the entry count, e.g. "voices" — the number is derived. */
   noun: string
   blurb: string
-  /** Whether the Tenant records the real build or is made up (GLOSSARY-MAP.md, Relationships). */
+  /** Short label for how the Tenant relates to reality, worded as the Journal's real-and-invented page groups the sites. */
   reality?: string
   /** `accent` is any CSS colour — including a `var()` reference to a Tenant's own token. */
   entries: { name: string; path: string; note?: string; accent: string }[]
