@@ -21,8 +21,9 @@
 //   `guest-pipeline` (ADR-0023), a PR that changes a Human-only path (ADR-0004),
 //   a PR whose closing keywords name an open `ready-for-human` issue (#2104),
 //   or unless this session's verdict, naming the head in a `Reviewed:` line, is
-//   on the PR (#1276, #1844). A Dependabot PR skips the first two refusals
-//   only when `dependabotBumpRefusal` finds a plain minor/patch bump (#1889).
+//   on the PR (#1276, #1844). A Dependabot PR skips the Public-author,
+//   guest-pipeline and Human-only refusals only when `dependabotBumpRefusal`
+//   finds a plain minor/patch bump (#1889); a fork still refuses.
 //   Then polls the PR's head-commit check runs every `interval-ms` (default 15s)
 //   until they resolve or `timeout-ms` (default 20 minutes) elapses, then:
 //     - all green  → merges via the given method (default `merge`, matching
