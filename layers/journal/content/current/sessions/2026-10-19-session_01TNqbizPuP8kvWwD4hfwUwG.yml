@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01TNqbizPuP8kvWwD4hfwUwG
 startedAt: 2026-10-19T12:07:41Z
-endedAt: 2026-10-19T12:13:34Z
+endedAt: 2026-10-19T12:18:12Z
 kind: interactive
 goal: Decide which questions the transcript-search Skill answers
 status: completed
 outcome: "Grilling ticket resolved: five named questions plus an Outline fallback, with caps and coverage rules"
-summary: "Worked the wayfinder map \"Wayfinder: a Skill for searching cloud session transcripts\" (issue 2291), resolving its frontier grilling ticket \"Which questions must the transcript-search Skill answer?\" (issue 2295) live with the Trusted user. The /wayfinder invocation and ticket choice came from the kickoff; every decision was the user's: they accepted all 13 recommendations across two rounds (Q1-Q6 shape, scope, log-first, context cap, coverage, subagent labels; Q7-Q13 page budget and each question's input, output and size). A key framing fact from the earlier research tickets: scripts cannot call the claude-code-remote tools, so the agent fetches and scripts only filter the spilled tool-results files. Agent-initiated follow-through, as the wayfinder Skill directs: posted the resolution comment, closed the ticket, narrowed the prototype ticket \"What shape should the transcript-search Skill take?\" (issue 2296) to the remaining fetch/filter question, and added a Decisions-so-far line to the map. No new tickets: the remaining fog depends on the prototype ticket. No code or PR."
+summary: "Worked the wayfinder map \"Wayfinder: a Skill for searching cloud session transcripts\" (issue 2291), resolving its frontier grilling ticket \"Which questions must the transcript-search Skill answer?\" (issue 2295) live with the Trusted user. The /wayfinder invocation and ticket choice came from the kickoff; every decision was the user's: they accepted all 13 recommendations across two rounds (Q1-Q6 shape, scope, log-first, context cap, coverage, subagent labels; Q7-Q13 page budget and each question's input, output and size). A key framing fact from the earlier research tickets: scripts cannot call the claude-code-remote tools, so the agent fetches and scripts only filter the spilled tool-results files. Agent-initiated follow-through, as the wayfinder Skill directs: posted the resolution comment, closed the ticket, narrowed the prototype ticket \"What shape should the transcript-search Skill take?\" (issue 2296) to the remaining fetch/filter question, and added a Decisions-so-far line to the map. No new tickets: the remaining fog depends on the prototype ticket. No code or PR. Afterwards, at the user's request, started a fresh session (session_01MwrXDH7XwMNUofgz3HvQ5N) to work the prototype ticket, since wayfinder resolves one ticket per session."
 prs: []
 docsRead:
   - path: GLOSSARY-MAP.md
@@ -24,6 +24,9 @@ docsRead:
   - path: docs/agents/issue-tracker.md
     reason: "Wayfinding operations: confirmed claim/resolve/header-replacement steps I had already followed"
     useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read before fetching main to verify the log commit; fetch-before-trust applied
+    useful: partly
 skillsUsed:
   - name: wayfinder
     reason: work through the map
@@ -47,16 +50,17 @@ frictions:
   - description: get_sub_issues returned 58KB of full issue JSON (user objects, URLs) to list six titles; spilled to a file and needed a python parse.
     solution: Use minimal output or search_issues with parent filter for frontier queries.
     severity: nit
-durationSec: 353
+durationSec: 632
 models:
-  claude-opus-5-5: 51
+  claude-opus-5-5: 62
 toolCounts:
-  Bash: 9
+  Bash: 12
   ToolSearch: 1
   mcp__github__issue_read: 7
   mcp__github__issue_write: 4
   Skill: 5
   mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__create_session: 1
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0027.md
