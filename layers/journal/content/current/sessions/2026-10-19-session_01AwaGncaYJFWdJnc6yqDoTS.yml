@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01AwaGncaYJFWdJnc6yqDoTS
 startedAt: 2026-10-19T10:33:13Z
-endedAt: 2026-10-19T11:02:30Z
+endedAt: 2026-10-19T11:04:55Z
 kind: interactive
 goal: Review the adr-check Skill and trim its prune-trial step
-status: in-review
-outcome: Reviewed adr-check; PR 2287 makes it print only open trial territories
-summary: 'The owner asked me to look at the adr-check Skill and the issue, PR and session it came from (#2146, PR #2284, session 01BTtvaF). I summarised that history and asked what they wanted; they chose a review. I ran adr-check on the review itself. Its main findings: a Skill can be skipped as easily as the CLAUDE.md line it replaced; one run cost about 13k tokens even for a chat opinion; "Question the premise" now only reaches agents that run the whole Skill; and subagents in a fresh worktree may fail at its tsx step. No session since the merge has used it yet, so there is no evidence either way. The owner then asked which parts of prune-trials.yml matter generally and whether a script could extract them. I said only `territory` binds other sessions, prototyped an extract (829 bytes instead of 8.5 KB), and found an unquoted `Reviewed:` keyword that YAML read as a mapping. The owner said "Only territory", which I took as the go-ahead to build it. Owner-instructed: the review, and the territory-only extract. Agent-initiated: renaming the script to binding.ts so steps 1 and 2 share one run, putting the keyword fix in the same PR (I said so and offered to split it), and the review-driven fixes (ADR-0027 wording in step 2, tolerating missing fields, a blank line between trials, reusing the ledger path). Left out: a gate check that territory keywords are strings. PR #2287 is open and the gate is green locally.'
+status: completed
+outcome: Reviewed adr-check; merged PR 2287 so it prints only open trial territories
+summary: 'The owner asked me to look at the adr-check Skill and the issue, PR and session it came from (#2146, PR #2284, session 01BTtvaF). I summarised that history and asked what they wanted; they chose a review. I ran adr-check on the review itself. Its main findings: a Skill can be skipped as easily as the CLAUDE.md line it replaced; one run cost about 13k tokens even for a chat opinion; "Question the premise" now only reaches agents that run the whole Skill; and subagents in a fresh worktree may fail at its tsx step. No session since the merge has used it yet, so there is no evidence either way. The owner then asked which parts of prune-trials.yml matter generally and whether a script could extract them. I said only `territory` binds other sessions, prototyped an extract (829 bytes instead of 8.5 KB), and found an unquoted `Reviewed:` keyword that YAML read as a mapping. The owner said "Only territory", which I took as the go-ahead to build it. Owner-instructed: the review, and the territory-only extract. Agent-initiated: renaming the script to binding.ts so steps 1 and 2 share one run, putting the keyword fix in the same PR (I said so and offered to split it), and the review-driven fixes (ADR-0027 wording in step 2, tolerating missing fields, a blank line between trials, reusing the ledger path). Left out: a gate check that territory keywords are strings. PR #2287 merged on a green gate after my verdict.'
 prs:
   - "2287"
 docsRead:
@@ -83,17 +83,17 @@ frictions:
   - description: The first tool call, a find for the Skill folder, was rejected by the user without a stated reason.
     solution: Use Glob for a file lookup, as the harness prefers.
     severity: nit
-durationSec: 1757
+durationSec: 1902
 models:
   claude-sonnet-5-5: 7
-  claude-opus-5-5: 140
+  claude-opus-5-5: 162
 toolCounts:
   Read: 14
-  Bash: 33
+  Bash: 36
   Glob: 3
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__issue_read: 2
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 6
   Skill: 5
   Grep: 3
   Write: 3
@@ -102,6 +102,11 @@ toolCounts:
   mcp__github__search_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/adr-check/tests/unit/binding.spec.ts
   - .agents/skills/adr-check/scripts/binding.ts
