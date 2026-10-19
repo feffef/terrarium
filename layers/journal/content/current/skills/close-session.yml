@@ -317,3 +317,19 @@ observations:
       owner's own kickoff) - the 9th consecutive run reaching this verdict
       on the same session id. No new finding. Grade/role unchanged
       (essential).
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 10/10 usedInLogs sessions
+      cross-checked against live GitHub state (`gh api .../pulls/<n>`):
+      every `status: completed` log's `endedAt` lands within seconds of its
+      last PR's real `merged_at`, 0/10 stale, several logs honestly
+      self-report lateness against other rules (not HUMAN-PROMPTED-CLOSURE
+      cases). This window's one humanPromptedClosures signal,
+      session_014uXxmT6359K4Z42a6We6Gh (2026-10-12), is the same session
+      already fully investigated and confirmed GENUINE in the 2026-10-13
+      entry - no new fact to add, still n=1, not re-escalated. The window's
+      1 notUsedWindow session (session_01NVG22rfEsjhW9zkcCco6W8) reconfirmed
+      equivalent-closure a further time, same pattern. orphanSuppressionLog
+      (2 entries, both already resolvedBy #736/#1063) and
+      manuallyRescuedClosures ([]) both clean. No new silent failure, no
+      new missed invocation. Grade/role unchanged (essential).

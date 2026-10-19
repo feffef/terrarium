@@ -376,3 +376,15 @@ observations:
       2026-10-12 self-merge via the then-existing `--prune-trial` flag
       reconfirmed compliant with the rule in force at the time. Grade/role
       unchanged.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 8/8 usedInLogs sessions
+      checked. Issue #2228 (line-delta misreport, flagged "still
+      uncorrected" in the 2026-10-18 entry) is now resolved: PR #2245
+      (merged) corrected `.agents/prune-trials.yml`'s close-session entry
+      to the true "59 lines to 40 (-19)" - confirmed on the live ledger.
+      The newest session, session_01VcVVq7cXavEqXGmXucBLbK (PR #2252),
+      checked in full: correctly deferred its Human-only-touching PR to a
+      human merge (confirmed via the real merge commit's human author),
+      honest frictions logged. No reverts of any judged trial verdict in
+      the 2-week sweep. No new silent failure. Grade/role unchanged.

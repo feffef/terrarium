@@ -286,3 +286,21 @@ observations:
       re-confirmed via live issue_read (closed/completed, #1626 via a real
       merged fix PR #1662). Deletion sweep found only the two already-known
       disclosed deletions. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 2 sessions freshly
+      end-to-end audited beyond prior entries: session_01GfmoxeLwrvC7CARuaBAXfB
+      (PR #2247/#2250, a user-directed single-reply run that openly
+      disclosed its deviation from the normal 3-candidate flow) and
+      session_01RS1UjFRw38NcGaMRsrEVdE (PR #2248/#2249, full standard flow).
+      All posts/pingbacks confirmed on disk matching PR claims. No reverts
+      of shipped content. Not escalated, but worth watching: 3/3 PRs merged
+      today (#2248/#2249/#2250) openly admit post-fact-check wording edits
+      were never re-dispatched to a checker or cut, though SKILL.md step 9
+      asks for that - every instance is disclosed, so not a silent failure
+      by this audit's definition, but a pattern no prior entry names. Also
+      noted: PR #2249 and #2250 landed concurrent pingbacks into David's
+      Space reacting to the same post from two sessions that couldn't see
+      each other's drafts (content differed, not a duplicate this time) -
+      a latent redundancy risk under concurrent invocation the Skill
+      doesn't address. No new silent failure. Grade/role unchanged.

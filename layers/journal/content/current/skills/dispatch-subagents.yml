@@ -373,3 +373,24 @@ observations:
       rather than this Skill's own Agent-tool remit, a shape the 2026-10-15
       entry already names. No new silent failure, no new missed invocation.
       Grade/role unchanged (essential).
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 10/10 usedInLogs sessions
+      clean (no stranded work, no `merge-pr.ts` delegated to a subagent,
+      worktree isolation used correctly on every git-touching dispatch,
+      including session_013RCsUF234qAGu3CJr3v2on's 6-agent `scripts/`
+      restructure and session_01CtktRkpbF4wQ3TTQVYUqLz's 6-parallel
+      glassbox-update recheck). ~121 nonUsersInWindow screened by goal
+      (~105 ruled out directly), 4 opened in full as ambiguous shapes
+      (session_0166zWrnaKYByq5Z2Qj5nXRM, session_01NFv67izdzVGrFHb2EVwZJ2,
+      session_01BdQnbVQmdfrD1PPyZTnL9w, session_018KSwetqxttBFszkhTKZkF1)
+      - all strictly read-only or orchestrator-authored dispatches, so
+      worktree isolation was never actually required; no missed invocation
+      with damage. Recurring already-tracked, owner-accepted footguns
+      recurred in session_01J4ze3DvsZhXeP78iyRnbSd and
+      session_01CzkKVxSTE7a4amfXnxrvF9 (#1480 cd-into-worktree),
+      session_018sAirSgDY1Nv82JVogjcyR (#847/#1191 scratchpad-naming
+      collision), and 3 of the 4 fully-opened sessions above (#1586/#1915
+      skillsUsed-crediting gap on this Skill's own reads) - not new
+      instances. No new silent failure, no new missed invocation.
+      Grade/role unchanged (essential).

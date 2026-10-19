@@ -36,3 +36,13 @@ observations:
       pinned commit with the exact quoted line range, no misdescribed
       claim found. No reverts of any glassbox-update PR's content in the
       2-week sweep. No new silent failure. Grade unchanged (specialist).
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 7/7 usedInLogs sessions
+      checked - the newest, session_0148agurVWH8QQeSkGCDm23e (PR #2244,
+      2026-10-18), freshly audited end-to-end: the content commit is
+      exactly the claimed 25-file pure revision/revisionDate pin with no
+      prose changes, the pin commit is real. 6 others independently
+      re-confirmed (PR existence/merge, pin-commit reality) plus a fresh
+      revert sweep - no revert found. No new silent failure. Grade
+      unchanged (specialist).

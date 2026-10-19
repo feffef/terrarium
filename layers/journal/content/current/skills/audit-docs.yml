@@ -304,3 +304,25 @@ observations:
       usedIn session ran after the fix landed, so it is untested live yet -
       worth confirming next run. No reverts of audit-docs-delivered content
       in the 2-week sweep. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check): the predicted risk named
+      2026-10-18 materialized on the first live run after the fix.
+      session_019U9RYQ9iFv8fwp2VQvwGny (2026-10-18, PR #2237, the first
+      usedIn session to start after PR #2205 merged) hit a NEW silent
+      failure: `scripts/session/save-handback.ts`'s `finalText()` returns
+      undefined whenever the subagent's last assistant record contains any
+      `tool_use` block, but a subagent hand-back in this harness *is* a
+      `SubagentHandback` tool call, so the script can never succeed for the
+      actual reply mechanism it exists to extract. Confirmed by reading the
+      script directly and by the session's own friction ("save-handback.ts
+      failed on every reviewer... so I retyped the pool by hand", severity
+      minor) and `learnings` entry. This is the Friction Ledger's 9th
+      occurrence of `findings-retyped-by-hand` across 4 fix attempts
+      (#1699, #1768, #2060, #2205) - escalated as new issue #2262 (no
+      duplicate open issue found via search_issues and a local open-issues
+      scan; #2196 itself is closed). PR #2237's actual fix content was
+      otherwise genuine (verified against live PR bodies). Other 9 usedIn
+      sessions and the revert sweep stayed clean. Grade/role unchanged
+      (routine) - this is a shared-script mechanism bug, not audit-docs's
+      own design.

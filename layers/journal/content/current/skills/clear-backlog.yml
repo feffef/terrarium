@@ -102,3 +102,15 @@ observations:
       Human-only paths from the diff, not from build agents) but
       `gatePassed` itself still relies on self-report per the workflow's
       schema. No new finding. Grade unchanged (specialist).
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 2 sessions freshly
+      end-to-end audited: session_01TJH95qkztCQJ8PF6G6pvqs (PRs
+      #2240-#2246, all verified merged with gate-then-verdict-then-merge
+      ordering intact) and session_01JygBaHorymh1xgVBsaTh3E (PRs
+      #2215-#2217, including a correct human-merge deferral for a
+      Human-only path). Other 8 usedInLogs sessions reconfirmed clean via
+      a 2-week revert/regression sweep - no regression of prior fixes
+      found. Known historical failures (#1840 unreviewed self-merge, a
+      skipped explore pass) stay fixed. No new silent failure. Grade/role
+      unchanged (specialist).

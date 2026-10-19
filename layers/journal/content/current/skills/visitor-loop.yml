@@ -393,3 +393,15 @@ observations:
       one. Grade/role unchanged (routine) - the dispatch/consensus/build
       mechanics remain sound; only the owner-memory mechanical gate is
       broken.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 9/9 usedInLogs sessions
+      checked. Good news on the prior entry's open watch-item: issue #2229
+      (owner-correction regex only credited the first #N/URL per line) is
+      now fixed by PR #2241 - a real code fix (`.match(...).g` +
+      `.flatMap`, confirmed in the current file), not the prose-only
+      attempt #1912 was. It passed its first live test,
+      session_01Ai3w5epHj4PWgBC8XSoEwz (PR #2255): 3 candidates each on
+      their own line, no batching. Worth one more live cycle before fully
+      retiring the watch-item. No new silent failure. Grade/role unchanged
+      (routine).

@@ -580,3 +580,18 @@ observations:
       (routine) - neither finding shows this Skill itself missing its own
       delivery; both are findings about other Skills/mechanisms it exists to
       catch.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 7/7 usedInLogs sessions
+      (2026-10-12 through 2026-10-18) independently re-verified against
+      live GitHub state, including the newest, session_01Sr3uwZro23NY3Z4sk5ojsM
+      (2026-10-18, PR #2230, closed #2228/#2229 via #2245/#2241): all 7
+      sessions' PRs merged and bodies matching claims, all cited issues
+      real with correct dispositions, the 10-18 run's own finding
+      (10-11/10-12 runs skipped the ADR-0004 code-review step, #1844,
+      closed via #2058) re-confirmed still holding since 10-13. No
+      ungrounded grade changes (every run reports unchanged). No
+      observations past the 40-day floor (oldest entry here is 2026-09-13,
+      within window). No new silent failure. This run's own new finding
+      (audit-docs' save-handback.ts regression, issue #2262) is recorded on
+      audit-docs's own entry, not here. Grade/role unchanged (routine).
