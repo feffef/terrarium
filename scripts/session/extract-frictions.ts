@@ -23,9 +23,9 @@
 // cap (issue #976) — no caller-side redirect or --compact is required for safety.
 //
 // --compact drops the prose fields (goal/outcome/summary/solution and per-doc
-// reasons) that make the default output large, keeping id/file/startedAt/prs,
-// docsRead paths, subagents (counted per type/model) and each friction's description/severity, for a
-// caller that wants a smaller read regardless (issues #951, #1755). It prints one
+// reasons) and docsRead that make the default output large, keeping id/file/startedAt/prs,
+// subagents (counted per type/model) and each friction's description/severity, for a
+// caller that wants a smaller read regardless (issues #951, #2276). It prints one
 // unindented JSON line per session (issue #1917).
 //
 // --unledgered drops every friction the Friction Ledger already carries as an
@@ -103,14 +103,14 @@ export interface CompactFriction {
 /** The `--compact` reduction of a TriageSession: drops the prose fields
  *  (goal/outcome/summary/solution, doc reasons) that make the default output
  *  exceed the Bash tool's inline-capture cap at the default window (issue #951),
- *  but keeps what the survey's doc-read check needs (issue #1755). `id`/`file`
- *  are kept so a candidate can still be traced back to its full log. */
+ *  and `docsRead` (about half the output, issue #2276): the survey re-reads a
+ *  candidate's full log for the doc-read check (issue #1755). `id`/`file`
+ *  are kept so a candidate can be traced back to its full log. */
 export interface CompactSession {
   id: string
   file: string
   startedAt: string
   prs: string[]
-  docsRead: string[]
   subagents: CompactSubagent[]
   frictions: CompactFriction[]
 }
@@ -206,7 +206,6 @@ export function toCompactSession(s: TriageSession): CompactSession {
     file: s.file,
     startedAt: s.startedAt,
     prs: s.prs,
-    docsRead: s.docsRead.map((d) => d.path),
     subagents: collapseSubagents(s.subagents),
     frictions: s.frictions.map((fr) => ({ index: fr.index, description: fr.description, severity: fr.severity })),
   }
