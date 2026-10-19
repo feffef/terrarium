@@ -21,7 +21,8 @@
 //   `guest-pipeline` (ADR-0023), a PR that changes a Human-only path (ADR-0004),
 //   a PR whose closing keywords name an open `ready-for-human` issue (#2104),
 //   or unless this session's verdict, naming the head in a `Reviewed:` line, is
-//   on the PR (#1276, #1844).
+//   on the PR (#1276, #1844). A Dependabot PR skips the first two refusals
+//   only when `dependabotBumpRefusal` finds a plain minor/patch bump (#1889).
 //   Then polls the PR's head-commit check runs every `interval-ms` (default 15s)
 //   until they resolve or `timeout-ms` (default 20 minutes) elapses, then:
 //     - all green  → merges via the given method (default `merge`, matching
@@ -90,8 +91,9 @@ export interface PollOptions {
 export interface MergeResult {
   pr: number
   /** Refused before polling: `untrusted-origin` — see `prOriginRefusal`;
-   *  `human-merge` — see `humanMergeRefusal`; `closes-ready-for-human` — see
-   *  `readyForHumanRefusal`; `no-verdict` — see `verdictRefusal`. */
+   *  `human-merge` — see `humanMergeRefusal` and `dependabotBumpRefusal`;
+   *  `closes-ready-for-human` — see `readyForHumanRefusal`; `no-verdict` — see
+   *  `verdictRefusal`. */
   verdict: ChecksVerdict | 'untrusted-origin' | 'human-merge' | 'closes-ready-for-human' | 'no-verdict'
   merged: boolean
   mergeCommitSha?: string
@@ -209,6 +211,66 @@ export function prOriginRefusal(meta: PrMeta, owner: string, repo: string): stri
   return null
 }
 
+/** GitHub reserves the `[bot]` suffix for Apps, so no user can take this login. */
+export const DEPENDABOT_LOGIN = 'dependabot[bot]'
+
+export interface PrFile {
+  filename: string
+  previousFilename?: string
+  /** Absent when GitHub omits a large diff. */
+  patch?: string
+}
+
+/** Every path the PR touches, a rename's old path included, so moving a file
+ *  out of a Human-only path still counts. */
+function prFilePaths(files: PrFile[]): string[] {
+  return files.flatMap((f) => [f.filename, ...(f.previousFilename ? [f.previousFilename] : [])])
+}
+
+const DEP_LINE_RE =/^([+-])\s*"([^"]+)":\s*"([^"]*)",?\s*$/
+const VERSION_RE = /^[\^~]?(\d+)\.(\d+)\.\d+/
+
+/** Major and minor of a version spec, or null when it is not a plain semver. */
+function versionCore(spec: string): [number, number] | null {
+  const m = VERSION_RE.exec(spec)
+  return m ? [Number(m[1]), Number(m[2])] : null
+}
+
+/** Why a Dependabot PR still needs a human, or null when it is a same-repo
+ *  `dependabot[bot]` PR that changes only `package.json` (plus its lockfile)
+ *  and keeps every changed version within its major, a 0.x minor counting as
+ *  a major (ADR-0004, #1889). Every changed `package.json` line must be one
+ *  side of such a pair, so a new dependency or any other edit refuses. */
+export function dependabotBumpRefusal(meta: PrMeta, files: PrFile[], owner: string, repo: string): string | null {
+  if (meta.authorLogin !== DEPENDABOT_LOGIN) return `refused: not authored by ${DEPENDABOT_LOGIN}`
+  if (meta.headRepo?.toLowerCase() !== `${owner}/${repo}`.toLowerCase()) {
+    return `refused: head branch lives in ${meta.headRepo ?? 'a deleted repository'} — a fork PR is merged by a human`
+  }
+  const extra = prFilePaths(files).filter((p) => p !== 'package.json' && p !== 'pnpm-lock.yaml')
+  if (extra.length) return `refused: a Dependabot PR that changes ${extra.join(', ')} is merged by a human`
+  const pkg = files.find((f) => f.filename === 'package.json')
+  if (!pkg) return 'refused: the PR does not change package.json, so its versions cannot be checked'
+  if (pkg.patch === undefined) return 'refused: GitHub sent no package.json patch to check'
+
+  const sides: Record<'+' | '-', Map<string, string>> = { '+': new Map(), '-': new Map() }
+  for (const line of pkg.patch.split('\n')) {
+    if (!/^[+-]/.test(line)) continue
+    const m = DEP_LINE_RE.exec(line)
+    const side = sides[m?.[1] as '+' | '-']
+    if (!m || side.has(m[2]!)) return `refused: package.json line ${JSON.stringify(line)} is not a single version change`
+    side.set(m[2]!, m[3]!)
+  }
+  const names = new Set([...sides['+'].keys(), ...sides['-'].keys()])
+  const majors = [...names].filter((name) => {
+    const from = versionCore(sides['-'].get(name) ?? '')
+    const to = versionCore(sides['+'].get(name) ?? '')
+    return !from || !to || from[0] !== to[0] || (from[0] === 0 && from[1] !== to[1])
+  })
+  return majors.length
+    ? `refused: ${majors.join(', ')} added, removed, unreadable or moved a major — a human merges it (ADR-0004)`
+    : null
+}
+
 // ── Closing-keyword reconciliation (pure, issue #983) ────────────────────────
 
 /** GitHub's documented closing keywords: `close(s|d)`, `fix(es|ed)`,
@@ -278,11 +340,12 @@ export async function pollUntilResolved(
 
 /** The fields this script reads off one `pulls/{number}` GET: the head SHA
  *  (polled, then pinned on the merge), the body (issue #983), and the origin
- *  and labels `prOriginRefusal` checks. */
+ *  and labels `prOriginRefusal` and `dependabotBumpRefusal` check. */
 export interface PrMeta {
   sha: string
   body: string
   headRepo: string | null
+  authorLogin: string
   authorAssociation: string
   labels: string[]
 }
@@ -290,6 +353,7 @@ export interface PrMeta {
 type RawPull = {
   head: { sha: string; repo: { full_name: string } | null }
   body: string | null
+  user: { login: string }
   author_association: string
   labels: { name: string }[]
 }
@@ -300,6 +364,7 @@ export function prMetaFromPull(pr: RawPull): PrMeta {
     sha: pr.head.sha,
     body: pr.body ?? '',
     headRepo: pr.head.repo?.full_name ?? null,
+    authorLogin: pr.user.login,
     authorAssociation: pr.author_association,
     labels: pr.labels.map((l) => l.name),
   }
@@ -323,13 +388,14 @@ function closeIssue(a: Access, issueNumber: number): void {
   requestJson(a, 'PATCH', `issues/${issueNumber}`, { state: 'closed', state_reason: 'completed' })
 }
 
-type RawPrFile = { filename: string; previous_filename?: string }
+type RawPrFile = { filename: string; previous_filename?: string; patch?: string }
 
-/** Every path the PR touches, a rename's old path included, so moving a file
- *  out of a Human-only path still counts. */
-function readChangedFiles(a: Access, prNumber: number): string[] {
-  const items = listAll<RawPrFile>(a, `pulls/${prNumber}/files`)
-  return items.flatMap((i) => [i.filename, ...(i.previous_filename ? [i.previous_filename] : [])])
+function readPrFiles(a: Access, prNumber: number): PrFile[] {
+  return listAll<RawPrFile>(a, `pulls/${prNumber}/files`).map((i) => ({
+    filename: i.filename,
+    previousFilename: i.previous_filename,
+    patch: i.patch,
+  }))
 }
 
 function readHumanMergeGlobsFromMain(cwd: string): string[] {
@@ -413,17 +479,21 @@ export async function mergePrWhenGreen(
   const { owner, repo } = access
 
   const meta = readPrMeta(access, prNumber)
-  const originRefusal = prOriginRefusal(meta, owner, repo)
-  if (originRefusal !== null) {
-    return { pr: prNumber, verdict: 'untrusted-origin', merged: false, message: originRefusal }
-  }
-
-  const humanRefusal = humanMergeRefusal(
-    readChangedFiles(access, prNumber),
-    readHumanMergeGlobsFromMain(cwd),
-  )
-  if (humanRefusal !== null) {
-    return { pr: prNumber, verdict: 'human-merge', merged: false, message: humanRefusal }
+  const files = readPrFiles(access, prNumber)
+  if (meta.authorLogin === DEPENDABOT_LOGIN) {
+    const bumpRefusal = dependabotBumpRefusal(meta, files, owner, repo)
+    if (bumpRefusal !== null) {
+      return { pr: prNumber, verdict: 'human-merge', merged: false, message: bumpRefusal }
+    }
+  } else {
+    const originRefusal = prOriginRefusal(meta, owner, repo)
+    if (originRefusal !== null) {
+      return { pr: prNumber, verdict: 'untrusted-origin', merged: false, message: originRefusal }
+    }
+    const humanRefusal = humanMergeRefusal(prFilePaths(files), readHumanMergeGlobsFromMain(cwd))
+    if (humanRefusal !== null) {
+      return { pr: prNumber, verdict: 'human-merge', merged: false, message: humanRefusal }
+    }
   }
 
   const closesReadyForHuman = readyForHumanRefusal(
