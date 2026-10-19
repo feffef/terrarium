@@ -59,8 +59,8 @@ Ledger, which you commit (Report, (d)). The scratchpad is
 - **Read the window's session logs** via `pnpm exec tsx scripts/session/extract-frictions.ts`
   (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
   `/tmp/extract-frictions-output.json` and stdout gets only a notice — read the file, or
-  pass `--out PATH`; don't parse stdout. Use `--compact --unledgered` (the latter drops each friction the ledger carries verbatim, and a session with none left; a session's other frictions stay, so skip one already in the target cluster; `--compact` keeps `docsRead` paths,
-  `subagents` and each friction's `index`, drops prose) and re-read a full log via its `file` only when a candidate needs it. This is a **recency window, not a
+  pass `--out PATH`; don't parse stdout. Use `--compact --unledgered` (the latter drops each friction the ledger carries verbatim, and a session with none left; a session's other frictions stay, so skip one already in the target cluster; `--compact` keeps
+  `subagents` and each friction's `index`, drops prose and `docsRead`) and re-read a full log via its `file` when a candidate needs it, such as for the doc-read check. This is a **recency window, not a
   sample** — read every session in it, don't chase frictions from older,
   likely-gone sessions. Each record's `id`/`file` point back to the full log —
   re-read it directly when a candidate needs more context than the triage
