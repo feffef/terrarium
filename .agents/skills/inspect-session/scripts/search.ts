@@ -13,8 +13,11 @@ export type Selector =
   | { name: 'reads'; paths: string[] }
   | { name: 'dispatches' | 'errors' | 'prompts' }
   | { name: 'last'; n: number }
+  | { name: 'replies'; n: number }
 
-const USAGE = 'selectors: tool <name regex> [<input regex>] | reads <path or glob>… | dispatches | errors | prompts | last <N>'
+const USAGE = 'selectors: tool <name regex> [<input regex>] | reads <path or glob>… | dispatches | errors | prompts | last <N> | replies [<N>]'
+
+const REPLY_CHARS = 300
 
 export function parseSelector(args: string[]): Selector {
   const [name, ...rest] = args
@@ -22,6 +25,7 @@ export function parseSelector(args: string[]): Selector {
   if (name === 'reads' && rest.length) return { name, paths: rest }
   if (name === 'dispatches' || name === 'errors' || name === 'prompts') return { name }
   if (name === 'last' && Number(rest[0]) > 0) return { name, n: Number(rest[0]) }
+  if (name === 'replies' && (!rest[0] || Number(rest[0]) > 0)) return { name, n: Number(rest[0] ?? REPLY_CHARS) }
   throw new Error(USAGE)
 }
 
@@ -49,7 +53,11 @@ export function search(lines: FlatLine[], sel: Selector, agent?: string): { hits
     return { hits, missing: hits.length < sel.n ? [`${sel.n - hits.length} more line(s)`] : [] }
   }
   let hits: FlatLine[]
-  if (sel.name === 'tool') {
+  if (sel.name === 'replies') {
+    hits = scoped
+      .filter((l) => l.kind === 'assistant' && !l.tool && l.input !== '(thinking)')
+      .map((l) => ({ ...l, input: l.input.length > sel.n ? `${l.input.slice(0, sel.n - 1)}…` : l.input }))
+  } else if (sel.name === 'tool') {
     const name = new RegExp(`^(?:${sel.tool})$`)
     const input = sel.input ? new RegExp(sel.input, 'i') : null
     hits = scoped.filter((l) => l.kind === 'assistant' && l.tool.split(',').some((t) => name.test(t)) && (!input || input.test(l.input)))

@@ -72,7 +72,7 @@ Load the tool first: ToolSearch "select:mcp__claude-code-remote__list_events".
 Then loop:
 1. Call list_events with session_id, limit 100, no kinds, and before_id from
    the last NEXT line (none on the first call). The page spills to a
-   tool-results/*.txt file: note its path. Never print or Read it. If a page
+   tool-results/*.txt file: note its file name. Never print or Read it. If a page
    lands inline instead, Write it verbatim to {Out}/page-<n>.txt.
 2. From the repo root run:
    pnpm exec tsx .agents/skills/inspect-session/scripts/flatten.ts --session {session id} --out {Out} --page-limit {page limit} <every saved page so far>
@@ -96,7 +96,9 @@ Afterwards, grep the named file yourself rather than fetching again.
 
 ## Full read
 
-For a retrospective, or to grep the whole session yourself. A 4.9-hour
+For a retrospective, or to grep the whole session yourself. Under about 25
+pages (judge from `get_session`'s duration and the page span above), run a
+partial read with page limit 9999 instead: one subagent, not three. A 4.9-hour
 session took about 8 minutes and 420k Haiku tokens, and only short hand-backs
 reach you. Make a directory `{Out}` = `{scratchpad}/inspect-{session id}/`.
 
@@ -132,7 +134,8 @@ reach you. Make a directory `{Out}` = `{scratchpad}/inspect-{session id}/`.
    Read it. Check what it returned with
    grep -o '"first_id": *"[^"]*"' <file> | tail -1
    and, unless the line's before_id is "none", call once more if it is not
-   the line's first_id. Append the saved file's path to {Out}/manifest-{k}.txt.
+   the line's first_id. Append the saved file's name (not its path) to
+   {Out}/manifest-{k}.txt.
    If a page lands inline instead, Write it verbatim to {Out}/page-{k}-<n>.txt
    and append that path. Reply only: the manifest's path, the pages saved,
    and any first_id still wrong. Then a verdict (path, why it loaded or was
@@ -181,7 +184,8 @@ MCP. Each prints a `COVERAGE` line naming the events held and where the blind
 spots come from.
 
 - `scripts/flatten.ts --session <id> --out <dir> [--page-limit <N>] <pages…>`:
-  writes the flattened events and prints their path, `COVERAGE`, any
+  takes each page as a path or a bare file name, looked up in the
+  `tool-results/` folders under `~/.claude/projects/`; writes the flattened events and prints their path, `COVERAGE`, any
   `DUPLICATE`, and `NEXT` (the cursor to fetch, or done).
 - `scripts/search.ts <flattened file> <selector> [--agent parent|<agent id>]`:
   prints matching lines capped at about 2k characters (the full list goes to a
@@ -192,6 +196,8 @@ spots come from.
     path the log records counts as found.
   - `dispatches`: dispatches with their replies.
   - `errors`, `prompts` (human prompts), `last <N>`.
+  - `replies [<N>]`: the session's text replies, each cut to N characters
+    (300 unless set).
 - `scripts/ranges.ts <cursors file> --fetchers <N> --out <dir>`: splits a
   full read's cursor walk into range files, one `<before_id> <first_id>` line
   per page.
@@ -206,4 +212,5 @@ spots come from.
 | What did a subagent get and return? | Partial read, selector `dispatches`, page limit 15 |
 | Which commands failed? | Partial read, selector `errors` (`--agent` for one subagent) |
 | How did it end? | `get_session`, then `kinds:["result"]` |
+| What did it say to the human? | Selector `prompts`, then `replies` |
 | What happened last? | Partial read, page limit 1, selector `last 40` |
