@@ -75,6 +75,16 @@ describe('flatten', () => {
     expect(nextLine(meta)).toBe('NEXT: done, session start reached')
   })
 
+  it('merges pages from several fetchers into the same file, whatever order they arrive in', () => {
+    const repeat = page('page-older-repeat.txt')
+    const inOrder = flatten([older, newer], 'x', null)
+    for (const pages of [[newer, older], [newer, repeat, older], [repeat, newer, older]]) {
+      const r = flatten(pages, 'x', null)
+      expect(r.lines.map(toLine)).toEqual(inOrder.lines.map(toLine))
+      expect(r.meta).toMatchObject({ pages: 2, reachedStart: true, nextBeforeId: 'o1' })
+    }
+  })
+
   it('drops and reports a page whose first_id repeats', () => {
     const r = flatten([newer, older, page('page-older-repeat.txt')], 'x', null)
     expect(r.lines).toHaveLength(20)
