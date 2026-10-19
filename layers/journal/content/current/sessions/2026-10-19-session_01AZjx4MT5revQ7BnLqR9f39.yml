@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01AZjx4MT5revQ7BnLqR9f39
 startedAt: 2026-10-19T09:16:21Z
-endedAt: 2026-10-19T09:27:59Z
+endedAt: 2026-10-19T09:29:12Z
 kind: interactive
 goal: Home a session's MDC naming learning in the docs
-status: in-review
-outcome: "One-bullet docs PR #2280 opened and awaiting CI"
+status: completed
+outcome: "PR #2280 merged: MDC naming constraint now in the research doc"
 summary: "Human-instructed: the owner asked me to check a learning from another session (an MDC component must not share a name with an HTML tag) against the code and docs, find its one home, and propose the exact edit before changing anything; after my proposal the owner replied \"Yes\". I read that session's log, confirmed in the installed @nuxtjs/mdc 0.23.2 that MDCRenderer skips component lookup for tags in html-tags-list (source is in it), and chose the component-resolution list in docs/research/nuxt-content-review-grounding.md section 13 as the home, since docs/agents/mdc-when-to-use.md already points there; a rule or agents-doc copy would break one-home-per-fact. After the go-ahead I added the bullet, ran gate:scoped (green) and code-review with Standards and Spec subagents (no defects). Agent-initiated within that approval: trimming one redundant clause the Standards reviewer flagged, and defaulting to the current branch with an immediately opened PR (ADR-0003) because the owner did not answer my branch-or-PR question. Left open and not changed: the same section pins @nuxtjs/mdc 0.22.1 while 0.23.2 is installed."
 prs:
   - "2280"
@@ -53,14 +53,14 @@ frictions:
   - description: A cd into node_modules during verification moved the primary working directory; I had to cd back before git commands.
     solution: Use absolute paths or a subshell instead of a bare cd into a dependency directory.
     severity: nit
-durationSec: 698
+durationSec: 772
 models:
-  claude-sonnet-5-5: 73
+  claude-sonnet-5-5: 89
 toolCounts:
   Read: 9
   Glob: 2
   Grep: 4
-  Bash: 16
+  Bash: 19
   Edit: 2
   Skill: 3
   Agent: 2
@@ -69,6 +69,10 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/research/nuxt-content-review-grounding.md
 rulesLoaded:
