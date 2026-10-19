@@ -79,35 +79,6 @@ trials:
       prevented it. NOT damage: the read-first hint firing, or a session that
       logs `HUMAN-PROMPTED-CLOSURE` correctly.
   - problem: >
-      `docs/agents/pr-workflow.md` rewritten plainly, 116 lines to 104 (-12): the
-      self-merge discipline (verdict comment, `Reviewed: <sha>`, no auto-merge,
-      closing keywords) cut to the rule and a pointer to `merge-pr.ts`, which now
-      holds it mechanically; issue histories cut. Step numbers and section names
-      kept (cited elsewhere). The rule failed as prose: #1113 then #1276 (read in
-      full via the search subagent), fixed by the `merge-pr.ts` check (#1311).
-      The subagent covered the instruction corpus, guard headers and the tracker;
-      runners-up: provenance-header restatements (about half is skill-specific),
-      backgrounding rules (about 8 lines). `merge-pr.ts` itself is Human-only, so
-      its header was left. Same run judged and deleted the `blog-post` step 12
-      trial (landed 6a8a02ca, judgeable from 2026-10-16T12:30Z per the window script): only
-      nit/minor Frictions, no regression issue. Sonnet probe read SHA a5eaf65b. The mass
-      here was small; no criterion-1 candidate cleared the bar for a larger cut.
-    territory:
-      paths:
-        - "docs/agents/pr-workflow.md (all of it)"
-      keywords:
-        - "Reviewed:"
-        - enable_pr_auto_merge
-        - closing keyword
-    opened: 2026-10-16
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session merged without a
-      verdict naming the head, called `enable_pr_auto_merge`, closed an issue its
-      PR only related to, or skipped the pre-push review, and a line the old page
-      carried would have prevented it. NOT damage: `merge-pr.ts` refusing and the
-      session fixing itself from its message.
-  - problem: >
       The two background-guard headers (`subagent-background-guard.ts`,
       `double-background-guard.ts`) cut to the rule, the issue pointers and
       `docs/agents/guards.md` (-34, comments only; no code changed). Chosen after
@@ -153,3 +124,30 @@ trials:
       fabricated session id, or a body the guard let through, and the cut header
       text would have prevented it. NOT damage: the guard denying and the session
       fixing itself from its message.
+  - problem: >
+      The `deferred-tool-guard.ts` header and doc comments cut to the rule, the
+      issue pointers (#612, #724) and a pointer to `docs/agents/guards.md`
+      (-55, comments only; no code changed, its unit test passes). Chosen after
+      the search subagent covered the instruction corpus, guard headers and the
+      tracker: the ToolSearch-before-first-call rule failed as prose three
+      times (#386, #432, #612) and again after the guard (#724; #612 and #724
+      read in full), and the guard now holds it. Runners-up:
+      `loop-only-tool-guard.ts` header (#814 unread), `workflow-edit-guard.ts`
+      header (weak failure evidence). Same run judged and deleted the
+      `pr-workflow.md` trial (landed 0cab6418, judgeable from 2026-10-19T12:35Z
+      per the window script): only nit/minor Frictions (code-review skipped on
+      tiny diffs, SHA typed from memory, both caught), no regression issue.
+      The mass here was small.
+    territory:
+      paths:
+        - "scripts/hooks/deferred-tool-guard.ts: header and doc comments"
+      keywords:
+        - deferred-tool guard
+        - InputValidationError
+    opened: 2026-10-19
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session called a deferred
+      tool with a guessed or foreign-shaped argument set, or the guard denied
+      wrongly, and the cut header text would have prevented it. NOT damage: the
+      guard denying and the session fixing itself from its message.
