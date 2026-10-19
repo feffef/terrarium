@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Bopw6N86uYzPzfaRpVqzhU
 startedAt: 2026-10-19T07:56:05Z
-endedAt: 2026-10-19T08:06:36Z
+endedAt: 2026-10-19T08:24:36Z
 kind: delegated
 goal: Clearer wording on the Journal frictions page
 status: completed
 outcome: "PR #2274 merged: pill text now reads 'since last fix' instead of 'since latest'"
-summary: "The human asked for one small fix: the still-recurring pill on the Journal frictions page said \"N since latest\", which does not show it counts occurrences after the latest merged fix PR; they asked for \"since last fix\". I found the one string in frictions.vue, changed it, ran gate:scoped (green), committed, pushed and opened PR #2274 and subscribed to it (opening the PR and subscribing are required by ADR-0003, not separately requested), then posted a verdict and merged it with merge-pr.ts after CI went green. The tooltip and intro already said \"after the latest merged PR\", so no other text needed changing. I did the code-review step inline for the one-word diff rather than spawning the two sub-agents the Skill prescribes. All code changes were human-instructed; the PR, subscription and gate/review steps were the repo's standing rules."
+summary: "The human asked for one small fix: the still-recurring pill on the Journal frictions page said \"N since latest\", which does not show it counts occurrences after the latest merged fix PR; they asked for \"since last fix\". I found the one string in frictions.vue, changed it, ran gate:scoped (green), committed, pushed and opened PR #2274 and subscribed to it (opening the PR and subscribing are required by ADR-0003, not separately requested), then posted a verdict and merged it with merge-pr.ts after CI went green. The tooltip and intro already said \"after the latest merged PR\", so no other text needed changing. I did the code-review step inline for the one-word diff rather than spawning the two sub-agents the Skill prescribes. All code changes were human-instructed; the PR, subscription and gate/review steps were the repo's standing rules. Later the human ran /grill-with-docs on the idea '--since-ledger flag for the survey' from another session (human-instructed). I found --unledgered and the 48h ledger-relative window already existed, had a Sonnet agent read that session's transcript (human-requested), and the human decided to drop the idea; nothing changed in the repo."
 prs:
   - "2274"
 docsRead:
@@ -27,7 +27,13 @@ docsRead:
     useful: partly
   - path: layers/journal/app/pages/t/journal/[space]/frictions.vue
     reason: (read before editing)
+  - path: layers/journal/content/2026-10/sessions/2026-10-18-session_0135hcUf12mVM8dEZfDRAkUb.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-18-session_0135hcUf12mVM8dEZfDRAkUb.yml
+    reason: (no reason given)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
     reason: (no reason given)
 skillsUsed:
   - name: code-review
@@ -49,11 +55,14 @@ frictions:
   - description: The code-review Skill prescribes two parallel sub-agents, disproportionate for a one-word label change; I reviewed inline, deviating from the Skill.
     solution: Let pr-workflow.md or the Skill allow an inline review for diffs under a few lines.
     severity: nit
-durationSec: 631
+  - description: Transcript-reading subagent printed whole list_events pages inline despite instructions to save them (the tool returns pages into context), costing ~390k subagent tokens and still not reaching the survey's commands.
+    solution: Document in github-integration.md that list_events cannot be redirected; tell briefs to use kinds [assistant] from the start and cap pages.
+    severity: minor
+durationSec: 1711
 models:
-  claude-sonnet-5-5: 62
+  claude-sonnet-5-5: 86
 toolCounts:
-  Bash: 15
+  Bash: 18
   Read: 6
   Grep: 1
   Edit: 1
@@ -62,10 +71,13 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
-  ReadNotifications: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 2
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  Agent: 1
+  ToolSearch: 1
+  SendMessage: 2
 filesEdited:
   - layers/journal/app/pages/t/journal/[space]/frictions.vue
 rulesLoaded:
@@ -84,6 +96,8 @@ rulesGlobal:
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/frictions-to-fixes/survey-brief.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Made me run gate:scoped and code-review before the first push; summary was enough, did not open the ADR
@@ -127,6 +141,10 @@ ruleVerdicts:
   - path: .claude/rules/adr-0030.md
     reason: Loaded by domain-modeling; about rewriting ADRs, and no ADR was touched
     useful: no
+subagents:
+  - type: general-purpose
+    task: Read survey session transcript
+    model: sonnet
 gitBranch: ccr-25473ee2-mxz0mg
 entrypoint: remote_mobile
 cliVersion: 2.1.303
