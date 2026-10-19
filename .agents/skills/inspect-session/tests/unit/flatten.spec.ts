@@ -1,13 +1,13 @@
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { flatten, parsePage, report } from '../../scripts/flatten.ts'
+import { bashReads, flatten, parsePage, report } from '../../scripts/flatten.ts'
 import { coverageLine, nextLine, parseLine, toLine, type FlatLine } from '../../scripts/flat.ts'
 
 const page = (name: string) => parsePage(readFileSync(join(import.meta.dirname, 'fixtures', name), 'utf8'), name)
 const older = page('page-older.txt')
 const newer = page('page-newer.txt')
-const { lines, meta } = flatten([newer, older], 'session_01Fixture')
+const { lines, meta } = flatten([newer, older], 'session_01Fixture', null)
 const at = (uuidTime: string): FlatLine => lines.find((l) => l.at.endsWith(uuidTime))!
 
 describe('parsePage', () => {
@@ -44,6 +44,13 @@ describe('flatten', () => {
     expect(at('10:00:03').tags).toEqual([])
   })
 
+  it("counts only a pipeline's first command, on a path, as a Bash read", () => {
+    expect(bashReads('cd x && cat a.md | head -5 && git show origin/main:b.md')).toEqual(['cat a.md', 'git show origin/main:b.md'])
+    expect(bashReads('pnpm exec tsx scripts/gate/gate.ts | tail -20')).toEqual([])
+    expect(bashReads('find . -name x.ts | grep src/')).toEqual([])
+    expect(bashReads("sed -i 's/a/b/' f.md; tail -3")).toEqual([])
+  })
+
   it('joins a background dispatch to its later hand-back by agent id', () => {
     const dispatch = at('10:00:07')
     const handback = at('10:01:04')
@@ -69,14 +76,14 @@ describe('flatten', () => {
   })
 
   it('drops and reports a page whose first_id repeats', () => {
-    const r = flatten([newer, older, page('page-older-repeat.txt')], 'x')
+    const r = flatten([newer, older, page('page-older-repeat.txt')], 'x', null)
     expect(r.lines).toHaveLength(20)
     expect(r.meta.duplicates).toEqual([{ file: 'page-older-repeat.txt', firstId: 'o1' }])
-    expect(report({ ...r.meta, file: 'f.txt' }, 20, null)).toContain('DUPLICATE: page-older-repeat.txt repeats page first_id=o1')
+    expect(report(r.meta, 'f.txt', 20)).toContain('DUPLICATE: page-older-repeat.txt repeats page first_id=o1')
   })
 
   it('points to the page before the oldest one, until the page limit', () => {
-    const one = flatten([newer], 'x', 1).meta
+    const one = flatten([newer], 'x', null, 1).meta
     expect(one).toMatchObject({ reachedStart: false, nextBeforeId: 'n1' })
     expect(nextLine(one)).toBe('NEXT: page limit reached (1 of 1); report coverage as is')
     expect(nextLine({ ...one, pageLimit: 5 })).toBe('NEXT: fetch list_events limit 100 before_id=n1')
@@ -89,7 +96,7 @@ describe('the line format', () => {
   })
 
   it('names the source of the blind spots in the coverage line', () => {
-    expect(coverageLine(meta, 'layers/journal/content/current/sessions/x.yml')).toContain('rules: from session log layers/journal/content/current/sessions/x.yml; workflow agents: reads only, no turns')
-    expect(coverageLine(meta, null)).toContain('no session log yet')
+    expect(coverageLine({ ...meta, sessionLog: 'layers/journal/content/current/sessions/x.yml' })).toContain('rules: from session log layers/journal/content/current/sessions/x.yml; workflow agents: reads only, no turns')
+    expect(coverageLine(meta)).toContain('no session log yet')
   })
 })

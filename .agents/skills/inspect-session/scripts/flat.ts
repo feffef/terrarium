@@ -1,9 +1,11 @@
 // The flattened-events format shared by Flatten, Search and Outline. SKILL.md
 // defines it for readers; this file is its one home in code.
-import { readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 export type Tag = 'read' | 'dispatch' | 'handback' | 'error' | 'human-prompt' | 'dispatch-not-in-range'
+
+export const DEFAULT_PAGE_LIMIT = 5
 
 /** One event. Tabs and newlines never occur inside a field, so a line splits on tabs. */
 export interface FlatLine {
@@ -13,7 +15,7 @@ export interface FlatLine {
   kind: string
   tool: string
   tags: Tag[]
-  /** What a `read` line read: a path, a glob, a Skill's SKILL.md, or a Bash command before any heredoc. */
+  /** What a `read` line read: paths, globs, a Skill's SKILL.md, or Bash commands before any heredoc. */
   target: string
   input: string
   result: string
@@ -21,7 +23,8 @@ export interface FlatLine {
 
 export interface Meta {
   session: string
-  file: string
+  /** The target's session log, the only source of its rule loads and workflow-agent reads. */
+  sessionLog: string | null
   pages: number
   duplicates: { file: string; firstId: string }[]
   events: number
@@ -35,6 +38,11 @@ export interface Meta {
 
 export const oneLine = (s: unknown): string => String(s ?? '').replace(/\s+/g, ' ').trim()
 
+export const skillFile = (name: string): string => `.agents/skills/${name.split(':').at(-1)}/SKILL.md`
+
+/** A read line shows what it read; any other line shows its input. */
+export const shown = (l: FlatLine): string => (l.tags.includes('read') ? l.target : l.input)
+
 export function toLine(f: FlatLine): string {
   return [`L${f.n}`, f.at, f.agent, f.kind, f.tool, f.tags.join(','), f.target, f.input, f.result].map(oneLine).join('\t')
 }
@@ -44,36 +52,33 @@ export function parseLine(s: string): FlatLine {
   return { n: Number(n.slice(1)), at, agent, kind, tool, tags: tags ? (tags.split(',') as Tag[]) : [], target, input, result }
 }
 
-export const metaPath = (flatFile: string): string => flatFile.replace(/\.txt$/, '') + '.meta.json'
+/** A file written beside the flattened events, e.g. `.meta.json`. */
+export const sibling = (flatFile: string, suffix: string): string => flatFile.replace(/\.txt$/, '') + suffix
 
 export const readFlat = (flatFile: string): { lines: FlatLine[]; meta: Meta } => ({
   lines: readFileSync(flatFile, 'utf8').split('\n').filter(Boolean).map(parseLine),
-  meta: JSON.parse(readFileSync(metaPath(flatFile), 'utf8')) as Meta,
+  meta: JSON.parse(readFileSync(sibling(flatFile, '.meta.json'), 'utf8')) as Meta,
 })
 
 export const bareSession = (id: string): string => id.replace(/^session_/, '')
 
-/** The target's session log, the only source of its rule loads and workflow-agent reads. */
 export function findSessionLog(repoRoot: string, session: string): string | null {
   const suffix = `-session_${bareSession(session)}.yml`
   const content = join(repoRoot, 'layers/journal/content')
-  for (const space of readdirSync(content)) {
-    const dir = join(content, space, 'sessions')
-    try {
-      const hit = readdirSync(dir).find((f) => f.endsWith(suffix))
-      if (hit) return join('layers/journal/content', space, 'sessions', hit)
-    } catch {
-      // A Space without sessions.
-    }
+  for (const space of readdirSync(content, { withFileTypes: true })) {
+    const dir = join(content, space.name, 'sessions')
+    if (!existsSync(dir)) continue
+    const hit = readdirSync(dir, { withFileTypes: true }).find((f) => f.name.endsWith(suffix))
+    if (hit) return join('layers/journal/content', space.name, 'sessions', hit.name)
   }
   return null
 }
 
-export function coverageLine(meta: Meta, sessionLog: string | null): string {
+export function coverageLine(meta: Meta): string {
   const dups = meta.duplicates.length ? `, ${meta.duplicates.length} duplicate page(s) dropped` : ''
   const start = meta.reachedStart ? 'session start reached' : 'session start NOT reached'
-  const log = sessionLog
-    ? `rules: from session log ${sessionLog}; workflow agents: reads only, no turns`
+  const log = meta.sessionLog
+    ? `rules: from session log ${meta.sessionLog}; workflow agents: reads only, no turns`
     : 'no session log yet, so rule loads and workflow-agent reads are unknown'
   return `COVERAGE: ${meta.events} events in ${meta.pages} page(s)${dups}, ${meta.from}–${meta.to}; ${start}; ${log}`
 }

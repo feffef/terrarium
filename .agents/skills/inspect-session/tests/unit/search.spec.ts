@@ -7,7 +7,7 @@ import { logReads, parseSelector, render, search, type Selector } from '../../sc
 import type { FlatLine } from '../../scripts/flat.ts'
 
 const page = (name: string) => parsePage(readFileSync(join(import.meta.dirname, 'fixtures', name), 'utf8'), name)
-const { lines, meta } = flatten([page('page-older.txt'), page('page-newer.txt')], 'x')
+const { lines, meta } = flatten([page('page-older.txt'), page('page-newer.txt')], 'x', null)
 const run = (args: string[], agent?: string) => search(lines, parseSelector(args), agent)
 
 describe('search', () => {
@@ -51,22 +51,30 @@ describe('render', () => {
   const sel: Selector = { name: 'tool', tool: 'Bash' }
 
   it('caps the matching lines and points to the full list', () => {
-    const out = render(sel, undefined, { hits: many, missing: [] }, meta, null, [], 'full.txt')
+    const out = render(sel, undefined, { hits: many, missing: [] }, meta, [], 'full.txt')
     expect(out.length).toBeLessThan(2600)
     expect(out).toContain('more; full list: full.txt')
     expect(out).toMatch(/COVERAGE: .*\nFOUND\nNEXT: done, found$/)
   })
 
   it('says what is missing and where to fetch next', () => {
-    const out = render(sel, undefined, { hits: [], missing: ['tool Bash'] }, { ...meta, reachedStart: false, nextBeforeId: 'abc' }, null, [], 'f')
+    const out = render(sel, undefined, { hits: [], missing: ['tool Bash'] }, { ...meta, reachedStart: false, nextBeforeId: 'abc' }, [], 'f')
     expect(out).toMatch(/NOT FOUND: tool Bash\nNEXT: fetch list_events limit 100 before_id=abc$/)
+  })
+})
+
+describe('render with the session log', () => {
+  it('counts a read the session log records as found', () => {
+    const sel: Selector = { name: 'reads', paths: ['adr-0015.md'] }
+    const out = render(sel, undefined, { hits: [], missing: ['adr-0015.md'] }, meta, [{ path: 'adr-0015.md', hit: '.claude/rules/adr-0015.md in rulesLoaded' }], 'f')
+    expect(out).toMatch(/SESSION LOG: .claude\/rules\/adr-0015.md in rulesLoaded\nCOVERAGE: .*\nFOUND\n/)
   })
 })
 
 describe('logReads', () => {
   it('finds a path among the session log reads and rule loads', () => {
     const log = 'docsRead:\n  - path: GLOSSARY.md\n    reason: x\nrulesLoadedBySubagents:\n  - .claude/rules/adr-0015.md\nskillsUsed:\n  - name: close-session\n'
-    expect(logReads(log, ['GLOSSARY.md', 'adr-0015.md', 'close-session/SKILL.md'])).toEqual([
+    expect(logReads(log, ['GLOSSARY.md', 'adr-0015.md', 'close-session/SKILL.md']).map((h) => h.hit)).toEqual([
       'GLOSSARY.md in docsRead',
       '.claude/rules/adr-0015.md in rulesLoadedBySubagents',
       '.agents/skills/close-session/SKILL.md in skillsUsed',

@@ -10,10 +10,12 @@ import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.
 import {
   bareSession,
   coverageLine,
+  DEFAULT_PAGE_LIMIT,
   findSessionLog,
-  metaPath,
   nextLine,
   oneLine,
+  sibling,
+  skillFile,
   toLine,
   type FlatLine,
   type Meta,
@@ -65,24 +67,30 @@ function textOf(c: unknown): string {
   return c.map((b: Raw) => (b.type === 'text' ? b.text : b.type === 'tool_result' ? '' : `[${b.type} dropped]`)).join(' ')
 }
 
-const BASH_READ = /\b(cat(?!\s*>)|sed(?!\s+-i)|head|tail|grep|rg|git show)\b/
-const HAS_PATH = /[\w.*-]*\/[\w./*-]+|\b[\w*-]+\.[a-z]{1,5}\b/i
+const BASH_READ = /^(?:\w+=\S*\s+)*(?:cat(?!\s*>)|sed(?!\s+-i)|head|tail|grep|rg|git show)\b/
+const HAS_PATH = /[\w.*-]*\/[\w./*:-]+|\b[\w*-]+\.[a-z]{1,5}\b/i
 
-function readTarget(name: string, input: Raw): string | null {
-  if (name === 'Read') return input.file_path ?? null
-  if (name === 'Grep') return input.path ?? '.'
-  if (name === 'Glob') return [input.path, input.pattern].filter(Boolean).join('/')
-  // A Skill call counts as reading that Skill's SKILL.md.
-  if (name === 'Skill') return `.agents/skills/${String(input.skill).split(':').at(-1)}/SKILL.md`
-  if (name === 'Bash') {
-    // Text after a heredoc marker is data written somewhere, not a path read.
-    const head = String(input.command ?? '').split('<<')[0]!
-    return BASH_READ.test(head) && HAS_PATH.test(head) ? head : null
-  }
-  return null
+/** The commands of a Bash call that read a path. Only a pipeline's first command
+ *  reads a file; the rest read stdin. Text after a heredoc marker is data. */
+export function bashReads(command: string): string[] {
+  const head = command.split('<<')[0]!
+  return head
+    .split(/&&|\|\||;|\n/)
+    .map((c) => c.split('|')[0]!.trim())
+    .filter((c) => BASH_READ.test(c) && HAS_PATH.test(c.replace(BASH_READ, '')))
 }
 
-const isDispatch = (b: Raw): boolean => b.type === 'tool_use' && (b.name === 'Agent' || b.name === 'Task')
+function readTargets(name: string, input: Raw): string[] {
+  if (name === 'Read') return input.file_path ? [input.file_path] : []
+  if (name === 'Grep') return [input.path ?? '.']
+  if (name === 'Glob') return [[input.path, input.pattern].filter(Boolean).join('/')]
+  // A Skill call counts as reading that Skill's SKILL.md.
+  if (name === 'Skill') return [skillFile(String(input.skill))]
+  if (name === 'Bash') return bashReads(String(input.command ?? ''))
+  return []
+}
+
+const DISPATCH_TOOLS = new Set(['Agent', 'Task'])
 
 function isHumanPrompt(e: Ev): boolean {
   if (e.kind !== 'user' || e.ca.agent_id || e.ca.isSynthetic || e.ca.isMeta || e.ca.origin) return false
@@ -120,11 +128,10 @@ export function merge(pages: Page[]): { events: Ev[]; kept: Page[]; duplicates: 
   return { events, kept, duplicates }
 }
 
-export function flatten(pages: Page[], session: string, pageLimit = 5): { lines: FlatLine[]; meta: Meta } {
+export function flatten(pages: Page[], session: string, sessionLog: string | null, pageLimit = DEFAULT_PAGE_LIMIT): { lines: FlatLine[]; meta: Meta } {
   const { events, kept, duplicates } = merge(pages)
   const lineOf = (i: number): number => i + 1
 
-  // Joins: a call to its result, a dispatch to its agent, an agent to its hand-back.
   const results = new Map<string, { b: Raw; ca: Raw; i: number }>()
   const callLine = new Map<string, number>()
   const callName = new Map<string, string>()
@@ -146,7 +153,7 @@ export function flatten(pages: Page[], session: string, pageLimit = 5): { lines:
     if (e.kind === 'user' && e.ca.origin?.handback) handbacks.set(e.ca.origin.from, { text: handbackText(e), i })
   })
   const dispatchedAgents = new Map<string, string>()
-  for (const [call, agent] of agentOfCall) if (callName.get(call) === 'Agent' || callName.get(call) === 'Task') dispatchedAgents.set(agent, call)
+  for (const [call, agent] of agentOfCall) if (DISPATCH_TOOLS.has(callName.get(call) ?? '')) dispatchedAgents.set(agent, call)
 
   const lines = events.map((e, i): FlatLine => {
     const subtype = e.ca.subtype ?? (e.kind === 'other' ? e.ca.type : undefined)
@@ -158,6 +165,7 @@ export function flatten(pages: Page[], session: string, pageLimit = 5): { lines:
       const tools: string[] = []
       const inputs: string[] = []
       const outs: string[] = []
+      const targets: string[] = []
       for (const b of blocks(e.ca)) {
         if (b.type === 'text') inputs.push(b.text)
         else if (b.type === 'thinking') inputs.push('(thinking)')
@@ -165,12 +173,10 @@ export function flatten(pages: Page[], session: string, pageLimit = 5): { lines:
           tools.push(b.name)
           const r = results.get(b.id)
           if (r?.b.is_error) tag('error')
-          const target = readTarget(b.name, b.input ?? {})
-          if (target !== null) {
-            tag('read')
-            line.target = target
-          }
-          if (isDispatch(b)) {
+          const read = readTargets(b.name, b.input ?? {})
+          if (read.length) tag('read')
+          targets.push(...read)
+          if (DISPATCH_TOOLS.has(b.name)) {
             tag('dispatch')
             const agent = agentOfCall.get(b.id)
             const hb = agent ? handbacks.get(agent) : undefined
@@ -185,6 +191,7 @@ export function flatten(pages: Page[], session: string, pageLimit = 5): { lines:
         }
       }
       line.tool = tools.join(',')
+      line.target = targets.join(' ; ')
       line.input = inputs.join(' | ')
       line.result = outs.join(' | ')
     } else if (e.kind === 'user') {
@@ -223,7 +230,7 @@ export function flatten(pages: Page[], session: string, pageLimit = 5): { lines:
   const oldest = kept[0]
   const meta: Meta = {
     session: `session_${bareSession(session)}`,
-    file: '',
+    sessionLog,
     pages: kept.length,
     duplicates,
     events: events.length,
@@ -236,10 +243,10 @@ export function flatten(pages: Page[], session: string, pageLimit = 5): { lines:
   return { lines, meta }
 }
 
-export function report(meta: Meta, lineCount: number, sessionLog: string | null): string {
+export function report(meta: Meta, file: string, lineCount: number): string {
   return [
-    `FLATTENED: ${meta.file} (${lineCount} lines, one per event, oldest first; grep -oE '.{0,150}PATTERN.{0,150}' ${meta.file})`,
-    coverageLine(meta, sessionLog),
+    `FLATTENED: ${file} (${lineCount} lines, one per event, oldest first; grep -oE '.{0,150}PATTERN.{0,150}' ${file})`,
+    coverageLine(meta),
     ...meta.duplicates.map((d) => `DUPLICATE: ${d.file} repeats page first_id=${d.firstId}; dropped. Fetch its cursor once more.`),
     nextLine(meta),
   ].join('\n')
@@ -251,15 +258,16 @@ runIfMain(import.meta.url, () => {
   for (const f of ['--session', '--out', '--page-limit']) ({ value: flags[f], rest: args } = extractFlag(args, f))
   const session = flags['--session']
   const out = flags['--out']
-  if (!session || !out || !args.length) fail('usage: flatten.ts --session <id> --out <dir> [--page-limit 5] <saved page files…>')
+  if (!session || !out || !args.length) fail(`usage: flatten.ts --session <id> --out <dir> [--page-limit ${DEFAULT_PAGE_LIMIT}] <saved page files…>`)
   const { lines, meta } = flatten(
     args.map((f) => parsePage(readFileSync(f, 'utf8'), f)),
     session,
-    Number(flags['--page-limit'] ?? 5),
+    findSessionLog(root, session),
+    Number(flags['--page-limit'] ?? DEFAULT_PAGE_LIMIT),
   )
   mkdirSync(out, { recursive: true })
-  meta.file = join(out, `events-${meta.session}.txt`)
-  writeFileSync(meta.file, lines.map(toLine).join('\n') + '\n')
-  writeFileSync(metaPath(meta.file), JSON.stringify(meta, null, 2))
-  console.log(report(meta, lines.length, findSessionLog(root, session)))
+  const file = join(out, `events-${meta.session}.txt`)
+  writeFileSync(file, lines.map(toLine).join('\n') + '\n')
+  writeFileSync(sibling(file, '.meta.json'), JSON.stringify(meta, null, 2))
+  console.log(report(meta, file, lines.length))
 })
