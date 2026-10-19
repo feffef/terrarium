@@ -1,0 +1,67 @@
+schemaVersion: 1
+session: session_01BioJpAhd9uY1SxSeUGHqjn
+startedAt: 2026-10-19T09:13:38Z
+endedAt: 2026-10-19T09:22:17Z
+kind: interactive
+goal: Check a logged learning about subagent hand-backs and decide where it belongs
+status: completed
+outcome: Learning found already fixed in code and docs; the owner agreed to drop it, nothing changed
+summary: The owner asked me to check a learning from an earlier audit-docs session (a subagent hand-back arrives as a message, so save-handback.ts could not find it) and propose its one home. I read that log, save-handback.ts, its test, the Friction Ledger entry and the audit-docs and dispatch-subagents mentions. save-handback.ts already reads the SubagentHandback tool call (#2262), so the learning was stale and the Skills already point at the script. I proposed writing nothing; the owner said Drop. No files were changed. The proposal was agent-initiated within the owner's ask; the drop decision was the owner's.
+prs: []
+docsRead:
+  - path: GLOSSARY.md
+    reason: session-start read; no term needed for this question
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; no finding came from it
+    useful: no
+  - path: layers/journal/content/current/sessions/2026-10-18-session_019U9RYQ9iFv8fwp2VQvwGny.yml
+    reason: (no reason given)
+  - path: scripts/session/save-handback.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/findings-retyped-by-hand.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: question-only session closure
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: CLAUDE.md says to grep docs/adr for binding ADRs before recommending a change; I recommended dropping the learning without doing that grep.
+    solution: Run the ADR grep when the ask is to propose an edit location, even when the answer is write nothing.
+    severity: nit
+durationSec: 519
+models:
+  claude-sonnet-5-5: 22
+toolCounts:
+  Bash: 3
+  Read: 5
+  Grep: 3
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading the glossary; about glossary placement, not needed for this check; summary only
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to propose, not build, and no PR was needed; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: No push or PR happened, so it did not apply; summary was enough
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to run close-session when only a question was answered; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: No GitHub or git write happened, so no header was needed; summary was enough
+    useful: no
+gitBranch: claude/subagent-handback-message-storage-7zhpwn
+entrypoint: remote_mobile
+cliVersion: 2.1.303
+landedBy: Stop
