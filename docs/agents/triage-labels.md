@@ -20,7 +20,8 @@ the AFK-ready triage label"), use that string.
 > **Who sets the state.** Only triage sets `ready-for-agent` and
 > `ready-for-human`: `triage`, `auto-triage`, `clear-backlog` and the guest
 > pipeline. Every other Skill files its issues `needs-triage`, however settled
-> they look. When it adds a significant fact the thread lacks to an existing
+> they look, except a spec on hold, which carries no label (`issue-tracker.md`,
+> Specs). When it adds a significant fact the thread lacks to an existing
 > issue, it may set `needs-triage` so the next `clear-backlog` run picks it up.
 
 > **Requester-trust gate.** A Public issue reaches `ready-for-agent` only

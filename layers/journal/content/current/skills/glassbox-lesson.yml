@@ -1,7 +1,7 @@
 name: glassbox-lesson
 category: platform-operation
 importance: specialist
-gist: Writes one Glass Box Lesson page explaining a concept with Terrarium as the example.
+gist: Writes one Glass Box Lesson explaining a concept through Terrarium.
 role: >-
   Writes a single Glass Box Lesson: one concept, pinned to a revision, with
   a Terrarium worked example and sourced "why it's built this way" reasoning,

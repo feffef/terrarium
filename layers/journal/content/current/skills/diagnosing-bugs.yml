@@ -6,6 +6,5 @@ role: >-
   Diagnoses hard bugs and perf regressions through a red-then-green
   reproduction loop before any fix is proposed. It helps once a bug resists a
   first theory, but hard-bug sessions here consistently root-cause ad hoc
-  without it, even in its own domain. Treat it as a reference, not a step bugs
-  actually go through here.
+  without it, even in its own domain, so treat it as a reference, not a step.
 observations: []

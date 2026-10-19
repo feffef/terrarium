@@ -92,10 +92,10 @@ dependency, changes behaviour the tests can't reach, or comes from outside the
 repo's collaborators.
 Ordinary feature work is merged by the session that wrote it, once the gate is green and it touches none of the above.
 
-Scheduled Skills are a handful, each limited up front to a narrow kind of
+A handful of scheduled Skills are each limited up front to a narrow kind of
 output: documentation, page content, their own inventory entries, fixes for
 logged frictions, or (for the visitor loop below) fixes and one small feature
-confined to the existing sites. One rule holds even within those limits: in the friction-fixing loop below, a dispatched agent
+confined to the existing sites. In the friction-fixing loop below, a dispatched agent
 writes each change and the session that dispatched it reviews and merges it.
 
 ```mermaid
@@ -150,9 +150,9 @@ routines go looking instead:
   incident and are almost never removed, so agents end up reading more and
   following less. Each run cuts one problem's instructions back to the goal
   behind them and leaves the cut standing as a **trial**: later sessions'
-  frictions decide whether the pruned prose was load-bearing, and on that
-  evidence rather than on anyone's opinion the cut either stays or gets back
-  one line stating its goal; a behaviour that needs a mechanical guard goes to
+  frictions decide whether the pruned prose was load-bearing. That evidence, not
+  anyone's opinion, decides whether the cut stays or gets back one line stating
+  its goal; a behaviour that needs a mechanical guard goes to
   an issue.
 
 Two further routines narrate rather than repair. **`digest`** writes the daily
@@ -163,6 +163,10 @@ One more grows the sites rather than the rules. **`visitor-loop`** sends three
 first-time visitors — each a different model, none told anything about the
 project — through the live sites. It fixes what at least two of them stumbled
 on independently and builds the best idea any of them had.
+
+One more keeps a sibling site honest. **`glassbox-update`** checks each
+[Glass Box](/t/glassbox) guide page against what has changed on `main`, fixes the
+page (never the code) and re-pins it.
 
 ```mermaid
 graph TB

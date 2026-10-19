@@ -85,8 +85,7 @@ cross-product — one keyed content collection for each combination of Tenant,
 Space, and Collection — and derives the routing map from the very same pass, so
 the URL you request and the content behind it can never disagree.
 
-Expanding a cross-product is mechanical and easy to get subtly wrong, so code
-does it, not anyone working from prose instructions.
+Expanding a cross-product is easy to get subtly wrong, so code does it.
 Adding a Space is one declarative line; the derived surface follows.
 
 ```mermaid

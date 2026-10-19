@@ -32,7 +32,7 @@ Classify every surface **before** editing.
   `layers/<tenant>/GLOSSARY.md`, our own Skills (not keyed in
   `skills-lock.json`) with their sibling files, and the current journal's
   facing pages,
-  `layers/journal/content/current/pages/{architecture,highlights,history,how-it-works,index,real-and-invented}.md`,
+  `layers/journal/content/current/pages/{architecture,highlights,history,how-it-works,index,real-and-invented,routines}.md`,
   and Skill Inventory entries (`layers/journal/content/current/skills/*.yml`;
   never an `importance` grade).
   Audit the source `.md`, not the render (the dashboard renders only part of
