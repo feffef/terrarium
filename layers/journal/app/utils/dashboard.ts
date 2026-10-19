@@ -333,6 +333,19 @@ export function ideaGrillPrompt(item: NoteItem): string {
   return `/grill-with-docs to refine this idea from session ${item.session}:\n\n${item.note}`
 }
 
+// A ready-to-paste prompt that hands one learning to an agent to decide where it
+// should live for future agents. It asks for a proposal first, since a learning
+// is unverified until checked and CLAUDE.md says to cut before adding.
+export function learningDocsPrompt(item: NoteItem): string {
+  return `Session ${item.session} logged this learning:\n\n${item.note}\n\n`
+    + `Read that session's log (layers/journal/content/*/sessions/*-${item.session}.yml) for context, `
+    + `and check the learning still holds against the code and docs. If it does, would a future agent `
+    + `have been better off knowing it, and where? Find its one home: an existing doc, rule, Skill or `
+    + `glossary entry that should carry it, or a lean new one if none fits. Prefer cutting or rewording `
+    + `existing text over adding more, and write nothing if it is too narrow to repay the reading. `
+    + `Propose the exact edit and its location, and wait for my go-ahead before changing anything.`
+}
+
 // ── Session summary paragraphs ───────────────────────────
 // A log's `summary` is one string, often over 1,000 characters, and reads as a
 // wall when rendered whole. Display only: the stored text is untouched.
