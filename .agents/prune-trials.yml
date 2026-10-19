@@ -96,7 +96,7 @@ trials:
       paths:
         - "docs/agents/pr-workflow.md (all of it)"
       keywords:
-        - Reviewed:
+        - "Reviewed:"
         - enable_pr_auto_merge
         - closing keyword
     opened: 2026-10-16
