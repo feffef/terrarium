@@ -60,8 +60,8 @@ act, once per session.
 - **Question the premise.** Before you recommend, implement or harden a change,
   give each part a reason of your own from the current goal; drop the parts you
   can't, and add nothing beyond the ask.
-- **Ask before building** something the Trusted user will see, or a data shape
-  they may prefer (the `grilling` Skill); don't assume.
+- **Ask before building** something the Trusted user will see (the `grilling`
+  Skill); don't assume. Data shapes: `.claude/rules/data-shapes.md`.
 - **One home per fact.** Write each fact once; elsewhere, point to it. When a
   fact and reality differ, fix its home.
 - **Code comments say WHY, never WHAT.** Default to no comment. When the why
@@ -92,9 +92,10 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
 
 - **Put throwaway scripts that import repo packages in `.throwaway/`**
   (git-ignored); in the scratchpad they can't resolve `node_modules`.
-- **Give any command that can take over 2 minutes** (the gate, a build, e2e) a
-  `timeout` that outlasts it or `run_in_background: true` (a dispatched subagent
-  can't background: `dispatch-subagents` §3); redirect output to a file.
+- **Start any command that can take over 2 minutes** (`pnpm gate:scoped`, a
+  build, e2e) with `run_in_background: true`, output redirected to a file: the
+  Bash tool caps a foreground timeout at 600s. A dispatched subagent can't
+  background: `dispatch-subagents` §3.
 - **Never use `pkill`,** and never chain a kill with `&&` or `;` (the commands
   after it can silently not run). Stop a preview or dev server with
   `scripts/ui/preview.ts stop <pid>`.

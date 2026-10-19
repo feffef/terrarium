@@ -1,8 +1,8 @@
 ---
 title: Adding a Tenant
 description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
-revision: '812d9dfab0603b653e970989aee95747de1d4b43'
-revisionDate: '2026-10-18'
+revision: '03ccaffa018ebf6b1fcbdb7f84b3c1b1fd95c6c5'
+revisionDate: '2026-10-19'
 ---
 
 A new site joins Terrarium. This Walkthrough follows the work from the side of the agent that builds it: from the approval, through one new folder and the manifest inside it, to the site answering at its own address with the Gate checking it. [Marquee](/t/marquee/reel), a small movie-blog Tenant, is the example throughout. Outside that folder, it must change only two glossary files.

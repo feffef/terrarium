@@ -1,0 +1,246 @@
+schemaVersion: 1
+session: session_01WxHaU21bCG18GRezDo4Yfe
+startedAt: 2026-10-19T05:54:35Z
+endedAt: 2026-10-19T06:22:49Z
+kind: interactive
+goal: Clear the issue backlog (four new regression issues)
+status: in-review
+outcome: "Four issues triaged and grilled; PR #2269 open, three more branches building"
+summary: "The owner invoked clear-backlog (human-instructed). The default sweep found four untriaged issues (#2262, #2264, #2265, #2266); the owner chose not to full-sweep and reserved #2264 and #2265. Triage made #2262 (save-handback.ts cannot read SubagentHandback replies) agent-ready; I dispatched a throwaway probe subagent to capture the real hand-back record shape so the builder would not guess, and PR #2269 implements it. Grilling decided the other three, all owner decisions: #2265 rewrites the CLAUDE.md Self-verification bullet to always background long commands such as pnpm gate:scoped; #2266 adds a git-ignored in-repo scratch folder and keeps the fact in one home; #2264 became a path-scoped .claude/rules/ rule on schema files (owner rejected my hook framing and added the scheduled-session escalation and the minor-blocking-fix exception). Those three are building in a second clear-backlog-build run."
+prs:
+  - "2269"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start glossary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session-start Platform terms
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: fetch before diffing; worktree review of origin/main...HEAD
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: step 1 set resolution and last-comment rule
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: external PR listing and label conventions
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: who may set ready-for-agent
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: label set replaces; comments via add_issue_comment
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: verdict comment and merge-pr.ts before merging
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: tests/unit/save-handback.spec.ts
+    reason: (read before editing)
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (read before editing)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: owner-invoked run
+  - name: grilling
+    reason: one sitting for three issues
+  - name: close-session
+    reason: "PR #2269 opened"
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: Ran gh api reads (open issues, comments, PRs) before reading docs/agents/github-integration.md as CLAUDE.md requires
+    solution: Read the GitHub doc together with the auto-triage Skill at the start of clear-backlog step 1
+    severity: nit
+  - description: "In the #2264 grilling I framed the choice as hook vs explore-brief line and missed that a path-scoped rule (ADR-0029) fits; the owner had to point it out"
+    solution: Before offering a mechanism, check ADR-0029 for whether a path-scoped rule fits
+    severity: minor
+  - description: "My first rule proposal for #2264 only covered interactive sessions; the owner added the scheduled-session escalation and blocking-fix exception"
+    solution: When proposing an ask-the-owner rule, state what an autonomous session or subagent does instead
+    severity: minor
+  - description: "The #2262 triage brief told the builder to dispatch a probe subagent, which a workflow agent may not be able to do; I ran the probe myself"
+    solution: clear-backlog-explore triage could note when a fact needs the orchestrator to gather it
+    severity: nit
+durationSec: 1695
+models:
+  claude-opus-5-5: 75
+toolCounts:
+  Bash: 21
+  AskUserQuestion: 1
+  Workflow: 3
+  Agent: 1
+  ToolSearch: 3
+  PushNotification: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 3
+  mcp__github__issue_write: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - tests/unit/save-handback.spec.ts
+  - scripts/session/save-handback.ts
+  - CLAUDE.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/verifying-ui-changes.md
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/guards.md
+  - docs/adr/0004-objective-safety-gate.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Gate and review before push; set which of the four PRs I may merge. Summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open and keep the log off the branch. Summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: PR opened right after push and subscribed; owner approval via grilling. Summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the header on every issue comment and the PR body.
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Confirmed triage may mark Trusted issues ready-for-agent and send regressions to a human.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading the glossary; no glossary change in this run.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded with Skill reads; the workflows are Skill code, which fit how I ran them.
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: All four issues are owner-authored, so Trusted; no Public path applied.
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: "Cut-before-add shaped the #2264 move of the dispatch-subagents clause into the rule."
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: "The owner used it to turn #2264 from a hook into a path-scoped rule; summary was enough."
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Showed .claude/rules/** is Human-only, so the #2264 PR waits for the owner."
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with the human-merge list read; no ADR changes here.
+    useful: no
+subagents:
+  - task: Throwaway handback probe
+    model: haiku
+  - type: workflow-subagent
+    task: build fix/save-handback-subagent-handback
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Spec fix/save-handback-subagent-handback r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards fix/save-handback-subagent-handback r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix rules/settle-data-shapes-first r1
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards rules/settle-data-shapes-first r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec docs/background-long-commands r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec rules/settle-data-shapes-first r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards docs/background-long-commands r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build rules/settle-data-shapes-first
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards rules/settle-data-shapes-first r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build fix/in-repo-scratch-folder
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Spec rules/settle-data-shapes-first r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build docs/background-long-commands
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: "triage #2266"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2262"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2264"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2265"
+    model: claude-opus-5-5
+gitBranch: ccr-22f1919f-5bngkh
+entrypoint: remote_mobile
+cliVersion: 2.1.303
+learnings:
+  - A subagent's hand-back in this harness is a final assistant record holding only a SubagentHandback tool_use with input.message; an earlier record carries the same text
+landedBy: Stop
