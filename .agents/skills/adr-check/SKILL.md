@@ -6,8 +6,10 @@ description: "Use before you plan, recommend, implement or give an opinion on a 
 Goal: your plan or recommendation stands on the decisions that bind it, and
 keeps only the parts you can justify.
 
-1. **Find the binding ADRs.** For each path the change touches and each term
-   it names, run `grep -l <path-or-term> docs/adr/*`. Read every hit in full.
+1. **Find the binding ADRs.** Run
+   `pnpm exec tsx .agents/skills/adr-check/scripts/adr-summaries.ts`: it prints
+   every ADR's summary. Read the full ADR behind every summary whose topic is
+   even slightly related to the change; when in doubt, read it.
 2. **Find the open prune trials.** Read `.agents/prune-trials.yml`; its open
    trials bind like ADRs (ADR-0027).
 3. **Question the premise.** Give each part of the change a reason of your own
