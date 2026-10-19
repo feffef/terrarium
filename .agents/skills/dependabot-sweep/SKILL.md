@@ -19,8 +19,8 @@ edits no file.
      (`docs/agents/triage-labels.md`). Either way, say what the major would buy
      us and what it risks, from its release notes and our use of it. Then
      comment `@dependabot ignore this major version` on the PR.
-   - **GitHub Actions** (`ecosystem: github_actions`; `.github/` is
-     Human-only): review it as below and post the verdict. A human merges it.
+   - **GitHub Actions** (`ecosystem: github_actions`): review it as below
+     and post the verdict; `merge-pr.ts` refuses it, so a human merges it.
    - **npm minor/patch**: safe only when the PR's checks are green, the release
      notes or changelog of every bumped package show no breaking or deprecation
      change that affects our use of it, the PR adds no direct dependency, and

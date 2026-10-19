@@ -471,6 +471,10 @@ describe('dependabotBumpRefusal() (#1889)', () => {
     expect(refusal([pkg(bump('foo', 'npm:bar@1.0.0', 'npm:bar@1.1.0')), lock])).toContain('foo')
   })
 
+  it('refuses a name changed twice on one side', () => {
+    expect(refusal([pkg(`${bump('vitest', '^3.2.4', '^3.3.0')}\n+    "vitest": "^3.4.0",`), lock])).toMatch(/single version change/)
+  })
+
   it('refuses when GitHub omits the package.json patch', () => {
     expect(refusal([{ filename: 'package.json' }, lock])).toMatch(/patch/)
   })

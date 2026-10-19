@@ -195,13 +195,19 @@ export function humanMergeRefusal(files: string[], globs: string[]): string | nu
 /** The label `guest-build` puts on every PR it opens. */
 export const GUEST_PIPELINE_LABEL = 'guest-pipeline'
 
+/** A fork PR merges by human hand only, whoever wrote it (ADR-0020). */
+function forkRefusal(meta: PrMeta, owner: string, repo: string): string | null {
+  return meta.headRepo?.toLowerCase() === `${owner}/${repo}`.toLowerCase()
+    ? null
+    : `refused: head branch lives in ${meta.headRepo ?? 'a deleted repository'}, not ${owner}/${repo} — a fork PR is merged by a human`
+}
+
 /** Why this script must not merge the PR, or null: a fork or Public-authored
  *  PR merges by human hand only (ADR-0020, `guest-contributions.md`), and so
  *  does a guest-pipeline PR, though an agent opens it as the owner (ADR-0023). */
 export function prOriginRefusal(meta: PrMeta, owner: string, repo: string): string | null {
-  if (meta.headRepo?.toLowerCase() !== `${owner}/${repo}`.toLowerCase()) {
-    return `refused: head branch lives in ${meta.headRepo ?? 'a deleted repository'}, not ${owner}/${repo} — a fork PR is merged by a human`
-  }
+  const fork = forkRefusal(meta, owner, repo)
+  if (fork) return fork
   if (!TRUSTED_ASSOCIATIONS.has(meta.authorAssociation)) {
     return `refused: PR author is ${meta.authorAssociation} (Public, ADR-0020) — merged by a human`
   }
@@ -227,7 +233,7 @@ function prFilePaths(files: PrFile[]): string[] {
   return files.flatMap((f) => [f.filename, ...(f.previousFilename ? [f.previousFilename] : [])])
 }
 
-const DEP_LINE_RE =/^([+-])\s*"([^"]+)":\s*"([^"]*)",?\s*$/
+const DEP_LINE_RE = /^([+-])\s*"([^"]+)":\s*"([^"]*)",?\s*$/
 const VERSION_RE = /^[\^~]?(\d+)\.(\d+)\.\d+/
 
 /** Major and minor of a version spec, or null when it is not a plain semver. */
@@ -243,9 +249,8 @@ function versionCore(spec: string): [number, number] | null {
  *  side of such a pair, so a new dependency or any other edit refuses. */
 export function dependabotBumpRefusal(meta: PrMeta, files: PrFile[], owner: string, repo: string): string | null {
   if (meta.authorLogin !== DEPENDABOT_LOGIN) return `refused: not authored by ${DEPENDABOT_LOGIN}`
-  if (meta.headRepo?.toLowerCase() !== `${owner}/${repo}`.toLowerCase()) {
-    return `refused: head branch lives in ${meta.headRepo ?? 'a deleted repository'} — a fork PR is merged by a human`
-  }
+  const fork = forkRefusal(meta, owner, repo)
+  if (fork) return fork
   const extra = prFilePaths(files).filter((p) => p !== 'package.json' && p !== 'pnpm-lock.yaml')
   if (extra.length) return `refused: a Dependabot PR that changes ${extra.join(', ')} is merged by a human`
   const pkg = files.find((f) => f.filename === 'package.json')
@@ -256,9 +261,12 @@ export function dependabotBumpRefusal(meta: PrMeta, files: PrFile[], owner: stri
   for (const line of pkg.patch.split('\n')) {
     if (!/^[+-]/.test(line)) continue
     const m = DEP_LINE_RE.exec(line)
-    const side = sides[m?.[1] as '+' | '-']
-    if (!m || side.has(m[2]!)) return `refused: package.json line ${JSON.stringify(line)} is not a single version change`
-    side.set(m[2]!, m[3]!)
+    const notOneChange = `refused: package.json line ${JSON.stringify(line)} is not a single version change`
+    if (!m) return notOneChange
+    const [, sign, name = '', version = ''] = m
+    const side = sides[sign as '+' | '-']
+    if (side.has(name)) return notOneChange
+    side.set(name, version)
   }
   const names = new Set([...sides['+'].keys(), ...sides['-'].keys()])
   const majors = [...names].filter((name) => {

@@ -1,5 +1,5 @@
-// The dependabot-sweep pre-filter: one plain REST listing, so a daily run with
-// nothing to do ends before any model reasoning (#1889).
+// The dependabot-sweep pre-filter: one plain REST listing, so a run with
+// nothing to do stops at once (#1889).
 //
 // Usage:  tsx .agents/skills/dependabot-sweep/scripts/list-dependabot-prs.ts
 //   Prints the open Dependabot PRs as JSON:
