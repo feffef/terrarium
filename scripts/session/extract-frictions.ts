@@ -70,8 +70,8 @@ export interface TriageDocRead {
 }
 /** The fields the frictions-to-fixes survey actually needs from one session log,
  *  including `docsRead`/`subagents` (issue #1178): judging a friction "doc not
- *  opened" vs. "doc opened but ignored" needs both. `--compact` drops `docsRead`,
- *  so its callers re-read `file` for that check. `id`/`file` are still carried so a candidate can be
+ *  opened" vs. "doc opened but ignored" needs both without a second full-file
+ *  read per candidate. `id`/`file` are still carried so a candidate can be
  *  traced back to its full log (summary, learnings, …) when more is needed. */
 export interface TriageSession {
   id: string
