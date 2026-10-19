@@ -1,0 +1,100 @@
+schemaVersion: 1
+session: session_01TNqbizPuP8kvWwD4hfwUwG
+startedAt: 2026-10-19T12:07:41Z
+endedAt: 2026-10-19T12:13:34Z
+kind: interactive
+goal: Decide which questions the transcript-search Skill answers
+status: completed
+outcome: "Grilling ticket resolved: five named questions plus an Outline fallback, with caps and coverage rules"
+summary: "Worked the wayfinder map \"Wayfinder: a Skill for searching cloud session transcripts\" (issue 2291), resolving its frontier grilling ticket \"Which questions must the transcript-search Skill answer?\" (issue 2295) live with the Trusted user. The /wayfinder invocation and ticket choice came from the kickoff; every decision was the user's: they accepted all 13 recommendations across two rounds (Q1-Q6 shape, scope, log-first, context cap, coverage, subagent labels; Q7-Q13 page budget and each question's input, output and size). A key framing fact from the earlier research tickets: scripts cannot call the claude-code-remote tools, so the agent fetches and scripts only filter the spilled tool-results files. Agent-initiated follow-through, as the wayfinder Skill directs: posted the resolution comment, closed the ticket, narrowed the prototype ticket \"What shape should the transcript-search Skill take?\" (issue 2296) to the remaining fetch/filter question, and added a Decisions-so-far line to the map. No new tickets: the remaining fog depends on the prototype ticket. No code or PR."
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start glossary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Session, Skill, Routine, Friction Ledger terms used in questions
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: current transcript-reading recipe the Skill replaces
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: "adr-check: Skills are Platform code; nothing in it constrained the question set"
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: "Wayfinding operations: confirmed claim/resolve/header-replacement steps I had already followed"
+    useful: yes
+skillsUsed:
+  - name: wayfinder
+    reason: work through the map
+  - name: grilling
+    reason: two rounds of questions on the ticket
+  - name: domain-modeling
+    reason: required for grilling tickets; no term resolved, so no glossary edit
+  - name: adr-check
+    reason: before recommending answers
+  - name: close-session
+    reason: session only answered a question
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read docs/agents/issue-tracker.md (Wayfinding operations) only at closure, after claiming, closing and editing issues; CLAUDE.md requires it before triaging issues.
+    solution: wayfinder Skill could name docs/agents/issue-tracker.md by path instead of 'the tracker doc', so the read happens at step 1.
+    severity: minor
+  - description: Ran git branch --show-current before reading docs/agents/git-conventions.md; the hook flagged it. Read-only, no harm.
+    solution: None needed; the hook hint worked as designed.
+    severity: nit
+  - description: get_sub_issues returned 58KB of full issue JSON (user objects, URLs) to list six titles; spilled to a file and needed a python parse.
+    solution: Use minimal output or search_issues with parent filter for frontier queries.
+    severity: nit
+durationSec: 353
+models:
+  claude-opus-5-5: 51
+toolCounts:
+  Bash: 9
+  ToolSearch: 1
+  mcp__github__issue_read: 7
+  mcp__github__issue_write: 4
+  Skill: 5
+  mcp__github__add_issue_comment: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed the approved spec is what authorizes building the Skill, so this ticket only decides; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0004.md
+    reason: No branch or PR this session, so the gate did not apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session with no PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Made me start every comment and rewritten issue body with this session header
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with domain-modeling; no glossary term changed this session
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: No instruction text changed; no open trial touched
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded from reading docs; nothing about rule placement was decided
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with domain-modeling; no ADR was written
+    useful: no
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.303
+learnings:
+  - The user answers grilling rounds tersely (numbered yes); tight recommendations with one-line rationale fit their style.
+landedBy: Stop
