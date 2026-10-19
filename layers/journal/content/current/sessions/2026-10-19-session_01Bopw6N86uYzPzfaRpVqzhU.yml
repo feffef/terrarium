@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01Bopw6N86uYzPzfaRpVqzhU
 startedAt: 2026-10-19T07:56:05Z
-endedAt: 2026-10-19T08:24:36Z
+endedAt: 2026-10-19T08:40:42Z
 kind: delegated
 goal: Clearer wording on the Journal frictions page
-status: completed
-outcome: "PR #2274 merged: pill text now reads 'since last fix' instead of 'since latest'"
-summary: "The human asked for one small fix: the still-recurring pill on the Journal frictions page said \"N since latest\", which does not show it counts occurrences after the latest merged fix PR; they asked for \"since last fix\". I found the one string in frictions.vue, changed it, ran gate:scoped (green), committed, pushed and opened PR #2274 and subscribed to it (opening the PR and subscribing are required by ADR-0003, not separately requested), then posted a verdict and merged it with merge-pr.ts after CI went green. The tooltip and intro already said \"after the latest merged PR\", so no other text needed changing. I did the code-review step inline for the one-word diff rather than spawning the two sub-agents the Skill prescribes. All code changes were human-instructed; the PR, subscription and gate/review steps were the repo's standing rules. Later the human ran /grill-with-docs on the idea '--since-ledger flag for the survey' from another session (human-instructed). I found --unledgered and the 48h ledger-relative window already existed, had a Sonnet agent read that session's transcript (human-requested), and the human decided to drop the idea; nothing changed in the repo."
+status: in-review
+outcome: "PR #2274 merged (label wording); idea dropped after check; filed #2276; PR #2277 adds a learnings copy button, awaiting human merge"
+summary: "The human asked for one small fix: the still-recurring pill on the Journal frictions page said \"N since latest\", which does not show it counts occurrences after the latest merged fix PR; they asked for \"since last fix\". I found the one string in frictions.vue, changed it, ran gate:scoped (green), committed, pushed and opened PR #2274 and subscribed to it (opening the PR and subscribing are required by ADR-0003, not separately requested), then posted a verdict and merged it with merge-pr.ts after CI went green. The tooltip and intro already said \"after the latest merged PR\", so no other text needed changing. I did the code-review step inline for the one-word diff rather than spawning the two sub-agents the Skill prescribes. All code changes were human-instructed; the PR, subscription and gate/review steps were the repo's standing rules. Later the human ran /grill-with-docs on the idea '--since-ledger flag for the survey' from another session (human-instructed). I found --unledgered and the 48h ledger-relative window already existed, had a Sonnet agent read that session's transcript (human-requested), and the human decided to drop the idea; nothing changed in the repo. The human then asked me to file an issue for compact docsRead (#2276) and to add a copy-prompt button for learnings, with a prompt that encourages placing the learning in docs; I wrote the prompt and opened PR #2277, leaving the merge to a human because the click wiring has no e2e test."
 prs:
   - "2274"
+  - "2277"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: required session-start read; no term was needed for a label change
@@ -25,15 +26,30 @@ docsRead:
   - path: docs/agents/github-integration.md
     reason: read after my first GitHub call; nothing in it changed what I did
     useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: "how to word the issue: separate verified facts from assumptions"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: non-triage Skills file issues as needs-triage
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: said to check the rendered DOM and interaction, not SSR HTML; drove the click with Playwright
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: grepped only for survey and ledger mentions while checking the idea
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: the transcript-reading subagent reported it names --compact --unledgered, which is the evidence the survey likely used the flag
+    useful: yes
   - path: layers/journal/app/pages/t/journal/[space]/frictions.vue
+    reason: (read before editing)
+  - path: layers/journal/app/pages/t/journal/[space]/ideas.vue
+    reason: (read before editing)
+  - path: layers/journal/app/utils/dashboard.ts
     reason: (read before editing)
   - path: layers/journal/content/2026-10/sessions/2026-10-18-session_0135hcUf12mVM8dEZfDRAkUb.yml
     reason: (no reason given)
   - path: layers/journal/content/current/sessions/2026-10-18-session_0135hcUf12mVM8dEZfDRAkUb.yml
-    reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/survey-brief.md
     reason: (no reason given)
 skillsUsed:
   - name: code-review
@@ -58,18 +74,24 @@ frictions:
   - description: Transcript-reading subagent printed whole list_events pages inline despite instructions to save them (the tool returns pages into context), costing ~390k subagent tokens and still not reaching the survey's commands.
     solution: Document in github-integration.md that list_events cannot be redirected; tell briefs to use kinds [assistant] from the start and cap pages.
     severity: minor
-durationSec: 1711
+  - description: gate:scoped caught an unused NoteItem import left after refactoring ideas.vue; I had skipped lint locally before running the whole gate.
+    solution: Run pnpm lint on touched files before the full gate.
+    severity: nit
+  - description: Dev preview server returned 503 for script chunks so the page never hydrated; ~2 wasted runs before switching to a production build.
+    solution: Note in verifying-ui-changes.md that click tests need the production build when the dev server 503s.
+    severity: minor
+durationSec: 2677
 models:
-  claude-sonnet-5-5: 86
+  claude-sonnet-5-5: 146
 toolCounts:
-  Bash: 18
-  Read: 6
-  Grep: 1
-  Edit: 1
+  Bash: 39
+  Read: 12
+  Grep: 4
+  Edit: 5
   mcp__github__list_pull_requests: 1
   Skill: 5
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   Write: 1
   ReadNotifications: 3
   mcp__github__pull_request_read: 2
@@ -78,8 +100,12 @@ toolCounts:
   Agent: 1
   ToolSearch: 1
   SendMessage: 2
+  mcp__github__issue_write: 1
 filesEdited:
   - layers/journal/app/pages/t/journal/[space]/frictions.vue
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - layers/journal/app/pages/t/journal/[space]/ideas.vue
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0006.md
@@ -91,6 +117,7 @@ rulesLoaded:
   - .claude/rules/adr-0030.md
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0022.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -140,6 +167,9 @@ ruleVerdicts:
     useful: no
   - path: .claude/rules/adr-0030.md
     reason: Loaded by domain-modeling; about rewriting ADRs, and no ADR was touched
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded with the issue-tracker doc; about the auto-triage sweep, which I did not run
     useful: no
 subagents:
   - type: general-purpose
