@@ -324,3 +324,53 @@ occurrences:
     severity: minor
     description: "Read docs/agents/git-conventions.md and docs/agents/github-integration.md only after a PostToolUse hook flagged each, following my first git fetch and first GitHub search call respectively, rather than before (CLAUDE.md's 'before your first git/GitHub operation' rule)."
     solution: "No damage either time (both calls were already compliant with the docs' own guidance), but it was luck, not foresight. Check the 'docs you must read first' triggers against the next tool call before making it, not after a hook reminder."
+  - session: session_011xvPjJVknZzx45v7NjhebT
+    date: "2026-10-19"
+    severity: minor
+    description: "Read only the 'Closing a scheduled run's PR' section of docs/agents/pr-workflow.md via grep -A 40, not the whole doc, before pushing/opening the PR, even though CLAUDE.md's trigger says read it in full. Missed running scripts/github/check-conflicting-issues.ts --pr <number> (recipe step 2) until after the PR was already open."
+    solution: "Read the full doc with the Read tool the first time a CLAUDE.md trigger names it, not a grepped section - a partial read misses adjacent steps like the conflicting-issues check."
+  - session: session_0148agurVWH8QQeSkGCDm23e
+    date: "2026-10-18"
+    severity: nit
+    description: "Combined cat of three docs exceeded the output limit and was saved to a file, so git-conventions.md was never read before my git fetch."
+    solution: "Read each required doc with its own call, so a long doc cannot swallow the rest."
+  - session: session_01GfmoxeLwrvC7CARuaBAXfB
+    date: "2026-10-18"
+    severity: nit
+    description: "Ran git log on the skill files before reading git-conventions.md, which CLAUDE.md requires before the first git command beyond status and diff."
+    solution: "Read the doc at session start together with the glossary, or have the hook fire before the first Bash call."
+  - session: session_01RS1UjFRw38NcGaMRsrEVdE
+    date: "2026-10-18"
+    severity: nit
+    description: "Read docs/agents/github-integration.md only after the hook prompted it, following my first GitHub call; the call itself was fine."
+    solution: "None needed; the hook nudge works."
+  - session: session_01VcVVq7cXavEqXGmXucBLbK
+    date: "2026-10-18"
+    severity: nit
+    description: "Read github-integration.md only after my first GitHub operation (create_pull_request), against CLAUDE.md's read-first trigger; the hook nudged it."
+    solution: "None needed; the call was right and the doc did not change it."
+  - session: session_01TwTc2v8Afxqc9R4NdUcNPD
+    date: "2026-10-18"
+    severity: nit
+    description: "Ran `git log` to find the routines commit before reading docs/agents/git-conventions.md, which CLAUDE.md requires first. No impact; a hook reminded me."
+    solution: "Read git-conventions.md before the first git command beyond status and diff."
+  - session: session_01Ai3w5epHj4PWgBC8XSoEwz
+    date: "2026-10-18"
+    severity: nit
+    description: "Ran git fetch in a build command before reading docs/agents/git-conventions.md; the PostToolUse hook pointed me at it afterwards."
+    solution: "Read the doc in the same first step as the first git command beyond status."
+  - session: session_01TANViXz17btvY9rH87SHcB
+    date: "2026-10-18"
+    severity: nit
+    description: "Read git-conventions.md only after my first git rm, which the hook asked for before any git command beyond status and diff."
+    solution: "Read the doc before the first state-changing git command."
+  - session: session_018Uhxo4D5VcScugLrS35r4w
+    date: "2026-10-18"
+    severity: nit
+    description: "Ran git log to draw conclusions about how earlier periods were added before reading docs/agents/git-conventions.md, as CLAUDE.md requires"
+    solution: "Read git-conventions.md at the first git log; the hook reminder did fire right after"
+  - session: session_019U9RYQ9iFv8fwp2VQvwGny
+    date: "2026-10-18"
+    severity: nit
+    description: "Ran git fetch in the same parallel batch as the git-conventions read, so the doc was not read before my first git command."
+    solution: "Read the trigger doc alone first, then start git."

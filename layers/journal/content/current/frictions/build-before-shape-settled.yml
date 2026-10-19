@@ -28,3 +28,13 @@ occurrences:
     severity: minor
     description: "Shipped homepage copy calling the guide finished pages without asking what the guide means to the owner; it needed a follow-up PR"
     solution: "When copy characterises a Tenant's content, check the framing with the owner before building; the glossary's polished wording was out of date"
+  - session: session_014PZ7z8L13nqP7rPdCgZRcM
+    date: "2026-10-17"
+    severity: moderate
+    description: "I began editing the session schema and transcript trace to record tokens in session logs before the user had chosen where the numbers live; they interrupted and I reverted all of it."
+    solution: "When the user's answer leaves the storage choice open, ask it as a single question before editing (the grilling and ask-before-building rules), not after reading code."
+  - session: session_01TJH95qkztCQJ8PF6G6pvqs
+    date: "2026-10-18"
+    severity: moderate
+    description: "Broke CLAUDE.md 'Ask before building a data shape they may prefer': Q3 on #2239 never asked per-run vs mean, so #2243 shipped means and needed a second PR plus backfill."
+    solution: "When a grill question settles a stored field, ask its shape explicitly; clear-backlog-explore could flag new schema fields as owner questions."

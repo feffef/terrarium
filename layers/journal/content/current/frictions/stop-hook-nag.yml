@@ -325,3 +325,38 @@ occurrences:
     severity: nit
     description: "The Stop hook asked me to push the survey commit before the ledger work was done, which conflicts with ADR-0004's review-before-push order."
     solution: "Have the hook stay quiet while an open Skill step still owes the gate."
+  - session: session_0135hcUf12mVM8dEZfDRAkUb
+    date: "2026-10-18"
+    severity: nit
+    description: "The Stop hook demanded a push about seven times while reviews were running and ADR-0004 required gate and review first."
+    solution: "Known stop-hook-nag cause; the hook cannot see running subagents or the review-before-push rule."
+  - session: session_019U9RYQ9iFv8fwp2VQvwGny
+    date: "2026-10-18"
+    severity: nit
+    description: "The Stop hook asked to commit and push uncommitted changes while checkers were still running and the gate and review were not done."
+    solution: "Let the hook skip when a scheduled run's PR steps are still pending."
+  - session: session_01TwTc2v8Afxqc9R4NdUcNPD
+    date: "2026-10-18"
+    severity: nit
+    description: "The Stop hook asked to push twice while the required gate and code-review were still running, and again for an uncommitted doc fix. It pushed against ADR-0004's order but cost only reply turns."
+    solution: "Have the Stop hook skip its push nudge while a gate run is in the background."
+  - session: session_019Ws4gsdRWPiAvCXBi55qac
+    date: "2026-10-18"
+    severity: nit
+    description: "Stop hook asked to push before code-review findings were fixed; it conflicts with ADR-0004 and had to be overridden by memory of the rule."
+    solution: "Make the Stop hook skip the push nag while a review is pending, or cite ADR-0004 in its message."
+  - session: session_01TANViXz17btvY9rH87SHcB
+    date: "2026-10-18"
+    severity: nit
+    description: "The Stop hook asked to commit and push six times while the gate and review were deliberately pending, adding noise."
+    solution: "Let the hook skip when a background gate run or review subagent is in progress."
+  - session: session_018Uhxo4D5VcScugLrS35r4w
+    date: "2026-10-18"
+    severity: nit
+    description: "Stop hook asked twice to push before the review had finished, against ADR-0004's review-before-first-push"
+    solution: "The Stop hook could skip its push nudge while a review subagent is running"
+  - session: session_01XueFVQyVySVEKHxSHTFeTh
+    date: "2026-10-19"
+    severity: nit
+    description: "The Stop hook asked three times to commit and push while the fact-check and gate were still running, against ADR-0004's gate-and-review-before-first-push order."
+    solution: "Make the Stop hook skip its nag while a background gate or subagent is pending."

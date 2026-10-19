@@ -70,3 +70,8 @@ occurrences:
     severity: minor
     description: "Reviewer findings arrive only as chat replies; pooling them into one file means retyping some, against the copy-never-retype step."
     solution: "Brief each reviewer to write its full findings file, and verify the file is non-stub before it replies."
+  - session: session_019U9RYQ9iFv8fwp2VQvwGny
+    date: "2026-10-18"
+    severity: minor
+    description: "save-handback.ts failed on every reviewer because they delivered their report as a hand-back message, not final text, so I retyped the pool by hand."
+    solution: "Have save-handback read SubagentHandback messages too, or tell audit-docs briefs to end with a plain final reply."

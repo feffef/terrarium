@@ -3,7 +3,11 @@ summary: The visitor-loop owner-memory check lists many unrelated file-overlap c
 cause: owner-corrections.ts prints a 'rework' candidate for every merged non-bot PR touching a file a visitor-loop PR touched in the prior 3 days (16-26 per run); --check wants one tally line each (#1912 made that strict on purpose).
 surface: safe
 status: open
-ref: "No open issue. #1912 (closed) tightened the same check in the opposite direction; a grouped-line fix would reopen it, so filter the candidates instead."
+ref: "Issue #2229 closed by PR #2241. Before that, no open issue. #1912 (closed) tightened the same check in the opposite direction; a grouped-line fix would reopen it, so filter the candidates instead."
+fixes:
+  - pr: 2241
+    date: "2026-10-18"
+    summary: "owner-corrections.ts --check now credits every issue or URL named on one dismissal line, so one tally line can dismiss several candidates."
 occurrences:
   - session: session_01AdUi9nKLGKyPFfBe4HYvqG
     date: "2026-10-14"

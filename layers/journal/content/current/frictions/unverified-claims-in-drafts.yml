@@ -36,11 +36,6 @@ occurrences:
     severity: moderate
     description: "My first Part 2 rewrite had internal contradictions that all three cold checkers caught (multi-target steps, one file listed on two nodes, accent count, an over-complex feature set). The merge of 10 proposals wasn't self-checked."
     solution: "After merging many proposals, run one adversarial consistency pass myself, or with one agent, before the cold check."
-  - session: session_01YSGRZcurrkv9WYqPfnRH2t
-    date: "2026-10-10"
-    severity: moderate
-    description: "The reader judged step-12 replies from scratch drafts whose premises were not verified. Both finalists failed fact-check after about 4 extra subagent rounds, and the run ended with no reply."
-    solution: "Before sending reply drafts to the reader, check each draft's one load-bearing claim against its primary source. The Skill exempts reply drafts from full citation-checking, and that let both premises through."
   - session: session_01Tcn6x6mZizT14rJuQqYivt
     date: "2026-10-10"
     severity: minor
@@ -171,11 +166,6 @@ occurrences:
     severity: moderate
     description: "I told the user only domain-modeling changed after diffing one skill; nine other pack skills also carried the rename, costing two extra decision rounds."
     solution: "Grep the whole skills diff for renamed terms before reporting scope."
-  - session: session_01BdQnbVQmdfrD1PPyZTnL9w
-    date: "2026-10-14"
-    severity: minor
-    description: "Recommended the new Tenant's shape without reading ADR-0021/0003 in full myself, as CLAUDE.md's plan-or-recommend trigger asks; relied on the Explore agent's summary."
-    solution: "Read the ADRs a new-Tenant plan binds (0003, 0018, 0021) before the breadth-first round."
   - session: session_01Qp5NojwQhExSmToPJtnQNV
     date: "2026-10-14"
     severity: minor
@@ -261,3 +251,23 @@ occurrences:
     severity: nit
     description: "Relayed the other session's merge and request-limit claims without checking them (CLAUDE.md: verify before you state); labelled them unverified"
     solution: "Check the PR merge state via GitHub before relaying"
+  - session: session_018Uhxo4D5VcScugLrS35r4w
+    date: "2026-10-18"
+    severity: minor
+    description: "First draft stated a few things as fact without checking them: Dependabot auto-merge (still only a Proposal), one wrong date, ADR word counts, which July guard was deleted"
+    solution: "Check each claim drawn from a subagent or blog post against git before writing it; the Spec fact-check caught them all before the push"
+  - session: session_01SRYx7bNrHJ2bWYsrdFUgtm
+    date: "2026-10-18"
+    severity: nit
+    description: "Stated the source session's 48-file empirical claim in the issue without re-verifying it, against 'Verify before you state'; attributed it instead."
+    solution: "Attribute second-hand counts explicitly, as done, or spot-check one file before filing."
+  - session: session_01TJH95qkztCQJ8PF6G6pvqs
+    date: "2026-10-18"
+    severity: minor
+    description: "After stopping the #2231 build I cited a commit and branch from the builder's first commit; a review round had rewritten them, so I posted a correction."
+    solution: "Read git log in the worktree before quoting a sha from a transcript."
+  - session: session_01E7YFbvBvT8HWhVJb6kTDMq
+    date: "2026-10-17"
+    severity: nit
+    description: "I first wrote the PR 2221 body saying the second-reader step was skipped, then ran it; the body had to be rewritten."
+    solution: "Run step 12's second reader before opening the PR, as the Skill orders."
