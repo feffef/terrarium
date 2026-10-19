@@ -10,6 +10,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   failingCheckNames,
+  dependabotBumpRefusal,
   humanMergeRefusal,
   mergeRequestFields,
   GUEST_PIPELINE_LABEL,
@@ -97,7 +98,14 @@ describe('mergeRequestFields()', () => {
 })
 
 describe('prOriginRefusal()', () => {
-  const meta = { sha: 's', body: '', headRepo: 'feffef/terrarium', authorAssociation: 'OWNER', labels: ['bug'] }
+  const meta = {
+    sha: 's',
+    body: '',
+    headRepo: 'feffef/terrarium',
+    authorLogin: 'feffef',
+    authorAssociation: 'OWNER',
+    labels: ['bug'],
+  }
 
   it('allows a Trusted-authored PR from this repo', () => {
     expect(prOriginRefusal(meta, 'feffef', 'terrarium')).toBeNull()
@@ -127,6 +135,7 @@ describe('prMetaFromPull()', () => {
   const pull = {
     head: { sha: 'abc', repo: { full_name: 'feffef/terrarium' } },
     body: null,
+    user: { login: 'feffef' },
     author_association: 'OWNER',
     labels: [{ name: 'guest-pipeline' }, { name: 'bug' }],
   }
@@ -136,6 +145,7 @@ describe('prMetaFromPull()', () => {
       sha: 'abc',
       body: '',
       headRepo: 'feffef/terrarium',
+      authorLogin: 'feffef',
       authorAssociation: 'OWNER',
       labels: ['guest-pipeline', 'bug'],
     })
@@ -405,5 +415,77 @@ describe('humanMergeRefusal() — the Human-only paths (ADR-0004)', () => {
   it('refuses an ADR change even alongside a Prune Trial ledger entry (ADR-0004)', () => {
     const files = ['docs/adr/0004-objective-safety-gate.md', '.agents/prune-trials.yml']
     expect(humanMergeRefusal(files, globs)).toContain('docs/adr/0004-objective-safety-gate.md')
+  })
+})
+
+// A bot's PR follows ADR-0004 (ADR-0020): a minor or patch bump may merge
+// though it changes the Human-only `package.json` (#1889).
+describe('dependabotBumpRefusal() (#1889)', () => {
+  const meta = {
+    sha: 's',
+    body: '',
+    headRepo: 'feffef/terrarium',
+    authorLogin: 'dependabot[bot]',
+    authorAssociation: 'NONE',
+    labels: ['dependencies'],
+  }
+  const pkg = (patch: string) => ({ filename: 'package.json', patch })
+  const lock = { filename: 'pnpm-lock.yaml', patch: '-x\n+y' }
+  const bump = (name: string, from: string, to: string) => `-    "${name}": "${from}",\n+    "${name}": "${to}",`
+  const refusal = (files: { filename: string; previousFilename?: string; patch?: string }[], m = meta) =>
+    dependabotBumpRefusal(m, files, 'feffef', 'terrarium')
+
+  it('allows minor and patch bumps within each major', () => {
+    const patch = `@@ -10,7 +10,7 @@\n   "devDependencies": {\n${bump('vitest', '^3.2.4', '^3.3.0')}\n${bump('nuxt', '4.1.2', '4.1.3')}\n${bump('zod', '~0.3.1', '~0.3.2')}`
+    expect(refusal([pkg(patch), lock])).toBeNull()
+  })
+
+  it('refuses a third file', () => {
+    expect(refusal([pkg(bump('vitest', '^3.2.4', '^3.3.0')), lock, { filename: '.npmrc', patch: '+a' }])).toContain(
+      '.npmrc',
+    )
+  })
+
+  it('refuses a renamed file by its old path', () => {
+    expect(refusal([{ ...pkg(bump('vitest', '^3.2.4', '^3.3.0')), previousFilename: 'old.json' }])).toContain('old.json')
+  })
+
+  it('refuses a lockfile-only change, which shows no versions to check', () => {
+    expect(refusal([lock])).toMatch(/package\.json/)
+  })
+
+  it('refuses a major move', () => {
+    expect(refusal([pkg(bump('vitest', '^3.2.4', '^4.0.0')), lock])).toContain('vitest')
+  })
+
+  it('treats a 0.x minor change as a major', () => {
+    expect(refusal([pkg(bump('zod', '^0.3.1', '^0.4.0')), lock])).toContain('zod')
+  })
+
+  it('refuses a new direct dependency', () => {
+    expect(refusal([pkg(`${bump('vitest', '^3.2.4', '^3.3.0')}\n+    "left-pad": "^1.0.0",`), lock])).toContain('left-pad')
+  })
+
+  it('refuses a changed line that is not a version pair, or a version it cannot read', () => {
+    expect(refusal([pkg('+  "overrides": {'), lock])).toMatch(/refused/)
+    expect(refusal([pkg(bump('foo', 'npm:bar@1.0.0', 'npm:bar@1.1.0')), lock])).toContain('foo')
+  })
+
+  it('refuses a name changed twice on one side', () => {
+    expect(refusal([pkg(`${bump('vitest', '^3.2.4', '^3.3.0')}\n+    "vitest": "^3.4.0",`), lock])).toMatch(/single version change/)
+  })
+
+  it('refuses when GitHub omits the package.json patch', () => {
+    expect(refusal([{ filename: 'package.json' }, lock])).toMatch(/patch/)
+  })
+
+  it('refuses a non-dependabot author', () => {
+    expect(refusal([pkg(bump('vitest', '^3.2.4', '^3.3.0')), lock], { ...meta, authorLogin: 'dependabot' })).toMatch(
+      /dependabot\[bot\]/,
+    )
+  })
+
+  it('refuses a fork', () => {
+    expect(refusal([pkg(bump('vitest', '^3.2.4', '^3.3.0')), lock], { ...meta, headRepo: 'x/terrarium' })).toMatch(/fork/)
   })
 })
