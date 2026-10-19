@@ -18,7 +18,9 @@ edits no file.
      otherwise open one labelled `needs-triage`
      (`docs/agents/triage-labels.md`). Either way, say what the major would buy
      us and what it risks, from its release notes and our use of it. Then
-     comment `@dependabot ignore this major version` on the PR.
+     comment on the PR `@dependabot ignore this major version`, or on a
+     grouped PR `@dependabot ignore <package> major version`; for a 0.x
+     minor say `minor` instead of `major`, so its patches keep coming.
    - **GitHub Actions** (`ecosystem: github_actions`): review it as below
      and post the verdict; `merge-pr.ts` refuses it, so a human merges it.
    - **npm minor/patch**: safe only when the PR's checks are green, the release
