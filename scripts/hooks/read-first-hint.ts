@@ -1,6 +1,6 @@
-// A hint, not a guard (issue #1754): CLAUDE.md's action-bound "read first"
-// triggers are prose, and sessions read the doc after the action. At the first
-// matching git, GitHub or screenshot call this adds one line pointing to the doc, alongside
+// A hint, not a guard (issue #1754): the action-bound "read first" triggers in
+// CLAUDE.md and the UI rule are prose, and sessions read the doc after the
+// action. At the first matching git, GitHub or screenshot call this adds one line pointing to the doc, alongside
 // that call's result (PostToolUse, and PostToolUseFailure for a failed call).
 // It cannot stop the first call, and the owner accepts that, so a closing line
 // says a late read that clears the call is not a Friction (Friction Ledger
@@ -29,7 +29,9 @@ import { root } from '../lib/cli.ts'
 
 interface ReadFirst {
   doc: string
-  /** CLAUDE.md's wording of the trigger, quoted in the pointer. */
+  /** The instruction file that states the trigger. */
+  source: string
+  /** Its wording of the trigger, quoted in the pointer. */
   trigger: string
   /** `segs`: each Bash segment's words, verb first; empty for other tools. */
   matches: (tool: string, segs: string[][]) => boolean
@@ -49,16 +51,19 @@ function gitSubcommand(words: string[]): string | undefined {
 export const READ_FIRST: ReadFirst[] = [
   {
     doc: 'docs/agents/git-conventions.md',
+    source: 'CLAUDE.md',
     trigger: 'Before your first git command',
     matches: (_t, segs) => runs(segs, 'git', (w) => !['status', 'diff', undefined].includes(gitSubcommand(w))),
   },
   {
     doc: 'docs/agents/github-integration.md',
+    source: 'CLAUDE.md',
     trigger: 'Before your first GitHub operation',
     matches: (tool, segs) => tool.startsWith('mcp__github__') || runs(segs, 'gh'),
   },
   {
     doc: 'docs/agents/verifying-ui-changes.md',
+    source: '.claude/rules/ui-verification.md',
     trigger: 'Before you say a UI change works, or take a screenshot',
     // Run through tsx, the script path is a later word, not the verb.
     matches: (_t, segs) => segs.some((w) => w.some((x, i) => /(^|\/)screenshot\.ts$/.test(x) || (/(^|\/)preview\.ts$/.test(x) && ['shot', 'review'].includes(w[i + 1]!)))),
@@ -70,7 +75,7 @@ export function triggeredDocs(tool: string, command: unknown): ReadFirst[] {
   return READ_FIRST.filter((r) => r.matches(tool, segs))
 }
 
-const pointer = (r: ReadFirst) => `Read first: \`${r.doc}\` (CLAUDE.md: "${r.trigger}").`
+const pointer = (r: ReadFirst) => `Read first: \`${r.doc}\` (${r.source}: "${r.trigger}").`
 
 export const LATE_READ_NOTE = 'If the doc shows your call was already right, the late read is not a Friction.'
 

@@ -59,7 +59,7 @@ const RESULT = {
 }
 
 const MODE = {
-  'ready-recheck': `It is labelled ready-for-agent. Re-check its brief against the repo now and give it CLAUDE.md's premise check ("Question the premise"): a wrong premise costs a whole build-and-review cycle. Return build with the corrected brief, or grill when the premise or design no longer holds.`,
+  'ready-recheck': `It is labelled ready-for-agent. Re-check its brief against the repo now and give it the adr-check Skill's premise check ("Question the premise"): a wrong premise costs a whole build-and-review cycle. Return build with the corrected brief, or grill when the premise or design no longer holds.`,
   'blocked-check': `It is blocked outside the chat (an upstream release, a date, an action only the owner can take). Only check that the blocker still holds, probing the outside source if needed. Return blocked with the blocker, or do the full pass below if it no longer holds.`,
   full: `Give it the full pass.`,
 }

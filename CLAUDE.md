@@ -20,9 +20,8 @@ act, once per session.
   the cross-cutting ones load at session start, the rest when you read or edit
   a file they govern or run a Skill they name. When a summary says so, read the
   full ADR before you act.
-  Before you plan or recommend a change (an opinion asked in chat counts), find
-  the ADRs that bind it with `grep -l <path-or-term> docs/adr/*` and read
-  them.
+- **Before you plan or recommend a change** (an opinion asked in chat counts):
+  the `adr-check` Skill.
 - **Before your first git command** beyond `status` and `diff` (commit, fetch,
   pull, rebase, amend, reset, or `log`/`blame` to draw a conclusion):
   `docs/agents/git-conventions.md`.
@@ -40,8 +39,6 @@ act, once per session.
   (path, why it loaded or was read, useful yes/partly/no) on each rule and doc
   it loaded or read, and to keep scratch files in a scratchpad subfolder named
   for itself (subagents share one scratchpad).
-- **Before you say a UI change works,** or take a screenshot:
-  `docs/agents/verifying-ui-changes.md`.
 - **Before you add or change a glossary term:** `docs/agents/domain.md`.
 - **Before you debug a tool, push, network or permission error** that your
   diff doesn't explain: `docs/agents/environment-caveats.md`.
@@ -57,9 +54,6 @@ act, once per session.
 - **Verify before you state.** Only call something settled (an id, a count, a
   cause, another session's claim) if you checked it this turn against the
   source. A count is a fact only after you read every item.
-- **Question the premise.** Before you recommend, implement or harden a change,
-  give each part a reason of your own from the current goal; drop the parts you
-  can't, and add nothing beyond the ask.
 - **Ask before building** something the Trusted user will see (the `grilling`
   Skill); don't assume. Data shapes: `.claude/rules/data-shapes.md`.
 - **One home per fact.** Write each fact once; elsewhere, point to it. When a

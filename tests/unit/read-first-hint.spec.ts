@@ -15,12 +15,12 @@ const GH = 'docs/agents/github-integration.md'
 const bashDocs = (command: string) => triggeredDocs('Bash', command).map((r) => r.doc)
 
 describe('the registry', () => {
-  it('names docs that exist, under a trigger CLAUDE.md states', () => {
-    const claude = readFileSync(join(repo, 'CLAUDE.md'), 'utf8').replace(/\*\*/g, '').replace(/\s+/g, ' ')
+  it('names docs that exist, under a trigger its source states', () => {
     for (const r of READ_FIRST) {
+      const source = readFileSync(join(repo, r.source), 'utf8').replace(/\*\*/g, '').replace(/\s+/g, ' ')
       expect(existsSync(join(repo, r.doc)), r.doc).toBe(true)
-      expect(claude, r.doc).toContain(r.doc)
-      expect(claude, r.trigger).toContain(r.trigger)
+      expect(source, r.doc).toContain(r.doc)
+      expect(source, r.trigger).toContain(r.trigger)
     }
   })
 })
