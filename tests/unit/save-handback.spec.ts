@@ -49,3 +49,29 @@ it('refuses to save while the subagent is mid-run', () => {
   )
   expect(() => saveHandback(join(dir, 'parent.jsonl'), 'run1', join(dir, 'o'))).toThrow(/not finished/)
 })
+
+// #2262: a subagent's hand-back is a SubagentHandback tool call, not a text turn.
+it('saves the message of a final SubagentHandback tool call, byte for byte', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'handback-'))
+  dirs.push(dir)
+  const sub = join(dir, 'parent', 'subagents')
+  mkdirSync(sub, { recursive: true })
+  const reply = 'PROBE-REPLY line one\nline two'
+  writeFileSync(
+    join(sub, 'agent-hb1.jsonl'),
+    [
+      rec([{ type: 'text', text: reply }]),
+      JSON.stringify({ type: 'user', message: { role: 'user', content: 'call SubagentHandback' } }),
+      rec([
+        { type: 'tool_use', id: 'toolu_1', name: 'SubagentHandback', input: { message: reply }, caller: { type: 'direct' } },
+      ]),
+      JSON.stringify({
+        type: 'user',
+        message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: 'toolu_1', content: 'delivered' }] },
+      }),
+    ].join('\n'),
+  )
+  const out = join(dir, 'out.md')
+  saveHandback(join(dir, 'parent.jsonl'), 'hb1', out)
+  expect(readFileSync(out, 'utf8')).toBe(reply)
+})
