@@ -1,0 +1,85 @@
+schemaVersion: 1
+session: session_01YT23v1E13X7UugkvpGQch7
+startedAt: 2026-10-19T09:14:23Z
+endedAt: 2026-10-19T09:23:42Z
+kind: interactive
+goal: Check whether a logged learning about chained Bash deny belongs in the docs
+status: completed
+outcome: Learning holds but is already homed in the guard's deny message; no edit made
+summary: The owner (via the learning-review prompt) asked me to check session 018pjaB's learning that a PreToolUse deny blocks a whole Bash call, and propose its one home. I read that log, the guard script, guards.md and hook-io.ts. The learning is true, but PR 2172 already put it in the double-background deny message, the place an agent reads it. I recommended writing nothing, offering only an optional hook-io.ts generalisation I advised skipping. The owner answered "Nothing", so no files changed. Both the review and the decision were human-instructed.
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start read
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session-start read; Friction and guard vocabulary
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: guard conventions and roster; confirmed deny message is the instruction
+    useful: yes
+  - path: scripts/hooks/double-background-guard.ts
+    reason: showed the nothing-ran sentence already present
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: question-only session closure
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git log before reading docs/agents/git-conventions.md; the read-first hint fired afterwards.
+    solution: Read git-conventions.md before the first git command beyond status and diff.
+    severity: nit
+  - description: Made no grep -l of docs/adr before recommending, as CLAUDE.md asks before any recommendation; no ADR turned out to conflict.
+    solution: Run grep -l on the guard paths in docs/adr before proposing a change.
+    severity: nit
+durationSec: 559
+models:
+  claude-sonnet-5-5: 24
+toolCounts:
+  Bash: 6
+  Read: 2
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Gate and merge rule; no PR in this question-only session, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session and log; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: PR and approval rule; nothing was built, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header for GitHub writes; I made none, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement rule; loaded on the glossary read, no glossary change was proposed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read the guard script; no change proposed, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Cut-before-add principle supported recommending no new text; did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Rule-versus-CLAUDE.md placement; confirmed no new rule was warranted, summary was enough
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Pointed me to docs/agents/guards.md, which held the guard conventions
+    useful: yes
+gitBranch: claude/pretooluse-deny-bash-chains-021khb
+entrypoint: remote_mobile
+cliVersion: 2.1.303
+landedBy: Stop
