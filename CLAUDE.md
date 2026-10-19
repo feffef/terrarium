@@ -33,6 +33,8 @@ act, once per session.
   and `docs/agents/triage-labels.md`.
 - **Before you act on an issue or PR from someone without write access, or
   from an outside agent:** `docs/agents/guest-contributions.md`.
+- **Before you inspect another session** (`list_events`, `get_event`): the
+  `inspect-session` Skill.
 - **Before you dispatch a subagent** that touches git or needs a worktree: the
   `dispatch-subagents` Skill.
 - **Every subagent brief** asks it to return, in its final reply, a verdict

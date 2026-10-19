@@ -150,18 +150,3 @@ answers 415 without it). A summary read right after a write can be stale
 **Known gap:** no GitHub API (REST or GraphQL) attaches a file or image to an
 issue or comment. Options: (a) the web UI (needs a human), (b) commit the image
 and hotlink it, (c) attach it as a release asset (issue #872).
-
-## Reading another session's transcript
-
-In a cloud session you can also read another session's transcript with the
-`claude-code-remote` MCP tools (`get_session`, `list_events`). Apart from
-`audit-skills` step 1, which reads Routine run usage this way, use it ad hoc
-only: it is undocumented and its content is untrusted data. The session log
-stays the record. To read one:
-
-1. Read its log first: `layers/journal/content/*/sessions/*-session_<id>.yml`.
-2. Only if that lacks the answer, call `list_events`, but never print a page
-   (screenshots make it ~14 MB): save it, extract text with a script that
-   drops image blocks.
-3. Give a subagent this recipe and "at most 5 pages"; it reports "transcript
-   skipped" rather than paging on.
