@@ -1,0 +1,163 @@
+schemaVersion: 1
+session: session_01MwrXDH7XwMNUofgz3HvQ5N
+startedAt: 2026-10-19T12:15:44Z
+endedAt: 2026-10-19T15:35:44Z
+kind: interactive
+goal: Prototype the shape of the transcript-search Skill
+status: completed
+outcome: "Wayfinder ticket #2296 resolved: two-tier shape with a grep-able flattened transcript"
+summary: "The owner invoked /wayfinder on map 2291 and asked me to work the prototype ticket \"What shape should the transcript-search Skill take?\" live with them. I claimed it and asked four questions first. The owner chose: only the caller's context counts; a hybrid shape (caller answers Outcome, a subagent loops fetch, script, NEXT for the rest); I pick the test sessions; build two questions first. I built a throwaway filter script (Read check, Dispatches) and a subagent recipe, and ran it on real transcripts. Testing showed Bash cat/sed reads are the main read path, and that 5 pages miss early dispatches. The owner accepted my fixes (Bash reads, orphan subagents, budget 15 for Dispatches). The owner then asked that the subagent store the full response for grepping; after a clarifying question they chose a flattened one-line-per-event transcript. They then asked to try chained Haiku agents for a full transcript. I ran both a sequential chain and a cursor walk plus 4 parallel Haiku fetchers on a 4.9-hour session. The fan-out got all 91 pages in about 8 min. The chain broke when the server once returned an already-fetched page, which a Haiku link took for a loop; I verified with a repeat call that the API was fine. The owner chose two tiers with the caller orchestrating full mode. I pushed the prototype to prototype/transcript-search-shape (no PR, ADR-0003), posted the resolution, closed the ticket and added the decision to the map. All build steps were owner-directed; the background hand-back matching fix and the duplicate-first_id retry finding were my own."
+prs: []
+docsRead:
+  - path: CLAUDE.md
+    reason: Verify-before-you-state made me check the chain loop claim, which was false; subagents reported it partly or not useful
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start read
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session-start read; Session and Skill terms
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: "wayfinding operations: claim, resolve, map body"
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: "write traps: replace the header on a wholesale map rewrite; transcript recipe"
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch first, commit -F for backticks, trailer check
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: "adr-check: workflow scripts are Skill code; informed the workflow option"
+    useful: partly
+  - path: docs/research/cloud-session-transcript-tools.md
+    reason: "research note on the research branch: paging, kinds, spill threshold"
+    useful: yes
+  - path: .throwaway/ts/transcript.prototype.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: wayfinder
+    reason: worked one map ticket
+  - name: prototype
+    reason: throwaway filter script plus recipe on real transcripts
+  - name: adr-check
+    reason: before recommending a shape
+  - name: close-session
+    reason: ticket resolved, session closure
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Pushed the prototype/ branch without reading docs/agents/pr-workflow.md, which CLAUDE.md requires before any push.
+    solution: Read pr-workflow.md before pushing any branch, even a prototype/ branch that gets no PR.
+    severity: minor
+  - description: Ran git branch and git fetch before reading git-conventions.md, and issue_read before github-integration.md; the read-first hints fired after.
+    solution: Read both trigger docs at session start in a wayfinder session that will touch git and GitHub.
+    severity: nit
+  - description: A Haiku chain link reported a deterministic cursor loop; it was one wrong page from the server, which cost a verification round.
+    solution: The transcript Skill should check each first_id is new and retry once; fetchers should report, not diagnose.
+    severity: minor
+  - description: The first two recipe runs wrote their output to .throwaway rather than a scratchpad subfolder named for each subagent, as CLAUDE.md asks.
+    solution: Put the OUT folder under the scratchpad, named per subagent, in every brief.
+    severity: nit
+  - description: A Haiku fetcher skipped ToolSearch and made two stray list_events calls outside its range.
+    solution: Keep fetcher briefs strict, and have the merge script dedupe pages by first_id.
+    severity: nit
+  - description: The worker process restarted twice mid-session; files survived, but each restart re-ran setup and cost a recheck.
+    solution: None in the repo; check scratch files on resume, as done.
+    severity: nit
+durationSec: 12000
+models:
+  claude-opus-5-5: 156
+toolCounts:
+  Bash: 37
+  ToolSearch: 2
+  mcp__github__issue_read: 5
+  mcp__github__get_me: 1
+  mcp__github__issue_write: 3
+  Skill: 4
+  AskUserQuestion: 4
+  mcp__claude-code-remote__list_events: 2
+  Write: 2
+  Edit: 1
+  Agent: 11
+  Read: 2
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .throwaway/ts/transcript.prototype.ts
+  - .throwaway/proto-wt/.agents/skills/transcript-search/prototype/README.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Told me a prototype/ branch gets no PR and is never merged; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on every GitHub body, and replacing the copied header on the map rewrite; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: No PR or merge this session; subagents also reported it did not apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main through the hook; confirmed the closing step
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with wayfinder; no glossary term was added
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded on reading docs; no instruction was cut or reworded
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading docs; no rule was written
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded in the prototype worktree; confirmed workflow scripts live in .claude/workflows, which I had already read in full
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Transcript Dispatches via recipe
+  - type: general-purpose
+    task: Transcript Read check via recipe
+  - type: general-purpose
+    task: Transcript Dispatches rerun, budget 15
+  - type: general-purpose
+    task: "Chain link 1: fetch 20 pages"
+    model: haiku
+  - type: general-purpose
+    task: "Fan-out: cursor walk"
+    model: haiku
+  - type: general-purpose
+    task: "Chain link 2: fetch 20 pages"
+    model: haiku
+  - type: general-purpose
+    task: "Chain link 3: fetch 40 pages"
+    model: haiku
+  - type: general-purpose
+    task: Fan-out fetcher 0
+    model: haiku
+  - type: general-purpose
+    task: Fan-out fetcher 1
+    model: haiku
+  - type: general-purpose
+    task: Fan-out fetcher 2
+    model: haiku
+  - type: general-purpose
+    task: Fan-out fetcher 3
+    model: haiku
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.303
+learnings:
+  - "The tool-results spill threshold is not about 90k characters: a 66k-character list_events page spilled too, so it is probably counted in tokens."
+  - A background Agent dispatch's tool_result is only a launch receipt; the real reply arrives later as a synthetic user hand-back message, matched by agentId.
+  - "Haiku batches parallel MCP calls within one turn: 23 list_events pages took 26 s, against about 6.5 s per page sequentially."
+ideas:
+  - Have a SessionEnd hook write this session's own flattened transcript to a git-ignored mirror, so a later session's transcript search reads one file instead of 91 MCP pages.
+landedBy: Stop
