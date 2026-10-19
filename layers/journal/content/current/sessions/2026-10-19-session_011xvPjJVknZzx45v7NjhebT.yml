@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011xvPjJVknZzx45v7NjhebT
 startedAt: 2026-10-19T00:46:32Z
-endedAt: 2026-10-19T01:19:54Z
+endedAt: 2026-10-19T01:21:34Z
 kind: autonomous
 goal: Scheduled audit-skills run (7-day window, 2026-10-12 to 2026-10-19)
-status: in-review
-outcome: "PR #2263 opened (in-review): Inventory tuning across 12 Skills + 4 Routines, 1 new issue filed (#2262)"
-summary: "Scheduled /audit-skills run - no human prompt at all; the schedule is the only instruction, and every step after that was agent-initiated within the Skill's own scope. Step 1: ran scripts/session/audit-skills.ts for the scorecard (157 sessions in window, 8 Routines, 12 Skills in behaviourChecks), then dispatched one subagent to fetch get_session usage/cost for all 52 routineRuns sessions, keeping the raw API responses out of my own context. Step 2: dispatched 12 parallel read-only Sonnet subagents, one per behaviourChecks Skill, each grading sessions against the SKILL.md text in effect at their own startedAt and verifying claims against git/GitHub rather than trusting the session logs' own claims. 11 came back clean; audit-docs found a genuine new silent failure: scripts/session/save-handback.ts (added by PR #2205, which closed issue #2196) can never extract a subagent's hand-back in this harness, because finalText() gives up whenever the last assistant message contains any tool_use block, and a SubagentHandback reply always is one. I independently verified this myself by reading the script, the session log (session_019U9RYQ9iFv8fwp2VQvwGny) and its friction/learnings entries, confirmed no duplicate open issue existed (search_issues plus a local open-issues script scan), then filed issue #2262. I also spot-checked at least one primary-source claim from every one of the 11 clean reports (git show/log, pull_request_read, issue_read) rather than taking any subagent's \"clean\" verdict on faith, per this Skill's own rule that a subagent's report is hearsay until verified. Step 3: closure completeness came back clean - both orphanedSessions entries already carry resolvedBy, orphanSuppressionLog's 2 entries are disclosed resolved-annotation (not misfile-cleanup), the window's one humanPromptedClosures signal (session_014uXxmT6359K4Z42a6We6Gh) is the same session already fully investigated and confirmed genuine in close-session.yml's 2026-10-13 entry (no new fact, not re-escalated), manuallyRescuedClosures is empty. Step 4: only the audit-docs finding cleared the significant/repeated bar (the Friction Ledger's 9th occurrence of the findings-retyped-by-hand cluster across 4 prior fix attempts) - filed as needs-triage issue #2262; nothing else needed a new issue or comment. Step 5: appended a dated 2026-10-19 observation to each of the 12 checked Skills' Inventory entries, each citing a specific newly-verified session id; appended the 4 Routine run-cost rows (blog-post, digest, prune-trial, visitor-loop) still missing this week's newest run and ran prune-routine-runs.ts to cap each Routine at 30. No grade changes (none had 2-session evidence for a move). No coverage gaps (no used-but-uninventoried Skill, none gone from disk). Step 6: gate:scoped green, code-review (Standards+Spec axes) run on the diff - Standards clean; Spec caught 2 entries (audit-skills, dispatch-subagents) that were bare re-confirmations not naming a new session id, fixed before push by naming the specific sessions in their own prose; Spec also independently confirmed the save-handback.ts technical claim against the source rather than taking the audit-docs subagent's word for it. Confirmed the diff touched only the 16 permitted Inventory/Routine files, pushed with retry, opened PR #2263, subscribed to its activity, and ran check-conflicting-issues.ts (clean) before this log."
+status: completed
+outcome: "PR #2263 merged (cbe98162): Inventory tuning across 12 Skills + 4 Routines, 1 new issue filed (#2262)"
+summary: "Scheduled /audit-skills run - no human prompt at all; the schedule is the only instruction, and every step after that was agent-initiated within the Skill's own scope. Step 1: ran scripts/session/audit-skills.ts for the scorecard (157 sessions in window, 8 Routines, 12 Skills in behaviourChecks), then dispatched one subagent to fetch get_session usage/cost for all 52 routineRuns sessions, keeping the raw API responses out of my own context. Step 2: dispatched 12 parallel read-only Sonnet subagents, one per behaviourChecks Skill, each grading sessions against the SKILL.md text in effect at their own startedAt and verifying claims against git/GitHub rather than trusting the session logs' own claims. 11 came back clean; audit-docs found a genuine new silent failure: scripts/session/save-handback.ts (added by PR #2205, which closed issue #2196) can never extract a subagent's hand-back in this harness, because finalText() gives up whenever the last assistant message contains any tool_use block, and a SubagentHandback reply always is one. I independently verified this myself by reading the script, the session log (session_019U9RYQ9iFv8fwp2VQvwGny) and its friction/learnings entries, confirmed no duplicate open issue existed (search_issues plus a local open-issues script scan), then filed issue #2262. I also spot-checked at least one primary-source claim from every one of the 11 clean reports (git show/log, pull_request_read, issue_read) rather than taking any subagent's \"clean\" verdict on faith, per this Skill's own rule that a subagent's report is hearsay until verified. Step 3: closure completeness came back clean - both orphanedSessions entries already carry resolvedBy, orphanSuppressionLog's 2 entries are disclosed resolved-annotation (not misfile-cleanup), the window's one humanPromptedClosures signal (session_014uXxmT6359K4Z42a6We6Gh) is the same session already fully investigated and confirmed genuine in close-session.yml's 2026-10-13 entry (no new fact, not re-escalated), manuallyRescuedClosures is empty. Step 4: only the audit-docs finding cleared the significant/repeated bar (the Friction Ledger's 9th occurrence of the findings-retyped-by-hand cluster across 4 prior fix attempts) - filed as needs-triage issue #2262; nothing else needed a new issue or comment. Step 5: appended a dated 2026-10-19 observation to each of the 12 checked Skills' Inventory entries, each citing a specific newly-verified session id; appended the 4 Routine run-cost rows (blog-post, digest, prune-trial, visitor-loop) still missing this week's newest run and ran prune-routine-runs.ts to cap each Routine at 30. No grade changes (none had 2-session evidence for a move). No coverage gaps (no used-but-uninventoried Skill, none gone from disk). Step 6: gate:scoped green, code-review (Standards+Spec axes) run on the diff - Standards clean; Spec caught 2 entries (audit-skills, dispatch-subagents) that were bare re-confirmations not naming a new session id, fixed before push by naming the specific sessions in their own prose; Spec also independently confirmed the save-handback.ts technical claim against the source rather than taking the audit-docs subagent's word for it. Confirmed the diff touched only the 16 permitted Inventory/Routine files, pushed with retry, opened PR #2263, subscribed to its activity, and ran check-conflicting-issues.ts (clean) before the in-review log. CI (gate and label checks) came back green on the head commit with no merge conflict and no Human-only path touched, so I posted a \"Reviewed: <sha>\" verdict comment and merged PR #2263 myself via scripts/github/merge-pr.ts (ADR-0004 allows self-merge here: no Human-only file, no dependency change, no untestable behavior, not a Public/fork/guest-pipeline PR), then unsubscribed from its activity."
 prs:
   - "2263"
 docsRead:
@@ -184,25 +184,28 @@ frictions:
   - description: The 12 behaviour-check subagent briefs didn't ask each subagent to name a specific new session/PR/issue id directly in its summary prose (vs. a parenthetical count like '7/7 sessions') - two of the 12 Inventory entries I drafted from their reports were bare re-confirmations with no visible new citation, caught only by the Spec-axis code-review pass rather than earlier.
     solution: When drafting an Inventory observation from a subagent's report, name the specific session/PR/issue id in the note's own prose before code-review has to catch a missing citation.
     severity: minor
-durationSec: 2002
+durationSec: 2102
 models:
-  claude-sonnet-5: 242
+  claude-sonnet-5: 269
 toolCounts:
-  Bash: 56
-  Read: 18
+  Bash: 61
+  Read: 19
   Agent: 15
   TaskCreate: 1
   Write: 2
-  Edit: 29
+  Edit: 32
   ToolSearch: 2
   mcp__github__search_issues: 2
   mcp__github__issue_read: 2
   mcp__github__issue_write: 1
-  mcp__github__pull_request_read: 3
-  Skill: 3
+  mcp__github__pull_request_read: 5
+  Skill: 4
   ScheduleWakeup: 1
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/routines/blog-post.yml
   - layers/journal/content/current/routines/digest.yml
