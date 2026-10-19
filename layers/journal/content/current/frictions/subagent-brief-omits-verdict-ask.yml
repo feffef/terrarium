@@ -35,3 +35,8 @@ occurrences:
     severity: nit
     description: "I forgot the CLAUDE.md verdict request in the two code-review spec briefs for the first PR and used wording from memory in the second; no verdicts came back from them."
     solution: "Put the verdict line into the code-review Skill's sub-agent briefs, or a shared brief snippet."
+  - session: session_014PZ7z8L13nqP7rPdCgZRcM
+    date: "2026-10-17"
+    severity: nit
+    description: "The first probe subagent brief said use no other tools and did not ask for the per-rule verdicts or a scratchpad subfolder that CLAUDE.md requires of every subagent brief."
+    solution: "Put the CLAUDE.md subagent-brief lines in a reusable snippet or a dispatch-subagents checklist so a one-off probe still carries them."

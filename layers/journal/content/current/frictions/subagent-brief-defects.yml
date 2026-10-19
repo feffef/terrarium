@@ -45,3 +45,8 @@ occurrences:
     severity: minor
     description: "The explore triage brief for #2147 stated the fix may be agent-merged because the file is not Human-only, missing ADR-0004's untested-behaviour exception; I caught it only at close-session."
     solution: "Have clear-backlog-explore's triage schema ask which ADR-0004 exception applies, not just whether a path is Human-only."
+  - session: session_011xvPjJVknZzx45v7NjhebT
+    date: "2026-10-19"
+    severity: minor
+    description: "The 12 behaviour-check subagent briefs didn't ask each subagent to name a specific new session/PR/issue id directly in its summary prose (vs. a parenthetical count like '7/7 sessions') - two of the 12 Inventory entries I drafted from their reports were bare re-confirmations with no visible new citation, caught only by the Spec-axis code-review pass rather than earlier."
+    solution: "When drafting an Inventory observation from a subagent's report, name the specific session/PR/issue id in the note's own prose before code-review has to catch a missing citation."

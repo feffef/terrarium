@@ -89,3 +89,8 @@ occurrences:
     severity: nit
     description: "The Spec review subagent was denied running glassbox-update.ts by the auto-mode classifier, so it could not confirm step 4's done check itself"
     solution: "Paste the done-check output into review briefs; I had already run it"
+  - session: session_01TJH95qkztCQJ8PF6G6pvqs
+    date: "2026-10-18"
+    severity: nit
+    description: "Deleting the redundant prototype/2231-accordion-pin-wait branch I had just pushed was blocked by the auto-mode classifier, so it stays on origin."
+    solution: "Don't push a prototype/ copy before the owner names the branch; ask the owner to delete it."

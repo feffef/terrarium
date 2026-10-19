@@ -20,3 +20,8 @@ occurrences:
     severity: nit
     description: "One session-reading subagent skipped a 3.6 h transcript because paging list_events was too slow, so one occurrence came from its log only."
     solution: "list_events with kinds filtering still pages the whole transcript; a search-by-tool filter would help for long sessions."
+  - session: session_01GfmoxeLwrvC7CARuaBAXfB
+    date: "2026-10-18"
+    severity: nit
+    description: "A subagent could not reach the screenshot phase of the stuck session through list_events, so image handling as the cause stayed unconfirmed after a full run."
+    solution: "The transcript recipe could say pages span only minutes and to expect the log, not the transcript, to hold late phases."

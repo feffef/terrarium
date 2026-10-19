@@ -26,11 +26,6 @@ occurrences:
     severity: moderate
     description: "CLAUDE.md ADR trigger: I wrote re-triage verdicts and implementation briefs without reading the binding ADRs (0017, 0022, 0028, 0004) in full myself, and briefed guard changes before reading guards.md; the owner had to ask whether any ADRs were read"
     solution: "Read binding ADRs and guards.md before writing any brief that edits their territory; require full ADR reads in every Explore brief"
-  - session: session_01LARTWkGx5vBwRwsMrdftPD
-    date: "2026-10-11"
-    severity: moderate
-    description: "Broke CLAUDE.md 'Read files with the Read tool': read many governed files via chained or piped Bash, so their path rules (human-merge on .claude/settings.json) never loaded."
-    solution: "Auto-mode harness text invites cat/sed/grep; a PostToolUse Bash hint for compound reads (ADR-0029 follow-up) would make this harmless."
   - session: session_01EmaH5A6Ziwjndz9esnsJ22
     date: "2026-10-10"
     severity: nit
@@ -376,3 +371,13 @@ occurrences:
     severity: nit
     description: "Skipped reading GLOSSARY-MAP.md and GLOSSARY.md at session start (CLAUDE.md) because the task was an ops question"
     solution: "Low impact here; a lighter trigger for pure-ops sessions would avoid the skip being a rule break"
+  - session: session_014PZ7z8L13nqP7rPdCgZRcM
+    date: "2026-10-17"
+    severity: nit
+    description: "Before recommending the audit-skills change I did not run the grep for ADRs that bind it, nor read ADR-0015 in full."
+    solution: "Run the ADR grep from CLAUDE.md before proposing a design, even in chat."
+  - session: session_01TwTc2v8Afxqc9R4NdUcNPD
+    date: "2026-10-18"
+    severity: nit
+    description: "Gave recommendations on Routine cost before checking the ADRs that bind them, as CLAUDE.md asks. ADR-0015 loaded only afterwards via a hook; no conflict found."
+    solution: "Run grep -l on docs/adr before recommending a change."

@@ -9,6 +9,9 @@ fixes:
   - pr: 1919
     date: "2026-10-14"
     summary: "Browser tests now wait up to 10 seconds instead of 1 second before failing."
+  - pr: 2258
+    date: "2026-10-18"
+    summary: "The smoke navigation test now fetches the exact payload URL the browser will request before clicking, so a cold first render no longer times it out (not the Journal accordion flake of #2231)."
 occurrences:
   - session: session_01JW1NEbkjzCyx2myBjt9X8V
     date: "2026-10-13"
@@ -40,3 +43,18 @@ occurrences:
     severity: minor
     description: "gate:scoped failed once on an unrelated journal e2e accordion test and passed on rerun; I did not investigate."
     solution: "Log the flaky journal accordion e2e test as a ledger item."
+  - session: session_01TANViXz17btvY9rH87SHcB
+    date: "2026-10-18"
+    severity: moderate
+    description: "Local gate was red on e2e page.goto timeouts: the cold home page render took about 32s on a 4-CPU box, and different tests failed each run."
+    solution: "Raise e2e navigation timeouts or warm the server before the suite; gate:scoped should be reliable enough to gate a first push."
+  - session: session_01TJH95qkztCQJ8PF6G6pvqs
+    date: "2026-10-18"
+    severity: minor
+    description: "The #2246 build's first gate:scoped failed the flaky Journal accordion e2e (#2231), which its diff doesn't touch; the rerun passed."
+    solution: "Land a fix for #2231 once the owner un-parks it."
+  - session: session_01RS1UjFRw38NcGaMRsrEVdE
+    date: "2026-10-18"
+    severity: minor
+    description: "First gate:scoped run failed on the Journal accordion e2e, unrelated to a prose-only diff; re-run was green, costing about a minute."
+    solution: "Fix or quarantine-by-repair the flaky accordion e2e test."

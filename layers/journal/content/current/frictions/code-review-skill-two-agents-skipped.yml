@@ -101,3 +101,23 @@ occurrences:
     severity: nit
     description: "Skipped the code-review Skill before the first push, self-reviewing a prose-only fact-checked digest diff against ADR-0004 and pr-workflow."
     solution: "Let the digest Skill say the fact-check plus gate counts as the review for digest PRs."
+  - session: session_0148agurVWH8QQeSkGCDm23e
+    date: "2026-10-18"
+    severity: nit
+    description: "The code-review Skill demands two parallel sub-agents, which is out of proportion for a diff of 50 lines that only change pin fields."
+    solution: "Let pr-workflow skip sub-agents for a diff that glassbox-update's script produced and a grep shows is pin-only."
+  - session: session_01C2XPRCDijGcdz27Kw6gi3s
+    date: "2026-10-18"
+    severity: nit
+    description: "code-review Skill mandates two parallel sub-agents; I reviewed a 3-line prose diff inline instead, deviating from the Skill's steps."
+    solution: "Let code-review state a size threshold below which an inline review is fine."
+  - session: session_01VcVVq7cXavEqXGmXucBLbK
+    date: "2026-10-18"
+    severity: nit
+    description: "Ran code-review as a lean self-check instead of the Skill's two parallel subagents, because the diff was comments-only."
+    solution: "Let the code-review Skill say when a comments-only diff may skip the subagents."
+  - session: session_01XueFVQyVySVEKHxSHTFeTh
+    date: "2026-10-19"
+    severity: nit
+    description: "Replaced the code-review Skill's two parallel subagents with an inline review because the diff was a prose page plus file moves."
+    solution: "Let code-review scale down for prose-only diffs."

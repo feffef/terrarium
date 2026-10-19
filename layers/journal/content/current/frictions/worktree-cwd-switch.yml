@@ -33,3 +33,8 @@ occurrences:
     severity: nit
     description: "A subagent's cd and the shell's directory changes left the working directory in the frictions folder and a worktree, so later relative commands could have hit the wrong tree."
     solution: "Use absolute paths or cd to the repo root at the start of each command."
+  - session: session_019Ws4gsdRWPiAvCXBi55qac
+    date: "2026-10-18"
+    severity: nit
+    description: "A cd into .agents/skills moved the primary working dir, so a following relative path (docs/adr/0022) failed to resolve."
+    solution: "Use absolute paths or a subshell; do not cd in Bash."

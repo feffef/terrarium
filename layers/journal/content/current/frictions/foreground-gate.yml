@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Sessions run pnpm gate:scoped (about 3 minutes) in the foreground although CLAUDE.md says to background commands over 2 minutes; only a guard would reach them.
 surface: guard-or-hook
-status: open
-ref: "issue #1785; PR #1790"
+status: tracked
+ref: "issue #2265; fix #1790 did not hold"
 fixes:
   - pr: 1790
     date: "2026-10-11"
@@ -36,3 +36,8 @@ occurrences:
     severity: nit
     description: "I chained preview stop with several long commands in one call; it exceeded the 2-minute limit and was moved to the background."
     solution: "Run stop alone; the tool output of stop is tiny and fast."
+  - session: session_01TANViXz17btvY9rH87SHcB
+    date: "2026-10-18"
+    severity: moderate
+    description: "Ran pnpm gate:scoped with a 600s timeout equal to the tool limit; it expired mid-e2e and wasted about ten minutes before a background rerun."
+    solution: "Start the gate with run_in_background from the first call, as CLAUDE.md's Self-verification section says."

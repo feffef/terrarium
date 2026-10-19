@@ -60,3 +60,8 @@ occurrences:
     severity: nit
     description: "Did not invoke close-session after the earlier answer-only turns, as CLAUDE.md asks when a session only answers a question."
     solution: "Log after the first answered question; re-invoking later is cheap."
+  - session: session_01Ai3w5epHj4PWgBC8XSoEwz
+    date: "2026-10-18"
+    severity: minor
+    description: "Did not invoke close-session at each PR open as CLAUDE.md says; the create_pull_request hook reminded me and I deferred both to the end."
+    solution: "Invoke it right after create_pull_request, before posting the verdict."

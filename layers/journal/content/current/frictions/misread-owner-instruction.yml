@@ -1,0 +1,18 @@
+name: misread-owner-instruction
+summary: >-
+  An agent guessed what the owner meant by a short or ambiguous instruction instead of asking, and the work took a detour until the owner corrected it.
+cause: >-
+  An ambiguous owner instruction or reference (a session type, "link the concepts", the period's focus) is resolved by the agent's first guess, not one clarifying question; the owner then reframes or corrects it, sometimes twice. Signals: "meant", "had to reframe", "two more owner prompts", "detour until corrected".
+surface: safe
+status: open
+occurrences:
+  - session: session_01GfmoxeLwrvC7CARuaBAXfB
+    date: "2026-10-18"
+    severity: moderate
+    description: "My first Angle question described David's visitor-loop outlier as the target of the reply, though the user meant the Glass Box drafts session, so the investigation took a detour until corrected."
+    solution: "Search the ledger and logs for the named session type before offering choices, and ask which session in plain words."
+  - session: session_018Uhxo4D5VcScugLrS35r4w
+    date: "2026-10-18"
+    severity: minor
+    description: "Read 'link the concepts' as 'link the pages'; it took two more owner prompts to land on explaining both concepts with links"
+    solution: "Ask one clarifying question when a short instruction has two readings"

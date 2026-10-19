@@ -20,11 +20,6 @@ fixes:
     date: "2026-10-17"
     summary: "A save-handback script writes a subagent's final reply to a file verbatim; audit-docs and dispatch-subagents point to it."
 occurrences:
-  - session: session_01GxJXNFxh3SQh8q1nkReAxJ
-    date: "2026-10-04"
-    severity: moderate
-    description: "Three of five second-pass subagent reports were not extractable from their output files, so I retyped 85 per-post labels by hand into a script; a transcription slip would silently mis-tag posts."
-    solution: "Have classification subagents write their JSON lines to a scratchpad file (or return them in the final assistant message) so results can be parsed instead of retyped."
   - session: session_017tt8CbwHqFWqw7PJZ7u7AL
     date: "2026-10-08"
     severity: moderate
@@ -70,3 +65,8 @@ occurrences:
     severity: minor
     description: "Reviewer findings arrive only as chat replies; pooling them into one file means retyping some, against the copy-never-retype step."
     solution: "Brief each reviewer to write its full findings file, and verify the file is non-stub before it replies."
+  - session: session_019U9RYQ9iFv8fwp2VQvwGny
+    date: "2026-10-18"
+    severity: minor
+    description: "save-handback.ts failed on every reviewer because they delivered their report as a hand-back message, not final text, so I retyped the pool by hand."
+    solution: "Have save-handback read SubagentHandback messages too, or tell audit-docs briefs to end with a plain final reply."

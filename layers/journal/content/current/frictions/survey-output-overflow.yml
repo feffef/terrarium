@@ -59,3 +59,13 @@ occurrences:
     severity: minor
     description: "session-frictions output was a 670KB JSON file; finding blog-post hits needed an ad-hoc node filter script."
     solution: "Give the helper a --grep option for keywords."
+  - session: session_0135hcUf12mVM8dEZfDRAkUb
+    date: "2026-10-18"
+    severity: nit
+    description: "The Skill says the survey agent works from a read of the extract file, but the compact output was still 90 KB with long docsRead arrays."
+    solution: "Have extract-frictions --compact drop docsRead."
+  - session: session_01TwTc2v8Afxqc9R4NdUcNPD
+    date: "2026-10-18"
+    severity: nit
+    description: "First dump of eight Skill Inventory entries was 36KB and truncated; a second query for observations was 137KB. Cost two extra calls before I filtered to recent dates."
+    solution: "Filter Inventory observations by date and truncate notes on the first query."

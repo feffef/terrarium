@@ -22,3 +22,8 @@ occurrences:
     severity: nit
     description: "The PR's merge-verdict comment's footer link rendered as \"https://claude.ai/code/code\" (a duplicated path segment) instead of \"https://claude.ai/code\", a copy-paste slip in the attribution footer."
     solution: "Proofread the exact attribution footer text against the system reminder's literal string before posting a GitHub comment, rather than typing it from memory."
+  - session: session_018Uhxo4D5VcScugLrS35r4w
+    date: "2026-10-18"
+    severity: nit
+    description: "Typed the review verdict's head SHA from memory and got its tail wrong; merge-pr.ts refused the merge until the comment was corrected"
+    solution: "Paste the SHA from git rev-parse HEAD into the verdict rather than retyping it; the script's exact-SHA check worked as designed"

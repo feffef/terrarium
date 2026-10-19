@@ -3,7 +3,8 @@ summary: >-
   A quick throwaway script could not use the project's libraries, and no doc says how.
 cause: A throwaway tsx script in the scratchpad resolves modules from its own directory, so `import 'yaml'` fails; no doc says to set NODE_PATH or import by absolute path.
 surface: safe
-status: open
+status: tracked
+ref: "issue #2266"
 fixes:
   - pr: 1920
     date: "2026-10-14"
@@ -29,3 +30,8 @@ occurrences:
     severity: nit
     description: "A Playwright script with top-level await in a .ts file failed under tsx (cjs); renamed to .mts."
     solution: "Mention in verifying-ui-changes.md that hand-rolled scripts use .mts."
+  - session: session_01GfmoxeLwrvC7CARuaBAXfB
+    date: "2026-10-18"
+    severity: nit
+    description: "The scratchpad cannot resolve node modules, so the migration script failed once and needed a temporary copy in the repo root."
+    solution: "Note in environment-caveats that one-off tsx scripts must run from the repo."

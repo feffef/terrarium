@@ -16,3 +16,8 @@ occurrences:
     severity: nit
     description: "Edited SKILL.md and the workflow script with a python replace instead of Read plus Edit, against CLAUDE.md's Read-tool rule; the edit landed fine."
     solution: "Use Read then Edit for small text fixes in a worktree."
+  - session: session_01GfmoxeLwrvC7CARuaBAXfB
+    date: "2026-10-18"
+    severity: minor
+    description: "First migration script re-serialized skill YAML, reformatting every long prose field, so I had to restore the files and redo the edit as a text cut."
+    solution: "Edit YAML as text or with parseDocument for a field removal; check git diff --stat right after any data migration."
