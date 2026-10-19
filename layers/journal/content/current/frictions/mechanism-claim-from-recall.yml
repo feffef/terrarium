@@ -1,0 +1,63 @@
+name: mechanism-claim-from-recall
+summary: >-
+  Agents described how a script, guard, rule or setting behaves from memory, or claimed "only", "every" or "nothing" without checking the whole set.
+cause: >-
+  How a script, guard, rule, harness setting or data format behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set. A reviewer, the owner or a later check finds it false. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed"; a regex written without the real data.
+surface: safe
+status: open
+occurrences:
+  - session: session_01NyDGTR1fuP22hPo7XghCfz
+    date: "2026-10-07"
+    severity: moderate
+    description: "I wrote unverified or false claims into CLAUDE.md ('main has no branch protection', 'CI runs the full gate on every PR'). A self-check and a reviewer caught them."
+    solution: "Apply verify-before-you-state to my own instruction text, not only to session reports"
+  - session: 1f97b613-f529-4487-a7e9-1115a44b84c7
+    date: "2026-10-08"
+    severity: moderate
+    description: "The overview's first draft carried several unchecked simplifications: guards as 'code that blocks', audit-docs as 'docs vs code', 'Nitro runs the Vue app', and 'design' as the only difference between tenants. Each was easy to verify in the skill or guard docs but went unchecked until the maintainer's review."
+    solution: "Before handing over a plain-language summary, re-read the primary file behind each one-line description (SKILL.md, guards.md, the package source) and check the simplification still holds"
+  - session: session_01DtK8w6aJ3361uPK73VAxhi
+    date: "2026-10-12"
+    severity: moderate
+    description: "The first draft stated that a PR built from a Public issue waits for a human merge, but merge-pr.ts only refuses Public-authored and fork PRs; the Standards reviewer caught it."
+    solution: "Check a stated enforcement claim against the enforcing script before writing it into a Skill."
+  - session: session_017XWy7odnhW5S5AEuekatR8
+    date: "2026-10-13"
+    severity: moderate
+    description: "I stated the workflow concurrency cap as fixed and unconfigurable before checking the docs; the owner had to ask, and an env var sets it."
+    solution: "Verify a harness limit against the current docs before calling it a constraint (CLAUDE.md Verify before you state)."
+  - session: session_01743kiGL2igSyAHJ77heWSV
+    date: "2026-10-13"
+    severity: minor
+    description: "First log pass falsely claimed the ADR-0004 summary rule held the minor/patch allowance; the user caught it"
+    solution: "Write ruleVerdicts from what the rule actually says, not from what I recall concluding"
+  - session: session_01Qp5NojwQhExSmToPJtnQNV
+    date: "2026-10-14"
+    severity: minor
+    description: "A closed decision ticket (#1971) chose MDC syntax `:source` without checking it against MDC; source is an HTML tag so the component would never render. Caught here only by chance"
+    solution: "Decision tickets that pick an MDC component name should check it against MDC's html-tags-list and the global component namespace"
+  - session: session_0166zWrnaKYByq5Z2Qj5nXRM
+    date: "2026-10-16"
+    severity: minor
+    description: "Agreed with the user that the survey cannot know which files a fix touches without checking; three run transcripts showed it routinely did"
+    solution: "Verify a claim about how a Skill runs against a recent run's transcript before agreeing to redesign around it"
+  - session: session_018pjaBqTXahmE3DFhAbkide
+    date: "2026-10-16"
+    severity: minor
+    description: "First draft of the deny message paraphrased the owner-approved sentence and added an unverified 'you are notified' claim, false for subagents; code-review caught both."
+    solution: "Paste approved wording verbatim and add nothing the owner did not approve."
+  - session: session_01675UWGBfCMALkurUr58cxM
+    date: "2026-10-14"
+    severity: moderate
+    description: "I told the user only domain-modeling changed after diffing one skill; nine other pack skills also carried the rename, costing two extra decision rounds."
+    solution: "Grep the whole skills diff for renamed terms before reporting scope."
+  - session: session_01VGLAakRJNm67PuNHpgbEc7
+    date: "2026-10-12"
+    severity: moderate
+    description: "My first 'loaded' prefix regex was written without checking the real data; about 70 reasons read 'loaded at start;' and would have rendered as broken fragments."
+    solution: "Grep landed logs for the actual variants before writing a text transform; the spec reviewer caught it."
+  - session: session_01WynjtDHvk8MajTsgr59Ckt
+    date: "2026-10-16"
+    severity: minor
+    description: "Wrote a glossary claim that nothing leads with Walkthroughs while the guide landing still shows Start here"
+    solution: "Grep the Tenant for the thing a new glossary rule describes before writing it; code-review caught it"

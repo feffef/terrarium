@@ -5,6 +5,13 @@ cause: >-
   ADR-0004's before-first-push gate:scoped plus code-review is skipped or the gate is not rerun after late edits.
 surface: guard-or-hook
 status: open
+fixes:
+  - pr: 1852
+    date: "2026-10-12"
+    summary: "clear-backlog runs the full code-review Skill on every branch and opens the PR only once review is done."
+  - pr: 1853
+    date: "2026-10-12"
+    summary: "pr-workflow.md asks for code-review before every branch's first push, and build agents hand back unpushed branches for review."
 occurrences:
   - session: session_011t1xXHxqwrfAjt83s9oTEP
     date: "2026-10-15"
@@ -31,3 +38,13 @@ occurrences:
     severity: nit
     description: "Fixed preview.ts stop's exit code myself after the build review and pushed with gate:scoped only, without another code-review pass on that one-line delta"
     solution: "Re-run the branch through clear-backlog-build with the fix in its brief, or run code-review on the delta"
+  - session: session_016gu9e44jjfAEFMo3CBxzUQ
+    date: "2026-10-13"
+    severity: nit
+    description: "I pushed on the build workflow's report of a passing gate:scoped. I checked its commits and diff, but did not re-run the gate myself."
+    solution: "clear-backlog §3 could say whether the orchestrator should re-run gate:scoped or trust the workflow's gatePassed."
+  - session: session_015dUGRadEQP1bvv6KytKLXT
+    date: "2026-10-14"
+    severity: minor
+    description: "The 1940 build agent reported gatePassed while saying it had not rerun the gate after its last round, and it could not do a live hook check in-session"
+    solution: "Have clear-backlog-build re-run gate:scoped on the final commit before it returns ready-to-push"

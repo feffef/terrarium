@@ -1,0 +1,28 @@
+name: diagnosis-from-partial-evidence
+summary: >-
+  Agents settled on a cause or an identity from one test, a truncated log or an issue title, and it was wrong.
+cause: >-
+  A diagnosis or attribution (why something fails, which PR made a change, whether an issue needs a guard change) is concluded from partial evidence: a single test, a truncated log, a commit list or an issue text, without reading the diff or running a controlled check. Signals: "misdiagnosed", "from one test", "without checking its diff", "from the issue text alone".
+surface: safe
+status: open
+occurrences:
+  - session: session_01LARTWkGx5vBwRwsMrdftPD
+    date: "2026-10-11"
+    severity: minor
+    description: "Broke 'Verify before you state': declared Bash reads never load rules from one chained-command test; PR #1741 evidence and controlled tests showed lone single-file reads do."
+    solution: "Vary one factor per test before generalising; check prior evidence (PR #1741 Checks) first."
+  - session: session_016iE4LmQUcg6ap5YMxJg4oC
+    date: "2026-10-12"
+    severity: moderate
+    description: "Misdiagnosed the warnings as a Vite chunk-size warning from a local build and truncated CI log, wasting a build, a question to the user and a revert."
+    solution: "Read the gate check-run annotations (lint warnings) first; the user's PrisePre typo and truncated log tail invited the guess."
+  - session: session_01XJ9iR9EbRT2iV7afhytND8
+    date: "2026-10-14"
+    severity: minor
+    description: "Labelled the ADR-0030 rewrite as PR #1909 from a merge-commit list without checking its diff; it was #1898, and #1909 only changed hash lines"
+    solution: "Check a merge's diff with git show --stat before naming it as the cause of a cohort split"
+  - session: session_01JygBaHorymh1xgVBsaTh3E
+    date: "2026-10-17"
+    severity: minor
+    description: "I excluded #2209 and #2210 as guard changes from the issue text alone; only the owner's request for a transcript look showed neither needed one."
+    solution: "Before excluding an issue for its fix's surface, check the cited sessions; the issue's candidate fix is not the root cause."
