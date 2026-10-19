@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01Pc15CVrLGyHXgoygsRHLbB
 startedAt: 2026-10-19T16:57:20Z
-endedAt: 2026-10-19T17:21:05Z
+endedAt: 2026-10-19T17:25:57Z
 kind: autonomous
 goal: Build the inspect-session Skill
 status: in-review
-outcome: Story 1 (partial read, Flatten, Search, Outline) is in review as PR 2304; story 2 (full read) is next
-summary: "Human-instructed: @feffef approved spec #2300 in session_01MKmEo8yAjxTqJ5h3zceLL5, and that session started this one to implement both stories (#2301 and #2302), each as its own gated PR. Nothing here was agent-initiated beyond the two small sample dispatches, which captured real event shapes. The prototype branch's flattener was the starting point. Before writing fixtures I read four real pages of a past session and this session's own newest page. That showed every Agent dispatch, foreground ones included, now returns only a receipt: the reply arrives as a hand-back user event (origin.handback, origin.from) and is joined by agent id. Flatten keeps a call's result on the call's own line and adds a `target` field for reads, a small refinement on the spec's field list. A live partial read of the spec session answered a free-form question correctly in 2 pages (0 inline). It also showed that the `prompts` selector's FOUND can fire before the answer is in range, so the recipe now stops when the question is answered. Code review (Standards and Spec) found an over-broad Bash-read rule, a single read target per line, session-log hits not counting toward FOUND, and WHAT-comments; all are fixed. The gate is green and PR 2304 is open. Story 2 waits for it to merge."
+outcome: Story 1 merged as PR 2304; story 2 (full read) is in review as PR 2305 after a live full read
+summary: "Human-instructed: @feffef approved spec #2300 in session_01MKmEo8yAjxTqJ5h3zceLL5, and that session started this one to implement both stories (#2301 and #2302), each as its own gated PR. Nothing here was agent-initiated beyond the two small sample dispatches, which captured real event shapes. The prototype branch's flattener was the starting point. Before writing fixtures I read four real pages of a past session and this session's own newest page. That showed every Agent dispatch, foreground ones included, now returns only a receipt: the reply arrives as a hand-back user event (origin.handback, origin.from) and is joined by agent id. Flatten keeps a call's result on the call's own line and adds a `target` field for reads, a small refinement on the spec's field list. A live partial read of the spec session answered a free-form question correctly in 2 pages (0 inline). It also showed that the `prompts` selector's FOUND can fire before the answer is in range, so the recipe now stops when the question is answered. Code review (Standards and Spec) found an over-broad Bash-read rule, a single read target per line, session-log hits not counting toward FOUND, and WHAT-comments; all fixed, and PR 2304 merged on a green gate. Story 2 added ranges.ts and the full-read recipe. A live full read of the 50-minute spec session took about 3 minutes and 250k Haiku tokens (walker plus 3 parallel fetchers, 11 pages, no wrong pages); all 14 human-prompt tags were genuine. The walker loaded the whole Skill on its own because of the new CLAUDE.md trigger, so every brief now says it holds all the subagent needs. Review of story 2 caught that a repeated cursor from the walker would poison the ranges, and that the merge test could not fail; both are fixed. PR 2305 is open on a green local gate."
 prs:
   - "2304"
+  - "2305"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: session-start vocabulary map
@@ -81,23 +82,24 @@ frictions:
   - description: "SHELL-READ-DETECTION: a real read went uncounted. Command: git show origin/research/cloud-session-transcript-tools:docs/research/cloud-session-transcript-tools.md (after a git fetch on the same line). Expected path: docs/research/cloud-session-transcript-tools.md"
     solution: Teach scripts/session/shell-reads.ts that git show <ref>:<path> reads <path> when its output is shown
     severity: moderate
-durationSec: 1424
+durationSec: 1717
 models:
-  claude-opus-5-5: 268
+  claude-opus-5-5: 309
 toolCounts:
-  Bash: 72
+  Bash: 83
   ToolSearch: 2
   mcp__github__issue_read: 10
   Skill: 4
   mcp__claude-code-remote__list_events: 5
-  Agent: 9
-  Write: 14
+  Agent: 11
+  Write: 17
   Edit: 14
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  ReadNotifications: 1
 filesEdited:
   - .agents/skills/inspect-session/scripts/flat.ts
   - .agents/skills/inspect-session/scripts/flatten.ts
@@ -184,6 +186,10 @@ subagents:
     model: haiku
   - task: "Full read: fetch range 3"
     model: haiku
+  - type: general-purpose
+    task: Standards review of full read
+  - type: general-purpose
+    task: Spec review of full read
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.303
