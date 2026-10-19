@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Wv24DMMmjdNR6a23HtkZ8i
 startedAt: 2026-10-19T02:07:40Z
-endedAt: 2026-10-19T02:24:16Z
+endedAt: 2026-10-19T02:27:41Z
 kind: autonomous
 goal: "Scheduled run: turn the week's logged frictions into fixes"
-status: in-review
-outcome: "Ledger PR #2267 open; 3 regression issues filed; no fix dispatched"
-summary: "Scheduled frictions-to-fixes run, no human input; everything was agent-initiated under the Skill. A survey subagent read 44 sessions, appended 50 occurrences to the ledger and added one entry. I filed regression issues #2264, #2265 and #2266 for the top three regressions without an open issue. A design subagent examined the three never-fixed picks and recommended no fix for each (mixed causes, a guard that already works, or a prose home inside an open Prune Trial). I accepted that, so nothing was dispatched. The ledger PR #2267 (gate green, review comment posted) waits on CI; the closing status-only PR of section 8 is skipped because no fix PR was opened."
+status: completed
+outcome: "Ledger PR #2267 merged; 3 regression issues filed; no fix dispatched"
+summary: "Scheduled frictions-to-fixes run, no human input; everything was agent-initiated under the Skill. A survey subagent read 44 sessions, appended 50 occurrences to the ledger and added one entry. I filed regression issues #2264, #2265 and #2266 for the top three regressions without an open issue. A design subagent examined the three never-fixed picks and recommended no fix for each (mixed causes, a guard that already works, or a prose home inside an open Prune Trial). I accepted that, so nothing was dispatched. The ledger PR #2267 (gate green, review comment posted) merged after green CI; the closing status-only PR of section 8 is skipped because no fix PR was opened."
 prs:
   - "2267"
 docsRead:
@@ -52,11 +52,11 @@ frictions:
   - description: Stop hook asked to push twice before the gate and review had run; ADR-0004 says to ignore it, but it nags mid-run on a scheduled routine.
     solution: Silence the hook while a gated first push is pending.
     severity: nit
-durationSec: 995
+durationSec: 1200
 models:
-  claude-sonnet-5-5: 54
+  claude-sonnet-5-5: 64
 toolCounts:
-  Bash: 19
+  Bash: 21
   Agent: 2
   ToolSearch: 1
   mcp__github__issue_write: 3
@@ -64,6 +64,8 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
   Skill: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0015.md
