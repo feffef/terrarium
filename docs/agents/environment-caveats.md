@@ -87,9 +87,6 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   delete the ref) instead of relying on default behavior — `init` + `remote
   add` + `fetch` left `origin/HEAD` unset locally but not in CI. (commit
   2b85df96)
-- **A scratchpad script can't `import` repo deps (e.g. `yaml`)** when run as
-  `pnpm exec tsx <scratchpad>/x.ts`: it resolves from its own directory. Set
-  `NODE_PATH=<repo>/node_modules` or import by absolute path.
 - **A cloud session's `CLAUDE_CODE_REMOTE_SESSION_ID` is `cse_<id>`, but
   claude.ai/code opens that session at `session_<id>`: the same id, another
   prefix.** Swap the prefix before you link the session or write its ADR-0017

@@ -34,3 +34,6 @@ dist
 
 # guest-intake-scan.ts's own local scan cursor (issue #569), never committed
 .guest-intake-scan-state.json
+
+# Throwaway scripts that import repo packages (see CLAUDE.md); never committed
+.throwaway/

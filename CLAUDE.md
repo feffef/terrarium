@@ -90,6 +90,8 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
 
 ## Self-verification
 
+- **Put throwaway scripts that import repo packages in `.throwaway/`**
+  (git-ignored); in the scratchpad they can't resolve `node_modules`.
 - **Start any command that can take over 2 minutes** (`pnpm gate:scoped`, a
   build, e2e) with `run_in_background: true`, output redirected to a file: the
   Bash tool caps a foreground timeout at 600s. A dispatched subagent can't

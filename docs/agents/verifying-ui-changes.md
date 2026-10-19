@@ -59,13 +59,10 @@ cite it.
   `scripts/ui/screenshot.ts` uses with
   `chromium.launch({ executablePath: resolveChromiumPath() })`, importing
   `resolveChromiumPath()` from `scripts/lib/chromium.ts` (don't re-derive the
-  `PLAYWRIGHT_BROWSERS_PATH` lookup). Three gotchas: (1) `tsx` runs it as CJS,
-  so wrap top-level `await` in an `async` IIFE; (2) write it **inside the repo
-  tree** so imports resolve against this repo's `node_modules`
-  (`playwright-core`, `yaml` and other devDependencies aren't global); (3) pass
-  `page.evaluate(...)` its body as a **string**: `tsx`/esbuild's `keepNames`
-  injects a `__name` helper that exists only in Node, so a function reference
-  throws `__name is not defined` in the page.
+  `PLAYWRIGHT_BROWSERS_PATH` lookup). Write it in `.throwaway/` (CLAUDE.md).
+  Pass `page.evaluate(...)` its body as a **string**: `tsx`/esbuild's
+  `keepNames` injects a `__name` helper that exists only in Node, so a
+  function reference throws `__name is not defined` in the page.
 - **A screenshot can't be trusted to rule out a subtle/scoped CSS change:**
   downscaled or compressed PNGs can mask a style that actually applied. Before
   concluding a scoped style is missing, read the element's *computed* style
