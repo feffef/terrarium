@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XueFVQyVySVEKHxSHTFeTh
 startedAt: 2026-10-19T00:16:35Z
-endedAt: 2026-10-19T00:22:03Z
+endedAt: 2026-10-19T00:25:42Z
 kind: autonomous
 goal: Write the 2026-10-18 Journal Digest
-status: in-review
-outcome: Digest and retention sweep in PR 2261, gate green, awaiting CI and merge
-summary: Scheduled digest run, agent-initiated by the schedule with no human prompt. Gathered the 2026-10-18 day (27 PRs, 17 sessions), wrote the Digest around the day's Routine cost-tracking theme, fact-checked it with a sonnet subagent (2 wrong and 3 imprecise claims, all fixed), ran the archive sweep (1 Digest, 21 session logs), passed gate:scoped, and opened PR 2261. Review was an inline check rather than the two-subagent code-review, since the diff is prose and file moves only.
+status: completed
+outcome: Digest and retention sweep merged in PR 2261, gate green
+summary: Scheduled digest run, agent-initiated by the schedule with no human prompt. Gathered the 2026-10-18 day (27 PRs, 17 sessions), wrote the Digest around the day's Routine cost-tracking theme, fact-checked it with a sonnet subagent (2 wrong and 3 imprecise claims, all fixed), ran the archive sweep (1 Digest, 21 session logs), passed gate:scoped, and opened PR 2261, which merged on a green gate. Review was an inline check rather than the two-subagent code-review, since the diff is prose and file moves only.
 prs:
   - "2261"
 docsRead:
@@ -49,17 +49,21 @@ frictions:
   - description: Replaced the code-review Skill's two parallel subagents with an inline review because the diff was a prose page plus file moves.
     solution: Let code-review scale down for prose-only diffs.
     severity: nit
-durationSec: 327
+durationSec: 546
 models:
-  claude-sonnet-5-5: 48
+  claude-sonnet-5-5: 63
 toolCounts:
-  Bash: 15
+  Bash: 18
   Read: 6
   Write: 1
   Agent: 1
   Skill: 3
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-18.md
 rulesLoaded:
