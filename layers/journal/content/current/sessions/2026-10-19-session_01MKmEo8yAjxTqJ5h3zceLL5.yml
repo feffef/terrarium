@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01MKmEo8yAjxTqJ5h3zceLL5
 startedAt: 2026-10-19T16:06:22Z
-endedAt: 2026-10-19T16:40:54Z
+endedAt: 2026-10-19T16:42:12Z
 kind: interactive
 goal: Finish the transcript-search wayfinder map and write the inspect-session Skill spec
 status: completed
 outcome: Mirror ticket resolved (no mirror); spec for the inspect-session Skill filed on hold, with two user stories
-summary: "The human-instructed kickoff asked me to work one wayfinder ticket (\"Should our hooks mirror each session's raw transcript for the Skill to search?\", #2298) on the transcript-search map (#2291). I found that scripts/session/transcript-trace.ts already derives rule loads and workflow-agent reads into each session log, which covers most of list_events' blind spots. After one grilling round and the user's question about how a mirror relates to the Haiku full tier, the user chose no mirror. I closed the ticket and updated the map. The user then asked me (option 2) to decide the remaining fog inside the spec and write it. I ran adr-check (ADR-0005/0015/0021/0004; no prune trial overlap), checked how Skill scripts are typechecked and tested, and grilled two more rounds. The user pushed back on the name twice: the Skill does more than search, and \"transcript\" is the raw record (Claude Code docs confirm the JSONL meaning, checked by a claude-code-guide subagent). So the Skill reads events, not the transcript, and is named inspect-session; its scratch file is \"flattened events\". The user approved the full list of decisions and asked me to write the spec. I filed \"Spec: the inspect-session Skill\" (#2300) as a child of the map, on hold until a Trusted user approves, with two user-story sub-issues (budgeted tier #2301, full tier #2302), and noted on the map that the way is clear. No code, branch or PR."
+summary: "The human-instructed kickoff asked me to work one wayfinder ticket (\"Should our hooks mirror each session's raw transcript for the Skill to search?\", #2298) on the transcript-search map (#2291). I found that scripts/session/transcript-trace.ts already derives rule loads and workflow-agent reads into each session log, which covers most of list_events' blind spots. After one grilling round and the user's question about how a mirror relates to the Haiku full tier, the user chose no mirror. I closed the ticket and updated the map. The user then asked me (option 2) to decide the remaining fog inside the spec and write it. I ran adr-check (ADR-0005/0015/0021/0004; no prune trial overlap), checked how Skill scripts are typechecked and tested, and grilled two more rounds. The user pushed back on the name twice: the Skill does more than search, and \"transcript\" is the raw record (Claude Code docs confirm the JSONL meaning, checked by a claude-code-guide subagent). So the Skill reads events, not the transcript, and is named inspect-session; its scratch file is \"flattened events\". The user approved the full list of decisions and asked me to write the spec. I filed \"Spec: the inspect-session Skill\" (#2300) as a child of the map, on hold until a Trusted user approves, with two user-story sub-issues (budgeted tier #2301, full tier #2302), and noted on the map that the way is clear. At the user's direction the recipe now leaves github-integration.md entirely and CLAUDE.md gets the trigger for the Skill instead. No code, branch or PR."
 prs: []
 docsRead:
   - path: GLOSSARY-MAP.md
@@ -53,14 +53,14 @@ frictions:
   - description: "SHELL-READ-DETECTION: a real read went uncounted. Command: git show origin/prototype/transcript-search-shape:.agents/skills/transcript-search/prototype/README.md | head -80 (chained after git fetch and git ls-tree). Expected path: .agents/skills/transcript-search/prototype/README.md"
     solution: Have shell-reads.ts credit git show <ref>:<path> output against the path after the colon.
     severity: moderate
-durationSec: 2072
+durationSec: 2150
 models:
-  claude-opus-5-5: 77
+  claude-opus-5-5: 88
 toolCounts:
-  Bash: 18
+  Bash: 20
   ToolSearch: 1
   mcp__github__issue_read: 5
-  mcp__github__issue_write: 7
+  mcp__github__issue_write: 10
   Skill: 5
   mcp__github__add_issue_comment: 1
   Agent: 1
