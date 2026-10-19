@@ -185,7 +185,8 @@ spots come from.
 
 - `scripts/flatten.ts --session <id> --out <dir> [--page-limit <N>] <pages…>`:
   takes each page as a path or a bare file name, looked up in the
-  `tool-results/` folders under `~/.claude/projects/`; writes the flattened events and prints their path, `COVERAGE`, any
+  `tool-results/` folders of Claude Code's `projects/` folder; writes the
+  flattened events and prints their path, `COVERAGE`, any
   `DUPLICATE`, and `NEXT` (the cursor to fetch, or done).
 - `scripts/search.ts <flattened file> <selector> [--agent parent|<agent id>]`:
   prints matching lines capped at about 2k characters (the full list goes to a

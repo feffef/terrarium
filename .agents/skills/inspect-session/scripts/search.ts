@@ -6,7 +6,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
-import { coverageLine, nextLine, readFlat, shown, sibling, skillFile, toLine, type FlatLine, type Meta } from './flat.ts'
+import { coverageLine, cut, nextLine, readFlat, shown, sibling, skillFile, THINKING, toLine, type FlatLine, type Meta } from './flat.ts'
 
 export type Selector =
   | { name: 'tool'; tool: string; input?: string }
@@ -55,8 +55,8 @@ export function search(lines: FlatLine[], sel: Selector, agent?: string): { hits
   let hits: FlatLine[]
   if (sel.name === 'replies') {
     hits = scoped
-      .filter((l) => l.kind === 'assistant' && !l.tool && l.input !== '(thinking)')
-      .map((l) => ({ ...l, input: l.input.length > sel.n ? `${l.input.slice(0, sel.n - 1)}…` : l.input }))
+      .filter((l) => l.kind === 'assistant' && !l.tool && l.input !== THINKING)
+      .map((l) => ({ ...l, input: cut(l.input, sel.n) }))
   } else if (sel.name === 'tool') {
     const name = new RegExp(`^(?:${sel.tool})$`)
     const input = sel.input ? new RegExp(sel.input, 'i') : null

@@ -7,6 +7,9 @@ export type Tag = 'read' | 'dispatch' | 'handback' | 'error' | 'human-prompt' | 
 
 export const DEFAULT_PAGE_LIMIT = 5
 
+/** An assistant line's input for a thinking block, whose text is never kept. */
+export const THINKING = '(thinking)'
+
 /** One event. Tabs and newlines never occur inside a field, so a line splits on tabs. */
 export interface FlatLine {
   n: number
@@ -35,6 +38,8 @@ export interface Meta {
   nextBeforeId: string
   pageLimit: number
 }
+
+export const cut = (s: string, n: number): string => (s.length > n ? `${s.slice(0, n - 1)}…` : s)
 
 export const oneLine = (s: unknown): string => String(s ?? '').replace(/\s+/g, ' ').trim()
 
