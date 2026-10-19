@@ -41,6 +41,13 @@ describe('search', () => {
     expect(run(['last', '30']).missing).toEqual(['10 more line(s)'])
   })
 
+  it('lists text replies, skipping thinking, each cut to N characters', () => {
+    const reply = (n: number, agent: string, input: string, tool = ''): FlatLine => ({ n, at: '', agent, kind: 'assistant', tool, tags: [], target: '', input, result: '' })
+    const events = [reply(1, 'parent', '(thinking)'), reply(2, 'parent', 'Fixed the docs and pushed.'), reply(3, 'parent', '{"command":"ls"}', 'Bash'), reply(4, 'sub:a1', 'Done: 3 files')]
+    expect(search(events, parseSelector(['replies'])).hits.map((l) => l.n)).toEqual([2, 4])
+    expect(search(events, parseSelector(['replies', '5']), 'parent').hits.map((l) => l.input)).toEqual(['Fixe…'])
+  })
+
   it('rejects an unknown selector', () => {
     expect(() => parseSelector(['everything'])).toThrow(/selectors:/)
   })

@@ -4,13 +4,15 @@
 //
 // Usage: pnpm exec tsx .agents/skills/inspect-session/scripts/flatten.ts \
 //   --session <id> --out <dir> [--page-limit 5] <saved page files…>
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { homedir } from 'node:os'
+import { basename, join } from 'node:path'
 import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import {
   bareSession,
   coverageLine,
   DEFAULT_PAGE_LIMIT,
+  THINKING,
   findSessionLog,
   nextLine,
   oneLine,
@@ -39,6 +41,22 @@ export function parsePage(text: string, file: string): Page {
   const { ccr } = JSON.parse(text.slice(start, text.lastIndexOf('}') + 1)) as { ccr: Raw }
   // has_more is left out, not false, when the page reaches the session start.
   return { file, firstId: ccr.first_id, hasMore: ccr.has_more === true, data: ccr.data ?? [] }
+}
+
+/** Each page's path; a bare or shortened one is looked up by file name, since
+ *  fetchers' replies shorten paths (#2306). */
+export function resolvePages(args: string[], projectsDir: string): string[] {
+  let saved: string[] | undefined
+  return args.map((arg) => {
+    if (existsSync(arg)) return arg
+    saved ??= readdirSync(projectsDir, { recursive: true, encoding: 'utf8' }).filter((f) => basename(join(f, '..')) === 'tool-results')
+    const name = basename(arg)
+    const hits = saved.filter((f) => basename(f) === name)
+    if (hits.length === 1) return join(projectsDir, hits[0]!)
+    throw new Error(
+      hits.length ? `${name}: ${hits.length} pages share that name; pass the full path` : `${name}: no such page in any tool-results folder under ${projectsDir}`,
+    )
+  })
 }
 
 interface Ev {
@@ -168,7 +186,7 @@ export function flatten(pages: Page[], session: string, sessionLog: string | nul
       const targets: string[] = []
       for (const b of blocks(e.ca)) {
         if (b.type === 'text') inputs.push(b.text)
-        else if (b.type === 'thinking') inputs.push('(thinking)')
+        else if (b.type === 'thinking') inputs.push(THINKING)
         else if (b.type === 'tool_use') {
           tools.push(b.name)
           const r = results.get(b.id)
@@ -259,8 +277,15 @@ runIfMain(import.meta.url, () => {
   const session = flags['--session']
   const out = flags['--out']
   if (!session || !out || !args.length) fail(`usage: flatten.ts --session <id> --out <dir> [--page-limit ${DEFAULT_PAGE_LIMIT}] <saved page files…>`)
+  const projects = join(process.env.CLAUDE_CONFIG_DIR || join(homedir(), '.claude'), 'projects')
+  let files: string[]
+  try {
+    files = resolvePages(args, projects)
+  } catch (e) {
+    fail((e as Error).message)
+  }
   const { lines, meta } = flatten(
-    args.map((f) => parsePage(readFileSync(f, 'utf8'), f)),
+    files.map((f) => parsePage(readFileSync(f, 'utf8'), f)),
     session,
     findSessionLog(root, session),
     Number(flags['--page-limit'] ?? DEFAULT_PAGE_LIMIT),

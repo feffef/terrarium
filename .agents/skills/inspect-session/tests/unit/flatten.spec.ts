@@ -1,7 +1,8 @@
-import { readFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { bashReads, flatten, parsePage, report } from '../../scripts/flatten.ts'
+import { bashReads, flatten, parsePage, report, resolvePages } from '../../scripts/flatten.ts'
 import { coverageLine, nextLine, parseLine, toLine, type FlatLine } from '../../scripts/flat.ts'
 
 const page = (name: string) => parsePage(readFileSync(join(import.meta.dirname, 'fixtures', name), 'utf8'), name)
@@ -15,6 +16,32 @@ describe('parsePage', () => {
     expect(older).toMatchObject({ firstId: 'o1', hasMore: false })
     expect(newer).toMatchObject({ firstId: 'n1', hasMore: true })
     expect(page('page-older-repeat.txt').data).toHaveLength(11)
+  })
+})
+
+describe('resolvePages', () => {
+  const projects = mkdtempSync(join(tmpdir(), 'projects-'))
+  const save = (dir: string, name: string): string => {
+    mkdirSync(join(projects, dir), { recursive: true })
+    writeFileSync(join(projects, dir, name), '')
+    return join(projects, dir, name)
+  }
+  const page = save('-repo/s1/tool-results', 'mcp-claude-code-remote-list_events-1.txt')
+  const sub = save('-repo/s1/subagents/tool-results', 'mcp-claude-code-remote-list_events-2.txt')
+  save('-repo/s1/tool-results', 'mcp-claude-code-remote-list_events-3.txt')
+  save('-repo/s2/tool-results', 'mcp-claude-code-remote-list_events-3.txt')
+
+  it('keeps a path that exists', () => {
+    expect(resolvePages([page], projects)).toEqual([page])
+  })
+
+  it('finds a bare or shortened file name in any tool-results folder', () => {
+    expect(resolvePages(['mcp-claude-code-remote-list_events-1.txt', '.../tool-results/mcp-claude-code-remote-list_events-2.txt'], projects)).toEqual([page, sub])
+  })
+
+  it('fails with a clear message on no match or several', () => {
+    expect(() => resolvePages(['.../tool-results/x.txt'], projects)).toThrow(/x\.txt: no such page in any tool-results folder/)
+    expect(() => resolvePages(['mcp-claude-code-remote-list_events-3.txt'], projects)).toThrow(/2 pages share that name/)
   })
 })
 

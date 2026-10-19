@@ -4,9 +4,7 @@
 // Usage: pnpm exec tsx .agents/skills/inspect-session/scripts/outline.ts <flattened file>
 import { writeFileSync } from 'node:fs'
 import { fail, runIfMain } from '../../../../scripts/lib/cli.ts'
-import { coverageLine, readFlat, shown, sibling, type FlatLine } from './flat.ts'
-
-const cut = (s: string, n: number): string => (s.length > n ? `${s.slice(0, n - 1)}…` : s)
+import { coverageLine, cut, readFlat, shown, sibling, type FlatLine } from './flat.ts'
 
 export function outline(lines: FlatLine[]): string[] {
   return lines.flatMap((l) => {
