@@ -16,8 +16,7 @@ Skill is the opt-in: run each by name with the Workflow tool, pass `args` as
 a JSON value, and act on the structured result. Pass `session` (this
 session's id, `session_…`) in both: every GitHub write carries it as the
 ADR-0017 header. A workflow can't ask the owner, wait on CI or merge, so you
-do those. To see what a run's agents did, read its `journal.jsonl`. A run's saved
-`.output` nests the return value as JSON under `result`. A branch with
+do those. To see what a run's agents did, read its `journal.jsonl`. A branch with
 `status: ready-to-push` has already passed `gate:scoped`.
 
 ## 1. Explore
@@ -39,9 +38,9 @@ blocked outside the chat (an upstream release, a date, an owner action), and
 `full` for the rest, deferred ones included. Set `reserved: true` on an issue
 the owner reserved ("I decide this one", directly or relayed).
 
-The result holds one triage `results[n]` per issue, the `missing` ones, and
-a proposed `grouping`: one branch per group of issues in which every pair
-shares a file or is clearly related. Adjust the grouping where you know
+`pnpm exec tsx .agents/skills/clear-backlog/scripts/run-summary.ts <output>
+--triage` prints each issue's result, the `missing` ones and a `grouping`: one
+branch per group of issues in which every pair shares a file or is clearly related. Adjust the grouping where you know
 better; a grouping you are unsure of is a grilling question. Then start §3
 for the groups whose issues are all `build`, and grill while it runs.
 
@@ -94,7 +93,7 @@ itself. Each branch is built in its own worktree off `origin/main`, then reviewe
 on both `code-review` axes and fixed until only judgement calls remain. Its
 review rounds are the review before the first push (`pr-workflow.md`).
 
-Act on each branch's `status`:
+Act on each branch's `status` (`run-summary.ts --build`):
 
 - `needs-owner`: an interrupt (the script lists the conditions). Send a push
   notification, ask its `question` in the running `Q` numbering, and re-run
@@ -139,9 +138,9 @@ some of its exceptions.
 `pnpm check:worktrees` exits 0.
 
 Report one line per issue: `#N | outcome | PR or "no PR: why" | merged / waits
-for you (why)`. Then re-invoke `close-session`, passing every workflow agent's
-`verdicts` merged into its own `ruleVerdicts` and `docsRead`, one entry per
-path (log-session step 3). Its log's `summary` carries one line
+for you (why)`. Then re-invoke `close-session`, merging into its own
+`ruleVerdicts` and `docsRead` what `run-summary.ts --verdicts` prints for each
+run (log-session step 3). Its log's `summary` carries one line
 per merged or opened branch: what it changed (from that branch's `decisions`)
 and any judgement calls left open. In a workflow run the orchestrator's log is
 the Journal's only record of what its agents built.

@@ -1,0 +1,52 @@
+{
+  "summary": "clear-backlog §1",
+  "agentCount": 2,
+  "logs": [],
+  "result": {
+    "results": {
+      "11": {
+        "outcome": "build",
+        "summary": "Fix the typo in the README",
+        "brief": "Fix it. Done when spelled right.",
+        "publicAuthor": false,
+        "readyForHuman": false,
+        "files": ["README.md", "docs/a.md"],
+        "relatedTo": [12],
+        "sideFindings": ["docs/b.md links nowhere"],
+        "writes": ["labelled ready-for-agent"],
+        "verdicts": [
+          { "path": ".claude/rules/adr-0004.md", "kind": "rule", "reason": "SECRET-11-RULE", "useful": "no" },
+          { "path": "docs/agents/issue-tracker.md", "kind": "doc", "reason": "told me the labels", "useful": "yes" }
+        ]
+      },
+      "12": {
+        "outcome": "grill",
+        "summary": "Rename the button",
+        "brief": "Rename it.",
+        "question": { "choice": "Which name?", "options": ["a) Go", "b) Start"], "pick": "b", "why": "clearer" },
+        "publicAuthor": true,
+        "readyForHuman": false,
+        "files": ["README.md"],
+        "relatedTo": [],
+        "sideFindings": [],
+        "writes": [],
+        "verdicts": [
+          { "path": ".claude/rules/adr-0004.md", "kind": "rule", "reason": "made me gate", "useful": "partly" }
+        ]
+      },
+      "13": {
+        "outcome": "blocked",
+        "summary": "Wait for Nuxt 5",
+        "blocker": "Nuxt 5 is unreleased (npm view nuxt version)",
+        "publicAuthor": false,
+        "readyForHuman": false,
+        "files": [],
+        "relatedTo": [],
+        "sideFindings": [],
+        "writes": []
+      }
+    },
+    "missing": [14],
+    "grouping": [{ "issues": [11, 12], "sharedFiles": ["README.md"] }]
+  }
+}
