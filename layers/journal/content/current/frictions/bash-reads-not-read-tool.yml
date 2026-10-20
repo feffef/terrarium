@@ -459,3 +459,8 @@ occurrences:
     severity: nit
     description: "Read several files with cat/sed via Bash (glossaries, validate-adr-rules.ts excerpt, log-session SKILL.md lines) instead of the Read tool, against CLAUDE.md"
     solution: "Use Read for repo docs; the Bash hint loaded the rules anyway"
+  - session: session_01PaPpUz7irjArWFrkrYgRwH
+    date: "2026-10-19"
+    severity: nit
+    description: "Read verifying-ui-changes.md and ran greps through Bash (grep, sed) instead of the Read and Grep tools, against the tool guidance."
+    solution: "Use Read with offset/limit and Grep for repo files."

@@ -49,3 +49,8 @@ occurrences:
     severity: minor
     description: "design-brief.md opens with a dangling fragment after {PICKS} and its session-log glob matches nothing; the design agent lost rounds on both."
     solution: "Rewrite the brief's first lines and give the real glob (*session_<id>*.yml)."
+  - session: session_01Wv24DMMmjdNR6a23HtkZ8i
+    date: "2026-10-19"
+    severity: minor
+    description: "survey-brief says to append every friction but --unledgered drops sessions, and --summary counts regressions by date, so same-day post-fix sessions were missed and needed hand checking."
+    solution: "Count regressions by session start in --summary; name a per-cluster dedupe step in the brief."

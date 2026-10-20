@@ -65,3 +65,8 @@ occurrences:
     severity: minor
     description: "Did not invoke close-session at each PR open as CLAUDE.md says; the create_pull_request hook reminded me and I deferred both to the end."
     solution: "Invoke it right after create_pull_request, before posting the verdict."
+  - session: session_01CBVi4qZ2RqPhfHeHPYrkwD
+    date: "2026-10-19"
+    severity: minor
+    description: "Did not invoke close-session after the first two answers, though CLAUDE.md asks for it when a session only answers a question."
+    solution: "Invoke close-session at the end of each answer turn; re-invoking is cheap."

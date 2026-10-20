@@ -14,3 +14,13 @@ occurrences:
     severity: minor
     description: "Started pnpm gate:scoped in the background, then edited files during it, so it had to run a second time on the final head."
     solution: "Finish review fixes before starting the gate, or start it only after the last commit."
+  - session: session_011G3PKUqDog2WRSuqypmuJX
+    date: "2026-10-20"
+    severity: minor
+    description: "Edited the Digest after gate:scoped had started, to apply fact-check fixes, so the gate did not see the final text; reran validate:content only."
+    solution: "Wait for the fact-check before starting the gate."
+  - session: session_01AwaGncaYJFWdJnc6yqDoTS
+    date: "2026-10-19"
+    severity: minor
+    description: "gate:scoped started on the first commit; review fixes were amended in mid-run, so I ran the gate a second time (about 5 extra minutes). The origin session logged the same."
+    solution: "Run code-review before starting gate:scoped, so amends land before the gate."

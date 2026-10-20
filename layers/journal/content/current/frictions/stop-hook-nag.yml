@@ -325,3 +325,38 @@ occurrences:
     severity: nit
     description: "The Stop hook asked three times to commit and push while the fact-check and gate were still running, against ADR-0004's gate-and-review-before-first-push order."
     solution: "Make the Stop hook skip its nag while a background gate or subagent is pending."
+  - session: session_01Wv24DMMmjdNR6a23HtkZ8i
+    date: "2026-10-19"
+    severity: nit
+    description: "Stop hook asked to push twice before the gate and review had run; ADR-0004 says to ignore it, but it nags mid-run on a scheduled routine."
+    solution: "Silence the hook while a gated first push is pending."
+  - session: session_0183U5MkKrjuhRKdjpFxD9Xj
+    date: "2026-10-19"
+    severity: nit
+    description: "Stop hook asked to push uncommitted/unpushed work while the gate and code-review still had to run first."
+    solution: "Have the hook skip its nag while a background gate is running."
+  - session: session_01BTtvaFQckiQwtGZsasWPJH
+    date: "2026-10-19"
+    severity: nit
+    description: "The Stop hook asked twice to push while the #2146 gate was still running; I declined per the ADR-0004 rule."
+    solution: "Accepted cost (stop-hook-nag, PR 2278)."
+  - session: session_01F2JGBVz5DXj7Yi8x2NBZcM
+    date: "2026-10-19"
+    severity: nit
+    description: "The Stop hook asked me to push four times while the gate and code-review ADR-0004 requires were still running. It cost only reply turns."
+    solution: "Have the Stop hook skip its push nudge while a gate run or review is pending."
+  - session: session_01AwaGncaYJFWdJnc6yqDoTS
+    date: "2026-10-19"
+    severity: nit
+    description: "The Stop hook asked twice to push while gate:scoped was still running; I declined per ADR-0004."
+    solution: "Accepted cost (stop-hook-nag, PR 2278)."
+  - session: session_01XTdRbnDg1n2j2ZqjTrwCLi
+    date: "2026-10-19"
+    severity: nit
+    description: "Stop hook asked to commit and push while the gate was still running; ADR-0004 says gate first, so I had to hold."
+    solution: "Let the stop-hook nag know a gate is running in the background."
+  - session: session_016Nsq9SWL64V4RqDJPQYodp
+    date: "2026-10-19"
+    severity: nit
+    description: "Stop hook asked to push twice while the gate and review ADR-0004 requires were still running."
+    solution: "Let the hook stay quiet while a background gate runs."

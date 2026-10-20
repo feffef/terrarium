@@ -30,3 +30,8 @@ occurrences:
     severity: moderate
     description: "The survey subagent's ledger patch listed sessions twice in clusters, failing validate-content; the impl agent dropped 23 occurrences and one distinct description was lost."
     solution: "Have the survey brief require the patch to pass validate:content, merging repeat sessions into one occurrence."
+  - session: session_019xiqcwnB2itTcdugr6EFZL
+    date: "2026-10-20"
+    severity: minor
+    description: "Used yaml's parseDocument(...).toString({lineWidth: 0}) to append new observation entries to 10 existing Skill Inventory YAML files. This collapsed every pre-existing multi-line block-scalar note onto one line, producing a ~2900-line unrelated reformatting diff across all 10 files instead of the intended ~10-line additions. Caught before committing by running `git diff --stat` as a sanity check, not by any guard. Reverted all 10 files with `git checkout --` and redid the same appends with plain-text Edit calls matching the files' existing ~79-column wrap style, which worked cleanly."
+    solution: "For an existing file with human-style prose wrapping, append via plain-text Edit matching the surrounding wrap width instead of parse-and-restringify with the yaml package."

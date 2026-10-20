@@ -9,6 +9,9 @@ fixes:
   - pr: 1920
     date: "2026-10-14"
     summary: "Added a note that throwaway scripts need NODE_PATH set, or an absolute import, to use repo libraries."
+  - pr: 2273
+    date: "2026-10-19"
+    summary: "Added a git-ignored .throwaway/ folder whose scripts resolve the repo's node_modules, with a CLAUDE.md line pointing to it."
 occurrences:
   - session: session_01QUhfMeVRZg7NX654bv5ZE5
     date: "2026-10-13"

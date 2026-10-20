@@ -121,3 +121,18 @@ occurrences:
     severity: nit
     description: "Replaced the code-review Skill's two parallel subagents with an inline review because the diff was a prose page plus file moves."
     solution: "Let code-review scale down for prose-only diffs."
+  - session: session_01Bopw6N86uYzPzfaRpVqzhU
+    date: "2026-10-19"
+    severity: nit
+    description: "The code-review Skill prescribes two parallel sub-agents, disproportionate for a one-word label change; I reviewed inline, deviating from the Skill."
+    solution: "Let pr-workflow.md or the Skill allow an inline review for diffs under a few lines."
+  - session: session_016Nsq9SWL64V4RqDJPQYodp
+    date: "2026-10-19"
+    severity: nit
+    description: "Ran code-review inline rather than the Skill's two subagents because the diff was comments only; the Skill has no size threshold."
+    solution: "Let code-review say when a comments-only diff may skip the subagents."
+  - session: session_011G3PKUqDog2WRSuqypmuJX
+    date: "2026-10-20"
+    severity: nit
+    description: "Replaced the code-review Skill's two subagents with an inline review because the diff was a prose page plus file moves; the Skill has no size threshold."
+    solution: "Add a prose-only exemption to the Skill."

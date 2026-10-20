@@ -19,6 +19,9 @@ fixes:
   - pr: 2205
     date: "2026-10-17"
     summary: "A save-handback script writes a subagent's final reply to a file verbatim; audit-docs and dispatch-subagents point to it."
+  - pr: 2269
+    date: "2026-10-19"
+    summary: "save-handback now returns the message of a SubagentHandback tool call instead of refusing the hand-back."
 occurrences:
   - session: session_017tt8CbwHqFWqw7PJZ7u7AL
     date: "2026-10-08"
@@ -70,3 +73,13 @@ occurrences:
     severity: minor
     description: "save-handback.ts failed on every reviewer because they delivered their report as a hand-back message, not final text, so I retyped the pool by hand."
     solution: "Have save-handback read SubagentHandback messages too, or tell audit-docs briefs to end with a plain final reply."
+  - session: session_0183U5MkKrjuhRKdjpFxD9Xj
+    date: "2026-10-19"
+    severity: moderate
+    description: "save-handback.ts refused every subagent hand-back (final turn is a SubagentHandback tool call, 'no final text'), so I wrote my own extractor over the transcript JSONL."
+    solution: "Make finalText accept a handback tool call's text input as the final message."
+  - session: session_01XWMuHGcaNTvRPHfYb9T7z2
+    date: "2026-10-19"
+    severity: minor
+    description: "Moving subagent research notes onto research branches took a save-handback, sed strip of the fence, a worktree per branch and a manual redaction pass"
+    solution: "A small script that turns a hand-back's fenced Markdown into a commit on a named research branch"

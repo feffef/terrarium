@@ -61,3 +61,13 @@ occurrences:
     severity: minor
     description: "Wrote a glossary claim that nothing leads with Walkthroughs while the guide landing still shows Start here"
     solution: "Grep the Tenant for the thing a new glossary rule describes before writing it; code-review caught it"
+  - session: session_01MKmEo8yAjxTqJ5h3zceLL5
+    date: "2026-10-19"
+    severity: minor
+    description: "Proposed the name transcript-search and the term flattened transcript before checking how Claude Code defines transcript; the user had to correct both."
+    solution: "Check a term against the glossary and the upstream docs before proposing a name built on it."
+  - session: session_01CBVi4qZ2RqPhfHeHPYrkwD
+    date: "2026-10-19"
+    severity: minor
+    description: "Stated in the retro that bad manifest paths could silently lose pages; flatten.ts actually throws on a missing file. Also rewrote the manifests with sed without reading them first, so their real content is unknown."
+    solution: "Check the code before stating a failure mode; read a file before rewriting it."

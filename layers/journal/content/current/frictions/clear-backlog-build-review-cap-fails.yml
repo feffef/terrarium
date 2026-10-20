@@ -23,3 +23,8 @@ occurrences:
     severity: minor
     description: "clear-backlog-build returned status failed for the 2069/2076 branch only because review hit its 3-round cap, though every remaining finding was a judgement call (worthFixing false)"
     solution: "Have the workflow return ready-to-push when the final round's findings are all worthFixing false"
+  - session: session_01BTtvaFQckiQwtGZsasWPJH
+    date: "2026-10-19"
+    severity: nit
+    description: "The build workflow hit its 3-round review cap on #1889 and #2146 with one small finding each, which I fixed by hand and re-gated."
+    solution: "Works as the Skill describes; no change needed."
