@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-10"
     summary: "Removed the commit-trailer guard, so hand-written trailers are no longer denied; recognised current models."
 occurrences:
-  - session: session_01AbPzFC2mns85YxwqznmJUe
-    date: "2026-10-05"
-    severity: minor
-    description: "Harness attribution reminder says to end commits with Co-Authored-By and Claude-Session lines, but the commit-trailer guard denies hand-written trailers. First commit attempt was blocked."
-    solution: "Make the harness reminder defer to the repo guard in this repo, or drop the instruction here."
-  - session: session_01EPZv5jBQyJYPqy8eVn8e8h
-    date: "2026-10-05"
-    severity: minor
-    description: "The harness attribution reminder told me to end commits with Co-Authored-By and Claude-Session lines, while the commit-trailer guard denies hand-written trailers; the first commit attempt followed the reminder and was denied."
-    solution: "Make the harness reminder yield to the repo convention, or note the conflict in guards.md next to the commit-trailer guard."
   - session: session_01QrvPXx1uquc4vvjJXhz1MU
     date: "2026-10-06"
     severity: nit

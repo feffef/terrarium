@@ -3,8 +3,8 @@ summary: >-
   A doc kept stating a fact a merged PR had made false, because an open Prune Trial covered its text.
 cause: "ADR-0027 forbids rewording text inside an open trial's territory, so a PR that changes behaviour leaves that doc false: docs/agents/pr-workflow.md lines 82-83 still say merge-pr.ts refuses Dependabot PRs after PR #2283. The pr-workflow.md trial was judged and deleted on 2026-10-19, yet the lines are unchanged on main (checked 2026-10-20). Signals: a PR body saying a doc 'is under the open prune trial, so it wasn't reworded'."
 surface: safe
-status: open
-ref: "No tracker issue found; docs/agents/pr-workflow.md:82-83 still stale on main 2026-10-20."
+status: tracked
+ref: "Dispatched in the 2026-10-20 frictions-to-fixes run (pr-workflow.md stale line)."
 occurrences:
   - session: session_01BTtvaFQckiQwtGZsasWPJH
     date: "2026-10-19"

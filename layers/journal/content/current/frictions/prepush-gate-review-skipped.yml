@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   ADR-0004's before-first-push gate:scoped plus code-review is skipped or the gate is not rerun after late edits.
 surface: guard-or-hook
-status: open
+status: tracked
+ref: "Regression issue #2311 (PRs #1852, #1853 did not hold)."
 fixes:
   - pr: 1852
     date: "2026-10-12"

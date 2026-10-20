@@ -2,7 +2,8 @@ name: edit-during-gate-run
 summary: "Editing files while pnpm gate:scoped runs makes its result test a different tree, so it fails or must run again."
 cause: "Agents start gate:scoped in the background and keep editing; the e2e step builds the old tree then runs new tests, or the gate must rerun on the final head. Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\"."
 surface: safe
-status: open
+status: tracked
+ref: "Dispatched in the 2026-10-20 frictions-to-fixes run (pr-workflow.md reorder)."
 occurrences:
   - session: session_01WynjtDHvk8MajTsgr59Ckt
     date: "2026-10-16"

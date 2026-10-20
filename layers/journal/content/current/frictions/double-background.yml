@@ -4,18 +4,13 @@ summary: >-
 cause: >-
   Sessions combine run_in_background: true with a trailing & or nohup, and the double-background guard denies it.
 surface: guard-or-hook
-status: open
-ref: "PR #2172 merged; the deny message now says nothing in the call ran. The guard still denies the combination."
+status: tracked
+ref: "Regression issue #2310 (PR #2172 did not hold)."
 fixes:
   - pr: 2172
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_01KyKW5E8oFPkSu3a4mCpT25
-    date: "2026-10-05"
-    severity: nit
-    description: "Combined `run_in_background: true` with a shell-level `nohup ... &` when starting the gate run; blocked by the double-background guard."
-    solution: "Use run_in_background alone with a plain foreground command, never both."
   - session: session_01AQ91ENQEqf8iMne1PrzFiu
     date: "2026-10-07"
     severity: nit

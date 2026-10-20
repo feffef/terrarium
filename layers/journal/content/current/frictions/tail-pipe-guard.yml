@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-11"
     summary: "Removed the check that blocked whole commands for ending in a pipe to tail or head."
 occurrences:
-  - session: session_01AbPzFC2mns85YxwqznmJUe
-    date: "2026-10-05"
-    severity: nit
-    description: "Tail-pipe guard rejected a command that piped through tail; later a sleep-then-tail wait was also blocked. Cost two retries."
-    solution: "Redirect to a log and read it separately; end the turn to wait on background builds."
-  - session: session_01BP68CxPvZypKHZE43z8gZA
-    date: "2026-10-05"
-    severity: nit
-    description: "A piped tail on a gate dry run was denied by the tail-pipe guard; fixed from the deny message."
-    solution: "None needed."
   - session: session_01ApFY3yyign1ba7pDd4aoeN
     date: "2026-10-06"
     severity: nit

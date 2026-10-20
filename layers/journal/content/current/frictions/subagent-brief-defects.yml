@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   Orchestrators write briefs from memory: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value restated wrongly, a check grepping output that lists only failures. The agent runs on the bad brief before anyone notices. Signals: "brief", "placeholder", "path did not exist".
 surface: safe
-status: open
+status: tracked
+ref: "Regression issue #2312 (PR #2150 did not hold)."
 fixes:
   - pr: 2150
     date: "2026-10-16"
