@@ -299,3 +299,15 @@ observations:
       Ledger data-hygiene clean - no stale `ref`/`fixedOn` fields, confirms
       the earlier #2024 bug stayed fixed. No reverts in the 2-week sweep.
       No new silent failure. Grade/role unchanged.
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): the Friction Ledger's
+      findings-retyped-by-hand entry (9 occurrences, fixes
+      #1699/#1768/#2060/#2205) correctly did NOT duplicate or re-fix issue
+      #2262 — #2262 was filed by a sibling Skill (audit-skills) and already
+      open when this window's frictions-to-fixes run executed, so per §2 it was
+      correctly left to the issue tracker. The real fix, PR #2269, merged via
+      clear-backlog afterward. No frictions-to-fixes run has executed since PR
+      #2269 merged, so the Ledger not yet listing it as the 5th fix is a timing
+      gap, not a miss — the next run should add "fixes: #2269" and refresh the
+      stale ref line. No reverts found. Grade/role unchanged.

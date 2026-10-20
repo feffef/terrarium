@@ -46,3 +46,17 @@ observations:
       re-confirmed (PR existence/merge, pin-commit reality) plus a fresh
       revert sweep - no revert found. No new silent failure. Grade
       unchanged (specialist).
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): 8 usedIn sessions (not 4), 1
+      freshly audited end-to-end plus 4 independently re-verified against git
+      history, all pinned revisions real ancestors with spot-checked excerpts
+      matching. No reverts in the 2-week sweep. One pending, self-correcting
+      staleness, not a failure:
+      layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+      (pinned 03ccaffa, 2026-10-19) still describes the pre-adr-check "search
+      docs/adr" behavior that commit 01177f458 superseded ~2.5h after the pin,
+      same day. No glassbox-update run has executed since; its own
+      citation-tracking (page-refs.ts) will flag this page for re-check on its
+      next pass per design. Worth a human/next-run follow-up. Grade/role
+      unchanged.

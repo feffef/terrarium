@@ -1,0 +1,24 @@
+name: adr-check
+category: platform-operation
+importance: essential
+gist: Finds and reads the ADRs that bind a planned change before you plan, recommend or implement it.
+role: >-
+  Replaces CLAUDE.md's old inline "search the ADRs first" step with a
+  model-invoked one: prints every ADR summary, then the full text behind any
+  even slightly related one, so a recommendation or change starts from what's
+  already decided rather than rediscovering it. Binds virtually every
+  planning/implementing session, not a specialist tool.
+observations:
+  - date: "2026-10-20"
+    note: >-
+      Coverage gap: created by commit 181976173 (2026-10-19, PR #2287/#2146),
+      used but had no Inventory entry until now. First `audit-skills`
+      behaviour check: 9/10 usedIn sessions delivered as promised, 151/154
+      windowNotUsed sessions predate the Skill's existence, the other 3
+      correctly out of scope. One verified silent failure, already tracked:
+      session_01AwaGncaYJFWdJnc6yqDoTS found a `clear-backlog-explore` triage
+      agent piping `binding.ts` through `tail -30`, defeating step 1's "read
+      every related summary" promise. Already fully recorded on open issue
+      #2286 (owner's own review, on hold until 2026-10-22) — no new comment
+      needed. Graded `essential`: stands in for a mandatory, broad CLAUDE.md
+      step.

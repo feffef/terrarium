@@ -394,3 +394,15 @@ observations:
       skillsUsed-crediting gap on this Skill's own reads) - not new
       instances. No new silent failure, no new missed invocation.
       Grade/role unchanged (essential).
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): 10/10 usedIn clean, pnpm
+      check:worktrees passes, no new stranding/collision. Two new instances of
+      the already-tracked, owner-closed-wontfix #1586/#1915
+      skillsUsed-crediting gap: session_011xvPjJVknZzx45v7NjhebT (the prior
+      week's audit-skills orchestrator) and session_01BTtvaFQckiQwtGZsasWPJH (a
+      clear-backlog sweep) each read dispatch-subagents/SKILL.md before
+      dispatching but omitted it from skillsUsed — sub-threshold, no damage
+      (isolation correctly judged unnecessary / handled via the Workflow tool
+      carve-out in both cases). windowNotUsed: 133 screened, 4 opened fully, no
+      missed invocation. Grade/role unchanged.

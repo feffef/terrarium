@@ -595,3 +595,17 @@ observations:
       within window). No new silent failure. This run's own new finding
       (audit-docs' save-handback.ts regression, issue #2262) is recorded on
       audit-docs's own entry, not here. Grade/role unchanged (routine).
+  - date: "2026-10-20"
+    note: >-
+      Self-check (the self-audit): 7/7 usedIn runs independently re-verified
+      against live GitHub (7 Inventory PRs, 14 filed issues), diffs correctly
+      scoped to Inventory/Routine YAML only, no unevidenced grade changes, no
+      premature observation pruning, no Pack-Skill issue violations,
+      routines/audit-skills.yml's 30-row cap enforced. One self-disclosed (not
+      silent) deviation: session_01TFojzwXEByz1nbqt3wcKNL (10-14) ran
+      code-review after its first push, not before (ADR-0004 ordering miss),
+      self-logged as moderate, caught 5 real issues before merge — no bad
+      content reached main. Detection gap noted: the current check (code-review
+      missing from skillsUsed) doesn't catch an ordering slip where it ran but
+      ran late; worth tightening in a future SKILL.md revision. Grade/role
+      unchanged.
