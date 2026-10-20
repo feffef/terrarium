@@ -22,10 +22,10 @@ a Skill's own steps already review the diff before the push, as
 instead. It is simple when it is a typo, rewrap, broken link or path, or a
 rule's `adr:` hash or token-estimate restamp, or when it changes at most 10
 lines in at most 2 files and adds no file. Either way it changes no code
-logic, hook, workflow script, Skill's or rule's frontmatter, and no meaning of
-a Skill, rule, ADR or agent doc. The same holds for a follow-up commit after a
-review; a larger follow-up gets `code-review` on its own diff, not the whole
-branch.
+logic, hook, workflow script, Skill's or rule's frontmatter (bar that hash),
+and no meaning of a Skill, rule, ADR or agent doc. The same holds for a
+follow-up commit after a review; a larger follow-up gets `code-review` on its
+own diff, not the whole branch.
 
 A later push that changes only prose or docs may skip `gate:scoped` and rely on
 CI's gate; run it first for any other change. If `gate:scoped` passed but CI
@@ -55,10 +55,10 @@ story or repeat its findings.
    as-is": the merge must never be the only trace. End it with a line
    `Reviewed: <sha>` naming the head commit your `code-review` run (or your
    Skill's own review step, or your self-read of a simple change) covered;
-   after any later push, review the new commits (as above) and post a new
-   verdict. Use `event=COMMENT` or `add_issue_comment`, never an APPROVE
-   review: it fails on our own PRs, and on a fork PR it would fake the human
-   merge authority
+   after any later push, review the new commits (per the follow-up rule above)
+   and post a new verdict. Use `event=COMMENT` or `add_issue_comment`, never
+   an APPROVE review: it fails on our own PRs, and on a fork PR it would fake
+   the human merge authority
    [`guest-contributions.md`](./guest-contributions.md) reserves.
 5. Land through `scripts/github/merge-pr.ts <pr-number>`, the only merge path; never
    call `enable_pr_auto_merge`. The script refuses what it can see (ADR-0004, ADR-0020, ADR-0023): a
