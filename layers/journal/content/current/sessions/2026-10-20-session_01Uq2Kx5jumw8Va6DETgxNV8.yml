@@ -1,15 +1,17 @@
 schemaVersion: 1
 session: session_01Uq2Kx5jumw8Va6DETgxNV8
 startedAt: 2026-10-20T02:08:15Z
-endedAt: 2026-10-20T02:32:39Z
+endedAt: 2026-10-20T02:47:38Z
 kind: autonomous
 goal: Turn the week's logged frictions into fixes
-status: in-review
-outcome: Ledger PR and one doc-fix PR open; a third code-fix branch still in review; three regression issues filed
-summary: "Scheduled frictions-to-fixes run (no human prompt; everything here is agent-initiated under the Skill's own authority). A survey subagent screened 38 sessions and committed the ledger changes; a design subagent designed three picks. I filed three regression issues (#2310, #2311, #2312), dispatched two Sonnet impl agents (one grouped pr-workflow.md doc fix, one transcript-trace.ts near-miss filter), opened the ledger PR #2313 and the doc PR #2314, and sent the code branch back once for a canonicalization edge case a code-review pass found. The shell-read detector friction turned out to be a design limit (credit needs output evidence from the checkout), so only the misleading advisory was fixed, not the credit rule. Open: the code PR, merging both opened PRs once CI is green, and the combined status PR (step 8)."
+status: completed
+outcome: Four PRs merged (ledger, doc fixes, detector advisory fix, status close) and three regression issues filed
+summary: "Scheduled frictions-to-fixes run (no human prompt; everything here is agent-initiated under the Skill's own authority). A survey subagent screened 38 sessions and committed the ledger changes; a design subagent designed three picks. I filed three regression issues (#2310, #2311, #2312), dispatched two Sonnet impl agents (one grouped pr-workflow.md doc fix, one transcript-trace.ts near-miss filter), opened the ledger PR #2313 and the doc PR #2314, and sent the code branch back once for a canonicalization edge case a code-review pass found. The shell-read detector friction turned out to be a design limit (credit needs output evidence from the checkout), so only the misleading advisory was fixed, not the credit rule. All four PRs (#2313 ledger, #2314 docs, #2315 code, #2316 status close) merged by me after posted verdicts."
 prs:
   - "2313"
   - "2314"
+  - "2315"
+  - "2316"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: read before first git command beyond status; commit via -F file
@@ -76,23 +78,24 @@ frictions:
   - description: The Stop hook asked to push twice while the ledger gate and impl agents were still running and the skill said not to push before the gate.
     solution: None; accepted stop-hook-nag cluster.
     severity: nit
-durationSec: 1464
+durationSec: 2363
 models:
-  claude-sonnet-5-5: 108
+  claude-sonnet-5-5: 138
 toolCounts:
-  Bash: 24
+  Bash: 34
   Read: 9
   Agent: 6
   ToolSearch: 2
   mcp__github__list_issues: 1
   mcp__github__issue_write: 3
   Skill: 4
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 2
+  mcp__github__create_pull_request: 4
+  mcp__github__subscribe_pr_activity: 4
+  ReadNotifications: 3
   SendMessage: 1
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 5
   mcp__github__pull_request_read: 2
+  PushNotification: 1
 filesEdited:
   - scripts/session/transcript-trace.ts
   - tests/unit/transcript-trace.spec.ts
