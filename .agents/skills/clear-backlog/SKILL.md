@@ -54,7 +54,9 @@ With no `grill` results, skip this section.
 
 Send a push notification with the `PushNotification` tool:
 `grilling ready: N questions`. Then run the `grilling` Skill on one list,
-built from the `grill` results. Where its format differs, this list wins:
+built from the `grill` results. Before asking, verify each pick's claim against
+its source (CLAUDE.md), via `inspect-session` for a regression report; say so
+on any pick you could not verify. Where its format differs, this list wins:
 
 - Keep the `Q` numbering running across the whole run: follow-up rounds and
   §3 interrupts continue the count. Label every option `a)`, `b)`, `c)`, so
