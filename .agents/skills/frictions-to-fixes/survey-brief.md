@@ -40,7 +40,7 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   one); add every partial fix. Never record that a fix worked: `status` is the
   tracking state (`open`, `tracked`, `on-trial`, `accepted`), and for an entry with `fixes`
   the page and `--summary` derive `fix landed`, `likely fixed` (no occurrence
-  for 3 days after the latest PR) or `still recurring` (occurrences dated after
+  for 3 days after the latest PR) or `still recurring` (occurrences after
   it, counted), so a re-fix after a regression needs only its `fixes` entry.
   An `accepted` cluster (the owner accepts its cost) is never re-proposed for a fix.
   `ref` holds the tracking issue or open PR, the trial's territory match or what a fix left
@@ -96,12 +96,11 @@ session files it, naming the trial. Then, for the rest: check the tracker for an
   ledger's `tracked`; cite the number). One with no
   commit or comment within the horizon is idle: surface it as a candidate for
   the main session to pick up or escalate.
-- **Reappeared _after_ its fix merged** (a friction logged in a session that
-  started later than the fixing PR landed; the entry's latest fix dates it,
-  and `--summary` shows it as `still recurring`) — a **regression**: the fix
+- **Reappeared _after_ its fix merged** — a **regression**: the fix
   that was supposed to be in place did not hold.
 
-Done when every candidate is labelled never-fixed, drop, open-already, or
+`prune-friction-ledger.ts --candidates` labels each ledger entry from the
+ledger alone; confirm each label on the tracker. Done when every candidate is labelled never-fixed, drop, open-already, or
 regression — each with its citing issue/PR number where one exists.
 
 ## Your own frictions
