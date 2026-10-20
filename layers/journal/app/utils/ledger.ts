@@ -15,12 +15,12 @@ export type LedgerState = FixState | 'open' | 'tracked' | 'on trial' | 'accepted
 /** Occurrences older than this many days are dropped (`prune-friction-ledger.ts`). */
 export const LEDGER_HORIZON_DAYS = 14
 
-/** The windows a visitor can narrow the page to, in days; the last is the horizon. */
+/** The windows a visitor can narrow the page to, in days. */
 export const LEDGER_WINDOWS = [2, 3, 5, 7, 10, LEDGER_HORIZON_DAYS] as const
 
-/** The first date inside a window of `days` ending on `today`, counted like the prune's horizon. */
+/** The first date of the last `days` dates, `today` included: 2 days is yesterday and today. */
 export function ledgerWindowStart(today: string, days: number): string {
-  return new Date(Date.parse(`${today}T00:00:00Z`) - days * 86_400_000).toISOString().slice(0, 10)
+  return new Date(Date.parse(`${today}T00:00:00Z`) - (days - 1) * 86_400_000).toISOString().slice(0, 10)
 }
 
 /** The newest merged PRs the page lists, in the pill and the list alike. */

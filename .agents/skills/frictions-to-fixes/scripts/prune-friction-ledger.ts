@@ -23,7 +23,7 @@ import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts
 
 /** The oldest occurrence date the horizon keeps. */
 export function horizonStart(today: string): string {
-  return ledgerWindowStart(today, LEDGER_HORIZON_DAYS)
+  return ledgerWindowStart(today, LEDGER_HORIZON_DAYS + 1)
 }
 
 /** One ledger file pruned: its new text, or `null` when no occurrence is left.

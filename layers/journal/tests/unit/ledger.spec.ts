@@ -151,8 +151,8 @@ describe('ledgerPanels window', () => {
     expect(e).toMatchObject({ count: 1, state: 'still recurring', since: 2 })
   })
 
-  it('starts the window the same way the prune counts its horizon', () => {
-    expect(ledgerWindowStart('2026-10-20', 2)).toBe('2026-10-18')
-    expect(ledgerWindowStart('2026-03-01', 14)).toBe('2026-02-15')
+  it('covers exactly the last N dates, today included', () => {
+    expect(ledgerWindowStart('2026-10-20', 2)).toBe('2026-10-19')
+    expect(ledgerWindowStart('2026-03-01', 14)).toBe('2026-02-16')
   })
 })
