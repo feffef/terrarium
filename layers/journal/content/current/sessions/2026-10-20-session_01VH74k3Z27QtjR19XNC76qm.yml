@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_01VH74k3Z27QtjR19XNC76qm
 startedAt: 2026-10-20T18:05:30Z
-endedAt: 2026-10-20T18:33:26Z
+endedAt: 2026-10-20T18:42:51Z
 kind: delegated
 goal: Turn the last days' recurring session frictions into fixes
-status: in-review
-outcome: Ledger PR and one batched doc-fix PR are open; three regression issues filed; the closing ledger PR is still to do
-summary: "The owner invoked /frictions-to-fixes (the only human prompt; everything after was the Skill's own procedure, so every step below was agent-initiated within that Skill). A survey subagent read 37 sessions, appended 45 occurrences to the Friction Ledger, recorded six missed fix PRs and ranked candidates. I filed regression issues #2332, #2333 and #2334 (the top three by severity, count and dated recurrence), picked seven fix groups and had a design agent design them. Two designs were dispatched as one doc branch (tighter CLAUDE.md verify-before-you-state wording, one clear-backlog sentence, quoted atlas-specimen note examples); the design agent recommended no change for four picks (misread-owner-instruction, blocked-waiting, designated-branch-clash, parallel-rewrite) because the guards already say the right thing or a clause would cost every session more than the slip, and the survey's pick 5 turned out to already have two fixes. Standards and Spec review of the doc branch found no hard violations; two wording fixes went back to the build agent. Ledger PR 2335 and doc PR 2336 are open and subscribed. Still open: CI, verdict comments, merging both, the closing status-only ledger PR (section 8) and cleaning the build agent's stray worktree branch. The weak point is that the same rule wording did not stop 35 earlier occurrences, so the doc PR may not move the counts."
+status: completed
+outcome: Ledger PR, doc-fix PR and closing ledger PR merged; three regression issues filed
+summary: "The owner invoked /frictions-to-fixes (the only human prompt; everything after was the Skill's own procedure, so every step below was agent-initiated within that Skill). A survey subagent read 37 sessions, appended 45 occurrences to the Friction Ledger, recorded six missed fix PRs and ranked candidates. I filed regression issues #2332, #2333 and #2334 (the top three by severity, count and dated recurrence), picked seven fix groups and had a design agent design them. Two designs were dispatched as one doc branch (tighter CLAUDE.md verify-before-you-state wording, one clear-backlog sentence, quoted atlas-specimen note examples); the design agent recommended no change for four picks (misread-owner-instruction, blocked-waiting, designated-branch-clash, parallel-rewrite) because the guards already say the right thing or a clause would cost every session more than the slip, and the survey's pick 5 turned out to already have two fixes. Standards and Spec review of the doc branch found no hard violations; two wording fixes went back to the build agent. I posted verdicts and merged ledger PR 2335 and doc PR 2336, then merged the status-only closing ledger PR 2337 (six clusters back to open with a fixes entry) and removed the build agent's worktree. Nothing is left open except the regression issues for triage. The weak point is that the same rule wording did not stop 35 earlier occurrences, so the doc PR may not move the counts."
 prs:
   - "2335"
   - "2336"
+  - "2337"
 docsRead:
   - path: GLOSSARY.md
     reason: Friction, Friction Ledger and Prune Trial definitions
@@ -115,20 +116,21 @@ frictions:
   - description: The Stop hook asked to push six times while the gate and reviews were still running and ADR-0004 forbids pushing before them.
     solution: "Accepted cost (stop-hook-nag cluster, issue #2233)."
     severity: nit
-durationSec: 1676
+durationSec: 2241
 models:
-  claude-sonnet-5-5: 93
+  claude-sonnet-5-5: 126
 toolCounts:
   Read: 10
   Agent: 5
-  Bash: 21
+  Bash: 32
   Skill: 4
   ToolSearch: 1
   mcp__github__issue_write: 4
   SendMessage: 1
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  mcp__github__add_issue_comment: 3
+  ReadNotifications: 4
 filesEdited:
   - CLAUDE.md
   - .agents/skills/clear-backlog/SKILL.md
