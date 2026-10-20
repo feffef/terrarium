@@ -27,7 +27,7 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   after its fix merged when it has one. Write the ledger changes (new entries, appended occurrences,
   status changes) to the entry files. Survey the ledger with
   `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts --summary` (one line per entry
-  with its fixes and its state; it lists the frictions two clusters share, for
+  with its state, fixes and newest note; it lists the frictions two clusters share, for
   you to re-judge);
   open an entry file only for its evidence.
 - **Re-cluster when the ledger says so.** The stored texts show a broad entry
@@ -67,9 +67,9 @@ Ledger, which you commit (Report, (d)). The scratchpad is
 extract carries. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (ADR-0009). Don't hunt the raw corpus for them.
 - **For a friction alleging a detector/tool/mechanism bug, check the `subagents` field and read the relevant mechanism source before trusting the friction's own root-cause guess.** A self-diagnosis logged in the moment, without source access, is not evidence: e.g. "detector over-credits reads" can be `foldSubagentTrace` correctly unioning a dispatched subagent's reads, not a real detector gap. Verify against source before ranking it.
 - **Group and rank.** A candidate is a ledger entry (one per root cause) or a
-  window friction too new for one; rank by **recurrence and severity together** (severity is an ordered rank, not a number: weigh it qualitatively, never multiply it). **Prioritize `moderate`, `major`, and `blocker` frictions**: these earn a fix on severity alone, even logged once. **Rank a `nit` or `minor` that recurs regularly high**: cheap repeated papercuts add up. What gets dropped is the lone low-severity one-off, not every `nit`.
+  window friction too new for one; rank by **recurrence and severity together** (severity is an ordered rank, not a number: weigh it qualitatively, never multiply it). **Prioritize `moderate`, `major`, and `blocker` frictions**: these earn a fix on severity alone, even logged once. **Rank a `nit` or `minor` that recurs regularly high**: cheap repeated papercuts add up. What gets dropped is the lone low-severity one-off, not every `nit`. **Rank low a cluster whose newest note drops a design** (`--summary`'s last column) unless the entry file shows occurrences dated after that note.
 - **Screen against the tracker** — apply the Screen rules below to every candidate.
-- **Earlier runs' decisions are the ledger's `status` and `ref`.** When an entry
+- **Earlier runs' decisions are the ledger's `status`, `ref` and `notes`.** When an entry
   lacks them, the window's `trigger: frictions-to-fixes` logs (`summary`,
   `outcome`, `prs`) are the fallback; a run's summary can be wrong or partial, so
   verify against the PR or `main` before dropping.

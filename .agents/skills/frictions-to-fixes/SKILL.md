@@ -102,9 +102,10 @@ built.
 
 Dispatch **one** `general-purpose` subagent for all picks. Its brief is
 [`design-brief.md`](design-brief.md) verbatim, with the picks (each with
-everything the survey found) and the scratchpad path filled in. It returns,
-per fix: the problem and evidence, one design, the risk, and a
-recommendation (dispatch or issue), plus its own frictions.
+everything the survey found, plus its ledger entry's `notes`, read from the
+entry file) and the scratchpad path filled in. It returns, per fix: the problem and
+evidence, one design, the risk, and a recommendation (dispatch, issue, or no
+change), plus its own frictions.
 
 Done when every pick has a design and a recommendation.
 
@@ -114,8 +115,9 @@ Done when every pick has a design and a recommendation.
 
 ## 5. Decide, file issues, open the ledger PR
 
-Goal: each fix is either dispatched (built and merged in this run) or filed
-as an issue, and the ledger reaches `main` whatever happens to the fixes.
+Goal: each fix is dispatched (built and merged in this run), filed as an
+issue, or dropped with its reason kept, and the ledger reaches `main`
+whatever happens to the fixes.
 
 ### Instructions
 
@@ -124,7 +126,9 @@ as an issue, and the ledger reaches `main` whatever happens to the fixes.
    fix that touches a Human-only file (the `paths` of
    `.claude/rules/adr-0004-human-merge.md`), a guard or the hook wiring in
    `.claude/settings.json` (`docs/agents/guards.md`), or that depends on a
-   design choice a human should make.
+   design choice a human should make. When the design agent recommends no
+   change (no repo change helps, or the fix costs more than the friction),
+   drop the fix.
 2. **File issues** for undispatched fixes, highest-ranked first, **at most
    three**. Search the tracker first. One issue per group of related
    frictions, holding the problem (quote every session and severity) and the
@@ -135,6 +139,10 @@ as an issue, and the ledger reaches `main` whatever happens to the fixes.
 3. **Update the ledger** on your branch, on top of the survey's commit:
    - set `status: tracked` on every entry this run files or dispatches, with
      the issue number in `ref` for a filed one;
+   - for each dropped fix, append a line to its entry's `notes` (a `|-`
+     block, one note per line):
+     `<date> design: <the solution> dropped: <the reason>`. The entry keeps
+     its status: only that solution is dropped, not the cluster;
    - run `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts`
      (drops occurrences older than the horizon and deletes empty entries).
 4. **Open the ledger PR.** Review the diff yourself (this Skill's own review
@@ -143,7 +151,8 @@ as an issue, and the ledger reaches `main` whatever happens to the fixes.
    `in-review`). Land it by `docs/agents/pr-workflow.md`'s recipe once CI is
    green. §6 does not wait for it.
 
-Done when every fix is ready to dispatch, filed, or listed for the next run;
+Done when every fix is ready to dispatch, filed, dropped with a note, or
+listed for the next run;
 the top three regressions have issues; and the ledger PR is open.
 
 ### Edge cases

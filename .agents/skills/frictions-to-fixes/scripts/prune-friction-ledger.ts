@@ -11,8 +11,9 @@
 //   stored status, or with merged PRs and not `accepted` what the page shows:
 //   fix landed, likely fixed, still recurring with the count since the latest
 //   PR, issue #2024),
-//   ref, in-horizon occurrence count, max severity (issue #1917), and the fix
-//   count and latest fix. It ends with every friction two clusters share, for
+//   ref, in-horizon occurrence count, max severity (issue #1917), the fix
+//   count and latest fix, and the newest of the entry's `notes` in full when it
+//   has any. It ends with every friction two clusters share, for
 //   the survey to judge.
 import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -64,6 +65,7 @@ interface Entry {
   name?: string
   status?: string
   ref?: string
+  notes?: string
   fixes?: { pr: number; date: string }[]
   occurrences?: { session?: string; date?: string; severity?: string; description?: string }[]
 }
@@ -84,7 +86,10 @@ export function summarizeLedger(today: string, cwd = root): string[] {
     const fixes = last ? `${e.fixes!.length} ${e.fixes!.length === 1 ? 'fix' : 'fixes'}, latest #${last.pr} ${last.date}` : 'no fixes'
     const derived = ledgerFixState(e.status, e.fixes ?? [], (e.occurrences ?? []).map((o) => String(o.date)), asOf)
     const state = derived ? `${derived.state}${derived.since ? ` (${derived.since} since #${last!.pr})` : ''}` : e.status
-    return [e.name ?? f, state, e.ref ?? '-', `${occ.length} in horizon`, SEVERITIES[max] ?? '-', fixes].join(' | ')
+    const note = String(e.notes ?? '').trim().split('\n').at(-1)
+    const cols = [e.name ?? f, state, e.ref ?? '-', `${occ.length} in horizon`, SEVERITIES[max] ?? '-', fixes]
+    if (note) cols.push(`note: ${note}`)
+    return cols.join(' | ')
   })
 }
 

@@ -5,6 +5,8 @@ cause: >-
   Agents add a sentence, rejected alternative or excerpt that restates a fact kept elsewhere (CLAUDE.md "One home per fact"): ADR rewrite agents, a build adding two ADR-0003 sentences, a lesson draft repeating ADR-0028 and an excerpt; the build reviewers passed some of it.
 surface: safe
 status: open
+notes: |-
+  2026-10-20 design: no separate fix designed: rides on PR #2336's CLAUDE.md "One home per fact" grep sentence plus review; not recurred since 2026-10-16.
 occurrences:
   - session: session_011xN2Zi67cjpCguuMiZbsJ6
     date: "2026-10-13"

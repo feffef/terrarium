@@ -134,6 +134,12 @@ describe('ledgerPanels fixes and state', () => {
     expect(e).toMatchObject({ state: 'accepted', since: 0, count: 1 })
     expect(e!.fixes.map((f) => f.pr)).toEqual([1])
   })
+
+  it('carries notes to the page without changing the state', () => {
+    const notes = '2026-10-20 design: a CLAUDE.md line dropped: costs every session more than the slip'
+    const [e] = ledgerPanels([{ ...cluster('n', ['major']), notes }], 'current', new Set(), 'archived').severe
+    expect(e).toMatchObject({ state: 'open', notes })
+  })
 })
 
 describe('ledgerPanels window', () => {
