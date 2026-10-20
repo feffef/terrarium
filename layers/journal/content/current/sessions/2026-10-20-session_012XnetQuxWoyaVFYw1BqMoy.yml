@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_012XnetQuxWoyaVFYw1BqMoy
 startedAt: 2026-10-20T04:03:29Z
-endedAt: 2026-10-20T04:30:04Z
+endedAt: 2026-10-20T04:32:06Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs against the code
-status: in-review
-outcome: "Fact-checked doc fixes in PR #2317 (gate green); ADR-0004 bump-exception conflict left for the owner"
+status: completed
+outcome: "Fact-checked doc fixes merged in PR #2317; ADR-0004 bump-exception conflict left for the owner"
 summary: "Scheduled /audit-docs run, no human prompts. Family was root (the last sweep was journal). Five read-only reviewers (freshness, single-home, coherence, two concision) returned about 70 findings; three independent checkers confirmed or corrected about half and rejected the rest (e.g. moving UI/e2e rules, glossary pointer changes, Atlas path removal that a test asserts on). Applied the confirmed fixes in one commit: gate-last order in pr-workflow and four scheduled Skills, merge-pr.ts refusal list, Dependabot exception in the Human-only entry, visitor-loop stored-field remit, journal page claims, verdict-ask pointers and root-family wording cuts. Ran code-review (two agents) and fixed its valid points (ready-for-human refusal, wording, tests/README). Left for a human: ADR-0004 and the human-merge rule say any minor/patch bump may be agent-merged but merge-pr.ts only allows same-repo Dependabot bumps; plus triage-labels vs pack Skills, outside-agent provenance marker, guards.md vs Prune Trials, the \"prose or docs\" gate-skip threshold. All work was agent-initiated under the Skill's standing remit."
 prs:
   - "2317"
@@ -295,11 +295,11 @@ frictions:
   - description: Tried a foreground sleep to wait for agents, then a run_in_background command that also used a trailing ampersand; both were blocked by guards.
     solution: The tool descriptions already say not to; waiting for agent notifications needs no polling.
     severity: nit
-durationSec: 1595
+durationSec: 1717
 models:
-  claude-sonnet-5-5: 83
+  claude-sonnet-5-5: 93
 toolCounts:
-  Bash: 25
+  Bash: 27
   Read: 3
   Agent: 10
   Skill: 3
@@ -307,6 +307,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__add_issue_comment: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0015.md
