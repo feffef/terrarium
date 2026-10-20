@@ -563,6 +563,7 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
     { path: 'docs/agents/guards.md', text: GUARDS },
     { path: 'docs/agents/domain.md', text: DOMAIN },
     { path: 'GLOSSARY.md', text: CONTEXT },
+    { path: 'layers/tinkerfund/GLOSSARY.md', text: '# Tinkerfund glossary\n\nThe crowdfunding shop vocabulary of invented products.' },
   ])
   let n = 0
   const bash = (command: string, output = ''): Record<string, unknown>[] => {
@@ -697,6 +698,11 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
       const preview = `Output too large. Full output saved to: ${saved}\n\nPreview:\n# Guards`
       const scan = shellReadScanOf(withCwd(bash('cat docs/agents/guards.md', preview)), [], { docIndex: index })
       expect(scan.paths).toEqual(['docs/agents/guards.md'])
+    })
+
+    it('drops the unshown near-miss for a doc absent from the checkout: no output could credit it', () => {
+      const scan = shellReadScanOf(withCwd(bash('cat docs/agents/branch-only.md', '(Bash completed with no output)')), [], { docIndex: index })
+      expect(scan.nearMisses).toEqual([])
     })
 
     it('names the cd-resolved path in a near-miss, so the agent recognizes which file went unshown (#1454)', () => {
