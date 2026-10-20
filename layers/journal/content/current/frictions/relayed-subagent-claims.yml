@@ -4,8 +4,11 @@ summary: >-
 cause: >-
   A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
 surface: safe
-status: tracked
-ref: "branch friction-fixes-doc-2026-10-20 (CLAUDE.md and clear-backlog wording)"
+status: open
+fixes:
+  - pr: 2336
+    date: "2026-10-20"
+    summary: "CLAUDE.md \"Verify before you state\" now names subagent reports, script behaviour from recall, \"only\"/\"every\"/\"nothing\" claims and one-test causes; \"One home per fact\" says to grep for other statements when changing one."
 occurrences:
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"

@@ -4,8 +4,11 @@ summary: >-
 cause: >-
   After adding a section, the author did not search the same file for statements the new text overrides. Signals: leftover bullet contradicting a new section; caught by code-review.
 surface: safe
-status: tracked
-ref: "branch friction-fixes-doc-2026-10-20 (CLAUDE.md wording)"
+status: open
+fixes:
+  - pr: 2336
+    date: "2026-10-20"
+    summary: "CLAUDE.md \"Verify before you state\" now names subagent reports, script behaviour from recall, \"only\"/\"every\"/\"nothing\" claims and one-test causes; \"One home per fact\" says to grep for other statements when changing one."
 occurrences:
   - session: session_01Fay2GiWTwxDKnnqS9DznHk
     date: "2026-10-16"
