@@ -19,7 +19,7 @@ A run opens three kinds of PR:
 - **Fix PRs** (§6–§7): one per code fix, plus one for all doc fixes.
 - **The closing ledger PR** (§8): records what happened to the fix PRs.
 
-Work on the session's branch until §6; each fix gets its own branch.
+Work on the session's branch until §6, where fixes move to their own branches.
 
 ## 1. Survey the frictions
 
@@ -42,9 +42,8 @@ Done when you hold all six parts.
 
 ### Edge cases
 
-- The subagent only surveys. It files no issues and opens no PRs; its one
-  write is the ledger commit on your branch.
-- Its own frictions (c) go into this session's log too (§8).
+- The subagent only surveys: its one write is the ledger commit on your
+  branch.
 
 ## 2. Act on the screen
 
@@ -55,10 +54,10 @@ labelled **never-fixed**, **drop**, **open-already** or **regression**.
 
 - **Never-fixed:** carry on to §3.
 - **Drop:** nothing to do.
-- **Open-already:** file nothing. If the subagent flags it idle, pick it up
-  in §3 or escalate it.
+- **Open-already:** file nothing. If the subagent flags it idle, it is yours
+  to pick up in §3 or escalate.
 - **Regression** (its fix merged, then the friction came back): never pick
-  it. File an issue saying the earlier fix did not work, linking the earlier
+  it; a change that already failed once needs human eyes. File an issue saying the earlier fix did not work, linking the earlier
   issue or PR and quoting the original and the new friction. Do this for the
   top **three** by severity, count and dated proof of recurrence together.
   List the rest in the ledger PR's description (§5).
@@ -82,8 +81,10 @@ Goal: choose this run's fixes from the never-fixed candidates.
 
 1. Take the subagent's ranking and grouping as given. Adjust a grouping if
    you disagree, but don't re-rank from scratch.
-2. Pick **up to 10**, or fewer if the Skill's argument says so. Prefer a
-   ledger entry with a `major` or `blocker` occurrence.
+2. Pick from the never-fixed candidates and any idle open-already ones you
+   take on (§2): everything that ranks, **up to 10**, or the lower count the
+   Skill's argument gives. Prefer a ledger entry with a `major` or `blocker`
+   occurrence.
 
 Done when each pick names its ledger entry (or window friction) and its
 sessions, with one line on why it earns a fix.
@@ -109,8 +110,7 @@ Done when every pick has a design and a recommendation.
 
 ### Edge cases
 
-- It designs only: no issues, no PRs, no code.
-- Its own frictions go into this session's log too (§8).
+- It designs only: it files and changes nothing.
 
 ## 5. Decide, file issues, open the ledger PR
 
@@ -130,13 +130,15 @@ as an issue, and the ledger reaches `main` whatever happens to the fixes.
    frictions, holding the problem (quote every session and severity) and the
    design. Follow `docs/agents/issue-tracker.md`'s "Filing an issue" and
    label it `needs-triage`. List the fixes over the cap in the ledger PR's
-   description.
+   description. Outside the cap: §2's regression issues, and fixes blocked
+   only by a Human-only file or a guard (still filed, as `needs-triage`).
 3. **Update the ledger** on your branch, on top of the survey's commit:
    - set `status: tracked` on every entry this run files or dispatches, with
      the issue number in `ref` for a filed one;
    - run `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts`
      (drops occurrences older than the horizon and deletes empty entries).
-4. **Open the ledger PR.** Review the diff yourself, run `pnpm gate:scoped`
+4. **Open the ledger PR.** Review the diff yourself (this Skill's own review
+   step, per `docs/agents/pr-workflow.md`), run `pnpm gate:scoped`
    on the final head, push, and open it. Invoke `close-session` (status
    `in-review`). Land it by `docs/agents/pr-workflow.md`'s recipe once CI is
    green. §6 does not wait for it.
@@ -146,11 +148,9 @@ the top three regressions have issues; and the ledger PR is open.
 
 ### Edge cases
 
-- §2's regression issues and fixes blocked only by a Human-only file or a
-  guard don't count toward the cap of three. Those blocked fixes are still
-  filed as `needs-triage` issues.
-- A dispatched fix gets **no issue**: its merged PR is the record. Carry its
-  problem, evidence and design into §6's brief and the PR description.
+- A dispatched fix's record is its merged PR, so it gets no issue (one would
+  close minutes later). Carry its problem, evidence and design into §6's
+  brief and the PR description.
 - A fix neither filed nor listed drops out of the window, and the next run
   finds it again from scratch.
 - A dispatched fix's PR number goes into the ledger in §8, not here.
@@ -169,24 +169,23 @@ Sonnet agent in its own worktree.
      Inventory entry): all go to **one** agent as one branch. One batched PR
      is cheaper to review than many one-line ones.
    - **Code or config fixes:** one agent and one branch each.
-3. Dispatch each agent with `model: sonnet`. Its brief is
+3. Dispatch each agent with `model: sonnet`, in its own worktree. Its brief is
    [`impl-brief.md`](impl-brief.md) verbatim, with its fixes (problem,
    evidence, design) and its own scratchpad subfolder (`{SCRATCH_DIR}`)
    filled in, plus `dispatch-subagents` §3's lines.
-4. Run at most **two** agents' full gates at once (`dispatch-subagents` §3);
-   dispatch the next as one finishes.
 
 Done when every dispatched fix is on a committed, gate-green branch handed
 back to you, unpushed.
 
 ### Edge cases
 
-- Parallel agents must never share a working tree.
+- Run at most **two** agents' full gates at once (`dispatch-subagents` §3);
+  dispatch the next as one finishes.
 
 ## 7. Review and merge
 
-Goal: you are the reviewer. Every fix branch ends merged by you, sent back
-and fixed, or escalated, never just pushed (ADR-0003).
+Goal: you are the reviewer. Every fix PR ends merged by you, escalated or
+abandoned, never just pushed (ADR-0003).
 
 ### Instructions
 
@@ -197,7 +196,8 @@ For each branch the agent hands back:
 2. **Review the diff** before the first push (`dispatch-subagents` §3, "Scope
    and trust"). Check it implements the §4 design, follows repo conventions
    and stays on a safe surface. A doc branch must also clear `audit-docs`'
-   house rules: a fix that would be a future `audit-docs` finding goes back.
+   house rules ([`impl-brief.md`](impl-brief.md)): a fix that would be a
+   future `audit-docs` finding goes back.
 3. **Have the agent push; open the PR yourself.** Its description carries
    the problem, evidence and design. A fix taken from an open issue (§2)
    also `Closes` it.
@@ -206,20 +206,20 @@ For each branch the agent hands back:
 5. **Decide:**
    - **Merge** a clean, low-risk change by the recipe.
    - **Send it back** when the agent can fix the findings: resume it, review
-     the new commits as in step 2, then decide again.
-   - **Escalate** only when the diff meets an ADR-0004 exception (check its
-     *Scope* list against the diff; don't guess). Leave the PR open and say
-     exactly why in a PR comment.
+     the new commits as in step 2, have it push them, then decide again.
+   - **Escalate** only when the diff meets an ADR-0004 exception (check the
+     *Scope* list in `docs/adr/0004-objective-safety-gate.md` against the
+     diff). Once the ledger PR has merged, have the agent merge `origin/main`
+     into the branch and commit the PR's own `fixes` ledger entry, dated
+     today. Leave the PR open and say exactly why in a PR comment.
 
 Done when every fix PR has a posted review comment and is merged, escalated
 or abandoned.
 
 ### Edge cases
 
-- Before escalating, once the ledger PR has merged, have the agent merge
-  `origin/main` into the branch and commit the PR's own `fixes` ledger
-  entry, dated today. The ledger then updates when a human merges it; the
-  next run's survey corrects the date.
+- The escalated PR's own `fixes` entry lets the ledger update when a human
+  merges it; the next run's survey corrects the date.
 
 ## 8. Close the ledger and log
 

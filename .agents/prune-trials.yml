@@ -157,8 +157,10 @@ trials:
       a done-when line, and an edge-case list. Every rule kept: the regression
       and issue caps of three and their exemptions, never-dispatch surfaces, the
       ledger PR every run, review comment before merge, the escalation ledger
-      entry, the closing status-only PR. Cut: the when-to-run line and the
-      merge-by-judgement restatement. Section numbers §1 to §8 kept, since
+      entry, the closing status-only PR. Cut: the when-to-run line, the
+      merge-by-judgement restatement, and a few short why-clauses (why a drop
+      needs no PR, why guards need a human session, "git keeps them").
+      Section numbers §1 to §8 kept, since
       `guest-build` cites §6 and §7. The briefs are unchanged.
     territory:
       paths:
