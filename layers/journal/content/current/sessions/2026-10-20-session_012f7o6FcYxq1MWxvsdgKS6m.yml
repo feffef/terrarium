@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_012f7o6FcYxq1MWxvsdgKS6m
 startedAt: 2026-10-20T04:51:09Z
-endedAt: 2026-10-20T07:16:18Z
+endedAt: 2026-10-20T07:24:46Z
 kind: interactive
 goal: Clear the issue backlog in one owner-attended run
-status: in-review
-outcome: "#2318 and #2319 merged; owner then reversed #2319: PR #2321 reviews Skills and docs like code with a self-read for simple changes, awaiting human merge"
-summary: "The owner invoked clear-backlog. The default-mode sweep found five eligible issues (#2310, #2311, #2312 new regression reports; #2286 and #2137 on date holds until Oct 22/23); the owner approved that set. clear-backlog-explore triaged all five: two date-blocked, three to grill. After the first grilling round the owner asked (a human instruction) to inspect the affected sessions first; three read-only subagents checked the cited sessions via their logs and events, and the evidence changed all three picks. #2310: only about half the slips were a trailing ampersand and a rewrite would need an auto-allow, so the guard stays (closed wontfix). #2311: the 11 sessions caused no harm and a sha push hook would false-alarm, so instead ADR-0004 lets a prose-, docs- or content-only first push skip code-review (PR #2319, Human-only, waits for the owner). #2312: two repo-caused brief defects, not one (impl-brief scratch folder, audit-skills §2 asking for counts instead of session ids), fixed in PR #2318. The owner accepted all revised picks and approved a second branch. The build workflow built and reviewed both; I hand-fixed small judgement-call wording on #2319 (the branch, not gate:scoped, is the subject; Skill and rule frontmatter never counts as prose), re-ran gate:scoped on both and pushed. #2318 merged with CI green; The owner then merged #2319, asked what guarantees review before merge, and reversed the prose skip: code review catches problems in instructions, so Skills and agent docs need it like code, but simple changes and follow-ups may take a shortcut. After a grilling round (7c, 8a, 9a, owner picks) I wrote PR #2321: a simple change (by kind or at most 10 lines in 2 files, never changing code logic, hooks, frontmatter or any instruction's meaning) gets the author's own read of its diff; a larger follow-up gets code-review on its own diff. code-review on both axes found that rewording a Skill could slip through as simple; all findings were fixed before the push. The owner declined a guard on direct merges. All decisions on issues are the owner's; the wording fixes are agent-initiated."
+status: completed
+outcome: "#2318, #2319 and #2321 merged: brief fixes, then ADR-0004 reviews Skills and docs like code with a self-read for simple changes"
+summary: "The owner invoked clear-backlog. The default-mode sweep found five eligible issues (#2310, #2311, #2312 new regression reports; #2286 and #2137 on date holds until Oct 22/23); the owner approved that set. clear-backlog-explore triaged all five: two date-blocked, three to grill. After the first grilling round the owner asked (a human instruction) to inspect the affected sessions first; three read-only subagents checked the cited sessions via their logs and events, and the evidence changed all three picks. #2310: only about half the slips were a trailing ampersand and a rewrite would need an auto-allow, so the guard stays (closed wontfix). #2311: the 11 sessions caused no harm and a sha push hook would false-alarm, so instead ADR-0004 lets a prose-, docs- or content-only first push skip code-review (PR #2319, Human-only, waits for the owner). #2312: two repo-caused brief defects, not one (impl-brief scratch folder, audit-skills §2 asking for counts instead of session ids), fixed in PR #2318. The owner accepted all revised picks and approved a second branch. The build workflow built and reviewed both; I hand-fixed small judgement-call wording on #2319 (the branch, not gate:scoped, is the subject; Skill and rule frontmatter never counts as prose), re-ran gate:scoped on both and pushed. #2318 merged with CI green; The owner then merged #2319, asked what guarantees review before merge, and reversed the prose skip: code review catches problems in instructions, so Skills and agent docs need it like code, but simple changes and follow-ups may take a shortcut. After a grilling round (7c, 8a, 9a, owner picks) I wrote PR #2321: a simple change (by kind or at most 10 lines in 2 files, never changing code logic, hooks, frontmatter or any instruction's meaning) gets the author's own read of its diff; a larger follow-up gets code-review on its own diff. code-review on both axes found that rewording a Skill could slip through as simple; all findings were fixed before the push. The owner declined a guard on direct merges and merged #2321. All decisions on issues are the owner's; the wording fixes are agent-initiated."
 prs:
   - "2318"
   - "2319"
@@ -122,11 +122,11 @@ frictions:
   - description: "#2319 left pr-workflow step 4 demanding a code-review sha for PRs the new skip exempted, a contradiction I only found when the owner asked what guarantees review."
     solution: When an ADR change adds a skip, grep every consumer of the skipped step (merge-pr.ts verdict, step 4) in the same PR.
     severity: minor
-durationSec: 8709
+durationSec: 9218
 models:
-  claude-opus-5-5: 218
+  claude-opus-5-5: 235
 toolCounts:
-  Bash: 74
+  Bash: 77
   Read: 1
   AskUserQuestion: 3
   Workflow: 2
@@ -134,14 +134,14 @@ toolCounts:
   PushNotification: 1
   Skill: 6
   Agent: 6
-  mcp__github__add_issue_comment: 5
+  mcp__github__add_issue_comment: 6
   mcp__github__issue_write: 3
   mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 3
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
-  mcp__claude-code-remote__send_later: 1
-  ReadNotifications: 3
-  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__send_later: 2
+  ReadNotifications: 8
+  mcp__claude-code-remote__delete_trigger: 2
 rulesLoaded:
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0021.md
