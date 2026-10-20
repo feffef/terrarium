@@ -14,13 +14,18 @@ push, check that no PR exists for it, commit, run the
 [`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on the
 committed diff against `origin/main`, in the checkout that holds it, and fix the
 findings, then run `pnpm gate:scoped` last on the final head and edit nothing
-until it ends, even when the Stop hook asks you to push. Skip the review only
-where a Skill's own steps already review the diff before the push, as
-`midden-catalogue` §4 does, or where the branch changes only prose or docs
-(the text of a SKILL.md, rule or ADR counts) or Tenant content under
-`layers/<tenant>/content/`. Code, config, a Skill's scripts, a hook, a
-workflow script, or a Skill's or rule's frontmatter never counts. A
-session-log commit needs none.
+until it ends, even when the Stop hook asks you to push. Skip the review where
+a Skill's own steps already review the diff before the push, as
+`midden-catalogue` §4 does. A session-log commit needs none.
+
+**A simple change** needs no `code-review` run: read its full diff yourself
+instead. It is simple when it is a typo, rewrap, broken link or path, or a
+rule's `adr:` hash or token-estimate restamp, or when it changes at most 10
+lines in at most 2 files and adds no file. Either way it changes no code
+logic, hook, workflow script, Skill's or rule's frontmatter, and no meaning of
+a Skill, rule, ADR or agent doc. The same holds for a follow-up commit after a
+review; a larger follow-up gets `code-review` on its own diff, not the whole
+branch.
 
 A later push that changes only prose or docs may skip `gate:scoped` and rely on
 CI's gate; run it first for any other change. If `gate:scoped` passed but CI
@@ -49,11 +54,12 @@ story or repeat its findings.
 4. Before merging, post your verdict as a PR comment, even a clean "merging
    as-is": the merge must never be the only trace. End it with a line
    `Reviewed: <sha>` naming the head commit your `code-review` run (or your
-   Skill's own review step) covered; after any later push, review the new head
-   and post a new verdict. Use `event=COMMENT` or `add_issue_comment`, never an
-   APPROVE review: it fails on our own PRs, and on a fork PR it would fake the
-   human merge authority [`guest-contributions.md`](./guest-contributions.md)
-   reserves.
+   Skill's own review step, or your self-read of a simple change) covered;
+   after any later push, review the new commits (as above) and post a new
+   verdict. Use `event=COMMENT` or `add_issue_comment`, never an APPROVE
+   review: it fails on our own PRs, and on a fork PR it would fake the human
+   merge authority
+   [`guest-contributions.md`](./guest-contributions.md) reserves.
 5. Land through `scripts/github/merge-pr.ts <pr-number>`, the only merge path; never
    call `enable_pr_auto_merge`. The script refuses what it can see (ADR-0004, ADR-0020, ADR-0023): a
    Human-only path, a fork or Public author, the `guest-pipeline` label, closing
