@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011W3gVNQAR433FiJcPAAEDK
 startedAt: 2026-10-20T16:11:21Z
-endedAt: 2026-10-20T17:23:44Z
+endedAt: 2026-10-20T17:27:39Z
 kind: interactive
 goal: Time-window dropdown on the Friction Ledger page
-status: in-review
-outcome: "Dropdown merged in PR #2325; fix so 'last N days' covers N dates is open in PR #2327"
-summary: "Human-instructed: the owner asked for a dropdown on the Journal's Friction Ledger page to show only clusters, frictions and proposed solutions from the last 2/3/5/7/10/14 days. Before building, I asked four questions and the owner chose: count back from today on the viewer's clock; recompute counts, severity and placement from in-window occurrences and hide empty clusters; keep merged PRs and fix state on full history; keep the window in ?days=. PR #2325 merged after CI went green (ADR-0004, no Human-only paths). Agent-initiated, and wrong: I made the window start at today minus N to match the prune horizon, so \"last 2 days\" showed 3 dates. I flagged it as a judgement call in my report, but merged before the owner answered. The owner then said they didn't expect the 18th under 2 days (human-instructed fix). PR #2327 makes N days cover exactly N dates; the prune keeps its 15-date horizon by asking the helper for one date more. Still open for the owner: UTC vs local date, and the \"since last fix\" pill counting all 14 days."
+status: completed
+outcome: "Dropdown merged in PR #2325; fix so last N days covers N dates merged in PR #2327"
+summary: "Human-instructed: the owner asked for a dropdown on the Journal's Friction Ledger page to show only clusters, frictions and proposed solutions from the last 2/3/5/7/10/14 days. Before building, I asked four questions and the owner chose: count back from today on the viewer's clock; recompute counts, severity and placement from in-window occurrences and hide empty clusters; keep merged PRs and fix state on full history; keep the window in ?days=. PR #2325 merged after CI went green (ADR-0004, no Human-only paths). Agent-initiated, and wrong: I made the window start at today minus N to match the prune horizon, so \"last 2 days\" showed 3 dates. I flagged it as a judgement call in my report, but merged before the owner answered. The owner then said they didn't expect the 18th under 2 days (human-instructed fix). PR #2327 (merged after green CI) makes N days cover exactly N dates; the prune keeps its 15-date horizon by asking the helper for one date more. Still open for the owner: UTC vs local date, and the \"since last fix\" pill counting all 14 days."
 prs:
   - "2325"
   - "2327"
@@ -66,24 +66,24 @@ frictions:
   - description: First follow-up push with --force-with-lease was rejected as stale info because the merged PR's branch had been deleted on the remote.
     solution: After a merged PR, run git remote prune origin before pushing the restarted branch (the hook hint said so).
     severity: nit
-durationSec: 4343
+durationSec: 4578
 models:
-  claude-opus-5-5: 128
+  claude-opus-5-5: 141
 toolCounts:
   Grep: 1
-  Bash: 40
+  Bash: 43
   AskUserQuestion: 1
   Skill: 4
   Agent: 4
   ToolSearch: 2
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 3
-  ReadNotifications: 3
+  ReadNotifications: 5
   mcp__claude-code-remote__send_later: 2
-  mcp__github__pull_request_read: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__delete_trigger: 1
-  mcp__claude-code-remote__unsubscribe_pr_activity: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__delete_trigger: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 3
 rulesLoaded:
   - .claude/rules/adr-0008.md
   - .claude/rules/tenant-layers.md
