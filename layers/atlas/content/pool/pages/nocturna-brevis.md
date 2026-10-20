@@ -82,7 +82,7 @@ It keeps the strictest hours of anything in the pool, and they are the saddest h
 
 What occupies those two hours is the thing we cannot stop watching. It does not feed as the others feed, nor court, nor squabble. It makes a circuit of the pool's margin — always the same direction, never quite the same route — and it pauses: where the glass snail crossed that morning, over the reed the drowned star favoured the night before, once a long moment above the corner where our own net had disturbed the water. At each station it holds still with its antennae laid toward the fading west, and then goes on, and one cannot escape the impression of a creature going down the day and putting a small mark against each thing in it.
 
-The circuit is not the same length the year round, nor flown at all in the deep of it, and it is the chronicler's own year we have kept below, not ours: the first circuits, the long rounds, the brisk rounds, and the unkept dusks in which no round is flown at all. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the chronicler's falls.
+The circuit is not the same length the year round, nor flown at all in the deep of it, and it is the chronicler's own year we have kept below, not ours: the first circuits, the long rounds, the brisk rounds, and the unkept dusks in which no round is flown at all. Turn the almanac to follow the chronicler through them.
 
 ::almanac
 ::

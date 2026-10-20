@@ -87,7 +87,7 @@ The accounts agree on this much. Late in the night, from the far water, a call i
 
 The plate overleaf is offered with every reservation, reconstructed from the single partial sighting we credit — a lamplit half-second at the water's edge, a pale throat open on a borrowed voice — and the draughtsman has honestly left wanting what the witness could not swear to, which the reader will observe is most of it. Its size we do not record; its diet we do not record. A creature that answers every question in someone else's voice keeps its own particulars remarkably well.
 
-The nine reports do not fall evenly across the year, and the mimic keeps two seasons of its own, only one of which speaks. What follows we have set down as the far water keeps it — not by our calendar but by its own: the far singing, when between the first warm nights and the keeper's holiday the pool is loudest and has the most voices to lend; and the still water, the long remainder in which it keeps its own counsel. Turn the almanac to move between them; the seasons on the rim only say where in our shared year each of the mimic's falls.
+The nine reports do not fall evenly across the year, and the mimic keeps two seasons of its own, only one of which speaks. What follows we have set down as the far water keeps it — not by our calendar but by its own: the far singing, when between the first warm nights and the keeper's holiday the pool is loudest and has the most voices to lend; and the still water, the long remainder in which it keeps its own counsel. Turn the almanac to move between them.
 
 ::almanac
 ::

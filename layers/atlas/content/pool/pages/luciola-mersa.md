@@ -133,7 +133,7 @@ We took it, the first night, for the reflection of our own lamp, and moved the l
 
 By day there is nothing to find. The drowned star is a swimmer of scarcely a centimetre, pale and unremarkable when netted — we netted one, once, and felt so plainly that we had overstepped that we have not repeated it — and it spends the bright hours dowsed and hidden, often in the blue shadow of the glass snail's shell. It rises when the pool goes black, lights its lamp somewhere below the surface, and hangs there patient as a held breath, drifting less than a hand's width in an hour. The lamp is dim, and this appears to be the whole art of it: motes come to that gold point the way dust comes to a sunbeam, and the star gathers them at its leisure, having concluded — we think correctly — that it is better to be a rumour than an announcement.
 
-How many lamps the water shows, and whether it shows any at all, the year answers differently each time it is asked — and the star keeps its own count, not ours: the few lights, the full constellation, the last lamps, and the dowsed months in which the water shows none. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the star's falls.
+How many lamps the water shows, and whether it shows any at all, the year answers differently each time it is asked — and the star keeps its own count, not ours: the few lights, the full constellation, the last lamps, and the dowsed months in which the water shows none. Turn the almanac to follow the star through them.
 
 ::almanac
 ::

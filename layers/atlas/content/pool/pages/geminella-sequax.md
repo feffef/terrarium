@@ -82,7 +82,7 @@ The pool keeps a great deal of drifting stuff too small and too idle to name, an
 
 A single *Geminella sequax* has never been recorded, and we say so with the confidence of a company that has tried. Once, in the interests of science, we parted a pair with a bristle drawn across the film. Both halves stopped dead, hung a hand's breadth apart doing nothing, with the air of finding the interruption beneath comment, until the film's slow turning brought them together again — whereupon they resumed grazing mid-stroke, as though the sentence had merely been waiting for its verb. We have not repeated the experiment; it felt like interrupting. Which of the two leads, and whether it is always the same one, we cannot answer: the follower is the greyer by a shade, the draughtsman insists, but we have never caught a pair changing places, and we have watched long enough to be embarrassed about it.
 
-The pairs are on the film only while there is a film to be on, and the year gives and takes it — by their reckoning, not ours: the first pairs, the film in plenty, the thin film, and the sunk season in which there is no film at all. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the pairs' falls.
+The pairs are on the film only while there is a film to be on, and the year gives and takes it — by their reckoning, not ours: the first pairs, the film in plenty, the thin film, and the sunk season in which there is no film at all. Turn the almanac to follow the pairs through them.
 
 ::almanac
 ::

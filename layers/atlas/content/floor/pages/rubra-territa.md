@@ -80,7 +80,7 @@ Our first record of the startle beetle is a field note that reads, in its entire
 
 *Rubra territa* feeds by night, on detritus and on the soft ends of roots, and it feeds in instalments — a few seconds of work between one alarm and the next. The alarms are not discriminating; we have seen it bolt at the settling of a leaf, at our breathing, at the click of the observation lamp being covered, and once, memorably, at the sound of its own feeding, which appeared to catch it unawares. The bolt is a short, violent, perfectly straight line ending under the nearest dark thing, where it waits with an air of having always been there. It keeps this manner in every season; only the things worth bolting from change.
 
-What follows we have set down as the beetle keeps it — not by our calendar but by its own: the first startle, the season of tender roots, the wary fattening, and the under-bark months. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the beetle's falls.
+What follows we have set down as the beetle keeps it — not by our calendar but by its own: the first startle, the season of tender roots, the wary fattening, and the under-bark months. Turn the almanac to follow the beetle through them.
 
 ::almanac
 ::
