@@ -161,9 +161,9 @@ export function candidateLabels(today: string, cwd = root, check = regressionChe
   const start = horizonStart(today)
   return readEntries(cwd).map(([f, e]) => {
     const { occ, max, last, since } = describeEntry(e, start, check)
-    const ref = /#\d+/.exec(e.ref ?? '')?.[0] ?? 'no issue'
+    const ref = /#\d+/.exec(e.ref ?? '')?.[0]
     const label = e.status === 'accepted' || e.status === 'on-trial' ? `drop (${e.status})`
-      : e.status === 'tracked' ? `open-already? (ref names ${ref}; check it is open)`
+      : e.status === 'tracked' ? `open-already? (${ref ? `ref names ${ref}; check it is open` : 'ref names no issue'})`
       : since ? `regression of #${last!.pr} (${since} since)`
       : last ? `drop (fixed by #${last.pr}, none since)`
       : 'never-fixed'
