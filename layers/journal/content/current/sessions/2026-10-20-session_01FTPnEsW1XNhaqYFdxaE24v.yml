@@ -1,16 +1,17 @@
 schemaVersion: 1
 session: session_01FTPnEsW1XNhaqYFdxaE24v
 startedAt: 2026-10-20T17:45:58Z
-endedAt: 2026-10-20T18:58:01Z
+endedAt: 2026-10-20T19:18:39Z
 kind: interactive
 goal: Compare the routine Skills for clarity, then rewrite and prune two of them
-status: completed
-outcome: "frictions-to-fixes and audit-docs rewritten plainly (#2330, #2331) and audit-docs pruned (#2343), all merged as Prune Trials"
-summary: "Human-instructed throughout. First a question: which routine Skill reads worst and which is cleanest; answered frictions-to-fixes and audit-skills. The user then asked for frictions-to-fixes to be rewritten in plain language, one section per step (goal, instructions with script and subagent calls, edge cases); after three clarifying questions it shipped as a Prune Trial in #2330. The user asked for audit-docs \"the same way\" (#2331), which grew slightly because its front-loaded reference moved into the steps. The user then said that one wasn't really a prune and asked which detailed edge cases could go. I proposed a list grouped as enforced elsewhere (ADR-0027 rule, skills-lock gate, spawn depth, provenance guard, gate scope), no-ops or impossible cases, and heavy simplifications (one checker rule, no read counts for Agent B); the user approved all of it and asked to fold it into the same trial. The pruned file is 230 lines / ~1630 words, from 297 / 2113. A Sonnet probe answered 11 scenarios correctly; a review against the approved list found I had again cut a few unapproved items, which I restored. Last, on request, I inspected the first frictions-to-fixes run on the rewritten text (session 01VH74k3, 18:05 UTC): it followed every step, with no major friction traceable to the rewrite; its gaps sit in the briefs and in rules the old text shared."
+status: in-review
+outcome: "Two Skills rewritten and audit-docs pruned (#2330, #2331, #2343 merged); ledger notes field open as #2345"
+summary: "Human-instructed throughout. First a question: which routine Skill reads worst and which is cleanest; answered frictions-to-fixes and audit-skills. The user then asked for frictions-to-fixes to be rewritten in plain language, one section per step (goal, instructions with script and subagent calls, edge cases); after three clarifying questions it shipped as a Prune Trial in #2330. The user asked for audit-docs \"the same way\" (#2331), which grew slightly because its front-loaded reference moved into the steps. The user then said that one wasn't really a prune and asked which detailed edge cases could go. I proposed a list grouped as enforced elsewhere (ADR-0027 rule, skills-lock gate, spawn depth, provenance guard, gate scope), no-ops or impossible cases, and heavy simplifications (one checker rule, no read counts for Agent B); the user approved all of it and asked to fold it into the same trial. The pruned file is 230 lines / ~1630 words, from 297 / 2113. A Sonnet probe answered 11 scenarios correctly; a review against the approved list found I had again cut a few unapproved items, which I restored. Last, on request, I inspected the first frictions-to-fixes run on the rewritten text (session 01VH74k3, 18:05 UTC): it followed every step, with no major friction traceable to the rewrite; its gaps sit in the briefs and in rules the old text shared. The user then asked for a \"design says no change\" outcome with the dropped idea kept in the Friction Ledger. They chose a free-form field (named notes after a rename), per-solution declines and rendering on the page; I seeded four notes from that run's design report and filed #2344 for the misused ref field. Review caught one seed note that called a shipped idea dropped. Open: the survey step does not see notes yet; the user decides whether that joins #2345."
 prs:
   - "2330"
   - "2331"
   - "2343"
+  - "2345"
 docsRead:
   - path: GLOSSARY.md
     reason: Defined the routine Importance grade, which identified the seven routine Skills
@@ -69,6 +70,14 @@ docsRead:
   - path: .agents/skills/guest-build/SKILL.md
     reason: Cites frictions-to-fixes §6–§7, so section numbers had to stay
     useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
 skillsUsed:
   - name: adr-check
     reason: Found ADR-0027 and ADR-0003 bind the rewrite; no open trial on the file
@@ -114,30 +123,33 @@ frictions:
   - description: Third time this session the first pass cut items beyond what was approved (gap rule, Mis-location order, shorter-or-plainer); review caught them.
     solution: Diff the approved cut list against git diff before committing; any removed line not on the list is restored or asked about.
     severity: minor
-durationSec: 4323
+durationSec: 5561
 models:
-  claude-opus-5-5: 260
+  claude-opus-5-5: 367
 toolCounts:
-  Bash: 89
-  Read: 2
+  Bash: 129
+  Read: 3
   Skill: 5
-  AskUserQuestion: 1
+  AskUserQuestion: 3
   Write: 3
-  Agent: 8
+  Agent: 10
   ToolSearch: 3
-  TaskStop: 1
-  SendUserFile: 3
-  mcp__github__create_pull_request: 3
-  mcp__claude-code-remote__subscribe_pr_activity: 3
+  TaskStop: 3
+  SendUserFile: 4
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
   mcp__github__add_issue_comment: 3
-  ReadNotifications: 9
+  ReadNotifications: 10
   mcp__github__pull_request_read: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 3
   mcp__claude-code-remote__list_triggers: 1
   mcp__claude-code-remote__list_sessions: 1
+  Edit: 1
+  mcp__github__issue_write: 2
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/skills/audit-docs/SKILL.md
+  - layers/journal/tests/unit/ledger.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0005.md
@@ -153,6 +165,10 @@ rulesLoaded:
   - .claude/rules/adr-0020.md
   - .claude/rules/adr-0023.md
   - .claude/rules/guards.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0022.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -165,9 +181,8 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0025.md
   - .claude/rules/mermaid-lanes.md
   - .claude/rules/ui-verification.md
-  - .claude/rules/data-shapes.md
 docsReadBySubagents:
-  - .agents/skills/frictions-to-fixes/SKILL.md
+  - layers/journal/GLOSSARY.md
   - .agents/skills/writing-for-agents/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
@@ -255,6 +270,11 @@ subagents:
     model: sonnet
   - type: general-purpose
     task: Spec review of audit-docs prune
+  - type: general-purpose
+    task: Extract dropped designs from last run
+    model: sonnet
+  - type: general-purpose
+    task: Standards and spec review
 gitBranch: ccr-97e57c38-pvk96r
 entrypoint: remote_mobile
 cliVersion: 2.1.304
