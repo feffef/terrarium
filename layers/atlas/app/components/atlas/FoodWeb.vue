@@ -69,7 +69,7 @@ function pt(p: Pt): string {
   return `${p.x.toFixed(1)},${p.y.toFixed(1)}`
 }
 
-interface Strand { e: Edge; d: string; rail: string; endStroke: string; label: string; off: string; at: number; pos: (u: number) => Pt }
+interface Strand { e: Edge; d: string; rail: string; endStroke: string; label: string; at: number; pos: (u: number) => Pt }
 
 const strands = computed<Strand[]>(() => {
   // A node pair can carry more than one Interaction (e.g. A preys-on B AND B
@@ -79,8 +79,8 @@ const strands = computed<Strand[]>(() => {
   // near their ACTOR's end of the strand rather than the midpoint — chord
   // midpoints of a ring all crowd into the same central patch, while the
   // actor's end both spreads phrases toward the perimeter and reads in arrow
-  // order ("A —preys on→ B"); multi-edge pairs stagger along the chord on top
-  // — which is what lets the old AABB pill-collision pass stay deleted.
+  // order ("A —preys on→ B"); multi-edge pairs stagger along the chord on top.
+  // Labels of strands that still cross are then pushed apart (see the last pass).
   const pairTotal: Record<string, number> = {}
   for (const e of props.edges) {
     const key = e.from < e.to ? `${e.from}|${e.to}` : `${e.to}|${e.from}`
@@ -152,7 +152,6 @@ const strands = computed<Strand[]>(() => {
         rail,
         endStroke: specimenAccent(a.s),
         label: relationLabel(e.kind, 'out'),
-        off: '',
         at: flip ? 1 - f : f,
         // Where the label's centre sits when seated `u` of the way along the rail.
         pos: (u) => ({
@@ -166,12 +165,11 @@ const strands = computed<Strand[]>(() => {
       // Strands that cross put their labels in the same patch, so the phrases
       // print over each other. Slide each label along its own strand to the
       // nearest seat that clears the labels already placed.
-      const GAP = 44
+      const GAP = 44 // ~ one phrase's length along a rail, in viewBox units
       const seats = [0, 0.08, -0.08, 0.16, -0.16, 0.24, -0.24, 0.32, -0.32].map((d) => st.at + d).filter((u) => u >= 0.15 && u <= 0.85)
       const clearance = (u: number) =>
         Math.min(GAP, ...all.slice(0, i).map((o) => Math.hypot(o.pos(o.at).x - st.pos(u).x, o.pos(o.at).y - st.pos(u).y)))
-      st.at = seats.find((u) => clearance(u) >= GAP) ?? seats.reduce((best, u) => (clearance(u) > clearance(best) ? u : best), st.at)
-      st.off = `${Math.round(st.at * 100)}%`
+      st.at = seats.find((u) => clearance(u) >= GAP) ?? seats.reduce((best, u) => (clearance(u) > clearance(best) ? u : best), Math.min(0.85, st.at))
       return st
     })
 })
@@ -247,7 +245,7 @@ function strandClass(e: Edge) {
           />
           <path :id="`${uid}-rail-${i}`" class="rail" :d="st.rail" />
           <text class="web-lbl" :class="strandClass(st.e)" text-anchor="middle">
-            <textPath :href="`#${uid}-rail-${i}`" :startOffset="st.off">{{ st.label }}</textPath>
+            <textPath :href="`#${uid}-rail-${i}`" :startOffset="`${Math.round(st.at * 100)}%`">{{ st.label }}</textPath>
           </text>
         </g>
 
