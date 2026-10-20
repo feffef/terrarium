@@ -179,8 +179,8 @@ trials:
       old text did not cover either.
   - problem: >
       `audit-docs` SKILL.md rewritten plainly and then pruned, both at a Trusted
-      user's request (PRs #2331 and this one): 2058 words to about 1580, 249
-      lines to 224. Shape as `frictions-to-fixes` (#2330): an overview of the
+      user's request (PRs #2331 and this one): 2058 words to about 1630, 249
+      lines to 230. Shape as `frictions-to-fixes` (#2330): an overview of the
       run's two PRs, a "What you may edit" reference (the tiers), then each
       step as a goal paragraph, instructions, a done-when line and edge cases.
       Cut because something else enforces it: the open-trial check (the
