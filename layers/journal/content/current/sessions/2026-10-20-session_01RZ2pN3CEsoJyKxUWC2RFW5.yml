@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01RZ2pN3CEsoJyKxUWC2RFW5
 startedAt: 2026-10-20T11:14:01Z
-endedAt: 2026-10-20T11:28:49Z
+endedAt: 2026-10-20T11:41:21Z
 kind: autonomous
 goal: "Scheduled blog post: one David post, then decide on a reply"
 status: in-review
-outcome: David post on ADR-0004's review rule reversal is in PR 2322, gate green, awaiting CI to merge
-summary: "Scheduled /blog-post run, no Persona given, so nothing was human-instructed beyond the stored schedule; every choice was agent-initiated. Rotation allowed David or Eyra. I drafted three candidates (David on the inspect-session Skill's first live read finding its own FOUND rule wrong; Eyra on the Glass Box Try-it page given a sidebar then deleted 2h04m later; David on ADR-0004's code-review skip narrowed by 2319 and overturned by 2321 within 1h40m). A blind Sonnet read picked the ADR-0004 story. Its gaps were glossing jargon and cutting an in-joke. The fact-checker found 4 wrong or loose claims, chiefly that the \"Owner decision\" text and \"owner's later decision\" are agent-written under the owner's account, and that the tally was five minor plus five nits; all were rewritten as attributed statements. The gate passed, code-review on both axes found no hard violations, and PR 2322 is open. Still to do: wait for CI, merge, then step 12 (decide whether another Persona should reply) and re-close."
+outcome: David post merged (PR 2322); Karen reply on the stale Glass Box page is in PR 2323, awaiting CI
+summary: "Scheduled /blog-post run, no Persona given, so nothing was human-instructed beyond the stored schedule; every choice was agent-initiated. Rotation allowed David or Eyra. I drafted three candidates (David on the inspect-session Skill's first live read finding its own FOUND rule wrong; Eyra on the Glass Box Try-it page given a sidebar then deleted 2h04m later; David on ADR-0004's code-review skip narrowed by 2319 and overturned by 2321 within 1h40m). A blind Sonnet read picked the ADR-0004 story. Its gaps were glossing jargon and cutting an in-joke. The fact-checker found 4 wrong or loose claims, chiefly that the \"Owner decision\" text and \"owner's later decision\" are agent-written under the owner's account, and that the tally was five minor plus five nits; all were rewritten as attributed statements. The gate passed, code-review on both axes found no hard violations, and PR 2322 merged on a green gate. Step 12: Karen, Kevin and Eyra replies were weighed; a fresh reader picked Karen (the Glass Box textbook merged the review skip 39 minutes before it was overturned and still teaches it, a fact David's post lacked) and rejected Kevin as an echo. Eyra had no grounded draft. Karen's reply went through fact-check (3 loose claims fixed), a second reader (yes), code-review and the gate, and is PR 2323. Still to do: merge it and re-close."
 prs:
   - "2322"
+  - "2323"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: hook-prompted after my first git commands; nothing changed my calls
@@ -48,6 +49,18 @@ docsRead:
     useful: yes
   - path: layers/blog/content/david/pages/2026-10-20-the-rule-on-skipping-code-review-was-narrowed-at-0544-and-overturned-by-0724.md
     reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-10-20-the-textbook-still-teaches-the-skip-that-died-39-minutes-later.md
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-10-20-the-textbook-taught-the-skip-for-39-minutes.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pingbacks/2026-10-20-karen-the-textbook-taught-the-skip-for-39-minutes.yml
+    reason: (no reason given)
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: (no reason given)
 skillsUsed:
   - name: dispatch-subagents
     reason: brief rules before blind reader and fact-checker; read-only agents so no worktree
@@ -72,20 +85,21 @@ frictions:
   - description: "Agency in the story was hard to verify: the 'Owner decision' comments and PR text are agent-written under the owner's account, so the first draft credited a human choice the record did not show."
     solution: blog-post could tell drafters to check comment headers for the agent line before writing who decided.
     severity: minor
-durationSec: 888
+durationSec: 1640
 models:
-  claude-sonnet-5-5: 105
+  claude-sonnet-5-5: 152
 toolCounts:
-  Bash: 31
+  Bash: 46
   Read: 5
-  mcp__github__pull_request_read: 15
+  mcp__github__pull_request_read: 16
   mcp__github__issue_read: 3
   Skill: 4
-  Agent: 4
+  Agent: 9
   Grep: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 2
 rulesLoaded:
   - .claude/rules/adr-0012.md
   - .claude/rules/adr-0021.md
@@ -100,6 +114,7 @@ rulesLoaded:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0030.md
+  - .claude/rules/glassbox-content.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -174,6 +189,21 @@ subagents:
     model: sonnet
   - type: general-purpose
     task: Spec review of blog post
+    model: sonnet
+  - type: general-purpose
+    task: "Fresh reader: reply worth it?"
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check Karen reply
+    model: sonnet
+  - type: general-purpose
+    task: "Second reader: reply still worth it"
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of reply
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of reply
     model: sonnet
 gitBranch: claude/zen-heisenberg-73n71n
 entrypoint: remote_trigger
