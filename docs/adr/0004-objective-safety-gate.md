@@ -13,8 +13,8 @@ A human merges the few PRs whose risk the gate cannot see.
   another's Documents (L3). Code and tests cite these labels.
 - **Skipping steps.** The gate may skip a step only when it proves no changed
   file can affect that step. Without proof, it runs everything.
-- **Before the first push,** the branch passes the gate locally and gets a code
-  review, unless it changes only prose, docs or Tenant content. CI's run of
+- **Before the first push,** the branch passes the gate locally and, unless it
+  changes only prose, docs or Tenant content, gets a code review. CI's run of
   the gate decides the merge.
 - **Who merges.** The agent that wrote the PR, once CI's gate is green and it
   has posted its verdict on the PR, unless an exception below applies.
