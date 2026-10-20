@@ -35,7 +35,7 @@ describe('--triage', () => {
 describe('--build', () => {
   const out = runSummary(fixture('build.output'), '--build')
 
-  it('reads a result saved as a JSON string and prints one block per branch', () => {
+  it('reads a result saved as a JSON string and prints one block per branch, even the workflow\'s stage-threw fallback', () => {
     expect(out.split('\n\n')).toEqual([
       [
         'fix-typo-11 ready-to-push',
@@ -55,6 +55,7 @@ describe('--build', () => {
         '  openFindings:',
         '    - Missing test: no test for empty input',
       ].join('\n'),
+      'crash-14 failed\n  reason: stage threw',
     ])
   })
 })

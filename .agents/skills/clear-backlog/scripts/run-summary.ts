@@ -28,8 +28,8 @@ type Branch = {
   branch: string
   status: string
   worktree?: string
-  commits: string[]
-  decisions: string[]
+  commits?: string[]
+  decisions?: string[]
   judgementCalls?: Finding[]
   question?: string
   reason?: string
@@ -73,7 +73,7 @@ function build(r: Branch[]): string[] {
   return r.map((b) => [
     `${b.branch} ${b.status}`,
     ...field('worktree', b.worktree),
-    ...field('commits', b.commits.join(', ')),
+    ...field('commits', b.commits?.join(', ')),
     ...list('decisions', b.decisions),
     ...list('judgementCalls', b.judgementCalls?.map(finding)),
     ...field('question', b.question),
