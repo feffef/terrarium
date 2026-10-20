@@ -162,8 +162,8 @@ illustration: |
 A general introduction to the specimen, in the naturalist's voice (§1) — how it
 was found, its character, one anecdote. Prose, not bullets. No leading `#` (the
 binomial comes from the frontmatter). One or two short paragraphs, ending with a
-short nudge to the dial in the creature's own terms (vary it; e.g. "Turn the
-almanac to follow the weaver through them.").
+short nudge to the dial in the creature's own terms, worded fresh for each
+specimen.
 
 ::almanac
 ::
