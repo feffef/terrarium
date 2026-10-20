@@ -1,0 +1,144 @@
+schemaVersion: 1
+session: session_016zEtXv32CmX793LgZvt7Hm
+startedAt: 2026-10-20T13:11:43Z
+endedAt: 2026-10-20T13:25:20Z
+kind: autonomous
+goal: "Scheduled prune trial: judge open trials, prune one problem"
+status: in-review
+outcome: Read-tool trial judged and deleted; dispatch-subagents brief checklist pruned in PR 2324
+summary: Scheduled prune-trial run, no human prompt. Agent-initiated throughout. The window script showed only the Read-tool trial judgeable; its 78 sessions held two unrelated major Frictions, so the prune holds and the entry was deleted. A search subagent ranked failed-prose candidates; I chose dispatch-subagents section 3 (#2312, the brief checklist) and cut it by 10 lines, restoring a few items after both review axes. A Sonnet probe on the pinned SHA briefed three subagents correctly. Gate passed on the final head. The mass was small.
+prs:
+  - "2324"
+docsRead:
+  - path: GLOSSARY.md
+    reason: session-start glossary read
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: read after first git command
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read after first GitHub call
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and scheduled-run closing steps
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: standards reviewer used it for pruning no-ops; reported useful
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: search subagent read the guard roster; reported useful
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: spec reviewer read the spec; reported useful
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .github/pull_request_template.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the run's task
+  - name: code-review
+    reason: pre-push review of the prune
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read git-conventions.md and github-integration.md after the first git and GitHub calls; the first search_issues call was denied by the fields guard.
+    solution: Read the docs before the first call; the hint arrives only after it.
+    severity: nit
+  - description: First gate run combined run_in_background with a text-level ampersand; the double-background guard denied it and nothing ran.
+    solution: Pass run_in_background alone with a plain command.
+    severity: nit
+  - description: The Stop hook asked me twice to push before the gate and probe finished; I held the push per ADR-0004.
+    solution: Stop hook could skip the nag while a background gate or subagent runs.
+    severity: minor
+  - description: My first ledger draft gave section line counts taken from diff hunks, not read from the file; both reviewers caught it.
+    solution: Count with the file in hand before writing a number.
+    severity: nit
+durationSec: 817
+models:
+  claude-sonnet-5-5: 74
+toolCounts:
+  Bash: 20
+  Read: 7
+  mcp__github__search_issues: 1
+  Agent: 4
+  ReadNotifications: 3
+  mcp__github__issue_read: 1
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Set the gate and code-review before first push; summary enough, no full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Not relevant to this prune beyond close-session logging; summary enough
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to the PR; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Governs trials and the open-trial territory check; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the trial text; no rule-placement decision came up
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Not applicable, no ADR edited
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary layout rule; not applicable to this prune
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are code; confirmed dispatch-subagents edit goes through a gated PR
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Subagent-loaded; confirmed no Human-only path touched
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Subagent-loaded; not needed for this task
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Find failed-prose candidate
+    model: sonnet
+  - type: general-purpose
+    task: Probe pruned dispatch brief
+    model: sonnet
+  - type: general-purpose
+    task: Review standards axis
+    model: sonnet
+  - type: general-purpose
+    task: Review spec axis
+    model: sonnet
+gitBranch: claude/practical-rubin-jltqql
+entrypoint: remote_trigger
+cliVersion: 2.1.304
+trigger: prune-trial
+landedBy: Stop
