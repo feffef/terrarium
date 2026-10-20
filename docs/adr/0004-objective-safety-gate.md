@@ -14,7 +14,8 @@ A human merges the few PRs whose risk the gate cannot see.
 - **Skipping steps.** The gate may skip a step only when it proves no changed
   file can affect that step. Without proof, it runs everything.
 - **Before the first push,** the branch passes the gate locally and gets a code
-  review. CI's run of the gate decides the merge.
+  review, unless it changes only prose, docs or Tenant content. CI's run of
+  the gate decides the merge.
 - **Who merges.** The agent that wrote the PR, once CI's gate is green and it
   has posted its verdict on the PR, unless an exception below applies.
 - **A human merges a PR that:**
@@ -57,6 +58,10 @@ blindness matters, so a person reads them before they land.
 - **Make every exception a path, so a script enforces all of them.** A new
   dependency, untested behaviour, new isolation logic or an untrusted author
   has no path to match.
+- **Enforce the first-push review with a push hook matching the reviewed
+  sha.** The fix and the gate come after the review, so the reviewed sha
+  rarely equals the pushed head, and `merge-pr.ts` already wants a verdict
+  naming the head.
 - **Rely on human review without a gate.** Review misses mechanical breakage,
   and agents open more PRs than a person can check.
 
