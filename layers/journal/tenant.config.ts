@@ -96,6 +96,10 @@ export const frictionClusterSchema = z
     // Agents' notes on the status, not rendered: the tracking issue or open PR,
     // the trial's territory match, what a fix left open. Merged PRs go in `fixes`.
     ref: z.string().optional(),
+    // Agents' dated notes for later runs, shown on the Ledger page: above all
+    // a designed solution a run dropped and why, so the next run doesn't
+    // re-propose it without new evidence. One note per line, newest last.
+    agentNotes: z.string().optional(),
     // The merged PRs meant to fix (part of) the cause, oldest first: what the
     // Ledger shows as "Merged PRs to fix it"; a merge does not prove the fix held. `date` is the merge date.
     fixes: z

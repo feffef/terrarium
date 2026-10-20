@@ -122,6 +122,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
               </summary>
               <p class="cause">{{ e.cause }}</p>
               <p v-if="e.ref" class="ref-text"><strong>References:</strong> {{ e.ref }}</p>
+              <p v-if="e.agentNotes" class="ref-text notes"><strong>Agent notes:</strong> {{ e.agentNotes }}</p>
               <template v-if="e.fixes.length">
                 <h3 class="occ-h">Merged PRs to fix it</h3>
                 <p class="occ-intro">Newest first, up to {{ LEDGER_MAX_PRS }}. Merged to fix it, which does not prove it worked.</p>
@@ -236,6 +237,7 @@ details[open] .summary::before { content: '▾'; }
 .pill.status.still-recurring { color: var(--jd-ink); border-color: var(--jd-sev-moderate); background: color-mix(in srgb, var(--jd-sev-moderate) 18%, transparent); }
 .pill.status.open { color: var(--jd-ink); border-color: var(--jd-ink); }
 .cause, .ref-text { margin: 0 0 0.4rem 3.3rem; font-size: 0.8rem; color: var(--jd-muted); overflow-wrap: anywhere; }
+.notes { white-space: pre-line; }
 .jd-prose .occ-h { margin: 0.6rem 0 0.1rem 3.3rem; font-size: 0.8rem; color: var(--jd-ink); }
 .occ-intro { margin: 0 0 0.4rem 3.3rem; font-size: 0.75rem; color: var(--jd-muted); }
 .occ {

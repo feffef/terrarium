@@ -33,6 +33,8 @@ the paths as evidence. **"Opened" can mean a subagent opened it:** subagent read
   carries, a finding** — `scripts/session/audit-skills.ts`'s `docReadCounts` docstring is
   the single home for why (three separate reasons it undercounts). Read it before
   citing a count.
+- **Read the pick's `agentNotes`**: a solution an earlier run dropped comes
+  back only with what has changed since, named in your report.
 - **Explore the source** the fix would change, and any ADR that binds it
   (the `adr-check` Skill finds and reads them), until the design is concrete.
 - **Off limits:** prose inside an open Prune Trial's territory
@@ -54,7 +56,8 @@ Group picks that one change would retire. For each fix, return:
   hook wiring (`docs/agents/guards.md`), whether the diff would meet an ADR-0004
   exception (its *Scope* lists them), and whether it turns on an open design
   choice a human should make.
-- **Recommendation**: dispatch, or file as an issue, with one line why.
+- **Recommendation**: dispatch, file as an issue, or no change (no repo
+  change helps, or the fix costs more than the friction), with one line why.
 
 Also return your own frictions from this run, naming each place this brief was
 confusing or contradicted itself, and each step that was hard to follow with
