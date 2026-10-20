@@ -1,6 +1,6 @@
 // The Friction Ledger page's ranking (layers/journal/app/utils/ledger.ts).
 import { describe, expect, it } from 'vitest'
-import { ledgerFixState, ledgerPanels } from '../../app/utils/ledger.ts'
+import { ledgerFixState, ledgerPanels, ledgerWindowStart } from '../../app/utils/ledger.ts'
 import type { FrictionClusterDoc, Severity } from '../../app/types/journal.ts'
 
 function cluster(name: string, severities: Severity[]): FrictionClusterDoc {
@@ -133,5 +133,26 @@ describe('ledgerPanels fixes and state', () => {
     const [e] = ledgerPanels([accepted], 'current', new Set(), 'archived').severe
     expect(e).toMatchObject({ state: 'accepted', since: 0, count: 1 })
     expect(e!.fixes.map((f) => f.pr)).toEqual([1])
+  })
+})
+
+describe('ledgerPanels window', () => {
+  it('counts, ranks and lists only occurrences from the window start, and drops a cluster with none', () => {
+    // cluster() dates occurrence i on 2026-10-0(i+1).
+    const clusters = [cluster('old-major', ['major', 'nit', 'nit']), cluster('gone', ['blocker']), cluster('new', ['nit', 'nit', 'minor'])]
+    const { severe, frequent } = ledgerPanels(clusters, 'current', new Set(), 'archived', {}, '2026-10-02')
+    expect([...severe, ...frequent].map((e) => [e.name, e.count, e.worst])).toEqual([['new', 2, 'minor'], ['old-major', 2, 'nit']])
+    expect(severe[0]!.occurrences.map((o) => o.date)).toEqual(['2026-10-03', '2026-10-02'])
+  })
+
+  it('keeps the fix state on every occurrence, so a fix merged before the window still counts', () => {
+    const c = { ...cluster('x', ['nit', 'nit', 'nit']), fixes: [{ pr: 1, date: '2026-10-01', summary: 'fix' }] }
+    const [e] = ledgerPanels([c], 'current', new Set(), 'archived', {}, '2026-10-03').severe
+    expect(e).toMatchObject({ count: 1, state: 'still recurring', since: 2 })
+  })
+
+  it('starts the window the same way the prune counts its horizon', () => {
+    expect(ledgerWindowStart('2026-10-20', 2)).toBe('2026-10-18')
+    expect(ledgerWindowStart('2026-03-01', 14)).toBe('2026-02-15')
   })
 })

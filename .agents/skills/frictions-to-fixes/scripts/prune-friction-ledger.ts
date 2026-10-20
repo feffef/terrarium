@@ -17,13 +17,13 @@
 import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { isMap, isSeq, parse as parseYaml, parseDocument } from 'yaml'
-import { LEDGER_HORIZON_DAYS, ledgerFixState } from '../../../../layers/journal/app/utils/ledger.ts'
+import { LEDGER_HORIZON_DAYS, ledgerFixState, ledgerWindowStart } from '../../../../layers/journal/app/utils/ledger.ts'
 import { LEDGER_DIR } from '../../../../scripts/session/extract-frictions.ts'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 /** The oldest occurrence date the horizon keeps. */
 export function horizonStart(today: string): string {
-  return new Date(Date.parse(`${today}T00:00:00Z`) - LEDGER_HORIZON_DAYS * 86_400_000).toISOString().slice(0, 10)
+  return ledgerWindowStart(today, LEDGER_HORIZON_DAYS)
 }
 
 /** One ledger file pruned: its new text, or `null` when no occurrence is left.
