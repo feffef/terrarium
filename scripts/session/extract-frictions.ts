@@ -274,7 +274,7 @@ function main(): void {
   const target = resolveOutputTarget(argv, json.length, OUTPUT_FILE_PATH)
   if (target) {
     writeFileSync(target, json + '\n')
-    process.stdout.write(`extract-frictions: ${sessions.length} sessions since ${since}, ${json.length} bytes, written to ${target}\n`)
+    process.stdout.write(`extract-frictions: ${sessions.length} sessions ended since ${since}, ${json.length} bytes, written to ${target}\n`)
   } else {
     console.error(`extract-frictions: window starts ${since}`)
     process.stdout.write(json + '\n')

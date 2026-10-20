@@ -8,10 +8,10 @@ new mechanism. Write scratch files only under {SCRATCH_DIR}.
 
 ## For each pick
 
-- **Read the full session log of every occurrence**
-  (`layers/journal/content/*/sessions/*-<session>.yml`): each friction's
-  `description` and `solution`, the session's `summary`, `docsRead` and
-  `subagents`. Weigh the sessions' own `solution` proposals, but report only
+- **Read each occurrence's friction** (`description`, `solution`); open its full
+  session log (`layers/journal/content/*/sessions/*-<session>.yml`: `summary`,
+  `docsRead`, `subagents`) only where needed. Name `feffef/terrarium` in every
+  GitHub read. Weigh the sessions' own `solution` proposals, but report only
   your design.
 - **For a friction a doc already covers, check whether that session read the
   doc.** `docsRead` holds Read-tool opens plus any the author listed, and since
@@ -24,7 +24,7 @@ new mechanism. Write scratch files only under {SCRATCH_DIR}.
   prose itself is unclear, wrong, or too easy to read past. Report which, with
 the paths as evidence. **"Opened" can mean a subagent opened it:** subagent reads are folded into the parent's list (`transcript-trace.ts`'s `foldSubagentTrace`), so on a session that delegated, check the `subagents` field before concluding the agent that hit the friction had the rule in front of it. A doc only a subagent opened is closer to *not opened*. Example (doc not opened): the #241/#425 fixes landed in `docs/agents/github-integration.md`, which the affected sessions had no reason to open; the friction recurred until a `PreToolUse` guard replaced the prose.
 - **Before recommending "add a line to doc X", check that anyone reads doc X.**
-  `pnpm exec tsx scripts/session/audit-skills.ts` (about 478 KB: redirect it to a file and read only `docReadCounts`) reports `docReadCounts` — path → how many
+  `pnpm exec tsx scripts/session/audit-skills.ts` (redirect it to a file and read only `docReadCounts`) reports `docReadCounts` — path → how many
   of the windowed sessions opened it. A doc sitting at **0** is where a prose fix
   goes to die. Prune the instruction that caused it first (CLAUDE.md, "Keep it
   short"); failing that, recommend a mechanism that reaches the session (a

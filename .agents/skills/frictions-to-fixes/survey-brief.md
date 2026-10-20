@@ -50,8 +50,8 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   its body and `merged_at` (`gh pr view` is blocked); read the body, since a
   batched doc PR's title names no cluster. This run's own PRs are recorded
   by the main session; a PR an earlier run missed (still `tracked`, or in that run's log `prs`
-  but in no `fixes`) is recorded here. A `tracked` entry whose PR closed
-  unmerged, or whose `ref` names no open issue or PR, goes back to `open`.
+  but in no `fixes`) is recorded here. A `tracked` or `on-trial` entry whose PR closed
+  unmerged, or whose `ref` names no open issue, PR or trial in `prune-trials.yml`, goes back to `open`.
   For one whose `ref` PR merged, set `status: open` and set that PR's `fixes`
   `date` to its `merged_at` (the same call), since an escalated PR dated its own
   entry before it merged.
@@ -87,7 +87,7 @@ Never re-fix what is already fixed. **First, drop what isn't ours to change:** a
 an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is the trial's
 evidence, not a fix (ADR-0027). The drop reason quotes the matching `territory` path or keyword verbatim; with no quotable match the candidate is not on trial, so classify it below. A
 `blocker` is the exception: list it as a drop flagged `blocker`, and the main
-session files it, naming the trial. Then, for the rest: check the tracker for an issue or PR that already covers it, and confirm against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/git/list-merges-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC, newest-first, `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a window's output can overflow you). Find the fixing commit/PR in it rather than comparing git timestamps by hand. Capture stdout and stderr separately: diagnostics go to stderr, and mixing them into the JSON on stdout breaks parsing. **Before labelling a candidate "never fixed", search the tracker with the friction's tool name and error-message text** (not a paraphrase), with a narrow query (`docs/agents/github-integration.md`). The search tools (e.g. `mcp__github__search_issues`) match semantically, not by substring, so a miss alone doesn't prove never-fixed: also eyeball nearby issues (same file, script or mechanism) for a closed one covering the same root cause in other words. A paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
+session files it, naming the trial. Then, for the rest: check the tracker for an issue or PR that already covers it, and confirm against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/git/list-merges-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC, newest-first, `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a window's output can overflow you). Find the fixing commit/PR in it rather than comparing git timestamps by hand. Capture stdout and stderr separately: diagnostics go to stderr, and mixing them into the JSON on stdout breaks parsing. **Before labelling a candidate "never fixed", filter `pnpm exec tsx scripts/github/list-open-issues.ts` output locally for open issues, and run one scoped `search_issues` with `state:closed` and the exact identifier for closed ones** (`docs/agents/github-integration.md`). The search tools (e.g. `mcp__github__search_issues`) match semantically, not by substring, so a miss alone doesn't prove never-fixed: also eyeball nearby issues (same file, script or mechanism) for a closed one covering the same root cause in other words. A paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
 
 - **Never fixed** — no issue/PR addresses it, confirmed by the keyword search
   above.
