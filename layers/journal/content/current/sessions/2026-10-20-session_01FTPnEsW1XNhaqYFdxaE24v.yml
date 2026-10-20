@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01FTPnEsW1XNhaqYFdxaE24v
 startedAt: 2026-10-20T17:45:58Z
-endedAt: 2026-10-20T18:12:57Z
+endedAt: 2026-10-20T18:16:08Z
 kind: interactive
 goal: Compare the routine Skills for clarity, then rewrite two of them plainly
-status: in-review
-outcome: "frictions-to-fixes rewrite merged (#2330); audit-docs rewrite open as #2331, both Prune Trials"
+status: completed
+outcome: "frictions-to-fixes and audit-docs rewritten plainly as Prune Trials; #2330 and #2331 merged"
 summary: "Human-instructed throughout. First a question: which routine Skill reads worst and which is cleanest; answered frictions-to-fixes and audit-skills after reading all seven. The user then asked for frictions-to-fixes to be rewritten in plain language, each step as a goal paragraph, instructions with script and subagent calls, and edge cases, keeping its logic. Before building I asked three questions (the typo \"sjioo calls\", SKILL.md only or briefs too, Prune Trial or plain PR); the user chose script calls or subagents, SKILL.md only, and a Prune Trial. That PR (#2330) merged after a Sonnet probe and a two-axis code-review whose findings (dropped pointers and why-clauses, a lost no-argument default) I fixed. The user then asked for audit-docs \"the same way\"; I carried the earlier answers over without asking again. Its reference block (tiers, lenses, checker sources) moved into the steps that use them, so this file grew slightly (2058 to 2113 words) where the first shrank. A Sonnet probe answered ten scenarios correctly; review found a broadened sweep-PR scope line, a lost load-bearing-why rule and the open-trial check placed away from the edits, all fixed. Agent-initiated within the asks: the overview of each run's PRs, keeping section numbers and tier and lens names for their callers, and the trials' check texts."
 prs:
   - "2330"
@@ -102,11 +102,11 @@ frictions:
   - description: The Stop hook asked to push five times while the gate and reviews ran; ADR-0004 says hold, so each nag cost a turn.
     solution: Have the git-check Stop hook stay quiet while a gate:scoped run for the branch is in progress or a review agent is running.
     severity: nit
-durationSec: 1619
+durationSec: 1810
 models:
-  claude-opus-5-5: 167
+  claude-opus-5-5: 179
 toolCounts:
-  Bash: 61
+  Bash: 65
   Read: 1
   Skill: 5
   AskUserQuestion: 1
@@ -114,13 +114,13 @@ toolCounts:
   Agent: 6
   ToolSearch: 2
   TaskStop: 1
-  SendUserFile: 1
+  SendUserFile: 2
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 2
-  ReadNotifications: 3
+  ReadNotifications: 5
   mcp__github__pull_request_read: 1
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/skills/audit-docs/SKILL.md
