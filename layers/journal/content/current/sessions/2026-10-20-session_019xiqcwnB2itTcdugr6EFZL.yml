@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019xiqcwnB2itTcdugr6EFZL
 startedAt: 2026-10-20T00:46:03Z
-endedAt: 2026-10-20T01:37:42Z
+endedAt: 2026-10-20T01:39:25Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "Opened PR #2309 (in review), subscribed to its activity; gate green, code-review findings fixed before push."
-summary: "Agent-initiated scheduled run of the audit-skills Routine; no human prompt arrived at any point (kind: autonomous). Ran scripts/session/audit-skills.ts for the 7-day scorecard, dispatched one subagent to pull usage/cost for all 53 routine-run sessions via get_session, and 13 parallel read-only subagents (one per Skill in behaviourChecks: adr-check, audit-docs, audit-skills, blog-post, clear-backlog, close-session, digest, dispatch-subagents, frictions-to-fixes, glassbox-update, log-session, prune-trial, visitor-loop). Personally verified a representative claim from each report against live GitHub (13 issue_read/pull_request_read calls), all checked out. All 13 came back clean or sub-threshold; the one real finding (adr-check's binding.ts output truncatable by a caller piping through tail) was already fully recorded on open issue #2286 (the owner's own pre-scheduled review) with no new evidence to add, so no comment was posted. Closure-completeness (step 3) was clean: orphanScan ran (1492 merged PRs, 1336 with a session), 2 orphan candidates both already resolvedBy (#736, #1063); humanPromptedClosures and manuallyRescuedClosures both empty. Step 4: no new issues or comments — every finding either didn't clear the significant/repeated bar (recorded as an observation) or was already fully tracked. Step 5: appended dated observations to 9 Skills, pruned one log-session observation past the 40-day floor, added 3 coverage-gap Inventory entries (adr-check: essential; inspect-session: specialist; dependabot-sweep: supporting, graded conservatively on one unverified use), appended this week's newest routine-run cost row to all 8 scheduled Routines then pruned each to the newest 30 via prune-routine-runs.ts. No grade changes on existing entries. Ran gate:scoped (green), then code-review (Standards+Spec subagents against origin/main), which found 2 real issues fixed in a second commit before pushing: adr-check's new observation exceeded the ~100-word cap, blog-post's new observation bare-reconfirmed #1479/#1626 already cited by an earlier entry in the same file, and (caught by the Spec reviewer) dependabot-sweep's initial importance grade of \"routine\" wasn't backed by the GLOSSARY.md-required scheduled-runs evidence (one unverified use) — corrected to \"supporting\". Re-ran gate:scoped green after the fixes, pushed, opened PR #2309 (self-mergeable: no Human-only path, no dependency, no untested-behaviour change), subscribed to its activity."
+status: completed
+outcome: "PR #2309 merged (db797a1953e87e482ea1cb5fcf581448ccab4fda): the audit-skills Inventory sweep landed on main."
+summary: "Agent-initiated scheduled run of the audit-skills Routine; no human prompt arrived at any point (kind: autonomous). Ran scripts/session/audit-skills.ts for the 7-day scorecard, dispatched one subagent to pull usage/cost for all 53 routine-run sessions via get_session, and 13 parallel read-only subagents (one per Skill in behaviourChecks: adr-check, audit-docs, audit-skills, blog-post, clear-backlog, close-session, digest, dispatch-subagents, frictions-to-fixes, glassbox-update, log-session, prune-trial, visitor-loop). Personally verified a representative claim from each report against live GitHub (13 issue_read/pull_request_read calls), all checked out. All 13 came back clean or sub-threshold; the one real finding (adr-check's binding.ts output truncatable by a caller piping through tail) was already fully recorded on open issue #2286 (the owner's own pre-scheduled review) with no new evidence to add, so no comment was posted. Closure-completeness (step 3) was clean: orphanScan ran (1492 merged PRs, 1336 with a session), 2 orphan candidates both already resolvedBy (#736, #1063); humanPromptedClosures and manuallyRescuedClosures both empty. Step 4: no new issues or comments — every finding either didn't clear the significant/repeated bar (recorded as an observation) or was already fully tracked. Step 5: appended dated observations to 9 Skills, pruned one log-session observation past the 40-day floor, added 3 coverage-gap Inventory entries (adr-check: essential; inspect-session: specialist; dependabot-sweep: supporting, graded conservatively on one unverified use), appended this week's newest routine-run cost row to all 8 scheduled Routines then pruned each to the newest 30 via prune-routine-runs.ts. No grade changes on existing entries. Ran gate:scoped (green), then code-review (Standards+Spec subagents against origin/main), which found 2 real issues fixed in a second commit before pushing: adr-check's new observation exceeded the ~100-word cap, blog-post's new observation bare-reconfirmed #1479/#1626 already cited by an earlier entry in the same file, and (caught by the Spec reviewer) dependabot-sweep's initial importance grade of \"routine\" wasn't backed by the GLOSSARY.md-required scheduled-runs evidence (one unverified use) — corrected to \"supporting\". Re-ran gate:scoped green after the fixes, pushed, opened PR #2309 (self-mergeable: no Human-only path, no dependency, no untested-behaviour change), subscribed to its activity. CI (gate + label checks) came back green on the head commit with a clean mergeable state and no conflicting issues; posted a merge verdict naming the head sha and merged via scripts/github/merge-pr.ts, then unsubscribed."
 prs:
   - "2309"
 docsRead:
@@ -184,26 +184,29 @@ frictions:
   - description: "First attempt to background `pnpm gate:scoped` chained `mkdir -p ... && nohup pnpm gate:scoped ... &` inside one Bash call with run_in_background:true. The double-background guard (issue #1208) correctly refused it, and its \"nothing in this call ran\" meant the mkdir never executed either, so the immediate retry's log redirect failed once more before I ran mkdir on its own first."
     solution: Run mkdir -p as its own call before a backgrounded command that redirects into a new directory.
     severity: nit
-durationSec: 3099
+durationSec: 3202
 models:
-  claude-sonnet-5: 303
+  claude-sonnet-5: 324
 toolCounts:
-  Bash: 77
+  Bash: 80
   Read: 17
   Agent: 16
   ToolSearch: 3
   TaskCreate: 6
   Write: 6
-  TaskUpdate: 7
+  TaskUpdate: 8
   ScheduleWakeup: 1
-  Edit: 25
-  mcp__github__pull_request_read: 5
+  Edit: 27
+  mcp__github__pull_request_read: 7
   mcp__github__issue_read: 8
   mcp__github__search_issues: 1
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
   mcp__Claude_Code_Remote__get_session: 1
+  ReadNotifications: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/log-session.yml
   - layers/journal/content/current/skills/audit-docs.yml
