@@ -4,18 +4,13 @@ summary: >-
 cause: >-
   Sessions combine run_in_background: true with a trailing & or nohup, and the double-background guard denies it.
 surface: guard-or-hook
-status: open
-ref: "PR #2172 merged; the deny message now says nothing in the call ran. The guard still denies the combination."
+status: tracked
+ref: "Regression issue #2310 (PR #2172 did not hold)."
 fixes:
   - pr: 2172
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_01KyKW5E8oFPkSu3a4mCpT25
-    date: "2026-10-05"
-    severity: nit
-    description: "Combined `run_in_background: true` with a shell-level `nohup ... &` when starting the gate run; blocked by the double-background guard."
-    solution: "Use run_in_background alone with a plain foreground command, never both."
   - session: session_01AQ91ENQEqf8iMne1PrzFiu
     date: "2026-10-07"
     severity: nit
@@ -66,3 +61,33 @@ occurrences:
     severity: nit
     description: "A Bash call with run_in_background plus a trailing & was blocked by the double-background guard, and a sleep-then-tail wait was blocked, costing two retries."
     solution: "Use run_in_background alone and a Monitor until-loop from the start."
+  - session: session_01Wo87Rt4Jm7quTeLgizu4QK
+    date: "2026-10-19"
+    severity: nit
+    description: "First gate:scoped call combined run_in_background with a trailing ampersand; the double-background guard blocked it."
+    solution: "CLAUDE.md could say plainly to use run_in_background alone, no ampersand."
+  - session: session_01AZjx4MT5revQ7BnLqR9f39
+    date: "2026-10-19"
+    severity: nit
+    description: "First Bash call set run_in_background and also ended with a shell &, so the double-background guard blocked the whole call, including the status check chained before it."
+    solution: "Pass run_in_background alone with a plain foreground command and redirect output to a file."
+  - session: session_018DaeF1okx3CjHh1GwVpwPf
+    date: "2026-10-19"
+    severity: nit
+    description: "Tried a Bash call that was both run_in_background and ended in a shell backgrounding; the double-background guard blocked it and a sleep was blocked too."
+    solution: "The Skill text for visitor-loop could say once: wait for subagents by ending the turn, run gates with run_in_background only."
+  - session: session_01Pc15CVrLGyHXgoygsRHLbB
+    date: "2026-10-19"
+    severity: nit
+    description: "A Bash call with run_in_background plus a subshell '&' was blocked by the double-background guard; resent without the '&'"
+    solution: "Use run_in_background alone with a foreground command"
+  - session: session_01XTdRbnDg1n2j2ZqjTrwCLi
+    date: "2026-10-19"
+    severity: nit
+    description: "A Bash call combining run_in_background with a trailing ampersand was blocked by the double-background guard; the retry cost a turn."
+    solution: "None needed beyond the guard message; I knew the CLAUDE.md rule and slipped."
+  - session: session_019xiqcwnB2itTcdugr6EFZL
+    date: "2026-10-20"
+    severity: nit
+    description: "First attempt to background `pnpm gate:scoped` chained `mkdir -p ... && nohup pnpm gate:scoped ... &` inside one Bash call with run_in_background:true. The double-background guard (issue #1208) correctly refused it, and its \"nothing in this call ran\" meant the mkdir never executed either, so the immediate retry's log redirect failed once more before I ran mkdir on its own first."
+    solution: "Run mkdir -p as its own call before a backgrounded command that redirects into a new directory."

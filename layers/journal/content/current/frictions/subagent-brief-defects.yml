@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   Orchestrators write briefs from memory: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value restated wrongly, a check grepping output that lists only failures. The agent runs on the bad brief before anyone notices. Signals: "brief", "placeholder", "path did not exist".
 surface: safe
-status: open
+status: tracked
+ref: "Regression issue #2312 (PR #2150 did not hold)."
 fixes:
   - pr: 2150
     date: "2026-10-16"
@@ -70,3 +71,18 @@ occurrences:
     severity: minor
     description: "Told the implementer not to edit asking-for-a-change.md because PR 2099 was open, repeating the Fable agent's claim without checking; 2099 was already merged and the page needed the edit."
     solution: "Check a PR's state with pull_request_read before putting it in a brief."
+  - session: session_0135hcUf12mVM8dEZfDRAkUb
+    date: "2026-10-18"
+    severity: nit
+    description: "The impl agent's scratch subfolder did not exist, so its first gate redirect failed; the Skill's brief does not say to create it."
+    solution: "Add mkdir -p of the scratch subfolder to the impl-brief."
+  - session: session_01XWMuHGcaNTvRPHfYb9T7z2
+    date: "2026-10-19"
+    severity: minor
+    description: "The sources research brief told the subagent to inspect MCP config and env var names; it drifted into probing how the CLI's worker credential is sourced until the classifier blocked it"
+    solution: "Research briefs that touch auth should say: never investigate credential sourcing; report the endpoint and stop"
+  - session: session_01MwrXDH7XwMNUofgz3HvQ5N
+    date: "2026-10-19"
+    severity: nit
+    description: "The first two recipe runs wrote their output to .throwaway rather than a scratchpad subfolder named for each subagent, as CLAUDE.md asks."
+    solution: "Put the OUT folder under the scratchpad, named per subagent, in every brief."

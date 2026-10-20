@@ -22,3 +22,13 @@ occurrences:
     severity: nit
     description: "Tried ScheduleWakeup and a foreground sleep to wait for visitors; both were blocked by guards, wasting two calls."
     solution: "Visitor-loop step 2 could say: subagents self-notify, end the turn and wait."
+  - session: session_0183U5MkKrjuhRKdjpFxD9Xj
+    date: "2026-10-19"
+    severity: nit
+    description: "Monitor until-loop matched an early tool-use name and ended before the agent finished; foreground sleep was also blocked."
+    solution: "Match only the final-message shape; poll from the first attempt."
+  - session: session_011G3PKUqDog2WRSuqypmuJX
+    date: "2026-10-20"
+    severity: nit
+    description: "ScheduleWakeup was blocked by the loop-only guard; the tool list offers it outside /loop."
+    solution: "Hide ScheduleWakeup outside /loop sessions."

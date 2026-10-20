@@ -10,6 +10,9 @@ fixes:
   - pr: 2165
     date: "2026-10-16"
     summary: "Each ADR summary rule now says when to read its full ADR, naming what only the ADR holds."
+  - pr: 2284
+    date: "2026-10-19"
+    summary: "Moved the ADR grep before a recommendation into a model-invoked adr-check Skill that prints every ADR summary and reads the related ADRs in full."
 occurrences:
   - session: session_01NyDGTR1fuP22hPo7XghCfz
     date: "2026-10-07"
@@ -386,3 +389,53 @@ occurrences:
     severity: nit
     description: "Told the owner the sidebar fits ADR-0028 from the spec's summary without reading ADR-0028 in full"
     solution: "Grep and read binding ADRs before giving an opinion, as CLAUDE.md asks"
+  - session: session_01AwaGncaYJFWdJnc6yqDoTS
+    date: "2026-10-19"
+    severity: nit
+    description: "I gave a light opinion on adr-check (a Skill is as skippable as a line) in my first reply, before running adr-check as CLAUDE.md requires."
+    solution: "Run adr-check before any evaluative remark on a change, even in a context-gathering reply."
+  - session: session_01MKmEo8yAjxTqJ5h3zceLL5
+    date: "2026-10-19"
+    severity: minor
+    description: "Recommended Q1-Q3 without running the adr-check Skill first, as CLAUDE.md requires before recommending a change."
+    solution: "Run adr-check before the first grilling round; the wayfinder Skill could name it for grilling tickets."
+  - session: session_01CBVi4qZ2RqPhfHeHPYrkwD
+    date: "2026-10-19"
+    severity: minor
+    description: "Recommended fixes (the friction-3 'better fix' and the retro's candidates) before running adr-check, as CLAUDE.md requires; ran it only before filing #2306."
+    solution: "Run adr-check at the first recommendation; the retro Skill could name it before step 4."
+  - session: session_01BioJpAhd9uY1SxSeUGHqjn
+    date: "2026-10-19"
+    severity: nit
+    description: "CLAUDE.md says to grep docs/adr for binding ADRs before recommending a change; I recommended dropping the learning without doing that grep."
+    solution: "Run the ADR grep when the ask is to propose an edit location, even when the answer is write nothing."
+  - session: session_01YT23v1E13X7UugkvpGQch7
+    date: "2026-10-19"
+    severity: nit
+    description: "Made no grep -l of docs/adr before recommending, as CLAUDE.md asks before any recommendation; no ADR turned out to conflict."
+    solution: "Run grep -l on the guard paths in docs/adr before proposing a change."
+  - session: session_01AZjx4MT5revQ7BnLqR9f39
+    date: "2026-10-19"
+    severity: nit
+    description: "Before recommending the edit I did not run grep -l on docs/adr/* for the file or term, as CLAUDE.md requires before recommending a change; I relied on the loaded rule summaries."
+    solution: "Run the ADR grep before proposing; for a docs-only edit to a research note it found nothing binding, so impact was nil."
+  - session: session_013VrLZFkT6dnWNMm1wN8Yjj
+    date: "2026-10-19"
+    severity: nit
+    description: "Did not run grep -l over docs/adr before proposing a change, as CLAUDE.md asks; I read ADR-0020 via grep only and did not read the full ADR"
+    solution: "Run the ADR grep first, then read the binding ADRs in full before proposing"
+  - session: session_01QMsuxS3fR6VMfWU1gXEYvk
+    date: "2026-10-19"
+    severity: nit
+    description: "Read GLOSSARY.md (40 lines) and github-integration.md (one section) only partly, though CLAUDE.md says read in full; no ADR grep done for the question."
+    solution: "Read the trigger docs in full at session start, in the first tool batch."
+  - session: session_01F2JGBVz5DXj7Yi8x2NBZcM
+    date: "2026-10-19"
+    severity: nit
+    description: "Proposed an edit to the MDC doc without first running grep -l on docs/adr for ADRs binding it, as CLAUDE.md asks before recommending a change. Later reads showed no conflict."
+    solution: "Run the ADR grep before proposing the edit."
+  - session: session_01XWMuHGcaNTvRPHfYb9T7z2
+    date: "2026-10-19"
+    severity: nit
+    description: "Read GLOSSARY-MAP.md and GLOSSARY.md via cat piped to head -300, which cut GLOSSARY.md short, so the session-start glossary read was incomplete"
+    solution: "Read the glossary files whole with the Read tool, not a capped pipe"

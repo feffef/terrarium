@@ -21,3 +21,8 @@ occurrences:
     severity: minor
     description: "First migration script re-serialized skill YAML, reformatting every long prose field, so I had to restore the files and redo the edit as a text cut."
     solution: "Edit YAML as text or with parseDocument for a field removal; check git diff --stat right after any data migration."
+  - session: session_01MeatWCLdQDV2rWVNHumqX7
+    date: "2026-10-19"
+    severity: nit
+    description: "A python replace-assertion for the SKILL.md edit failed because my anchor started mid-line (' from the last NEXT line'); cost one retry."
+    solution: "Anchor edits on a whole distinctive line, or use the Edit tool for prose."

@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   ADR-0004's before-first-push gate:scoped plus code-review is skipped or the gate is not rerun after late edits.
 surface: guard-or-hook
-status: open
+status: tracked
+ref: "Regression issue #2311 (PRs #1852, #1853 did not hold)."
 fixes:
   - pr: 1852
     date: "2026-10-12"
@@ -48,3 +49,18 @@ occurrences:
     severity: minor
     description: "The 1940 build agent reported gatePassed while saying it had not rerun the gate after its last round, and it could not do a live hook check in-session"
     solution: "Have clear-backlog-build re-run gate:scoped on the final commit before it returns ready-to-push"
+  - session: session_01BTtvaFQckiQwtGZsasWPJH
+    date: "2026-10-19"
+    severity: nit
+    description: "gate:scoped ran on the pre-amend #2233 commit; the amend changed only one YAML string, and I re-ran only validate:content on it."
+    solution: "Amend before starting the gate, or re-run gate:scoped after any amend; CI's gate decides anyway."
+  - session: session_01F2JGBVz5DXj7Yi8x2NBZcM
+    date: "2026-10-19"
+    severity: nit
+    description: "Amended the commit after code-review to trim one sentence, then pushed without re-running review, since the change was a pure deletion in a docs file."
+    solution: "State in pr-workflow whether a review-driven trim needs a re-review."
+  - session: session_01XTdRbnDg1n2j2ZqjTrwCLi
+    date: "2026-10-19"
+    severity: minor
+    description: "Skipped the code-review Skill before first push, treating the fact-check as the review of a one-file prose diff, as earlier blog runs did; ADR-0004 does not exempt it."
+    solution: "Let blog-post or pr-workflow say explicitly whether code-review is skipped for a prose-only post."

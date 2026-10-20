@@ -39,3 +39,8 @@ occurrences:
     severity: minor
     description: "search_pull_requests asking for body returned about eight full PR bodies (visitor-loop tallies), flooding context before I read the overflow advice."
     solution: "Use scripts/recent-prs.ts or list_pull_requests with fields that omit body for the last blog PRs, as the blog-post step could say."
+  - session: session_016Nsq9SWL64V4RqDJPQYodp
+    date: "2026-10-19"
+    severity: nit
+    description: "Called search_issues without fields and the guard denied it; one wasted call."
+    solution: "Mention the fields requirement in the prune-trial Skill's tracker step."

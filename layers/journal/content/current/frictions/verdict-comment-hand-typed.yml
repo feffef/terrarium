@@ -37,3 +37,8 @@ occurrences:
     severity: minor
     description: "After stopping the #2231 build I cited a commit and branch from the builder's first commit; a review round had rewritten them, so I posted a correction."
     solution: "Read git log in the worktree before quoting a sha from a transcript."
+  - session: session_01MeatWCLdQDV2rWVNHumqX7
+    date: "2026-10-19"
+    severity: nit
+    description: "My first verdict comment named a mistyped short SHA (30a92a7247 vs ...7244); merge-pr.ts refused and I edited the comment."
+    solution: "Paste the head SHA from git rev-parse HEAD into the verdict rather than typing it."

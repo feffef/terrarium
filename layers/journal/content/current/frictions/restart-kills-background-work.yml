@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "Worker restart killed the first gate run (exit 137) and cost a rerun."
     solution: "Start the gate with run_in_background from the start so a restart does not abort it."
+  - session: session_01MwrXDH7XwMNUofgz3HvQ5N
+    date: "2026-10-19"
+    severity: nit
+    description: "The worker process restarted twice mid-session; files survived, but each restart re-ran setup and cost a recheck."
+    solution: "None in the repo; check scratch files on resume, as done."

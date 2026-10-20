@@ -8,6 +8,9 @@ fixes:
   - pr: 2213
     date: "2026-10-17"
     summary: "dispatch-subagents section 1 now names owner-visible shape, data shape, length and ownership as choices to settle first, and CLAUDE.md says to ask before building what the Trusted user will see."
+  - pr: 2272
+    date: "2026-10-19"
+    summary: "Added a path-scoped rule to settle a stored field's shape with a Trusted user before building it."
 occurrences:
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"

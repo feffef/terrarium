@@ -119,3 +119,8 @@ occurrences:
     severity: nit
     description: "clear-backlog §1 again left the hook-wiring issue out by default, so I had to ask the owner, the same gap #2232 reports."
     solution: "PR #2240 cuts the rule."
+  - session: session_01BTtvaFQckiQwtGZsasWPJH
+    date: "2026-10-19"
+    severity: minor
+    description: "Nothing checks that owner-approved issues are relabelled ready-for-agent before clear-backlog-build runs; merge-pr.ts caught it only after two PRs were built and gated."
+    solution: "clear-backlog-build.js checks each branch issue's ready-for-agent label first and returns needs-owner when it is missing."

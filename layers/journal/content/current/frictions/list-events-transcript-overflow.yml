@@ -9,6 +9,15 @@ fixes:
   - pr: 2235
     date: "2026-10-18"
     summary: "The transcript section of github-integration.md now says to read the log first, save list_events pages and drop image blocks, and budget subagents."
+  - pr: 2304
+    date: "2026-10-19"
+    summary: "Added the inspect-session Skill with flatten and search scripts for reading another session's events without loading them."
+  - pr: 2305
+    date: "2026-10-19"
+    summary: "Added a full-read recipe: parallel Haiku fetchers over cursor ranges, merged by flatten."
+  - pr: 2307
+    date: "2026-10-19"
+    summary: "inspect-session takes bare page names, does a partial read for short sessions and has a replies selector."
 occurrences:
   - session: session_01GVmwHZQthucdGcVwe3HAUL
     date: "2026-10-17"
@@ -25,3 +34,23 @@ occurrences:
     severity: nit
     description: "A subagent could not reach the screenshot phase of the stuck session through list_events, so image handling as the cause stayed unconfirmed after a full run."
     solution: "The transcript recipe could say pages span only minutes and to expect the log, not the transcript, to hold late phases."
+  - session: session_01Bopw6N86uYzPzfaRpVqzhU
+    date: "2026-10-19"
+    severity: minor
+    description: "Transcript-reading subagent printed whole list_events pages inline despite instructions to save them (the tool returns pages into context), costing ~390k subagent tokens and still not reaching the survey's commands."
+    solution: "Document in github-integration.md that list_events cannot be redirected; tell briefs to use kinds [assistant] from the start and cap pages."
+  - session: session_01Pc15CVrLGyHXgoygsRHLbB
+    date: "2026-10-19"
+    severity: minor
+    description: "An ad-hoc python analysis of saved list_events pages printed a whole hand-back body, about 20k characters, into the main context"
+    solution: "Truncate every printed field from the first run; the new Flatten plus grep -oE now does this by default"
+  - session: session_01CBVi4qZ2RqPhfHeHPYrkwD
+    date: "2026-10-19"
+    severity: moderate
+    description: "The inspect-session full read cost about 190k Haiku tokens and three subagents for an 11-page session, and needed a hand fix of the fetchers' abbreviated page paths before Flatten could merge."
+    solution: "Filed as #2306: bare file names in flatten.ts, and a partial read with no page limit for short sessions."
+  - session: session_01MwrXDH7XwMNUofgz3HvQ5N
+    date: "2026-10-19"
+    severity: minor
+    description: "A Haiku chain link reported a deterministic cursor loop; it was one wrong page from the server, which cost a verification round."
+    solution: "The transcript Skill should check each first_id is new and retry once; fetchers should report, not diagnose."

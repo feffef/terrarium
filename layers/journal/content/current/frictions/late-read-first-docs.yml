@@ -374,3 +374,48 @@ occurrences:
     severity: nit
     description: "Ran git fetch in the same parallel batch as the git-conventions read, so the doc was not read before my first git command."
     solution: "Read the trigger doc alone first, then start git."
+  - session: session_018DaeF1okx3CjHh1GwVpwPf
+    date: "2026-10-19"
+    severity: nit
+    description: "Called mcp__github__search_issues before reading docs/agents/github-integration.md, which CLAUDE.md requires first; the hook only reminded me afterwards."
+    solution: "No harm done; a rule-loading hook on the first mcp__github__ call would put the doc in front of the call."
+  - session: session_01QEZ5a5X44d3ZzbF2vPwmAo
+    date: "2026-10-19"
+    severity: nit
+    description: "Read git-conventions only after first git fetch, because the hook reminded me; I batched it with other docs."
+    solution: "Read the Before-first-git docs in the same opening batch as the glossary."
+  - session: session_01Bopw6N86uYzPzfaRpVqzhU
+    date: "2026-10-19"
+    severity: nit
+    description: "Read github-integration.md only after my first mcp__github__ call (a hook reminded me), against CLAUDE.md's read-before rule; no harm since the call was a plain read."
+    solution: "None needed beyond the existing hook; read it with the other session-start docs when a PR is expected."
+  - session: session_01Wo87Rt4Jm7quTeLgizu4QK
+    date: "2026-10-19"
+    severity: nit
+    description: "Ran git log -S for a conclusion before reading git-conventions.md and without fetching or scoping to origin/main."
+    solution: "Read the doc first; the hook reminder only came after the call."
+  - session: session_01XTdRbnDg1n2j2ZqjTrwCLi
+    date: "2026-10-19"
+    severity: nit
+    description: "Ran git fetch and GitHub reads before reading git-conventions.md and github-integration.md; the hooks only reminded me after the first call."
+    solution: "Surface the read-first hint in the Skill's step 1 or before the first command, not after it."
+  - session: session_0183U5MkKrjuhRKdjpFxD9Xj
+    date: "2026-10-19"
+    severity: nit
+    description: "Read git-conventions.md in the same command as my first git fetch/log, and the first-GitHub-op doc after pushing; the hook flagged the late read."
+    solution: "Read the first-op docs in a separate call before the first such command."
+  - session: session_01TNqbizPuP8kvWwD4hfwUwG
+    date: "2026-10-19"
+    severity: minor
+    description: "Read docs/agents/issue-tracker.md (Wayfinding operations) only at closure, after claiming, closing and editing issues; CLAUDE.md requires it before triaging issues."
+    solution: "wayfinder Skill could name docs/agents/issue-tracker.md by path instead of 'the tracker doc', so the read happens at step 1."
+  - session: session_01MwrXDH7XwMNUofgz3HvQ5N
+    date: "2026-10-19"
+    severity: minor
+    description: "Pushed the prototype/ branch without reading docs/agents/pr-workflow.md, which CLAUDE.md requires before any push."
+    solution: "Read pr-workflow.md before pushing any branch, even a prototype/ branch that gets no PR."
+  - session: session_01Pc15CVrLGyHXgoygsRHLbB
+    date: "2026-10-19"
+    severity: nit
+    description: "Dispatched code-review subagents that ran git diff without first reading the dispatch-subagents Skill, which CLAUDE.md requires for subagents that touch git"
+    solution: "The CLAUDE.md trigger says 'touches git'; read-only git diffs are ambiguous. Clarify whether read-only git counts."

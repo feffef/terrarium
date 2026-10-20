@@ -13,6 +13,9 @@ fixes:
   - pr: 2109
     date: "2026-10-16"
     summary: "The survey instructions now say to save the large skill-audit output to a file and read only one part."
+  - pr: 2281
+    date: "2026-10-19"
+    summary: "extract-frictions --compact no longer prints each session's docsRead paths, about half its bytes."
 occurrences:
   - session: session_01GEqB5frKCNtJYAr9KaRxDo
     date: "2026-10-10"

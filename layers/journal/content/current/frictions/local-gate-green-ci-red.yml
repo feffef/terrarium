@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-12"
     summary: "Fixed two flaky tests (worktree check timing and a checkout test) that passed locally but failed in CI."
 occurrences:
-  - session: session_014mna6dsd4t2Ui98gbs3jCF
-    date: "2026-10-05"
-    severity: moderate
-    description: "Local gate:scoped passed but CI failed on PR #1622: a test hard-coded git 2.43's `+00:00` %aI output while CI's git 2.55 prints `Z`. Not an inert-classifier skip; the full local gate ran."
-    solution: "Compare parsed instants rather than raw git date strings; note the container-vs-CI git version gap in environment-caveats.md"
   - session: session_01CF4k9jXS9wLrcPVsGduZmn
     date: "2026-10-08"
     severity: major
