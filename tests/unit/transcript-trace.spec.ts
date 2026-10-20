@@ -705,6 +705,12 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
       expect(scan.nearMisses).toEqual([])
     })
 
+    it('keeps the near-miss for a symlinked .claude/skills path whose canonical doc is in the checkout', () => {
+      const idx = buildDocLineIndex([{ path: '.agents/skills/foo/notes.md', text: '# Foo skill\n\nA distinctive line about the foo skill workflow.' }])
+      const scan = shellReadScanOf(withCwd(bash('cat .claude/skills/foo/notes.md', '(Bash completed with no output)')), [], { docIndex: idx })
+      expect(scan.nearMisses).toHaveLength(1)
+    })
+
     it('names the cd-resolved path in a near-miss, so the agent recognizes which file went unshown (#1454)', () => {
       const scan = shellReadScanOf(withCwd(bash('cd /repo/layers/tinkerfund; cat GLOSSARY.md', '(Bash completed with no output)')), [], { docIndex: index })
       expect(scan.paths).toEqual([])

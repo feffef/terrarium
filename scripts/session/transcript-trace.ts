@@ -366,7 +366,7 @@ export function shellReadScanOf(
     const parser = scanShellReads(commands, rel, resolveGlob)
     for (const [p, command] of parser.creditedBy) {
       const path = resolveAgainstCdDir(p, command, rel)
-      if (!docIndex.sizes.has(path)) continue // shell-read-detection-branch-only-docs: not in the checkout, so no output could credit it
+      if (!docIndex.sizes.has(canonicalizeInstructionPath(path))) continue // a doc missing from the checkout can't be credited from output
       unshown.push({ command, token: p, path, rule: 'named by the command, but its output showed too little of this doc' })
     }
     parsed.push(...parser.nearMisses.filter((m) => !crediting.has(m.command)))
