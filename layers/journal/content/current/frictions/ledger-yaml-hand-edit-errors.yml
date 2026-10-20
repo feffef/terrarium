@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   Ledger and prune-trials YAML are patched by string replacement (or a survey patch that repeats a session); unquoted dates, replaced refs or a match inside a comment broke the file (gate or repair needed).
 surface: safe
-status: open
+status: tracked
+ref: "branch friction-fixes-doc-2026-10-20 (atlas-specimen note examples quoted)"
 fixes:
   - pr: 2154
     date: "2026-10-16"

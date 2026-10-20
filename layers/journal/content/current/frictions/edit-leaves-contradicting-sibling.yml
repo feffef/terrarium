@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   After adding a section, the author did not search the same file for statements the new text overrides. Signals: leftover bullet contradicting a new section; caught by code-review.
 surface: safe
-status: open
+status: tracked
+ref: "branch friction-fixes-doc-2026-10-20 (CLAUDE.md wording)"
 occurrences:
   - session: session_01Fay2GiWTwxDKnnqS9DznHk
     date: "2026-10-16"

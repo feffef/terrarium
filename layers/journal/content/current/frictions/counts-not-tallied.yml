@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A number (verdict counts, line totals, regression counts) goes into a GitHub body as an estimate or from a report not yet final, instead of being tallied from every item. Signals: "about N", a PR body count corrected by an edit, "without tallying", "without counting".
 surface: safe
-status: open
+status: tracked
+ref: "branch friction-fixes-doc-2026-10-20 (CLAUDE.md wording)"
 occurrences:
   - session: session_01Tcn6x6mZizT14rJuQqYivt
     date: "2026-10-10"
