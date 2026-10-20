@@ -1,0 +1,525 @@
+schemaVersion: 1
+session: session_012XnetQuxWoyaVFYw1BqMoy
+startedAt: 2026-10-20T04:03:29Z
+endedAt: 2026-10-20T04:30:04Z
+kind: autonomous
+goal: Scheduled audit of the repo's docs against the code
+status: in-review
+outcome: "Fact-checked doc fixes in PR #2317 (gate green); ADR-0004 bump-exception conflict left for the owner"
+summary: "Scheduled /audit-docs run, no human prompts. Family was root (the last sweep was journal). Five read-only reviewers (freshness, single-home, coherence, two concision) returned about 70 findings; three independent checkers confirmed or corrected about half and rejected the rest (e.g. moving UI/e2e rules, glossary pointer changes, Atlas path removal that a test asserts on). Applied the confirmed fixes in one commit: gate-last order in pr-workflow and four scheduled Skills, merge-pr.ts refusal list, Dependabot exception in the Human-only entry, visitor-loop stored-field remit, journal page claims, verdict-ask pointers and root-family wording cuts. Ran code-review (two agents) and fixed its valid points (ready-for-human refusal, wording, tests/README). Left for a human: ADR-0004 and the human-merge rule say any minor/patch bump may be agent-merged but merge-pr.ts only allows same-repo Dependabot bumps; plus triage-labels vs pack Skills, outside-agent provenance marker, guards.md vs Prune Trials, the \"prose or docs\" gate-skip threshold. All work was agent-initiated under the Skill's standing remit."
+prs:
+  - "2317"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: closing recipe and review/gate order; also the file I edited
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP write conventions before opening the PR
+    useful: partly
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: read by a subagent reviewer; I edited it from checked findings
+    useful: yes
+  - path: layers/atlas/GLOSSARY.md
+    reason: read by a subagent reviewer; I edited it from checked findings
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: read by a subagent reviewer; I edited it from checked findings
+    useful: yes
+  - path: layers/commons/GLOSSARY.md
+    reason: read by a subagent reviewer; I edited it from checked findings
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: layers/journal/GLOSSARY.md
+    reason: read by a subagent reviewer; I edited it from checked findings
+    useful: yes
+  - path: layers/marquee/GLOSSARY.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/proposals/README.md
+    reason: read by a subagent reviewer; I edited it from checked findings
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: read by a subagent reviewer; I edited it from checked findings
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: read by a subagent reviewer; I edited it from checked findings
+    useful: yes
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: read by a subagent reviewer; I edited it from checked findings
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/agents/guest-contributions.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/agents/domain.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/agents/tenant-layers.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/agents/mdc-when-to-use.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/close-session/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/adr-check/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/log-session/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: read by a subagent reviewer; I edited it from checked findings
+    useful: yes
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: read by a subagent reviewer; I edited it from checked findings
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/glassbox-walkthrough/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: read by a subagent reviewer; I edited it from checked findings
+    useful: yes
+  - path: docs/research/making-repo-public.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/research/public-readiness-review.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0013-content-config-built-from-manifests.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0019-content-load-error-recovery.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: .agents/skills/grilling/SKILL.md
+    reason: audit material read by a subagent reviewer; only its verdict was used
+    useful: partly
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled task
+  - name: code-review
+    reason: pre-push review of the docs diff
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Tried a foreground sleep to wait for agents, then a run_in_background command that also used a trailing ampersand; both were blocked by guards.
+    solution: The tool descriptions already say not to; waiting for agent notifications needs no polling.
+    severity: nit
+durationSec: 1595
+models:
+  claude-sonnet-5-5: 83
+toolCounts:
+  Bash: 25
+  Read: 3
+  Agent: 10
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__subscribe_pr_activity: 1
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0010.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0026.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/guards.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+docsReadBySubagents:
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - docs/agents/domain.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/mdc-when-to-use.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/adr-check/SKILL.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-walkthrough/SKILL.md
+  - docs/proposals/README.md
+  - docs/research/content-client-queries-without-wasm.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/making-repo-public.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/research/public-readiness-review.md
+  - docs/research/shell-reads-by-output-matching.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0007-derived-files-built-not-committed.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+  - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+  - docs/adr/0013-content-config-built-from-manifests.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0019-content-load-error-recovery.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - layers/journal/GLOSSARY.md
+  - layers/commons/GLOSSARY.md
+  - layers/marquee/GLOSSARY.md
+  - layers/glassbox/GLOSSARY.md
+  - layers/blog/GLOSSARY.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - layers/atlas/GLOSSARY.md
+  - layers/tinkerfund/GLOSSARY.md
+  - .agents/skills/grilling/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded by a reviewer reading governed files; not needed for this docs sweep, summary was enough
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Audit A: freshness"
+  - type: general-purpose
+    task: "Audit B: single-home"
+  - type: general-purpose
+    task: "Audit C1: concision root"
+  - type: general-purpose
+    task: "Audit C2: concision tenants"
+  - type: general-purpose
+    task: "Audit D: coherence"
+  - type: general-purpose
+    task: Check A and D findings
+  - type: general-purpose
+    task: Check B findings
+  - type: general-purpose
+    task: Check concision findings
+  - type: general-purpose
+    task: "Review: Standards axis"
+  - type: general-purpose
+    task: "Review: Spec axis"
+gitBranch: claude/festive-mayer-ik84bh
+entrypoint: remote_trigger
+cliVersion: 2.1.304
+trigger: audit-docs
+landedBy: Stop
