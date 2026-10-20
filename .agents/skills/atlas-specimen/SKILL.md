@@ -162,8 +162,8 @@ illustration: |
 A general introduction to the specimen, in the naturalist's voice (§1) — how it
 was found, its character, one anecdote. Prose, not bullets. No leading `#` (the
 binomial comes from the frontmatter). One or two short paragraphs, ending with a
-nudge to the dial ("… Turn the almanac to move through them; the seasons on the
-rim only say where in our shared year each falls.").
+short nudge to the dial in the creature's own terms, worded fresh for each
+specimen.
 
 ::almanac
 ::
