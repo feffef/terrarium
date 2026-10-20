@@ -6,6 +6,7 @@ cause: >-
 surface: guard-or-hook
 status: open
 ref: "issue #1499 closed 2026-10-12 by PR #1825, but #1499 is the worktree-isolation guard, not waiting; nothing tracks this cause"
+agentNotes: "2026-10-20 design: a CLAUDE.md clause (end your turn; the notification wakes you) dropped: the guard denials already name the alternative, each occurrence costs a call or two, and the clause would cost words in every session."
 occurrences:
   - session: session_01P7kLLJwHBgCaeVSUjhbScg
     date: "2026-10-15"
