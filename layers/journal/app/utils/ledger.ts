@@ -63,7 +63,7 @@ export interface LedgerEntry {
   /** Occurrences dated after the latest PR; only a "still recurring" state has any. */
   since: number
   ref?: string
-  agentNotes?: string
+  notes?: string
   /** Newest first. */
   fixes: { pr: number; url: string; date: string; summary: string }[]
   worst: Severity
@@ -120,7 +120,7 @@ export function ledgerPanels(
       cause: c.cause,
       ...(derived ? { state: derived.state, since: derived.since } : { state: c.status.replace('-', ' ') as LedgerState, since: 0 }),
       ref: c.ref,
-      agentNotes: c.agentNotes,
+      notes: c.notes,
       fixes: fixes.slice(0, LEDGER_MAX_PRS),
       worst,
       worstCount: inWindow.filter((o) => o.severity === worst).length,

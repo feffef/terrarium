@@ -122,7 +122,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
               </summary>
               <p class="cause">{{ e.cause }}</p>
               <p v-if="e.ref" class="ref-text"><strong>References:</strong> {{ e.ref }}</p>
-              <p v-if="e.agentNotes" class="ref-text notes"><strong>Agent notes:</strong> {{ e.agentNotes }}</p>
+              <p v-if="e.notes" class="ref-text notes"><strong>Notes:</strong> {{ e.notes }}</p>
               <template v-if="e.fixes.length">
                 <h3 class="occ-h">Merged PRs to fix it</h3>
                 <p class="occ-intro">Newest first, up to {{ LEDGER_MAX_PRS }}. Merged to fix it, which does not prove it worked.</p>

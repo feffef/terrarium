@@ -164,7 +164,7 @@ trials:
       `guest-build` cites §6 and §7. The briefs are unchanged. Later, at the
       same user's request, §4–§5 and the design brief gained a third outcome
       (no change: drop the fix and note the dropped solution in the entry's
-      new `agentNotes`); that is added behaviour, not restored text.
+      new `notes`); that is added behaviour, not restored text.
     territory:
       paths:
         - ".agents/skills/frictions-to-fixes/SKILL.md (all of it)"

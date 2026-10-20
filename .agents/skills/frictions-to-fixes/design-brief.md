@@ -33,7 +33,7 @@ the paths as evidence. **"Opened" can mean a subagent opened it:** subagent read
   carries, a finding** — `scripts/session/audit-skills.ts`'s `docReadCounts` docstring is
   the single home for why (three separate reasons it undercounts). Read it before
   citing a count.
-- **Read the pick's `agentNotes`**: a solution an earlier run dropped comes
+- **Read the pick's `notes`**: a solution an earlier run dropped comes
   back only with what has changed since, named in your report.
 - **Explore the source** the fix would change, and any ADR that binds it
   (the `adr-check` Skill finds and reads them), until the design is concrete.
