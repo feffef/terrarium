@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   ADR-0004's before-first-push gate:scoped plus code-review is skipped or the gate is not rerun after late edits.
 surface: guard-or-hook
-status: tracked
-ref: "Regression issue #2311 (PRs #1852, #1853 did not hold)."
+status: open
+ref: "issue #2311 closed by PR #2319, which the owner reversed with PR #2321 (review Skills and docs like code; self-read only for simple changes). Left open: pr-workflow.md and ADR-0004 must still agree on the review skip."
 fixes:
   - pr: 1852
     date: "2026-10-12"
@@ -13,6 +13,15 @@ fixes:
   - pr: 1853
     date: "2026-10-12"
     summary: "pr-workflow.md asks for code-review before every branch's first push, and build agents hand back unpushed branches for review."
+  - pr: 2314
+    date: "2026-10-20"
+    summary: "pr-workflow.md now runs the gate last, on the final head, after code-review and its fixes."
+  - pr: 2319
+    date: "2026-10-20"
+    summary: "ADR-0004 let a prose-, docs- or content-only first push skip code-review (reversed by #2321)."
+  - pr: 2321
+    date: "2026-10-20"
+    summary: "ADR-0004 now reviews Skills and docs like code; only a simple change (typo, rewrap, link, restamp, or at most 10 lines in 2 files) gets the author's own read."
 occurrences:
   - session: session_011t1xXHxqwrfAjt83s9oTEP
     date: "2026-10-15"
@@ -64,3 +73,18 @@ occurrences:
     severity: minor
     description: "Skipped the code-review Skill before first push, treating the fact-check as the review of a one-file prose diff, as earlier blog runs did; ADR-0004 does not exempt it."
     solution: "Let blog-post or pr-workflow say explicitly whether code-review is skipped for a prose-only post."
+  - session: session_01Uq2Kx5jumw8Va6DETgxNV8
+    date: "2026-10-20"
+    severity: minor
+    description: "Review before first push: I ran code-review only on the code branch and self-reviewed the 13-line doc diff and the ledger-only PR, though ADR-0004 asks for the Skill."
+    solution: "Say in pr-workflow whether a ledger-only or tiny doc diff may be self-reviewed."
+  - session: session_012f7o6FcYxq1MWxvsdgKS6m
+    date: "2026-10-20"
+    severity: nit
+    description: "After the workflow's review I hand-edited wording on both branches and pushed after re-running gate:scoped but without a fresh code-review of those edits, the very edge #2311 reports."
+    solution: "Under #2319 these prose-only edits need no review; until it merges, the pre-merge verdict must review the final head."
+  - session: session_011W3gVNQAR433FiJcPAAEDK
+    date: "2026-10-20"
+    severity: minor
+    description: "Ran pnpm gate:scoped before committing and running code-review, against pr-workflow.md's order (gate last on the final head); harmless only because review led to no edits."
+    solution: "Read pr-workflow.md before starting the gate, not before the push; CLAUDE.md's trigger 'before you push' came too late for the gate step."

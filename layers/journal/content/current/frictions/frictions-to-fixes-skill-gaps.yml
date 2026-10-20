@@ -2,7 +2,8 @@ name: frictions-to-fixes-skill-gaps
 summary: "The frictions-to-fixes Skill leaves recurring situations unspecified, so the run asks the owner or improvises."
 cause: "SKILL.md does not say what to do when each top regression already has an open issue, that the ledger PR may open before design, or how a ledger ref names a PR that does not exist yet; the user is asked or the run improvises. Signals: \"the Skill says ... but not what to do\", \"had to ask the user how many\"."
 surface: safe
-status: open
+status: tracked
+ref: "issue #2333 (regression of #2213)"
 fixes:
   - pr: 2149
     date: "2026-10-16"
@@ -54,3 +55,8 @@ occurrences:
     severity: minor
     description: "survey-brief says to append every friction but --unledgered drops sessions, and --summary counts regressions by date, so same-day post-fix sessions were missed and needed hand checking."
     solution: "Count regressions by session start in --summary; name a per-cluster dedupe step in the brief."
+  - session: session_01Uq2Kx5jumw8Va6DETgxNV8
+    date: "2026-10-20"
+    severity: minor
+    description: "The survey subagent's ledger commit and --unledgered/--summary date-only counting made same-day post-fix sessions invisible; it counted them by hand."
+    solution: "Make --summary compare session start time to the fix's merged_at, not dates."

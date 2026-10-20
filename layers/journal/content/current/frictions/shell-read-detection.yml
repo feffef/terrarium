@@ -85,3 +85,8 @@ occurrences:
     severity: moderate
     description: "SHELL-READ-DETECTION false positive: docs/agents/mdc-when-to-use.md was credited from shell output, but the session marked it (not read)"
     solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
+  - session: session_0115DiEWEHCxV2UhwYf636YG
+    date: "2026-10-20"
+    severity: moderate
+    description: "SHELL-READ-DETECTION: docs/agents/github-integration.md was credited from shell output, but the session marked it (not read)"
+    solution: "Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts"

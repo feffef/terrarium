@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   After adding a section, the author did not search the same file for statements the new text overrides. Signals: leftover bullet contradicting a new section; caught by code-review.
 surface: safe
-status: open
+status: tracked
+ref: "branch friction-fixes-doc-2026-10-20 (CLAUDE.md wording)"
 occurrences:
   - session: session_01Fay2GiWTwxDKnnqS9DznHk
     date: "2026-10-16"
@@ -41,3 +42,8 @@ occurrences:
     severity: minor
     description: "My Hooks rewrite claimed every guard sets onFailure though the page itself said one fails open; only the late code-review caught it"
     solution: "Check the rewritten claim against the page's own other lines (EVERY-PAGE.md Test the lede) before committing"
+  - session: session_012f7o6FcYxq1MWxvsdgKS6m
+    date: "2026-10-20"
+    severity: minor
+    description: "#2319 left pr-workflow step 4 demanding a code-review sha for PRs the new skip exempted, a contradiction I only found when the owner asked what guarantees review."
+    solution: "When an ADR change adds a skip, grep every consumer of the skipped step (merge-pr.ts verdict, step 4) in the same PR."

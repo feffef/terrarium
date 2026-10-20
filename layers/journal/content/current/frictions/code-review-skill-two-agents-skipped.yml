@@ -136,3 +136,8 @@ occurrences:
     severity: nit
     description: "Replaced the code-review Skill's two subagents with an inline review because the diff was a prose page plus file moves; the Skill has no size threshold."
     solution: "Add a prose-only exemption to the Skill."
+  - session: session_01RZ2pN3CEsoJyKxUWC2RFW5
+    date: "2026-10-20"
+    severity: minor
+    description: "Code-review on a one-file prose post needs two subagents after the fact-checker already re-derived every claim, so the review mostly repeated format checks the gate runs."
+    solution: "Let blog-post count its step 9 fact-check plus gate as the review, as midden-catalogue section 4 does for itself."

@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   CI tests the merge ref against the current main with its own git version; the local gate tests the branch as cut with the container git and may skip Heavy as Inert, so a local green still fails in CI.
 surface: safe
-status: tracked
-ref: "issue #2138 (regression of #1824, filed 2026-10-16)"
+status: open
+ref: "issue #2138 closed not planned on 2026-10-19: the owner chose to do nothing for now and to build merge-ref gating in gate.ts if a third base-drift case lands."
 fixes:
   - pr: 1483
     date: "2026-09-29"

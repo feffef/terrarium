@@ -32,3 +32,13 @@ occurrences:
     severity: nit
     description: "ScheduleWakeup was blocked by the loop-only guard; the tool list offers it outside /loop."
     solution: "Hide ScheduleWakeup outside /loop sessions."
+  - session: session_012XnetQuxWoyaVFYw1BqMoy
+    date: "2026-10-20"
+    severity: nit
+    description: "Tried a foreground sleep to wait for agents, then a run_in_background command that also used a trailing ampersand; both were blocked by guards."
+    solution: "The tool descriptions already say not to; waiting for agent notifications needs no polling."
+  - session: session_011W3gVNQAR433FiJcPAAEDK
+    date: "2026-10-20"
+    severity: nit
+    description: "A foreground pgrep wait loop for the background gate hit the 600s timeout and was moved to background; the gate's completion notification would have sufficed."
+    solution: "Wait for the background task notification instead of polling."
