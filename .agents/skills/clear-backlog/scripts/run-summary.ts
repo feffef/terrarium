@@ -36,7 +36,7 @@ type Branch = {
   openFindings?: Finding[]
   verdicts?: Verdict[]
 }
-type Explore ={ results: Record<string, Triage>; missing: number[]; grouping: { issues: number[]; sharedFiles: string[] }[] }
+type Explore = { results: Record<string, Triage>; missing: number[]; grouping: { issues: number[]; sharedFiles: string[] }[] }
 
 /** The workflow's return value; the saved `.output` holds it under `result`, sometimes as a JSON string. */
 function result(path: string): unknown {

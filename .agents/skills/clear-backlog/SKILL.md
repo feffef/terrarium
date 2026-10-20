@@ -40,8 +40,8 @@ the owner reserved ("I decide this one", directly or relayed).
 
 `pnpm exec tsx .agents/skills/clear-backlog/scripts/run-summary.ts <output>
 --triage` prints each issue's result, the `missing` ones and a `grouping`: one
-branch per group of issues in which every pair shares a file or is clearly related. Adjust the grouping where you know
-better; a grouping you are unsure of is a grilling question. Then start §3
+branch per group of issues in which every pair shares a file or is clearly
+related. Adjust the grouping where you know better; a grouping you are unsure of is a grilling question. Then start §3
 for the groups whose issues are all `build`, and grill while it runs.
 
 **Done:** every issue has a result, or is in `missing` and goes to the
