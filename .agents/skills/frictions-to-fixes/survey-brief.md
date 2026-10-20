@@ -69,7 +69,9 @@ extract carries. **External sessions are already excluded:** the survey script d
 - **Group and rank.** A candidate is a ledger entry (one per root cause) or a
   window friction too new for one; rank by **recurrence and severity together** (severity is an ordered rank, not a number: weigh it qualitatively, never multiply it). **Prioritize `moderate`, `major`, and `blocker` frictions**: these earn a fix on severity alone, even logged once. **Rank a `nit` or `minor` that recurs regularly high**: cheap repeated papercuts add up. What gets dropped is the lone low-severity one-off, not every `nit`.
 - **Screen against the tracker** — apply the Screen rules below to every candidate.
-- **Earlier runs' decisions are the ledger's `status` and `ref`.** When an entry
+- **Earlier runs' decisions are the ledger's `status`, `ref` and `notes`.** A
+  cluster whose newest note (`--summary`'s last column) drops a design ranks low
+  unless it has occurrences dated after that note. When an entry
   lacks them, the window's `trigger: frictions-to-fixes` logs (`summary`,
   `outcome`, `prs`) are the fallback; a run's summary can be wrong or partial, so
   verify against the PR or `main` before dropping.
