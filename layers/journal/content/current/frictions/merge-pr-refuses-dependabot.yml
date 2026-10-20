@@ -3,12 +3,14 @@ summary: >-
   The merge script refused small automated dependency updates that the rules say agents may merge.
 cause: package.json is Human-only and Dependabot PRs come from a Public author, so merge-pr.ts refuses minor/patch bumps that ADR-0004's summary says agents may merge.
 surface: human-only
-status: tracked
-ref: "Dispatched in the 2026-10-20 frictions-to-fixes run (pr-workflow.md reorder)."
+status: open
 fixes:
   - pr: 2283
     date: "2026-10-19"
     summary: "merge-pr.ts now merges a same-repo Dependabot minor or patch bump that touches only package.json and the lockfile; a new dependabot-sweep Skill drives it."
+  - pr: 2314
+    date: "2026-10-20"
+    summary: "pr-workflow.md now says Dependabot PRs go through the dependabot-sweep Skill, replacing the stale claim that merge-pr.ts refuses them."
 occurrences:
   - session: session_01743kiGL2igSyAHJ77heWSV
     date: "2026-10-13"
