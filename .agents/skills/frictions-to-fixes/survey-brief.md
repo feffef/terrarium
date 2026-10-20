@@ -43,8 +43,7 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   for 3 days after the latest PR) or `still recurring` (occurrences dated after
   it, counted), so a re-fix after a regression needs only its `fixes` entry.
   An `accepted` cluster (the owner accepts its cost) is never re-proposed for a fix.
-  `ref` is not rendered: it
-  holds the tracking issue or open PR, the trial's territory match or what a fix left
+  `ref` holds the tracking issue or open PR, the trial's territory match or what a fix left
   open, never the merged PRs. `gh api repos/feffef/terrarium/commits/<sha>/pulls`
   maps a commit to its PR and `gh api repos/feffef/terrarium/pulls/<N>` gives
   its body and `merged_at` (`gh pr view` is blocked); read the body, since a
