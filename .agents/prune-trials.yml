@@ -177,3 +177,32 @@ trials:
       closing ledger PR skipped or wrong. NOT damage: a run that hits a survey
       or design brief problem (the briefs did not change), or a friction the
       old text did not cover either.
+  - problem: >
+      `audit-docs` SKILL.md rewritten plainly at a Trusted user's request, in the
+      shape `frictions-to-fixes` got (PR #2330): an overview of the run's two PRs,
+      then each step as a goal paragraph, numbered instructions with their
+      script and subagent calls, a done-when line, and an edge-case list
+      (2058 words to about 2110, 249 lines to 297: the per-step headings add
+      more than the cuts save). The reference that used to sit before step 1
+      moved into the step that uses it: the four tiers into §2, the eight
+      lenses and the concision-family rotation into §3, the checkers' sources
+      into §5, the fix-or-file rules and the open-trial check into §6, the
+      escalation list into §8. Every
+      rule kept, and the tier, lens and family names unchanged, since
+      `frictions-to-fixes`' briefs, `prune-trial` and the commit-subject rotation
+      use them. Cut: the "Command-only" note (the frontmatter holds it).
+    territory:
+      paths:
+        - ".agents/skills/audit-docs/SKILL.md (all of it)"
+      keywords:
+        - concision family
+        - escalation PR
+    opened: 2026-10-20
+    check: >
+      Damage is a major or blocker Friction in an audit-docs run that the old text
+      would have prevented: a Historical or Pack-generic file edited, an ADR edit
+      or route-changing page move self-merged instead of escalated, a fix applied
+      without a checker's CONFIRMED, the wrong concision family picked, text in an
+      open trial's territory reworded, or a "don't regress" reason cut. NOT
+      damage: a reviewer or checker finding that is simply wrong, or a branch
+      clash over the escalation PR (the old text did not cover it either).
