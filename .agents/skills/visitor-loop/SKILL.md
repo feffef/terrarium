@@ -17,10 +17,8 @@ at the same complaint is signal.
 Each run may change, and merge on a green gate, two PRs: one fixing the
 consensus findings and one building **one** feature from the visitors'
 ideas. Both stay inside existing Tenant layers (`layers/<tenant>/`:
-content, components, pages, styles and that Tenant's tests; a manifest
-edit only to add a field to an existing Collection), files under `app/`
-that are not Human-only, and this Skill's `decisions.md`. Out of remit: a
-new Tenant, Space or Collection, a new dependency, any Human-only file,
+content, components, pages, styles and that Tenant's tests), files under `app/`
+that are not Human-only, and this Skill's `decisions.md`. Out of remit: a new Tenant, Space, Collection or stored field (`.claude/rules/data-shapes.md`), a new dependency, any Human-only file,
 agent instructions, and editing authored history (published posts,
 session logs, Digests, Midden artifacts). File an out-of-remit finding as
 an issue (step 7). If anything else gets into a PR, leave it open for a

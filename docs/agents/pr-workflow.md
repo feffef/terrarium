@@ -51,9 +51,11 @@ story or repeat its findings.
    human merge authority [`guest-contributions.md`](./guest-contributions.md)
    reserves.
 5. Land through `scripts/github/merge-pr.ts <pr-number>`, the only merge path; never
-   call `enable_pr_auto_merge`. The script refuses what a human must merge
-   (ADR-0004, ADR-0020, ADR-0023) and a PR without your step-4 verdict
-   naming its head (why: #1276).
+   call `enable_pr_auto_merge`. The script refuses what it can see (ADR-0004, ADR-0020, ADR-0023): a
+   Human-only path, a fork or Public author, the `guest-pipeline` label, closing
+   keywords on an open `ready-for-human` issue, and a PR without your step-4
+   verdict naming its head (why: #1276). Check the other ADR-0004 exceptions (untested
+   behaviour, Tenant-reach logic, a PR built from a Public request) yourself first.
 6. Escalate a PR that needs a human merge or is out of scope instead of merging
    it.
 
@@ -90,9 +92,10 @@ own work is staged (not `frictions-to-fixes`, which opens many PRs per run).
 Each SKILL.md adds only its delta: what its diff is limited to, and what to do
 when something outside that scope rides in.
 
-1. Run `pnpm gate:scoped` (ADR-0004; `scripts/gate/gate.ts` owns what it runs).
-   Done when it's green.
-2. Commit, review (see "Review before the first push"), push with retry, and
+1. Commit, review (see "Review before the first push"), then run
+   `pnpm gate:scoped` on the final head (ADR-0004; `scripts/gate/gate.ts` owns
+   what it runs). Done when it's green.
+2. Push with retry, and
    open **one gated PR** scoped to that Skill's own diff — one per run unless
    the Skill's own SKILL.md names more.
 3. Subscribe on open and land via this doc's recipe once green.

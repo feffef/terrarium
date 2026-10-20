@@ -123,8 +123,7 @@ of the survey's commit (§1), commit:
   drops every occurrence before the horizon and deletes an entry left with none
   (git keeps them).
 
-Run `pnpm gate:scoped`, review the diff yourself (this Skill's own review step,
-`docs/agents/pr-workflow.md`), push, and open the **ledger PR**; invoke
+Review the diff yourself (this Skill's own review step, `docs/agents/pr-workflow.md`), run `pnpm gate:scoped` on the final head, push, and open the **ledger PR**; invoke
 `close-session` (`in-review`). Land it by `pr-workflow.md`'s recipe once CI is
 green; §6 need not wait for it.
 

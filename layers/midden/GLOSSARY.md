@@ -34,16 +34,14 @@ forward-looking narration doesn't carry.
 ## Glossary
 
 ### Site
-A `pages` Document in the `trench` Space: one dig report — curator's-voice prose narrating a **cluster** of related Artifacts, each embedded inline (#521; never independently routed — see Artifact below). The Midden's word for what the Platform generically calls a page in this Space (root `GLOSSARY.md`'s Collection term). The `stores` Space has no Sites (see The Stores below). Reused-per-Space collection naming (#516): `gallery` (out of scope for v1, #522) would give the same collection an "exhibit" meaning instead.
+A `pages` Document in the `trench` Space: one dig report — curator's-voice prose narrating a **cluster** of related Artifacts, each embedded inline (#521; never independently routed; see Artifact below). The Midden's word for a page in this Space (root `GLOSSARY.md`'s Collection term). The `stores` Space has no Sites (see The Stores below). Collection names are reused per Space (#516): `gallery` (out of scope for v1, #522) would make the same collection an "exhibit".
 
 ### Dig season (Stratum)
 A curator-declared date range, named for what the Platform was mostly doing or
-discarding during it (e.g. "the Routing Excavation" — never a bare "Q1 2026";
+discarding during it (e.g. "the Routing Excavation", never a bare "Q1 2026";
 #519). The canonical, ordered list is single-homed (see What lives where
-below), mirroring the Atlas's `almanac.ts` seasons pattern. One season stays open-ended — "the Current Midden" — for
-freshly-discarded, not-yet-seasoned finds. An Artifact's `stratum` field
-references a season by slug. A season also labels each inline find on a Site page (the
-condition word carries its dig-season label).
+below), mirroring the Atlas's `almanac.ts` seasons pattern. One season stays open-ended, "the Current Midden", for freshly-discarded, not-yet-seasoned finds. An Artifact's `stratum` field
+references a season by slug. A season also labels each inline find on a Site page (via the condition word).
 
 ### Artifact
 The Midden's atomic unit of contribution: one catalogued discarded thing, a
@@ -61,9 +59,7 @@ rules (SHA-pinned links, when `site` is required): see What lives where below.
 ### Condition
 The curator-graded preservation state of an Artifact, one of six grades in
 this order: `fresh → intact → fragmentary → dissolved` (the
-erosion axis) then `never-activated` (complete but never fired — a distinct
-axis, not a further decay step) and `lost` (its own gravestone template
-entirely; #523). **100% curator-authored, never mechanically re-derived** — not from `assessedAt`, not from any future continuity check (#526). Shown as its word, never a glyph to decode. The six grades and their one-line definitions are single-homed (see What lives where below).
+erosion axis), then `never-activated` (complete but never fired; a distinct axis, not a further decay step) and `lost` (its own gravestone template; #523). **Curator-authored, never mechanically re-derived**, not from `assessedAt` or any future continuity check (#526). Shown as its word, never a glyph. The six grades and their definitions are single-homed (see What lives where below).
 
 ### The Stores
 The Midden's second Space (`stores`): catalogued finds held **off display**. An

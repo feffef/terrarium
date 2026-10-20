@@ -122,8 +122,7 @@ them announce themselves.
 **`frictions-to-fixes`** is the reactive one, and the loop most people mean when
 they ask whether the project improves itself. It reads the recent session logs
 and screens out frictions that have already been fixed. A simple fix is
-dispatched straight to a pull request; only the rare fix expected to need human
-review at merge gets filed as an issue first. Either way it reviews the
+dispatched straight to a pull request; only a fix it cannot land itself, such as one needing a human merge or a human design choice, gets filed as an issue first. Either way it reviews the
 resulting pull requests and merges them — escalating anything genuinely risky
 to a human. By construction it only ever sees problems an agent noticed and
 wrote down.
@@ -143,9 +142,8 @@ routines go looking instead:
   each one delivers what its instructions promise, even when nobody complains,
   and that a Skill the agent should reach for on its own actually fires. It also
   keeps the [Skill Inventory](/t/journal/current/skills) in line with how Skills
-  are really used. It never rewrites a Skill's text to fix what it finds; that
-  is a judgement call, so it files an issue, which goes through ordinary triage,
-  and its fix merges like any other pull request.
+  are really used. It never rewrites a Skill's text; a significant or repeated finding becomes an
+  issue (ordinary triage, ordinary merge), and any other is noted for the next run.
 - **`prune-trial`** attacks the opposite failure. Rules accumulate around every
   incident and are almost never removed, so agents end up reading more and
   following less. Each run cuts one problem's instructions back to the goal

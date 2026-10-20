@@ -55,14 +55,12 @@ of *preys-on, pollinates, mimics, shelters, fears*. Authored once as a directed
 edge (a Document in the Biome's `interactions` data collection); the reverse label
 ("preyed on by") is *derived*, so a Specimen's own Relations and the Biome's
 food-web diagram are two views of the one single-homed fact. (Contrast the Blog's
-Pingback — see `GLOSSARY-MAP.md`'s Relationships section for the derives-vs-
-denormalizes contrast.)
+Pingback: `GLOSSARY-MAP.md`, Relationships, derives vs denormalizes.)
 
 ### Observation
 A dated sighting in a Biome's **field log** (a Document in its `observations` data
 collection): a date, a coarse time-of-day, an optional Specimen, and a terse
-in-fiction note. Append-only in spirit — old entries are never rewritten. The cheapest unit of contribution: a session can leave the world
-visibly alive without adding a Specimen.
+in-fiction note. Append-only in spirit: old entries are never rewritten. The cheapest contribution: it leaves the world visibly alive without a new Specimen.
 
 ## What lives where
 
@@ -75,6 +73,4 @@ visibly alive without adding a Specimen.
 
 ## Product decisions
 
-- Atlas has no cross-Biome root pages beyond its index. A "plates" gallery
-  (`/t/atlas/plates`) and an "open at random" page (`/t/atlas/random`) were
-  removed (#1984): visitor-loop ideas that didn't work well.
+- Atlas has no cross-Biome root pages beyond its index. `/t/atlas/plates` and `/t/atlas/random` were removed (#1984).

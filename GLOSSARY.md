@@ -66,13 +66,11 @@ One continuous Claude Code working session against the Platform, identified by a
 stable Claude session id. It is the unit of self-reporting: at **Session closure**
 a session authors a **session log** — a Journal record of, honestly, its
 goal, how far it got, what it read, which Skills it used, and every **Friction**
-it hit (see Session closure). It
-may also carry, *only when the work sparked them*, two optional notes: **learnings**
-(useful knowledge the session inferred during the work, not read from the repo,
-which would be a doc read; a Friction's positive twin) and **ideas** (see
-Idea). A session may
-span several branches or PRs, or none, and its log is authored either way, even
-if no code was committed. Session logs are ground truth, not a projection of
+it hit (see Session closure). It may also carry two optional notes, only when
+the work sparked them: **learnings** (knowledge the session inferred, not read
+from the repo (that would be a doc read); a Friction's positive twin) and **ideas** (see
+Idea). A session may span several branches or PRs, or none; its log is authored
+either way, even with no code committed. Session logs are ground truth, not a projection of
 repo state (see the Journal Tenant).
 
 A session log may be **external**: authored by a different agent / harness /
@@ -88,9 +86,8 @@ prompt, the kickoff, with no human prompt after it), or **autonomous** (no human
 prompt at all — the Session was started by a schedule or by another Session, not
 a person). Prompts injected by machinery — a scheduled self check-in, a webhook
 event, a hook reminder — arrive as user messages but are **not** human prompts
-and never make a Session interactive. Kind is descriptive of what happened, never a grant of
-authority: what a Session may merge is governed elsewhere and does not vary by
-kind.
+and never make a Session interactive. Kind describes what happened and grants no authority: what a Session may merge
+does not vary by kind.
 
 ### Idea
 An optional note in a **session log**: an ambitious, concrete proposal for the
@@ -164,7 +161,7 @@ graded down for the rarity of its domain. Five grades:
   kinds of session (e.g. `log-session`, `domain-modeling`).
 - **routine** — the Platform's standing operation: the Skill *is* a scheduled
   Routine's job, driving whole unattended sessions of its own rather than being
-  reached for inside someone else's (e.g. `digest`, `audit-docs`). Assigned from the observed fact that scheduled sessions run it, not from breadth, so it doesn't compete with `essential`. A Skill that is merely *fireable* on an interval but in practice invoked by hand is not `routine`.
+  reached for inside someone else's (e.g. `digest`, `audit-docs`). Assigned because scheduled sessions run it, not for breadth, so it doesn't compete with `essential`. A Skill that could be scheduled but is in practice invoked by hand is not `routine`.
 - **specialist** — essential *within a specific kind* of work, even when that work
   is rare (e.g. `atlas-specimen`).
 - **supporting** — genuinely useful but not essential; work proceeds without it.
@@ -264,7 +261,7 @@ the narrower skips.
 
 ### Human-only
 A surface that a **Trusted** human must **merge** — never merged by an agent,
-whatever the **Gate** says (the list is the `paths` of
+whatever the **Gate** says, bar a same-repo Dependabot bump that stays within each package's major (`merge-pr.ts`; the list is the `paths` of
 `.claude/rules/adr-0004-human-merge.md`; ADR-0004). It constrains merging
 only: agents author changes to Human-only surfaces routinely, and review is the
 control.
