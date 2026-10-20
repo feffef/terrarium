@@ -1,0 +1,374 @@
+schemaVersion: 1
+session: session_019xiqcwnB2itTcdugr6EFZL
+startedAt: 2026-10-20T00:46:03Z
+endedAt: 2026-10-20T01:37:42Z
+kind: autonomous
+goal: Weekly check of the Platform's own Skills
+status: in-review
+outcome: "Opened PR #2309 (in review), subscribed to its activity; gate green, code-review findings fixed before push."
+summary: "Agent-initiated scheduled run of the audit-skills Routine; no human prompt arrived at any point (kind: autonomous). Ran scripts/session/audit-skills.ts for the 7-day scorecard, dispatched one subagent to pull usage/cost for all 53 routine-run sessions via get_session, and 13 parallel read-only subagents (one per Skill in behaviourChecks: adr-check, audit-docs, audit-skills, blog-post, clear-backlog, close-session, digest, dispatch-subagents, frictions-to-fixes, glassbox-update, log-session, prune-trial, visitor-loop). Personally verified a representative claim from each report against live GitHub (13 issue_read/pull_request_read calls), all checked out. All 13 came back clean or sub-threshold; the one real finding (adr-check's binding.ts output truncatable by a caller piping through tail) was already fully recorded on open issue #2286 (the owner's own pre-scheduled review) with no new evidence to add, so no comment was posted. Closure-completeness (step 3) was clean: orphanScan ran (1492 merged PRs, 1336 with a session), 2 orphan candidates both already resolvedBy (#736, #1063); humanPromptedClosures and manuallyRescuedClosures both empty. Step 4: no new issues or comments — every finding either didn't clear the significant/repeated bar (recorded as an observation) or was already fully tracked. Step 5: appended dated observations to 9 Skills, pruned one log-session observation past the 40-day floor, added 3 coverage-gap Inventory entries (adr-check: essential; inspect-session: specialist; dependabot-sweep: supporting, graded conservatively on one unverified use), appended this week's newest routine-run cost row to all 8 scheduled Routines then pruned each to the newest 30 via prune-routine-runs.ts. No grade changes on existing entries. Ran gate:scoped (green), then code-review (Standards+Spec subagents against origin/main), which found 2 real issues fixed in a second commit before pushing: adr-check's new observation exceeded the ~100-word cap, blog-post's new observation bare-reconfirmed #1479/#1626 already cited by an earlier entry in the same file, and (caught by the Spec reviewer) dependabot-sweep's initial importance grade of \"routine\" wasn't backed by the GLOSSARY.md-required scheduled-runs evidence (one unverified use) — corrected to \"supporting\". Re-ran gate:scoped green after the fixes, pushed, opened PR #2309 (self-mergeable: no Human-only path, no dependency, no untested-behaviour change), subscribed to its activity."
+prs:
+  - "2309"
+docsRead:
+  - path: GLOSSARY.md
+    reason: Session kind (autonomous), Skill Inventory and Importance definitions used to grade the 3 new coverage-gap entries
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start pointer to GLOSSARY.md, nothing else this task needed
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: fetch-before-trust and origin/main anchoring before any git log/show/diff work
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: confirmed issue_read/pull_request_read usage and HTML-entity-decoding note before my first GitHub MCP calls
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Review-before-first-push and the scheduled-run Closing-a-PR recipe (gate, code-review, push, open, subscribe)
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: the whole task's own spec, every step
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: checked whether worktree isolation was needed for the 14 read-only subagents (it wasn't, none touched git state)
+    useful: yes
+  - path: skills-lock.json
+    reason: checked adr-check/dependabot-sweep/inspect-session aren't Pack Skills before creating Inventory entries for them
+    useful: yes
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: read to write its gist/role before creating its coverage-gap Inventory entry
+    useful: yes
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: read to write its gist/role before creating its coverage-gap Inventory entry
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: subagent (log-session behaviour check) graded all 10 logs' field shape against its current spec
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: "subagent (digest behaviour check): gave the exact promise each run had to produce"
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: subagent (close-session behaviour check) graded all 10 usedIn sessions against its current contract
+    useful: yes
+  - path: .agents/skills/adr-check/SKILL.md
+    reason: "subagent (adr-check behaviour check): gave step 1's exact promise the silent-failure finding is measured against"
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: subagent (adr-check behaviour check) confirmed ADRs are explicitly out of prune-trial's scope
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: "subagent (glassbox-update behaviour check): gave the report/advance/flag/re-check/check/land promise graded against"
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: subagent (visitor-loop behaviour check) read to confirm what the Skill actually produces
+    useful: yes
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: subagent (visitor-loop behaviour check) checked owner-memory 'not a ruling' verdicts against it
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: subagent (clear-backlog behaviour check) used it as the spec throughout
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: subagent (frictions-to-fixes behaviour check) used it as the spec throughout
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: "subagent (audit-docs behaviour check): read to know what the Skill promises"
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: "subagent (blog-post behaviour check): current Skill text, graded the fresh session's run against it"
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: subagent (adr-check behaviour check) cat'd it in a multi-file shell loop surveying other Skills' adr-check delegation text; not itself load-bearing for that subagent's finding
+    useful: no
+  - path: .agents/skills/implement/SKILL.md
+    reason: same shell loop as writing-for-agents/SKILL.md above; not load-bearing
+    useful: no
+  - path: layers/journal/content/current/skills/close-session.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/audit-docs.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/routines/audit-docs.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/clear-backlog.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/log-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/blog-post.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/adr-check.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/dependabot-sweep.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/sessions/2026-10-20-session_011G3PKUqDog2WRSuqypmuJX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01MeatWCLdQDV2rWVNHumqX7.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01CBVi4qZ2RqPhfHeHPYrkwD.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01Pc15CVrLGyHXgoygsRHLbB.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_018DaeF1okx3CjHh1GwVpwPf.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01MKmEo8yAjxTqJ5h3zceLL5.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_016Nsq9SWL64V4RqDJPQYodp.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01MwrXDH7XwMNUofgz3HvQ5N.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01TNqbizPuP8kvWwD4hfwUwG.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01XWMuHGcaNTvRPHfYb9T7z2.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01BTtvaFQckiQwtGZsasWPJH.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01Pzj23dzUMace5jwZCvxmx7.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01AwaGncaYJFWdJnc6yqDoTS.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01XTdRbnDg1n2j2ZqjTrwCLi.yml
+    reason: (no reason given)
+  - path: scripts/session/audit-skills.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_011xvPjJVknZzx45v7NjhebT.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-18-session_01Sr3uwZro23NY3Z4sk5ojsM.yml
+    reason: (no reason given)
+  - path: scripts/session/save-handback.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01QEZ5a5X44d3ZzbF2vPwmAo.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-17-session_01CtktRkpbF4wQ3TTQVYUqLz.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-18-session_0135hcUf12mVM8dEZfDRAkUb.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-17-session_01Sc82qSCs4NVP3igf9SaGXM.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-16-session_013RCsUF234qAGu3CJr3v2on.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-17-session_01J4ze3DvsZhXeP78iyRnbSd.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-17-session_01P39mjYt8LWVh2TYNyxWdqN.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-16-5ba40529-d06b-4b13-a44a-a01292148909.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-16-session_01CzkKVxSTE7a4amfXnxrvF9.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-16-session_018sAirSgDY1Nv82JVogjcyR.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01Wv24DMMmjdNR6a23HtkZ8i.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_01WxHaU21bCG18GRezDo4Yfe.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-18-session_01TJH95qkztCQJ8PF6G6pvqs.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/findings-retyped-by-hand.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-19-session_0183U5MkKrjuhRKdjpFxD9Xj.yml
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01RAEu4CBfQptjCtKnJpUw8q.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: Standards + Spec review of the Inventory diff before the branch's first push, per ADR-0004
+  - name: close-session
+    reason: logging this in-review entry at PR-open
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-skills
+    reason: (invoked as a slash command)
+frictions:
+  - description: "Used yaml's parseDocument(...).toString({lineWidth: 0}) to append new observation entries to 10 existing Skill Inventory YAML files. This collapsed every pre-existing multi-line block-scalar note onto one line, producing a ~2900-line unrelated reformatting diff across all 10 files instead of the intended ~10-line additions. Caught before committing by running `git diff --stat` as a sanity check, not by any guard. Reverted all 10 files with `git checkout --` and redid the same appends with plain-text Edit calls matching the files' existing ~79-column wrap style, which worked cleanly."
+    solution: For an existing file with human-style prose wrapping, append via plain-text Edit matching the surrounding wrap width instead of parse-and-restringify with the yaml package.
+    severity: minor
+  - description: "First attempt to background `pnpm gate:scoped` chained `mkdir -p ... && nohup pnpm gate:scoped ... &` inside one Bash call with run_in_background:true. The double-background guard (issue #1208) correctly refused it, and its \"nothing in this call ran\" meant the mkdir never executed either, so the immediate retry's log redirect failed once more before I ran mkdir on its own first."
+    solution: Run mkdir -p as its own call before a backgrounded command that redirects into a new directory.
+    severity: nit
+durationSec: 3099
+models:
+  claude-sonnet-5: 303
+toolCounts:
+  Bash: 77
+  Read: 17
+  Agent: 16
+  ToolSearch: 3
+  TaskCreate: 6
+  Write: 6
+  TaskUpdate: 7
+  ScheduleWakeup: 1
+  Edit: 25
+  mcp__github__pull_request_read: 5
+  mcp__github__issue_read: 8
+  mcp__github__search_issues: 1
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 1
+  mcp__Claude_Code_Remote__get_session: 1
+filesEdited:
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/audit-skills.yml
+  - layers/journal/content/current/skills/blog-post.yml
+  - layers/journal/content/current/skills/clear-backlog.yml
+  - layers/journal/content/current/skills/dispatch-subagents.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - layers/journal/content/current/skills/glassbox-update.yml
+  - layers/journal/content/current/skills/prune-trial.yml
+  - layers/journal/content/current/skills/visitor-loop.yml
+  - layers/journal/content/current/skills/dependabot-sweep.yml
+  - layers/journal/content/current/skills/inspect-session.yml
+  - layers/journal/content/current/skills/adr-check.yml
+rulesLoaded:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0008.md
+docsReadBySubagents:
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/adr-check/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/visitor-loop/decisions.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Drove running gate:scoped + code-review before the first push, and confirmed none of the touched paths need a human merge
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Confirmed this log commits straight to main without a PR, separate from the Inventory PR itself
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed a PR opens on the branch's first non-log push, and that this scheduled run may only change what its own Skill allows
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: "Gave the exact PR-body header line and commit-trailer format used on PR #2309 and the two commits"
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Confirmed audit-skills edits only Inventory entries/Routine costs/issues, never a Skill's own text — scoped this whole diff
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Used while judging prune-trial's behaviour check (a near-miss correctly left untouched inside an open trial's territory)
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Confirmed the Platform/Tenant glossary split; not load-bearing for this content-only Inventory task
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Background on why each rule/doc loads when it does; not itself a finding source this run
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed workflow scripts in .claude/workflows/ aren't SKILL.md edits, relevant to judging clear-backlog's sub-workflows
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Checked the Human-only paths list; none of this PR's files are on it, so self-merge is correct once CI is green
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded automatically while reading an ADR-adjacent file; not load-bearing for this content-only task
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Auto-loaded for the glassbox-update subagent, which worked under layers/glassbox/; its own final reply gave no explicit verdict for this rule
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Auto-loaded for a subagent touching a path it governs; no explicit verdict in that subagent's final reply
+    useful: partly
+  - path: .claude/rules/adr-0025.md
+    reason: Auto-loaded for a subagent; no explicit verdict in that subagent's final reply
+    useful: partly
+  - path: .claude/rules/ui-verification.md
+    reason: Auto-loaded for a subagent; not relevant to a read-only audit with no UI change
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Auto-loaded for a subagent; no explicit verdict in that subagent's final reply
+    useful: partly
+  - path: .claude/rules/adr-0012.md
+    reason: Auto-loaded for the blog-post behaviour-check subagent (pingback rule); its reply confirmed the kevin pingback stub was written correctly
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Auto-loaded for a subagent; not named in any subagent's final reply, no verdict available
+    useful: partly
+  - path: .claude/rules/adr-0028.md
+    reason: Auto-loaded for a subagent; not named in any subagent's final reply, no verdict available
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: Auto-loaded for a subagent; not named in any subagent's final reply, no verdict available
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Fetch usage/cost for routine-run sessions
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: adr-check skill"
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: audit-docs skill"
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: audit-skills skill (self-audit)"
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: blog-post skill"
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: clear-backlog skill"
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: close-session skill"
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: digest skill"
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: dispatch-subagents skill"
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: frictions-to-fixes skill"
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: glassbox-update skill"
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: log-session skill"
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: prune-trial skill"
+    model: sonnet
+  - type: general-purpose
+    task: "Behaviour check: visitor-loop skill"
+    model: sonnet
+  - type: general-purpose
+    task: Standards review of Inventory diff
+  - type: general-purpose
+    task: Spec review of Inventory diff
+gitBranch: claude/upbeat-sagan-zxcwzk
+entrypoint: remote_trigger
+cliVersion: 2.1.304
+trigger: audit-skills
+learnings:
+  - "yaml's parseDocument(text) + .toString({ lineWidth: 0 }) is safe for a file this repo's own tooling already treats as fully machine-owned (prune-routine-runs.ts does exactly this every run), but not for a surgical append to a hand-wrapped prose file: it re-wraps every existing block scalar, turning a one-entry addition into a whole-file reformat."
+landedBy: Stop
