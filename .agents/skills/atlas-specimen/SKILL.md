@@ -225,7 +225,7 @@ Write to `layers/atlas/content/<biome>/interactions/<from>-<kind>-<to>.yml`:
 from: lumina-fabulae      # actor slug
 to: mycora-susurrans      # acted-upon slug
 kind: pollinates          # preys-on | pollinates | mimics | shelters | fears
-note: tends the whisper mold at dusk, and is the only thing that does.
+note: "tends the whisper mold at dusk, and is the only thing that does."
 ```
 Both slugs must be specimens **in the same biome**. The `note` is one line in the
 voice — it reads the same from either side, so write it direction-neutral or from
@@ -241,7 +241,7 @@ Write to `layers/atlas/content/<biome>/observations/<date>-<slug-or-note>.yml`:
 date: 2026-07-06          # YYYY-MM-DD
 time: dusk                # dawn | noon | dusk | night
 specimen: lumina-fabulae  # slug observed — omit for an ambient note
-note: first sighting this season, near the west glass.
+note: "first sighting this season, near the west glass."
 ```
 
 ## 6. Hidden portraits (#76) — subtext, never reporting
