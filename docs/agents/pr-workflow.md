@@ -10,11 +10,12 @@ The `mcp__github__*` tool surface (retries, polling, overflow traps):
 ## Review before the first push
 
 Opening the PR follows the push at once (ADR-0003). So before a branch's first
-push, check that no PR exists for it, run `pnpm gate:scoped`, then run the
-[`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on its
+push, check that no PR exists for it, commit, run the
+[`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on the
 committed diff against `origin/main`, in the checkout that holds it, and fix the
-findings, even when the Stop hook asks you to push. Skip the review only where a
-Skill's own steps already review the diff before the push, as
+findings, then run `pnpm gate:scoped` last on the final head and edit nothing
+until it ends, even when the Stop hook asks you to push. Skip the review only
+where a Skill's own steps already review the diff before the push, as
 `midden-catalogue` §4 does. A session-log commit needs none.
 
 A later push that changes only prose or docs may skip `gate:scoped` and rely on
@@ -79,8 +80,8 @@ description.
 
 The authoring session merges its PR on a green gate unless ADR-0004 names an
 exception. `frictions-to-fixes`, `guest-build` and `midden-catalogue` narrow
-that; their SKILL.md says how. Leave Dependabot PRs for a human: `merge-pr.ts`
-refuses them (#1889 decides how they should merge).
+that; their SKILL.md says how. Dependabot PRs go through the `dependabot-sweep`
+Skill; `merge-pr.ts` merges only a plain minor or patch bump and refuses the rest.
 
 ## Closing a scheduled run's PR
 
