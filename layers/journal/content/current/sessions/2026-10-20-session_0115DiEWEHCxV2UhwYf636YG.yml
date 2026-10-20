@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_0115DiEWEHCxV2UhwYf636YG
 startedAt: 2026-10-20T16:48:18Z
-endedAt: 2026-10-20T17:18:06Z
+endedAt: 2026-10-20T17:31:20Z
 kind: autonomous
 goal: Scheduled visitor-loop run on the Atlas
-status: in-review
-outcome: "Fix PR #2326 open (fresh sightings, calmer food-web labels, trimmed almanac nudge); feature PR not started"
-summary: "Scheduled visitor-loop run, focus atlas (row 0), no human prompt; everything was agent-initiated within the Skill's remit. Built and served main, sent sonnet, fable and opus visitors to /t/atlas, tallied consensus. Verified and kept three (month-old latest sighting, overprinting food-web labels, the same almanac sentence on all 15 specimens); dropped four consensus items against decisions.md (#1494 phone webs), the Atlas glossary (subtext never named; observations are append-only voice) and a misreading. Refiner kept two and refined one. Fix PR 2326 passed code-review and gate:scoped after one gate failure (unquoted colons in new observation YAML). Chosen feature, a Glass-Year dial on the landing, comes next after the fix PR merges. Out-of-remit follow-up still to file: the atlas-specimen Skill example still prescribes the trimmed clause."
+status: completed
+outcome: "Both PRs merged: #2326 (fresh sightings, calmer food-web labels, trimmed almanac nudge) and #2328 (Glass-Year dial on the Atlas front door); issue #2329 filed"
+summary: Scheduled visitor-loop run, focus atlas (row 0), no human prompt; everything was agent-initiated within the Skill's remit. Built and served main, sent sonnet, fable and opus visitors to /t/atlas, tallied consensus. Verified and kept three (month-old latest sighting, overprinting food-web labels, the same almanac sentence on all 15 specimens); dropped four consensus items against decisions.md (#1494 phone webs), the Atlas glossary (subtext never named; observations are append-only voice) and a misreading. Refiner kept two and refined one. Fix PR 2326 passed code-review and gate:scoped after one gate failure (unquoted colons in new observation YAML). Chosen feature, a Glass-Year dial on the landing, was built next as PR 2328 (dial turns, roster updates, ?day written; reviews fixed dates payload, aria-live and test strength). The out-of-remit follow-up, the atlas-specimen Skill example, is issue 2329.
 prs:
   - "2326"
+  - "2328"
 docsRead:
   - path: docs/agents/pr-workflow.md
     reason: review-before-push, gate-last and merge recipe
@@ -64,6 +65,10 @@ docsRead:
     reason: (no reason given)
   - path: scripts/lib/chromium.ts
     reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
 skillsUsed:
   - name: visitor-loop
     reason: the run's own Skill
@@ -88,20 +93,24 @@ frictions:
   - description: "SHELL-READ-DETECTION: docs/agents/github-integration.md was credited from shell output, but the session marked it (not read)"
     solution: Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts
     severity: moderate
-durationSec: 1788
+durationSec: 2582
 models:
-  claude-sonnet-5-5: 146
+  claude-sonnet-5-5: 210
 toolCounts:
-  Bash: 56
-  Agent: 6
-  ToolSearch: 2
+  Bash: 71
+  Agent: 8
+  ToolSearch: 3
   mcp__github__search_issues: 4
-  Read: 5
+  Read: 7
   Skill: 3
-  Monitor: 2
-  mcp__github__create_pull_request: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Monitor: 3
+  mcp__github__create_pull_request: 2
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__github__issue_write: 1
 rulesLoaded:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0021.md
@@ -125,6 +134,9 @@ rulesFollowedUp:
   - .claude/rules/adr-0028.md
 rulesLoadedBySubagents:
   - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0018.md
   - .claude/rules/adr-0002.md
   - .claude/rules/data-shapes.md
 docsReadBySubagents:
@@ -134,6 +146,7 @@ docsReadBySubagents:
   - docs/adr/0004-objective-safety-gate.md
   - docs/adr/0016-tenant-root-layer-routes.md
   - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/agents/tenant-layers.md
 ruleVerdicts:
   - path: .claude/rules/adr-0003.md
     reason: Scheduled-run remit and open-the-PR-yourself; summary was enough
@@ -206,6 +219,10 @@ subagents:
     task: Standards review
   - type: general-purpose
     task: Spec review
+  - type: general-purpose
+    task: Standards review feature
+  - type: general-purpose
+    task: Spec review feature
 gitBranch: claude/adoring-galileo-et9uqm
 entrypoint: remote_trigger
 cliVersion: 2.1.304
