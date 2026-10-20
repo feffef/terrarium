@@ -3,8 +3,11 @@ summary: >-
   The session-log check missed a doc a session read from a branch that is not merged to main.
 cause: "`git show origin/<branch>:<path>` of a doc that exists only on an unmerged research or prototype branch is not credited by the shell-read detector (scripts/session/shell-reads.ts header: a doc read from history whose lines are gone stays invisible), so the session logs a moderate SHELL-READ-DETECTION Friction. Signals: 'a real read went uncounted', a git show of origin/research/... or origin/prototype/... after a git fetch. Both docs are absent from main (checked 2026-10-20); the detector was not run on the transcripts."
 surface: safe
-status: tracked
-ref: "Dispatched in the 2026-10-20 frictions-to-fixes run (near-miss filter in transcript-trace.ts)."
+status: open
+fixes:
+  - pr: 2315
+    date: "2026-10-20"
+    summary: "The unshown near-miss advisory is dropped for docs absent from the checkout, which no output could ever credit."
 occurrences:
   - session: session_01MKmEo8yAjxTqJ5h3zceLL5
     date: "2026-10-19"
