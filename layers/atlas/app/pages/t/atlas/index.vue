@@ -15,10 +15,20 @@ interface Sighting { date: string; note?: string; name?: string; to?: string }
 // Prerendered, so "today" is the build day — same as the wing dials.
 const day = useGlassToday()
 const season = seasonOf(day)
+const route = useRoute()
+
+// The landing owns the shared needle (as a wing landing does): the dial parks at
+// today, restores a shared `?day=` link and writes its scrub back to it.
+const almanac = provideAlmanac({ initialDay: parseAlmanacDayParam(route.query.day) })
+const currentSeason = computed(() => seasonOf(almanac.day.value))
+const daySuffix = computed(() => (almanac.day.value === almanac.today ? '' : `?day=${almanac.day.value}`))
 
 const { data } = await useAsyncData('atlas-front', async () => {
   const stats: Record<string, number> = {}
-  const abroad: { to: string; label: string }[] = []
+  // Only what the dial reads travels in the payload (ADR-0028): each creature's
+  // phase spans, not its prose.
+  const creatures: { to: string; label: string; common?: string; wing: string; phases: { span: PhenologyPhase['span']; quiet?: boolean }[] }[] = []
+  const observations: { date: string }[] = []
   const recent: Sighting[] = []
   for (const b of BIOMES) {
     const r = resolveSpaceRoute('atlas', b.slug, undefined)
@@ -35,10 +45,18 @@ const { data } = await useAsyncData('atlas-front', async () => {
         .all()
     ).map(toSpecimenView)
     for (const s of docs) {
-      if (s.phenology?.phases.some((p) => !p.quiet && inSpan(day, p.span)))
-        abroad.push({ to: `/t/atlas/${b.slug}${s.path}`, label: s.binomial })
+      if (s.phenology?.phases.length)
+        creatures.push({
+          to: `/t/atlas/${b.slug}${s.path}`,
+          label: s.binomial,
+          common: s.common,
+          wing: b.name,
+          phases: s.phenology.phases.map((p) => ({ span: p.span, quiet: p.quiet })),
+        })
     }
-    const newest = await queryCollection(r.collections.observations).order('date', 'DESC').limit(SIGHTINGS_SHOWN).all()
+    const all = await queryCollection(r.collections.observations).order('date', 'DESC').all()
+    observations.push(...all.map((o) => ({ date: o.date })))
+    const newest = all.slice(0, SIGHTINGS_SHOWN)
     for (const o of newest) {
       const s = docs.find((d) => d.slug === o.specimen)
       recent.push({ date: o.date, note: o.note, name: s?.binomial, to: s && `/t/atlas/${b.slug}${s.path}` })
@@ -46,11 +64,16 @@ const { data } = await useAsyncData('atlas-front', async () => {
     stats[b.slug] = docs.length
   }
   recent.sort((a, b) => b.date.localeCompare(a.date))
-  return { stats, abroad, recent: recent.slice(0, SIGHTINGS_SHOWN) }
+  return { stats, creatures, observations, recent: recent.slice(0, SIGHTINGS_SHOWN) }
 })
 
 const stats = computed(() => data.value?.stats ?? {})
-const abroad = computed(() => data.value?.abroad ?? [])
+const creatures = computed(() => data.value?.creatures ?? [])
+const observations = computed(() => data.value?.observations ?? [])
+// Who is astir on the needle's day: a non-quiet phase covers it. Turning the dial re-reads this.
+const abroad = computed(() =>
+  creatures.value.filter((c) => c.phases.some((p) => !p.quiet && inSpan(almanac.day.value, p.span))),
+)
 const recent = computed(() => data.value?.recent ?? [])
 const latest = computed(() => recent.value[0] ?? null)
 
@@ -127,13 +150,20 @@ useHead({ title: 'The Atlas of the Terrarium' })
         <h2 id="today-h" class="atlas-eyebrow">Today under the glass</h2>
         <p>Day {{ day }} of the Glass Year — {{ season.label }}<template v-if="season.gloss">, {{ season.gloss }}</template>.</p>
         <p class="today-note">The Glass Year is our own calendar counted from day 0 (1 January), cut into the terrarium’s six seasons.</p>
-        <p v-if="abroad.length" class="today-abroad">
-          Abroad this season:
-          <template v-for="(a, i) in abroad.slice(0, 5)" :key="a.to"
-            >{{ i ? ', ' : ' ' }}<NuxtLink :to="a.to">{{ a.label }}</NuxtLink></template
-          ><template v-if="abroad.length > 5"> and {{ abroad.length - 5 }} more</template>.
-        </p>
-        <p v-else class="today-abroad">Nothing is abroad; the glass keeps to itself.</p>
+        <div v-if="creatures.length" class="today-almanac">
+          <AtlasPhenologyWheel class="today-wheel" wing :observations="observations" />
+          <div class="today-roster">
+            <p class="roster-season">Abroad in {{ currentSeason.label }}</p>
+            <ul v-if="abroad.length" class="roster-astir">
+              <li v-for="a in abroad" :key="a.to">
+                <NuxtLink class="rname" :to="`${a.to}${daySuffix}`">{{ a.label }}</NuxtLink>
+                <span class="rcommon">{{ a.common ? `${a.common} · ` : '' }}{{ a.wing }}</span>
+              </li>
+            </ul>
+            <p v-else class="roster-none">Nothing is abroad; the glass keeps to itself.</p>
+            <p class="roster-hint">Turn the needle to another season to see who the glass holds then.</p>
+          </div>
+        </div>
         <template v-if="recent.length">
           <h3 class="today-log-h">Latest sightings, across all wings</h3>
           <ul class="today-log">
@@ -246,5 +276,21 @@ useHead({ title: 'The Atlas of the Terrarium' })
 @keyframes settle { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) {
   .cover-title { animation: none; }
+}
+.today-almanac { display: grid; grid-template-columns: minmax(0, 18rem) 1fr; gap: 1.2rem 2.2rem; align-items: center; margin: 1.2rem 0 1.6rem; }
+.today-wheel { width: 100%; }
+.today-roster { min-width: 0; }
+.roster-season { font-family: var(--atlas-label); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--atlas-muted); margin: 0 0 0.7rem; }
+.roster-astir { list-style: none; margin: 0 0 0.8rem; padding: 0; display: grid; gap: 0.5rem; }
+.roster-astir li { display: grid; grid-template-columns: 1fr auto; gap: 0.2rem 1rem; align-items: baseline; border-left: 2px solid var(--atlas-line); padding-left: 0.7rem; }
+.roster-astir .rname { font-family: var(--atlas-display); font-style: italic; color: var(--atlas-ink); text-decoration: none; border-bottom: 1px solid transparent; }
+.roster-astir .rname:hover { border-bottom-color: currentColor; }
+.roster-astir .rcommon { font-style: italic; font-size: 0.82rem; color: var(--atlas-muted); text-align: right; }
+.roster-none { color: var(--atlas-faint); font-style: italic; margin: 0 0 0.8rem; }
+.roster-hint { font-size: 0.85rem; color: var(--atlas-muted); margin: 0; }
+@media (max-width: 46rem) {
+  .today-almanac { grid-template-columns: 1fr; justify-items: center; }
+  .today-wheel { max-width: 20rem; }
+  .today-roster { width: 100%; max-width: 30rem; }
 }
 </style>
