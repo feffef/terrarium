@@ -54,9 +54,9 @@ act, once per session.
 - **Invoke `close-session`** when you open a PR, and when a session only answers a question.
 - **Merge your own PR** with `scripts/github/merge-pr.ts <number>` once ADR-0004 allows it.
 - **Verify before you state.** Call something settled only if you checked it
-  this turn against the source: an id, a count (read every item), a cause (not
-  from one test or a cut-off log), how a script, guard or rule behaves, an
-  "only", "every" or "nothing" (check the whole set), or what a subagent or
+  this turn against the source: an id, a count (read every item), a cause
+  (from the whole run and the full log), how a script, guard or rule behaves, a
+  claim of "only", "every" or "nothing" (check the whole set), or what a subagent or
   another session told you. Otherwise say it is unchecked.
 - **Ask before building** something the Trusted user will see (the `grilling`
   Skill); don't assume. Data shapes: `.claude/rules/data-shapes.md`.
