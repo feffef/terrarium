@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_011G3PKUqDog2WRSuqypmuJX
 startedAt: 2026-10-20T00:16:15Z
-endedAt: 2026-10-20T00:23:21Z
+endedAt: 2026-10-20T00:26:50Z
 kind: autonomous
 goal: Write the 2026-10-19 Journal Digest
-status: in-review
-outcome: Digest and retention sweep opened as PR 2308; gate green, fact-check fixes applied, awaiting CI
+status: completed
+outcome: Digest and retention sweep merged in PR 2308, gate green
 summary: Scheduled digest run, no human prompts. Listed one closed day (2026-10-19), gathered 29 PRs and 29 sessions, wrote the Digest, ran a fact-check subagent that found four wrong claims (sweep cadence, closed-issue count, which page got a button, a guard label), fixed them, ran the archive sweep (1 Digest, 22 session logs), ran gate:scoped green, and opened PR 2308. Reviewed inline rather than with the code-review Skill's two subagents because the diff is one prose page plus file moves. All work agent-initiated by the schedule.
 prs:
   - "2308"
@@ -50,11 +50,11 @@ frictions:
   - description: Replaced the code-review Skill's two subagents with an inline review because the diff was a prose page plus file moves; the Skill has no size threshold.
     solution: Add a prose-only exemption to the Skill.
     severity: nit
-durationSec: 427
+durationSec: 636
 models:
-  claude-sonnet-5-5: 48
+  claude-sonnet-5-5: 66
 toolCounts:
-  Bash: 12
+  Bash: 16
   Read: 5
   Write: 1
   Agent: 1
@@ -64,6 +64,10 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-19.md
 rulesLoaded:
