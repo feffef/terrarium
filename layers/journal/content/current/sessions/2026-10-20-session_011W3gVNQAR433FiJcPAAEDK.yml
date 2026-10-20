@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_011W3gVNQAR433FiJcPAAEDK
 startedAt: 2026-10-20T16:11:21Z
-endedAt: 2026-10-20T16:33:54Z
+endedAt: 2026-10-20T17:23:44Z
 kind: interactive
 goal: Time-window dropdown on the Friction Ledger page
-status: completed
-outcome: "Dropdown (2-14 days, ?days=) filters clusters, frictions and solutions; PR #2325 merged"
-summary: "Human-instructed: the owner asked for a dropdown on the Journal's Friction Ledger page to show only clusters, frictions and proposed solutions from the last 2/3/5/7/10/14 days. Before building, I asked four questions and the owner chose: count back from today on the viewer's clock (I had recommended the newest occurrence); recompute counts, severity and placement from in-window occurrences and hide empty clusters; keep merged PRs and fix state on full history; keep the window in ?days=. Agent-initiated: the window start uses the prune horizon's arithmetic (today minus N, so \"last 2 days\" includes 3 dates), and the prune script's horizonStart now calls the shared helper. The server's date renders first and the browser's date replaces it on mount, to keep hydration clean under ADR-0028's cache. Open judgement calls for the owner: UTC vs local date, the off-by-one convention, and a pill that can read \"2 since last fix\" beside a count of 1 (a result of keeping fix state on full history)."
+status: in-review
+outcome: "Dropdown merged in PR #2325; fix so 'last N days' covers N dates is open in PR #2327"
+summary: "Human-instructed: the owner asked for a dropdown on the Journal's Friction Ledger page to show only clusters, frictions and proposed solutions from the last 2/3/5/7/10/14 days. Before building, I asked four questions and the owner chose: count back from today on the viewer's clock; recompute counts, severity and placement from in-window occurrences and hide empty clusters; keep merged PRs and fix state on full history; keep the window in ?days=. PR #2325 merged after CI went green (ADR-0004, no Human-only paths). Agent-initiated, and wrong: I made the window start at today minus N to match the prune horizon, so \"last 2 days\" showed 3 dates. I flagged it as a judgement call in my report, but merged before the owner answered. The owner then said they didn't expect the 18th under 2 days (human-instructed fix). PR #2327 makes N days cover exactly N dates; the prune keeps its 15-date horizon by asking the helper for one date more. Still open for the owner: UTC vs local date, and the \"since last fix\" pill counting all 14 days."
 prs:
   - "2325"
+  - "2327"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: session-start read; pointed to the Journal glossary
@@ -56,24 +57,33 @@ frictions:
   - description: A foreground pgrep wait loop for the background gate hit the 600s timeout and was moved to background; the gate's completion notification would have sufficed.
     solution: Wait for the background task notification instead of polling.
     severity: nit
-durationSec: 1353
+  - description: Chose 'last N days' = today minus N (N+1 dates) to match the prune horizon instead of the plain reading; the owner had to correct it after merge, costing a follow-up PR.
+    solution: When a boundary convention is ambiguous and the user prefers questions, ask before building or at least before merging, rather than flagging it afterwards.
+    severity: moderate
+  - description: "Subscribed to PR #2326 by guessing the next PR number before reading create_pull_request's result (#2327); had to unsubscribe and resubscribe."
+    solution: Subscribe only after reading the PR number from the create result.
+    severity: nit
+  - description: First follow-up push with --force-with-lease was rejected as stale info because the merged PR's branch had been deleted on the remote.
+    solution: After a merged PR, run git remote prune origin before pushing the restarted branch (the hook hint said so).
+    severity: nit
+durationSec: 4343
 models:
-  claude-opus-5-5: 92
+  claude-opus-5-5: 128
 toolCounts:
   Grep: 1
-  Bash: 31
+  Bash: 40
   AskUserQuestion: 1
   Skill: 4
-  Agent: 2
+  Agent: 4
   ToolSearch: 2
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
-  mcp__claude-code-remote__send_later: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  ReadNotifications: 3
+  mcp__claude-code-remote__send_later: 2
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__delete_trigger: 1
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
 rulesLoaded:
   - .claude/rules/adr-0008.md
   - .claude/rules/tenant-layers.md
@@ -149,6 +159,10 @@ subagents:
     task: Standards review of ledger filter
   - type: general-purpose
     task: Spec review of ledger filter
+  - type: general-purpose
+    task: Standards review follow-up
+  - type: general-purpose
+    task: Spec review follow-up
 gitBranch: ccr-cbe3337f-cx1c23
 entrypoint: remote_mobile
 cliVersion: 2.1.304
