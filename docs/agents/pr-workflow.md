@@ -16,7 +16,11 @@ committed diff against `origin/main`, in the checkout that holds it, and fix the
 findings, then run `pnpm gate:scoped` last on the final head and edit nothing
 until it ends, even when the Stop hook asks you to push. Skip the review only
 where a Skill's own steps already review the diff before the push, as
-`midden-catalogue` §4 does. A session-log commit needs none.
+`midden-catalogue` §4 does, or where the branch changes only prose or docs
+(the text of a SKILL.md, rule or ADR counts) or Tenant content under
+`layers/<tenant>/content/`. Code, config, a Skill's scripts, a hook, a
+workflow script, or a Skill's or rule's frontmatter never counts. A
+session-log commit needs none.
 
 A later push that changes only prose or docs may skip `gate:scoped` and rely on
 CI's gate; run it first for any other change. If `gate:scoped` passed but CI
