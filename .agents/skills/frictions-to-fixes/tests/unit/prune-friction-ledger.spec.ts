@@ -73,13 +73,13 @@ describe('summarizeLedger()', () => {
       'x | open | - | 1 in horizon | nit | no fixes',
     ])
   })
-  it('ends with the newest note, cut to 80 characters, only when the entry has notes', () => {
+  it('ends with the newest note in full, only when the entry has notes', () => {
     const dir = setup()
-    const long = `2026-10-20 design: ${'x'.repeat(80)}`
-    writeFileSync(join(dir, 'a.yml'), entry(['a', '2026-10-01']).replace('status: open', `status: open\nnotes: |-\n  2026-10-10 design: old dropped: why\n  ${long}`))
+    const newest = `2026-10-20 design: ${'x'.repeat(90)} dropped: costs more than it saves`
+    writeFileSync(join(dir, 'a.yml'), entry(['a', '2026-10-01']).replace('status: open', `status: open\nnotes: |-\n  2026-10-10 design: old dropped: why\n  ${newest}`))
     writeFileSync(join(dir, 'b.yml'), entry(['a', '2026-10-01']))
     const [a, b] = summarizeLedger('2026-10-13', cwd)
-    expect(a).toMatch(new RegExp(`\\| note: ${long.slice(0, 80)}…$`))
+    expect(a.endsWith(` | note: ${newest}`)).toBe(true)
     expect(b).toBe('x | open | - | 1 in horizon | nit | no fixes')
   })
   it('takes the latest fix by date whatever their order, and says "fix" for one', () => {

@@ -12,8 +12,8 @@
 //   fix landed, likely fixed, still recurring with the count since the latest
 //   PR, issue #2024),
 //   ref, in-horizon occurrence count, max severity (issue #1917), the fix
-//   count and latest fix, and the newest of the entry's `notes` (cut short) when
-//   it has any. It ends with every friction two clusters share, for
+//   count and latest fix, and the newest of the entry's `notes` in full when it
+//   has any. It ends with every friction two clusters share, for
 //   the survey to judge.
 import { readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -88,7 +88,7 @@ export function summarizeLedger(today: string, cwd = root): string[] {
     const state = derived ? `${derived.state}${derived.since ? ` (${derived.since} since #${last!.pr})` : ''}` : e.status
     const note = String(e.notes ?? '').trim().split('\n').at(-1)
     const cols = [e.name ?? f, state, e.ref ?? '-', `${occ.length} in horizon`, SEVERITIES[max] ?? '-', fixes]
-    if (note) cols.push(`note: ${note.length > 80 ? `${note.slice(0, 80)}…` : note}`)
+    if (note) cols.push(`note: ${note}`)
     return cols.join(' | ')
   })
 }
