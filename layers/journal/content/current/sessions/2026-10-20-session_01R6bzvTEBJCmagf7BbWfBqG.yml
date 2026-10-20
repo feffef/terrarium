@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01R6bzvTEBJCmagf7BbWfBqG
 startedAt: 2026-10-20T06:33:53Z
-endedAt: 2026-10-20T06:42:14Z
+endedAt: 2026-10-20T06:45:47Z
 kind: autonomous
 goal: Sync the Glass Box textbook pages to the latest main
-status: in-review
-outcome: "PR #2320 re-pins 24 pages and 1 term, with five pages and the human-only term reworded; gate green, awaiting CI"
-summary: "A schedule fired the glassbox-update Skill; no human prompted anything (autonomous). Ran the report, advanced pins to main 2bc05931, then read 157 commits of non-journal diffs against each flagged page. Edited the pages whose teaching moved: the PR recipe excerpt and first-push review order, the Dependabot merge exception (trust tiers, Human-only list, human-only term), and the adr-check Skill replacing the CLAUDE.md ADR grep (ADRs, path-scoped rules). Other flagged pages and the 21 other terms were re-pinned only after checking them against the diffs. Page spec (138 tests), validate:content and gate:scoped passed on the final head, then pushed, opened one PR and subscribed. Skipped code-review (content-only, ADR-0004) and screenshots (wording-only edits). The Stop hook asked for a push while the gate was still running; I waited for the green gate first. Still open: CI on the PR and the merge."
+status: completed
+outcome: "PR #2320 merged: 24 pages and 1 term re-pinned to main, five pages and the human-only term reworded"
+summary: "A schedule fired the glassbox-update Skill; no human prompted anything (autonomous). Ran the report, advanced pins to main 2bc05931, then read 157 commits of non-journal diffs against each flagged page. Edited the pages whose teaching moved: the PR recipe excerpt and first-push review order, the Dependabot merge exception (trust tiers, Human-only list, human-only term), and the adr-check Skill replacing the CLAUDE.md ADR grep (ADRs, path-scoped rules). Other flagged pages and the 21 other terms were re-pinned only after checking them against the diffs. Page spec (138 tests), validate:content and gate:scoped passed on the final head, then pushed, opened one PR and subscribed. Skipped code-review (content-only, ADR-0004) and screenshots (wording-only edits). The Stop hook asked for a push while the gate was still running; I waited for the green gate first. CI went green and I merged the PR myself after posting a verdict naming the head."
 prs:
   - "2320"
 docsRead:
@@ -60,11 +60,11 @@ frictions:
   - description: Called Monitor without loading its schema first, so the call was rejected.
     solution: Load deferred tools with ToolSearch first; the harness's own error said so.
     severity: nit
-durationSec: 501
+durationSec: 714
 models:
-  claude-sonnet-5-5: 84
+  claude-sonnet-5-5: 101
 toolCounts:
-  Bash: 31
+  Bash: 35
   Read: 7
   Monitor: 1
   ToolSearch: 1
@@ -72,6 +72,10 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
