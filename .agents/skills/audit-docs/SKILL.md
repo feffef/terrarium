@@ -46,8 +46,9 @@ lenses.
 
 ### Instructions
 
-1. Pick this run's **concision family** (for Agent C): the one after the
-   family named by the newest `origin/main` commit whose subject ends
+1. Fetch `origin/main` (`docs/agents/git-conventions.md`), then pick this
+   run's **concision family** (for Agent C): the one after the family named
+   by the newest `origin/main` commit whose subject ends
    `(<name> concision family)`, wrapping from 4 to 0.
    - 0 `root`: `CLAUDE.md`, `GLOSSARY*.md`, every Live README, `SECURITY.md`,
      `layers/*/GLOSSARY.md`;
@@ -60,15 +61,16 @@ lenses.
 3. Tell every agent the finding format: the file plus the exact sentence,
    quoted whole with its line breaks, plus replacement text. No line ranges
    (reviewers get them wrong). A finding outside its own lenses is still
-   reported, named by its lens.
+   reported, named by its lens, and joins the pool like any other.
 4. Save each agent's reply verbatim into one pooled scratchpad file with
    `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`.
 
 **Agent A, Freshness.** Start from `git log --since="48 hours ago"
-origin/main` and its diff, after a fetch.
+origin/main` and its diff.
 
 - **Drift:** a doc describes a mechanism, path or term the code no longer
-  matches. Most often a decision moved and its referrers weren't updated, so
+  matches. Most often a decision changed at its new home and its referrers
+  weren't updated, so
   grep every noun the diff removed (an old path, a deleted job name) across
   all docs. For a Skill, its Inventory entry's `observations` may back up a
   finding.
@@ -80,14 +82,16 @@ origin/main` and its diff, after a fetch.
   2. a new ADR that changes another ADR's decision while the old one still
      states it (ADR-0030): rewrite the old ADR (it escalates).
 
-  Never add a hand-kept ADR list to `CLAUDE.md`.
+  Older additions are out of scope. Never add a hand-kept ADR list to
+  `CLAUDE.md`.
 
 **Agent B, Single-home.**
 
 - **Duplication:** a fact stated in more than one place. The home keeps it;
   every copy becomes a pointer. A file stating its own specific case plus a
   pointer to the home is fine. The ADR summary rules in `.claude/rules/` are
-  a deliberate copy of their ADRs.
+  a deliberate copy of their ADRs; `validate-adr-rules` keeps the two in
+  step.
 - **Mis-location:** a fact or file in the wrong home: implementation detail
   in `GLOSSARY.md`, a status story in `CLAUDE.md`, a repo-wide convention
   buried in a `docs/agents/*` topic file (move it, leave a pointer), or a
@@ -151,12 +155,13 @@ own inline check. A wrong finding acted on is new drift you wrote.
    Point each at the pooled file to read; never retype findings into a
    prompt.
 2. Each checker re-derives every claim from its primary source (code,
-   schemas, ADRs, git history, and any issue or PR the doc names) and
-   returns **CONFIRMED**, **CONFIRMED-BUT** (with the corrected line or
-   quote) or **WRONG**. For a rewrite or cut, it first lists every rule,
-   condition, exception, pointer and "why" in the original (for an ADR: what
-   it allows, forbids and excepts); a fix that loses or changes one is
-   **WRONG**.
+   schemas, ADRs, git history) and returns **CONFIRMED**, **CONFIRMED-BUT**
+   (with the corrected line or quote) or **WRONG**. For a rewrite or cut, it
+   first lists every rule, condition, exception, pointer and "why" in the
+   original (for an ADR: what it allows, forbids and excepts); a fix that
+   loses or changes one, or is not shorter or plainer, is **WRONG**. For
+   Mis-location, it first reads any originating issue or PR the doc names or
+   implies; a placement stated there wins.
 3. Drop every WRONG; apply every CONFIRMED-BUT correction.
 
 Done when every finding has a verdict, and every CONFIRMED(-BUT) one has an
@@ -175,8 +180,8 @@ Goal: every confirmed finding fixed, without asking anyone.
    the more specific ADR unless git history or the code shows it is a
    leftover.
 3. File a `needs-triage` issue for one thing only: two sources state
-   conflicting facts and no primary source settles which is true (two ADRs
-   included). Search open issues first, then file per
+   conflicting facts and no primary source settles which is true, including
+   two ADRs that neither history nor code settles. Search open issues first, then file per
    `docs/agents/issue-tracker.md`'s "Filing an issue" with both readings and
    your best guess. Leave that finding unfixed.
 
@@ -185,7 +190,8 @@ Done when every finding is fixed, or filed as a true factual conflict.
 ### Edge cases
 
 - If the confirmed text leaves a gap (it names a place but doesn't word the
-  fix), send the gap back to a checker as a new finding.
+  fix), send the gap back to a checker as a new finding. Never fill it
+  yourself.
 
 ## 5. Commit, review and gate
 

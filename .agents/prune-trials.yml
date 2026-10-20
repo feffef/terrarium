@@ -195,7 +195,8 @@ trials:
       kept), Agent B no longer runs `audit-skills.ts` for read counts (they
       could only corroborate), one "don't regress" example instead of three,
       the duplicate-issue lookup to "search open issues first", no reuse of an
-      earlier escalation PR. Tier, lens and family names unchanged, since
+      earlier escalation PR, and the Pack-generic "note it in a Live doc"
+      (ADR-0015 puts such notes in the Inventory entry). Tier, lens and family names unchanged, since
       `frictions-to-fixes`' briefs, `prune-trial` and the commit-subject
       rotation use them. `audit-skills.ts`' docstring no longer names
       audit-docs as a reader.
