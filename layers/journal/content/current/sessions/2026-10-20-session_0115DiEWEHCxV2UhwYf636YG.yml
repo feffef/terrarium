@@ -1,0 +1,216 @@
+schemaVersion: 1
+session: session_0115DiEWEHCxV2UhwYf636YG
+startedAt: 2026-10-20T16:48:18Z
+endedAt: 2026-10-20T17:18:06Z
+kind: autonomous
+goal: Scheduled visitor-loop run on the Atlas
+status: in-review
+outcome: "Fix PR #2326 open (fresh sightings, calmer food-web labels, trimmed almanac nudge); feature PR not started"
+summary: "Scheduled visitor-loop run, focus atlas (row 0), no human prompt; everything was agent-initiated within the Skill's remit. Built and served main, sent sonnet, fable and opus visitors to /t/atlas, tallied consensus. Verified and kept three (month-old latest sighting, overprinting food-web labels, the same almanac sentence on all 15 specimens); dropped four consensus items against decisions.md (#1494 phone webs), the Atlas glossary (subtext never named; observations are append-only voice) and a misreading. Refiner kept two and refined one. Fix PR 2326 passed code-review and gate:scoped after one gate failure (unquoted colons in new observation YAML). Chosen feature, a Glass-Year dial on the landing, comes next after the fix PR merges. Out-of-remit follow-up still to file: the atlas-specimen Skill example still prescribes the trimmed clause."
+prs:
+  - "2326"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push, gate-last and merge recipe
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read after hook prompt; fetch-before-trust confirmed my call
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: capture tooling for the food-web before/after
+    useful: yes
+  - path: layers/atlas/GLOSSARY.md
+    reason: subtext rule and Observation voice settled two drops
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: read at start; Tenant roster
+    useful: partly
+  - path: GLOSSARY.md
+    reason: read at start; vocabulary
+    useful: partly
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: settled drops of phone webs and the footer, and the feature filter
+    useful: yes
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: verbatim visitor brief
+    useful: yes
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: verbatim refiner brief
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: the run script; refiner also read it and found it useful
+    useful: yes
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: observation format and subtext rule; reviewers found it useful
+    useful: yes
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: refiner read it for the feature; partly useful
+    useful: partly
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: refiner read it for approval of the feature; useful
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: refiner read it for the remit; partly useful
+    useful: partly
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: refiner read it for the landing page; useful
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: refiner read it for the payload constraint; useful
+    useful: yes
+  - path: layers/atlas/app/components/atlas/FoodWeb.vue
+    reason: (no reason given)
+  - path: layers/atlas/app/pages/t/atlas/index.vue
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the run's own Skill
+  - name: code-review
+    reason: Standards and Spec review before the first push
+  - name: close-session
+    reason: PR-open closure
+  - name: log-session
+    reason: (no reason given)
+  - name: adr-check
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch and a GitHub search before reading git-conventions.md and github-integration.md; the hooks only reminded me afterwards.
+    solution: Read the CLAUDE.md-triggered docs first; a PreToolUse reminder would beat the post-hoc hint.
+    severity: nit
+  - description: New observation YAML with colons in unquoted notes failed validate-content-schema in gate:scoped, costing a full gate cycle.
+    solution: atlas-specimen §5 example should say to quote notes that contain colons.
+    severity: minor
+  - description: The atlas-specimen Skill §3 example prescribes the exact almanac sentence all 15 pages copied, so new specimens will re-seed it.
+    solution: Ask the Skill to say the nudge is an example to vary (issue to file).
+    severity: minor
+  - description: "SHELL-READ-DETECTION: docs/agents/github-integration.md was credited from shell output, but the session marked it (not read)"
+    solution: Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts
+    severity: moderate
+durationSec: 1788
+models:
+  claude-sonnet-5-5: 146
+toolCounts:
+  Bash: 56
+  Agent: 6
+  ToolSearch: 2
+  mcp__github__search_issues: 4
+  Read: 5
+  Skill: 3
+  Monitor: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/mdc-when-to-use.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0028.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+docsReadBySubagents:
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Scheduled-run remit and open-the-PR-yourself; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Gate and review before first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main via close-session; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR and comment; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on a Skill read; did not apply to this run
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; loaded by GLOSSARY-MAP read, did not change anything
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; loaded on Skill read, no trial covered my changes
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Cached payload rule; shaped the feature plan, the refiner opened the full ADR
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement; loaded by a read, not relevant here
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Routing prefix; loaded on landing-page read, not relevant to the fixes
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Tenant root pages live in the layer; relevant to the pending feature, refiner opened the full ADR
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Layer auto-import naming; confirmed my new local names were safe
+    useful: partly
+  - path: .claude/rules/ui-verification.md
+    reason: Pointed me to verifying-ui-changes before the food-web render
+    useful: yes
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on a content read; no MDC change made
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on a glossary read; no diagrams touched
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded by a subagent read; refiner and reviewer found it not applicable
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Human-only list; no touched file was on it
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: No stored field added; confirmed only by the refiner
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Visitor (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Visitor (fable)
+    model: fable
+  - type: general-purpose
+    task: Visitor (opus)
+    model: opus
+  - type: general-purpose
+    task: Refiner fit check
+    model: opus
+  - type: general-purpose
+    task: Standards review
+  - type: general-purpose
+    task: Spec review
+gitBranch: claude/adoring-galileo-et9uqm
+entrypoint: remote_trigger
+cliVersion: 2.1.304
+trigger: visitor-loop
+ideas:
+  - "Atlas landing: a Glass-Year dial with every creature abroad listed, replacing the text-only Abroad line (feature in progress)."
+  - "Atlas: a since-your-last-visit strip of new sightings, kept in localStorage, to give return visitors a reason to come back."
+landedBy: Stop
