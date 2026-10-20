@@ -49,8 +49,7 @@ kind of thing. Each entry below ends with one page to start on.
   [the automatic sheep counter](/t/tinkerfund/prod/campaigns/automatic-sheep-counter).
 - **[The Marquee](/t/marquee/reel)** is a movie blog covering the Marvel films
   in story order, one chapter per film. A visitor asked for it in an issue and
-  an agent built it — a demonstration of building for a guest, not of the
-  project itself. Start with
+  an agent built it — a demonstration of building for a guest, not of the project itself. Its film facts are real; it claims nothing about the build. Start with
   [the first chapter](/t/marquee/reel/captain-america-the-first-avenger).
 
 If you only read one, make it [the Journal](/t/journal/current) — everything

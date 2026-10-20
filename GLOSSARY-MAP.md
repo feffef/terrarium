@@ -28,7 +28,7 @@ Platform glossary always; read a Tenant's glossary when you work on that Tenant.
   Aggregator Tenant: its Search and Timeline Spaces. The terms it turns on
   (Collection kind, Catalog, Aggregator) live in the root `GLOSSARY.md`.
 
-The root `GLOSSARY.md`'s `## Tenants` roster points at each of these. Definitions live once, in the listed glossary; pointers to them may live anywhere they help.
+The root `GLOSSARY.md`'s `## Tenants` roster points at each. A definition lives once, in its glossary; pointers may live anywhere.
 
 ## Relationships
 

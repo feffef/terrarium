@@ -29,11 +29,11 @@ When a change needs both an agent-authored edit and a companion workflow edit,
 the two are applied **together**: the human applies the workflow half and
 merges the agent's PR in the same sitting, never the agent half first. ADR-0026 records the cost of drifting apart: CI ran a stale subset of `pnpm gate`.
 
-A human applies the proposal by hand (editing the workflow file, or making the setting) and, once landed, deletes the proposal file in the same commit; this directory tracks only *pending* proposals.
+Once the human has applied a proposal, they delete its file in the same commit; this directory tracks only *pending* proposals.
 
 ## Superseding a pending proposal
 
-A superseded proposal must say so on its own file, or readers miss the contradiction (issue #890). The PR that adds the superseding proposal also adds, as the **first line** of the superseded file's body, a banner naming the replacement:
+So readers don't miss the contradiction (issue #890), the PR that adds a superseding proposal also adds this banner, naming the replacement, as the **first line** of the superseded file's body:
 
 ```
 > **Superseded by [`docs/proposals/NNN-new-slug.md`](./NNN-new-slug.md).**

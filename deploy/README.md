@@ -37,7 +37,7 @@ down; it self-heals on the next good commit.
 
 ## One-time bootstrap
 
-> **Run everything as your non-root Docker operator user** (`<deploy-user>` below — substitute your host's account): a member of the `docker` group, *not* `root`, and *not* merely a user with a GitHub SSH key. Outside the `docker` group, the first `docker compose` fails with `permission denied … /var/run/docker.sock`. `chown -R <deploy-user>:<deploy-user> /opt/terrarium`, then `sudo -iu <deploy-user>` and do the rest there.
+> **Run everything as a non-root user in the `docker` group** (`<deploy-user>` below — substitute your host's account), not `root`; an SSH key alone isn't enough. Otherwise the first `docker compose` fails with `permission denied … /var/run/docker.sock`. `chown -R <deploy-user>:<deploy-user> /opt/terrarium`, then `sudo -iu <deploy-user>` and do the rest there.
 
 1. **Fine-grained PAT.** <https://github.com/settings/personal-access-tokens/new>
    (Settings → Developer settings → **Fine-grained** tokens — *not* a classic

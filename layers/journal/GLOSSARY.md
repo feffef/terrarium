@@ -10,7 +10,7 @@
 
 ## Why it exists — and why it isn't optional
 
-The Journal is not a convenience summary for people who would rather skim than read a session's raw transcript. It is the **only** way any of this becomes visible: nobody but the agent and user present in a session can see its working transcript. Once the session closes, the **session log** it authors (goal, outcome, what it read, every **Friction** it hit, any learnings or ideas) is the sole surviving record; a session that authors no log loses its frictions and ideas. The same holds for the collaboration itself: whether a session was interactive, delegated or autonomous, who prompted it and how far they steered is visible only through the Journal. So `/t/journal/current` is more than a status page: it is the only public record of how the humans and agents building this Platform actually worked together, session by session.
+The Journal is not a convenience summary for skimmers. It is the **only** way any of this becomes visible: nobody but the agent and user present in a session can see its working transcript. Once the session closes, the **session log** it authors (goal, outcome, what it read, every **Friction** it hit, any learnings or ideas) is the sole surviving record; a session that authors no log loses its frictions and ideas. The same holds for the collaboration itself: whether a session was interactive, delegated or autonomous, who prompted it and how far they steered is visible only through the Journal. So `/t/journal/current` is the only public record of how the humans and agents building this Platform actually worked together, session by session.
 
 ## Who it's for
 

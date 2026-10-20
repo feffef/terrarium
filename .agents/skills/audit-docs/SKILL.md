@@ -222,7 +222,7 @@ as a true factual conflict.
 
 ## 7. Clear the safety gate
 
-Run `pnpm gate:scoped` (step 1 of `docs/agents/pr-workflow.md`'s "Closing a
+Run `pnpm gate:scoped` last, on the final head, after §8's review (step 1 of `docs/agents/pr-workflow.md`'s "Closing a
 scheduled run's PR"). Run it even for doc-only edits: an edit under
 `layers/` (an Inventory `.yml`, a journal page) runs the full gate, and the
 floor still runs `verify:skills-lock` and `validate:content`. Done when green.

@@ -70,17 +70,15 @@ in the same pass.
 ## 4. Verify, then review
 
 Run `pnpm validate:content` while iterating (it checks each `removedIn` date
-against its season), then `pnpm gate:scoped`.
+against its season).
 
 Dispatch two read-only reviewers in parallel (`dispatch-subagents`): an
 adversarial **fact-check** of every claim against primary sources, and a
 **voice and domain** review against GLOSSARY.md, `condition.ts` and the house
 voice, flagging every word a visitor would need the repository to understand.
-Each ends with: For each rule and doc you loaded or read: its path, why it
-loaded or was read, and whether it was useful (yes, partly, no).
+Each ends with the standard verdict ask (CLAUDE.md, "Every subagent brief").
 Fix every finding, then grep for each phrase you fixed: seeing new text
-in a diff does not prove the old text is gone. Repeat the fact-check on the
-fixes until it comes back clean.
+in a diff does not prove the old text is gone. Repeat the fact-check on the fixes until it comes back clean. Then run `pnpm gate:scoped` on the final head.
 
 ## 5. Open the PR
 
