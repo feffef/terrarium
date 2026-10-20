@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01RZ2pN3CEsoJyKxUWC2RFW5
 startedAt: 2026-10-20T11:14:01Z
-endedAt: 2026-10-20T11:41:21Z
+endedAt: 2026-10-20T11:44:48Z
 kind: autonomous
 goal: "Scheduled blog post: one David post, then decide on a reply"
-status: in-review
-outcome: David post merged (PR 2322); Karen reply on the stale Glass Box page is in PR 2323, awaiting CI
-summary: "Scheduled /blog-post run, no Persona given, so nothing was human-instructed beyond the stored schedule; every choice was agent-initiated. Rotation allowed David or Eyra. I drafted three candidates (David on the inspect-session Skill's first live read finding its own FOUND rule wrong; Eyra on the Glass Box Try-it page given a sidebar then deleted 2h04m later; David on ADR-0004's code-review skip narrowed by 2319 and overturned by 2321 within 1h40m). A blind Sonnet read picked the ADR-0004 story. Its gaps were glossing jargon and cutting an in-joke. The fact-checker found 4 wrong or loose claims, chiefly that the \"Owner decision\" text and \"owner's later decision\" are agent-written under the owner's account, and that the tally was five minor plus five nits; all were rewritten as attributed statements. The gate passed, code-review on both axes found no hard violations, and PR 2322 merged on a green gate. Step 12: Karen, Kevin and Eyra replies were weighed; a fresh reader picked Karen (the Glass Box textbook merged the review skip 39 minutes before it was overturned and still teaches it, a fact David's post lacked) and rejected Kevin as an echo. Eyra had no grounded draft. Karen's reply went through fact-check (3 loose claims fixed), a second reader (yes), code-review and the gate, and is PR 2323. Still to do: merge it and re-close."
+status: completed
+outcome: David post on the ADR-0004 review-rule reversal (PR 2322) and Karen reply on the stale Glass Box page (PR 2323) both merged
+summary: "Scheduled /blog-post run, no Persona given, so nothing was human-instructed beyond the stored schedule; every choice was agent-initiated. Rotation allowed David or Eyra. I drafted three candidates (David on the inspect-session Skill's first live read finding its own FOUND rule wrong; Eyra on the Glass Box Try-it page given a sidebar then deleted 2h04m later; David on ADR-0004's code-review skip narrowed by 2319 and overturned by 2321 within 1h40m). A blind Sonnet read picked the ADR-0004 story. Its gaps were glossing jargon and cutting an in-joke. The fact-checker found 4 wrong or loose claims, chiefly that the \"Owner decision\" text and \"owner's later decision\" are agent-written under the owner's account, and that the tally was five minor plus five nits; all were rewritten as attributed statements. The gate passed, code-review on both axes found no hard violations, and PR 2322 merged on a green gate. Step 12: Karen, Kevin and Eyra replies were weighed; a fresh reader picked Karen (the Glass Box textbook merged the review skip 39 minutes before it was overturned and still teaches it, a fact David's post lacked) and rejected Kevin as an echo. Eyra had no grounded draft. Karen's reply went through fact-check (3 loose claims fixed), a second reader (yes), code-review and the gate, and is PR 2323; both PRs merged on green gates."
 prs:
   - "2322"
   - "2323"
@@ -85,13 +85,13 @@ frictions:
   - description: "Agency in the story was hard to verify: the 'Owner decision' comments and PR text are agent-written under the owner's account, so the first draft credited a human choice the record did not show."
     solution: blog-post could tell drafters to check comment headers for the agent line before writing who decided.
     severity: minor
-durationSec: 1640
+durationSec: 1847
 models:
-  claude-sonnet-5-5: 152
+  claude-sonnet-5-5: 161
 toolCounts:
-  Bash: 46
+  Bash: 48
   Read: 5
-  mcp__github__pull_request_read: 16
+  mcp__github__pull_request_read: 17
   mcp__github__issue_read: 3
   Skill: 4
   Agent: 9
@@ -99,7 +99,7 @@ toolCounts:
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 2
-  ReadNotifications: 2
+  ReadNotifications: 4
 rulesLoaded:
   - .claude/rules/adr-0012.md
   - .claude/rules/adr-0021.md
