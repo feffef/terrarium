@@ -186,7 +186,8 @@ trials:
       more than the cuts save). The reference that used to sit before step 1
       moved into the step that uses it: the four tiers into §2, the eight
       lenses and the concision-family rotation into §3, the checkers' sources
-      into §5, the fix-or-file rules into §6, the escalation list into §8. Every
+      into §5, the fix-or-file rules and the open-trial check into §6, the
+      escalation list into §8. Every
       rule kept, and the tier, lens and family names unchanged, since
       `frictions-to-fixes`' briefs, `prune-trial` and the commit-subject rotation
       use them. Cut: the "Command-only" note (the frontmatter holds it).

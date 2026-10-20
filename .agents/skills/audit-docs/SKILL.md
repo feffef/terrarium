@@ -14,10 +14,9 @@ short" governs every edit.
 
 A run opens up to two PRs:
 
-- **The sweep PR** (§8): every fix that touches no Human-only file (the
-  `paths` of `.claude/rules/adr-0004-human-merge.md`). You merge it.
-- **The escalation PR** (§8): the few fixes a human must merge, such as any
-  ADR edit.
+- **The sweep PR** (§8): every fact-checked fix that §8 doesn't escalate.
+  You merge it.
+- **The escalation PR** (§8): the few fixes a human must merge.
 
 ## 1. Get on a working branch
 
@@ -93,7 +92,7 @@ lenses.
 3. Tell every agent the finding format: the file plus the exact sentence,
    quoted whole with its line breaks, plus replacement text. No line ranges
    (reviewers get them wrong). A finding outside its own lenses is still
-   reported, named by its lens.
+   reported, named by its lens, and joins the pool like any other.
 4. Save each agent's reply verbatim into one pooled scratchpad file with
    `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`.
 
@@ -114,6 +113,9 @@ lenses.
   2. a new ADR that changes another ADR's decision while the old one still
      states it (ADR-0030): rewriting the old ADR escalates (§8).
 
+  Older additions are out of scope. Never add a hand-kept ADR list to
+  `CLAUDE.md`.
+
 **Agent B, Single-home.** Run `pnpm exec tsx scripts/session/audit-skills.ts`
 for `docReadCounts` (how many recent sessions opened each doc). A fact in a
 doc nobody opens is in the wrong home, however correct. Use a count only to
@@ -121,19 +123,23 @@ back up a finding reached another way; the field's docstring says why it
 undercounts.
 
 - **Duplication:** a fact stated in more than one place. The home keeps it;
-  every copy becomes a pointer.
+  every copy becomes a pointer. A file stating its own specific case plus a
+  pointer to the home is fine. The ADR summary rules in `.claude/rules/` are
+  a deliberate copy of their ADRs; `validate-adr-rules` keeps the two in
+  step.
 - **Mis-location:** a fact or file in the wrong home: implementation detail
   in `GLOSSARY.md`, a status story in `CLAUDE.md`, a repo-wide convention
   buried in a `docs/agents/*` topic file (move it, leave a pointer), or a
   misfiled file (`git mv` it).
 
-**Agent C, Concision.** Brief it with the concision family's full file list.
+**Agent C, Concision.** Cut words, never meaning or a load-bearing "why".
+Brief it with the concision family's full file list.
 It reads every file in full and reports every finding, with no cap. Split
 the family across agents if one can't hold it.
 
 - **Verbose:** wording more complicated than its meaning: the same fact said
-  twice, filler, long or nested sentences, stacked caveats, jargon where a
-  plain word is exact. Rewrite it in the plainest words that keep every
+  twice, filler, long or nested sentences, stacked caveats and
+  parentheticals, jargon or coined terms where a plain word is exact. Rewrite it in the plainest words that keep every
   rule, condition, exception and pointer. If that can't be done without
   losing one, leave it.
 - **Stale-narration:** a doc correct about the present that still tells a
@@ -154,20 +160,10 @@ read in full, and every reply is in the pooled file.
 
 ### Edge cases
 
-- **Open Prune Trials.** Before any lens touches text, check
-  `.agents/prune-trials.yml`. Text inside an open trial's territory is terse
-  on purpose and under watch: leave it as it is, record what you found as a
-  Friction, and leave it to `prune-trial`.
-- **Duplication that isn't:** a file stating its own specific case plus a
-  pointer to the home is fine. The ADR summary rules in `.claude/rules/` are
-  a deliberate copy of their ADRs; `validate-adr-rules` keeps the two in
-  step.
 - **Keep "don't regress" reasons.** Stale-narration never cuts a reason that
   stops the old way coming back (e.g. `CLAUDE.md`'s never-`pkill` rule,
   `dispatch-subagents`' worktree-HEAD rule, `environment-caveats.md`'s
   `permissions.allow` bullet). Retiring one is a Prune Trial's call.
-- **Orphan-addition limits:** additions older than 48 hours are out of
-  scope. Never add a hand-kept ADR list to `CLAUDE.md`.
 - Moving a journal `pages/*.md` changes its route (ADR-0006), so that move
   escalates (§8).
 
@@ -201,8 +197,9 @@ own inline check. A wrong finding acted on is new drift you wrote.
      `shared/`, `modules/`, the schemas) and the ADRs.
    - **Duplication, Mis-location, Ambiguity:** the home convention: which
      doc owns the fact, and does it really hold it. A cited read count is
-     re-run, never remembered. For Mis-location, first read any issue or PR
-     the target doc names or implies; a placement stated there wins.
+     re-run, never remembered. For Mis-location, first read any originating
+     issue or PR the target doc names or implies; a placement stated there
+     wins.
    - **Orphan-addition:** git history (added within 48 hours?) and the
      expected home (is the reference really missing?).
    - **Verbose:** the original text. List every rule, condition, exception
@@ -224,13 +221,16 @@ Goal: every confirmed finding fixed, without asking anyone.
 
 ### Instructions
 
-1. Fix every surviving finding in place, using only the checker-confirmed
-   text. Decide scope yourself. Don't ask, and don't file an issue for a
+1. Check `.agents/prune-trials.yml` first. Text inside an open Prune
+   Trial's territory is terse on purpose and under watch: keep it as it is,
+   record the finding as a Friction for `prune-trial` to weigh, and move on.
+2. Fix every other surviving finding in place, using only the
+   checker-confirmed text. Decide scope yourself. Don't ask, and don't file an issue for a
    judgement call.
-2. Two ADRs that contradict each other: fix it in the escalation PR, keeping
+3. Two ADRs that contradict each other: fix it in the escalation PR, keeping
    the more specific ADR unless git history or the code shows it is a
-   leftover. If neither settles it, file an issue (step 3).
-3. File a `needs-triage` issue for one thing only: two sources state
+   leftover. If neither settles it, file an issue (item 4).
+4. File a `needs-triage` issue for one thing only: two sources state
    conflicting facts and no primary source (code, schemas, ADRs) settles
    which is true. Check for an open duplicate first
    (`scripts/github/list-open-issues.ts` or a scoped `list_issues`;
@@ -277,7 +277,7 @@ human.
      `audit-docs: 2026-10-14 sweep (docs/research concision family)`;
    - its body lists the fixes and any issue filed;
    - its verdict comment records the audit in one line plus
-     `Reviewed: <head sha>` (the recipe's step 4).
+     `Reviewed: <head sha>` (`pr-workflow.md`'s "The recipe", step 4).
    Merge it yourself on green (ADR-0004).
 2. Move these fixes into **one** separate escalation PR for a human to
    review and merge:
