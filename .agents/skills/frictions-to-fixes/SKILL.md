@@ -102,8 +102,8 @@ built.
 
 Dispatch **one** `general-purpose` subagent for all picks. Its brief is
 [`design-brief.md`](design-brief.md) verbatim, with the picks (each with
-everything the survey found, including its ledger entry's `notes`) and
-the scratchpad path filled in. It returns, per fix: the problem and
+everything the survey found, plus its ledger entry's `notes`, read from the
+entry file) and the scratchpad path filled in. It returns, per fix: the problem and
 evidence, one design, the risk, and a recommendation (dispatch, issue, or no
 change), plus its own frictions.
 
@@ -139,7 +139,8 @@ whatever happens to the fixes.
 3. **Update the ledger** on your branch, on top of the survey's commit:
    - set `status: tracked` on every entry this run files or dispatches, with
      the issue number in `ref` for a filed one;
-   - for each dropped fix, append a line to its entry's `notes`:
+   - for each dropped fix, append a line to its entry's `notes` (a `|-`
+     block, one note per line):
      `<date> design: <the solution> dropped: <the reason>`. The entry keeps
      its status: only that solution is dropped, not the cluster;
    - run `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts`

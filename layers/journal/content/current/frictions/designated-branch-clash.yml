@@ -5,7 +5,8 @@ cause: >-
   CLAUDE.md's "Stay on the branch your session started on" and the session's designated-branch instruction collide with tasks that need a PR's branch or several independent PRs, so the session asks or breaks the rule.
 surface: safe
 status: open
-notes: "2026-10-20 design: a repo doc granting pushes to other branches dropped: the harness pins one pushable branch and a repo doc cannot grant that; issue-tracker.md already says to flag it upfront and ask."
+notes: |-
+  2026-10-20 design: a repo doc granting pushes to other branches dropped: the harness pins one pushable branch and a repo doc cannot grant that; issue-tracker.md already says to flag it upfront and ask.
 occurrences:
   - session: session_01X7EjwNGgzS9n6614B4PTU3
     date: "2026-10-10"
