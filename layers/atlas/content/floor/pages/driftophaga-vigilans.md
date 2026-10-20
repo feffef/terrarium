@@ -82,7 +82,7 @@ We cannot tell you where the drift-eater lives. We can only tell you where it tu
 
 Its manner of feeding is particular. While the pair agree it takes no interest in either — we have set out matched fragments by the dozen and it walked over them as over gravel. It eats only the difference: the strayed whorl, the miscounted seed, the margin that has curled away from its likeness. It does not sleep, so far as we can determine; drift, presumably, does not either. What changes with the season is not the animal but the world's supply of disagreement, on which it wholly depends.
 
-We have set the year down as the drift-eater keeps it, by that supply and not by our calendar: the slow straying, the reckoning, and the lean agreement. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the drift-eater's falls.
+We have set the year down as the drift-eater keeps it, by that supply and not by our calendar: the slow straying, the reckoning, and the lean agreement. Turn the almanac to follow the drift-eater through them.
 
 ::almanac
 ::

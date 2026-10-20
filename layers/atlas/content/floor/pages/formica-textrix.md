@@ -84,7 +84,7 @@ The column was at work when we first lowered the lamp below the leaf line, and i
 
 *Formica textrix* does not dig so much as weave. Soil crumb, leaf-vein, root-hair, and a dark thread of its own spinning are drawn together into galleries that hold the loose litter the way warp holds weft. The remarkable thing — stated plainly, as it deserves — is that the weaving is never finished: a gallery completed at dawn is as likely to be unpicked at dusk and worked again a thumb's width to the left, for reasons the column does not disclose. What it reworks, and how furiously, is the year's chief variable; that it is always reworking something is not.
 
-We have set the year down as the column keeps it, shift by shift and not by our calendar: the great reworking, the double shift, the provisioning, and the deep galleries. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the column's falls.
+We have set the year down as the column keeps it, shift by shift and not by our calendar: the great reworking, the double shift, the provisioning, and the deep galleries. Turn the almanac to follow the column through them.
 
 ::almanac
 ::

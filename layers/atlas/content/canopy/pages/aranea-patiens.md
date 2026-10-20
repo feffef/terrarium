@@ -94,7 +94,7 @@ illustration: |
 
 The visitor inclined to pity the prey should sit with the weaver through one whole night, as we have: eight hours motionless in the cold, the web trembling with every false alarm, and no certainty at all that the canopy owes it breakfast. Everything up here waits; the weaver has merely gone further, and made of waiting a livelihood. We could not do it, and we have the advantage of knowing the kitchen is stocked.
 
-That livelihood keeps a calendar of its own — first strung, then wheeled high, then quietly taken in, then sat out flat against the bark — and we have set it down not by our calendar but as the weaver keeps it: the first stringing, the high wheeling, the taking-in, and the close sitting. Turn the almanac to follow the year around the hub; the seasons on the rim only say where in our shared year each of the weaver's falls.
+That livelihood keeps a calendar of its own — first strung, then wheeled high, then quietly taken in, then sat out flat against the bark — and we have set it down not by our calendar but as the weaver keeps it: the first stringing, the high wheeling, the taking-in, and the close sitting. Turn the almanac to follow the year around the hub.
 
 ::almanac
 ::

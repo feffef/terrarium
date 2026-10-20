@@ -69,7 +69,7 @@ function pt(p: Pt): string {
   return `${p.x.toFixed(1)},${p.y.toFixed(1)}`
 }
 
-interface Strand { e: Edge; d: string; rail: string; endStroke: string; label: string; off: string }
+interface Strand { e: Edge; d: string; rail: string; endStroke: string; label: string; off: string; at: number; pos: (u: number) => Pt }
 
 const strands = computed<Strand[]>(() => {
   // A node pair can carry more than one Interaction (e.g. A preys-on B AND B
@@ -152,10 +152,28 @@ const strands = computed<Strand[]>(() => {
         rail,
         endStroke: specimenAccent(a.s),
         label: relationLabel(e.kind, 'out'),
-        off: `${Math.round((flip ? 1 - f : f) * 100)}%`,
+        off: '',
+        at: flip ? 1 - f : f,
+        // Where the label's centre sits when seated `u` of the way along the rail.
+        pos: (u) => ({
+          x: (1 - u) ** 2 * rs.x + 2 * u * (1 - u) * qx + u ** 2 * rt.x,
+          y: (1 - u) ** 2 * rs.y + 2 * u * (1 - u) * qy + u ** 2 * rt.y,
+        }),
       }
     })
     .filter((x): x is Strand => x !== null)
+    .map((st, i, all) => {
+      // Strands that cross put their labels in the same patch, so the phrases
+      // print over each other. Slide each label along its own strand to the
+      // nearest seat that clears the labels already placed.
+      const GAP = 44
+      const seats = [0, 0.08, -0.08, 0.16, -0.16, 0.24, -0.24, 0.32, -0.32].map((d) => st.at + d).filter((u) => u >= 0.15 && u <= 0.85)
+      const clearance = (u: number) =>
+        Math.min(GAP, ...all.slice(0, i).map((o) => Math.hypot(o.pos(o.at).x - st.pos(u).x, o.pos(o.at).y - st.pos(u).y)))
+      st.at = seats.find((u) => clearance(u) >= GAP) ?? seats.reduce((best, u) => (clearance(u) > clearance(best) ? u : best), st.at)
+      st.off = `${Math.round(st.at * 100)}%`
+      return st
+    })
 })
 
 // Neighbour set for the hover dimming.

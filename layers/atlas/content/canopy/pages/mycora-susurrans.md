@@ -109,7 +109,7 @@ illustration: |
 
 Its common name is earned, and this is the part the visitor never quite credits until the canopy goes still around him. The colony makes a sound — very faint, a dry papery sibilance, as of a page being turned somewhere in the next room, forever. The caps never sleep and the whisper never stops; we have listened at dawn and at midnight and been told, each time, the same thing, whatever it is. We have grown fond of it, in the way one grows fond of a clock.
 
-What it says, and how much of it, turns with the year's damp — and we have set it down not by our calendar but as the mold keeps it: the full voice, the parch whisper, the new ground, and the damp corners. Turn the almanac to move among them; the seasons on the rim only say where in our shared year each of the mold's falls.
+What it says, and how much of it, turns with the year's damp — and we have set it down not by our calendar but as the mold keeps it: the full voice, the parch whisper, the new ground, and the damp corners. Turn the almanac to move among them.
 
 ::almanac
 ::

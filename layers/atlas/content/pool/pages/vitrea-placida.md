@@ -78,7 +78,7 @@ The glass snail was the first inhabitant of the pool we recorded, chiefly becaus
 
 The shell earns the name. Held to the light — the specimen tolerates this with an air of mild reproach — it is very nearly transparent, a whorl of pondlight blue so thin that one sees the animal turning inside it, like weather behind a window. We suspect the shell is less a fortress than a formality, and that the snail's true defence is that nothing in the pool is in enough of a hurry to catch it. It keeps daylight hours and is fastened down somewhere secret by dusk, which in the pool is a wise habit; the drowned star, we have lately noticed, will sit out the bright hours in the shadow of that shell — an arrangement the snail permits, or more likely has not noticed.
 
-What it grazes, and how far it must travel for it, the year decides — and we have kept its labours by the snail's own calendar, not the keepers': the first grazing, the green harvest, the slow polish, and the sealed months in which the pane is left to us. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the snail's falls.
+What it grazes, and how far it must travel for it, the year decides — and we have kept its labours by the snail's own calendar, not the keepers': the first grazing, the green harvest, the slow polish, and the sealed months in which the pane is left to us. Turn the almanac to follow the snail through them.
 
 ::almanac
 ::

@@ -88,7 +88,7 @@ There are three ways down through the old root-tangle at the western wall, and *
 
 The web is not the airy wheel of the upper storeys. It is a lattice, square-set and severe, iron-grey in the lamp, strung from wall to wall of the gap with no slack in it anywhere. Traffic crosses it all night, and most crosses unhindered; but let something arrive that is wrong — lame, sickening, carrying rot in with it — and it is held at the third thread, and it does not go on. We cannot name the standard by which she judges; we can only report that we have never seen her wave a thing through and regret it.
 
-What follows we have set down as she keeps it, not by our calendar but by her own: the restringing, the long keeping, the thin traffic, and the winter watch. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the gatekeeper's falls.
+What follows we have set down as she keeps it, not by our calendar but by her own: the restringing, the long keeping, the thin traffic, and the winter watch. Turn the almanac to follow the gatekeeper through them.
 
 ::almanac
 ::
