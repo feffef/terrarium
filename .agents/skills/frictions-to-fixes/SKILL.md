@@ -151,8 +151,9 @@ Each PR description carries its fixes' problem, evidence and design (§5); a fix
 picked up from an open issue (§2) also `Closes` it.
 
 Each agent's brief is [`impl-brief.md`](impl-brief.md) verbatim, with its
-fixes filled in, plus `dispatch-subagents` §3's lines. It hands the committed
-branch back to you, unpushed; you are the reviewer (§7) and open the PR.
+fixes and its own scratchpad subfolder ({SCRATCH_DIR}) filled in, plus
+`dispatch-subagents` §3's lines. It hands the committed branch back to you,
+unpushed; you are the reviewer (§7) and open the PR.
 
 Done when every dispatched fix is covered by a committed branch (every doc fix by
 the one grouped branch, each other fix by its own), gate green, awaiting your
