@@ -14,6 +14,7 @@ type Triage = {
   summary: string
   publicAuthor: boolean
   brief?: string
+  canonical?: number
   question?: Question
   blocker?: string
   files: string[]
@@ -51,6 +52,7 @@ function triage(r: Explore): string[] {
   const blocks = Object.entries(r.results).map(([n, t]) => [
     `#${n} ${t.outcome} publicAuthor=${t.publicAuthor}`,
     ...field('summary', t.summary),
+    ...field('canonical', t.canonical ? `#${t.canonical}` : undefined),
     ...field('brief', t.brief),
     ...(t.question ? [`  question: ${t.question.choice}`, ...t.question.options.map((o) => `    ${o}`), `    pick: ${t.question.pick} (${t.question.why})`] : []),
     ...field('blocker', t.blocker),
@@ -106,16 +108,18 @@ function verdicts(r: Explore | Branch[]): string[] {
   ]
 }
 
-export function runSummary(path: string, mode: string): string {
-  const r = result(path)
-  if (mode === '--verdicts') return verdicts(r as Explore | Branch[]).join('\n')
-  if (mode === '--triage') return triage(r as Explore).join('\n\n')
-  if (mode === '--build') return build(r as Branch[]).join('\n\n')
-  throw new Error(`unknown mode ${mode}: use --triage, --build or --verdicts`)
+const MODES = {
+  '--triage': (r: unknown) => triage(r as Explore).join('\n\n'),
+  '--build': (r: unknown) => build(r as Branch[]).join('\n\n'),
+  '--verdicts': (r: unknown) => verdicts(r as Explore | Branch[]).join('\n'),
+}
+
+export function runSummary(path: string, mode: keyof typeof MODES): string {
+  return MODES[mode](result(path))
 }
 
 runIfMain(import.meta.url, () => {
   const [path, mode] = process.argv.slice(2)
-  if (!path || !mode) fail('usage: run-summary.ts <run .output> --triage | --build | --verdicts')
-  console.log(runSummary(path, mode))
+  if (!path || !mode || !Object.hasOwn(MODES, mode)) fail('usage: run-summary.ts <run .output> --triage | --build | --verdicts')
+  console.log(runSummary(path, mode as keyof typeof MODES))
 })

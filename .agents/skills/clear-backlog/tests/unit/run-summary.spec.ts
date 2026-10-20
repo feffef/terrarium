@@ -1,3 +1,4 @@
+import { spawnSync } from 'node:child_process'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { runSummary } from '../../scripts/run-summary.ts'
@@ -21,6 +22,7 @@ describe('--triage', () => {
       ].join('\n'),
     )
     expect(out).toContain('#13 blocked publicAuthor=false\n  summary: Wait for Nuxt 5\n  blocker: Nuxt 5 is unreleased (npm view nuxt version)')
+    expect(out).toContain('#15 close-duplicate publicAuthor=false\n  summary: Same as #11\n  canonical: #11')
     expect(out).toContain('  relatedTo: #12\n  sideFindings:\n    - docs/b.md links nowhere\n  writes:\n    - labelled ready-for-agent')
   })
 
@@ -78,5 +80,15 @@ describe('--verdicts', () => {
         '  - { path: "docs/agents/pr-workflow.md", reason: "build big-13: steps for the push", useful: partly }',
       ].join('\n'),
     )
+  })
+})
+
+describe('the command line', () => {
+  it('rejects an unknown mode with the usage line, not a stack trace', () => {
+    const script = join(import.meta.dirname, '../../scripts/run-summary.ts')
+    const run = spawnSync(process.execPath, ['--import', 'tsx', script, fixture('build.output'), '--verdict'], { encoding: 'utf8' })
+    expect(run.status).toBe(1)
+    expect(run.stderr).toContain('usage: run-summary.ts')
+    expect(run.stderr).not.toMatch(/\n\s+at /)
   })
 })
