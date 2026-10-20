@@ -289,6 +289,17 @@ describe('journal Tenant', async () => {
     })
   })
 
+  it('narrows the Friction Ledger to the window in the URL, and keeps a picked one there', async () => {
+    await withRendered('/t/journal/current/frictions?days=5', async (page) => {
+      const select = page.getByLabel('Frictions from the last')
+      expect(await select.inputValue()).toBe('5')
+      await select.selectOption('3')
+      await page.waitForURL(/\?days=3$/)
+      await select.selectOption('14')
+      await page.waitForURL((u) => !u.search)
+    })
+  })
+
   it('hydrates the sub pages with no unresolved components', async () => {
     await expectCleanHydration('/t/journal/current/routines')
     await expectCleanHydration('/t/journal/current/skills')

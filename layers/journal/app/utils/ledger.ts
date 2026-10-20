@@ -15,6 +15,14 @@ export type LedgerState = FixState | 'open' | 'tracked' | 'on trial' | 'accepted
 /** Occurrences older than this many days are dropped (`prune-friction-ledger.ts`). */
 export const LEDGER_HORIZON_DAYS = 14
 
+/** The windows a visitor can narrow the page to, in days; the last is the horizon. */
+export const LEDGER_WINDOWS = [2, 3, 5, 7, 10, LEDGER_HORIZON_DAYS] as const
+
+/** The first date inside a window of `days` ending on `today`, counted like the prune's horizon. */
+export function ledgerWindowStart(today: string, days: number): string {
+  return new Date(Date.parse(`${today}T00:00:00Z`) - days * 86_400_000).toISOString().slice(0, 10)
+}
+
 /** The newest merged PRs the page lists, in the pill and the list alike. */
 export const LEDGER_MAX_PRS = 5
 
@@ -74,18 +82,22 @@ const SEVERE_LEVELS = 2
  *  (by worst severity, then how often it hit that, then total); `frequent`
  *  ranks all clusters by total. A tie goes to `severe`. `ownSessions` holds this Space's session ids; an occurrence
  *  missing from it links to `otherSpace`, where archiving moved it. `goals`
- *  maps session ids to their goal line. */
+ *  maps session ids to their goal line. Occurrences dated before `from` are left
+ *  out, and a cluster left with none is dropped; its fix state still reads every
+ *  occurrence, since a fix merged before the window explains why it went quiet. */
 export function ledgerPanels(
   clusters: FrictionClusterDoc[],
   space: string,
   ownSessions: Set<string>,
   otherSpace: string,
   goals: Record<string, string> = {},
+  from = '',
 ): { severe: LedgerEntry[]; frequent: LedgerEntry[] } {
   const asOf = clusters.flatMap((c) => c.occurrences.map((o) => o.date)).sort().at(-1) ?? ''
   const entries = clusters.map((c): LedgerEntry => {
-    const worst = c.occurrences.reduce<Severity>((w, o) => (SEVERITY_RANK[o.severity] > SEVERITY_RANK[w] ? o.severity : w), 'nit')
-    const occurrences = c.occurrences
+    const inWindow = c.occurrences.filter((o) => o.date >= from)
+    const worst = inWindow.reduce<Severity>((w, o) => (SEVERITY_RANK[o.severity] > SEVERITY_RANK[w] ? o.severity : w), 'nit')
+    const occurrences = inWindow
       .map((o) => ({
         date: o.date,
         severity: o.severity,
@@ -109,12 +121,12 @@ export function ledgerPanels(
       ref: c.ref,
       fixes: fixes.slice(0, LEDGER_MAX_PRS),
       worst,
-      worstCount: c.occurrences.filter((o) => o.severity === worst).length,
-      count: c.occurrences.length,
+      worstCount: inWindow.filter((o) => o.severity === worst).length,
+      count: inWindow.length,
       occurrences: occurrences.map(({ report: _report, ...o }) => o),
       reports,
     }
-  })
+  }).filter((e) => e.count)
   const bySeverity = (a: LedgerEntry, b: LedgerEntry) =>
     SEVERITY_RANK[b.worst] - SEVERITY_RANK[a.worst] || b.worstCount - a.worstCount || b.count - a.count || a.name.localeCompare(b.name)
   const byCount = (a: LedgerEntry, b: LedgerEntry) =>

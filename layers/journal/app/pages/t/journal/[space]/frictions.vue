@@ -8,6 +8,7 @@ definePageMeta({ name: 'journal-frictions' })
 const PAGE_TITLE = 'Friction Ledger'
 
 const route = useRoute()
+const router = useRouter()
 const { space, collections } = useSpace('journal')
 // Only two Spaces: a session not in this one was moved to the other.
 const otherSpace = Object.keys(routingMap.journal).find((s) => s !== space) ?? space
@@ -39,8 +40,17 @@ function stateHint(e: { state: string; since: number }): string {
   if (e.state === 'accepted') return 'The owner accepts this cost; occurrences are still counted'
   return ''
 }
+// The server's date renders first so hydration matches; then the viewer's clock
+// takes over, since a cached render's "today" can be old (ADR-0028).
+const isoToday = () => new Date().toISOString().slice(0, 10)
+const today = useState('journal-ledger-today', isoToday)
+onMounted(() => (today.value = isoToday()))
+const days = computed({
+  get: () => LEDGER_WINDOWS.find((d) => String(d) === route.query.days) ?? LEDGER_HORIZON_DAYS,
+  set: (d) => router.replace({ query: { ...route.query, days: d === LEDGER_HORIZON_DAYS ? undefined : String(d) } }),
+})
 const panels = computed(() =>
-  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.own), otherSpace, data.value?.goals),
+  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.own), otherSpace, data.value?.goals, ledgerWindowStart(today.value, days.value)),
 )
 const sections = computed(() => [
   {
@@ -79,6 +89,13 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         its cost, whatever its PRs; its occurrences are still counted. A cluster
         sits in the list where it ranks higher. Click a cluster (▸) to expand its
         cause, merged PRs, sessions and logged frictions.
+      </p>
+      <p class="window">
+        <label for="ledger-window">Frictions from the last</label>
+        <select id="ledger-window" v-model.number="days">
+          <option v-for="d in LEDGER_WINDOWS" :key="d" :value="d">{{ d }} days</option>
+        </select>
+        <span>Counts, severity and ranking use only those; merged PRs and fix states use all {{ LEDGER_HORIZON_DAYS }} days.</span>
       </p>
 
       <template v-for="sec in sections" :key="sec.id">
@@ -139,7 +156,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
             </details>
           </li>
         </ul>
-        <p v-else>No friction clusters in this Space.</p>
+        <p v-else>No friction clusters in this window.</p>
       </template>
     </article>
 
@@ -151,6 +168,17 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 .jd-prose { max-width: 80ch; }
 .n { color: var(--jd-faint); font-weight: 400; margin-left: 0.4rem; }
 .intro { color: var(--jd-muted); font-size: 0.88rem; }
+.window { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; font-size: 0.88rem; }
+.window span { color: var(--jd-muted); font-size: 0.8rem; flex-basis: 100%; }
+.window select {
+  font: inherit;
+  color: var(--jd-ink);
+  background: var(--jd-surface);
+  border: 1px solid var(--jd-line);
+  border-radius: 4px;
+  padding: 0.1rem 0.3rem;
+}
+.window select:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px; }
 .ledger { list-style: none; padding: 0; margin: 0; }
 .ledger > li { margin: 0; border-top: 1px solid var(--jd-line); }
 .ledger > li:first-child { border-top: 0; }
