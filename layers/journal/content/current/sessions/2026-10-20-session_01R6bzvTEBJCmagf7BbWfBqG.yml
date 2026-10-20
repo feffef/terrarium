@@ -1,0 +1,132 @@
+schemaVersion: 1
+session: session_01R6bzvTEBJCmagf7BbWfBqG
+startedAt: 2026-10-20T06:33:53Z
+endedAt: 2026-10-20T06:42:14Z
+kind: autonomous
+goal: Sync the Glass Box textbook pages to the latest main
+status: in-review
+outcome: "PR #2320 re-pins 24 pages and 1 term, with five pages and the human-only term reworded; gate green, awaiting CI"
+summary: "A schedule fired the glassbox-update Skill; no human prompted anything (autonomous). Ran the report, advanced pins to main 2bc05931, then read 157 commits of non-journal diffs against each flagged page. Edited the pages whose teaching moved: the PR recipe excerpt and first-push review order, the Dependabot merge exception (trust tiers, Human-only list, human-only term), and the adr-check Skill replacing the CLAUDE.md ADR grep (ADRs, path-scoped rules). Other flagged pages and the 21 other terms were re-pinned only after checking them against the diffs. Page spec (138 tests), validate:content and gate:scoped passed on the final head, then pushed, opened one PR and subscribed. Skipped code-review (content-only, ADR-0004) and screenshots (wording-only edits). The Stop hook asked for a push while the gate was still running; I waited for the green gate first. Still open: CI on the PR and the merge."
+prs:
+  - "2320"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: Read after my first git command, when the hook pointed to it; nothing in it changed what I did
+    useful: no
+  - path: docs/agents/pr-workflow.md
+    reason: Review-before-push order, the recipe, and the scheduled-run closing steps
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Cloud MCP mapping before the first GitHub call
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Page shapes and the Excerpt rules
+    useful: yes
+  - path: .claude/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin, Write and Check steps
+    useful: yes
+  - path: GLOSSARY.md
+    reason: Read the first 60 lines at start; later saw its diff, which held the Human-only change
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: Session-start read; Tenant glossary pointers, nothing needed for this run
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: Saw only its diff; enough to fix the adr-check pointer on two pages
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: Saw only its diff, the first-push review change
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Diff plus a grep to confirm the subagent page still holds
+    useful: partly
+  - path: .agents/skills/adr-check/SKILL.md
+    reason: First 19 lines, to word the new pointer
+    useful: yes
+skillsUsed:
+  - name: glassbox-update
+    reason: The scheduled task itself
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch before reading git-conventions.md; the read-first hint pointed to it only after the call.
+    solution: Read the trigger docs before the first command; the late-read note says this is not a Friction when the call was right.
+    severity: nit
+  - description: Stop hook asked to push an unpushed commit while the background gate was still running.
+    solution: Declined until the gate was green, per ADR-0004; the hook could skip while a gate log is still open.
+    severity: nit
+  - description: Called Monitor without loading its schema first, so the call was rejected.
+    solution: Load deferred tools with ToolSearch first; the harness's own error said so.
+    severity: nit
+durationSec: 501
+models:
+  claude-sonnet-5-5: 84
+toolCounts:
+  Bash: 31
+  Read: 7
+  Monitor: 1
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Its first-push review skip for content-only branches decided to skip code-review; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to the PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: No open prune trial touched my content paths, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Page content about it needed its diff, not the rule itself
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: About glossary placement; I only edited a term definition
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill storage; I changed no Skill
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR wording; I edited no ADR
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept ids and counts out of the page prose I edited
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by reading page files; no diagram touched
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded reading the Human-only page; confirmed its adr hash for the excerpt
+    useful: yes
+gitBranch: claude/ecstatic-euler-yi6z9q
+entrypoint: remote_trigger
+cliVersion: 2.1.304
+trigger: glassbox-update
+landedBy: Stop
