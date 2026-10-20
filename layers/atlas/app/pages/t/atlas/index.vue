@@ -55,7 +55,8 @@ const { data } = await useAsyncData('atlas-front', async () => {
         })
     }
     const all = await queryCollection(r.collections.observations).order('date', 'DESC').all()
-    observations.push(...all.map((o) => ({ date: o.date })))
+    // The dial's rim reads only dates, so ship each day once.
+    for (const date of new Set(all.map((o) => o.date))) observations.push({ date })
     const newest = all.slice(0, SIGHTINGS_SHOWN)
     for (const o of newest) {
       const s = docs.find((d) => d.slug === o.specimen)
@@ -153,7 +154,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
         <div v-if="creatures.length" class="today-almanac">
           <AtlasPhenologyWheel class="today-wheel" wing :observations="observations" />
           <div class="today-roster">
-            <p class="roster-season">Abroad in {{ currentSeason.label }}</p>
+            <p class="roster-season" aria-live="polite">Abroad in {{ currentSeason.label }}</p>
             <ul v-if="abroad.length" class="roster-astir">
               <li v-for="a in abroad" :key="a.to">
                 <NuxtLink class="rname" :to="`${a.to}${daySuffix}`">{{ a.label }}</NuxtLink>
