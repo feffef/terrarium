@@ -79,7 +79,7 @@ describe('summarizeLedger()', () => {
     writeFileSync(join(dir, 'a.yml'), entry(['a', '2026-10-01']).replace('status: open', `status: open\nnotes: |-\n  2026-10-10 design: old dropped: why\n  ${newest}`))
     writeFileSync(join(dir, 'b.yml'), entry(['a', '2026-10-01']))
     const [a, b] = summarizeLedger('2026-10-13', cwd)
-    expect(a.endsWith(` | note: ${newest}`)).toBe(true)
+    expect(a!.endsWith(` | note: ${newest}`)).toBe(true)
     expect(b).toBe('x | open | - | 1 in horizon | nit | no fixes')
   })
   it('takes the latest fix by date whatever their order, and says "fix" for one', () => {
