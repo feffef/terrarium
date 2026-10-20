@@ -220,7 +220,7 @@ export interface Scorecard {
   /** Path → how many windowed sessions opened it.
    *
    *  **This docstring is the single home for how to read a doc-read count**
-   *  (read by `audit-docs` and `frictions-to-fixes`). A doc a Skill tells you
+   *  (read by `frictions-to-fixes`). A doc a Skill tells you
    *  to read, sitting at 0, is evidence the pointer isn't landing — but only
    *  ever *corroborating* evidence, for three independent reasons: a
    *  topic-scoped doc reads 0 because that work didn't come up; a shell read
