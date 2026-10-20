@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01FTPnEsW1XNhaqYFdxaE24v
 startedAt: 2026-10-20T17:45:58Z
-endedAt: 2026-10-20T18:04:07Z
+endedAt: 2026-10-20T18:12:57Z
 kind: interactive
-goal: Compare the routine Skills for clarity, then rewrite frictions-to-fixes plainly
-status: completed
-outcome: "frictions-to-fixes rewritten one section per step as a Prune Trial; PR #2330 merged"
-summary: "Human-instructed throughout. First a question: which routine Skill reads worst and which is cleanest; answered frictions-to-fixes and audit-skills after reading all seven. The user then asked for frictions-to-fixes to be rewritten in plain language, each step as a goal paragraph, instructions with script and subagent calls, and edge cases, keeping its logic. Before building I asked three questions (what the typo \"sjioo calls\" meant, SKILL.md only or briefs too, Prune Trial or plain PR); the user chose script calls or subagents, SKILL.md only, and a Prune Trial. Agent-initiated within that ask: an overview of the run's three PR kinds, keeping section numbers for guest-build's pointers, and the trial's check text. A Sonnet probe pinned to the first commit answered eight scenarios correctly; code-review (Standards and Spec) found dropped pointers and why-clauses, cap exemptions away from the cap, escalation steps filed as edge cases and a lost no-argument pick default, all fixed in a second commit. Open: no step defines when a fix PR is abandoned (the old text had the same gap). PR #2330 merged on a green gate via merge-pr.ts."
+goal: Compare the routine Skills for clarity, then rewrite two of them plainly
+status: in-review
+outcome: "frictions-to-fixes rewrite merged (#2330); audit-docs rewrite open as #2331, both Prune Trials"
+summary: "Human-instructed throughout. First a question: which routine Skill reads worst and which is cleanest; answered frictions-to-fixes and audit-skills after reading all seven. The user then asked for frictions-to-fixes to be rewritten in plain language, each step as a goal paragraph, instructions with script and subagent calls, and edge cases, keeping its logic. Before building I asked three questions (the typo \"sjioo calls\", SKILL.md only or briefs too, Prune Trial or plain PR); the user chose script calls or subagents, SKILL.md only, and a Prune Trial. That PR (#2330) merged after a Sonnet probe and a two-axis code-review whose findings (dropped pointers and why-clauses, a lost no-argument default) I fixed. The user then asked for audit-docs \"the same way\"; I carried the earlier answers over without asking again. Its reference block (tiers, lenses, checker sources) moved into the steps that use them, so this file grew slightly (2058 to 2113 words) where the first shrank. A Sonnet probe answered ten scenarios correctly; review found a broadened sweep-PR scope line, a lost load-bearing-why rule and the open-trial check placed away from the edits, all fixed. Agent-initiated within the asks: the overview of each run's PRs, keeping section numbers and tier and lens names for their callers, and the trials' check texts."
 prs:
   - "2330"
+  - "2331"
 docsRead:
   - path: GLOSSARY.md
     reason: Defined the routine Importance grade, which identified the seven routine Skills
@@ -23,7 +24,7 @@ docsRead:
     reason: Assessed for clarity; dense tally rules
     useful: yes
   - path: .agents/skills/audit-docs/SKILL.md
-    reason: Assessed for clarity; rules front-loaded before steps
+    reason: Rewrote it; its tier and lens names are referenced elsewhere
     useful: yes
   - path: .agents/skills/audit-skills/SKILL.md
     reason: Assessed for clarity; judged the clearest
@@ -80,6 +81,8 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: context
+    reason: (invoked as a slash command)
 frictions:
   - description: Ran git log to draw conclusions before reading docs/agents/git-conventions.md, and skipped the full GLOSSARY read at session start.
     solution: Read-only question sessions still trigger the read-first list; the hint fired late but was right.
@@ -93,27 +96,34 @@ frictions:
   - description: First rewrite pass dropped several pointers and why-clauses and a no-argument default while claiming every rule kept; the spec review caught them.
     solution: Before committing a whole-file rewrite, diff an old-vs-new rule checklist myself rather than relying on review to find losses.
     severity: minor
-durationSec: 1090
+  - description: Second rewrite again lost a rule (never cut a load-bearing why) and broadened the sweep PR scope despite a mental checklist; review caught both.
+    solution: Write the old-rule checklist to a file and tick it against the new text before committing; a mental pass missed the lens's opening line.
+    severity: minor
+  - description: The Stop hook asked to push five times while the gate and reviews ran; ADR-0004 says hold, so each nag cost a turn.
+    solution: Have the git-check Stop hook stay quiet while a gate:scoped run for the branch is in progress or a review agent is running.
+    severity: nit
+durationSec: 1619
 models:
-  claude-opus-5-5: 120
+  claude-opus-5-5: 167
 toolCounts:
-  Bash: 46
+  Bash: 61
   Read: 1
   Skill: 5
   AskUserQuestion: 1
-  Write: 1
-  Agent: 3
+  Write: 2
+  Agent: 6
   ToolSearch: 2
   TaskStop: 1
   SendUserFile: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
-  ReadNotifications: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0005.md
@@ -128,6 +138,7 @@ rulesLoaded:
   - .claude/rules/adr-0001.md
   - .claude/rules/adr-0020.md
   - .claude/rules/adr-0023.md
+  - .claude/rules/guards.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -138,6 +149,8 @@ rulesFollowedUp:
   - .claude/rules/adr-0027.md
 rulesLoadedBySubagents:
   - .claude/rules/adr-0025.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/ui-verification.md
   - .claude/rules/data-shapes.md
 docsReadBySubagents:
   - .agents/skills/frictions-to-fixes/SKILL.md
@@ -171,11 +184,11 @@ ruleVerdicts:
     reason: "Checked its paths: neither touched file is Human-only, so self-merge is allowed"
     useful: yes
   - path: .claude/rules/adr-0030.md
-    reason: Loaded on reading ADRs; no ADR was edited
-    useful: no
+    reason: "Re-checked: confirmed the Decisions tier and ADR-rewrite escalation wording"
+    useful: partly
   - path: .claude/rules/adr-0029.md
-    reason: Loaded with writing-for-agents; no rule placement was in play
-    useful: no
+    reason: "Re-checked: confirmed audit-docs' Orphan-addition case 1 wording against it while rewriting"
+    useful: partly
   - path: .claude/rules/adr-0015.md
     reason: Confirmed frictions-to-fixes is our own Skill, not a pack Skill, so editable
     useful: partly
@@ -200,6 +213,15 @@ ruleVerdicts:
   - path: .claude/rules/data-shapes.md
     reason: Only the standards subagent loaded it; it reported it irrelevant
     useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded on grepping a guard script for audit-docs mentions; no guard was changed
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Only the spec reviewer loaded it via a grep; it reported it irrelevant
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: Only the spec reviewer loaded it via a grep; it reported it irrelevant
+    useful: no
 subagents:
   - task: Sonnet probe of rewritten Skill
     model: sonnet
@@ -208,10 +230,18 @@ subagents:
     model: sonnet
   - type: general-purpose
     task: Spec review of rewrite
+  - task: Sonnet probe of audit-docs rewrite
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of audit-docs rewrite
+  - type: general-purpose
+    task: Standards review of audit-docs rewrite
+    model: sonnet
 gitBranch: ccr-97e57c38-pvk96r
 entrypoint: remote_mobile
 cliVersion: 2.1.304
 ideas:
   - Let prune-trial's plain-rewrite mode target frictions-to-fixes next, merging its ledger rules (sections 1, 5, 7, 8) into one Ledger section with a single lifecycle table.
   - Let prune-trial's plain-rewrite mode target audit-docs next, moving its tiers and lenses into reference sections after the numbered steps, since its rules all load before step 1.
+  - Give prune-trial a small script that extracts every imperative sentence of a file into a checklist, so a whole-file rewrite can be ticked off rule by rule before commit; both rewrites here lost rules that a checklist would have caught.
 landedBy: Stop
