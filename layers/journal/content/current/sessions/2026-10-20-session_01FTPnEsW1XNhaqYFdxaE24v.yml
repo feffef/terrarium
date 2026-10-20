@@ -1,0 +1,95 @@
+schemaVersion: 1
+session: session_01FTPnEsW1XNhaqYFdxaE24v
+startedAt: 2026-10-20T17:45:58Z
+endedAt: 2026-10-20T17:47:49Z
+kind: interactive
+goal: Compare the routine Skills for how clear their instructions are
+status: completed
+outcome: Answered in chat - frictions-to-fixes judged least clear, audit-skills clearest
+summary: "Human-instructed question: which routine Skill has the most confusing instructions and which is already clean. Found the seven routine Skills via their Skill Inventory grade, read every SKILL.md in full, and checked git and prune-trial history for plain-language rewrites. Judged frictions-to-fixes the most confusing (ledger lifecycle split across four sections, layered caps and exceptions, cross-section ordering), audit-docs runner-up (all rules front-loaded before step 1, out-of-order step references), and audit-skills the clearest. Found no prune-trial plain rewrite of any routine Skill. No code changed."
+prs: []
+docsRead:
+  - path: GLOSSARY.md
+    reason: Defined the routine Importance grade, which identified the seven routine Skills
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: Assessed for clarity; clear steps but long style rules in step 3
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: Assessed for clarity; goal-first but dense mechanism
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: Assessed for clarity; dense tally rules
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: Assessed for clarity; rules front-loaded before steps
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: Assessed for clarity; judged the clearest
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: Assessed for clarity; judged the most confusing
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: Assessed for clarity; long but linear
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git log to draw conclusions before reading docs/agents/git-conventions.md, and skipped the full GLOSSARY read at session start.
+    solution: Read-only question sessions still trigger the read-first list; the hint fired late but was right.
+    severity: nit
+  - description: Did not run adr-check before giving an opinion on Skill quality, which CLAUDE.md counts as a recommendation.
+    solution: Opinion was descriptive, not a proposed change; clarify whether adr-check applies to pure assessments.
+    severity: nit
+durationSec: 111
+models:
+  claude-opus-5-5: 29
+toolCounts:
+  Bash: 14
+  Read: 1
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: About gating and merging PRs; this session opened no PR
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log this question-only session via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: About landing changes as PRs; no change was made
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: About provenance on GitHub writes; no GitHub write happened
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading GLOSSARY.md; glossary layout was irrelevant to the question
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading Skills; confirmed where Skills live, nothing more needed
+    useful: partly
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded via blog-post; pingback rules irrelevant to judging clarity
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Confirmed prune-trial plain rewrites exist, which framed the cleaned-up check; summary was enough
+    useful: yes
+gitBranch: ccr-97e57c38-pvk96r
+entrypoint: remote_mobile
+cliVersion: 2.1.304
+ideas:
+  - Let prune-trial's plain-rewrite mode target frictions-to-fixes next, merging its ledger rules (sections 1, 5, 7, 8) into one Ledger section with a single lifecycle table.
+landedBy: Stop
