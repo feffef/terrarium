@@ -307,13 +307,12 @@ observations:
   - date: "2026-10-20"
     note: >-
       Self-check (audit-skills behaviour check): 9/9 usedIn sessions verified,
-      issues #1479 and #1626 (step-12 reply-decision skip pattern) both
-      reconfirmed closed/fixed, not recurred. New, not yet escalated: today's
-      session (session_01XTdRbnDg1n2j2ZqjTrwCLi) logged skipping the
-      code-review Skill before its first push, treating the fact-check as the
-      review instead — self-identified in its own friction as a repeat of
-      earlier blog-post runs' behavior, an ADR-0004 gate-compliance gap this
-      Skill doesn't currently route around. Below this run's escalation bar (no
-      prior observation yet records the pattern, so not yet "repeated" by this
+      no new silent failure. New, not yet escalated: today's session
+      (session_01XTdRbnDg1n2j2ZqjTrwCLi) logged skipping the code-review Skill
+      before its first push, treating the fact-check as the review instead —
+      self-identified in its own friction as a repeat of earlier blog-post
+      runs' behavior, an ADR-0004 gate-compliance gap this Skill doesn't
+      currently route around. Below this run's escalation bar (no prior
+      observation yet records the pattern, so not yet "repeated" by this
       Inventory's own definition) — flagged here so a second instance clears
       it. Grade/role unchanged.

@@ -11,19 +11,14 @@ role: >-
 observations:
   - date: "2026-10-20"
     note: >-
-      Coverage gap: created by commit 181976173 (2026-10-19T11:04:39Z,
-      PR #2287/#2146, moving CLAUDE.md's "find binding ADRs" instruction into
-      a Skill), used but had no Inventory entry until now. First
-      `audit-skills` behaviour check: 9/10 usedIn sessions delivered as
-      promised, independently verified against live GitHub/git; 151/154
-      windowNotUsed sessions ruled out categorically (predate the Skill's
-      existence), the other 3 correctly out of scope. One verified silent
-      failure, already tracked: session_01AwaGncaYJFWdJnc6yqDoTS found a
-      `clear-backlog-explore` triage agent piping `binding.ts` through
-      `tail -30` before deciding which ADRs to read in full, defeating
-      step 1's "read every related summary" promise. Owner's own
-      pre-scheduled review, issue #2286 (on hold until 2026-10-22), already
-      has a comment from that same session recording this exact finding plus
-      two candidate fixes — no new comment or issue needed. Graded `essential`
-      on creation: it stands in for a mandatory, broad CLAUDE.md step, not a
-      narrow specialist tool.
+      Coverage gap: created by commit 181976173 (2026-10-19, PR #2287/#2146),
+      used but had no Inventory entry until now. First `audit-skills`
+      behaviour check: 9/10 usedIn sessions delivered as promised, 151/154
+      windowNotUsed sessions predate the Skill's existence, the other 3
+      correctly out of scope. One verified silent failure, already tracked:
+      session_01AwaGncaYJFWdJnc6yqDoTS found a `clear-backlog-explore` triage
+      agent piping `binding.ts` through `tail -30`, defeating step 1's "read
+      every related summary" promise. Already fully recorded on open issue
+      #2286 (owner's own review, on hold until 2026-10-22) — no new comment
+      needed. Graded `essential`: stands in for a mandatory, broad CLAUDE.md
+      step.
