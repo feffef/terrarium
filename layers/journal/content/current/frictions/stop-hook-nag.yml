@@ -340,3 +340,23 @@ occurrences:
     severity: nit
     description: "Stop hook asked to push twice while the gate and review ADR-0004 requires were still running."
     solution: "Let the hook stay quiet while a background gate runs."
+  - session: session_011G3PKUqDog2WRSuqypmuJX
+    date: "2026-10-20"
+    severity: nit
+    description: "Stop hook asked three times to commit and push while gate and fact-check were still running, against ADR-0004 order."
+    solution: "Have the hook skip the nag while a background gate is running."
+  - session: session_01Uq2Kx5jumw8Va6DETgxNV8
+    date: "2026-10-20"
+    severity: nit
+    description: "The Stop hook asked to push twice while the ledger gate and impl agents were still running and the skill said not to push before the gate."
+    solution: "None; accepted stop-hook-nag cluster."
+  - session: session_01R6bzvTEBJCmagf7BbWfBqG
+    date: "2026-10-20"
+    severity: nit
+    description: "Stop hook asked to push an unpushed commit while the background gate was still running."
+    solution: "Declined until the gate was green, per ADR-0004; the hook could skip while a gate log is still open."
+  - session: session_016zEtXv32CmX793LgZvt7Hm
+    date: "2026-10-20"
+    severity: minor
+    description: "The Stop hook asked me twice to push before the gate and probe finished; I held the push per ADR-0004."
+    solution: "Stop hook could skip the nag while a background gate or subagent runs."

@@ -40,3 +40,8 @@ occurrences:
     severity: nit
     description: "The first probe subagent brief said use no other tools and did not ask for the per-rule verdicts or a scratchpad subfolder that CLAUDE.md requires of every subagent brief."
     solution: "Put the CLAUDE.md subagent-brief lines in a reusable snippet or a dispatch-subagents checklist so a one-off probe still carries them."
+  - session: session_01XWMuHGcaNTvRPHfYb9T7z2
+    date: "2026-10-19"
+    severity: nit
+    description: "First Explore brief omitted the CLAUDE.md line about a per-subagent scratchpad subfolder (it wrote nothing, so no harm)"
+    solution: "Keep a brief template with the verdict and scratchpad lines"

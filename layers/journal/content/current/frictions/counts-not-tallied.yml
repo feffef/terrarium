@@ -31,3 +31,8 @@ occurrences:
     severity: minor
     description: "Quoted survey regression counts (28, 20, 10) in three issues before the ledger patch was applied; the schema-deduped counts were 26, 19, 6, so issues needed correction comments."
     solution: "File regression issues after the ledger edit is applied, or have the Skill say to quote counts from --summary run on the patched ledger."
+  - session: session_016zEtXv32CmX793LgZvt7Hm
+    date: "2026-10-20"
+    severity: nit
+    description: "My first ledger draft gave section line counts taken from diff hunks, not read from the file; both reviewers caught it."
+    solution: "Count with the file in hand before writing a number."

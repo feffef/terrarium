@@ -9,6 +9,9 @@ fixes:
   - pr: 2154
     date: "2026-10-16"
     summary: "The survey commits its own ledger changes, built with ledger-occurrence.ts, instead of handing an impl agent a patch."
+  - pr: 2297
+    date: "2026-10-19"
+    summary: "The gate now fails a prune-trial whose territory paths or keywords are not strings, such as an unquoted entry YAML reads as a mapping."
 occurrences:
   - session: session_0147UencKKZS3WLHvsbgywp7
     date: "2026-10-15"
@@ -35,3 +38,8 @@ occurrences:
     severity: minor
     description: "Used yaml's parseDocument(...).toString({lineWidth: 0}) to append new observation entries to 10 existing Skill Inventory YAML files. This collapsed every pre-existing multi-line block-scalar note onto one line, producing a ~2900-line unrelated reformatting diff across all 10 files instead of the intended ~10-line additions. Caught before committing by running `git diff --stat` as a sanity check, not by any guard. Reverted all 10 files with `git checkout --` and redid the same appends with plain-text Edit calls matching the files' existing ~79-column wrap style, which worked cleanly."
     solution: "For an existing file with human-style prose wrapping, append via plain-text Edit matching the surrounding wrap width instead of parse-and-restringify with the yaml package."
+  - session: session_0115DiEWEHCxV2UhwYf636YG
+    date: "2026-10-20"
+    severity: minor
+    description: "New observation YAML with colons in unquoted notes failed validate-content-schema in gate:scoped, costing a full gate cycle."
+    solution: "atlas-specimen §5 example should say to quote notes that contain colons."

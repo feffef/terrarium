@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Sessions read governed files with cat, sed or chained Bash instead of the Read tool, so path rules did not load; PR #1775's Bash rules hint now loads them but sessions still break the CLAUDE.md rule; the harness auto-mode message that tells agents to prefer Bash also contributes (sessions 01V3bxJa, 01BLrfuH).
 surface: safe
-status: on-trial
-ref: "Prune Trial opened 2026-10-16 by PR #2168 (territory: CLAUDE.md Read-tool bullet, ADR-0029 Scope bullet; keywords 'Read tool', 'not `cat`'); regression issue #2145; issue #2167 revisits the Bash rules hint around 2026-10-23."
+status: tracked
+ref: "issue #2145 (regression after #1946) is open; issue #2167 revisits the Bash rules hint around 2026-10-23. The Read-tool Prune Trial (PR #2168) was judged and deleted on 2026-10-20 (PR #2324): the prune holds."
 fixes:
   - pr: 1775
     date: "2026-10-11"
@@ -464,3 +464,8 @@ occurrences:
     severity: nit
     description: "Read verifying-ui-changes.md and ran greps through Bash (grep, sed) instead of the Read and Grep tools, against the tool guidance."
     solution: "Use Read with offset/limit and Grep for repo files."
+  - session: session_012f7o6FcYxq1MWxvsdgKS6m
+    date: "2026-10-20"
+    severity: nit
+    description: "Subagents reported the read-first hint for github-integration.md kept firing after they had read it with cat (hint counts only Read-tool reads)."
+    solution: "Let the read-first hint count shell reads the trace already detects."

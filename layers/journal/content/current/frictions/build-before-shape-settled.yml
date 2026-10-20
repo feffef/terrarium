@@ -2,8 +2,8 @@ name: build-before-shape-settled
 summary: The main agent started builds or a many-agent fan-out before the design was settled, and the work had to be redone.
 cause: Orchestrator briefs build or polish agents (1947 subagent-verdict UI; 20 Glass Box polish agents) before asking the owner or fixing the shape, forcing a redesign PR or a second polish pass. dispatch-subagents SKILL.md line 12 says to settle choices with grilling first.
 surface: safe
-status: tracked
-ref: "issue #2264"
+status: open
+ref: "issue #2264 closed by PR #2272"
 fixes:
   - pr: 2213
     date: "2026-10-17"

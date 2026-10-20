@@ -45,3 +45,18 @@ occurrences:
     severity: nit
     description: "I first wrote the PR 2221 body saying the second-reader step was skipped, then ran it; the body had to be rewritten."
     solution: "Run step 12's second reader before opening the PR, as the Skill orders."
+  - session: session_01AwaGncaYJFWdJnc6yqDoTS
+    date: "2026-10-19"
+    severity: nit
+    description: "My first wording for adr-check step 2 was stricter than ADR-0027 and would have blocked an allowed repoint; the Spec review caught it."
+    solution: "Quote the ADR's own verbs when restating its duty in a Skill."
+  - session: session_01BTtvaFQckiQwtGZsasWPJH
+    date: "2026-10-19"
+    severity: nit
+    description: "The first #2233 commit used Closes, which would have closed the issue as completed instead of not planned, and its ref claimed the issue was already closed; the Spec review caught both."
+    solution: "Use a closing keyword only when completed is the right reason; otherwise close by hand."
+  - session: session_01FTPnEsW1XNhaqYFdxaE24v
+    date: "2026-10-20"
+    severity: minor
+    description: "First rewrite pass dropped several pointers and why-clauses and a no-argument default while claiming every rule kept; the spec review caught them."
+    solution: "Before committing a whole-file rewrite, diff an old-vs-new rule checklist myself rather than relying on review to find losses."

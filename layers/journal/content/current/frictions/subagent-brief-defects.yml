@@ -4,12 +4,18 @@ summary: >-
 cause: >-
   Orchestrators write briefs from memory: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value restated wrongly, a check grepping output that lists only failures. The agent runs on the bad brief before anyone notices. Signals: "brief", "placeholder", "path did not exist".
 surface: safe
-status: tracked
-ref: "Regression issue #2312 (PR #2150 did not hold)."
+status: on-trial
+ref: "Prune Trial opened 2026-10-20 by PR #2324 (territory: dispatch-subagents SKILL.md section 3; keywords 'subagent brief', 'stranded'); regression issue #2312 closed by PR #2318."
 fixes:
   - pr: 2150
     date: "2026-10-16"
     summary: dispatch-subagents §3 now says to re-read a brief before dispatch (placeholders filled, paths existing, values copied from source).
+  - pr: 2318
+    date: "2026-10-20"
+    summary: "The frictions-to-fixes impl brief now names a scratch folder to write to, and audit-skills asks for session ids instead of a count."
+  - pr: 2324
+    date: "2026-10-20"
+    summary: "dispatch-subagents section 3 (Write the brief) cut to the rule per line, with one line added to create each agent artifact folder first (a Prune Trial)."
 occurrences:
   - session: session_011JKK8rrCwea3xSmL4kw6si
     date: "2026-10-14"
@@ -86,3 +92,8 @@ occurrences:
     severity: nit
     description: "The first two recipe runs wrote their output to .throwaway rather than a scratchpad subfolder named for each subagent, as CLAUDE.md asks."
     solution: "Put the OUT folder under the scratchpad, named per subagent, in every brief."
+  - session: session_01WxHaU21bCG18GRezDo4Yfe
+    date: "2026-10-19"
+    severity: nit
+    description: "The #2262 triage brief told the builder to dispatch a probe subagent, which a workflow agent may not be able to do; I ran the probe myself"
+    solution: "clear-backlog-explore triage could note when a fact needs the orchestrator to gather it"

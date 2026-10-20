@@ -30,3 +30,8 @@ occurrences:
     severity: nit
     description: "Workflow results are nested JSON in .output files, so reading them took a one-off node script each time."
     solution: "A small script that prints a clear-backlog run's results (outcome, question, decisions, judgement calls) from the .output file."
+  - session: session_01BTtvaFQckiQwtGZsasWPJH
+    date: "2026-10-19"
+    severity: minor
+    description: "Both clear-backlog workflows return 57-88 KB that the tool result truncates; I hand-wrote node -e parsers three times, for triage results, build statuses and the log's merged verdicts, and shell quoting broke one."
+    solution: "A clear-backlog run-summary.ts with --triage, --build and --verdicts modes that the Skill names in sections 1, 3 and 4."

@@ -54,3 +54,8 @@ occurrences:
     severity: minor
     description: "survey-brief says to append every friction but --unledgered drops sessions, and --summary counts regressions by date, so same-day post-fix sessions were missed and needed hand checking."
     solution: "Count regressions by session start in --summary; name a per-cluster dedupe step in the brief."
+  - session: session_01Uq2Kx5jumw8Va6DETgxNV8
+    date: "2026-10-20"
+    severity: minor
+    description: "The survey subagent's ledger commit and --unledgered/--summary date-only counting made same-day post-fix sessions invisible; it counted them by hand."
+    solution: "Make --summary compare session start time to the fix's merged_at, not dates."

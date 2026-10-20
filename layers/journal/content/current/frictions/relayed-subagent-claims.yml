@@ -61,3 +61,8 @@ occurrences:
     severity: nit
     description: "Stated the source session's 48-file empirical claim in the issue without re-verifying it, against 'Verify before you state'; attributed it instead."
     solution: "Attribute second-hand counts explicitly, as done, or spot-check one file before filing."
+  - session: session_012f7o6FcYxq1MWxvsdgKS6m
+    date: "2026-10-20"
+    severity: moderate
+    description: "First-round picks relayed the triage agents' claims (e.g. #2310 all trailing ampersand, #2312 one repo-caused case) that a session check then overturned on all three issues."
+    solution: "clear-backlog §2 could have the main session check a regression issue's cited sessions with inspect-session before grilling, not only on owner request."

@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Sessions combine run_in_background: true with a trailing & or nohup, and the double-background guard denies it.
 surface: guard-or-hook
-status: tracked
-ref: "Regression issue #2310 (PR #2172 did not hold)."
+status: accepted
+ref: "issue #2310 closed not planned on 2026-10-20: the owner accepts the cost. Every slip was a deliberate background attempt that cost one retry, and a trailing-only rewrite would miss a mid-command &."
 fixes:
   - pr: 2172
     date: "2026-10-16"
@@ -91,3 +91,13 @@ occurrences:
     severity: nit
     description: "First attempt to background `pnpm gate:scoped` chained `mkdir -p ... && nohup pnpm gate:scoped ... &` inside one Bash call with run_in_background:true. The double-background guard (issue #1208) correctly refused it, and its \"nothing in this call ran\" meant the mkdir never executed either, so the immediate retry's log redirect failed once more before I ran mkdir on its own first."
     solution: "Run mkdir -p as its own call before a backgrounded command that redirects into a new directory."
+  - session: session_012XnetQuxWoyaVFYw1BqMoy
+    date: "2026-10-20"
+    severity: nit
+    description: "Tried a foreground sleep to wait for agents, then a run_in_background command that also used a trailing ampersand; both were blocked by guards."
+    solution: "The tool descriptions already say not to; waiting for agent notifications needs no polling."
+  - session: session_016zEtXv32CmX793LgZvt7Hm
+    date: "2026-10-20"
+    severity: nit
+    description: "First gate run combined run_in_background with a text-level ampersand; the double-background guard denied it and nothing ran."
+    solution: "Pass run_in_background alone with a plain command."

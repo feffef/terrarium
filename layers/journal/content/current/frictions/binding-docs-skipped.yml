@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   CLAUDE.md's read-first rules are prose, and nothing hooks the session-start GLOSSARY.md reads, full-ADR reads or the ADR grep before a recommendation. A late read of a step-triggered doc (git-conventions.md, github-integration.md and the like) belongs to late-read-first-docs, which the owner accepted.
 surface: guard-or-hook
-status: tracked
-ref: "issue #2146: the owner decides whether these need a new mechanism; its accepted late reads and PRs #1793/#2066 moved to late-read-first-docs"
+status: open
+ref: "issue #2146 closed by PR #2284 (adr-check Skill); issue #2286 reviews adr-check around 2026-10-22; PR #2287 trimmed its output. Sessions after #2284 still skipped adr-check (012f7o6F, 017X5SQq, 01FTPnEs). Late reads of step-triggered docs belong to late-read-first-docs."
 fixes:
   - pr: 2165
     date: "2026-10-16"
@@ -439,3 +439,23 @@ occurrences:
     severity: nit
     description: "Read GLOSSARY-MAP.md and GLOSSARY.md via cat piped to head -300, which cut GLOSSARY.md short, so the session-start glossary read was incomplete"
     solution: "Read the glossary files whole with the Read tool, not a capped pipe"
+  - session: session_017X5SQqh4JtkECD69pftATE
+    date: "2026-10-20"
+    severity: nit
+    description: "Skipped the session-start GLOSSARY-MAP.md and GLOSSARY.md reads CLAUDE.md requires; no wrong term resulted in this answer-only session"
+    solution: "Read both in the first batch of tool calls; a SessionStart hint could name them"
+  - session: session_01FTPnEsW1XNhaqYFdxaE24v
+    date: "2026-10-20"
+    severity: nit
+    description: "Ran git log to draw conclusions before reading docs/agents/git-conventions.md, and skipped the full GLOSSARY read at session start."
+    solution: "Read-only question sessions still trigger the read-first list; the hint fired late but was right."
+  - session: session_012f7o6FcYxq1MWxvsdgKS6m
+    date: "2026-10-20"
+    severity: minor
+    description: "Recommended changes in the grilling rounds without invoking the adr-check Skill, which CLAUDE.md requires before any recommendation."
+    solution: "clear-backlog §2 could name adr-check before the main session revises a triage agent's pick; the triage agents had run it, so the gap was only in my revisions."
+  - session: session_01WxHaU21bCG18GRezDo4Yfe
+    date: "2026-10-19"
+    severity: minor
+    description: "In the #2264 grilling I framed the choice as hook vs explore-brief line and missed that a path-scoped rule (ADR-0029) fits; the owner had to point it out"
+    solution: "Before offering a mechanism, check ADR-0029 for whether a path-scoped rule fits"

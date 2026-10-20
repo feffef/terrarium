@@ -39,3 +39,8 @@ occurrences:
     severity: minor
     description: "Added two CLAUDE.md lines for the 0020/0027 split that the owner had not asked for; the owner interrupted and I reverted them"
     solution: "When a split implies a CLAUDE.md change, ask before editing CLAUDE.md, since it loads in every session"
+  - session: session_012f7o6FcYxq1MWxvsdgKS6m
+    date: "2026-10-20"
+    severity: moderate
+    description: "I recommended and built #2319's prose-only review skip without weighing that review catches errors in instructions; the owner reversed it the same day, costing a revert and a second ADR PR."
+    solution: "When a change removes a review step, ask what kinds of defect that step catches in the files it would skip before recommending it."

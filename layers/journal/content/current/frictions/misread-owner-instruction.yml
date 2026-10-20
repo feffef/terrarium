@@ -16,3 +16,8 @@ occurrences:
     severity: minor
     description: "Read 'link the concepts' as 'link the pages'; it took two more owner prompts to land on explaining both concepts with links"
     solution: "Ask one clarifying question when a short instruction has two readings"
+  - session: session_011W3gVNQAR433FiJcPAAEDK
+    date: "2026-10-20"
+    severity: moderate
+    description: "Chose 'last N days' = today minus N (N+1 dates) to match the prune horizon instead of the plain reading; the owner had to correct it after merge, costing a follow-up PR."
+    solution: "When a boundary convention is ambiguous and the user prefers questions, ask before building or at least before merging, rather than flagging it afterwards."
