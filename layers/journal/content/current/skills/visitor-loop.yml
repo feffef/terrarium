@@ -405,3 +405,16 @@ observations:
       their own line, no batching. Worth one more live cycle before fully
       retiring the watch-item. No new silent failure. Grade/role unchanged
       (routine).
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): 8/8 usedIn verified against
+      live GitHub/git. CLOSING a long-tracked watch item: the owner-memory
+      batching bug (#1452→...→#2229, fixed by PR #2241) has now passed two
+      consecutive live tests — PR #2255 (trivial, unbatched) and PR #2303
+      (2026-10-19), which genuinely stress-tested the batched-line case the bug
+      lived in (8 PR numbers on one "not a ruling" line, all correctly
+      credited, verified against the live unresolved() code and each cited PR).
+      No further watching needed on this item. Non-escalated note: SKILL.md's
+      "paste the tally into the fix PR" requirement (§5) has no equivalent for
+      a feature-only PR (§6) — worth flagging if the Skill is next revised. No
+      reverts found. Grade/role unchanged.

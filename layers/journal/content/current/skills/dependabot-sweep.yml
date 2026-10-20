@@ -1,0 +1,18 @@
+name: dependabot-sweep
+category: platform-operation
+importance: routine
+gist: Reviews every open Dependabot PR daily; merges safe bumps, triages the rest.
+role: >-
+  A scheduled daily sweep (user-invoked only, model-invocation disabled) over
+  every open Dependabot PR: merges a safe minor/patch bump itself, leaves a
+  major for a human with a written risk/benefit case, and opens or comments on
+  a `needs-triage` issue either way. Opens no branch, edits no file.
+observations:
+  - date: "2026-10-20"
+    note: >-
+      Coverage gap: brand new, first used 2026-10-19 (session_01FPzSKyY66o24rfLL8SJFxw,
+      1 occurrence, allTimeUses: 1), no Inventory entry until now. Not yet
+      behaviour-checked by this run (only 1 use, and not in this week's
+      `behaviourChecks` list) — no verification performed, grade/role set from
+      the SKILL.md text alone. Worth a real behaviour check once it has run a
+      few more times.

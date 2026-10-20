@@ -114,3 +114,14 @@ observations:
       found. Known historical failures (#1840 unreviewed self-merge, a
       skipped explore pass) stay fixed. No new silent failure. Grade/role
       unchanged (specialist).
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): issue #2232's fix (PR #2240,
+      cut the hook/guard-wiring exclusion from §1) CONFIRMED HOLDING on its
+      first real test — the next 16-issue sweep
+      (session_01BTtvaFQckiQwtGZsasWPJH) correctly auto-included a hook-wiring
+      issue (#2233) with no owner intervention, unlike every prior occurrence.
+      9 PRs and 2 issues cross-checked live, no reverts in the 2-week sweep.
+      One near-miss, not a failure: a run forgot to relabel 2 owner-approved
+      issues ready-for-agent before building, caught by merge-pr.ts's own guard
+      before any bad merge. Grade/role unchanged (specialist).

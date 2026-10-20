@@ -1,0 +1,24 @@
+name: inspect-session
+category: platform-operation
+importance: specialist
+gist: Answers what another Claude session did, read or failed, at the lowest cost to the asking session's own context.
+role: >-
+  The model-facing front door for reading another session's events
+  (`list_events`/`get_event`): answers from the session's log and cheap reads
+  first, then dispatches a subagent to search the raw events so they never
+  enter the asking session's own context. Essential whenever a session must
+  inspect a sibling's history, rare otherwise.
+observations:
+  - date: "2026-10-20"
+    note: >-
+      Coverage gap: on disk, used twice this window (allTimeUses: 2), no
+      Inventory entry until now. Not yet independently behaviour-checked by
+      this run's own subagent fan-out (not in this week's `behaviourChecks`
+      list), but two of its own uses are informative: session_01CBVi4qZ2RqPhfHeHPYrkwD
+      ran a full read of a 58-minute session and filed issue #2306 against
+      inspect-session itself (fragile fetcher page paths, a costly full read
+      for short sessions, no selector for a session's own replies) — closed
+      via merged PR #2307 the same day (session_01MeatWCLdQDV2rWVNHumqX7),
+      independently confirmed merged in this run's close-session behaviour
+      check. Graded `specialist` on creation: essential within its own narrow
+      job (inspecting a sibling session), not reached for day-to-day.

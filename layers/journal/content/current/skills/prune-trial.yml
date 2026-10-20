@@ -388,3 +388,16 @@ observations:
       human merge (confirmed via the real merge commit's human author),
       honest frictions logged. No reverts of any judged trial verdict in
       the 2-week sweep. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): 8/8 usedIn verified, all 4
+      Human-only-touching PRs this window (#2168/#2223/#2252/#2299) confirmed
+      merged_by the real human owner (feffef), none self-merged. #1526/#1565's
+      unattended-hook-writing fix still holding. One near-miss illustrating the
+      mechanism working as designed, not a failure:
+      session_01BTtvaFQckiQwtGZsasWPJH logged a moderate friction about stale
+      pr-workflow.md Dependabot text inside the open pr-workflow.md trial's
+      territory, correctly left untouched per ADR-0027 rather than reworded,
+      and correctly judged outside that trial's own narrower damage-check scope
+      when the trial was later judged clean. No reverts found. Grade/role
+      unchanged.

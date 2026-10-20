@@ -326,3 +326,15 @@ observations:
       sessions and the revert sweep stayed clean. Grade/role unchanged
       (routine) - this is a shared-script mechanism bug, not audit-docs's
       own design.
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): all 10 usedIn sessions
+      re-verified against live GitHub, 2 freshly end-to-end (PR #2268, #2237),
+      8 via the corroborated trail. Issue #2262 (save-handback.ts regression,
+      the Ledger's findings-retyped-by-hand cluster) confirmed CLOSED via
+      merged PR #2269 — the fix itself read directly and correct (extracts a
+      SubagentHandback tool call's input.message). But no usedIn session has
+      run since the 2026-10-19T06:25:04Z merge, so the fix is still untested
+      live after 4 prior fix attempts that each broke on first real use. Next
+      run should confirm it held. No new silent failure, no reverts found.
+      Grade/role unchanged (routine).
