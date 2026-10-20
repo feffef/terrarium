@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FTPnEsW1XNhaqYFdxaE24v
 startedAt: 2026-10-20T17:45:58Z
-endedAt: 2026-10-20T18:02:06Z
+endedAt: 2026-10-20T18:04:07Z
 kind: interactive
 goal: Compare the routine Skills for clarity, then rewrite frictions-to-fixes plainly
-status: in-review
-outcome: "frictions-to-fixes rewritten one section per step as a Prune Trial; PR #2330 open"
-summary: "Human-instructed throughout. First a question: which routine Skill reads worst and which is cleanest; answered frictions-to-fixes and audit-skills after reading all seven. The user then asked for frictions-to-fixes to be rewritten in plain language, each step as a goal paragraph, instructions with script and subagent calls, and edge cases, keeping its logic. Before building I asked three questions (what the typo \"sjioo calls\" meant, SKILL.md only or briefs too, Prune Trial or plain PR); the user chose script calls or subagents, SKILL.md only, and a Prune Trial. Agent-initiated within that ask: an overview of the run's three PR kinds, keeping section numbers for guest-build's pointers, and the trial's check text. A Sonnet probe pinned to the first commit answered eight scenarios correctly; code-review (Standards and Spec) found dropped pointers and why-clauses, cap exemptions away from the cap, escalation steps filed as edge cases and a lost no-argument pick default, all fixed in a second commit. Open: no step defines when a fix PR is abandoned (the old text had the same gap)."
+status: completed
+outcome: "frictions-to-fixes rewritten one section per step as a Prune Trial; PR #2330 merged"
+summary: "Human-instructed throughout. First a question: which routine Skill reads worst and which is cleanest; answered frictions-to-fixes and audit-skills after reading all seven. The user then asked for frictions-to-fixes to be rewritten in plain language, each step as a goal paragraph, instructions with script and subagent calls, and edge cases, keeping its logic. Before building I asked three questions (what the typo \"sjioo calls\" meant, SKILL.md only or briefs too, Prune Trial or plain PR); the user chose script calls or subagents, SKILL.md only, and a Prune Trial. Agent-initiated within that ask: an overview of the run's three PR kinds, keeping section numbers for guest-build's pointers, and the trial's check text. A Sonnet probe pinned to the first commit answered eight scenarios correctly; code-review (Standards and Spec) found dropped pointers and why-clauses, cap exemptions away from the cap, escalation steps filed as edge cases and a lost no-argument pick default, all fixed in a second commit. Open: no step defines when a fix PR is abandoned (the old text had the same gap). PR #2330 merged on a green gate via merge-pr.ts."
 prs:
   - "2330"
 docsRead:
@@ -93,11 +93,11 @@ frictions:
   - description: First rewrite pass dropped several pointers and why-clauses and a no-argument default while claiming every rule kept; the spec review caught them.
     solution: Before committing a whole-file rewrite, diff an old-vs-new rule checklist myself rather than relying on review to find losses.
     severity: minor
-durationSec: 968
+durationSec: 1090
 models:
-  claude-opus-5-5: 104
+  claude-opus-5-5: 120
 toolCounts:
-  Bash: 41
+  Bash: 46
   Read: 1
   Skill: 5
   AskUserQuestion: 1
@@ -109,6 +109,9 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
 rulesLoaded:
