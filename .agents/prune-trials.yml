@@ -23,79 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      `close-session` SKILL.md rewritten plainly, 59 lines to 40 (-19): the
-      three logging conditions and the PR-open sequence cut to one goal-shaped
-      paragraph and a numbered list, every rule kept (re-read, log, re-invoke,
-      HUMAN-PROMPTED-CLOSURE, no worktree self-invoke). The rule failed as prose:
-      skipped after PR #1821 (#1859) and after the hint of PR #1868 (#2023, both
-      read in full via the search subagent). `read-first-hint.ts` now holds the
-      PR-open invocation, not the re-invocation. The subagent covered the
-      instruction corpus (not the Journal) and the tracker; runners-up: the
-      read-first triggers in CLAUDE.md (#1754, held by the same hint) and the
-      restart-after-merge paragraph in pr-workflow.md (held by
-      `stale-info-hint.ts`). The mass here was small. No trial was judgeable.
-    territory:
-      paths:
-        - ".agents/skills/close-session/SKILL.md (all of it)"
-        - ".agents/skills/blog-post/SKILL.md: the `Done when` line near the end"
-      keywords:
-        - HUMAN-PROMPTED-CLOSURE
-        - logging duty
-    opened: 2026-10-15
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session ended with its log
-      missing or left at `in-review` after the work landed, or reran close-session
-      without the always-loaded re-read, and a line the old Skill carried would have
-      prevented it. NOT damage: the read-first hint firing, or a session that
-      logs `HUMAN-PROMPTED-CLOSURE` correctly.
-  - problem: >
-      The two background-guard headers (`subagent-background-guard.ts`,
-      `double-background-guard.ts`) cut to the rule, the issue pointers and
-      `docs/agents/guards.md` (-34, comments only; no code changed). Chosen after
-      the search subagent covered the instruction corpus, guard headers and the
-      tracker: the rule failed as prose (#694, #964, #1208) and the guards now
-      hold it. Runners-up: provenance header (overlaps the github-integration
-      trial's territory), read-first triggers (overlaps the close-session trial).
-      Same run judged and deleted the github-integration trial: only nit/minor
-      Frictions. The mass here was small.
-    territory:
-      paths:
-        - "scripts/hooks/subagent-background-guard.ts: header and hasBackgroundOperator comment"
-        - "scripts/hooks/double-background-guard.ts: header"
-      keywords:
-        - double-background
-        - subagent background guard
-    opened: 2026-10-17
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session or subagent
-      backgrounded a command, stalled waiting on it, or reported a double-
-      backgrounded run as finished, and the cut header text would have prevented
-      it. NOT damage: a guard denying and the session fixing itself.
-  - problem: >
-      The `github-provenance-guard.ts` header and doc comments cut to the rule,
-      the findings, the issue pointers and the fail-open list (-89, comments only;
-      no code changed). Chosen after the search subagent covered the instruction
-      corpus, guard headers and the tracker: the rule failed as prose five times
-      (#387, #605, #628, #723, #788; #628 and #737 read in full) and the guard now
-      holds it. Runners-up: deferred-tool guard header (#612), workflow-edit guard
-      header (#897). The four open trials were not judgeable (landings
-      2026-10-16 to 10-18; window script run this run).
-    territory:
-      paths:
-        - "scripts/hooks/github-provenance-guard.ts: header and doc comments"
-      keywords:
-        - provenance guard
-        - fabricated session id
-    opened: 2026-10-18
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session posted a wrong or
-      fabricated session id, or a body the guard let through, and the cut header
-      text would have prevented it. NOT damage: the guard denying and the session
-      fixing itself from its message.
-  - problem: >
       The `deferred-tool-guard.ts` header and doc comments cut to the rule, the
       issue pointers (#612, #724) and a pointer to `docs/agents/guards.md`
       (-55, comments only; no code changed, its unit test passes). Chosen after
@@ -220,3 +147,29 @@ trials:
       would have surfaced. NOT damage: a reviewer or checker finding that is
       simply wrong, a branch clash over the escalation PR, or a second
       escalation PR beside an open one.
+  - problem: >
+      `docs/agents/github-integration.md` "Overflow and precision traps" search
+      bullets tightened to the goal (-4 net): the `fields`
+      rule now lives in `github-search-fields-guard.ts`' deny message, which the
+      doc only points to. Chosen after the search subagent covered the
+      instruction corpus, guard headers and the tracker: the rule failed as prose
+      (#1860, again #2210; #1860 read in full) and the guard holds it. Runners-up:
+      Stop-hook inherited-commits advice in `git-conventions.md` (#2233, nothing
+      in the repo enforces it), "Verify before you state" in CLAUDE.md (#2341, too
+      fresh). Same run judged and deleted the close-session, background-guard and
+      provenance-guard trials: only nit/minor Frictions (#2363's close-session
+      recurrences trace to the read-first hint being deferred, not to cut text).
+      The mass here was small.
+    territory:
+      paths:
+        - "docs/agents/github-integration.md: the 'Overflow and precision traps' search bullets"
+      keywords:
+        - search_issues fields
+        - search_pull_requests
+    opened: 2026-10-21
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session flooded its context
+      with a search or list result, or asserted "nothing exists" from an empty
+      search, and the cut text would have prevented it. NOT damage: the fields
+      guard denying and the session fixing itself from its message.

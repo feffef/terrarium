@@ -62,24 +62,20 @@ like this:
 
 Large results overflow your context. Keep them small and read every hit.
 
-- **Prefer a repo-scoped listing to `search_*`.** Searching is the fragile path:
-  the `search_*` tools return a 403 rate limit after a few sequential calls, and
-  the proxy blocks GitHub's `search/issues` for scripts. Use `list_issues`,
-  `list_pull_requests` or `pnpm exec tsx scripts/github/list-open-issues.ts` and filter
-  locally. If a search is unavoidable and returns 403, wait a minute and retry
-  once, sequentially. Always scope a search (state, label, keyword): a broad
-  query overflows too. A guard requires `fields` on `search_issues` and
-  `search_pull_requests`; its message says what to pass.
+- **Prefer a repo-scoped listing to `search_*`.** Search 403s after a few
+  sequential calls, and the proxy blocks `search/issues` for scripts. Use
+  `list_issues`, `list_pull_requests` or
+  `pnpm exec tsx scripts/github/list-open-issues.ts` and filter locally. If you
+  must search, scope it (state, label, a quoted identifier such as a session id
+  or exact error string), run it alone, and on a 403 retry once after a minute.
+  `search_pull_requests` needs explicit `owner` and `repo`, or it searches all of
+  GitHub. A guard demands `fields` on both search tools and says what to pass.
 - **`list_issues` and `list_pull_requests` have no `minimal_output`.** Pass
   `fields` that omit `body` (and `field_values`/`labels` on `list_issues`), use a
   small `perPage` (5-10), and page through open and closed/merged.
-- **`search_pull_requests` needs explicit `owner` and `repo`;** without them it
-  searches all of GitHub.
 - **A search result is not proof.** Matching is fuzzy even for a quoted phrase,
   so read every hit. `total_count: 0` can miss a real hit: before you assert
-  "nothing exists," cross-check with a narrow `list_*` scan. Quote an identifier
-  (session id, issue number as text, exact error string); an unquoted query can
-  overflow.
+  "nothing exists," cross-check with a narrow `list_*` scan.
 - **`issue_read` / `pull_request_read` bodies are HTML-entity-encoded**
   (`&amp;`, `&#34;`, `&lt;`). Decode before you quote or parse them.
 - **Three calls return huge output.** `actions_list` returns full run objects
