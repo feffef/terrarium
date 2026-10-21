@@ -427,3 +427,13 @@ observations:
       previously escalated issues #1515/#1721/#1912/#2229 all independently
       reconfirmed closed via real merged fixes, none reopened. No reverts
       beyond the already-tracked cases. Grade/role unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Filed #2369 (verified, repeated): the owner removed the session-log
+      explainer (built 10-15, session_019e468BFBTvDPXZuGzLMAL7, #2092) and
+      the Glass Box Try it page (session_01CXxyUmwkN3Rx5DTSK2s391, #2226;
+      sidebar from session_01Ai3w5epHj4PWgBC8XSoEwz, #2255) in a2127e01d on
+      10-18, recording both in decisions.md. Owner memory worked after the
+      fact; nothing predicted the rejection. Hypothesis only: picks are
+      filtered by decisions.md lines written after a rejection. Other 5 runs
+      clean. Grade/role unchanged (routine).

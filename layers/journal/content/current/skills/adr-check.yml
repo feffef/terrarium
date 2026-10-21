@@ -42,3 +42,14 @@ observations:
       already names. Commented both onto #2286 with full session evidence.
       10/10 newest invocations otherwise delivered cleanly (no mechanics
       failure). Grade/role unchanged (essential) pending #2286's decision.
+  - date: "2026-10-21"
+    note: >-
+      Behaviour check: 10/10 newest invocations delivered. Corrected the
+      earlier entry and the #2286 comment: session_012XnetQuxWoyaVFYw1BqMoy
+      (audit-docs) did read adr-check's SKILL.md and all 30 ADRs, so it is
+      not a silent skip; the other three scheduled sessions
+      (session_016zEtXv32CmX793LgZvt7Hm, session_016Nsq9SWL64V4RqDJPQYodp,
+      session_01Uq2Kx5jumw8Va6DETgxNV8) still have no trace. Unverified:
+      session_01WU8rXHT5rKQKDYbYqCv7Sd and session_017X5SQqh4JtkECD69pftATE
+      may have used only the summaries; their docsRead may be incomplete.
+      Correction posted on #2286. Grade/role unchanged (essential).

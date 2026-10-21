@@ -349,3 +349,14 @@ observations:
       a new occurrence. Side note, not scored: a same-day prune-trial
       rewrite of audit-docs/SKILL.md self-caught and restored an unapproved
       cut before merging (PR #2343). Grade/role unchanged (routine).
+  - date: "2026-10-21"
+    note: >-
+      Behaviour check, 9 runs, all PRs merged, no reverts. Verified, not
+      escalated: session_012XnetQuxWoyaVFYw1BqMoy (PR #2317) listed five
+      source conflicts under "Not in this PR (needs a human)" and filed no
+      needs-triage issue or escalation PR, though SKILL.md then said to file
+      one for a true factual conflict. One of them (ADR-0004 vs merge-pr.ts
+      on minor/patch bumps) is still live and untracked; #1889 is closed.
+      Single run, nothing damaged; a second such run clears the bar. Also
+      unverified: whether session_01HcMFbKDTkG7hs2VhByAs4b's pool.md held
+      both agents' findings. Grade/role unchanged (routine).
