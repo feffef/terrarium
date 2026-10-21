@@ -1,14 +1,17 @@
 schemaVersion: 1
 session: session_01C32ny8wWXkJLgyHd9wiD1J
 startedAt: 2026-10-21T13:26:51Z
-endedAt: 2026-10-21T13:39:04Z
+endedAt: 2026-10-21T13:57:04Z
 kind: interactive
 goal: Clear the issue backlog with clear-backlog
 status: in-review
-outcome: "9 issues triaged, 5 owner decisions taken, PR #2377 open, 4 more branches building"
-summary: "The owner invoked /clear-backlog (human-instructed). The sweep found 9 eligible issues and no ready-for-agent or wayfinder issues. Triage via clear-backlog-explore: #2373, #2286 and #2137 are time-gated (due 10-24, 10-22, 10-23); #2362 went straight to ready-for-agent; #2341, #2363, #2364, #2369 and #2370 needed decisions. I verified the picks' key claims (ledger occurrences after #2336, blog-post step 9 sentence, the visitor-loop onramp hint, list-recent-prs being git-only) and found one triage claim wrong: close-session/SKILL.md is no longer in an open prune trial. The owner accepted every pick (1a 2b 3b 4a 5a); those were recorded on the issues and labelled ready-for-agent. #2362 was built (agent-initiated per its brief) and opened as PR #2377. #2341, #2363, #2364+#2370 and #2369 are building in clear-backlog-build."
+outcome: "9 issues triaged, 5 owner decisions; PR #2377 merged, PRs #2378-#2380 open, #2363 gating"
+summary: "The owner invoked /clear-backlog (human-instructed). The sweep found 9 eligible issues and no ready-for-agent or wayfinder issues. Triage via clear-backlog-explore: #2373, #2286 and #2137 are time-gated (due 10-24, 10-22, 10-23); #2362 went straight to ready-for-agent; #2341, #2363, #2364, #2369 and #2370 needed decisions. I verified the picks' key claims (ledger occurrences after #2336, blog-post step 9 sentence, the visitor-loop onramp hint, list-recent-prs being git-only) and found one triage claim wrong: close-session/SKILL.md is no longer in an open prune trial. The owner accepted every pick (1a 2b 3b 4a 5a); those were recorded on the issues and labelled ready-for-agent. Built by clear-backlog-build: #2362 merged as PR #2377 (build workflow refuses branch names with \"git\"). PR #2378 restores the short Verify bullet and adds a cited-source check to the Standards reviewer (#2341). PR #2379 adds list-recent-prs --since and cuts the step 9 tally sentence (#2364, #2370). PR #2380 drops the visitor-loop onramp hint and adds a same-family drop rule (#2369); judgement call left: that rule now lives in both Filters and the refiner brief. #2363's branch hit the review cap; I fixed its last finding by hand (timing kept only in the hint constant) and it waits for a human merge (scripts/hooks). ADR-0009's summary still says \"when you open a PR\"."
 prs:
   - "2377"
+  - "2378"
+  - "2379"
+  - "2380"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: fetch before trusting history; commit hygiene
@@ -43,6 +46,8 @@ docsRead:
   - path: .agents/skills/log-session/SKILL.md
     reason: authored-field schema and the reads report
     useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
   - path: .agents/skills/implement/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/visitor-loop/SKILL.md
@@ -51,15 +56,17 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/triage/SKILL.md
     reason: (no reason given)
-  - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
   - path: .agents/skills/blog-post/SKILL.md
     reason: (read before editing)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
   - path: docs/adr/0027-prune-trials.md
     reason: (no reason given)
   - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: (no reason given)
-  - path: .agents/skills/visitor-loop/decisions.md
     reason: (no reason given)
   - path: docs/adr/0003-agent-operating-model-and-governance.md
     reason: (no reason given)
@@ -72,8 +79,6 @@ docsRead:
   - path: docs/adr/0005-skill-model.md
     reason: (no reason given)
   - path: docs/adr/0009-session-logs-commit-directly-to-main.md
-    reason: (no reason given)
-  - path: .agents/skills/close-session/SKILL.md
     reason: (no reason given)
 skillsUsed:
   - name: clear-backlog
@@ -96,20 +101,24 @@ frictions:
   - description: A triage agent claimed close-session/SKILL.md sits in an open prune trial; .agents/prune-trials.yml shows that trial was judged and deleted.
     solution: The explore workflow's triage brief could ask agents to quote the matching territory line from prune-trials.yml on origin/main.
     severity: minor
-durationSec: 733
+durationSec: 1813
 models:
-  claude-opus-5-5: 84
+  claude-opus-5-5: 126
 toolCounts:
-  Bash: 29
+  Bash: 43
   Workflow: 3
   ToolSearch: 3
   PushNotification: 1
   Skill: 2
-  mcp__github__add_issue_comment: 5
+  mcp__github__add_issue_comment: 6
   mcp__github__issue_write: 5
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
+  ReadNotifications: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  Edit: 1
 filesEdited:
+  - scripts/hooks/read-first-hint.ts
   - scripts/git/list-recent-prs.ts
   - .agents/skills/blog-post/SKILL.md
   - .agents/skills/visitor-loop/SKILL.md
@@ -123,6 +132,8 @@ rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -138,27 +149,26 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0012.md
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0015.md
-  - .claude/rules/guards.md
-  - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0008.md
   - .claude/rules/tenant-layers.md
 docsReadBySubagents:
-  - .agents/skills/implement/SKILL.md
+  - .agents/skills/code-review/SKILL.md
   - .agents/skills/blog-post/SKILL.md
   - .agents/skills/visitor-loop/SKILL.md
   - .agents/skills/visitor-loop/refiner-brief.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/close-session/SKILL.md
   - .agents/skills/triage/SKILL.md
   - docs/adr/0027-prune-trials.md
   - docs/adr/0022-autonomous-triage-sweep.md
-  - .agents/skills/visitor-loop/decisions.md
   - docs/adr/0003-agent-operating-model-and-governance.md
   - docs/agents/environment-caveats.md
   - .agents/skills/clear-backlog/SKILL.md
   - .agents/skills/dispatch-subagents/SKILL.md
   - docs/adr/0005-skill-model.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
-  - .agents/skills/close-session/SKILL.md
-  - .agents/skills/code-review/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Set the review-before-push and merge rules for PR 2377; the summary was enough.
@@ -195,17 +205,86 @@ ruleVerdicts:
     useful: no
 subagents:
   - type: workflow-subagent
+    task: Standards blog-post-window-and-step9 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards visitor-loop-drop-onramp-hint r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec close-session-timing r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec verify-bullet-revert-reviewer-check r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec blog-post-window-and-step9 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
     task: build blog-post-window-and-step9
     model: claude-sonnet-5-5
   - type: workflow-subagent
     task: build visitor-loop-drop-onramp-hint
     model: claude-sonnet-5-5
   - type: workflow-subagent
+    task: Standards verify-bullet-revert-reviewer-check r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
     task: build close-session-timing
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: fix verify-bullet-revert-reviewer-check r1
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Spec visitor-loop-drop-onramp-hint r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec close-session-timing r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec verify-bullet-revert-reviewer-check r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec visitor-loop-drop-onramp-hint r3
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec visitor-loop-drop-onramp-hint r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec close-session-timing r3
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards visitor-loop-drop-onramp-hint r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix visitor-loop-drop-onramp-hint r1
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: fix close-session-timing r1
     model: claude-sonnet-5-5
   - type: workflow-subagent
     task: build verify-bullet-revert-reviewer-check
     model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards visitor-loop-drop-onramp-hint r3
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix visitor-loop-drop-onramp-hint r2
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards close-session-timing r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards close-session-timing r3
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards verify-bullet-revert-reviewer-check r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix close-session-timing r2
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards close-session-timing r2
+    model: claude-opus-5-5
   - type: workflow-subagent
     task: "triage #2341"
     model: claude-opus-5-5
