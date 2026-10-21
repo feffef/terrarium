@@ -88,7 +88,7 @@ Then loop:
 Reply in at most 2,000 characters: the answer, citing line numbers (L<n>) of
 the flattened events; the flattened file's path; the last COVERAGE line,
 verbatim. Then a verdict (path, why it loaded or was read, useful
-yes/partly/no) on each rule and doc you loaded or read. Keep scratch files in
+yes/partly/no) on each rule and doc you loaded or read. Write every file you create, scripts included, under
 {Out}.
 ```
 
@@ -115,7 +115,7 @@ reach you. Make a directory `{Out}` = `{scratchpad}/inspect-{session id}/`.
    with the same before_id. Stop after a call whose has_more is false or
    absent. Reply only: the file's path and its line count. Then a verdict
    (path, why it loaded or was read, useful yes/partly/no) on each rule and
-   doc you loaded or read. Keep scratch files in {Out}.
+   doc you loaded or read. Write every file you create, scripts included, under {Out}.
    ```
 
 2. **Split the cursors** into N ranges of about 25 pages each:
@@ -139,8 +139,8 @@ reach you. Make a directory `{Out}` = `{scratchpad}/inspect-{session id}/`.
    If a page lands inline instead, Write it verbatim to {Out}/page-{k}-<n>.txt
    and append that path. Reply only: the manifest's path, the pages saved,
    and any first_id still wrong. Then a verdict (path, why it loaded or was
-   read, useful yes/partly/no) on each rule and doc you loaded or read. Keep
-   scratch files in {Out}.
+   read, useful yes/partly/no) on each rule and doc you loaded or read. Write every file you create,
+   scripts included, under {Out}.
    ```
 
 4. **Merge** every range's pages:
