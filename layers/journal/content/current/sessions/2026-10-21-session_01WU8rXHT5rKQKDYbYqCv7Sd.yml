@@ -1,14 +1,16 @@
 schemaVersion: 1
 session: session_01WU8rXHT5rKQKDYbYqCv7Sd
 startedAt: 2026-10-21T07:24:46Z
-endedAt: 2026-10-21T07:43:05Z
+endedAt: 2026-10-21T08:04:18Z
 kind: delegated
 goal: Weekly run turning recurring session frictions into fixes
-status: in-review
-outcome: Ledger PR open; three regression issues filed; one fix designed, not yet built
-summary: "Human-instructed: the owner started the frictions-to-fixes Skill with no further input; every later step was the Skill's own, agent-decided. A survey subagent read 24 sessions, appended 17 occurrences to existing clusters and committed the ledger. I filed regression issues #2362, #2363 and #2364 (worktree guard, close-session, search overflow), skipping regressions that already have an open issue. I picked five fixes after adr-check, and a design agent recommended dispatching only one (a ledger test rejecting a session listed twice in one cluster) and dropping the other four with reasons now in the ledger. Ledger PR #2365 is open with a green scoped gate. Still open: verdict comment, the fix build, review and merge, then the closing ledger PR."
+status: completed
+outcome: Ledger updated, three regression issues filed, one fix merged, four designs dropped
+summary: "Human-instructed: the owner started the frictions-to-fixes Skill with no further input; every later step was the Skill's own, agent-decided. A survey subagent read 24 sessions, appended 17 occurrences to existing clusters and committed the ledger. I filed regression issues #2362, #2363 and #2364 (worktree guard, close-session, search overflow), skipping regressions that already have an open issue. I picked five fixes after adr-check; a design agent recommended building only one (a ledger test rejecting a session listed twice in one cluster) and dropping the other four, with the reasons now in the ledger. A Sonnet agent built the test in a worktree; I reviewed it as a simple change, reran it against the merged ledger and merged it as #2366. The ledger PR #2365 and the closing ledger PR #2367 also merged, each after a green scoped gate. Open: the three regression issues await triage, and issue #2338 (ledger-set helper) still stands."
 prs:
   - "2365"
+  - "2366"
+  - "2367"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: read before the first git command; commit via -F file
@@ -40,12 +42,15 @@ docsRead:
   - path: .agents/skills/clear-backlog/SKILL.md
     reason: design agent read it; it found Done already requires ready-for-agent
     useful: yes
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: the impl brief I adapted for the build agent
+    useful: yes
   - path: .claude/skills/frictions-to-fixes/survey-brief.md
     reason: (no reason given)
   - path: /home/user/terrarium/docs/agents/git-conventions.md
     reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/impl-brief.md
-    reason: (no reason given)
+  - path: layers/journal/tests/unit/ledger-content.spec.ts
+    reason: (read before editing)
 skillsUsed:
   - name: frictions-to-fixes
     reason: the run itself
@@ -67,19 +72,40 @@ frictions:
   - description: The Stop hook asked twice to push while the gate ran, against ADR-0004's review-and-gate-before-first-push rule.
     solution: "None here: the owner accepts the nag (stop-hook-nag); declining was correct."
     severity: nit
-durationSec: 1099
+  - description: Survey brief mixes window start and session end dates, and never says which status a ledger entry takes when its issue closes not planned or its Skill sits in a trial.
+    solution: State the window by session start, and list the status for closed-not-planned and on-trial entries in the brief.
+    severity: nit
+  - description: The brief and ledger entries cite scripts/verify-skills-lock.ts and a CLAUDE.md Read-tool rule that no longer exist, so the design agent had to re-check them.
+    solution: Fix the stale path in the ledger entry; cite current paths when an entry is written.
+    severity: nit
+  - description: SKILL.md section 2 and pr-workflow.md leave open whether a test counts as code logic for the simple-change read; I reran the test and read the diff to be safe.
+    solution: Say in pr-workflow.md whether a test-only change of at most 10 lines counts as simple.
+    severity: nit
+  - description: check-conflicting-issues.ts flagged a watch-list issue on the keyword remove, which has nothing to do with the change; reading the issue body cost a call.
+    solution: None needed; it is advisory and one call.
+    severity: nit
+  - description: Ran the Skill with its autonomous decisions and built without the grilling the owner's preference for questions-first suggests; no question was asked.
+    solution: Say in the Skill that the owner's start is the approval for picks, so no question is expected.
+    severity: nit
+durationSec: 2372
 models:
-  claude-sonnet-5-5: 74
+  claude-sonnet-5-5: 154
 toolCounts:
   Read: 9
-  Bash: 18
+  Bash: 44
   Agent: 3
   ToolSearch: 1
   mcp__github__issue_write: 3
-  Skill: 4
-  mcp__github__create_pull_request: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 5
+  mcp__github__create_pull_request: 3
+  mcp__github__add_issue_comment: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  ReadNotifications: 8
+  mcp__github__pull_request_read: 1
+  Edit: 2
+filesEdited:
+  - layers/journal/content/current/frictions/ledger-yaml-hand-edit-errors.yml
+  - layers/journal/tests/unit/ledger-content.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0015.md
