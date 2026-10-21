@@ -1,0 +1,201 @@
+schemaVersion: 1
+session: session_01FNv8z61n7roCRsM4AYVtf6
+startedAt: 2026-10-21T13:15:41Z
+endedAt: 2026-10-21T13:36:54Z
+kind: interactive
+goal: Should agents get a doc on the self-improvement loop?
+status: in-review
+outcome: "No new doc; auto-triage Routine wording cut and the Journal shows clear-backlog (PR #2376, waits for a human merge)"
+summary: "The owner asked, as an opinion question, whether a short agent doc or rule explaining the self-improvement loop (Routines fix inside their domain, file issues for the rest; clear-backlog works those issues with minimal owner input) would help agents that only see one piece. I read the Journal's how-it-works page, the Routine Skills, auto-triage, clear-backlog and ADR-0003/0022/0029 via adr-check. First I leaned toward a short path-scoped rule loading on the Routine Skills, with an \"options plus a recommended pick\" issue format. The owner rejected the pick (it could steer triage the wrong way) and asked whether this overlaps issue-filing guidance. It largely does: issue-tracker.md's \"Filing an issue\" (already linked from every Routine Skill), triage-labels.md's needs-triage -> clear-backlog line and ADR-0003 cover it, and no Friction evidence of a gap exists, so I recommended no new doc. The owner then directed (human-instructed): auto-triage will never run as a Routine and they no longer run it directly, so trim ADR-0022's \"Who starts a run\" section, and update the Journal section. I cut the Routine and /loop wording from ADR-0022, its summary rule and the auto-triage Skill, and added the clear-backlog second half to how-it-works.md. Two-axis code-review caught an inaccurate \"agents triage every open issue\" / \"merge the rest\" in my Journal text; fixed. PR #2376 is open and must wait for a human merge (ADR and rule are Human-only). Left open in the PR body: the auto-triage Inventory role, two Glass Box drafts and the interactive map still describe the old way."
+prs:
+  - "2376"
+docsRead:
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: the human-facing loop page; it lacked clear-backlog
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: what clear-backlog actually picks up, grills and merges
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: where the Routine and /loop wording lived
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: Filing an issue already covers the proposed rule's content
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: already links needs-triage to the next clear-backlog run
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: rejected a central table of scheduled Skills' limits
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: rule vs doc home and how rules reach a Skill
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: the section the owner asked to trim
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch, commit hygiene, amend only own tip
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push and the gate order
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP write routing; read only the first 80 lines
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Routine, Skill, Trusted terms
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session start
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "grep only: how it files issues (cap 3, needs-triage)"
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: "grep only: files an issue only for an unresolvable factual conflict"
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: "grep only: significant or repeated findings become issues"
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: "grep only: files hook proposals as needs-triage"
+    useful: partly
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: "grep only: out-of-remit findings become issues"
+    useful: partly
+  - path: .agents/skills/digest/SKILL.md
+    reason: "grep only: files no issues"
+    useful: no
+  - path: docs/diagrams/interactive-map/terrarium-overview.md
+    reason: "spec subagent: still shows the maintainer starting auto-triage directly; left for later"
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: "standards subagent: wording standards; partly useful"
+    useful: partly
+skillsUsed:
+  - name: adr-check
+    reason: binding ADRs and open prune trials before recommending
+  - name: code-review
+    reason: two-axis review before first push; caught Journal inaccuracies
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read docs/agents/github-integration.md with head -80 instead of in full, against CLAUDE.md's read-first-in-full rule, before the first GitHub write.
+    solution: Read the trigger docs whole; a short doc costs little.
+    severity: nit
+  - description: Applied review fixes and amended the commit while the first gate:scoped run was still going, against pr-workflow.md's edit-nothing-until-it-ends; had to re-run the gate.
+    solution: Start the gate only after the review fixes are in, as pr-workflow.md orders.
+    severity: minor
+  - description: First Journal draft said clear-backlog triages every open issue and merges the rest; both wrong per its SKILL.md. Caught by the spec review.
+    solution: Check a Skill's claims against its SKILL.md before describing it on the Journal.
+    severity: nit
+  - description: First recommendation proposed a new path-scoped rule before checking that issue-tracker.md's Filing an issue already covered most of it; the owner had to ask about overlap.
+    solution: Grep the existing homes of a fact before proposing a new doc (CLAUDE.md one home per fact).
+    severity: minor
+durationSec: 1273
+models:
+  claude-opus-5-5: 89
+toolCounts:
+  Bash: 38
+  Skill: 4
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0029.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/glassbox-content.md
+docsReadBySubagents:
+  - docs/diagrams/interactive-map/terrarium-overview.md
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Rejected central table of scheduled Skills' limits shaped the no-new-doc advice; opened the full ADR for that detail
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body header line; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading the glossaries; no glossary change here
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on the Journal page; I touched no diagram
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Told me the ADR and rule edits need a human merge, stated in the PR
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on Skill reads; Skill edit was a plain gated change, nothing new
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Kept the Journal's Public-issue wording right; subagent found it partly useful too
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: The rule I rewrote; pointed to the full ADR I edited
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Cut-before-add and open prune trials on frictions-to-fixes and audit-docs shaped the advice against a new rule
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Rule vs doc home and how rules reach Skills; opened the full ADR for the Skill-loading detail
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Rewrite summary rule and repoint callers in the same PR; subagents used it to find callers
+    useful: yes
+  - path: .claude/rules/adr-0008.md
+    reason: Subagent-only load on Journal content; not relevant
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Subagent-only load on the Journal page; not relevant
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "Standards subagent: showed the Inventory role is audit-skills' to edit, so I left it"
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: "Spec subagent: partly useful for Public-issue handling"
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: "Standards subagent: Glass Box drafts are pinned, so left to glassbox-update"
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+  - type: general-purpose
+    task: Spec review of diff
+gitBranch: claude/self-improvement-loop-docs-ucjqeb
+entrypoint: remote_mobile
+cliVersion: 2.1.306
+learnings:
+  - Every Routine Skill that files issues already links issue-tracker.md's Filing an issue at that step, so filing guidance reaches Routine agents without a separate rule.
+landedBy: Stop
