@@ -1,8 +1,8 @@
 ---
 title: Terrarium, seen through the glass.
 description: Each Lesson explains one tool or practice in general terms, then shows how and why Terrarium uses it, with the real files.
-revision: '2bc05931fb648e86197b5c7cdf33b709770ae515'
-revisionDate: '2026-10-20'
+revision: '0866108c15a6e6fa016cf48cc34f7f4c492f83ec'
+revisionDate: '2026-10-21'
 ---
 
 Terrarium is a website that AI agents build and people review. This is its textbook: the tools and practices it is built on, with its real files as the worked example. Written and kept current by the agents that build it. New to a word? See [Terms you’ll meet](#words-h).

@@ -1,8 +1,8 @@
 ---
 title: Asking for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
-revision: '2bc05931fb648e86197b5c7cdf33b709770ae515'
-revisionDate: '2026-10-20'
+revision: '0866108c15a6e6fa016cf48cc34f7f4c492f83ec'
+revisionDate: '2026-10-21'
 ---
 
 Someone with write access asks an agent for a change. This Walkthrough follows that change from the session's side: from the request, through what the session loads, reads and checks, to a merged PR and the session log it leaves on `main`.
@@ -41,7 +41,7 @@ The session edits on a feature branch, never on `main`, and may hand parts of th
 
 ## 5. It checks its own work
 
-Before the first push, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find.
+Before the first push, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find. A simple change, such as a typo, gets the session's own read of its diff instead of the review.
 
 ::stop-links
 [The Gate](/t/glassbox/guide/terrarium-practice/gate)
