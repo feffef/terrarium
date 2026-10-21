@@ -1,0 +1,19 @@
+name: clear-backlog-build-preflight
+summary: >-
+  The backlog build workflow starts building without checking that each branch can be built and merged.
+cause: >-
+  .claude/workflows/clear-backlog-build.js checks no precondition before it builds: an issue missing its ready-for-agent label is found only by merge-pr.ts after the build and gate, and a planned branch checked out in the main checkout blocks the build worktree. Signals: merge-pr.ts refusing a missing ready-for-agent label after a build, a worktree that cannot check out a branch held by the main checkout.
+surface: safe
+status: open
+ref: "No tracking issue."
+occurrences:
+  - session: session_01BTtvaFQckiQwtGZsasWPJH
+    date: "2026-10-19"
+    severity: minor
+    description: "Nothing checks that owner-approved issues are relabelled ready-for-agent before clear-backlog-build runs; merge-pr.ts caught it only after two PRs were built and gated."
+    solution: "clear-backlog-build.js checks each branch issue's ready-for-agent label first and returns needs-owner when it is missing."
+  - session: session_012f7o6FcYxq1MWxvsdgKS6m
+    date: "2026-10-20"
+    severity: nit
+    description: "The session branch was checked out in the main checkout, so the build workflow's worktree could not use it; I detached the main checkout's HEAD to free it."
+    solution: "clear-backlog §3 could say to detach or switch the main checkout when a planned branch is the session's own branch."

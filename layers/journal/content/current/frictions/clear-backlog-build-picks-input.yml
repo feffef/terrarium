@@ -1,0 +1,26 @@
+name: clear-backlog-build-picks-input
+summary: >-
+  The backlog build workflow took the owner's picks in a shape that failed, or showed each build agent picks meant for other branches.
+cause: >-
+  clear-backlog section 3 did not name the shape of the picks it passes to .claude/workflows/clear-backlog-build.js, so a string failed the run, and each branch got the whole relayed owner reply. Signals: clear-backlog-build failing on picks, a build agent following another branch's pick.
+surface: safe
+status: open
+ref: "Issue #2232 (picks as a plain string)."
+fixes:
+  - pr: 2067
+    date: "2026-10-15"
+    summary: "Fixed remaining clear-backlog gaps: per-branch picks, label docs, and a dispatch-subagents trigger."
+  - pr: 2240
+    date: "2026-10-18"
+    summary: "clear-backlog no longer leaves out issues whose fix changes a guard or hook wiring, and the build workflow accepts picks given as a plain string."
+occurrences:
+  - session: session_012NmfdSNbbPD9T5LPAwmdYG
+    date: "2026-10-15"
+    severity: minor
+    description: "The #1844 build agent saw every owner pick and treated pick 2a's no-verdict wording request as binding on its own merge-pr.ts messages."
+    solution: "clear-backlog-build should pass each branch only its own picks, not the whole relayed owner reply."
+  - session: session_01JygBaHorymh1xgVBsaTh3E
+    date: "2026-10-17"
+    severity: minor
+    description: "clear-backlog-build failed at once because I passed picks as a string; the Skill says 'the agreed picks' without naming the array shape."
+    solution: "Say 'picks: an array of strings' in clear-backlog §3, or have the script accept a string."
