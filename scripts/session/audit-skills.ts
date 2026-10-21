@@ -4,8 +4,8 @@
 // closure-completeness signals — and prints compact JSON. Every judgement stays
 // with the Skill's session.
 //
-// Usage:  tsx scripts/session/audit-skills.ts [--days N]
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
+// Usage:  tsx scripts/session/audit-skills.ts [--days N] [--briefs DIR]
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { isContentPath } from './transcript-trace.ts'
@@ -347,6 +347,36 @@ export function pickSkillChanges(landings: readonly Landing[], name: string, scr
 }
 
 /** Own, on-disk Skills used often enough in the window to judge their behaviour. */
+/** How many of a Skill's newest runs its behaviour-check subagent reads. */
+export const BRIEF_RUNS = 10
+
+/** The data half of a behaviour-check brief (step 2): what the parent would
+ *  otherwise assemble by hand from the scorecard. The ask itself is the
+ *  Skill's `brief.md`. */
+export function buildBrief(row: SkillRow, window: readonly WindowSession[]): string {
+  const byId = new Map(window.map((w) => [w.session, w]))
+  const newestFirst = (ids: readonly string[]) =>
+    ids.map((id) => byId.get(id)).filter((w): w is WindowSession => Boolean(w)).sort((a, b) => b.startedAt.localeCompare(a.startedAt))
+  const runLine = (w: WindowSession) => `- ${w.session} · ${w.startedAt} · ${w.file}`
+  const lines = [`# ${row.name}`, '', `SKILL.md: ${SKILLS_DIR}/${row.name}/SKILL.md`, '', '## Changes since the earliest run started']
+  if (row.changes.length) {
+    lines.push('A run whose `startedAt` precedes a landing is graded against the text before it (`git show <sha>^:<path>`).')
+    for (const c of row.changes) lines.push(`- ${c.sha} · ${c.landedAt} · ${c.paths.join(', ')}`)
+  } else lines.push('None: every run is graded against the files on disk.')
+  lines.push('', `## Runs (newest ${BRIEF_RUNS}; log files to read)`)
+  const runs = newestFirst(row.usedIn).slice(0, BRIEF_RUNS)
+  lines.push(...(runs.length ? runs.map(runLine) : ['None.']))
+  if (row.modelInvoked) {
+    const used = new Set(row.usedIn)
+    lines.push('', '## Sessions that did not use it (rule each in or out)')
+    const others = window.filter((w) => !used.has(w.session)).sort((a, b) => b.startedAt.localeCompare(a.startedAt))
+    lines.push(...others.map((w) => `${runLine(w)} · goal: ${w.goal} · skillsUsed: ${w.skillsUsed.join(', ') || 'none'}`))
+  }
+  lines.push('', '## Observations (what is already known)')
+  lines.push(...(row.observations.length ? row.observations.map((o) => `- ${o.date}: ${o.note.replace(/\s+/g, ' ').trim()}`) : ['None.']))
+  return lines.join('\n') + '\n'
+}
+
 export function pickBehaviourChecks(rows: readonly SkillRow[], minUses = BEHAVIOUR_CHECK_MIN_USES): string[] {
   return rows.filter((r) => r.onDisk && !r.external && r.useCount >= minUses).map((r) => r.name)
 }
@@ -885,6 +915,13 @@ function main(): void {
   for (const row of card.skills) {
     if (card.behaviourChecks.includes(row.name) && row.changes.length) {
       console.error(`audit-skills: warning: ${row.name} changed while its runs were happening (${row.changes.length} landing(s), see its \`changes\`) — a run that started before one is graded against the earlier text`)
+    }
+  }
+  const briefsDir = flagValue(argv, '--briefs')
+  if (briefsDir) {
+    mkdirSync(briefsDir, { recursive: true })
+    for (const row of card.skills) {
+      if (card.behaviourChecks.includes(row.name)) writeFileSync(join(briefsDir, `${row.name}.md`), buildBrief(row, card.window))
     }
   }
   process.stdout.write(JSON.stringify(card, null, 2) + '\n')
