@@ -76,3 +76,8 @@ occurrences:
     severity: minor
     description: "My #2329 build brief copied the triage agent's replacement example without checking the pages; review found it already closes 10 of 15 specimens, so I cut it by hand."
     solution: "When a brief proposes example wording to stop repetition, grep the content for it first."
+  - session: session_01HcMFbKDTkG7hs2VhByAs4b
+    date: "2026-10-21"
+    severity: nit
+    description: "The code-review Spec reviewer said pool.md held only Agent A's findings, while the batch-1 checker handled B-D from it; I did not verify the pool contents myself."
+    solution: "Have save-handback print the saved byte count per agent so a truncated pool is obvious."

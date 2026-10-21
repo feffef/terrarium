@@ -3,6 +3,8 @@ summary: Parallel branches editing the same lines of a shared file conflicted, a
 cause: "Branches built in parallel edit the same lines of one shared file (Where next lists, a stamped pointer line, a roster table, a moved script), and nothing orders or groups them; signals: merge conflicts on adjacent shared lines, restamps, lists re-grown past the cap."
 surface: safe
 status: open
+notes: |-
+  2026-10-21 design: a rule on parallel branches dropped: the five occurrences have different causes, one is already fixed by a cap in the contract, and the cost is one merge step.
 occurrences:
   - session: session_01GG85r8HWMEdaMgKUaNUZH7
     date: "2026-10-14"

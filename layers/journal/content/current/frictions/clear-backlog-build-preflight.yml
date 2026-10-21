@@ -5,6 +5,8 @@ cause: >-
   .claude/workflows/clear-backlog-build.js checks no precondition before it builds: an issue missing its ready-for-agent label is found only by merge-pr.ts after the build and gate, and a planned branch checked out in the main checkout blocks the build worktree. Signals: merge-pr.ts refusing a missing ready-for-agent label after a build, a worktree that cannot check out a branch held by the main checkout.
 surface: safe
 status: open
+notes: |-
+  2026-10-21 design: a build-workflow precheck dropped: clear-backlog SKILL.md section 2 Done already requires ready-for-agent, and the workflow has no shell, so a check costs an agent call per run.
 occurrences:
   - session: session_01BTtvaFQckiQwtGZsasWPJH
     date: "2026-10-19"
