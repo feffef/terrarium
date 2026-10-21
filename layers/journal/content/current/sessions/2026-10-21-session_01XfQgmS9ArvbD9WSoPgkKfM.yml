@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XfQgmS9ArvbD9WSoPgkKfM
 startedAt: 2026-10-21T16:53:07Z
-endedAt: 2026-10-21T16:54:43Z
-kind: delegated
+endedAt: 2026-10-21T16:56:24Z
+kind: interactive
 goal: Count sessions that invoked the adr-check Skill
 status: completed
-outcome: "21 logged sessions listed adr-check: 15 interactive, 3 delegated, 3 autonomous"
-summary: "Human-instructed: the owner asked how many sessions, and of which kind, have invoked the adr-check Skill. Everything else was agent-chosen method. I parsed every session log on origin/main (1150 across current and archived) and counted those whose skillsUsed names adr-check: 21, all since the Skill was added on 2026-10-19 (15 interactive, 3 delegated, 3 autonomous), out of 47 sessions logged since then. Ten more logs mention adr-check only in text (audits of it, its build, or frictions saying they skipped it); I read each mention and counted none of them. Sessions without a log are invisible to this count. No code changed, no PR."
+outcome: 21 logged sessions used adr-check; 18 autonomous sessions did not, 3 of which admit it
+summary: "Human-instructed: the owner asked how many sessions, and of which kind, have invoked the adr-check Skill, then asked for the autonomous sessions that skipped it. The method was agent-chosen. I parsed every session log on origin/main (1150 across current and archived) and counted those whose skillsUsed names adr-check: 21, all since the Skill was added on 2026-10-19 (15 interactive, 3 delegated, 3 autonomous), out of 47 sessions logged since. Ten more logs mention adr-check only in text; I read each mention and counted none. For the follow-up I listed the 18 autonomous sessions since 2026-10-19 without adr-check in skillsUsed, flagging the 3 (audit-skills, frictions-to-fixes, audit-docs on 2026-10-21) whose frictions admit the skip; whether the other 15 needed it is not judged. Sessions without a log are invisible. No code changed, no PR."
 prs: []
 docsRead:
   - path: GLOSSARY-MAP.md
@@ -27,11 +27,11 @@ frictions:
   - description: Ran git fetch and git log before reading docs/agents/git-conventions.md, against CLAUDE.md's read-first trigger; no harm, my calls matched it.
     solution: The PostToolUse hint caught it; reading triggers before the first Bash call would avoid it.
     severity: nit
-durationSec: 96
+durationSec: 197
 models:
-  claude-opus-5-5: 27
+  claude-opus-5-5: 33
 toolCounts:
-  Bash: 11
+  Bash: 13
   Skill: 2
 rulesLoaded:
   - .claude/rules/adr-0021.md
