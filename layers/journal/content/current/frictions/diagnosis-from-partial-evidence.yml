@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A diagnosis or attribution (why something fails, which PR made a change, whether an issue needs a guard change) is concluded from partial evidence: a single test, a truncated log, a commit list or an issue text, without reading the diff or running a controlled check. Signals: "misdiagnosed", "from one test", "without checking its diff", "from the issue text alone".
 surface: safe
-status: open
+status: tracked
+ref: "issue #2341 measures PR #2336's CLAUDE.md rule and may move the check to the reviewer."
 fixes:
   - pr: 2336
     date: "2026-10-20"

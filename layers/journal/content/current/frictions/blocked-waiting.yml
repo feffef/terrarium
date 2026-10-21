@@ -44,3 +44,8 @@ occurrences:
     severity: nit
     description: "A foreground pgrep wait loop for the background gate hit the 600s timeout and was moved to background; the gate's completion notification would have sufficed."
     solution: "Wait for the background task notification instead of polling."
+  - session: session_01FTPnEsW1XNhaqYFdxaE24v
+    date: "2026-10-20"
+    severity: nit
+    description: "My first gate-wait loop grepped the gate log for an EXIT marker that only the outer task output held, so it could never end; stopped it."
+    solution: "Wait on the background task's own completion notification instead of polling a log for a marker the command writes elsewhere."

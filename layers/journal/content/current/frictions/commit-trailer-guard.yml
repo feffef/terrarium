@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-10"
     summary: "Removed the commit-trailer guard, so hand-written trailers are no longer denied; recognised current models."
 occurrences:
-  - session: session_01QrvPXx1uquc4vvjJXhz1MU
-    date: "2026-10-06"
-    severity: nit
-    description: "Hand-wrote the commit trailer from the harness's attribution reminder; commit-trailer-guard denied it"
-    solution: "Guard worked as designed; the harness reminder conflicts with the repo rule. Already covered by CLAUDE.md and the deny message"
-  - session: session_01RCmFsgtMbJiafbzPg48LYh
-    date: "2026-10-06"
-    severity: nit
-    description: "The commit-trailer guard denied my first commit because the system-reminder attribution told me to hand-write the trailer; the whole chained call, including the ledger append, was dropped."
-    solution: "Harness attribution reminder and repo guard conflict; the guard message was clear and one retry fixed it."
   - session: session_01AQ91ENQEqf8iMne1PrzFiu
     date: "2026-10-07"
     severity: minor

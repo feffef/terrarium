@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   The advisory fires when an agent marks `(not read)` a doc the detector credited from shell output, often one a subagent opened; the detector is usually right, and `--author` hides subagent shell reads (#1786 re-triage).
 surface: safe
-status: open
-ref: "Issue #1786 closed by PR #2160 (superseded by #1941/#1943); #2160 only made the advisory text neutral. Detector left as is."
+status: tracked
+ref: "Issue #2355 (regression of #2160). Issue #1786 closed by PR #2160 (superseded by #1941/#1943); #2160 only made the advisory text neutral. Detector left as is."
 fixes:
   - pr: 1485
     date: "2026-09-29"

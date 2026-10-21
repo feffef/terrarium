@@ -1,0 +1,15 @@
+name: rewrite-pass-scope-drift
+summary: >-
+  A rewrite or prune pass cut or added more than the owner approved, and review or the owner had to catch it.
+cause: >-
+  An agent rewriting a Skill or doc to a stated goal (plain rewrite, prune) works from a mental checklist: it drops a rule or a why that was meant to stay, cuts items outside the approved list, or moves text so the file grows instead of shrinking. Signals: "lost a rule", "cut items beyond what was approved", "not a real prune", "review caught both".
+surface: safe
+status: open
+notes: |-
+  2026-10-21 design: a rewrite-discipline line dropped: one session, the owner caught the drift in the same session, no deletion-style fix exists, and the open trials on the rewritten Skills will judge the damage.
+occurrences:
+  - session: session_01FTPnEsW1XNhaqYFdxaE24v
+    date: "2026-10-20"
+    severity: moderate
+    description: "The audit-docs restructure in #2331 grew the file instead of pruning it; the user had to point out it was not a real prune."
+    solution: "In a prune-trial rewrite, ask of each line whether a rule, guard or the gate already enforces it before moving it; moving text is not pruning."

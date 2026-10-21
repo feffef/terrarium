@@ -6,6 +6,8 @@ cause: >-
 surface: safe
 status: open
 fixes: []
+notes: |-
+  2026-10-21 design: a pr-workflow line or a guard on hand-typed SHAs and paths dropped: all 8 sessions read pr-workflow.md and slipped anyway, merge-pr.ts already refuses a wrong Reviewed SHA and prints the line, and a guard is a Human-only edit for a nit-level cost.
 occurrences:
   - session: session_01Sc82qSCs4NVP3igf9SaGXM
     date: "2026-10-17"
@@ -42,3 +44,8 @@ occurrences:
     severity: nit
     description: "My first verdict comment named a mistyped short SHA (30a92a7247 vs ...7244); merge-pr.ts refused and I edited the comment."
     solution: "Paste the head SHA from git rev-parse HEAD into the verdict rather than typing it."
+  - session: session_01VH74k3Z27QtjR19XNC76qm
+    date: "2026-10-20"
+    severity: nit
+    description: "Filed regression issue #2332 with a garbled phrase (#321-era follow-up #2321) and had to edit the body after creating it."
+    solution: "Re-read the body before sending, as for any GitHub post."
