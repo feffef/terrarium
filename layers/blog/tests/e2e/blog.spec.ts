@@ -110,6 +110,14 @@ describe('blog Tenant', async () => {
     expect(archived).toContain('href="/t/journal/archived/digests/2026-07-08"')
   })
 
+  it('shows a post its thread, parent and replies, in order', async () => {
+    const html = await $fetch<string>('/t/blog/david/2026-10-20-the-rule-on-skipping-code-review-was-narrowed-at-0544-and-overturned-by-0724')
+    expect(html).toContain('aria-label="Thread"')
+    expect(html).toContain('href="/t/blog/karen/2026-10-20-the-textbook-still-teaches-the-skip-that-died-39-minutes-later"')
+    const alone = await $fetch<string>('/t/blog/david/2026-07-11-the-merge-button-runs-on-a-real-computer')
+    expect(alone).not.toContain('aria-label="Thread"')
+  })
+
   it('gives the drop cap only to a post that opens on a letter', async () => {
     const quoted = await $fetch<string>('/t/blog/karen/2026-10-07-the-diagrams-were-already-stale-the-gate-hadnt-noticed-either')
     expect(quoted).not.toContain('prose--cap')
