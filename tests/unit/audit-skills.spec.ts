@@ -952,9 +952,9 @@ describe('one-Skill query', () => {
     const b = sess({ session: 'b', startedAt: '2026-10-19T09:55:48Z', endedAt: '2026-10-21T00:00:00Z' })
     expect(startedWindow([a, b], '2026-10-19T09:55:49Z').map((s) => s.session)).toEqual(['a'])
   })
-  it('groups used and unused by kind, keeping ADR reads apart', () => {
+  it('groups used and unused by kind, keeping main-agent ADR reads apart from subagent ones', () => {
     const sessions = [
-      sess({ session: 'u1', kind: 'interactive', skillsUsed: ['x'], docsRead: [adr('0001'), 'docs/agents/a.md'], docsReadBySubagents: [adr('0002')] }),
+      sess({ session: 'u1', kind: 'interactive', skillsUsed: ['x'], docsRead: [adr('0001'), adr('0002'), 'docs/agents/a.md'], docsReadBySubagents: [adr('0002')] }),
       sess({ session: 'n1', kind: 'routine' }),
       sess({ session: 'n2', kind: 'interactive', docsRead: [adr('0003')] }),
     ]

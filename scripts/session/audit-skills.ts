@@ -255,7 +255,7 @@ export function startedWindow(sessions: readonly Session[], since: string): Sess
 
 export interface SkillQuerySession {
   session: string
-  /** `docs/adr/` paths in `docsRead` and `docsReadBySubagents`, kept apart. */
+  /** `docs/adr/` paths the main agent read; `docsRead` also holds the subagents' reads. */
   adrsRead: string[]
   adrsReadBySubagents: string[]
 }
@@ -270,7 +270,7 @@ export function skillQuery(sessions: readonly Session[], skill: string): SkillQu
   const out: SkillQuery = { used: {}, notUsed: {} }
   for (const s of sessions) {
     const side = s.skillsUsed.includes(skill) ? out.used : out.notUsed
-    ;(side[s.kind] ??= []).push({ session: s.session, adrsRead: adrs(s.docsRead), adrsReadBySubagents: adrs(s.docsReadBySubagents) })
+    ;(side[s.kind] ??= []).push({ session: s.session, adrsRead: adrs(s.docsRead).filter((p) => !s.docsReadBySubagents.includes(p)), adrsReadBySubagents: adrs(s.docsReadBySubagents) })
   }
   return out
 }

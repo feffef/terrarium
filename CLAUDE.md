@@ -81,8 +81,8 @@ docs/research/            dated reference notes
 .agents/skills/           our Skills (.claude/skills/ links here)
 .claude/workflows/        workflow scripts, each its Skill's code (ADR-0005)
 scripts/                  repo tooling by area: gate/ (the gate and its checks), hooks/ (tool-call
-                          guards and hints), session/ (session logs; Skill usage: audit-skills.ts --skill NAME --since ISO;
-                          Frictions since a date: extract-frictions.ts --since ISO), github/, git/, ui/, lib/ (shared)
+                          guards and hints), session/ (session logs; Skill usage: audit-skills.ts --skill;
+                          Frictions since a date: extract-frictions.ts --since), github/, git/, ui/, lib/ (shared)
 tests/                    Platform tests; each Tenant keeps its own in its layer
 ```
 
