@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XfQgmS9ArvbD9WSoPgkKfM
 startedAt: 2026-10-21T16:53:07Z
-endedAt: 2026-10-21T18:34:56Z
+endedAt: 2026-10-21T19:14:48Z
 kind: interactive
-goal: Measure adr-check Skill use and full ADR reads across sessions
+goal: Measure adr-check Skill use and whether its full-ADR reads happen
 status: completed
-outcome: 86% of 22 sessions using adr-check read a full ADR vs 31% of 26 that did not
-summary: "Human-instructed: the owner asked three questions in turn: how many sessions, by kind, invoked the adr-check Skill; which autonomous sessions skipped it; and how often full ADRs were read with versus without it. The method was agent-chosen: parse every session log on origin/main and use skillsUsed and docsRead. Since the Skill was added on 2026-10-19, 21 (later 22, as a new log landed) sessions used it; 18 autonomous sessions did not, 3 of which admit the skip in a friction. Of the 22 with the Skill, 19 (86%) list at least one docs/adr file in docsRead (mean 2.6); of the 26 without, 8 (31%, mean 1.5, skewed by one docs audit that read all 30). The comparison is confounded: the with-group is mostly interactive design work, the without-group mostly scheduled content runs, and docsRead cannot say whether the right ADRs were read. No code changed, no PR."
+outcome: Sessions using adr-check read 25 of 61 path-bound ADRs in full; 4 transcripts confirm the logs
+summary: "Human-instructed: the owner asked in turn how many sessions by kind invoked adr-check, which autonomous sessions skipped it, how full-ADR reads compare with and without it, and then (after choosing \"logs, then sample transcripts\" when I asked) whether sessions using it read the ADRs that bind their change. Method was agent-chosen. Since 2026-10-19, 22 sessions used it; 86% of them read some full ADR vs 31% without it. adr-check names no binding set, so I took as bound every ADR whose rule paths match files the session edited or its merged PRs changed: 15 of 22 sessions had such ADRs, 61 pairs in all, of which 25 were read in full; only 3 sessions read all theirs. Four subagents read transcripts of 01Pzj23d, 01WU8rXH, 011W3gVN and 01FTPnEs: the logs' read lists were accurate, no session named its binding ADRs when it ran the Skill, skips were justified only afterwards as \"summary was enough\", and 01FTPnEs ran adr-check once for four PRs. Path matching overstates some bindings. No code changed, no PR."
 prs: []
 docsRead:
   - path: GLOSSARY-MAP.md
@@ -18,25 +18,39 @@ docsRead:
   - path: docs/agents/git-conventions.md
     reason: read late; confirmed git show/fetch of origin/main was right
     useful: partly
+  - path: .agents/skills/adr-check/SKILL.md
+    reason: showed the Skill prints all summaries and names no binding set
+    useful: yes
 skillsUsed:
   - name: close-session
     reason: session only answered a question
+  - name: inspect-session
+    reason: brief for four transcript reads
   - name: log-session
     reason: (no reason given)
 frictions:
   - description: Ran git fetch and git log before reading docs/agents/git-conventions.md, against CLAUDE.md's read-first trigger; no harm, my calls matched it.
     solution: The PostToolUse hint caught it; reading triggers before the first Bash call would avoid it.
     severity: nit
-durationSec: 6109
+  - description: Offered to check sessions against 'the ADRs adr-check said bind', assuming the Skill outputs such a list; it does not, so I had to ask the owner for a method.
+    solution: Read a Skill's SKILL.md before proposing an analysis built on its output.
+    severity: minor
+  - description: One transcript subagent reported another overwrote a shared scratchpad file (fl.sh), polluting its page list until it moved to its own folder.
+    solution: inspect-session briefs already set Out per session; also tell subagents to keep all helper scripts inside Out.
+    severity: nit
+durationSec: 8501
 models:
-  claude-opus-5-5: 41
+  claude-opus-5-5: 80
 toolCounts:
-  Bash: 16
-  Skill: 2
+  Bash: 27
+  Skill: 3
+  AskUserQuestion: 1
+  Agent: 4
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -64,7 +78,21 @@ ruleVerdicts:
   - path: .claude/rules/adr-0029.md
     reason: Loaded on reading git-conventions; no rule placement decided
     useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading the adr-check Skill; I changed no Skill
+    useful: no
+subagents:
+  - task: Inspect 01Pzj23d ADR reads
+    model: sonnet
+  - task: Inspect 01WU8rXH ADR reads
+    model: sonnet
+  - task: Inspect 011W3gVN ADR reads
+    model: sonnet
+  - task: Inspect 01FTPnEs ADR reads
+    model: sonnet
 gitBranch: ccr-a3227126-g8q0f1
 entrypoint: remote_mobile
 cliVersion: 2.1.306
+ideas:
+  - Make adr-check's binding.ts take the changed paths (git diff names) and print the ADRs whose rule paths match first, as a must-read list, and have log-session record which ADRs the agent judged binding, so 'did it read the binding ADRs' becomes checkable from the log.
 landedBy: Stop
