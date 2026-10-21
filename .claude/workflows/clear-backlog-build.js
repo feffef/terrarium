@@ -14,6 +14,10 @@ if (!args || !args.session) throw new Error('args.session (this session id, sess
 const HEADER = `🤖 [Claude](https://claude.ai/code/${args.session})`
 const MAX_ROUNDS = 3
 
+// The worktree guard refuses every command that names a branch containing "git".
+const guarded = (args.branches || []).filter(b => /git/i.test(b.name)).map(b => b.name)
+if (guarded.length) throw new Error(`Branch name contains "git": ${guarded.join(', ')}. Orchestrator: rename it (clear-backlog §3 name) and run again.`)
+
 const VERDICTS = {
   type: 'array',
   description: 'your verdict on each .claude/rules file that loaded for you and each instruction doc you read',
@@ -84,7 +88,7 @@ ${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`
 
 function rules(b) {
   return `## Rules
-- Bash resets cwd: prefix every command with \`cd <worktree> &&\`, one git command per Bash call. A branch name or path containing "git" counts as naming git again, and the worktree guard refuses the command.
+- Bash resets cwd: prefix every command with \`cd <worktree> &&\`, one git command per Bash call.
 - Run checks in the foreground, logging to your scratchpad with a name unique to you, e.g. \`cd <worktree> && pnpm gate:scoped > <scratchpad>/${slug(b)}-<stage>-gate.log 2>&1; echo EXIT=$? >> <same log>\` with Bash timeout 600000.
 - Commit before you stop, even mid-work. Never push, open a PR, merge, or run close-session/log-session: the orchestrator does those.
 - Every GitHub body you post starts with this exact first line: ${HEADER}
