@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011UkamwPwXvoBVMmNHuoBaD
 startedAt: 2026-10-21T13:16:40Z
-endedAt: 2026-10-21T13:27:14Z
+endedAt: 2026-10-21T13:30:54Z
 kind: autonomous
 goal: "Scheduled prune trial: judge open trials, prune one problem"
-status: in-review
-outcome: "PR #2375 open: 3 trials judged and deleted, GitHub search bullets tightened (-4), new trial recorded"
-summary: "Scheduled /prune-trial run, agent-initiated, no human prompt. Judged the close-session, background-guard and provenance-guard trials from the window script and the Frictions since landing (only nit/minor; #2363 traces to the deferred read-first hint, not cut text) and deleted them. A search subagent picked the GitHub search-overflow rule (#1860, #2210, held by the fields guard) over the inherited-commits advice and Verify-before-you-state. The mass was small, so the prune is -4 lines. Sonnet probe pinned to the commit passed; gate green; Standards and Spec reviews clean. Still open: PR CI and merge."
+status: completed
+outcome: "PR #2375 merged: 3 trials judged and deleted, GitHub search bullets tightened (-4), new trial recorded"
+summary: "Scheduled /prune-trial run, agent-initiated, no human prompt. Judged the close-session, background-guard and provenance-guard trials from the window script and the Frictions since landing (only nit/minor; #2363 traces to the deferred read-first hint, not cut text) and deleted them. A search subagent picked the GitHub search-overflow rule (#1860, #2210, held by the fields guard) over the inherited-commits advice and Verify-before-you-state. The mass was small, so the prune is -4 lines. Sonnet probe pinned to the commit passed; gate green; Standards and Spec reviews clean. PR merged after CI green."
 prs:
   - "2375"
 docsRead:
@@ -51,12 +51,12 @@ frictions:
   - description: Started a pointless background sleep to wait on the subagent, wasting two calls.
     solution: End the turn and wait for the notification.
     severity: nit
-durationSec: 635
+durationSec: 854
 models:
-  claude-sonnet-5-5: 76
+  claude-sonnet-5-5: 86
 toolCounts:
   Read: 7
-  Bash: 18
+  Bash: 20
   mcp__github__search_issues: 3
   Agent: 4
   mcp__github__issue_read: 2
@@ -64,6 +64,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
