@@ -7,6 +7,7 @@ import { describe, expect, it } from 'vitest'
 import {
   extractTitle,
   parsePrNumber,
+  prsSince,
   recentPrs,
   toRecentPr,
 } from '../../scripts/git/list-recent-prs.ts'
@@ -93,5 +94,24 @@ describe('recentPrs()', () => {
 
   it('defaults to 20 when no limit is given', () => {
     expect(recentPrs(commits)).toHaveLength(3)
+  })
+})
+
+describe('prsSince()', () => {
+  const commits: RawMergeCommit[] = [
+    { hash: 'h1', isoCommitTime: '2026-07-11T09:00:00Z', subject: 'Merge pull request #312 from feffef/foo', body: 'on the boundary' },
+    { hash: 'h2', isoCommitTime: '2026-07-11T11:00:00Z', subject: 'Merge pull request #310 from feffef/bar', body: 'newest' },
+    { hash: 'h3', isoCommitTime: '2026-07-10T11:00:00Z', subject: 'Merge pull request #300 from feffef/old', body: 'too old' },
+    { hash: 'h4', isoCommitTime: '2026-07-11T10:00:00Z', subject: 'fix: patch bug', body: '' },
+  ]
+
+  it('lists every PR merged at or after the instant, newest-first, with no count cap', () => {
+    expect(prsSince(commits, '2026-07-11T09:00:00Z').map((p) => p.number)).toEqual([310, 312])
+  })
+  it('accepts a bare date as midnight UTC', () => {
+    expect(prsSince(commits, '2026-07-10').map((p) => p.number)).toEqual([310, 312, 300])
+  })
+  it('rejects a value that is not a date', () => {
+    expect(() => prsSince(commits, 'last week')).toThrow(/not an ISO date/)
   })
 })

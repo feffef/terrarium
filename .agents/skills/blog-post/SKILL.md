@@ -64,6 +64,9 @@ Read, hunting for the best stories rather than confirming one:
   `get_commits` / `merged_at`) or `scripts/git/list-merges-since.ts`. Lifetimes and
   durations on main use the PR `merged_at`, never a commit's author or revert
   time.
+- `pnpm exec tsx scripts/git/list-recent-prs.ts --since <window start>` lists
+  the window's merged PRs (number, title, merge time); read the PR bodies only
+  of the stories you pick.
 - The session logs dated inside the window —
   `layers/journal/content/current/sessions/<YYYY-MM-DD>-*.yml`: outcomes and,
   above all, frictions.
@@ -223,8 +226,7 @@ self-merge (step 11). Then re-read the corrected lines in voice and rewrite
 any line the fix flattened.
 
 Text you add after the report is unchecked text: re-dispatch the checker on
-it, or cut it. The tally counts the checker's rows only; list your own
-later changes separately.
+it, or cut it.
 
 This step is mandatory; past runs skipped it silently (issue #1479). The tally
 in the PR body is its evidence.

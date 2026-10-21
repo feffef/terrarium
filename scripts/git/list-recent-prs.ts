@@ -15,8 +15,10 @@
 // merge commit could), the merge subject line itself is used as a fallback.
 //
 // Usage:  tsx scripts/git/list-recent-prs.ts [N]
+//         tsx scripts/git/list-recent-prs.ts --since <ISO date or datetime>
 //   Prints the last N merged PRs (default 20) on `origin/main` as JSON:
-//   { number, title, mergedAtUtc }. Newest-first.
+//   { number, title, mergedAtUtc }. Newest-first. With --since, prints every
+//   PR merged at or after that time instead (a bare date is midnight UTC).
 import { readMergeCommits, type RawMergeCommit } from '../lib/git.ts'
 import { toUtcIso } from './list-merges-since.ts'
 import { root, fail, runIfMain } from '../lib/cli.ts'
@@ -80,6 +82,14 @@ export function recentPrs(commits: RawMergeCommit[], limit = DEFAULT_LIMIT): Rec
     .map((x) => x.pr)
 }
 
+/** Every PR merge at or after `since` (an ISO date or datetime), newest-first,
+ *  with no count cap — a story window must not silently drop PRs. */
+export function prsSince(commits: RawMergeCommit[], since: string): RecentPr[] {
+  const sinceMs = Date.parse(since)
+  if (Number.isNaN(sinceMs)) throw new Error(`not an ISO date or datetime: ${since}`)
+  return recentPrs(commits, Infinity).filter((pr) => Date.parse(pr.mergedAtUtc) >= sinceMs)
+}
+
 // ── Command ─────────────────────────────────────────────────────────────────
 
 export function recentPrsOnMain(limit = DEFAULT_LIMIT, cwd = root): RecentPr[] {
@@ -90,6 +100,16 @@ export function recentPrsOnMain(limit = DEFAULT_LIMIT, cwd = root): RecentPr[] {
 
 function main(): void {
   const argv = process.argv.slice(2)
+  if (argv[0] === '--since') {
+    const since = argv[1]
+    if (since === undefined) fail('--since needs an ISO date or datetime')
+    try {
+      process.stdout.write(JSON.stringify(prsSince(readMergeCommits(root), since), null, 2) + '\n')
+    } catch (e) {
+      fail((e as Error).message)
+    }
+    return
+  }
   const limitArg = argv[0]
   let limit = DEFAULT_LIMIT
   if (limitArg !== undefined) {
