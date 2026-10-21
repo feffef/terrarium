@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01C32ny8wWXkJLgyHd9wiD1J
 startedAt: 2026-10-21T13:26:51Z
-endedAt: 2026-10-21T14:07:48Z
+endedAt: 2026-10-21T14:12:07Z
 kind: interactive
 goal: Clear the issue backlog with clear-backlog
 status: in-review
-outcome: "9 issues triaged, 5 owner decisions; PRs #2377 #2378 #2380 merged, #2379 open, #2381 waits for a human merge"
-summary: "The owner invoked /clear-backlog (human-instructed). The sweep found 9 eligible issues and no ready-for-agent or wayfinder issues. Triage via clear-backlog-explore: #2373, #2286 and #2137 are time-gated (due 10-24, 10-22, 10-23); #2362 went straight to ready-for-agent; #2341, #2363, #2364, #2369 and #2370 needed decisions. I verified the picks' key claims (ledger occurrences after #2336, blog-post step 9 sentence, the visitor-loop onramp hint, list-recent-prs being git-only) and found one triage claim wrong: close-session/SKILL.md is no longer in an open prune trial. The owner accepted every pick (1a 2b 3b 4a 5a); those were recorded on the issues and labelled ready-for-agent. Built by clear-backlog-build: #2362 merged as PR #2377 (build workflow refuses branch names with \"git\"). PR #2378 restores the short Verify bullet and adds a cited-source check to the Standards reviewer (#2341). PR #2379 adds list-recent-prs --since and cuts the step 9 tally sentence (#2364, #2370). PR #2380 drops the visitor-loop onramp hint and adds a same-family drop rule (#2369); judgement call left: that rule now lives in both Filters and the refiner brief. #2363's branch hit the review cap; I fixed its last finding by hand (timing kept only in the hint constant) and it waits for a human merge (scripts/hooks). ADR-0009's summary still says \"when you open a PR\"."
+outcome: "9 issues triaged, 5 owner decisions; PRs #2377-#2380 merged, #2381 waits for a human merge"
+summary: "The owner invoked /clear-backlog (human-instructed). The sweep found 9 eligible issues and no ready-for-agent or wayfinder issues. Triage via clear-backlog-explore: #2373, #2286 and #2137 are time-gated (due 10-24, 10-22, 10-23); #2362 went straight to ready-for-agent; #2341, #2363, #2364, #2369 and #2370 needed decisions. I verified the picks' key claims (ledger occurrences after #2336, blog-post step 9 sentence, the visitor-loop onramp hint, list-recent-prs being git-only) and found one triage claim wrong: close-session/SKILL.md is no longer in an open prune trial. The owner accepted every pick (1a 2b 3b 4a 5a); those were recorded on the issues and labelled ready-for-agent. Built by clear-backlog-build: #2362 merged as PR #2377 (build workflow refuses branch names with \"git\"). PR #2378 restores the short Verify bullet and adds a cited-source check to the Standards reviewer (#2341). PR #2379 adds list-recent-prs --since and cuts the step 9 tally sentence (#2364, #2370). PR #2380 drops the visitor-loop onramp hint and adds a same-family drop rule (#2369). All four merged except #2381 (#2363), which waits for a human merge (scripts/hooks). Judgement call left on #2380: that rule now lives in both Filters and the refiner brief. #2363's branch hit the review cap; I fixed its last finding by hand (timing kept only in the hint constant) and it waits for a human merge (scripts/hooks). ADR-0009's summary still says \"when you open a PR\"."
 prs:
   - "2377"
   - "2378"
@@ -15,22 +15,22 @@ prs:
   - "2381"
 docsRead:
   - path: docs/agents/git-conventions.md
-    reason: fetch before trusting history; commit hygiene
-    useful: partly
+    reason: "triage #2363: CLAUDE.md trigger before git log; I fetched before trusting history; triage #2364: CLAUDE.md trigger before using git log to draw a conclusion. It said to fetch origin/main and read history from origin/main.; triage #2369: CLAUDE.md trigger before git log to draw conclusions; build build-refuses-guarded-branch-names: A hook told me to read it after my first git command. Nothing in it changed my calls.; build blog-post-window-and-step9: Read after the hook asked for it. Its advice to use `git commit -F` was useful.; build visitor-loop-drop-onramp-hint: Hook told me to read it after my first git command was refused for being chained"
+    useful: yes
   - path: docs/agents/github-integration.md
-    reason: label updates replace the set; write through MCP
+    reason: "triage #2364: CLAUDE.md trigger for GitHub operations. It confirmed that a label update replaces the whole set and gave the script escapes the issue is about.; Spec blog-post-window-and-step9 r1: Partly read: the top section, plus the 'Script escapes' section via grep, because CLAUDE.md requires it before GitHub operations and a hook reminded me. The grep of 'Script escapes' turned up the second finding."
     useful: yes
   - path: docs/agents/pr-workflow.md
     reason: simple-change self-read rule, verdict comment before merge
     useful: yes
   - path: docs/agents/issue-tracker.md
-    reason: labels and comment conventions
+    reason: "triage #2341: Required before labelling. Only grepped it for labels.; triage #2363: CLAUDE.md trigger before triage; its prune-trial supersession check applied; triage #2364: CLAUDE.md trigger for triage. It gave the supersession and prune-trial checks.; triage #2369: CLAUDE.md trigger before triage"
     useful: partly
   - path: docs/agents/triage-labels.md
-    reason: who may set ready-for-agent
+    reason: "triage #2341: Required before labelling. Gave the label strings.; triage #2362: CLAUDE.md trigger before labelling; gave the label strings; triage #2363: CLAUDE.md trigger before labelling; triage #2369: CLAUDE.md trigger before labelling; triage #2370: Read to check the label strings"
     useful: yes
   - path: .agents/skills/auto-triage/SKILL.md
-    reason: eligibility rule for the sweep set
+    reason: "triage #2341: Required by the brief for its per-issue rules. Gave the judgement-call and labelling rules.; triage #2362: The task said to read it; gave the brave/determinability rule and the path-free brief; triage #2363: Required by the brief; gave the brave, determinability and closing rules; triage #2364: The brief said to read it. It gave the brave-within-determinability line, the history check and the comment rules.; triage #2369: Required by the task; brave/judgment rules and comment rules; triage #2370: The task said to read it; it holds the brave, close and wayfinder rules"
     useful: yes
   - path: .agents/skills/grilling/SKILL.md
     reason: round format
@@ -47,39 +47,66 @@ docsRead:
   - path: .agents/skills/log-session/SKILL.md
     reason: authored-field schema and the reads report
     useful: yes
-  - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/implement/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/visitor-loop/SKILL.md
-    reason: (read before editing)
-  - path: .agents/skills/visitor-loop/refiner-brief.md
-    reason: (read before editing)
-  - path: .agents/skills/triage/SKILL.md
-    reason: (no reason given)
+  - path: .agents/skills/adr-check/SKILL.md
+    reason: "triage #2341: Required by the brief to find binding ADRs. The prune-trial territories mattered most.; triage #2362: Invoked as the adr-check Skill; its binding.ts listing found the relevant ADRs and prune trials; triage #2363: Required by the brief; binding.ts surfaced the close-session prune trial"
+    useful: yes
   - path: .agents/skills/blog-post/SKILL.md
-    reason: (read before editing)
+    reason: "triage #2364: The area the issue is about. It confirmed step 2 has no cheap windowed path."
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2362: The task said to read it; gave the per-issue steps and the brief outcome; triage #2363: Required by the brief; gave the per-issue steps; triage #2364: The brief said to read it. It gave the label roles and the redundancy check.; triage #2369: Required by the task; state roles and categories"
+    useful: yes
   - path: .agents/skills/visitor-loop/decisions.md
-    reason: (no reason given)
+    reason: "triage #2369: Primary source for owner rulings; Standards visitor-loop-drop-onramp-hint r1: Read to check the widened rule against its source; this is where the stale header turned up"
+    useful: yes
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: "triage #2369: Primary source for refiner step"
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: "triage #2369: Primary source for the issue; revealed the onramp hint"
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: "triage #2364: adr-check: full read to see whether a new script counts as new work.; triage #2369: adr-check; scheduled-run remit"
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: "triage #2362: Read in full per adr-check"
+    useful: partly
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "triage #2363: Read in full via adr-check; its rejected 'remind at every pause' hook and its revisit trigger decided the options; Spec close-session-timing r2: Read lines 14-20 only, to judge whether the summary rule contradicts the new wording"
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "triage #2364: adr-check: full read to see what counts as real design doubt (several valid approaches).; triage #2369: adr-check; judgment-call definition; triage #2370: adr-check; defines a judgment call (policy choice) and so sets the ready-for-human outcome"
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "triage #2341: Read via adr-check. Backs the cut-first pick.; triage #2362: Read in full per adr-check; confirmed I should not reword trial text and should prefer a mechanical fix; triage #2369: adr-check; cut-before-add and open trials; triage #2370: adr-check; an open trial touches blog-post SKILL.md, and the ADR backs picking a cut over adding text"
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: "triage #2362: Read the worktree-guard bullet to check the issue's claims; Standards build-refuses-guarded-branch-names r2: Read the worktree-guard bullet to check whether the new comment and the cut prose repeat a fact documented there."
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Standards build-refuses-guarded-branch-names r1: The task told me to read it. It gave me the Standards axis and the smell baseline.; Spec build-refuses-guarded-branch-names r1: The task told me to read it for the Spec axis. Its three-question frame (missing, scope creep, wrong) guided the review.; Standards build-refuses-guarded-branch-names r2: The task said to read it and apply its Standards axis and smell baseline.; Spec build-refuses-guarded-branch-names r2: The task required it; I applied the Spec axis from it.; Spec verify-bullet-revert-reviewer-check r1: The task told me to read it to apply the Spec axis. Its missing, scope-creep and wrong-implementation framing structured the review.; Standards verify-bullet-revert-reviewer-check r2: Read as instructed for the Standards axis and the smell baseline.; Spec verify-bullet-revert-reviewer-check r2: The task said to read it to apply the Spec axis; it defines the missing / scope-creep / wrong-implementation checks I used; Standards blog-post-window-and-step9 r1: The brief told me to read it for the Standards axis and smell baseline. It gave the checklist I applied.; Spec blog-post-window-and-step9 r1: Read as the brief told me to, to apply the Spec axis (missing, scope creep, wrong). It defined the review frame.; Spec visitor-loop-drop-onramp-hint r1: The task told me to read it and apply its Spec axis brief (missing, scope creep, wrong implementation); Spec visitor-loop-drop-onramp-hint r2: The task said to read it and apply its Spec axis; Standards visitor-loop-drop-onramp-hint r3: The task told me to read it; it supplied the smell baseline (Duplicated Code is relevant).; Spec visitor-loop-drop-onramp-hint r3: The task said to apply its Spec axis (missing, scope creep, wrong); Standards close-session-timing r1: Read as the brief told me to, for the Standards axis and the smell baseline.; Spec close-session-timing r1: The task told me to apply its Spec axis; Standards close-session-timing r2: The task said to read it. It gave the Standards axis and the smell baseline.; Spec close-session-timing r2: The task told me to read it and apply its Spec axis; Standards close-session-timing r3: The brief told me to read it. It supplied the Standards axis and the smell baseline.; Spec close-session-timing r3: The task told me to read it. Its Spec-axis brief set the review's frame: missing, scope creep, wrong."
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "build build-refuses-guarded-branch-names: The task told me to read and follow it.; build verify-bullet-revert-reviewer-check: The task told me to read it; build blog-post-window-and-step9: The task told me to read and follow it; build close-session-timing: The brief told me to read it."
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: "Spec close-session-timing r3: Read to check that it doesn't plainly contradict the new wording. It doesn't."
+    useful: yes
+  - path: .claude/skills/tdd/SKILL.md
+    reason: "build blog-post-window-and-step9: The task told me to invoke the tdd Skill. I wrote the failing test first, so the loop applied."
+    useful: yes
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: "Standards close-session-timing r3: Loaded as project instructions. It is the source of the 'one home per fact' and 'comments say WHY' standards I applied."
+    useful: yes
+  - path: docs/agents/git-conventions.md / docs/agents/github-integration.md
+    reason: "Spec close-session-timing r2: The read-first hint pointed to both after my read-only git diff/log and issue_read calls. I did not read them, since I ran no state-changing git or GitHub write."
+    useful: no
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: the run's procedure; its triage subagent grepped it for branch naming
+    useful: yes
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (no reason given)
-  - path: .agents/skills/close-session/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0027-prune-trials.md
-    reason: (no reason given)
-  - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: (no reason given)
-  - path: docs/adr/0003-agent-operating-model-and-governance.md
-    reason: (no reason given)
-  - path: docs/agents/environment-caveats.md
-    reason: (no reason given)
-  - path: .agents/skills/clear-backlog/SKILL.md
-    reason: (no reason given)
   - path: .agents/skills/dispatch-subagents/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0005-skill-model.md
-    reason: (no reason given)
-  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
     reason: (no reason given)
 skillsUsed:
   - name: clear-backlog
@@ -102,22 +129,23 @@ frictions:
   - description: A triage agent claimed close-session/SKILL.md sits in an open prune trial; .agents/prune-trials.yml shows that trial was judged and deleted.
     solution: The explore workflow's triage brief could ask agents to quote the matching territory line from prune-trials.yml on origin/main.
     severity: minor
-durationSec: 2457
+durationSec: 2715
 models:
-  claude-opus-5-5: 148
+  claude-opus-5-5: 174
 toolCounts:
-  Bash: 49
+  Bash: 56
   Workflow: 3
   ToolSearch: 3
   PushNotification: 1
   Skill: 2
-  mcp__github__add_issue_comment: 8
+  mcp__github__add_issue_comment: 10
   mcp__github__issue_write: 5
   mcp__github__create_pull_request: 5
   mcp__claude-code-remote__subscribe_pr_activity: 5
-  ReadNotifications: 5
+  ReadNotifications: 8
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
   Edit: 1
+  mcp__claude-code-remote__send_later: 1
 filesEdited:
   - scripts/hooks/read-first-hint.ts
   - scripts/git/list-recent-prs.ts
@@ -203,6 +231,24 @@ ruleVerdicts:
     useful: no
   - path: .claude/rules/adr-0030.md
     reason: Loaded with the human-merge list; no ADR was edited.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "triage #2362: Loaded when I read its paths; confirmed .claude/workflows is not Human-only; build close-session-timing: Loaded when I touched read-first-hint.ts; confirmed the PR needs a human merge."
+    useful: yes
+  - path: .claude/rules/adr-0008.md
+    reason: "triage #2341: Loaded when I read ledger.ts. Background only."
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: "triage #2364: Loaded when I read the blog-post Skill. It's about pingbacks, which don't matter here.; build blog-post-window-and-step9: Loaded when I read blog-post. It does not apply to this change."
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: "triage #2369: Loaded on reading visitor-loop files; unrelated to triage; build visitor-loop-drop-onramp-hint: Loaded when reading the Skill file"
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "triage #2363: Loaded on reading read-first-hint.ts; not needed"
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "triage #2341: Loaded when I read ledger.ts. Not relevant."
     useful: no
 subagents:
   - type: workflow-subagent
