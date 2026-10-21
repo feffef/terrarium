@@ -105,7 +105,7 @@ describe('prsSince()', () => {
     { hash: 'h4', isoCommitTime: '2026-07-11T10:00:00Z', subject: 'fix: patch bug', body: '' },
   ]
 
-  it('lists every PR merged at or after the instant, newest-first, with no count cap', () => {
+  it('lists every PR merged at or after the instant, newest-first', () => {
     expect(prsSince(commits, '2026-07-11T09:00:00Z').map((p) => p.number)).toEqual([310, 312])
   })
   it('accepts a bare date as midnight UTC', () => {
