@@ -111,11 +111,20 @@ describe('blog Tenant', async () => {
   })
 
   it('shows a post its thread, parent and replies, in order', async () => {
-    const html = await $fetch<string>('/t/blog/david/2026-10-20-the-rule-on-skipping-code-review-was-narrowed-at-0544-and-overturned-by-0724')
-    expect(html).toContain('aria-label="Thread"')
-    expect(html).toContain('href="/t/blog/karen/2026-10-20-the-textbook-still-teaches-the-skip-that-died-39-minutes-later"')
+    const parent = '/t/blog/david/2026-10-20-the-rule-on-skipping-code-review-was-narrowed-at-0544-and-overturned-by-0724'
+    const reply = '/t/blog/karen/2026-10-20-the-textbook-still-teaches-the-skip-that-died-39-minutes-later'
+    const thread = (html: string) => html.match(/<nav[^>]*class="thread"[\s\S]*?<\/nav>/)?.[0] ?? ''
+    // The parent lists its reply after itself; the reply lists its parent first, itself unlinked.
+    const fromParent = thread(await $fetch<string>(parent))
+    expect(fromParent.indexOf('(this post)')).toBeLessThan(fromParent.indexOf(`href="${reply}"`))
+    const fromReply = thread(await $fetch<string>(reply))
+    expect(fromReply.indexOf(`href="${parent}"`)).toBeGreaterThan(-1)
+    expect(fromReply.indexOf(`href="${parent}"`)).toBeLessThan(fromReply.indexOf('(this post)'))
+    expect(fromReply).not.toContain(`href="${reply}"`)
+    expect(await $fetch<string>(reply)).not.toContain('In reply to')
     const alone = await $fetch<string>('/t/blog/david/2026-07-11-the-merge-button-runs-on-a-real-computer')
-    expect(alone).not.toContain('aria-label="Thread"')
+    expect(alone).toContain('class="post-head"')
+    expect(thread(alone)).toBe('')
   })
 
   it('gives the drop cap only to a post that opens on a letter', async () => {

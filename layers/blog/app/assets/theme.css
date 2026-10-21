@@ -407,7 +407,8 @@ body.bl-page {
 .bl .thread-label { margin: 0 0 0.3rem; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
 .bl .thread ol { list-style: none; margin: 0; padding: 0; }
 .bl .thread li { display: flex; gap: 0.6rem; padding: 0.15rem 0; }
-.bl .thread .who { flex: none; min-width: 3.2rem; text-transform: capitalize; }
+.bl .thread .who { flex: none; min-width: 3.2rem; }
+.bl .thread li > :last-child { min-width: 0; }
 .bl .thread a { color: var(--bl-accent); text-decoration: none; }
 .bl .thread a:hover { text-decoration: underline; }
 .bl .thread-here { color: var(--bl-ink); font-weight: 600; }
