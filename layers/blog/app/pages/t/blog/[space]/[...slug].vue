@@ -93,10 +93,27 @@ useSeoMeta({ description: () => post.value?.description })
         <p class="byline"><BlogSprout />{{ meta.name }}</p>
         <div v-if="post.publishedAt" class="when">{{ formatBlogDate(post.publishedAt) }}</div>
         <h1>{{ post.title }}</h1>
-        <p v-if="post.reactsTo" class="replyto">
-          ↳ In reply to {{ post.reactsTo.persona }}'s
-          <NuxtLink :to="`/t/blog/${post.reactsTo.persona}${post.reactsTo.path}`">“{{ post.reactsTo.title }}”</NuxtLink>
-        </p>
+        <!-- The chain this post sits in, oldest first, read from this Space alone:
+             the parent from `reactsTo`, the replies from its pingbacks (ADR-0012).
+             Each linked post shows its own strip, so a longer chain is a hop apiece.
+             The pingbacks query is newest first, hence the reverse. -->
+        <nav v-if="post.reactsTo || pingbacks.length" class="thread" aria-labelledby="thread-label">
+          <p id="thread-label" class="thread-label">Thread</p>
+          <ol>
+            <li v-if="post.reactsTo">
+              <span class="who">{{ personaMeta(post.reactsTo.persona).name }}</span>
+              <NuxtLink :to="`/t/blog/${post.reactsTo.persona}${post.reactsTo.path}`">{{ post.reactsTo.title }}</NuxtLink>
+            </li>
+            <li class="thread-here">
+              <span class="who">{{ meta.name }}</span>
+              <span>{{ post.title }} <em>(this post)</em></span>
+            </li>
+            <li v-for="pb in [...pingbacks].reverse()" :key="`${pb.fromPersona}${pb.fromPath}`">
+              <span class="who">{{ personaMeta(pb.fromPersona).name }}</span>
+              <NuxtLink :to="`/t/blog/${pb.fromPersona}${pb.fromPath}`">{{ pb.fromTitle }}</NuxtLink>
+            </li>
+          </ol>
+        </nav>
         <ul v-if="post.tags?.length" class="tag-chips">
           <li v-for="t in post.tags" :key="t">
             <NuxtLink :to="`/t/blog?tag=${t}`" class="tag-chip">{{ t }}</NuxtLink>
