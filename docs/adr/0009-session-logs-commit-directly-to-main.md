@@ -24,9 +24,10 @@ and its own commits.
   it judged relevant. Timings, models, tools, files read, subagents and loaded
   rules come from the transcript. Files edited come from the transcript and
   from the session's own commits, found by their `Claude-Session:` trailer, so
-  an edit made through a shell command counts too. A doc counts as read when a command's output showed enough
-  of it. The agent may mark a read credited from a command's output "not read";
-  it is then dropped and logged as a Friction, so detector errors stay visible.
+  an edit made through a shell command counts too. A doc counts as read when a
+  command's output showed enough of it. The agent may mark a read credited from
+  a command's output "not read"; it is then dropped and logged as a Friction, so
+  detector errors stay visible.
 - **Landed logs stay as they are.** No other session edits a log, not even to
   fix its wording.
 - **The schema only grows.** No log is ever migrated, so every old log must

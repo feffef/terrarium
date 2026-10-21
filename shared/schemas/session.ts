@@ -58,7 +58,7 @@ export const sessionSchema = z
     durationSec: z.number().int().nonnegative().optional(),
     models: z.record(z.string(), z.number().int()).optional(), // model id → assistant-turn count
     toolCounts: z.record(z.string(), z.number().int()).optional(), // tool name → call count
-    filesEdited: z.array(z.string()).optional(), // also from the session's own commits (log-session.ts)
+    filesEdited: z.array(z.string()).optional(),
     // Path-scoped `.claude/rules/` files that loaded on a file touch, so an audit
     // can see which ADR summaries fired and whether a full read followed.
     rulesLoaded: z.array(z.string()).optional(),
