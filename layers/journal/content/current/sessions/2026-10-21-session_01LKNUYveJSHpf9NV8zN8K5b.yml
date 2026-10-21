@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01LKNUYveJSHpf9NV8zN8K5b
 startedAt: 2026-10-21T07:25:44Z
-endedAt: 2026-10-21T09:58:57Z
+endedAt: 2026-10-21T10:19:13Z
 kind: interactive
 goal: Inspect recent audit-skills runs and improve the Skill
-status: in-review
-outcome: "PR #2368 merged by the owner; follow-up PR #2372 open for a human merge; three-day inspection ticket #2373 filed"
-summary: "The user (human-instructed throughout) first asked me to quote the audit-skills observations from the Skill Inventory dated 10-20 and 10-21; I asked scope and format first (their stated preference), then quoted 26 notes. They then asked whether the Skill works as intended and to use inspect-session; after a scoping question I had three subagents read the 10-18, 10-20 and 10-21 scheduled runs and grade them against SKILL.md. Findings: real issues were found and the Inventory-only scope held, but clean subagent reports went unverified, issue and PR states were written from hearsay, notes were bloated, and runs cost $18-28. The user asked for a Fable agent to propose fixes, then to apply them on a branch (explicit green-light). I applied the proposal's changes 1-5 (check-states.ts script replacing the prose rule, cut the clean-report claim check, clean checks append nothing, role re-read dropped, --briefs plus brief.md); changes 6 and the optional flags were deliberately not built. Code-review's Spec axis found the first state-claim heuristic misfired on 222 real claims; I tightened it and measured it on two real sweep diffs (0 of 7 and 1 of 16 flagged). The last small follow-up got only my own read though it touched 3 files. PR #2368 needed a human merge (ADR-0004: Skill prose no gate step observes); the owner merged it with green CI. The owner also asked where an audited-sessions list would live and chose the name audited, then decided not to build it yet. After the owner started the new audit-skills run (session_015WxXTQihe7mgBPgpAYZUqB) I inspected it at their request: it used the new text, took 18 min and $8.36, and the new pieces worked; the one serious defect (check-states read only committed lines, so run in step order it passed with 0 claims) I fixed in PR #2372, and I filed ticket #2373 listing regressions to check on 2026-10-24 (human-instructed). Open: whether to brief only sessions no earlier run graded, and whether the daily cadence pays off (unverified)."
+status: completed
+outcome: "PR #2368 merged by the owner; follow-up PR #2372 merged by the owner; three-day inspection ticket #2373 filed"
+summary: "The user (human-instructed throughout) first asked me to quote the audit-skills observations from the Skill Inventory dated 10-20 and 10-21; I asked scope and format first (their stated preference), then quoted 26 notes. They then asked whether the Skill works as intended and to use inspect-session; after a scoping question I had three subagents read the 10-18, 10-20 and 10-21 scheduled runs and grade them against SKILL.md. Findings: real issues were found and the Inventory-only scope held, but clean subagent reports went unverified, issue and PR states were written from hearsay, notes were bloated, and runs cost $18-28. The user asked for a Fable agent to propose fixes, then to apply them on a branch (explicit green-light). I applied the proposal's changes 1-5 (check-states.ts script replacing the prose rule, cut the clean-report claim check, clean checks append nothing, role re-read dropped, --briefs plus brief.md); changes 6 and the optional flags were deliberately not built. Code-review's Spec axis found the first state-claim heuristic misfired on 222 real claims; I tightened it and measured it on two real sweep diffs (0 of 7 and 1 of 16 flagged). The last small follow-up got only my own read though it touched 3 files. PR #2368 needed a human merge (ADR-0004: Skill prose no gate step observes); the owner merged it with green CI. The owner also asked where an audited-sessions list would live and chose the name audited, then decided not to build it yet. After the owner started the new audit-skills run (session_015WxXTQihe7mgBPgpAYZUqB) I inspected it at their request: it used the new text, took 18 min and $8.36, and the new pieces worked; the one serious defect (check-states read only committed lines, so run in step order it passed with 0 claims) I fixed in PR #2372 (merged by the owner after green CI), and I filed ticket #2373 listing regressions to check on 2026-10-24 (human-instructed). Open: whether to brief only sessions no earlier run graded, and whether the daily cadence pays off (unverified)."
 prs:
   - "2368"
   - "2372"
@@ -102,22 +102,22 @@ frictions:
   - description: The first check-states heuristic misfired on 222 claims across the current Inventory; the Spec reviewer caught it after the first commit and I reworked it.
     solution: Measure a new heuristic against real historical diffs before the first commit.
     severity: nit
-durationSec: 9193
+durationSec: 10409
 models:
-  claude-sonnet-5-5: 224
+  claude-sonnet-5-5: 231
 toolCounts:
   Read: 10
   Grep: 2
   AskUserQuestion: 3
-  Bash: 61
+  Bash: 62
   Skill: 5
   Agent: 8
   Write: 2
   ToolSearch: 3
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 5
-  mcp__github__pull_request_read: 2
+  ReadNotifications: 7
+  mcp__github__pull_request_read: 3
   mcp__claude-code-remote__send_later: 2
   mcp__claude-code-remote__delete_trigger: 1
   mcp__claude-code-remote__get_session: 1
