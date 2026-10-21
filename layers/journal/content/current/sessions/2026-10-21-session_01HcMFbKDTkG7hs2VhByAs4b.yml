@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01HcMFbKDTkG7hs2VhByAs4b
 startedAt: 2026-10-21T04:03:47Z
-endedAt: 2026-10-21T04:15:24Z
+endedAt: 2026-10-21T04:15:55Z
 kind: autonomous
 goal: Scheduled docs audit of the docs/agents family
-status: in-review
-outcome: Sweep PR 2358 open with a green gate and a posted verdict, awaiting CI before merge
-summary: Scheduled audit-docs run (no human prompt). Concision family chosen from the newest family commit (root), so this run was docs/agents. Four read-only reviewers (Freshness, Single-home, Concision, Coherence) returned 17 findings; I merged overlaps, and two independent checkers returned 3 CONFIRMED, 5 CONFIRMED-BUT and 9 WRONG. Rejected ones were mostly rewrites that lost a rule, a why, or ground held by an open prune trial or a deliberate earlier audit commit. I applied only checker-confirmed text across seven files, ran code-review (one judgement call, an ambiguous step reference, fixed), ran gate:scoped green, pushed, opened PR 2358 and posted the verdict. No ADR edit, no issue filed, so no escalation PR. Everything was agent-initiated under the schedule's stored prompt; no human instruction beyond it.
+status: completed
+outcome: Sweep PR 2358 merged green after code-review and a green scoped gate
+summary: Scheduled audit-docs run (no human prompt). Concision family chosen from the newest family commit (root), so this run was docs/agents. Four read-only reviewers (Freshness, Single-home, Concision, Coherence) returned 17 findings; I merged overlaps, and two independent checkers returned 3 CONFIRMED, 5 CONFIRMED-BUT and 9 WRONG. Rejected ones were mostly rewrites that lost a rule, a why, or ground held by an open prune trial or a deliberate earlier audit commit. I applied only checker-confirmed text across seven files, ran code-review (one judgement call, an ambiguous step reference, fixed), ran gate:scoped green, pushed, opened PR 2358, posted the verdict and merged it via merge-pr.ts after CI went green. No ADR edit, no issue filed, so no escalation PR. Everything was agent-initiated under the schedule's stored prompt; no human instruction beyond it.
 prs:
   - "2358"
 docsRead:
@@ -113,12 +113,12 @@ frictions:
   - description: The code-review Spec reviewer said pool.md held only Agent A's findings, while the batch-1 checker handled B-D from it; I did not verify the pool contents myself.
     solution: Have save-handback print the saved byte count per agent so a truncated pool is obvious.
     severity: nit
-durationSec: 697
+durationSec: 728
 models:
-  claude-sonnet-5-5: 82
+  claude-sonnet-5-5: 89
 toolCounts:
   Read: 11
-  Bash: 15
+  Bash: 17
   Agent: 8
   Grep: 1
   Edit: 9
@@ -128,6 +128,8 @@ toolCounts:
   mcp__github__update_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/agents/issue-tracker.md
   - docs/agents/domain.md
