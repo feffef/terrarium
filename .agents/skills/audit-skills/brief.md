@@ -3,7 +3,7 @@ data file (named in your prompt) lists the Skill's `SKILL.md`, what changed
 in it, the runs' log files and what earlier audits observed. Keep scratch
 files in a scratchpad subfolder named for yourself.
 
-Work out from the `SKILL.md` in effect when each run started (the brief says
+Work out from the `SKILL.md` in effect when each run started (your data file says
 if and when it changed) what a run must deliver: its outcome and each
 step's completion criterion. For each session, check against primary sources
 whether it delivered. Start from the log's outcome, summary, `prs` and files
@@ -31,6 +31,7 @@ is ruled in or out.
 Report every finding labelled silent failure or missed invocation, with its
 session ids, quoted evidence, what the Skill promised against what happened,
 and your best guess at why. If there are none, name the session ids you
-checked. For each rule and doc you loaded or read: its path, why it loaded or was read, and whether it was useful (yes, partly, no).
+checked. For each rule and doc you loaded or read: its path, why it loaded or
+was read, and whether it was useful (yes, partly, no).
 
 Report in under 300 words plus 150 per finding.

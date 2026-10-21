@@ -14,7 +14,10 @@ import { getJson, resolveAccess, type Access } from '../../../../scripts/lib/git
 
 const INVENTORY_DIR = 'layers/journal/content/current/skills/'
 /** How close, in characters, a state word must sit to a `#N` to be its claim. */
-const NEAR = 60
+const NEAR = 40
+const CLAUSE_BREAK = /[;:]|\.\s|\u2014/
+/** "was open", "then closed": a past state, not a claim about now. */
+const HISTORICAL = /\b(?:was|were|been|once|then|originally)\s+$/i
 const STATE_WORD = /\b(reopened|open|closed|resolved|fixed|merged|wontfix)\b/gi
 
 export interface StateClaim {
@@ -31,18 +34,27 @@ export interface IssueState {
   pull_request?: { merged_at?: string | null }
 }
 
-/** Claims in one run of text: each state word belongs to the nearest `#N`
- *  within `NEAR` characters. `lineAt` maps a text offset to its source line. */
+/** Claims in one run of text: a state word belongs to the nearest `#N` within
+ *  `NEAR` characters with no other number and no clause break between them.
+ *  Conservative on purpose: a missed claim is no worse than having no check,
+ *  while a false one makes a run reword a true note. So "open-issue home" and
+ *  "was open then" are not claims. `lineAt` maps a text offset to its line. */
 export function claimsIn(text: string, file: string, lineAt: (offset: number) => number): StateClaim[] {
   const refs = [...text.matchAll(/#(\d+)\b/g)].map((m) => ({ num: Number(m[1]), at: m.index, end: m.index + m[0].length }))
   const found = new Map<string, StateClaim>()
   for (const w of text.matchAll(STATE_WORD)) {
-    const gap = (r: (typeof refs)[number]) => (w.index < r.at ? r.at - (w.index + w[0].length) : w.index - r.end)
-    const ref = refs.filter((r) => gap(r) <= NEAR).sort((x, y) => gap(x) - gap(y))[0]
-    if (!ref) continue
+    const end = w.index + w[0].length
+    if (text[end] === '-' || HISTORICAL.test(text.slice(0, w.index))) continue
+    const reach = refs.flatMap((r) => {
+      const between = r.at >= end ? text.slice(end, r.at) : text.slice(r.end, w.index)
+      const ok = (r.at >= end || r.end <= w.index) && between.length <= NEAR && !CLAUSE_BREAK.test(between) && !/#\d/.test(between)
+      return ok ? [{ r, gap: between.length }] : []
+    })
+    const best = reach.sort((x, y) => x.gap - y.gap)[0]
+    if (!best) continue
     const word = w[1]!.toLowerCase()
-    const key = `${ref.num}:${word}`
-    if (!found.has(key)) found.set(key, { file, line: lineAt(ref.at), num: ref.num, word })
+    const key = `${best.r.num}:${word}`
+    if (!found.has(key)) found.set(key, { file, line: lineAt(best.r.at), num: best.r.num, word })
   }
   return [...found.values()]
 }

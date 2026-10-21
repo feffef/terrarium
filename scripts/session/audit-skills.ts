@@ -346,7 +346,6 @@ export function pickSkillChanges(landings: readonly Landing[], name: string, scr
   })
 }
 
-/** Own, on-disk Skills used often enough in the window to judge their behaviour. */
 /** How many of a Skill's newest runs its behaviour-check subagent reads. */
 export const BRIEF_RUNS = 10
 
@@ -377,6 +376,7 @@ export function buildBrief(row: SkillRow, window: readonly WindowSession[]): str
   return lines.join('\n') + '\n'
 }
 
+/** Own, on-disk Skills used often enough in the window to judge their behaviour. */
 export function pickBehaviourChecks(rows: readonly SkillRow[], minUses = BEHAVIOUR_CHECK_MIN_USES): string[] {
   return rows.filter((r) => r.onDisk && !r.external && r.useCount >= minUses).map((r) => r.name)
 }

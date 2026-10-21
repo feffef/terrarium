@@ -31,6 +31,14 @@ describe('claimsInDiff', () => {
 })
 
 describe('claimsIn', () => {
+  it('leaves compounds, past states and clause breaks alone', () => {
+    expect(claimsIn('an open-issue home for #5', 't', () => 1)).toEqual([])
+    expect(claimsIn('#5 was open then', 't', () => 1)).toEqual([])
+    expect(claimsIn('closed. Next, #5', 't', () => 1)).toEqual([])
+    expect(claimsIn('merged #5 and #6', 't', () => 1).map((c) => c.num)).toEqual([5])
+  })
+
+
   it('counts a state word once per number', () => {
     expect(claimsIn('#4 closed, then #4 closed again', 't', () => 1)).toHaveLength(1)
   })
