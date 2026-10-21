@@ -10,7 +10,7 @@
 // transcript beside its parent's; if that is missing it points anyway. A missing
 // main transcript adds nothing, since every call would repeat the pointer.
 // After a successful `mcp__github__create_pull_request` in the main session it
-// also says to invoke `close-session` now, unless the transcript shows it invoked
+// also says to invoke `close-session` before that turn ends, unless the transcript shows it invoked
 // after that PR call, so each PR gets it (issue #2209): prose alone left sessions
 // logging only at the end (issue #1859).
 // Fails open: any error adds nothing. `scripts/hooks/read-first-hint.sh` is the Bash

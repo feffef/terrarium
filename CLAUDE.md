@@ -51,7 +51,7 @@ act, once per session.
   task from the branch name or past commits.
 - **Stay on the branch your session started on.** If that is `main`, fetch
   `origin main` and cut a new branch first.
-- **Invoke `close-session`** before the turn in which you open a PR ends, and when a session only answers a question.
+- **Invoke `close-session`** before the turn that opens a PR ends, and when a session only answers a question.
 - **Merge your own PR** with `scripts/github/merge-pr.ts <number>` once ADR-0004 allows it.
 - **Verify before you state.** Call something settled only if you checked it
   this turn against the source: an id, a count (read every item), a cause
