@@ -4,7 +4,8 @@
 // reads each cited number itself.
 //
 // Usage:  tsx .agents/skills/audit-skills/scripts/check-states.ts [--text FILE]
-// Default: the lines the branch adds under the Inventory, against origin/main.
+// Default: the lines the branch adds under the Inventory, committed or not,
+// against where it left origin/main.
 // `--text` checks a file instead (an issue or comment body before posting).
 // Exit 1 on any mismatch or unreadable number.
 import { readFileSync } from 'node:fs'
@@ -116,7 +117,7 @@ function main(): void {
   const text = textFile ? readFileSync(textFile, 'utf8') : ''
   const claims = textFile
     ? claimsIn(text, textFile, (offset) => text.slice(0, offset).split('\n').length)
-    : claimsInDiff(git(['diff', '--no-renames', '-U0', 'origin/main...HEAD', '--', INVENTORY_DIR], root))
+    : claimsInDiff(git(['diff', '--no-renames', '-U0', git(['merge-base', 'origin/main', 'HEAD'], root).trim(), '--', INVENTORY_DIR], root))
   const access: Access = resolveAccess(root)
   const actual = new Map<number, IssueState | string>()
   let bad = 0
