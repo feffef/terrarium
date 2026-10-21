@@ -1,15 +1,17 @@
 schemaVersion: 1
 session: session_013n8e5pQ7h9GevyhHvtm4c3
 startedAt: 2026-10-21T19:39:25Z
-endedAt: 2026-10-21T19:57:20Z
+endedAt: 2026-10-21T20:16:08Z
 kind: interactive
 goal: Clear the issue backlog with the owner
 status: in-review
-outcome: "PR #2389 merged (#2387); PR #2390 open for a human merge (#2388); two branches building"
+outcome: "#2387 and #2388 merged; PR #2391 (#2384, #2385) and PR #2392 (#2386, human merge) in review"
 summary: "The owner invoked /clear-backlog. The default sweep found four untriaged issues (#2384-#2387); the owner kept that scope and reserved none. The owner also asked, unprompted by any issue, to say \"relevant ADRs\" instead of \"binding ADRs\"; I filed that as #2388 on their direction (Q3c, Q4c) and it is building. The owner doubted #2384, so its triage verdict went into the grilling. The grilling settled #2384 (live issue lookup in audit-skills --skill, built with #2385), #2386 (filesEdited from the session's own commits; a relevant-ADRs log field with reasons), an owner-approved exception to the dispatch-subagents prune trial for #2388, and extending #2387 to CLAUDE.md. #2387 plus the CLAUDE.md line is PR #2389. The #2386 triage agent read the owner's chat answers \"1a 2a\" as answers to that issue's points and posted a false claim; I corrected it on the issue. All building is agent-executed on owner-approved issues."
 prs:
   - "2389"
   - "2390"
+  - "2391"
+  - "2392"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: session-start glossary map
@@ -38,6 +40,8 @@ docsRead:
   - path: .agents/prune-trials.yml
     reason: found dispatch-subagents section 3 in an open trial, which raised Q6
     useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
   - path: .agents/skills/implement/SKILL.md
     reason: (no reason given)
   - path: tests/unit/log-session.spec.ts
@@ -45,8 +49,6 @@ docsRead:
   - path: /home/user/terrarium/.claude/worktrees/wf_1dc58104-72c-1/.agents/skills/code-review/SKILL.md
     reason: (no reason given)
   - path: scripts/session/audit-skills.ts
-    reason: (no reason given)
-  - path: .agents/skills/code-review/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/triage/SKILL.md
     reason: (no reason given)
@@ -101,22 +103,22 @@ frictions:
   - description: Stop hook asked twice to push inspect-session-out-files while I held it for an owner answer and then for gate:scoped
     solution: None needed; ADR-0004 already says to ignore it until the gate passes
     severity: nit
-durationSec: 1075
+durationSec: 2203
 models:
-  claude-opus-5-5: 136
+  claude-opus-5-5: 185
 toolCounts:
-  Bash: 40
+  Bash: 59
   Read: 1
   Workflow: 4
   ToolSearch: 3
   mcp__github__issue_write: 3
-  mcp__github__add_issue_comment: 6
+  mcp__github__add_issue_comment: 7
   PushNotification: 1
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
   mcp__github__update_pull_request: 1
   Skill: 1
-  ReadNotifications: 2
+  ReadNotifications: 7
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - tests/unit/log-session.spec.ts
@@ -138,6 +140,11 @@ rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -151,22 +158,17 @@ rulesFollowedUp:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0005.md
 rulesLoadedBySubagents:
-  - .claude/rules/adr-0004-human-merge.md
-  - .claude/rules/adr-0025.md
-  - .claude/rules/data-shapes.md
   - .claude/rules/adr-0008.md
   - .claude/rules/tenant-layers.md
   - .claude/rules/ui-verification.md
-  - .claude/rules/adr-0030.md
-  - .claude/rules/adr-0015.md
   - .claude/rules/adr-0002.md
   - .claude/rules/mdc-when-to-use.md
   - .claude/rules/adr-0028.md
 docsReadBySubagents:
+  - .agents/skills/code-review/SKILL.md
   - .agents/skills/implement/SKILL.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - .agents/skills/inspect-session/SKILL.md
-  - .agents/skills/code-review/SKILL.md
   - .agents/skills/triage/SKILL.md
   - docs/adr/0015-audit-skills-and-conditional-importance.md
   - docs/adr/0029-instructions-load-with-the-files-they-govern.md
@@ -210,6 +212,9 @@ ruleVerdicts:
     useful: no
 subagents:
   - type: workflow-subagent
+    task: Standards audit-skills-one-skill-query r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
     task: build session-log-files-and-relevant-adrs
     model: claude-opus-5-5
   - type: workflow-subagent
@@ -219,7 +224,28 @@ subagents:
     task: build audit-skills-one-skill-query
     model: claude-sonnet-5-5
   - type: workflow-subagent
+    task: fix session-log-files-and-relevant-adrs r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards session-log-files-and-relevant-adrs r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards session-log-files-and-relevant-adrs r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec session-log-files-and-relevant-adrs r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec audit-skills-one-skill-query r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix audit-skills-one-skill-query r1
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
     task: Standards audit-skills-one-skill-query r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec session-log-files-and-relevant-adrs r2
     model: claude-opus-5-5
   - type: workflow-subagent
     task: build inspect-session-out-files
