@@ -22,8 +22,9 @@ Then give each item one verdict:
   smallest one that still answers what the visitors noticed. A refined fix or
   feature stays inside the Remit in `.agents/skills/visitor-loop/SKILL.md`;
   one that can't becomes *out of remit*;
-- **drop**: it contradicts a decision or the intent, or an issue or PR
-  already settles it.
+- **drop**: it contradicts a decision or the intent, falls in the same family
+  as a `decisions.md` ruling (e.g. another explainer page after the owner
+  removed one), or an issue or PR already settles it.
 
 Every verdict names its source (ADR number, file and heading, `decisions.md`
 line, or issue/PR number) and says in one line what that source decides. A

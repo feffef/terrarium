@@ -86,7 +86,8 @@ tally in your scratchpad:
   preference becomes one new line in `decisions.md` (committed with step 5's
   PR; say "decisions.md" on the tally line); anything else is marked *not a
   ruling (why)*.
-- **Filters.** Then drop anything [`decisions.md`](decisions.md) rules out,
+- **Filters.** Then drop anything [`decisions.md`](decisions.md) rules out or
+  that is in the same family as one of its rulings,
   anything an open or closed issue/PR already covers (search first; record
   each result in the tally — the match by number, or the query and *no match*),
   and anything already logged as an idea in the last week
