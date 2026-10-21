@@ -79,7 +79,7 @@ const pointer = (r: ReadFirst) => `Read first: \`${r.doc}\` (${r.source}: "${r.t
 
 export const LATE_READ_NOTE = 'If the doc shows your call was already right, the late read is not a Friction.'
 
-export const CLOSE_SESSION_HINT = 'PR opened: invoke the `close-session` Skill now for an in-review first log (CLAUDE.md); re-invoking it later is safe.'
+export const CLOSE_SESSION_HINT = 'PR opened: invoke the `close-session` Skill before this turn ends for an in-review first log (CLAUDE.md); re-invoking it later is safe.'
 
 /** The docs this transcript already read or was pointed to. */
 function seen(records: Record<string, unknown>[], docs: ReadFirst[], trace: ReturnType<typeof extractTrace>): Set<string> {

@@ -151,6 +151,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
   it('says to invoke close-session after a main-session PR create, unless the transcript shows it invoked after that PR', () => {
     const pr = (extra: object = {}) => context(run(call('x', { tool_name: 'mcp__github__create_pull_request', tool_input: {}, ...extra })))
     expect(pr()).toContain(CLOSE_SESSION_HINT)
+    expect(CLOSE_SESSION_HINT).toContain('before this turn ends')
     // Not tied to a doc pointer being due.
     const ghRead = transcript('gh-read.jsonl', [toolUse('r', 'Read', { file_path: `${repo}/${GH}` })])
     expect(pr({ transcript_path: ghRead })).toBe(CLOSE_SESSION_HINT)
