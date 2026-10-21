@@ -1,0 +1,274 @@
+schemaVersion: 1
+session: session_015WxXTQihe7mgBPgpAYZUqB
+startedAt: 2026-10-21T09:12:47Z
+endedAt: 2026-10-21T09:28:14Z
+kind: delegated
+goal: Weekly check of the Platform's own Skills
+status: in-review
+outcome: "Inventory PR #2371 open with gate green; 2 issues filed, 1 correction comment posted"
+summary: "The human's only prompt was the /audit-skills invocation; everything after was agent-initiated within that Skill's remit (issues, Inventory edits and the PR are the Skill's own outputs, ADR-0015). I gathered the scorecard, fetched usage for only the 4 routine runs not yet recorded (the Skill says every run; the other 51 were already listed), and dispatched 14 read-only Sonnet agents, one per Skill. Two reports were incomplete: log-session named too few non-user sessions and was sent back; visitor-loop's covered all runs. I verified findings against git and PR bodies before acting. Result: filed #2369 (visitor-loop, owner removed two run-built features) and #2370 (blog-post step 9 late unchecked edits); commented a correction on #2286 because an earlier audit comment wrongly called session_012XnetQuxWoyaVFYw1BqMoy a silent skip (it read all 30 ADRs); corrected inspect-session's \"missed invocation\" (that session predates the Skill). Left as observations only: audit-docs conflicts left in a PR body (single run), the blog-post code-review skip (already the closed prepush-gate cluster). Step 3 closure checks cleared (2 orphans both resolved, 2 resolved-annotation suppressions, no human-prompted closures). No grade or role changed. Several subagent claims stay unchecked: dispatch-subagents' 20 unopened non-users, log-session's bulk status checks of 25 non-users, adr-check's two possible summary-only sessions."
+prs:
+  - "2371"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start vocabulary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Importance and Role definitions for grading
+    useful: yes
+  - path: .claude/skills/audit-skills/brief.md
+    reason: subagent brief text for the 14 checks
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: hook demanded it; it also forbids state-changing git in a gate command
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping and search traps before filing issues
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "how to file an issue: separate verified fact from hypothesis"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: other Skills file needs-triage only
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push; simple-change threshold; scheduled-run PR closing
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: spec under audit, read by its checking agent
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: spec under audit, read by its checking agent (also an earlier version via git show)
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: spec under audit, read by its checking agent
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: spec under audit, read by its checking agent
+    useful: yes
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: owner decisions the revert commit added; checked by the visitor-loop agent and me
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: spec under audit, read by its checking agent
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: spec under audit, read by its checking agent
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: spec under audit, read by its checking agent
+    useful: yes
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: spec under audit, read by its checking agent
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: spec under audit, read by its checking agent
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: spec under audit, read by its checking agent
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: spec under audit, read by its checking agent
+    useful: yes
+  - path: .agents/skills/adr-check/SKILL.md
+    reason: spec under audit, read by its checking agent; also in session_012Xnet docsRead
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: spec under audit, read by its checking agent
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (not read) only named in a gh api command; I relied on the rule summary
+    useful: no
+  - path: docs/PULL_REQUEST_TEMPLATE.md
+    reason: (not read) only ls-checked for existence; no template found
+    useful: no
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: "spec under audit; I also read step 9 to quote it exactly in #2370"
+    useful: yes
+  - path: .claude/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the task itself
+  - name: code-review
+    reason: 82-line diff is not a simple change; Standards and Spec both clean
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: in-review log
+frictions:
+  - description: Chained git commit --amend before the gate run in one Bash command, against git-conventions (no state-changing git in a gate command). No push happened.
+    solution: Amend in one call, start the gate in a separate backgrounded call.
+    severity: nit
+  - description: Read git-conventions.md only after the hook fired, following git status and branch commands; the doc did not change what I ran.
+    solution: Nothing needed; the hook worked as designed.
+    severity: nit
+  - description: Filed issues and posted a recommendation-bearing hypothesis without running the adr-check Skill, the same gap this audit reports on others.
+    solution: Run adr-check before the step 4 issue text; or name audit-skills in CLAUDE.md's exemption.
+    severity: minor
+  - description: A subagent report omitted or truncated ids (log-session's non-user list) and one spec reviewer skipped check-states; each needed a send-back or my own rerun.
+    solution: Put the completeness requirement (every id in full) in brief.md itself.
+    severity: minor
+  - description: Skill step 1 asks usage for every routine run but step 5 only needs unlisted ones, so I fetched 4 of 55; that is a deviation the text does not allow.
+    solution: Reword step 1 to fetch usage only for runs not yet in routines/*.yml.
+    severity: nit
+  - description: Stop hook asked for a push four times while review and gate were pending, as ADR-0004 anticipates; each cost a turn of explanation.
+    solution: Let the hook skip while a gate or review agent is running.
+    severity: nit
+durationSec: 927
+models:
+  claude-sonnet-5-5: 147
+toolCounts:
+  Read: 8
+  Bash: 31
+  Agent: 17
+  ToolSearch: 3
+  SendMessage: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__issue_read: 1
+  mcp__github__search_issues: 2
+  mcp__github__issue_write: 2
+  mcp__github__add_issue_comment: 1
+  Skill: 3
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/skills/inspect-session.yml
+rulesLoaded:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0012.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0010.md
+docsReadBySubagents:
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/adr-check/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Made me open the PR and subscribe without asking; the summary was enough, I skipped the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Held the push until code-review and gate:scoped passed despite four Stop-hook nags; I read pr-workflow.md instead of the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open and keep the log off the branch; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on all three GitHub writes and the PR body; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Confirmed the sweep edits only Inventory entries, run costs and issues, never a Skill; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded when I read Skill files; I edited no Skill text, so the open-trial rule and full ADR did not apply.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: About glossary placement; I edited no glossary.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill files in .agents/skills; I changed no Skill.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule-placement guidance; I wrote no rule or doc.
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: About the auto-triage sweep, which this run never started.
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Blog Pingback rule, loaded when I read blog-post material; my checks touched no Pingback. The blog-post agent found it partly useful.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "Subagents only: loaded by a hook on their greps; the prune-trial and frictions-to-fixes agents found it not useful."
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Subagents only: loaded by a hook on their greps; the frictions-to-fixes agent found it not needed."
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: "Subagent only: the visitor-loop agent said no, not relevant."
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: "Subagent only: the digest agent said yes, it matches what it audited (one digest a day, landed by PR)."
+    useful: yes
+subagents:
+  - type: general-purpose
+    task: Routine run usage lookup
+    model: sonnet
+  - type: general-purpose
+    task: Check adr-check Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check audit-docs Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check audit-skills Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check blog-post Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check clear-backlog Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check close-session Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check digest Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check dispatch-subagents Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check frictions-to-fixes Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check glassbox-update Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check inspect-session Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check log-session Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check prune-trial Skill
+    model: sonnet
+  - type: general-purpose
+    task: Check visitor-loop Skill
+    model: sonnet
+  - type: general-purpose
+    task: "Code review: Standards axis"
+    model: sonnet
+  - type: general-purpose
+    task: "Code review: Spec axis"
+    model: sonnet
+gitBranch: ccr-b759ab48-br6vif
+entrypoint: remote_mobile
+cliVersion: 2.1.306
+ideas:
+  - Make audit-skills' scorecard print, per Skill, the sessions whose log shows the full-ADR read, so adr-check's 'read the full ADR' promise is checkable without opening logs.
+landedBy: Stop
