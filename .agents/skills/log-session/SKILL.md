@@ -82,7 +82,7 @@ learnings:                         # OPTIONAL — omit unless something sparked
   - Nuxt layer `~/` resolves to the main app, not the layer  # each a short string
 ideas:                             # OPTIONAL — omit unless something sparked
   - Auto-cluster recurring `ideas` entries into GitHub issues weekly, so an idea doesn't die in a YAML file no one re-reads
-relevantAdrs:                      # OPTIONAL — the ADRs you judged relevant to the work
+relevantAdrs:                      # OPTIONAL — ADRs you judged relevant (typically adr-check's)
   - { adr: 9, reason: "Changed what the session log records" }  # ADR number, one-line reason
 ```
 
@@ -98,9 +98,6 @@ relevantAdrs:                      # OPTIONAL — the ADRs you judged relevant t
     worth doing, so a later reader could file it as a GitHub issue without
     re-deriving your reasoning. A quick win and a big structural bet are equally
     welcome; "someone should look into X" is too vague.
-
-- **`relevantAdrs` lists the ADRs that shaped your work** (typically the ones
-  `adr-check` found), each with a one-line reason; omit it when none did.
 
 - **Don't set `external`.** That optional boolean marks a log from a *different*
   harness (an outside contributor's own agent); absent means internal
