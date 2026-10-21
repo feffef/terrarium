@@ -5,6 +5,8 @@ cause: >-
   No doc covers adding a pack Skill; the skills CLI installed under .claude/skills (needs move plus link) and skills-lock computedHash is not the on-disk installedSha256.
 surface: safe
 status: open
+notes: |-
+  2026-10-21 design: a pack-install doc dropped: installs are rare, and validate-skills-lock.ts already explains the hash pin and prints the --write fix.
 occurrences:
   - session: session_01Lwanyry6GWtqHYoMAgGGLa
     date: "2026-10-15"
