@@ -112,14 +112,16 @@ function fresh(b) {
   return `Run \`pwd\` once to learn your worktree root. Then \`pnpm install\`, \`git fetch origin main\`, \`git checkout -b ${b.name} origin/main\` (if \`${b.name}\` already exists locally or on origin, check it out instead and keep its commits), and check HEAD equals origin/main or that branch.${b.cherryPick ? ` Closed PR #${b.cherryPick} already implements the agreed pick: \`git fetch origin pull/${b.cherryPick}/head\`, cherry-pick its commits onto your branch, then adapt them to the brief.` : ''}`
 }
 
-function reviewPrompt(b, axis, wt, round) {
+function reviewPrompt(b, axis, wt, round, decisions) {
   const what = axis === 'Standards'
-    ? `the Standards axis: the repo's documented standards plus the smell baseline in that Skill, and one check: every count and every subagent claim in the branch's PR or issue body text or its decisions cites its source (a file, a command, a commit); flag an uncited one as a finding`
+    ? `the Standards axis: the repo's documented standards plus the smell baseline in that Skill, and one check: every count and every subagent claim in the commit messages or the build decisions listed below cites its source (a file, a command, a commit); flag an uncited one as a finding`
     : `the Spec axis, with the brief and picks above as the spec, plus the issues themselves (read them with mcp__github__issue_read via ToolSearch)`
   return `You are the ${axis.toUpperCase()} reviewer, round ${round}. ${common(b)}
 ## Task
 Review read-only in ${wt} (\`cd ${wt} && …\`): the diff \`git diff origin/main...HEAD\`. Read .agents/skills/code-review/SKILL.md with Read and apply ${what} yourself; you can't spawn subagents (the environment sets CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1). Focus on simplicity: what could be smaller, plainer or deleted. Edit no file and run no git command that changes state.
-Mark worthFixing false for a judgement call not worth another fix round. ${ASK_VERDICTS}`
+Mark worthFixing false for a judgement call not worth another fix round. ${ASK_VERDICTS}
+## Build decisions
+${JSON.stringify(decisions)}`
 }
 
 function fixPrompt(b, wt, findings, round) {
@@ -146,7 +148,7 @@ async function reviewBranch(built, b) {
     out.rounds = round
     const axes = ['Standards', 'Spec']
     const reviews = await parallel(axes.map(axis => () =>
-      agent(reviewPrompt(b, axis, out.worktree, round), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW })))
+      agent(reviewPrompt(b, axis, out.worktree, round, out.decisions), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW })))
     reviews.forEach((r, i) => out.verdicts.push(...tagged(r, `${axes[i]} ${b.name} r${round}`)))
     if (reviews.some(r => !r)) return { ...out, status: 'failed', reason: `round ${round}: a reviewer returned nothing` }
     const all = reviews.flatMap(r => r.findings)
