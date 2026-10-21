@@ -593,6 +593,14 @@ describe('stitch()', () => {
     expect(withNotes.ideas).toEqual(['cluster frictions into tags'])
     expect(validateEntry(withNotes).ok).toBe(true)
   })
+
+  it('carries authored relevantAdrs through, and omits them when absent', () => {
+    expect('relevantAdrs' in entry).toBe(false)
+    const relevantAdrs = [{ adr: 9, reason: 'changes the session log' }]
+    const withAdrs = stitch({ ...scratch, relevantAdrs }, trace)
+    expect(withAdrs.relevantAdrs).toEqual(relevantAdrs)
+    expect(validateEntry(withAdrs).ok).toBe(true)
+  })
 })
 
 describe('docsReadViaShell (issues #1074, #1545)', () => {

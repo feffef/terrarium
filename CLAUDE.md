@@ -39,8 +39,8 @@ act, once per session.
   `dispatch-subagents` Skill.
 - **Every subagent brief** asks it to return, in its final reply, a verdict
   (path, why it loaded or was read, useful yes/partly/no) on each rule and doc
-  it loaded or read, and to keep scratch files in a scratchpad subfolder named
-  for itself (subagents share one scratchpad).
+  it loaded or read, and to write every file it creates, scripts included, in a
+  scratchpad subfolder named for itself (subagents share one scratchpad).
 - **Before you add or change a glossary term:** `docs/agents/domain.md`.
 - **Before you debug a tool, push, network or permission error** that your
   diff doesn't explain: `docs/agents/environment-caveats.md`.
@@ -81,7 +81,8 @@ docs/research/            dated reference notes
 .agents/skills/           our Skills (.claude/skills/ links here)
 .claude/workflows/        workflow scripts, each its Skill's code (ADR-0005)
 scripts/                  repo tooling by area: gate/ (the gate and its checks), hooks/ (tool-call
-                          guards and hints), session/ (session logs, Skill audit), github/, git/, ui/, lib/ (shared)
+                          guards and hints), session/ (session logs; Skill usage: audit-skills.ts --skill;
+                          Frictions since a date: extract-frictions.ts --since), github/, git/, ui/, lib/ (shared)
 tests/                    Platform tests; each Tenant keeps its own in its layer
 ```
 

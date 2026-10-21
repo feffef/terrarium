@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { adrSummariesText, trialTerritoriesText } from '../../scripts/binding.ts'
+import { adrSummariesText, trialTerritoriesText } from '../../scripts/relevant-adrs.ts'
 
 describe('adrSummariesText', () => {
   it('prints every ADR summary rule body in number order, and no other rule', () => {

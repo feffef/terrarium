@@ -51,7 +51,7 @@ map, so we use its shape.
 - **One flat glossary.** Simpler, but every agent pays for every Tenant's
   words on every task.
 - **An ADR, or an ADR folder, per Tenant.** Product choices would sit beside
-  architecture, and agents would search more ADRs to find the ones that bind
+  architecture, and agents would search more ADRs to find the ones relevant to
   the Platform.
 - **A glossary-only file per Tenant, as the Skill's template has.** A Tenant's
   purpose would have no home.

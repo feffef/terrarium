@@ -20,8 +20,10 @@ const tokenShare = z.number().min(0).max(100)
 
 export const usefulVerdict = z.enum(['yes', 'partly', 'no'])
 export const ruleVerdict = z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict })
+export const relevantAdr = z.object({ adr: z.number().int().positive(), reason: z.string() })
 export type UsefulVerdict = z.infer<typeof usefulVerdict>
 export type RuleVerdict = z.infer<typeof ruleVerdict>
+export type RelevantAdr = z.infer<typeof relevantAdr>
 
 /**
  * The grow-only `sessions` schema (ADR-0009). `status`/`kind` are queryable spines;
@@ -132,6 +134,9 @@ export const sessionSchema = z
     // truly empty.
     learnings: z.array(z.string()).optional(),
     ideas: z.array(z.string()).optional(),
+    // The ADRs the agent judged relevant to its work, each with a one-line
+    // reason (#2386). Authored, optional.
+    relevantAdrs: z.array(relevantAdr).optional(),
     // Field names a back-catalog sweep (issue #449 Gap 5) suspects were silently
     // truncated by the pre-#367 unquoted-`#` bug but couldn't repair with
     // confidence. Absent on every log the sweep didn't flag.

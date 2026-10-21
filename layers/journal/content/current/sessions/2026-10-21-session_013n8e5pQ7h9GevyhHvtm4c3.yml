@@ -1,0 +1,357 @@
+schemaVersion: 1
+session: session_013n8e5pQ7h9GevyhHvtm4c3
+startedAt: 2026-10-21T19:39:25Z
+endedAt: 2026-10-21T20:23:53Z
+kind: interactive
+goal: Clear the issue backlog with the owner
+status: completed
+outcome: "All five issues (#2384-#2388) merged across PRs #2389-#2392"
+summary: "The owner invoked /clear-backlog. The default sweep found four untriaged issues (#2384-#2387); the owner kept that scope and reserved none. Unprompted by any issue, the owner asked to say \"relevant ADRs\" instead of \"binding ADRs\"; I filed that as #2388 on their direction (Q3c, Q4c), including the ADR-0021 and ADR-0029 text and renaming adr-check's binding.ts to relevant-adrs.ts. The owner doubted #2384, so its triage verdict went into the grilling (Q5c). The grilling (Q6-Q10, all answered by the owner) settled four things: an owner-approved exception to the dispatch-subagents prune trial for #2388; #2384 as a live open-issue lookup in audit-skills --skill, built with #2385; #2386 as filesEdited from the session's own commits (found by their Claude-Session trailer) plus an optional relevantAdrs field with reasons; and extending #2387 to CLAUDE.md. Builds ran through clear-backlog-build. I verified each branch and added small fixes: the relevant-adrs.ts header, adrsRead holding only the main agent's ADR reads, dropping a schema comment that restated ADR-0009, and rewrapping an ADR line. Merged: PR #2389 (#2387, by me), PR #2390 (#2388, by the owner), PR #2391 (#2384 and #2385, by me). PR #2392 (#2386) was merged by the owner (it touched ADR-0009 and the shared schema). The #2386 triage agent misread the owner's chat answers \"1a 2a\" and posted a false decision on the issue; I corrected it. Still open: two Glass Box pages still say ADRs \"bind\" a change, and the frictions-to-fixes briefs have the same scratch-file loophole as #2387."
+prs:
+  - "2389"
+  - "2390"
+  - "2391"
+  - "2392"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start glossary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session-start terms; Friction and Session kind
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: "fetch before history; trailer check Subagents: triage #2386: CLAUDE.md trigger before git log; I read it after the first fetch and log"
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: "label set replaces; comment via add_issue_comment Subagents: triage #2384: Required before GitHub operations. It covered replacing the whole label set and commenting through MCP."
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "filing #2388 with verified facts Subagents: triage #2384: Required before triage.; triage #2386: CLAUDE.md trigger for triage; I read only its first part"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: "who may set ready-for-agent Subagents: triage #2384: Required before triage. It maps the labels.; triage #2386: CLAUDE.md trigger for triage; the label strings; triage #2387: Required before labelling; it gave the label strings"
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: "review-before-push and simple-change rule for the CLAUDE.md follow-up Subagents: Standards audit-skills-one-skill-query r2: Read its closing-keyword section to judge 'Closes #2385, #2384'. It settled that the second issue still closes, because merge-pr.ts closes named issues GitHub left open."
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "step 1 resolved the issue set Subagents: triage #2384: The task brief told me to read it. It sets the brave and determinability rules and closing limits.; triage #2385: The task said to read it. It gave the brave and determinability line and the comment and label rules.; triage #2386: The task brief required it; triage #2387: The task said"
+    useful: yes
+  - path: .agents/prune-trials.yml
+    reason: "found dispatch-subagents section 3 in an open trial, which raised Q6 Subagents: Spec relevant-adrs-wording r1: Read to check whether any edited text was inside an open trial's territory. It turned up the dispatch-subagents §3 overlap."
+    useful: yes
+  - path: .agents/skills/adr-check/SKILL.md
+    reason: "triage #2385: The task said to run it to find the relevant ADRs.; triage #2387: The task said to run adr-check; its script listed the open prune trials, which showed the target is outside every trial Subagents: triage #2385: The task said to run it to find the relevant ADRs.; triage #2387: The task said to run adr-check; its script listed the open prune trials, which showed the target is outside every trial"
+    useful: yes
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: "triage #2385: The brief template, read for the ready-for-agent comment. Subagents: triage #2385: The brief template, read for the ready-for-agent comment."
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2384: The task brief told me to read it. It sets the labels and the redundancy check.; triage #2385: The task said to read it. It gave the per-issue steps.; triage #2386: The task brief required it Subagents: triage #2384: The task brief told me to read it. It sets the labels and the redundancy check.; triage #2385: The task said to read it. It gave the per-issue steps.; triage #2386: The task brief required it"
+    useful: yes
+  - path: .claude/skills/adr-check (SKILL.md)
+    reason: "triage #2386: Required before recommending; it led me to ADR-0009's rejected alternative Subagents: triage #2386: Required before recommending; it led me to ADR-0009's rejected alternative"
+    useful: yes
+  - path: .claude/skills/adr-check (Skill)
+    reason: "triage #2384: Required before recommending a change. It listed the ADRs and the open prune trials. Subagents: triage #2384: Required before recommending a change. It listed the ADRs and the open prune trials."
+    useful: yes
+  - path: CLAUDE.md
+    reason: "triage #2384: Loaded at session start. It sent me to adr-check and the GitHub and issue docs.; triage #2385: Project instructions loaded at start. They gave the layout line the issue wants changed and the provenance header. Subagents: Spec inspect-session-out-files r1: Project instructions loaded at session start. Only the one-home-per-fact and keep-it-short guidance applied here."
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: "triage #2387: Read as a relevant ADR for a Skill edit Subagents: triage #2387: Read as a relevant ADR for a Skill edit"
+    useful: partly
+  - path: docs/adr/0008-journal-is-the-platforms-logbook.md
+    reason: "triage #2386: Relevant ADR on the Journal's session logs Subagents: triage #2386: Relevant ADR on the Journal's session logs"
+    useful: partly
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: "triage #2384: A relevant ADR, read in full. Background on Inventories. Subagents: triage #2384: A relevant ADR, read in full. Background on Inventories."
+    useful: partly
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "triage #2386: The relevant ADR for log fields and derivation Subagents: build session-log-files-and-relevant-adrs: Read in full to reword it, as the brief required"
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: "triage #2384: A relevant ADR, read in full. It covers the Skill Inventory fields and the limits of audit-skills.; triage #2385: The full ADR for the script being changed. Subagents: triage #2384: A relevant ADR, read in full. It covers the Skill Inventory fields and the limits of audit-skills.; triage #2385: The full ADR for the script being changed."
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "triage #2384: A relevant ADR, read in full. It defines a judgment call.; triage #2386: Relevant ADR for what the sweep may label Subagents: triage #2384: A relevant ADR, read in full. It defines a judgment call.; triage #2386: Relevant ADR for what the sweep may label"
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "triage #2387: Read as a relevant ADR: whether a prune trial overlaps, and cut before add Subagents: triage #2387: Read as a relevant ADR: whether a prune trial overlaps, and cut before add"
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: "triage #2384: A relevant ADR, read in full. It says prose pointers get skipped.; triage #2385: The full ADR on where the CLAUDE.md layout pointer belongs. Subagents: triage #2384: A relevant ADR, read in full. It says prose pointers get skipped.; triage #2385: The full ADR on where the CLAUDE.md layout pointer belongs."
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Spec inspect-session-out-files r1: The task told me to read it. Its Spec-axis brief (missing requirements, scope creep, wrong implementation) set the frame for this review. Subagents: Spec relevant-adrs-wording r1: The task said to read it. I used its Spec axis brief (missing, scope creep, wrong)."
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "build inspect-session-out-files: The task told me to read and follow it. Subagents: build relevant-adrs-wording: The task told me to read it."
+    useful: partly
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: "Standards inspect-session-out-files r1: Project instructions loaded at session start. Its rule that instructions should be short guided the simplicity check. Subagents: Standards relevant-adrs-wording r1: Project instructions, loaded at session start. Its 'one home per fact' and 'keep it short' lines framed the simplicity check."
+    useful: partly
+  - path: /home/user/terrarium/.agents/skills/code-review/SKILL.md
+    reason: "Standards relevant-adrs-wording r1: The task said to read it. It supplied the smell baseline and the Standards axis brief. Subagents: Standards session-log-files-and-relevant-adrs r2: Read on the task's instruction for the Standards axis and the smell baseline."
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: "build session-log-files-and-relevant-adrs: Read to document the new field Subagents: build session-log-files-and-relevant-adrs: Read to document the new field"
+    useful: yes
+  - path: .claude/skills/tdd/SKILL.md
+    reason: "build session-log-files-and-relevant-adrs: Invoked per the brief; I ran a red-green cycle for committedFiles, the schema, stitch, merge and the card view Subagents: build session-log-files-and-relevant-adrs: Invoked per the brief; I ran a red-green cycle for committedFiles, the schema, stitch, merge and the card view"
+    useful: yes
+  - path: /home/user/terrarium/.claude/worktrees/wf_1dc58104-72c-2/docs/agents/git-conventions.md
+    reason: "Standards session-log-files-and-relevant-adrs r2: Read because a hook flagged that I hadn't read it before my first git command. It confirmed the three-dot diff and the --no-renames convention the diff follows. Subagents: Standards session-log-files-and-relevant-adrs r2: Read because a hook flagged that I hadn't read it before my first git command. It confirmed the three-dot diff and the --no-renames convention the diff follows."
+    useful: partly
+  - path: tests/unit/log-session.spec.ts
+    reason: (read before editing)
+  - path: /home/user/terrarium/.claude/worktrees/wf_1dc58104-72c-1/.agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: scripts/session/audit-skills.ts
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: owner-invoked backlog run
+  - name: close-session
+    reason: "PR #2389 opened"
+  - name: tdd
+    reason: (no reason given)
+  - name: adr-check
+    reason: (no reason given)
+frictions:
+  - description: "Explore triage agent for #2386 saw the owner's chat answers '1a 2a' and posted on the issue that the owner had decided the field shape"
+    solution: clear-backlog-explore should not pass the owner's raw chat to triage agents, or should say which questions the answers belong to
+    severity: moderate
+  - description: "Launched the #2388 rename build before checking prune-trials.yml; dispatch-subagents section 3 was in an open trial and needed an owner question afterwards"
+    solution: Check .agents/prune-trials.yml territories before filing a wording-change issue, as adr-check would have
+    severity: minor
+  - description: Skipped the adr-check Skill before recommending picks in Q3-Q10; relied on triage agents' adr-check runs
+    solution: Run adr-check once at the start of the grilling round for orchestrator picks
+    severity: minor
+  - description: "Put a triage agent's claim (frictions-to-fixes briefs are in a prune trial) into PR #2389 unverified; the trial covers only SKILL.md; fixed in the PR body"
+    solution: Verify each sideFinding against its source before relaying it, as clear-backlog section 3 already says
+    severity: minor
+  - description: Stop hook asked twice to push inspect-session-out-files while I held it for an owner answer and then for gate:scoped
+    solution: None needed; ADR-0004 already says to ignore it until the gate passes
+    severity: nit
+durationSec: 2668
+models:
+  claude-opus-5-5: 224
+toolCounts:
+  Bash: 69
+  Read: 1
+  Workflow: 4
+  ToolSearch: 3
+  mcp__github__issue_write: 3
+  mcp__github__add_issue_comment: 9
+  PushNotification: 1
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
+  mcp__github__update_pull_request: 1
+  Skill: 1
+  ReadNotifications: 14
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  Write: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
+filesEdited:
+  - .throwaway/merge-verdicts.cjs
+  - tests/unit/log-session.spec.ts
+  - scripts/session/log-session.ts
+  - tests/unit/log-session-land.spec.ts
+  - tests/unit/transcript-trace.spec.ts
+  - shared/schemas/session.ts
+  - scripts/session/transcript-trace.ts
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - layers/journal/app/types/journal.ts
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/app/components/journal/SessionCard.vue
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/log-session/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0008.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0028.md
+docsReadBySubagents:
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/visitor-loop/refiner-brief.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: "Held the #2389 push until gate:scoped passed despite the Stop hook; summary was enough Subagents: triage #2385: Loaded at session start. I used it to judge whether the PR can self-merge."
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: "Told me to close-session on PR open; summary was enough Subagents: triage #2386: Loaded at start; the session-log rules this issue is about"
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: "Owner's grilling answers are the approval for building #2384-#2388; summary enough Subagents: triage #2384: Loaded at session start. It confirmed that new work needs approval, which supports grill.; triage #2385: Loaded at session start. Background on approving new work."
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: "Set the header on every issue comment and the PR; checked the commit trailers landed Subagents: triage #2384: Loaded at session start. It set the header line for the comment.; triage #2385: Loaded at session start. It set the comment header.; triage #2386: Loaded at start; the comment header, and the commit trailer that option (a) relies on; triage #2387: Loaded at session start; it gave the c"
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: "Framed which triage outcomes could be ready-for-agent without the owner Subagents: triage #2384: Loaded with the auto-triage Skill. It sets when to choose ready-for-agent and when ready-for-human.; triage #2385: Loaded with the triage Skill files. It allowed ready-for-agent for an owner-authored issue.; triage #2386: Loaded when I read the triage docs; real design doubt goes to re"
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: "Confirmed Skill and workflow wording changes go through a gated PR Subagents: triage #2387: Loaded on reading the Skill files"
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: "All issues were OWNER-authored, so trust tiers did not change anything Subagents: triage #2385: Loaded with the triage Skill files. I used it to confirm the OWNER is Trusted.; triage #2387: Loaded at session start; it gave the author-trust check (the author is OWNER, so Trusted)"
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: "Glossary placement; no glossary term changed this session Subagents: build relevant-adrs-wording: Loaded when I touched ADR-0021; flagged the re-stamp."
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: "Made me check prune trials, which surfaced the dispatch-subagents conflict for Q6 Subagents: triage #2384: Loaded with the Skills. It backs not adding a prose instruction; no open prune trial covers this area.; triage #2387: Loaded at session start and on reading Skill files"
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: "Loaded on reading docs; nothing here moved an instruction between homes Subagents: triage #2384: Loaded by a Bash read. It is why the prose-pointer option is weak.; triage #2385: Loaded when I read CLAUDE.md and the scripts. It confirmed CLAUDE.md is the home for the layout line."
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: "triage #2384: Loaded by grepping layers/journal/tenant.config.ts. Not relevant. Subagents: triage #2384: Loaded by grepping layers/journal/tenant.config.ts. Not relevant."
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "triage #2385: Loaded when the bash reads touched governed files. Its paths showed that CLAUDE.md and scripts/session are not Human-only.; triage #2386: Loaded when I read docs/adr and shared/schemas; showed the schema and ADR edits need a human merge; triage #2387: Loaded when I read its paths list; it showed the inspect-session Skill is not Human-only Subagents: build session-log-files-and-relevant-adrs: Loaded on touching shared/ and scripts/session; it confirmed a human merges this"
+    useful: yes
+  - path: .claude/rules/adr-0008.md
+    reason: "triage #2384: Loaded with the Journal manifest. It frames the Skill Inventory as a derived Inventory. Subagents: build session-log-files-and-relevant-adrs: Loaded with the Journal layer; it confirmed old logs must stay valid and are never regenerated"
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: "triage #2384: Loaded with the Journal manifest. It sets what audit-skills may edit and which field may hold ids.; triage #2385: Loaded when I read audit-skills.ts. It confirmed the script gathers facts and the session judges. Subagents: build relevant-adrs-wording: Loaded when I edited a Skill; none of the changed Skills are pack Skills."
+    useful: yes
+  - path: .claude/rules/adr-0025.md
+    reason: "triage #2385: Loaded when I read shared/schemas/session.ts. Not relevant (cross-Tenant reads).; triage #2386: Loaded when I read the human-merge rule Subagents: build session-log-files-and-relevant-adrs: Loaded with shared/schemas; it didn't apply (no cross-Tenant read changed)"
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "triage #2386: Loaded when I read the ADRs; option (a) means rewriting ADR-0009 in place Subagents: build session-log-files-and-relevant-adrs: Loaded on editing ADR-0009; it led me to rewrite in place with no history note"
+    useful: partly
+  - path: .claude/rules/data-shapes.md
+    reason: "triage #2384: Loaded with the Journal manifest. It makes option 2 an owner decision.; triage #2386: Read directly; the shape of the new field needs a Trusted user, settled here by '2a' Subagents: Standards session-log-files-and-relevant-adrs r1: The brief told me to read it. It confirmed that relevantAdrs is a new stored field whose shape was settled by the owner's pick (b), so the build decision not to ask again is sound.; Spec session-log-files-and-relevant-adrs r2: The brief named it. It "
+    useful: yes
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "triage #2384: Loaded with the Journal manifest. Not relevant. Subagents: triage #2384: Loaded with the Journal manifest. Not relevant."
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "triage #2384: Loaded with the Journal manifest. Not relevant. Subagents: build session-log-files-and-relevant-adrs: Loaded with the Journal layer; the relative-import guidance matched the existing journal.ts import"
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: "build relevant-adrs-wording: Loaded unprompted; not relevant to this change. Subagents: build relevant-adrs-wording: Loaded unprompted; not relevant to this change."
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: "build session-log-files-and-relevant-adrs: Loaded with SessionCard.vue; I did not claim a visual check, so I note the card block is only unit/e2e covered Subagents: build session-log-files-and-relevant-adrs: Loaded with SessionCard.vue; I did not claim a visual check, so I note the card block is only unit/e2e covered"
+    useful: partly
+subagents:
+  - type: workflow-subagent
+    task: Standards audit-skills-one-skill-query r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build session-log-files-and-relevant-adrs
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec audit-skills-one-skill-query r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build audit-skills-one-skill-query
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: fix session-log-files-and-relevant-adrs r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards session-log-files-and-relevant-adrs r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards session-log-files-and-relevant-adrs r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec session-log-files-and-relevant-adrs r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec audit-skills-one-skill-query r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix audit-skills-one-skill-query r1
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards audit-skills-one-skill-query r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec session-log-files-and-relevant-adrs r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build inspect-session-out-files
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards inspect-session-out-files r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec inspect-session-out-files r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2385"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2384"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2387"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2386"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards relevant-adrs-wording r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build relevant-adrs-wording
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Spec relevant-adrs-wording r1
+    model: claude-opus-5-5
+gitBranch: ccr-00647b3b-75mu6s
+entrypoint: remote_mobile
+cliVersion: 2.1.306
+landedBy: Stop
