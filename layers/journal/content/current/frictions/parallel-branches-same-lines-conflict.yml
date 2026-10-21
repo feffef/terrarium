@@ -1,15 +1,19 @@
 name: parallel-branches-same-lines-conflict
-summary: Parallel branches editing the same shared list lines conflicted again and again, and merging kept re-growing the lists.
-cause: "Parallel content PRs each edit the same shared lists (Where next, Opening a page chips); keeping both sides re-grew lists past the cap. Related earlier occurrence in clear-backlog-gaps (015dUGRa: parallel builds on the same adr-0002 pointer line)."
+summary: Parallel branches editing the same lines of a shared file conflicted, and the second to merge needed a manual merge.
+cause: "Branches built in parallel edit the same lines of one shared file (Where next lists, a stamped pointer line, a roster table, a moved script), and nothing orders or groups them; signals: merge conflicts on adjacent shared lines, restamps, lists re-grown past the cap."
 surface: safe
 status: open
-ref: One occurrence from the Glass Box backfill; candidate to drop.
 occurrences:
   - session: session_01GG85r8HWMEdaMgKUaNUZH7
     date: "2026-10-14"
     severity: moderate
     description: "Parallel content PRs conflicted repeatedly on shared Where next lists and Opening a page chips; keeping both sides re-grew lists past the cap"
     solution: "Cap Where next and stop chips in the contract from the start (now done), and merge content PRs serially"
+  - session: session_015dUGRadEQP1bvv6KytKLXT
+    date: "2026-10-14"
+    severity: minor
+    description: "Builds of PRs that touch the same adr-0002 pointer line ran in parallel, so the second needed a manual conflict merge and restamp"
+    solution: "Have clear-backlog group branches that regenerate the same stamped files, or order them"
   - session: e34491a0-8237-4285-88b7-1a0b73cd29e7
     date: "2026-10-16"
     severity: nit

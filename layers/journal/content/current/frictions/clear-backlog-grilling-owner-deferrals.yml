@@ -1,0 +1,39 @@
+name: clear-backlog-grilling-owner-deferrals
+summary: >-
+  The backlog Skill's grilling had no rules for owner-deferred, owner-reserved or delegated issues, so runs improvised them or spent the owner's time on them.
+cause: >-
+  The clear-backlog Skill's grilling step left open which issues it covers and who decides them: who may answer when the owner delegates, whether an owner's reservation (direct or relayed) outranks the standing green-light, how much re-triage an owner-deferred issue gets, and whether every deferred issue is grilled again. Signals: a stand-in or defer policy invented on the fly, a reservation re-stamped ready-for-agent, a long full-sweep pass on deferred issues that changes nothing, the owner narrowing the grilling round.
+surface: safe
+status: open
+ref: "Owner answers to the clear-backlog dry runs (sessions 01SZwdbK, 01La82mx)."
+fixes:
+  - pr: 1826
+    date: "2026-10-12"
+    summary: "Added the clear-backlog Skill and folded in findings from its first dry run."
+  - pr: 1833
+    date: "2026-10-12"
+    summary: "Folded in second dry-run findings: deferred issues stay in grilling; dropped an extra triage check."
+  - pr: 1863
+    date: "2026-10-13"
+    summary: "The grilling now covers only issues the run's own sweep picked up."
+occurrences:
+  - session: session_01DtK8w6aJ3361uPK73VAxhi
+    date: "2026-10-12"
+    severity: minor
+    description: "The Skill gave no rule for who may answer the grilling when the owner delegates; I had to invent a defer-the-consequential-ones policy on the fly in the dry run."
+    solution: "If delegated grilling recurs, state in clear-backlog what a stand-in may decide."
+  - session: session_01SZwdbK8GbYtyj926UyJT6o
+    date: "2026-10-12"
+    severity: moderate
+    description: "clear-backlog full-sweep re-triage spent roughly 70-100k tokens per issue on 10 owner-deferred issues to conclude no change"
+    solution: "clear-backlog: for an issue whose last owner comment is a deferral with a revisit condition, check only that condition"
+  - session: session_01La82mxqduxHnRS9jRfNHmU
+    date: "2026-10-12"
+    severity: moderate
+    description: "clear-backlog gave no rule for owner reservations relayed by an AI reset comment; full-sweep would let the sweep re-stamp ready-for-agent over them, so I improvised a brief rule"
+    solution: "clear-backlog/auto-triage: an owner's 'I decide this' (direct or relayed) outranks the standing green-light; drop such issues from the grilling"
+  - session: session_01STVS35HcxNZp7dQ1pPnrhW
+    date: "2026-10-13"
+    severity: moderate
+    description: "clear-backlog §2 required grilling every deferred issue; the owner had to interrupt to narrow the round to the four fresh ones"
+    solution: "PR #1863 scopes the grilling to the sweep's own set"
