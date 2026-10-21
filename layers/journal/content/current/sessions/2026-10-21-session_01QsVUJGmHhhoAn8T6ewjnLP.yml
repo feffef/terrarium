@@ -1,70 +1,107 @@
 schemaVersion: 1
 session: session_01QsVUJGmHhhoAn8T6ewjnLP
 startedAt: 2026-10-21T05:50:17Z
-endedAt: 2026-10-21T06:16:43Z
+endedAt: 2026-10-21T06:20:15Z
 kind: interactive
 goal: Clear the backlog of issues that need attention
-status: in-review
-outcome: "#2354 merged via PR 2359; the #2356 ledger split is open as PR 2360"
-summary: 'The owner ran /clear-backlog. The sweep picked up 7 issues; none was ready-for-agent. The explore workflow found three on hold: #2286 until 2026-10-22, #2137 until 2026-10-23, and #2341 until a second frictions-to-fixes survey. It marked #2356 build, after the owner commented there that the clear-backlog-gaps ledger cluster should be split (human-instructed); that build started straight away. #2352, #2354 and #2355 went to one grilling round. The owner (human-instructed) picked 1c: #2354 gets no guard, only a wider git-conventions.md line; PR #2359 made it and merged. They deferred #2352 until there is more data and confirmed closing #2355 as not a regression. The build agent could not name its branch git-conventions-foreground-gate-chain, because a guard refused branch names containing "git", so it was pushed as widen-gate-chain-rule. PR #2360 splits clear-backlog-gaps into 8 single-cause entries and moves two occurrences into existing entries. I checked that all 17 occurrences are accounted for. Its open judgement calls (ref wording, one single-nit entry) are listed in the PR.'
+status: completed
+outcome: 7 issues triaged; PRs 2359 and 2360 merged; 2355 closed; 2352 deferred; 3 on hold
+summary: |-
+  The owner ran /clear-backlog. The sweep picked up 7 issues; none was ready-for-agent. The explore workflow found three on hold: #2286 until 2026-10-22, #2137 until 2026-10-23, and #2341 until a second frictions-to-fixes survey. It marked #2356 build, after the owner commented there that the clear-backlog-gaps ledger cluster should be split (human-instructed). #2352, #2354 and #2355 went to one grilling round, where the owner (human-instructed) picked 1c for #2354 (no guard, just a wider rule line), deferred #2352 until there is more data, and confirmed closing #2355 as not a regression.
+  Per branch: PR #2359 (#2354) widened git-conventions.md's chaining rule to cover a push in the same command as any gate or test run, foreground or backgrounded. One judgement call stays open: the "foreground or backgrounded" words are arguably redundant. PR #2360 (#2356) split clear-backlog-gaps into 8 single-cause entries and moved one occurrence each into chat-progress-narration and parallel-branches-same-lines-conflict. Its judgement calls stay open: refs that give provenance or a closed issue, one single-nit entry, verbatim fix summaries that span sibling entries, and a grilling entry that holds four related rules. Both PRs merged on green CI. The build agent could not name a branch containing "git" because of a guard, so I pushed #2359 as widen-gate-chain-rule.
 prs:
   - "2359"
   - "2360"
 docsRead:
   - path: GLOSSARY-MAP.md
-    reason: session-start read; set the vocabulary
+    reason: "me: session-start read; set the vocabulary"
     useful: partly
   - path: GLOSSARY.md
-    reason: session-start read; Friction Ledger and Trusted terms used in grilling
+    reason: "me: session-start read; Friction Ledger and Trusted terms used in grilling"
     useful: partly
   - path: docs/agents/git-conventions.md
-    reason: "push rules; also the file #2354 changes"
+    reason: "me: push rules; also the file #2354 changes; triage #2341: CLAUDE.md requires it before git commands. I read it after a stray `git checkout origin/main --` had detached HEAD; I switched back to the session branch with no loss.; triage #2354: First git command, and it holds the rule the issue cites; showed the rule covers only a backgrounded gate run; build split-clear-backlog-gaps-ledger: Required before git commands; read just after the first fetch/checkout; commit -F and trailer check guided the commit; build git-conventions-foreground-gate-chain: Required before my first git command, and..."
     useful: yes
   - path: .agents/skills/auto-triage/SKILL.md
-    reason: step 1 eligibility rule (last comment human or no state label)
+    reason: "me: step 1 eligibility rule (last comment human or no state label); triage #2341: The task brief required it. It sets the brave and closing rules.; triage #2352: Required by the brief. Gave the brave-vs-determinable line and the comment rules.; triage #2354: The task said to read it; the brave/determinability line and the closing rules; triage #2355: The task required it; gave the brave/closing rules and the rule to post one comment on an uncommented issue; triage #2356: Required by the task. Gave the brave-within-determinability rule and the closing rules."
     useful: yes
   - path: docs/agents/github-integration.md
-    reason: list-open-issues.ts and gh api REST fallback
+    reason: "me: list-open-issues.ts and gh api REST fallback; triage #2356: CLAUDE.md requires it before GitHub operations. Its rule that a label update replaces the set applied.; build split-clear-backlog-gaps-ledger: Required before gh api; read after one refused call; confirmed gh api works for REST reads"
     useful: yes
   - path: docs/agents/pr-workflow.md
-    reason: review-before-push and merge recipe
+    reason: "me: review-before-push and merge recipe; Standards git-conventions-foreground-gate-chain r1: Grepped only for the simple-change definition (lines 21-22)."
     useful: yes
   - path: docs/agents/triage-labels.md
-    reason: which label for a deferred or closed issue
-    useful: partly
+    reason: "me: which label for a deferred or closed issue; triage #2352: CLAUDE.md trigger. Gave the label names.; triage #2354: Required before labelling; the label strings; triage #2355: CLAUDE.md requires it before labelling; gave the label strings; triage #2356: CLAUDE.md requires it before labelling. Gave the label strings."
+    useful: yes
   - path: docs/agents/issue-tracker.md
-    reason: close and comment recipes
+    reason: "me: close and comment recipes; triage #2341: CLAUDE.md requires it before triage. It points to the supersession and prune-trial checks.; triage #2352: CLAUDE.md trigger. Supersession check.; triage #2354: Required before labelling (skimmed the label sections); triage #2355: CLAUDE.md requires it before triage; redundancy and supersession checks; triage #2356: CLAUDE.md requires it before triage. Gave the supersession and prune-trial checks."
     useful: partly
+  - path: .agents/prune-trials.yml
+    reason: "triage #2356: Checked for an open trial over this area. One covers frictions-to-fixes SKILL.md, which is out of scope here."
+    useful: yes
+  - path: .agents/skills/adr-check (Skill)
+    reason: "triage #2354: Required before recommending; found the binding ADRs and confirmed no prune trial covers this"
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: "triage #2352: The Skill the issue is about. Holds the step 5 rule."
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "triage #2356: The Skill that keeps the ledger. Explained how regressions are filed."
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: "triage #2356: Holds the root-cause clustering test and the re-cluster rule. It determines the design.; build split-clear-backlog-gaps-ledger: Read for the clustering test, fixes and ref rules; Standards split-clear-backlog-gaps-ledger r2: Holds the cluster test, the semantics of ref and fixes, and how status is derived; it was the main standard to review against; Spec split-clear-backlog-gaps-ledger r2: Read for the clustering test and the ref and status semantics the spec relies on; Standards split-clear-backlog-gaps-ledger r3: Read as the documented standard for ledger entries: the new-en..."
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2352: Required by the brief. Gave the per-issue steps and category labels."
+    useful: yes
+  - path: .claude/skills/adr-check/SKILL.md
+    reason: "triage #2355: The task required it; listed the binding ADRs and the open prune trials (none cover this area)"
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "triage #2354: adr-check; its rejected push-hook alternative counts against option 2"
+    useful: yes
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: "triage #2356: Read through adr-check. Inventories are refreshed in place."
+    useful: partly
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "triage #2355: Read through adr-check; settles that a '(not read)' marking is logged as a Friction by design, which is the basis for options 1 and 3"
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: "triage #2352: adr-check: binding ADR read in full."
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "triage #2341: Read through adr-check. It confirms that revising a rule is a judgment call.; triage #2352: adr-check: defines real design doubt.; triage #2354: adr-check; defines real design doubt; triage #2355: Read through adr-check; defines a judgement call versus a settled design; triage #2356: Read through adr-check. Confirmed the outcome is build, not a judgment call."
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "triage #2352: adr-check: cut-before-add and prose-fails reasoning."
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "triage #2354: Checked the issue's 'is there already a guard' claim against the roster"
+    useful: yes
   - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
+    reason: "Spec split-clear-backlog-gaps-ledger r1: The task told me to read it and apply its Spec axis. Its Spec brief (missing, scope creep, wrong) gave this review its structure.; Spec split-clear-backlog-gaps-ledger r2: The task said to apply its Spec axis; Spec split-clear-backlog-gaps-ledger r3: Read because the task asked me to apply its Spec axis. It gave the missing, scope-creep and wrong-implementation framing.; Standards git-conventions-foreground-gate-chain r1: The task said to read it. I applied its Standards axis and smell baseline.; Spec git-conventions-foreground-gate-chain r1: The tas..."
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "build split-clear-backlog-gaps-ledger: Brief said to follow it; build git-conventions-foreground-gate-chain: The brief told me to read it."
+    useful: partly
+  - path: .agents/skills/tdd/SKILL.md
+    reason: "build split-clear-backlog-gaps-ledger: Invoked as brief required; content-only change had no new seam"
+    useful: no
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: "Spec split-clear-backlog-gaps-ledger r1: Loaded at session start. Its 'one home per fact' rule backs the stale-ref finding.; Spec split-clear-backlog-gaps-ledger r2: Project instructions loaded at session start"
+    useful: partly
+  - path: CLAUDE.md
+    reason: "fix split-clear-backlog-gaps-ledger r1: Loaded at session start. Its 'One home per fact' rule backed the fix.; build git-conventions-foreground-gate-chain: Loaded as project instructions.; Standards git-conventions-foreground-gate-chain r1: Loaded at session start. Its 'fewest words' and 'one home per fact' rules were the main checks."
+    useful: yes
+  - path: layers/journal/tenant.config.ts
+    reason: "Standards split-clear-backlog-gaps-ledger r1: Its frictionClusterSchema comments define what status, ref and fixes mean; that was the main standard for the findings; Standards split-clear-backlog-gaps-ledger r2: The ledger schema and its comments on ref and status; Spec split-clear-backlog-gaps-ledger r2: Read for the ledger schema (status, ref and fixes meanings); fix split-clear-backlog-gaps-ledger r2: Read the frictions schema to confirm what each status means and that ref is optional.; Standards split-clear-backlog-gaps-ledger r3: Read the frictionClusterSchema comments, which define wh..."
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: authored-field shape and the verdict passes for this log
+    useful: yes
   - path: layers/journal/content/current/frictions/parallel-branches-same-lines-conflict.yml
     reason: (read before editing)
-  - path: .agents/skills/triage/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/implement/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/log-session/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/survey-brief.md
-    reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/audit-skills/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
-    reason: (no reason given)
-  - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: (no reason given)
-  - path: docs/adr/0027-prune-trials.md
-    reason: (no reason given)
-  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
-    reason: (no reason given)
-  - path: docs/agents/guards.md
-    reason: (no reason given)
-  - path: docs/adr/0004-objective-safety-gate.md
-    reason: (no reason given)
-  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
-    reason: (no reason given)
 skillsUsed:
   - name: grilling
     reason: "one round for #2352, #2354 and #2355"
@@ -92,11 +129,11 @@ frictions:
   - description: My first verdict comment on PR 2360 named the oldest commit as Reviewed, because I took the build output's commit list order for newest-first; corrected by an edit.
     solution: Take the Reviewed sha from git rev-parse HEAD in the worktree, never from the workflow's commits list.
     severity: nit
-durationSec: 1585
+durationSec: 1798
 models:
-  claude-opus-5-5: 96
+  claude-opus-5-5: 109
 toolCounts:
-  Bash: 28
+  Bash: 34
   Workflow: 3
   ToolSearch: 4
   Skill: 2
@@ -105,7 +142,7 @@ toolCounts:
   mcp__github__issue_write: 2
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 3
+  ReadNotifications: 5
   mcp__github__pull_request_read: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
   mcp__github__update_issue_comment: 1
@@ -159,37 +196,64 @@ docsReadBySubagents:
   - docs/adr/0008-self-documentation-tenant-is-a-journal.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
-    reason: "Confirmed PR #2359 is a doc change an agent may merge after CI and a verdict; summary was enough, so I didn't open the ADR."
+    reason: "me: Confirmed PR #2359 is a doc change an agent may merge after CI and a verdict; summary was enough, so I didn't open the ADR.; triage #2354: Loaded at session start; settles that a guard is Human-only to merge; build split-clear-backlog-gaps-ledger: Loaded at session start; told me to run gate:scoped before push; fix split-clear-backlog-gaps-ledger r2: Loaded at session start. It requires the gate:scoped run before a push.; build git-conventions-foreground-gate-chain: Loaded at session start.; Standards git-conventions-foreground-gate-chain r1: Loaded at session start. It sets which revie..."
     useful: yes
   - path: .claude/rules/adr-0009.md
-    reason: Told me to log at PR open and keep the log off the branch; the summary was enough.
+    reason: "me: Told me to log at PR open and keep the log off the branch; the summary was enough.; triage #2355: Loaded at session start; pointed me to the full ADR-0009, which decides the '(not read)' friction behaviour; build split-clear-backlog-gaps-ledger: Loaded at session start; confirmed session logs naming clear-backlog-gaps must not be edited; build git-conventions-foreground-gate-chain: Loaded at session start.; Standards git-conventions-foreground-gate-chain r1: Loaded at session start. Not relevant to a read-only review.; Spec git-conventions-foreground-gate-chain r1: Loaded at session sta..."
     useful: yes
   - path: .claude/rules/adr-0003.md
-    reason: Made me open the PR right after the push and subscribe; the summary was enough.
+    reason: "me: Made me open the PR right after the push and subscribe; the summary was enough.; triage #2286: Loaded at session start; confirmed the issue is a propose-only review, not new work to build.; triage #2341: Loaded at session start. It frames who approves new work.; triage #2352: Loaded at session start. Says new work needs approval.; triage #2356: Loaded at session start. Approval context for building.; build split-clear-backlog-gaps-ledger: Loaded at session start; PR handling is the orchestrator's here; Spec split-clear-backlog-gaps-ledger r1: Loaded at session start. It confirms the PR ..."
     useful: yes
   - path: .claude/rules/adr-0017.md
-    reason: Set the header on every comment and PR body and the commit trailer, which I checked.
+    reason: "me: Set the header on every comment and PR body and the commit trailer, which I checked.; triage #2352: Loaded at session start. Gave the comment header.; triage #2354: Loaded at session start; the provenance header on my comment; triage #2355: Loaded at session start; gave the header for the comment; triage #2356: Loaded at session start. Gave the provenance header for the comment.; build split-clear-backlog-gaps-ledger: Loaded at session start; checked the commit trailer landed; build git-conventions-foreground-gate-chain: Loaded at session start. It covers the commit trailer.; Standards ..."
     useful: yes
   - path: .claude/rules/adr-0022.md
-    reason: Set what the sweep may label; all 7 issues were the owner's, so no Public routing applied.
-    useful: partly
+    reason: "me: Set what the sweep may label; all 7 issues were the owner's, so no Public routing applied.; triage #2341: Loaded with the triage docs. It sets what the sweep may label and close, and sends a revert decision to a person.; triage #2352: Loaded with the triage Skills. Sends design doubt to ready-for-human.; triage #2354: Loaded with the triage Skills; real design doubt goes to ready-for-human; triage #2355: Loaded with the triage Skills; decided that a judgement call goes to ready-for-human; triage #2356: Loaded with the triage Skills. Set the bar for ready-for-agent.; build split-clear-ba..."
+    useful: yes
   - path: .claude/rules/adr-0021.md
-    reason: Loaded with GLOSSARY.md; this run changed no glossary.
+    reason: "me: Loaded with GLOSSARY.md; this run changed no glossary.; triage #2356: Loaded when I grepped GLOSSARY.md. Not relevant."
     useful: no
   - path: .claude/rules/adr-0005.md
-    reason: Loaded with the clear-backlog Skill; it changed nothing I did, as I ran workflows without editing them.
-    useful: no
+    reason: "me: Loaded with the clear-backlog Skill; it changed nothing I did, as I ran workflows without editing them.; triage #2341: Loaded when I read the clear-backlog workflow. It confirms the Standards brief lives in a workflow script.; build split-clear-backlog-gaps-ledger: Loaded on reading skill files; not relevant; Standards split-clear-backlog-gaps-ledger r1: Loaded when I read the code-review Skill; about Skill layout, not relevant; Spec split-clear-backlog-gaps-ledger r1: Loaded when I read a Skill file. It doesn't apply to ledger YAML.; Standards split-clear-backlog-gaps-ledger r2: Loaded..."
+    useful: partly
   - path: .claude/rules/adr-0020.md
-    reason: Confirmed every issue was Trusted, so no human-merge hold for a Public request.
-    useful: partly
+    reason: "me: Confirmed every issue was Trusted, so no human-merge hold for a Public request.; triage #2354: Loaded with author-trust.ts; confirmed OWNER is Trusted"
+    useful: yes
   - path: .claude/rules/adr-0027.md
-    reason: Explained why the triage agents kept the frictions-to-fixes Skill out of scope (open prune trial).
-    useful: partly
+    reason: "me: Explained why the triage agents kept the frictions-to-fixes Skill out of scope (open prune trial).; triage #2341: Loaded with the triage docs and ledger files. It confirms the frictions-to-fixes prune trial blocks adding a reminder step there.; triage #2352: Loaded on several reads. Its cut-or-make-mechanical principle framed the options.; triage #2356: Loaded with the Skills and the ledger. Led me to check the open prune trial on frictions-to-fixes SKILL.md.; build split-clear-backlog-gaps-ledger: Loaded on reading skill files; confirmed the survey brief and SKILL.md under a trial stay..."
+    useful: yes
   - path: .claude/rules/adr-0029.md
-    reason: Loaded with docs reads; no rule placement was in question this run.
-    useful: no
+    reason: "me: Loaded with docs reads; no rule placement was in question this run.; triage #2137: Loaded when I read docs/agents/github-integration.md. Not relevant here.; triage #2286: Loaded when I read github-integration.md; not needed to check a date hold.; triage #2341: Loaded when I read the docs/agents files. Not relevant to this decision.; triage #2352: Loaded when reading docs/agents files. Not relevant here.; triage #2354: Loaded with the docs/agents reads; not decisive; triage #2355: Loaded on reading scripts and docs; not relevant; triage #2356: Loaded when I read the docs. Not relevant.; ..."
+    useful: partly
   - path: .claude/rules/adr-0015.md
-    reason: "Loaded when I grepped audit-skills for #2352's question; it made no difference to the question I asked."
+    reason: "me: Loaded when I grepped audit-skills for #2352's question; it made no difference to the question I asked.; triage #2352: Loaded when reading the audit-skills Skill and Inventory files. Sets what audit-skills may edit and the script-gathers-facts principle.; build split-clear-backlog-gaps-ledger: Loaded on reading frictions-to-fixes script; not relevant"
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: "triage #2356: Loaded when I read tenant.config.ts for the ledger schema. Not relevant.; build split-clear-backlog-gaps-ledger: Loaded on reading tenant.config.ts; not relevant"
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "triage #2356: Loaded when I read it to check whether the ledger is a Human-only file; it is not.; build split-clear-backlog-gaps-ledger: Loaded on reading a Human-only file; my diff touches none"
+    useful: yes
+  - path: .claude/rules/adr-0008.md
+    reason: "triage #2356: Loaded with the journal manifest. Confirmed the ledger is an Inventory refreshed in place.; build split-clear-backlog-gaps-ledger: Loaded on reading journal tenant.config.ts; confirmed the ledger is refreshed in place; Standards split-clear-backlog-gaps-ledger r1: Read because the brief names it as binding; confirmed the Friction Ledger is derived and refreshed in place; Standards split-clear-backlog-gaps-ledger r2: Read because the brief names it as binding; the Friction Ledger is a derived inventory refreshed in place, which matches what this diff does; Spec split-clear-back..."
+    useful: yes
+  - path: .claude/rules/adr-0026.md
+    reason: "triage #2354: Loaded when I grepped gate.ts; not relevant"
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "triage #2341: Loaded when adr-check read the ADRs. Not relevant.; triage #2352: Loaded when reading the ADRs. Not relevant here.; triage #2354: Loaded with the ADR reads; not relevant; triage #2355: Loaded on reading the ADRs; not relevant; triage #2356: Loaded when I read the ADR files. Not relevant.; build split-clear-backlog-gaps-ledger: Loaded alongside the human-merge rule; not relevant"
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: "triage #2356: Loaded with tenant.config.ts. Confirmed no stored field changes, so no shape question.; build split-clear-backlog-gaps-ledger: Loaded on reading tenant.config.ts; confirmed no stored field changes"
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: "triage #2354: Loaded with the hooks; pointed to the guard roster"
+    useful: yes
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "triage #2356: Loaded with tenant.config.ts. Not relevant.; build split-clear-backlog-gaps-ledger: Loaded on reading tenant.config.ts; not relevant"
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "triage #2341: Loaded when I read the journal layer files. Not relevant.; triage #2356: Loaded with tenant.config.ts. Not relevant.; build split-clear-backlog-gaps-ledger: Loaded on reading tenant.config.ts; not relevant"
     useful: no
 subagents:
   - type: workflow-subagent
