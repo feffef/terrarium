@@ -22,3 +22,23 @@ observations:
       #2286 (owner's own review, on hold until 2026-10-22) — no new comment
       needed. Graded `essential`: stands in for a mandatory, broad CLAUDE.md
       step.
+  - date: "2026-10-21"
+    note: >-
+      Two findings, both fed into #2286 (the owner's own scheduled review,
+      due 2026-10-22) rather than filed separately. (1) Recurring,
+      self-reported: 4 of 10 newest invocations show the orchestrating
+      session giving its own recommendation/revision atop a subagent's
+      output without itself invoking adr-check (session_01FTPnEsW1XNhaqYFdxaE24v,
+      session_01VH74k3Z27QtjR19XNC76qm — which filed #2342 on this exact
+      gap, session_012f7o6FcYxq1MWxvsdgKS6m, session_01CBVi4qZ2RqPhfHeHPYrkwD),
+      each honestly logged as a nit/minor Friction, matching #2342's
+      `binding-docs-skipped` cluster. (2) NEW, silent: 4 scheduled/autonomous
+      sweep sessions (prune-trial x2, frictions-to-fixes, audit-docs) edited
+      real repo instructions with no adr-check trace anywhere and no
+      Friction naming the gap — session_016zEtXv32CmX793LgZvt7Hm,
+      session_016Nsq9SWL64V4RqDJPQYodp, session_01Uq2Kx5jumw8Va6DETgxNV8,
+      session_012XnetQuxWoyaVFYw1BqMoy. This is worse than (1): invisible to
+      self-report, and reaches beyond the frictions-to-fixes case #2342
+      already names. Commented both onto #2286 with full session evidence.
+      10/10 newest invocations otherwise delivered cleanly (no mechanics
+      failure). Grade/role unchanged (essential) pending #2286's decision.

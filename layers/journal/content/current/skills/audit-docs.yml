@@ -338,3 +338,14 @@ observations:
       live after 4 prior fix attempts that each broke on first real use. Next
       run should confirm it held. No new silent failure, no reverts found.
       Grade/role unchanged (routine).
+  - date: "2026-10-21"
+    note: >-
+      Self-check, 9/9 PRs confirmed merged, no reverts. Resolved the 10-20
+      observation's open question: the save-handback.ts fix (PR #2269,
+      merged 10-19T06:25) held on its first live use -
+      session_012XnetQuxWoyaVFYw1BqMoy (started after the fix) logged no
+      save-handback friction; session_0183U5MkKrjuhRKdjpFxD9Xj's identical
+      hit on the same already-tracked #2262 bug confirms pre-fix timing, not
+      a new occurrence. Side note, not scored: a same-day prune-trial
+      rewrite of audit-docs/SKILL.md self-caught and restored an unapproved
+      cut before merging (PR #2343). Grade/role unchanged (routine).

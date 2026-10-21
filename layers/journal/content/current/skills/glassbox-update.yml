@@ -60,3 +60,13 @@ observations:
       citation-tracking (page-refs.ts) will flag this page for re-check on its
       next pass per design. Worth a human/next-run follow-up. Grade/role
       unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check: all 9 usedIn runs (the brief said "5, all of them" but
+      the field actually held 9 - a brief/data discrepancy, not a Skill
+      failure) and their 11 PRs independently re-verified live: all
+      merged_by the repo owner, labeled trusted, no Human-only path
+      touched (one CSS fix PR was a legitimate separate, human-requested,
+      reviewed change). The 10-20 observation's predicted staleness (a
+      claude-code doc citing pre-adr-check behavior) self-corrected the
+      very next run via merged PR #2320. No reverts. Grade/role unchanged.

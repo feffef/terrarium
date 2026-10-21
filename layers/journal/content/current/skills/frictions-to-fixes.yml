@@ -311,3 +311,13 @@ observations:
       #2269 merged, so the Ledger not yet listing it as the 5th fix is a timing
       gap, not a miss — the next run should add "fixes: #2269" and refresh the
       stale ref line. No reverts found. Grade/role unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check, 10/10 newest runs' fix/ledger/closing PRs and regression
+      issues verified real and merged: session_01VH74k3Z27QtjR19XNC76qm
+      (PRs #2335-2337, issues #2332-2334 resolved by #2348/#2350),
+      session_01Uq2Kx5jumw8Va6DETgxNV8 (PRs #2313-2316, issues #2310-2312
+      resolved by #2318/#2319), session_01Wv24DMMmjdNR6a23HtkZ8i (PR #2267,
+      issues #2264-2266 resolved by #2271-2273). The 10-20 observation's
+      open ledger-timing gap (fix PR #2269 not yet recorded) self-healed,
+      confirmed in PR #2313's own body. No reverts. Grade/role unchanged.

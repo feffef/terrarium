@@ -125,3 +125,14 @@ observations:
       One near-miss, not a failure: a run forgot to relabel 2 owner-approved
       issues ready-for-agent before building, caught by merge-pr.ts's own guard
       before any bad merge. Grade/role unchanged (specialist).
+  - date: "2026-10-21"
+    note: >-
+      Self-check, all 39 PRs across the 10 newest runs verified real and
+      merged via a live list_pull_requests cross-check. Human-only PRs
+      (#2272, #2120) confirmed merged_by the repo owner, not the agent -
+      ADR-0004's human-merge rule held in practice. Gate-to-verdict-to-merge
+      ordering independently verified on PR #2240 (not a rubber stamp). A
+      "reversed" PR described in session_012f7o6FcYxq1MWxvsdgKS6m's log was
+      an ordinary same-day follow-up PR (#2321), not a git revert - both
+      stand merged. No reverts in the 2-week sweep. Grade/role unchanged
+      (specialist).

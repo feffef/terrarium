@@ -609,3 +609,21 @@ observations:
       missing from skillsUsed) doesn't catch an ordering slip where it ran but
       ran late; worth tightening in a future SKILL.md revision. Grade/role
       unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check: 7/7 usedIn runs' Inventory PRs re-confirmed YAML-only, no
+      unevidenced grade change. NEW, repeated finding escalated as issue
+      #2352: step 5's own citation rule (append only when citing an
+      uncited session/PR/issue) fails on first draft in 4 of 7 runs
+      (session_01TFojzwXEByz1nbqt3wcKNL 5/12, session_01Q4KbJ3FxhATe3QXaMbo1AM
+      3/14, session_011xvPjJVknZzx45v7NjhebT 2/12,
+      session_019xiqcwnB2itTcdugr6EFZL on blog-post's entry), caught every
+      time only by the mandatory code-review gate - never self-caught. That
+      gate itself was found silently skipped twice (10-11, 10-12) and run
+      out of order once (10-14, the very run with 5/12 misses), so step 5's
+      own "done when every entry matches the evidence" criterion isn't
+      actually met on a first pass; rescued each time by a backstop with
+      its own known failure history. Also commented adr-check's new
+      evidence (self-reported + 4 silent sweep-session misses) onto #2286.
+      Grade/role unchanged (routine) - the finding is about a drafting-step
+      self-check gap, not this Skill's delivered outcome.

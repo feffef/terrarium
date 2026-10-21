@@ -22,3 +22,17 @@ observations:
       independently confirmed merged in this run's close-session behaviour
       check. Graded `specialist` on creation: essential within its own narrow
       job (inspecting a sibling session), not reached for day-to-day.
+  - date: "2026-10-21"
+    note: >-
+      First behaviour check. 4/4 newest usedIn sessions clean (correctly
+      dispatched a subagent before reading raw events). NEW, verified
+      missed invocation (n=1): session_01GVmwHZQthucdGcVwe3HAUL ("Diagnose a
+      cloud session that looked stuck") never invoked inspect-session,
+      instead calling list_events/get_session directly in its own context;
+      its own logged Friction confirms the cost ("list_events on a
+      screenshot-heavy session returned 14MB per page... forcing file dumps
+      and a custom parser") — exactly the context-pollution case this Skill
+      exists to prevent. Single instance, not yet escalated per this
+      Inventory's own convention (escalate on a second occurrence); watch
+      for recurrence. No reverts in 2-week sweep. Grade/role unchanged
+      (specialist).
