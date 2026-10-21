@@ -12,6 +12,7 @@ import {
   findOrphanedSessions,
   groupSessionReferences,
   hasHumanPromptedClosure,
+  issuesNamingSkill,
   HUMAN_PROMPTED_CLOSURE,
   isSessionLogPath,
   lastUsed,
@@ -23,6 +24,8 @@ import {
   pickRoutineRuns,
   pickSkillChanges,
   pickWindow,
+  skillQuery,
+  startedWindow,
   pullRequestSessionRef,
   REC,
   RESCUED_GAP_HOURS,
@@ -55,6 +58,7 @@ function sess(over: Partial<Session> = {}): Session {
     humanInvoked: [],
     humanPromptedClosure: false,
     docsRead: [],
+    docsReadBySubagents: [],
     trigger: null,
     ...over,
   }
@@ -255,6 +259,7 @@ describe('toSession() — external exclusion (ADR-0009)', () => {
       humanInvoked: [],
       humanPromptedClosure: true,
       docsRead: ['CLAUDE.md'],
+      docsReadBySubagents: [],
       trigger: null,
     })
   })
@@ -937,5 +942,33 @@ describe('buildBrief()', () => {
     expect(out).toContain('b · 2026-10-01T00:00:00Z · b.yml · goal: goal of b · skillsUsed: other')
     expect(out).toContain('abc123 · 2026-10-03T00:00:00Z · x')
     expect(out).toContain('- 2026-10-01: one two')
+  })
+})
+
+describe('one-Skill query', () => {
+  const adr = (n: string) => `docs/adr/${n}.md`
+  it('windows by start time, boundary inclusive', () => {
+    const a = sess({ session: 'a', startedAt: '2026-10-19T09:55:49Z', endedAt: '2026-10-20T00:00:00Z' })
+    const b = sess({ session: 'b', startedAt: '2026-10-19T09:55:48Z', endedAt: '2026-10-21T00:00:00Z' })
+    expect(startedWindow([a, b], '2026-10-19T09:55:49Z').map((s) => s.session)).toEqual(['a'])
+  })
+  it('groups used and unused by kind, keeping main-agent ADR reads apart from subagent ones', () => {
+    const sessions = [
+      sess({ session: 'u1', kind: 'interactive', skillsUsed: ['x'], docsRead: [adr('0001'), adr('0002'), 'docs/agents/a.md'], docsReadBySubagents: [adr('0002')] }),
+      sess({ session: 'n1', kind: 'routine' }),
+      sess({ session: 'n2', kind: 'interactive', docsRead: [adr('0003')] }),
+    ]
+    const q = skillQuery(sessions, 'x')
+    expect(q.used).toEqual({ interactive: [{ session: 'u1', adrsRead: [adr('0001')], adrsReadBySubagents: [adr('0002')] }] })
+    expect(Object.keys(q.notUsed).sort()).toEqual(['interactive', 'routine'])
+    expect(q.notUsed.interactive).toEqual([{ session: 'n2', adrsRead: [adr('0003')], adrsReadBySubagents: [] }])
+  })
+  it('matches open issues by whole-token Skill name in title or body, skipping PRs', () => {
+    const r = (number: number, title: string, body: string | null, extra = {}) => ({ number, title, body, labels: [], updated_at: '2026-10-01T00:00:00Z', ...extra })
+    const got = issuesNamingSkill(
+      [r(1, 'adr-check is slow', null), r(2, 'other', 'see `adr-check`'), r(3, 'other', 'adr-checker'), r(4, 'adr-check', '', { pull_request: {} })],
+      'adr-check',
+    )
+    expect(got.map((i) => i.number)).toEqual([1, 2])
   })
 })
