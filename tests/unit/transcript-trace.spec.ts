@@ -192,7 +192,6 @@ describe('usage — tokens, duration and tool calls per agent', () => {
   it('stitches each agent\'s share of the session\'s tokens into a valid entry, without the id', () => {
     const folded = foldSubagentTrace(extractTrace([...sub, dispatch], NO_ENV), [{ records: sub, toolUseId: 'toolu_1' }], NO_ENV)
     const entry = stitch({ session: 'session_01ABC', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, folded)
-    expect(entry.tokenShare).toBe(50)
     expect(entry.subagents).toEqual([{ type: 'Explore', task: 'find X', durationSec: 90, toolCalls: 3, modelCalls: 2, tokenShare: 50 }])
     expect(validateEntry(entry).ok).toBe(true)
   })

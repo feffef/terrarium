@@ -76,7 +76,7 @@ export interface DerivedRef {
   source: 'derived'
 }
 
-/** What the log's `tokenShare` is computed from (shared/schemas/session.ts).
+/** What a subagent's `tokenShare` in the log is computed from (shared/schemas/session.ts).
  *  Output is left out: a subagent's transcript holds only its stream-start
  *  count (CLI 2.1.306), and it is a small share anyway. */
 export interface Usage {
@@ -914,7 +914,6 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (authored.ruleVerdicts?.length) entry.ruleVerdicts = authored.ruleVerdicts
   const total = [trace.usage, ...trace.subagents].reduce((n, u) => n + (u?.weightedTokens ?? 0), 0)
   const share = (w?: number) => (w === undefined || total === 0 ? {} : { tokenShare: Math.round((1000 * w) / total) / 10 })
-  Object.assign(entry, share(trace.usage?.weightedTokens))
   if (trace.subagents.length) {
     entry.subagents = trace.subagents.map(({ toolUseId: _, weightedTokens, ...s }) => ({ ...s, ...share(weightedTokens) }))
   }
