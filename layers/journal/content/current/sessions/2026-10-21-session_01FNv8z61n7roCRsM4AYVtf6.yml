@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FNv8z61n7roCRsM4AYVtf6
 startedAt: 2026-10-21T13:15:41Z
-endedAt: 2026-10-21T13:36:54Z
+endedAt: 2026-10-21T13:40:44Z
 kind: interactive
 goal: Should agents get a doc on the self-improvement loop?
 status: in-review
-outcome: "No new doc; auto-triage Routine wording cut and the Journal shows clear-backlog (PR #2376, waits for a human merge)"
-summary: "The owner asked, as an opinion question, whether a short agent doc or rule explaining the self-improvement loop (Routines fix inside their domain, file issues for the rest; clear-backlog works those issues with minimal owner input) would help agents that only see one piece. I read the Journal's how-it-works page, the Routine Skills, auto-triage, clear-backlog and ADR-0003/0022/0029 via adr-check. First I leaned toward a short path-scoped rule loading on the Routine Skills, with an \"options plus a recommended pick\" issue format. The owner rejected the pick (it could steer triage the wrong way) and asked whether this overlaps issue-filing guidance. It largely does: issue-tracker.md's \"Filing an issue\" (already linked from every Routine Skill), triage-labels.md's needs-triage -> clear-backlog line and ADR-0003 cover it, and no Friction evidence of a gap exists, so I recommended no new doc. The owner then directed (human-instructed): auto-triage will never run as a Routine and they no longer run it directly, so trim ADR-0022's \"Who starts a run\" section, and update the Journal section. I cut the Routine and /loop wording from ADR-0022, its summary rule and the auto-triage Skill, and added the clear-backlog second half to how-it-works.md. Two-axis code-review caught an inaccurate \"agents triage every open issue\" / \"merge the rest\" in my Journal text; fixed. PR #2376 is open and must wait for a human merge (ADR and rule are Human-only). Left open in the PR body: the auto-triage Inventory role, two Glass Box drafts and the interactive map still describe the old way."
+outcome: "No new doc; auto-triage Routine wording cut, Journal and interactive map show clear-backlog (PR #2376, waits for a human merge)"
+summary: "The owner asked, as an opinion question, whether a short agent doc or rule explaining the self-improvement loop (Routines fix inside their domain, file issues for the rest; clear-backlog works those issues with minimal owner input) would help agents that only see one piece. I read the Journal's how-it-works page, the Routine Skills, auto-triage, clear-backlog and ADR-0003/0022/0029 via adr-check. First I leaned toward a short path-scoped rule loading on the Routine Skills, with an \"options plus a recommended pick\" issue format. The owner rejected the pick (it could steer triage the wrong way) and asked whether this overlaps issue-filing guidance. It largely does: issue-tracker.md's \"Filing an issue\" (already linked from every Routine Skill), triage-labels.md's needs-triage -> clear-backlog line and ADR-0003 cover it, and no Friction evidence of a gap exists, so I recommended no new doc. The owner then directed (human-instructed): auto-triage will never run as a Routine and they no longer run it directly, so trim ADR-0022's \"Who starts a run\" section, and update the Journal section. I cut the Routine and /loop wording from ADR-0022, its summary rule and the auto-triage Skill, and added the clear-backlog second half to how-it-works.md. Two-axis code-review caught an inaccurate \"agents triage every open issue\" / \"merge the rest\" in my Journal text; fixed. PR #2376 is open and must wait for a human merge (ADR and rule are Human-only). The owner then asked (human-instructed) to fix the interactive map brief too; it now shows one clear-backlog session triaging, asking once and building, and a second code-review caught a dropped ready-for-human label there, fixed. Left open in the PR body: the auto-triage Inventory role and two Glass Box drafts still describe the old way."
 prs:
   - "2376"
 docsRead:
@@ -73,6 +73,12 @@ docsRead:
   - path: .agents/skills/writing-for-agents/SKILL.md
     reason: "standards subagent: wording standards; partly useful"
     useful: partly
+  - path: docs/diagrams/interactive-map/README.md
+    reason: the map brief is a paused experiment; told me which file to edit
+    useful: partly
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: "spec subagent: confirmed a visitor's PR needs a human merge"
+    useful: yes
 skillsUsed:
   - name: adr-check
     reason: binding ADRs and open prune trials before recommending
@@ -95,16 +101,20 @@ frictions:
   - description: First recommendation proposed a new path-scoped rule before checking that issue-tracker.md's Filing an issue already covered most of it; the owner had to ask about overlap.
     solution: Grep the existing homes of a fact before proposing a new doc (CLAUDE.md one home per fact).
     severity: minor
-durationSec: 1273
+durationSec: 1503
 models:
-  claude-opus-5-5: 89
+  claude-opus-5-5: 118
 toolCounts:
-  Bash: 38
+  Bash: 48
   Skill: 4
-  Agent: 2
-  ToolSearch: 1
+  Agent: 4
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__update_pull_request: 1
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/mermaid-lanes.md
@@ -124,6 +134,7 @@ rulesFollowedUp:
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0020.md
 rulesLoadedBySubagents:
   - .claude/rules/adr-0008.md
   - .claude/rules/adr-0001.md
@@ -131,7 +142,7 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0023.md
   - .claude/rules/glassbox-content.md
 docsReadBySubagents:
-  - docs/diagrams/interactive-map/terrarium-overview.md
+  - docs/adr/0020-requester-trust-tiers.md
   - .agents/skills/writing-for-agents/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
@@ -193,6 +204,10 @@ subagents:
     task: Standards review of diff
   - type: general-purpose
     task: Spec review of diff
+  - type: general-purpose
+    task: Standards review of map diff
+  - type: general-purpose
+    task: Spec review of map diff
 gitBranch: claude/self-improvement-loop-docs-ucjqeb
 entrypoint: remote_mobile
 cliVersion: 2.1.306
