@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XfQgmS9ArvbD9WSoPgkKfM
 startedAt: 2026-10-21T16:53:07Z
-endedAt: 2026-10-21T19:20:51Z
+endedAt: 2026-10-21T19:23:46Z
 kind: interactive
 goal: Measure adr-check Skill use and whether its full-ADR reads happen
 status: completed
-outcome: "Findings posted on issue 2286: users read 25 of 61 path-bound ADRs in full"
-summary: "Human-instructed: the owner asked in turn how many sessions by kind invoked adr-check, which autonomous sessions skipped it, how full-ADR reads compare with and without it, whether users read the ADRs that bind their change (choosing \"logs, then sample transcripts\" when I asked), and finally to post findings and process to the ticket. Method and the issue choice (#2286, the open adr-check review) were agent-chosen. Before posting I found I had started the window at the Skill's commit (09:07Z) rather than #2284's merge (09:55:49Z), which wrongly counted 7 pre-landing sessions as non-users; corrected figures: 22 of 41 sessions used it (15/16 interactive, 3/4 delegated, 4/21 autonomous), 86% vs 37% read some full ADR. Including docsReadBySubagents changed nothing. 15 users had path-bound ADRs: 25 of 61 read in full, 3 sessions read all. Four transcript reads confirmed the logs, showed no session named its binding ADRs, and that skips follow the summary rules' narrower \"to change it or review work it governs\" test. I ran adr-check (read ADR-0003, 0005, 0009, 0027, 0029) before posting a proposal: align step 1 with the rules, or have binding.ts list path-matched ADRs, plus an optional log field. No code, no PR."
+outcome: "Findings posted on issue 2286; prune-trial reads checked: no work changed by a trial"
+summary: "Human-instructed: the owner asked in turn how many sessions by kind invoked adr-check, which autonomous sessions skipped it, how full-ADR reads compare with and without it, whether users read the ADRs that bind their change (choosing \"logs, then sample transcripts\" when I asked), and finally to post findings and process to the ticket. Method and the issue choice (#2286, the open adr-check review) were agent-chosen. Before posting I found I had started the window at the Skill's commit (09:07Z) rather than #2284's merge (09:55:49Z), which wrongly counted 7 pre-landing sessions as non-users; corrected figures: 22 of 41 sessions used it (15/16 interactive, 3/4 delegated, 4/21 autonomous), 86% vs 37% read some full ADR. Including docsReadBySubagents changed nothing. 15 users had path-bound ADRs: 25 of 61 read in full, 3 sessions read all. Four transcript reads confirmed the logs, showed no session named its binding ADRs, and that skips follow the summary rules' narrower \"to change it or review work it governs\" test. I ran adr-check (read ADR-0003, 0005, 0009, 0027, 0029) before posting a proposal: align step 1 with the rules, or have binding.ts list path-matched ADRs, plus an optional log field. A last question asked whether sessions read .agents/prune-trials.yml and whether adr-check changed anything: 3 of 22 users vs 6 of 19 non-users read it, and no log reports a trial changing its work. No code, no PR."
 prs: []
 docsRead:
   - path: GLOSSARY-MAP.md
@@ -61,11 +61,11 @@ frictions:
   - description: "Started the analysis window at the adr-check commit time, not #2284's merge, so 7 pre-landing sessions counted as non-users in two chat answers."
     solution: Take a measurement window from the issue's stated landing time; issue 2286 named it.
     severity: minor
-durationSec: 8864
+durationSec: 9039
 models:
-  claude-opus-5-5: 116
+  claude-opus-5-5: 124
 toolCounts:
-  Bash: 39
+  Bash: 42
   Skill: 4
   AskUserQuestion: 1
   Agent: 4
