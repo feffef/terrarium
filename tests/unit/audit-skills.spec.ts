@@ -4,6 +4,7 @@
 // the Skill.
 import { describe, expect, it } from 'vitest'
 import {
+  buildBrief,
   buildDocReadCounts,
   buildSkillRows,
   findHumanPromptedClosures,
@@ -883,5 +884,58 @@ describe('findManuallyRescuedClosures()', () => {
     const sessions = [sess({ session: 's', endedAt: '2026-07-13T02:00:00Z' })] // 2h gap
     expect(findManuallyRescuedClosures(refs, sessions, RESCUED_GAP_HOURS)).toEqual([]) // below default 6h
     expect(findManuallyRescuedClosures(refs, sessions, 1)).toHaveLength(1) // above a 1h threshold
+  })
+})
+
+describe('buildBrief()', () => {
+  const win = (session: string, startedAt: string, skillsUsed: string[] = []) => ({
+    session,
+    file: `${session}.yml`,
+    kind: 'autonomous',
+    goal: `goal of ${session}`,
+    startedAt,
+    endedAt: startedAt,
+    skillsUsed,
+  })
+  const row = (over: Partial<SkillRow> = {}): SkillRow => ({
+    name: 'demo',
+    onDisk: true,
+    inventoried: true,
+    external: false,
+    modelInvoked: false,
+    category: null,
+    importance: null,
+    role: null,
+    observations: [],
+    description: null,
+    useCount: 0,
+    usedIn: [],
+    mentionedIn: [],
+    humanInvokedIn: [],
+    allTimeUses: 0,
+    lastUsed: null,
+    changes: [],
+    ...over,
+  })
+
+  it('lists the newest runs first, capped, with their log files', () => {
+    const w = Array.from({ length: 12 }, (_, i) => win(`s${i}`, `2026-10-${String(i + 1).padStart(2, '0')}T00:00:00Z`, ['demo']))
+    const out = buildBrief(row({ usedIn: w.map((x) => x.session) }), w)
+    const runs = out.split('\n').filter((l) => l.startsWith('- s'))
+    expect(runs).toHaveLength(10)
+    expect(runs[0]).toContain('s11 ·')
+    expect(runs[0]).toContain('s11.yml')
+    expect(out).not.toContain('Sessions that did not use it')
+  })
+
+  it('gives a model-invoked Skill the sessions that did not use it, and names each landing', () => {
+    const w = [win('a', '2026-10-02T00:00:00Z', ['demo']), win('b', '2026-10-01T00:00:00Z', ['other'])]
+    const out = buildBrief(
+      row({ modelInvoked: true, usedIn: ['a'], changes: [{ sha: 'abc123', landedAt: '2026-10-03T00:00:00Z', paths: ['x'] }], observations: [{ date: '2026-10-01', note: 'one\n  two' }] }),
+      w,
+    )
+    expect(out).toContain('b · 2026-10-01T00:00:00Z · b.yml · goal: goal of b · skillsUsed: other')
+    expect(out).toContain('abc123 · 2026-10-03T00:00:00Z · x')
+    expect(out).toContain('- 2026-10-01: one two')
   })
 })
