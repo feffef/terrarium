@@ -1,0 +1,70 @@
+schemaVersion: 1
+session: session_01XfQgmS9ArvbD9WSoPgkKfM
+startedAt: 2026-10-21T16:53:07Z
+endedAt: 2026-10-21T16:54:43Z
+kind: delegated
+goal: Count sessions that invoked the adr-check Skill
+status: completed
+outcome: "21 logged sessions listed adr-check: 15 interactive, 3 delegated, 3 autonomous"
+summary: "Human-instructed: the owner asked how many sessions, and of which kind, have invoked the adr-check Skill. Everything else was agent-chosen method. I parsed every session log on origin/main (1150 across current and archived) and counted those whose skillsUsed names adr-check: 21, all since the Skill was added on 2026-10-19 (15 interactive, 3 delegated, 3 autonomous), out of 47 sessions logged since then. Ten more logs mention adr-check only in text (audits of it, its build, or frictions saying they skipped it); I read each mention and counted none of them. Sessions without a log are invisible to this count. No code changed, no PR."
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; pointed to the Journal Tenant
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Session kind definitions used for the breakdown
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read late; confirmed git show/fetch of origin/main was right
+    useful: partly
+skillsUsed:
+  - name: close-session
+    reason: session only answered a question
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch and git log before reading docs/agents/git-conventions.md, against CLAUDE.md's read-first trigger; no harm, my calls matched it.
+    solution: The PostToolUse hint caught it; reading triggers before the first Bash call would avoid it.
+    severity: nit
+durationSec: 96
+models:
+  claude-opus-5-5: 27
+toolCounts:
+  Bash: 11
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: About gating and merging PRs; this session opened none
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Confirmed the log goes straight to main via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: About landing changes as PRs; a read-only question needed none
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: About provenance on GitHub writes; this session made none
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading the glossary; I edited no glossary
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded on reading git-conventions; no instruction text changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading git-conventions; no rule placement decided
+    useful: no
+gitBranch: ccr-a3227126-g8q0f1
+entrypoint: remote_mobile
+cliVersion: 2.1.306
+landedBy: Stop
