@@ -39,8 +39,8 @@ act, once per session.
   `dispatch-subagents` Skill.
 - **Every subagent brief** asks it to return, in its final reply, a verdict
   (path, why it loaded or was read, useful yes/partly/no) on each rule and doc
-  it loaded or read, and to keep scratch files in a scratchpad subfolder named
-  for itself (subagents share one scratchpad).
+  it loaded or read, and to write every file it creates, scripts included, in a
+  scratchpad subfolder named for itself (subagents share one scratchpad).
 - **Before you add or change a glossary term:** `docs/agents/domain.md`.
 - **Before you debug a tool, push, network or permission error** that your
   diff doesn't explain: `docs/agents/environment-caveats.md`.
