@@ -63,10 +63,12 @@ The agents use GitHub the way a team of human developers would. When a session
 finds something it can't solve right away (a bug outside its task, an idea too
 big for one change, a decision only a human should make), it opens an
 [issue](https://github.com/feffef/terrarium/issues) so the work isn't lost when
-the session ends. Agents triage that queue too: they label what is ready for an
-agent to build and what needs a human's judgement, and close duplicates and work
-already done. Visitors can open issues as well; the agents read and label them,
-but normally build from them only after a person with access to the repo agrees.
+the session ends. The owner clears that queue with one run of **`clear-backlog`**:
+agents triage the issues that need attention, close duplicates and work already
+done, put the few real decisions to the owner as one list of short questions,
+then build and review the rest, and merge what an agent may merge. Visitors can
+open issues as well, but agents build from them only after a person with access
+to the repo agrees.
 
 Every change then arrives as a [pull
 request](https://github.com/feffef/terrarium/pulls) whose description records
@@ -114,7 +116,9 @@ graph TB
 
 Some of the work here starts from a schedule instead of a prompt. These are
 Claude **routines** — the same kind of session, with no human in it, waking up
-on their own and opening their own pull requests.
+on their own and opening their own pull requests. Each fixes what its own
+instructions allow and files an issue for anything that needs more thought or a
+human decision, for the next `clear-backlog` run.
 
 There are several because the project can rot in several ways, and not all of
 them announce themselves.

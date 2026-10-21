@@ -1,6 +1,6 @@
 ---
 name: auto-triage
-description: Autonomous, brave triage sweep over the issues that need attention — the batch/loop sibling of `triage`. User-invoked; fire it by hand or on an interval via a Routine or `/loop`.
+description: Autonomous, brave triage sweep over the issues that need attention — the batch sibling of `triage`. User-invoked.
 disable-model-invocation: true
 ---
 
@@ -33,8 +33,8 @@ For everything else, fetch the **most recent comment** and check who wrote it:
   **is eligible when its most recent comment is human-authored.**
   Every agent comment carries an ADR-0017 mark, so its **absence** is the signal (`isAiAuthored`). Never use the author or `author_association`: agents post as the owner (ADR-0017).
 
-Skip any other ticket whose most recent comment is already AI's own. That keeps a
-short-interval loop **idempotent**: once an agent answers the human's comment,
+Skip any other ticket whose most recent comment is already AI's own. That keeps
+repeated sweeps **idempotent**: once an agent answers the human's comment,
 the ticket stays quiet until a human writes again, whatever its label reads.
 
 Scan every open issue and fetch its comments, not a label-filtered query: no label can express a state/comment combination. Revisit only when a sweep visibly costs time or API budget, never at a guessed issue count; don't pre-build pagination or caching.
@@ -99,9 +99,8 @@ explicit skip here instead of relying on timing.
 ## Run it
 
 **Full-sweep mode.** Pass `full-sweep` as this Skill's argument (e.g.
-`/auto-triage full-sweep`, or naming it in a Routine's prompt) to disable the
-AI-last-comment idempotency skip above for this run only — every open,
-in-scope issue is eligible regardless of who commented last. Use it only when
+`/auto-triage full-sweep`) to disable the AI-last-comment idempotency skip
+above for this run only — every open, in-scope issue is eligible regardless of who commented last. Use it only when
 a human directs a brave re-triage; an agent never picks it on its own.
 
 1. **Resolve the set.** List every open issue via `pnpm exec tsx scripts/github/list-open-issues.ts`
@@ -129,7 +128,3 @@ a human directs a brave re-triage; an agent never picks it on its own.
    `ready-for-agent` issue (not only this run's), say so, and mark the
    higher-numbered one blocked by the other (`issue-tracker.md`'s Blocking); it
    unblocks when that one closes.
-
-**Loop it** by firing this skill by name on an interval — a Routine (standing,
-survives teardown) or `/loop` (within a live session). Idempotency above keeps a
-tight interval cheap.
