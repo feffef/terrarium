@@ -10,7 +10,7 @@
 // transcript beside its parent's; if that is missing it points anyway. A missing
 // main transcript adds nothing, since every call would repeat the pointer.
 // After a successful `mcp__github__create_pull_request` in the main session it
-// also says to invoke `close-session` now, unless the transcript shows it invoked
+// also says to invoke `close-session`, unless the transcript shows it invoked
 // after that PR call, so each PR gets it (issue #2209): prose alone left sessions
 // logging only at the end (issue #1859).
 // Fails open: any error adds nothing. `scripts/hooks/read-first-hint.sh` is the Bash
@@ -79,7 +79,7 @@ const pointer = (r: ReadFirst) => `Read first: \`${r.doc}\` (${r.source}: "${r.t
 
 export const LATE_READ_NOTE = 'If the doc shows your call was already right, the late read is not a Friction.'
 
-export const CLOSE_SESSION_HINT = 'PR opened: invoke the `close-session` Skill now for an in-review first log (CLAUDE.md); re-invoking it later is safe.'
+export const CLOSE_SESSION_HINT = 'PR opened: invoke the `close-session` Skill before this turn ends for an in-review first log (CLAUDE.md); re-invoking it later is safe.'
 
 /** The docs this transcript already read or was pointed to. */
 function seen(records: Record<string, unknown>[], docs: ReadFirst[], trace: ReturnType<typeof extractTrace>): Set<string> {

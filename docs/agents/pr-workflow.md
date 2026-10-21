@@ -108,7 +108,7 @@ when something outside that scope rides in.
    open **one gated PR** scoped to that Skill's own diff — one per run unless
    the Skill's own SKILL.md names more.
 3. Subscribe on open and land via this doc's recipe once green.
-4. **At PR-open, invoke `close-session`** — your first log (`in-review`).
+4. **Before the turn that opens the PR ends, invoke `close-session`** — your first log (`in-review`).
 5. If the gate is red for a reason that isn't yours, or anything outside the
    Skill's own scope rode into the diff, leave the PR open and escalate to a
    human instead of merging: a scheduled run merges only what its SKILL.md
