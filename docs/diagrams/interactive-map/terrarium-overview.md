@@ -197,14 +197,13 @@ label says whose move it is:
 - `ready-for-human`: needs a person.
 - `wontfix`: closed without action.
 
-A **triage** session sorts new issues. When the maintainer starts the batch
-version, `auto-triage`, it may approve issues written under the owner's
-account (by the maintainer or by agents) for agents by itself, if the design
-is clear. A visitor's issue always waits for the maintainer's approval. No
-routine builds approved issues: the maintainer starts a session for that,
-often the same one that ran `auto-triage`. Big pieces of work are first
-split into a plan and a set of smaller issues (`wayfinder`, `to-spec`,
-`to-tickets`).
+The maintainer clears the queue with one `clear-backlog` session. It triages
+the issues that need attention and may approve issues written under the
+owner's account (by the maintainer or by agents) by itself, if the design is
+clear. It asks the maintainer about the rest in one sitting, then builds what is
+approved. A visitor's issue always waits for the maintainer's approval. Big
+pieces of work are first split into a plan and a set of smaller issues
+(`wayfinder`, `to-spec`, `to-tickets`).
 
 ## The self-improvement loop
 
@@ -614,17 +613,18 @@ Close-up: `container`.
 Object card: the issue, with its label as a tag.
 
 1. `visitor` opens an issue in `issues`. It has no label.
-2. `maintainer` starts a `cloud` session that runs `auto-triage`.
+2. `maintainer` starts a `cloud` session that runs `clear-backlog`.
 3. **Who wrote it?** `cloud` reads the author's access from `issues`, never
    from the text. *Decision.*
-4. `cloud` checks the claim by reading only, and labels the issue
-   `ready-for-human` with a short summary: it waits for the maintainer.
+4. `cloud` checks the claim by reading only, labels the issue
+   `ready-for-human` and adds it to its questions for the maintainer.
    *Decision.*
-5. `maintainer` approves it for agents in `issues`: `ready-for-agent`.
-6. `maintainer` asks a `cloud` session to build it, often the same one.
+5. `maintainer` approves it; the session labels it `ready-for-agent`.
+6. The same session builds it.
 7. The session opens a pull request in `prs`, as in story 2.
 8. `ci` runs the checks.
-9. `maintainer` merges, or tells the session to merge. The issue closes.
+9. `maintainer` merges: a visitor's request always needs a human merge. The
+   issue closes.
 
 Branches:
 - at step 3: **a visitor** (usual) → step 4. **Written under the owner's
@@ -873,7 +873,7 @@ Every panel has the same rows, in this order. An empty row is hidden.
 | `journal` | `.agents/skills/digest/scripts/archive-journal-content.ts` | ADR-0009, ADR-0010 |
 | `logs` | `layers/journal/content/*/sessions/`, `shared/schemas/session.ts`, `scripts/session/log-session.ts` | ADR-0009 |
 | `inventory` | `layers/journal/content/*/skills/` | ADR-0015 |
-| `issues` | `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `.agents/skills/triage/`, `.agents/skills/auto-triage/` | ADR-0020, ADR-0022 |
+| `issues` | `docs/agents/issue-tracker.md`, `docs/agents/triage-labels.md`, `.agents/skills/triage/`, `.agents/skills/auto-triage/`, `.agents/skills/clear-backlog/` | ADR-0020, ADR-0022 |
 | `prs` | `docs/agents/pr-workflow.md`, `scripts/github/merge-pr.ts` | ADR-0003, ADR-0004 |
 | `ci` | `.github/workflows/gate.yml`, `.github/actions/gate/action.yml`, `scripts/gate/gate.ts` | ADR-0004, ADR-0026 |
 | `caddy` | `deploy/README.md`; Caddy itself is set up outside the repository | – |
