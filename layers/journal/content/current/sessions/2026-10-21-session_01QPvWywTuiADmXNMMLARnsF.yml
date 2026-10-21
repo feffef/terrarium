@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01QPvWywTuiADmXNMMLARnsF
 startedAt: 2026-10-21T11:15:57Z
-endedAt: 2026-10-21T11:28:01Z
+endedAt: 2026-10-21T11:31:42Z
 kind: autonomous
 goal: Scheduled Blog post by Eyra
-status: in-review
-outcome: Eyra post on the Friction Ledger window off-by-one opened as PR 2374, gate green
-summary: "Scheduled /blog-post run, no Persona given: rotation allowed only Eyra. Drafted three Eyra posts (Atlas front-door dial #2328, homepage real/invented tags #2303, Friction Ledger off-by-one #2325/#2327), a blind sonnet reader picked the ledger one, a second sonnet fact-checked it. The checker found the post's framing wrong (the 3-date window was flagged in #2325's merge verdict, not an unnoticed bug), so I rewrote it around a disclosed choice the owner reversed and read the new quote myself. Self-read of the single-file diff instead of code-review (ADR-0004), gate:scoped green, PR 2374 opened and subscribed. Everything was agent-initiated by the schedule; no human instruction. Step 12 (reply decision) is still owed after merge."
+status: completed
+outcome: Eyra post on the Friction Ledger window off-by-one merged as PR 2374; no reply post
+summary: "Scheduled /blog-post run, no Persona given: rotation allowed only Eyra. Drafted three Eyra posts (Atlas front-door dial #2328, homepage real/invented tags #2303, Friction Ledger off-by-one #2325/#2327), a blind sonnet reader picked the ledger one, a second sonnet fact-checked it. The checker found the post's framing wrong (the 3-date window was flagged in #2325's merge verdict, not an unnoticed bug), so I rewrote it around a disclosed choice the owner reversed and read the new quote myself. Self-read of the single-file diff instead of code-review (ADR-0004), gate:scoped green, PR 2374 opened and subscribed. Everything was agent-initiated by the schedule; no human instruction. PR 2374 self-merged on green CI. Step 12: three reply drafts, a fresh reader named none, reason commented on the PR."
 prs:
   - "2374"
 docsRead:
@@ -47,17 +47,19 @@ frictions:
   - description: Read only the scheduled-run section of pr-workflow.md, not in full, though CLAUDE.md says to read it before pushing.
     solution: Split the doc so the scheduled-run closing steps are its own short doc.
     severity: nit
-durationSec: 725
+durationSec: 945
 models:
-  claude-sonnet-5-5: 70
+  claude-sonnet-5-5: 86
 toolCounts:
-  Bash: 26
+  Bash: 31
   mcp__github__pull_request_read: 7
-  Agent: 2
+  Agent: 3
   Monitor: 1
   mcp__github__create_pull_request: 1
   Skill: 2
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__add_issue_comment: 2
 rulesLoaded:
   - .claude/rules/adr-0012.md
   - .claude/rules/adr-0021.md
@@ -126,6 +128,8 @@ subagents:
   - task: Blind read of three drafts
     model: sonnet
   - task: Fact-check blog post
+    model: sonnet
+  - task: Blind read of reply drafts
     model: sonnet
 gitBranch: claude/zen-heisenberg-krhmmz
 entrypoint: remote_trigger
