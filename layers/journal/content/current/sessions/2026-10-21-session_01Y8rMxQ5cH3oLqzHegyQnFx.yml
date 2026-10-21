@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Y8rMxQ5cH3oLqzHegyQnFx
 startedAt: 2026-10-21T19:49:07Z
-endedAt: 2026-10-21T20:34:11Z
+endedAt: 2026-10-21T21:30:12Z
 kind: interactive
 goal: Measure how token use splits between a session and its subagents
-status: in-review
-outcome: "PR #2393 logs each agent's price-weighted token share; waits for a human merge"
-summary: "The owner asked (human-instructed) whether clear-backlog-build wastes context by handing review findings to a fresh fix agent, checked via inspect-session on session_01C32ny8 and session_01MKHvrD. Confirmed: every fix round is a new agent (the Workflow API can't continue one), contrary to dispatch-subagents §5, and fixPrompt omits the build decisions; one branch's fixes moved a rule between files twice. Per-agent cost couldn't be measured because workflow agents' turns aren't in events. The owner then chose (human-instructed) to have session logs record it mechanically. Building it showed subagent transcripts hold stream-start output_tokens; the owner asked for a deep-research run, whose three tracks (docs, GitHub issues, the installed 2.1.306 binary) found no exact per-subagent output source on disk, only OTel spans. The owner then narrowed the goal to a reliable rough split, price-weighted, stored as percent shares, which PR #2393 implements (tokenShare at top level and per subagent, plus durationSec, toolCalls, modelCalls per subagent). code-review found nested and unmatched transcripts were dropped; fixed. No change to clear-backlog-build itself; that is left for the owner to decide."
+status: completed
+outcome: "PR #2393 merged: session logs show each subagent's price-weighted token share"
+summary: "The owner asked (human-instructed) whether clear-backlog-build wastes context by handing review findings to a fresh fix agent, checked via inspect-session on session_01C32ny8 and session_01MKHvrD. Confirmed: every fix round is a new agent (the Workflow API can't continue one), contrary to dispatch-subagents §5, and fixPrompt omits the build decisions; one branch's fixes moved a rule between files twice. Per-agent cost couldn't be measured because workflow agents' turns aren't in events. The owner then chose (human-instructed) to have session logs record it mechanically. Building it showed subagent transcripts hold stream-start output_tokens; the owner asked for a deep-research run, whose three tracks (docs, GitHub issues, the installed 2.1.306 binary) found no exact per-subagent output source on disk, only OTel spans. The owner then narrowed the goal to a reliable rough split, price-weighted, stored as percent shares, which PR #2393 implements (tokenShare at top level and per subagent, plus durationSec, toolCalls, modelCalls per subagent). code-review found nested and unmatched transcripts were dropped; fixed. The owner then asked (human-instructed) to drop the session-level share as derivable, and authorized me in chat to merge this Human-only PR myself; merge-pr.ts refuses Human-only paths, so I merged with the GitHub merge tool after merging main in (one conflict with #2386 in traceOf, both sides kept) and a green gate. No change to clear-backlog-build itself; that is left for the owner to decide."
 prs:
   - "2393"
 docsRead:
@@ -64,26 +64,36 @@ frictions:
   - description: Committed while a gate run was still in progress, which pr-workflow.md forbids (edit nothing until it ends); I re-ran the gate on the final head.
     solution: Wait for the gate notification before touching the tree.
     severity: nit
-durationSec: 2703
+  - description: Merged a Human-only PR with the GitHub merge tool instead of merge-pr.ts, which pr-workflow.md names as the only merge path; the owner authorized it explicitly in chat.
+    solution: merge-pr.ts could take an --owner-authorized flag that records the authorization, so an owner-approved Human-only merge keeps one path.
+    severity: minor
+durationSec: 6065
 models:
-  claude-opus-5-5: 232
+  claude-opus-5-5: 292
 toolCounts:
   Skill: 8
-  Bash: 67
+  Bash: 80
   Agent: 9
   Write: 1
-  AskUserQuestion: 6
+  AskUserQuestion: 7
   Edit: 4
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__send_later: 1
-  ReadNotifications: 1
+  mcp__github__add_issue_comment: 3
+  mcp__claude-code-remote__send_later: 2
+  ReadNotifications: 4
+  mcp__github__update_pull_request: 1
+  mcp__github__pull_request_read: 6
+  mcp__github__merge_pull_request: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - tests/unit/transcript-trace.spec.ts
   - scripts/session/transcript-trace.ts
+  - shared/schemas/session.ts
+  - scripts/session/log-session.ts
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0004-human-merge.md
@@ -172,58 +182,58 @@ subagents:
     durationSec: 569
     toolCalls: 96
     modelCalls: 96
-    tokenShare: 23.2
+    tokenShare: 19.7
   - type: general-purpose
     task: Inspect fix agents session 01MKH
     model: sonnet
     durationSec: 210
     toolCalls: 27
     modelCalls: 27
-    tokenShare: 4.6
+    tokenShare: 3.9
   - type: general-purpose
     task: Research Claude Code docs usage surfaces
     durationSec: 230
     toolCalls: 24
     modelCalls: 20
-    tokenShare: 6
+    tokenShare: 5.1
   - type: general-purpose
     task: Research GitHub issues on usage
     durationSec: 225
     toolCalls: 28
     modelCalls: 20
-    tokenShare: 5.2
+    tokenShare: 4.4
   - type: general-purpose
     task: Inspect installed CLI for usage
     durationSec: 393
     toolCalls: 50
     modelCalls: 48
-    tokenShare: 9.9
+    tokenShare: 8.4
   - type: general-purpose
     task: Standards review of usage diff
     durationSec: 57
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2.1
+    tokenShare: 1.8
   - type: general-purpose
     task: Spec review of usage diff
     durationSec: 58
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 2.1
+    tokenShare: 1.8
   - type: general-purpose
     task: Standards review of follow-up
     model: sonnet
     durationSec: 31
     toolCalls: 2
     modelCalls: 3
-    tokenShare: 1.4
+    tokenShare: 1.2
   - type: general-purpose
     task: Spec review of follow-up
     model: sonnet
     durationSec: 28
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.6
+    tokenShare: 1.3
 gitBranch: ccr-9a4c1386-awyekt
 entrypoint: remote_mobile
 cliVersion: 2.1.306
