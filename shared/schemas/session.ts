@@ -14,8 +14,10 @@ import { utcTimestamp } from './timestamp'
 
 export const usefulVerdict = z.enum(['yes', 'partly', 'no'])
 export const ruleVerdict = z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict })
+export const relevantAdr = z.object({ adr: z.number().int().positive(), reason: z.string() })
 export type UsefulVerdict = z.infer<typeof usefulVerdict>
 export type RuleVerdict = z.infer<typeof ruleVerdict>
+export type RelevantAdr = z.infer<typeof relevantAdr>
 
 /**
  * The grow-only `sessions` schema (ADR-0009). `status`/`kind` are queryable spines;
@@ -56,7 +58,7 @@ export const sessionSchema = z
     durationSec: z.number().int().nonnegative().optional(),
     models: z.record(z.string(), z.number().int()).optional(), // model id → assistant-turn count
     toolCounts: z.record(z.string(), z.number().int()).optional(), // tool name → call count
-    filesEdited: z.array(z.string()).optional(),
+    filesEdited: z.array(z.string()).optional(), // also from the session's own commits (log-session.ts)
     // Path-scoped `.claude/rules/` files that loaded on a file touch, so an audit
     // can see which ADR summaries fired and whether a full read followed.
     rulesLoaded: z.array(z.string()).optional(),
@@ -122,6 +124,9 @@ export const sessionSchema = z
     // truly empty.
     learnings: z.array(z.string()).optional(),
     ideas: z.array(z.string()).optional(),
+    // The ADRs the agent judged relevant to its work, each with a one-line
+    // reason (#2386). Authored, optional.
+    relevantAdrs: z.array(relevantAdr).optional(),
     // Field names a back-catalog sweep (issue #449 Gap 5) suspects were silently
     // truncated by the pre-#367 unquoted-`#` bug but couldn't repair with
     // confidence. Absent on every log the sweep didn't flag.

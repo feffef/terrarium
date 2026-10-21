@@ -9,6 +9,7 @@ import { existsSync, readFileSync, rmSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { parse as parseYaml } from 'yaml'
 import {
   buildDroppedScratchScratch,
   declaredClosure,
@@ -111,6 +112,37 @@ describe('handle() — lands from gitignored staging, never the tree (#148)', ()
     expect(res.action).toBe('skipped-unchanged')
     expect(landFn).not.toHaveBeenCalled()
     expect(existsSync(stagingAbs)).toBe(false)
+  })
+})
+
+describe("filesEdited — the transcript's edits plus the session's own commits (#2386)", () => {
+  afterEach(() => rmSync(stagingAbs, { force: true }))
+
+  it('merges files committed under this session into filesEdited, deduplicated', () => {
+    const edit = JSON.stringify({
+      type: 'assistant',
+      timestamp: '2026-07-04T22:46:00Z',
+      sessionId: scratch.session,
+      cwd: '/home/user/terrarium',
+      message: {
+        model: 'claude-opus-4-8',
+        content: [{ type: 'tool_use', name: 'Edit', input: { file_path: '/home/user/terrarium/docs/a.md' } }],
+      },
+    })
+    const gitLog = `\x1eWork\n\nClaude-Session: https://claude.ai/code/${scratch.session}\n\x1f\n\ndocs/a.md\nscripts/b.ts\n`
+    let yaml = ''
+    handle(scratch, `${transcript}\n${edit}`, {
+      dryRun: false,
+      remote: 'origin',
+      env: {},
+      mainVersionFn: () => null,
+      gitLogFn: (session) => (session === scratch.session ? gitLog : ''),
+      landFn: ((_rel: string, abs: string) => {
+        yaml = readFileSync(abs, 'utf8')
+        return 'x'
+      }) as unknown as typeof import('../../scripts/session/log-session.ts').land,
+    })
+    expect(parseYaml(yaml).filesEdited).toEqual(['docs/a.md', 'scripts/b.ts'])
   })
 })
 

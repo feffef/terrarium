@@ -2,7 +2,8 @@
 
 Each session writes one honest log of its work, and a script commits that one
 file straight to `main`, without a PR. Nothing else takes this path. The agent
-writes only the judgement half; the rest comes from the session's transcript.
+writes only the judgement half; the rest comes from the session's transcript
+and its own commits.
 
 ## Scope
 
@@ -19,9 +20,11 @@ writes only the judgement half; the rest comes from the session's transcript.
   blocked, the session logs again and replaces its earlier log. A session
   with no PR logs too.
 - **Who writes what.** The agent writes the goal, status, outcome, summary,
-  every Friction, and why the docs and Skills it names mattered. Timings,
-  models, tools, files read and edited, subagents and loaded rules come from
-  the transcript. A doc counts as read when a command's output showed enough
+  every Friction, why the docs and Skills it names mattered, and which ADRs
+  it judged relevant. Timings, models, tools, files read, subagents and loaded
+  rules come from the transcript. Files edited come from the transcript and
+  from the session's own commits, found by their `Claude-Session:` trailer, so
+  an edit made through a shell command counts too. A doc counts as read when a command's output showed enough
   of it. The agent may mark a read credited from a command's output "not read";
   it is then dropped and logged as a Friction, so detector errors stay visible.
 - **Landed logs stay as they are.** No other session edits a log, not even to

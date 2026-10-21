@@ -116,6 +116,15 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
             </ul>
           </div>
 
+          <div v-if="card.relevantAdrs.length" class="block">
+            <h4>Relevant ADRs</h4>
+            <ul class="notes">
+              <li v-for="a in card.relevantAdrs" :key="a.adr">
+                <span class="mono">ADR-{{ String(a.adr).padStart(4, '0') }}</span> — {{ a.reason }}
+              </li>
+            </ul>
+          </div>
+
           <!-- Mechanical trace — verbose, transcript-derived lists. Tucked behind
                individual disclosures so they inform without swamping the narrative. -->
           <div

@@ -9,6 +9,7 @@ import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vites
 import { parse as parseYaml } from 'yaml'
 import {
   authorMain,
+  committedFiles,
   CURRENT_SESSIONS_SCHEMA_VERSION,
   expectedFilename,
   land,
@@ -79,6 +80,24 @@ describe('validateEntry() — the L1 stand-in', () => {
     expect(validateEntry({ ...valid, learnings: ['inferred a thing'], ideas: ['an idea'] }).ok).toBe(true)
     expect('learnings' in valid).toBe(false) // absent is fine — they are optional
     expect(validateEntry(valid).ok).toBe(true)
+  })
+
+  it('accepts optional relevantAdrs as ADR numbers with a reason, and refuses other shapes', () => {
+    const relevantAdrs = [{ adr: 9, reason: 'changes the session log' }]
+    expect(validateEntry({ ...valid, relevantAdrs }).ok).toBe(true)
+    expect(validateEntry({ ...valid, relevantAdrs: [{ adr: 'ADR-0009', reason: 'r' }] }).ok).toBe(false)
+    expect(validateEntry({ ...valid, relevantAdrs: [{ adr: 9 }] }).ok).toBe(false)
+    const authored = { session: 's', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+    expect(validateAuthored({ ...authored, relevantAdrs }).ok).toBe(true)
+  })
+
+  it('merges relevantAdrs by ADR number on re-fire, the later pass winning', () => {
+    const base = { session: 's', goal: 'g', status: 'completed' as const, outcome: 'o', summary: 's', frictions: [] }
+    const merged = mergeAuthored(
+      { ...base, relevantAdrs: [{ adr: 9, reason: 'old' }, { adr: 4, reason: 'gate' }] },
+      { ...base, relevantAdrs: [{ adr: 9, reason: 'new' }] },
+    )
+    expect(merged.relevantAdrs).toEqual([{ adr: 9, reason: 'new' }, { adr: 4, reason: 'gate' }])
   })
 
   it('rejects a non-string entry in learnings (must be a plain string array)', () => {
@@ -589,5 +608,34 @@ describe('mergeAuthored() — merge on re-fire (issue #688)', () => {
   it('replaces, never merges, a scratch left behind by a different session', () => {
     const other = { ...pass2, session: 'session_01B' }
     expect(mergeAuthored(pass1, other)).toEqual(other)
+  })
+})
+
+describe('committedFiles() — files the session changed through its own commits (#2386)', () => {
+  // `git log --name-only --format=%x1e%B%x1f` output: RS, body, US, then the files.
+  const commit = (body: string, files: string[]) => `\x1e${body}\n\x1f\n\n${files.join('\n')}\n`
+  const mine = 'Claude-Session: https://claude.ai/code/session_01A'
+
+  it('lists the files of commits whose trailer names this session, and only those', () => {
+    const log = [
+      commit(`Fix the gate\n\n${mine}\n`, ['scripts/gate/gate.ts', 'docs/x.md']),
+      commit('Fix\n\nClaude-Session: https://claude.ai/code/session_01AB\n', ['other.ts']),
+      commit('Mentions session_01A in prose only\n', ['prose.ts']),
+      commit(`Again\n\n${mine}\n`, ['docs/x.md', 'app/a.vue']),
+    ].join('')
+    expect(committedFiles(log, 'session_01A')).toEqual(['scripts/gate/gate.ts', 'docs/x.md', 'app/a.vue'])
+  })
+
+  it("drops noise paths and the session's own log commits", () => {
+    const log = commit(`Log\n\n${mine}\n`, [
+      'layers/journal/content/current/sessions/2026-10-21-session_01A.yml',
+      'node_modules/x/index.js',
+      'app/b.vue',
+    ])
+    expect(committedFiles(log, 'session_01A')).toEqual(['app/b.vue'])
+  })
+
+  it('is empty when git gave nothing (unavailable or no commits)', () => {
+    expect(committedFiles('', 'session_01A')).toEqual([])
   })
 })
