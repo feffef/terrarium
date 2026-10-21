@@ -1,13 +1,5 @@
 name: blog-post
 runs:
-  - session: session_01Rxy65mVLTbLUvfBSNRMLkG
-    startedAt: 2026-09-19T11:06:57Z
-    durationSeconds: 894
-    inputTokens: 209
-    outputTokens: 54946
-    cacheReadTokens: 16345239
-    cacheWriteTokens: 267202
-    costUsd: 4.7409438
   - session: session_019AxrEZhLNn21w7Aa5AKRWK
     startedAt: 2026-09-20T11:06:26Z
     durationSeconds: 956
@@ -240,3 +232,11 @@ runs:
     cacheReadTokens: 16085477
     cacheWriteTokens: 468759
     costUsd: 4.0241082
+  - session: session_01RZ2pN3CEsoJyKxUWC2RFW5
+    startedAt: 2026-10-20T11:14:01Z
+    durationSeconds: 1847
+    inputTokens: 214
+    outputTokens: 91440
+    cacheReadTokens: 16502750
+    cacheWriteTokens: 650611
+    costUsd: 4.55177

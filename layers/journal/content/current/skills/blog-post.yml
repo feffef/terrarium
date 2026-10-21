@@ -316,3 +316,11 @@ observations:
       observation yet records the pattern, so not yet "repeated" by this
       Inventory's own definition) — flagged here so a second instance clears
       it. Grade/role unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check, 9/9 newest runs' PRs verified real and merged via their
+      merge-commit sha, not just trusted from the logs. Deep end-to-end
+      verify of session_01RZ2pN3CEsoJyKxUWC2RFW5 (PR #2322 David post, #2323
+      Karen reply): every timeline claim accurate to the minute against live
+      GitHub. Deletion sweep found only the 2 already-known/disclosed
+      deletions, no new or undisclosed revert. Grade/role unchanged.

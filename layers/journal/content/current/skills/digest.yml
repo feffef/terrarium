@@ -264,3 +264,14 @@ observations:
       now; the only historical case (2026-09-28, PR #1478) remains closed.
       No reverts in the 2-week sweep. No new silent failure. Grade/role
       unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check (audit-skills behaviour check): no new silent failure, 22
+      consecutive clean daily audits since the single 2026-09-28 #1478
+      case. Newly verified: session_011G3PKUqDog2WRSuqypmuJX (2026-10-19
+      digest, PR #2308 - rollup matches footer, fact-check caught 4 wrong
+      claims pre-merge, correctly attributed PR #2303 to the homepage files
+      unlike the original #1478 error class) and session_01Dz5nEANXqTtZzTki1C5ArD
+      (2026-10-20 digest, PR #2351 - rollup matches, fact-check fixed 2
+      claims pre-merge). Retention sweep holds exactly 7 consecutive dates.
+      No reverts in the 2-week sweep. Grade/role unchanged.

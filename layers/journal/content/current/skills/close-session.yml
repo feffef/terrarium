@@ -332,3 +332,14 @@ observations:
       (2 entries, both already resolvedBy #736/#1063) and
       manuallyRescuedClosures ([]) both clean. No new silent failure, no
       new missed invocation. Grade/role unchanged (essential).
+  - date: "2026-10-21"
+    note: >-
+      Self-check (audit-skills behaviour check), 10 newest invocations (PRs
+      #2318-#2351), all independently verified against live GitHub: every
+      `status: completed` log's `endedAt` lands within seconds-minutes of its
+      PR's real `merged_at`, 0/10 stale. The window's 1 notUsedWindow session
+      (session_01NVG22rfEsjhW9zkcCco6W8) reconfirmed the known
+      equivalent-closure pattern via log-session alone (no new fact).
+      session_01TMgZyrN42pwudxkUdHLKwP stays settled per the 2026-10-06 call.
+      No reverts of close-session mechanics in the 2-week sweep. No new
+      finding. Grade/role unchanged (essential).

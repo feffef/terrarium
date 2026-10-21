@@ -418,3 +418,12 @@ observations:
       "paste the tally into the fix PR" requirement (§5) has no equivalent for
       a feature-only PR (§6) — worth flagging if the Skill is next revised. No
       reverts found. Grade/role unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check, 8/8 newest runs clean. Freshly verified: the Atlas run
+      (PR #2326/#2328 merged; its out-of-remit finding became issue #2329,
+      closed via merged fix #2346) and the homepage run (PR #2303 merged,
+      owner-memory batching confirmed still fixed post-#2241). The
+      previously escalated issues #1515/#1721/#1912/#2229 all independently
+      reconfirmed closed via real merged fixes, none reopened. No reverts
+      beyond the already-tracked cases. Grade/role unchanged.

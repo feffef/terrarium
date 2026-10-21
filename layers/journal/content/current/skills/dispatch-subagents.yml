@@ -406,3 +406,14 @@ observations:
       (isolation correctly judged unnecessary / handled via the Workflow tool
       carve-out in both cases). windowNotUsed: 133 screened, 4 opened fully, no
       missed invocation. Grade/role unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check, 10/10 newest usedIn clean, including a 26-subagent
+      scripts/ restructure with correct worktree isolation at scale. Noted,
+      not escalated: a push-responsibility ambiguity in SKILL.md section 3
+      when the build agent is worktree-isolated (session_01VH74k3Z27QtjR19XNC76qm,
+      self-caught, no damage); recurrences of the closed-wontfix
+      #1480/#1586 shapes (self-caught); a major screenshot-read-loop
+      incident (session_01CtktRkpbF4wQ3TTQVYUqLz, 10-17) already fixed the
+      next day via merged PR #2235. ~123 nonUsers triaged by goal, no new
+      missed invocation found. Grade/role unchanged.
