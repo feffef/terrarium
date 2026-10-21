@@ -53,11 +53,9 @@ act, once per session.
   `origin main` and cut a new branch first.
 - **Invoke `close-session`** when you open a PR, and when a session only answers a question.
 - **Merge your own PR** with `scripts/github/merge-pr.ts <number>` once ADR-0004 allows it.
-- **Verify before you state.** Call something settled only if you checked it
-  this turn against the source: an id, a count (read every item), a cause
-  (from the whole run and the full log), how a script, guard or rule behaves, a
-  claim of "only", "every" or "nothing" (check the whole set), or what a subagent or
-  another session told you. Otherwise say it is unchecked.
+- **Verify before you state.** Only call something settled (an id, a count, a
+  cause, another session's claim) if you checked it this turn against the
+  source. A count is a fact only after you read every item.
 - **Ask before building** something the Trusted user will see (the `grilling`
   Skill); don't assume. Data shapes: `.claude/rules/data-shapes.md`.
 - **One home per fact.** Write each fact once; elsewhere, point to it. When a
