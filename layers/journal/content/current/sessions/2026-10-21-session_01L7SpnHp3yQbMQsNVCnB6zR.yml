@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01L7SpnHp3yQbMQsNVCnB6zR
 startedAt: 2026-10-21T06:33:39Z
-endedAt: 2026-10-21T06:41:39Z
+endedAt: 2026-10-21T06:45:34Z
 kind: autonomous
 goal: Sync Glass Box guide pages to the latest main commit
-status: in-review
-outcome: "PR #2361 opened: all guide pages re-pinned, 4 pages reworded, 1 excerpt re-cut; gate green"
-summary: "Scheduled glassbox-update run, so nothing was human-instructed; all work followed the Skill. Ran the script, advanced pins to 0866108c, then read the 123 commits since the oldest revision against every page. Real changes came from the simple-change review rule (ADR-0004, pr-workflow) and the ADR hash bump: re-cut the pr-workflow excerpt, reworded the PR, subagents and asking-for-a-change pages, restamped the Human-only list excerpt. Other flagged pages cited changed files whose meaning did not move. No terms flagged. Skipped screenshots (wording fixes). Substituted my own diff read for the code-review sub-agents. PR open and subscribed; merge is pending CI."
+status: completed
+outcome: "PR #2361 merged: all guide pages re-pinned, 4 pages reworded, 1 excerpt re-cut"
+summary: "Scheduled glassbox-update run, so nothing was human-instructed; all work followed the Skill. Ran the script, advanced pins to 0866108c, then read the 123 commits since the oldest revision against every page. Real changes came from the simple-change review rule (ADR-0004, pr-workflow) and the ADR hash bump: re-cut the pr-workflow excerpt, reworded the PR, subagents and asking-for-a-change pages, restamped the Human-only list excerpt. Other flagged pages cited changed files whose meaning did not move. No terms flagged. Skipped screenshots (wording fixes). Substituted my own diff read for the code-review sub-agents. PR merged after the gate went green."
 prs:
   - "2361"
 docsRead:
@@ -58,16 +58,20 @@ frictions:
   - description: Stop hook asked to push while gate:scoped was still running; I held the push per ADR-0004.
     solution: None; the rule covers it.
     severity: nit
-durationSec: 480
+durationSec: 715
 models:
-  claude-sonnet-5-5: 75
+  claude-sonnet-5-5: 91
 toolCounts:
   Read: 7
-  Bash: 30
+  Bash: 33
   Skill: 3
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0027.md
