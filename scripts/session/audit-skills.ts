@@ -84,7 +84,7 @@ export interface Session {
   humanPromptedClosure: boolean
   /** `docsRead` paths, feeding `docReadCounts`. */
   docsRead: string[]
-  /** `docsReadBySubagents` paths — in-memory only; the stored log is unchanged. */
+  /** `docsReadBySubagents` paths (a subset of `docsRead`), feeding `skillQuery`. */
   docsReadBySubagents: string[]
   /** The Routine that fired it (`entrypoint: remote_trigger`), else null. */
   trigger: string | null
@@ -970,7 +970,7 @@ function main(): void {
     const since = flagValue(argv, '--since')
     if (!skill || skill.startsWith('--')) fail('--skill needs a Skill name')
     if (!since) fail('--skill needs --since ISO')
-    process.stdout.write(JSON.stringify(skillReport(skill, since), null, 2) + '\n')
+    process.stdout.write(JSON.stringify(skillReport(skill, since)) + '\n')
     return
   }
   const daysArg = flagValue(argv, '--days')
