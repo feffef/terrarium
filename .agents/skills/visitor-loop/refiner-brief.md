@@ -10,8 +10,7 @@ chosen feature, find what binds it:
 - `GLOSSARY.md` and the glossary of each Tenant it touches, above all its
   "Why it exists", "Who it's for" and "Product decisions";
 - `docs/agents/` and the Skill that writes the content it touches, if any;
-- `.agents/skills/visitor-loop/decisions.md` (a feature in the same family as a
-  ruling is dropped too, e.g. another explainer page after the owner removed one);
+- `.agents/skills/visitor-loop/decisions.md`;
 - GitHub issues and PRs, open and closed, on the same page or feature, read
   through the `mcp__github__*` tools (load them with ToolSearch). Read the
   discussion, not just the title: it often says why the thing is the way it is.
