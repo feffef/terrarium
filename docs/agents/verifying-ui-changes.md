@@ -171,8 +171,7 @@ because its container ref was null in `onMounted`.)
 
 ## See also
 
-- Drive the affected flow yourself and observe the behavior before committing;
-  this doc is the browser/UI reference for that.
+- Drive the affected flow and observe it before committing.
 - `docs/agents/tenant-layers.md` — Nuxt-layer render gotchas (Platform-wide
   component overrides, scoped-CSS token inheritance); auto-imports and alias
   resolution are in `.claude/rules/tenant-layers.md`.

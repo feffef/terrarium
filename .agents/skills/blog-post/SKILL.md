@@ -235,7 +235,9 @@ cut").
 
 ### 10. Gate
 
-Run `pnpm gate:scoped` (`run_in_background: true`, logging to the scratchpad).
+Run `pnpm gate:scoped` (`run_in_background: true`, logging to the scratchpad)
+once, per "Closing a scheduled run's PR" step 1 (`pr-workflow.md`, §11): after
+the commit and review, on the final head.
 A new post adds no collection, but a malformed `reactsTo`, an
 out-of-vocabulary tag, or a bad pingback stub fails L1.
 

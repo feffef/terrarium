@@ -41,8 +41,8 @@ story or repeat its findings.
 
 ## The recipe
 
-1. Run `pnpm gate:scoped` and wait (a prose- or docs-only follow-up push may skip
-   it). A red gate never merges.
+1. Run `pnpm gate:scoped` and wait (skip rule: "Review before the first push").
+   A red gate never merges.
 2. Run `pnpm exec tsx scripts/github/check-conflicting-issues.ts --pr <number>`. It is
    advisory: a hit means read that issue (#798), not that there is a conflict.
 3. Wait for green checks: `in_progress` is not failing. A clean mergeable state
@@ -90,9 +90,8 @@ description.
 
 ## Who merges
 
-The authoring session merges its PR on a green gate unless ADR-0004 names an
-exception. `frictions-to-fixes`, `guest-build` and `midden-catalogue` narrow
-that; their SKILL.md says how. Dependabot PRs go through the `dependabot-sweep`
+`frictions-to-fixes`, `guest-build` and `midden-catalogue` narrow ADR-0004's
+rule; their SKILL.md says how. Dependabot PRs go through the `dependabot-sweep`
 Skill; `merge-pr.ts` merges only a plain minor or patch bump and refuses the rest.
 
 ## Closing a scheduled run's PR
