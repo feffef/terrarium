@@ -1,5 +1,5 @@
 import type { z } from 'zod'
-import type { RuleVerdict, sessionSchema } from '../../../../shared/schemas/session'
+import type { RelevantAdr, RuleVerdict, sessionSchema } from '../../../../shared/schemas/session'
 import type { frictionClusterSchema, routineSchema, skillSchema } from '../../tenant.config'
 
 // `z.input`, not `z.infer`: the schemas' `.default([])` fields are optional on the
@@ -51,6 +51,7 @@ export interface SessionCardView {
   // Authored note fields — normalized to arrays (empty ⇒ the card hides them).
   learnings: string[]
   ideas: string[]
+  relevantAdrs: RelevantAdr[]
   // Mechanical trace, tucked behind in-card disclosures so the verbose lists
   // inform without cluttering. All may be empty (older logs, or a session that
   // edited nothing / spawned no subagent).

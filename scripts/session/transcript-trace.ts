@@ -32,7 +32,7 @@
 //   Prints the derived trace as JSON.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
-import type { RuleVerdict, UsefulVerdict } from '../../shared/schemas/session.ts'
+import type { RelevantAdr, RuleVerdict, UsefulVerdict } from '../../shared/schemas/session.ts'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../../shared/trace-fields.ts'
 import {
   buildDocLineIndex,
@@ -792,6 +792,7 @@ export interface AuthoredScratch {
   frictions: { description: string; solution: string; severity: string }[]
   learnings?: string[]
   ideas?: string[]
+  relevantAdrs?: RelevantAdr[]
 }
 
 function mergeRefs<T extends Record<string, string | undefined>>(
@@ -868,6 +869,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   // no dangling `learnings: []`).
   if (authored.learnings?.length) entry.learnings = authored.learnings
   if (authored.ideas?.length) entry.ideas = authored.ideas
+  if (authored.relevantAdrs?.length) entry.relevantAdrs = authored.relevantAdrs
   return entry
 }
 
