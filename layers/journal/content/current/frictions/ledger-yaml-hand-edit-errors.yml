@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Ledger and prune-trials YAML are patched by string replacement (or a survey patch that repeats a session); unquoted dates, replaced refs or a match inside a comment broke the file (gate or repair needed).
 surface: safe
-status: tracked
-ref: "issue #2338 (a ledger-set helper); fixes so far covered occurrence appends, prune-trial path types and YAML examples, not status, ref and fixes edits."
+status: open
+ref: "issue #2338 (a ledger-set helper); fixes so far covered occurrence appends, prune-trial path types, YAML examples and duplicate sessions, not status, ref and fixes edits."
 fixes:
   - pr: 2154
     date: "2026-10-16"
@@ -16,6 +16,9 @@ fixes:
   - pr: 2336
     date: "2026-10-20"
     summary: "Quoted the note values in atlas-specimen's YAML examples so a copied note with a colon parses."
+  - pr: 2366
+    date: "2026-10-21"
+    summary: "The ledger content test now fails when a session appears twice in one cluster, so a survey that repeats a session cannot land."
 occurrences:
   - session: session_0147UencKKZS3WLHvsbgywp7
     date: "2026-10-15"
