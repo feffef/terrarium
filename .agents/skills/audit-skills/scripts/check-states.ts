@@ -16,7 +16,7 @@ const INVENTORY_DIR = 'layers/journal/content/current/skills/'
 /** How close, in characters, a state word must sit to a `#N` to be its claim. */
 const NEAR = 40
 const CLAUSE_BREAK = /[;:]|\.\s|\u2014/
-/** "was open", "then closed": a past state, not a claim about now. */
+/** "was open", "then closed": a past issue state, not a claim about now. */
 const HISTORICAL = /\b(?:was|were|been|once|then|originally)\s+$/i
 const STATE_WORD = /\b(reopened|open|closed|resolved|fixed|merged|wontfix)\b/gi
 
@@ -44,10 +44,11 @@ export function claimsIn(text: string, file: string, lineAt: (offset: number) =>
   const found = new Map<string, StateClaim>()
   for (const w of text.matchAll(STATE_WORD)) {
     const end = w.index + w[0].length
-    if (text[end] === '-' || HISTORICAL.test(text.slice(0, w.index))) continue
+    const stateOfIssue = /^(?:open|reopened|closed)$/i.test(w[0])
+    if (text[end] === '-' || (stateOfIssue && HISTORICAL.test(text.slice(Math.max(0, w.index - 16), w.index)))) continue
     const reach = refs.flatMap((r) => {
       const between = r.at >= end ? text.slice(end, r.at) : text.slice(r.end, w.index)
-      const ok = (r.at >= end || r.end <= w.index) && between.length <= NEAR && !CLAUSE_BREAK.test(between) && !/#\d/.test(between)
+      const ok = between.length <= NEAR && !CLAUSE_BREAK.test(between) && !/#\d/.test(between)
       return ok ? [{ r, gap: between.length }] : []
     })
     const best = reach.sort((x, y) => x.gap - y.gap)[0]

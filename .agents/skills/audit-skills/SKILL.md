@@ -111,7 +111,8 @@ For each other finding that clears that bar:
 
 Before posting an issue or comment, run
 `pnpm exec tsx .agents/skills/audit-skills/scripts/check-states.ts --text <body file>`:
-every issue or PR state it writes must match GitHub now (#1627, #1720).
+every issue or PR state it writes must match GitHub now; reword a flag that
+misreads ordinary prose (#1627, #1720).
 
 Done when every finding is either an issue (filed or commented on) or headed
 for step 5 as an observation.
