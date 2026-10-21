@@ -12,6 +12,11 @@ import { z } from 'zod'
 // The string-not-`z.date()` rationale lives with the shared refinement.
 import { utcTimestamp } from './timestamp'
 
+// Percent of the session's tokens, main session plus every subagent, each
+// weighted by its price relative to fresh input whatever the model: a rough
+// cost indicator, not a bill. Weights: scripts/session/transcript-trace.ts (`weightOf`).
+const tokenShare = z.number().min(0).max(100)
+
 export const usefulVerdict = z.enum(['yes', 'partly', 'no'])
 export const ruleVerdict = z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict })
 export type UsefulVerdict = z.infer<typeof usefulVerdict>
@@ -73,12 +78,18 @@ export const sessionSchema = z
     // DEPRECATED — no longer written; shell reads fold into `docsRead`. The key
     // stays so older logs validate (ADR-0009).
     docsReadViaShell: z.array(z.string()).optional(),
+    // The main session's own share; each subagent's sits on its entry.
+    tokenShare: tokenShare.optional(),
     subagents: z
       .array(
         z.object({
           type: z.string().optional(),
           task: z.string().optional(),
           model: z.string().optional(),
+          durationSec: z.number().int().nonnegative().optional(),
+          toolCalls: z.number().int().nonnegative().optional(),
+          modelCalls: z.number().int().nonnegative().optional(),
+          tokenShare: tokenShare.optional(),
         }),
       )
       .optional(),

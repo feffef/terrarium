@@ -76,10 +76,22 @@ export interface DerivedRef {
   source: 'derived'
 }
 
-export interface SubagentRef {
+/** What the log's `tokenShare` is computed from (shared/schemas/session.ts).
+ *  Output is left out: a subagent's transcript holds only its stream-start
+ *  count (CLI 2.1.306), and it is a small share anyway. */
+export interface Usage {
+  modelCalls: number
+  weightedTokens: number
+}
+
+/** `toolUseId` joins a dispatch to its transcript; the log never holds it. */
+export interface SubagentRef extends Partial<Usage> {
   type?: string
   task?: string
   model?: string
+  toolUseId?: string
+  durationSec?: number
+  toolCalls?: number
 }
 
 /** The mechanical trace — every field derived, none self-reported. Shapes match
@@ -101,6 +113,8 @@ export interface MechanicalTrace {
   durationSec?: number
   models: Record<string, number>
   toolCounts: Record<string, number>
+  /** The parent's own responses only; each subagent's sit on its `subagents` entry. */
+  usage?: Usage
   filesRead: string[]
   filesEdited: string[]
   /** Agent-instruction docs Bash output showed the session (#1074); the stitch
@@ -554,6 +568,7 @@ export function extractTrace(
   const alwaysLoadedRules: string[] = []
   const ruleLoadedAt = new Map<string, number>()
   const readAt: [string, number][] = []
+  const usageById = new Map<string, ApiUsage>()
 
   for (const [i, rec] of records.entries()) {
     const ts = typeof rec.timestamp === 'string' ? Date.parse(rec.timestamp) : NaN
@@ -567,10 +582,11 @@ export function extractTrace(
     }
     for (const r of [...alwaysLoadedRules, ...rules]) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
 
-    const msg = rec.message as { content?: unknown; model?: string } | undefined
+    const msg = rec.message as { content?: unknown; model?: string; id?: string; usage?: ApiUsage } | undefined
     if (rec.type === 'assistant' && msg?.model) {
       models[msg.model] = (models[msg.model] ?? 0) + 1
     }
+    if (rec.type === 'assistant' && msg?.id && msg.usage) usageById.set(msg.id, msg.usage)
 
     const content = msg?.content
     if (rec.type === 'user') commandSkills.push(...commandSkillNames(content))
@@ -594,6 +610,7 @@ export function extractTrace(
           type: input.subagent_type as string,
           task: input.description as string,
           model: input.model as string | undefined,
+          toolUseId: (b as { id?: string }).id,
         })
       } else if (name.includes('create_pull_request')) {
         prSignals.push((input.title as string) ?? '(pr)')
@@ -632,6 +649,7 @@ export function extractTrace(
     durationSec: started !== undefined && ended !== undefined ? Math.round((ended - started) / 1000) : undefined,
     models,
     toolCounts,
+    usage: sumUsage([...usageById.values()]),
     filesRead: dedup(reads).filter(isContentPath).map(rel),
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
     docsReadViaShell: docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths : [],
@@ -642,6 +660,35 @@ export function extractTrace(
     commandSkills: dedup(commandSkills),
     subagents,
     prSignals,
+  }
+}
+
+interface ApiUsage {
+  input_tokens?: number
+  cache_read_input_tokens?: number
+  cache_creation_input_tokens?: number
+  cache_creation?: { ephemeral_5m_input_tokens?: number; ephemeral_1h_input_tokens?: number }
+}
+
+// Weights from Anthropic's prompt-caching prices.
+function weightOf(u: ApiUsage): number {
+  const split = u.cache_creation
+  const write = split
+    ? 1.25 * (split.ephemeral_5m_input_tokens ?? 0) + 2 * (split.ephemeral_1h_input_tokens ?? 0)
+    : 1.25 * (u.cache_creation_input_tokens ?? 0)
+  return (u.input_tokens ?? 0) + write + 0.1 * (u.cache_read_input_tokens ?? 0)
+}
+
+function sumUsage(usages: ApiUsage[]): Usage | undefined {
+  if (usages.length === 0) return undefined
+  return { modelCalls: usages.length, weightedTokens: Math.round(usages.reduce((n, u) => n + weightOf(u), 0)) }
+}
+
+function statsOf(trace: MechanicalTrace): Partial<SubagentRef> {
+  return {
+    durationSec: trace.durationSec,
+    toolCalls: Object.values(trace.toolCounts).reduce((a, b) => a + b, 0),
+    ...trace.usage,
   }
 }
 
@@ -674,23 +721,24 @@ export interface SubagentJsonl {
   label: string
   jsonl: string
   agent?: SubagentRef
+  toolUseId?: string
 }
 
 /** One subagent's parsed transcript; `agent` names a workflow agent (#1876). */
 export interface SubagentRecords {
   records: Record<string, unknown>[]
   agent?: SubagentRef
+  toolUseId?: string
 }
 
 /** Every subagent transcript beside `transcriptPath`, read tolerantly: a sibling
  *  jsonl that vanished or won't read costs its reads, not the whole trace.
  *  `label` is the sibling `.meta.json`'s dispatch `description`, else the agent id.
- *  `agent` is set only for a workflow agent: an Agent/Task dispatch is already
- *  in the parent's `subagents`, but a workflow's agents are not (#1876).
- *  `foldSubagentTrace` adds its model. */
+ *  `agent` names it for `foldSubagentTrace`, which lists it unless its
+ *  `toolUseId` matches a dispatch already in the parent's `subagents`: a
+ *  workflow agent or a nested agent has none there (#1876). */
 export function readSubagentJsonls(transcriptPath: string): SubagentJsonl[] {
   const out: SubagentJsonl[] = []
-  const workflows = join(subagentsDir(transcriptPath), 'workflows') + '/'
   for (const p of subagentTranscriptPaths(transcriptPath)) {
     let jsonl
     try {
@@ -700,14 +748,16 @@ export function readSubagentJsonls(transcriptPath: string): SubagentJsonl[] {
     }
     let label = basename(p, '.jsonl').replace(/^agent-/, '')
     let type: string | undefined
+    let toolUseId: string | undefined
     try {
-      const { description, agentType } = JSON.parse(readFileSync(p.replace(/\.jsonl$/, '.meta.json'), 'utf8'))
-      if (typeof description === 'string' && description) label = description
-      if (typeof agentType === 'string') type = agentType
+      const meta = JSON.parse(readFileSync(p.replace(/\.jsonl$/, '.meta.json'), 'utf8'))
+      if (typeof meta.description === 'string' && meta.description) label = meta.description
+      if (typeof meta.agentType === 'string') type = meta.agentType
+      if (typeof meta.toolUseId === 'string') toolUseId = meta.toolUseId
     } catch {
       /* no readable meta: keep the agent id */
     }
-    out.push(p.startsWith(workflows) ? { label, jsonl, agent: { type, task: label } } : { label, jsonl })
+    out.push({ label, jsonl, agent: { type, task: label }, toolUseId })
   }
   return out
 }
@@ -731,9 +781,13 @@ export function foldSubagentTrace(
   if (subagents.length === 0) return trace
   const subs = subagents.map(({ records }) => extractTrace(records, env, docIndex))
   const folded = { ...trace }
+  const stats = subs.map(statsOf)
+  const transcriptOf = (id?: string) => (id ? subagents.findIndex((a) => a.toolUseId === id) : -1)
+  const dispatched = new Set(trace.subagents.map((s) => transcriptOf(s.toolUseId)))
   folded.subagents = [
-    ...trace.subagents,
-    ...subagents.flatMap(({ agent }, i) => (agent ? [{ ...agent, model: busiestModelId(subs[i]!.models) }] : [])),
+    ...trace.subagents.map((s) => ({ ...s, ...stats[transcriptOf(s.toolUseId)] })),
+    ...subagents.flatMap(({ agent }, i) =>
+      agent && !dispatched.has(i) ? [{ ...agent, model: busiestModelId(subs[i]!.models), ...stats[i] }] : []),
   ]
   for (const { field } of FOLDED_TRACE_FIELDS) {
     folded[field] = dedup([...trace[field], ...subs.flatMap((s) => s[field])])
@@ -858,7 +912,12 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (trace.rulesLoadedBySubagents?.length) entry.rulesLoadedBySubagents = trace.rulesLoadedBySubagents
   if (docsReadBySubagents.length) entry.docsReadBySubagents = docsReadBySubagents
   if (authored.ruleVerdicts?.length) entry.ruleVerdicts = authored.ruleVerdicts
-  if (trace.subagents.length) entry.subagents = trace.subagents
+  const total = [trace.usage, ...trace.subagents].reduce((n, u) => n + (u?.weightedTokens ?? 0), 0)
+  const share = (w?: number) => (w === undefined || total === 0 ? {} : { tokenShare: Math.round((1000 * w) / total) / 10 })
+  Object.assign(entry, share(trace.usage?.weightedTokens))
+  if (trace.subagents.length) {
+    entry.subagents = trace.subagents.map(({ toolUseId: _, weightedTokens, ...s }) => ({ ...s, ...share(weightedTokens) }))
+  }
   if (trace.gitBranch) entry.gitBranch = trace.gitBranch
   if (trace.entrypoint) entry.entrypoint = trace.entrypoint
   if (trace.cliVersion) entry.cliVersion = trace.cliVersion

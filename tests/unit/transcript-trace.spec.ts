@@ -136,7 +136,7 @@ describe('foldSubagentTrace() — subagent work counts as the session\'s (issue 
   it('adds a workflow agent to subagents, with its busiest model', () => {
     const agent = { type: 'workflow-subagent', task: 'triage #1778' }
     const withAgent = foldSubagentTrace(parent, [{ records: parseTranscript(subagentTranscript), agent }], NO_ENV)
-    expect(withAgent.subagents).toEqual([...parent.subagents, { ...agent, model: 'claude-sonnet-5' }])
+    expect(withAgent.subagents).toEqual([...parent.subagents, { ...agent, model: 'claude-sonnet-5', durationSec: 60, toolCalls: 4 }])
     expect(withAgent.models).toEqual(parent.models)
   })
 
@@ -151,6 +151,50 @@ describe('foldSubagentTrace() — subagent work counts as the session\'s (issue 
     expect(entry.docsReadBySubagents).toEqual(['docs/agents/pr-workflow.md'])
     expect(validateEntry(entry).ok).toBe(true)
     expect(stitch({ session: 'session_01ABC', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, parent)).not.toHaveProperty('docsReadBySubagents')
+  })
+})
+
+// The harness writes one record per content block, each repeating its response's
+// id and usage, so a response counts once.
+describe('usage — tokens, duration and tool calls per agent', () => {
+  const call = (id: string, at: string, usage: object) => ({
+    type: 'assistant', timestamp: at, message: { id, model: 'claude-sonnet-5', usage, content: [read] },
+  })
+  const read = { type: 'tool_use', name: 'Read', input: { file_path: '/repo/a.md' } }
+  const m1 = { input_tokens: 2, output_tokens: 10, cache_read_input_tokens: 100, cache_creation_input_tokens: 40 }
+  const m2 = { ...m1, input_tokens: 1, cache_read_input_tokens: 300, cache_creation: { ephemeral_5m_input_tokens: 0, ephemeral_1h_input_tokens: 40 } }
+  const sub = [call('m1', '2026-07-06T10:01:00Z', m1), call('m1', '2026-07-06T10:01:00Z', m1), call('m2', '2026-07-06T10:02:30Z', m2)]
+  // 3 input + 0.1 × 400 read + 1.25 × 40 short write + 2 × 40 hour write; output ignored
+  const usage = { modelCalls: 2, weightedTokens: 173 }
+  const stats = { durationSec: 90, toolCalls: 3, ...usage }
+  const dispatch = { type: 'assistant', message: { content: [{ type: 'tool_use', id: 'toolu_1', name: 'Agent', input: { subagent_type: 'Explore', description: 'find X' } }] } }
+
+  it('weights a transcript\'s tokens by price, counting each response once', () => {
+    expect(extractTrace(sub, NO_ENV).usage).toEqual(usage)
+    expect(extractTrace([dispatch], NO_ENV).usage).toBeUndefined()
+  })
+
+  it('attaches a dispatched agent\'s stats to its entry, matched by tool-use id', () => {
+    const folded = foldSubagentTrace(extractTrace([dispatch], NO_ENV), [{ records: sub, agent: { task: 'find X' }, toolUseId: 'toolu_1' }], NO_ENV)
+    expect(folded.subagents).toEqual([{ type: 'Explore', task: 'find X', toolUseId: 'toolu_1', ...stats }])
+  })
+
+  it('lists an agent its parent never dispatched, such as a nested one', () => {
+    const folded = foldSubagentTrace(extractTrace([dispatch], NO_ENV), [{ records: sub, agent: { task: 'nested' }, toolUseId: 'toolu_2' }], NO_ENV)
+    expect(folded.subagents.map((s) => s.task)).toEqual(['find X', 'nested'])
+  })
+
+  it('attaches a workflow agent\'s stats to the entry it adds', () => {
+    const folded = foldSubagentTrace(extractTrace([dispatch], NO_ENV), [{ records: sub, agent: { task: 'fix r1' } }], NO_ENV)
+    expect(folded.subagents[1]).toEqual({ task: 'fix r1', model: 'claude-sonnet-5', ...stats })
+  })
+
+  it('stitches each agent\'s share of the session\'s tokens into a valid entry, without the id', () => {
+    const folded = foldSubagentTrace(extractTrace([...sub, dispatch], NO_ENV), [{ records: sub, toolUseId: 'toolu_1' }], NO_ENV)
+    const entry = stitch({ session: 'session_01ABC', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, folded)
+    expect(entry.tokenShare).toBe(50)
+    expect(entry.subagents).toEqual([{ type: 'Explore', task: 'find X', durationSec: 90, toolCalls: 3, modelCalls: 2, tokenShare: 50 }])
+    expect(validateEntry(entry).ok).toBe(true)
   })
 })
 
@@ -342,7 +386,7 @@ describe('readSubagentJsonls()', () => {
     // A directory named like a transcript: readdir lists it, readFileSync throws
     // on it — the hook must lose that one contribution, not the whole trace.
     mkdirSync(join(subs, 'agent-b.jsonl'))
-    expect(readSubagentJsonls(parent)).toEqual([{ label: 'a', jsonl: 'A' }])
+    expect(readSubagentJsonls(parent)).toEqual([{ label: 'a', jsonl: 'A', agent: { task: 'a' } }])
   })
 
   it('returns [] for a session that dispatched nobody', () => {
@@ -352,9 +396,8 @@ describe('readSubagentJsonls()', () => {
     expect(readSubagentJsonls(parent)).toEqual([])
   })
 
-  // An Agent/Task dispatch is already a tool call in the parent; a workflow
-  // agent shows up only under workflows/ (#1876).
-  it('names a workflow agent as a subagent, and only a workflow agent', () => {
+  // The id lets the fold skip an agent the parent already lists as a dispatch (#1876).
+  it('names every agent, and keeps the dispatch id that joins it to its parent', () => {
     const dir = mkdtempSync(join(tmpdir(), 'trace-'))
     const parent = join(dir, 'session-uuid.jsonl')
     writeFileSync(parent, '')
@@ -366,10 +409,11 @@ describe('readSubagentJsonls()', () => {
     writeFileSync(join(run, 'agent-x.jsonl'), assistant)
     writeFileSync(join(run, 'agent-x.meta.json'), JSON.stringify({ agentType: 'workflow-subagent', description: 'triage #1778' }))
     writeFileSync(join(run, 'agent-y.jsonl'), '')
-    expect(readSubagentJsonls(parent).map((s) => s.agent)).toEqual([
-      undefined,
-      { type: 'workflow-subagent', task: 'triage #1778' },
-      { task: 'y' },
+    writeFileSync(join(subs, 'agent-a.meta.json'), JSON.stringify({ description: 'a', toolUseId: 'toolu_a' }))
+    expect(readSubagentJsonls(parent).map((s) => [s.agent, s.toolUseId])).toEqual([
+      [{ task: 'a' }, 'toolu_a'],
+      [{ type: 'workflow-subagent', task: 'triage #1778' }, undefined],
+      [{ task: 'y' }, undefined],
     ])
   })
 })
