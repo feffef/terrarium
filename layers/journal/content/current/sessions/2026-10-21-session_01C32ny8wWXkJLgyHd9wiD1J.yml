@@ -1,0 +1,257 @@
+schemaVersion: 1
+session: session_01C32ny8wWXkJLgyHd9wiD1J
+startedAt: 2026-10-21T13:26:51Z
+endedAt: 2026-10-21T13:39:04Z
+kind: interactive
+goal: Clear the issue backlog with clear-backlog
+status: in-review
+outcome: "9 issues triaged, 5 owner decisions taken, PR #2377 open, 4 more branches building"
+summary: "The owner invoked /clear-backlog (human-instructed). The sweep found 9 eligible issues and no ready-for-agent or wayfinder issues. Triage via clear-backlog-explore: #2373, #2286 and #2137 are time-gated (due 10-24, 10-22, 10-23); #2362 went straight to ready-for-agent; #2341, #2363, #2364, #2369 and #2370 needed decisions. I verified the picks' key claims (ledger occurrences after #2336, blog-post step 9 sentence, the visitor-loop onramp hint, list-recent-prs being git-only) and found one triage claim wrong: close-session/SKILL.md is no longer in an open prune trial. The owner accepted every pick (1a 2b 3b 4a 5a); those were recorded on the issues and labelled ready-for-agent. #2362 was built (agent-initiated per its brief) and opened as PR #2377. #2341, #2363, #2364+#2370 and #2369 are building in clear-backlog-build."
+prs:
+  - "2377"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; commit hygiene
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: label updates replace the set; write through MCP
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: simple-change self-read rule, verdict comment before merge
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: labels and comment conventions
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: who may set ready-for-agent
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: eligibility rule for the sweep set
+    useful: yes
+  - path: .agents/skills/grilling/SKILL.md
+    reason: round format
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; Tenant roster
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Session, Friction, Trusted and Routine terms used in the log and issue comments
+    useful: partly
+  - path: CLAUDE.md
+    reason: read-first triggers and the verify-before-you-state rule I checked picks against
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: authored-field schema and the reads report
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: (read before editing)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: owner-invoked orchestration
+  - name: grilling
+    reason: one round of 5 owner questions
+  - name: close-session
+    reason: (no reason given)
+  - name: tdd
+    reason: (no reason given)
+  - name: adr-check
+    reason: (no reason given)
+frictions:
+  - description: Ran git rev-parse and git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires first; the hook flagged it after the fact.
+    solution: Read the session-start docs and git-conventions in the first tool call of a clear-backlog run.
+    severity: nit
+  - description: Gave recommendations in the grilling round without running the adr-check Skill, which CLAUDE.md requires before recommending a change; I relied on the triage agents' ADR reads.
+    solution: clear-backlog §2 could say whether the triage agents' binding-ADR reads satisfy adr-check for the orchestrator's picks.
+    severity: minor
+  - description: A triage agent claimed close-session/SKILL.md sits in an open prune trial; .agents/prune-trials.yml shows that trial was judged and deleted.
+    solution: The explore workflow's triage brief could ask agents to quote the matching territory line from prune-trials.yml on origin/main.
+    severity: minor
+durationSec: 733
+models:
+  claude-opus-5-5: 84
+toolCounts:
+  Bash: 29
+  Workflow: 3
+  ToolSearch: 3
+  PushNotification: 1
+  Skill: 2
+  mcp__github__add_issue_comment: 5
+  mcp__github__issue_write: 5
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - scripts/git/list-recent-prs.ts
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/visitor-loop/refiner-brief.md
+  - .claude/workflows/clear-backlog-build.js
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0009.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/tenant-layers.md
+docsReadBySubagents:
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/visitor-loop/refiner-brief.md
+  - .agents/skills/triage/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Set the review-before-push and merge rules for PR 2377; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open and again at merge; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed opening the PR without asking and that owner answers approve the new work.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the session header I put on every issue comment and PR body.
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Confirmed judgement calls go to ready-for-human until the owner answers in the grilling.
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on the auto-triage read; confirmed the workflow script is Skill code changed via a gated PR.
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: All issues were OWNER-authored, so the Public rules did not bite.
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: About glossary placement; no glossary term changed this session.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Backed the cut-before-adding picks, and led me to check which prune trials are open.
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; it did not affect any decision here.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with the human-merge list; no ADR was edited.
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: build blog-post-window-and-step9
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: build visitor-loop-drop-onramp-hint
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: build close-session-timing
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: build verify-bullet-revert-reviewer-check
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: "triage #2341"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2137"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2370"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2369"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2362"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2364"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2363"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2373"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2286"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards build-refuses-guarded-branch-names r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build build-refuses-guarded-branch-names
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Spec build-refuses-guarded-branch-names r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix build-refuses-guarded-branch-names r1
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards build-refuses-guarded-branch-names r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec build-refuses-guarded-branch-names r1
+    model: claude-opus-5-5
+gitBranch: ccr-9e168247-ky1y2j
+entrypoint: remote_mobile
+cliVersion: 2.1.306
+landedBy: Stop
