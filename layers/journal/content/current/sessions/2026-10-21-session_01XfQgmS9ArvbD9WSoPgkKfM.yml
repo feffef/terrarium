@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XfQgmS9ArvbD9WSoPgkKfM
 startedAt: 2026-10-21T16:53:07Z
-endedAt: 2026-10-21T19:14:48Z
+endedAt: 2026-10-21T19:20:51Z
 kind: interactive
 goal: Measure adr-check Skill use and whether its full-ADR reads happen
 status: completed
-outcome: Sessions using adr-check read 25 of 61 path-bound ADRs in full; 4 transcripts confirm the logs
-summary: "Human-instructed: the owner asked in turn how many sessions by kind invoked adr-check, which autonomous sessions skipped it, how full-ADR reads compare with and without it, and then (after choosing \"logs, then sample transcripts\" when I asked) whether sessions using it read the ADRs that bind their change. Method was agent-chosen. Since 2026-10-19, 22 sessions used it; 86% of them read some full ADR vs 31% without it. adr-check names no binding set, so I took as bound every ADR whose rule paths match files the session edited or its merged PRs changed: 15 of 22 sessions had such ADRs, 61 pairs in all, of which 25 were read in full; only 3 sessions read all theirs. Four subagents read transcripts of 01Pzj23d, 01WU8rXH, 011W3gVN and 01FTPnEs: the logs' read lists were accurate, no session named its binding ADRs when it ran the Skill, skips were justified only afterwards as \"summary was enough\", and 01FTPnEs ran adr-check once for four PRs. Path matching overstates some bindings. No code changed, no PR."
+outcome: "Findings posted on issue 2286: users read 25 of 61 path-bound ADRs in full"
+summary: "Human-instructed: the owner asked in turn how many sessions by kind invoked adr-check, which autonomous sessions skipped it, how full-ADR reads compare with and without it, whether users read the ADRs that bind their change (choosing \"logs, then sample transcripts\" when I asked), and finally to post findings and process to the ticket. Method and the issue choice (#2286, the open adr-check review) were agent-chosen. Before posting I found I had started the window at the Skill's commit (09:07Z) rather than #2284's merge (09:55:49Z), which wrongly counted 7 pre-landing sessions as non-users; corrected figures: 22 of 41 sessions used it (15/16 interactive, 3/4 delegated, 4/21 autonomous), 86% vs 37% read some full ADR. Including docsReadBySubagents changed nothing. 15 users had path-bound ADRs: 25 of 61 read in full, 3 sessions read all. Four transcript reads confirmed the logs, showed no session named its binding ADRs, and that skips follow the summary rules' narrower \"to change it or review work it governs\" test. I ran adr-check (read ADR-0003, 0005, 0009, 0027, 0029) before posting a proposal: align step 1 with the rules, or have binding.ts list path-matched ADRs, plus an optional log field. No code, no PR."
 prs: []
 docsRead:
   - path: GLOSSARY-MAP.md
@@ -21,11 +21,31 @@ docsRead:
   - path: .agents/skills/adr-check/SKILL.md
     reason: showed the Skill prints all summaries and names no binding set
     useful: yes
+  - path: docs/agents/github-integration.md
+    reason: comment via add_issue_comment; list-open-issues script
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: proposing is free; building needs approval
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: Skill changes go through a gated PR
+    useful: partly
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: a new optional log field is allowed
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: simplify before adding; no open trial covers adr-check
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: summary rules say when to read the full ADR
+    useful: yes
 skillsUsed:
   - name: close-session
     reason: session only answered a question
   - name: inspect-session
     reason: brief for four transcript reads
+  - name: adr-check
+    reason: before posting the proposal on 2286
   - name: log-session
     reason: (no reason given)
 frictions:
@@ -38,14 +58,23 @@ frictions:
   - description: One transcript subagent reported another overwrote a shared scratchpad file (fl.sh), polluting its page list until it moved to its own folder.
     solution: inspect-session briefs already set Out per session; also tell subagents to keep all helper scripts inside Out.
     severity: nit
-durationSec: 8501
+  - description: "Started the analysis window at the adr-check commit time, not #2284's merge, so 7 pre-landing sessions counted as non-users in two chat answers."
+    solution: Take a measurement window from the issue's stated landing time; issue 2286 named it.
+    severity: minor
+durationSec: 8864
 models:
-  claude-opus-5-5: 80
+  claude-opus-5-5: 116
 toolCounts:
-  Bash: 27
-  Skill: 3
+  Bash: 39
+  Skill: 4
   AskUserQuestion: 1
   Agent: 4
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Write: 1
+  Read: 1
+  Edit: 1
+  mcp__github__add_issue_comment: 1
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0027.md
@@ -56,6 +85,12 @@ rulesGlobal:
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: About gating and merging PRs; this session opened none
@@ -64,20 +99,20 @@ ruleVerdicts:
     reason: Confirmed the log goes straight to main via close-session; summary was enough
     useful: yes
   - path: .claude/rules/adr-0003.md
-    reason: About landing changes as PRs; a read-only question needed none
-    useful: no
+    reason: Confirmed a proposal in a comment needs no approval; read in full via adr-check
+    useful: partly
   - path: .claude/rules/adr-0017.md
-    reason: About provenance on GitHub writes; this session made none
-    useful: no
+    reason: Made me put the session header first in the issue comment; summary was enough
+    useful: yes
   - path: .claude/rules/adr-0021.md
     reason: Loaded on reading the glossary; I edited no glossary
     useful: no
   - path: .claude/rules/adr-0027.md
-    reason: Loaded on reading git-conventions; no instruction text changed
-    useful: no
+    reason: Shaped the proposal to cut before adding; I read the full ADR via adr-check
+    useful: yes
   - path: .claude/rules/adr-0029.md
-    reason: Loaded on reading git-conventions; no rule placement decided
-    useful: no
+    reason: Its read-in-full wording explained why agents skip full ADRs; full ADR read via adr-check
+    useful: yes
   - path: .claude/rules/adr-0005.md
     reason: Loaded on reading the adr-check Skill; I changed no Skill
     useful: no
