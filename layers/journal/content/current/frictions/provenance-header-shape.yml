@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-10"
     summary: "The provenance rule now requires only the session link, not a model name, and its example label is 'Claude'."
 occurrences:
-  - session: session_015pcFLucxsdwj7nSLKtozGP
-    date: "2026-10-06"
-    severity: nit
-    description: "PR body first attempt rejected by the provenance guard for header shape; the digest Skill and pr-workflow do not show the shape."
-    solution: "Show the header shape in pr-workflow.md."
-  - session: session_01Tk6qPkPUrwdTz9ftGezFyD
-    date: "2026-10-06"
-    severity: minor
-    description: "System prompt forbids model identifiers in PR bodies while ADR-0017's header example names the model; I used a model-free '🤖 [Claude](session)' header"
-    solution: "ADR-0017 could state whether the model name is required or optional in the header"
   - session: session_01BT5bPRncBfCNwhim2d71Hh
     date: "2026-10-07"
     severity: nit

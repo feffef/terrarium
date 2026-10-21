@@ -20,11 +20,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_015pcFLucxsdwj7nSLKtozGP
-    date: "2026-10-06"
-    severity: nit
-    description: "Stop hook nagged about uncommitted changes four times while the fact-check and gate were legitimately running."
-    solution: "Hook could detect a running background gate."
   - session: session_01BT5bPRncBfCNwhim2d71Hh
     date: "2026-10-07"
     severity: minor

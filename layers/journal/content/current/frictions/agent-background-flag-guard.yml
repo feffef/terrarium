@@ -11,31 +11,6 @@ fixes:
     date: "2026-10-10"
     summary: "Removed the guard that blocked the no-op background flag on subagent dispatch, so it no longer denies calls."
 occurrences:
-  - session: session_015pcFLucxsdwj7nSLKtozGP
-    date: "2026-10-06"
-    severity: nit
-    description: "Agent call with run_in_background false was denied by a guard, costing a retry."
-    solution: "The digest Skill's fact-check step should say to omit that flag."
-  - session: session_01ApFY3yyign1ba7pDd4aoeN
-    date: "2026-10-06"
-    severity: nit
-    description: "Guards denied Agent run_in_background:false and a tail-piped Bash call; the playwright probe needed an .mts file with an absolute import path outside the repo."
-    solution: "The visitor-loop Skill could ship a ready probe script and note that Agent calls always run in the background."
-  - session: session_01L6ePb5aMsH4u53XnEs7FLQ
-    date: "2026-10-06"
-    severity: nit
-    description: "Agent calls with run_in_background false were denied by a guard; first commit with hand-written trailer and first PR body without header shape were also denied, costing three retries."
-    solution: "audit-docs and system-reminder attribution text conflict with repo guards; the audit-docs Skill could say omit the flag and trailer."
-  - session: session_01QM5wbJFUHy2Qrq7AkphT9L
-    date: "2026-10-06"
-    severity: nit
-    description: "Agent calls with run_in_background false are denied by a guard, but the blog-post Skill says no flag only in prose; first blind-read dispatch failed and was resent."
-    solution: "The Skill step 6 and 9 text could say outright to omit run_in_background and wait for the notification."
-  - session: session_01RCmFsgtMbJiafbzPg48LYh
-    date: "2026-10-06"
-    severity: nit
-    description: "The Agent tool guard rejected run_in_background false, which the Skill's wording suggests for the probe."
-    solution: "Omit the flag; wait for the notification."
   - session: session_015nX759CQdTRtT6x6oLDanX
     date: "2026-10-07"
     severity: nit

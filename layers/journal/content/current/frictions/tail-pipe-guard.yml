@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-11"
     summary: "Removed the check that blocked whole commands for ending in a pipe to tail or head."
 occurrences:
-  - session: session_01ApFY3yyign1ba7pDd4aoeN
-    date: "2026-10-06"
-    severity: nit
-    description: "Guards denied Agent run_in_background:false and a tail-piped Bash call; the playwright probe needed an .mts file with an absolute import path outside the repo."
-    solution: "The visitor-loop Skill could ship a ready probe script and note that Agent calls always run in the background."
-  - session: session_01Jej4qtE56V9dtLCNobJ39K
-    date: "2026-10-06"
-    severity: nit
-    description: "Tail-pipe guard denied a git diff --stat | tail chained before a backgrounded gate; one retry."
-    solution: "Redirect to a file as the guard says."
   - session: session_01N6jqFrkCMkEm3g6kJW9Zqk
     date: "2026-10-07"
     severity: nit

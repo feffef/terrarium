@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   ADR-0004's before-first-push gate:scoped plus code-review is skipped or the gate is not rerun after late edits.
 surface: guard-or-hook
-status: open
-ref: "issue #2311 closed by PR #2319, which the owner reversed with PR #2321 (review Skills and docs like code; self-read only for simple changes). Left open: pr-workflow.md and ADR-0004 must still agree on the review skip."
+status: tracked
+ref: "issue #2354 (regression of #2321: a push chained after a gate run). Earlier: issue #2311 closed by PR #2319, reversed by PR #2321. Left open: pr-workflow.md and ADR-0004 must still agree on the review skip."
 fixes:
   - pr: 1852
     date: "2026-10-12"

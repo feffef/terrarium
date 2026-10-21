@@ -7,6 +7,8 @@ fixes:
   - pr: 2198
     date: "2026-10-17"
     summary: "log-session worktree refusal now says to cd back when the directory only drifted into an agent worktree."
+notes: |-
+  2026-10-21 design: a hint or guard on a bare cd, or a reworded cd line in docs, dropped: our own briefs tell sessions to run cd <root> &&, so a guard would flag recommended usage; the harness flags the drift and recovery is one cd. Note for any later edit of dispatch-subagents §3 (open trial territory): its claim that the Bash tool resets cwd between calls is wrong for the primary session.
 occurrences:
   - session: session_01GLWVkt3R3EnHJj5XpQEJQt
     date: "2026-10-15"
