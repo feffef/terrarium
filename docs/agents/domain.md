@@ -28,8 +28,7 @@ Match the repo's actual files, not the template: `GLOSSARY-MAP.md`'s
 
 If `GLOSSARY-MAP.md`, a `GLOSSARY.md` or an ADR is missing, **proceed
 silently**: don't flag it or suggest creating it. `/domain-modeling` creates
-a missing one lazily, when a term or
-decision needs resolving.
+a missing one when a term or decision needs resolving.
 
 ## Use the glossary's vocabulary
 
