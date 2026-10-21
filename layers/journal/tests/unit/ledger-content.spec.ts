@@ -25,4 +25,13 @@ describe('Friction Ledger content', () => {
     }
     expect(wrong).toEqual([])
   })
+
+  it('counts a session once per cluster', () => {
+    const wrong: string[] = []
+    for (const cluster of read(join(content, 'current/frictions'))) {
+      const seen = new Set<string>()
+      for (const o of cluster.occurrences) if (seen.size === seen.add(o.session).size) wrong.push(`${cluster.name} ${o.session}`)
+    }
+    expect(wrong).toEqual([])
+  })
 })
