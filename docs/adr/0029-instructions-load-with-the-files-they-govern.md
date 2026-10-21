@@ -18,7 +18,7 @@ commit or a PR, stay in `CLAUDE.md`.
   the ADR doesn't (ADR-0030). One rule holds a fact itself: the human-merge
   rule's `paths` are the Human-only list, and ADR-0004 says what belongs on
   it. It loads at
-  session start only when the ADR binds every session; otherwise its `paths`
+  session start only when the ADR is relevant to every session; otherwise its `paths`
   list the files the ADR governs. When an ADR changes, the gate fails until
   its summary is re-checked.
 - **Other rules** always have `paths`. A short instruction lives in the rule
@@ -61,7 +61,7 @@ each kind of instruction has one home.
 - When sessions miss a file-bound line in `CLAUDE.md`, the default fix is to
   move it into a rule.
 - A plan often comes before any file is opened, so `CLAUDE.md` points to the
-  Skill that finds the binding ADRs before a plan or recommendation.
+  Skill that finds the relevant ADRs before a plan or recommendation.
 - A rule that loads where it doesn't apply is logged as a Friction, so a
   too-broad glob gets narrowed.
 

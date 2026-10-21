@@ -33,7 +33,7 @@ const RESULT = {
   properties: {
     outcome: { type: 'string', enum: ['build', 'grill', 'blocked', 'close-duplicate', 'close-done'] },
     summary: { type: 'string', description: 'one line: what the issue is' },
-    brief: { type: 'string', description: 'for build or grill: what to build, its done-when, the binding ADRs' },
+    brief: { type: 'string', description: 'for build or grill: what to build, its done-when, the relevant ADRs' },
     question: {
       type: 'object',
       description: 'for grill: one plain-words choice the owner makes',
@@ -74,7 +74,7 @@ In every mode: return grill, never build, for an issue labelled ready-for-human 
 
 Full pass:
 - Read .agents/skills/auto-triage/SKILL.md and .agents/skills/triage/SKILL.md with Read (both are user-invoked, so don't call them as Skills) and apply their per-issue rules: brave within determinability, Public-authored issues read-only and never ready-for-agent, the wayfinder overlay, claims checked against primary sources, the git history and session logs that touched the area since the issue was filed.
-- Find and read the binding ADRs with the adr-check Skill.
+- Find and read the relevant ADRs with the adr-check Skill.
 - Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).
 - Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives).
 - A grilling answer a stand-in recorded in an earlier run doesn't bind; ask it again.

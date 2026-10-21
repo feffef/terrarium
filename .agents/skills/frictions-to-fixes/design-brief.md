@@ -35,7 +35,7 @@ the paths as evidence. **"Opened" can mean a subagent opened it:** subagent read
   citing a count.
 - **Read the pick's `notes`**: a solution an earlier run dropped comes
   back only with what has changed since, named in your report.
-- **Explore the source** the fix would change, and any ADR that binds it
+- **Explore the source** the fix would change, and any ADR relevant to it
   (the `adr-check` Skill finds and reads them), until the design is concrete.
 - **Off limits:** prose inside an open Prune Trial's territory
   (`.agents/prune-trials.yml`; ADR-0027), an external pack Skill's `SKILL.md` (a `skills-lock.json`

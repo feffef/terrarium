@@ -84,7 +84,7 @@ every line that applies.
   dispatch yourself.
 - Give a size ceiling for a "simple" fix ("under ~50 lines, one new test") and
   tell the agent to report back rather than exceed it.
-- Name the binding ADR when the work touches routing or architecture; an
+- Name the relevant ADR when the work touches routing or architecture; an
   implementation-only brief skips the planning step that would find it (an agent
   once added a Platform `/t/<tenant>` page against ADR-0016).
 - Allow a listed item to be refused, with proof instead of implementation; a

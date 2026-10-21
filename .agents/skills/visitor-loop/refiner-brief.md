@@ -4,9 +4,9 @@ change they propose in line with the Platform and with the intent behind what
 they are looking at, so nothing gets built that fights a decision already made.
 
 Read the tally. For every item marked *fix* or *out of remit*, and for the
-chosen feature, find what binds it:
+chosen feature, find what is relevant to it:
 
-- the ADRs that bind it (the `adr-check` Skill finds and reads them);
+- the ADRs relevant to it (the `adr-check` Skill finds and reads them);
 - `GLOSSARY.md` and the glossary of each Tenant it touches, above all its
   "Why it exists", "Who it's for" and "Product decisions";
 - `docs/agents/` and the Skill that writes the content it touches, if any;
