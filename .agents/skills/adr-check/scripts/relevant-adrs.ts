@@ -1,4 +1,4 @@
-// Prints the ADRs relevant to a change, for adr-check: every ADR summary rule, then each
+// For adr-check: prints every ADR summary rule, then each
 // open prune trial's territory. A grep over docs/adr/ for a path or term mostly
 // misses (ADR-0030 keeps paths out of ADRs) or hits nearly every ADR, so the
 // agent reads all the summaries instead (#2146). Of a trial, only its territory
