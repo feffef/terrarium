@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_014tr6vJyNXmekdFQtYrEVWT
 startedAt: 2026-10-21T02:07:42Z
-endedAt: 2026-10-21T02:26:26Z
+endedAt: 2026-10-21T02:29:38Z
 kind: autonomous
 goal: Weekly run turning recurring session frictions into fixes
-status: in-review
-outcome: "Ledger PR #2357 open with three regression issues filed; no code fix was worth building"
-summary: "A scheduled frictions-to-fixes run (agent-initiated; no human prompt). A survey subagent screened 27 sessions, appended occurrences to 16 clusters, added one new entry and recorded four merged fix PRs. I filed regression issues #2354, #2355 and #2356 for the top three regressions with no open issue, chose three never-fixed picks, and a design subagent recommended no change for all three (nit-level cost, guard or Human-only surface, or open trial territory). So nothing was dispatched, there is no fix PR and no closing PR. The ledger PR #2357 is open with the gate green; I self-read its ledger-only diff and did not run code-review. Open: PR merge, and the regression issues await triage."
+status: completed
+outcome: "Ledger PR #2357 merged and three regression issues filed; no code fix was worth building"
+summary: "A scheduled frictions-to-fixes run (agent-initiated; no human prompt). A survey subagent screened 27 sessions, appended occurrences to 16 clusters, added one new entry and recorded four merged fix PRs. I filed regression issues #2354, #2355 and #2356 for the top three regressions with no open issue, chose three never-fixed picks, and a design subagent recommended no change for all three (nit-level cost, guard or Human-only surface, or open trial territory). So nothing was dispatched, there is no fix PR and no closing PR. The ledger PR #2357 merged on a green gate; I self-read its ledger-only diff and did not run code-review. The ledger PR merged; the regression issues await triage."
 prs:
   - "2357"
 docsRead:
@@ -65,11 +65,11 @@ frictions:
   - description: Survey subagent hit extract-frictions --unledgered keeping a session's other frictions, so it appended duplicates to 7 clusters and caught them only with its own uniqueness check.
     solution: Make print-ledger-occurrence.ts refuse a session already in the target cluster.
     severity: minor
-durationSec: 1123
+durationSec: 1316
 models:
-  claude-sonnet-5-5: 54
+  claude-sonnet-5-5: 67
 toolCounts:
-  Bash: 20
+  Bash: 23
   Read: 1
   Agent: 2
   ToolSearch: 1
@@ -77,6 +77,9 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   Skill: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0015.md
