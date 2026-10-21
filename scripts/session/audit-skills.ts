@@ -5,6 +5,7 @@
 // with the Skill's session.
 //
 // Usage:  tsx scripts/session/audit-skills.ts [--days N] [--briefs DIR]
+//         tsx scripts/session/audit-skills.ts --skill NAME --since ISO   (one Skill's usage instead)
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
@@ -14,6 +15,7 @@ import { git, SESSION_TRAILER } from '../lib/git.ts'
 import { asRecord, frontmatterBlock } from '../lib/frontmatter.ts'
 import { listAll, resolveAccess, type Access } from '../lib/github-client.ts'
 import { readProvenanceHeader } from '../lib/provenance-header.ts'
+import { toOpenIssue, type OpenIssue, type RawIssueApiRecord } from '../github/list-open-issues.ts'
 import { ARCHIVED_SESSIONS_DIR, readSessionLogs, SESSIONS_DIR } from './journal-files.ts'
 import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
 
@@ -82,11 +84,13 @@ export interface Session {
   humanPromptedClosure: boolean
   /** `docsRead` paths, feeding `docReadCounts`. */
   docsRead: string[]
+  /** `docsReadBySubagents` paths — in-memory only; the stored log is unchanged. */
+  docsReadBySubagents: string[]
   /** The Routine that fired it (`entrypoint: remote_trigger`), else null. */
   trigger: string | null
 }
 /** A windowed session as printed — what the Skill judges "kind of work" from. */
-export type WindowSession = Omit<Session, 'humanPromptedClosure' | 'docsRead' | 'mentioned' | 'humanInvoked' | 'trigger'>
+export type WindowSession = Omit<Session, 'humanPromptedClosure' | 'docsRead' | 'docsReadBySubagents' | 'mentioned' | 'humanInvoked' | 'trigger'>
 export interface OnDiskSkill {
   description: string
   /** False when its frontmatter sets `disable-model-invocation: true`. */
@@ -240,6 +244,42 @@ export function pickWindow(sessions: readonly Session[], since: string): Session
   return sessions
     .filter((s) => Date.parse(s.endedAt) >= from)
     .sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.session.localeCompare(a.session))
+}
+
+/** The sessions that STARTED at or after `since`: one that began before a Skill
+ *  landed couldn't use it, so an end-time window misleads (#2384). */
+export function startedWindow(sessions: readonly Session[], since: string): Session[] {
+  const from = Date.parse(since)
+  return sessions.filter((s) => Date.parse(s.startedAt) >= from)
+}
+
+export interface SkillQuerySession {
+  session: string
+  /** `docs/adr/` paths in `docsRead` and `docsReadBySubagents`, kept apart. */
+  adrsRead: string[]
+  adrsReadBySubagents: string[]
+}
+export interface SkillQuery {
+  used: Record<string, SkillQuerySession[]>
+  notUsed: Record<string, SkillQuerySession[]>
+}
+
+/** `sessions` split by whether they used `skill`, each side grouped by kind. */
+export function skillQuery(sessions: readonly Session[], skill: string): SkillQuery {
+  const adrs = (paths: readonly string[]) => paths.filter((p) => p.startsWith('docs/adr/'))
+  const out: SkillQuery = { used: {}, notUsed: {} }
+  for (const s of sessions) {
+    const side = s.skillsUsed.includes(skill) ? out.used : out.notUsed
+    ;(side[s.kind] ??= []).push({ session: s.session, adrsRead: adrs(s.docsRead), adrsReadBySubagents: adrs(s.docsReadBySubagents) })
+  }
+  return out
+}
+
+export type IssueRecord = RawIssueApiRecord & { body?: string | null }
+
+/** Open issues whose title or body names `skill` as a whole token. */
+export function issuesNamingSkill(records: readonly IssueRecord[], skill: string): OpenIssue[] {
+  return records.filter((r) => namesSkill(`${r.title}\n${r.body ?? ''}`, skill)).flatMap((r) => toOpenIssue(r) ?? [])
 }
 
 /** Skill name → the ids of the sessions that used it (or, via `field`, named or
@@ -440,6 +480,7 @@ export function toSession(raw: Record<string, unknown>, file: string, skillNames
     docsRead: (Array.isArray(raw.docsRead) ? raw.docsRead : [])
       .map((d: Record<string, unknown>) => String(d.path ?? ''))
       .filter(isContentPath),
+    docsReadBySubagents: (Array.isArray(raw.docsReadBySubagents) ? raw.docsReadBySubagents : []).map(String),
     trigger: raw.entrypoint === 'remote_trigger' && raw.trigger ? String(raw.trigger) : null,
   }
 }
@@ -904,10 +945,34 @@ export function scorecard(windowDays = DEFAULT_WINDOW_DAYS, cwd = root, now = Da
   }
 }
 
+/** The one-Skill query: windowed usage plus live open issues naming the Skill
+ *  (GitHub stays the only home for whether an issue is open); a failed fetch is
+ *  reported in the output, not thrown. */
+export function skillReport(skill: string, since: string, cwd = root) {
+  const skillNames = readSkillNames(cwd)
+  if (!skillNames.has(skill)) fail(`unknown Skill: ${skill}`)
+  if (!Number.isFinite(Date.parse(since))) fail(`--since is not a timestamp: ${since}`)
+  let issues: { openIssues: OpenIssue[] } | { openIssuesError: string }
+  try {
+    issues = { openIssues: issuesNamingSkill(listAll<IssueRecord>(resolveAccess(cwd), 'issues', { state: 'open' }), skill) }
+  } catch (err) {
+    issues = { openIssuesError: err instanceof Error ? err.message : String(err) }
+  }
+  return { skill, since, ...issues, ...skillQuery(startedWindow(readSessions(cwd, skillNames), since), skill) }
+}
+
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
 function main(): void {
   const argv = process.argv.slice(2)
+  const skill = flagValue(argv, '--skill')
+  if (argv.includes('--skill')) {
+    const since = flagValue(argv, '--since')
+    if (!skill || skill.startsWith('--')) fail('--skill needs a Skill name')
+    if (!since) fail('--skill needs --since ISO')
+    process.stdout.write(JSON.stringify(skillReport(skill, since), null, 2) + '\n')
+    return
+  }
   const daysArg = flagValue(argv, '--days')
   const days = daysArg ? Number(daysArg) : DEFAULT_WINDOW_DAYS
   if (!Number.isInteger(days) || days <= 0) fail('--days must be a positive integer')
