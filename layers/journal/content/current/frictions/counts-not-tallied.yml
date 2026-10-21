@@ -46,3 +46,8 @@ occurrences:
     severity: nit
     description: "Push notification said 5 questions but the round had 6 (the last was 'accept the rest')."
     solution: "Count the accept-the-rest line or not, consistently."
+  - session: session_01HcMFbKDTkG7hs2VhByAs4b
+    date: "2026-10-21"
+    severity: nit
+    description: "First PR body miscounted the checker verdicts; I recounted from the ID list and corrected it before the verdict comment."
+    solution: "Tally verdicts from a written list while the checkers' replies are in hand."

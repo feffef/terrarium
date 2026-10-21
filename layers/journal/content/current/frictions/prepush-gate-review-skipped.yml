@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   ADR-0004's before-first-push gate:scoped plus code-review is skipped or the gate is not rerun after late edits.
 surface: guard-or-hook
-status: tracked
-ref: "issue #2354 (regression of #2321: a push chained after a gate run). Earlier: issue #2311 closed by PR #2319, reversed by PR #2321. Left open: pr-workflow.md and ADR-0004 must still agree on the review skip."
+status: open
+ref: "Issue #2354 (regression of #2321: a push chained after a gate run) closed by PR #2359, a doc rule with no guard. Earlier: issue #2311 closed by PR #2319, reversed by PR #2321. Left open: pr-workflow.md and ADR-0004 must still agree on the review skip."
 fixes:
   - pr: 1852
     date: "2026-10-12"
@@ -22,6 +22,9 @@ fixes:
   - pr: 2321
     date: "2026-10-20"
     summary: "ADR-0004 now reviews Skills and docs like code; only a simple change (typo, rewrap, link, restamp, or at most 10 lines in 2 files) gets the author's own read."
+  - pr: 2359
+    date: "2026-10-21"
+    summary: "git-conventions.md's rule against chaining a push after a gate run now covers foreground runs too, and says to read the exit status in a separate step first (doc only; no guard or hook)."
 occurrences:
   - session: session_011t1xXHxqwrfAjt83s9oTEP
     date: "2026-10-15"

@@ -474,3 +474,8 @@ occurrences:
     severity: nit
     description: "Ran git status before reading git-conventions.md and read the large GLOSSARY and github docs in one truncated cat."
     solution: "Read the docs one at a time before the first git command."
+  - session: session_014tr6vJyNXmekdFQtYrEVWT
+    date: "2026-10-21"
+    severity: nit
+    description: "Read GLOSSARY.md and three docs in one Bash cat, which truncated at 30KB, then needed a second Read; the git-conventions doc was read after my first git status."
+    solution: "Read each required doc with the Read tool, one call each."

@@ -2,7 +2,8 @@ name: frictions-to-fixes-skill-gaps
 summary: "The frictions-to-fixes Skill leaves recurring situations unspecified, so the run asks the owner or improvises."
 cause: "SKILL.md does not say what to do when each top regression already has an open issue, that the ledger PR may open before design, or how a ledger ref names a PR that does not exist yet; the user is asked or the run improvises. Signals: \"the Skill says ... but not what to do\", \"had to ask the user how many\"."
 surface: safe
-status: open
+status: on-trial
+ref: "Inside the open Prune Trial for the frictions-to-fixes plain rewrite (PR #2330): territory path '.agents/skills/frictions-to-fixes/SKILL.md (all of it)'; keywords 'ledger PR', 'closing ledger PR'."
 fixes:
   - pr: 2149
     date: "2026-10-16"
@@ -73,3 +74,8 @@ occurrences:
     severity: minor
     description: "prune-friction-ledger.ts --summary compares dates as strings, hiding same-day post-fix sessions; the survey agent counted them by hand. Same cause as open issue #2333, and one subagent hit three ledger YAML edit hazards (blank line, quoting)."
     solution: "Compare session start time with the fix merged_at, as issue #2333 proposes."
+  - session: session_014tr6vJyNXmekdFQtYrEVWT
+    date: "2026-10-21"
+    severity: nit
+    description: "Section 2 says to file the top three regressions by severity, count and proof together, but gives no rule for severity before versus after the fix, so my pick of the third was a judgement call."
+    solution: "Say to rank by the highest severity since the latest fix PR, as the summary shows it."

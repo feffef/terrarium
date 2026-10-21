@@ -49,3 +49,8 @@ occurrences:
     severity: nit
     description: "Filed regression issue #2332 with a garbled phrase (#321-era follow-up #2321) and had to edit the body after creating it."
     solution: "Re-read the body before sending, as for any GitHub post."
+  - session: session_01QsVUJGmHhhoAn8T6ewjnLP
+    date: "2026-10-21"
+    severity: nit
+    description: "My first verdict comment on PR 2360 named the oldest commit as Reviewed, because I took the build output's commit list order for newest-first; corrected by an edit."
+    solution: "Take the Reviewed sha from git rev-parse HEAD in the worktree, never from the workflow's commits list."

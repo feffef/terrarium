@@ -50,3 +50,8 @@ occurrences:
     severity: nit
     description: "A bash cd into the frictions directory moved the session working directory, so later relative commands needed an explicit cd back."
     solution: "Use subshell cd or absolute paths in one-off commands."
+  - session: session_014tr6vJyNXmekdFQtYrEVWT
+    date: "2026-10-21"
+    severity: nit
+    description: "Ran a cd into the frictions directory in Bash and the primary working directory moved; I had to cd back."
+    solution: "Use absolute paths or a subshell instead of a bare cd."

@@ -36,3 +36,8 @@ occurrences:
     severity: minor
     description: "The harness refused the impl agent's git commands when the word git appeared twice (a branch or file name), so it renamed its branch and logs."
     solution: "Note the guard's trigger in dispatch-subagents section 3 beside the one-git-command-per-call line."
+  - session: session_01QsVUJGmHhhoAn8T6ewjnLP
+    date: "2026-10-21"
+    severity: minor
+    description: "The build agent's worktree guard refused every command naming the branch git-conventions-foreground-gate-chain because it contains 'git', so the commit sat on the worktree branch and I pushed it under another name."
+    solution: "Narrow the guard's match so that a branch name containing the word git is not treated as a git command."

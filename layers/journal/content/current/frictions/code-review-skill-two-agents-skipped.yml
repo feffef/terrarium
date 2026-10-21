@@ -141,3 +141,8 @@ occurrences:
     severity: minor
     description: "Code-review on a one-file prose post needs two subagents after the fact-checker already re-derived every claim, so the review mostly repeated format checks the gate runs."
     solution: "Let blog-post count its step 9 fact-check plus gate as the review, as midden-catalogue section 4 does for itself."
+  - session: session_01L7SpnHp3yQbMQsNVCnB6zR
+    date: "2026-10-21"
+    severity: minor
+    description: "Ran code-review Skill's intent as my own diff read rather than its two sub-agents, to save cost, on a 25-file diff that is not 'simple' by the stated rule."
+    solution: "Let the simple-change rule cover mechanical revision pin bumps, or state it for scheduled pin-only runs."

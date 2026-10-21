@@ -469,3 +469,18 @@ occurrences:
     severity: moderate
     description: "Throughout this run I made several judgment/recommendation calls on the repo's own rules and conventions - e.g. deciding the Standards reviewer's blog-post.yml concern was already settled by #2238/#2242 rather than a new violation, deciding inspect-session's finding stayed below the escalation bar, deciding how adr-check's findings should be routed (comment on #2286 vs. a new issue) - without ever invoking the adr-check Skill CLAUDE.md requires before a recommendation. This is the exact silent-gap shape I verified and reported in this very run's own adr-check behaviour check (4 scheduled/autonomous sessions with zero adr-check trace, fed into #2286) - I reproduced the pattern I was auditing."
     solution: "Invoke adr-check before any judgment call a scheduled Skill's own steps don't fully script, not just before architectural recommendations."
+  - session: session_014tr6vJyNXmekdFQtYrEVWT
+    date: "2026-10-21"
+    severity: minor
+    description: "Decided picks and recommended drops without invoking the adr-check Skill, though CLAUDE.md requires it before any recommendation and frictions-to-fixes sections 3-5 mandate decisions (issue #2342)."
+    solution: "Resolve #2342: either let frictions-to-fixes call adr-check in section 3 or exempt it in CLAUDE.md."
+  - session: session_01HcMFbKDTkG7hs2VhByAs4b
+    date: "2026-10-21"
+    severity: nit
+    description: "Skipped the adr-check Skill; this scheduled run changed docs with no plan or recommendation step, so the rule seemed not to apply, but I did not confirm that."
+    solution: "State in audit-docs whether adr-check applies to scheduled sweeps."
+  - session: session_01QsVUJGmHhhoAn8T6ewjnLP
+    date: "2026-10-21"
+    severity: minor
+    description: "Gave recommended picks in the grilling round without invoking adr-check, which CLAUDE.md requires before any recommendation; I relied on the triage agents' ADR reads."
+    solution: "clear-backlog §2 could say whether triage agents' adr-check covers the orchestrator's picks (see #2342)."

@@ -499,3 +499,18 @@ occurrences:
     severity: nit
     description: "Ran git status before reading git-conventions.md and read the large GLOSSARY and github docs in one truncated cat."
     solution: "Read the docs one at a time before the first git command."
+  - session: session_014tr6vJyNXmekdFQtYrEVWT
+    date: "2026-10-21"
+    severity: nit
+    description: "Read GLOSSARY.md and three docs in one Bash cat, which truncated at 30KB, then needed a second Read; the git-conventions doc was read after my first git status."
+    solution: "Read each required doc with the Read tool, one call each."
+  - session: session_01QsVUJGmHhhoAn8T6ewjnLP
+    date: "2026-10-21"
+    severity: nit
+    description: "Ran scripts/github/list-open-issues.ts (a gh-backed GitHub read) before reading github-integration.md, which CLAUDE.md requires before the first GitHub operation."
+    solution: "Have the clear-backlog Skill §1 point to github-integration.md next to its auto-triage step-1 pointer."
+  - session: session_01L7SpnHp3yQbMQsNVCnB6zR
+    date: "2026-10-21"
+    severity: minor
+    description: "Read github-integration.md only after the first mcp__github__ call; CLAUDE.md says before. A hook reminded me."
+    solution: "Read it when loading the GitHub tools via ToolSearch."
