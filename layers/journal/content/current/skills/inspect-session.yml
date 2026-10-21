@@ -36,3 +36,11 @@ observations:
       Inventory's own convention (escalate on a second occurrence); watch
       for recurrence. No reverts in 2-week sweep. Grade/role unchanged
       (specialist).
+  - date: "2026-10-21"
+    note: >-
+      Second behaviour check, 5 runs clean. Correction: the entry above's
+      "verified missed invocation" session_01GVmwHZQthucdGcVwe3HAUL ran on
+      2026-10-17, two days before the Skill landed (3fece330c,
+      2026-10-19T17:08Z), so it was not a miss. No post-landing session
+      called list_events or get_event without the Skill. Not yet escalated,
+      n=0. Grade/role unchanged (specialist).

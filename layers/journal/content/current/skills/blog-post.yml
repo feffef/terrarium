@@ -324,3 +324,13 @@ observations:
       Karen reply): every timeline claim accurate to the minute against live
       GitHub. Deletion sweep found only the 2 already-known/disclosed
       deletions, no new or undisclosed revert. Grade/role unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Behaviour check, 9 runs, all 18 PRs merged. Filed #2370: step 9's
+      "later unchecked edits" shipped in 7 of 8 PR bodies read (#2220 and
+      #2139 re-read here); this repeats the 10-19 entry. code-review was
+      reduced to inline in 4 of 9 runs (session_01XTdRbnDg1n2j2ZqjTrwCLi,
+      session_01E7YFbvBvT8HWhVJb6kTDMq, session_01N9bwDKW51kMS6WJvK2nfSU,
+      session_01RJh5bK46AQRRtwagmz8GjU); that is the closed
+      prepush-gate-review-skipped cluster (#2354), so no issue here.
+      Grade/role unchanged.
