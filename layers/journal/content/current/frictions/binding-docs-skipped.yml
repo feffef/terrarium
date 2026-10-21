@@ -459,3 +459,13 @@ occurrences:
     severity: minor
     description: "In the #2264 grilling I framed the choice as hook vs explore-brief line and missed that a path-scoped rule (ADR-0029) fits; the owner had to point it out"
     solution: "Before offering a mechanism, check ADR-0029 for whether a path-scoped rule fits"
+  - session: session_01VH74k3Z27QtjR19XNC76qm
+    date: "2026-10-20"
+    severity: minor
+    description: "Gave recommendations (which fixes to dispatch or file, and the regression picks) without invoking the adr-check Skill that CLAUDE.md requires before a recommendation; the design agent ran it for its picks."
+    solution: "The Skill could say adr-check is run by the design agent so the main session need not repeat it, or CLAUDE.md could exempt Skill-mandated decisions."
+  - session: session_01SaChfBZfspYfAm5F7ArCfK
+    date: "2026-10-21"
+    severity: moderate
+    description: "Throughout this run I made several judgment/recommendation calls on the repo's own rules and conventions - e.g. deciding the Standards reviewer's blog-post.yml concern was already settled by #2238/#2242 rather than a new violation, deciding inspect-session's finding stayed below the escalation bar, deciding how adr-check's findings should be routed (comment on #2286 vs. a new issue) - without ever invoking the adr-check Skill CLAUDE.md requires before a recommendation. This is the exact silent-gap shape I verified and reported in this very run's own adr-check behaviour check (4 scheduled/autonomous sessions with zero adr-check trace, fed into #2286) - I reproduced the pattern I was auditing."
+    solution: "Invoke adr-check before any judgment call a scheduled Skill's own steps don't fully script, not just before architectural recommendations."

@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
 surface: safe
-status: open
+status: tracked
+ref: "issue #2341 measures PR #2336's CLAUDE.md rule and may move the check to the reviewer."
 fixes:
   - pr: 2336
     date: "2026-10-20"
@@ -70,3 +71,8 @@ occurrences:
     severity: moderate
     description: "First-round picks relayed the triage agents' claims (e.g. #2310 all trailing ampersand, #2312 one repo-caused case) that a session check then overturned on all three issues."
     solution: "clear-backlog §2 could have the main session check a regression issue's cited sessions with inspect-session before grilling, not only on owner request."
+  - session: session_01MKHvrDA9VoqiKWSG6QjpE2
+    date: "2026-10-20"
+    severity: minor
+    description: "My #2329 build brief copied the triage agent's replacement example without checking the pages; review found it already closes 10 of 15 specimens, so I cut it by hand."
+    solution: "When a brief proposes example wording to stop repetition, grep the content for it first."

@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A number (verdict counts, line totals, regression counts) goes into a GitHub body as an estimate or from a report not yet final, instead of being tallied from every item. Signals: "about N", a PR body count corrected by an edit, "without tallying", "without counting".
 surface: safe
-status: open
+status: tracked
+ref: "issue #2341 measures PR #2336's CLAUDE.md rule and may move the check to the reviewer."
 fixes:
   - pr: 2336
     date: "2026-10-20"
@@ -40,3 +41,8 @@ occurrences:
     severity: nit
     description: "My first ledger draft gave section line counts taken from diff hunks, not read from the file; both reviewers caught it."
     solution: "Count with the file in hand before writing a number."
+  - session: session_01MKHvrDA9VoqiKWSG6QjpE2
+    date: "2026-10-20"
+    severity: nit
+    description: "Push notification said 5 questions but the round had 6 (the last was 'accept the rest')."
+    solution: "Count the accept-the-rest line or not, consistently."

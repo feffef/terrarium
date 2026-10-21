@@ -479,3 +479,23 @@ occurrences:
     severity: nit
     description: "Ran git log to draw conclusions before reading docs/agents/git-conventions.md, and skipped the full GLOSSARY read at session start."
     solution: "Read-only question sessions still trigger the read-first list; the hint fired late but was right."
+  - session: session_01CBVi4qZ2RqPhfHeHPYrkwD
+    date: "2026-10-19"
+    severity: minor
+    description: "Ran git log and git ls-remote without reading docs/agents/git-conventions.md, and ignored the hook's Read-first hint."
+    solution: "Read the doc when the hint fires; it is short."
+  - session: session_01VH74k3Z27QtjR19XNC76qm
+    date: "2026-10-20"
+    severity: nit
+    description: "Ran git log and git diff --stat before reading git-conventions.md; the PostToolUse hook reminded me. No harm, the doc did not change the call."
+    solution: "None needed beyond the existing hook; the hook worked as designed."
+  - session: session_01MKHvrDA9VoqiKWSG6QjpE2
+    date: "2026-10-20"
+    severity: nit
+    description: "Ran git rev-parse and git fetch before reading git-conventions.md (CLAUDE.md read-first trigger); the late read showed the calls were right."
+    solution: "None needed; hook caught it."
+  - session: session_01Dz5nEANXqTtZzTki1C5ArD
+    date: "2026-10-21"
+    severity: nit
+    description: "Ran git status before reading git-conventions.md and read the large GLOSSARY and github docs in one truncated cat."
+    solution: "Read the docs one at a time before the first git command."

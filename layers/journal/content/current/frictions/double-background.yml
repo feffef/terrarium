@@ -101,3 +101,8 @@ occurrences:
     severity: nit
     description: "First gate run combined run_in_background with a text-level ampersand; the double-background guard denied it and nothing ran."
     solution: "Pass run_in_background alone with a plain command."
+  - session: session_01SaChfBZfspYfAm5F7ArCfK
+    date: "2026-10-21"
+    severity: nit
+    description: "My first pnpm gate:scoped background run failed immediately because the scratchpad/logs directory I'd meant to create in the same shell call never existed - an earlier combined mkdir-then-gate call with a trailing shell \"&\" was correctly refused outright by the double-background guard, but I didn't notice the guard's \"nothing in this call ran\" meant the mkdir was skipped too, not just the backgrounded command."
+    solution: "After a blocked double-background call, re-issue every part of it, since the guard refuses the whole call, not just the backgrounded part."

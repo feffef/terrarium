@@ -38,3 +38,13 @@ occurrences:
     severity: nit
     description: "A cd into .agents/skills moved the primary working dir, so a following relative path (docs/adr/0022) failed to resolve."
     solution: "Use absolute paths or a subshell; do not cd in Bash."
+  - session: session_01AZjx4MT5revQ7BnLqR9f39
+    date: "2026-10-19"
+    severity: nit
+    description: "A cd into node_modules during verification moved the primary working directory; I had to cd back before git commands."
+    solution: "Use absolute paths or a subshell instead of a bare cd into a dependency directory."
+  - session: session_01VH74k3Z27QtjR19XNC76qm
+    date: "2026-10-20"
+    severity: nit
+    description: "A bash cd into the frictions directory moved the session working directory, so later relative commands needed an explicit cd back."
+    solution: "Use subshell cd or absolute paths in one-off commands."

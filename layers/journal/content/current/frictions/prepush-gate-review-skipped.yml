@@ -88,3 +88,8 @@ occurrences:
     severity: minor
     description: "Ran pnpm gate:scoped before committing and running code-review, against pr-workflow.md's order (gate last on the final head); harmless only because review led to no edits."
     solution: "Read pr-workflow.md before starting the gate, not before the push; CLAUDE.md's trigger 'before you push' came too late for the gate step."
+  - session: session_01FTPnEsW1XNhaqYFdxaE24v
+    date: "2026-10-20"
+    severity: moderate
+    description: "Pushed 423b029e in the same command that printed GATE_EXIT=2, so a typecheck failure reached CI on PR #2345; git-conventions.md forbids exactly this chaining."
+    solution: "Run the gate alone, read its exit status in a separate step, and only then push; a guard could deny git push in a command that also reads a gate log."

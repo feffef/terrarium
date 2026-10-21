@@ -2,8 +2,7 @@ name: frictions-to-fixes-skill-gaps
 summary: "The frictions-to-fixes Skill leaves recurring situations unspecified, so the run asks the owner or improvises."
 cause: "SKILL.md does not say what to do when each top regression already has an open issue, that the ledger PR may open before design, or how a ledger ref names a PR that does not exist yet; the user is asked or the run improvises. Signals: \"the Skill says ... but not what to do\", \"had to ask the user how many\"."
 surface: safe
-status: tracked
-ref: "issue #2333 (regression of #2213)"
+status: open
 fixes:
   - pr: 2149
     date: "2026-10-16"
@@ -14,6 +13,15 @@ fixes:
   - pr: 2213
     date: "2026-10-17"
     summary: "The survey brief says --unledgered drops each carried friction verbatim, so a session already in the target cluster must be skipped by hand."
+  - pr: 2345
+    date: "2026-10-20"
+    summary: "Added a no-change outcome to the design step and a notes field in the ledger, so a run that finds nothing worth fixing has an outcome."
+  - pr: 2347
+    date: "2026-10-20"
+    summary: "Made the survey and design briefs match the repo: tracker search via the listing script, window wording, status reset, repo name, log-reading rule."
+  - pr: 2348
+    date: "2026-10-20"
+    summary: "The ledger summary counts same-day regressions by merge time and a new --candidates option prints the survey labels from the ledger."
 occurrences:
   - session: session_01Mf4dUxuWB7WtkC5fVzByH6
     date: "2026-10-16"
@@ -60,3 +68,8 @@ occurrences:
     severity: minor
     description: "The survey subagent's ledger commit and --unledgered/--summary date-only counting made same-day post-fix sessions invisible; it counted them by hand."
     solution: "Make --summary compare session start time to the fix's merged_at, not dates."
+  - session: session_01VH74k3Z27QtjR19XNC76qm
+    date: "2026-10-20"
+    severity: minor
+    description: "prune-friction-ledger.ts --summary compares dates as strings, hiding same-day post-fix sessions; the survey agent counted them by hand. Same cause as open issue #2333, and one subagent hit three ledger YAML edit hazards (blank line, quoting)."
+    solution: "Compare session start time with the fix merged_at, as issue #2333 proposes."
