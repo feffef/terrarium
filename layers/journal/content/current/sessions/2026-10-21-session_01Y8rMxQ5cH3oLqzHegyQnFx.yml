@@ -1,0 +1,102 @@
+schemaVersion: 1
+session: session_01Y8rMxQ5cH3oLqzHegyQnFx
+startedAt: 2026-10-21T19:49:07Z
+endedAt: 2026-10-21T19:56:57Z
+kind: interactive
+goal: Check whether clear-backlog-build's fresh fix agents waste context
+status: completed
+outcome: "Confirmed: each fix round spawns a new agent, contrary to dispatch-subagents; per-agent cost unmeasurable from events"
+summary: The owner asked (human-instructed) whether clear-backlog-build is wasteful because review findings go to a new fix agent instead of the implementer, and to use inspect-session on two recent sessions. I picked session_01C32ny8 (6 fix agents over 4 of 5 branches; one branch hit the 3-round cap and the orchestrator fixed it by hand) and session_01MKHvrD (3 fix agents over 2 of 5 branches). The script's fixPrompt spawns a fresh agent per round, and the Workflow API's agent() cannot continue an earlier agent. dispatch-subagents says to resume the implementer for every fix, so the workflow departs from it. fixPrompt also omits the build agent's decisions, which reviewers get. Workflow agents' turns are not in session events and their .output files lived in the dead containers, so per-agent tool calls and tokens can't be measured; the logs record only one doc read by any fix agent. No change was made; the recommendation and the question of direction went to the owner (agent-initiated opinion).
+prs: []
+docsRead:
+  - path: docs/adr/0005-skill-model.md
+    reason: Workflow scripts fix the step sequence so the model can't skip steps; that is the main cost of moving fixes out of the workflow
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Says to resume the impl agent for every fix; the build workflow departs from it
+    useful: yes
+skillsUsed:
+  - name: inspect-session
+    reason: (no reason given)
+  - name: workflow-authoring
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: adr-check
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped the session-start GLOSSARY-MAP.md and GLOSSARY.md reads CLAUDE.md requires; no wrong term resulted that I know of.
+    solution: Read them in the first tool call even for a chat-only question.
+    severity: nit
+  - description: Started forming a recommendation before running adr-check (CLAUDE.md requires it before any opinion); caught at close-session and ran it before answering.
+    solution: Run adr-check as soon as the ask is an opinion on a change.
+    severity: minor
+  - description: "inspect-session can't answer questions about workflow agents: their turns aren't in events and the run's .output stays in the old container, so a 16-page read returned nothing per agent."
+    solution: inspect-session could say up front that workflow-agent questions need the session log or a saved run summary; clear-backlog could commit per-agent usage into the log.
+    severity: moderate
+durationSec: 470
+models:
+  claude-opus-5-5: 43
+toolCounts:
+  Skill: 5
+  Bash: 15
+  Agent: 2
+  Write: 1
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0005.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: No PR or push in this chat-only session, so the gate rule didn't apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to log via close-session for a question-only session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me not to build the workflow change without owner approval, so I only recommended; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Nothing was written to GitHub, so the provenance header didn't apply
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Pointed to the full ADR on why workflow scripts exist, which I opened for the trade-off
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded from a read only; nothing was edited or merged
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Checked open prune trials; none covers clear-backlog-build or dispatch-subagents §5; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded from reading ADRs; no ADR was changed
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded when grepping dispatch-subagents; triage sweep wasn't part of the question
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Inspect fix agents session 01C32
+    model: sonnet
+  - type: general-purpose
+    task: Inspect fix agents session 01MKH
+    model: sonnet
+gitBranch: ccr-9a4c1386-awyekt
+entrypoint: remote_mobile
+cliVersion: 2.1.306
+learnings:
+  - Workflow agents' turns do not appear in list_events for the parent session; only the parent's lines do.
+ideas:
+  - Have log-session record per workflow agent its tool count, tokens and duration from the run journal, so retrospectives on workflow cost don't depend on a dead container.
+landedBy: Stop
