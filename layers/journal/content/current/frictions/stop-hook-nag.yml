@@ -370,3 +370,8 @@ occurrences:
     severity: nit
     description: "Stop hook asked three times to commit and push while fact-check and gate were still running, against ADR-0004 order."
     solution: "Make the stop hook skip while a background gate or subagent runs."
+  - session: session_01L7SpnHp3yQbMQsNVCnB6zR
+    date: "2026-10-21"
+    severity: nit
+    description: "Stop hook asked to push while gate:scoped was still running; I held the push per ADR-0004."
+    solution: "None; the rule covers it."

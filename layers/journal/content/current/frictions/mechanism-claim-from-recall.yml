@@ -76,3 +76,8 @@ occurrences:
     severity: minor
     description: "Stated in the retro that bad manifest paths could silently lose pages; flatten.ts actually throws on a missing file. Also rewrote the manifests with sed without reading them first, so their real content is unknown."
     solution: "Check the code before stating a failure mode; read a file before rewriting it."
+  - session: session_01MKHvrDA9VoqiKWSG6QjpE2
+    date: "2026-10-20"
+    severity: nit
+    description: "Two triage agents repeated the issue's wrong claim that the frictions-to-fixes briefs are in the prune trial, and one wrongly called tenant.config.ts Human-only; caught on verification."
+    solution: "Triage briefs could tell agents to check trial territory and the Human-only list rather than relay the issue's constraint lines."

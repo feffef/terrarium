@@ -62,3 +62,8 @@ occurrences:
     severity: nit
     description: "A word split across a line-wrapped hyphen in visitor-loop.yml's new note (\"Previously-\" / \"escalated\") failed validate-content-schema on the first gate:scoped run, costing one full gate cycle (~2 minutes) before the real failure was caught and fixed."
     solution: "After writing any new folded-scalar note by hand, grep the diff for lines ending in a hyphen before running the gate, not after."
+  - session: session_014tr6vJyNXmekdFQtYrEVWT
+    date: "2026-10-21"
+    severity: minor
+    description: "Survey subagent hit extract-frictions --unledgered keeping a session's other frictions, so it appended duplicates to 7 clusters and caught them only with its own uniqueness check."
+    solution: "Make print-ledger-occurrence.ts refuse a session already in the target cluster."

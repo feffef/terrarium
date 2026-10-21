@@ -60,3 +60,8 @@ occurrences:
     severity: minor
     description: "First rewrite pass dropped several pointers and why-clauses and a no-argument default while claiming every rule kept; the spec review caught them."
     solution: "Before committing a whole-file rewrite, diff an old-vs-new rule checklist myself rather than relying on review to find losses."
+  - session: session_01RZ2pN3CEsoJyKxUWC2RFW5
+    date: "2026-10-20"
+    severity: minor
+    description: "Agency in the story was hard to verify: the 'Owner decision' comments and PR text are agent-written under the owner's account, so the first draft credited a human choice the record did not show."
+    solution: "blog-post could tell drafters to check comment headers for the agent line before writing who decided."
