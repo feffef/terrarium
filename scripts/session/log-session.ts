@@ -585,7 +585,7 @@ function withoutLandedBy(yaml: string): string {
 function traceOf(transcriptJsonl: string, opts: Pick<LandOpts, 'env' | 'subagents' | 'docIndex' | 'gitLogFn'>): MechanicalTrace {
   const docIndex = opts.docIndex ?? loadDocLineIndex(root)
   const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env, docIndex)
-  const folded = foldSubagentTrace(trace, (opts.subagents ?? []).map((s) => ({ records: parseTranscript(s.jsonl), agent: s.agent })), opts.env, docIndex)
+  const folded = foldSubagentTrace(trace, (opts.subagents ?? []).map((s) => ({ records: parseTranscript(s.jsonl), agent: s.agent, toolUseId: s.toolUseId })), opts.env, docIndex)
   if (!folded.session) return folded
   const committed = committedFiles((opts.gitLogFn ?? sessionCommitsLog)(folded.session), folded.session)
   return { ...folded, filesEdited: [...new Set([...folded.filesEdited, ...committed])] }

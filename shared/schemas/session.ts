@@ -12,6 +12,12 @@ import { z } from 'zod'
 // The string-not-`z.date()` rationale lives with the shared refinement.
 import { utcTimestamp } from './timestamp'
 
+// A subagent's percent of the session's tokens, main session plus every
+// subagent, each weighted by its price relative to fresh input whatever the
+// model: a rough cost indicator, not a bill. The main session has the rest.
+// Weights: scripts/session/transcript-trace.ts (`weightOf`).
+const tokenShare = z.number().min(0).max(100)
+
 export const usefulVerdict = z.enum(['yes', 'partly', 'no'])
 export const ruleVerdict = z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict })
 export const relevantAdr = z.object({ adr: z.number().int().positive(), reason: z.string() })
@@ -81,6 +87,10 @@ export const sessionSchema = z
           type: z.string().optional(),
           task: z.string().optional(),
           model: z.string().optional(),
+          durationSec: z.number().int().nonnegative().optional(),
+          toolCalls: z.number().int().nonnegative().optional(),
+          modelCalls: z.number().int().nonnegative().optional(),
+          tokenShare: tokenShare.optional(),
         }),
       )
       .optional(),
