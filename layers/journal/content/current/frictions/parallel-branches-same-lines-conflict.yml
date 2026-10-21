@@ -1,9 +1,8 @@
 name: parallel-branches-same-lines-conflict
-summary: Parallel branches editing the same shared list lines conflicted again and again, and merging kept re-growing the lists.
-cause: "Parallel content PRs each edit the same shared lists (Where next, Opening a page chips); keeping both sides re-grew lists past the cap."
+summary: Parallel branches editing the same lines of a shared file conflicted, and the second to merge needed a manual merge.
+cause: "Branches built in parallel edit the same lines of one shared file (Where next lists, a stamped pointer line, a roster table, a moved script), and nothing orders or groups them; signals: merge conflicts on adjacent shared lines, restamps, lists re-grown past the cap."
 surface: safe
 status: open
-ref: One occurrence from the Glass Box backfill; candidate to drop.
 occurrences:
   - session: session_01GG85r8HWMEdaMgKUaNUZH7
     date: "2026-10-14"
