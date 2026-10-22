@@ -30,8 +30,9 @@ A human merges the few PRs whose risk the gate cannot see.
   - comes from a Public author, a fork or the guest pipeline, or was built
     from a Public request (ADR-0020, ADR-0023).
 
-  An agent may still merge a minor or patch bump that Dependabot opens from
-  this repo, though it changes `package.json`.
+  An agent may still merge a minor or patch npm bump that Dependabot opens
+  from this repo, if it changes only `package.json` and the lockfile and stays
+  within each package's major.
 - **The Human-only list** holds the files where a bad change escapes the gate
   or weakens the merge check itself. The list is the `paths` of the
   human-merge rule.
