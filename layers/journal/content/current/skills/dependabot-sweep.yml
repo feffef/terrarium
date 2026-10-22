@@ -5,8 +5,8 @@ gist: Reviews every open Dependabot PR daily; merges safe bumps, triages the res
 role: >-
   Designed as a scheduled daily sweep (user-invoked only, model-invocation
   disabled) over every open Dependabot PR: merges a safe minor/patch bump
-  itself, leaves a major for a human with a written risk/benefit case, and
-  opens or comments on a `needs-triage` issue either way. Opens no branch,
+  itself, leaves a major for a human, with a written risk/benefit case in a
+  `needs-triage` issue (opened or commented on). Opens no branch,
   edits no file.
 observations:
   - date: "2026-10-20"

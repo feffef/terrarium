@@ -8,8 +8,7 @@ planned: the owner kept browser-side building and rejected full page loads
 because of Tinkerfund's view transitions and in-memory state) and ADR-0019
 (recovery from client-DB failures).
 
-**Researched 2026-09-27.** This note is based on installed source and the
-official upstream repos only. The versions read were:
+**Researched 2026-09-27** from installed source and official upstream repos only. Versions read:
 
 - `@nuxt/content` **3.15.0** (`node_modules/@nuxt/content/package.json`).
   Upstream `main` is **3.16.1** (`raw.githubusercontent.com/nuxt/content/main/package.json`).

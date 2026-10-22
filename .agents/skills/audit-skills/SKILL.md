@@ -171,5 +171,5 @@ only `layers/journal/content/current/skills/*.yml` and `routines/*.yml`, every
 grade change cites its ≥2 sessions, and every removed observation is past 40
 days. Anything else in the diff means you leave the PR open for a human.
 
-Log the session, with the step 3
-results (`orphanScan` included) in its summary.
+Invoke `close-session`, with the step 3
+results (`orphanScan` included) in the log's summary.
