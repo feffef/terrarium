@@ -4,12 +4,14 @@ summary: >-
 cause: >-
   A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
 surface: safe
-status: tracked
-ref: "issue #2341 measures PR #2336's CLAUDE.md rule and may move the check to the reviewer."
+status: open
 fixes:
   - pr: 2336
     date: "2026-10-20"
     summary: "CLAUDE.md \"Verify before you state\" now names subagent reports, script behaviour from recall, \"only\"/\"every\"/\"nothing\" claims and one-test causes; \"One home per fact\" says to grep for other statements when changing one."
+  - pr: 2378
+    date: "2026-10-21"
+    summary: "Restored the shorter \"Verify before you state\" bullet in CLAUDE.md, and the Standards reviewer in clear-backlog-build now flags a count or subagent claim that cites no source."
 occurrences:
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"
@@ -81,3 +83,13 @@ occurrences:
     severity: nit
     description: "The code-review Spec reviewer said pool.md held only Agent A's findings, while the batch-1 checker handled B-D from it; I did not verify the pool contents myself."
     solution: "Have save-handback print the saved byte count per agent so a truncated pool is obvious."
+  - session: session_01LKNUYveJSHpf9NV8zN8K5b
+    date: "2026-10-21"
+    severity: minor
+    description: "My first summary of the inspection relayed subagent claims unverified and was wrong in places: note lengths 110-142 (actual max 113), one state called hearsay was live-read, sequential dispatch called unique to 10-20."
+    solution: "Spot-check each number and quote against the flattened events before summarising a subagent report."
+  - session: session_013n8e5pQ7h9GevyhHvtm4c3
+    date: "2026-10-21"
+    severity: minor
+    description: "Put a triage agent's claim (frictions-to-fixes briefs are in a prune trial) into PR #2389 unverified; the trial covers only SKILL.md; fixed in the PR body"
+    solution: "Verify each sideFinding against its source before relaying it, as clear-backlog section 3 already says"

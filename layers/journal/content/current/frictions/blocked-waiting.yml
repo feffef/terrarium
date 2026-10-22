@@ -49,3 +49,8 @@ occurrences:
     severity: nit
     description: "My first gate-wait loop grepped the gate log for an EXIT marker that only the outer task output held, so it could never end; stopped it."
     solution: "Wait on the background task's own completion notification instead of polling a log for a marker the command writes elsewhere."
+  - session: session_011UkamwPwXvoBVMmNHuoBaD
+    date: "2026-10-21"
+    severity: nit
+    description: "Started a pointless background sleep to wait on the subagent, wasting two calls."
+    solution: "End the turn and wait for the notification."

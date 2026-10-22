@@ -7,6 +7,9 @@ fixes:
   - pr: 2197
     date: "2026-10-17"
     summary: "Subagent briefs now ask each agent to keep scratch files in its own scratchpad subfolder."
+  - pr: 2389
+    date: "2026-10-21"
+    summary: "CLAUDE.md and the inspect-session briefs now say a subagent writes every file it creates, scripts included, in its own folder."
 occurrences:
   - session: session_01Fay2GiWTwxDKnnqS9DznHk
     date: "2026-10-16"
@@ -23,3 +26,8 @@ occurrences:
     severity: minor
     description: "Impl agents repeatedly hit the worktree shell guard on compound commands, heredocs and variable expansion, and worked around it with helper scripts; one ran a stale helper left in the shared scratchpad."
     solution: "Briefs tell agents to name scratch helpers uniquely; consider documenting the guard's triggers where dispatch-subagents points."
+  - session: session_01XfQgmS9ArvbD9WSoPgkKfM
+    date: "2026-10-21"
+    severity: nit
+    description: "One transcript subagent reported another overwrote a shared scratchpad file (fl.sh), polluting its page list until it moved to its own folder."
+    solution: "inspect-session briefs already set Out per session; also tell subagents to keep all helper scripts inside Out."

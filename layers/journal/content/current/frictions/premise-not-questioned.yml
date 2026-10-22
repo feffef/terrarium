@@ -44,3 +44,8 @@ occurrences:
     severity: moderate
     description: "I recommended and built #2319's prose-only review skip without weighing that review catches errors in instructions; the owner reversed it the same day, costing a revert and a second ADR PR."
     solution: "When a change removes a review step, ask what kinds of defect that step catches in the files it would skip before recommending it."
+  - session: session_01FNv8z61n7roCRsM4AYVtf6
+    date: "2026-10-21"
+    severity: minor
+    description: "First recommendation proposed a new path-scoped rule before checking that issue-tracker.md's Filing an issue already covered most of it; the owner had to ask about overlap."
+    solution: "Grep the existing homes of a fact before proposing a new doc (CLAUDE.md one home per fact)."

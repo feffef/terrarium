@@ -42,3 +42,8 @@ occurrences:
     severity: moderate
     description: "Broke CLAUDE.md 'Ask before building a data shape they may prefer': Q3 on #2239 never asked per-run vs mean, so #2243 shipped means and needed a second PR plus backfill."
     solution: "When a grill question settles a stored field, ask its shape explicitly; clear-backlog-explore could flag new schema fields as owner questions."
+  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
+    date: "2026-10-21"
+    severity: nit
+    description: "Ran the Skill with its autonomous decisions and built without the grilling the owner's preference for questions-first suggests; no question was asked."
+    solution: "Say in the Skill that the owner's start is the approval for picks, so no question is expected."

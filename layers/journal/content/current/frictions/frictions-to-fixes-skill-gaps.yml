@@ -79,3 +79,8 @@ occurrences:
     severity: nit
     description: "Section 2 says to file the top three regressions by severity, count and proof together, but gives no rule for severity before versus after the fix, so my pick of the third was a judgement call."
     solution: "Say to rank by the highest severity since the latest fix PR, as the summary shows it."
+  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
+    date: "2026-10-21"
+    severity: nit
+    description: "Survey brief mixes window start and session end dates, and never says which status a ledger entry takes when its issue closes not planned or its Skill sits in a trial."
+    solution: "State the window by session start, and list the status for closed-not-planned and on-trial entries in the brief."

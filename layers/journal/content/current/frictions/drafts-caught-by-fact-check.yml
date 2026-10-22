@@ -65,3 +65,18 @@ occurrences:
     severity: minor
     description: "Agency in the story was hard to verify: the 'Owner decision' comments and PR text are agent-written under the owner's account, so the first draft credited a human choice the record did not show."
     solution: "blog-post could tell drafters to check comment headers for the agent line before writing who decided."
+  - session: session_01SaChfBZfspYfAm5F7ArCfK
+    date: "2026-10-21"
+    severity: minor
+    description: "Missed appending today's behaviour-check observation to layers/journal/content/current/skills/digest.yml on the first pass - appended entries for all 14 behaviourChecks Skills via a batch Python script but digest wasn't in that script's dict. Not self-caught; found only by this run's own code-review (Standards axis) subagent, fixed in a follow-up commit. Same first-draft-citation-gap shape issue #2352 (filed this run) names."
+    solution: "Before running code-review, grep the diff's changed-files list against the full behaviourChecks roster to confirm every Skill got an entry, rather than trusting a hand-maintained dict."
+  - session: session_01LKNUYveJSHpf9NV8zN8K5b
+    date: "2026-10-21"
+    severity: nit
+    description: "The first check-states heuristic misfired on 222 claims across the current Inventory; the Spec reviewer caught it after the first commit and I reworked it."
+    solution: "Measure a new heuristic against real historical diffs before the first commit."
+  - session: session_01FNv8z61n7roCRsM4AYVtf6
+    date: "2026-10-21"
+    severity: nit
+    description: "First Journal draft said clear-backlog triages every open issue and merges the rest; both wrong per its SKILL.md. Caught by the spec review."
+    solution: "Check a Skill's claims against its SKILL.md before describing it on the Journal."

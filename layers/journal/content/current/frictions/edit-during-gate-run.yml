@@ -28,3 +28,13 @@ occurrences:
     severity: minor
     description: "gate:scoped started on the first commit; review fixes were amended in mid-run, so I ran the gate a second time (about 5 extra minutes). The origin session logged the same."
     solution: "Run code-review before starting gate:scoped, so amends land before the gate."
+  - session: session_01FNv8z61n7roCRsM4AYVtf6
+    date: "2026-10-21"
+    severity: minor
+    description: "Applied review fixes and amended the commit while the first gate:scoped run was still going, against pr-workflow.md's edit-nothing-until-it-ends; had to re-run the gate."
+    solution: "Start the gate only after the review fixes are in, as pr-workflow.md orders."
+  - session: session_01Y8rMxQ5cH3oLqzHegyQnFx
+    date: "2026-10-21"
+    severity: nit
+    description: "Committed while a gate run was still in progress, which pr-workflow.md forbids (edit nothing until it ends); I re-ran the gate on the final head."
+    solution: "Wait for the gate notification before touching the tree."

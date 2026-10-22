@@ -52,3 +52,8 @@ occurrences:
     severity: minor
     description: "The digest run's PR description diagnosed the failure but did not notice that main had already fixed it, so the PR sat red for hours."
     solution: "Have the digest Skill fetch main and re-check a red gate against it before leaving a PR for a human."
+  - session: session_01T4UbBvJmjSunCwb3cUN68Q
+    date: "2026-10-22"
+    severity: moderate
+    description: "Archive sweep moved a session log that a unit test reads by its current path, so the gate failed; the Skill's allowed diff cannot include the fix."
+    solution: "Make the test not depend on a log that ages out (fixture copy), or have the sweep skip it."

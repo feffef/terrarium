@@ -375,3 +375,23 @@ occurrences:
     severity: nit
     description: "Stop hook asked to push while gate:scoped was still running; I held the push per ADR-0004."
     solution: "None; the rule covers it."
+  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
+    date: "2026-10-21"
+    severity: nit
+    description: "The Stop hook asked twice to push while the gate ran, against ADR-0004's review-and-gate-before-first-push rule."
+    solution: "None here: the owner accepts the nag (stop-hook-nag); declining was correct."
+  - session: session_015WxXTQihe7mgBPgpAYZUqB
+    date: "2026-10-21"
+    severity: nit
+    description: "Stop hook asked for a push four times while review and gate were pending, as ADR-0004 anticipates; each cost a turn of explanation."
+    solution: "Let the hook skip while a gate or review agent is running."
+  - session: session_013n8e5pQ7h9GevyhHvtm4c3
+    date: "2026-10-21"
+    severity: nit
+    description: "Stop hook asked twice to push inspect-session-out-files while I held it for an owner answer and then for gate:scoped"
+    solution: "None needed; ADR-0004 already says to ignore it until the gate passes"
+  - session: session_01T4UbBvJmjSunCwb3cUN68Q
+    date: "2026-10-22"
+    severity: nit
+    description: "Stop hook asked to push three times while review and gate were still running, against ADR-0004 order."
+    solution: "Make the hook skip when a gate or review is pending."

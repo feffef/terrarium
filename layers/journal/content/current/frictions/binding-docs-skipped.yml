@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   CLAUDE.md's read-first rules are prose, and nothing hooks the session-start GLOSSARY.md reads, full-ADR reads or the ADR grep before a recommendation. A late read of a step-triggered doc (git-conventions.md, github-integration.md and the like) belongs to late-read-first-docs, which the owner accepted.
 surface: guard-or-hook
-status: open
-ref: "issue #2146 closed by PR #2284 (adr-check Skill); issue #2286 reviews adr-check around 2026-10-22; PR #2287 trimmed its output. Sessions after #2284 still skipped adr-check (012f7o6F, 017X5SQq, 01FTPnEs). Late reads of step-triggered docs belong to late-read-first-docs."
+status: tracked
+ref: "issue #2146 closed by PR #2284 (adr-check Skill); issue #2286 reviews adr-check around 2026-10-22; PR #2287 trimmed its output. Sessions after #2284 still skipped adr-check (012f7o6F, 017X5SQq, 01FTPnEs). Late reads of step-triggered docs belong to late-read-first-docs.; issue #2342 (CLAUDE.md demands adr-check before any recommendation, but frictions-to-fixes mandates decisions without it)"
 fixes:
   - pr: 2165
     date: "2026-10-16"
@@ -484,3 +484,48 @@ occurrences:
     severity: minor
     description: "Gave recommended picks in the grilling round without invoking adr-check, which CLAUDE.md requires before any recommendation; I relied on the triage agents' ADR reads."
     solution: "clear-backlog §2 could say whether triage agents' adr-check covers the orchestrator's picks (see #2342)."
+  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
+    date: "2026-10-21"
+    severity: nit
+    description: "Survey and design subagents each skipped or read late the CLAUDE.md-required reads; the design agent also skipped adr-check and cited stale paths from the ledger."
+    solution: "Brief templates could list the required reads first, and ledger entries should cite current paths."
+  - session: session_01LKNUYveJSHpf9NV8zN8K5b
+    date: "2026-10-21"
+    severity: nit
+    description: "I did not invoke adr-check myself before relaying and recommending the Fable proposal; I only asked the subagent to run it (the gap audit-skills flags in #2286)."
+    solution: "Invoke adr-check in the orchestrating session before presenting a recommendation, even when a subagent already did."
+  - session: session_015WxXTQihe7mgBPgpAYZUqB
+    date: "2026-10-21"
+    severity: minor
+    description: "Filed issues and posted a recommendation-bearing hypothesis without running the adr-check Skill, the same gap this audit reports on others."
+    solution: "Run adr-check before the step 4 issue text; or name audit-skills in CLAUDE.md's exemption."
+  - session: session_01QPvWywTuiADmXNMMLARnsF
+    date: "2026-10-21"
+    severity: nit
+    description: "Read only the scheduled-run section of pr-workflow.md, not in full, though CLAUDE.md says to read it before pushing."
+    solution: "Split the doc so the scheduled-run closing steps are its own short doc."
+  - session: session_01C32ny8wWXkJLgyHd9wiD1J
+    date: "2026-10-21"
+    severity: minor
+    description: "Gave recommendations in the grilling round without running the adr-check Skill, which CLAUDE.md requires before recommending a change; I relied on the triage agents' ADR reads."
+    solution: "clear-backlog §2 could say whether the triage agents' binding-ADR reads satisfy adr-check for the orchestrator's picks."
+  - session: session_01XfQgmS9ArvbD9WSoPgkKfM
+    date: "2026-10-21"
+    severity: minor
+    description: "Proposed adr-check changes in chat before running adr-check, against CLAUDE.md's 'opinion asked in chat counts' trigger; ran it only before posting to 2286."
+    solution: "No hook can tell a recommendation from an answer; evidence for 2342 rather than a new rule."
+  - session: session_01Y8rMxQ5cH3oLqzHegyQnFx
+    date: "2026-10-21"
+    severity: minor
+    description: "Started forming a recommendation before running adr-check (CLAUDE.md requires it before any opinion); caught at close-session and ran it before answering."
+    solution: "Run adr-check as soon as the ask is an opinion on a change."
+  - session: session_013n8e5pQ7h9GevyhHvtm4c3
+    date: "2026-10-21"
+    severity: minor
+    description: "Skipped the adr-check Skill before recommending picks in Q3-Q10; relied on triage agents' adr-check runs"
+    solution: "Run adr-check once at the start of the grilling round for orchestrator picks"
+  - session: session_01T4UbBvJmjSunCwb3cUN68Q
+    date: "2026-10-22"
+    severity: minor
+    description: "Read GLOSSARY-MAP, GLOSSARY and two docs in one cat that truncated at 30KB; never read the rest of GLOSSARY or the full git-conventions."
+    solution: "Read each required doc with its own Read call."

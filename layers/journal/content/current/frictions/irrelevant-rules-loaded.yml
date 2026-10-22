@@ -3,7 +3,7 @@ summary: >-
   Rules for unrelated ADRs loaded into sessions whose work they do not touch.
 cause: "Hook-injected or session-start rule files (adr-0005, adr-0021, adr-0027, adr-0029 and others) add context with no bearing on the task. Signals: 'loaded after plain reads of unrelated docs', 'loaded at session start though irrelevant', 'no bearing'."
 surface: guard-or-hook
-status: open
+status: tracked
 ref: "Issue #2167 revisits the Bash rules hint and loading ADR-0021 on planning Skills around 2026-10-23."
 occurrences:
   - session: session_0135hcUf12mVM8dEZfDRAkUb

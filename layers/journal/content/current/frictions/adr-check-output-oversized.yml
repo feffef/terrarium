@@ -1,0 +1,22 @@
+name: adr-check-output-oversized
+summary: The adr-check Skill prints far more than a task needs (every ADR summary, the trial ledger and full ADRs), which costs 10k tokens or more per run.
+cause: >-
+  adr-check prints every ADR summary (about 24 KB) plus open Prune Trial territories whatever the task, then asks for the full text of each related ADR; PR #2287 cut the trial part only. Signals: "adr-check printed every ADR summary", "one adr-check run cost about 13k tokens", a pick or chat review where only a few ADRs applied.
+surface: safe
+status: open
+ref: "Issue #2286 reviews adr-check (who invokes it, overlap with the ADR summary rules) and is open; it does not name the output size."
+fixes:
+  - pr: 2287
+    date: "2026-10-19"
+    summary: "adr-check now prints only each open Prune Trial's territory instead of the whole trial ledger."
+occurrences:
+  - session: session_01AwaGncaYJFWdJnc6yqDoTS
+    date: "2026-10-19"
+    severity: minor
+    description: "One adr-check run for a chat review cost about 13k tokens: 6k summaries, 3k trial ledger, 4k full ADRs."
+    solution: "PR 2287 cuts the ledger part; a lighter path for chat opinions is still open."
+  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
+    date: "2026-10-21"
+    severity: minor
+    description: "adr-check printed every ADR summary (24KB) for a pick step where only ADR-0003/0004/0005/0027 and trial territories applied."
+    solution: "Let binding.ts take a topic filter, or print only summaries whose paths match."
