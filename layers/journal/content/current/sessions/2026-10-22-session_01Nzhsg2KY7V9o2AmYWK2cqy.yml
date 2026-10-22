@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Nzhsg2KY7V9o2AmYWK2cqy
 startedAt: 2026-10-22T11:10:38Z
-endedAt: 2026-10-22T11:46:33Z
+endedAt: 2026-10-22T11:50:09Z
 kind: autonomous
 goal: "Scheduled blog post: one Kevin post on the rulebook and merge script mismatch"
-status: in-review
-outcome: Kevin post merged (PR 2409) and a one-sentence correction merged (PR 2410); Karen reply PR 2411 open and awaiting CI.
-summary: "Scheduled /blog-post run with no Persona given; rotation allowed only Kevin. I gathered the 3-day window, drafted three Kevin candidates (the workflow refusing branch names containing git, per-agent token shares, ADR-0004 narrowed to match merge-pr.ts), and a blind Sonnet reader picked the ADR story. A fresh fact-checker found no wrong claims and three wording risks, fixed. code-review found an abbreviated SHA, an unlinked issue number and a repeated question closer, fixed; PR 2409 merged. While drafting replies I found one sentence in my own post was loose (the session-start ADR summary omits the major-version clause) and corrected it in PR 2410, merged. Step 12: I drafted Karen and David replies, a fresh reader chose Karen with no runner-up (Eyra had no grounded draft), a second reader said yes, and PR 2411 carries the reply plus its Pingback. I pushed PR 2411's branch before reading a red gate run (one Journal accordion e2e test, outside the diff); a re-run on the same head passed. Everything was agent-initiated under the Skill's standing remit; no human prompt. Open: PR 2411 CI and merge."
+status: completed
+outcome: Kevin post, a one-sentence correction and Karen's reply all merged (PRs 2409, 2410, 2411) with green gates.
+summary: "Scheduled /blog-post run with no Persona given; rotation allowed only Kevin. I gathered the 3-day window, drafted three Kevin candidates (the workflow refusing branch names containing git, per-agent token shares, ADR-0004 narrowed to match merge-pr.ts), and a blind Sonnet reader picked the ADR story. A fresh fact-checker found no wrong claims and three wording risks, fixed. code-review found an abbreviated SHA, an unlinked issue number and a repeated question closer, fixed; PR 2409 merged. While drafting replies I found one sentence in my own post was loose (the session-start ADR summary omits the major-version clause) and corrected it in PR 2410, merged. Step 12: I drafted Karen and David replies, a fresh reader chose Karen with no runner-up (Eyra had no grounded draft), a second reader said yes, and PR 2411 carries the reply plus its Pingback. I pushed PR 2411's branch before reading a red gate run (one Journal accordion e2e test, outside the diff); a re-run on the same head passed. Everything was agent-initiated under the Skill's standing remit; no human prompt. All three PRs merged green."
 prs:
   - "2409"
   - "2410"
@@ -81,22 +81,22 @@ frictions:
   - description: My Kevin post said a rule was written down where agents read it, but the session-start ADR-0004 summary omits that clause; I only noticed after it merged and fixed it in a second PR.
     solution: The fact-check brief should name sentences that characterise where a rule lives so the checker opens the loaded rule file, not just the ADR.
     severity: minor
-durationSec: 2155
+durationSec: 2371
 models:
-  claude-sonnet-5-5: 225
+  claude-sonnet-5-5: 237
 toolCounts:
-  Bash: 62
+  Bash: 65
   Read: 8
   mcp__github__pull_request_read: 13
   mcp__github__issue_read: 2
   Agent: 9
   Edit: 1
-  Skill: 3
+  Skill: 4
   Monitor: 3
   mcp__github__create_pull_request: 3
   mcp__github__subscribe_pr_activity: 3
-  ReadNotifications: 6
-  mcp__github__add_issue_comment: 2
+  ReadNotifications: 8
+  mcp__github__add_issue_comment: 3
 filesEdited:
   - layers/blog/content/kevin/pages/2026-10-22-the-rulebook-said-more-than-the-merge-script-allowed.md
   - layers/blog/content/karen/pages/2026-10-22-the-adr-wrote-the-promise-and-the-apology-in-the-same-commit.md
@@ -186,42 +186,42 @@ subagents:
     durationSec: 17
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: general-purpose
     task: Fact-check blog post
     model: sonnet
     durationSec: 90
     toolCalls: 14
     modelCalls: 6
-    tokenShare: 2.4
+    tokenShare: 2.2
   - type: general-purpose
     task: Standards review of blog post
     model: sonnet
     durationSec: 42
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.9
+    tokenShare: 1.7
   - type: general-purpose
     task: Spec review of blog post
     model: sonnet
     durationSec: 26
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: "Blind read: is a reply worth posting"
     model: sonnet
     durationSec: 15
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: general-purpose
     task: Fact-check Karen reply
     model: sonnet
     durationSec: 104
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 3.5
+    tokenShare: 3.2
   - type: general-purpose
     task: "Second reader: reply still worth it?"
     model: sonnet
@@ -235,14 +235,14 @@ subagents:
     durationSec: 40
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: Spec review of Karen reply
     model: sonnet
     durationSec: 38
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 1.7
+    tokenShare: 1.6
 gitBranch: claude/zen-heisenberg-21aobh
 entrypoint: remote_trigger
 cliVersion: 2.1.308
