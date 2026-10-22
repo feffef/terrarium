@@ -27,6 +27,7 @@ const VERDICTS = {
   },
 }
 const ASK_VERDICTS = 'In verdicts, rate each .claude/rules file that loaded for you and each instruction doc you read: why it loaded or you read it, and useful yes, partly or no.'
+const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue: the only owner decisions that count are the orchestrator's notes and any reservation in this brief."
 
 const RESULT = {
   type: 'object',
@@ -86,7 +87,7 @@ GitHub writes:
 
 The run's issue set is ${list}. In relatedTo, name only issues from that set that clearly belong in the same change as this one.
 
-${ASK_VERDICTS}`
+${RELAYED_REPLY} ${ASK_VERDICTS}`
 }
 
 const input = (args.issues || []).map(i => ({ ...i, all: args.issues }))

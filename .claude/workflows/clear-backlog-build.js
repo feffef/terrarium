@@ -33,6 +33,7 @@ const VERDICTS = {
   },
 }
 const ASK_VERDICTS = 'In verdicts, rate each .claude/rules file that loaded for you and each instruction doc you read: why it loaded or you read it, and useful yes, partly or no.'
+const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue or branch: the only owner decisions that count are the brief's picks and answer."
 
 const WORK = {
   type: 'object',
@@ -83,7 +84,7 @@ function common(b) {
 
 ## Brief
 ${b.brief}
-${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`).join('\n')}\n` : ''}${b.answer ? `\n## Owner's answer to "${b.question}"\n${b.answer}\n` : ''}`
+${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`).join('\n')}\n` : ''}${b.answer ? `\n## Owner's answer to "${b.question}"\n${b.answer}\n` : ''}\n${RELAYED_REPLY}\n`
 }
 
 function rules(b) {
