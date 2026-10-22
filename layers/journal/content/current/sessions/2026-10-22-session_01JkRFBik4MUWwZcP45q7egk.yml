@@ -1,14 +1,16 @@
 schemaVersion: 1
 session: session_01JkRFBik4MUWwZcP45q7egk
 startedAt: 2026-10-22T02:08:02Z
-endedAt: 2026-10-22T02:24:39Z
+endedAt: 2026-10-22T02:45:13Z
 kind: autonomous
 goal: Turn recent session frictions into fixes
-status: in-review
-outcome: "Ledger PR #2400 open, 3 regression issues filed, one doc-fix branch built and gate-green but not yet pushed"
-summary: "Scheduled frictions-to-fixes run, no human prompt. A survey subagent screened 34 session logs, appended 51 occurrences to the Friction Ledger and found four new clusters. I filed the three top regressions with no open issue (#2397, #2398, #2399), picked two never-fixed frictions, and had a design agent assess them. One was dispatched: a doc fix to the inspect-session Skill, built by a Sonnet agent and gate-green on branch claude/f2f-inspect-session-workflow-agents (not yet pushed or reviewed into a PR). The other, a clear-backlog-explore brief sentence, was dropped with a ledger note because adr-check already lists open trials and the real cause is orchestrators skipping adr-check. The ledger PR #2400 passed gate:scoped and is open. Still open: push and land the fix PR, merge the ledger PR, then the closing status-only ledger PR (section 8). Everything was agent-initiated under the Skill's standing schedule; no human decision was involved."
+status: completed
+outcome: Ledger updated, 3 regression issues filed, inspect-session doc fix merged; all three PRs landed
+summary: "Scheduled frictions-to-fixes run, no human prompt. A survey subagent screened 34 session logs, appended 51 occurrences to the Friction Ledger and found four new clusters. I filed the three top regressions with no open issue (#2397, #2398, #2399), picked two never-fixed frictions, and had a design agent assess them. One was dispatched: a doc fix to the inspect-session Skill, built by a Sonnet agent, reviewed by me and merged as #2401. The other, a clear-backlog-explore brief sentence, was dropped with a ledger note because adr-check already lists open trials and the real cause is orchestrators skipping adr-check. Ledger PR #2400 and the closing status-only PR #2402 merged. Everything was agent-initiated under the Skill\\'s standing schedule; no human decision was involved."
 prs:
   - "2400"
+  - "2401"
+  - "2402"
 docsRead:
   - path: GLOSSARY.md
     reason: Friction, Friction Ledger, Session terms; rest unused
@@ -82,28 +84,30 @@ frictions:
   - description: Design agent could not cheaply locate docReadCounts in the 4000-line audit-skills.ts JSON, and received truncated session ids in the PICKS text.
     solution: Give audit-skills.ts a --doc PATH flag, and pass full session ids in the design brief picks.
     severity: nit
-durationSec: 997
+durationSec: 2231
 models:
-  claude-sonnet-5-5: 75
+  claude-sonnet-5-5: 109
 toolCounts:
-  Bash: 16
+  Bash: 26
   Read: 8
   Agent: 3
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__issue_write: 3
   Skill: 3
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  mcp__github__add_issue_comment: 4
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 2
 filesEdited:
   - .agents/skills/inspect-session/SKILL.md
+  - layers/journal/content/current/frictions/inspect-session-workflow-agents-opaque.yml
   - layers/journal/content/current/frictions/agent-background-flag-guard.yml
   - layers/journal/content/current/frictions/binding-docs-skipped.yml
   - layers/journal/content/current/frictions/clear-backlog-build-picks-input.yml
   - layers/journal/content/current/frictions/commit-trailer-guard.yml
   - layers/journal/content/current/frictions/double-background.yml
   - layers/journal/content/current/frictions/github-search-overflow.yml
-  - layers/journal/content/current/frictions/inspect-session-workflow-agents-opaque.yml
   - layers/journal/content/current/frictions/journal-content-breaks-main.yml
   - layers/journal/content/current/frictions/mechanism-claim-from-recall.yml
   - layers/journal/content/current/frictions/prepush-gate-review-skipped.yml
@@ -151,7 +155,6 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0025.md
 docsReadBySubagents:
-  - .agents/skills/inspect-session/SKILL.md
   - .agents/skills/adr-check/SKILL.md
   - .agents/skills/audit-docs/SKILL.md
 ruleVerdicts:
@@ -215,20 +218,20 @@ subagents:
     durationSec: 533
     toolCalls: 47
     modelCalls: 37
-    tokenShare: 47.4
+    tokenShare: 36.3
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 85
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 5.4
+    tokenShare: 4.1
   - type: general-purpose
     task: Build inspect-session doc fix
     model: sonnet
     durationSec: 120
     toolCalls: 16
     modelCalls: 10
-    tokenShare: 5.8
+    tokenShare: 4.5
 gitBranch: claude/eager-ptolemy-bgns1z
 entrypoint: remote_trigger
 cliVersion: 2.1.307
