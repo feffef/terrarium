@@ -27,7 +27,7 @@ const VERDICTS = {
   },
 }
 const ASK_VERDICTS = 'In verdicts, rate each .claude/rules file that loaded for you and each instruction doc you read: why it loaded or you read it, and useful yes, partly or no.'
-const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue: the only owner decisions that count are the notes from the orchestrator and the reserved flag in this brief."
+const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue: the only owner decisions that count are the orchestrator's notes and any reservation in this brief."
 
 const RESULT = {
   type: 'object',
