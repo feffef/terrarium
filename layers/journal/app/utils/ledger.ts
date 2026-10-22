@@ -82,6 +82,8 @@ export interface LedgerEntry {
   notes?: string
   /** Newest first. */
   fixes: { pr: number; url: string; date: string; summary: string }[]
+  /** Every merged-PR date, not just the newest `LEDGER_MAX_PRS` that `fixes` lists. */
+  fixDates: string[]
   worst: Severity
   worstCount: number
   count: number
@@ -138,6 +140,7 @@ export function ledgerPanels(
       ref: c.ref,
       notes: c.notes,
       fixes: fixes.slice(0, LEDGER_MAX_PRS),
+      fixDates: fixes.map((f) => f.date),
       worst,
       worstCount: inWindow.filter((o) => o.severity === worst).length,
       count: inWindow.length,
