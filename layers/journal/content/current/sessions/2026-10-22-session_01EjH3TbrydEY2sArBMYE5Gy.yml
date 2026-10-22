@@ -1,0 +1,155 @@
+schemaVersion: 1
+session: session_01EjH3TbrydEY2sArBMYE5Gy
+startedAt: 2026-10-22T19:02:51Z
+endedAt: 2026-10-22T19:26:52Z
+kind: interactive
+goal: Make close-session look back for missed Frictions at the completed close
+status: in-review
+outcome: "close-session gains a look-back step on the completed close; PR #2417 open"
+summary: "The Trusted user asked whether the retro Skill should run in close-session or log-session, since retro kept finding real problems no Friction had logged. I found retro is a pack Skill (ADR-0015) with disable-model-invocation, so it can't be called, and asked four questions. The user answered: run it only on the close that sets completed, no transcript read, log findings as ordinary Frictions without showing them, focus on knowledge found too late and inefficient processes. Building the step was human-instructed through those answers; wording choices and applying the review fixes (expensive tool calls, \"from memory\", naming it \"look back\" instead of \"retrospective\" to avoid a /retro confusion, not steering the solution field) were agent-initiated. Gate green; PR open."
+prs:
+  - "2417"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; pointed to Friction and session log terms
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Friction, Session closure, session log definitions (grepped, not read in full)
+    useful: yes
+  - path: .agents/skills/retro/SKILL.md
+    reason: showed retro is model-uninvocable and its tool-economy/navigation categories
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: the Skill changed
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: status values, friction merge rules
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: confirmed closure and re-log on merge; nothing blocked the change
+    useful: partly
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: pack Skills can't be edited, so retro can't be changed or reused
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; commit hygiene
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: a Skill meaning change is not simple, so code-review plus gate:scoped
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: list_pull_requests fields and MCP writes
+    useful: partly
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: editing a Skill; the Standards subagent used it to flag the no-op adverb and the retro name clash
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: subagent checked its 'step 3' meant its own step, not close-session's
+    useful: yes
+skillsUsed:
+  - name: adr-check
+    reason: before recommending the change
+  - name: writing-for-agents
+    reason: editing a Skill
+  - name: code-review
+    reason: Standards and Spec review before first push
+  - name: close-session
+    reason: (no reason given)
+frictions:
+  - description: Read GLOSSARY.md only through a grep for Friction/session terms, not in full as CLAUDE.md's session-start rule asks
+    solution: Read GLOSSARY.md in full at session start; the grep was enough for this task but skipped the rule
+    severity: nit
+  - description: The branch was one session-log commit behind origin/main at start; found only when merge-base differed
+    solution: None needed; ff-merge took seconds
+    severity: nit
+durationSec: 1442
+models:
+  claude-opus-5-5: 54
+toolCounts:
+  Bash: 20
+  Skill: 4
+  Edit: 2
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/close-session/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Confirmed close-session re-logs on merge, the hook point for the new step; I read the full ADR to check scope
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR and subscribed without asking; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Put the session header on the PR body and checked the commit trailer
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading the glossary; no glossary change here
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed retro is a pack Skill that stays as installed; both subagents also cited it
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Checked no prune trial covers close-session; the cut-before-add nudge was weighed by the Standards review
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Decided retro can't be edited or reused, so the step borrows its focus; read the full ADR for the pack-Skill scope
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Showed .agents/skills is not Human-only, so the PR may self-merge
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading an ADR; no ADR changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading the glossary and writing-for-agents; no rule placement decided
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of close-session diff
+    durationSec: 57
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 17.1
+  - type: general-purpose
+    task: Spec review of close-session diff
+    durationSec: 33
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 12.2
+gitBranch: ccr-01e8197b-5ohkn9
+entrypoint: remote_mobile
+cliVersion: 2.1.308
+relevantAdrs:
+  - adr: 9
+    reason: close-session and the completed re-log
+  - adr: 15
+    reason: retro is a pack Skill, not editable
+  - adr: 27
+    reason: cut before add; checked no prune trial covers close-session
+landedBy: Stop
