@@ -4,8 +4,8 @@ A multi-tenant, **agent-driven** content platform built on
 [Nuxt Content](https://content.nuxt.com). One repository, one container: it houses
 many independent products and grows itself with only light human steering — a
 sealed little world you plant tenants in and watch grow. It is also built to be
-watched: every change is a traceable git commit, surfaced again at increasing
-altitude by the [Journal](https://terrarium.feffef.de/t/journal/current) and the
+watched: every change is a traceable git commit, surfaced again by the
+[Journal](https://terrarium.feffef.de/t/journal/current) and the
 [Blog](https://terrarium.feffef.de/t/blog) (see **Observability** in
 [`GLOSSARY.md`](GLOSSARY.md)).
 
@@ -40,8 +40,8 @@ is; the ADRs record what's decided vs. deliberately left open.
   working conventions and repo layout. The safety gate is ADR-0004.
   Start here before making changes —
   humans and agents alike.
-- **[`GLOSSARY-MAP.md`](GLOSSARY-MAP.md)** — the domain model: indexes the Platform
-  glossary ([`GLOSSARY.md`](GLOSSARY.md), which also lists the Tenants) and each
+- **[`GLOSSARY-MAP.md`](GLOSSARY-MAP.md)** — the domain model: lists the Tenants and
+  indexes the Platform glossary ([`GLOSSARY.md`](GLOSSARY.md)) and each
   Tenant's own `layers/<tenant>/GLOSSARY.md`.
 - **[`docs/adr/`](docs/adr/)** — Architecture Decision Records: the reasoning
   behind the design, one decision per file.

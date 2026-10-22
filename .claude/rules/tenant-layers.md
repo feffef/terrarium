@@ -7,6 +7,9 @@ paths:
 ---
 # Tenant layers
 
+- **Share no code between Tenants;** read another Tenant only through the
+  Catalog (ADR-0025). Add a shared layer only when a concrete cross-cutting
+  need proves it worth the coupling.
 - **Auto-imports first.** A layer's `app/components/`, `app/composables/` and
   `app/utils/` are auto-imported in every layer, components by
   directory-prefixed name. The namespace is global: name exports in the
@@ -26,4 +29,4 @@ paths:
   (prefix keys, delete only yours, never `clear()`).
 
 Wrapper CSS tokens, content-component overrides and routing claims:
-docs/agents/tenant-layers.md. A Tenant's own terms: layers/<tenant>/GLOSSARY.md.
+docs/agents/tenant-layers.md.

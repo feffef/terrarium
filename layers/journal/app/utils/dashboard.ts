@@ -150,7 +150,7 @@ export function externalSkills(skills: SkillDoc[]): SkillDoc[] {
 }
 
 // Sessions that used each Skill — shown beside the grade, never instead of it
-// (GLOSSARY.md's Importance term: a grade is not a frequency).
+// (ADR-0015: a grade is not a frequency).
 export function skillUseCounts(sessions: SessionDoc[]): Record<string, number> {
   const counts: Record<string, number> = {}
   for (const s of sessions) {

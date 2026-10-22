@@ -41,7 +41,7 @@ export const sessionSchema = z
     startedAt: utcTimestamp, // UTC ISO-8601 — session start (ordering anchor)
     endedAt: utcTimestamp, //   UTC ISO-8601 — session end / log authored
     // Autonomy spectrum, judged by who prompted — canonical definitions:
-    // GLOSSARY.md → Session.
+    // the log-session Skill.
     kind: z.enum(['interactive', 'delegated', 'autonomous']),
     goal: z.string(), // short plain headline — what the session worked on
     // `in-review`: the session opened a gated PR that hasn't merged, the norm at

@@ -2,7 +2,7 @@
    The Atlas of the Terrarium — theme (PRD #64)
 
    A Victorian specimen-plate field guide. Self-contained tokens (no sharing with
-   other Tenants; GLOSSARY.md isolation stance). Registered globally by the layer's
+   other Tenants; tenant-layers rule). Registered globally by the layer's
    nuxt.config, so every layer view and every nested component inherits the tokens
    (docs/agents/tenant-layers.md §1).
 

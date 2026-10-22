@@ -3,7 +3,7 @@
    "Section column")
 
    An excavation catalogue of the Platform's own discarded work. Self-contained
-   tokens (no sharing with other Tenants; ADR isolation stance, GLOSSARY.md).
+   tokens (no sharing with other Tenants; tenant-layers rule).
    Registered globally by the layer's nuxt.config, so every layer view and every
    nested component inherits the tokens (docs/agents/tenant-layers.md §1).
 

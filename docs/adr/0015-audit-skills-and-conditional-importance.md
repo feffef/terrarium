@@ -21,7 +21,7 @@ Routine run costs and issues.
   without it can lower a pack Skill's grade, since we can't fix its trigger;
   for our own Skill, that is a trigger problem to report. A grade moves only
   on cited session evidence. One grade, `routine`, instead marks a Skill that
-  scheduled runs drive. `GLOSSARY.md` defines the grades.
+  scheduled runs drive. `audit-skills` defines the grades.
 - **`role` is plain prose for the site's readers:** what the Skill does for
   this project, not a copy of its own description, with no PR, issue or
   session ids. Those go in `observations`, the audit's own record, which the

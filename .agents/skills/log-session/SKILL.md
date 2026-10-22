@@ -86,9 +86,25 @@ relevantAdrs:                      # OPTIONAL — ADRs you judged relevant (typi
   - { adr: 9, reason: "Changed what the session log records" }  # ADR number, one-line reason
 ```
 
-- **`kind` is judged by who prompted, not by what the session did.** Classify it
-  against `GLOSSARY.md` → **Session** (which also says what does *not* count as
-  a human prompt), not from memory.
+- **`kind` is judged by who prompted, not by what the session did:**
+  **interactive** (a human prompted again after kickoff), **delegated** (one
+  human prompt, the kickoff) or **autonomous** (none: a schedule or another
+  Session started it). Machinery prompts (a scheduled check-in, a webhook
+  event, a hook reminder) are not human prompts. Kind grants no authority:
+  what a Session may merge doesn't vary by kind.
+- **Grade a friction's `severity` by what this instance cost,** not by how
+  notorious its failure class is; recurrence is counted in the Friction Ledger,
+  not by inflating severity. A mistake caught before landing (self-review, a
+  guard working as designed) stays `nit` or `minor`. A few named frictions
+  have a fixed grade, stated where they are used.
+  - `nit`: an annoyance with no real cost.
+  - `minor`: a contained papercut (extra steps, a few tokens) that didn't
+    change the outcome.
+  - `moderate`: cost real time or tokens, or forced a workaround, but the goal
+    was reached.
+  - `major`: derailed part of the session (a wrong turn undone, a redo) or
+    degraded the outcome.
+  - `blocker`: the goal couldn't proceed without a workaround or human help.
 - **`learnings`/`ideas` are optional: add one only when the session genuinely
   produced it.** `GLOSSARY.md` → **Session** and **Idea** define them; don't restate them here.
   - `learnings` — a fact you read from a file is a `docsRead` entry, not a
@@ -100,8 +116,8 @@ relevantAdrs:                      # OPTIONAL — ADRs you judged relevant (typi
     welcome; "someone should look into X" is too vague.
 
 - **Don't set `external`.** That optional boolean marks a log from a *different*
-  harness (an outside contributor's own agent); absent means internal
-  (`GLOSSARY.md` → **Session**), and ADR-0009 says what it changes for mining.
+  harness (an outside contributor's own agent); absent means internal, and
+  ADR-0009 says what it changes for mining.
 - `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).
   A `docsRead` `reason` says briefly what the doc told you; `useful` says
   whether that helped your task. Step 3 says what a `ruleVerdicts` entry says. You don't have to list

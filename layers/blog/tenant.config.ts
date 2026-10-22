@@ -1,5 +1,5 @@
 // Manifest for the Blog Tenant — a simple blog reporting on the Terrarium from
-// several angles (GLOSSARY.md Tenants roster: Blog; layers/blog/GLOSSARY.md:
+// several angles (GLOSSARY-MAP.md: Blog; layers/blog/GLOSSARY.md:
 // Persona / Pingback). Declarative intent only (ADR-0002, ADR-0013).
 //
 // Each Space IS a Persona (its slug is the persona's name): `david` (neutral

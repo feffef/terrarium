@@ -9,8 +9,7 @@ glossary plus one per Tenant) is in `GLOSSARY-MAP.md` (ADR-0021).
 ## Before exploring, read these
 
 Reading order and triggers (`GLOSSARY-MAP.md`, `GLOSSARY.md`, relevant ADRs):
-see CLAUDE.md's "Docs you must read first", not this page. `GLOSSARY-MAP.md`
-says when to read a Tenant's glossary: when you work on that Tenant.
+see CLAUDE.md's "Docs you must read first", not this page.
 
 This repo deliberately diverges from the `domain-modeling` Skill's generic
 templates:
@@ -18,13 +17,11 @@ templates:
 - an ADR follows ADR-0030's template, not the Skill's section layout;
 - a `GLOSSARY.md` is a `## Glossary` of `### Term` entries, not the Skill's
   `## Language`/`_Avoid_` layout;
-- the root `GLOSSARY.md` doubles as the Platform glossary and carries the
-  Tenants roster, and each per-Tenant `GLOSSARY.md` adds a purpose narrative on
-  top of its glossary (ADR-0021 says why).
+- each per-Tenant `GLOSSARY.md` adds a purpose narrative on top of its
+  glossary (ADR-0021 says why).
 
-Match the repo's actual files, not the template: `GLOSSARY-MAP.md`'s
-**Decisions** section says where ADRs live; CLAUDE.md's "Repo layout" says where
-`layers/<tenant>/` glossaries live.
+Match the repo's actual files, not the template: CLAUDE.md's "Repo layout" says
+where ADRs and `layers/<tenant>/` glossaries live.
 
 If `GLOSSARY-MAP.md`, a `GLOSSARY.md` or an ADR is missing, **proceed
 silently**: don't flag it or suggest creating it. `/domain-modeling` creates
