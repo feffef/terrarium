@@ -1,57 +1,43 @@
 # Glossary Map
 
-Domain vocabulary is split (ADR-0021) between a shared **Platform glossary** at
-the root and one glossary per Tenant, beside that Tenant's code. Read the
-Platform glossary always; read a Tenant's glossary when you work on that Tenant.
+Every glossary, which is also the list of Tenants (ADR-0021). Read the Platform
+glossary always, and a Tenant's glossary when you work on that Tenant.
 
 ## Glossaries
 
-- **Platform** — [`./GLOSSARY.md`](./GLOSSARY.md) — the concepts every agent needs
-  regardless of task: Platform, Tenant, Space, Collection, Document, Session,
-  Friction, Skill, Trusted/Public, Agent Authorship, session log, Skill Inventory.
-- **Blog** — [`layers/blog/GLOSSARY.md`](./layers/blog/GLOSSARY.md) — Persona, Pingback, Tag.
-- **Atlas** — [`layers/atlas/GLOSSARY.md`](./layers/atlas/GLOSSARY.md) — Biome,
-  Specimen, Interaction, Observation.
-- **Journal** — [`layers/journal/GLOSSARY.md`](./layers/journal/GLOSSARY.md) —
-  Digest.
-- **Midden** — [`layers/midden/GLOSSARY.md`](./layers/midden/GLOSSARY.md) — Site,
-  Dig season (Stratum), Artifact, Condition, the Stores, the inclusion bar
-  (two-gate test).
-- **Marquee** — [`layers/marquee/GLOSSARY.md`](./layers/marquee/GLOSSARY.md) —
-  Screening, Chapter, Poster.
-- **Tinkerfund** — [`layers/tinkerfund/GLOSSARY.md`](./layers/tinkerfund/GLOSSARY.md) —
-  Campaign, Inventor, Backer, Pledge, Reward, Promotion and the rest of a
-  crowdfunding shop's vocabulary.
-- **Glass Box** — [`layers/glassbox/GLOSSARY.md`](./layers/glassbox/GLOSSARY.md) —
-  Lesson, Walkthrough, Subject, Excerpt, Term.
-- **Commons** — [`layers/commons/GLOSSARY.md`](./layers/commons/GLOSSARY.md) — the
-  Aggregator Tenant: its Search and Timeline Spaces. The terms it turns on
-  (Collection kind, Catalog, Aggregator) live in the root `GLOSSARY.md`.
-
-The root `GLOSSARY.md`'s `## Tenants` roster points at each. A definition lives once, in its glossary; pointers may live anywhere.
+- **Platform**: [`GLOSSARY.md`](./GLOSSARY.md).
+- **Journal**: the Platform's self-documentation; Platform infrastructure, not a
+  demo (ADR-0008). Digest.
+  [`layers/journal/GLOSSARY.md`](./layers/journal/GLOSSARY.md)
+- **Blog**: in-character commentary on the experiment from several Personas.
+  Persona, Pingback, Tag. [`layers/blog/GLOSSARY.md`](./layers/blog/GLOSSARY.md)
+- **Atlas**: a fictional natural-history field guide. Biome, Specimen,
+  Interaction, Observation.
+  [`layers/atlas/GLOSSARY.md`](./layers/atlas/GLOSSARY.md)
+- **Midden**: an archaeology-themed catalogue of the Platform's discarded work.
+  Site, Dig season, Artifact, Condition, the Stores, the inclusion bar.
+  [`layers/midden/GLOSSARY.md`](./layers/midden/GLOSSARY.md)
+- **Marquee**: a movie blog on the Marvel Cinematic Universe in story order;
+  guest-requested (ADR-0023). Screening, Chapter, Poster.
+  [`layers/marquee/GLOSSARY.md`](./layers/marquee/GLOSSARY.md)
+- **Tinkerfund**: a simulated crowdfunding shop for useless inventions.
+  Campaign, Inventor, Backer, Pledge, Reward, Promotion.
+  [`layers/tinkerfund/GLOSSARY.md`](./layers/tinkerfund/GLOSSARY.md)
+- **Glass Box**: a textbook of the concepts Terrarium is built on, with
+  Terrarium as the example. Lesson, Walkthrough, Subject, Excerpt, Term.
+  [`layers/glassbox/GLOSSARY.md`](./layers/glassbox/GLOSSARY.md)
+- **Commons**: the first Aggregator, with cross-Tenant Search and Timeline
+  Spaces (ADR-0025). Coins no terms of its own.
+  [`layers/commons/GLOSSARY.md`](./layers/commons/GLOSSARY.md)
 
 ## Relationships
 
-- **The content Tenants relate to reality differently.** The **Journal**
-  documents the Platform honestly (primary/derived self-documentation). The
-  **Blog** comments on real repo activity in-character (subjective,
-  non-authoritative). The **Atlas** is fiction and claims nothing about the
-  Terrarium. The **Midden** is real like the Journal (every Artifact
-  traces to an actual discarded thing, gated by its two-gate inclusion test)
-  but curated and voiced: a hand-selected, graded subset, not an exhaustive
-  record. The **Marquee** is real like the Journal and the Midden (the films and
-their in-universe order are genuine facts) but, like the Atlas, claims nothing about the Terrarium. **Tinkerfund** is fiction too: a simulated shop of invented
-  products that claims nothing about the Terrarium. **Glass Box** is real like the
-  Journal but curated: a textbook pinned to dated commits that cites the Journal
-  and ADRs as evidence rather than recording activity. The **Commons** owns almost
-  no content; it re-presents the other Tenants' opted-in content through the
-  Catalog and makes no claims of its own.
-- **Same-Space derivation vs. cross-Space denormalization.** The Atlas's
-  **Interaction** is a same-Space edge whose reverse is *derived*; the Blog's
-  **Pingback** denormalizes a *cross-Space* reaction, copying the reference into
-  the reacted-to Persona's Space at author time (ADR-0012). Same surface problem,
-  opposite mechanism — dictated by whether the fact crosses a Space boundary.
+How each Tenant's content relates to the Terrarium:
 
-## Decisions
-
-ADRs live in [`docs/adr/`](./docs/adr/) and record decisions about the Platform and how agents work on it (ADR-0021).
+- **Records it:** the Journal, honestly and in full.
+- **Curates it:** the Midden (graded discarded things) and Glass Box (a
+  textbook pinned to dated commits, citing the Journal and ADRs).
+- **Comments on it:** the Blog, in character and non-authoritatively.
+- **Claims nothing about it:** the Atlas and Tinkerfund (fiction) and the
+  Marquee (real films).
+- **Re-presents the others:** the Commons, through the Catalog.

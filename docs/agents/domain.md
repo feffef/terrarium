@@ -18,13 +18,11 @@ templates:
 - an ADR follows ADR-0030's template, not the Skill's section layout;
 - a `GLOSSARY.md` is a `## Glossary` of `### Term` entries, not the Skill's
   `## Language`/`_Avoid_` layout;
-- the root `GLOSSARY.md` doubles as the Platform glossary and carries the
-  Tenants roster, and each per-Tenant `GLOSSARY.md` adds a purpose narrative on
-  top of its glossary (ADR-0021 says why).
+- `GLOSSARY-MAP.md` lists the Tenants, and each per-Tenant `GLOSSARY.md` adds
+  a purpose narrative on top of its glossary (ADR-0021 says why).
 
-Match the repo's actual files, not the template: `GLOSSARY-MAP.md`'s
-**Decisions** section says where ADRs live; CLAUDE.md's "Repo layout" says where
-`layers/<tenant>/` glossaries live.
+Match the repo's actual files, not the template: CLAUDE.md's "Repo layout" says
+where ADRs and `layers/<tenant>/` glossaries live.
 
 If `GLOSSARY-MAP.md`, a `GLOSSARY.md` or an ADR is missing, **proceed
 silently**: don't flag it or suggest creating it. `/domain-modeling` creates

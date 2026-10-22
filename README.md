@@ -40,8 +40,8 @@ is; the ADRs record what's decided vs. deliberately left open.
   working conventions and repo layout. The safety gate is ADR-0004.
   Start here before making changes —
   humans and agents alike.
-- **[`GLOSSARY-MAP.md`](GLOSSARY-MAP.md)** — the domain model: indexes the Platform
-  glossary ([`GLOSSARY.md`](GLOSSARY.md), which also lists the Tenants) and each
+- **[`GLOSSARY-MAP.md`](GLOSSARY-MAP.md)** — the domain model: lists the Tenants and
+  indexes the Platform glossary ([`GLOSSARY.md`](GLOSSARY.md)) and each
   Tenant's own `layers/<tenant>/GLOSSARY.md`.
 - **[`docs/adr/`](docs/adr/)** — Architecture Decision Records: the reasoning
   behind the design, one decision per file.
