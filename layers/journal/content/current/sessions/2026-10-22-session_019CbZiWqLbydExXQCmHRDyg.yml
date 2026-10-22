@@ -1,0 +1,273 @@
+schemaVersion: 1
+session: session_019CbZiWqLbydExXQCmHRDyg
+startedAt: 2026-10-22T18:40:48Z
+endedAt: 2026-10-22T19:02:37Z
+kind: interactive
+goal: Trim the root glossary and glossary map
+status: in-review
+outcome: "PR #2416 cuts both files from ~3,370 to ~1,340 words; waits for a human merge"
+summary: "The user asked what in root GLOSSARY.md and GLOSSARY-MAP.md could be trimmed because it lives elsewhere. I answered first with an analysis: some text was plain duplication, but several entries (severity scale, Session kind, Importance grades) were the sole home other files point to, so they could only move. The user then directed (human-instructed): aim for fewer tokens, put the Tenant list in the map, prune retired terms, open a PR, and keep both files strictly a glossary and a map, moving concepts and instructions out. I did that: kind and severity grading moved to log-session, Importance grades to audit-skills, the no-shared-code stance to the tenant-layers rule, and ADR-0021 and its rule were rewritten to match. Only `Spawn` was pruned; the other retired terms still appear in old Journal and Blog content. Glass Box terms cite root headings, so every heading stayed. Two code-review rounds (the second requested by the user) caught stale pointers and one meaning change (Human-only lost ADR-0004's Dependabot exception); all fixed. Needs a human merge (ADR, rules, CLAUDE.md, shared/)."
+prs:
+  - "2416"
+docsRead:
+  - path: GLOSSARY.md
+    reason: the file under trim
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: the file under trim
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: governs both files; rewritten in place
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: glossary layout; repointed its stale bullets
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: commit hygiene and three-dot diffs
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review then gate before first push
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: write PR via MCP
+    useful: partly
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: new home for Importance grades
+    useful: yes
+  - path: layers/journal/GLOSSARY.md
+    reason: checked it held Session kind wording
+    useful: partly
+  - path: layers/blog/GLOSSARY.md
+    reason: Pingback contrast pointer to repoint
+    useful: yes
+  - path: layers/atlas/GLOSSARY.md
+    reason: Interaction contrast pointer to repoint
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: new home for kind and severity grading
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: pointer to grades repointed
+    useful: yes
+  - path: layers/midden/GLOSSARY.md
+    reason: headings only, for map term lists
+    useful: partly
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: relies on the map's Relationships section, so it stayed
+    useful: yes
+  - path: .agents/skills/domain-modeling/SKILL.md
+    reason: grep hit only; map shape matches its template
+    useful: no
+  - path: layers/commons/GLOSSARY.md
+    reason: checked it held the isolation stance; it did not
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: headings only, for map term lists
+    useful: partly
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: grep for shared-layer stance; absent, so moved to tenant-layers
+    useful: partly
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: subagent standards source; confirmed rewrite in place
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: subagent standards source; it reported partly useful
+    useful: partly
+skillsUsed:
+  - name: adr-check
+    reason: found ADR-0021 and no prune trial on the glossaries
+  - name: code-review
+    reason: two rounds caught stale pointers and the Human-only meaning change
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: First commit left many callers pointing at removed glossary sections (manifests, theme.css, session.ts, an Atlas page); review caught them.
+    solution: Before cutting a section, grep for its heading and phrases across code comments, not only Markdown (CLAUDE.md one home per fact).
+    severity: minor
+  - description: "Edited files while the first gate:scoped run was in flight, so it had to be re-run on the final head (pr-workflow: edit nothing until it ends)."
+    solution: Apply review fixes before starting the gate, then wait.
+    severity: minor
+  - description: Trimming the Human-only definition dropped ADR-0004's Dependabot exception, a meaning change caught in the second review.
+    solution: When compressing a definition, diff each qualifier against its ADR before committing.
+    severity: minor
+  - description: Stop hook repeatedly asked to push while ADR-0004 requires review and gate first; several turns spent only answering it.
+    solution: Have the Stop hook stay quiet while a gate:scoped run is in progress for the branch.
+    severity: nit
+durationSec: 1308
+models:
+  claude-opus-5-5: 134
+toolCounts:
+  Bash: 48
+  Skill: 5
+  Write: 2
+  Agent: 4
+  Edit: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - GLOSSARY.md
+  - GLOSSARY-MAP.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/domain.md
+  - layers/atlas/GLOSSARY.md
+  - layers/blog/GLOSSARY.md
+  - .claude/rules/adr-0021.md
+  - CLAUDE.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - layers/atlas/app/assets/theme.css
+  - layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+  - layers/atlas/tenant.config.ts
+  - layers/blog/app/assets/theme.css
+  - layers/journal/content/current/skills/dependabot-sweep.yml
+  - layers/marquee/app/assets/theme.css
+  - layers/midden/app/assets/theme.css
+  - shared/schemas/session.ts
+  - .agents/skills/log-session/SKILL.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/tenant-layers.md
+  - README.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - layers/atlas/app/utils/atlas.ts
+  - layers/blog/tenant.config.ts
+  - layers/journal/app/utils/dashboard.ts
+  - layers/marquee/tenant.config.ts
+  - layers/midden/tenant.config.ts
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0030.md
+rulesLoadedBySubagents:
+  - .claude/rules/mermaid-lanes.md
+docsReadBySubagents:
+  - GLOSSARY.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - GLOSSARY-MAP.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before the first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session at PR open; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself and subscribe; the user also asked for a PR
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Session header on the PR body; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: The governing decision; I read the full ADR because I rewrote it
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed the PR needs a human merge
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Checked no open prune trial covered my edits; audit-docs is one, so I left it
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Rewrite ADR-0021 in place and repoint callers in the same PR
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading skills; not relevant to a glossary trim
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Confirmed session logs and inventories wording; minor
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Pointed to GLOSSARY.md for grades; repointed to audit-skills
+    useful: yes
+  - path: .claude/rules/adr-0025.md
+    reason: Home for cross-Tenant reads, used to justify cutting the isolation text
+    useful: partly
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded via gate files; no gate change here
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule vs CLAUDE.md placement for the moved instructions
+    useful: partly
+  - path: .claude/rules/data-shapes.md
+    reason: No stored field changed
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Confirmed pinned Glass Box pages may keep old layout
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on manifest comment edits; comments only
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on a layer read; not applicable
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: New home for the no-shared-code stance
+    useful: yes
+  - path: .claude/rules/ui-verification.md
+    reason: Loaded on theme.css; comment-only edits, no UI change
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Only a subagent loaded it; it reported not useful
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of glossary trim
+    durationSec: 115
+    toolCalls: 12
+    modelCalls: 10
+    tokenShare: 9.1
+  - type: general-purpose
+    task: Spec review of glossary trim
+    durationSec: 64
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 6.5
+  - type: general-purpose
+    task: Standards review, full branch
+    durationSec: 142
+    toolCalls: 13
+    modelCalls: 10
+    tokenShare: 9.9
+  - type: general-purpose
+    task: Spec review, full branch
+    durationSec: 117
+    toolCalls: 12
+    modelCalls: 11
+    tokenShare: 8.9
+gitBranch: ccr-855ce066-4twhq6
+entrypoint: remote_mobile
+cliVersion: 2.1.308
+learnings:
+  - Glass Box term yml files cite root GLOSSARY.md as source, so root headings are load-bearing even when their text shrinks
+relevantAdrs:
+  - adr: 21
+    reason: Governs root glossary and map; rewritten
+  - adr: 15
+    reason: Importance grades' home moved to audit-skills
+  - adr: 4
+    reason: Human-only definition and merge
+landedBy: Stop
