@@ -54,18 +54,20 @@ const digests = computed(() => digestList(allPages.value))
 // from THIS Space's own `pages`, so a page must exist in-Space to surface — the
 // archived Space, lacking these pages, shows none. The Friction Ledger is a
 // Vue page, not a Document, so its door is added here, as is the Routine costs one.
-const onrampCards = computed(() => [
-  ...onrampSteps(allPages.value).map((s, i, all) => ({
+const onrampCards = computed(() =>
+  onrampSteps(allPages.value).map((s, i, all) => ({
     key: s.path,
     kicker: `Start here · ${i + 1} of ${all.length}`,
     title: s.label,
     blurb: s.blurb,
     to: `/t/${tenant}/${space}${s.path}`,
   })),
+)
+// Compact links under the cards, so these two don't weigh as much as the five steps.
+const onrampDoors = computed(() => [
   ...(data.value?.ledgerSize
     ? [{
         key: 'frictions',
-        kicker: 'Also worth a look',
         title: 'What went wrong recently',
         blurb: 'The Friction Ledger: recent recurring pain-points agents logged, grouped by cause, worst and most frequent first, fixed ones included.',
         to: `/t/${tenant}/${space}/frictions`,
@@ -74,7 +76,6 @@ const onrampCards = computed(() => [
   ...(data.value?.routineCount
     ? [{
         key: 'routines',
-        kicker: 'Also worth a look',
         title: 'What the scheduled runs cost',
         blurb: 'Every Routine run as a chart, plus a weekly table. Switch between dollars, tokens and time.',
         to: `/t/${tenant}/${space}/routines`,
@@ -189,7 +190,7 @@ useSeoMeta({
 
     <!-- Newcomer on-ramp: after the short lead that gives it context, before the
          longer intro and the data-heavy feed. -->
-    <section v-if="onrampCards.length" class="onramp" aria-label="Start here">
+    <section v-if="onrampCards.length || onrampDoors.length" class="onramp" aria-label="Start here">
       <p class="onramp-lead">New here? Start with the short version:</p>
       <div class="onramp-cards">
         <NuxtLink v-for="c in onrampCards" :key="c.key" :to="c.to" class="onramp-card">
@@ -198,6 +199,12 @@ useSeoMeta({
           <span class="onramp-blurb">{{ c.blurb }}</span>
         </NuxtLink>
       </div>
+      <ul v-if="onrampDoors.length" class="onramp-doors">
+        <li v-for="c in onrampDoors" :key="c.key">
+          <NuxtLink :to="c.to">{{ c.title }}<span aria-hidden="true"> →</span></NuxtLink>
+          <span class="onramp-blurb"> {{ c.blurb }}</span>
+        </li>
+      </ul>
     </section>
 
     <!-- Free-form editorial intro — the root page's Markdown body -->
@@ -418,6 +425,8 @@ h1 {
 .onramp-kicker { font-family: var(--jd-mono); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--jd-muted); }
 .onramp-arrow { color: var(--jd-accent); transition: transform 0.15s ease; }
 .onramp-card:hover .onramp-arrow { transform: translateX(3px); }
+.onramp-doors { list-style: none; margin: 0.9rem 0 0; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+.onramp-doors a { font-weight: 600; color: var(--jd-accent); }
 .onramp-blurb { color: var(--jd-muted); font-size: 0.88rem; line-height: 1.45; }
 
 .spaces { display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end; }
