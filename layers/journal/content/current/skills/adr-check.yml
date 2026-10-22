@@ -53,3 +53,14 @@ observations:
       session_01WU8rXHT5rKQKDYbYqCv7Sd and session_017X5SQqh4JtkECD69pftATE
       may have used only the summaries; their docsRead may be incomplete.
       Correction posted on #2286. Grade/role unchanged (essential).
+  - date: "2026-10-22"
+    note: >-
+      Behaviour check, 10/10 newest invocations delivered. The subagent's
+      claim that session_01HcMFbKDTkG7hs2VhByAs4b (audit-docs) was a NEW
+      silent skip was false — its log carries an explicit friction naming
+      the gap, already counted in #2286's 2026-10-21T19:20 comment; dropped.
+      session_011UkamwPwXvoBVMmNHuoBaD (prune-trial) verified clean: no
+      adr-check trace, no friction — a genuine third instance of the
+      already-tracked pattern, but #2286's analysis already quantifies this
+      window's autonomous-sweep non-use in aggregate, so no new comment.
+      Grade/role unchanged (essential) pending #2286's decision, due today.

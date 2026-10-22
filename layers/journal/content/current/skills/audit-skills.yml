@@ -627,3 +627,18 @@ observations:
       evidence (self-reported + 4 silent sweep-session misses) onto #2286.
       Grade/role unchanged (routine) - the finding is about a drafting-step
       self-check gap, not this Skill's delivered outcome.
+  - date: "2026-10-22"
+    note: >-
+      Self-check: dispatched 14 behaviour-check subagents plus a
+      usage-fetch subagent for all 55 routineRuns sessions; verified every
+      report against primary sources before use. Escalated audit-docs'
+      ADR-0004/merge-pr.ts gap as issue #2395 (detail on audit-docs's own
+      entry). Caught a false claim in this run's own adr-check subagent
+      before it could be escalated — detail on adr-check's own entry, not
+      restated here. The rest (blog-post, clear-backlog, close-session,
+      digest, dispatch-subagents, frictions-to-fixes, glassbox-update,
+      inspect-session, log-session, prune-trial, visitor-loop) came back
+      clean or only extended an already-tracked note on their own entries.
+      Step 3: orphan scan clean (1549 merged PRs, 1393 with a session),
+      both candidates carry resolvedBy, humanPromptedClosures and
+      manuallyRescuedClosures both empty. Grade/role unchanged (routine).

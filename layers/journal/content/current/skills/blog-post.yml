@@ -334,3 +334,11 @@ observations:
       session_01RJh5bK46AQRRtwagmz8GjU); that is the closed
       prepush-gate-review-skipped cluster (#2354), so no issue here.
       Grade/role unchanged.
+  - date: "2026-10-22"
+    note: >-
+      Behaviour check, 9/9 runs clean, no new silent failure. #2370's fix
+      (PR #2379, merged 2026-10-21T14:09Z, deleting step 9's "list your own
+      later changes separately" sentence) landed after every run in this
+      window started, so it is still untested by a real run — watch next
+      round for whether unchecked-edit language still appears in a PR body
+      under the new text. Grade/role unchanged.

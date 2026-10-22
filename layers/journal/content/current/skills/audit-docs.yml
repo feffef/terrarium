@@ -360,3 +360,15 @@ observations:
       Single run, nothing damaged; a second such run clears the bar. Also
       unverified: whether session_01HcMFbKDTkG7hs2VhByAs4b's pool.md held
       both agents' findings. Grade/role unchanged (routine).
+  - date: "2026-10-22"
+    note: >-
+      Escalated as issue #2395: the 2026-10-21 "second run clears the bar"
+      condition is now met. Independently re-verified in source: package.json
+      sits unconditionally on the Human-only paths list, and
+      merge-pr.ts's dependabotBumpRefusal only fires for dependabot[bot] —
+      so ADR-0004's "an agent may merge its own minor/patch bump" promise
+      holds only for Dependabot, never an agent's own direct bump, a gap
+      #1889's closing PR never addressed. Two runs named it and filed
+      nothing: session_017xginqTj2NjZ8XgrbRqvkm (PR #2110/#2111) and
+      session_012XnetQuxWoyaVFYw1BqMoy (PR #2317, after #1889 closed). Full
+      detail on #2395. Grade/role unchanged (routine).
