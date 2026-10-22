@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01T4UbBvJmjSunCwb3cUN68Q
 startedAt: 2026-10-22T00:16:03Z
-endedAt: 2026-10-22T00:24:04Z
+endedAt: 2026-10-22T05:33:05Z
 kind: autonomous
 goal: Write the 2026-10-21 Journal Digest
-status: in-review
-outcome: "PR #2394 open for a human: Digest, retention sweep and a one-line test repoint; gate green"
-summary: "Scheduled /digest run (agent-initiated by the schedule; no human instruction in-session). Wrote the 2026-10-21 Digest from gather output, fact-checked it with a subagent (4 claims fixed), ran Standards and Spec review, then the retention sweep. The sweep archived a session log that tests/unit/log-session.spec.ts reads by its current path, so the gate failed; I repointed that one test line, re-ran the gate green and pushed. Because that test file is outside the Digest skill's allowed diff, I did not self-merge and left PR #2394 for a human, with a notification."
+status: completed
+outcome: "PR #2394 merged by a human: Digest, retention sweep and a one-line test repoint"
+summary: "Scheduled /digest run (agent-initiated by the schedule; no human instruction in-session). Wrote the 2026-10-21 Digest from gather output, fact-checked it with a subagent (4 claims fixed), ran Standards and Spec review, then the retention sweep. The sweep archived a session log that tests/unit/log-session.spec.ts reads by its current path, so the gate failed; I repointed that one test line, re-ran the gate green and pushed. Because that test file is outside the Digest skill's allowed diff, I did not self-merge; a human merged PR #2394 after a green gate."
 prs:
   - "2394"
 docsRead:
@@ -59,20 +59,21 @@ frictions:
   - description: Stop hook asked to push three times while review and gate were still running, against ADR-0004 order.
     solution: Make the hook skip when a gate or review is pending.
     severity: nit
-durationSec: 481
+durationSec: 19022
 models:
-  claude-sonnet-5-5: 61
+  claude-sonnet-5-5: 73
 toolCounts:
-  Bash: 19
+  Bash: 20
   Write: 1
   Agent: 3
-  ReadNotifications: 1
+  ReadNotifications: 5
   Edit: 3
   Skill: 2
   Read: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   PushNotification: 1
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-21.md
   - tests/unit/log-session.spec.ts
@@ -174,21 +175,21 @@ subagents:
     durationSec: 56
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 15.8
+    tokenShare: 10.6
   - type: general-purpose
     task: Standards review of digest diff
     model: sonnet
     durationSec: 24
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 6.1
+    tokenShare: 4.1
   - type: general-purpose
     task: Spec review of digest diff
     model: sonnet
     durationSec: 25
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 7.2
+    tokenShare: 4.8
 gitBranch: claude/compassionate-lovelace-fr6s7k
 entrypoint: remote_trigger
 cliVersion: 2.1.307
