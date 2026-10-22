@@ -116,7 +116,7 @@ describe('validateEntry() — the L1 stand-in', () => {
 
   // The one log that carried subagentVerdicts, migrated by the owner's one-off exception to ADR-0009.
   it('validates the migrated log, its subagent verdict now in ruleVerdicts', () => {
-    const log = parseYaml(readFileSync('layers/journal/content/current/sessions/2026-10-14-session_01NVG22rfEsjhW9zkcCco6W8.yml', 'utf8'))
+    const log = parseYaml(readFileSync('layers/journal/content/archived/sessions/2026-10-14-session_01NVG22rfEsjhW9zkcCco6W8.yml', 'utf8'))
     expect(validateEntry(log).ok).toBe(true)
     expect(log.ruleVerdicts).toContainEqual(expect.objectContaining({ path: '.claude/rules/tenant-layers.md', useful: 'partly' }))
   })
