@@ -23,6 +23,22 @@ export function ledgerWindowStart(today: string, days: number): string {
   return new Date(Date.parse(`${today}T00:00:00Z`) - (days - 1) * 86_400_000).toISOString().slice(0, 10)
 }
 
+/** One cell per day from `from` to `to`, both included: how many occurrences fell on it
+ *  and whether a fix merged that day. Dates are UTC days, like the ledger's own. */
+export function ledgerDayStrip(
+  occurrenceDates: string[],
+  fixDates: string[],
+  from: string,
+  to: string,
+): { date: string; count: number; fix: boolean }[] {
+  const days: { date: string; count: number; fix: boolean }[] = []
+  for (let t = Date.parse(`${from}T00:00:00Z`); t <= Date.parse(`${to}T00:00:00Z`); t += 86_400_000) {
+    const date = new Date(t).toISOString().slice(0, 10)
+    days.push({ date, count: occurrenceDates.filter((d) => d === date).length, fix: fixDates.includes(date) })
+  }
+  return days
+}
+
 /** The newest merged PRs the page lists, in the pill and the list alike. */
 export const LEDGER_MAX_PRS = 5
 
@@ -66,6 +82,8 @@ export interface LedgerEntry {
   notes?: string
   /** Newest first. */
   fixes: { pr: number; url: string; date: string; summary: string }[]
+  /** Every merged-PR date, not just the newest `LEDGER_MAX_PRS` that `fixes` lists. */
+  fixDates: string[]
   worst: Severity
   worstCount: number
   count: number
@@ -122,6 +140,7 @@ export function ledgerPanels(
       ref: c.ref,
       notes: c.notes,
       fixes: fixes.slice(0, LEDGER_MAX_PRS),
+      fixDates: fixes.map((f) => f.date),
       worst,
       worstCount: inWindow.filter((o) => o.severity === worst).length,
       count: inWindow.length,

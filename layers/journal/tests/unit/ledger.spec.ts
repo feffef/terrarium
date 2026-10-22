@@ -1,6 +1,6 @@
 // The Friction Ledger page's ranking (layers/journal/app/utils/ledger.ts).
 import { describe, expect, it } from 'vitest'
-import { ledgerFixState, ledgerPanels, ledgerWindowStart } from '../../app/utils/ledger.ts'
+import { ledgerDayStrip, ledgerFixState, ledgerPanels, ledgerWindowStart } from '../../app/utils/ledger.ts'
 import type { FrictionClusterDoc, Severity } from '../../app/types/journal.ts'
 
 function cluster(name: string, severities: Severity[]): FrictionClusterDoc {
@@ -160,5 +160,20 @@ describe('ledgerPanels window', () => {
   it('covers exactly the last N dates, today included', () => {
     expect(ledgerWindowStart('2026-10-20', 2)).toBe('2026-10-19')
     expect(ledgerWindowStart('2026-03-01', 14)).toBe('2026-02-16')
+  })
+})
+
+describe('ledgerDayStrip', () => {
+  it('buckets occurrences per UTC day across the window and marks fix days', () => {
+    const cells = ledgerDayStrip(['2026-10-20', '2026-10-20', '2026-10-22', '2026-10-01'], ['2026-10-21'], '2026-10-20', '2026-10-22')
+    expect(cells).toEqual([
+      { date: '2026-10-20', count: 2, fix: false },
+      { date: '2026-10-21', count: 0, fix: true },
+      { date: '2026-10-22', count: 1, fix: false },
+    ])
+  })
+
+  it('has one cell per day of the window, the window start included', () => {
+    expect(ledgerDayStrip([], [], ledgerWindowStart('2026-10-22', 14), '2026-10-22')).toHaveLength(14)
   })
 })
