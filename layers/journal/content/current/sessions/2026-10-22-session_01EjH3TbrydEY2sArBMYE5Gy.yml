@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01EjH3TbrydEY2sArBMYE5Gy
 startedAt: 2026-10-22T19:02:51Z
-endedAt: 2026-10-22T19:27:49Z
+endedAt: 2026-10-22T19:33:54Z
 kind: interactive
 goal: Make close-session look back for missed Frictions at the completed close
-status: completed
-outcome: "close-session now looks back for missed Frictions when a close sets completed; PR #2417 merged"
-summary: "The Trusted user asked whether the retro Skill should run in close-session or log-session, since retro kept finding real problems no Friction had logged. I found retro is a pack Skill (ADR-0015) with disable-model-invocation, so it can't be called, and asked four questions. The user answered: run it only on the close that sets completed, no transcript read, log findings as ordinary Frictions without showing them, focus on knowledge found too late and inefficient processes. Building the step was human-instructed through those answers; wording choices and applying the review fixes (expensive tool calls, \"from memory\", naming it \"look back\" instead of \"retrospective\" to avoid a /retro confusion, not steering the solution field) were agent-initiated. Gate and CI green; I posted a verdict and merged PR #2417 myself (no Human-only file). This final close was the first to run the new step."
+status: in-review
+outcome: "Look-back step merged in PR #2417; follow-up PR #2418 adds learnings and ideas, in review"
+summary: "The Trusted user asked whether the retro Skill should run in close-session or log-session, since retro kept finding real problems no Friction had logged. I found retro is a pack Skill (ADR-0015) with disable-model-invocation, so it can't be called, and asked four questions. The user answered: run it only on the close that sets completed, no transcript read, log findings as ordinary Frictions without showing them, focus on knowledge found too late and inefficient processes. I built that as close-session step 2 and merged PR #2417. The user then asked that the step also encourage learnings and ideas, and corrected my first proposal: an idea must not restate a Friction's solution but be a higher-level proposal the session inspired. PR #2418 does that. Both changes were human-instructed; wording and the review fixes (positive phrasing, \"inferred rather than read\", dropping the retired word \"sparks\") were agent-initiated."
 prs:
   - "2417"
+  - "2418"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: session-start read; pointed to Friction and session log terms
@@ -68,19 +69,25 @@ frictions:
   - description: "Look-back: close-session step 1 re-printed CLAUDE.md and the always-loaded rules already in context, a large output for a short session"
     solution: None needed for this session; worth watching whether always-loaded.ts output is skimmed rather than read
     severity: nit
-durationSec: 1498
+  - description: Pushed the restarted branch with --force-with-lease and it failed; pr-workflow.md, read earlier, says to push a restarted branch plainly
+    solution: Apply the doc's restarted-branch line; none needed beyond that
+    severity: nit
+  - description: Called subscribe_pr_activity in parallel with create_pull_request, guessing PR number 2418 before the create result returned
+    solution: Subscribe only after the create result gives the number
+    severity: minor
+durationSec: 1863
 models:
-  claude-opus-5-5: 72
+  claude-opus-5-5: 103
 toolCounts:
-  Bash: 22
+  Bash: 32
   Skill: 5
-  Edit: 2
-  Agent: 2
+  Edit: 4
+  Agent: 4
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 3
   mcp__claude-code-remote__send_later: 1
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__delete_trigger: 1
@@ -106,6 +113,7 @@ rulesFollowedUp:
 docsReadBySubagents:
   - .agents/skills/writing-for-agents/SKILL.md
   - .agents/skills/audit-skills/SKILL.md
+  - GLOSSARY.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Made me run gate:scoped and code-review before the first push; summary was enough
@@ -146,16 +154,30 @@ subagents:
     durationSec: 57
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 14.2
+    tokenShare: 9.2
   - type: general-purpose
     task: Spec review of close-session diff
     durationSec: 33
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 10.1
+    tokenShare: 6.5
+  - type: general-purpose
+    task: Standards review of learnings/ideas edit
+    durationSec: 29
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 6.8
+  - type: general-purpose
+    task: Spec review of learnings/ideas edit
+    durationSec: 32
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 7.2
 gitBranch: ccr-01e8197b-5ohkn9
 entrypoint: remote_mobile
 cliVersion: 2.1.308
+learnings:
+  - "A Friction's solution and a session-log idea differ in altitude: the solution is the first fix for that one pain, an idea is a higher-level proposal the session only inspired (from the Trusted user)"
 relevantAdrs:
   - adr: 9
     reason: close-session and the completed re-log
