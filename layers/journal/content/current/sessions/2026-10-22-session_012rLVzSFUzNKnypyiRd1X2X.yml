@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_012rLVzSFUzNKnypyiRd1X2X
 startedAt: 2026-10-22T10:23:59Z
-endedAt: 2026-10-22T10:46:34Z
+endedAt: 2026-10-22T11:45:18Z
 kind: interactive
 goal: Show subagent token share and run time in the Journal
 status: completed
@@ -57,17 +57,23 @@ frictions:
     solution: Name the field tokenShare in the card's note so a reader asking for it uses the stored name
     severity: nit
   - description: Ran gate:scoped before code-review, then edited during the run; pr-workflow says review first and edit nothing until the gate ends, so one gate run was wasted
-    solution: "Follow pr-workflow's order: commit, code-review, then gate last; a build for a screenshot can come from that final gate"
+    solution: Make scripts/gate/gate.ts record HEAD and the working-tree state at start and fail at the end if either changed, so a stale run is caught mechanically
     severity: minor
   - description: User asked me to run /retro after the merge; the Skill has disable-model-invocation, so it needed an extra user turn
     solution: Let a Skill the user names in a prompt run by model, or list user-only Skills so the agent can say so up front
     severity: minor
-durationSec: 1355
+  - description: adr-check's relevant-adrs.ts printed all 30 ADR summaries (about 6k tokens), including the always-loaded ones, for a 30-line display change
+    solution: Skip the always-loaded rules (no paths) and print one line per ADR, so the agent opens only the summaries that bear on the change
+    severity: minor
+  - description: log-session --author listed a reviewer subagent's shell command as this session's own read, asking me to account for it
+    solution: Have scripts/session/shell-reads.ts tag each shell read with the agent that ran it, as the rules report already does
+    severity: nit
+durationSec: 4879
 models:
-  claude-opus-5-5: 137
+  claude-opus-5-5: 146
 toolCounts:
   Skill: 7
-  Bash: 45
+  Bash: 48
   Edit: 5
   Agent: 2
   ToolSearch: 3
@@ -164,13 +170,13 @@ subagents:
     durationSec: 39
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 7.2
+    tokenShare: 6.8
   - type: general-purpose
     task: Spec review of diff
     durationSec: 33
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 6.5
+    tokenShare: 6
 gitBranch: ccr-9bb558d0-cgb1rs
 entrypoint: remote_mobile
 cliVersion: 2.1.308
