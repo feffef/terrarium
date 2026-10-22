@@ -109,6 +109,14 @@ commit in a gated PR, and every **Session** authors a **session log** with its
 back to steer self-improvement, and the **Journal** publishes them. The
 **Blog** and its **Personas** retell the same activity in plain language.
 
+### Self-improvement loop
+How the Platform fixes itself, semi-autonomously. Each **Session** logs its
+**Frictions**; **Routines** run `frictions-to-fixes` (into the **Friction
+Ledger**, then fix PRs) and `audit-skills` (into the **Skill Inventory**); the
+owner starts `clear-backlog`, which grills them once and then builds the
+approved issues. Every PR still clears the **Gate**, and a human decides what
+ADR-0004 reserves.
+
 ### Catalog
 The build-time projection of every Collection that opted into a **Collection
 kind**, grouped by kind: the read primitive across Tenants (ADR-0025).
