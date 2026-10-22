@@ -12,12 +12,11 @@ this session, with its final status.
    rule or step in them that this session broke or skipped, log a Friction that
    names the rule, even if you fixed it later. Say what impact breaking it had or
    could have had, and what would have made you read it at the time.
-2. **On the close that sets `completed`, run a retrospective.** Look back over
-   the whole session, critically, for what it cost: knowledge you found too
-   late that would have changed your route had you known it at the start, and
-   detours (searches, re-reads, retries, a long way round to a fact or a
-   result). Log each one not yet logged as a Friction, its `solution` the
-   pointer or shortcut that would have spared it.
+2. **Look back once more when this close sets `completed`.** From memory, with
+   no transcript read, hunt what the whole session cost: knowledge you found
+   too late that would have changed your route, and detours (repeated
+   searches, re-reads, retries, an expensive tool call, a long way round to a
+   fact). Log each one not yet logged as a Friction, as usual.
 3. **Invoke `/log-session`** with an honest `status` (`log-session` defines the
    five values). Never default a stalled or abandoned session to `completed`.
    If a PR-open step (`subscribe_pr_activity`, or this Skill) was rejected, log
