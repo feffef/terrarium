@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_0149fVyZ37qWGMuwVPw3Uryc
 startedAt: 2026-10-22T13:14:13Z
-endedAt: 2026-10-22T13:29:05Z
+endedAt: 2026-10-22T13:31:14Z
 kind: autonomous
 goal: Scheduled prune of agent instructions
-status: in-review
-outcome: "No trial judgeable; opened PR #2412 rewording pr-workflow.md with a new trial entry"
+status: completed
+outcome: "No trial judgeable; merged PR #2412 rewording pr-workflow.md with a new trial entry"
 summary: "Scheduled prune-trial firing (agent-initiated, no human prompt). find-trial-window.ts showed all five open trials landed under three days ago, so none was judged. A Sonnet search subagent covered the instruction corpus and tracker; the pre-push review/gate rule (#2311, #2354, #2397) ranked first because it failed as prose and nothing guards it. Its mass was small, so I did a plain reword of docs/agents/pr-workflow.md (118 to 115 lines), kept every rule, and opened trial PR #2412 with a ledger entry; a Sonnet probe pinned to the post-prune SHA answered four situations correctly. Standards and Spec review caught that my first draft changed meaning (stricter wording, an inaccurate ledger claim); restored. The gate caught my repoint of a pinned Glass Box excerpt; reverted. Open: the verdict needs sessions to run against the new text; the real fix for #2397 may still be a human-built guard."
 prs:
   - "2412"
@@ -67,15 +67,15 @@ frictions:
   - description: The chosen problem's prose mass was small (-3 net against a ~100-line target), so the run bought little.
     solution: Consider the always-loaded read-first section of CLAUDE.md next run, or file the guard issue for the pre-push rule.
     severity: nit
-durationSec: 892
+durationSec: 1021
 models:
-  claude-sonnet-5-5: 94
+  claude-sonnet-5-5: 107
 toolCounts:
   Read: 6
-  Bash: 25
+  Bash: 28
   Skill: 4
   Agent: 4
-  ReadNotifications: 1
+  ReadNotifications: 3
   Grep: 2
   ToolSearch: 2
   mcp__github__issue_read: 1
@@ -83,6 +83,8 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   mcp__github__update_issue_comment: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - docs/agents/pr-workflow.md
@@ -157,28 +159,28 @@ subagents:
     durationSec: 89
     toolCalls: 19
     modelCalls: 10
-    tokenShare: 12.5
+    tokenShare: 11
   - type: general-purpose
     task: Sonnet probe of pruned doc
     model: sonnet
     durationSec: 18
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 2.5
+    tokenShare: 2.2
   - type: general-purpose
     task: Standards review of diff
     model: sonnet
     durationSec: 35
     toolCalls: 3
     modelCalls: 4
-    tokenShare: 4.2
+    tokenShare: 3.7
   - type: general-purpose
     task: Spec review of diff
     model: sonnet
     durationSec: 47
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 6
+    tokenShare: 5.3
 gitBranch: claude/practical-rubin-a1h3dh
 entrypoint: remote_trigger
 cliVersion: 2.1.308
