@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CKXPocBm85jSCheqepKn2v
 startedAt: 2026-10-22T00:46:05Z
-endedAt: 2026-10-22T01:19:28Z
+endedAt: 2026-10-22T01:22:15Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "Inventory sweep pushed as PR #2396; waiting on CI before merge"
-summary: "Agent-initiated scheduled audit-skills run, no human prompt. Gathered the scorecard (scripts/session/audit-skills.ts), dispatched one usage-fetch subagent across all 55 routineRuns sessions and 14 behaviour-check subagents (one per behaviourChecks entry), and verified every report against primary sources before using it. Escalated one finding as issue #2395: audit-docs twice named a live ADR-0004/merge-pr.ts mismatch (an agent's own minor/patch package.json bump is Human-only-refused despite ADR-0004 saying it can merge) and never filed it, which I independently re-verified in source. Caught and dropped a false claim in this run's own adr-check subagent report (it wrongly called a session's adr-check skip \"silent\" when the session's own log carried an explicit friction naming it) before it could be escalated or written into the Inventory. Step 3 closure completeness was clean: orphan scan ran (1549 merged PRs, 1393 with a session), both orphan candidates already carry resolvedBy, no human-prompted or manually-rescued closures. Step 5 updated 6 Skill Inventory entries with this run's findings, appended Routine run costs for 4 newly-seen sessions across 4 Routines, and pruned each to the newest 30 runs; no grade changes (no finding cleared the ≥2-session bar) and no coverage gaps (the 3 on-disk, zero-use Skills stay uninventoried per the Skill's own rule). Opened PR #2396 (Inventory/Routine YAML only), subscribed to it, ran pnpm gate:scoped (green, escalated to a full gate since journal content isn't on the fast path), then realized mid-closure that the diff (10 files, 164 lines) didn't qualify as a \"simple change\" under pr-workflow.md and should have had a code-review run before the first push. Ran code-review after the fact instead: both axes came back clean except one shared finding (three new observation notes ran 1.4x-2.7x over SKILL.md's ~100-word cap, and one fact was duplicated across two entries instead of having one home). Fixed in a follow-up push, posted a second verdict, and am now waiting on CI to go green on the latest head before merging."
+status: completed
+outcome: "PR #2396 merged (67f2e7aa3)"
+summary: "Agent-initiated scheduled audit-skills run, no human prompt. Gathered the scorecard (scripts/session/audit-skills.ts), dispatched one usage-fetch subagent across all 55 routineRuns sessions and 14 behaviour-check subagents (one per behaviourChecks entry), and verified every report against primary sources before using it. Escalated one finding as issue #2395: audit-docs twice named a live ADR-0004/merge-pr.ts mismatch (an agent's own minor/patch package.json bump is Human-only-refused despite ADR-0004 saying it can merge) and never filed it, which I independently re-verified in source. Caught and dropped a false claim in this run's own adr-check subagent report (it wrongly called a session's adr-check skip \"silent\" when the session's own log carried an explicit friction naming it) before it could be escalated or written into the Inventory. Step 3 closure completeness was clean: orphan scan ran (1549 merged PRs, 1393 with a session), both orphan candidates already carry resolvedBy, no human-prompted or manually-rescued closures. Step 5 updated 6 Skill Inventory entries with this run's findings, appended Routine run costs for 4 newly-seen sessions across 4 Routines, and pruned each to the newest 30 runs; no grade changes (no finding cleared the ≥2-session bar) and no coverage gaps (the 3 on-disk, zero-use Skills stay uninventoried per the Skill's own rule). Opened PR #2396 (Inventory/Routine YAML only), subscribed to it, ran pnpm gate:scoped (green, escalated to a full gate since journal content isn't on the fast path), then realized mid-closure that the diff (10 files, 164 lines) didn't qualify as a \"simple change\" under pr-workflow.md and should have had a code-review run before the first push. Ran code-review after the fact instead: both axes came back clean except one shared finding (three new observation notes ran 1.4x-2.7x over SKILL.md's ~100-word cap, and one fact was duplicated across two entries instead of having one home). Fixed in a follow-up push, posted a second verdict, CI went green, and merged PR #2396 (67f2e7aa3) once mergeable_state was clean and no review thread was outstanding. Unsubscribed from the PR's activity after the merge."
 prs:
   - "2396"
 docsRead:
@@ -147,24 +147,24 @@ skillsUsed:
   - name: code-review
     reason: Standards+Spec review of the Inventory diff after misjudging it as simple
   - name: close-session
-    reason: "opened PR #2396; logging in-review"
+    reason: "opened PR #2396; logged in-review, then completed on merge"
   - name: log-session
     reason: authoring this log
 frictions:
   - description: Misjudged the Inventory-sweep diff (10 files, 164 lines) as a "simple change" under ADR-0004/pr-workflow.md and skipped the mandatory code-review Skill before the first push, even though pr-workflow.md's simple-change bar is "at most 10 lines in at most 2 files" and this Skill's own Inventory history repeatedly treats a skipped code-review as a real finding on itself.
     solution: Check the diff's file/line count against pr-workflow.md's literal "simple" definition before the push, not by file type (YAML-only, no code) alone. Caught it myself during close-session's step 1, before any human or subagent flagged it; ran code-review after the push instead, which cost an extra push cycle fixing what it found (notes over the word cap, one duplicated fact).
     severity: moderate
-durationSec: 2003
+durationSec: 2170
 models:
-  claude-sonnet-5: 289
+  claude-sonnet-5: 313
 toolCounts:
-  Bash: 68
+  Bash: 70
   Read: 19
-  Write: 4
+  Write: 5
   Agent: 17
   ToolSearch: 6
   TaskCreate: 6
-  TaskUpdate: 12
+  TaskUpdate: 13
   Grep: 1
   mcp__github__search_issues: 1
   mcp__github__issue_read: 5
@@ -172,10 +172,12 @@ toolCounts:
   Edit: 18
   mcp__github__create_pull_request: 1
   mcp__Claude_Code_Remote__subscribe_pr_activity: 1
-  Skill: 4
-  ReadNotifications: 2
+  Skill: 6
+  ReadNotifications: 4
   mcp__Claude_Code_Remote__get_session: 1
   mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 4
+  mcp__Claude_Code_Remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/routines/blog-post.yml
   - layers/journal/content/current/routines/digest.yml
@@ -234,7 +236,7 @@ ruleVerdicts:
     reason: Confirmed a scheduled run opens its PR itself and subscribes; summary was enough, didn't need the full ADR
     useful: yes
   - path: .claude/rules/adr-0009.md
-    reason: Confirmed close-session/log-session semantics for a scheduled run's PR-open log; summary was enough
+    reason: Confirmed close-session/log-session semantics for a scheduled run's PR-open log and the final completed log on merge; summary was enough
     useful: yes
   - path: .claude/rules/adr-0017.md
     reason: Reminded me to put the session header on the PR body and the filed issue; summary was enough
@@ -276,117 +278,117 @@ subagents:
     durationSec: 156
     toolCalls: 59
     modelCalls: 8
-    tokenShare: 2.8
+    tokenShare: 2.6
   - type: general-purpose
     task: "Behaviour check: adr-check skill"
     model: sonnet
     durationSec: 354
     toolCalls: 21
     modelCalls: 15
-    tokenShare: 4.8
+    tokenShare: 4.5
   - type: general-purpose
     task: "Behaviour check: audit-docs skill"
     model: sonnet
     durationSec: 333
     toolCalls: 23
     modelCalls: 22
-    tokenShare: 4.2
+    tokenShare: 4
   - type: general-purpose
     task: "Behaviour check: audit-skills skill"
     model: sonnet
     durationSec: 143
     toolCalls: 18
     modelCalls: 9
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: general-purpose
     task: "Behaviour check: blog-post skill"
     model: sonnet
     durationSec: 146
     toolCalls: 16
     modelCalls: 13
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: general-purpose
     task: "Behaviour check: clear-backlog skill"
     model: sonnet
     durationSec: 205
     toolCalls: 22
     modelCalls: 19
-    tokenShare: 3
+    tokenShare: 2.9
   - type: general-purpose
     task: "Behaviour check: close-session skill"
     model: sonnet
     durationSec: 145
     toolCalls: 22
     modelCalls: 11
-    tokenShare: 3.3
+    tokenShare: 3.1
   - type: general-purpose
     task: "Behaviour check: digest skill"
     model: sonnet
     durationSec: 92
     toolCalls: 16
     modelCalls: 10
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: general-purpose
     task: "Behaviour check: dispatch-subagents skill"
     model: sonnet
     durationSec: 292
     toolCalls: 25
     modelCalls: 25
-    tokenShare: 4.7
+    tokenShare: 4.4
   - type: general-purpose
     task: "Behaviour check: frictions-to-fixes skill"
     model: sonnet
     durationSec: 138
     toolCalls: 22
     modelCalls: 12
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: general-purpose
     task: "Behaviour check: glassbox-update skill"
     model: sonnet
     durationSec: 139
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: general-purpose
     task: "Behaviour check: inspect-session skill"
     model: sonnet
     durationSec: 225
     toolCalls: 21
     modelCalls: 16
-    tokenShare: 3.8
+    tokenShare: 3.6
   - type: general-purpose
     task: "Behaviour check: log-session skill"
     model: sonnet
     durationSec: 253
     toolCalls: 39
     modelCalls: 27
-    tokenShare: 5.7
+    tokenShare: 5.3
   - type: general-purpose
     task: "Behaviour check: prune-trial skill"
     model: sonnet
     durationSec: 232
     toolCalls: 23
     modelCalls: 23
-    tokenShare: 3.7
+    tokenShare: 3.5
   - type: general-purpose
     task: "Behaviour check: visitor-loop skill"
     model: sonnet
     durationSec: 413
     toolCalls: 23
     modelCalls: 21
-    tokenShare: 3.6
+    tokenShare: 3.4
   - type: general-purpose
     task: Standards review of audit-skills Inventory diff
     durationSec: 97
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Spec review of audit-skills Inventory diff
     durationSec: 116
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 1.9
+    tokenShare: 1.8
 gitBranch: claude/upbeat-sagan-63v7th
 entrypoint: remote_trigger
 cliVersion: 2.1.307
