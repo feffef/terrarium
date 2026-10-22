@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_012rLVzSFUzNKnypyiRd1X2X
 startedAt: 2026-10-22T10:23:59Z
-endedAt: 2026-10-22T10:35:03Z
+endedAt: 2026-10-22T10:46:34Z
 kind: interactive
 goal: Show subagent token share and run time in the Journal
-status: in-review
-outcome: "PR #2408 open: each subagent line shows share and duration"
-summary: "The user asked (human-instructed) for \"usageShare\" and the seconds an agent ran to show in the Journal's sessions view, via /grill-me. No usageShare field exists; I found the stored subagents[].tokenShare and durationSec, which were never displayed, and put six questions (field, placement, format, missing values, explanatory note, scope) in one round. The user accepted every recommendation. Building it followed from that green-light: a subagentUsageLabel helper in the Journal's dashboard utils, mapped onto each subagent in sessionCardViews, rendered at the end of the card's Subagents line, plus one clause in the note under it. code-review's Standards pass suggested the view-model mapping and the schema type, which I applied (agent-initiated); I kept the agreed \"3m 12s\" format although the Journal already has two other duration styles. Gate green, screenshot of the production build checked, PR opened and verdict posted; waiting on CI to merge."
+status: completed
+outcome: "PR #2408 merged: each subagent line shows share and duration"
+summary: "The user asked (human-instructed) for \"usageShare\" and the seconds an agent ran to show in the Journal's sessions view, via /grill-me. No usageShare field exists; I found the stored subagents[].tokenShare and durationSec, which were never displayed, and put six questions (field, placement, format, missing values, explanatory note, scope) in one round. The user accepted every recommendation. Building it followed from that green-light: a subagentUsageLabel helper in the Journal's dashboard utils, mapped onto each subagent in sessionCardViews, rendered at the end of the card's Subagents line, plus one clause in the note under it. code-review's Standards pass suggested the view-model mapping and the schema type, which I applied (agent-initiated); I kept the agreed \"3m 12s\" format although the Journal already has two other duration styles. Gate green, screenshot of the production build checked, PR opened, verdict posted, CI green and merged via merge-pr.ts. The user then asked for /retro after the merge and before the final log; I could not invoke it (disable-model-invocation), so the user ran it and I presented environment candidates before writing this final log."
 prs:
   - "2408"
 docsRead:
@@ -34,6 +34,9 @@ docsRead:
   - path: docs/adr/0004-objective-safety-gate.md
     reason: confirmed an agent may merge a tested display change
     useful: yes
+  - path: .agents/skills/retro/SKILL.md
+    reason: read to see whether I could run it after the merge; it is user-invoked only
+    useful: partly
 skillsUsed:
   - name: grilling
     reason: one round of six questions settled the display
@@ -45,6 +48,10 @@ skillsUsed:
     reason: first log on PR open
   - name: log-session
     reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
+  - name: writing-for-agents
+    reason: (no reason given)
 frictions:
   - description: The user's term usageShare matched no field; it took several greps to map it to subagents[].tokenShare
     solution: Name the field tokenShare in the card's note so a reader asking for it uses the stored name
@@ -52,12 +59,15 @@ frictions:
   - description: Ran gate:scoped before code-review, then edited during the run; pr-workflow says review first and edit nothing until the gate ends, so one gate run was wasted
     solution: "Follow pr-workflow's order: commit, code-review, then gate last; a build for a screenshot can come from that final gate"
     severity: minor
-durationSec: 664
+  - description: User asked me to run /retro after the merge; the Skill has disable-model-invocation, so it needed an extra user turn
+    solution: Let a Skill the user names in a prompt run by model, or list user-only Skills so the agent can say so up front
+    severity: minor
+durationSec: 1355
 models:
-  claude-opus-5-5: 99
+  claude-opus-5-5: 137
 toolCounts:
-  Skill: 5
-  Bash: 36
+  Skill: 7
+  Bash: 45
   Edit: 5
   Agent: 2
   ToolSearch: 3
@@ -66,6 +76,12 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__update_trigger: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/app/utils/dashboard.ts
   - layers/journal/app/components/journal/SessionCard.vue
@@ -82,6 +98,8 @@ rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0030.md
   - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0026.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -134,19 +152,25 @@ ruleVerdicts:
   - path: .claude/rules/adr-0029.md
     reason: Loaded on the always-loaded print and by the reviewers; no rule changed
     useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading the retro Skill; no Skill changed
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded on grepping gate.ts for a retro fact; no gate step changed
+    useful: no
 subagents:
   - type: general-purpose
     task: Standards review of diff
     durationSec: 39
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 10.3
+    tokenShare: 7.2
   - type: general-purpose
     task: Spec review of diff
     durationSec: 33
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 9.2
+    tokenShare: 6.5
 gitBranch: ccr-9bb558d0-cgb1rs
 entrypoint: remote_mobile
 cliVersion: 2.1.308
