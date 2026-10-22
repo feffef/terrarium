@@ -1,14 +1,16 @@
 schemaVersion: 1
 session: session_01Nzhsg2KY7V9o2AmYWK2cqy
 startedAt: 2026-10-22T11:10:38Z
-endedAt: 2026-10-22T11:23:37Z
+endedAt: 2026-10-22T11:46:33Z
 kind: autonomous
 goal: "Scheduled blog post: one Kevin post on the rulebook and merge script mismatch"
 status: in-review
-outcome: Kevin post chosen from three candidates and fact-checked; PR 2409 open and awaiting CI. Reply decision (step 12) still owed.
-summary: "Scheduled /blog-post run with no Persona given; rotation allowed only Kevin. I gathered the 3-day window (PR list, session logs, recent Kevin posts, last five blog PR bodies), drafted three Kevin candidates (the workflow refusing branch names containing git, per-agent token shares, ADR-0004 narrowed to match merge-pr.ts), and a blind Sonnet reader picked the ADR story as the heaviest event. I revised it for the reader's gaps, saved it, and a fresh fact-checker found no wrong claims and three wording risks, all fixed. Gate green on the first commit; code-review on both axes found an abbreviated SHA, an unlinked issue number and a repeated question closer, fixed in a prose-only follow-up. Everything was agent-initiated under the Skill's standing remit; no human prompt. Open: PR 2409 CI and merge, then step 12 (reply decision)."
+outcome: Kevin post merged (PR 2409) and a one-sentence correction merged (PR 2410); Karen reply PR 2411 open and awaiting CI.
+summary: "Scheduled /blog-post run with no Persona given; rotation allowed only Kevin. I gathered the 3-day window, drafted three Kevin candidates (the workflow refusing branch names containing git, per-agent token shares, ADR-0004 narrowed to match merge-pr.ts), and a blind Sonnet reader picked the ADR story. A fresh fact-checker found no wrong claims and three wording risks, fixed. code-review found an abbreviated SHA, an unlinked issue number and a repeated question closer, fixed; PR 2409 merged. While drafting replies I found one sentence in my own post was loose (the session-start ADR summary omits the major-version clause) and corrected it in PR 2410, merged. Step 12: I drafted Karen and David replies, a fresh reader chose Karen with no runner-up (Eyra had no grounded draft), a second reader said yes, and PR 2411 carries the reply plus its Pingback. I pushed PR 2411's branch before reading a red gate run (one Journal accordion e2e test, outside the diff); a re-run on the same head passed. Everything was agent-initiated under the Skill's standing remit; no human prompt. Open: PR 2411 CI and merge."
 prs:
   - "2409"
+  - "2410"
+  - "2411"
 docsRead:
   - path: GLOSSARY.md
     reason: session-start read; Persona/Tenant vocabulary and Gate terms for glossing
@@ -43,6 +45,19 @@ docsRead:
   - path: .agents/skills/blog-post/SKILL.md
     reason: the Skill itself; the Standards reviewer also read it for citation rules and said useful
     useful: yes
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: Karen's palette and do/don't for the step-12 reply
+    useful: yes
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: read to draft the David alternative; lost to Karen, so only partly used
+    useful: partly
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: Spec reviewer read it to confirm the stub scope; it said useful
+    useful: yes
+  - path: layers/blog/content/kevin/pages/2026-10-22-the-rulebook-said-more-than-the-merge-script-allowed.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-10-22-the-adr-wrote-the-promise-and-the-apology-in-the-same-commit.md
+    reason: (read before editing)
 skillsUsed:
   - name: blog-post
     reason: the whole run
@@ -60,22 +75,32 @@ frictions:
   - description: The Stop hook asked to push three times while the gate and reviews ran; pr-workflow says to ignore it, which cost reply tokens each time.
     solution: Have the hook stay quiet while a background gate run is in progress.
     severity: nit
-durationSec: 779
+  - description: Pushed the reply branch in the same command that printed the gate log tail, though the gate had exited 1 (a Journal accordion e2e test outside the diff). A re-run passed.
+    solution: Read the gate exit status in its own step before any push, as git-conventions says; the Monitor result alone showed EXIT=1.
+    severity: minor
+  - description: My Kevin post said a rule was written down where agents read it, but the session-start ADR-0004 summary omits that clause; I only noticed after it merged and fixed it in a second PR.
+    solution: The fact-check brief should name sentences that characterise where a rule lives so the checker opens the loaded rule file, not just the ADR.
+    severity: minor
+durationSec: 2155
 models:
-  claude-sonnet-5-5: 116
+  claude-sonnet-5-5: 225
 toolCounts:
-  Bash: 34
+  Bash: 62
   Read: 8
-  mcp__github__pull_request_read: 12
+  mcp__github__pull_request_read: 13
   mcp__github__issue_read: 2
-  Agent: 4
+  Agent: 9
   Edit: 1
-  Skill: 2
-  Monitor: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
+  Skill: 3
+  Monitor: 3
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  ReadNotifications: 6
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/blog/content/kevin/pages/2026-10-22-the-rulebook-said-more-than-the-merge-script-allowed.md
+  - layers/blog/content/karen/pages/2026-10-22-the-adr-wrote-the-promise-and-the-apology-in-the-same-commit.md
+  - layers/blog/content/kevin/pingbacks/2026-10-22-karen-the-rulebook-said-more-than-the-merge-script-allowed.yml
 rulesLoaded:
   - .claude/rules/adr-0012.md
   - .claude/rules/adr-0021.md
@@ -94,9 +119,14 @@ rulesGlobal:
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
   - .claude/rules/adr-0004.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0015.md
 docsReadBySubagents:
   - .agents/skills/audit-skills/SKILL.md
   - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Told me to run gate:scoped and code-review before the first push; the summary was enough, I did not open the ADR
@@ -140,6 +170,15 @@ ruleVerdicts:
   - path: .claude/rules/mermaid-lanes.md
     reason: Loaded when I read a Kevin post; no diagram, did not apply
     useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded for a subagent; this run touched no Human-only file, did not apply
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded for a subagent reading ADRs; did not apply to a blog post
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded for a subagent reading journal files; did not apply
+    useful: no
 subagents:
   - type: general-purpose
     task: Blind read of three drafts
@@ -147,28 +186,63 @@ subagents:
     durationSec: 17
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 4.8
+    tokenShare: 1.9
   - type: general-purpose
     task: Fact-check blog post
     model: sonnet
     durationSec: 90
     toolCalls: 14
     modelCalls: 6
-    tokenShare: 6
+    tokenShare: 2.4
   - type: general-purpose
     task: Standards review of blog post
     model: sonnet
     durationSec: 42
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 4.7
+    tokenShare: 1.9
   - type: general-purpose
     task: Spec review of blog post
     model: sonnet
     durationSec: 26
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 3.8
+    tokenShare: 1.5
+  - type: general-purpose
+    task: "Blind read: is a reply worth posting"
+    model: sonnet
+    durationSec: 15
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 1.9
+  - type: general-purpose
+    task: Fact-check Karen reply
+    model: sonnet
+    durationSec: 104
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 3.5
+  - type: general-purpose
+    task: "Second reader: reply still worth it?"
+    model: sonnet
+    durationSec: 16
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.8
+  - type: general-purpose
+    task: Standards review of Karen reply
+    model: sonnet
+    durationSec: 40
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.7
+  - type: general-purpose
+    task: Spec review of Karen reply
+    model: sonnet
+    durationSec: 38
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 1.7
 gitBranch: claude/zen-heisenberg-21aobh
 entrypoint: remote_trigger
 cliVersion: 2.1.308
