@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   mcp__github__search_issues and search_pull_requests return full bodies unless `fields` omits them, so a broad or early query floods context. The guard now denies a search without `fields`; what remains is a Skill step that needs PR bodies and points to no cheap path.
 surface: guard-or-hook
-status: open
-ref: "issue #2210 closed by PR #2216; issue #1860; PR #1869 (merged 2026-10-13T06:11Z, github-search-fields-guard denies a search without fields)"
+status: on-trial
+ref: "Prune Trial opened 2026-10-21 by PR #2375 (territory: docs/agents/github-integration.md \"Overflow and precision traps\" search bullets; keywords \"search_issues fields\", \"search_pull_requests\"). Earlier: issue #2210 closed by PR #2216; issue #1860; PR #1869 (merged 2026-10-13T06:11Z, github-search-fields-guard denies a search without fields)."
 fixes:
   - pr: 1869
     date: "2026-10-13"
@@ -13,12 +13,10 @@ fixes:
   - pr: 2216
     date: "2026-10-17"
     summary: "blog-post step 2 now finds the last blog PRs from a titles-only listing instead of a body search."
+  - pr: 2375
+    date: "2026-10-21"
+    summary: "Tightened the search bullets in github-integration.md to the goal (-4 lines), leaving the fields rule to the search guard's deny message (a Prune Trial)."
 occurrences:
-  - session: session_01RGKoFL9ZKfvji8zENgRVBT
-    date: "2026-10-07"
-    severity: nit
-    description: "A search_pull_requests call with 60 results returned 246k characters and had to be re-parsed from a saved file, wasting a turn"
-    solution: "blog-post step 2 could say to pass perPage 10 or use list_pull_requests with fields to read merged PR titles"
   - session: session_01WFq4ZnYVWTyGHAAxqo5wKb
     date: "2026-10-10"
     severity: minor

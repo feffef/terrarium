@@ -20,31 +20,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_01BT5bPRncBfCNwhim2d71Hh
-    date: "2026-10-07"
-    severity: minor
-    description: "The Stop hook repeatedly asked to push unpushed commits while pnpm gate:scoped was still running, conflicting with CLAUDE.md's gate-first rule."
-    solution: "Make the stop-hook reminder aware of a running or pending gate, or point to the gate-first rule in its message."
-  - session: session_01H84NG8cxGEwFS4jL3DWi1S
-    date: "2026-10-07"
-    severity: nit
-    description: "The Stop-hook uncommitted-changes nag fired while gate:scoped was legitimately running, the exact friction filed as 1653"
-    solution: "Resolve 1653; the source is harness-side ~/.claude/stop-hook-git-check.sh, so likely accept and drop the CLAUDE.md caveat"
-  - session: session_01QLxPLD6AQ2Y6GyWHE1dkKp
-    date: "2026-10-07"
-    severity: minor
-    description: "The Stop hook repeatedly demanded pushing unpushed commits while gate:scoped was still running, conflicting with CLAUDE.md's push-only-after-gate rule; cost several explanatory turns."
-    solution: "Make the Stop hook detect a running gate or accept a gate-pending marker."
-  - session: session_01RGKoFL9ZKfvji8zENgRVBT
-    date: "2026-10-07"
-    severity: nit
-    description: "The Stop hook asked twice to commit untracked files while the fact-check and gate were still pending, so committing then would have broken the don't-push-unverified rule"
-    solution: "Let the stop-hook git check skip while a background task or subagent is running"
-  - session: session_01TY4CnbUTCjYqaKpHAHKHku
-    date: "2026-10-07"
-    severity: nit
-    description: "Stop hook nagged about uncommitted changes twice while the fact-check and gate were legitimately running."
-    solution: "Let the hook detect a running background gate or pending subagent."
   - session: session_01449u16G5rFweMPGkKZe9Tv
     date: "2026-10-08"
     severity: nit
@@ -375,3 +350,23 @@ occurrences:
     severity: nit
     description: "Stop hook asked to push while gate:scoped was still running; I held the push per ADR-0004."
     solution: "None; the rule covers it."
+  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
+    date: "2026-10-21"
+    severity: nit
+    description: "The Stop hook asked twice to push while the gate ran, against ADR-0004's review-and-gate-before-first-push rule."
+    solution: "None here: the owner accepts the nag (stop-hook-nag); declining was correct."
+  - session: session_015WxXTQihe7mgBPgpAYZUqB
+    date: "2026-10-21"
+    severity: nit
+    description: "Stop hook asked for a push four times while review and gate were pending, as ADR-0004 anticipates; each cost a turn of explanation."
+    solution: "Let the hook skip while a gate or review agent is running."
+  - session: session_013n8e5pQ7h9GevyhHvtm4c3
+    date: "2026-10-21"
+    severity: nit
+    description: "Stop hook asked twice to push inspect-session-out-files while I held it for an owner answer and then for gate:scoped"
+    solution: "None needed; ADR-0004 already says to ignore it until the gate passes"
+  - session: session_01T4UbBvJmjSunCwb3cUN68Q
+    date: "2026-10-22"
+    severity: nit
+    description: "Stop hook asked to push three times while review and gate were still running, against ADR-0004 order."
+    solution: "Make the hook skip when a gate or review is pending."

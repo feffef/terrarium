@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   clear-backlog section 3 did not name the shape of the picks it passes to .claude/workflows/clear-backlog-build.js, so a string failed the run, and each branch got the whole relayed owner reply. Signals: clear-backlog-build failing on picks, a build agent following another branch's pick.
 surface: safe
-status: open
-ref: "Issue #2232 (picks as a plain string)."
+status: tracked
+ref: "Issue #2399 (regression of #2240). Issue #2232 (picks as a plain string)."
 fixes:
   - pr: 2067
     date: "2026-10-15"
@@ -24,3 +24,8 @@ occurrences:
     severity: minor
     description: "clear-backlog-build failed at once because I passed picks as a string; the Skill says 'the agreed picks' without naming the array shape."
     solution: "Say 'picks: an array of strings' in clear-backlog §3, or have the script accept a string."
+  - session: session_013n8e5pQ7h9GevyhHvtm4c3
+    date: "2026-10-21"
+    severity: moderate
+    description: "Explore triage agent for #2386 saw the owner's chat answers '1a 2a' and posted on the issue that the owner had decided the field shape"
+    solution: "clear-backlog-explore should not pass the owner's raw chat to triage agents, or should say which questions the answers belong to"

@@ -4,18 +4,15 @@ summary: >-
 cause: >-
   How a script, guard, rule, harness setting or data format behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set. A reviewer, the owner or a later check finds it false. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed"; a regex written without the real data.
 surface: safe
-status: tracked
-ref: "issue #2341 measures PR #2336's CLAUDE.md rule and may move the check to the reviewer."
+status: open
 fixes:
   - pr: 2336
     date: "2026-10-20"
     summary: "CLAUDE.md \"Verify before you state\" now names subagent reports, script behaviour from recall, \"only\"/\"every\"/\"nothing\" claims and one-test causes; \"One home per fact\" says to grep for other statements when changing one."
+  - pr: 2378
+    date: "2026-10-21"
+    summary: "Restored the shorter \"Verify before you state\" bullet in CLAUDE.md, and the Standards reviewer in clear-backlog-build now flags a count or subagent claim that cites no source."
 occurrences:
-  - session: session_01NyDGTR1fuP22hPo7XghCfz
-    date: "2026-10-07"
-    severity: moderate
-    description: "I wrote unverified or false claims into CLAUDE.md ('main has no branch protection', 'CI runs the full gate on every PR'). A self-check and a reviewer caught them."
-    solution: "Apply verify-before-you-state to my own instruction text, not only to session reports"
   - session: 1f97b613-f529-4487-a7e9-1115a44b84c7
     date: "2026-10-08"
     severity: moderate
@@ -81,3 +78,8 @@ occurrences:
     severity: nit
     description: "Two triage agents repeated the issue's wrong claim that the frictions-to-fixes briefs are in the prune trial, and one wrongly called tenant.config.ts Human-only; caught on verification."
     solution: "Triage briefs could tell agents to check trial territory and the Human-only list rather than relay the issue's constraint lines."
+  - session: session_01XfQgmS9ArvbD9WSoPgkKfM
+    date: "2026-10-21"
+    severity: minor
+    description: "Offered to check sessions against 'the ADRs adr-check said bind', assuming the Skill outputs such a list; it does not, so I had to ask the owner for a method."
+    solution: "Read a Skill's SKILL.md before proposing an analysis built on its output."

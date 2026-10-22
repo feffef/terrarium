@@ -11,26 +11,6 @@ fixes:
     date: "2026-10-10"
     summary: "Removed the commit-trailer guard, so hand-written trailers are no longer denied; recognised current models."
 occurrences:
-  - session: session_01AQ91ENQEqf8iMne1PrzFiu
-    date: "2026-10-07"
-    severity: minor
-    description: "I hand-wrote the Co-Authored-By and Claude-Session commit trailer from the harness attribution reminder, though CLAUDE.md says never to hand-write it; the guard did not deny a git commit -F."
-    solution: "Let the commit-msg hook add the trailer, and say in the harness reminder that the repo rule wins."
-  - session: session_01H84NG8cxGEwFS4jL3DWi1S
-    date: "2026-10-07"
-    severity: nit
-    description: "Harness attribution reminder said to end commits with Co-Authored-By/Claude-Session lines; CLAUDE.md forbids hand-writing them. I knew to omit them, but the contradiction is live (filed 1652)"
-    solution: "Resolve 1652 so the guard accepts the correct trailer"
-  - session: session_01S6auRmvHwvmSRZNciYFDbD
-    date: "2026-10-07"
-    severity: nit
-    description: "Hand-wrote the Co-Authored-By trailer in a commit command and the commit-trailer guard denied it; the system reminder told me to add it."
-    solution: "Reconcile the harness attribution reminder with the guard, or have the skill say never to add trailers."
-  - session: session_01UwY4ZKweYsmaf9zZrzj92k
-    date: "2026-10-07"
-    severity: nit
-    description: "First git commit hand-typed the Co-Authored-By and Claude-Session trailer from the system reminder; commit-trailer-guard denied it and the chained ledger append had to be redone."
-    solution: "The harness attribution reminder conflicts with CLAUDE.md; the reminder should say the trailer is landed automatically."
   - session: session_015UvXah6phvbuMpUWmf5rYs
     date: "2026-10-08"
     severity: minor

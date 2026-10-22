@@ -14,26 +14,6 @@ fixes:
     date: "2026-10-10"
     summary: "The provenance rule now requires only the session link, not a model name, and its example label is 'Claude'."
 occurrences:
-  - session: session_01BT5bPRncBfCNwhim2d71Hh
-    date: "2026-10-07"
-    severity: nit
-    description: "The provenance guard rejected my first PR body for header shape; fixed on retry using the shape in the deny message."
-    solution: "Mention the exact first-line header shape in pr-workflow.md before the PR step."
-  - session: session_01FjXKYqhJLRWNRcbDvdhNxQ
-    date: "2026-10-07"
-    severity: nit
-    description: "First create_pull_request call was denied by the provenance guard because the header was missing from the body's first line; retried with the marker."
-    solution: "Put the provenance header as the first body line on the first attempt."
-  - session: session_01NyDGTR1fuP22hPo7XghCfz
-    date: "2026-10-07"
-    severity: nit
-    description: "The harness system prompt says to keep model names out of PR bodies; ADR-0017's header carries one. I used the model-less 'Claude Code' name."
-    solution: "Note in ADR-0017 that a model-less header name is acceptable"
-  - session: session_01TY4CnbUTCjYqaKpHAHKHku
-    date: "2026-10-07"
-    severity: nit
-    description: "PR body first attempt rejected by the provenance guard for header shape; the digest Skill does not show the shape."
-    solution: "Show the header shape in the digest Skill or pr-workflow."
   - session: session_01SVbTmvqHK7xdAcGtG4SfKL
     date: "2026-10-08"
     severity: nit

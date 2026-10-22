@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_01AQ91ENQEqf8iMne1PrzFiu
-    date: "2026-10-07"
-    severity: nit
-    description: "The Agent-background-flag guard denied run_in_background false that the blog-post Skill's step 6 wording invites, and the double-background guard denied a Bash call that had both the flag and a trailing ampersand; each cost a retry."
-    solution: "Fix the blog-post Skill's step 6 and 9 wording to say Agent calls are always async; use one background mechanism only."
-  - session: session_01FjXKYqhJLRWNRcbDvdhNxQ
-    date: "2026-10-07"
-    severity: nit
-    description: "First gate launch used run_in_background plus a text-level ampersand and was blocked by the double-background guard; cost one retry."
-    solution: "Use run_in_background alone with a plain foreground command, as the guard message says."
   - session: session_01449u16G5rFweMPGkKZe9Tv
     date: "2026-10-08"
     severity: minor

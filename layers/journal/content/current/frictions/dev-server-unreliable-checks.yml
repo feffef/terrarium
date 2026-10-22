@@ -1,0 +1,17 @@
+name: dev-server-unreliable-checks
+summary: The dev server gives unreliable results when a session uses it to check a page, so the check wastes runs or reads stale content.
+cause: >-
+  The Nuxt dev server returns 503 for script chunks (the page never hydrates) or hot-reloads slowly (a before read already shows the new text), so a dev-server check of a change is wrong; a production build and preview is the dependable check. Signals: "dev preview server returned 503", "hot-reloaded slowly", a before/after check on the dev server.
+surface: safe
+status: open
+occurrences:
+  - session: session_01Bopw6N86uYzPzfaRpVqzhU
+    date: "2026-10-19"
+    severity: minor
+    description: "Dev preview server returned 503 for script chunks so the page never hydrated; ~2 wasted runs before switching to a production build."
+    solution: "Note in verifying-ui-changes.md that click tests need the production build when the dev server 503s."
+  - session: session_01CQhPd23d8eRP33TzyDha76
+    date: "2026-10-21"
+    severity: nit
+    description: "Dev-server before/after check of a content edit was unreliable: it hot-reloaded slowly, so the before read already showed the new text."
+    solution: "verifying-ui-changes.md should say to take content-edit evidence from the production build, with a rebuild between."

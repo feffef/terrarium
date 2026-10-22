@@ -10,6 +10,9 @@ fixes:
   - pr: 2140
     date: "2026-10-16"
     summary: "The build workflow brief now says a branch name or path containing git counts toward the worktree guard's two-git limit."
+  - pr: 2377
+    date: "2026-10-21"
+    summary: "clear-backlog-build now refuses a planned branch name containing \"git\" before any agent runs, replacing the prose warning in its build brief."
 occurrences:
   - session: session_01VPNHf6qDdJPXX23GghKs74
     date: "2026-10-16"

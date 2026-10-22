@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   ADR-0004's before-first-push gate:scoped plus code-review is skipped or the gate is not rerun after late edits.
 surface: guard-or-hook
-status: open
-ref: "Issue #2354 (regression of #2321: a push chained after a gate run) closed by PR #2359, a doc rule with no guard. Earlier: issue #2311 closed by PR #2319, reversed by PR #2321. Left open: pr-workflow.md and ADR-0004 must still agree on the review skip."
+status: tracked
+ref: "Issue #2397 (regression of #2359). Issue #2354 (regression of #2321: a push chained after a gate run) closed by PR #2359, a doc rule with no guard. Earlier: issue #2311 closed by PR #2319, reversed by PR #2321. Left open: pr-workflow.md and ADR-0004 must still agree on the review skip."
 fixes:
   - pr: 1852
     date: "2026-10-12"
@@ -96,3 +96,33 @@ occurrences:
     severity: moderate
     description: "Pushed 423b029e in the same command that printed GATE_EXIT=2, so a typecheck failure reached CI on PR #2345; git-conventions.md forbids exactly this chaining."
     solution: "Run the gate alone, read its exit status in a separate step, and only then push; a guard could deny git push in a command that also reads a gate log."
+  - session: session_01LKNUYveJSHpf9NV8zN8K5b
+    date: "2026-10-21"
+    severity: minor
+    description: "Last follow-up commit touched 3 files (7+/4-), over pr-workflow.md's 2-file simple bar, yet I gave it only my own read, skipping code-review. Gate passed."
+    solution: "Count files against the simple-change bar before choosing the review path, or run code-review on any follow-up that is not clearly simple."
+  - session: session_015WxXTQihe7mgBPgpAYZUqB
+    date: "2026-10-21"
+    severity: nit
+    description: "Chained git commit --amend before the gate run in one Bash command, against git-conventions (no state-changing git in a gate command). No push happened."
+    solution: "Amend in one call, start the gate in a separate backgrounded call."
+  - session: session_01QPvWywTuiADmXNMMLARnsF
+    date: "2026-10-21"
+    severity: nit
+    description: "Ran git commit and the background gate in one command, against git-conventions' no state-changing git next to a gate run; I read that doc only after my first git commands."
+    solution: "Hook-level reminder of git-conventions before the first git command, not after."
+  - session: session_01T4UbBvJmjSunCwb3cUN68Q
+    date: "2026-10-22"
+    severity: nit
+    description: "Ran the first gate:scoped in the same command as git commit --amend, against git-conventions."
+    solution: "Commit first, then start the gate alone."
+  - session: session_01CKXPocBm85jSCheqepKn2v
+    date: "2026-10-22"
+    severity: moderate
+    description: "Misjudged the Inventory-sweep diff (10 files, 164 lines) as a \"simple change\" under ADR-0004/pr-workflow.md and skipped the mandatory code-review Skill before the first push, even though pr-workflow.md's simple-change bar is \"at most 10 lines in at most 2 files\" and this Skill's own Inventory history repeatedly treats a skipped code-review as a real finding on itself."
+    solution: "Check the diff's file/line count against pr-workflow.md's literal \"simple\" definition before the push, not by file type (YAML-only, no code) alone. Caught it myself during close-session's step 1, before any human or subagent flagged it; ran code-review after the push instead, which cost an extra push cycle fixing what it found (notes over the word cap, one duplicated fact)."
+  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
+    date: "2026-10-21"
+    severity: nit
+    description: "SKILL.md section 2 and pr-workflow.md leave open whether a test counts as code logic for the simple-change read; I reran the test and read the diff to be safe."
+    solution: "Say in pr-workflow.md whether a test-only change of at most 10 lines counts as simple."
