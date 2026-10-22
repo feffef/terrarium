@@ -1,0 +1,328 @@
+schemaVersion: 1
+session: session_0115nugX79gRNenKYwsHM7UG
+startedAt: 2026-10-22T04:03:52Z
+endedAt: 2026-10-22T04:21:47Z
+kind: autonomous
+goal: Scheduled audit of the repo's docs for drift and padding
+status: completed
+outcome: "Sweep PR #2403 merged green with 13 confirmed fixes"
+summary: "Scheduled audit-docs run (docs/research concision family; 7 CONFIRMED, 6 CONFIRMED-BUT, 7 WRONG). Everything was agent-initiated by the schedule; no human prompt. Four reviewers produced ~25 findings (Freshness found none); two checkers dropped seven, mainly over-eager dedups and a rewrite inside an open prune trial (audit-docs's own log line). Applied the rest in one commit, ran code-review (nothing to change) and gate:scoped (green), opened and merged #2403. No ADR or Human-only path touched, so no escalation PR. Merged green via merge-pr.ts."
+prs:
+  - "2403"
+docsRead:
+  - path: GLOSSARY.md
+    reason: required read; glossary terms
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR recipe
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch and gate-then-push separation
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read without needing it
+    useful: no
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: (read before editing)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (read before editing)
+  - path: docs/research/public-readiness-review.md
+    reason: (read before editing)
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: (read before editing)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (read before editing)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (read before editing)
+  - path: docs/research/making-repo-public.md
+    reason: (read before editing)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/commons/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/atlas/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/marquee/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/adr-check/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/research/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Read github-integration.md in full before the PR although the read was not needed
+    solution: Only read it for tool traps when a tool misbehaves
+    severity: nit
+durationSec: 1075
+models:
+  claude-sonnet-5-5: 68
+toolCounts:
+  Bash: 20
+  Agent: 8
+  ReadNotifications: 2
+  Skill: 3
+  Read: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - docs/research/content-client-queries-without-wasm.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/making-repo-public.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/research/public-readiness-review.md
+  - docs/research/shell-reads-by-output-matching.md
+  - layers/journal/content/current/pages/how-it-works.md
+  - layers/journal/content/current/skills/dependabot-sweep.yml
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0010.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/guards.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0012.md
+docsReadBySubagents:
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/agents/guards.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/inspect-session/SKILL.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/domain.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/proposals/README.md
+  - layers/blog/GLOSSARY.md
+  - layers/journal/GLOSSARY.md
+  - layers/midden/GLOSSARY.md
+  - layers/tinkerfund/GLOSSARY.md
+  - layers/commons/GLOSSARY.md
+  - layers/atlas/GLOSSARY.md
+  - layers/marquee/GLOSSARY.md
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/adr-check/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/making-repo-public.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - docs/research/content-client-queries-without-wasm.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/research/public-readiness-review.md
+  - docs/research/shell-reads-by-output-matching.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/research/nuxt-content-review-grounding.md
+  - .agents/skills/research/SKILL.md
+subagents:
+  - type: general-purpose
+    task: "Audit A: freshness"
+    durationSec: 99
+    toolCalls: 25
+    modelCalls: 22
+    tokenShare: 9.9
+  - type: general-purpose
+    task: "Audit B: single-home"
+    durationSec: 132
+    toolCalls: 27
+    modelCalls: 18
+    tokenShare: 11
+  - type: general-purpose
+    task: "Audit C: concision"
+    durationSec: 56
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 5
+  - type: general-purpose
+    task: "Audit D: coherence"
+    durationSec: 351
+    toolCalls: 53
+    modelCalls: 46
+    tokenShare: 34.6
+  - type: general-purpose
+    task: Fact-check findings 1
+    durationSec: 99
+    toolCalls: 16
+    modelCalls: 15
+    tokenShare: 5.2
+  - type: general-purpose
+    task: Fact-check findings 2
+    durationSec: 136
+    toolCalls: 22
+    modelCalls: 20
+    tokenShare: 7.3
+  - type: general-purpose
+    task: "Review: Standards"
+    durationSec: 18
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 2.5
+  - type: general-purpose
+    task: "Review: Spec"
+    durationSec: 29
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 3.6
+gitBranch: claude/festive-mayer-tr7lyv
+entrypoint: remote_trigger
+cliVersion: 2.1.307
+trigger: audit-docs
+landedBy: Stop
