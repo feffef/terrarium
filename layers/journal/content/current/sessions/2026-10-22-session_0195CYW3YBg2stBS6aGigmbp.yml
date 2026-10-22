@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_0195CYW3YBg2stBS6aGigmbp
 startedAt: 2026-10-22T16:48:38Z
-endedAt: 2026-10-22T17:15:28Z
+endedAt: 2026-10-22T17:30:02Z
 kind: autonomous
 goal: "Visitor-loop run on the Journal: three blind visitors, fix consensus problems, build one feature"
-status: in-review
-outcome: Fix PR opened (Routine table on phones, friction defined in lead, two doors slimmed); feature PR still to build
-summary: "Scheduled visitor-loop run, focus journal (day-count row 2). Everything was agent-initiated from the stored schedule; no human steered. Served a production build, sent sonnet, fable and opus visitors through /t/journal/current, tallied consensus: three fixes (Routine weekly table clipped at 390px, \"Friction\" defined far below its first use, seven equal-weight start cards) and four consensus findings dropped after verification or on decisions.md rulings (reorder of the real-and-invented card, empty session links that were not empty, ideas jargon already warned, footer sites). An opus refiner kept two fixes, refined the table fix to a .rw-only change that leaves the owner's scroll cue alone, and refined the chosen feature (Friction Ledger cluster sparklines) to follow the ?days window. Fix PR #2413 carries the tally; code-review found one real edge case (empty grid when only the doors exist), fixed. RSS/Atom is out of remit and gets an issue; the feature PR follows."
+status: completed
+outcome: "Both PRs merged (#2413 fixes, #2414 Friction Ledger per-day strip); RSS issue #2415 filed"
+summary: "Scheduled visitor-loop run, focus journal (day-count row 2). Everything was agent-initiated from the stored schedule; no human steered. Served a production build, sent sonnet, fable and opus visitors through /t/journal/current, tallied consensus: three fixes (Routine weekly table clipped at 390px, \"Friction\" defined far below its first use, seven equal-weight start cards) and four consensus findings dropped after verification or on decisions.md rulings (reorder of the real-and-invented card, empty session links that were not empty, ideas jargon already warned, footer sites). An opus refiner kept two fixes, refined the table fix to a .rw-only change that leaves the owner's scroll cue alone, and refined the chosen feature (Friction Ledger cluster sparklines) to follow the ?days window. Fix PR #2413 carries the tally; code-review found one real edge case (empty grid when only the doors exist), fixed, and it merged. The feature PR #2414 (merged) adds a per-day strip to each Friction Ledger cluster; review caught a real bug (fix ticks read from a list capped at five), fixed with a fixDates field. RSS/Atom is out of remit: issue #2415."
 prs:
   - "2413"
+  - "2414"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: required at start; Tenant glossary map
@@ -61,8 +62,11 @@ docsRead:
   - path: .agents/skills/visitor-loop/refiner-brief.md
     reason: brief sent verbatim to the refiner
     useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "Filing an issue section: what to write, verified vs assumed"
+    useful: yes
   - path: layers/journal/app/pages/t/journal/[space]/frictions.vue
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/journal/app/pages/t/journal/[space]/index.vue
     reason: (read before editing)
   - path: scripts/lib/chromium.ts
@@ -97,22 +101,30 @@ frictions:
   - description: gate:scoped's e2e step reused an .output built before the last commit (L2 reuse), so it did not exercise the final v-if change.
     solution: Rebuild before gate:scoped when a later commit touches rendered code, or have the gate compare the build's age to the diff.
     severity: minor
-durationSec: 1609
+  - description: Typed an invented commit hash in the verdict comment on PR 2414 instead of copying the real head; caught before merging and corrected with a second comment.
+    solution: Print the head hash and paste it, never type it; merge-pr.ts would have refused the verdict anyway.
+    severity: nit
+durationSec: 2483
 models:
-  claude-sonnet-5-5: 123
+  claude-sonnet-5-5: 188
 toolCounts:
-  Bash: 44
-  Agent: 6
+  Bash: 64
+  Agent: 8
   ToolSearch: 1
   mcp__github__pull_request_read: 5
-  Read: 3
+  Read: 5
   mcp__github__search_issues: 4
   mcp__github__search_pull_requests: 1
-  Skill: 3
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  Skill: 5
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 3
+  ReadNotifications: 2
+  mcp__github__issue_write: 2
 filesEdited:
+  - layers/journal/app/pages/t/journal/[space]/frictions.vue
+  - layers/journal/app/utils/ledger.ts
+  - layers/journal/tests/unit/ledger.spec.ts
   - layers/journal/app/pages/t/journal/[space]/index.vue
   - layers/journal/app/components/content/RoutineWeeklyTable.vue
   - layers/journal/content/current/pages/index.md
@@ -229,37 +241,49 @@ subagents:
     durationSec: 98
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 4.6
+    tokenShare: 3.3
   - task: Visitor fable
     model: fable
     durationSec: 362
     toolCalls: 48
     modelCalls: 16
-    tokenShare: 11.9
+    tokenShare: 8.5
   - task: Visitor opus
     model: opus
     durationSec: 267
     toolCalls: 25
     modelCalls: 20
-    tokenShare: 10.3
+    tokenShare: 7.3
   - task: Refiner fit check
     model: opus
     durationSec: 314
     toolCalls: 51
     modelCalls: 37
-    tokenShare: 22.1
+    tokenShare: 15.7
   - type: general-purpose
     task: Standards review
     durationSec: 24
     toolCalls: 7
     modelCalls: 2
-    tokenShare: 2.5
+    tokenShare: 1.7
   - type: general-purpose
     task: Spec review
     durationSec: 31
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 2.8
+    tokenShare: 2
+  - type: general-purpose
+    task: Standards review feature
+    durationSec: 27
+    toolCalls: 9
+    modelCalls: 4
+    tokenShare: 2.2
+  - type: general-purpose
+    task: Spec review feature
+    durationSec: 21
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.8
 gitBranch: claude/adoring-galileo-5ap7ut
 entrypoint: remote_trigger
 cliVersion: 2.1.308
