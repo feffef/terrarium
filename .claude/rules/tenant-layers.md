@@ -29,4 +29,5 @@ paths:
   (prefix keys, delete only yours, never `clear()`).
 
 Wrapper CSS tokens, content-component overrides and routing claims:
-docs/agents/tenant-layers.md. A Tenant's own terms: layers/<tenant>/GLOSSARY.md.
+docs/agents/tenant-layers.md. Before you work on a Tenant, read its terms in
+layers/<tenant>/GLOSSARY.md.

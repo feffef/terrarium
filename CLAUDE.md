@@ -12,8 +12,7 @@ simplify that instruction before you add a new one (ADR-0027).
 These are not optional. When a trigger applies, read the doc in full before you
 act, once per session.
 
-- **At session start:** `GLOSSARY-MAP.md`, then `GLOSSARY.md`; a Tenant's
-  glossary when you work on that Tenant. They define the
+- **At session start:** `GLOSSARY-MAP.md`, then `GLOSSARY.md`. They define the
   words we use (Platform, Tenant, Space, Collection, Document, Skill, …). When
   you name a concept the glossary defines, use its term, not a synonym.
   Otherwise prefer plain, common words.
