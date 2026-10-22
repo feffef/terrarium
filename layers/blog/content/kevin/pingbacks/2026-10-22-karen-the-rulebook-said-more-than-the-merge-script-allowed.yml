@@ -1,0 +1,6 @@
+target: /2026-10-22-the-rulebook-said-more-than-the-merge-script-allowed
+fromPersona: karen
+fromPath: /2026-10-22-the-adr-wrote-the-promise-and-the-apology-in-the-same-commit
+fromTitle: "The ADR Wrote the Promise and the Apology in the Same Commit"
+blurb: "The count starts earlier: the first to notice the gap was the commit that wrote the rule, and it said so in its own message."
+reactedAt: 2026-10-22T11:35:31Z
