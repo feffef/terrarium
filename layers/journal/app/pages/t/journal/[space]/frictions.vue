@@ -52,6 +52,18 @@ const days = computed({
 const panels = computed(() =>
   ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.own), otherSpace, data.value?.goals, ledgerWindowStart(today.value, days.value)),
 )
+// Self-reported sessions per UTC day over the chosen window, with a tick on each day a fix merged.
+const windowStart = computed(() => ledgerWindowStart(today.value, days.value))
+function dayStrip(e: { occurrences: { date: string }[]; fixes: { date: string }[] }) {
+  const cells = ledgerDayStrip(e.occurrences.map((o) => o.date), e.fixes.map((f) => f.date), windowStart.value, today.value)
+  const max = Math.max(1, ...cells.map((c) => c.count))
+  const hits = cells.filter((c) => c.count).map((c) => `${c.date} ${c.count}`).join(', ')
+  const fixes = cells.filter((c) => c.fix).map((c) => c.date).join(', ')
+  return {
+    cells: cells.map((c) => ({ ...c, height: c.count ? 25 + (75 * c.count) / max : 0 })),
+    label: `Sessions per day since ${windowStart.value}: ${hits || 'none'}${fixes ? `. A fix merged on ${fixes}` : ''}`,
+  }
+}
 const sections = computed(() => [
   {
     id: 'severe-h',
@@ -95,7 +107,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         <select id="ledger-window" v-model.number="days">
           <option v-for="d in LEDGER_WINDOWS" :key="d" :value="d">{{ d }} days</option>
         </select>
-        <span>Counts, severity and ranking use only those; merged PRs and fix states use all {{ LEDGER_HORIZON_DAYS }} days.</span>
+        <span>Counts, severity and ranking use only those; merged PRs and fix states use all {{ LEDGER_HORIZON_DAYS }} days. The strip on each row shows the sessions that hit it per UTC day, as the agents reported them; a green tick under a day marks a merged fix.</span>
       </p>
 
       <template v-for="sec in sections" :key="sec.id">
@@ -117,6 +129,11 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                       · {{ e.fixes.length === 1 ? 'PR' : 'PRs' }}
                       <template v-for="(f, i) in e.fixes" :key="f.pr"><a :href="f.url" @click.stop>#{{ f.pr }}</a>{{ i < e.fixes.length - 1 ? ', ' : '' }}</template>
                     </template>
+                  </span>
+                  <span class="strip" role="img" :aria-label="dayStrip(e).label">
+                    <span v-for="c in dayStrip(e).cells" :key="c.date" class="day" :class="{ fix: c.fix }">
+                      <span v-if="c.count" class="bar" :style="{ height: `${c.height}%` }" />
+                    </span>
                   </span>
                 </span>
               </summary>
@@ -207,6 +224,10 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
 .summary::before { content: '▸'; display: inline-block; width: 1rem; color: var(--jd-muted); }
 details[open] .summary::before { content: '▾'; }
 .pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.strip { display: inline-flex; align-items: flex-end; gap: 2px; height: 1.1rem; margin-left: 0.2rem; }
+.day { position: relative; display: flex; align-items: flex-end; width: 5px; height: 100%; border-bottom: 1px solid var(--jd-line); }
+.day.fix { border-bottom: 2px solid var(--jd-accent); }
+.bar { display: block; width: 100%; background: var(--jd-muted); }
 .pill {
   font-family: var(--jd-mono);
   font-size: 0.66rem;
