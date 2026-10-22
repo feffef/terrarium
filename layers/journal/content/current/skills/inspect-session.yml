@@ -44,3 +44,15 @@ observations:
       2026-10-19T17:08Z), so it was not a miss. No post-landing session
       called list_events or get_event without the Skill. Not yet escalated,
       n=0. Grade/role unchanged (specialist).
+  - date: "2026-10-22"
+    note: >-
+      Third behaviour check, 7/7 usedIn sessions clean (correct
+      subagent-first dispatch every time); the "did not use it" candidates
+      were correctly ruled out by goal. NEW, single-instance, not escalated:
+      session_01Y8rMxQ5cH3oLqzHegyQnFx logged that inspect-session can't
+      answer questions about workflow agents — their turns aren't in
+      list_events and the local .output lives in a dead container once the
+      session ends — so a 16-page read returned nothing. A real gap in this
+      Skill's own coverage, distinct from the 2026-10-21 missed-invocation
+      question; watch for a second occurrence before escalating. Grade/role
+      unchanged (specialist).

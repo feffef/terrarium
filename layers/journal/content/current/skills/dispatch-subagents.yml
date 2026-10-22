@@ -417,3 +417,17 @@ observations:
       incident (session_01CtktRkpbF4wQ3TTQVYUqLz, 10-17) already fixed the
       next day via merged PR #2235. ~123 nonUsers triaged by goal, no new
       missed invocation found. Grade/role unchanged.
+  - date: "2026-10-22"
+    note: >-
+      Self-check, 10/10 usedIn clean (no stranding, no merge-pr.ts-to-subagent,
+      no new branch/worktree collision beyond the already-closed-not_planned
+      #1480/#1586 shapes recurring self-caught). NEW, single-instance, not
+      escalated: session_01Y8rMxQ5cH3oLqzHegyQnFx found that
+      clear-backlog-build's fix loop spawns a fresh Workflow-tool agent per
+      review round rather than resuming one, because the Workflow API can't
+      continue a stopped run — directly contrary to this Skill's "never
+      re-dispatch, always resume" rule (now §6), and the fresh agent's
+      prompt omits the prior round's build decisions. No open issue names
+      it; the session's own outcome left it for the owner to decide rather
+      than filing. Worth escalating if it recurs or if a human wants it
+      filed now. Grade/role unchanged (essential).

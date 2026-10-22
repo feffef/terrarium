@@ -360,3 +360,26 @@ observations:
       Single run, nothing damaged; a second such run clears the bar. Also
       unverified: whether session_01HcMFbKDTkG7hs2VhByAs4b's pool.md held
       both agents' findings. Grade/role unchanged (routine).
+  - date: "2026-10-22"
+    note: >-
+      Escalated as issue #2395: the 2026-10-21 entry's "a second such run
+      clears the bar" condition is now met. Independently re-verified in
+      source, not just from the sessions' own logs: docs/adr/0004 line 25
+      says plainly an agent may merge its own minor/patch package.json bump;
+      .claude/rules/adr-0004-human-merge.md's paths list package.json
+      unconditionally; scripts/github/merge-pr.ts's mergePrWhenGreen only
+      runs version-bump logic (dependabotBumpRefusal) for
+      meta.authorLogin === DEPENDABOT_LOGIN, so any other author's plain
+      minor/patch bump still falls to the unconditional Human-only refusal.
+      Git history (commit 159597cca, 2026-10-13) shows this was a deliberate
+      owner-confirmed ADR decision left pending #1889's resolution; #1889
+      closed via PR #2283 addressing only Dependabot-authored PRs, never an
+      agent's own direct bump — so the gap has been live since before #1889
+      existed and remains live today. Two runs named it and filed nothing:
+      session_017xginqTj2NjZ8XgrbRqvkm (2026-10-16, PR #2110/#2111, "tracked
+      in #1889... No issue filed") and session_012XnetQuxWoyaVFYw1BqMoy
+      (2026-10-20, PR #2317, after #1889 had already closed, "Left for a
+      human"). Step 4's "every finding is fixed, or filed as a needs-triage
+      issue" never actually ran for this one — both times it rode on
+      #1889's coattails without checking #1889's scope matched. Grade/role
+      unchanged (routine).
