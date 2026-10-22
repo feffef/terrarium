@@ -75,13 +75,16 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
               <li v-for="(a, i) in card.subagents" :key="i">
                 <span class="mono">{{ a.type || 'agent' }}</span
                 ><span v-if="a.model" class="amodel"> · {{ a.model }}</span
-                ><template v-if="a.task"> — {{ a.task }}</template>
+                ><template v-if="a.task"> — {{ a.task }}</template
+                ><span v-if="subagentUsageLabel(a)" class="amodel"> · {{ subagentUsageLabel(a) }}</span>
               </li>
             </ul>
             <p class="subnote">
               {{ foldedFieldLabels }} fold in each subagent's own activity as well
               as the main session's. Tool counts — and the duration and model
-              above — cover the main session's turns only.
+              above — cover the main session's turns only. Each subagent's % is
+              its share of the session's tokens, weighted by price: a rough
+              cost, not a bill.
             </p>
           </div>
 

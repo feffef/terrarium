@@ -66,6 +66,18 @@ export function sessionToolEntries(counts?: Record<string, number>): { name: str
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
 }
 
+// A subagent's token share and run time, e.g. `42% · 3m 12s`. Empty ⇒ an older log
+// that stored neither.
+export function subagentUsageLabel(a: { tokenShare?: number; durationSec?: number }): string {
+  const parts: string[] = []
+  if (a.tokenShare !== undefined) parts.push(a.tokenShare < 1 ? '<1%' : `${Math.round(a.tokenShare)}%`)
+  if (a.durationSec !== undefined) {
+    const m = Math.floor(a.durationSec / 60)
+    parts.push(m ? `${m}m ${a.durationSec % 60}s` : `${a.durationSec}s`)
+  }
+  return parts.join(' · ')
+}
+
 // ── Aggregations (scoped to one Space) ───────────────────
 const emptySev = (): Record<Severity, number> => ({ nit: 0, minor: 0, moderate: 0, major: 0, blocker: 0 })
 

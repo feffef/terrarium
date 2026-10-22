@@ -28,6 +28,7 @@ import {
   externalSkillCount,
   sessionWhen,
   sessionModelsLabel,
+  subagentUsageLabel,
   frictionCount,
   frictionOtherCount,
   frictionTotals,
@@ -289,6 +290,18 @@ describe('skillUrl', () => {
   it("links a repo Skill's SKILL.md on main, and nothing for an unknown name", () => {
     expect(skillUrl('tdd', ['tdd'])).toBe('https://github.com/feffef/terrarium/blob/main/.agents/skills/tdd/SKILL.md')
     expect(skillUrl('simplify', ['tdd'])).toBeUndefined()
+  })
+})
+
+describe('subagentUsageLabel', () => {
+  it('shows a whole-percent share and minutes and seconds', () => {
+    expect(subagentUsageLabel({ tokenShare: 41.6, durationSec: 192 })).toBe('42% · 3m 12s')
+    expect(subagentUsageLabel({ tokenShare: 0.8, durationSec: 45 })).toBe('<1% · 45s')
+  })
+  it('leaves out a value an older log lacks', () => {
+    expect(subagentUsageLabel({ durationSec: 60 })).toBe('1m 0s')
+    expect(subagentUsageLabel({ tokenShare: 10 })).toBe('10%')
+    expect(subagentUsageLabel({})).toBe('')
   })
 })
 
