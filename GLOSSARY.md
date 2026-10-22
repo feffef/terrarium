@@ -14,7 +14,8 @@ several Spaces.)
 ### Tenant
 A distinct product/site within the Platform, with its own components (its
 "fit-out") and content model; that code is what sets it apart from a Space.
-Tenants are isolated from each other (ADR-0025). A Tenant is implemented as a
+Tenants are isolated from each other (ADR-0025). "Multi-tenant" means this
+architecture, not paying customers. A Tenant is implemented as a
 Nuxt layer: say "Tenant" for the domain concept and "layer" only for the Nuxt
 mechanism.
 
@@ -134,8 +135,7 @@ locally and in CI; CI's run decides the merge. Its steps form two tiers,
 The **Gate** tier that always runs, whatever changed.
 
 ### Heavy
-The **Gate** tier that may be skipped when every changed path is **Inert**,
-because it is expensive.
+The costly **Gate** tier, skipped when every changed path is **Inert**.
 
 ### Full gate
 **Floor** plus **Heavy**.

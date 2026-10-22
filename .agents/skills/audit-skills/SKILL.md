@@ -119,9 +119,8 @@ for step 5 as an observation.
 
 ## 5. Tune the Inventory
 
-Grade each Skill's importance (how essential it is when its kind of work comes
-up, never how often it runs), after reading its `observations`: earlier runs'
-evidence counts alongside this window's.
+Grade each Skill's importance (`GLOSSARY.md`) after reading its
+`observations`: earlier runs' evidence counts alongside this window's.
 
 - **essential**: essential and broad; its absence would be felt across many
   kinds of session (e.g. `log-session`, `domain-modeling`).

@@ -14,7 +14,7 @@ no ADR.
   it.
 - **The root `GLOSSARY.md`** is a glossary only: definitions, with no
   instructions, rationale, implementation details or specs; those live where
-  they are used. It also lists the terms we
+  they are used. An entry may still say which word to use. It also lists the terms we
   stopped using, so older text stays readable.
 - **A Tenant's `GLOSSARY.md`** holds that Tenant's glossary, plus why it exists,
   who it is for and its product decisions as they stand. A spec issue may hold

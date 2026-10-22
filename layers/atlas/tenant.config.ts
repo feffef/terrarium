@@ -15,7 +15,7 @@
 //  - `interactions` the food-web edges — one directed edge per file. Both the
 //                   diagram (#70) and a Specimen's own Relations (#71) are two
 //                   views of THIS single-homed data. Same-biome only, so the web
-//                   is always a same-Space read (GLOSSARY.md: Interaction).
+//                   is always a same-Space read (layers/atlas/GLOSSARY.md: Interaction).
 //  - `observations` the field log — dated sightings that accumulate over time
 //                   (#72). Append-only in spirit; the world's heartbeat.
 import { z } from 'zod'

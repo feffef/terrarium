@@ -1,7 +1,6 @@
 # Glossary Map
 
-Every glossary, which is also the list of Tenants (ADR-0021). Read the Platform
-glossary always, and a Tenant's glossary when you work on that Tenant.
+Every glossary, which is also the list of Tenants (ADR-0021).
 
 ## Glossaries
 
