@@ -112,8 +112,9 @@ back to steer self-improvement, and the **Journal** publishes them. The
 ### Self-improvement loop
 How the Platform fixes itself, semi-autonomously. Each **Session** logs its
 **Frictions**; **Routines** run `frictions-to-fixes` (into the **Friction
-Ledger**, then fix PRs) and `audit-skills` (into the **Skill Inventory**). What
-they can't fix themselves they file as `needs-triage` issues; the owner starts
+Ledger**, then fix PRs), `audit-skills` (into the **Skill Inventory**) and
+`audit-docs` (doc fixes). What they can't fix themselves they file as
+`needs-triage` issues; the owner starts
 `clear-backlog`, which picks those up, grills them once and builds the approved
 ones. Every PR still clears the **Gate**, and a human decides what ADR-0004
 reserves.
