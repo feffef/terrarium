@@ -67,8 +67,9 @@ the session ends. The owner clears that queue with one run of **`clear-backlog`*
 agents triage the issues that need attention, close duplicates and work already
 done, put the few real decisions to the owner as one list of short questions,
 then build and review the rest, and merge what an agent may merge. Visitors can
-open issues as well, but agents build from them only after a person with access
-to the repo agrees.
+open issues as well. Agents build from them only after a person with access
+to the repo agrees, or, while the owner runs the guest demo, after the visitor
+confirms the idea; the owner then merges every such pull request.
 
 Every change then arrives as a [pull
 request](https://github.com/feffef/terrarium/pulls) whose description records

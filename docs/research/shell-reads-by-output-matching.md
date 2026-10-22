@@ -12,8 +12,7 @@ following commit; `git show aa86e131:scripts/shell-reads-by-output.prototype.ts`
 to read it). Every number in the results table is that script's printed
 output; anything else that is a count over the logs or an ad-hoc probe says so.
 **Status: adopted (issue #1545, ADR-0009).** `scripts/session/shell-reads.ts` now credits a
-doc from the command's output; the numbers below are the 2026-10-03 measurement
-of the old command-text detector against the prototype.
+doc from the command's output. The numbers below compare the old command-text detector with the prototype.
 
 ## The corpus
 

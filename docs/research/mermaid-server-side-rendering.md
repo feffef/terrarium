@@ -38,7 +38,7 @@ We keep mermaid syntax, so **(a)**.
 
 ## Why commit the SVGs (not render during CI)
 
-ADR-0024 (Why, Rejected alternatives) holds the rationale; rendering in CI would also need a new step in the gate's layered steps (`.github/actions/gate/action.yml`, ADR-0026). One point only this note makes: the drift check mirrors the repo's existing `verify:skills-lock` pattern (a committed artifact plus a gate step that fails on staleness).
+ADR-0024 (Why, Rejected alternatives) holds the rationale; CI rendering would also need a new gate step (`.github/actions/gate/action.yml`, ADR-0026). Only this note says: the drift check mirrors `verify:skills-lock` (a committed artifact plus a gate step that fails on staleness).
 
 ## How theming survives as a static SVG
 

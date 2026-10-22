@@ -1,7 +1,6 @@
 # Public-readiness review — `feffef/terrarium`'s 2026-07-11 flip to public
 
-One-time review before this repository went from **private** to **public read**;
-the flip happened the same day (see the 2026-07-11 journal digest). Generic
+One-time review before this repository went from **private** to **public read** (same day; see the 2026-07-11 journal digest). Generic
 GitHub mechanics (what becomes visible, which settings to enable,
 fork/secret-scanning behaviour) are single-homed in
 **[`making-repo-public.md`](./making-repo-public.md)**. This doc holds the
