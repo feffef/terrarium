@@ -42,7 +42,7 @@ export interface SessionCardView {
   // Expanded detail:
   sid: string
   summary: string
-  subagents: Subagent[]
+  subagents: (Subagent & { usage: string })[]
   // `viaSubagent`: only a subagent read it (#1941). `unknown`: such an entry no
   // agent gave a verdict on, which counts as neither useful nor not.
   docsRead: (DocRead & { viaSubagent: boolean; unknown: boolean })[]

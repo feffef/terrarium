@@ -28,6 +28,7 @@ import {
   externalSkillCount,
   sessionWhen,
   sessionModelsLabel,
+  subagentUsageLabel,
   frictionCount,
   frictionOtherCount,
   frictionTotals,
@@ -292,6 +293,18 @@ describe('skillUrl', () => {
   })
 })
 
+describe('subagentUsageLabel', () => {
+  it('shows a whole-percent share and minutes and seconds', () => {
+    expect(subagentUsageLabel({ tokenShare: 41.6, durationSec: 192 })).toBe('42% · 3m 12s')
+    expect(subagentUsageLabel({ tokenShare: 0.8, durationSec: 45 })).toBe('<1% · 45s')
+  })
+  it('leaves out a value an older log lacks', () => {
+    expect(subagentUsageLabel({ durationSec: 60 })).toBe('1m 0s')
+    expect(subagentUsageLabel({ tokenShare: 10 })).toBe('10%')
+    expect(subagentUsageLabel({})).toBe('')
+  })
+})
+
 describe('sessionDurationLabel', () => {
   it('shows hours from 60 minutes up', () => {
     expect(sessionDurationLabel(596)).toBe('9 h 56 min')
@@ -342,7 +355,7 @@ describe('sessionCardViews', () => {
     })
     const [c] = sessionCardViews([s])
     expect(c!.model).toBe('opus-4-8 · sonnet-5')
-    expect(c!.subagents).toEqual([{ type: 'general-purpose', task: 'survey', model: 'sonnet' }])
+    expect(c!.subagents).toEqual([{ type: 'general-purpose', task: 'survey', model: 'sonnet', usage: '' }])
     expect(c!.filesEdited).toEqual(['a.ts', 'b.vue'])
     expect(c!.tools).toEqual([{ name: 'Bash', count: 9 }, { name: 'Read', count: 2 }])
   })
