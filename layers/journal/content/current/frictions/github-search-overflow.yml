@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-21"
     summary: "Tightened the search bullets in github-integration.md to the goal (-4 lines), leaving the fields rule to the search guard's deny message (a Prune Trial)."
 occurrences:
-  - session: session_01RGKoFL9ZKfvji8zENgRVBT
-    date: "2026-10-07"
-    severity: nit
-    description: "A search_pull_requests call with 60 results returned 246k characters and had to be re-parsed from a saved file, wasting a turn"
-    solution: "blog-post step 2 could say to pass perPage 10 or use list_pull_requests with fields to read merged PR titles"
   - session: session_01WFq4ZnYVWTyGHAAxqo5wKb
     date: "2026-10-10"
     severity: minor

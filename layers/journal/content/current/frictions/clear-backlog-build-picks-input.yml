@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   clear-backlog section 3 did not name the shape of the picks it passes to .claude/workflows/clear-backlog-build.js, so a string failed the run, and each branch got the whole relayed owner reply. Signals: clear-backlog-build failing on picks, a build agent following another branch's pick.
 surface: safe
-status: open
-ref: "Issue #2232 (picks as a plain string)."
+status: tracked
+ref: "Issue #2399 (regression of #2240). Issue #2232 (picks as a plain string)."
 fixes:
   - pr: 2067
     date: "2026-10-15"

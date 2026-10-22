@@ -11,21 +11,6 @@ fixes:
     date: "2026-10-11"
     summary: "Removed the check that blocked whole commands for ending in a pipe to tail or head."
 occurrences:
-  - session: session_01N6jqFrkCMkEm3g6kJW9Zqk
-    date: "2026-10-07"
-    severity: nit
-    description: "tail-pipe guard blocked a piped check command; had to redirect to a file."
-    solution: "None needed beyond habit; guard message was clear."
-  - session: session_01QLxPLD6AQ2Y6GyWHE1dkKp
-    date: "2026-10-07"
-    severity: nit
-    description: "A single bash command piping into tail while backgrounded was denied by the tail-pipe guard, and the chained python edit did not run, costing a retry."
-    solution: "None needed; the guard worked as designed."
-  - session: session_01S6auRmvHwvmSRZNciYFDbD
-    date: "2026-10-07"
-    severity: nit
-    description: "Several first attempts were denied by guards (sleep in Bash, tail pipe, PR body provenance shape), each costing a retry."
-    solution: "Mention the provenance marker shape and the no-sleep/no-tail-pipe rules in the visitor-loop skill."
   - session: df390af0-11a7-4415-9bb9-b24cea702246
     date: "2026-10-08"
     severity: nit

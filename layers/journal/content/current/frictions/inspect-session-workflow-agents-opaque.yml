@@ -3,7 +3,7 @@ summary: The inspect-session Skill cannot answer questions about workflow agents
 cause: >-
   Workflow subagents (workflow-subagent) run outside the session's event stream and their saved .output stays in the old container, so list_events pages return nothing per agent; inspect-session does not say up front that such questions need the session log or a saved run summary. Signals: "inspect-session", "workflow agents", ".output", a multi-page read that returned nothing per agent.
 surface: safe
-status: open
+status: tracked
 occurrences:
   - session: session_01Y8rMxQ5cH3oLqzHegyQnFx
     date: "2026-10-21"

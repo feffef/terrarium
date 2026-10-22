@@ -11,31 +11,6 @@ fixes:
     date: "2026-10-10"
     summary: "Removed the guard that blocked the no-op background flag on subagent dispatch, so it no longer denies calls."
 occurrences:
-  - session: session_015nX759CQdTRtT6x6oLDanX
-    date: "2026-10-07"
-    severity: nit
-    description: "Agent call with run_in_background false was denied by the agent-background-flag guard; I copied the flag from the skill's own wording."
-    solution: "Tracked as #1651; the frictions-to-fixes skill text should not suggest the flag."
-  - session: session_01H84NG8cxGEwFS4jL3DWi1S
-    date: "2026-10-07"
-    severity: nit
-    description: "Dispatched both /code-review agents with run_in_background false and the agent-background-flag guard denied both, minutes after I filed 1651 about exactly that"
-    solution: "Resolve 1651; the harness's own Agent tool guidance invites the flag"
-  - session: session_01N6jqFrkCMkEm3g6kJW9Zqk
-    date: "2026-10-07"
-    severity: nit
-    description: "Agent call with run_in_background false was rejected by the guard (a no-op flag); re-sent five reviewer prompts."
-    solution: "Skill dispatch text should say omit the flag."
-  - session: session_01NyDGTR1fuP22hPo7XghCfz
-    date: "2026-10-07"
-    severity: nit
-    description: "agent-background-flag-guard denied run_in_background false on an Agent call, costing a retry (tracked in issue 1651)."
-    solution: "Issue 1651's options: allow the no-op flag or delete the guard"
-  - session: session_01RGKoFL9ZKfvji8zENgRVBT
-    date: "2026-10-07"
-    severity: nit
-    description: "The Agent guard denied run_in_background false on the fact-check dispatch; the Skill's step 9 wording invites a synchronous return"
-    solution: "Reword step 9 like step 6: dispatch and wait for the notification, no flag"
   - session: session_018i6d2BQPkf9cq6jSEqCNSX
     date: "2026-10-10"
     severity: minor

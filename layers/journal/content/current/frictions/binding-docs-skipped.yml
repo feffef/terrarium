@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-19"
     summary: "Moved the ADR grep before a recommendation into a model-invoked adr-check Skill that prints every ADR summary and reads the related ADRs in full."
 occurrences:
-  - session: session_01NyDGTR1fuP22hPo7XghCfz
-    date: "2026-10-07"
-    severity: moderate
-    description: "Broke CLAUDE.md 'Before you plan a change: grep docs/adr' (old CLAUDE.md: read all ADRs) — no ADR lookup before planning. Impact: I mis-cited ADR-0018/0026 in the Human-only list, which two review rounds had to fix."
-    solution: "Would have grepped had the trigger named instruction files too ('including CLAUDE.md and Skills'); I treated the rewrite as prose, not as a change ADRs bind"
   - session: session_011p9VA5A1CWNG9xd2VrQf8N
     date: "2026-10-08"
     severity: major

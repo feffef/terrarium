@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Session logs and Digests land on main without a gate (ADR-0009) while e2e tests and the strict session schema assert on them, so one log turns main and every open PR red.
 surface: safe
-status: open
-ref: "issue #1784; PR #1792 (regressed); issue #2105; PR #2103 blocked on it; fix PR from frictions-to-fixes 2026-10-16"
+status: tracked
+ref: "Issue #2398 (regression of #2108). issue #1784; PR #1792 (regressed); issue #2105; PR #2103 blocked on it; fix PR from frictions-to-fixes 2026-10-16"
 fixes:
   - pr: 1748
     date: "2026-10-10"

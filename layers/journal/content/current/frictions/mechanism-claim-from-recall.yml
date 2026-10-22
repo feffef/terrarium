@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-21"
     summary: "Restored the shorter \"Verify before you state\" bullet in CLAUDE.md, and the Standards reviewer in clear-backlog-build now flags a count or subagent claim that cites no source."
 occurrences:
-  - session: session_01NyDGTR1fuP22hPo7XghCfz
-    date: "2026-10-07"
-    severity: moderate
-    description: "I wrote unverified or false claims into CLAUDE.md ('main has no branch protection', 'CI runs the full gate on every PR'). A self-check and a reviewer caught them."
-    solution: "Apply verify-before-you-state to my own instruction text, not only to session reports"
   - session: 1f97b613-f529-4487-a7e9-1115a44b84c7
     date: "2026-10-08"
     severity: moderate
