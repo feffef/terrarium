@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019CbZiWqLbydExXQCmHRDyg
 startedAt: 2026-10-22T18:40:48Z
-endedAt: 2026-10-22T19:02:37Z
+endedAt: 2026-10-22T19:23:31Z
 kind: interactive
 goal: Trim the root glossary and glossary map
-status: in-review
-outcome: "PR #2416 cuts both files from ~3,370 to ~1,340 words; waits for a human merge"
-summary: "The user asked what in root GLOSSARY.md and GLOSSARY-MAP.md could be trimmed because it lives elsewhere. I answered first with an analysis: some text was plain duplication, but several entries (severity scale, Session kind, Importance grades) were the sole home other files point to, so they could only move. The user then directed (human-instructed): aim for fewer tokens, put the Tenant list in the map, prune retired terms, open a PR, and keep both files strictly a glossary and a map, moving concepts and instructions out. I did that: kind and severity grading moved to log-session, Importance grades to audit-skills, the no-shared-code stance to the tenant-layers rule, and ADR-0021 and its rule were rewritten to match. Only `Spawn` was pruned; the other retired terms still appear in old Journal and Blog content. Glass Box terms cite root headings, so every heading stayed. Two code-review rounds (the second requested by the user) caught stale pointers and one meaning change (Human-only lost ADR-0004's Dependabot exception); all fixed. Needs a human merge (ADR, rules, CLAUDE.md, shared/)."
+status: completed
+outcome: "PR #2416 merged: root glossary and map cut from ~3,370 to ~1,340 words"
+summary: "The user asked what in root GLOSSARY.md and GLOSSARY-MAP.md could be trimmed because it lives elsewhere. I answered first with an analysis: some text was plain duplication, but several entries (severity scale, Session kind, Importance grades) were the sole home other files point to, so they could only move. The user then directed (human-instructed): aim for fewer tokens, put the Tenant list in the map, prune retired terms, open a PR, and keep both files strictly a glossary and a map, moving concepts and instructions out. I did that: kind and severity grading moved to log-session, Importance grades to audit-skills, the no-shared-code stance to the tenant-layers rule, and ADR-0021 and its rule were rewritten to match. Only `Spawn` was pruned; the other retired terms still appear in old Journal and Blog content. Glass Box terms cite root headings, so every heading stayed. Two code-review rounds (the second requested by the user) caught stale pointers and one meaning change (Human-only lost ADR-0004's Dependabot exception); all fixed. Needs a human merge (ADR, rules, CLAUDE.md, shared/). The user's PR review then asked (human-instructed) to move the Tenant-glossary read out of CLAUDE.md, which became a new one-line tenant-glossary rule on layers/*/** after I showed tenant-layers is ~180 words of code-only guidance, and to centre Observability on session logs and the Friction Ledger, dropping the four-altitudes framing. The user merged it."
 prs:
   - "2416"
 docsRead:
@@ -95,27 +95,38 @@ frictions:
   - description: Stop hook repeatedly asked to push while ADR-0004 requires review and gate first; several turns spent only answering it.
     solution: Have the Stop hook stay quiet while a gate:scoped run is in progress for the branch.
     severity: nit
-durationSec: 1308
+durationSec: 2562
 models:
-  claude-opus-5-5: 134
+  claude-opus-5-5: 212
 toolCounts:
-  Bash: 48
+  Bash: 61
   Skill: 5
   Write: 2
   Agent: 4
   Edit: 1
-  ToolSearch: 1
+  ToolSearch: 5
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 14
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 2
+  mcp__github__add_reply_to_pull_request_comment: 3
+  mcp__github__resolve_review_thread: 2
+  mcp__github__update_pull_request: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - GLOSSARY.md
   - GLOSSARY-MAP.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - README.md
+  - layers/blog/GLOSSARY.md
+  - CLAUDE.md
   - .agents/skills/audit-skills/SKILL.md
   - docs/agents/domain.md
   - layers/atlas/GLOSSARY.md
-  - layers/blog/GLOSSARY.md
   - .claude/rules/adr-0021.md
-  - CLAUDE.md
   - docs/adr/0021-multi-context-domain-docs.md
   - layers/atlas/app/assets/theme.css
   - layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
@@ -127,8 +138,6 @@ filesEdited:
   - shared/schemas/session.ts
   - .agents/skills/log-session/SKILL.md
   - .claude/rules/adr-0015.md
-  - .claude/rules/tenant-layers.md
-  - README.md
   - docs/adr/0015-audit-skills-and-conditional-importance.md
   - layers/atlas/app/utils/atlas.ts
   - layers/blog/tenant.config.ts
@@ -239,25 +248,25 @@ subagents:
     durationSec: 115
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 9.1
+    tokenShare: 5.6
   - type: general-purpose
     task: Spec review of glossary trim
     durationSec: 64
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 6.5
+    tokenShare: 4
   - type: general-purpose
     task: Standards review, full branch
     durationSec: 142
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 9.9
+    tokenShare: 6.1
   - type: general-purpose
     task: Spec review, full branch
     durationSec: 117
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 8.9
+    tokenShare: 5.5
 gitBranch: ccr-855ce066-4twhq6
 entrypoint: remote_mobile
 cliVersion: 2.1.308
