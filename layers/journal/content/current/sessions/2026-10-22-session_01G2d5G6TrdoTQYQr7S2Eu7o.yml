@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01G2d5G6TrdoTQYQr7S2Eu7o
 startedAt: 2026-10-22T06:33:47Z
-endedAt: 2026-10-22T06:40:48Z
+endedAt: 2026-10-22T06:44:53Z
 kind: autonomous
 goal: Weekly sync of Glass Box pages to main
-status: in-review
-outcome: "PR #2404 re-pins 8 flagged pages and edits 4; gate green, awaiting CI and merge"
+status: completed
+outcome: "PR #2404 merged: 8 pages re-pinned, 4 reworded; gate green"
 summary: Scheduled glassbox-update run, no human prompt. Ran the script, advanced pins to c76af481c, read the code diffs behind the 8 flagged pages and found four teaching changes (ADR "binds" to "relevant", subagent file naming, session-log relevantAdrs and commit-derived edited files). Others were pin-only. Skipped screenshots because edits were one-sentence wording changes; said so in the PR. All work was agent-initiated under the scheduled Skill.
 prs:
   - "2404"
@@ -52,18 +52,23 @@ frictions:
   - description: Screenshot step skipped for the changed session-logs page, a deviation from the Skill's Check step.
     solution: Skill could say when a one-sentence wording edit needs no shot.
     severity: nit
-durationSec: 421
+  - description: First verdict named the CI comment's sha (a merge ref), not the PR head; merge-pr refused until a corrected verdict.
+    solution: Take the sha from the PR head via git rev-parse HEAD, not the CI comment.
+    severity: nit
+durationSec: 666
 models:
-  claude-sonnet-5-5: 49
+  claude-sonnet-5-5: 65
 toolCounts:
-  Bash: 22
+  Bash: 26
   Read: 1
   Monitor: 1
-  ReadNotifications: 1
+  ReadNotifications: 3
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   Skill: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
