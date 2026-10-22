@@ -44,4 +44,9 @@ const fmt = (v: number) => formatRoutineMetric(metric.value, v)
 .rw .num { text-align: right; font-family: var(--jd-mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .rw tfoot th, .rw tfoot td { border-top: 2px solid var(--jd-line); font-weight: 600; color: var(--jd-ink); }
 .rw tbody th { font-family: var(--jd-mono); font-size: 0.8rem; color: var(--jd-ink); font-weight: 500; }
+@media (max-width: 600px) {
+  .rw table { font-size: 0.7rem; }
+  .rw th, .rw td { padding: 0.35rem 0.2rem; }
+  .rw tbody th { font-size: 0.68rem; }
+}
 </style>
