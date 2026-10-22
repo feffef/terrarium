@@ -21,7 +21,7 @@
 // export below, and truly generic helpers stay module-private. This module,
 // for its part, never relies on auto-import itself: it stays dependency-free
 // and explicit.
-import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem } from '../types/journal'
+import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
 
@@ -66,9 +66,8 @@ export function sessionToolEntries(counts?: Record<string, number>): { name: str
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
 }
 
-// A subagent's token share and run time, e.g. `42% · 3m 12s`. Empty ⇒ an older log
-// that stored neither.
-export function subagentUsageLabel(a: { tokenShare?: number; durationSec?: number }): string {
+// Empty ⇒ an older log that stored neither.
+export function subagentUsageLabel(a: Pick<Subagent, 'tokenShare' | 'durationSec'>): string {
   const parts: string[] = []
   if (a.tokenShare !== undefined) parts.push(a.tokenShare < 1 ? '<1%' : `${Math.round(a.tokenShare)}%`)
   if (a.durationSec !== undefined) {
@@ -236,7 +235,7 @@ export function sessionCardViews(
       url: external || !s.session.startsWith('session_') ? null : sessionUrl(s.session),
       // Expanded detail — the full log, revealed on click (no route of its own).
       summary: s.summary,
-      subagents: s.subagents ?? [],
+      subagents: (s.subagents ?? []).map((a) => ({ ...a, usage: subagentUsageLabel(a) })),
       docsRead: (s.docsRead ?? []).map((d) => {
         const viaSubagent = !!s.docsReadBySubagents?.includes(d.path)
         return { ...d, viaSubagent, unknown: viaSubagent && !d.useful }

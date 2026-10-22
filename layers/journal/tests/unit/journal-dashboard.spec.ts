@@ -355,7 +355,7 @@ describe('sessionCardViews', () => {
     })
     const [c] = sessionCardViews([s])
     expect(c!.model).toBe('opus-4-8 · sonnet-5')
-    expect(c!.subagents).toEqual([{ type: 'general-purpose', task: 'survey', model: 'sonnet' }])
+    expect(c!.subagents).toEqual([{ type: 'general-purpose', task: 'survey', model: 'sonnet', usage: '' }])
     expect(c!.filesEdited).toEqual(['a.ts', 'b.vue'])
     expect(c!.tools).toEqual([{ name: 'Bash', count: 9 }, { name: 'Read', count: 2 }])
   })

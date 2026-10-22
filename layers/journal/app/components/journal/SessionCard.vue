@@ -76,7 +76,7 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                 <span class="mono">{{ a.type || 'agent' }}</span
                 ><span v-if="a.model" class="amodel"> · {{ a.model }}</span
                 ><template v-if="a.task"> — {{ a.task }}</template
-                ><span v-if="subagentUsageLabel(a)" class="amodel"> · {{ subagentUsageLabel(a) }}</span>
+                ><span v-if="a.usage" class="amodel"> · {{ a.usage }}</span>
               </li>
             </ul>
             <p class="subnote">
