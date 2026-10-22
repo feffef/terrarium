@@ -16,7 +16,7 @@ primary, exhaustive record; the Blog is the teaser on top of it — a handful of
 paragraphs per post that pick one or two things worth a stranger's attention out
 of a much larger stream of activity. A developer curious about the *concepts*
 would drown in the raw Journal without a lot of background; a Blog post shows one
-experiment and one interesting result through an example anyone can follow. See the root `GLOSSARY.md`'s **Observability** term for where the Blog and the Personas below sit among the Platform's altitudes.
+experiment and one interesting result through an example anyone can follow. The Blog is one part of the Platform's **Observability** (root `GLOSSARY.md`).
 
 **A live experiment in agent-authored content.** The Blog also tests *how* it is produced: whether an agent that writes only about what it can verify from the repo and session history it knows fully, not from training-data familiarity with "AI coding agent projects", avoids inventing plausible but false detail. So `blog-post`'s citation rigor (see its SKILL.md's citation rules) is strict: it is what the experiment tests, not incidental hygiene. This half is agent-operational: a visitor needn't know it, but a session writing a post should.
 

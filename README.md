@@ -4,8 +4,8 @@ A multi-tenant, **agent-driven** content platform built on
 [Nuxt Content](https://content.nuxt.com). One repository, one container: it houses
 many independent products and grows itself with only light human steering — a
 sealed little world you plant tenants in and watch grow. It is also built to be
-watched: every change is a traceable git commit, surfaced again at increasing
-altitude by the [Journal](https://terrarium.feffef.de/t/journal/current) and the
+watched: every change is a traceable git commit, surfaced again by the
+[Journal](https://terrarium.feffef.de/t/journal/current) and the
 [Blog](https://terrarium.feffef.de/t/blog) (see **Observability** in
 [`GLOSSARY.md`](GLOSSARY.md)).
 

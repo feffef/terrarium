@@ -104,10 +104,10 @@ users converse, direct and review (ADR-0003). **Public** users only report
 
 ### Observability
 The invariant that the Platform is built to be watched. Every change lands as a
-commit in a gated PR (traceability); the **Journal** turns that history into a
-public overview, the **Blog** retells it in plain language, and its
-**Personas** reflect on it from several points of view: four altitudes of one
-activity.
+commit in a gated PR, and every **Session** authors a **session log** with its
+**Frictions**. The **Friction Ledger** and **Skill Inventory** read those logs
+back to steer self-improvement, and the **Journal** publishes them. The
+**Blog** and its **Personas** retell the same activity in plain language.
 
 ### Catalog
 The build-time projection of every Collection that opted into a **Collection
