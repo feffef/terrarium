@@ -21,9 +21,9 @@ A human merges the few PRs whose risk the gate cannot see.
   has posted its verdict on the PR, unless an exception below applies.
 - **A human merges a PR that:**
   - changes a file on the Human-only list;
-  - adds a dependency, moves one to a new major version, or patches its code.
-    A minor or patch version bump can be merged by an agent, even though it
-    changes `package.json`;
+  - adds a dependency, moves one to a new major version, patches its code, or
+    otherwise changes `package.json`. The one exception is a minor or patch
+    bump that Dependabot opens from this repo, which an agent may merge;
   - changes behaviour no test or gate step can observe, such as a hook or
     script that runs unattended, timing-dependent logic, or an outside side
     effect. Touching unfamiliar code that has tests does not count;
