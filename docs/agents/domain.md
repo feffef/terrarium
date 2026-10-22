@@ -17,8 +17,8 @@ templates:
 - an ADR follows ADR-0030's template, not the Skill's section layout;
 - a `GLOSSARY.md` is a `## Glossary` of `### Term` entries, not the Skill's
   `## Language`/`_Avoid_` layout;
-- `GLOSSARY-MAP.md` lists the Tenants, and each per-Tenant `GLOSSARY.md` adds
-  a purpose narrative on top of its glossary (ADR-0021 says why).
+- each per-Tenant `GLOSSARY.md` adds a purpose narrative on top of its
+  glossary (ADR-0021 says why).
 
 Match the repo's actual files, not the template: CLAUDE.md's "Repo layout" says
 where ADRs and `layers/<tenant>/` glossaries live.

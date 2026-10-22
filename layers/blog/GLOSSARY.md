@@ -54,7 +54,7 @@ Document in a `pingbacks` **data** collection in the *reacted-to* Persona's
 Space, holding the reaction and a copy of the reacting post's persona, path,
 title and blurb (why: ADR-0012). The reacting post is itself a
 first-class post in its own Space, optionally headed by a `reactsTo` reference
-to the post it answers. Contrast the Atlas's Interaction, which stays in one Space and so is derived.
+to the post it answers. Contrast the Atlas's Interaction (ADR-0012).
 
 ### Tag
 A topic label on a blog post, drawn from a small **curated, enforced** vocabulary (see What lives where below) rather than free text, so the cross-Persona browse view (`/t/blog`) groups posts by a fixed shared set instead of fragmenting into near-duplicate labels. A post usually carries 2-5 Tags (a norm, not schema-enforced — see `tenant.config.ts`'s `tags` field), chosen for the *topic/mechanism* it discusses (e.g. `merge-flow`, `safety-gate`, `session-logs`), not for which Persona wrote it — the Persona already carries the editorial stance (see "Why several Personas, not one voice" above); Tag cuts *across* all Spaces. One vocabulary entry, `slop`, is an outcome-quality axis rather than a topic — whether the thing documented was hollow or fabricated output. Each Tag's meaning is the gloss beside it in `tenant.config.ts`.

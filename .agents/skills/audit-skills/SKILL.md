@@ -125,8 +125,8 @@ Grade each Skill's importance (`GLOSSARY.md`) after reading its
 - **essential**: essential and broad; its absence would be felt across many
   kinds of session (e.g. `log-session`, `domain-modeling`).
 - **routine**: it *is* a scheduled Routine's job, driving whole unattended
-  sessions (e.g. `digest`, `audit-docs`). A Skill that could be scheduled but
-  is invoked by hand is not `routine`.
+  sessions (e.g. `digest`, `audit-docs`). Assign it on the observed fact that
+  scheduled sessions run it; a Skill invoked by hand is not `routine`.
 - **specialist**: essential within one kind of work, even a rare one (e.g.
   `atlas-specimen`).
 - **supporting**: useful, but work proceeds without it.

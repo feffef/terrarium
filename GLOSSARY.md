@@ -63,7 +63,7 @@ JS/TS).
 One recorded pain-point within a Session: something that went wrong, was
 needlessly complex, or wasted effort or tokens. It has a description, a possible
 solution and a severity (`nit < minor < moderate < major < blocker`; grading:
-`log-session`). Frictions are the main signal the self-improvement Skills mine.
+`log-session`).
 
 ### Friction Ledger
 An **Inventory** of Friction clusters: one entry per root cause, with each
@@ -72,7 +72,7 @@ maintains it.
 
 ### Skill
 A Claude Code skill that encodes a repeatable capability for developing the
-Platform. Skills are as much a deliverable as the Nuxt code.
+Platform.
 
 ### Skill Inventory
 An **Inventory** of the Skills in use, each with its **role** and
@@ -145,8 +145,9 @@ A changed path that provably cannot affect the **Heavy** tier. A property of the
 path, not of the change's importance (`scripts/gate/gate.ts`).
 
 ### Human-only
-A path whose PR a **Trusted** human must merge, whatever the **Gate** says
-(ADR-0004; the list is `.claude/rules/adr-0004-human-merge.md`). Agents may
+A path whose PR a **Trusted** human must merge, whatever the **Gate** says,
+bar the exceptions ADR-0004 names (the list is
+`.claude/rules/adr-0004-human-merge.md`). Agents may
 still author changes to it.
 
 ### Rule
