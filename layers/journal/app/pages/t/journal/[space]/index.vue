@@ -52,8 +52,7 @@ const digests = computed(() => digestList(allPages.value))
 // plus `onrampLabel`/`onrampBlurb` teaser copy — see the `pages` schema), so
 // adding or reordering a door needs no edit here. Isolation-respecting: sourced
 // from THIS Space's own `pages`, so a page must exist in-Space to surface — the
-// archived Space, lacking these pages, shows none. The Friction Ledger is a
-// Vue page, not a Document, so its door is added here, as is the Routine costs one.
+// archived Space, lacking these pages, shows none.
 const onrampCards = computed(() =>
   onrampSteps(allPages.value).map((s, i, all) => ({
     key: s.path,
@@ -63,7 +62,8 @@ const onrampCards = computed(() =>
     to: `/t/${tenant}/${space}${s.path}`,
   })),
 )
-// Compact links under the cards, so these two don't weigh as much as the five steps.
+// The Friction Ledger and Routine costs are Vue pages, not Documents, so their doors
+// are added here, as compact links under the cards so they don't weigh as much as the steps.
 const onrampDoors = computed(() => [
   ...(data.value?.ledgerSize
     ? [{
@@ -191,8 +191,8 @@ useSeoMeta({
     <!-- Newcomer on-ramp: after the short lead that gives it context, before the
          longer intro and the data-heavy feed. -->
     <section v-if="onrampCards.length || onrampDoors.length" class="onramp" aria-label="Start here">
-      <p class="onramp-lead">New here? Start with the short version:</p>
-      <div class="onramp-cards">
+      <p v-if="onrampCards.length" class="onramp-lead">New here? Start with the short version:</p>
+      <div v-if="onrampCards.length" class="onramp-cards">
         <NuxtLink v-for="c in onrampCards" :key="c.key" :to="c.to" class="onramp-card">
           <span class="onramp-kicker">{{ c.kicker }}</span>
           <span class="onramp-card-title">{{ c.title }}<span class="onramp-arrow" aria-hidden="true">→</span></span>
