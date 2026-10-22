@@ -55,19 +55,12 @@ observations:
       Correction posted on #2286. Grade/role unchanged (essential).
   - date: "2026-10-22"
     note: >-
-      Behaviour check, 10/10 newest invocations delivered. One claim in this
-      run's own subagent report did not survive verification: it listed
-      session_01HcMFbKDTkG7hs2VhByAs4b (audit-docs, 2026-10-21T04:03Z) as a
-      NEW silent instance with "no Friction naming the gap" — its committed
-      log in fact carries an explicit friction ("Skipped the adr-check
-      Skill... I did not confirm that"), matching the already-counted
-      self-reported set in #2286's 2026-10-21T19:20 comment, not a new
-      silent one; dropped, recorded here so a future run doesn't re-cite it.
-      The other named instance, session_011UkamwPwXvoBVMmNHuoBaD
-      (prune-trial, 2026-10-21T13:16Z), verified clean against its own log
-      (no adr-check in skillsUsed, no friction naming the gap) — a genuine
-      third prune-trial instance of the already-tracked pattern, but
-      #2286's comprehensive analysis (due for the owner's review today)
-      already quantifies this window's autonomous-sweep non-use in
-      aggregate, so no new comment posted — nothing #2286 lacks. Grade/role
-      unchanged (essential) pending #2286's decision, due today.
+      Behaviour check, 10/10 newest invocations delivered. The subagent's
+      claim that session_01HcMFbKDTkG7hs2VhByAs4b (audit-docs) was a NEW
+      silent skip was false — its log carries an explicit friction naming
+      the gap, already counted in #2286's 2026-10-21T19:20 comment; dropped.
+      session_011UkamwPwXvoBVMmNHuoBaD (prune-trial) verified clean: no
+      adr-check trace, no friction — a genuine third instance of the
+      already-tracked pattern, but #2286's analysis already quantifies this
+      window's autonomous-sweep non-use in aggregate, so no new comment.
+      Grade/role unchanged (essential) pending #2286's decision, due today.

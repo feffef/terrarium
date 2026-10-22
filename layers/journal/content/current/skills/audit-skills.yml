@@ -629,34 +629,16 @@ observations:
       self-check gap, not this Skill's delivered outcome.
   - date: "2026-10-22"
     note: >-
-      Self-check: dispatched 14 behaviour-check subagents (one per
-      behaviourChecks entry) plus a usage-fetch subagent for all 55
-      routineRuns sessions; verified every report against primary sources
-      before use. ONE finding escalated as issue #2395: audit-docs named a
-      live ADR-0004/merge-pr.ts mismatch (an agent's own minor/patch
-      package.json bump is Human-only-refused despite ADR-0004 saying it can
-      merge) in two separate runs (2026-10-16 PR #2110/#2111, 2026-10-20 PR
-      #2317) and never filed it — independently re-verified the drift myself
-      directly in source (package.json unconditionally on the Human-only
-      paths list; dependabotBumpRefusal only triggers for dependabot[bot]).
-      Caught and corrected a false claim from this run's own adr-check
-      subagent: it reported session_01HcMFbKDTkG7hs2VhByAs4b (audit-docs) as
-      a silent, unreported adr-check skip; its session log in fact carries an
-      explicit friction naming the skip, so that instance is not new and not
-      silent — dropped before escalating, a reminder that this Skill's own
-      step 2 verification must read the cited session log itself, not just
-      trust a subagent's "no Friction found." The other genuinely-new
-      instance in that same report, session_011UkamwPwXvoBVMmNHuoBaD
-      (prune-trial), verified clean against source and left on #2286/#2342's
-      existing thread with no new comment, since #2286's own
-      2026-10-21T19:20 analysis already covers this window's
-      autonomous-sweep count and one more session id adds nothing the thread
-      lacks. All other skills (blog-post, clear-backlog, close-session,
+      Self-check: dispatched 14 behaviour-check subagents plus a
+      usage-fetch subagent for all 55 routineRuns sessions; verified every
+      report against primary sources before use. Escalated audit-docs'
+      ADR-0004/merge-pr.ts gap as issue #2395 (detail on audit-docs's own
+      entry). Caught a false claim in this run's own adr-check subagent
+      before it could be escalated — detail on adr-check's own entry, not
+      restated here. The rest (blog-post, clear-backlog, close-session,
       digest, dispatch-subagents, frictions-to-fixes, glassbox-update,
       inspect-session, log-session, prune-trial, visitor-loop) came back
-      clean or only extended an already-tracked, sub-threshold note (recorded
-      on their own entries). Step 3 closure completeness: orphan scan clean
-      (scanned: true, 1549 merged PRs, 1393 with a session), both orphan
-      candidates carry resolvedBy (left alone), orphanSuppressionLog both
-      entries resolved-annotation, humanPromptedClosures and
+      clean or only extended an already-tracked note on their own entries.
+      Step 3: orphan scan clean (1549 merged PRs, 1393 with a session),
+      both candidates carry resolvedBy, humanPromptedClosures and
       manuallyRescuedClosures both empty. Grade/role unchanged (routine).
