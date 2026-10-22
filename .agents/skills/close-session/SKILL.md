@@ -16,7 +16,11 @@ this session, with its final status.
    no transcript read, hunt what the whole session cost: knowledge you found
    too late that would have changed your route, and detours (repeated
    searches, re-reads, retries, an expensive tool call, a long way round to a
-   fact). Log each one not yet logged as a Friction, as usual.
+   fact). Log each one not yet logged as a Friction, as usual. When what you
+   found late is written nowhere in the repo, also record it as a learning.
+   When the session sparks something larger than any one Friction's fix, a
+   step up from the pain rather than its `solution` restated, record it as an
+   idea (`GLOSSARY.md` → Session, Idea).
 3. **Invoke `/log-session`** with an honest `status` (`log-session` defines the
    five values). Never default a stalled or abandoned session to `completed`.
    If a PR-open step (`subscribe_pr_activity`, or this Skill) was rejected, log
