@@ -64,9 +64,9 @@ GitHub PR-files API has the same gap: read `previous_filename` too.
 - Never `&&`-chain a branch rename or create with the commit and push after it:
   if the branch exists, the rename fails and the rest silently never runs. Check
   with `git rev-parse --verify <branch>` first.
-- Never push (or run any state-changing git command) in the same command as a
-  gate or test run, foreground or backgrounded. Pushes went out while the gate
-  was red. Read the run's exit status in a separate step first.
+- Never push (or run any other state-changing git command) after a gate or test
+  run in the same command, foreground or backgrounded. Pushes went out while the
+  gate was red. Read the run's exit status in a separate step first.
 
 ## Before a destructive command
 
