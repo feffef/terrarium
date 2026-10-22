@@ -1,0 +1,160 @@
+schemaVersion: 1
+session: session_012rLVzSFUzNKnypyiRd1X2X
+startedAt: 2026-10-22T10:23:59Z
+endedAt: 2026-10-22T10:35:03Z
+kind: interactive
+goal: Show subagent token share and run time in the Journal
+status: in-review
+outcome: "PR #2408 open: each subagent line shows share and duration"
+summary: "The user asked (human-instructed) for \"usageShare\" and the seconds an agent ran to show in the Journal's sessions view, via /grill-me. No usageShare field exists; I found the stored subagents[].tokenShare and durationSec, which were never displayed, and put six questions (field, placement, format, missing values, explanatory note, scope) in one round. The user accepted every recommendation. Building it followed from that green-light: a subagentUsageLabel helper in the Journal's dashboard utils, mapped onto each subagent in sessionCardViews, rendered at the end of the card's Subagents line, plus one clause in the note under it. code-review's Standards pass suggested the view-model mapping and the schema type, which I applied (agent-initiated); I kept the agreed \"3m 12s\" format although the Journal already has two other duration styles. Gate green, screenshot of the production build checked, PR opened and verdict posted; waiting on CI to merge."
+prs:
+  - "2408"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: required session-start read
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Session and subagent vocabulary for the questions
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: commit -F and trailer check
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review then gate order and the verdict comment
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: write through MCP; check runs not status
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: how to screenshot the expanded card from a production build
+    useful: yes
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: confirmed a display change touches no session log
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: confirmed an agent may merge a tested display change
+    useful: yes
+skillsUsed:
+  - name: grilling
+    reason: one round of six questions settled the display
+  - name: adr-check
+    reason: checked the change against the ADRs before building
+  - name: code-review
+    reason: Standards and Spec review before the first push
+  - name: close-session
+    reason: first log on PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The user's term usageShare matched no field; it took several greps to map it to subagents[].tokenShare
+    solution: Name the field tokenShare in the card's note so a reader asking for it uses the stored name
+    severity: nit
+  - description: Ran gate:scoped before code-review, then edited during the run; pr-workflow says review first and edit nothing until the gate ends, so one gate run was wasted
+    solution: "Follow pr-workflow's order: commit, code-review, then gate last; a build for a screenshot can come from that final gate"
+    severity: minor
+durationSec: 664
+models:
+  claude-opus-5-5: 99
+toolCounts:
+  Skill: 5
+  Bash: 36
+  Edit: 5
+  Agent: 2
+  ToolSearch: 3
+  TaskStop: 1
+  Read: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/app/components/journal/SessionCard.vue
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - layers/journal/app/types/journal.ts
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0008.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Held the push until gate:scoped and code-review passed despite the Stop hook; read the full ADR to confirm an agent may merge
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Made me log on PR open; summary was enough so I skipped the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Made me open the PR and subscribe right after the push; the user had approved the work in the grilling round
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Put the session header on the PR body and verdict comment; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on the glossary read; no term was added or changed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading the session schema; the PR touches no Human-only file (subagents also reported no)
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded on a grep over shared/; no cross-Tenant read involved (subagents agreed)
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Confirmed a display-only change needs no stored-shape decision; the reviewers said the same
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: Journal rule; I read the full ADR to check a display change keeps logs untouched
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Auto-import naming in the Journal words shaped subagentUsageLabel; the Standards reviewer used it too
+    useful: yes
+  - path: .claude/rules/ui-verification.md
+    reason: Sent me to verifying-ui-changes, so I screenshotted the production build rather than trusting tests
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded via adr-check; no prune-trial territory touched
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading ADRs; no ADR changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on the always-loaded print and by the reviewers; no rule changed
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+    durationSec: 39
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 10.3
+  - type: general-purpose
+    task: Spec review of diff
+    durationSec: 33
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 9.2
+gitBranch: ccr-9bb558d0-cgb1rs
+entrypoint: remote_mobile
+cliVersion: 2.1.308
+ideas:
+  - Unify the Journal's three duration formats (sessionDurationLabel '9 h 56 min', routineRuns '1h 5m', subagentUsageLabel '3m 12s') into one formatDuration util with an hours branch, so a two-hour subagent stops showing '120m 0s'
+relevantAdrs:
+  - adr: 8
+    reason: Journal display of session logs
+  - adr: 4
+    reason: gate, review and who merges
+landedBy: Stop
