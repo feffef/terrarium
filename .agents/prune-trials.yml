@@ -173,3 +173,32 @@ trials:
       with a search or list result, or asserted "nothing exists" from an empty
       search, and the cut text would have prevented it. NOT damage: the fields
       guard denying and the session fixing itself from its message.
+  - problem: >
+      `docs/agents/pr-workflow.md` plainly reworded (-3 net: 118 lines to 115;
+      the pre-push review section's "simple change" bar is reworded, with one
+      added line (count, don't judge); the integration-PR, recipe steps 2-3, closing-keyword, "Who merges" and
+      "Closing a scheduled run's PR" prose shortened, every rule kept.
+      The Glass Box page's excerpt is pinned to its own `revision`, so it is
+      untouched. Chosen after the search
+      subagent covered the instruction corpus and the tracker: the pre-push
+      gate/review rule failed as prose repeatedly (#2311, #2354, #2397; #2397
+      read in full) and no guard holds it (#2397 left the guard question open;
+      ADR-0004's summary rule, untouched, still carries the rule). Runners-up:
+      Stop-hook inherited-commit advice (#2233, owner accepted the cost),
+      CLAUDE.md read-first triggers (#1754, partly held by read-first-hint.ts).
+      The mass here was small; no trial was judgeable this run (all five landed
+      under three days ago, per the window script).
+    territory:
+      paths:
+        - "docs/agents/pr-workflow.md (all of it)"
+      keywords:
+        - Review before the first push
+        - simple change
+    opened: 2026-10-22
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session skipped `code-review`
+      or `gate:scoped` before a first push, judged a non-simple change simple,
+      merged without a verdict, or mishandled a closing keyword, and the old
+      wording would have prevented it. NOT damage: the nit-level chaining or
+      Stop-hook slips #2397 already records, which this prune did not touch.
