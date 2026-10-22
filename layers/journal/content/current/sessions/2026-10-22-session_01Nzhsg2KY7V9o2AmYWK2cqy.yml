@@ -1,0 +1,176 @@
+schemaVersion: 1
+session: session_01Nzhsg2KY7V9o2AmYWK2cqy
+startedAt: 2026-10-22T11:10:38Z
+endedAt: 2026-10-22T11:23:37Z
+kind: autonomous
+goal: "Scheduled blog post: one Kevin post on the rulebook and merge script mismatch"
+status: in-review
+outcome: Kevin post chosen from three candidates and fact-checked; PR 2409 open and awaiting CI. Reply decision (step 12) still owed.
+summary: "Scheduled /blog-post run with no Persona given; rotation allowed only Kevin. I gathered the 3-day window (PR list, session logs, recent Kevin posts, last five blog PR bodies), drafted three Kevin candidates (the workflow refusing branch names containing git, per-agent token shares, ADR-0004 narrowed to match merge-pr.ts), and a blind Sonnet reader picked the ADR story as the heaviest event. I revised it for the reader's gaps, saved it, and a fresh fact-checker found no wrong claims and three wording risks, all fixed. Gate green on the first commit; code-review on both axes found an abbreviated SHA, an unlinked issue number and a repeated question closer, fixed in a prose-only follow-up. Everything was agent-initiated under the Skill's standing remit; no human prompt. Open: PR 2409 CI and merge, then step 12 (reply decision)."
+prs:
+  - "2409"
+docsRead:
+  - path: GLOSSARY.md
+    reason: session-start read; Persona/Tenant vocabulary and Gate terms for glossing
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; pointed to the Blog glossary
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: "Who a post is for: told me to gloss jargon inline"
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read after the hook flagged it; confirmed fetch then origin/main
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read after the hook flagged it; PR reads and MCP route were already right
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push, gate-last order and scheduled-run closing steps
+    useful: yes
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: Kevin's voice and palette; shaped the draft and the closer fix
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: format of this log
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: not opened in full; only a git log line named it
+    useful: no
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: fact-checker read it to confirm which scheduled run filed the issue; it said useful
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the Skill itself; the Standards reviewer also read it for citation rules and said useful
+    useful: yes
+skillsUsed:
+  - name: blog-post
+    reason: the whole run
+  - name: code-review
+    reason: Standards and Spec review of the new post; found three real fixes
+  - name: close-session
+    reason: log at PR open
+frictions:
+  - description: Ran git fetch and log before reading docs/agents/git-conventions.md, and a PR read before github-integration.md; the hooks only reminded me afterwards.
+    solution: Read both docs in the same first step as the glossaries when a Skill obviously needs git and GitHub.
+    severity: nit
+  - description: A backgrounded gate command with a trailing ampersand plus run_in_background was blocked by the double-background guard; a chained sleep was also blocked. Both resent correctly.
+    solution: "The Skill step 10 could say: gate in background with run_in_background alone, then a Monitor on its log."
+    severity: nit
+  - description: The Stop hook asked to push three times while the gate and reviews ran; pr-workflow says to ignore it, which cost reply tokens each time.
+    solution: Have the hook stay quiet while a background gate run is in progress.
+    severity: nit
+durationSec: 779
+models:
+  claude-sonnet-5-5: 116
+toolCounts:
+  Bash: 34
+  Read: 8
+  mcp__github__pull_request_read: 12
+  mcp__github__issue_read: 2
+  Agent: 4
+  Edit: 1
+  Skill: 2
+  Monitor: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-10-22-the-rulebook-said-more-than-the-merge-script-allowed.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+docsReadBySubagents:
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the first push; the summary was enough, I did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and subscribe without asking; the summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main via the hook, kept out of the branch; summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line on the PR body and the commit trailer; summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback rule; this post was standalone so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement; no term added, did not apply
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Cut-before-add; no instruction changed, did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Where instructions live; did not apply to a blog post
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by reading a Skill; I changed no Skill, did not apply
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded when I read tenant.config.ts for tags; no manifest edit, did not apply
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded with tenant.config.ts; no stored field changed, did not apply
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with tenant.config.ts; no MDC used, did not apply
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded with tenant.config.ts; no layer code touched, did not apply
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded when I read a Kevin post; no diagram, did not apply
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Blind read of three drafts
+    model: sonnet
+    durationSec: 17
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 4.8
+  - type: general-purpose
+    task: Fact-check blog post
+    model: sonnet
+    durationSec: 90
+    toolCalls: 14
+    modelCalls: 6
+    tokenShare: 6
+  - type: general-purpose
+    task: Standards review of blog post
+    model: sonnet
+    durationSec: 42
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 4.7
+  - type: general-purpose
+    task: Spec review of blog post
+    model: sonnet
+    durationSec: 26
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 3.8
+gitBranch: claude/zen-heisenberg-21aobh
+entrypoint: remote_trigger
+cliVersion: 2.1.308
+trigger: blog-post
+landedBy: Stop
