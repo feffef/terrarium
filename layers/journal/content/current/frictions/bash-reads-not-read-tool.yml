@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-14"
     summary: "Made the Bash rules hint also run when a Bash call fails, such as a compound read."
 occurrences:
-  - session: session_01Mw8k3DVnAyVho8fcDofChZ
-    date: "2026-10-10"
-    severity: minor
-    description: "I piped issue-tracker.md and triage-labels.md through head -300, which cut them off. I filed the issue having read only part of the triage-label doc. The label was right only because the Skill names it."
-    solution: "Never truncate a doc that CLAUDE.md requires reading in full. Read it with the Read tool."
   - session: session_015BjYk46dntcMuAWMn1z4Zw
     date: "2026-10-10"
     severity: nit
@@ -464,33 +459,3 @@ occurrences:
     severity: nit
     description: "Read verifying-ui-changes.md and ran greps through Bash (grep, sed) instead of the Read and Grep tools, against the tool guidance."
     solution: "Use Read with offset/limit and Grep for repo files."
-  - session: session_012f7o6FcYxq1MWxvsdgKS6m
-    date: "2026-10-20"
-    severity: nit
-    description: "Subagents reported the read-first hint for github-integration.md kept firing after they had read it with cat (hint counts only Read-tool reads)."
-    solution: "Let the read-first hint count shell reads the trace already detects."
-  - session: session_01Dz5nEANXqTtZzTki1C5ArD
-    date: "2026-10-21"
-    severity: nit
-    description: "Ran git status before reading git-conventions.md and read the large GLOSSARY and github docs in one truncated cat."
-    solution: "Read the docs one at a time before the first git command."
-  - session: session_014tr6vJyNXmekdFQtYrEVWT
-    date: "2026-10-21"
-    severity: nit
-    description: "Read GLOSSARY.md and three docs in one Bash cat, which truncated at 30KB, then needed a second Read; the git-conventions doc was read after my first git status."
-    solution: "Read each required doc with the Read tool, one call each."
-  - session: session_01FNv8z61n7roCRsM4AYVtf6
-    date: "2026-10-21"
-    severity: nit
-    description: "Read docs/agents/github-integration.md with head -80 instead of in full, against CLAUDE.md's read-first-in-full rule, before the first GitHub write."
-    solution: "Read the trigger docs whole; a short doc costs little."
-  - session: session_01T4UbBvJmjSunCwb3cUN68Q
-    date: "2026-10-22"
-    severity: minor
-    description: "Read GLOSSARY-MAP, GLOSSARY and two docs in one cat that truncated at 30KB; never read the rest of GLOSSARY or the full git-conventions."
-    solution: "Read each required doc with its own Read call."
-  - session: session_0195CYW3YBg2stBS6aGigmbp
-    date: "2026-10-22"
-    severity: minor
-    description: "Root GLOSSARY.md was catted together with other docs; output overflowed to a file and I read only its first 2KB, not the whole glossary the start-of-session rule requires."
-    solution: "Read big required docs in their own Read call so truncation is visible."

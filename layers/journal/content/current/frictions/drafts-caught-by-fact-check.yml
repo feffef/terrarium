@@ -55,11 +55,6 @@ occurrences:
     severity: nit
     description: "The first #2233 commit used Closes, which would have closed the issue as completed instead of not planned, and its ref claimed the issue was already closed; the Spec review caught both."
     solution: "Use a closing keyword only when completed is the right reason; otherwise close by hand."
-  - session: session_01FTPnEsW1XNhaqYFdxaE24v
-    date: "2026-10-20"
-    severity: minor
-    description: "First rewrite pass dropped several pointers and why-clauses and a no-argument default while claiming every rule kept; the spec review caught them."
-    solution: "Before committing a whole-file rewrite, diff an old-vs-new rule checklist myself rather than relying on review to find losses."
   - session: session_01RZ2pN3CEsoJyKxUWC2RFW5
     date: "2026-10-20"
     severity: minor
@@ -70,11 +65,6 @@ occurrences:
     severity: minor
     description: "Missed appending today's behaviour-check observation to layers/journal/content/current/skills/digest.yml on the first pass - appended entries for all 14 behaviourChecks Skills via a batch Python script but digest wasn't in that script's dict. Not self-caught; found only by this run's own code-review (Standards axis) subagent, fixed in a follow-up commit. Same first-draft-citation-gap shape issue #2352 (filed this run) names."
     solution: "Before running code-review, grep the diff's changed-files list against the full behaviourChecks roster to confirm every Skill got an entry, rather than trusting a hand-maintained dict."
-  - session: session_01LKNUYveJSHpf9NV8zN8K5b
-    date: "2026-10-21"
-    severity: nit
-    description: "The first check-states heuristic misfired on 222 claims across the current Inventory; the Spec reviewer caught it after the first commit and I reworked it."
-    solution: "Measure a new heuristic against real historical diffs before the first commit."
   - session: session_01FNv8z61n7roCRsM4AYVtf6
     date: "2026-10-21"
     severity: nit

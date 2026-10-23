@@ -1,8 +1,8 @@
 name: subagent-brief-defects
 summary: >-
-  Briefs for helper agents carried a wrong path, value, check or unfilled placeholder, which cost a wasted run or a review catch.
+  Briefs for helper agents carried a wrong path, value or unfilled placeholder that the orchestrator wrote from memory, which cost a wasted run or a review catch.
 cause: >-
-  Orchestrators write briefs from memory: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value restated wrongly, a check grepping output that lists only failures. The agent runs on the bad brief before anyone notices. Signals: "brief", "placeholder", "path did not exist".
+  Orchestrators write briefs from memory instead of copying from the source, and send them without re-reading: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value, ADR level or scope claim restated wrongly. The agent runs on the bad brief before anyone notices. Signals: "brief", "placeholder", "path did not exist", a value in a brief that differs from its source. A brief that relays another agent's unchecked claim belongs in relayed-subagent-claims; a missing CLAUDE.md brief line in subagent-brief-omits-verdict-ask.
 surface: safe
 status: on-trial
 ref: "Prune Trial opened 2026-10-20 by PR #2324 (territory: dispatch-subagents SKILL.md section 3; keywords 'subagent brief', 'stranded'); regression issue #2312 closed by PR #2318."
@@ -16,6 +16,8 @@ fixes:
   - pr: 2324
     date: "2026-10-20"
     summary: "dispatch-subagents section 3 (Write the brief) cut to the rule per line, with one line added to create each agent artifact folder first (a Prune Trial)."
+notes: |-
+  2026-10-23 re-cluster: 01Fay2Gi (a check grepping failure-only output), 013RCsUF (dated content not excluded), 011RZgGT (explore triage schema lacks the ADR-0004 exception), 011xvPjJ (audit-skills ids, PR 2318), 01XWMuHG (auth research boundary), 01WxHaU2 (workflow agent asked to dispatch), 0135hcUf and 01VH74k3 (frictions-to-fixes Skill briefs) each need their own fix; left here as single low-severity strays.
 occurrences:
   - session: session_011JKK8rrCwea3xSmL4kw6si
     date: "2026-10-14"
@@ -62,43 +64,18 @@ occurrences:
     severity: minor
     description: "My #868 resolution and #1730 brief called the Journal leak test ADR-0004 L2; it is L3 (isolation invariant). A reviewer caught it, costing one fix round and a correction comment"
     solution: "Verify level/term definitions against the ADR before stating them in a brief"
-  - session: session_01BLrfuHbMMEmjZZ7STpe1AN
-    date: "2026-10-11"
-    severity: nit
-    description: "Two facts in my briefs were wrong: the content DB path (`.output/server/contents.sqlite`, actually `.data/content/contents.sqlite`) copied from an earlier agent's claim, and a stale unit-file count (99, actually 101); the agents caught both."
-    solution: "Re-check a subagent's factual claim against the source before pasting it into the next brief, as dispatch-subagents already says."
   - session: session_01La82mxqduxHnRS9jRfNHmU
     date: "2026-10-12"
     severity: minor
     description: "My triage brief said the 16:43Z resets undid dry-run-1 answers, but only 4 issues had resets; 8 subagents each flagged the ambiguity"
     solution: "Check which issues carry a reset before writing a shared brief; the Skill could say how a prior run's answers bind"
-  - session: session_01KVh6e6JUAssZvPRbuN5YDr
-    date: "2026-10-15"
-    severity: minor
-    description: "Told the implementer not to edit asking-for-a-change.md because PR 2099 was open, repeating the Fable agent's claim without checking; 2099 was already merged and the page needed the edit."
-    solution: "Check a PR's state with pull_request_read before putting it in a brief."
-  - session: session_0135hcUf12mVM8dEZfDRAkUb
-    date: "2026-10-18"
-    severity: nit
-    description: "The impl agent's scratch subfolder did not exist, so its first gate redirect failed; the Skill's brief does not say to create it."
-    solution: "Add mkdir -p of the scratch subfolder to the impl-brief."
   - session: session_01XWMuHGcaNTvRPHfYb9T7z2
     date: "2026-10-19"
     severity: minor
     description: "The sources research brief told the subagent to inspect MCP config and env var names; it drifted into probing how the CLI's worker credential is sourced until the classifier blocked it"
     solution: "Research briefs that touch auth should say: never investigate credential sourcing; report the endpoint and stop"
-  - session: session_01MwrXDH7XwMNUofgz3HvQ5N
-    date: "2026-10-19"
-    severity: nit
-    description: "The first two recipe runs wrote their output to .throwaway rather than a scratchpad subfolder named for each subagent, as CLAUDE.md asks."
-    solution: "Put the OUT folder under the scratchpad, named per subagent, in every brief."
   - session: session_01WxHaU21bCG18GRezDo4Yfe
     date: "2026-10-19"
     severity: nit
     description: "The #2262 triage brief told the builder to dispatch a probe subagent, which a workflow agent may not be able to do; I ran the probe myself"
     solution: "clear-backlog-explore triage could note when a fact needs the orchestrator to gather it"
-  - session: session_01VH74k3Z27QtjR19XNC76qm
-    date: "2026-10-20"
-    severity: minor
-    description: "Design brief says read the full log of every occurrence, impossible for 35 occurrences; the design agent scripted extracts and listed what it read. It also gave no repo slug, so a GitHub read failed on a wrong owner."
-    solution: "Brief: full logs for moderate and above plus the newest three; give feffef/terrarium as owner/repo."

@@ -1,8 +1,8 @@
 name: clear-backlog-build-picks-input
 summary: >-
-  The backlog build workflow took the owner's picks in a shape that failed, or showed each build agent picks meant for other branches.
+  The backlog workflows showed every agent the owner's whole chat reply, so agents treated picks meant for other questions or branches as their own instructions.
 cause: >-
-  clear-backlog section 3 did not name the shape of the picks it passes to .claude/workflows/clear-backlog-build.js, so a string failed the run, and each branch got the whole relayed owner reply. Signals: clear-backlog-build failing on picks, a build agent following another branch's pick.
+  The Workflow harness relays the owner's chat reply to every workflow agent (explore triage and build), and clear-backlog passed each build branch all the picks, so an agent read another question's or branch's answer as binding on itself or as an owner decision. Signals: a build agent following another branch's pick, a triage agent saying the owner decided something from a relayed '1a 2a', issue #2399. Stray 01JygBaH (picks passed as a string failed the run, fixed by PR #2240) needs a different fix.
 surface: safe
 status: open
 ref: "Issue #2399 (regression of #2240) closed by PR #2405. Issue #2232 (picks as a plain string)."

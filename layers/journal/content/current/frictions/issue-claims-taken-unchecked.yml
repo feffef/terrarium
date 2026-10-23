@@ -1,0 +1,18 @@
+name: issue-claims-taken-unchecked
+summary: >-
+  During backlog runs, agents took an issue's own claims about constraints or fixes as fact and acted on them unchecked.
+cause: >-
+  In clear-backlog triage, an issue's constraint lines or candidate fix (what is in a Prune Trial, what is Human-only, which surface the fix needs) are repeated or used to exclude the issue without checking them against the cited sessions, the trial ledger or the Human-only list. Signals: "from the issue text alone", triage agents repeating the issue's claim, an exclusion reversed after a transcript look.
+surface: safe
+status: open
+occurrences:
+  - session: session_01JygBaHorymh1xgVBsaTh3E
+    date: "2026-10-17"
+    severity: minor
+    description: "I excluded #2209 and #2210 as guard changes from the issue text alone; only the owner's request for a transcript look showed neither needed one."
+    solution: "Before excluding an issue for its fix's surface, check the cited sessions; the issue's candidate fix is not the root cause."
+  - session: session_01MKHvrDA9VoqiKWSG6QjpE2
+    date: "2026-10-20"
+    severity: nit
+    description: "Two triage agents repeated the issue's wrong claim that the frictions-to-fixes briefs are in the prune trial, and one wrongly called tenant.config.ts Human-only; caught on verification."
+    solution: "Triage briefs could tell agents to check trial territory and the Human-only list rather than relay the issue's constraint lines."

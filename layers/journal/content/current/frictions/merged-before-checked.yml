@@ -1,8 +1,8 @@
 name: merged-before-checked
 summary: >-
-  An agent merged a change, or called it ready, before the required checks had finished.
+  An agent merged its own PR before running the required code review.
 cause: >-
-  An agent merged a PR or told the owner it was ready before the required check was complete (a bare "Yes" answering two questions, an inline-only review under clear-backlog's few-line exception, a self-merge before code-review), and the owner had to point it out.
+  An agent self-merged a PR on a green gate without running code-review, and the owner had to point it out; merge-pr.ts now refuses a merge without a verdict naming the PR head. Signals: "self-merged", "without running code-review", a merge with no posted verdict. Merging on an ambiguous owner answer belongs to misread-owner-instruction; a clear-backlog PR handed over unreviewed, to clear-backlog-review-before-pr.
 surface: safe
 status: open
 ref: "issue #1844 closed by PR #2058 (merged 2026-10-15T12:38Z: merge-pr.ts requires a verdict naming the PR head in a Reviewed line); earlier PRs #1852, #1853, #1854"
@@ -20,23 +20,8 @@ fixes:
     date: "2026-10-15"
     summary: "The merge script now refuses to merge unless a review verdict naming the PR's latest commit is present."
 occurrences:
-  - session: session_01DtK8w6aJ3361uPK73VAxhi
-    date: "2026-10-12"
-    severity: major
-    description: "Merged PR 1826 on a bare 'Yes' that answered two questions at once, while a further dry run was planned and the Skill was clearly unfinished; the user had to point it out."
-    solution: "Ask merge and other irreversible actions as their own question, and hold a merge while more validation runs are planned."
-  - session: session_017NBxJhtBSd9AoCwTzsg6pM
-    date: "2026-10-12"
-    severity: major
-    description: "Told the owner #1840 was ready for human merge before running phase-4 review; owner merged an unreviewed PR on my word."
-    solution: "clear-backlog §5: hand a PR to the owner for merge only after its review round is done and the verdict is posted."
   - session: session_018KSwetqxttBFszkhTKZkF1
     date: "2026-10-12"
     severity: major
     description: "Self-merged PR #1852 on a green gate without running code-review, the exact shortcut the PR removed from clear-backlog; owner had to ask."
     solution: "PR #1853 makes code-review before first push a pr-workflow rule for every PR."
-  - session: session_01TFojzwXEByz1nbqt3wcKNL
-    date: "2026-10-14"
-    severity: moderate
-    description: "Ran /code-review only after the first push instead of before it (ADR-0004); it caught 5 citation-rule violations that needed a second push to fix."
-    solution: "Run code-review on the committed diff before the first push, even for a content-only Inventory change, as ADR-0004 literally requires."

@@ -1,0 +1,41 @@
+name: push-chained-to-gate-run
+summary: >-
+  Agents put a push or commit in the same command as a check run, so a failed check could still be pushed.
+cause: >-
+  git-conventions.md forbids a push or other state-changing git later in the same Bash command as a gate or test run, and says to read the exit status in its own step; sessions chain git commit, --amend or git push with gate:scoped or with reading the gate log, so a red gate reaches CI. Signals: GATE_EXIT or EXIT=1 printed by the command that pushed, 'in the same command as git commit --amend', 'chained'.
+surface: guard-or-hook
+status: open
+ref: "Issue #2397 (regression of #2359) closed by PR #2407. Issue #2354 closed by PR #2359, a doc rule with no guard."
+fixes:
+  - pr: 2359
+    date: "2026-10-21"
+    summary: "git-conventions.md's rule against chaining a push after a gate run now covers foreground runs too, and says to read the exit status in a separate step first (doc only; no guard or hook)."
+  - pr: 2407
+    date: "2026-10-22"
+    summary: "git-conventions.md's chaining rule now forbids a push or other state-changing git only when it comes later in the same command as a gate or test run."
+occurrences:
+  - session: session_01FTPnEsW1XNhaqYFdxaE24v
+    date: "2026-10-20"
+    severity: moderate
+    description: "Pushed 423b029e in the same command that printed GATE_EXIT=2, so a typecheck failure reached CI on PR #2345; git-conventions.md forbids exactly this chaining."
+    solution: "Run the gate alone, read its exit status in a separate step, and only then push; a guard could deny git push in a command that also reads a gate log."
+  - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
+    date: "2026-10-22"
+    severity: minor
+    description: "Pushed the reply branch in the same command that printed the gate log tail, though the gate had exited 1 (a Journal accordion e2e test outside the diff). A re-run passed."
+    solution: "Read the gate exit status in its own step before any push, as git-conventions says; the Monitor result alone showed EXIT=1."
+  - session: session_015WxXTQihe7mgBPgpAYZUqB
+    date: "2026-10-21"
+    severity: nit
+    description: "Chained git commit --amend before the gate run in one Bash command, against git-conventions (no state-changing git in a gate command). No push happened."
+    solution: "Amend in one call, start the gate in a separate backgrounded call."
+  - session: session_01QPvWywTuiADmXNMMLARnsF
+    date: "2026-10-21"
+    severity: nit
+    description: "Ran git commit and the background gate in one command, against git-conventions' no state-changing git next to a gate run; I read that doc only after my first git commands."
+    solution: "Hook-level reminder of git-conventions before the first git command, not after."
+  - session: session_01T4UbBvJmjSunCwb3cUN68Q
+    date: "2026-10-22"
+    severity: nit
+    description: "Ran the first gate:scoped in the same command as git commit --amend, against git-conventions."
+    solution: "Commit first, then start the gate alone."

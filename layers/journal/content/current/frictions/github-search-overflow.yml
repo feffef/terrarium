@@ -2,17 +2,14 @@ name: github-search-overflow
 summary: >-
   GitHub searches returned so much text that they flooded the agent's working memory.
 cause: >-
-  mcp__github__search_issues and search_pull_requests return full bodies unless `fields` omits them, so a broad or early query floods context. The guard now denies a search without `fields`; what remains is a Skill step that needs PR bodies and points to no cheap path.
+  mcp__github__search_issues and search_pull_requests return full bodies unless `fields` omits them, so a broad or early query floods context. The guard now denies a search without `fields`. Signals: a search_issues or search_pull_requests result of many full bodies, a guard deny for a missing `fields`.
 surface: guard-or-hook
 status: on-trial
-ref: "Prune Trial opened 2026-10-21 by PR #2375 (territory: docs/agents/github-integration.md \"Overflow and precision traps\" search bullets; keywords \"search_issues fields\", \"search_pull_requests\"). Earlier: issue #2210 closed by PR #2216; issue #1860; PR #1869 (merged 2026-10-13T06:11Z, github-search-fields-guard denies a search without fields)."
+ref: "Prune Trial opened 2026-10-21 by PR #2375 (territory: docs/agents/github-integration.md \"Overflow and precision traps\" search bullets; keywords \"search_issues fields\", \"search_pull_requests\"). Earlier: issue #1860; PR #1869 (merged 2026-10-13T06:11Z, github-search-fields-guard denies a search without fields)."
 fixes:
   - pr: 1869
     date: "2026-10-13"
     summary: "Added a guard that blocks GitHub search calls that do not limit which fields come back."
-  - pr: 2216
-    date: "2026-10-17"
-    summary: "blog-post step 2 now finds the last blog PRs from a titles-only listing instead of a body search."
   - pr: 2375
     date: "2026-10-21"
     summary: "Tightened the search bullets in github-integration.md to the goal (-4 lines), leaving the fields rule to the search guard's deny message (a Prune Trial)."
@@ -32,18 +29,8 @@ occurrences:
     severity: minor
     description: "A broad search_issues query returned huge issue bodies (Tinkerfund spec), flooding context."
     solution: "Use minimal_output or narrower queries for duplicate searches."
-  - session: session_01N9bwDKW51kMS6WJvK2nfSU
-    date: "2026-10-16"
-    severity: minor
-    description: "search_pull_requests asking for body returned about eight full PR bodies (visitor-loop tallies), flooding context before I read the overflow advice."
-    solution: "Use scripts/recent-prs.ts or list_pull_requests with fields that omit body for the last blog PRs, as the blog-post step could say."
   - session: session_016Nsq9SWL64V4RqDJPQYodp
     date: "2026-10-19"
     severity: nit
     description: "Called search_issues without fields and the guard denied it; one wasted call."
     solution: "Mention the fields requirement in the prune-trial Skill's tracker step."
-  - session: session_01RZ2pN3CEsoJyKxUWC2RFW5
-    date: "2026-10-20"
-    severity: minor
-    description: "The blog-post step 2 hunt for stories reads dozens of PR bodies and logs; the Skill gives no cheap way to find the windowed finished stories."
-    solution: "A script printing merged PRs in the window with their issue links and any revert or follow-up pairs."

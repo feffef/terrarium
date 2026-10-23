@@ -1,24 +1,16 @@
 name: clear-backlog-sweep-scope
 summary: >-
-  The backlog Skill's sweep took in or left out issues the owner wanted handled the other way.
+  The backlog Skill's sweep left out issues whose fix changes a guard or hook wiring, though the owner wanted them handled.
 cause: >-
-  The clear-backlog Skill's rule for which issues the sweep covers did not match the owner's wishes: it took in wayfinder-labelled issues and left out issues whose fix changes a guard or hook wiring. Signals: the owner asks to add or drop a class of issues from the run's set, a wayfinder issue labelled by triage.
+  clear-backlog section 1 left out issues whose fix changes a guard or hook wiring by default, though a human merge already controls those files. Signals: the owner asks to include a hook-wiring issue, a run asking whether to include one. Wayfinder issues belong in clear-backlog-sweep-took-wayfinder.
 surface: safe
 status: open
 ref: "Issue #2232 (hook-wiring exclusion)."
 fixes:
-  - pr: 1977
-    date: "2026-10-14"
-    summary: "clear-backlog now leaves out wayfinder-labelled issues in both sweep modes."
   - pr: 2240
     date: "2026-10-18"
     summary: "clear-backlog no longer leaves out issues whose fix changes a guard or hook wiring, and the build workflow accepts picks given as a plain string."
 occurrences:
-  - session: session_01ATdHzhyNozsTLHHtJGbLsa
-    date: "2026-10-14"
-    severity: moderate
-    description: "clear-backlog plus auto-triage let triage agents label wayfinder tickets (1967 got ready-for-agent); the owner wants wayfinder ignored entirely."
-    solution: "PR 1977 makes clear-backlog §1 leave out wayfinder:* issues."
   - session: session_014H5yqxJ4wuQfuCP7tqW7z5
     date: "2026-10-17"
     severity: minor

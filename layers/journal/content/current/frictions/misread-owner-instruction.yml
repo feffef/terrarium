@@ -2,11 +2,12 @@ name: misread-owner-instruction
 summary: >-
   An agent guessed what the owner meant by a short or ambiguous instruction instead of asking, and the work took a detour until the owner corrected it.
 cause: >-
-  An ambiguous owner instruction or reference (a session type, "link the concepts", the period's focus) is resolved by the agent's first guess, not one clarifying question; the owner then reframes or corrects it, sometimes twice. Signals: "meant", "had to reframe", "two more owner prompts", "detour until corrected".
+  An ambiguous owner instruction or reference (a session type, "link the concepts", the period's focus) is resolved by the agent's first guess, not one clarifying question; the owner then reframes or corrects it, sometimes twice. An irreversible step taken on a bare "Yes" that answered two questions at once counts too. Signals: "meant", "had to reframe", "two more owner prompts", "detour until corrected", a merge on an answer to a combined question.
 surface: safe
 status: open
 notes: |-
   2026-10-20 design: a pr-workflow.md step-4 sentence (do not merge while a question you asked the owner about this PR is unanswered) dropped: one occurrence of that boundary; revisit on a fourth.
+  2026-10-23 design: the pr-workflow.md step-4 sentence dropped again: 01DtK8w6 (moved here by the re-cluster, dated 2026-10-12) is a bare Yes to two combined questions, a different boundary (ask a merge as its own question), and no occurrence is new; pr-workflow.md is in the open Prune Trial (PR #2412), revisit when it is judged.
 occurrences:
   - session: session_01GfmoxeLwrvC7CARuaBAXfB
     date: "2026-10-18"
@@ -23,3 +24,8 @@ occurrences:
     severity: moderate
     description: "Chose 'last N days' = today minus N (N+1 dates) to match the prune horizon instead of the plain reading; the owner had to correct it after merge, costing a follow-up PR."
     solution: "When a boundary convention is ambiguous and the user prefers questions, ask before building or at least before merging, rather than flagging it afterwards."
+  - session: session_01DtK8w6aJ3361uPK73VAxhi
+    date: "2026-10-12"
+    severity: major
+    description: "Merged PR 1826 on a bare 'Yes' that answered two questions at once, while a further dry run was planned and the Skill was clearly unfinished; the user had to point it out."
+    solution: "Ask merge and other irreversible actions as their own question, and hold a merge while more validation runs are planned."

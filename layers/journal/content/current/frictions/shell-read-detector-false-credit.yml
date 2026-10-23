@@ -1,0 +1,22 @@
+name: shell-read-detector-false-credit
+summary: >-
+  The read tracker counted a doc as read when only text quoting it, or a loosely matching line, appeared in shell output.
+cause: >-
+  scripts/session/shell-reads.ts credits a doc from command output that did not come from that file: a session log or friction quoting the doc's text, or a short generic string matching unrelated lines. Signals: a SHELL-READ-DETECTION credit whose command never cats or greps the doc (grep -rn output prefixed by another file, an ls or grep over layers/journal/), direction credited-but-not-read.
+surface: safe
+status: open
+fixes:
+  - pr: 1725
+    date: "2026-10-10"
+    summary: "The read detector stopped crediting docs that merely appeared quoted in GitHub or session-log output."
+occurrences:
+  - session: session_01VaPP7iMRxMvKvX8KQh1qeY
+    date: "2026-10-09"
+    severity: moderate
+    description: "SHELL-READ-DETECTION false positive: docs/agents/environment-caveats.md credited from command `sed -n 70,96p layers/journal/content/current/sessions/2026-10-08-1f97b613-f529-4487-a7e9-1115a44b84c7.yml; grep -rn worktree CLAUDE.md docs/agents/*.md | head`. Its output was a session log's friction quoting the doc's fix, not the doc; grep -rn showed only one environment-caveats line about a worktree guard."
+    solution: "Credit a doc only when the matching line's output source is that file (grep -rn prefixes it); a quoted fix inside another file should not count."
+  - session: session_01JR1AZGGyi6AEh1SHTp6qsH
+    date: "2026-10-10"
+    severity: moderate
+    description: "SHELL-READ-DETECTION: docsReadViaShell credited .agents/skills/wait-what/SKILL.md and .agents/skills/ask-matt/SKILL.md from one subagent command: `ls layers/journal/content/current/skills/ | grep -i wait; echo \"---\"; grep -rn \"wait-what\" layers/journal/...` (the \"Behaviour-check audit-skills\" subagent, checking the wait-what coverage-gap call). That command only reads layers/journal/content/current/skills/ and never cats or greps either SKILL.md under .agents/skills/, so its output cannot contain a line from either file."
+    solution: "False positive, direction credited-but-not-read, on both paths. Same shape as the already-tracked SHELL-READ-DETECTION false-positive family (#1482/#1542) — a short/generic string (\"wait\") matched somewhere unrelated to the actual file content."

@@ -101,3 +101,8 @@ occurrences:
     severity: nit
     description: "Stacked run_in_background with a text-level & (blocked by the double-background guard, #1208); the wrapper echo also reported exit 0 for a failed gate."
     solution: "Run the gate as a plain background command and read the log for the result."
+  - session: session_01CfTFFQrkwq1eUsDy61AJzz
+    date: "2026-10-23"
+    severity: nit
+    description: "Started the gate with a trailing & plus run_in_background; the double-background guard blocked it and nothing ran."
+    solution: "Pass run_in_background alone with a plain command (the guard already says so)."

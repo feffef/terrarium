@@ -1,0 +1,44 @@
+name: dispatch-subagents-skill-unread
+summary: >-
+  Agents dispatched subagents or a workflow without first reading the dispatch-subagents Skill.
+cause: >-
+  CLAUDE.md's dispatch-subagents trigger is prose with no hint (read-first-hint.ts covers only git, GitHub and screenshots), and agents read it as not covering read-only git or a saved workflow (clear-backlog-build, explore) that dispatches for them. Signals: "without reading the dispatch-subagents Skill", "read-only git diff", "the workflow does the dispatch".
+surface: safe
+status: tracked
+ref: "issue #2438 (trigger on writing a brief, not on every dispatch)"
+occurrences:
+  - session: session_01LtYEkEsZ2cxf4uRFJvq4n9
+    date: "2026-10-12"
+    severity: nit
+    description: "Dispatched the survey subagent, which ran git commands, before reading the dispatch-subagents Skill that CLAUDE.md names for subagents touching git."
+    solution: "No change needed beyond the existing trigger; I treated a read-only survey as exempt, which the trigger wording does not say."
+  - session: session_01596W4GVWwvN1kfaHsV4ax8
+    date: "2026-10-12"
+    severity: nit
+    description: "I did not read the dispatch-subagents Skill before dispatching; the subagents touched no git, so no harm came of it."
+    solution: "CLAUDE.md trigger says git or worktree only; fine as written."
+  - session: session_013FXrBeYrgCUvFvJjysR7yM
+    date: "2026-10-13"
+    severity: minor
+    description: "Dispatched worktree subagents via the build workflow without first reading the dispatch-subagents Skill, which CLAUDE.md requires; I only grepped its 'simple' size line."
+    solution: "clear-backlog §3 could say the workflow carries dispatch-subagents' rules, so the orchestrator need not read it, or tell the orchestrator to read it."
+  - session: session_01DqPT8JpBjhHPEubNDJuVuN
+    date: "2026-10-13"
+    severity: nit
+    description: "The issue-tracker.md and triage-labels.md triggers (before triage) and the dispatch-subagents trigger (before a worktree subagent) were not read by me; the workflows do the triage and dispatch, so their agents read them"
+    solution: "Have CLAUDE.md, or the clear-backlog Skill, say that running a saved workflow satisfies those triggers for the orchestrator"
+  - session: session_012NmfdSNbbPD9T5LPAwmdYG
+    date: "2026-10-15"
+    severity: nit
+    description: "Started the clear-backlog-build workflow (worktrees, git) without invoking dispatch-subagents first, as CLAUDE.md's trigger requires."
+    solution: "clear-backlog §3 could say whether its workflow satisfies the dispatch-subagents trigger."
+  - session: 1c810a28-81d4-417d-ac20-af374c985683
+    date: "2026-10-16"
+    severity: nit
+    description: "Dispatched two review subagents that ran read-only git diff in a worktree without loading dispatch-subagents first"
+    solution: "Load dispatch-subagents whenever a brief names a worktree, even for read-only git"
+  - session: session_01Pc15CVrLGyHXgoygsRHLbB
+    date: "2026-10-19"
+    severity: nit
+    description: "Dispatched code-review subagents that ran git diff without first reading the dispatch-subagents Skill, which CLAUDE.md requires for subagents that touch git"
+    solution: "The CLAUDE.md trigger says 'touches git'; read-only git diffs are ambiguous. Clarify whether read-only git counts."

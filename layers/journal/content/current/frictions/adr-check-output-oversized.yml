@@ -4,11 +4,14 @@ cause: >-
   adr-check prints every ADR summary (about 24 KB) plus open Prune Trial territories whatever the task, then asks for the full text of each related ADR; PR #2287 cut the trial part only. Signals: "adr-check printed every ADR summary", "one adr-check run cost about 13k tokens", a pick or chat review where only a few ADRs applied.
 surface: safe
 status: open
-ref: "Issue #2286 reviews adr-check (who invokes it, overlap with the ADR summary rules) and is open; it does not name the output size."
+ref: "PR #2431 retired adr-check, so its output is gone; issue #2286 (the adr-check review) is still open."
 fixes:
   - pr: 2287
     date: "2026-10-19"
     summary: "adr-check now prints only each open Prune Trial's territory instead of the whole trial ledger."
+  - pr: 2431
+    date: "2026-10-23"
+    summary: "Retired the adr-check Skill and its CLAUDE.md trigger; a new PostToolUse hook (adr-read-hint.ts) now names, once per agent, each ADR an Edit or Write touches by its rule paths or by number and that the agent has not read in full."
 occurrences:
   - session: session_01AwaGncaYJFWdJnc6yqDoTS
     date: "2026-10-19"

@@ -1,6 +1,6 @@
 name: local-gate-green-ci-red
 summary: >-
-  Checks passed on the agent's machine but failed on GitHub, because the two ran against different code.
+  Checks passed on the agent's machine but failed on GitHub, because GitHub tested them against a newer main.
 cause: >-
   CI tests the merge ref against the current main with its own git version; the local gate tests the branch as cut with the container git and may skip Heavy as Inert, so a local green still fails in CI.
 surface: safe
@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-12"
     summary: "Fixed two flaky tests (worktree check timing and a checkout test) that passed locally but failed in CI."
 occurrences:
-  - session: session_01VGLAakRJNm67PuNHpgbEc7
-    date: "2026-10-12"
-    severity: major
-    description: "gate:scoped passed but CI failed on ec89520d in tinkerfund-flows.spec.ts:388 (checkbox state after goForward), which this diff doesn't touch; base drift is unlikely since it passed on earlier commits."
-    solution: "Likely a back/forward form-restore flake in the tinkerfund e2e test; worth an issue if it recurs. Commented on PR 1812 and re-ran once."
   - session: session_01VPNHf6qDdJPXX23GghKs74
     date: "2026-10-16"
     severity: major

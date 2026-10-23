@@ -1,0 +1,18 @@
+name: pr-workflow-unread-before-push
+summary: >-
+  Agents pushed a branch or opened a PR before reading the PR workflow doc.
+cause: >-
+  CLAUDE.md's "before you push a branch, or open ... a PR" trigger for docs/agents/pr-workflow.md has no hint (read-first-hint.ts covers only git conventions, GitHub and screenshots), so nothing points to it before a push or create_pull_request; a prototype/ branch that gets no PR feels exempt. Signals: a push or PR opened before pr-workflow.md is read.
+surface: safe
+status: open
+occurrences:
+  - session: session_014uXxmT6359K4Z42a6We6Gh
+    date: "2026-10-12"
+    severity: minor
+    description: "Opened PR #1806 before reading docs/agents/pr-workflow.md, and made the first GitHub call before github-integration.md; a hook reminded me only afterwards."
+    solution: "Read both docs when the visitor-loop Skill reaches step 4, or have the Skill's step 4 name pr-workflow.md up front as it does for verifying-ui-changes."
+  - session: session_01MwrXDH7XwMNUofgz3HvQ5N
+    date: "2026-10-19"
+    severity: minor
+    description: "Pushed the prototype/ branch without reading docs/agents/pr-workflow.md, which CLAUDE.md requires before any push."
+    solution: "Read pr-workflow.md before pushing any branch, even a prototype/ branch that gets no PR."

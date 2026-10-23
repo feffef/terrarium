@@ -1,0 +1,78 @@
+name: adr-check-scope-in-skill-runs
+summary: >-
+  Sessions running a Skill made the decisions it asks for without the ADR check CLAUDE.md requires, because nothing says whether that check applies there.
+cause: >-
+  CLAUDE.md requires adr-check before any recommendation, but Skills that mandate decisions (frictions-to-fixes picks, clear-backlog grilling picks, audit-docs and audit-skills judgement calls, scheduled sweeps) neither name it nor are exempted, and they do not say whether a triage or design agent's adr-check run covers the orchestrator. Signals: "frictions-to-fixes mandates decisions", "relied on the triage agents' adr-check", "scheduled-sweep adr-check silent-skip", issue #2342.
+surface: safe
+status: tracked
+ref: "issue #2342 (CLAUDE.md demands adr-check before any recommendation, but frictions-to-fixes mandates decisions without it) is still open, though PR #2431 retired adr-check and its CLAUDE.md trigger; issue #2286 reviews who invokes adr-check."
+fixes:
+  - pr: 2431
+    date: "2026-10-23"
+    summary: "Retired the adr-check Skill and its CLAUDE.md trigger; a new PostToolUse hook (adr-read-hint.ts) now names, once per agent, each ADR an Edit or Write touches by its rule paths or by number and that the agent has not read in full."
+occurrences:
+  - session: session_012f7o6FcYxq1MWxvsdgKS6m
+    date: "2026-10-20"
+    severity: minor
+    description: "Recommended changes in the grilling rounds without invoking the adr-check Skill, which CLAUDE.md requires before any recommendation."
+    solution: "clear-backlog §2 could name adr-check before the main session revises a triage agent's pick; the triage agents had run it, so the gap was only in my revisions."
+  - session: session_01VH74k3Z27QtjR19XNC76qm
+    date: "2026-10-20"
+    severity: minor
+    description: "Gave recommendations (which fixes to dispatch or file, and the regression picks) without invoking the adr-check Skill that CLAUDE.md requires before a recommendation; the design agent ran it for its picks."
+    solution: "The Skill could say adr-check is run by the design agent so the main session need not repeat it, or CLAUDE.md could exempt Skill-mandated decisions."
+  - session: session_01SaChfBZfspYfAm5F7ArCfK
+    date: "2026-10-21"
+    severity: moderate
+    description: "Throughout this run I made several judgment/recommendation calls on the repo's own rules and conventions - e.g. deciding the Standards reviewer's blog-post.yml concern was already settled by #2238/#2242 rather than a new violation, deciding inspect-session's finding stayed below the escalation bar, deciding how adr-check's findings should be routed (comment on #2286 vs. a new issue) - without ever invoking the adr-check Skill CLAUDE.md requires before a recommendation. This is the exact silent-gap shape I verified and reported in this very run's own adr-check behaviour check (4 scheduled/autonomous sessions with zero adr-check trace, fed into #2286) - I reproduced the pattern I was auditing."
+    solution: "Invoke adr-check before any judgment call a scheduled Skill's own steps don't fully script, not just before architectural recommendations."
+  - session: session_014tr6vJyNXmekdFQtYrEVWT
+    date: "2026-10-21"
+    severity: minor
+    description: "Decided picks and recommended drops without invoking the adr-check Skill, though CLAUDE.md requires it before any recommendation and frictions-to-fixes sections 3-5 mandate decisions (issue #2342)."
+    solution: "Resolve #2342: either let frictions-to-fixes call adr-check in section 3 or exempt it in CLAUDE.md."
+  - session: session_01HcMFbKDTkG7hs2VhByAs4b
+    date: "2026-10-21"
+    severity: nit
+    description: "Skipped the adr-check Skill; this scheduled run changed docs with no plan or recommendation step, so the rule seemed not to apply, but I did not confirm that."
+    solution: "State in audit-docs whether adr-check applies to scheduled sweeps."
+  - session: session_01QsVUJGmHhhoAn8T6ewjnLP
+    date: "2026-10-21"
+    severity: minor
+    description: "Gave recommended picks in the grilling round without invoking adr-check, which CLAUDE.md requires before any recommendation; I relied on the triage agents' ADR reads."
+    solution: "clear-backlog §2 could say whether triage agents' adr-check covers the orchestrator's picks (see #2342)."
+  - session: session_01LKNUYveJSHpf9NV8zN8K5b
+    date: "2026-10-21"
+    severity: nit
+    description: "I did not invoke adr-check myself before relaying and recommending the Fable proposal; I only asked the subagent to run it (the gap audit-skills flags in #2286)."
+    solution: "Invoke adr-check in the orchestrating session before presenting a recommendation, even when a subagent already did."
+  - session: session_015WxXTQihe7mgBPgpAYZUqB
+    date: "2026-10-21"
+    severity: minor
+    description: "Filed issues and posted a recommendation-bearing hypothesis without running the adr-check Skill, the same gap this audit reports on others."
+    solution: "Run adr-check before the step 4 issue text; or name audit-skills in CLAUDE.md's exemption."
+  - session: session_01C32ny8wWXkJLgyHd9wiD1J
+    date: "2026-10-21"
+    severity: minor
+    description: "Gave recommendations in the grilling round without running the adr-check Skill, which CLAUDE.md requires before recommending a change; I relied on the triage agents' ADR reads."
+    solution: "clear-backlog §2 could say whether the triage agents' binding-ADR reads satisfy adr-check for the orchestrator's picks."
+  - session: session_013n8e5pQ7h9GevyhHvtm4c3
+    date: "2026-10-21"
+    severity: minor
+    description: "Skipped the adr-check Skill before recommending picks in Q3-Q10; relied on triage agents' adr-check runs"
+    solution: "Run adr-check once at the start of the grilling round for orchestrator picks"
+  - session: session_01JkRFBik4MUWwZcP45q7egk
+    date: "2026-10-22"
+    severity: minor
+    description: "CLAUDE.md demands adr-check before any recommendation, but frictions-to-fixes mandates dispatch/drop decisions without a step for it; I decided picks without running adr-check."
+    solution: "Let frictions-to-fixes name adr-check in the decide step or exempt its decisions in CLAUDE.md (issue #2342 already tracks this)."
+  - session: session_017W9GmXqDiiuDeZGmNDJLcL
+    date: "2026-10-23"
+    severity: minor
+    description: "Did not invoke the adr-check Skill before recommending fixes/wording and a label change in GitHub comments on #2370, #2105 and #2286 - the same scheduled-sweep adr-check silent-skip pattern this run's own adr-check behaviour check found and escalated (as a 5th instance) for 5 other sessions."
+    solution: "Scheduled Skill runs that end up making small judgment calls (a proposed fix framing, a label) should treat that as recommending a change and run adr-check, or CLAUDE.md's trigger should name an explicit exemption for judgment calls a Skill's own numbered steps already walk through."
+  - session: session_01CfTFFQrkwq1eUsDy61AJzz
+    date: "2026-10-23"
+    severity: minor
+    description: "Decided which fixes to drop or file without invoking adr-check, though CLAUDE.md asks for it before any recommendation; the frictions-to-fixes Skill has no step for it."
+    solution: "Add an adr-check step to the Skill's §5, or drop the CLAUDE.md trigger for scheduled sweeps."

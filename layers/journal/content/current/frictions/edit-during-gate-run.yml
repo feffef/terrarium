@@ -1,8 +1,9 @@
 name: edit-during-gate-run
-summary: "Editing files while pnpm gate:scoped runs makes its result test a different tree, so it fails or must run again."
-cause: "Agents start gate:scoped in the background and keep editing; the e2e step builds the old tree then runs new tests, or the gate must rerun on the final head. Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\"."
+summary: "The gate passed on a different tree than the one pushed, because files were edited during its run or committed after it."
+cause: "Agents start gate:scoped before the final head exists: they keep editing while it runs, so the e2e step builds the old tree then runs new tests, or they run it before code-review or commit, amend or fix wording after it and push without rerunning it. Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\", gate run before code-review, an amend or follow-up commit pushed after the gate."
 surface: safe
-status: open
+status: tracked
+ref: "issue #2434 (regression of #2314)"
 fixes:
   - pr: 2314
     date: "2026-10-20"
@@ -48,3 +49,18 @@ occurrences:
     severity: minor
     description: "Edited files while the first gate:scoped run was in flight, so it had to be re-run on the final head (pr-workflow: edit nothing until it ends)."
     solution: "Apply review fixes before starting the gate, then wait."
+  - session: session_01NqN7omu3o4kxoGeQzzSXhK
+    date: "2026-10-15"
+    severity: minor
+    description: "Committed small wording fixes on the 2029 and 2071 worktrees after their gate ran and pushed without rerunning gate:scoped (validate-adr-rules only); the nuxt.config.ts edit is a comment in a code file"
+    solution: "Run pnpm validate:content or gate:scoped for any non-doc follow-up, even a comment"
+  - session: session_01BTtvaFQckiQwtGZsasWPJH
+    date: "2026-10-19"
+    severity: nit
+    description: "gate:scoped ran on the pre-amend #2233 commit; the amend changed only one YAML string, and I re-ran only validate:content on it."
+    solution: "Amend before starting the gate, or re-run gate:scoped after any amend; CI's gate decides anyway."
+  - session: session_011W3gVNQAR433FiJcPAAEDK
+    date: "2026-10-20"
+    severity: minor
+    description: "Ran pnpm gate:scoped before committing and running code-review, against pr-workflow.md's order (gate last on the final head); harmless only because review led to no edits."
+    solution: "Read pr-workflow.md before starting the gate, not before the push; CLAUDE.md's trigger 'before you push' came too late for the gate step."

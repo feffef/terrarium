@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A number (verdict counts, line totals, regression counts) goes into a GitHub body as an estimate or from a report not yet final, instead of being tallied from every item. Signals: "about N", a PR body count corrected by an edit, "without tallying", "without counting".
 surface: safe
-status: open
+status: tracked
+ref: "issue #2435 (regression of #2378)"
 fixes:
   - pr: 2336
     date: "2026-10-20"
@@ -58,3 +59,13 @@ occurrences:
     severity: minor
     description: "I counted #2286 and #2137 eligible as unlabelled issues, but both are on-hold specs whose last comment is an agent's, so auto-triage would skip them; #2286's hold had not lifted yet."
     solution: "Apply auto-triage's on-hold-spec exception (issue-tracker.md Specs) when resolving the set; a helper that prints eligibility per issue would make it mechanical."
+  - session: session_01PWZU3TqUdSp6uD1KaoQXit
+    date: "2026-10-23"
+    severity: minor
+    description: "Posted baseline numbers to #2286 from a throwaway script that dropped sessions reading 20+ ADRs; the real audit shows autonomous 40% to 51%, not flat."
+    solution: "Report medians or state outlier exclusions next to any read-share figure; the PR now does."
+  - session: session_01XfQgmS9ArvbD9WSoPgkKfM
+    date: "2026-10-21"
+    severity: minor
+    description: "Started the analysis window at the adr-check commit time, not #2284's merge, so 7 pre-landing sessions counted as non-users in two chat answers."
+    solution: "Take a measurement window from the issue's stated landing time; issue 2286 named it."

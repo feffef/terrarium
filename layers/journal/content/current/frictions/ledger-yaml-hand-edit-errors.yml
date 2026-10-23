@@ -1,11 +1,11 @@
 name: ledger-yaml-hand-edit-errors
 summary: >-
-  Hand edits to this ledger's data files by text replacement broke their format.
+  Hand edits to the Journal's YAML data files (this ledger, prune trials, Skill Inventory) broke their format.
 cause: >-
-  Ledger and prune-trials YAML are patched by string replacement (or a survey patch that repeats a session); unquoted dates, replaced refs or a match inside a comment broke the file (gate or repair needed).
+  Ledger, prune-trials and Skill Inventory YAML are patched by string replacement or hand-typed: unquoted dates, hashes or colons, a hyphen-split folded scalar, a replaced ref or a match inside a comment broke the file (gate or repair needed), or, with no helper that writes into a named entry, the survey scripts its own splitter to place print-ledger-occurrence.ts blocks. A session repeated in one entry belongs to survey-appends-duplicate-sessions.
 surface: safe
 status: tracked
-ref: "issue #2338 (a ledger-set helper); fixes so far covered occurrence appends, prune-trial path types, YAML examples and duplicate sessions, not status, ref and fixes edits."
+ref: "issue #2338 (a ledger-set helper); fixes so far covered occurrence appends, prune-trial path types and YAML examples, not status, ref and fixes edits."
 fixes:
   - pr: 2154
     date: "2026-10-16"
@@ -16,9 +16,6 @@ fixes:
   - pr: 2336
     date: "2026-10-20"
     summary: "Quoted the note values in atlas-specimen's YAML examples so a copied note with a colon parses."
-  - pr: 2366
-    date: "2026-10-21"
-    summary: "The ledger content test now fails when a session appears twice in one cluster, so a survey that repeats a session cannot land."
 occurrences:
   - session: session_0147UencKKZS3WLHvsbgywp7
     date: "2026-10-15"
@@ -35,11 +32,6 @@ occurrences:
     severity: minor
     description: "The doc agent truncated a ledger cause at an unquoted hash and left new dates unquoted; the Standards review caught both."
     solution: "Have the patch writer quote causes and dates so applying it is a copy."
-  - session: session_01Mf4dUxuWB7WtkC5fVzByH6
-    date: "2026-10-16"
-    severity: moderate
-    description: "The survey subagent's ledger patch listed sessions twice in clusters, failing validate-content; the impl agent dropped 23 occurrences and one distinct description was lost."
-    solution: "Have the survey brief require the patch to pass validate:content, merging repeat sessions into one occurrence."
   - session: session_019xiqcwnB2itTcdugr6EFZL
     date: "2026-10-20"
     severity: minor
@@ -65,8 +57,8 @@ occurrences:
     severity: nit
     description: "A word split across a line-wrapped hyphen in visitor-loop.yml's new note (\"Previously-\" / \"escalated\") failed validate-content-schema on the first gate:scoped run, costing one full gate cycle (~2 minutes) before the real failure was caught and fixed."
     solution: "After writing any new folded-scalar note by hand, grep the diff for lines ending in a hyphen before running the gate, not after."
-  - session: session_014tr6vJyNXmekdFQtYrEVWT
-    date: "2026-10-21"
+  - session: session_01CfTFFQrkwq1eUsDy61AJzz
+    date: "2026-10-23"
     severity: minor
-    description: "Survey subagent hit extract-frictions --unledgered keeping a session's other frictions, so it appended duplicates to 7 clusters and caught them only with its own uniqueness check."
-    solution: "Make print-ledger-occurrence.ts refuse a session already in the target cluster."
+    description: "print-ledger-occurrence.ts prints blocks without cluster labels, so the survey agent wrote a splitter to place 45 blocks."
+    solution: "Add a --cluster flag or labelled output to the script."

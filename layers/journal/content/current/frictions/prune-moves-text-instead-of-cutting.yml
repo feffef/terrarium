@@ -1,0 +1,15 @@
+name: prune-moves-text-instead-of-cutting
+summary: >-
+  A prune of a Skill moved its text around instead of cutting it, so the file grew, and the owner had to point it out.
+cause: >-
+  In a prune or Prune Trial rewrite the agent restructures and relocates lines rather than asking of each whether a rule, guard or the gate already enforces it, so nothing is removed and the file grows. Signals: "not a real prune", a prune PR whose word or line count went up, the owner pointing out the growth.
+surface: safe
+status: open
+notes: |-
+  2026-10-21 design: a rewrite-discipline line dropped: one session, the owner caught the drift in the same session, no deletion-style fix exists, and the open trials on the rewritten Skills will judge the damage.
+occurrences:
+  - session: session_01FTPnEsW1XNhaqYFdxaE24v
+    date: "2026-10-20"
+    severity: moderate
+    description: "The audit-docs restructure in #2331 grew the file instead of pruning it; the user had to point out it was not a real prune."
+    solution: "In a prune-trial rewrite, ask of each line whether a rule, guard or the gate already enforces it before moving it; moving text is not pruning."

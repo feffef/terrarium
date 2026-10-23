@@ -1,0 +1,15 @@
+name: close-session-bypassed-by-hand-log
+summary: >-
+  An agent wrote its session log by hand instead of running the closing Skill, so the user had to ask for a proper close.
+cause: >-
+  A session that has the close-session or log-session text in context (for example from editing it) authors the log directly instead of invoking the Skill, skipping its steps such as the rule re-read. Signals: HUMAN-PROMPTED-CLOSURE after a merge, 'authored the completed log directly', 'having edited a Skill is not having run it'.
+surface: safe
+status: tracked
+ref: "issue #2424 (close-session skipped after a merge, filed as a regression of PR #2381, whose rule covers PR-open only)"
+fixes: []
+occurrences:
+  - session: session_01EjH3TbrydEY2sArBMYE5Gy
+    date: "2026-10-22"
+    severity: major
+    description: "HUMAN-PROMPTED-CLOSURE: after PR #2418 merged I authored the completed log directly instead of invoking close-session (ADR-0009 rule), skipping step 1's rule re-read; the user had to ask for a proper close"
+    solution: "Invoke the close-session Skill at every merge, even when its text is in context from editing it; having edited a Skill is not having run it"

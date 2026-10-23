@@ -1,36 +1,44 @@
-name: code-review-skill-two-agents-skipped
+name: skill-run-diff-review-unnamed
 summary: >-
-  For small text changes, agents reviewed their own work instead of running the two independent reviewers the review Skill asks for.
-cause: The code-review pack Skill prescribes two parallel subagents; sessions self-review small prose diffs instead and log the deviation.
-surface: outside
-status: open
-ref: "code-review is in skills-lock.json (ADR-0015): any note belongs in its Skill Inventory entry (audit-skills)"
+  Agents skipped the code review on changes a Skill had produced and already checked, because no rule says whether those checks count as the review.
+cause: >-
+  A diff a Skill or script produced and already checked (a Digest with archive moves, a fact-checked blog post, a Glass Box or pin-bump update, a verbatim pack install, Glass Box content reviewed by a subagent) is larger than pr-workflow.md's simple-change bar, and neither pr-workflow.md nor the Skill says whether the Skill's own checks count as the review, so the session skips code-review on its own judgement. Signals: 'prose-only digest diff', 'one-file prose post already fact-checked', 'pin-only', 'Digest pages and archive moves', 'verbatim upstream copy', a Skill step named as the review.
+surface: safe
+status: on-trial
+ref: "Prune Trial opened 2026-10-22 by PR #2412: the fix (pr-workflow.md saying whether a Skill's own checks count as the review) lands inside its territory 'docs/agents/pr-workflow.md (all of it)', keyword 'simple change'. midden-catalogue section 4 already names its own checks as the review."
+fixes:
+  - pr: 2319
+    date: "2026-10-20"
+    summary: "ADR-0004 let a prose-, docs- or content-only first push skip code-review (reversed by #2321)."
+  - pr: 2321
+    date: "2026-10-20"
+    summary: "ADR-0004 now reviews Skills and docs like code; only a simple change (typo, rewrap, link, restamp, or at most 10 lines in 2 files) gets the author's own read."
 occurrences:
-  - session: session_016ZibVzWmCmiQkdt6hF5fy9
-    date: "2026-10-13"
-    severity: nit
-    description: "code-review skill prescribes two parallel subagents; for a 2-file prose diff I self-reviewed instead, deviating from the skill as written."
-    solution: "Let code-review state a prose-only shortcut."
+  - session: session_01GG85r8HWMEdaMgKUaNUZH7
+    date: "2026-10-14"
+    severity: minor
+    description: "Content PRs got a content review by subagent instead of the code-review Skill before their first push"
+    solution: "Have pr-workflow name content review as the review for content-only Glass Box PRs, or run code-review too"
+  - session: session_01XTdRbnDg1n2j2ZqjTrwCLi
+    date: "2026-10-19"
+    severity: minor
+    description: "Skipped the code-review Skill before first push, treating the fact-check as the review of a one-file prose diff, as earlier blog runs did; ADR-0004 does not exempt it."
+    solution: "Let blog-post or pr-workflow say explicitly whether code-review is skipped for a prose-only post."
+  - session: session_0174aaydYCKDuWSrJkkTD1dM
+    date: "2026-10-23"
+    severity: minor
+    description: "Skipped the code-review Skill before the first push on a 20-file diff (mostly renames), substituting my own read and the fact-check subagent."
+    solution: "The pr-workflow simple-change bar says nothing about pure archive moves; state whether rename-only sweeps count, or have the digest Skill name its review step."
   - session: session_01AvdPELZeDaDwyikp4dxVZG
     date: "2026-10-14"
     severity: nit
     description: "Invoked the code-review Skill but did not run its two parallel subagents; self-reviewed a prose-only diff instead, deviating from the Skill."
     solution: "Let pr-workflow state that content-only digest diffs may skip the two-axis review."
-  - session: session_01ERZa4fUGxpF81MeLhZMkSB
-    date: "2026-10-14"
-    severity: nit
-    description: "Skipped the code-review Skill on the two small PRs (poll config, docs) and reviewed inline, though pr-workflow says run it before the first push."
-    solution: "Either run it for tiny diffs or let pr-workflow state a size skip."
   - session: session_01RJh5bK46AQRRtwagmz8GjU
     date: "2026-10-14"
     severity: minor
     description: "I invoked code-review but skipped its two sub-agents for a one-file prose diff, against ADR-0004's before-first-push rule; the post had already had a blind read and fact-check."
     solution: "Let pr-workflow name a skip for blog-post runs, whose own steps already review the diff, as it does for midden-catalogue."
-  - session: session_01AdUi9nKLGKyPFfBe4HYvqG
-    date: "2026-10-14"
-    severity: nit
-    description: "The code-review Skill says to spawn two parallel sub-agents; I reviewed the four-file diff inline instead, a deviation from the Skill."
-    solution: "Let the Skill say when a tiny diff may be reviewed inline."
   - session: session_01672sKdk3qVR8DfkAWvR5Qz
     date: "2026-10-15"
     severity: nit
@@ -46,46 +54,16 @@ occurrences:
     severity: nit
     description: "Skipped the code-review Skill before the first push, which ADR-0004 says to run even for a Stop-hook push; I judged it pointless on a verbatim upstream copy."
     solution: "Let pr-workflow.md name verbatim pack installs as a skip case, so agents need not decide alone."
-  - session: session_01RnZJ7VrgWpgzfJUCEdif77
-    date: "2026-10-16"
-    severity: nit
-    description: "ADR-0004 asks code-review before every first push; I ran the two-agent review on one of three branches and read the other diffs myself (a one-line deletion, a ledger and doc diff)."
-    solution: "Let the rule or pr-workflow name a size floor below which a read of the diff counts."
-  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
-    date: "2026-10-16"
-    severity: nit
-    description: "code-review Skill mandates two parallel sub-agents, disproportionate for a 5-line CSS and markup change; I reviewed inline."
-    solution: "Let the pre-push rule allow an inline review for diffs under a few dozen lines."
-  - session: session_01AaqTUSRhRmRpBxM8E4QSPR
-    date: "2026-10-16"
-    severity: minor
-    description: "Two parallel review subagents plus a doc-heavy PR flow for a two-line template change cost far more than the change"
-    solution: "Let code-review run inline for diffs of a few lines"
-  - session: session_01LpcCJWRYb5grgQe3wBGEwb
-    date: "2026-10-15"
-    severity: nit
-    description: "code-review's two parallel review agents for a one-line --first-parent diff cost about 125k subagent tokens"
-    solution: "Let code-review scale down to one inline pass for a diff under ~5 lines (pack Skill: note it in its Inventory entry)"
   - session: session_01N9bwDKW51kMS6WJvK2nfSU
     date: "2026-10-16"
     severity: nit
     description: "The code-review Skill mandates two parallel sub-agents, disproportionate for a one-file prose post already fact-checked; I reviewed inline."
     solution: "Let pr-workflow allow an inline review for a single-file content diff."
-  - session: session_018sAirSgDY1Nv82JVogjcyR
-    date: "2026-10-16"
-    severity: minor
-    description: "The code-review Skill ran two Sonnet subagents on a 6-line doc diff, costing about 120k tokens for judgement-call-only findings."
-    solution: "Let the Skill run Standards alone for a doc-only diff under about 20 lines."
   - session: session_01CZ2bdCKBrotyVQL9mtkeGS
     date: "2026-10-17"
     severity: nit
     description: "The code-review Skill's two-subagent flow is overkill for a prose-only digest diff already fact-checked and gated; I reviewed it myself instead."
     solution: "Let pr-workflow skip code-review for a scheduled run whose diff is only Digest pages and archive moves."
-  - session: session_01Sc82qSCs4NVP3igf9SaGXM
-    date: "2026-10-17"
-    severity: minor
-    description: "Skipped the code-review Skill before the first push of both PRs, self-reviewing two small diffs instead, against ADR-0004 and pr-workflow."
-    solution: "Say in frictions-to-fixes section 7 whether a self-review of a tiny doc diff may replace the code-review Skill."
   - session: session_01BePy3Sj8TRHv7YGtPqnpfB
     date: "2026-10-17"
     severity: minor
@@ -106,31 +84,11 @@ occurrences:
     severity: nit
     description: "The code-review Skill demands two parallel sub-agents, which is out of proportion for a diff of 50 lines that only change pin fields."
     solution: "Let pr-workflow skip sub-agents for a diff that glassbox-update's script produced and a grep shows is pin-only."
-  - session: session_01C2XPRCDijGcdz27Kw6gi3s
-    date: "2026-10-18"
-    severity: nit
-    description: "code-review Skill mandates two parallel sub-agents; I reviewed a 3-line prose diff inline instead, deviating from the Skill's steps."
-    solution: "Let code-review state a size threshold below which an inline review is fine."
-  - session: session_01VcVVq7cXavEqXGmXucBLbK
-    date: "2026-10-18"
-    severity: nit
-    description: "Ran code-review as a lean self-check instead of the Skill's two parallel subagents, because the diff was comments-only."
-    solution: "Let the code-review Skill say when a comments-only diff may skip the subagents."
   - session: session_01XueFVQyVySVEKHxSHTFeTh
     date: "2026-10-19"
     severity: nit
     description: "Replaced the code-review Skill's two parallel subagents with an inline review because the diff was a prose page plus file moves."
     solution: "Let code-review scale down for prose-only diffs."
-  - session: session_01Bopw6N86uYzPzfaRpVqzhU
-    date: "2026-10-19"
-    severity: nit
-    description: "The code-review Skill prescribes two parallel sub-agents, disproportionate for a one-word label change; I reviewed inline, deviating from the Skill."
-    solution: "Let pr-workflow.md or the Skill allow an inline review for diffs under a few lines."
-  - session: session_016Nsq9SWL64V4RqDJPQYodp
-    date: "2026-10-19"
-    severity: nit
-    description: "Ran code-review inline rather than the Skill's two subagents because the diff was comments only; the Skill has no size threshold."
-    solution: "Let code-review say when a comments-only diff may skip the subagents."
   - session: session_011G3PKUqDog2WRSuqypmuJX
     date: "2026-10-20"
     severity: nit

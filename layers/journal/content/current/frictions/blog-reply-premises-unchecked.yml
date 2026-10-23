@@ -1,0 +1,17 @@
+name: blog-reply-premises-unchecked
+summary: >-
+  The blog Skill's reply step sent drafts with unchecked claims to its reader, so both finalists later failed fact-check and no reply shipped.
+cause: >-
+  blog-post step 12 exempted reply drafts from citation checks, so the reader picked drafts whose load-bearing premise was false and the fact-check only caught it after extra subagent rounds. Signals: "both finalists failed fact-check", "the run ended with no reply", unverified reply premises.
+surface: safe
+status: open
+fixes:
+  - pr: 1756
+    date: "2026-10-11"
+    summary: "Blog-post step 12 now fact-checks reply drafts, closing the gap where bad claims surfaced late."
+occurrences:
+  - session: session_01YSGRZcurrkv9WYqPfnRH2t
+    date: "2026-10-10"
+    severity: moderate
+    description: "The reader judged step-12 replies from scratch drafts whose premises were not verified. Both finalists failed fact-check after about 4 extra subagent rounds, and the run ended with no reply."
+    solution: "Before sending reply drafts to the reader, check each draft's one load-bearing claim against its primary source. The Skill exempts reply drafts from full citation-checking, and that let both premises through."
