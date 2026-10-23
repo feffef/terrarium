@@ -66,11 +66,13 @@ describe('midden Tenant', async () => {
     expect(html).toMatch(/midden-latest__meta[^>]*>[^<]*· in [^<]+ · assessed/)
   })
 
-  it('lists a report\'s finds with anchors to their cards', async () => {
+  it('lists a report\'s finds in the order its prose embeds them, each linking to its card', async () => {
     const html = (await $fetch('/t/midden/trench/stood-down')) as string
-    const anchors = [...html.matchAll(/<a href="#(artifact-[a-z0-9-]+)"/g)].map((m) => m[1]!)
-    expect(anchors.length).toBeGreaterThanOrEqual(2)
-    for (const id of anchors) expect(html).toContain(`id="${id}"`)
+    const list = html.match(/<details[^>]*midden-report__finds[\s\S]*?<\/details>/)?.[0] ?? ''
+    const listed = [...list.matchAll(/href="#(artifact-[a-z0-9-]+)"/g)].map((m) => m[1])
+    const cards = [...html.matchAll(/<article id="(artifact-[a-z0-9-]+)"/g)].map((m) => m[1])
+    expect(listed.length).toBeGreaterThanOrEqual(2)
+    expect(listed).toEqual(cards)
   })
 
   it('404s an unknown Midden Space', async () => {

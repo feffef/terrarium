@@ -56,6 +56,7 @@ const assessedSpan = computed(() => {
 })
 
 // "In this report": the finds in the order the prose embeds them, not query order.
+// Walks the raw minimark body, `[tag, props, ...children]`, so nested embeds count.
 const findList = computed(() => {
   const slugs: string[] = []
   const walk = (node: unknown) => {
@@ -65,7 +66,7 @@ const findList = computed(() => {
   }
   const body = site.value?.body as { value?: unknown[] } | undefined
   body?.value?.forEach(walk)
-  return slugs.flatMap((slug) => siteArtifacts.value.find((a) => a.stem === slug) ?? [])
+  return [...new Set(slugs)].flatMap((slug) => siteArtifacts.value.find((a) => a.stem === slug) ?? [])
 })
 // Open where there is room; on a phone it would push the first paragraph down (PR #1709).
 const findsBox = ref<HTMLDetailsElement>()
