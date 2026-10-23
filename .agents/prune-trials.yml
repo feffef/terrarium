@@ -23,33 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      `dispatch-subagents` §3 "Write the brief" cut to the rule per line, most
-      incident histories dropped to a few issue pointers, and one line added
-      (create each agent's artifact folder first) (-10 net, 84 lines in,
-      74 out). Chosen after the search subagent
-      covered the instruction corpus, guard headers and the tracker: the brief
-      checklist failed as prose (#2312, after #2150; #1480, #1585, #1586) and
-      nothing checks a brief mechanically. Runners-up: pre-push review in
-      `pr-workflow.md` (#2311, partly held by merge-pr.ts), stored-field shape
-      rule (#2264), CLAUDE.md read-first triggers (#1754). Judged and deleted
-      the Read-tool trial (landed 3a6075ae, judgeable from 2026-10-19T20:03Z per
-      the window script): only two unrelated major Frictions (stale TMPDIR,
-      screenshot loop). The mass here was small.
-    territory:
-      paths:
-        - ".agents/skills/dispatch-subagents/SKILL.md: §3 (Write the brief)"
-      keywords:
-        - subagent brief
-        - stranded
-    opened: 2026-10-20
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a subagent went wrong
-      (clobbered a checkout, collided on an artifact name, ran stale, merged,
-      or exceeded a "simple" fix) because the brief lacked a line the old §3
-      carried. NOT damage: a brief defect the removed text would not have
-      caught, or a guard denying and the agent fixing itself.
-  - problem: >
       `frictions-to-fixes` SKILL.md rewritten plainly at a Trusted user's request
       (1936 words to about 1730; 213 lines to 250, the extra lines being per-step
       headings): an overview of the run's three PR kinds, then each step as a
@@ -206,3 +179,34 @@ trials:
       wording (or blog-post's restatement) would have prevented it. NOT damage:
       the nit/minor slips #2426 already records at the old wording's rate, or a
       guard denying and the session fixing itself.
+  - problem: >
+      Workflow-write ban (cloud session cannot write `.github/workflows/*`) cut
+      to its one home each (-27 net): the `workflow-edit-guard.ts` header
+      (40 lines to 21) keeps purpose, usage and the fail-open list but drops the
+      mechanic retelling and incident asides; the `.sh` pre-filter comment and
+      the `environment-caveats.md` bullet are shortened (recovery recipe, proposals
+      pointer and issue pointers kept). Chosen after the search subagent covered
+      the instruction corpus, guard headers and the tracker (it ran list and REST
+      reads of issues 1247-2439, about 60 bodies): the ban failed as prose (#897,
+      again #1955) and the wired guard (unit-tested) holds it. Larger candidates
+      were read-first triggers (about 69 lines; #1754, #1819, #2146; the owner
+      accepted late reads, nothing denies) and provenance header (about 37 lines).
+      Judged and deleted the dispatch-subagents §3 trial (landed 81bc1915,
+      judgeable from 2026-10-23T12:28Z per the window script): 47 sessions, no
+      major or blocker Friction traces to it (a shared-checkout `git checkout`
+      by a triage agent, g9zpjr, was minor; the foreground-gate clash is in the
+      newer trial's territory).
+    territory:
+      paths:
+        - "scripts/hooks/workflow-edit-guard.ts and .sh: header comments"
+        - "docs/agents/environment-caveats.md: the `.github/workflows/*` bullet"
+      keywords:
+        - workflow scope
+        - workflow-edit-guard
+    opened: 2026-10-23
+    check: >
+      Damage is a major or blocker Friction where a cloud session committed a
+      change to `.github/workflows/*` (or stranded commits behind a rejected
+      push) and could not recover or knew no recovery because the cut text was
+      gone. NOT damage: the guard denying a write and the session moving the
+      edit to `docs/proposals/`, or a local session pushing a workflow file.
