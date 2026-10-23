@@ -1,8 +1,8 @@
 ---
 title: Adding a Tenant
 description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
-revision: 'c76af481cc56b5811586c6115bd961e9c428b117'
-revisionDate: '2026-10-22'
+revision: 'cfce4413a0af4506bf80ba86ef6edccc6ef089fb'
+revisionDate: '2026-10-23'
 ---
 
 A new site joins Terrarium. This Walkthrough follows the work from the side of the agent that builds it: from the approval, through one new folder and the manifest inside it, to the site answering at its own address with the Gate checking it. [Marquee](/t/marquee/reel), a small movie-blog Tenant, is the example throughout. Outside that folder, it must change only two glossary files.
@@ -57,7 +57,7 @@ For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in 
 
 ## 7. It gets its own words
 
-It writes its own `GLOSSARY.md` for the words only it uses. Then it adds itself to the root list and `GLOSSARY-MAP.md`.
+It writes its own `GLOSSARY.md` for the words only it uses. Then it adds itself to `GLOSSARY-MAP.md`.
 
 ::stop-links
 :file[layers/marquee/GLOSSARY.md]

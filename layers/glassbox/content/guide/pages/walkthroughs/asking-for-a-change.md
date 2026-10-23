@@ -1,8 +1,8 @@
 ---
 title: Asking for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
-revision: 'c76af481cc56b5811586c6115bd961e9c428b117'
-revisionDate: '2026-10-22'
+revision: 'cfce4413a0af4506bf80ba86ef6edccc6ef089fb'
+revisionDate: '2026-10-23'
 ---
 
 Someone with write access asks an agent for a change. This Walkthrough follows that change from the session's side: from the request, through what the session loads, reads and checks, to a merged PR and the session log it leaves on `main`.
@@ -81,7 +81,7 @@ If a reviewer asks for changes, the session pushes again and CI runs again. Then
 
 ## 10. It logs its work again
 
-Once the PR has merged, the session runs `close-session` again and marks its log `completed`. The hook commits the new log over the old one on `main`. The merged change itself now waits for the container that serves the site to notice it.
+Once the PR has merged, the session runs `close-session` again. It first looks back over the whole session for costly detours it hasn't logged yet, then marks its log `completed`. The hook commits the new log over the old one on `main`. The merged change itself now waits for the container that serves the site to notice it.
 
 ::stop-links
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · :file[.agents/skills/close-session/SKILL.md]
