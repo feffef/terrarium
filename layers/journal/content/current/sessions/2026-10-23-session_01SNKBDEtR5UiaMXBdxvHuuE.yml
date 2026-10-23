@@ -1,0 +1,158 @@
+schemaVersion: 1
+session: session_01SNKBDEtR5UiaMXBdxvHuuE
+startedAt: 2026-10-23T18:33:19Z
+endedAt: 2026-10-23T18:40:21Z
+kind: interactive
+goal: Audit Glass Box guide pages for title and cut quality
+status: completed
+outcome: "Report delivered: 11 A, 13 B, 0 C; 12 Lesson titles miss the short-concept-name rule"
+summary: "Human-instructed: the user asked for an agent to read all Glass Box guide Lessons and judge quality, titles and standalone cut, then answered my clarifying questions (guide Space only, contract plus newcomer criteria, report first, titles are short general concept names). I dispatched one read-only general-purpose subagent over the 24 guide pages, forwarded the title rule mid-run, spot-checked titles and skip lines against the files, and reported. No edits made; next step (retitling, in-place fixes, approval-gated splits/merges) awaits the user."
+prs: []
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson contract and Space layout; subagent also used it as its yardstick
+    useful: yes
+  - path: GLOSSARY.md
+    reason: Subagent read it for Platform terms while judging jargon
+    useful: partly
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: Subagent grepped it to check that a page's Why citation was on point; it was
+    useful: yes
+  - path: /home/user/terrarium/app/utils/lesson.ts
+    reason: (no reason given)
+  - path: app/utils/lesson.ts
+    reason: (no reason given)
+  - path: content/guide/pages/index.md
+    reason: (no reason given)
+  - path: content/guide/pages/claude-code/01.claude-md.md
+    reason: (no reason given)
+  - path: content/guide/pages/claude-code/02.path-scoped-rules.md
+    reason: (no reason given)
+  - path: content/guide/pages/claude-code/03.skills.md
+    reason: (no reason given)
+  - path: content/guide/pages/claude-code/04.hooks.md
+    reason: (no reason given)
+  - path: content/guide/pages/claude-code/07.subagents-worktrees.md
+    reason: (no reason given)
+  - path: content/guide/pages/deploy/01.self-updating-container.md
+    reason: (no reason given)
+  - path: content/guide/pages/git-github/01.every-change-a-pr.md
+    reason: (no reason given)
+  - path: content/guide/pages/git-github/04.trust-tiers.md
+    reason: (no reason given)
+  - path: content/guide/pages/nuxt-content/01.manifest-collections.md
+    reason: (no reason given)
+  - path: content/guide/pages/nuxt-content/02.one-table-per-key.md
+    reason: (no reason given)
+  - path: content/guide/pages/nuxt-content/03.content-database.md
+    reason: (no reason given)
+  - path: content/guide/pages/nuxt-vue/01.layers.md
+    reason: (no reason given)
+  - path: content/guide/pages/nuxt-vue/02.file-routing.md
+    reason: (no reason given)
+  - path: content/guide/pages/nuxt-vue/05.use-space.md
+    reason: (no reason given)
+  - path: content/guide/pages/nuxt-vue/06.use-async-data.md
+    reason: (no reason given)
+  - path: content/guide/pages/nuxt-vue/09.nitro.md
+    reason: (no reason given)
+  - path: content/guide/pages/terrarium-practice/01.gate.md
+    reason: (no reason given)
+  - path: content/guide/pages/terrarium-practice/02.adrs.md
+    reason: (no reason given)
+  - path: content/guide/pages/terrarium-practice/04.session-logs.md
+    reason: (no reason given)
+  - path: content/guide/pages/terrarium-practice/07.human-only-list.md
+    reason: (no reason given)
+  - path: content/guide/pages/walkthroughs/a-change-goes-live.md
+    reason: (no reason given)
+  - path: content/guide/pages/walkthroughs/adding-a-tenant.md
+    reason: (no reason given)
+  - path: content/guide/pages/walkthroughs/asking-for-a-change.md
+    reason: (no reason given)
+  - path: content/guide/pages/walkthroughs/from-file-to-browser.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief for the read-only audit agent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: My subagent brief named app/utils/lesson.ts; the file lives at layers/glassbox/app/utils/lesson.ts. The glossary's path is layer-relative, and I copied it without checking.
+    solution: Check that every path in a brief exists, as dispatch-subagents §3 already says; the glossary could write the path repo-relative.
+    severity: nit
+  - description: I ran always-loaded.ts with its output discarded, so step 1 of close-session was not really done. I relied on the rules already in context.
+    solution: Read the script's output in full when closing.
+    severity: nit
+durationSec: 422
+models:
+  claude-opus-5-5: 23
+toolCounts:
+  Bash: 6
+  Skill: 3
+  Agent: 1
+  SendMessage: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+docsReadBySubagents:
+  - GLOSSARY.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Read-only audit with no push, so the gate rule did not apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log this session straight to main via close-session; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Made me ask before editing and mark splits or merges as needing approval; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: No GitHub writes this session
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with the Glass Box glossary; no glossary change was needed
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pointed to the Glass Box glossary that held the Lesson contract
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: "Subagent: partly; used it to check claims made in the Layers page"
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: "Subagent: yes; it was the basis for flagging changing facts in page prose"
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: "Subagent: partly; it confirmed one diagram's classDef use"
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: "Subagent: partly; used it to check the deploy page's claims"
+    useful: partly
+  - path: .claude/rules/adr-0011.md
+    reason: "Subagent: partly; used it to check the Nuxt Content pages' claims"
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Audit Glass Box guide pages
+    durationSec: 227
+    toolCalls: 33
+    modelCalls: 13
+    tokenShare: 53.6
+gitBranch: ccr-19d4f19c-eoxob8
+entrypoint: remote_mobile
+cliVersion: 2.1.309
+landedBy: Stop
