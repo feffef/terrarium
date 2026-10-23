@@ -1,6 +1,7 @@
 title: the status-Tenant dashboard
 stratum: routing-excavation
 condition: lost
+cause: closed-by-owner
 provenance:
   kind: commit
   hash: 9d3e3bc

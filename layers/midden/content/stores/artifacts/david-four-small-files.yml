@@ -1,6 +1,7 @@
 title: "David: “It’s Four Small Files, Not a Trial”"
 stratum: routing-excavation
 condition: fragmentary
+cause: closed-by-owner
 provenance:
   kind: pr
   number: 91

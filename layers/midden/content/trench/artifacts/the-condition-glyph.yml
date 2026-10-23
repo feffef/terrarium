@@ -1,6 +1,7 @@
 title: ConditionGlyph.vue + ConditionTooltip.vue (the grade mark and its decode)
 stratum: plainer-cut
 condition: dissolved
+cause: cut-as-excess
 provenance:
   kind: file
   path: layers/midden/app/components/midden/ConditionGlyph.vue

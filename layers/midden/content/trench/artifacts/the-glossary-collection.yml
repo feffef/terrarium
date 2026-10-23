@@ -1,6 +1,7 @@
 title: The glossary collection
 stratum: routing-excavation
 condition: fragmentary
+cause: cut-as-excess
 provenance:
   kind: commit
   hash: 551862c

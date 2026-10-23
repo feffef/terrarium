@@ -1,6 +1,7 @@
 title: the third onramp
 stratum: trial-pits
 condition: never-activated
+cause: closed-by-owner
 provenance:
   kind: commit
   hash: 33409ef

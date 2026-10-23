@@ -1,6 +1,7 @@
 title: SeasonNote.vue (::season-note)
 stratum: almanac-recut
 condition: fragmentary
+cause: outlived-its-need
 provenance:
   kind: file
   path: layers/atlas/app/components/content/SeasonNote.vue

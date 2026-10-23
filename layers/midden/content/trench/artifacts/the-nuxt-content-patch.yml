@@ -1,6 +1,7 @@
 title: "the @nuxt/content #236 client-DB patch"
 stratum: plainer-cut
 condition: fresh
+cause: closed-by-owner
 provenance:
   kind: commit
   hash: b23e8d3

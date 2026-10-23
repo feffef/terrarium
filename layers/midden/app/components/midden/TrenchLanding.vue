@@ -38,21 +38,25 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
   const pages = await queryCollection(resolved.pagesKey).all()
   const artifacts = await queryCollection(resolved.collections.artifacts).all()
   // Per report: how many finds and when they were assessed, so the numbered list says what it holds.
-  const meta = (slug: string) => {
-    const dates = artifacts.filter((a) => a.site === slug).map((a) => a.assessedAt).sort()
+  const meta = (finds: typeof artifacts) => {
+    const dates = finds.map((a) => a.assessedAt).sort()
     if (!dates.length) return ''
     const lo = formatMiddenDate(dates[0]!)
     const hi = formatMiddenDate(dates[dates.length - 1]!)
     return `${dates.length} ${dates.length === 1 ? 'find' : 'finds'} · assessed ${lo === hi ? lo : `${lo} – ${hi}`}`
   }
   const sites = middenReportOrder(pages.filter((p) => p.path !== '/'), artifacts)
-    .map((p, i) => ({
-      meta: meta(p.path.slice(1)),
+    .map((p, i) => {
+      const finds = artifacts.filter((a) => a.site === p.path.slice(1))
+      return {
+      meta: meta(finds),
       num: String(i + 1).padStart(2, '0'),
       title: (p.title ?? p.path.replace(/^\//, '')).replaceAll('`', ''),
       description: (p.description as string | undefined)?.replaceAll('`', ''),
       href: `/t/midden/trench${p.path}`,
-    }))
+      causes: [...new Set(finds.map((a) => a.cause))],
+    }
+    })
   return { intro: pages.find((p) => p.path === '/') ?? null, count: sites.length, sites, latest: [] }
 })
 
@@ -64,13 +68,16 @@ const START_HERE = [
 ]
 
 const count = computed(() => data.value?.count ?? 0)
+const route = useRoute()
+const activeCause = computed(() => (props.front ? undefined : middenCauseFromQuery(route.query.cause)))
+const causeChips = computed(() => middenCauseTally((data.value?.sites ?? []).map((s) => s.causes)))
 const rows = computed(() =>
   props.front
     ? [
         { num: 'I', title: 'The Trench', description: `the open excavation — ${count.value} dig report${count.value === 1 ? '' : 's'}`, href: '/t/midden/trench' },
         { num: 'II', title: 'The Stores', description: 'finds held off display, boxed by season', href: '/t/midden/stores' },
       ]
-    : (data.value?.sites ?? []),
+    : (data.value?.sites ?? []).filter((s) => !activeCause.value || s.causes.includes(activeCause.value)),
 )
 
 useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
@@ -145,8 +152,18 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
         <div class="midden-sechead">
           <span id="midden-sites-head" class="hand midden-sechead__title">{{ front ? 'The excavation' : 'The dig reports' }}</span>
           <span class="midden-sechead__rule" />
-          <span v-if="!front" class="mono midden-sechead__aside">{{ count }} site{{ count === 1 ? '' : 's' }} · newest stratum first</span>
+          <span v-if="!front" class="mono midden-sechead__aside">{{ activeCause ? `${rows.length} of ` : '' }}{{ count }} site{{ count === 1 ? '' : 's' }} · newest stratum first</span>
         </div>
+        <nav v-if="!front && causeChips.length" class="tech midden-causes" aria-label="Filter by cause of death">
+          <NuxtLink
+            v-for="chip in causeChips"
+            :key="chip.meta.cause"
+            :to="{ query: activeCause === chip.meta.cause ? {} : { cause: chip.meta.cause } }"
+            :title="chip.meta.definition"
+            :aria-current="activeCause === chip.meta.cause ? 'true' : undefined"
+            class="midden-causes__chip"
+          >{{ chip.meta.label }} <span class="midden-causes__count">{{ chip.sites }}</span></NuxtLink>
+        </nav>
         <ol v-if="rows.length" class="midden-sites">
           <li v-for="site in rows" :key="site.href" class="midden-sites__item">
             <NuxtLink :to="site.href" class="midden-sites__link">
@@ -237,6 +254,28 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
 }
 
 .midden-landing__section { margin-top: 1.9rem; }
+
+/* Cause-of-death filter chips: links, so a filtered view is linkable and
+   server-rendered without JavaScript. */
+.midden-causes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0 0 1.1rem;
+}
+.midden-causes__chip {
+  padding: 0.2rem 0.65rem;
+  border: 1px solid var(--midden-rule);
+  border-radius: 999px;
+  color: var(--midden-muted);
+}
+.midden-causes__chip:hover { color: var(--midden-accent); border-color: currentColor; }
+.midden-causes__chip[aria-current] {
+  color: var(--midden-paper-2);
+  background: var(--midden-accent);
+  border-color: var(--midden-accent);
+}
+.midden-causes__count { opacity: 0.7; }
 
 /* The dig-report list: a plain numbered list, each row a full-width link. */
 .midden-sites {

@@ -1,6 +1,7 @@
 title: StratigraphySidebar.vue + StrataLegend.vue (the season instruments)
 stratum: plainer-cut
 condition: intact
+cause: cut-as-excess
 provenance:
   kind: file
   path: layers/midden/app/components/midden/StratigraphySidebar.vue

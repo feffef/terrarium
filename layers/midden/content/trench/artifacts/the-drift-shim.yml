@@ -1,6 +1,7 @@
 title: the gate:drift compat no-op
 stratum: routing-excavation
 condition: never-activated
+cause: outlived-its-need
 provenance:
   kind: commit
   hash: 9ecd4b5

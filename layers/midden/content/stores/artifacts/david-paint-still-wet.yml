@@ -1,6 +1,7 @@
 title: "David: “The Paint Is Still Wet”"
 stratum: routing-excavation
 condition: intact
+cause: closed-by-owner
 provenance:
   kind: file
   path: layers/blog/content/david/pages/2026-07-07-the-paint-still-wet.md

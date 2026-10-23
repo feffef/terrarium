@@ -1,6 +1,7 @@
 title: "Spike: does a bot comment wake a subscribed session?"
 stratum: spike-ashfall
 condition: never-activated
+cause: built-to-be-discarded
 provenance:
   kind: pr
   number: 277

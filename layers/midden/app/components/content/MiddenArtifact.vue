@@ -77,6 +77,8 @@ const stampStyle = computed(() => {
           <a :href="`${REPO_URL}/commit/${artifact.removedIn}`" target="_blank" rel="noopener noreferrer">removed in {{ artifact.removedIn.slice(0, 7) }}</a>
         </template>
         <span class="midden-find__dot" aria-hidden="true">·</span>
+        <span class="midden-find__cause">{{ middenCauseMeta(artifact.cause).label }}</span>
+        <span class="midden-find__dot" aria-hidden="true">·</span>
         <span class="midden-find__assessed">assessed {{ formatMiddenDate(artifact.assessedAt) }}</span>
       </p>
     </header>

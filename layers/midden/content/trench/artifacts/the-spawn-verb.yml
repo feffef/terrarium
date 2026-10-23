@@ -1,6 +1,7 @@
 title: Spawn (a Tenant / Space)
 stratum: spike-ashfall
 condition: fragmentary
+cause: cut-as-excess
 provenance:
   kind: commit
   hash: 2cb2aa5

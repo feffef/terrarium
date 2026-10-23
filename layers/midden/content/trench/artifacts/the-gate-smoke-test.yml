@@ -1,6 +1,7 @@
 title: CI gate smoke test (close without merging)
 stratum: spike-ashfall
 condition: never-activated
+cause: built-to-be-discarded
 provenance:
   kind: pr
   number: 330

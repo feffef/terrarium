@@ -1,6 +1,7 @@
 title: "Kevin: “The Walls Learned to Talk to Each Other”"
 stratum: plainer-cut
 condition: fresh
+cause: closed-by-owner
 provenance:
   kind: pr
   number: 646

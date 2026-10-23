@@ -1,6 +1,7 @@
 title: the `pnpm gen` build prefix
 stratum: routing-excavation
 condition: dissolved
+cause: outlived-its-need
 provenance:
   kind: commit
   hash: e75bda0

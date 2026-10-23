@@ -1,6 +1,7 @@
 title: the generated content.config.ts
 stratum: routing-excavation
 condition: dissolved
+cause: outlived-its-need
 provenance:
   kind: commit
   hash: 73bf3dc

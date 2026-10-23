@@ -1,6 +1,7 @@
 title: the end-of-session id check
 stratum: current-midden
 condition: intact
+cause: cost-more-than-it-caught
 provenance:
   kind: commit
   hash: 226b4074ba5e13061ac0c042ac86849c5cb8a8f5

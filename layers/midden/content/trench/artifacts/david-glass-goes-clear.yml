@@ -1,6 +1,7 @@
 title: "David: “The Glass Is About to Go Clear”"
 stratum: spike-ashfall
 condition: fragmentary
+cause: closed-by-owner
 provenance:
   kind: pr
   number: 327

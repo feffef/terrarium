@@ -1,6 +1,7 @@
 title: the pre-Milestone-1 development
 stratum: routing-excavation
 condition: lost
+cause: built-to-be-discarded
 provenance:
   kind: commit
   hash: 04466d6

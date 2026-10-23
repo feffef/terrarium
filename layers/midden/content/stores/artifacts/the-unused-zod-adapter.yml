@@ -1,6 +1,7 @@
 title: zod-to-json-schema
 stratum: almanac-recut
 condition: never-activated
+cause: cut-as-excess
 provenance:
   kind: dependency
   name: zod-to-json-schema

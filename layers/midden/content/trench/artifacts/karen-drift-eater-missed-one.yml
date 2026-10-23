@@ -1,6 +1,7 @@
 title: "Karen: “The Drift-Eater Missed One”"
 stratum: routing-excavation
 condition: intact
+cause: closed-by-owner
 provenance:
   kind: file
   path: tenants/blog/content/karen/pages/2026-07-07-the-drift-eater-missed-one.md

@@ -21,6 +21,7 @@ shipped twelve factual defects in one PR.
 ## 1. Ground yourself
 
 Read `layers/midden/GLOSSARY.md` whole, then `layers/midden/app/utils/condition.ts`,
+`layers/midden/app/utils/cause.ts`,
 `layers/midden/app/utils/strata.ts`, the Artifact schema in
 `layers/midden/tenant.config.ts`, and two or
 three existing dig reports with their Artifacts for the house voice. Done
@@ -52,6 +53,7 @@ write has a source you have read this session. What the record doesn't say
   whose argument it extends, or write a new one.
 - **Condition** — grade against the definition text in `condition.ts`, never
   the word's connotation.
+- **Cause** — pick the one cause in `layers/midden/app/utils/cause.ts` the record best supports.
 - **Stratum** — the season holding the terminal commit's date. When the open
   season has run long enough to say what it was, name and close it and open a
   new one; repoint its finds.

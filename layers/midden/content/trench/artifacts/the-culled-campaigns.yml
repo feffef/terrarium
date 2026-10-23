@@ -1,6 +1,7 @@
 title: "three culled Campaigns (PR #1429)"
 stratum: kiln-wasters
 condition: never-activated
+cause: closed-by-owner
 provenance:
   kind: pr
   number: 1429

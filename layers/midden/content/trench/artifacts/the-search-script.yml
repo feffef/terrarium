@@ -1,6 +1,7 @@
 title: "the issue-search script (PR #1149)"
 stratum: kiln-wasters
 condition: never-activated
+cause: never-worked
 provenance:
   kind: commit
   hash: b1d4cd378f768ab56439af7bc37eecf80fc5adf8

@@ -1,6 +1,7 @@
 title: the `sync` / `consolidate` / `codify` job-names
 stratum: spike-ashfall
 condition: dissolved
+cause: cut-as-excess
 provenance:
   kind: commit
   hash: a1dc590

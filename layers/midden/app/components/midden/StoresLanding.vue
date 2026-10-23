@@ -116,6 +116,8 @@ useHead({ title: 'The Stores · The Midden' })
             <p class="tech midden-entry__facts">
               <span class="sc midden-entry__grade">{{ conditionMeta(find.condition).label }}</span>
               <span class="midden-entry__dot" aria-hidden="true">·</span>
+              <span>{{ middenCauseMeta(find.cause).label }}</span>
+              <span class="midden-entry__dot" aria-hidden="true">·</span>
               <a
                 v-if="find.provenance.url"
                 :href="find.provenance.url"

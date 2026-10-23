@@ -1,6 +1,7 @@
 title: the Commits Tenant
 stratum: wire-cut
 condition: intact
+cause: closed-by-owner
 provenance:
   kind: commit
   hash: b008ec1

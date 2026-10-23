@@ -1,6 +1,7 @@
 title: the two root-index designs that lost the bake-off
 stratum: trial-pits
 condition: lost
+cause: built-to-be-discarded
 provenance:
   kind: commit
   hash: 449bf46

@@ -1,6 +1,7 @@
 title: shared/routing.generated.ts
 stratum: routing-excavation
 condition: intact
+cause: outlived-its-need
 provenance:
   kind: file
   path: shared/routing.generated.ts
