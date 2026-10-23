@@ -5,9 +5,9 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { adrsForWrite, HINT_PREFIX, LATE_READ_NOTE } from '../../scripts/hooks/adr-read-hint.ts'
+import { adrsForWrite, LATE_READ_NOTE } from '../../scripts/hooks/adr-read-hint.ts'
 import { agentTranscript } from '../../scripts/session/transcript-trace.ts'
-import { loadRules, ruleAdr, rulePaths } from '../../scripts/lib/adr-rules.ts'
+import { ADR_HINT_PREFIX, adrHintLine, adrHintsIn, loadRules, ruleAdr, rulePaths } from '../../scripts/lib/adr-rules.ts'
 import { runTsx } from '../support/run-script.ts'
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -23,22 +23,22 @@ const ADRS = new Map([
   ['0021', 'docs/adr/0021-glossaries.md'],
   ['0029', 'docs/adr/0029-rules.md'],
 ])
-const hits = (file: string, texts: string[] = []) => adrsForWrite(file, texts, RULES, ADRS).map((h) => `${h.adr} ${h.why}`)
+const hits = (file: string, texts: string[] = []) => adrsForWrite(file, texts, RULES, ADRS).map((h) => `${h.adr} ${h.via}`)
 
 describe('adrsForWrite()', () => {
   it('maps every ADR rule whose paths match the file, a topic rule included, and no other rule', () => {
-    expect(hits('GLOSSARY.md')).toEqual(['0021 ADR-0021 governs `GLOSSARY.md`'])
-    expect(hits('scripts/hooks/x.ts')).toEqual(['0004 ADR-0004 governs `scripts/hooks/x.ts`'])
+    expect(hits('GLOSSARY.md')).toEqual(['0021 path'])
+    expect(hits('scripts/hooks/x.ts')).toEqual(['0004 path'])
     expect(hits('README.md')).toEqual([])
   })
 
   it('adds each ADR the old or new text names, or the ADR file itself, once and after the path matches', () => {
     expect(hits('GLOSSARY.md', ['see ADR-0004 and ADR-0021', 'ADR-0004 again'])).toEqual([
-      '0021 ADR-0021 governs `GLOSSARY.md`',
-      '0004 your edit names ADR-0004',
+      '0021 path',
+      '0004 text',
     ])
-    expect(hits('docs/adr/0029-rules.md')).toEqual(['0029 you edit ADR-0029'])
-    expect(hits('x.md', ['ADR-00045', 'xADR-0004', 'ADR-0029'])).toEqual(['0029 your edit names ADR-0029'])
+    expect(hits('docs/adr/0029-rules.md')).toEqual(['0029 text'])
+    expect(hits('x.md', ['ADR-00045', 'xADR-0004', 'ADR-0029'])).toEqual(['0029 text'])
   })
 
   it('keeps only ADRs with a file, and skips the text match in Tenant content, session logs and throwaway scripts', () => {
@@ -46,7 +46,20 @@ describe('adrsForWrite()', () => {
     for (const f of ['layers/journal/content/current/sessions/a.yml', '.session-logs/pending.json', '.throwaway/a.ts']) {
       expect(hits(f, ['ADR-0004']), f).toEqual([])
     }
-    expect(hits('layers/journal/GLOSSARY.md', ['ADR-0004'])).toEqual(['0004 your edit names ADR-0004'])
+    expect(hits('layers/journal/GLOSSARY.md', ['ADR-0004'])).toEqual(['0004 text'])
+  })
+})
+
+describe('the pointer line', () => {
+  it('parses back to each ADR and how it matched, from pointer lines only', () => {
+    const line = adrHintLine([
+      { adr: '0021', via: 'path', doc: 'docs/adr/0021-g.md', file: 'GLOSSARY.md' },
+      { adr: '0029', via: 'text', doc: 'docs/adr/0029-r.md', file: 'docs/adr/0029-r.md' },
+      { adr: '0004', via: 'text', doc: 'docs/adr/0004-g.md', file: 'x.md' },
+    ])
+    expect(line).toBe('Read in full before you go on: `docs/adr/0021-g.md` (ADR-0021 governs `GLOSSARY.md`); `docs/adr/0029-r.md` (you edit ADR-0029); `docs/adr/0004-g.md` (your edit names ADR-0004).')
+    expect(adrHintsIn(`other\n${line}\n${LATE_READ_NOTE}`)).toEqual([{ adr: '0021', via: 'path' }, { adr: '0029', via: 'text' }, { adr: '0004', via: 'text' }])
+    expect(adrHintsIn('Read `docs/adr/0021-g.md` (ADR-0021 governs `GLOSSARY.md`)')).toEqual([])
   })
 })
 
@@ -104,7 +117,7 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
   it('points to each governing or named ADR in one line, then the late-read note', () => {
     const hint = context(run(edit({}, { old_string: 'ADR-0004 says' })))
     const [line, note] = hint.split('\n')
-    expect(line!.startsWith(HINT_PREFIX)).toBe(true)
+    expect(line!.startsWith(ADR_HINT_PREFIX)).toBe(true)
     expect(line).toContain(`\`${ADR21}\` (ADR-0021 governs \`GLOSSARY.md\`)`)
     expect(line).toContain('`docs/adr/0004-objective-safety-gate.md` (your edit names ADR-0004)')
     expect(note).toBe(LATE_READ_NOTE)

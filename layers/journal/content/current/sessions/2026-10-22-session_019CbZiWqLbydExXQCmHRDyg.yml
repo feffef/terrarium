@@ -272,11 +272,4 @@ entrypoint: remote_mobile
 cliVersion: 2.1.308
 learnings:
   - Glass Box term yml files cite root GLOSSARY.md as source, so root headings are load-bearing even when their text shrinks
-relevantAdrs:
-  - adr: 21
-    reason: Governs root glossary and map; rewritten
-  - adr: 15
-    reason: Importance grades' home moved to audit-skills
-  - adr: 4
-    reason: Human-only definition and merge
 landedBy: Stop

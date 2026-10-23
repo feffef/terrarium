@@ -11,7 +11,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { join, matchesGlob } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { isContentPath } from './transcript-trace.ts'
-import { isExternalSession } from '../../shared/schemas/session.ts'
+import { adrHint, isExternalSession, type AdrHint } from '../../shared/schemas/session.ts'
 import { git, SESSION_TRAILER } from '../lib/git.ts'
 import { asRecord, frontmatterBlock } from '../lib/frontmatter.ts'
 import { listAll, resolveAccess, type Access } from '../lib/github-client.ts'
@@ -89,11 +89,12 @@ export interface Session {
   /** `docsReadBySubagents` paths (a subset of `docsRead`), feeding `skillQuery`. */
   docsReadBySubagents: string[]
   filesEdited: string[]
+  adrHints: AdrHint[]
   /** The Routine that fired it (`entrypoint: remote_trigger`), else null. */
   trigger: string | null
 }
 /** A windowed session as printed — what the Skill judges "kind of work" from. */
-export type WindowSession = Omit<Session, 'humanPromptedClosure' | 'docsRead' | 'docsReadBySubagents' | 'mentioned' | 'humanInvoked' | 'trigger' | 'filesEdited'>
+export type WindowSession = Omit<Session, 'humanPromptedClosure' | 'docsRead' | 'docsReadBySubagents' | 'mentioned' | 'humanInvoked' | 'trigger' | 'filesEdited' | 'adrHints'>
 export interface OnDiskSkill {
   description: string
   /** False when its frontmatter sets `disable-model-invocation: true`. */
@@ -315,6 +316,19 @@ export function adrReadReport(sessions: readonly Session[], rules: readonly Rule
   return out
 }
 
+/** Per ADR: how many times the hint fired (each `by` counts) and how many of
+ *  those were followed by a full read. */
+export function adrHintReport(sessions: readonly Session[]): Record<string, { fired: number; readAfter: number; readAfterPct: number }> {
+  const out: Record<string, { fired: number; readAfter: number; readAfterPct: number }> = {}
+  for (const h of sessions.flatMap((s) => s.adrHints)) {
+    const a = (out[`ADR-${String(h.adr).padStart(4, '0')}`] ??= { fired: 0, readAfter: 0, readAfterPct: 0 })
+    a.fired++
+    if (h.readAfter) a.readAfter++
+    a.readAfterPct = Math.round((100 * a.readAfter) / a.fired)
+  }
+  return out
+}
+
 export type IssueRecord = RawIssueApiRecord & { body?: string | null }
 
 /** Open issues whose title or body names `skill` as a whole token. */
@@ -522,6 +536,7 @@ export function toSession(raw: Record<string, unknown>, file: string, skillNames
       .filter(isContentPath),
     docsReadBySubagents: (Array.isArray(raw.docsReadBySubagents) ? raw.docsReadBySubagents : []).map(String),
     filesEdited: (Array.isArray(raw.filesEdited) ? raw.filesEdited : []).map(String),
+    adrHints: adrHint.array().catch([]).parse(raw.adrHints ?? []),
     trigger: raw.entrypoint === 'remote_trigger' && raw.trigger ? String(raw.trigger) : null,
   }
 }
@@ -1011,7 +1026,8 @@ function main(): void {
     const until = flagValue(argv, '--until') ?? new Date().toISOString()
     if (!since || ![since, until].every((t) => Number.isFinite(Date.parse(t)))) fail('--adr-reads needs --since ISO, and --until ISO if given')
     const sessions = startedWindow(readSessions(root, readSkillNames()), since).filter((s) => Date.parse(s.startedAt) < Date.parse(until))
-    process.stdout.write(JSON.stringify({ since, until, ...adrReadReport(sessions, loadRules(join(root, RULES_DIR))) }, null, 2) + '\n')
+    const report = { since, until, ...adrReadReport(sessions, loadRules(join(root, RULES_DIR))), hints: adrHintReport(sessions) }
+    process.stdout.write(JSON.stringify(report, null, 2) + '\n')
     return
   }
   const skill = flagValue(argv, '--skill')

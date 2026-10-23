@@ -21,12 +21,11 @@ import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRun
 import { repoRoot } from './bash-rules-hint.ts'
 import { adrReadInFull, agentTranscript, hintText } from '../session/transcript-trace.ts'
 import { buildDocLineIndex } from '../session/shell-reads.ts'
-import { ADR_DIR, loadRules, RULES_DIR, ruleAdr, rulePaths, type RuleFile } from '../lib/adr-rules.ts'
+import { ADR_DIR, adrHintLine, adrHintsIn, loadRules, RULES_DIR, ruleAdr, rulePaths, type AdrHintVia, type RuleFile } from '../lib/adr-rules.ts'
 
 export interface AdrHit {
   adr: string
-  /** Why it is due, quoted in the pointer. */
-  why: string
+  via: AdrHintVia
 }
 
 const NO_TEXT_MATCH = ['layers/*/content/**', '.session-logs/**', '.throwaway/**']
@@ -34,33 +33,27 @@ const NO_TEXT_MATCH = ['layers/*/content/**', '.session-logs/**', '.throwaway/**
 /** The ADRs a write to repo-relative `file` touches, path matches first.
  *  `adrs` maps each ADR number to its file; any other number is dropped. */
 export function adrsForWrite(file: string, texts: string[], rules: RuleFile[], adrs: Map<string, string>): AdrHit[] {
-  const hits = new Map<string, string>()
-  const add = (n: string | undefined, why: string) => {
-    if (n && adrs.has(n) && !hits.has(n)) hits.set(n, why)
+  const hits = new Map<string, AdrHintVia>()
+  const add = (n: string | undefined, via: AdrHintVia) => {
+    if (n && adrs.has(n) && !hits.has(n)) hits.set(n, via)
   }
   for (const r of rules) {
-    const n = ruleAdr(r.file)
-    if (rulePaths(r.text).some((g) => matchesGlob(file, g))) add(n, `ADR-${n} governs \`${file}\``)
+    if (rulePaths(r.text).some((g) => matchesGlob(file, g))) add(ruleAdr(r.file), 'path')
   }
   if (!NO_TEXT_MATCH.some((g) => matchesGlob(file, g))) {
-    const own = /^docs\/adr\/(\d{4})-/.exec(file)?.[1]
-    add(own, `you edit ADR-${own}`)
-    for (const m of texts.join('\n').matchAll(/\bADR-(\d{4})\b/g)) add(m[1], `your edit names ADR-${m[1]}`)
+    add(/^docs\/adr\/(\d{4})-/.exec(file)?.[1], 'text')
+    for (const m of texts.join('\n').matchAll(/\bADR-(\d{4})\b/g)) add(m[1], 'text')
   }
-  return [...hits].map(([adr, why]) => ({ adr, why }))
+  return [...hits].map(([adr, via]) => ({ adr, via }))
 }
 
-export const HINT_PREFIX = 'Read in full before you go on:'
 export const LATE_READ_NOTE = 'If the ADR shows the edit was already right, the late read is not a Friction.'
 
-/** ADRs this transcript already pointed to: their path on a line this hook wrote. */
-function pointedTo(records: Record<string, unknown>[], path: string): boolean {
-  return records
-    .map((r) => r.attachment as { type?: string; content?: unknown } | undefined)
-    .filter((a) => a?.type === 'hook_additional_context')
-    .flatMap((a) => hintText(a!.content).split('\n'))
-    .some((l) => l.startsWith(HINT_PREFIX) && l.includes(`\`${path}\``))
-}
+/** ADRs this transcript already pointed to. */
+const pointedTo = (records: Record<string, unknown>[]) => new Set(records
+  .map((r) => r.attachment as { type?: string; content?: unknown } | undefined)
+  .filter((a) => a?.type === 'hook_additional_context')
+  .flatMap((a) => adrHintsIn(hintText(a!.content)).map((h) => h.adr)))
 
 function hintFor(payload: unknown, dryRun = false): string | null {
   const input = prop(payload, 'tool_input')
@@ -80,9 +73,10 @@ function hintFor(payload: unknown, dryRun = false): string | null {
   else records = readTranscript(agent === undefined ? parent : agentTranscript(parent, String(agent)))
   if (!records) return null
   const index = buildDocLineIndex(hits.map((h) => ({ path: adrs.get(h.adr)!, text: readFileSync(join(root, adrs.get(h.adr)!), 'utf8') })))
-  const due = hits.filter((h) => !pointedTo(records, adrs.get(h.adr)!) && !adrReadInFull(records, h.adr, index))
+  const pointed = pointedTo(records)
+  const due = hits.filter((h) => !pointed.has(h.adr) && !adrReadInFull(records, h.adr, index))
   if (due.length === 0) return null
-  return `${HINT_PREFIX} ${due.map((h) => `\`${adrs.get(h.adr)}\` (${h.why})`).join('; ')}.\n${LATE_READ_NOTE}`
+  return `${adrHintLine(due.map((h) => ({ ...h, doc: adrs.get(h.adr)!, file })))}\n${LATE_READ_NOTE}`
 }
 
 function main(): void {

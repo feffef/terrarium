@@ -20,9 +20,9 @@ and its own commits.
   blocked, the session logs again and replaces its earlier log. A session
   with no PR logs too.
 - **Who writes what.** The agent writes the goal, status, outcome, summary,
-  every Friction, why the docs and Skills it names mattered, and which ADRs
-  it judged relevant. Timings, models, tools, files read, subagents and loaded
-  rules come from the transcript. Files edited come from the transcript and
+  every Friction, and why the docs and Skills it names mattered. Timings,
+  models, tools, files read, subagents, loaded rules and the ADRs a hint
+  pointed to come from the transcript. Files edited come from the transcript and
   from the session's own commits, found by their `Claude-Session:` trailer, so
   an edit made through a shell command counts too. A doc counts as read when a
   command's output showed enough of it. The agent may mark a read credited from
@@ -34,6 +34,9 @@ and its own commits.
   stay valid. A new optional field is fine at any time. A required, renamed or
   narrower field needs a new schema version beside the old one; a log with no
   version is version 1.
+- **The one exception to both:** a Trusted user may remove a field that few
+  logs ever used, from the schema and from every log that holds it, in one PR
+  a human merges.
 - **Logs from outside agents** are marked `external`. They stay on the Timeline
   and dashboard, but Friction mining and the Skill audit skip them; only their
   ideas are used. Their authors can't push to `main`, so such a log travels in

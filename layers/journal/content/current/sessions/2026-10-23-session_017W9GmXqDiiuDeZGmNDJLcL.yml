@@ -441,17 +441,4 @@ learnings:
   - Removing the sentence that sanctioned a behavior (blog-post's '...list your own later changes separately') doesn't remove the behavior itself when nothing newly forbids it or checks for it - the model reproduces the old PR-body shape by habit, not by permission.
 ideas:
   - "A mechanical pre-post check for blog-post step 9: grep the drafted PR body for phrases like 'later unchecked edits' or 'unchecked' before it ships, catching the forbidden shape the moment it's written rather than relying on audit-skills to catch it a day later."
-relevantAdrs:
-  - adr: 15
-    reason: Scoped what this run may edit (Inventory, Routine run costs, issues)
-  - adr: 3
-    reason: Opened the PR immediately once the branch had a pushed commit
-  - adr: 4
-    reason: The diff's size required code-review and gate:scoped before the first push
-  - adr: 9
-    reason: This log commits straight to main, out of the PR
-  - adr: 17
-    reason: Provenance header on every GitHub write
-  - adr: 27
-    reason: Checked for an open prune trial over audit-skills' own text
 landedBy: Stop

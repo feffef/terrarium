@@ -32,7 +32,7 @@
 //   Prints the derived trace as JSON.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
-import type { RelevantAdr, RuleVerdict, UsefulVerdict } from '../../shared/schemas/session.ts'
+import type { AdrHint, RuleVerdict, UsefulVerdict } from '../../shared/schemas/session.ts'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../../shared/trace-fields.ts'
 import {
   buildDocLineIndex,
@@ -45,7 +45,7 @@ import {
   type NearMiss,
   type ShellCommand,
 } from './shell-reads.ts'
-import { ruleAdr, ruleBlockFiles } from '../lib/adr-rules.ts'
+import { adrHintsIn, ruleAdr, ruleBlockFiles, type AdrHintVia } from '../lib/adr-rules.ts'
 import { root, runIfMain } from '../lib/cli.ts'
 
 /** The one authored-scratch file per container (one session per container in the
@@ -130,6 +130,8 @@ export interface MechanicalTrace {
    *  loaded: whole, by the Read tool, or in Bash output once `docIndex` is given
    *  (the shell detector's floor, not a whole read). */
   rulesFollowedUp: string[]
+  /** The ADRs `adr-read-hint.ts` pointed to; `readAfter` uses `adrReadInFull`. */
+  adrHints: AdrHint[]
   /** Rules only a subagent or workflow agent loaded. Set by `foldSubagentTrace`. */
   rulesLoadedBySubagents?: string[]
   /** Instruction docs only a subagent or workflow agent read. Set by `foldSubagentTrace`. */
@@ -564,6 +566,16 @@ export function adrReadInFull(
   return read || (!!docIndex && scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths.some(isAdr))
 }
 
+/** One entry per (adr, via, by), read after if any of its hints was. */
+function mergeAdrHints(hints: AdrHint[]): AdrHint[] {
+  const out = new Map<string, AdrHint>()
+  for (const h of hints) {
+    const key = `${h.adr}|${h.via}|${h.by}`
+    out.set(key, { ...h, readAfter: h.readAfter || !!out.get(key)?.readAfter })
+  }
+  return [...out.values()]
+}
+
 /** Derive the mechanical trace from parsed transcript records. Pure — the
  *  testable core. `env` is injectable (defaults to `process.env`). `docIndex`
  *  is what `docsReadViaShell` is credited against (ADR-0009): the lander and
@@ -586,6 +598,7 @@ export function extractTrace(
   const rules: string[] = []
   const alwaysLoadedRules: string[] = []
   const ruleLoadedAt = new Map<string, number>()
+  const hintAt: (readonly [{ adr: string; via: AdrHintVia }, number])[] = []
   const usageById = new Map<string, ApiUsage>()
 
   for (const [i, rec] of records.entries()) {
@@ -594,7 +607,10 @@ export function extractTrace(
 
     const att = rec.attachment as { type?: string; path?: string; content?: unknown; files?: { path?: string }[] } | undefined
     if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(ruleKey(att.path))
-    if (att?.type === 'hook_additional_context') rules.push(...hintedRules(att.content))
+    if (att?.type === 'hook_additional_context') {
+      rules.push(...hintedRules(att.content))
+      hintAt.push(...adrHintsIn(hintText(att.content)).map((h) => [h, i] as const))
+    }
     if (att?.type === 'instructions') {
       for (const f of att.files ?? []) if (f.path?.includes('/.claude/rules/')) alwaysLoadedRules.push(ruleKey(f.path))
     }
@@ -668,6 +684,9 @@ export function extractTrace(
     rulesLoaded: dedup(rules).filter((r) => !alwaysLoadedRules.includes(r)),
     rulesGlobal: dedup(alwaysLoadedRules),
     rulesFollowedUp: [...ruleLoadedAt].filter(([r, at]) => adrReadAfter(r, at)).map(([r]) => r),
+    adrHints: mergeAdrHints(hintAt.map(([h, at]) => ({
+      adr: Number(h.adr), via: h.via, readAfter: adrReadInFull(records.slice(at + 1), h.adr, docIndex, rel), by: 'main' as const,
+    }))),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,
@@ -819,6 +838,7 @@ export function foldSubagentTrace(
     (r) => !folded.rulesGlobal.includes(r) && !folded.rulesLoaded.includes(r),
   )
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
+  folded.adrHints = mergeAdrHints([...trace.adrHints, ...subs.flatMap((s) => s.adrHints.map((h) => ({ ...h, by: 'subagent' as const })))])
   const mainDocs = new Set([...trace.filesRead, ...trace.docsReadViaShell].map(canonicalizeInstructionPath))
   folded.docsReadBySubagents = dedup(subs.flatMap((s) => [...s.filesRead, ...s.docsReadViaShell])).filter(
     (p) => isInstructionDoc(p) && !mainDocs.has(canonicalizeInstructionPath(p)),
@@ -865,7 +885,6 @@ export interface AuthoredScratch {
   frictions: { description: string; solution: string; severity: string }[]
   learnings?: string[]
   ideas?: string[]
-  relevantAdrs?: RelevantAdr[]
 }
 
 function mergeRefs<T extends Record<string, string | undefined>>(
@@ -929,6 +948,7 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (trace.rulesLoaded.length) entry.rulesLoaded = trace.rulesLoaded
   if (trace.rulesGlobal.length) entry.rulesGlobal = trace.rulesGlobal
   if (trace.rulesFollowedUp.length) entry.rulesFollowedUp = trace.rulesFollowedUp
+  if (trace.adrHints.length) entry.adrHints = trace.adrHints
   if (trace.rulesLoadedBySubagents?.length) entry.rulesLoadedBySubagents = trace.rulesLoadedBySubagents
   if (docsReadBySubagents.length) entry.docsReadBySubagents = docsReadBySubagents
   if (authored.ruleVerdicts?.length) entry.ruleVerdicts = authored.ruleVerdicts
@@ -946,7 +966,6 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   // no dangling `learnings: []`).
   if (authored.learnings?.length) entry.learnings = authored.learnings
   if (authored.ideas?.length) entry.ideas = authored.ideas
-  if (authored.relevantAdrs?.length) entry.relevantAdrs = authored.relevantAdrs
   return entry
 }
 

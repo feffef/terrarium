@@ -4,6 +4,7 @@
 // the Skill.
 import { describe, expect, it } from 'vitest'
 import {
+  adrHintReport,
   adrReadReport,
   buildBrief,
   buildDocReadCounts,
@@ -61,6 +62,7 @@ function sess(over: Partial<Session> = {}): Session {
     docsRead: [],
     docsReadBySubagents: [],
     filesEdited: [],
+    adrHints: [],
     trigger: null,
     ...over,
   }
@@ -263,6 +265,7 @@ describe('toSession() — external exclusion (ADR-0009)', () => {
       docsRead: ['CLAUDE.md'],
       docsReadBySubagents: [],
       filesEdited: [],
+      adrHints: [],
       trigger: null,
     })
   })
@@ -998,6 +1001,15 @@ describe('governing-ADR reads', () => {
       all: { sessions: 4, governed: 3, pairs: 6, readInFull: 4, readInFullPct: 67, readAll: 1, readNone: 1 },
       interactive: { sessions: 1, governed: 1, pairs: 3, readInFull: 2, readInFullPct: 67, readAll: 0, readNone: 0 },
       autonomous: { sessions: 3, governed: 2, pairs: 3, readInFull: 2, readInFullPct: 67, readAll: 1, readNone: 1 },
+    })
+  })
+
+  it('counts each hint per ADR, by main and subagent apart, and the share read after', () => {
+    const hint = (adr: number, readAfter: boolean, by: 'main' | 'subagent' = 'main') => ({ adr, via: 'path' as const, readAfter, by })
+    const sessions = [sess({ adrHints: [hint(4, true), hint(4, false, 'subagent'), hint(21, false)] }), sess({ adrHints: [hint(4, true)] })]
+    expect(adrHintReport(sessions)).toEqual({
+      'ADR-0004': { fired: 3, readAfter: 2, readAfterPct: 67 },
+      'ADR-0021': { fired: 1, readAfter: 0, readAfterPct: 0 },
     })
   })
 
