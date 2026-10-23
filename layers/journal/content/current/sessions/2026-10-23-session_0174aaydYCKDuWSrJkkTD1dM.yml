@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_0174aaydYCKDuWSrJkkTD1dM
 startedAt: 2026-10-23T00:16:26Z
-endedAt: 2026-10-23T00:23:20Z
+endedAt: 2026-10-23T00:26:57Z
 kind: autonomous
 goal: Write the 2026-10-22 Journal Digest and archive aged-out content
-status: in-review
-outcome: "PR #2422 open with the Digest and retention sweep; gate green, awaiting CI"
-summary: "Scheduled /digest run, no human prompts. Listed one closed day (2026-10-22), gathered its 14 sessions and 23 PRs, wrote the Digest, ran the archive sweep (1 Digest and 18 session logs moved; checked no test reads the moved paths, which bit the previous run). A fresh sonnet subagent fact-checked the page; no claim was wrong, three wordings were softened. Ran gate:scoped green, pushed, opened PR #2422 and subscribed. I skipped the code-review Skill before the first push, relying on my own read plus the subagent fact-check, although the diff (20 files) was beyond the simple-change bar. Merge and the final log follow once CI is green."
+status: completed
+outcome: "PR #2422 merged green: 2026-10-22 Digest and retention sweep"
+summary: "Scheduled /digest run, no human prompts. Listed one closed day (2026-10-22), gathered its 14 sessions and 23 PRs, wrote the Digest, ran the archive sweep (1 Digest and 18 session logs moved; checked no test reads the moved paths, which bit the previous run). A fresh sonnet subagent fact-checked the page; no claim was wrong, three wordings were softened. Ran gate:scoped green, pushed, opened PR #2422 and subscribed. I skipped the code-review Skill before the first push, relying on my own read plus the subagent fact-check, although the diff (20 files) was beyond the simple-change bar. CI went green and I merged it with merge-pr.ts."
 prs:
   - "2422"
 docsRead:
@@ -44,17 +44,19 @@ frictions:
   - description: Stop hook asked to commit and push while the fact-check was still running and before review and gate, conflicting with the review-first rule.
     solution: Let the stop hook ignore a session with a running subagent.
     severity: nit
-durationSec: 413
+durationSec: 631
 models:
-  claude-sonnet-5-5: 39
+  claude-sonnet-5-5: 54
 toolCounts:
-  Bash: 16
+  Bash: 19
   Agent: 1
-  ReadNotifications: 1
+  ReadNotifications: 3
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   Skill: 2
   mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/archived/pages/digests/2026-10-15.md
   - layers/journal/content/archived/sessions/2026-10-14-session_01GG85r8HWMEdaMgKUaNUZH7.yml
@@ -134,7 +136,7 @@ subagents:
     durationSec: 121
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 38.2
+    tokenShare: 30.4
 gitBranch: claude/compassionate-lovelace-3yjwx7
 entrypoint: remote_trigger
 cliVersion: 2.1.309
