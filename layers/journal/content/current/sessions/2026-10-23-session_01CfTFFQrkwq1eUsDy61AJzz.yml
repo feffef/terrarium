@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CfTFFQrkwq1eUsDy61AJzz
 startedAt: 2026-10-23T02:07:43Z
-endedAt: 2026-10-23T02:21:03Z
+endedAt: 2026-10-23T02:24:17Z
 kind: autonomous
 goal: Turn the recent session frictions into fixes (scheduled run)
-status: in-review
-outcome: "Ledger PR #2427 open and gate-green; three regression issues filed; no fix PRs this run"
-summary: "Scheduled frictions-to-fixes run, agent-initiated by the schedule (no human prompt). A survey subagent screened 27 sessions' frictions, appended 45 occurrences, added one entry, recorded five merged fix PRs and put one entry on trial; it committed the ledger. I filed regression issues #2424 (close-session skipped after a merge, major), #2425 (mechanism claims from recall) and #2426 (gate run outside run_in_background). I picked three open entries (pr-number-guessed-before-create, rewrite-pass-scope-drift, verdict-comment-hand-typed); the design subagent recommended no change for each (Human-only homes, trial territory, cost of one retry), so I recorded dropped-design notes, pruned the horizon and opened ledger PR #2427 after a green gate:scoped. No fix PRs, so no closing ledger PR. Open: the PR must merge (ADR-0004 allows it, ledger-only), then re-close."
+status: completed
+outcome: "Ledger PR #2427 merged; three regression issues filed; no fix PRs this run"
+summary: "Scheduled frictions-to-fixes run, agent-initiated by the schedule (no human prompt). A survey subagent screened 27 sessions' frictions, appended 45 occurrences, added one entry, recorded five merged fix PRs and put one entry on trial; it committed the ledger. I filed regression issues #2424 (close-session skipped after a merge, major), #2425 (mechanism claims from recall) and #2426 (gate run outside run_in_background). I picked three open entries (pr-number-guessed-before-create, rewrite-pass-scope-drift, verdict-comment-hand-typed); the design subagent recommended no change for each (Human-only homes, trial territory, cost of one retry), so I recorded dropped-design notes, pruned the horizon and opened ledger PR #2427 after a green gate:scoped. No fix PRs, so no closing ledger PR. PR #2427 merged by me via merge-pr.ts after a green CI gate (ledger-only, ADR-0004 allows it)."
 prs:
   - "2427"
 docsRead:
@@ -99,11 +99,11 @@ frictions:
   - description: dispatch-subagents §3 says to run pnpm gate:scoped in the foreground while CLAUDE.md says run_in_background; I hit the conflict choosing how to run the gate.
     solution: Point §3 to CLAUDE.md and state that only dispatched subagents run it in the foreground.
     severity: nit
-durationSec: 800
+durationSec: 994
 models:
-  claude-sonnet-5-5: 61
+  claude-sonnet-5-5: 77
 toolCounts:
-  Bash: 18
+  Bash: 21
   Read: 6
   Skill: 2
   Agent: 2
@@ -112,6 +112,11 @@ toolCounts:
   Monitor: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__Claude_Code_Remote__delete_trigger: 1
 filesEdited:
   - layers/journal/content/current/frictions/binding-docs-skipped.yml
   - layers/journal/content/current/frictions/closure-not-invoked-on-answers.yml
@@ -228,13 +233,13 @@ subagents:
     durationSec: 330
     toolCalls: 31
     modelCalls: 25
-    tokenShare: 38.8
+    tokenShare: 33.3
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 63
     toolCalls: 17
     modelCalls: 7
-    tokenShare: 9.2
+    tokenShare: 7.9
 gitBranch: claude/eager-ptolemy-4vk2xf
 entrypoint: remote_trigger
 cliVersion: 2.1.309
