@@ -25,7 +25,9 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   **horizon** is `LEDGER_HORIZON_DAYS` (`layers/journal/app/utils/ledger.ts`; the run prunes it to that): an entry's
   recurrence is its occurrences within it, counting only sessions that started
   after its fix merged when it has one. Write the ledger changes (new entries, appended occurrences,
-  status changes) to the entry files. Survey the ledger with
+  status changes) to the entry files; set `status`, `ref` and `fixes` and append
+  occurrence blocks with `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/ledger-set.ts`
+  (flags in its header; it refuses a result the schema rejects), never by hand. Survey the ledger with
   `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts --summary` (one line per entry
   with its state, fixes and newest note; it lists the frictions two clusters share, for
   you to re-judge);
