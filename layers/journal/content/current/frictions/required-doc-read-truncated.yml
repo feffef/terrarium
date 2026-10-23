@@ -1,0 +1,68 @@
+name: required-doc-read-truncated
+summary: >-
+  Agents read a doc they must read in full through a shell pipe whose output was cut, so part of it went unread.
+cause: >-
+  A required doc (GLOSSARY, git-conventions, github-integration, issue-tracker, triage-labels, guards, …) was read through a cat, head or sed chain, often several docs in one call, and the output hit the tool's size cap or a head -N limit, so the rest was never seen; the truncation is easy to miss. Signals: "truncated at 30KB", "output went to a file", "head -300 cut it", "read only its first 2KB". The fix is to read each required doc in full with the Read tool, one call each.
+surface: safe
+status: open
+occurrences:
+  - session: session_01T4UbBvJmjSunCwb3cUN68Q
+    date: "2026-10-22"
+    severity: minor
+    description: "Read GLOSSARY-MAP, GLOSSARY and two docs in one cat that truncated at 30KB; never read the rest of GLOSSARY or the full git-conventions."
+    solution: "Read each required doc with its own Read call."
+  - session: session_0195CYW3YBg2stBS6aGigmbp
+    date: "2026-10-22"
+    severity: minor
+    description: "Root GLOSSARY.md was catted together with other docs; output overflowed to a file and I read only its first 2KB, not the whole glossary the start-of-session rule requires."
+    solution: "Read big required docs in their own Read call so truncation is visible."
+  - session: session_014tr6vJyNXmekdFQtYrEVWT
+    date: "2026-10-21"
+    severity: nit
+    description: "Read GLOSSARY.md and three docs in one Bash cat, which truncated at 30KB, then needed a second Read; the git-conventions doc was read after my first git status."
+    solution: "Read each required doc with the Read tool, one call each."
+  - session: session_01Dz5nEANXqTtZzTki1C5ArD
+    date: "2026-10-21"
+    severity: nit
+    description: "Ran git status before reading git-conventions.md and read the large GLOSSARY and github docs in one truncated cat."
+    solution: "Read the docs one at a time before the first git command."
+  - session: session_01Mw8k3DVnAyVho8fcDofChZ
+    date: "2026-10-10"
+    severity: minor
+    description: "I piped issue-tracker.md and triage-labels.md through head -300, which cut them off. I filed the issue having read only part of the triage-label doc. The label was right only because the Skill names it."
+    solution: "Never truncate a doc that CLAUDE.md requires reading in full. Read it with the Read tool."
+  - session: session_01FNv8z61n7roCRsM4AYVtf6
+    date: "2026-10-21"
+    severity: nit
+    description: "Read docs/agents/github-integration.md with head -80 instead of in full, against CLAUDE.md's read-first-in-full rule, before the first GitHub write."
+    solution: "Read the trigger docs whole; a short doc costs little."
+  - session: session_01DRBxySwYL4HR4xEEJc3CXX
+    date: "2026-10-11"
+    severity: minor
+    description: "Read CONTEXT-MAP.md, CONTEXT.md (only first 150 lines), settings.json and several Skills with cat/head/sed, breaking CLAUDE.md's Read-tool rule (ADR-0029) and the read-in-full rule"
+    solution: "Use the Read tool for every doc read; path-scoped rules then load and the read is whole"
+  - session: session_0166zWrnaKYByq5Z2Qj5nXRM
+    date: "2026-10-16"
+    severity: nit
+    description: "Read GLOSSARY.md, docs and skills with cat/head in Bash, not the Read tool as CLAUDE.md asks; GLOSSARY.md was read only partly"
+    solution: "Use the Read tool for instruction docs; the auto-mode note that permits cat overrides it in practice"
+  - session: session_015vXkKcdLwYRQqKKVJ8BLJJ
+    date: "2026-10-16"
+    severity: nit
+    description: "Read files with cat/sed/head through Bash instead of the Read tool (CLAUDE.md), including a head -300 that cut guards.md short"
+    solution: "Use Read for docs; bash-rules-hint loaded the rules anyway"
+  - session: session_01AuUp8RpGpxhyoa3yctctHN
+    date: "2026-10-09"
+    severity: nit
+    description: "My git-conventions.md read was cut off by a head -200 pipe before subagents ran git log/show (CLAUDE.md read-before-git rule); harmless here as all git use was read-only"
+    solution: "Read required docs with the Read tool, not a truncated cat chain"
+  - session: session_0148agurVWH8QQeSkGCDm23e
+    date: "2026-10-18"
+    severity: nit
+    description: "Combined cat of three docs exceeded the output limit and was saved to a file, so git-conventions.md was never read before my git fetch."
+    solution: "Read each required doc with its own call, so a long doc cannot swallow the rest."
+  - session: session_01XWMuHGcaNTvRPHfYb9T7z2
+    date: "2026-10-19"
+    severity: nit
+    description: "Read GLOSSARY-MAP.md and GLOSSARY.md via cat piped to head -300, which cut GLOSSARY.md short, so the session-start glossary read was incomplete"
+    solution: "Read the glossary files whole with the Read tool, not a capped pipe"

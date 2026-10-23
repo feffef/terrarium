@@ -1,6 +1,6 @@
 name: subagent-brief-omits-verdict-ask
-summary: Briefs for helper agents left out the request for rule and doc verdicts, so those reads have no verdict in the session log.
-cause: "CLAUDE.md asks every subagent brief for a rule/doc verdict in the final reply (PR #2060); nothing checks briefs, so orchestrators omit it. Signals: 'briefs didn't ask for rule and doc verdicts', 'no verdict provided'."
+summary: Briefs for helper agents left out the lines CLAUDE.md asks every brief to carry (rule and doc verdicts, a scratchpad subfolder per agent), so verdicts went missing and output landed elsewhere.
+cause: "CLAUDE.md asks every subagent brief for a rule/doc verdict in the final reply (PR #2060) and for a scratchpad subfolder named for the agent; nothing puts those lines into a brief, so orchestrators omit them from hand-written, one-off and Skill-templated briefs alike. Signals: 'briefs didn't ask for rule and doc verdicts', 'no verdict provided', output written outside a per-agent scratchpad subfolder."
 surface: safe
 status: open
 ref: "Owner kept the request (issue #2115 closed not-planned 2026-10-16); 01E2zbWE (nit, after the fix) shows it still gets omitted."
@@ -45,3 +45,8 @@ occurrences:
     severity: nit
     description: "First Explore brief omitted the CLAUDE.md line about a per-subagent scratchpad subfolder (it wrote nothing, so no harm)"
     solution: "Keep a brief template with the verdict and scratchpad lines"
+  - session: session_01MwrXDH7XwMNUofgz3HvQ5N
+    date: "2026-10-19"
+    severity: nit
+    description: "The first two recipe runs wrote their output to .throwaway rather than a scratchpad subfolder named for each subagent, as CLAUDE.md asks."
+    solution: "Put the OUT folder under the scratchpad, named per subagent, in every brief."

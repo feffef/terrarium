@@ -1,27 +1,15 @@
 name: closure-not-invoked-on-answers
 summary: >-
-  Agents forgot to write their session log, and the user had to ask whether it was done.
+  Agents that only answered a question forgot to write their session log, and the user had to ask whether it was done.
 cause: >-
-  A session skips close-session when it is due (after answering a question, or at PR-open) and the user has to ask whether it was logged.
+  CLAUDE.md asks for close-session when a session only answers a question, or when its work is done without a PR; the session waits for a follow-up or the end instead, and the user has to ask whether it was logged. Signals: 'did not invoke close-session after answering', 'the user had to ask "Logged?"', no PR in the session.
 surface: safe
-status: tracked
-ref: "issue #2424 (regression of #2381). Earlier: issue #2209 closed 2026-10-17; PR #2217 fixed only the PR-open half, the answer-only half was left out of scope by the owner; PR #1801 (answers case); PR #1821 (PR-open case, regressed); issue #1859 closed by PR #1868 (merged 2026-10-13T06:11Z, read-first-hint reminds close-session after a PR opens)"
+status: open
+ref: "Issue #2209 closed 2026-10-17: the owner left the answer-only half out of scope of PR #2217, and PR #2381 kept it out."
 fixes:
   - pr: 1801
     date: "2026-10-12"
     summary: "Added a CLAUDE.md rule to run close-session when a session only answers a question."
-  - pr: 1821
-    date: "2026-10-12"
-    summary: "Doc fix so close-session is also invoked when a PR is opened."
-  - pr: 1868
-    date: "2026-10-13"
-    summary: "The read-first hint now reminds the session to run close-session after it opens a PR."
-  - pr: 2217
-    date: "2026-10-17"
-    summary: "The read-first hint now looks only at the transcript after the latest PR creation, so it reminds about close-session on every PR."
-  - pr: 2381
-    date: "2026-10-21"
-    summary: "CLAUDE.md, pr-workflow.md step 4 and clear-backlog now say to invoke close-session before the turn that opens a PR ends, and the read-first hint says \"before this turn ends\"; the answer-only case stays out of scope."
 occurrences:
   - session: session_01DRBxySwYL4HR4xEEJc3CXX
     date: "2026-10-11"
@@ -33,48 +21,18 @@ occurrences:
     severity: minor
     description: "Did not invoke close-session by self-judgment at task end; the user had to ask 'Logged?' (no PR existed, so not HUMAN-PROMPTED-CLOSURE)."
     solution: "Invoke close-session when the user confirms the work is done."
-  - session: session_014uXxmT6359K4Z42a6We6Gh
-    date: "2026-10-12"
-    severity: major
-    description: "HUMAN-PROMPTED-CLOSURE: the user had to ask for the log after #1808 had already been opened and merged; I offered it instead of invoking close-session at PR-open."
-    solution: "Invoke close-session at every PR-open, including small chat-directed follow-up PRs, rather than offering it afterwards."
-  - session: session_01SZwdbK8GbYtyj926UyJT6o
-    date: "2026-10-12"
-    severity: minor
-    description: "Opened PR #1827 about 15 minutes before invoking close-session; CLAUDE.md and ADR-0009 say invoke it when you open a PR"
-    solution: "Invoke close-session right after the first PR opens in a multi-PR run; re-invoking is cheap"
-  - session: session_017NBxJhtBSd9AoCwTzsg6pM
-    date: "2026-10-12"
-    severity: minor
-    description: "Broke CLAUDE.md 'Invoke close-session when you open a PR': opened #1840 and several more PRs without logging until the end."
-    solution: "Log at the first PR open; re-invoke later."
   - session: session_01EdZyfmrUBL5o3ePoaobtae
     date: "2026-10-13"
     severity: nit
     description: "Deferred close-session until after the owner's follow-up instead of invoking it when the answer was given."
     solution: "Invoke close-session with the answer; re-logging is cheap."
-  - session: session_013RCsUF234qAGu3CJr3v2on
-    date: "2026-10-16"
-    severity: minor
-    description: "Opened PR #2189 after the first issue landed but did not invoke close-session then, against CLAUDE.md's 'Invoke close-session when you open a PR'; the session log stayed stale for hours."
-    solution: "Invoke close-session in the same turn as create_pull_request; a PostToolUse hint on create_pull_request could remind."
   - session: session_018pjaBqTXahmE3DFhAbkide
     date: "2026-10-16"
     severity: nit
     description: "Did not invoke close-session after the earlier answer-only turns, as CLAUDE.md asks when a session only answers a question."
     solution: "Log after the first answered question; re-invoking later is cheap."
-  - session: session_01Ai3w5epHj4PWgBC8XSoEwz
-    date: "2026-10-18"
-    severity: minor
-    description: "Did not invoke close-session at each PR open as CLAUDE.md says; the create_pull_request hook reminded me and I deferred both to the end."
-    solution: "Invoke it right after create_pull_request, before posting the verdict."
   - session: session_01CBVi4qZ2RqPhfHeHPYrkwD
     date: "2026-10-19"
     severity: minor
     description: "Did not invoke close-session after the first two answers, though CLAUDE.md asks for it when a session only answers a question."
     solution: "Invoke close-session at the end of each answer turn; re-invoking is cheap."
-  - session: session_01EjH3TbrydEY2sArBMYE5Gy
-    date: "2026-10-22"
-    severity: major
-    description: "HUMAN-PROMPTED-CLOSURE: after PR #2418 merged I authored the completed log directly instead of invoking close-session (ADR-0009 rule), skipping step 1's rule re-read; the user had to ask for a proper close"
-    solution: "Invoke the close-session Skill at every merge, even when its text is in context from editing it; having edited a Skill is not having run it"

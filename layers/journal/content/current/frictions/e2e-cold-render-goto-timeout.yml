@@ -1,0 +1,17 @@
+name: e2e-cold-render-goto-timeout
+summary: >-
+  The first page load in browser tests took so long on a cold server that different tests timed out each run.
+cause: >-
+  The e2e suite navigates before the server has rendered the home page once; a cold render can take about 30 s on a small box, so page.goto or the first navigation times out in varying tests. Signals: page.goto timeouts, different tests failing each run, a slow first render in gate:scoped.
+surface: safe
+status: open
+fixes:
+  - pr: 2258
+    date: "2026-10-18"
+    summary: "The smoke navigation test now fetches the exact payload URL the browser will request before clicking, so a cold first render no longer times it out (not the Journal accordion flake of #2231)."
+occurrences:
+  - session: session_01TANViXz17btvY9rH87SHcB
+    date: "2026-10-18"
+    severity: moderate
+    description: "Local gate was red on e2e page.goto timeouts: the cold home page render took about 32s on a 4-CPU box, and different tests failed each run."
+    solution: "Raise e2e navigation timeouts or warm the server before the suite; gate:scoped should be reliable enough to gate a first push."

@@ -1,8 +1,8 @@
 name: parallel-rewrite-agents-restate-facts
 summary: >-
-  New text from drafting or rewriting agents repeated a fact that already has a home, and a reviewer or the owner had to catch it.
+  New text, or a proposed field or rule, repeated a fact that already has a home, and a reviewer or the owner had to catch it.
 cause: >-
-  Agents add a sentence, rejected alternative or excerpt that restates a fact kept elsewhere (CLAUDE.md "One home per fact"): ADR rewrite agents, a build adding two ADR-0003 sentences, a lesson draft repeating ADR-0028 and an excerpt; the build reviewers passed some of it.
+  Agents add a sentence, rejected alternative or excerpt that restates a fact kept elsewhere (CLAUDE.md "One home per fact"): ADR rewrite agents, a build adding two ADR-0003 sentences, a lesson draft repeating ADR-0028 and an excerpt, a proposed frontmatter field or path-scoped rule whose content a doc already holds; the build reviewers passed some of it. Signals: "duplicated", "one home", "already covered", the owner asking about overlap.
 surface: safe
 status: open
 notes: |-
@@ -28,3 +28,13 @@ occurrences:
     severity: minor
     description: "First commit wrote the publishedAt rule twice (EVERY-PAGE.md and the Glass Box glossary) and left EVERY-PAGE.md saying frontmatter holds four fields only"
     solution: "Search the edited doc for statements the new rule contradicts before committing; code-review caught both"
+  - session: session_018wtKTCgkvJwgb3gS8o8JKA
+    date: "2026-10-14"
+    severity: minor
+    description: "Proposed files/docs frontmatter that duplicated the body; the owner had to question it before I saw the one-home violation"
+    solution: "Check every proposed field against one-home-per-fact before recommending it"
+  - session: session_01FNv8z61n7roCRsM4AYVtf6
+    date: "2026-10-21"
+    severity: minor
+    description: "First recommendation proposed a new path-scoped rule before checking that issue-tracker.md's Filing an issue already covered most of it; the owner had to ask about overlap."
+    solution: "Grep the existing homes of a fact before proposing a new doc (CLAUDE.md one home per fact)."

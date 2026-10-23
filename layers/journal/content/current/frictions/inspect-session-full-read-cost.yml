@@ -1,0 +1,15 @@
+name: inspect-session-full-read-cost
+summary: The inspect-session Skill's full read of a short session cost several helper agents and a hand fix before its pages could be merged.
+cause: "inspect-session's full-read recipe (parallel Haiku fetchers over cursor ranges, merged by flatten.ts) ran even for an 11-page session and wrote abbreviated page paths that flatten.ts could not merge. Signals: a full read costing ~190k tokens for a short session, flatten failing on page paths, issue #2306."
+surface: safe
+status: open
+fixes:
+  - pr: 2307
+    date: "2026-10-19"
+    summary: "inspect-session takes bare page names, does a partial read for short sessions and has a replies selector."
+occurrences:
+  - session: session_01CBVi4qZ2RqPhfHeHPYrkwD
+    date: "2026-10-19"
+    severity: moderate
+    description: "The inspect-session full read cost about 190k Haiku tokens and three subagents for an 11-page session, and needed a hand fix of the fetchers' abbreviated page paths before Flatten could merge."
+    solution: "Filed as #2306: bare file names in flatten.ts, and a partial read with no page limit for short sessions."

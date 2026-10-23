@@ -44,11 +44,6 @@ occurrences:
     severity: minor
     description: "An ad-hoc python analysis of saved list_events pages printed a whole hand-back body, about 20k characters, into the main context"
     solution: "Truncate every printed field from the first run; the new Flatten plus grep -oE now does this by default"
-  - session: session_01CBVi4qZ2RqPhfHeHPYrkwD
-    date: "2026-10-19"
-    severity: moderate
-    description: "The inspect-session full read cost about 190k Haiku tokens and three subagents for an 11-page session, and needed a hand fix of the fetchers' abbreviated page paths before Flatten could merge."
-    solution: "Filed as #2306: bare file names in flatten.ts, and a partial read with no page limit for short sessions."
   - session: session_01MwrXDH7XwMNUofgz3HvQ5N
     date: "2026-10-19"
     severity: minor

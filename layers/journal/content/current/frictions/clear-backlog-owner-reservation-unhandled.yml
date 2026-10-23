@@ -1,0 +1,16 @@
+name: clear-backlog-owner-reservation-unhandled
+summary: The backlog Skill had no rule for issues the owner said they would decide themselves, so a run could mark them ready to build.
+cause: "clear-backlog's sweep and grilling did not say that an owner's reservation ('I decide this', directly or relayed by an agent's reset comment) outranks the standing green-light, so a full sweep could re-stamp ready-for-agent over it. Signals: a reserved issue relabelled ready-for-agent, a rule for reservations improvised in the run. SKILL.md section 1 now has a `reserved` flag."
+surface: safe
+status: open
+ref: "Owner answers to the clear-backlog dry run (session 01La82mx)."
+fixes:
+  - pr: 1833
+    date: "2026-10-12"
+    summary: "Folded in second dry-run findings: deferred issues stay in grilling; dropped an extra triage check."
+occurrences:
+  - session: session_01La82mxqduxHnRS9jRfNHmU
+    date: "2026-10-12"
+    severity: moderate
+    description: "clear-backlog gave no rule for owner reservations relayed by an AI reset comment; full-sweep would let the sweep re-stamp ready-for-agent over them, so I improvised a brief rule"
+    solution: "clear-backlog/auto-triage: an owner's 'I decide this' (direct or relayed) outranks the standing green-light; drop such issues from the grilling"

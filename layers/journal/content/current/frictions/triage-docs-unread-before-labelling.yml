@@ -1,0 +1,53 @@
+name: triage-docs-unread-before-labelling
+summary: >-
+  Agents labelled, closed or triaged issues without first reading the issue-tracker and triage-label docs.
+cause: >-
+  CLAUDE.md's trigger for docs/agents/issue-tracker.md and triage-labels.md is prose with no hint (read-first-hint.ts covers only git, GitHub and screenshots), and the clear-backlog and wayfinder Skills neither name the docs at their label step nor say whether their triage agents' reads cover the orchestrator. Signals: an issue_write label or close before either doc is read, "the triage agents did the labelling".
+surface: safe
+status: open
+occurrences:
+  - session: session_015LwBgLjaCn36ayZedges6G
+    date: "2026-10-12"
+    severity: minor
+    description: "Labelled #1844 ready-for-agent without first reading docs/agents/issue-tracker.md and triage-labels.md, which CLAUDE.md requires before labelling"
+    solution: "A read-first hint on issue_write label changes, like the git/GitHub one, would have surfaced them"
+  - session: session_01DqPT8JpBjhHPEubNDJuVuN
+    date: "2026-10-13"
+    severity: nit
+    description: "The issue-tracker.md and triage-labels.md triggers (before triage) and the dispatch-subagents trigger (before a worktree subagent) were not read by me; the workflows do the triage and dispatch, so their agents read them"
+    solution: "Have CLAUDE.md, or the clear-backlog Skill, say that running a saved workflow satisfies those triggers for the orchestrator"
+  - session: session_01JYFKBPoDVHJanBhFhmw1kR
+    date: "2026-10-14"
+    severity: minor
+    description: "Did not read docs/agents/issue-tracker.md or triage-labels.md myself; the triage subagents did the labelling, but #1905 stays needs-triage while blocked and I did not check that label"
+    solution: "The explore workflow could say which label a blocked issue should carry"
+  - session: session_015dUGRadEQP1bvv6KytKLXT
+    date: "2026-10-14"
+    severity: nit
+    description: "I didn't read docs/agents/issue-tracker.md and triage-labels.md in full before triage, which CLAUDE.md requires; the triage agents did the labelling, but the orchestrator still decided set membership"
+    solution: "clear-backlog section 1 could name those two docs as orchestrator reads, or say explicitly that only the triage agents need them"
+  - session: session_01ATdHzhyNozsTLHHtJGbLsa
+    date: "2026-10-14"
+    severity: minor
+    description: "Labelled and closed issues (1954, 1955, 1959, 1967, 1968) without reading issue-tracker.md and triage-labels.md first, as CLAUDE.md requires."
+    solution: "Read them before the first label write; the clear-backlog Skill could name them at §2."
+  - session: session_012NmfdSNbbPD9T5LPAwmdYG
+    date: "2026-10-15"
+    severity: minor
+    description: "Labelled and closed issues without first reading docs/agents/triage-labels.md and all of issue-tracker.md, as CLAUDE.md's trigger requires; read only its Specs section."
+    solution: "clear-backlog §2 could name the two docs at the point where it says to set labels."
+  - session: session_015vXkKcdLwYRQqKKVJ8BLJJ
+    date: "2026-10-16"
+    severity: minor
+    description: "Labelled issues after reading triage-labels.md but not docs/agents/issue-tracker.md in full, which CLAUDE.md requires before labelling"
+    solution: "Read issue-tracker.md alongside triage-labels.md before the first label write"
+  - session: session_01PHx8z77pGDJT7vmfA7P6Sw
+    date: "2026-10-17"
+    severity: nit
+    description: "Read github-integration.md, issue-tracker.md and triage-labels.md only after already listing issues with a script; late reads cost a few tokens."
+    solution: "Read the GitHub docs before the duplicate check, in the same step."
+  - session: session_01TNqbizPuP8kvWwD4hfwUwG
+    date: "2026-10-19"
+    severity: minor
+    description: "Read docs/agents/issue-tracker.md (Wayfinding operations) only at closure, after claiming, closing and editing issues; CLAUDE.md requires it before triaging issues."
+    solution: "wayfinder Skill could name docs/agents/issue-tracker.md by path instead of 'the tracker doc', so the read happens at step 1."

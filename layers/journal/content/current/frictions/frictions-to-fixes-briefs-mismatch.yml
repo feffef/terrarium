@@ -1,0 +1,37 @@
+name: frictions-to-fixes-briefs-mismatch
+summary: >-
+  The frictions-to-fixes survey and design briefs disagreed with the repo or left steps out, so their helper agents lost rounds or worked by hand.
+cause: >-
+  survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, search guidance that contradicts github-integration.md, no named way to find merged PRs missing from the ledger, an impossible "read every full log" ask, no owner/repo slug. Signals: a survey or design subagent reporting the brief "says ... but", a glob matching nothing, work done by hand that the brief should have pointed to.
+surface: safe
+status: open
+fixes:
+  - pr: 2347
+    date: "2026-10-20"
+    summary: "Made the survey and design briefs match the repo: tracker search via the listing script, window wording, status reset, repo name, log-reading rule."
+occurrences:
+  - session: session_01Sc82qSCs4NVP3igf9SaGXM
+    date: "2026-10-17"
+    severity: minor
+    description: "The survey subagent reported that the brief gives no cheap way to find merged PRs missing from the ledger and no helper to append occurrences, so it did both by hand."
+    solution: "Add a script that lists merged PRs absent from every ledger fixes entry, and one that appends print-ledger-occurrence output."
+  - session: session_0135hcUf12mVM8dEZfDRAkUb
+    date: "2026-10-18"
+    severity: minor
+    description: "design-brief.md opens with a dangling fragment after {PICKS} and its session-log glob matches nothing; the design agent lost rounds on both."
+    solution: "Rewrite the brief's first lines and give the real glob (*session_<id>*.yml)."
+  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
+    date: "2026-10-21"
+    severity: nit
+    description: "Survey brief mixes window start and session end dates, and never says which status a ledger entry takes when its issue closes not planned or its Skill sits in a trial."
+    solution: "State the window by session start, and list the status for closed-not-planned and on-trial entries in the brief."
+  - session: session_01JkRFBik4MUWwZcP45q7egk
+    date: "2026-10-22"
+    severity: minor
+    description: "Survey agent reported the survey brief pulls opposite ways on closed-issue search (brief says search_issues, github-integration.md says avoid it), and that --summary's max-severity column does not match the brief's 'since the latest PR' part (e)."
+    solution: "Make --summary print the severity since the latest PR, and reconcile the search guidance in the brief with github-integration.md."
+  - session: session_01VH74k3Z27QtjR19XNC76qm
+    date: "2026-10-20"
+    severity: minor
+    description: "Design brief says read the full log of every occurrence, impossible for 35 occurrences; the design agent scripted extracts and listed what it read. It also gave no repo slug, so a GitHub read failed on a wrong owner."
+    solution: "Brief: full logs for moderate and above plus the newest three; give feffef/terrarium as owner/repo."

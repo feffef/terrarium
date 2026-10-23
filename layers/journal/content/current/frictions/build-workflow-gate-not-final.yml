@@ -1,0 +1,19 @@
+name: build-workflow-gate-not-final
+summary: >-
+  The backlog build workflow reported a passing check that had not run on the branch's final commit.
+cause: >-
+  clear-backlog-build returns gatePassed from a gate:scoped run that may predate its last review-fix round, and clear-backlog section 3 does not say whether the orchestrator re-runs the gate before pushing. Signals: 'reported gatePassed while saying it had not rerun the gate', pushing on the workflow's gatePassed.
+surface: safe
+status: open
+fixes: []
+occurrences:
+  - session: session_016gu9e44jjfAEFMo3CBxzUQ
+    date: "2026-10-13"
+    severity: nit
+    description: "I pushed on the build workflow's report of a passing gate:scoped. I checked its commits and diff, but did not re-run the gate myself."
+    solution: "clear-backlog §3 could say whether the orchestrator should re-run gate:scoped or trust the workflow's gatePassed."
+  - session: session_015dUGRadEQP1bvv6KytKLXT
+    date: "2026-10-14"
+    severity: minor
+    description: "The 1940 build agent reported gatePassed while saying it had not rerun the gate after its last round, and it could not do a live hook check in-session"
+    solution: "Have clear-backlog-build re-run gate:scoped on the final commit before it returns ready-to-push"

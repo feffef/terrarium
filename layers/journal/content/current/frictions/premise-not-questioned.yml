@@ -29,11 +29,6 @@ occurrences:
     severity: minor
     description: "Round 1 offered #1966's subject merges as a recommendation without a rationale of my own; the owner asked why, and the honest answer was that the merges only existed to limit Space count."
     solution: "Re-derive inherited recommendations against the current premise before offering them."
-  - session: session_018wtKTCgkvJwgb3gS8o8JKA
-    date: "2026-10-14"
-    severity: minor
-    description: "Proposed files/docs frontmatter that duplicated the body; the owner had to question it before I saw the one-home violation"
-    solution: "Check every proposed field against one-home-per-fact before recommending it"
   - session: session_01CzkKVxSTE7a4amfXnxrvF9
     date: "2026-10-16"
     severity: minor
@@ -44,8 +39,3 @@ occurrences:
     severity: moderate
     description: "I recommended and built #2319's prose-only review skip without weighing that review catches errors in instructions; the owner reversed it the same day, costing a revert and a second ADR PR."
     solution: "When a change removes a review step, ask what kinds of defect that step catches in the files it would skip before recommending it."
-  - session: session_01FNv8z61n7roCRsM4AYVtf6
-    date: "2026-10-21"
-    severity: minor
-    description: "First recommendation proposed a new path-scoped rule before checking that issue-tracker.md's Filing an issue already covered most of it; the owner had to ask about overlap."
-    solution: "Grep the existing homes of a fact before proposing a new doc (CLAUDE.md one home per fact)."

@@ -54,3 +54,28 @@ occurrences:
     severity: nit
     description: "Started a pointless background sleep to wait on the subagent, wasting two calls."
     solution: "End the turn and wait for the notification."
+  - session: session_01NHHafnvmf9qkvq85pvMYzc
+    date: "2026-10-09"
+    severity: nit
+    description: "tail-pipe guard denied a chained command, and a Monitor until-loop grepping a subagent transcript matched early and gave a false done."
+    solution: "Redirect to a file and read it; wait for subagent completion notifications instead of grepping their transcripts."
+  - session: session_018DaeF1okx3CjHh1GwVpwPf
+    date: "2026-10-19"
+    severity: nit
+    description: "Tried a Bash call that was both run_in_background and ended in a shell backgrounding; the double-background guard blocked it and a sleep was blocked too."
+    solution: "The Skill text for visitor-loop could say once: wait for subagents by ending the turn, run gates with run_in_background only."
+  - session: session_01N9bwDKW51kMS6WJvK2nfSU
+    date: "2026-10-16"
+    severity: nit
+    description: "A Bash call with run_in_background plus a trailing & was blocked by the double-background guard, and a sleep-then-tail wait was blocked, costing two retries."
+    solution: "Use run_in_background alone and a Monitor until-loop from the start."
+  - session: session_01Dz52W6wWZWUgKwPtdxabzJ
+    date: "2026-10-12"
+    severity: nit
+    description: "A Bash call with run_in_background plus a trailing ampersand was denied by the double-background guard; a chained sleep was also blocked."
+    solution: "Use run_in_background alone and Monitor with an until-loop; the guard message said so."
+  - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
+    date: "2026-10-22"
+    severity: nit
+    description: "A backgrounded gate command with a trailing ampersand plus run_in_background was blocked by the double-background guard; a chained sleep was also blocked. Both resent correctly."
+    solution: "The Skill step 10 could say: gate in background with run_in_background alone, then a Monitor on its log."

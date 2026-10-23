@@ -1,0 +1,23 @@
+name: ci-job-logs-unreachable
+summary: >-
+  Agents could not read a CI job's log in cloud sessions, so they guessed why a check failed instead of reading its annotations.
+cause: >-
+  The REST job-log endpoint redirects to a blob host the agent proxy blocks (403 Forbidden for gh api or curl on actions/jobs/<id>/logs), and mcp__github__get_job_logs returns one enormous line whose tail shows only cleanup, while the check run's annotations name the failing lint or test; sessions that miss this guess the cause from a local build or a truncated log tail. Signals: "job logs", "403", "blob storage", get_job_logs overflow or a tail of cleanup lines, a misdiagnosed CI failure or a wasted local build before reading the annotations.
+surface: safe
+status: open
+occurrences:
+  - session: session_01BLrfuHbMMEmjZZ7STpe1AN
+    date: "2026-10-11"
+    severity: minor
+    description: "The REST job-log endpoint (`gh api repos/.../actions/jobs/<id>/logs`) is blocked here: its redirect to blob storage returns Forbidden; only mcp__github__get_job_logs works, and its single-line output needs a parser."
+    solution: "Add the blocked endpoint to environment-caveats.md next to the existing proxy notes, pointing at get_job_logs with a large tail_lines."
+  - session: session_016iE4LmQUcg6ap5YMxJg4oC
+    date: "2026-10-12"
+    severity: moderate
+    description: "Misdiagnosed the warnings as a Vite chunk-size warning from a local build and truncated CI log, wasting a build, a question to the user and a revert."
+    solution: "Read the gate check-run annotations (lint warnings) first; the user's PrisePre typo and truncated log tail invited the guess."
+  - session: session_01XJ9iR9EbRT2iV7afhytND8
+    date: "2026-10-14"
+    severity: minor
+    description: "gh api job logs redirect to a blob host the proxy blocks; MCP get_job_logs tail only showed cleanup lines. Check-run annotations gave the cause"
+    solution: "github-integration.md could name check-run annotations as the cheap way to get a gate failure's cause"

@@ -1,16 +1,12 @@
 name: build-before-shape-settled
-summary: The main agent started builds or a many-agent fan-out before the design was settled, and the work had to be redone.
-cause: Orchestrator briefs build or polish agents (1947 subagent-verdict UI; 20 Glass Box polish agents) before asking the owner or fixing the shape, forcing a redesign PR or a second polish pass. dispatch-subagents SKILL.md line 12 says to settle choices with grilling first.
+summary: The main agent started builds or a many-agent fan-out before what the owner would see was settled, and the work had to be redone.
+cause: Orchestrator briefs build or polish agents (1947 subagent-verdict UI; 20 Glass Box polish agents) before asking the owner or fixing the shape, or shipped copy that characterises a Tenant without checking its framing, forcing a redesign PR, a follow-up PR or a second polish pass. A stored field's shape built before asking belongs to data-shape-built-before-asked. dispatch-subagents SKILL.md line 12 says to settle choices with grilling first.
 surface: safe
 status: open
-ref: "issue #2264 closed by PR #2272"
 fixes:
   - pr: 2213
     date: "2026-10-17"
     summary: "dispatch-subagents section 1 now names owner-visible shape, data shape, length and ownership as choices to settle first, and CLAUDE.md says to ask before building what the Trusted user will see."
-  - pr: 2272
-    date: "2026-10-19"
-    summary: "Added a path-scoped rule to settle a stored field's shape with a Trusted user before building it."
 occurrences:
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"
@@ -22,28 +18,8 @@ occurrences:
     severity: moderate
     description: "I dispatched 20 agents before settling paragraph length and per-reason ownership, so a second 5-agent polish pass was needed."
     solution: "Settle length bound and an ownership map of shared reasons in the first brief (dispatch-subagents §1)."
-  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
-    date: "2026-10-16"
-    severity: nit
-    description: "The first backfill plan used an index, the user then preferred full text; the index commits and schema were built and thrown away within one PR."
-    solution: "When a data-shape choice is cheap to ask about, ask it before building; I only answered with a size comparison afterwards."
   - session: session_01WynjtDHvk8MajTsgr59Ckt
     date: "2026-10-16"
     severity: minor
     description: "Shipped homepage copy calling the guide finished pages without asking what the guide means to the owner; it needed a follow-up PR"
     solution: "When copy characterises a Tenant's content, check the framing with the owner before building; the glossary's polished wording was out of date"
-  - session: session_014PZ7z8L13nqP7rPdCgZRcM
-    date: "2026-10-17"
-    severity: moderate
-    description: "I began editing the session schema and transcript trace to record tokens in session logs before the user had chosen where the numbers live; they interrupted and I reverted all of it."
-    solution: "When the user's answer leaves the storage choice open, ask it as a single question before editing (the grilling and ask-before-building rules), not after reading code."
-  - session: session_01TJH95qkztCQJ8PF6G6pvqs
-    date: "2026-10-18"
-    severity: moderate
-    description: "Broke CLAUDE.md 'Ask before building a data shape they may prefer': Q3 on #2239 never asked per-run vs mean, so #2243 shipped means and needed a second PR plus backfill."
-    solution: "When a grill question settles a stored field, ask its shape explicitly; clear-backlog-explore could flag new schema fields as owner questions."
-  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
-    date: "2026-10-21"
-    severity: nit
-    description: "Ran the Skill with its autonomous decisions and built without the grilling the owner's preference for questions-first suggests; no question was asked."
-    solution: "Say in the Skill that the owner's start is the approval for picks, so no question is expected."

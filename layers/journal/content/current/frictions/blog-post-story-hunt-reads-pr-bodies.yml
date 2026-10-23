@@ -1,0 +1,23 @@
+name: blog-post-story-hunt-reads-pr-bodies
+summary: >-
+  The blog Skill's search for stories read dozens of full pull request texts, flooding the agent's working memory.
+cause: >-
+  blog-post step 2 finds the window's finished stories by reading PR bodies and logs, and gives no cheap listing of merged PRs with their issue links, so the session searches with bodies or reads them one by one. Signals: blog-post step 2, search_pull_requests asking for body, 'reads dozens of PR bodies'.
+surface: safe
+status: open
+ref: "issue #2210 closed by PR #2216"
+fixes:
+  - pr: 2216
+    date: "2026-10-17"
+    summary: "blog-post step 2 now finds the last blog PRs from a titles-only listing instead of a body search."
+occurrences:
+  - session: session_01N9bwDKW51kMS6WJvK2nfSU
+    date: "2026-10-16"
+    severity: minor
+    description: "search_pull_requests asking for body returned about eight full PR bodies (visitor-loop tallies), flooding context before I read the overflow advice."
+    solution: "Use scripts/recent-prs.ts or list_pull_requests with fields that omit body for the last blog PRs, as the blog-post step could say."
+  - session: session_01RZ2pN3CEsoJyKxUWC2RFW5
+    date: "2026-10-20"
+    severity: minor
+    description: "The blog-post step 2 hunt for stories reads dozens of PR bodies and logs; the Skill gives no cheap way to find the windowed finished stories."
+    solution: "A script printing merged PRs in the window with their issue links and any revert or follow-up pairs."

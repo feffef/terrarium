@@ -1,0 +1,33 @@
+name: survey-appends-duplicate-sessions
+summary: >-
+  The friction survey added the same session to a ledger entry twice, which failed validation or lost an occurrence.
+cause: >-
+  extract-frictions --unledgered keeps a session's other frictions after one is ledgered, and nothing at append time refuses a session already in the target entry, so the survey's patch lists a session twice in one entry; validation fails and a hand repair can drop a distinct description. Signals: "listed sessions twice", "duplicates appended to N clusters", "a session is listed twice" from the content test.
+surface: safe
+status: open
+fixes:
+  - pr: 2154
+    date: "2026-10-16"
+    summary: "The survey commits its own ledger changes, built with ledger-occurrence.ts, instead of handing an impl agent a patch."
+  - pr: 2213
+    date: "2026-10-17"
+    summary: "The survey brief says --unledgered drops each carried friction verbatim, so a session already in the target cluster must be skipped by hand."
+  - pr: 2366
+    date: "2026-10-21"
+    summary: "The ledger content test now fails when a session appears twice in one cluster, so a survey that repeats a session cannot land."
+occurrences:
+  - session: session_01Mf4dUxuWB7WtkC5fVzByH6
+    date: "2026-10-16"
+    severity: moderate
+    description: "The survey subagent's ledger patch listed sessions twice in clusters, failing validate-content; the impl agent dropped 23 occurrences and one distinct description was lost."
+    solution: "Have the survey brief require the patch to pass validate:content, merging repeat sessions into one occurrence."
+  - session: session_01J4ze3DvsZhXeP78iyRnbSd
+    date: "2026-10-17"
+    severity: minor
+    description: "Survey brief says --unledgered drops carried frictions, yet 7 blocks for sessions already in a cluster reappeared and only surfaced at validate time (survey agent's friction)."
+    solution: "Have the brief say to skip a session already present in the target cluster, or filter by session in the script."
+  - session: session_014tr6vJyNXmekdFQtYrEVWT
+    date: "2026-10-21"
+    severity: minor
+    description: "Survey subagent hit extract-frictions --unledgered keeping a session's other frictions, so it appended duplicates to 7 clusters and caught them only with its own uniqueness check."
+    solution: "Make print-ledger-occurrence.ts refuse a session already in the target cluster."

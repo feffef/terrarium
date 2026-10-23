@@ -1,0 +1,43 @@
+name: bare-cd-moves-session-cwd
+summary: A plain cd in the main agent's shell moved its working directory for every later command, so relative paths and git commands ran in the wrong place.
+cause: "In the primary session the Bash tool keeps the working directory between calls, so a bare cd (into a worktree, the frictions folder, .agents/skills, node_modules) persists: later relative paths fail, git or merge-pr runs in the wrong checkout, and removing a worktree leaves the shell in a deleted directory. Signals: 'a cd into', 'moved the primary working directory', 'had to cd back', 'deleted directory'."
+surface: safe
+status: open
+notes: |-
+  2026-10-21 design: a hint or guard on a bare cd, or a reworded cd line in docs, dropped: our own briefs tell sessions to run cd <root> &&, so a guard would flag recommended usage; the harness flags the drift and recovery is one cd. Note for any later edit of dispatch-subagents §3 (open trial territory): its claim that the Bash tool resets cwd between calls is wrong for the primary session.
+occurrences:
+  - session: session_01CzkKVxSTE7a4amfXnxrvF9
+    date: "2026-10-16"
+    severity: nit
+    description: "cd'd into the probe's worktree to check it, which moved the session's working directory there; removing the worktree then left the shell in a deleted directory"
+    solution: "Inspect a subagent worktree with git -C <path>, never cd, as dispatch-subagents section 5 hints"
+  - session: session_01J4ze3DvsZhXeP78iyRnbSd
+    date: "2026-10-17"
+    severity: nit
+    description: "A cd into an impl agent's worktree left my shell there; the next merge-pr and ledger edits ran in the wrong checkout until the harness noted it."
+    solution: "Use absolute paths or git -C instead of cd when inspecting a worktree."
+  - session: session_01Sc82qSCs4NVP3igf9SaGXM
+    date: "2026-10-17"
+    severity: nit
+    description: "A subagent's cd and the shell's directory changes left the working directory in the frictions folder and a worktree, so later relative commands could have hit the wrong tree."
+    solution: "Use absolute paths or cd to the repo root at the start of each command."
+  - session: session_019Ws4gsdRWPiAvCXBi55qac
+    date: "2026-10-18"
+    severity: nit
+    description: "A cd into .agents/skills moved the primary working dir, so a following relative path (docs/adr/0022) failed to resolve."
+    solution: "Use absolute paths or a subshell; do not cd in Bash."
+  - session: session_01AZjx4MT5revQ7BnLqR9f39
+    date: "2026-10-19"
+    severity: nit
+    description: "A cd into node_modules during verification moved the primary working directory; I had to cd back before git commands."
+    solution: "Use absolute paths or a subshell instead of a bare cd into a dependency directory."
+  - session: session_01VH74k3Z27QtjR19XNC76qm
+    date: "2026-10-20"
+    severity: nit
+    description: "A bash cd into the frictions directory moved the session working directory, so later relative commands needed an explicit cd back."
+    solution: "Use subshell cd or absolute paths in one-off commands."
+  - session: session_014tr6vJyNXmekdFQtYrEVWT
+    date: "2026-10-21"
+    severity: nit
+    description: "Ran a cd into the frictions directory in Bash and the primary working directory moved; I had to cd back."
+    solution: "Use absolute paths or a subshell instead of a bare cd."

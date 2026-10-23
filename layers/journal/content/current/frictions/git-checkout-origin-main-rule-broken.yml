@@ -17,3 +17,8 @@ occurrences:
     severity: nit
     description: "Restored those logs with 'git checkout origin/main -- <path>', which git-conventions.md says never to use (it stages); staging was intended but the rule was broken"
     solution: "Use git restore --source=origin/main --staged --worktree, or follow the doc"
+  - session: session_01U6EF8qk4ANQLqE5KXmJgEY
+    date: "2026-10-14"
+    severity: moderate
+    description: "Tried 'git checkout origin/main -- .' plus 'git stash' to read files from main; the classifier blocked it. git-conventions.md forbids it, and it could have overwritten the tree."
+    solution: "Use git show or git grep on origin/main to read main's files, as git-conventions.md says."

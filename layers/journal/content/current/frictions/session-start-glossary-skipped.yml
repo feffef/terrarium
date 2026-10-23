@@ -1,0 +1,158 @@
+name: session-start-glossary-skipped
+summary: >-
+  Agents skipped or cut short the glossary read that CLAUDE.md asks for at the start of every session.
+cause: >-
+  CLAUDE.md's "at session start" read of GLOSSARY-MAP.md and GLOSSARY.md (formerly CONTEXT-MAP.md and CONTEXT.md) is prose with no SessionStart hook, so sessions with a narrow, scheduled, delegated or question-only task skip it or read only its head. Signals: "skipped the session-start read", "GLOSSARY-MAP", "CONTEXT.md only to line 60", "read only the head of GLOSSARY". A read cut short by a truncated cat belongs to required-doc-read-truncated.
+surface: guard-or-hook
+status: open
+occurrences:
+  - session: session_01EmaH5A6Ziwjndz9esnsJ22
+    date: "2026-10-10"
+    severity: nit
+    description: "Read CONTEXT.md only to line 60 and only ADR-0010 of the ADRs found by grep, not in full as CLAUDE.md's read-first rules require."
+    solution: "Read the full file or skip claiming it read; the digest touched nothing those parts govern, so no impact."
+  - session: session_01YSGRZcurrkv9WYqPfnRH2t
+    date: "2026-10-10"
+    severity: nit
+    description: "Skipped reading the root CONTEXT.md in full at session start (only ran wc on it), which CLAUDE.md requires."
+    solution: "Read it at session start. The impact was low here, since only Blog terms were used."
+  - session: session_01Tcn6x6mZizT14rJuQqYivt
+    date: "2026-10-10"
+    severity: minor
+    description: "Skipped required reads: CONTEXT.md in full, the ADR list-and-grep, and tenant-layers.md before editing layers/commons and journal pages (CLAUDE.md docs-you-must-read-first)."
+    solution: "Low impact here since checkers read the binding ADRs, but a reader-trigger inside audit-docs step 6 for layers/ edits would have prompted it."
+  - session: session_018AsNh8hqd6jam8x7cSd136
+    date: "2026-10-10"
+    severity: minor
+    description: "Skimmed CONTEXT-MAP.md with head and never read CONTEXT.md or ADR-0009 in full at the start, breaking CLAUDE.md's session-start and ADR read-first rules"
+    solution: "Read both in full at session start even for research-only questions; a session-start hook printing the reminder would help"
+  - session: session_01X7EjwNGgzS9n6614B4PTU3
+    date: "2026-10-10"
+    severity: minor
+    description: "Skipped CLAUDE.md's session-start reads (CONTEXT-MAP.md, CONTEXT.md) and github-integration.md before the first GitHub call; impact was nil for a one-file doc conflict but a wrong-term or tool-trap risk in general"
+    solution: "For a narrowly scoped mechanical task the mandatory reads feel disproportionate; a guard or a scoped exemption for merge-only tasks would make the rule honest"
+  - session: session_015BjYk46dntcMuAWMn1z4Zw
+    date: "2026-10-10"
+    severity: minor
+    description: "Skipped CLAUDE.md's session-start reads of CONTEXT-MAP.md and CONTEXT.md in the main session; only the subagents read CONTEXT.md."
+    solution: "Read both before the first answer. A SessionStart rule without paths that names them would make it automatic."
+  - session: session_01UEeKV1vUyYkM8vedtgWPnY
+    date: "2026-10-10"
+    severity: minor
+    description: "Read only the head of tenant-layers.md, github-integration.md and CONTEXT.md, skipped verifying-ui-changes.md and the ADR grep for touched files, though CLAUDE.md says read in full."
+    solution: "A scheduled run should read the triggered docs in full before editing; the Skill could list the required reads in step 4."
+  - session: session_013GkBtC56M36dmz5AtEb1Hp
+    date: "2026-10-11"
+    severity: nit
+    description: "Read CONTEXT.md only to line 60 and skipped the ADR grep, against CLAUDE.md's session-start and ADR-before-planning rules."
+    solution: "Read CONTEXT.md in full at start; the digest Skill could say which ADRs bind it."
+  - session: session_01FW11yrFCnfGNcEXNtrWeko
+    date: "2026-10-11"
+    severity: nit
+    description: "Skipped the session-start read of CONTEXT-MAP.md and CONTEXT.md that CLAUDE.md requires; no impact on this read-only answer."
+    solution: "For pure Q&A sessions, a short hook reminder at session start would make the rule hard to skip."
+  - session: session_01BBQnwhyfsvoksh4oV9MXsU
+    date: "2026-10-11"
+    severity: minor
+    description: "Skipped the CLAUDE.md session-start rule to read CONTEXT-MAP.md and CONTEXT.md before acting."
+    solution: "Read both first; low impact here since the task was a lookup, but the glossary could have named the Journal's maintainer view sooner."
+  - session: session_019w4vmM2Ygsu4yESyXPK6Tc
+    date: "2026-10-11"
+    severity: nit
+    description: "Skipped the CLAUDE.md session-start read of CONTEXT-MAP.md and all of CONTEXT.md; read only the Friction Ledger section."
+    solution: "Low impact for a one-line Skill edit. A session-start hook that injects CONTEXT-MAP would make the read automatic."
+  - session: session_01DtK8w6aJ3361uPK73VAxhi
+    date: "2026-10-12"
+    severity: minor
+    description: "Skipped reading CONTEXT.md in full at session start (only grepped headings), against CLAUDE.md's session-start rule."
+    solution: "Read CONTEXT-MAP.md and CONTEXT.md with Read before the first task step."
+  - session: session_01P1PVFxwyuuQJShzqfd55D3
+    date: "2026-10-12"
+    severity: nit
+    description: "Skipped reading CONTEXT-MAP.md and CONTEXT.md at session start, which CLAUDE.md requires; the deletion needed no glossary terms."
+    solution: "None needed for a one-file revert; the rule could exempt trivial content deletions."
+  - session: session_018KSwetqxttBFszkhTKZkF1
+    date: "2026-10-12"
+    severity: nit
+    description: "Skipped reading CONTEXT-MAP.md and CONTEXT.md at session start, as CLAUDE.md requires; went straight to dispatching the Explore agent."
+    solution: "Read them first; low impact here since the task was a Skill prose edit using no glossary-sensitive terms."
+  - session: session_01HNLMJQDMabmJ9U54iWwtiH
+    date: "2026-10-13"
+    severity: nit
+    description: "Skipped the session-start read of CONTEXT-MAP.md and CONTEXT.md that CLAUDE.md requires; no glossary terms were needed for this read-only probe."
+    solution: "Low impact here; a probe-type task could note that the glossary read is optional when no domain terms come up."
+  - session: session_017XWy7odnhW5S5AEuekatR8
+    date: "2026-10-13"
+    severity: minor
+    description: "Never read CONTEXT-MAP.md or CONTEXT.md at session start, as CLAUDE.md requires; the session added a glossary term through a subagent."
+    solution: "Read both in the first batch of calls; impact low because the subagent read domain.md and CONTEXT.md itself."
+  - session: session_01PGvPc9bv3tGwoaLDDZsg6a
+    date: "2026-10-13"
+    severity: minor
+    description: "Skipped CLAUDE.md's session-start read of CONTEXT-MAP.md and CONTEXT.md; relied on agents and grep for glossary terms like Floor and Proposal."
+    solution: "Read both at session start; a cheap step that would have settled the coined-term findings without a subagent."
+  - session: session_01EdZyfmrUBL5o3ePoaobtae
+    date: "2026-10-13"
+    severity: nit
+    description: "Skipped CLAUDE.md's session-start reads of CONTEXT-MAP.md and CONTEXT.md for a question-only session."
+    solution: "Read them at start; here no glossary term mattered, so no impact beyond the broken rule."
+  - session: session_01TW6hQ1C1Fm1aeaaoxQeHEp
+    date: "2026-10-13"
+    severity: nit
+    description: "Skipped reading CONTEXT.md at session start (read only CONTEXT-MAP.md), against CLAUDE.md's read-first list"
+    solution: "No glossary term was needed here, so no impact; a session-start hook printing a reminder would have caught it"
+  - session: session_01675UWGBfCMALkurUr58cxM
+    date: "2026-10-14"
+    severity: minor
+    description: "Never read CONTEXT-MAP.md and CONTEXT.md at session start, though CLAUDE.md requires it; the task was about those very files being renamed."
+    solution: "Read them first; a session-start read list in a hook output would make the skip visible."
+  - session: session_01P7kLLJwHBgCaeVSUjhbScg
+    date: "2026-10-15"
+    severity: moderate
+    description: "Did not read GLOSSARY-MAP.md then GLOSSARY.md in full at session start, against CLAUDE.md's \"at session start\" rule, before acting on the scheduled prompt"
+    solution: "Read both at the very start of every session before acting, even when the scheduled prompt already carries extensive inline context"
+  - session: session_011t1xXHxqwrfAjt83s9oTEP
+    date: "2026-10-15"
+    severity: minor
+    description: "Read only the head of GLOSSARY-MAP.md and skipped GLOSSARY.md at session start, which CLAUDE.md requires."
+    solution: "Read both in full at the first turn; a Glass Box or Skill term misuse could have slipped in."
+  - session: session_01E2zbWEQmuUrEhWvbzNpBba
+    date: "2026-10-15"
+    severity: minor
+    description: "Skipped reading GLOSSARY-MAP.md and GLOSSARY.md at session start, as CLAUDE.md requires; the task started as a delegation so it felt optional."
+    solution: "Read them before the first dispatch; a SessionStart reminder naming them would have caught it."
+  - session: session_01KVh6e6JUAssZvPRbuN5YDr
+    date: "2026-10-15"
+    severity: nit
+    description: "Skipped the CLAUDE.md session-start read of GLOSSARY-MAP.md and GLOSSARY.md; the task needed no glossary terms, so impact was low."
+    solution: "Scope that trigger to sessions that name concepts or edit files."
+  - session: 5ba40529-d06b-4b13-a44a-a01292148909
+    date: "2026-10-16"
+    severity: nit
+    description: "Skipped reading GLOSSARY-MAP.md and GLOSSARY.md at session start, as CLAUDE.md requires"
+    solution: "Low impact here since nothing was written; the glossary read could be enforced by a SessionStart hint"
+  - session: session_01GVmwHZQthucdGcVwe3HAUL
+    date: "2026-10-17"
+    severity: nit
+    description: "Skipped reading GLOSSARY-MAP.md and GLOSSARY.md at session start (CLAUDE.md) because the task was an ops question"
+    solution: "Low impact here; a lighter trigger for pure-ops sessions would avoid the skip being a rule break"
+  - session: session_01QMsuxS3fR6VMfWU1gXEYvk
+    date: "2026-10-19"
+    severity: nit
+    description: "Read GLOSSARY.md (40 lines) and github-integration.md (one section) only partly, though CLAUDE.md says read in full; no ADR grep done for the question."
+    solution: "Read the trigger docs in full at session start, in the first tool batch."
+  - session: session_017X5SQqh4JtkECD69pftATE
+    date: "2026-10-20"
+    severity: nit
+    description: "Skipped the session-start GLOSSARY-MAP.md and GLOSSARY.md reads CLAUDE.md requires; no wrong term resulted in this answer-only session"
+    solution: "Read both in the first batch of tool calls; a SessionStart hint could name them"
+  - session: session_01FTPnEsW1XNhaqYFdxaE24v
+    date: "2026-10-20"
+    severity: nit
+    description: "Ran git log to draw conclusions before reading docs/agents/git-conventions.md, and skipped the full GLOSSARY read at session start."
+    solution: "Read-only question sessions still trigger the read-first list; the hint fired late but was right."
+  - session: session_01EjH3TbrydEY2sArBMYE5Gy
+    date: "2026-10-22"
+    severity: nit
+    description: "Read GLOSSARY.md only through a grep for Friction/session terms, not in full as CLAUDE.md's session-start rule asks"
+    solution: "Read GLOSSARY.md in full at session start; the grep was enough for this task but skipped the rule"

@@ -1,6 +1,6 @@
 name: frictions-to-fixes-skill-gaps
-summary: "The frictions-to-fixes Skill leaves recurring situations unspecified, so the run asks the owner or improvises."
-cause: "SKILL.md does not say what to do when each top regression already has an open issue, that the ledger PR may open before design, or how a ledger ref names a PR that does not exist yet; the user is asked or the run improvises. Signals: \"the Skill says ... but not what to do\", \"had to ask the user how many\"."
+summary: "The frictions-to-fixes SKILL.md leaves recurring situations unspecified, so the run asks the owner or improvises."
+cause: "SKILL.md (not the survey or design briefs or the scripts) does not say how many regressions get issues, what to do when one already has an open issue, how to rank by severity, that a skipped cluster needs a recorded reason, how a ledger ref names a PR that does not exist yet, or that the owner's start approves the run's picks; the user is asked or the run improvises. Brief defects belong to frictions-to-fixes-briefs-mismatch, --summary date counting to ledger-summary-same-day-counting, repeated sessions to survey-appends-duplicate-sessions. Signals: \"the Skill says ... but not what to do\", \"had to ask the user how many\"."
 surface: safe
 status: on-trial
 ref: "Inside the open Prune Trial for the frictions-to-fixes plain rewrite (PR #2330): territory path '.agents/skills/frictions-to-fixes/SKILL.md (all of it)'; keywords 'ledger PR', 'closing ledger PR'."
@@ -11,18 +11,9 @@ fixes:
   - pr: 2197
     date: "2026-10-17"
     summary: "The Skill says a regression that already has an open issue needs none and does not count toward the three."
-  - pr: 2213
-    date: "2026-10-17"
-    summary: "The survey brief says --unledgered drops each carried friction verbatim, so a session already in the target cluster must be skipped by hand."
   - pr: 2345
     date: "2026-10-20"
     summary: "Added a no-change outcome to the design step and a notes field in the ledger, so a run that finds nothing worth fixing has an outcome."
-  - pr: 2347
-    date: "2026-10-20"
-    summary: "Made the survey and design briefs match the repo: tracker search via the listing script, window wording, status reset, repo name, log-reading rule."
-  - pr: 2348
-    date: "2026-10-20"
-    summary: "The ledger summary counts same-day regressions by merge time and a new --candidates option prints the survey labels from the ledger."
 occurrences:
   - session: session_01Mf4dUxuWB7WtkC5fVzByH6
     date: "2026-10-16"
@@ -44,36 +35,6 @@ occurrences:
     severity: minor
     description: "frictions-to-fixes runs left an 11-occurrence cluster open with no recorded reason, so the owner had to ask why."
     solution: "Have the ledger PR description name each high-occurrence open cluster it skipped and why."
-  - session: session_01J4ze3DvsZhXeP78iyRnbSd
-    date: "2026-10-17"
-    severity: minor
-    description: "Survey brief says --unledgered drops carried frictions, yet 7 blocks for sessions already in a cluster reappeared and only surfaced at validate time (survey agent's friction)."
-    solution: "Have the brief say to skip a session already present in the target cluster, or filter by session in the script."
-  - session: session_01Sc82qSCs4NVP3igf9SaGXM
-    date: "2026-10-17"
-    severity: minor
-    description: "The survey subagent reported that the brief gives no cheap way to find merged PRs missing from the ledger and no helper to append occurrences, so it did both by hand."
-    solution: "Add a script that lists merged PRs absent from every ledger fixes entry, and one that appends print-ledger-occurrence output."
-  - session: session_0135hcUf12mVM8dEZfDRAkUb
-    date: "2026-10-18"
-    severity: minor
-    description: "design-brief.md opens with a dangling fragment after {PICKS} and its session-log glob matches nothing; the design agent lost rounds on both."
-    solution: "Rewrite the brief's first lines and give the real glob (*session_<id>*.yml)."
-  - session: session_01Wv24DMMmjdNR6a23HtkZ8i
-    date: "2026-10-19"
-    severity: minor
-    description: "survey-brief says to append every friction but --unledgered drops sessions, and --summary counts regressions by date, so same-day post-fix sessions were missed and needed hand checking."
-    solution: "Count regressions by session start in --summary; name a per-cluster dedupe step in the brief."
-  - session: session_01Uq2Kx5jumw8Va6DETgxNV8
-    date: "2026-10-20"
-    severity: minor
-    description: "The survey subagent's ledger commit and --unledgered/--summary date-only counting made same-day post-fix sessions invisible; it counted them by hand."
-    solution: "Make --summary compare session start time to the fix's merged_at, not dates."
-  - session: session_01VH74k3Z27QtjR19XNC76qm
-    date: "2026-10-20"
-    severity: minor
-    description: "prune-friction-ledger.ts --summary compares dates as strings, hiding same-day post-fix sessions; the survey agent counted them by hand. Same cause as open issue #2333, and one subagent hit three ledger YAML edit hazards (blank line, quoting)."
-    solution: "Compare session start time with the fix merged_at, as issue #2333 proposes."
   - session: session_014tr6vJyNXmekdFQtYrEVWT
     date: "2026-10-21"
     severity: nit
@@ -82,10 +43,5 @@ occurrences:
   - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
     date: "2026-10-21"
     severity: nit
-    description: "Survey brief mixes window start and session end dates, and never says which status a ledger entry takes when its issue closes not planned or its Skill sits in a trial."
-    solution: "State the window by session start, and list the status for closed-not-planned and on-trial entries in the brief."
-  - session: session_01JkRFBik4MUWwZcP45q7egk
-    date: "2026-10-22"
-    severity: minor
-    description: "Survey agent reported the survey brief pulls opposite ways on closed-issue search (brief says search_issues, github-integration.md says avoid it), and that --summary's max-severity column does not match the brief's 'since the latest PR' part (e)."
-    solution: "Make --summary print the severity since the latest PR, and reconcile the search guidance in the brief with github-integration.md."
+    description: "Ran the Skill with its autonomous decisions and built without the grilling the owner's preference for questions-first suggests; no question was asked."
+    solution: "Say in the Skill that the owner's start is the approval for picks, so no question is expected."

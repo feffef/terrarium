@@ -1,6 +1,6 @@
 name: parallel-branches-same-lines-conflict
-summary: Parallel branches editing the same lines of a shared file conflicted, and the second to merge needed a manual merge.
-cause: "Branches built in parallel edit the same lines of one shared file (Where next lists, a stamped pointer line, a roster table, a moved script), and nothing orders or groups them; signals: merge conflicts on adjacent shared lines, restamps, lists re-grown past the cap."
+summary: Branches built in parallel edited the same lines of a shared file, and the second to merge needed a manual merge.
+cause: "One run builds branches in parallel that edit the same lines of one shared file (Where next lists, a stamped pointer line, a roster table), and nothing orders or groups them; signals: merge conflicts on adjacent shared lines between a run's own PRs, restamps, lists re-grown past the cap. Strays 01JuCbPD and 013RCsUF are conflicts with main changed by another session (fixes: fetch before pushing; land large moves quickly)."
 surface: safe
 status: open
 notes: |-

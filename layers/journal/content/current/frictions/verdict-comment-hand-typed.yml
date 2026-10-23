@@ -1,14 +1,14 @@
 name: verdict-comment-hand-typed
 summary: >-
-  Agents typed paths, commit SHAs and ids into GitHub posts by hand and got them wrong.
+  Agents typed the reviewed commit's SHA into their merge verdict by hand and got it wrong.
 cause: >-
-  A path, SHA, branch or id in a GitHub body (a verdict comment's Reviewed SHA or footer link, an issue or PR body) is written from memory, a short hash or an earlier transcript instead of copied from git rev-parse, the file tree or the session id when posting, so it is wrong until compared and corrected. Signals: 'typed the Reviewed SHA from memory', 'made-up full commit SHA', 'duplicated path segment' in the footer link, a guessed path, a cited commit a later rewrite replaced.
+  The Reviewed SHA in a PR verdict comment is typed from memory, a short hash, the workflow's commit list or a CI comment's merge ref instead of copied from git rev-parse HEAD, so merge-pr.ts refuses it or the session corrects it. Signals: 'typed the Reviewed SHA from memory', 'made-up full commit SHA', 'mistyped short SHA', merge-pr refusing the verdict's SHA.
 surface: safe
 status: open
-fixes: []
 notes: |-
   2026-10-21 design: a pr-workflow line or a guard on hand-typed SHAs and paths dropped: all 8 sessions read pr-workflow.md and slipped anyway, merge-pr.ts already refuses a wrong Reviewed SHA and prints the line, and a guard is a Human-only edit for a nit-level cost.
   2026-10-23 design: a merge-pr.ts flag or hand-typed-value guard dropped again: merge-pr.ts already refuses a wrong Reviewed SHA and prints the exact line, so a slip costs one edit, and a guard is a Human-only edit.
+fixes: []
 occurrences:
   - session: session_01Sc82qSCs4NVP3igf9SaGXM
     date: "2026-10-17"
@@ -20,36 +20,16 @@ occurrences:
     severity: nit
     description: "Typed the Reviewed SHA in the verdict comment from memory and got the tail wrong; caught it by comparing with git rev-parse and posted a correction."
     solution: "Have the verdict comment built from the git rev-parse output, or have merge-pr.ts print the line to paste."
-  - session: session_01P39mjYt8LWVh2TYNyxWdqN
-    date: "2026-10-17"
-    severity: nit
-    description: "The PR's merge-verdict comment's footer link rendered as \"https://claude.ai/code/code\" (a duplicated path segment) instead of \"https://claude.ai/code\", a copy-paste slip in the attribution footer."
-    solution: "Proofread the exact attribution footer text against the system reminder's literal string before posting a GitHub comment, rather than typing it from memory."
   - session: session_018Uhxo4D5VcScugLrS35r4w
     date: "2026-10-18"
     severity: nit
     description: "Typed the review verdict's head SHA from memory and got its tail wrong; merge-pr.ts refused the merge until the comment was corrected"
     solution: "Paste the SHA from git rev-parse HEAD into the verdict rather than retyping it; the script's exact-SHA check worked as designed"
-  - session: session_012VTgtrUEy7cPVTN5sMriXj
-    date: "2026-10-15"
-    severity: nit
-    description: "Filed #2076 with a guessed spec path (tests/e2e/ instead of layers/tinkerfund/tests/e2e/) before checking it; corrected the body right after."
-    solution: "Verify a path with git ls-files before it goes into an issue body (CLAUDE.md Verify before you state)."
-  - session: session_01TJH95qkztCQJ8PF6G6pvqs
-    date: "2026-10-18"
-    severity: minor
-    description: "After stopping the #2231 build I cited a commit and branch from the builder's first commit; a review round had rewritten them, so I posted a correction."
-    solution: "Read git log in the worktree before quoting a sha from a transcript."
   - session: session_01MeatWCLdQDV2rWVNHumqX7
     date: "2026-10-19"
     severity: nit
     description: "My first verdict comment named a mistyped short SHA (30a92a7247 vs ...7244); merge-pr.ts refused and I edited the comment."
     solution: "Paste the head SHA from git rev-parse HEAD into the verdict rather than typing it."
-  - session: session_01VH74k3Z27QtjR19XNC76qm
-    date: "2026-10-20"
-    severity: nit
-    description: "Filed regression issue #2332 with a garbled phrase (#321-era follow-up #2321) and had to edit the body after creating it."
-    solution: "Re-read the body before sending, as for any GitHub post."
   - session: session_01QsVUJGmHhhoAn8T6ewjnLP
     date: "2026-10-21"
     severity: nit

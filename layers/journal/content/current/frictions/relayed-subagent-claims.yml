@@ -23,11 +23,6 @@ occurrences:
     severity: moderate
     description: "Broke CLAUDE.md 'Verify before you state' — my first answer relayed subagent counts (about 35 fixes, about 210 papercut frictions, three guards removed) without checking each; the ADR-0017 change was an amendment, not a guard removal."
     solution: "Mark subagent-derived counts as approximate or recount them from the extract before stating them."
-  - session: session_01LuXuScHA2QsY4RXipy9nAt
-    date: "2026-10-11"
-    severity: minor
-    description: "The survey subagent stated that PR 1775 rewrote scripts/shell-reads.ts and called it a regression of that PR; git log showed no such change. It also admitted it never read the mechanism source."
-    solution: "The Skill brief already asks to read mechanism source for detector claims; make the survey brief require citing the commit for any 'PR X changed file Y' claim."
   - session: session_01LtYEkEsZ2cxf4uRFJvq4n9
     date: "2026-10-12"
     severity: minor
@@ -93,3 +88,13 @@ occurrences:
     severity: minor
     description: "Put a triage agent's claim (frictions-to-fixes briefs are in a prune trial) into PR #2389 unverified; the trial covers only SKILL.md; fixed in the PR body"
     solution: "Verify each sideFinding against its source before relaying it, as clear-backlog section 3 already says"
+  - session: session_01BLrfuHbMMEmjZZ7STpe1AN
+    date: "2026-10-11"
+    severity: nit
+    description: "Two facts in my briefs were wrong: the content DB path (`.output/server/contents.sqlite`, actually `.data/content/contents.sqlite`) copied from an earlier agent's claim, and a stale unit-file count (99, actually 101); the agents caught both."
+    solution: "Re-check a subagent's factual claim against the source before pasting it into the next brief, as dispatch-subagents already says."
+  - session: session_01KVh6e6JUAssZvPRbuN5YDr
+    date: "2026-10-15"
+    severity: minor
+    description: "Told the implementer not to edit asking-for-a-change.md because PR 2099 was open, repeating the Fable agent's claim without checking; 2099 was already merged and the page needed the edit."
+    solution: "Check a PR's state with pull_request_read before putting it in a brief."

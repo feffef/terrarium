@@ -2,7 +2,7 @@ name: mechanism-claim-from-recall
 summary: >-
   Agents described how a script, guard, rule or setting behaves from memory, or claimed "only", "every" or "nothing" without checking the whole set.
 cause: >-
-  How a script, guard, rule, harness setting or data format behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set. A reviewer, the owner or a later check finds it false. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed"; a regex written without the real data.
+  How a script, guard, rule, harness setting or data format behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set. A reviewer, the owner or a later check finds it false. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed".
 surface: safe
 status: tracked
 ref: "issue #2425 (regression of #2378)"
@@ -49,11 +49,6 @@ occurrences:
     severity: moderate
     description: "I told the user only domain-modeling changed after diffing one skill; nine other pack skills also carried the rename, costing two extra decision rounds."
     solution: "Grep the whole skills diff for renamed terms before reporting scope."
-  - session: session_01VGLAakRJNm67PuNHpgbEc7
-    date: "2026-10-12"
-    severity: moderate
-    description: "My first 'loaded' prefix regex was written without checking the real data; about 70 reasons read 'loaded at start;' and would have rendered as broken fragments."
-    solution: "Grep landed logs for the actual variants before writing a text transform; the spec reviewer caught it."
   - session: session_01WynjtDHvk8MajTsgr59Ckt
     date: "2026-10-16"
     severity: minor
@@ -69,11 +64,6 @@ occurrences:
     severity: minor
     description: "Stated in the retro that bad manifest paths could silently lose pages; flatten.ts actually throws on a missing file. Also rewrote the manifests with sed without reading them first, so their real content is unknown."
     solution: "Check the code before stating a failure mode; read a file before rewriting it."
-  - session: session_01MKHvrDA9VoqiKWSG6QjpE2
-    date: "2026-10-20"
-    severity: nit
-    description: "Two triage agents repeated the issue's wrong claim that the frictions-to-fixes briefs are in the prune trial, and one wrongly called tenant.config.ts Human-only; caught on verification."
-    solution: "Triage briefs could tell agents to check trial territory and the Human-only list rather than relay the issue's constraint lines."
   - session: session_01XfQgmS9ArvbD9WSoPgkKfM
     date: "2026-10-21"
     severity: minor
@@ -84,3 +74,8 @@ occurrences:
     severity: minor
     description: "My Kevin post said a rule was written down where agents read it, but the session-start ADR-0004 summary omits that clause; I only noticed after it merged and fixed it in a second PR."
     solution: "The fact-check brief should name sentences that characterise where a rule lives so the checker opens the loaded rule file, not just the ADR."
+  - session: session_01LuXuScHA2QsY4RXipy9nAt
+    date: "2026-10-11"
+    severity: minor
+    description: "The survey subagent stated that PR 1775 rewrote scripts/shell-reads.ts and called it a regression of that PR; git log showed no such change. It also admitted it never read the mechanism source."
+    solution: "The Skill brief already asks to read mechanism source for detector claims; make the survey brief require citing the commit for any 'PR X changed file Y' claim."

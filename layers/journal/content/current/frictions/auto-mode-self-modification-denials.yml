@@ -1,0 +1,28 @@
+name: auto-mode-self-modification-denials
+summary: >-
+  The hosting environment's auto mode blocked edits to the repo's own guards and settings even after the owner had approved them in chat.
+cause: >-
+  The auto-mode permission classifier denies edits to .claude/settings.json, .claude/rules or guard code (and dispatches that will make them) as Self-Modification; an approval given in chat or in a grilling does not count, so the session finds out only on the denial and needs another round with the owner. Signals: "Self-Modification", "auto-mode classifier denied", an owner-approved guard, hook, rule or settings change.
+surface: safe
+status: open
+occurrences:
+  - session: session_018i6d2BQPkf9cq6jSEqCNSX
+    date: "2026-10-10"
+    severity: moderate
+    description: "Auto-mode classifier denied the guards-cluster dispatch twice as Self-Modification, even after the owner approved in chat; it ran only after the owner left auto mode"
+    solution: "For guard or hook changes, ask the owner to leave auto mode before dispatching, instead of discovering the denial"
+  - session: session_017NBxJhtBSd9AoCwTzsg6pM
+    date: "2026-10-12"
+    severity: minor
+    description: "The auto-mode classifier denied the .claude/settings.json edit (Self-Modification) before the owner approved it in chat."
+    solution: "List Human-only settings edits as an explicit approval question in the grilling up front."
+  - session: session_01STVS35HcxNZp7dQ1pPnrhW
+    date: "2026-10-13"
+    severity: minor
+    description: "Auto-mode classifier blocked both the build agent's and my edit/commit of .claude/settings.json as self-modification despite the owner's approval in the grilling; needed an extra AskUserQuestion round"
+    solution: "guards.md could say the settings.json edit needs an explicit permission grant from the owner before dispatch, so it is asked once, up front"
+  - session: session_01CJix3AqBpX5KrAENqNp1M7
+    date: "2026-10-14"
+    severity: minor
+    description: "Auto-mode classifier denied appending marker lines to a throwaway worktree's .claude/rules copies, which blocked the direct which-copy test"
+    solution: "Use subagent rule labels and a nested non-worktree control dir instead; it worked, so no change needed"
