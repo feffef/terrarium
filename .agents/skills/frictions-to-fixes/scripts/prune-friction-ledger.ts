@@ -12,7 +12,8 @@
 //   fix landed, likely fixed, still recurring with the count since the latest
 //   PR, issue #2024),
 //   ref, in-horizon occurrence count, max severity (issue #1917), the fix
-//   count and latest fix, and the newest of the entry's `notes` in full when it
+//   count, latest fix and the highest severity since it (`none` if no
+//   occurrence came after), and the newest of the entry's `notes` in full when it
 //   has any. It ends with every friction two clusters share, for
 //   the survey to judge.
 //   `--candidates` edits nothing and prints each entry's survey label from the
@@ -131,8 +132,9 @@ function describeEntry(e: Entry, start: string, check: RegressionCheck) {
   const occ = (e.occurrences ?? []).filter((o) => String(o.date) >= start)
   const max = SEVERITIES[Math.max(-1, ...occ.map((o) => SEVERITIES.indexOf(String(o.severity))))] ?? '-'
   const last = [...(e.fixes ?? [])].sort((a, b) => a.date.localeCompare(b.date)).at(-1)
-  const since = last ? (e.occurrences ?? []).filter((o) => check.after(o, last)).length : 0
-  return { occ, max, last, since }
+  const after = last ? (e.occurrences ?? []).filter((o) => check.after(o, last)) : []
+  const sinceMax = SEVERITIES[Math.max(-1, ...after.map((o) => SEVERITIES.indexOf(String(o.severity))))] ?? 'none'
+  return { occ, max, last, since: after.length, sinceMax }
 }
 
 function readEntries(cwd: string): [string, Entry][] {
@@ -145,8 +147,8 @@ export function summarizeLedger(today: string, cwd = root, check = regressionChe
   const entries = readEntries(cwd)
   const asOf = entries.flatMap(([, e]) => (e.occurrences ?? []).map((o) => String(o.date))).sort().at(-1) ?? ''
   return entries.map(([f, e]) => {
-    const { occ, max, last, since } = describeEntry(e, start, check)
-    const fixes = last ? `${e.fixes!.length} ${e.fixes!.length === 1 ? 'fix' : 'fixes'}, latest #${last.pr} ${last.date}` : 'no fixes'
+    const { occ, max, last, since, sinceMax } = describeEntry(e, start, check)
+    const fixes = last ? `${e.fixes!.length} ${e.fixes!.length === 1 ? 'fix' : 'fixes'}, latest #${last.pr} ${last.date}, since: ${sinceMax}` : 'no fixes'
     const derived = ledgerFixState(e.status, e.fixes ?? [], (e.occurrences ?? []).map((o) => String(o.date)), asOf)
     const state = derived ? (since ? `still recurring (${since} since #${last!.pr})` : derived.state) : e.status
     const note = String(e.notes ?? '').trim().split('\n').at(-1)

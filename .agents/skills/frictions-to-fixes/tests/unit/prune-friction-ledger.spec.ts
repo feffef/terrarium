@@ -69,7 +69,7 @@ describe('summarizeLedger()', () => {
     writeFileSync(join(dir, 'x.yml'), withFixes(fixes([1, '2026-10-02'], [7, '2026-10-12']), ['a', '2026-09-01'], ['b', '2026-10-01']).replace('status: open', 'ref: "issue #5"\nstatus: open'))
     writeFileSync(join(dir, 'y.yml'), entry(['a', '2026-10-01']))
     expect(summarizeLedger('2026-10-13', cwd)).toEqual([
-      'x | fix landed | issue #5 | 1 in horizon | nit | 2 fixes, latest #7 2026-10-12',
+      'x | fix landed | issue #5 | 1 in horizon | nit | 2 fixes, latest #7 2026-10-12, since: none',
       'x | open | - | 1 in horizon | nit | no fixes',
     ])
   })
@@ -103,10 +103,19 @@ describe('summarizeLedger()', () => {
     expect(sameday).toContain('| likely fixed |')
     expect(young).toContain('| fix landed |')
   })
+  it('ends a fixed entry with its highest severity since the latest fix, "none" when nothing came after', () => {
+    const dir = setup()
+    const sev = (text: string, ...levels: string[]) => levels.reduce((t, l) => t.replace('severity: nit', `severity: ${l}`), text)
+    writeFileSync(join(dir, 'a.yml'), sev(withFixes(fixes([1, '2026-10-02']), ['a', '2026-10-01'], ['b', '2026-10-05'], ['c', '2026-10-06']), 'blocker', 'minor', 'major'))
+    writeFileSync(join(dir, 'b.yml'), withFixes(fixes([1, '2026-10-02']), ['a', '2026-10-01']))
+    const [a, b] = summarizeLedger('2026-10-13', cwd)
+    expect(a).toContain('latest #1 2026-10-02, since: major')
+    expect(b).toContain('latest #1 2026-10-02, since: none')
+  })
   it('shows accepted over the derived state', () => {
     const dir = setup()
     writeFileSync(join(dir, 'x.yml'), withFixes(fixes([1, '2026-10-02']), ['a', '2026-10-01'], ['b', '2026-10-05']).replace('status: open', 'status: accepted'))
-    expect(summarizeLedger('2026-10-13', cwd)).toEqual(['x | accepted | - | 2 in horizon | nit | 1 fix, latest #1 2026-10-02'])
+    expect(summarizeLedger('2026-10-13', cwd)).toEqual(['x | accepted | - | 2 in horizon | nit | 1 fix, latest #1 2026-10-02, since: nit'])
   })
 })
 
