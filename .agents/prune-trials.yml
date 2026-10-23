@@ -182,7 +182,7 @@ trials:
   - problem: >
       Workflow-write ban (cloud session cannot write `.github/workflows/*`) cut
       to its one home each (-27 net): the `workflow-edit-guard.ts` header
-      (40 lines to 21) keeps purpose, usage and the fail-open list but drops the
+      (40 lines to 20) keeps purpose, usage and the fail-open list but drops the
       mechanic retelling and incident asides; the `.sh` pre-filter comment and
       the `environment-caveats.md` bullet are shortened (recovery recipe, proposals
       pointer and issue pointers kept). Chosen after the search subagent covered
@@ -194,8 +194,8 @@ trials:
       Judged and deleted the dispatch-subagents §3 trial (landed 81bc1915,
       judgeable from 2026-10-23T12:28Z per the window script): 47 sessions, no
       major or blocker Friction traces to it (a shared-checkout `git checkout`
-      by a triage agent, g9zpjr, was minor; the foreground-gate clash is in the
-      newer trial's territory).
+      by a triage agent, g9zpjr, was minor; the foreground-gate clash with
+      CLAUDE.md was a nit, already #2426).
     territory:
       paths:
         - "scripts/hooks/workflow-edit-guard.ts and .sh: header comments"
