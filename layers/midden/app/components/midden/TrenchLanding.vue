@@ -38,22 +38,25 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
   const pages = await queryCollection(resolved.pagesKey).all()
   const artifacts = await queryCollection(resolved.collections.artifacts).all()
   // Per report: how many finds and when they were assessed, so the numbered list says what it holds.
-  const meta = (slug: string) => {
-    const dates = artifacts.filter((a) => a.site === slug).map((a) => a.assessedAt).sort()
+  const meta = (finds: typeof artifacts) => {
+    const dates = finds.map((a) => a.assessedAt).sort()
     if (!dates.length) return ''
     const lo = formatMiddenDate(dates[0]!)
     const hi = formatMiddenDate(dates[dates.length - 1]!)
     return `${dates.length} ${dates.length === 1 ? 'find' : 'finds'} · assessed ${lo === hi ? lo : `${lo} – ${hi}`}`
   }
   const sites = middenReportOrder(pages.filter((p) => p.path !== '/'), artifacts)
-    .map((p, i) => ({
-      meta: meta(p.path.slice(1)),
+    .map((p, i) => {
+      const finds = artifacts.filter((a) => a.site === p.path.slice(1))
+      return {
+      meta: meta(finds),
       num: String(i + 1).padStart(2, '0'),
       title: (p.title ?? p.path.replace(/^\//, '')).replaceAll('`', ''),
       description: (p.description as string | undefined)?.replaceAll('`', ''),
       href: `/t/midden/trench${p.path}`,
-      causes: [...new Set(artifacts.filter((a) => a.site === p.path.slice(1)).map((a) => a.cause))],
-    }))
+      causes: [...new Set(finds.map((a) => a.cause))],
+    }
+    })
   return { intro: pages.find((p) => p.path === '/') ?? null, count: sites.length, sites, latest: [] }
 })
 
@@ -159,7 +162,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
             :title="chip.meta.definition"
             :aria-current="activeCause === chip.meta.cause ? 'true' : undefined"
             class="midden-causes__chip"
-          >{{ chip.meta.label.toLowerCase() }} <span class="midden-causes__count">{{ chip.sites }}</span></NuxtLink>
+          >{{ chip.meta.label }} <span class="midden-causes__count">{{ chip.sites }}</span></NuxtLink>
         </nav>
         <ol v-if="rows.length" class="midden-sites">
           <li v-for="site in rows" :key="site.href" class="midden-sites__item">

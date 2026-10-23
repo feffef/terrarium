@@ -53,7 +53,8 @@ describe('midden Tenant', async () => {
     expect(html).toContain('/t/midden/trench/stood-down')
     expect(html).not.toContain('/t/midden/trench/the-generated-map')
     expect(html.match(/class="midden-sites__item"/g)?.length).toBeLessThan(all)
-    expect(html).toMatch(/aria-current="true"[^>]*>cost more than it caught/)
+    // The active chip links back to the unfiltered Trench.
+    expect(html.match(/<a[^>]*aria-current="true"[^>]*>cost more than it caught/)?.[0]).toContain('href="/t/midden/trench"')
   })
 
   // The front door's count must match the trench's actual list (the Space
