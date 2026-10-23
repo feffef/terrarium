@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Hw8mVJmgWejGc6YWi8ngnm
 startedAt: 2026-10-23T04:03:42Z
-endedAt: 2026-10-23T04:30:49Z
+endedAt: 2026-10-23T04:57:22Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs (skills concision family)
-status: in-review
-outcome: Sweep PR 2428 merged green (22 files fixed); escalation PR 2429 with two ADR pointer fixes waits for a human merge
-summary: Scheduled audit-docs run, started by a Routine with no human prompt; every step was agent-initiated under the Skill's own authority. Concision family picked from the newest origin/main commit (docs/research, so skills). Five read-only reviewers (freshness, single-home, two concision halves, coherence) produced 80 findings; three independent checkers returned 50 CONFIRMED, 20 CONFIRMED-BUT, 9 WRONG, and 1 finding was dropped because its file is in an open Prune Trial's territory. Applied the survivors in one sweep commit (22 files, none Human-only), ran code-review and gate:scoped, pushed and opened the sweep PR with a verdict comment. The two ADR pointer fixes (ADR-0021, ADR-0012, plus their rule hash restamps) went to a separate escalation PR that waits for a human merge.  Chose to keep edits the code-review Standards reviewer second-guessed (guest-build author filter, CLAUDE.md trigger) because the checkers had verified them against primary sources. The sweep PR merged on a green gate (merge commit c9b73d91a); the escalation PR is open for a human merge and still watched.
+status: completed
+outcome: Sweep PR 2428 and escalation PR 2429 both merged (22 files fixed, two ADR pointers repaired)
+summary: Scheduled audit-docs run, started by a Routine with no human prompt; every step was agent-initiated under the Skill's own authority. Concision family picked from the newest origin/main commit (docs/research, so skills). Five read-only reviewers (freshness, single-home, two concision halves, coherence) produced 80 findings; three independent checkers returned 50 CONFIRMED, 20 CONFIRMED-BUT, 9 WRONG, and 1 finding was dropped because its file is in an open Prune Trial's territory. Applied the survivors in one sweep commit (22 files, none Human-only), ran code-review and gate:scoped, pushed and opened the sweep PR with a verdict comment. The two ADR pointer fixes (ADR-0021, ADR-0012, plus their rule hash restamps) went to a separate escalation PR that waits for a human merge.  Chose to keep edits the code-review Standards reviewer second-guessed (guest-build author filter, CLAUDE.md trigger) because the checkers had verified them against primary sources. The sweep PR merged on a green gate (merge commit c9b73d91a); a human then merged the escalation PR.
 prs:
   - "2428"
   - "2429"
@@ -258,14 +258,14 @@ frictions:
   - description: One concision reviewer claimed a guard enforces ToolSearch-before-call; the checker found the premise false, so the finding was dropped.
     solution: Tell reviewers to verify any claim about a mechanism before reporting a cut that depends on it.
     severity: nit
-durationSec: 1627
+durationSec: 3219
 models:
-  claude-sonnet-5-5: 168
+  claude-sonnet-5-5: 175
 toolCounts:
   Read: 5
-  Bash: 52
+  Bash: 53
   Agent: 10
-  ReadNotifications: 4
+  ReadNotifications: 6
   Skill: 2
   ToolSearch: 1
   mcp__github__get_file_contents: 1
@@ -509,13 +509,13 @@ subagents:
     durationSec: 130
     toolCalls: 29
     modelCalls: 25
-    tokenShare: 6.3
+    tokenShare: 6.2
   - type: general-purpose
     task: "Audit B: single-home"
     durationSec: 411
     toolCalls: 54
     modelCalls: 51
-    tokenShare: 20.3
+    tokenShare: 19.9
   - type: general-purpose
     task: "Audit C1: skills concision"
     durationSec: 222
@@ -533,25 +533,25 @@ subagents:
     durationSec: 624
     toolCalls: 68
     modelCalls: 66
-    tokenShare: 25.3
+    tokenShare: 24.8
   - type: general-purpose
     task: Check group X findings
     durationSec: 105
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: Check group Y findings
     durationSec: 218
     toolCalls: 22
     modelCalls: 20
-    tokenShare: 4.1
+    tokenShare: 4
   - type: general-purpose
     task: Check group Z findings
     durationSec: 145
     toolCalls: 25
     modelCalls: 23
-    tokenShare: 3.4
+    tokenShare: 3.3
   - type: general-purpose
     task: "Code review: Standards"
     durationSec: 58
