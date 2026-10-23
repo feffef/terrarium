@@ -103,7 +103,7 @@ users converse, direct and review (ADR-0003). **Public** users only report
 (ADR-0020).
 
 ### Observability
-The invariant that the Platform is built to be watched. Every change lands as a
+The invariant that the Platform is built to be watched. Every change except a session log lands as a
 commit in a gated PR, and every **Session** authors a **session log** with its
 **Frictions**. The **Friction Ledger** and **Skill Inventory** read those logs
 back to steer self-improvement, and the **Journal** publishes them. The

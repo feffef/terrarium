@@ -112,8 +112,7 @@ Before you finish, push every reviewed branch, remove the worktree of any branch
 you dropped, and run **`pnpm check:worktrees`**. It reads git's own worktree
 list, so it catches a subagent that died without returning, and exits non-zero
 for any linked worktree left uncommitted or unpushed (`EXCUSALS` in the script
-lists the exceptions). It cannot prevent an abort, only make the damage
-visible. Done when it exits 0.
+lists the exceptions). Done when it exits 0.
 
 If you `cd`'d into a subagent's worktree, `cd` back (or use absolute paths) and
 re-check `git status` at the root: a closure Stop-hook flag may belong to that

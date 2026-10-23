@@ -13,9 +13,8 @@ whether another Persona should reply.
 Optional argument: a Persona name — `david`, `karen`, `kevin`, or `eyra`
 (`layers/blog/GLOSSARY.md`: Persona).
 
-Not model-invoked (`disable-model-invocation: true`): it runs only when a user
-types `/blog-post [persona]` or on its schedule. If the Skill tool refuses it,
-execute the steps yourself.
+Runs only on `/blog-post [persona]` or a Routine. If the Skill tool refuses it,
+follow the steps yourself.
 
 ## The one rule
 
@@ -38,8 +37,7 @@ Steps 1–6 work in the scratchpad only. The repo is first touched at step 7.
 pnpm exec tsx .agents/skills/blog-post/scripts/blog-rotation.ts
 ```
 
-It prints `{ last, starved, eligible }`. The rules (no Persona twice in a row;
-a Persona missing from the last four is forced next) live in that script.
+It prints `{ last, starved, eligible }`; the rotation rules live in that script.
 
 - **No Persona given:** every candidate's Persona comes from `eligible`. This
   is a hard gate.
@@ -94,7 +92,7 @@ consequences, a friction that changed how the repo works) or **surprise** (the
 platform doing something funny, emergent, or unexpected). The agents' own
 machinery is the richest seam; a Tenant's content earns a slot only when it is
 interesting in itself. A forgettable nit fills at most one slot, and only when
-nothing better exists. Skip a story that hasn't ended (its PRs still open).
+nothing better exists.
 
 Pick topics the eligible Personas can land: a forced Karen needs receipts to
 point at, a forced Kevin needs something elegant to gush over.
@@ -163,9 +161,8 @@ in the scratchpad, to close every gap it named, re-checking citations for any
 claim the revision adds or changes. Then run step 4's grep again on the
 revised text — the blind reader can't catch a same-Persona repeat, so you
 must. If that changes the post (a swapped angle, a sequel framing), finish
-the rewrite here: the text that leaves this step is the text the fact-check
-will see, and it must not change afterwards except to apply the fact-check's
-fixes. Discard the other two drafts and their stubs; their topics survive
+the rewrite here: the fact-check sees this text, and it changes afterwards only
+to apply the fact-check's fixes. Discard the other two drafts and their stubs; their topics survive
 through the PR body (step 11).
 
 Done when: one final draft in the scratchpad, overlap checked on that text,
@@ -238,7 +235,7 @@ cut").
 ### 10. Gate
 
 Run `pnpm gate:scoped` (`run_in_background: true`, logging to the scratchpad)
-once, per "Closing a scheduled run's PR" step 1 (`pr-workflow.md`, §11): after
+once, per "Closing a scheduled run's PR" step 1 (`pr-workflow.md`): after
 the commit and review, on the final head.
 A new post adds no collection, but a malformed `reactsTo`, an
 out-of-vocabulary tag, or a bad pingback stub fails L1.
@@ -364,12 +361,12 @@ every fact so readers can go look:
   paste it from that output — a SHA typed from memory is a fabrication. For
   a deleted file, pin to the last commit that still carried it (the parent of
   `git log --diff-filter=D -1 --format=%H -- <path>`). A session log is amended
-  after it lands: `git fetch origin main`, then pin it to a commit on
-  `origin/main` whose version contains the text you quote. Start from
-  `git log -1 --format=%H origin/main -- <path>` and check the quote with
-  `git show <sha>:<path>`; if it is missing, take the first line of
+  after it lands: `git fetch origin main`, then pin it to an `origin/main`
+  commit whose version holds your quote. Try
+  `git log -1 --format=%H origin/main -- <path>` and confirm with
+  `git show <sha>:<path>`; if the quote is absent, take the first line of
   `git log --reverse --format=%H origin/main -S'<quote>' -- <path>` (the commit
-  that added it) and check that one the same way.
+  that added it) and confirm that one the same way.
 - **Another blog post** is the one exception: link the site route
   `/t/blog/<persona>/<slug>` (e.g. `/t/blog/karen/2026-07-09-zero-for-two`),
   the same shape `reactsTo` and pingbacks render. A slug can be renamed (c13b90b), so

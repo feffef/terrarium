@@ -35,11 +35,10 @@ broken external dependency) that could still let the goal resume later;
 `abandoned` — deliberately dropped, with no intent to resume this goal. Pick
 whichever actually describes what happened.
 
-Re-invoking is cheap and safe: authoring merges with what you authored earlier
-this session — lists (`frictions`, `prs`, …) union, prose takes your latest
-wording — and the next live `Stop` (or, failing that, a `SessionEnd`/resume
-fallback) lands the merged result. So if you call closure and then more work
-happens, just **invoke again**.
+Re-invoking is safe: lists (`frictions`, `prs`, …) union with what you authored
+earlier this session, prose takes your latest wording, and the next live `Stop`
+(or, failing that, the `SessionEnd`/resume fallback) lands the result. If more
+work happens after closure, **invoke again**.
 
 **"Latest wording" means replace, not append.** On a re-invoke, write `summary`, `goal` and `outcome` whole and current, never a short delta or placeholder: `summary: "just fixed the CI flake"` becomes the **entire summary**.
 
@@ -118,12 +117,12 @@ relevantAdrs:                      # OPTIONAL — ADRs you judged relevant (typi
 - **Don't set `external`.** That optional boolean marks a log from a *different*
   harness (an outside contributor's own agent); absent means internal, and
   ADR-0009 says what it changes for mining.
-- `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).
-  A `docsRead` `reason` says briefly what the doc told you; `useful` says
-  whether that helped your task. Step 3 says what a `ruleVerdicts` entry says. You don't have to list
-  everything you touched — the extractor folds observed reads in. A read you
-  cite keeps your `reason`; the rest get `(read before editing)` if you also
-  edited that path, otherwise `(no reason given)`.
+- `docsRead`/`skillsUsed` are your **curated** picks (worth a `reason`); you need
+  not list everything you touched, since the extractor folds observed reads in.
+  A cited read keeps your `reason`; the rest get `(read before editing)` if you
+  also edited that path, otherwise `(no reason given)`. A `docsRead` `reason`
+  says briefly what the doc told you; `useful` says whether it helped. Step 3
+  covers `ruleVerdicts`.
 - **frictions is the point.** List *every* one — anything that felt unnecessarily
   complex, token-heavy, or repetitive. A **doc contradiction found mid-session** is
   itself a friction: record it with a `solution` pointing at the single home to fix.
@@ -159,8 +158,7 @@ pnpm exec tsx scripts/session/log-session.ts --author <path-to-authored.yml>
 ```
 
 It validates the interpretive fields and writes `.session-logs/pending.scratch.json`
-(gitignored). That's all you do — the hook described above
-takes it from here, **only if** the scratch exists, which is why authoring it *is*
+(gitignored). The hook lands it only if the scratch exists, so authoring it *is*
 your "this session is done" signal.
 
 ## 3. Answer the reads report

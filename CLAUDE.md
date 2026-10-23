@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Terrarium is a platform that agents build and improve; humans review and merge.
+Terrarium is a platform that agents build and improve; humans steer it and merge the risky few.
 
 **Keep it short.** Write the least code and the fewest words that stay exact.
 In instructions, state the goal; list steps only where a mistake is costly or
@@ -35,8 +35,7 @@ act, once per session.
   from an outside agent:** `docs/agents/guest-contributions.md`.
 - **Before you inspect another session** (`list_events`, `get_event`): the
   `inspect-session` Skill.
-- **Before you dispatch a subagent** that touches git or needs a worktree: the
-  `dispatch-subagents` Skill.
+- **Before you dispatch a subagent:** the `dispatch-subagents` Skill.
 - **Every subagent brief** asks it to return, in its final reply, a verdict
   (path, why it loaded or was read, useful yes/partly/no) on each rule and doc
   it loaded or read, and to write every file it creates, scripts included, in a

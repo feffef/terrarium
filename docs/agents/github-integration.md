@@ -138,9 +138,9 @@ misspelled full name) gives `Error: No such tool available: <name>`, with no
 "did you mean" and no hint to try `ToolSearch`. Don't write off a plausible
 bare name as unsupported: retry it as a keyword query.
 
-**No MCP tool for issue dependencies** (wayfinding *Blocking*): `curl` the endpoint
-in [`issue-tracker.md`](./issue-tracker.md)'s **Blocking** bullet with `$GH_TOKEN` and `Content-Type: application/json` (the proxy
-answers 415 without it). A summary read right after a write can be stale
+**No MCP tool for issue dependencies** (wayfinding *Blocking*): use the `curl` recipe in
+[`issue-tracker.md`](./issue-tracker.md)'s **Blocking** bullet (the proxy answers
+415 without its `Content-Type` header). A summary read right after a write can be stale
 (issue #1373).
 
 **Known gap:** no GitHub API (REST or GraphQL) attaches a file or image to an

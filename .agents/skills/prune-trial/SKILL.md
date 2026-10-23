@@ -15,17 +15,14 @@ not by a rulebook they skim.** You get there by pruning, and you find out
 whether a prune was right the only honest way — by leaving it standing as a
 **trial** and letting real sessions deliver the verdict.
 
-One **new** trial per run — §1 may close several. Work on the branch your
-session started on; cut one off `main` only if that is `main` (CLAUDE.md).
-Everything below is mechanism; the goal above is the point.
+One **new** trial per run; §1 may close several.
 
 ## 1. Judge the open trials
 
 Open trials are in `.agents/prune-trials.yml`.
 
 **A trial is judgeable only once its prune has landed on `main` and sessions
-have run against it since.** `opened:` records when the entry was written, which
-is earlier and is never the window's start. Run
+have run against it since.** Run
 `pnpm exec tsx .agents/skills/prune-trial/scripts/find-trial-window.ts` to get every open trial's real landing commit, timestamp, and `judgeable from:` time, taken from `git log -S`; never derive or recall them by hand (a hand-derived one is how PR #1061 judged a trial a day early against a landing commit that did not exist). Its `judgeable from:` time is a floor, not a deadline: judge at or after it, never before. A `NOT FOUND` result means silence is not evidence: leave the entry alone and judge nothing.
 
 For each trial that has landed and is past its window: **apply** its `check`
@@ -52,7 +49,7 @@ every candidate's full smear to rank them):
 
 1. **Prose that already failed.** A rule whose own failure is on the tracker —
    an issue filed because the rule didn't hold, or a rule narrowed repeatedly and
-   still not followed. Dispatch a single subagent to search for one in a full pass of the instruction corpus (mechanism records for guards already built included: one is often the largest prose mass going) and the tracker, before reading any candidate file yourself. Read candidates one by one only if that search comes up empty or ambiguous. Such a
+   still not followed. Dispatch one subagent to search the whole instruction corpus (guard mechanism records included; a record is often the largest prose mass) and the tracker for such a rule, before you read any candidate yourself. Read candidates one by one only if the search finds nothing or is ambiguous. Such a
    rule has proven **the prose** isn't load-bearing — not the behaviour, which
    may matter more than ever. Check what holds that behaviour now: a rule a wired
    guard, gate or test already enforces is the safest prune on the board; one
@@ -67,16 +64,15 @@ attributed.
 
 **"Nothing clears the bar" is a result you earn, not one you inherit.** Say it
 only after criterion 1's subagent search ran this run, and name what it
-searched in the ledger. Earlier ledger entries saying the same prove nothing
-about today: the tracker and the logs have moved. The same goes for every other
-claim you write in the ledger or PR (a file has no recorded failures, only
-whole-file inbound pointers): read it from a source this run, or leave it out.
-Read files with the Read tool, so the log shows what you actually read.
+searched in the ledger; earlier ledger entries prove nothing about today (the
+tracker and logs have moved). Any other claim in the ledger or PR (a file has no
+recorded failures, only whole-file inbound pointers) must come from a source you
+read this run, with the Read tool so the log shows it, or be left out.
 
 ## 3. Prune it to the goal
 
-Read every place the problem is legislated — it is usually smeared across
-CLAUDE.md, a `docs/agents/` page and several Skills. Search the instruction
+Read every place the problem is covered (usually CLAUDE.md, a `docs/agents/`
+page and several Skills). Search the instruction
 corpus, not the Journal: session logs quote these rules constantly and will
 swamp any grep. Work out what all of it is
 chasing. Write that, in the plainest words that stay exact, in one home. Delete
@@ -102,13 +98,12 @@ Aim for around 100 lines **deleted** (the goal you write back and the ledger
 entry don't count). Get there by retiring a whole problem. Never pad the scope,
 and never delete the worked examples a weaker reader needs.
 
-**You may also simplify the language of any Markdown file in scope** (see
-Bounds), alongside a prune or instead of one. Do this when no problem clears
-the bar. Rewrite the whole file if that helps: a Skill or a doc. Use
-short sentences. Avoid project jargon. Prefer plain English. Keep every rule and
-decision; cut the rest. Be brave: restructure the file, merge its sections,
-reword all of it. The file is the trial's territory. It gets the same ledger
-entry and §4 probe as a prune.
+**You may also rewrite any Markdown file in scope plainly** (see Bounds),
+alongside a prune or instead of one; do this when no problem clears the bar. Use
+short sentences and plain English, avoid project jargon, keep every rule and
+decision, and cut the rest. Restructure, merge sections and reword freely. The
+file is the trial's territory and gets the same ledger entry and §4 probe as a
+prune.
 
 When §4's probe fails, or a landed trial's verdict in §1 showed real damage,
 the behaviour has proven it needs a hook. **File a `needs-triage` issue proposing it** (`docs/agents/issue-tracker.md`'s "Filing an issue"); a
