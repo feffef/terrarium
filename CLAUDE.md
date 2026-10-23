@@ -87,10 +87,9 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
 
 - **Put throwaway scripts that import repo packages in `.throwaway/`**
   (git-ignored); in the scratchpad they can't resolve `node_modules`.
-- **Start any command that can take over 2 minutes** (`pnpm gate:scoped`, a
-  build, e2e) with `run_in_background: true`, output redirected to a file: the
-  Bash tool caps a foreground timeout at 600s. A dispatched subagent can't
-  background: `dispatch-subagents` §3.
+- **Run anything that can take over 2 minutes** (`pnpm gate:scoped`, a build,
+  e2e) with `run_in_background: true` and a log file; a foreground call dies at
+  600s. Dispatched subagents: `dispatch-subagents` §3.
 - **Never use `pkill`,** and never chain a kill with `&&` or `;` (the commands
   after it can silently not run). Stop a preview or dev server with
   `scripts/ui/preview.ts stop <pid>`.
