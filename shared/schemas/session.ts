@@ -20,10 +20,15 @@ const tokenShare = z.number().min(0).max(100)
 
 export const usefulVerdict = z.enum(['yes', 'partly', 'no'])
 export const ruleVerdict = z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict })
-export const relevantAdr = z.object({ adr: z.number().int().positive(), reason: z.string() })
 export type UsefulVerdict = z.infer<typeof usefulVerdict>
 export type RuleVerdict = z.infer<typeof ruleVerdict>
-export type RelevantAdr = z.infer<typeof relevantAdr>
+export const adrHint = z.object({
+  adr: z.number().int().positive(),
+  via: z.enum(['path', 'text']),
+  readAfter: z.boolean(),
+  by: z.enum(['main', 'subagent']),
+})
+export type AdrHint = z.infer<typeof adrHint>
 
 /**
  * The grow-only `sessions` schema (ADR-0009). `status`/`kind` are queryable spines;
@@ -72,6 +77,10 @@ export const sessionSchema = z
     rulesGlobal: z.array(z.string()).optional(),
     // The subset of the rule lists whose ADR was read after the rule loaded.
     rulesFollowedUp: z.array(z.string()).optional(),
+    // Each ADR `scripts/hooks/adr-read-hint.ts` pointed to, how the write matched
+    // it, and whether that agent read it in full afterwards. One entry per
+    // (adr, via, by); workflow agents count as `subagent`.
+    adrHints: z.array(adrHint).optional(),
     // Rules only a subagent or workflow agent loaded, and the `docsRead`
     // instruction docs only one read. Their verdicts sit in `ruleVerdicts` and
     // `docsRead` like any other, merged by the main session (#1941).
@@ -134,9 +143,6 @@ export const sessionSchema = z
     // truly empty.
     learnings: z.array(z.string()).optional(),
     ideas: z.array(z.string()).optional(),
-    // The ADRs the agent judged relevant to its work, each with a one-line
-    // reason (#2386). Authored, optional.
-    relevantAdrs: z.array(relevantAdr).optional(),
     // Field names a back-catalog sweep (issue #449 Gap 5) suspects were silently
     // truncated by the pre-#367 unquoted-`#` bug but couldn't repair with
     // confidence. Absent on every log the sweep didn't flag.

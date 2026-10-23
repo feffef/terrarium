@@ -53,7 +53,7 @@ export function validatePruneTrialsYaml(yamlText: string): PruneTrialsValidation
 }
 
 // An unquoted `- Reviewed:` list item parses as the mapping `{Reviewed: null}`,
-// which `relevant-adrs.ts` then prints to every agent as JSON (issue #2288).
+// not a string (issue #2288).
 function territoryError(trial: unknown): string | undefined {
   const territory = (trial as { territory?: Record<string, unknown> } | null)?.territory
   for (const key of ['paths', 'keywords']) {

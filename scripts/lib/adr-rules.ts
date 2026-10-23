@@ -85,6 +85,34 @@ export const ruleDocPaths = (ruleText: string): string[] => [
  *  `adr-0004-<topic>.md` covers a part of that ADR with its own `paths`. */
 export const ruleAdr = (file: string) => /^adr-(\d{4})(?:-[a-z0-9-]+)?\.md$/.exec(file)?.[1]
 
+/** The ADR number of a repo-relative ADR file, else undefined. */
+export const adrDocNumber = (path: string) => /^docs\/adr\/(\d{4})-[^/]*\.md$/.exec(path)?.[1]
+
+export type AdrHintVia = 'path' | 'text'
+export interface AdrPointer {
+  adr: string
+  via: AdrHintVia
+  /** The ADR's file. */
+  doc: string
+  /** The file the write touched. */
+  file: string
+}
+
+/** The pointer line `scripts/hooks/adr-read-hint.ts` writes, which
+ *  transcript-trace.ts parses back into the session log's `adrHints`. */
+export const ADR_HINT_PREFIX = 'Read in full before you go on:'
+
+const pointerWhy = ({ adr, via, doc, file }: AdrPointer) =>
+  via === 'path' ? `ADR-${adr} governs \`${file}\`` : file === doc ? `you edit ADR-${adr}` : `your edit names ADR-${adr}`
+
+export const adrHintLine = (pointers: AdrPointer[]) =>
+  `${ADR_HINT_PREFIX} ${pointers.map((p) => `\`${p.doc}\` (${pointerWhy(p)})`).join('; ')}.`
+
+export const adrHintsIn = (text: string): { adr: string; via: AdrHintVia }[] =>
+  text.split('\n').filter((l) => l.startsWith(ADR_HINT_PREFIX)).flatMap((l) =>
+    [...l.matchAll(/\((?:ADR-(\d{4}) governs|(?:your edit names|you edit) ADR-(\d{4}))/g)]
+      .map((m) => (m[1] ? { adr: m[1], via: 'path' as const } : { adr: m[2]!, via: 'text' as const })))
+
 /** Rule files whose stamp no longer matches their ADR. */
 export function staleRules({ adrs, rules }: AdrRuleInput): string[] {
   return Object.entries(rules)

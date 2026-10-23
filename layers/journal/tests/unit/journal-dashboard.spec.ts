@@ -459,12 +459,6 @@ describe('sessionCardViews', () => {
     expect(without!.ideas).toEqual([])
   })
 
-  it('surfaces authored relevant ADRs, and defaults them to [] when absent', () => {
-    const relevantAdrs = [{ adr: 9, reason: 'changes the session log' }]
-    expect(sessionCardViews([session({ relevantAdrs })])[0]!.relevantAdrs).toEqual(relevantAdrs)
-    expect(sessionCardViews([session()])[0]!.relevantAdrs).toEqual([])
-  })
-
   it('normalizes `external` to a boolean, defaulting to false when absent (ADR-0009)', () => {
     const [marked] = sessionCardViews([session({ external: true })])
     expect(marked!.external).toBe(true)

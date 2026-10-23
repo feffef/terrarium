@@ -5,6 +5,7 @@
 // merge rules, and prove a stitched entry satisfies the frozen schema.
 import { describe, expect, it } from 'vitest'
 import {
+  adrReadInFull,
   NOT_READ_REASON,
   DERIVED_REASON_COMMAND,
   DERIVED_REASON_EDITED,
@@ -27,6 +28,7 @@ import { validateEntry } from '../../scripts/session/journal-files.ts'
 import { DERIVED_REASON } from '../../shared/trace-fields.ts'
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { buildDocLineIndex } from '../../scripts/session/shell-reads.ts'
+import { adrHintLine } from '../../scripts/lib/adr-rules.ts'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -314,6 +316,12 @@ describe('rulesFollowedUp — a rule whose ADR was read after it loaded', () => 
     expect(extractTrace(records, NO_ENV).rulesFollowedUp).toEqual([])
   })
 
+  it('shares its full-read test as adrReadInFull()', () => {
+    expect(adrReadInFull([...base, read('/repo/docs/adr/0012-x.md')], '0012')).toBe(true)
+    expect(adrReadInFull([...base, read('/repo/docs/adr/0012-x.md')], '0004')).toBe(false)
+    expect(adrReadInFull([...base, { type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/docs/adr/0012-x.md', offset: 5 } }] } }], '0012')).toBe(false)
+  })
+
   it('folds in a subagent, and is written by the stitch and accepted by the schema', () => {
     const trace = extractTrace(base, NO_ENV)
     const sub = [...parseTranscript(subagentTranscript), rule('/repo/.claude/rules/adr-0012.md'), read('/repo/docs/adr/0012-x.md')]
@@ -322,6 +330,42 @@ describe('rulesFollowedUp — a rule whose ADR was read after it loaded', () => 
     const authored: AuthoredScratch = { session: 'session_01RF', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
     const entry = stitch(authored, folded)
     expect(entry.rulesFollowedUp).toEqual(['.claude/rules/adr-0012.md'])
+    expect(validateEntry(entry).ok).toBe(true)
+  })
+})
+
+describe('adrHints — the ADRs adr-read-hint pointed to', () => {
+  const hint = (adrs: [string, 'path' | 'text'][]) => ({
+    type: 'attachment',
+    attachment: { type: 'hook_additional_context', content: [adrHintLine(adrs.map(([adr, via]) => ({ adr, via, doc: `docs/adr/${adr}-x.md`, file: 'GLOSSARY.md' })))] },
+  })
+  const read = (file_path: string) => ({ type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path } }] } })
+  const base = parseTranscript(transcript)
+
+  it('finds each pointer, and whether a full read followed it', () => {
+    const records = [...base, read('/repo/docs/adr/0004-x.md'), hint([['0021', 'path'], ['0004', 'text']]), read('/repo/docs/adr/0021-x.md'), hint([['0004', 'text']])]
+    expect(extractTrace(records, NO_ENV).adrHints).toEqual([
+      { adr: 21, via: 'path', readAfter: true, by: 'main' },
+      { adr: 4, via: 'text', readAfter: false, by: 'main' },
+    ])
+    expect(extractTrace(base, NO_ENV).adrHints).toEqual([])
+  })
+
+  it("folds subagents' in as by: subagent, one entry per (adr, via, by), read if any context read it", () => {
+    const main = extractTrace([...base, hint([['0021', 'path']])], NO_ENV)
+    const sub = (more: Record<string, unknown>[]) => ({ records: [...parseTranscript(subagentTranscript), hint([['0021', 'path']]), ...more] })
+    const folded = foldSubagentTrace(main, [sub([]), sub([read('/repo/docs/adr/0021-x.md')])], NO_ENV)
+    expect(folded.adrHints).toEqual([
+      { adr: 21, via: 'path', readAfter: false, by: 'main' },
+      { adr: 21, via: 'path', readAfter: true, by: 'subagent' },
+    ])
+  })
+
+  it('is written by the stitch only when non-empty, and accepted by the schema', () => {
+    const authored: AuthoredScratch = { session: 'session_01AH', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+    expect('adrHints' in stitch(authored, extractTrace(base, NO_ENV))).toBe(false)
+    const entry = stitch(authored, extractTrace([...base, hint([['0004', 'text']])], NO_ENV))
+    expect(entry.adrHints).toEqual([{ adr: 4, via: 'text', readAfter: false, by: 'main' }])
     expect(validateEntry(entry).ok).toBe(true)
   })
 })
@@ -594,13 +638,6 @@ describe('stitch()', () => {
     expect(validateEntry(withNotes).ok).toBe(true)
   })
 
-  it('carries authored relevantAdrs through, and omits them when absent', () => {
-    expect('relevantAdrs' in entry).toBe(false)
-    const relevantAdrs = [{ adr: 9, reason: 'changes the session log' }]
-    const withAdrs = stitch({ ...scratch, relevantAdrs }, trace)
-    expect(withAdrs.relevantAdrs).toEqual(relevantAdrs)
-    expect(validateEntry(withAdrs).ok).toBe(true)
-  })
 })
 
 describe('docsReadViaShell (issues #1074, #1545)', () => {

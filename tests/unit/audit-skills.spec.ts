@@ -4,6 +4,8 @@
 // the Skill.
 import { describe, expect, it } from 'vitest'
 import {
+  adrHintReport,
+  adrReadReport,
   buildBrief,
   buildDocReadCounts,
   buildSkillRows,
@@ -59,6 +61,8 @@ function sess(over: Partial<Session> = {}): Session {
     humanPromptedClosure: false,
     docsRead: [],
     docsReadBySubagents: [],
+    filesEdited: [],
+    adrHints: [],
     trigger: null,
     ...over,
   }
@@ -260,6 +264,8 @@ describe('toSession() — external exclusion (ADR-0009)', () => {
       humanPromptedClosure: true,
       docsRead: ['CLAUDE.md'],
       docsReadBySubagents: [],
+      filesEdited: [],
+      adrHints: [],
       trigger: null,
     })
   })
@@ -966,9 +972,49 @@ describe('one-Skill query', () => {
   it('matches open issues by whole-token Skill name in title or body, skipping PRs', () => {
     const r = (number: number, title: string, body: string | null, extra = {}) => ({ number, title, body, labels: [], updated_at: '2026-10-01T00:00:00Z', ...extra })
     const got = issuesNamingSkill(
-      [r(1, 'adr-check is slow', null), r(2, 'other', 'see `adr-check`'), r(3, 'other', 'adr-checker'), r(4, 'adr-check', '', { pull_request: {} })],
-      'adr-check',
+      [r(1, 'tdd is slow', null), r(2, 'other', 'see `tdd`'), r(3, 'other', 'tdd-ish'), r(4, 'tdd', '', { pull_request: {} })],
+      'tdd',
     )
     expect(got.map((i) => i.number)).toEqual([1, 2])
+  })
+})
+
+describe('governing-ADR reads', () => {
+  const rule = (paths: string[]) => `---\nadr: x\npaths:\n${paths.map((p) => `  - "${p}"`).join('\n')}\n---\nbody\n`
+  const rules = [
+    { file: 'adr-0004.md', text: '---\nadr: x\n---\nloads at session start\n' },
+    { file: 'adr-0004-human-merge.md', text: rule(['scripts/hooks/**']) },
+    { file: 'adr-0021.md', text: rule(['GLOSSARY.md', 'layers/*/GLOSSARY.md']) },
+    { file: 'adr-0029.md', text: rule(['.claude/rules/**', 'scripts/hooks/**']) },
+    { file: 'guards.md', text: rule(['scripts/hooks/**']) },
+  ]
+  const adr = (n: string) => `docs/adr/${n}-x.md`
+
+  it('counts each session-ADR pair a rule path governs, and which were read in full by the session or a subagent', () => {
+    const sessions = [
+      sess({ session: 'a', kind: 'interactive', filesEdited: ['scripts/hooks/x.ts', 'GLOSSARY.md'], docsRead: [adr('0004'), adr('0021')], docsReadBySubagents: [adr('0021')] }),
+      sess({ session: 'b', kind: 'autonomous', filesEdited: ['layers/atlas/GLOSSARY.md'], docsRead: ['docs/adr/0021'] }),
+      sess({ session: 'c', kind: 'autonomous', filesEdited: ['scripts/hooks/y.ts'], docsRead: [adr('0029'), adr('0004')] }),
+      sess({ session: 'd', kind: 'autonomous', filesEdited: ['README.md'], docsRead: [adr('0004')] }),
+    ]
+    expect(adrReadReport(sessions, rules)).toEqual({
+      all: { sessions: 4, governed: 3, pairs: 6, readInFull: 4, readInFullPct: 67, readAll: 1, readNone: 1 },
+      interactive: { sessions: 1, governed: 1, pairs: 3, readInFull: 2, readInFullPct: 67, readAll: 0, readNone: 0 },
+      autonomous: { sessions: 3, governed: 2, pairs: 3, readInFull: 2, readInFullPct: 67, readAll: 1, readNone: 1 },
+    })
+  })
+
+  it('counts hinted contexts per ADR and via, main and subagents apart, and the share read after', () => {
+    const hint = (adr: number, readAfter: boolean, by: 'main' | 'subagent' = 'main', via: 'path' | 'text' = 'path') => ({ adr, via, readAfter, by })
+    const sessions = [sess({ adrHints: [hint(4, true), hint(4, false, 'subagent'), hint(4, false, 'main', 'text'), hint(21, false)] }), sess({ adrHints: [hint(4, true)] })]
+    expect(adrHintReport(sessions)).toEqual({
+      'ADR-0004 path': { contextsHinted: 3, readAfter: 2, readAfterPct: 67 },
+      'ADR-0004 text': { contextsHinted: 1, readAfter: 0, readAfterPct: 0 },
+      'ADR-0021 path': { contextsHinted: 1, readAfter: 0, readAfterPct: 0 },
+    })
+  })
+
+  it('reports no percentage when nothing is governed', () => {
+    expect(adrReadReport([sess()], rules).all).toEqual({ sessions: 1, governed: 0, pairs: 0, readInFull: 0, readInFullPct: null, readAll: 0, readNone: 0 })
   })
 })

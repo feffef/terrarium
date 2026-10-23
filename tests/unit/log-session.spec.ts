@@ -82,22 +82,12 @@ describe('validateEntry() — the L1 stand-in', () => {
     expect(validateEntry(valid).ok).toBe(true)
   })
 
-  it('accepts optional relevantAdrs as ADR numbers with a reason, and refuses other shapes', () => {
-    const relevantAdrs = [{ adr: 9, reason: 'changes the session log' }]
-    expect(validateEntry({ ...valid, relevantAdrs }).ok).toBe(true)
-    expect(validateEntry({ ...valid, relevantAdrs: [{ adr: 'ADR-0009', reason: 'r' }] }).ok).toBe(false)
-    expect(validateEntry({ ...valid, relevantAdrs: [{ adr: 9 }] }).ok).toBe(false)
+  it('accepts derived adrHints and refuses other shapes, and never takes them authored', () => {
+    const adrHints = [{ adr: 4, via: 'text', readAfter: false, by: 'main' }]
+    expect(validateEntry({ ...valid, adrHints }).ok).toBe(true)
+    expect(validateEntry({ ...valid, adrHints: [{ adr: 4, via: 'bash', readAfter: false, by: 'main' }] }).ok).toBe(false)
     const authored = { session: 's', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
-    expect(validateAuthored({ ...authored, relevantAdrs }).ok).toBe(true)
-  })
-
-  it('merges relevantAdrs by ADR number on re-fire, the later pass winning', () => {
-    const base = { session: 's', goal: 'g', status: 'completed' as const, outcome: 'o', summary: 's', frictions: [] }
-    const merged = mergeAuthored(
-      { ...base, relevantAdrs: [{ adr: 9, reason: 'old' }, { adr: 4, reason: 'gate' }] },
-      { ...base, relevantAdrs: [{ adr: 9, reason: 'new' }] },
-    )
-    expect(merged.relevantAdrs).toEqual([{ adr: 9, reason: 'new' }, { adr: 4, reason: 'gate' }])
+    expect(validateAuthored({ ...authored, adrHints }).ok).toBe(false)
   })
 
   it('rejects a non-string entry in learnings (must be a plain string array)', () => {

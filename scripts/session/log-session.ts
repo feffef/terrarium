@@ -31,7 +31,7 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
 import { z } from 'zod'
-import { relevantAdr, ruleVerdict, usefulVerdict } from '../../shared/schemas/session.ts'
+import { ruleVerdict, usefulVerdict } from '../../shared/schemas/session.ts'
 import { sessionUrl } from '../../shared/session-url.ts'
 import { fetchOriginMain, git, SESSION_TRAILER, tryGit } from '../lib/git.ts'
 import { FALLBACK_MODEL, provenanceFooter } from './commit-trailer.ts'
@@ -103,7 +103,6 @@ const authoredScratchSchema = z
     // Optional authored fields (single home: the manifest) — omit when empty.
     learnings: z.array(z.string()).optional(),
     ideas: z.array(z.string()).optional(),
-    relevantAdrs: z.array(relevantAdr).optional(),
   })
   .strict()
 
@@ -112,6 +111,7 @@ const authoredScratchSchema = z
  *  names the rule instead, because the correct next action is not obvious from the
  *  generic error (issue #1074). */
 const DERIVED_ONLY_FIELDS: Record<string, string> = {
+  adrHints: 'derived from the adr-read-hint pointers in the transcript.',
   docsReadViaShell:
     `shell reads fold into docsRead; answer them there, with a reason or '${NOT_READ_REASON}' (log-session Skill, step 3).`,
 }
@@ -168,7 +168,6 @@ export function mergeAuthored(existing: AuthoredScratch | undefined, incoming: A
     prs: union(existing.prs, incoming.prs),
     learnings: union(existing.learnings, incoming.learnings),
     ideas: union(existing.ideas, incoming.ideas),
-    relevantAdrs: unionBy(existing.relevantAdrs, incoming.relevantAdrs, (x) => String(x.adr)),
   }
 }
 

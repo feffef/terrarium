@@ -12,7 +12,8 @@ readouts derived from the repo and daily Digests.
   (ADR-0021).
 - **It holds three kinds of content:**
   - session logs: one honest self-report per session, written by that
-    session's agent and never changed by another session;
+    session's agent and changed by no other session, bar the field removal
+    ADR-0009 allows;
   - Inventories: readouts derived from the repo and refreshed in place, such
     as the Skill Inventory and the Friction Ledger;
   - Digests: daily summaries derived from the other records (ADR-0010).

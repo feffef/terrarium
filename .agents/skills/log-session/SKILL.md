@@ -81,8 +81,6 @@ learnings:                         # OPTIONAL — omit unless something sparked
   - Nuxt layer `~/` resolves to the main app, not the layer  # each a short string
 ideas:                             # OPTIONAL — omit unless something sparked
   - Auto-cluster recurring `ideas` entries into GitHub issues weekly, so an idea doesn't die in a YAML file no one re-reads
-relevantAdrs:                      # OPTIONAL — ADRs you judged relevant (typically adr-check's)
-  - { adr: 9, reason: "Changed what the session log records" }  # ADR number, one-line reason
 ```
 
 - **`kind` is judged by who prompted, not by what the session did:**

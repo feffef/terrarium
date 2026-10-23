@@ -189,11 +189,4 @@ learnings:
   - "A Friction's solution and a session-log idea differ in altitude: the solution is the first fix for that one pain, an idea is a higher-level proposal the session only inspired (from the Trusted user)"
 ideas:
   - "Run an added instruction like a reverse prune trial: when a Skill gains a step (like this look-back), ledger it with a window and a measurable verdict from later logs, e.g. whether completed logs' look-back Frictions, learnings and ideas name kinds of cost earlier passes missed, so added text must earn its place the way cut text does"
-relevantAdrs:
-  - adr: 9
-    reason: close-session and the completed re-log
-  - adr: 15
-    reason: retro is a pack Skill, not editable
-  - adr: 27
-    reason: cut before add; checked no prune trial covers close-session
 landedBy: Stop

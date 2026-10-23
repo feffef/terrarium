@@ -245,7 +245,6 @@ export function sessionCardViews(
       frictions: [...s.frictions].sort((a, b) => SEVERITY_RANK[a.severity] - SEVERITY_RANK[b.severity]),
       learnings: s.learnings ?? [],
       ideas: s.ideas ?? [],
-      relevantAdrs: s.relevantAdrs ?? [],
       filesEdited: s.filesEdited ?? [],
       docsReadViaShell: s.docsReadViaShell ?? [],
       rules: [

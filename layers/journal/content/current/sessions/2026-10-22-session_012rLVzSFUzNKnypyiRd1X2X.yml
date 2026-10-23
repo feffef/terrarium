@@ -182,9 +182,4 @@ entrypoint: remote_mobile
 cliVersion: 2.1.308
 ideas:
   - Unify the Journal's three duration formats (sessionDurationLabel '9 h 56 min', routineRuns '1h 5m', subagentUsageLabel '3m 12s') into one formatDuration util with an hours branch, so a two-hour subagent stops showing '120m 0s'
-relevantAdrs:
-  - adr: 8
-    reason: Journal display of session logs
-  - adr: 4
-    reason: gate, review and who merges
 landedBy: Stop
