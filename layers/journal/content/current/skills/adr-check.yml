@@ -64,3 +64,13 @@ observations:
       already-tracked pattern, but #2286's analysis already quantifies this
       window's autonomous-sweep non-use in aggregate, so no new comment.
       Grade/role unchanged (essential) pending #2286's decision, due today.
+  - date: "2026-10-23"
+    note: >-
+      10/10 newest invocations delivered. One more instance of the
+      scheduled/autonomous-sweep silent-skip pattern tracked on #2286:
+      session_0149fVyZ37qWGMuwVPw3Uryc (prune-trial, PR #2412) edited real
+      repo instructions with zero adr-check trace (skillsUsed/docsRead/
+      docsReadBySubagents) and no Friction naming the gap — a 5th instance
+      beside the four already cited there. Commented onto #2286 (still
+      open, review overdue since 2026-10-22T10:00Z). Grade/role unchanged
+      (essential).

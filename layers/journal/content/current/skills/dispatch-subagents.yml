@@ -431,3 +431,13 @@ observations:
       it; the session's own outcome left it for the owner to decide rather
       than filing. Worth escalating if it recurs or if a human wants it
       filed now. Grade/role unchanged (essential).
+  - date: "2026-10-23"
+    note: >-
+      10/10 usedIn clean (no stranding, no merge-pr.ts-to-subagent, no new
+      collision beyond the already-closed-not_planned #1480/#1586 shapes
+      recurring self-caught); check:worktrees passes. One new,
+      single-instance, unverified-severity note: session_01JkRFBik4MUWwZcP45q7egk
+      found SKILL.md's "run the gate in the foreground" line contradicts
+      CLAUDE.md's "background anything over 2 minutes" rule; it followed
+      CLAUDE.md and the gate passed, no damage. Worth escalating if it ever
+      causes a real backgrounding failure. Grade/role unchanged (essential).

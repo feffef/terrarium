@@ -275,3 +275,14 @@ observations:
       (2026-10-20 digest, PR #2351 - rollup matches, fact-check fixed 2
       claims pre-merge). Retention sweep holds exactly 7 consecutive dates.
       No reverts in the 2-week sweep. Grade/role unchanged.
+  - date: "2026-10-23"
+    note: >-
+      Fourth occurrence of the "retention sweep's side effects reach
+      outside its own Space" pattern, as #2105's closing comment asked to
+      be reopened for: session_01T4UbBvJmjSunCwb3cUN68Q (PR #2394) hit a
+      hardcoded path in tests/unit/log-session.spec.ts, a different root
+      cause than the first three (#2108's e2e prose-assertion fix doesn't
+      cover it). Caught and fixed loudly in-session, correctly left for
+      human merge (test fix outside digest's allowed diff, ADR-0003).
+      Reopened #2105 with this evidence; relabeled needs-triage. Grade/role
+      unchanged (routine).
