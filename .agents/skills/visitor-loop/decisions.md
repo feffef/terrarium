@@ -23,3 +23,4 @@ here is dropped. One line each, in the order added, citing the PR where it was m
 - The Glass Box landing's terms stay a compact chip strip, not prominent cards (owner, #2178, 2026-10-16).
 - No "How to Read a Session Log" Journal page or "New here?" card for it (owner, 2026-10-18).
 - No "Try it in your project" page or landing link collecting every Lesson's exercise; the exercise stays inside each Lesson (owner, 2026-10-18).
+- No RSS/Atom feeds for the Journal Digests or the Blog for now; a visitor asking for one is not a finding (owner, #2415, 2026-10-23).
