@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Wd2WvrPmFRYHAZmf7DYnrG
 startedAt: 2026-10-23T16:48:26Z
-endedAt: 2026-10-23T17:32:30Z
+endedAt: 2026-10-23T17:35:28Z
 kind: autonomous
 goal: "visitor-loop run, focus midden: fix what visitors agreed on, build one feature"
-status: in-review
-outcome: "Fix PR #2460 merged; feature PR #2462 open, gate green locally"
-summary: "Scheduled visitor-loop run (agent-initiated, no human prompt). Focus row 3, the Midden. Served a production preview, sent three blind visitors (sonnet, fable, opus), tallied consensus, and sent the tally to the refiner. Seven consensus findings: four fixed (latest finds name their report, find shows its season's dates, trench list and pager ordered newest stratum first, a removal commit shown once), one fixed through the gloss layer instead of editing authored cards (drift), two dropped on owner rulings (strata plate #1709, footer #1624). The refiner also dropped my first-choice feature (a by-season browser) as a rebuild of the legend the owner removed in c399e92; I replaced it with an \"In this report\" jump list for the feature PR. Reviewed with code-review, applied its follow-ups, gate:scoped green, merged PR #2460 on green CI. Then built the jump list as PR #2462 (reviewed, gate green); still open: its CI and merge."
+status: completed
+outcome: "Fix PR #2460 and feature PR #2462 both merged on green CI"
+summary: "Scheduled visitor-loop run (agent-initiated, no human prompt). Focus row 3, the Midden. Served a production preview, sent three blind visitors (sonnet, fable, opus), tallied consensus, and sent the tally to the refiner. Seven consensus findings: four fixed (latest finds name their report, find shows its season's dates, trench list and pager ordered newest stratum first, a removal commit shown once), one fixed through the gloss layer instead of editing authored cards (drift), two dropped on owner rulings (strata plate #1709, footer #1624). The refiner also dropped my first-choice feature (a by-season browser) as a rebuild of the legend the owner removed in c399e92; I replaced it with an \"In this report\" jump list for the feature PR. Reviewed with code-review, applied its follow-ups, gate:scoped green, merged PR #2460 on green CI. Then built the jump list as PR #2462 (reviewed, gate green) and merged it. No out-of-remit finding survived, so no issue was filed; unbuilt ideas are in `ideas`."
 prs:
   - "2460"
   - "2462"
@@ -68,11 +68,14 @@ frictions:
   - description: The Stop hook twice asked me to push while gate:scoped was still running, against ADR-0004's gate-before-first-push rule.
     solution: The hook could stay quiet while a gate log is open; I ignored it and pushed after the gate was green.
     severity: nit
-durationSec: 2643
+  - description: Preview start printed PID on the third-last line; my `tail -3` dropped it and the first stop call failed, leaving a server up until I read the log.
+    solution: preview.ts could print PID last, or accept stop without an argument for the newest server.
+    severity: nit
+durationSec: 2821
 models:
-  claude-sonnet-5-5: 188
+  claude-sonnet-5-5: 199
 toolCounts:
-  Bash: 61
+  Bash: 63
   Read: 7
   Monitor: 5
   ToolSearch: 1
@@ -80,13 +83,13 @@ toolCounts:
   mcp__github__search_issues: 2
   Write: 1
   SendMessage: 1
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 2
   mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 1
-  ReadNotifications: 3
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  ReadNotifications: 5
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
 filesEdited:
   - layers/midden/app/pages/t/midden/[space]/[...slug].vue
   - layers/midden/tests/e2e/midden.spec.ts
@@ -129,6 +132,28 @@ docsReadBySubagents:
   - docs/adr/0006-runtime-routing-path-prefix.md
   - docs/adr/0016-tenant-root-layer-routes.md
   - .agents/skills/midden-catalogue/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the first push; the summary was enough, I did not open the ADR.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself and subscribe; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the session-header line for PR and comment bodies; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Pointed to close-session for the log; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Kept the front-door change to three report titles instead of every page; the refiner cited it too.
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded when I read Midden components; naming and auto-import rules held, the full doc was not needed.
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded though I touched no Human-only file; its paths seem to match something broad I only read.
+    useful: no
 subagents:
   - type: general-purpose
     task: Visitor sonnet
@@ -136,52 +161,52 @@ subagents:
     durationSec: 131
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 2.8
+    tokenShare: 2.7
   - type: general-purpose
     task: Visitor fable
     model: fable
     durationSec: 331
     toolCalls: 33
     modelCalls: 13
-    tokenShare: 5.5
+    tokenShare: 5.2
   - type: general-purpose
     task: Visitor opus
     model: opus
     durationSec: 216
     toolCalls: 22
     modelCalls: 18
-    tokenShare: 5.6
+    tokenShare: 5.3
   - type: general-purpose
     task: Refiner fit check
     model: opus
     durationSec: 269
     toolCalls: 48
     modelCalls: 29
-    tokenShare: 14.3
+    tokenShare: 13.6
   - type: general-purpose
     task: "Review: standards axis"
     durationSec: 49
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: general-purpose
     task: "Review: spec axis"
     durationSec: 46
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: general-purpose
     task: "Review: standards axis"
     durationSec: 23
     toolCalls: 8
     modelCalls: 3
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: "Review: spec axis"
     durationSec: 25
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 1.9
+    tokenShare: 1.8
 gitBranch: claude/adoring-galileo-qtegrz
 entrypoint: remote_trigger
 cliVersion: 2.1.309
