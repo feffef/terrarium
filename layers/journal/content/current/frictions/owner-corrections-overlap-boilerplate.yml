@@ -24,3 +24,8 @@ occurrences:
     severity: minor
     description: "owner-corrections.ts listed 16 candidates; 13 came from file overlap with unrelated Journal Friction Ledger PRs, and each needed its own tally line."
     solution: "Skip overlap candidates whose title and body never name a visitor-loop PR."
+  - session: session_0195CYW3YBg2stBS6aGigmbp
+    date: "2026-10-22"
+    severity: minor
+    description: "owner-corrections.ts printed 19 candidates for ten PRs, almost all routine bot content PRs; resolving them took several GitHub reads that the previous run had already done."
+    solution: "Have the script skip PRs whose title matches a known routine prefix (glassbox-update, journal(digest), blog(...)) or whose author is a Routine session."

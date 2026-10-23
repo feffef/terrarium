@@ -20,11 +20,6 @@ fixes:
     date: "2026-10-16"
     summary: "Made the shell-read advisory's text neutral: it no longer calls a disputed credit a false positive and tells the agent to check the transcript for the earlier reader."
 occurrences:
-  - session: session_01CF4k9jXS9wLrcPVsGduZmn
-    date: "2026-10-08"
-    severity: moderate
-    description: "SHELL-READ-DETECTION miss: `cat docs/adr/0009-session-logs-commit-directly-to-main.md && echo ===== && cat docs/adr/0003-agent-operating-model-and-governance.md && echo ===== && cat docs/adr/0004-objective-safety-gate.md` overflowed, the harness persisted the output to a tool-results file and showed a 2KB preview, and I read the full text with Read on that file; the detector credits only ADR-0009 (in the preview) and reports ADR-0003 and ADR-0004 as 'named by the command, but its output shows no line of this doc'. Both were read in full. Same session: .agents/skills/triage/SKILL.md was credited because an issue comment printed by `gh api .../issues/348/comments` quoted a line of it, which is a GitHub body echoing a doc, not a read."
-    solution: "Let the trace follow a persisted-output pointer ('Full output saved to: <path>') and match the saved file's content, or treat a Read of a tool-results file as the Bash command's output. For the quoted-line case, consider excluding output of gh api calls that return GitHub bodies."
   - session: session_01VaPP7iMRxMvKvX8KQh1qeY
     date: "2026-10-09"
     severity: moderate

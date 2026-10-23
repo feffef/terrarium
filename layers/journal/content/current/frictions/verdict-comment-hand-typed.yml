@@ -8,6 +8,7 @@ status: open
 fixes: []
 notes: |-
   2026-10-21 design: a pr-workflow line or a guard on hand-typed SHAs and paths dropped: all 8 sessions read pr-workflow.md and slipped anyway, merge-pr.ts already refuses a wrong Reviewed SHA and prints the line, and a guard is a Human-only edit for a nit-level cost.
+  2026-10-23 design: a merge-pr.ts flag or hand-typed-value guard dropped again: merge-pr.ts already refuses a wrong Reviewed SHA and prints the exact line, so a slip costs one edit, and a guard is a Human-only edit.
 occurrences:
   - session: session_01Sc82qSCs4NVP3igf9SaGXM
     date: "2026-10-17"
@@ -54,3 +55,18 @@ occurrences:
     severity: nit
     description: "My first verdict comment on PR 2360 named the oldest commit as Reviewed, because I took the build output's commit list order for newest-first; corrected by an edit."
     solution: "Take the Reviewed sha from git rev-parse HEAD in the worktree, never from the workflow's commits list."
+  - session: session_0149fVyZ37qWGMuwVPw3Uryc
+    date: "2026-10-22"
+    severity: minor
+    description: "Typed the Reviewed: SHA in the PR verdict from memory; it was wrong and I corrected the comment (CLAUDE.md Verify before you state)."
+    solution: "Run git rev-parse HEAD before writing the verdict."
+  - session: session_01G2d5G6TrdoTQYQr7S2Eu7o
+    date: "2026-10-22"
+    severity: nit
+    description: "First verdict named the CI comment's sha (a merge ref), not the PR head; merge-pr refused until a corrected verdict."
+    solution: "Take the sha from the PR head via git rev-parse HEAD, not the CI comment."
+  - session: session_0195CYW3YBg2stBS6aGigmbp
+    date: "2026-10-22"
+    severity: nit
+    description: "Typed an invented commit hash in the verdict comment on PR 2414 instead of copying the real head; caught before merging and corrected with a second comment."
+    solution: "Print the head hash and paste it, never type it; merge-pr.ts would have refused the verdict anyway."

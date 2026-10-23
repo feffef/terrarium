@@ -489,3 +489,8 @@ occurrences:
     severity: minor
     description: "Read GLOSSARY-MAP, GLOSSARY and two docs in one cat that truncated at 30KB; never read the rest of GLOSSARY or the full git-conventions."
     solution: "Read each required doc with its own Read call."
+  - session: session_0195CYW3YBg2stBS6aGigmbp
+    date: "2026-10-22"
+    severity: minor
+    description: "Root GLOSSARY.md was catted together with other docs; output overflowed to a file and I read only its first 2KB, not the whole glossary the start-of-session rule requires."
+    solution: "Read big required docs in their own Read call so truncation is visible."

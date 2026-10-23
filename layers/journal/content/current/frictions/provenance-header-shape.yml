@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-10"
     summary: "The provenance rule now requires only the session link, not a model name, and its example label is 'Claude'."
 occurrences:
-  - session: session_01SVbTmvqHK7xdAcGtG4SfKL
-    date: "2026-10-08"
-    severity: nit
-    description: "ADR-0017 says the provenance header names the model, the harness forbids model names, and the guard accepts any label. I again used a model-less Claude header on #1684 and the #1676 comment."
-    solution: "Tracked as #1684: reword ADR-0017 so the label is free text."
   - session: session_01Pps6pXDX7ahChHwQajVZNc
     date: "2026-10-09"
     severity: nit

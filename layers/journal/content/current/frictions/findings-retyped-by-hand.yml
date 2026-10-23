@@ -23,11 +23,6 @@ fixes:
     date: "2026-10-19"
     summary: "save-handback now returns the message of a SubagentHandback tool call instead of refusing the hand-back."
 occurrences:
-  - session: session_017tt8CbwHqFWqw7PJZ7u7AL
-    date: "2026-10-08"
-    severity: moderate
-    description: "Checkers cannot see my context, so I retyped about 12k tokens of reviewer findings into scratchpad pool files before they could be verified."
-    solution: "Have reviewers write findings to a scratchpad file themselves (numbered, with exact replacement text) so checkers can read them directly."
   - session: session_01GbMt1vGTDZpQxZ3h4pNsF8
     date: "2026-10-11"
     severity: moderate

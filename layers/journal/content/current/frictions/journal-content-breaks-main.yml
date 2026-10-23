@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Session logs and Digests land on main without a gate (ADR-0009) while e2e tests and the strict session schema assert on them, so one log turns main and every open PR red.
 surface: safe
-status: tracked
-ref: "Issue #2398 (regression of #2108). issue #1784; PR #1792 (regressed); issue #2105; PR #2103 blocked on it; fix PR from frictions-to-fixes 2026-10-16"
+status: open
+ref: "Issue #2398 (regression of #2108) closed by PR #2394; a guard against tests reading content/current paths waits for a recurrence. Earlier: issue #1784; PR #1792 (regressed); issue #2105."
 fixes:
   - pr: 1748
     date: "2026-10-10"
@@ -16,17 +16,10 @@ fixes:
   - pr: 2108
     date: "2026-10-16"
     summary: "Removed a browser-test assertion that an archived session log's wording could turn red."
+  - pr: 2394
+    date: "2026-10-22"
+    summary: "A unit test that read a session log by its current path now reads the archived copy, so the retention sweep no longer turns the gate red."
 occurrences:
-  - session: session_01CF4k9jXS9wLrcPVsGduZmn
-    date: "2026-10-08"
-    severity: moderate
-    description: "The e2e smoke tests' not.toContain('No document at') checks can be tripped by any Journal content that quotes the 404 page, which an idea in a session log did; main's push gate went red for three runs and every open PR with it."
-    solution: "PR 1695 matches the markup. Consider the same review for other prose-substring assertions in the e2e suites."
-  - session: session_01KCWd4fWsUfUxL6uT4Bephj
-    date: "2026-10-08"
-    severity: moderate
-    description: "Retention sweep archived a Digest that a blog e2e test hard-coded under current, failing the gate and forcing an out-of-scope test edit."
-    solution: "Make the blog e2e check date-independent, or have the digest Skill warn that the sweep can break date-pinned tests."
   - session: session_015BjYk46dntcMuAWMn1z4Zw
     date: "2026-10-10"
     severity: major

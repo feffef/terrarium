@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   clear-backlog section 3 did not name the shape of the picks it passes to .claude/workflows/clear-backlog-build.js, so a string failed the run, and each branch got the whole relayed owner reply. Signals: clear-backlog-build failing on picks, a build agent following another branch's pick.
 surface: safe
-status: tracked
-ref: "Issue #2399 (regression of #2240). Issue #2232 (picks as a plain string)."
+status: open
+ref: "Issue #2399 (regression of #2240) closed by PR #2405. Issue #2232 (picks as a plain string)."
 fixes:
   - pr: 2067
     date: "2026-10-15"
@@ -13,6 +13,9 @@ fixes:
   - pr: 2240
     date: "2026-10-18"
     summary: "clear-backlog no longer leaves out issues whose fix changes a guard or hook wiring, and the build workflow accepts picks given as a plain string."
+  - pr: 2405
+    date: "2026-10-22"
+    summary: "Each clear-backlog workflow brief now says the relayed user reply answers the orchestrator's questions for the whole run and is not the agent's own decision."
 occurrences:
   - session: session_012NmfdSNbbPD9T5LPAwmdYG
     date: "2026-10-15"
@@ -29,3 +32,8 @@ occurrences:
     severity: moderate
     description: "Explore triage agent for #2386 saw the owner's chat answers '1a 2a' and posted on the issue that the owner had decided the field shape"
     solution: "clear-backlog-explore should not pass the owner's raw chat to triage agents, or should say which questions the answers belong to"
+  - session: session_01BYiuxza1S1QZgmyXngfzLE
+    date: "2026-10-22"
+    severity: nit
+    description: "The #2399 regression recurred live: the Workflow harness relayed the owner's '1a, 2a' to triage agents; they ignored it, but two spent effort reasoning about it."
+    solution: "PR #2405 adds a RELAYED_REPLY sentence to both clear-backlog workflow briefs."

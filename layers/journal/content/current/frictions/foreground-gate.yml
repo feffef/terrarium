@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Sessions run pnpm gate:scoped (about 3 minutes) in the foreground although CLAUDE.md says to background commands over 2 minutes; only a guard would reach them.
 surface: guard-or-hook
-status: open
-ref: "issue #2265 closed by PR #2271; fix #1790 did not hold"
+status: tracked
+ref: "issue #2426 (regression of #2271). Earlier: issue #2265 closed by PR #2271; fix #1790 did not hold"
 fixes:
   - pr: 1790
     date: "2026-10-11"
@@ -49,3 +49,8 @@ occurrences:
     severity: nit
     description: "Ran the full vitest suite in the foreground (about 3 minutes) instead of run_in_background as CLAUDE.md requires; it fit under the 600s cap."
     solution: "Start the full suite with run_in_background and a redirected output file from the first call."
+  - session: session_01EjH3TbrydEY2sArBMYE5Gy
+    date: "2026-10-22"
+    severity: minor
+    description: "Broke CLAUDE.md's Self-verification rule: started one gate:scoped with shell & instead of run_in_background, and ran the next in the foreground with a 600s timeout"
+    solution: "Start every gate:scoped with run_in_background true and output redirected to a file, as CLAUDE.md says"
