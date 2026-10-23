@@ -101,6 +101,11 @@ Large results overflow your context. Keep them small and read every hit.
 - **Check a PR's gate with `pull_request_read` method `get_check_runs`, not
   `get_status`.** The combined-status API reports `total_count: 0` / pending for
   Actions-based gates, which wrongly suggests the gate has not run.
+- **Read a red check's annotations before its log:**
+  `gh api repos/{owner}/{repo}/check-runs/{id}/annotations`, filtered to
+  `annotation_level: failure`, usually names the failing file and message. The
+  REST job-log download 403s in the cloud (its blob redirect is blocked); for
+  `get_job_logs`, see "Three calls return huge output" above.
 - **CI success is not delivered natively.** A green gate wakes a subscribed
   session only through the comment the gate action posts on green (its "doorbell",
   `.github/actions/gate/action.yml`; none on a fork PR). Poll
