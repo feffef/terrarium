@@ -79,7 +79,6 @@ describe('triggeredDocs()', () => {
       ['gh issue', [GH]],
     ]
     for (const [command, docs] of cases) expect(bashDocs(command), command).toEqual(docs)
-    expect(triggeredDocs('mcp__github__issue_read', undefined).map((r) => r.doc)).toEqual([GH])
   })
 
   it('matches every mcp__github__ tool and no other tool', () => {
