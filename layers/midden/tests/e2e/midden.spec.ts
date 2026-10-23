@@ -66,6 +66,13 @@ describe('midden Tenant', async () => {
     expect(html).toMatch(/midden-latest__meta[^>]*>[^<]*· in [^<]+ · assessed/)
   })
 
+  it('lists a report\'s finds with anchors to their cards', async () => {
+    const html = (await $fetch('/t/midden/trench/stood-down')) as string
+    const anchors = [...html.matchAll(/<a href="#(artifact-[a-z0-9-]+)"/g)].map((m) => m[1]!)
+    expect(anchors.length).toBeGreaterThanOrEqual(2)
+    for (const id of anchors) expect(html).toContain(`id="${id}"`)
+  })
+
   it('404s an unknown Midden Space', async () => {
     expect((await fetch('/t/midden/no-such-space')).status).toBe(404)
   })
