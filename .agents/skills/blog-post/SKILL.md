@@ -222,15 +222,12 @@ timeline can't settle is cut; if you keep it anyway, the PR may not
 self-merge (step 11). Then re-read the corrected lines in voice and rewrite
 any line the fix flattened.
 
-Text you add after the report is unchecked text: re-dispatch the checker on
-it, or cut it.
-
 This step is mandatory; past runs skipped it silently (issue #1479). The tally
 in the PR body is its evidence.
 
 Done when: every row the checker returned is `ok`, fixed, cut, or
-source-read by you, and you hold the tally ("N claims checked, M fixed or
-cut").
+source-read by you, every edit made after the report was re-checked or cut,
+and you hold the tally ("N claims checked, M fixed or cut").
 
 ### 10. Gate
 
@@ -377,4 +374,6 @@ every fact so readers can go look:
   paragraph. For "who decided" / "the session reasoned" / "on its own", the
   authority is the PR's own review comments and timeline — not a commit
   message (often in agent voice whoever directed the change) or a session
-  log's summary line. Step 9's fact-check holds this rule.
+  log's summary line. For where a rule lives or what agents read, it is the
+  loaded `.claude/rules/` file, not only the ADR. Step 9's fact-check holds
+  this rule.
