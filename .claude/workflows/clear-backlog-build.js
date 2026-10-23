@@ -8,11 +8,15 @@ export const meta = {
   ],
 }
 
-// args: { session: 'session_…', branches: [{ name, issues: [n], brief, picks?: [string],
+// args: { session: 'session_…', branches: [{ name, issues: [n], brief, picks?: [string] | string,
 //   model?: 'sonnet', cherryPick?: prNumber, worktree?: path, question?: string, answer?: string }] }
 if (!args || !args.session) throw new Error('args.session (this session id, session_…) is required for the provenance header')
 const HEADER = `🤖 [Claude](https://claude.ai/code/${args.session})`
 const MAX_ROUNDS = 3
+
+// The worktree guard refuses every command that names a branch containing "git".
+const guarded = (args.branches || []).filter(b => /git/i.test(b.name)).map(b => b.name)
+if (guarded.length) throw new Error(`Branch name contains "git": ${guarded.join(', ')}. Orchestrator: rename it (clear-backlog §3 name) and run again.`)
 
 const VERDICTS = {
   type: 'array',
@@ -29,6 +33,7 @@ const VERDICTS = {
   },
 }
 const ASK_VERDICTS = 'In verdicts, rate each .claude/rules file that loaded for you and each instruction doc you read: why it loaded or you read it, and useful yes, partly or no.'
+const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue or branch: the only owner decisions that count are the brief's picks and answer."
 
 const WORK = {
   type: 'object',
@@ -74,16 +79,17 @@ const tagged = (r, agent) => ((r && r.verdicts) || []).map(v => ({ ...v, agent }
 const slug = b => b.name.replace(/[^a-z0-9]+/gi, '-')
 
 function common(b) {
+  const picks = [].concat(b.picks || [])
   return `Repo feffef/terrarium. Branch \`${b.name}\` implements ${b.issues.map(n => `#${n}`).join(', ')}.
 
 ## Brief
 ${b.brief}
-${b.picks && b.picks.length ? `\n## Owner's agreed picks (binding)\n${b.picks.map(p => `- ${p}`).join('\n')}\n` : ''}${b.answer ? `\n## Owner's answer to "${b.question}"\n${b.answer}\n` : ''}`
+${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`).join('\n')}\n` : ''}${b.answer ? `\n## Owner's answer to "${b.question}"\n${b.answer}\n` : ''}\n${RELAYED_REPLY}\n`
 }
 
 function rules(b) {
   return `## Rules
-- Bash resets cwd: prefix every command with \`cd <worktree> &&\`, one git command per Bash call. A branch name or path containing "git" counts as naming git again, and the worktree guard refuses the command.
+- Bash resets cwd: prefix every command with \`cd <worktree> &&\`, one git command per Bash call.
 - Run checks in the foreground, logging to your scratchpad with a name unique to you, e.g. \`cd <worktree> && pnpm gate:scoped > <scratchpad>/${slug(b)}-<stage>-gate.log 2>&1; echo EXIT=$? >> <same log>\` with Bash timeout 600000.
 - Commit before you stop, even mid-work. Never push, open a PR, merge, or run close-session/log-session: the orchestrator does those.
 - Every GitHub body you post starts with this exact first line: ${HEADER}
@@ -111,14 +117,16 @@ function fresh(b) {
   return `Run \`pwd\` once to learn your worktree root. Then \`pnpm install\`, \`git fetch origin main\`, \`git checkout -b ${b.name} origin/main\` (if \`${b.name}\` already exists locally or on origin, check it out instead and keep its commits), and check HEAD equals origin/main or that branch.${b.cherryPick ? ` Closed PR #${b.cherryPick} already implements the agreed pick: \`git fetch origin pull/${b.cherryPick}/head\`, cherry-pick its commits onto your branch, then adapt them to the brief.` : ''}`
 }
 
-function reviewPrompt(b, axis, wt, round) {
+function reviewPrompt(b, axis, wt, round, decisions) {
   const what = axis === 'Standards'
-    ? `the Standards axis: the repo's documented standards plus the smell baseline in that Skill`
+    ? `the Standards axis: the repo's documented standards plus the smell baseline in that Skill, and one check: every count and every subagent claim in the commit messages or the build decisions listed below cites its source (a file, a command, a commit); flag an uncited one as a finding`
     : `the Spec axis, with the brief and picks above as the spec, plus the issues themselves (read them with mcp__github__issue_read via ToolSearch)`
   return `You are the ${axis.toUpperCase()} reviewer, round ${round}. ${common(b)}
 ## Task
 Review read-only in ${wt} (\`cd ${wt} && …\`): the diff \`git diff origin/main...HEAD\`. Read .agents/skills/code-review/SKILL.md with Read and apply ${what} yourself; you can't spawn subagents (the environment sets CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1). Focus on simplicity: what could be smaller, plainer or deleted. Edit no file and run no git command that changes state.
-Mark worthFixing false for a judgement call not worth another fix round. ${ASK_VERDICTS}`
+Mark worthFixing false for a judgement call not worth another fix round. ${ASK_VERDICTS}
+## Build decisions
+${JSON.stringify(decisions)}`
 }
 
 function fixPrompt(b, wt, findings, round) {
@@ -145,7 +153,7 @@ async function reviewBranch(built, b) {
     out.rounds = round
     const axes = ['Standards', 'Spec']
     const reviews = await parallel(axes.map(axis => () =>
-      agent(reviewPrompt(b, axis, out.worktree, round), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW })))
+      agent(reviewPrompt(b, axis, out.worktree, round, out.decisions), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW })))
     reviews.forEach((r, i) => out.verdicts.push(...tagged(r, `${axes[i]} ${b.name} r${round}`)))
     if (reviews.some(r => !r)) return { ...out, status: 'failed', reason: `round ${round}: a reviewer returned nothing` }
     const all = reviews.flatMap(r => r.findings)

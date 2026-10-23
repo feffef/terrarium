@@ -1,0 +1,90 @@
+name: full-adr-read-skipped
+summary: >-
+  Agents relied on an ADR's short summary when its rule said to read the full ADR.
+cause: >-
+  Each ADR summary rule says to read the full ADR in some cases, and sessions whose task touched the topic used the summary (or pr-workflow.md) instead; most found the summary enough, so the read-in-full line reads as optional. Signals: "did not open the full ADR-000N", "their summaries said to read them", "relied on the rule summaries".
+surface: safe
+status: open
+fixes:
+  - pr: 2165
+    date: "2026-10-16"
+    summary: "Each ADR summary rule now says when to read its full ADR, naming what only the ADR holds."
+  - pr: 2431
+    date: "2026-10-23"
+    summary: "Retired the adr-check Skill and its CLAUDE.md trigger; a new PostToolUse hook (adr-read-hint.ts) now names, once per agent, each ADR an Edit or Write touches by its rule paths or by number and that the agent has not read in full."
+occurrences:
+  - session: session_01Tjsmye34hk57NtioyWQG4h
+    date: "2026-10-11"
+    severity: nit
+    description: "Did not read the full ADR-0003 and ADR-0004 although their rules say to when the topic is touched; I relied on the rule summaries for the merge flow."
+    solution: "Read the full ADR before the merge step."
+  - session: session_0177ZCpnHq4Sw5wicAEmriDh
+    date: "2026-10-11"
+    severity: nit
+    description: "Did not read docs/adr/0004 in full though the ADR-0004 rule asks for it when touching the topic; I read only the amendment diff."
+    solution: "Read the full ADR before writing about it; a prose-only blog post made the impact low."
+  - session: session_01QfaLuSd5cnBQPu8CCRrvkn
+    date: "2026-10-12"
+    severity: nit
+    description: "Did not read the full ADR-0003, ADR-0004 and ADR-0010 though their rules say to when the topic is touched; relied on the rule summaries."
+    solution: "Digest Skill could state that its own steps suffice and the ADR rules need no full read."
+  - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
+    date: "2026-10-14"
+    severity: nit
+    description: "Did not read the full ADR-0004 doc though its rule says to when it touches the task; read only pr-workflow and an excerpt."
+    solution: "Rule could say which step the full read changes."
+  - session: session_01R8ZgGod9KTmxwvnDyB4PQY
+    date: "2026-10-14"
+    severity: nit
+    description: "Did not open the full ADR-0004 although its summary applied (human-merge PR); the summary and pr-workflow.md were enough, but the rule says to read it."
+    solution: "Read the full ADR whenever a summary rule applies, as it says."
+  - session: session_011HBcCLzMW7CshmqnHLnegb
+    date: "2026-10-15"
+    severity: nit
+    description: "Did not open the full ADR-0003/0004/0009/0017 texts that their summary rules point to; the summaries sufficed for this doc-only run."
+    solution: "None needed beyond the summaries for a scheduled doc sweep."
+  - session: session_012VTgtrUEy7cPVTN5sMriXj
+    date: "2026-10-15"
+    severity: minor
+    description: "Skipped reading the full ADRs the loaded rule summaries said to read, and CLAUDE.md's grep-and-read step before recommending the drafts Space; read them only after the owner asked."
+    solution: "Reading all eight added one small fact (ADR-0003 approver in log). Evidence for a prune trial on the 'must read the full ADR' line, or make the summaries say which detail needs the full read."
+  - session: session_019e468BFBTvDPXZuGzLMAL7
+    date: "2026-10-15"
+    severity: nit
+    description: "Did not open the full ADR-0004, ADR-0003 or ADR-0017 though their summaries said to read them if relevant."
+    solution: "Summaries were enough for this change; none cost anything."
+  - session: session_01C8c4U7TDuWnJwenPUWYxrP
+    date: "2026-10-15"
+    severity: nit
+    description: "Skipped the full ADR for ADR-0003, 0004, 0009 and 0017 though each summary says to read it; their summaries were enough but the instruction was not followed."
+    solution: "Either read them or let the summaries drop the must-read line for ADRs a content run never needs."
+  - session: session_01Lwanyry6GWtqHYoMAgGGLa
+    date: "2026-10-15"
+    severity: nit
+    description: "Did not read the full ADR-0003 or ADR-0004 although their summaries say to if relevant; relied on the summaries and pr-workflow.md."
+    solution: "None needed if summaries suffice for a pack install; consider a no-ADR-read note for trivial pack installs."
+  - session: session_013LwpcexAe7t3Qck4CKtj9Y
+    date: "2026-10-15"
+    severity: nit
+    description: "I did not open the full ADRs that the loaded summaries named (0003, 0004, 0017, 0028), and did not check for an existing PR before the first push."
+    solution: "Open the named ADRs at the first trigger, and run the no-PR check as part of the push step."
+  - session: session_017xginqTj2NjZ8XgrbRqvkm
+    date: "2026-10-16"
+    severity: nit
+    description: "Edited ADR-0009 text after reading only its rejected-alternatives section, not the full ADR the summary rule asks for; a checker did read it in full."
+    solution: "Read the whole ADR before editing it."
+  - session: session_01Fay2GiWTwxDKnnqS9DznHk
+    date: "2026-10-16"
+    severity: nit
+    description: "Did not open the full ADRs whose summary rules loaded (0004, 0005, 0021, 0029, 0030) though each says to when relevant."
+    solution: "The summaries sufficed for this content task; the rule wording could say which tasks need the full ADR."
+  - session: session_01XxPqcyjVxcgmHTidWtoF1g
+    date: "2026-10-16"
+    severity: minor
+    description: "Skipped reading the full ADRs behind the 0003, 0004, 0009, 0017 and 0027 rule summaries; relied on summaries and pr-workflow.md."
+    solution: "None needed; the summaries were enough, no harm came of it."
+  - session: session_018sAirSgDY1Nv82JVogjcyR
+    date: "2026-10-16"
+    severity: nit
+    description: "I did not open ADR-0004's full text before pushing, although its rule says to; I relied on pr-workflow.md, which carries the same steps."
+    solution: "Let the ADR-0004 summary rule say pr-workflow.md suffices for pushing."

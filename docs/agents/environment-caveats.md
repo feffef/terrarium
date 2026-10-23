@@ -37,18 +37,15 @@ re-diagnose them as new. Incident detail lives in the cited issue.
 - **A fired self-bind Routine's output may not surface as a visible turn.**
   Check `last_run.fired_at` via `list_triggers` before concluding it didn't fire.
   (issue #834)
-- **A cloud session cannot write `.github/workflows/*` — its token has no
+- **A cloud session cannot write `.github/workflows/*`: its token has no
   `workflow` OAuth scope.** `workflow-edit-guard` ([guards](./guards.md)) denies
-  the write there. A local session pushing over SSH with the owner's key can
-  push it, so the guard lets it through; one pushing over HTTPS with a token
-  that lacks the scope is still rejected. A commit that is rejected at
-  push strands every other commit in that push. To recover, drop that commit
-  rather than revert it; the push check reads every commit:
-  `git rebase --onto <sha>^ <sha>` for a commit inside the branch, or for the
-  tip `git reset --soft HEAD~1`, `git reset -- <path>`, then re-commit without the
-  workflow file. Only on a branch you created. The edit itself goes
-  in `docs/proposals/` ([README](../proposals/README.md)). (issues #659, #897,
-  #1955, #2174)
+  the write; a local session with the owner's key can push it, but one pushing
+  over HTTPS with a token lacking the scope is still rejected. A rejected push
+  strands every commit in it. To recover on a branch you created, drop the
+  workflow commit rather than revert it (the check reads every commit):
+  `git rebase --onto <sha>^ <sha>`, or for the tip `git reset --soft HEAD~1`,
+  `git reset -- <path>`, then re-commit without it. Put the edit in
+  `docs/proposals/` ([README](../proposals/README.md)). (issues #659, #897, #1955, #2174)
 - **The agent proxy denies writes to repository-settings endpoints and any
   non-repo-scoped path.** `POST repos/{owner}/{repo}/rulesets` returns 403
   "Write access to this GitHub API path is not permitted through this proxy";
@@ -87,9 +84,6 @@ re-diagnose them as new. Incident detail lives in the cited issue.
   delete the ref) instead of relying on default behavior — `init` + `remote
   add` + `fetch` left `origin/HEAD` unset locally but not in CI. (commit
   2b85df96)
-- **A scratchpad script can't `import` repo deps (e.g. `yaml`)** when run as
-  `pnpm exec tsx <scratchpad>/x.ts`: it resolves from its own directory. Set
-  `NODE_PATH=<repo>/node_modules` or import by absolute path.
 - **A cloud session's `CLAUDE_CODE_REMOTE_SESSION_ID` is `cse_<id>`, but
   claude.ai/code opens that session at `session_<id>`: the same id, another
   prefix.** Swap the prefix before you link the session or write its ADR-0017

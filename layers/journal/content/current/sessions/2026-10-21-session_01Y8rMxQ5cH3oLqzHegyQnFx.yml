@@ -1,0 +1,275 @@
+schemaVersion: 1
+session: session_01Y8rMxQ5cH3oLqzHegyQnFx
+startedAt: 2026-10-21T19:49:07Z
+endedAt: 2026-10-22T06:17:54Z
+kind: interactive
+goal: Measure how token use splits between a session and its subagents
+status: completed
+outcome: "PR #2393 merged and checked: per-subagent token shares match in every post-merge log that could be checked"
+summary: "The owner asked (human-instructed) whether clear-backlog-build wastes context by handing review findings to a fresh fix agent, checked via inspect-session on session_01C32ny8 and session_01MKHvrD. Confirmed: every fix round is a new agent (the Workflow API can't continue one), contrary to dispatch-subagents §5, and fixPrompt omits the build decisions; one branch's fixes moved a rule between files twice. Per-agent cost couldn't be measured because workflow agents' turns aren't in events. The owner then chose (human-instructed) to have session logs record it mechanically. Building it showed subagent transcripts hold stream-start output_tokens; the owner asked for a deep-research run, whose three tracks (docs, GitHub issues, the installed 2.1.306 binary) found no exact per-subagent output source on disk, only OTel spans. The owner then narrowed the goal to a reliable rough split, price-weighted, stored as percent shares, which PR #2393 implements (tokenShare at top level and per subagent, plus durationSec, toolCalls, modelCalls per subagent). code-review found nested and unmatched transcripts were dropped; fixed. The owner then asked (human-instructed) to drop the session-level share as derivable, and authorized me in chat to merge this Human-only PR myself; merge-pr.ts refuses Human-only paths, so I merged with the GitHub merge tool after merging main in (one conflict with #2386 in traceOf, both sides kept) and a green gate. Next day the owner asked (human-instructed) to verify the measurements in the five logs landed since the merge. This session's own shares, modelCalls and toolCalls match an independent recomputation from its transcripts exactly (cut at the log's endedAt). For the other four, the harness's per-agent tool_uses and duration_ms from parent events match toolCalls and durationSec for all 20 agents that reported usage; 11 of 01CKXP's 17 agents reported none, and no post-merge session ran a workflow, so that path is untested in production. No change to clear-backlog-build itself; that is left for the owner to decide."
+prs:
+  - "2393"
+docsRead:
+  - path: docs/adr/0005-skill-model.md
+    reason: Workflow scripts fix the step sequence so the model can't skip steps; that is the main cost of moving fixes out of the workflow
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Says to resume the impl agent for every fix; the build workflow departs from it
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: Amend only the unpushed tip; three-dot diffs against origin/main
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Review, then gate last on the final head before the first push; verdict comment format
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Write through MCP; list_pull_requests with fields to check no PR existed
+    useful: partly
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: The Standards reviewer read it to confirm new log fields must be optional; it reported useful
+    useful: yes
+  - path: /root/.claude/skills/synced/5db01b4f-7087-4fc8-8549-c34520e48f97_184a2dfe-14a2-45fd-9e0b-ee22c8404de5/deep-research/references/researcher.md
+    reason: (no reason given)
+skillsUsed:
+  - name: inspect-session
+    reason: (no reason given)
+  - name: workflow-authoring
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: adr-check
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: anthropic-skills:deep-research
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+frictions:
+  - description: Skipped the session-start GLOSSARY-MAP.md and GLOSSARY.md reads CLAUDE.md requires; no wrong term resulted that I know of.
+    solution: Read them in the first tool call even for a chat-only question.
+    severity: nit
+  - description: Started forming a recommendation before running adr-check (CLAUDE.md requires it before any opinion); caught at close-session and ran it before answering.
+    solution: Run adr-check as soon as the ask is an opinion on a change.
+    severity: minor
+  - description: "inspect-session can't answer questions about workflow agents: their turns aren't in events and the run's .output stays in the old container, so a 16-page read returned nothing per agent."
+    solution: inspect-session could say up front that workflow-agent questions need the session log or a saved run summary; clear-backlog could commit per-agent usage into the log.
+    severity: moderate
+  - description: Built absolute token fields before checking whether subagent transcripts' usage was trustworthy; the stream-start output_tokens forced two redesigns.
+    solution: Before deriving a number from transcripts, check it against an independent figure (the task-notification usage) first.
+    severity: minor
+  - description: Ran git rev-parse and git log before reading git-conventions.md; the hook flagged it, and the late read showed the calls were fine.
+    solution: None needed; the hook caught it.
+    severity: nit
+  - description: Committed while a gate run was still in progress, which pr-workflow.md forbids (edit nothing until it ends); I re-ran the gate on the final head.
+    solution: Wait for the gate notification before touching the tree.
+    severity: nit
+  - description: Merged a Human-only PR with the GitHub merge tool instead of merge-pr.ts, which pr-workflow.md names as the only merge path; the owner authorized it explicitly in chat.
+    solution: merge-pr.ts could take an --owner-authorized flag that records the authorization, so an owner-approved Human-only merge keeps one path.
+    severity: minor
+durationSec: 37727
+models:
+  claude-opus-5-5: 323
+toolCounts:
+  Skill: 8
+  Bash: 85
+  Agent: 13
+  Write: 1
+  AskUserQuestion: 7
+  Edit: 4
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 3
+  mcp__claude-code-remote__send_later: 2
+  ReadNotifications: 5
+  mcp__github__update_pull_request: 1
+  mcp__github__pull_request_read: 6
+  mcp__github__merge_pull_request: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - tests/unit/transcript-trace.spec.ts
+  - scripts/session/transcript-trace.ts
+  - shared/schemas/session.ts
+  - scripts/session/log-session.ts
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0025.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0009.md
+rulesLoadedBySubagents:
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0021.md
+docsReadBySubagents:
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push despite Stop-hook nags; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to log via close-session for a question-only session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR right after the push and subscribed; the owner approved the feature in chat
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body and verdict comment start with the session header
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Pointed to the full ADR on why workflow scripts exist, which I opened for the trade-off
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: shared/schemas is Human-only, so the PR says it waits for a human merge
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Checked open prune trials; none covers clear-backlog-build or dispatch-subagents §5; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded from reading ADRs; no ADR was changed
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded when grepping dispatch-subagents; triage sweep wasn't part of the work
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Made me settle the stored fields' shape with the owner before building them
+    useful: yes
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded on reading shared/schemas/session.ts; the session kind's contract stayed additive, nothing cross-Tenant changed
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on reading the Journal manifest; no manifest change
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded with Journal files; confirmed logs are never regenerated, which the change respects
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with a rule read; no instruction placement changed
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with Journal files; no content component involved
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded with Journal files; no layer code changed
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: Only the Standards reviewer loaded it, reading SessionCard.vue; no UI changed, it reported not useful
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Only the Standards reviewer loaded it on a GLOSSARY grep; no term added, it reported not useful
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Inspect fix agents session 01C32
+    model: sonnet
+    durationSec: 569
+    toolCalls: 96
+    modelCalls: 96
+    tokenShare: 12.9
+  - type: general-purpose
+    task: Inspect fix agents session 01MKH
+    model: sonnet
+    durationSec: 210
+    toolCalls: 27
+    modelCalls: 27
+    tokenShare: 2.5
+  - type: general-purpose
+    task: Research Claude Code docs usage surfaces
+    durationSec: 230
+    toolCalls: 24
+    modelCalls: 20
+    tokenShare: 3.3
+  - type: general-purpose
+    task: Research GitHub issues on usage
+    durationSec: 225
+    toolCalls: 28
+    modelCalls: 20
+    tokenShare: 2.9
+  - type: general-purpose
+    task: Inspect installed CLI for usage
+    durationSec: 393
+    toolCalls: 50
+    modelCalls: 48
+    tokenShare: 5.5
+  - type: general-purpose
+    task: Standards review of usage diff
+    durationSec: 57
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 1.2
+  - type: general-purpose
+    task: Spec review of usage diff
+    durationSec: 58
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 1.2
+  - type: general-purpose
+    task: Standards review of follow-up
+    model: sonnet
+    durationSec: 31
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.8
+  - type: general-purpose
+    task: Spec review of follow-up
+    model: sonnet
+    durationSec: 28
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.9
+  - type: general-purpose
+    task: Harness usage, session 01CKXP
+    model: sonnet
+    durationSec: 670
+    toolCalls: 129
+    modelCalls: 129
+    tokenShare: 13.8
+  - type: general-purpose
+    task: Harness usage, session 01JkRF
+    model: sonnet
+    durationSec: 193
+    toolCalls: 32
+    modelCalls: 30
+    tokenShare: 2.7
+  - type: general-purpose
+    task: Harness usage, session 0115nu
+    model: sonnet
+    durationSec: 413
+    toolCalls: 72
+    modelCalls: 70
+    tokenShare: 7.1
+  - type: general-purpose
+    task: Harness usage, session 01T4Ub
+    model: sonnet
+    durationSec: 111
+    toolCalls: 19
+    modelCalls: 18
+    tokenShare: 1.7
+gitBranch: ccr-9a4c1386-awyekt
+entrypoint: remote_mobile
+cliVersion: 2.1.306
+learnings:
+  - Workflow agents' turns do not appear in list_events for the parent session; only the parent's lines do.
+  - Subagent transcripts (CLI 2.1.306) write each record before message_delta, so output_tokens is a stream-start count while input and cache counts are final; the parent transcript is final.
+  - A background agent's task-notification subagent_tokens is its last response's context plus that response's output, not a run total.
+ideas:
+  - Have log-session record per workflow agent its tool count, tokens and duration from the run journal, so retrospectives on workflow cost don't depend on a dead container.
+  - Show tokenShare on the Journal's session card as a small bar per agent, once a few logs carry it, so expensive orchestration patterns stand out at a glance.
+landedBy: Stop

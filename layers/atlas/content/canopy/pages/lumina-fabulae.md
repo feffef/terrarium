@@ -94,7 +94,7 @@ It was the light we noticed first, moving against the upper glass as though the 
 
 Of its diet we can report only what the evidence permits. We have never seen it eat. We have seen it hang beneath a gap in the leaves on clear nights, wings stilled, lamp banked low, in an attitude we can only call attentive, and we have recorded in the ledger — with some professional embarrassment — the entry *starlight, mostly*. No one in the company has proposed a better line, and the moth has offered no correction.
 
-What follows we have set down as the moth keeps it — not by our calendar but by its own: the first glow, the long dusk, and the lantern swell. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the moth's falls.
+What follows we have set down as the moth keeps it — not by our calendar but by its own: the first glow, the long dusk, and the lantern swell. Turn the almanac to follow the moth through them.
 
 ::almanac
 ::

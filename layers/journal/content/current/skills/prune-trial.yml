@@ -376,3 +376,40 @@ observations:
       2026-10-12 self-merge via the then-existing `--prune-trial` flag
       reconfirmed compliant with the rule in force at the time. Grade/role
       unchanged.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 8/8 usedInLogs sessions
+      checked. Issue #2228 (line-delta misreport, flagged "still
+      uncorrected" in the 2026-10-18 entry) is now resolved: PR #2245
+      (merged) corrected `.agents/prune-trials.yml`'s close-session entry
+      to the true "59 lines to 40 (-19)" - confirmed on the live ledger.
+      The newest session, session_01VcVVq7cXavEqXGmXucBLbK (PR #2252),
+      checked in full: correctly deferred its Human-only-touching PR to a
+      human merge (confirmed via the real merge commit's human author),
+      honest frictions logged. No reverts of any judged trial verdict in
+      the 2-week sweep. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): 8/8 usedIn verified, all 4
+      Human-only-touching PRs this window (#2168/#2223/#2252/#2299) confirmed
+      merged_by the real human owner (feffef), none self-merged. #1526/#1565's
+      unattended-hook-writing fix still holding. One near-miss illustrating the
+      mechanism working as designed, not a failure:
+      session_01BTtvaFQckiQwtGZsasWPJH logged a moderate friction about stale
+      pr-workflow.md Dependabot text inside the open pr-workflow.md trial's
+      territory, correctly left untouched per ADR-0027 rather than reworded,
+      and correctly judged outside that trial's own narrower damage-check scope
+      when the trial was later judged clean. No reverts found. Grade/role
+      unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check, 8/8 runs clean. The one ADR-touching trial (CLAUDE.md +
+      ADR-0029 cut, session_01CzkKVxSTE7a4amfXnxrvF9) confirmed genuinely
+      Trusted-user-approved (owner approved PR #2166 first, matching
+      ADR-0027's one exception) rather than self-initiated. No reverts of a
+      judged verdict found; a live find-trial-window.ts run matches the
+      ledger's 7 open trials exactly. Minor ledger-gloss imprecision found
+      (the pr-workflow.md trial's "only nit/minor" undercounts one moderate
+      friction) but the verdict itself stays correct either way - not
+      escalating, extends the 10-20 "mechanism working as designed"
+      observation. Grade/role unchanged.

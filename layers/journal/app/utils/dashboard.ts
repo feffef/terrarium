@@ -21,7 +21,7 @@
 // export below, and truly generic helpers stay module-private. This module,
 // for its part, never relies on auto-import itself: it stays dependency-free
 // and explicit.
-import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem } from '../types/journal'
+import type { Friction, Importance, SessionCardView, SessionDoc, Severity, SkillDoc, NoteItem, Subagent } from '../types/journal'
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
 
@@ -64,6 +64,17 @@ export function sessionToolEntries(counts?: Record<string, number>): { name: str
   return Object.entries(counts ?? {})
     .map(([name, count]) => ({ name, count }))
     .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+}
+
+// Empty ⇒ an older log that stored neither.
+export function subagentUsageLabel(a: Pick<Subagent, 'tokenShare' | 'durationSec'>): string {
+  const parts: string[] = []
+  if (a.tokenShare !== undefined) parts.push(a.tokenShare < 1 ? '<1%' : `${Math.round(a.tokenShare)}%`)
+  if (a.durationSec !== undefined) {
+    const m = Math.floor(a.durationSec / 60)
+    parts.push(m ? `${m}m ${a.durationSec % 60}s` : `${a.durationSec}s`)
+  }
+  return parts.join(' · ')
 }
 
 // ── Aggregations (scoped to one Space) ───────────────────
@@ -139,7 +150,7 @@ export function externalSkills(skills: SkillDoc[]): SkillDoc[] {
 }
 
 // Sessions that used each Skill — shown beside the grade, never instead of it
-// (GLOSSARY.md's Importance term: a grade is not a frequency).
+// (ADR-0015: a grade is not a frequency).
 export function skillUseCounts(sessions: SessionDoc[]): Record<string, number> {
   const counts: Record<string, number> = {}
   for (const s of sessions) {
@@ -224,7 +235,7 @@ export function sessionCardViews(
       url: external || !s.session.startsWith('session_') ? null : sessionUrl(s.session),
       // Expanded detail — the full log, revealed on click (no route of its own).
       summary: s.summary,
-      subagents: s.subagents ?? [],
+      subagents: (s.subagents ?? []).map((a) => ({ ...a, usage: subagentUsageLabel(a) })),
       docsRead: (s.docsRead ?? []).map((d) => {
         const viaSubagent = !!s.docsReadBySubagents?.includes(d.path)
         return { ...d, viaSubagent, unknown: viaSubagent && !d.useful }
@@ -331,6 +342,19 @@ export function sessionNotes(sessions: SessionDoc[]): { ideas: NoteItem[]; learn
 // writes exactly this to the clipboard.
 export function ideaGrillPrompt(item: NoteItem): string {
   return `/grill-with-docs to refine this idea from session ${item.session}:\n\n${item.note}`
+}
+
+// A ready-to-paste prompt that hands one learning to an agent to decide where it
+// should live for future agents. It asks for a proposal first, since a learning
+// is unverified until checked and CLAUDE.md says to cut before adding.
+export function learningDocsPrompt(item: NoteItem): string {
+  return `Session ${item.session} logged this learning:\n\n${item.note}\n\n`
+    + `Read that session's log (layers/journal/content/*/sessions/*-${item.session}.yml) for context, `
+    + `and check the learning still holds against the code and docs. If it does, would a future agent `
+    + `have been better off knowing it, and where? Find its one home: an existing doc, rule, Skill or `
+    + `glossary entry that should carry it, or a lean new one if none fits. Prefer cutting or rewording `
+    + `existing text over adding more, and write nothing if it is too narrow to repay the reading. `
+    + `Propose the exact edit and its location, and wait for my go-ahead before changing anything.`
 }
 
 // ── Session summary paragraphs ───────────────────────────

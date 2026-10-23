@@ -1,7 +1,9 @@
 name: flaky-e2e-matcher-timeouts
 summary: >-
-  A browser test sometimes failed on unrelated changes until a re-run, most likely because it clicked a card while the page was still moving and the click missed.
-cause: "Most likely (not reproduced: all 120 runs under Chromium CPU throttling passed: the old test 40 at 6x and 40 at 20x, the fixed one 40 at 20x): the Journal accordion e2e clicked a session card while the digest it had just opened was still expanding (160 ms), so the card moved. Playwright waits for a stable box before it clicks, so a miss needs motion that survives that check, such as a late shift near the end of the ease. A longer expect.poll timeout (10 s since PR #1919) can't help. Signal: an unrelated PR fails journal.spec.ts's accordion test or another click right after an open, and passes on re-run."
+  A Journal browser test that opens a session card fails at random, so unrelated changes fail once and pass on a retry.
+cause: >-
+  The Journal accordion e2e test (journal.spec.ts, the session-card head toggle) times out in gate:scoped or CI on diffs that do not touch it and passes on re-run; raising expect.poll's timeout to 10 s (PR #1919) did not stop it. Signals: 'Journal accordion e2e', journal.spec.ts:393, a gate red on an unrelated Journal test that passes on rerun.
+  The fix (issue #2231) opens the digest with openAndAwaitPin, so the click waits for the scroll pin to settle; not reproduced locally, judged by whether gate runs stop failing on it.
 surface: safe
 status: tracked
 ref: "issue #2231 (regression of PR #1919)"
@@ -20,16 +22,6 @@ occurrences:
     severity: minor
     description: "gate:scoped failed on an unrelated Journal accordion e2e test (matcher timeout) and passed on re-run; cost about three minutes."
     solution: "Make that e2e test robust against slow hydration, or log it as a known flake."
-  - session: session_01TW6hQ1C1Fm1aeaaoxQeHEp
-    date: "2026-10-13"
-    severity: minor
-    description: "First gate:scoped failed on an unrelated tinkerfund-flows e2e timeout (Cart and checkout), costing a full re-run"
-    solution: "Raise that matcher's timeout or file a flake issue for tinkerfund-flows.spec.ts:387"
-  - session: session_011xN2Zi67cjpCguuMiZbsJ6
-    date: "2026-10-13"
-    severity: minor
-    description: "The Tinkerfund e2e history step (tinkerfund-flows.spec.ts:387) timed out once in gate:scoped and passed on re-run; this branch changed only a comment there."
-    solution: "File the flake if it recurs; poll with a longer timeout on goForward."
   - session: session_01NoQubvnMfCpcq9nkicNsDq
     date: "2026-10-15"
     severity: minor
@@ -40,3 +32,18 @@ occurrences:
     severity: minor
     description: "gate:scoped failed once on an unrelated journal e2e accordion test and passed on rerun; I did not investigate."
     solution: "Log the flaky journal accordion e2e test as a ledger item."
+  - session: session_01TJH95qkztCQJ8PF6G6pvqs
+    date: "2026-10-18"
+    severity: minor
+    description: "The #2246 build's first gate:scoped failed the flaky Journal accordion e2e (#2231), which its diff doesn't touch; the rerun passed."
+    solution: "Land a fix for #2231 once the owner un-parks it."
+  - session: session_01RS1UjFRw38NcGaMRsrEVdE
+    date: "2026-10-18"
+    severity: minor
+    description: "First gate:scoped run failed on the Journal accordion e2e, unrelated to a prose-only diff; re-run was green, costing about a minute."
+    solution: "Fix or quarantine-by-repair the flaky accordion e2e test."
+  - session: session_01Pzj23dzUMace5jwZCvxmx7
+    date: "2026-10-19"
+    severity: nit
+    description: "Full vitest run failed one unrelated journal e2e accordion test that passed when rerun alone, costing an extra rerun."
+    solution: "Fix or quarantine the flaky journal accordion e2e test."

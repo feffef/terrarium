@@ -1,0 +1,23 @@
+name: audit-skills-output-overflow
+summary: >-
+  The skill-audit script printed so much that the survey agent could not read its output in one go.
+cause: >-
+  scripts/session/audit-skills.ts prints its whole report (56-478 KB) to stdout when run bare, overflowing the tool result, so the survey subagent persists it and re-runs a narrow extraction. Signals: audit-skills.ts, output persisted to a file, "printed about N KB".
+surface: safe
+status: open
+ref: "audit-skills output redirect in frictions-to-fixes §4, 2026-10-16"
+fixes:
+  - pr: 2109
+    date: "2026-10-16"
+    summary: "The survey instructions now say to save the large skill-audit output to a file and read only one part."
+occurrences:
+  - session: session_01LpcCJWRYb5grgQe3wBGEwb
+    date: "2026-10-15"
+    severity: minor
+    description: "Survey subagent: audit-skills.ts output plus a broad grep printed 56 KB and was persisted to a file; it re-ran with narrow extraction"
+    solution: "audit-skills.ts could offer a --doc-read-counts-only flag"
+  - session: session_01RnZJ7VrgWpgzfJUCEdif77
+    date: "2026-10-16"
+    severity: nit
+    description: "audit-skills.ts printed about 478 KB when run bare by the survey subagent, which had to redirect it to a file."
+    solution: "PR 2109 notes the redirect in frictions-to-fixes section 4."

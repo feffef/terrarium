@@ -1,0 +1,122 @@
+schemaVersion: 1
+session: session_01Pzj23dzUMace5jwZCvxmx7
+startedAt: 2026-10-19T11:46:06Z
+endedAt: 2026-10-19T11:59:05Z
+kind: delegated
+goal: Make the prune-trial ledger check reject non-string territory entries
+status: completed
+outcome: Validator and unit tests merged via PR 2297; issue 2288 closed
+summary: The owner's only prompt was /implement 2288. The issue and its agent brief already settled the open assumption (require both paths and keywords), so I built it without asking questions. validatePruneTrialsYaml now fails a trial with a missing territory, paths or keywords, or a non-string item, naming the trial and the item as JSON. Tests were written alongside the code, the full vitest run had one unrelated e2e failure that passed on rerun, and gate:scoped passed. Two code-review subagents (Standards, Spec) found no violations; I applied one suggested test-assertion nit. I pushed only after the gate was green, although the Stop hook asked earlier. CI went green and I merged with merge-pr.ts after posting my verdict, as ADR-0004 allows. Opening the PR, subscribing, merging and logging were agent-initiated under ADR-0003; the implementation itself was human-instructed via the issue.
+prs:
+  - "2297"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping before the first GitHub call
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: read before first git command; fetch and commit -F advice
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: confirmed gate and code-review before first push, and no existing PR check
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; no term needed for this change
+    useful: no
+  - path: GLOSSARY.md
+    reason: session-start read; Gate and Floor terms confirmed the gate check wording
+    useful: partly
+  - path: scripts/gate/validate-prune-trials.ts
+    reason: (no reason given)
+  - path: tests/unit/validate-prune-trials.spec.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: adr-check
+    reason: ran binding.ts; no ADR or open trial covered the validator
+  - name: code-review
+    reason: Standards and Spec subagents on the one-commit diff
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran the full vitest suite in the foreground (about 3 minutes) instead of run_in_background as CLAUDE.md requires; it fit under the 600s cap.
+    solution: Start the full suite with run_in_background and a redirected output file from the first call.
+    severity: nit
+  - description: Full vitest run failed one unrelated journal e2e accordion test that passed when rerun alone, costing an extra rerun.
+    solution: Fix or quarantine the flaky journal accordion e2e test.
+    severity: nit
+durationSec: 779
+models:
+  claude-sonnet-5-5: 76
+toolCounts:
+  Read: 7
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Glob: 1
+  Skill: 4
+  Bash: 21
+  Agent: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0026.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0030.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before pushing despite the Stop hook; the summary was enough, I read pr-workflow.md instead of the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to the PR without asking; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header line on the PR body; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary layout rule loaded with the glossary read; unrelated to a validator change
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Confirmed no open prune trial covers the validator script; subagent called it partly useful, I did not open the ADR
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; did not apply, and the Standards subagent also found it irrelevant
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Only the Standards subagent loaded it; it did not verify the path list, and the issue already said the file is not Human-only
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Only the Standards subagent loaded it via a hook; not relevant to this diff
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded when I read gate.ts and the gate action to confirm validate:content runs in CI; confirmed it, ADR not opened
+    useful: yes
+subagents:
+  - type: general-purpose
+    task: Standards review
+  - type: general-purpose
+    task: Spec review
+gitBranch: ccr-4cba6166-q63pn5
+entrypoint: remote_mobile
+cliVersion: 2.1.303
+landedBy: Stop

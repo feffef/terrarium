@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { horizonStart, pruneEntry, pruneLedger, sharedFrictions, summarizeLedger } from '../../scripts/prune-friction-ledger.ts'
+import { candidateLabels, horizonStart, pruneEntry, pruneLedger, regressionCheck, sharedFrictions, summarizeLedger } from '../../scripts/prune-friction-ledger.ts'
 import { LEDGER_DIR } from '../../../../../scripts/session/extract-frictions.ts'
 
 const entry = (...occ: [session: string, date: string][]) => `name: x
@@ -69,9 +69,18 @@ describe('summarizeLedger()', () => {
     writeFileSync(join(dir, 'x.yml'), withFixes(fixes([1, '2026-10-02'], [7, '2026-10-12']), ['a', '2026-09-01'], ['b', '2026-10-01']).replace('status: open', 'ref: "issue #5"\nstatus: open'))
     writeFileSync(join(dir, 'y.yml'), entry(['a', '2026-10-01']))
     expect(summarizeLedger('2026-10-13', cwd)).toEqual([
-      'x | fix landed | issue #5 | 1 in horizon | nit | 2 fixes, latest #7 2026-10-12',
+      'x | fix landed | issue #5 | 1 in horizon | nit | 2 fixes, latest #7 2026-10-12, since: none',
       'x | open | - | 1 in horizon | nit | no fixes',
     ])
+  })
+  it('ends with the newest note in full, only when the entry has notes', () => {
+    const dir = setup()
+    const newest = `2026-10-20 design: ${'x'.repeat(90)} dropped: costs more than it saves`
+    writeFileSync(join(dir, 'a.yml'), entry(['a', '2026-10-01']).replace('status: open', `status: open\nnotes: |-\n  2026-10-10 design: old dropped: why\n  ${newest}`))
+    writeFileSync(join(dir, 'b.yml'), entry(['a', '2026-10-01']))
+    const [a, b] = summarizeLedger('2026-10-13', cwd)
+    expect(a!.endsWith(` | note: ${newest}`)).toBe(true)
+    expect(b).toBe('x | open | - | 1 in horizon | nit | no fixes')
   })
   it('takes the latest fix by date whatever their order, and says "fix" for one', () => {
     const dir = setup()
@@ -94,10 +103,74 @@ describe('summarizeLedger()', () => {
     expect(sameday).toContain('| likely fixed |')
     expect(young).toContain('| fix landed |')
   })
+  it('ends a fixed entry with its highest severity since the latest fix, "none" when nothing came after', () => {
+    const dir = setup()
+    const sev = (text: string, ...levels: string[]) => levels.reduce((t, l) => t.replace('severity: nit', `severity: ${l}`), text)
+    writeFileSync(join(dir, 'a.yml'), sev(withFixes(fixes([1, '2026-10-02']), ['a', '2026-10-01'], ['b', '2026-10-05'], ['c', '2026-10-06']), 'blocker', 'minor', 'major'))
+    writeFileSync(join(dir, 'b.yml'), withFixes(fixes([1, '2026-10-02']), ['a', '2026-10-01']))
+    const [a, b] = summarizeLedger('2026-10-13', cwd)
+    expect(a).toContain('latest #1 2026-10-02, since: major')
+    expect(b).toContain('latest #1 2026-10-02, since: none')
+  })
   it('shows accepted over the derived state', () => {
     const dir = setup()
     writeFileSync(join(dir, 'x.yml'), withFixes(fixes([1, '2026-10-02']), ['a', '2026-10-01'], ['b', '2026-10-05']).replace('status: open', 'status: accepted'))
-    expect(summarizeLedger('2026-10-13', cwd)).toEqual(['x | accepted | - | 2 in horizon | nit | 1 fix, latest #1 2026-10-02'])
+    expect(summarizeLedger('2026-10-13', cwd)).toEqual(['x | accepted | - | 2 in horizon | nit | 1 fix, latest #1 2026-10-02, since: nit'])
+  })
+})
+
+describe('same-day occurrences and --candidates', () => {
+  let cwd: string
+  afterEach(() => rmSync(cwd, { recursive: true, force: true }))
+  const fixed = (...occ: [string, string][]) => entry(...occ).replace('status: open', 'status: open\nfixes:\n  - pr: 1\n    date: "2026-10-05"\n    summary: s')
+  const setup = (files: Record<string, string>, starts: Record<string, string> = {}) => {
+    cwd = mkdtempSync(join(tmpdir(), 'ledger-'))
+    const dir = join(cwd, LEDGER_DIR)
+    mkdirSync(dir, { recursive: true })
+    for (const [f, text] of Object.entries(files)) writeFileSync(join(dir, f), text)
+    const sessions = join(cwd, 'layers/journal/content/archived/sessions')
+    mkdirSync(sessions, { recursive: true })
+    for (const [s, t] of Object.entries(starts)) writeFileSync(join(sessions, `${t.slice(0, 10)}-${s}.yml`), `id: ${s}\nstartedAt: ${t}\n`)
+  }
+  const merges = new Map([[1, '2026-10-05T12:00:00Z']])
+
+  it('counts a same-day occurrence whose session started after the fix merged, and not one before', () => {
+    setup(
+      { 'after.yml': fixed(['early', '2026-10-01'], ['late', '2026-10-05']), 'before.yml': fixed(['early', '2026-10-01'], ['morning', '2026-10-05']) },
+      { late: '2026-10-05T13:00:00Z', morning: '2026-10-05T11:00:00Z' },
+    )
+    const check = regressionCheck(cwd, merges)
+    const [after, before] = summarizeLedger('2026-10-06', cwd, check)
+    expect(after).toContain('| still recurring (1 since #1) |')
+    expect(before).toContain('| fix landed |')
+    expect(check.fallbacks).toEqual([])
+  })
+  it('falls back to the date and says so when a time is missing', () => {
+    setup({ 'x.yml': fixed(['nolog', '2026-10-05']) })
+    const check = regressionCheck(cwd, new Map())
+    expect(summarizeLedger('2026-10-06', cwd, check)[0]).toContain('| fix landed |')
+    expect(check.fallbacks).toEqual(['nolog on #1\'s merge day: compared by date (no merge commit for #1 on origin/main, no session log startedAt)'])
+  })
+  it('labels each entry never-fixed, regression, open-already or drop', () => {
+    setup(
+      {
+        'a.yml': entry(['s', '2026-10-01']),
+        'b.yml': fixed(['late', '2026-10-05']),
+        'c.yml': entry(['s', '2026-10-01']).replace('status: open', 'ref: "issue #9"\nstatus: tracked'),
+        'd.yml': fixed(['early', '2026-10-01']),
+        'e.yml': fixed(['late', '2026-10-05']).replace('status: open', 'status: accepted'),
+        'f.yml': fixed(['late', '2026-10-05']).replace('status: open', 'ref: "issue #8 (closed)"\nstatus: open'),
+      },
+      { late: '2026-10-05T13:00:00Z' },
+    )
+    expect(candidateLabels('2026-10-06', cwd, regressionCheck(cwd, merges))).toEqual([
+      'x | never-fixed | nit | 1 in horizon | -',
+      'x | regression of #1 (1 since) | nit | 1 in horizon | -',
+      'x | open-already? (ref names #9; check it is open) | nit | 1 in horizon | issue #9',
+      'x | drop (fixed by #1, none since) | nit | 1 in horizon | -',
+      'x | drop (accepted) | nit | 1 in horizon | -',
+      'x | regression of #1 (1 since) | nit | 1 in horizon | issue #8 (closed)',
+    ])
   })
 })
 

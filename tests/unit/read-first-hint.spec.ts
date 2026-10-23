@@ -15,12 +15,12 @@ const GH = 'docs/agents/github-integration.md'
 const bashDocs = (command: string) => triggeredDocs('Bash', command).map((r) => r.doc)
 
 describe('the registry', () => {
-  it('names docs that exist, under a trigger CLAUDE.md states', () => {
-    const claude = readFileSync(join(repo, 'CLAUDE.md'), 'utf8').replace(/\*\*/g, '').replace(/\s+/g, ' ')
+  it('names docs that exist, under a trigger its source states', () => {
     for (const r of READ_FIRST) {
+      const source = readFileSync(join(repo, r.source), 'utf8').replace(/\*\*/g, '').replace(/\s+/g, ' ')
       expect(existsSync(join(repo, r.doc)), r.doc).toBe(true)
-      expect(claude, r.doc).toContain(r.doc)
-      expect(claude, r.trigger).toContain(r.trigger)
+      expect(source, r.doc).toContain(r.doc)
+      expect(source, r.trigger).toContain(r.trigger)
     }
   })
 })
@@ -60,6 +60,23 @@ describe('triggeredDocs()', () => {
       ['node_modules/.bin/tsx scripts/ui/screenshot.ts /x', [UI]],
       ['scripts/ui/preview.ts stop 123', []],
       ['cat scripts/ui/preview.ts', []],
+    ]
+    for (const [command, docs] of cases) expect(bashDocs(command), command).toEqual(docs)
+  })
+
+  it('adds the issue-tracker and triage-labels docs for issue writes only', () => {
+    const TRACKER = 'docs/agents/issue-tracker.md'
+    const LABELS = 'docs/agents/triage-labels.md'
+    const writes = [GH, TRACKER, LABELS]
+    expect(triggeredDocs('mcp__github__issue_write', undefined).map((r) => r.doc)).toEqual(writes)
+    const cases: [string, string[]][] = [
+      ['gh issue edit 1 --add-label x', writes],
+      ['gh issue create -t x', writes],
+      ['gh issue close 1', writes],
+      ['gh issue reopen 1', writes],
+      ['gh issue view 1', [GH]],
+      ['gh issue list', [GH]],
+      ['gh issue', [GH]],
     ]
     for (const [command, docs] of cases) expect(bashDocs(command), command).toEqual(docs)
   })
@@ -131,6 +148,15 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     for (const t of [read, shell, pointed]) expect(run(call('git log', { transcript_path: t })).stdout, t).toBe('')
     // Seeing one doc does not silence the other.
     expect(context(run(call('git log && gh api x', { transcript_path: pointed })))).toContain(GH)
+  })
+
+  it('points to the triage docs on an issue write, and stays silent once they are read', () => {
+    const docs = ['docs/agents/issue-tracker.md', 'docs/agents/triage-labels.md']
+    const write = { tool_name: 'mcp__github__issue_write', tool_input: {} }
+    const hint = context(run(call('x', write)))
+    for (const d of docs) expect(hint).toContain(d)
+    const read = transcript('triage-read.jsonl', [GH, ...docs].map((d, i) => toolUse(`t${i}`, 'Read', { file_path: `${repo}/${d}` })))
+    expect(run(call('x', { ...write, transcript_path: read })).stdout).toBe('')
   })
 
   it("dedupes a subagent against its own transcript, and points when that is missing", () => {

@@ -19,17 +19,10 @@ fixes:
   - pr: 2205
     date: "2026-10-17"
     summary: "A save-handback script writes a subagent's final reply to a file verbatim; audit-docs and dispatch-subagents point to it."
+  - pr: 2269
+    date: "2026-10-19"
+    summary: "save-handback now returns the message of a SubagentHandback tool call instead of refusing the hand-back."
 occurrences:
-  - session: session_01GxJXNFxh3SQh8q1nkReAxJ
-    date: "2026-10-04"
-    severity: moderate
-    description: "Three of five second-pass subagent reports were not extractable from their output files, so I retyped 85 per-post labels by hand into a script; a transcription slip would silently mis-tag posts."
-    solution: "Have classification subagents write their JSON lines to a scratchpad file (or return them in the final assistant message) so results can be parsed instead of retyped."
-  - session: session_017tt8CbwHqFWqw7PJZ7u7AL
-    date: "2026-10-08"
-    severity: moderate
-    description: "Checkers cannot see my context, so I retyped about 12k tokens of reviewer findings into scratchpad pool files before they could be verified."
-    solution: "Have reviewers write findings to a scratchpad file themselves (numbered, with exact replacement text) so checkers can read them directly."
   - session: session_01GbMt1vGTDZpQxZ3h4pNsF8
     date: "2026-10-11"
     severity: moderate
@@ -70,3 +63,18 @@ occurrences:
     severity: minor
     description: "Reviewer findings arrive only as chat replies; pooling them into one file means retyping some, against the copy-never-retype step."
     solution: "Brief each reviewer to write its full findings file, and verify the file is non-stub before it replies."
+  - session: session_019U9RYQ9iFv8fwp2VQvwGny
+    date: "2026-10-18"
+    severity: minor
+    description: "save-handback.ts failed on every reviewer because they delivered their report as a hand-back message, not final text, so I retyped the pool by hand."
+    solution: "Have save-handback read SubagentHandback messages too, or tell audit-docs briefs to end with a plain final reply."
+  - session: session_0183U5MkKrjuhRKdjpFxD9Xj
+    date: "2026-10-19"
+    severity: moderate
+    description: "save-handback.ts refused every subagent hand-back (final turn is a SubagentHandback tool call, 'no final text'), so I wrote my own extractor over the transcript JSONL."
+    solution: "Make finalText accept a handback tool call's text input as the final message."
+  - session: session_01XWMuHGcaNTvRPHfYb9T7z2
+    date: "2026-10-19"
+    severity: minor
+    description: "Moving subagent research notes onto research branches took a save-handback, sed strip of the fence, a worktree per branch and a manual redaction pass"
+    solution: "A small script that turns a hand-back's fenced Markdown into a commit on a named research branch"

@@ -37,6 +37,12 @@ name resolution, see [`github-integration.md`](./github-integration.md).
   branch your session started on"): flag it upfront and ask whether separate
   branches are allowed. Don't bundle unrelated issues into one PR and wait for
   an objection after the push.
+- **Filing an issue.** Write what would be costly to derive again: the
+  background, what you checked and found, and why it matters. Make clear which
+  statements are verified fact (with their source) and which are assumption or
+  working theory, so triage doesn't build on a guess. `clear-backlog` decides
+  from the issue alone, and anything it can't settle becomes a question for the
+  owner. Labels: [`triage-labels.md`](./triage-labels.md).
 - **Create**: `gh issue create --title "..." --body "..."` (heredoc for multi-line bodies).
 - **Read**: `gh issue view <number> --comments`, filtering comments with `jq` and fetching labels too.
 - **List**: `gh issue list --state open --json number,title,body,labels,comments --jq '[.[] | {number, title, body, labels: [.labels[].name], comments: [.comments[].body]}]'`, with `--label` / `--state` filters as needed.
@@ -81,9 +87,8 @@ PRs go through the same labels and states as issues, using `gh pr`:
 Issues and PRs share one number space, so a bare `#42` may be either. Try
 `gh pr view 42`, then fall back to `gh issue view 42`.
 
-A reviewing agent's verdict-posting, review-thread and closing-keyword rules
-(and what `merge-pr.ts` does about a named issue GitHub left open)
-are in `docs/agents/pr-workflow.md` (recipe step 4 for verdicts).
+Verdicts (recipe step 4), review threads, closing keywords and what
+`merge-pr.ts` does about a named issue GitHub left open: `docs/agents/pr-workflow.md`.
 
 **A "you already have a pending review" error is stop-and-ask, never `delete_pending`:** see "Write traps" in [`github-integration.md`](./github-integration.md).
 

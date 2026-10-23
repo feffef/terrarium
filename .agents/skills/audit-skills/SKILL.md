@@ -17,82 +17,49 @@ aims at two gaps that frictions never reveal:
 Keeping the **Skill Inventory** (`layers/journal/content/current/skills/`) in
 line with real usage is a by-product of the same evidence.
 
-This Skill writes only Inventory `.yml` entries and GitHub issues (ADR-0015).
-A finding that clears step 4's bar becomes an issue; the rest become
-observations.
-
-Every issue or PR state you write, in any words (open, closed, merged,
-resolved, fixed), in an observation, issue, comment or session log, matches a
-live GitHub read you made this run. A prior observation, a git sweep or visible
-fix activity is not one (#1627, #1720).
+This Skill writes only Inventory `.yml` entries, Routine run costs and GitHub
+issues (ADR-0015).
 
 ## 1. Gather the scorecard
 
 ```
-pnpm exec tsx scripts/session/audit-skills.ts
+pnpm exec tsx scripts/session/audit-skills.ts --briefs <dir>
 ```
 
 It prints JSON for the last 7 days of session logs (`--days N` widens or
-narrows that). The `Scorecard` type in `scripts/session/audit-skills.ts` documents
-every field.
+narrows that) and writes one data file per `behaviourChecks` entry to `<dir>`.
+The `Scorecard` type in `scripts/session/audit-skills.ts` documents every
+field.
 
-Done when you hold the scorecard.
+Then dispatch one Sonnet subagent to call `get_session` (claude-code-remote
+MCP) on every `session` in `routineRuns`, so the raw responses stay out of
+your context. It returns, per run, `input_tokens`, `output_tokens`,
+`cache_read_tokens`, `cache_write_tokens` and `cost_usd` as the API gives them.
+
+Done when you hold the scorecard and the usage of every `routineRuns` session.
 
 ## 2. Check behaviour — one subagent per Skill in `behaviourChecks`
 
-A run answers to the Skill as it was when the run started. The scorecard's
+Grade a run against the Skill as it was when the run started. The scorecard's
 `changes` lists what landed in the Skill's folder or scripts during the window
-(and the CLI warns when it is non-empty). Empty: every run is graded against
-the files on disk. Otherwise the brief says when each change landed, and a run
-whose `startedAt` precedes it is graded against the earlier text
-(`git show <sha>^:<path>`) — a fix a run never saw is untested by it, not
-broken (#1479, #1515).
+(the CLI warns when it is non-empty). If it is empty, use the files on disk.
+Otherwise the data file dates each change; for a run whose `startedAt` precedes
+a change, use the earlier text (`git show <sha>^:<path>`): a fix the run never
+saw is untested, not broken (#1479, #1515).
 
-Dispatch one read-only Sonnet subagent (`model: sonnet`) per Skill, all in
-parallel. Each brief names the Skill's `SKILL.md`, the log files of the
-sessions in its `usedIn` (newest 10), and its `observations`. For a
-`modelInvoked` Skill, the brief also lists every `window[]` session that did
-not use it, with its log `file`, `goal` and `skillsUsed`. The brief asks for
-this:
+Dispatch one read-only Sonnet subagent (`model: sonnet`) per Skill, all in one
+message. Each brief is [`brief.md`](brief.md) plus the path of the Skill's
+file from step 1's `<dir>`.
 
-> Work out from the `SKILL.md` in effect when each run started (the brief says
-> if and when it changed) what a run must deliver: its outcome and each
-> step's completion criterion. For each session, check against primary sources
-> whether it delivered. Start from the log's outcome, summary, `prs` and files
-> edited, then confirm on GitHub or in git that the PR, commit, issue or file
-> is really there and says what the Skill promised. Then check it still
-> stands: search the last two weeks of `git log origin/main` for the Skill's
-> name, in commit messages (`-i --grep=<name>`) and in changed content
-> (`-i -G<name>`). A later revert or rewrite of what a run delivered is a
-> silent failure, and the reverting commit and its session log say why. A
-> promise the runs keep breaking, a step that silently never happens, or an
-> outcome the log claims but that never landed is a **silent failure** too,
-> whether or not anyone logged a friction. Prior observations tell you what
-> is already known, including unverified findings this run's sessions may
-> confirm.
->
-> If you were given sessions that did not use the Skill, decide for each one
-> whether its work matches the case the Skill's `description` says it covers.
-> Judge from the goal first, then open the log. A match is a **missed
-> invocation** only if the Skill's outcome is missing. It is not one when the
-> outcome was delivered another way: another Skill or a workflow script ran
-> the step, or the log's `docsRead` shows the session read the Skill's
-> `SKILL.md` and followed it. You are done when every listed session
-> is ruled in or out.
->
-> Report every finding labelled silent failure or missed invocation, with its
-> session ids, quoted evidence, what the Skill promised against what happened,
-> and your best guess at why. If there are none, say how many sessions you
-> checked. For each rule and doc you loaded or read: its path, why it loaded or was read, and whether it was useful (yes, partly, no).
+A subagent's report is hearsay until you have verified it (CLAUDE.md): check
+each finding against the source it cites before you use it. A finding that
+holds up in part but not enough to act on is **unverified**: it goes into the
+Skill's `observations` (step 5), so a later run can build on it. A clean report
+names every session its brief listed; one that doesn't goes back to its
+subagent.
 
-A subagent's report is hearsay until you have verified it (CLAUDE.md). Check
-each finding against the source it cites before you use it, and check one
-claim from every clean report too: "nothing found" is a claim like any other.
-A finding that holds up in part but not enough to act on is **unverified**: it
-goes into the Skill's `observations` (step 5), so a later run can build on it.
-
-Done when every subagent has reported, each finding is verified, unverified,
-or dropped, and each clean report has had one claim checked.
+Done when every subagent has reported and each finding is verified, unverified
+or dropped.
 
 ## 3. Check closure completeness
 
@@ -130,21 +97,37 @@ For each other finding that clears that bar:
 - Search open issues first: the session id for a closure finding,
   `audit-skills <skill>` for a Skill finding.
 - **Match found**: comment with only the evidence the thread does not
-  already cite. A concern that recurs across runs belongs on one thread.
-- **No match**: file one `needs-triage` issue naming the Skill (or session),
-  whether it is a silent failure or a missed invocation, the session ids, the
-  quoted evidence, promised against delivered, and your hypothesis.
+  already cite. A concern that recurs across runs belongs on one thread. A comment
+  that adds a significant fact the thread lacks also sets `needs-triage`.
+- **No match**: file one `needs-triage` issue (`docs/agents/issue-tracker.md`'s
+  "Filing an issue") naming the Skill (or session), whether it is a silent
+  failure or a missed invocation, the session ids, the quoted evidence,
+  promised against delivered, and your hypothesis.
 - **Human-nudged closures** go on one standing thread per trend, never one
   issue per session.
+
+Before posting an issue or comment, run
+`pnpm exec tsx .agents/skills/audit-skills/scripts/check-states.ts --text <body file>`:
+every issue or PR state it writes must match GitHub now; reword a flag that
+misreads ordinary prose (#1627, #1720).
 
 Done when every finding is either an issue (filed or commented on) or headed
 for step 5 as an observation.
 
 ## 5. Tune the Inventory
 
-Grade each Skill by the definitions in `GLOSSARY.md` (`### Importance (of a Skill)`), after
-reading its `observations`: earlier runs' evidence counts alongside this
-window's.
+Grade each Skill's importance by the definitions below, after reading its
+`observations`: earlier runs' evidence counts alongside this window's.
+
+- **essential**: essential and broad; its absence would be felt across many
+  kinds of session (e.g. `log-session`, `domain-modeling`).
+- **routine**: it *is* a scheduled Routine's job, driving whole unattended
+  sessions (e.g. `digest`, `audit-docs`). Assign it on the observed fact that
+  scheduled sessions run it; a Skill invoked by hand is not `routine`.
+- **specialist**: essential within one kind of work, even a rare one (e.g.
+  `atlas-specimen`).
+- **supporting**: useful, but work proceeds without it.
+- **peripheral**: marginal or superseded; little pull even where it applied.
 
 - **Grade on felt absence, not counts.** Read each Skill's `mentionedIn`
   logs for where it **caught** something or where **skipping it cost**
@@ -157,15 +140,21 @@ window's.
 - **A missed invocation of an own Skill is a trigger problem**: step 4's
   issue, not a demotion. For a pack Skill, whose trigger we cannot fix, the
   grade is the lever.
-- **`role`** stays ≤ ~50 words and free of PR, issue or session ids. Re-read it
-  every run, grade changed or not, and rewrite any claim the evidence
-  contradicts.
+- **`role`** stays ≤ ~50 words and free of PR, issue or session ids. The
+  scorecard prints it; rewrite any claim this run's evidence contradicts.
 - **`observations`** hold 40 days of history. Append
-  `{ date: <today, UTC>, note: <citations> }` for every grade or role change,
-  verified or unverified finding (say which), or idea, but only when it cites
-  a session no remaining entry already cites. Remove every entry dated more
-  than 40 days before today; git keeps the history. Leave the other entries as
-  they are. If none remain, the field is `[]`.
+  `{ date: <today, UTC>, note }` for a grade or role change, a finding
+  (verified or unverified, say which) or an idea; a clean check appends
+  nothing. Write the note fresh, ≤ ~100 words: what this run found and the ids
+  (PRs, issues, sessions, commits) a later run needs to pick up the thread,
+  nothing git or GitHub already shows. Remove every entry dated more than 40
+  days before today; git keeps the history. If none remain, the field is `[]`.
+- **Routine runs**: in `layers/journal/content/current/routines/<routine>.yml`
+  (create it with `name: <routine>` and `runs: []` if absent), append a row for
+  each step 1 run whose `session` isn't listed yet: its `routineRuns` entry
+  (`session`, `startedAt`, `durationSeconds`) plus the usage. Then run
+  `pnpm exec tsx scripts/session/prune-routine-runs.ts`, which keeps the newest
+  30 per Routine.
 - **Coverage gaps**: create an entry for a Skill that is used but not
   inventoried (`category` is `general-engineering` for a pack Skill,
   `platform-operation` for our own). Propose removing an entry whose Skill is
@@ -174,16 +163,18 @@ window's.
   retirement, record it as this run's session-log `ideas` entry and never act
   on it.
 
-Done when every entry's grade and `role` match the evidence, and every issue
-or PR state your observations cite matches a live read this run.
+Done when every entry's grade and `role` match the evidence. Step 6 checks the
+issue and PR states your notes write.
 
 ## 6. Land the Inventory PR
 
-If step 5 changed nothing, there is no PR. Otherwise follow
-`docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR". The
-diff touches only `layers/journal/content/current/skills/*.yml`, every grade
-change cites its ≥2 sessions, and every removed observation is past 40 days.
-Anything else in the diff means you leave the PR open for a human.
+If step 5 changed nothing, there is no PR. Otherwise run
+`pnpm exec tsx .agents/skills/audit-skills/scripts/check-states.ts` (no `--text`:
+it checks the diff) and fix what it flags, as in step 4. Then follow
+`docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR". The diff touches
+only `layers/journal/content/current/skills/*.yml` and `routines/*.yml`, every
+grade change cites its ≥2 sessions, and every removed observation is past 40
+days. Anything else in the diff means you leave the PR open for a human.
 
-Log the session, with the step 3
-results (`orphanScan` included) in its summary.
+Invoke `close-session`, with the step 3
+results (`orphanScan` included) in the log's summary.

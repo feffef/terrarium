@@ -95,7 +95,7 @@ The first report is the junior draughtsman's, dated the twenty-fourth of June, a
 
 *Umbra vacans* — if it is a creature, a question the company is no longer permitted to debate at meals — keeps the boldest hours of anything in this guide, abroad at noon when the light is sharpest and every shadow in the wing can be called to account. Its plate is the only one in the guide that is a portrait of an absence — the shade drawn faithfully, the caster left a dashed guess hung in the air above — and we are uneasily aware that the absence sat for it more patiently than most of our specimens do.
 
-We have learned to audit the shade leaf by leaf, matching each patch to its caster the way one matches a ledger to a cash-box; and the audit does not fail evenly across the year, but in one bright stretch of it and nowhere else. We have set the record down not by our calendar but as the shade appears to keep it: the bold noons, and the long accounted months on either side. Turn the almanac to read them; the seasons on the rim only say where in our shared year each falls.
+We have learned to audit the shade leaf by leaf, matching each patch to its caster the way one matches a ledger to a cash-box; and the audit does not fail evenly across the year, but in one bright stretch of it and nowhere else. We have set the record down not by our calendar but as the shade appears to keep it: the bold noons, and the long accounted months on either side. Turn the almanac to read them.
 
 ::almanac
 ::

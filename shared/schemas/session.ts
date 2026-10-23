@@ -12,10 +12,23 @@ import { z } from 'zod'
 // The string-not-`z.date()` rationale lives with the shared refinement.
 import { utcTimestamp } from './timestamp'
 
+// A subagent's percent of the session's tokens, main session plus every
+// subagent, each weighted by its price relative to fresh input whatever the
+// model: a rough cost indicator, not a bill. The main session has the rest.
+// Weights: scripts/session/transcript-trace.ts (`weightOf`).
+const tokenShare = z.number().min(0).max(100)
+
 export const usefulVerdict = z.enum(['yes', 'partly', 'no'])
 export const ruleVerdict = z.object({ path: z.string(), reason: z.string(), useful: usefulVerdict })
 export type UsefulVerdict = z.infer<typeof usefulVerdict>
 export type RuleVerdict = z.infer<typeof ruleVerdict>
+export const adrHint = z.object({
+  adr: z.number().int().positive(),
+  via: z.enum(['path', 'text']),
+  readAfter: z.boolean(),
+  by: z.enum(['main', 'subagent']),
+})
+export type AdrHint = z.infer<typeof adrHint>
 
 /**
  * The grow-only `sessions` schema (ADR-0009). `status`/`kind` are queryable spines;
@@ -33,7 +46,7 @@ export const sessionSchema = z
     startedAt: utcTimestamp, // UTC ISO-8601 — session start (ordering anchor)
     endedAt: utcTimestamp, //   UTC ISO-8601 — session end / log authored
     // Autonomy spectrum, judged by who prompted — canonical definitions:
-    // GLOSSARY.md → Session.
+    // the log-session Skill.
     kind: z.enum(['interactive', 'delegated', 'autonomous']),
     goal: z.string(), // short plain headline — what the session worked on
     // `in-review`: the session opened a gated PR that hasn't merged, the norm at
@@ -64,6 +77,10 @@ export const sessionSchema = z
     rulesGlobal: z.array(z.string()).optional(),
     // The subset of the rule lists whose ADR was read after the rule loaded.
     rulesFollowedUp: z.array(z.string()).optional(),
+    // Each ADR `scripts/hooks/adr-read-hint.ts` pointed to, how the write matched
+    // it, and whether that agent read it in full afterwards. One entry per
+    // (adr, via, by); workflow agents count as `subagent`.
+    adrHints: z.array(adrHint).optional(),
     // Rules only a subagent or workflow agent loaded, and the `docsRead`
     // instruction docs only one read. Their verdicts sit in `ruleVerdicts` and
     // `docsRead` like any other, merged by the main session (#1941).
@@ -79,6 +96,10 @@ export const sessionSchema = z
           type: z.string().optional(),
           task: z.string().optional(),
           model: z.string().optional(),
+          durationSec: z.number().int().nonnegative().optional(),
+          toolCalls: z.number().int().nonnegative().optional(),
+          modelCalls: z.number().int().nonnegative().optional(),
+          tokenShare: tokenShare.optional(),
         }),
       )
       .optional(),

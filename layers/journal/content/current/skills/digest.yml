@@ -249,3 +249,40 @@ observations:
       fact-check subagent entry in the log. 19 consecutive clean daily
       audits now. No reverts in the 2-week sweep. No new silent failure.
       Grade/role unchanged.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), session_01XueFVQyVySVEKHxSHTFeTh
+      (2026-10-19, the 2026-10-18 Digest, PR #2261) freshly audited
+      end-to-end: `layers/journal/content/current/pages/digests/2026-10-18.md`
+      exists with real narrative content (confirmed on disk), rollup
+      numbers independently re-derived via `digest.ts gather 2026-10-18`
+      match the published footer exactly, 4 narrative claims spot-checked
+      against live PR bodies all accurate, the day's "worst" friction claim
+      checked against its own primary session log and correctly picked,
+      retention sweep (2026-10-11 Digest + 21 logs moved to archived)
+      verified on disk, not just claimed. 20 consecutive clean daily audits
+      now; the only historical case (2026-09-28, PR #1478) remains closed.
+      No reverts in the 2-week sweep. No new silent failure. Grade/role
+      unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check (audit-skills behaviour check): no new silent failure, 22
+      consecutive clean daily audits since the single 2026-09-28 #1478
+      case. Newly verified: session_011G3PKUqDog2WRSuqypmuJX (2026-10-19
+      digest, PR #2308 - rollup matches footer, fact-check caught 4 wrong
+      claims pre-merge, correctly attributed PR #2303 to the homepage files
+      unlike the original #1478 error class) and session_01Dz5nEANXqTtZzTki1C5ArD
+      (2026-10-20 digest, PR #2351 - rollup matches, fact-check fixed 2
+      claims pre-merge). Retention sweep holds exactly 7 consecutive dates.
+      No reverts in the 2-week sweep. Grade/role unchanged.
+  - date: "2026-10-23"
+    note: >-
+      Fourth occurrence of the "retention sweep's side effects reach
+      outside its own Space" pattern, as #2105's closing comment asked to
+      be reopened for: session_01T4UbBvJmjSunCwb3cUN68Q (PR #2394) hit a
+      hardcoded path in tests/unit/log-session.spec.ts, a different root
+      cause than the first three (#2108's e2e prose-assertion fix doesn't
+      cover it). Caught and fixed loudly in-session, correctly left for
+      human merge (test fix outside digest's allowed diff, ADR-0003).
+      Reopened #2105 with this evidence; relabeled needs-triage. Grade/role
+      unchanged (routine).

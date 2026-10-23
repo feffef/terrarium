@@ -32,7 +32,7 @@
 //   Prints the derived trace as JSON.
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
-import type { RuleVerdict, UsefulVerdict } from '../../shared/schemas/session.ts'
+import type { AdrHint, RuleVerdict, UsefulVerdict } from '../../shared/schemas/session.ts'
 import { DERIVED_REASON, FOLDED_TRACE_FIELDS } from '../../shared/trace-fields.ts'
 import {
   buildDocLineIndex,
@@ -45,7 +45,7 @@ import {
   type NearMiss,
   type ShellCommand,
 } from './shell-reads.ts'
-import { ruleAdr, ruleBlockFiles } from '../lib/adr-rules.ts'
+import { adrDocNumber, adrHintsIn, ruleAdr, ruleBlockFiles, type AdrHintVia } from '../lib/adr-rules.ts'
 import { root, runIfMain } from '../lib/cli.ts'
 
 /** The one authored-scratch file per container (one session per container in the
@@ -76,10 +76,22 @@ export interface DerivedRef {
   source: 'derived'
 }
 
-export interface SubagentRef {
+/** What a subagent's `tokenShare` in the log is computed from (shared/schemas/session.ts).
+ *  Output is left out: a subagent's transcript holds only its stream-start
+ *  count (CLI 2.1.306), and it is a small share anyway. */
+export interface Usage {
+  modelCalls: number
+  weightedTokens: number
+}
+
+/** `toolUseId` joins a dispatch to its transcript; the log never holds it. */
+export interface SubagentRef extends Partial<Usage> {
   type?: string
   task?: string
   model?: string
+  toolUseId?: string
+  durationSec?: number
+  toolCalls?: number
 }
 
 /** The mechanical trace — every field derived, none self-reported. Shapes match
@@ -101,6 +113,8 @@ export interface MechanicalTrace {
   durationSec?: number
   models: Record<string, number>
   toolCounts: Record<string, number>
+  /** The parent's own responses only; each subagent's sit on its `subagents` entry. */
+  usage?: Usage
   filesRead: string[]
   filesEdited: string[]
   /** Agent-instruction docs Bash output showed the session (#1074); the stitch
@@ -116,6 +130,8 @@ export interface MechanicalTrace {
    *  loaded: whole, by the Read tool, or in Bash output once `docIndex` is given
    *  (the shell detector's floor, not a whole read). */
   rulesFollowedUp: string[]
+  /** The ADRs `adr-read-hint.ts` pointed to; `readAfter` uses `adrReadInFull`. */
+  adrHints: AdrHint[]
   /** Rules only a subagent or workflow agent loaded. Set by `foldSubagentTrace`. */
   rulesLoadedBySubagents?: string[]
   /** Instruction docs only a subagent or workflow agent read. Set by `foldSubagentTrace`. */
@@ -127,6 +143,8 @@ export interface MechanicalTrace {
   commandSkills: string[]
   subagents: SubagentRef[]
   prSignals: string[]
+  /** A PR merge ran and no `close-session` Skill call followed the last one (#2424). */
+  mergedWithoutClose: boolean
 }
 
 const EDIT_TOOLS = new Set(['Edit', 'Write', 'NotebookEdit'])
@@ -366,6 +384,7 @@ export function shellReadScanOf(
     const parser = scanShellReads(commands, rel, resolveGlob)
     for (const [p, command] of parser.creditedBy) {
       const path = resolveAgainstCdDir(p, command, rel)
+      if (!docIndex.sizes.has(canonicalizeInstructionPath(path))) continue // a doc missing from the checkout can't be credited from output
       unshown.push({ command, token: p, path, rule: 'named by the command, but its output showed too little of this doc' })
     }
     parsed.push(...parser.nearMisses.filter((m) => !crediting.has(m.command)))
@@ -530,6 +549,35 @@ export function findLatestTranscript(cwd: string, home: string | undefined): str
   return jsonls.sort((a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs)[0]
 }
 
+/** Whether `records` read ADR `n` in full: a `Read` with no offset or limit,
+ *  or a shell read whose output showed enough of it (ADR-0009). `rulesFollowedUp`
+ *  and `scripts/hooks/adr-read-hint.ts` share it so they can't diverge. */
+export function adrReadInFull(
+  records: Record<string, unknown>[],
+  n: string,
+  docIndex?: DocLineIndex,
+  rel: (p: string) => string = relativizer(records),
+): boolean {
+  const isAdr = (p: string) => adrDocNumber(p) === n
+  const read = records.some((r) => {
+    const content = (r.message as { content?: unknown } | undefined)?.content
+    return Array.isArray(content) && content.some((b: { type?: string; name?: string; input?: Record<string, unknown> }) =>
+      b?.type === 'tool_use' && b.name === 'Read' && b.input?.offset === undefined && b.input?.limit === undefined
+      && typeof b.input?.file_path === 'string' && isAdr(rel(b.input.file_path)))
+  })
+  return read || (!!docIndex && scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths.some(isAdr))
+}
+
+/** One entry per (adr, via, by), read after if any of its hints was. */
+function mergeAdrHints(hints: AdrHint[]): AdrHint[] {
+  const out = new Map<string, AdrHint>()
+  for (const h of hints) {
+    const key = `${h.adr}|${h.via}|${h.by}`
+    out.set(key, { ...h, readAfter: h.readAfter || !!out.get(key)?.readAfter })
+  }
+  return [...out.values()]
+}
+
 /** Derive the mechanical trace from parsed transcript records. Pure — the
  *  testable core. `env` is injectable (defaults to `process.env`). `docIndex`
  *  is what `docsReadViaShell` is credited against (ADR-0009): the lander and
@@ -549,10 +597,12 @@ export function extractTrace(
   const commandSkills: string[] = []
   const subagents: SubagentRef[] = []
   const prSignals: string[] = []
+  let mergedWithoutClose = false
   const rules: string[] = []
   const alwaysLoadedRules: string[] = []
   const ruleLoadedAt = new Map<string, number>()
-  const readAt: [string, number][] = []
+  const hintAt: (readonly [{ adr: string; via: AdrHintVia }, number])[] = []
+  const usageById = new Map<string, ApiUsage>()
 
   for (const [i, rec] of records.entries()) {
     const ts = typeof rec.timestamp === 'string' ? Date.parse(rec.timestamp) : NaN
@@ -560,16 +610,20 @@ export function extractTrace(
 
     const att = rec.attachment as { type?: string; path?: string; content?: unknown; files?: { path?: string }[] } | undefined
     if (att?.type === 'nested_memory' && att.path?.includes('/.claude/rules/')) rules.push(ruleKey(att.path))
-    if (att?.type === 'hook_additional_context') rules.push(...hintedRules(att.content))
+    if (att?.type === 'hook_additional_context') {
+      rules.push(...hintedRules(att.content))
+      hintAt.push(...adrHintsIn(hintText(att.content)).map((h) => [h, i] as const))
+    }
     if (att?.type === 'instructions') {
       for (const f of att.files ?? []) if (f.path?.includes('/.claude/rules/')) alwaysLoadedRules.push(ruleKey(f.path))
     }
     for (const r of [...alwaysLoadedRules, ...rules]) if (!ruleLoadedAt.has(r)) ruleLoadedAt.set(r, i)
 
-    const msg = rec.message as { content?: unknown; model?: string } | undefined
+    const msg = rec.message as { content?: unknown; model?: string; id?: string; usage?: ApiUsage } | undefined
     if (rec.type === 'assistant' && msg?.model) {
       models[msg.model] = (models[msg.model] ?? 0) + 1
     }
+    if (rec.type === 'assistant' && msg?.id && msg.usage) usageById.set(msg.id, msg.usage)
 
     const content = msg?.content
     if (rec.type === 'user') commandSkills.push(...commandSkillNames(content))
@@ -582,24 +636,28 @@ export function extractTrace(
       const input = b.input ?? {}
       toolCounts[name] = (toolCounts[name] ?? 0) + 1
 
-      if (name === 'Read') {
-        reads.push(input.file_path as string)
-        if (input.offset === undefined && input.limit === undefined) readAt.push([input.file_path as string, i])
-      }
+      if (name === 'Read') reads.push(input.file_path as string)
       else if (EDIT_TOOLS.has(name)) edits.push(input.file_path as string)
-      else if (name === 'Skill') skills.push((input.skill ?? input.command) as string)
-      else if (name === 'Agent' || name === 'Task') {
+      else if (name === 'Skill') {
+        const skill = (input.skill ?? input.command) as string
+        skills.push(skill)
+        if (skill === 'close-session') mergedWithoutClose = false
+      } else if (name === 'Agent' || name === 'Task') {
         subagents.push({
           type: input.subagent_type as string,
           task: input.description as string,
           model: input.model as string | undefined,
+          toolUseId: (b as { id?: string }).id,
         })
       } else if (name.includes('create_pull_request')) {
         prSignals.push((input.title as string) ?? '(pr)')
+      } else if (name.endsWith('merge_pull_request')) {
+        mergedWithoutClose = true
       }
 
       if (name === 'Bash') {
         const cmd = (input.command as string) ?? ''
+        if (cmd.includes('scripts/github/merge-pr.ts')) mergedWithoutClose = true
         if (cmd.includes('git push') || cmd.includes('pr create')) {
           prSignals.push(`(bash) ${cmd.slice(0, 60)}`)
         }
@@ -614,10 +672,7 @@ export function extractTrace(
   const rel = relativizer(records)
   const adrReadAfter = (rule: string, at: number): boolean => {
     const n = ruleAdr(basename(rule))
-    if (n === undefined) return false
-    const isAdr = (p: string) => p.startsWith(`docs/adr/${n}-`)
-    if (readAt.some(([p, j]) => j > at && typeof p === 'string' && isAdr(rel(p)))) return true
-    return !!docIndex && scanShellReadsByOutput(bashCommandsOf(records.slice(at + 1)), docIndex, rel).paths.some(isAdr)
+    return n !== undefined && adrReadInFull(records.slice(at + 1), n, docIndex, rel)
   }
 
   return {
@@ -631,16 +686,50 @@ export function extractTrace(
     durationSec: started !== undefined && ended !== undefined ? Math.round((ended - started) / 1000) : undefined,
     models,
     toolCounts,
+    usage: sumUsage([...usageById.values()]),
     filesRead: dedup(reads).filter(isContentPath).map(rel),
     filesEdited: dedup(edits).filter(isContentPath).map(rel),
     docsReadViaShell: docIndex ? scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths : [],
     rulesLoaded: dedup(rules).filter((r) => !alwaysLoadedRules.includes(r)),
     rulesGlobal: dedup(alwaysLoadedRules),
     rulesFollowedUp: [...ruleLoadedAt].filter(([r, at]) => adrReadAfter(r, at)).map(([r]) => r),
+    adrHints: mergeAdrHints(hintAt.map(([h, at]) => ({
+      adr: Number(h.adr), via: h.via, readAfter: adrReadInFull(records.slice(at + 1), h.adr, docIndex, rel), by: 'main' as const,
+    }))),
     skillsUsed: dedup([...skills, ...commandSkills]),
     commandSkills: dedup(commandSkills),
     subagents,
     prSignals,
+    mergedWithoutClose,
+  }
+}
+
+interface ApiUsage {
+  input_tokens?: number
+  cache_read_input_tokens?: number
+  cache_creation_input_tokens?: number
+  cache_creation?: { ephemeral_5m_input_tokens?: number; ephemeral_1h_input_tokens?: number }
+}
+
+// Weights from Anthropic's prompt-caching prices.
+function weightOf(u: ApiUsage): number {
+  const split = u.cache_creation
+  const write = split
+    ? 1.25 * (split.ephemeral_5m_input_tokens ?? 0) + 2 * (split.ephemeral_1h_input_tokens ?? 0)
+    : 1.25 * (u.cache_creation_input_tokens ?? 0)
+  return (u.input_tokens ?? 0) + write + 0.1 * (u.cache_read_input_tokens ?? 0)
+}
+
+function sumUsage(usages: ApiUsage[]): Usage | undefined {
+  if (usages.length === 0) return undefined
+  return { modelCalls: usages.length, weightedTokens: Math.round(usages.reduce((n, u) => n + weightOf(u), 0)) }
+}
+
+function statsOf(trace: MechanicalTrace): Partial<SubagentRef> {
+  return {
+    durationSec: trace.durationSec,
+    toolCalls: Object.values(trace.toolCounts).reduce((a, b) => a + b, 0),
+    ...trace.usage,
   }
 }
 
@@ -648,6 +737,13 @@ const subagentsDir = (transcriptPath: string) => join(dirname(transcriptPath), b
 
 /** One depth-1 subagent's transcript, named for the hook payload's `agent_id`. */
 export const subagentTranscript = (transcriptPath: string, agentId: string) => join(subagentsDir(transcriptPath), `agent-${agentId}.jsonl`)
+
+/** An agent's own transcript: a depth-1 subagent's, else one nested deeper,
+ *  such as a workflow agent's under `workflows/<runId>/`. */
+export const agentTranscript = (transcriptPath: string, agentId: string): string | undefined => {
+  const direct = subagentTranscript(transcriptPath, agentId)
+  return existsSync(direct) ? direct : subagentTranscriptPaths(transcriptPath).find((p) => basename(p) === `agent-${agentId}.jsonl`)
+}
 
 /** Every dispatched subagent's own transcript, given the parent's path: the
  *  harness writes them to `<parent-dir>/<parent-basename>/subagents/*.jsonl`
@@ -673,23 +769,24 @@ export interface SubagentJsonl {
   label: string
   jsonl: string
   agent?: SubagentRef
+  toolUseId?: string
 }
 
 /** One subagent's parsed transcript; `agent` names a workflow agent (#1876). */
 export interface SubagentRecords {
   records: Record<string, unknown>[]
   agent?: SubagentRef
+  toolUseId?: string
 }
 
 /** Every subagent transcript beside `transcriptPath`, read tolerantly: a sibling
  *  jsonl that vanished or won't read costs its reads, not the whole trace.
  *  `label` is the sibling `.meta.json`'s dispatch `description`, else the agent id.
- *  `agent` is set only for a workflow agent: an Agent/Task dispatch is already
- *  in the parent's `subagents`, but a workflow's agents are not (#1876).
- *  `foldSubagentTrace` adds its model. */
+ *  `agent` names it for `foldSubagentTrace`, which lists it unless its
+ *  `toolUseId` matches a dispatch already in the parent's `subagents`: a
+ *  workflow agent or a nested agent has none there (#1876). */
 export function readSubagentJsonls(transcriptPath: string): SubagentJsonl[] {
   const out: SubagentJsonl[] = []
-  const workflows = join(subagentsDir(transcriptPath), 'workflows') + '/'
   for (const p of subagentTranscriptPaths(transcriptPath)) {
     let jsonl
     try {
@@ -699,14 +796,16 @@ export function readSubagentJsonls(transcriptPath: string): SubagentJsonl[] {
     }
     let label = basename(p, '.jsonl').replace(/^agent-/, '')
     let type: string | undefined
+    let toolUseId: string | undefined
     try {
-      const { description, agentType } = JSON.parse(readFileSync(p.replace(/\.jsonl$/, '.meta.json'), 'utf8'))
-      if (typeof description === 'string' && description) label = description
-      if (typeof agentType === 'string') type = agentType
+      const meta = JSON.parse(readFileSync(p.replace(/\.jsonl$/, '.meta.json'), 'utf8'))
+      if (typeof meta.description === 'string' && meta.description) label = meta.description
+      if (typeof meta.agentType === 'string') type = meta.agentType
+      if (typeof meta.toolUseId === 'string') toolUseId = meta.toolUseId
     } catch {
       /* no readable meta: keep the agent id */
     }
-    out.push(p.startsWith(workflows) ? { label, jsonl, agent: { type, task: label } } : { label, jsonl })
+    out.push({ label, jsonl, agent: { type, task: label }, toolUseId })
   }
   return out
 }
@@ -730,9 +829,13 @@ export function foldSubagentTrace(
   if (subagents.length === 0) return trace
   const subs = subagents.map(({ records }) => extractTrace(records, env, docIndex))
   const folded = { ...trace }
+  const stats = subs.map(statsOf)
+  const transcriptOf = (id?: string) => (id ? subagents.findIndex((a) => a.toolUseId === id) : -1)
+  const dispatched = new Set(trace.subagents.map((s) => transcriptOf(s.toolUseId)))
   folded.subagents = [
-    ...trace.subagents,
-    ...subagents.flatMap(({ agent }, i) => (agent ? [{ ...agent, model: busiestModelId(subs[i]!.models) }] : [])),
+    ...trace.subagents.map((s) => ({ ...s, ...stats[transcriptOf(s.toolUseId)] })),
+    ...subagents.flatMap(({ agent }, i) =>
+      agent && !dispatched.has(i) ? [{ ...agent, model: busiestModelId(subs[i]!.models), ...stats[i] }] : []),
   ]
   for (const { field } of FOLDED_TRACE_FIELDS) {
     folded[field] = dedup([...trace[field], ...subs.flatMap((s) => s[field])])
@@ -745,6 +848,7 @@ export function foldSubagentTrace(
     (r) => !folded.rulesGlobal.includes(r) && !folded.rulesLoaded.includes(r),
   )
   folded.rulesFollowedUp = dedup([...trace.rulesFollowedUp, ...subs.flatMap((s) => s.rulesFollowedUp)])
+  folded.adrHints = mergeAdrHints([...trace.adrHints, ...subs.flatMap((s) => s.adrHints.map((h) => ({ ...h, by: 'subagent' as const })))])
   const mainDocs = new Set([...trace.filesRead, ...trace.docsReadViaShell].map(canonicalizeInstructionPath))
   folded.docsReadBySubagents = dedup(subs.flatMap((s) => [...s.filesRead, ...s.docsReadViaShell])).filter(
     (p) => isInstructionDoc(p) && !mainDocs.has(canonicalizeInstructionPath(p)),
@@ -854,10 +958,15 @@ export function stitch(authored: AuthoredScratch, trace: MechanicalTrace): Recor
   if (trace.rulesLoaded.length) entry.rulesLoaded = trace.rulesLoaded
   if (trace.rulesGlobal.length) entry.rulesGlobal = trace.rulesGlobal
   if (trace.rulesFollowedUp.length) entry.rulesFollowedUp = trace.rulesFollowedUp
+  if (trace.adrHints.length) entry.adrHints = trace.adrHints
   if (trace.rulesLoadedBySubagents?.length) entry.rulesLoadedBySubagents = trace.rulesLoadedBySubagents
   if (docsReadBySubagents.length) entry.docsReadBySubagents = docsReadBySubagents
   if (authored.ruleVerdicts?.length) entry.ruleVerdicts = authored.ruleVerdicts
-  if (trace.subagents.length) entry.subagents = trace.subagents
+  const total = [trace.usage, ...trace.subagents].reduce((n, u) => n + (u?.weightedTokens ?? 0), 0)
+  const share = (w?: number) => (w === undefined || total === 0 ? {} : { tokenShare: Math.round((1000 * w) / total) / 10 })
+  if (trace.subagents.length) {
+    entry.subagents = trace.subagents.map(({ toolUseId: _, weightedTokens, ...s }) => ({ ...s, ...share(weightedTokens) }))
+  }
   if (trace.gitBranch) entry.gitBranch = trace.gitBranch
   if (trace.entrypoint) entry.entrypoint = trace.entrypoint
   if (trace.cliVersion) entry.cliVersion = trace.cliVersion

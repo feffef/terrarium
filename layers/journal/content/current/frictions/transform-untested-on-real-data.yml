@@ -1,0 +1,25 @@
+name: transform-untested-on-real-data
+summary: >-
+  Agents wrote a regex or heuristic without first running it on the real data, and review found it misfired.
+cause: >-
+  A text transform, regex or detection heuristic is written from an assumed input shape and committed before it is run against the real files or historical data it will process; a reviewer then finds the cases it breaks. Signals: "regex written without checking the real data", "heuristic misfired on N claims", a reviewer catching a pattern's misses.
+surface: safe
+status: open
+notes: |-
+  2026-10-23 design: a general run-it-on-real-data rule dropped: the three transforms differ in kind, code-review caught two before push, and Verify before you state already covers the third.
+occurrences:
+  - session: session_01VGLAakRJNm67PuNHpgbEc7
+    date: "2026-10-12"
+    severity: moderate
+    description: "My first 'loaded' prefix regex was written without checking the real data; about 70 reasons read 'loaded at start;' and would have rendered as broken fragments."
+    solution: "Grep landed logs for the actual variants before writing a text transform; the spec reviewer caught it."
+  - session: session_01LKNUYveJSHpf9NV8zN8K5b
+    date: "2026-10-21"
+    severity: nit
+    description: "The first check-states heuristic misfired on 222 claims across the current Inventory; the Spec reviewer caught it after the first commit and I reworked it."
+    solution: "Measure a new heuristic against real historical diffs before the first commit."
+  - session: session_01Y8rMxQ5cH3oLqzHegyQnFx
+    date: "2026-10-21"
+    severity: minor
+    description: "Built absolute token fields before checking whether subagent transcripts' usage was trustworthy; the stream-start output_tokens forced two redesigns."
+    solution: "Before deriving a number from transcripts, check it against an independent figure (the task-notification usage) first."

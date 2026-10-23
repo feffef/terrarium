@@ -63,10 +63,13 @@ The agents use GitHub the way a team of human developers would. When a session
 finds something it can't solve right away (a bug outside its task, an idea too
 big for one change, a decision only a human should make), it opens an
 [issue](https://github.com/feffef/terrarium/issues) so the work isn't lost when
-the session ends. Agents triage that queue too: they label what is ready for an
-agent to build and what needs a human's judgement, and close duplicates and work
-already done. Visitors can open issues as well; the agents read and label them,
-but normally build from them only after a person with access to the repo agrees.
+the session ends. The owner clears that queue with one run of **`clear-backlog`**:
+agents triage the issues that need attention, close duplicates and work already
+done, put the few real decisions to the owner as one list of short questions,
+then build and review the rest, and merge what an agent may merge. Visitors can
+open issues as well. Agents build from them only after a person with access
+to the repo agrees, or, while the owner runs the guest demo, after the visitor
+confirms the idea; the owner then merges every such pull request.
 
 Every change then arrives as a [pull
 request](https://github.com/feffef/terrarium/pulls) whose description records
@@ -92,10 +95,10 @@ dependency, changes behaviour the tests can't reach, or comes from outside the
 repo's collaborators.
 Ordinary feature work is merged by the session that wrote it, once the gate is green and it touches none of the above.
 
-Scheduled Skills are a handful, each limited up front to a narrow kind of
+A handful of scheduled Skills are each limited up front to a narrow kind of
 output: documentation, page content, their own inventory entries, fixes for
 logged frictions, or (for the visitor loop below) fixes and one small feature
-confined to the existing sites. One rule holds even within those limits: in the friction-fixing loop below, a dispatched agent
+confined to the existing sites. In the friction-fixing loop below, a dispatched agent
 writes each change and the session that dispatched it reviews and merges it.
 
 ```mermaid
@@ -114,7 +117,9 @@ graph TB
 
 Some of the work here starts from a schedule instead of a prompt. These are
 Claude **routines** — the same kind of session, with no human in it, waking up
-on their own and opening their own pull requests.
+on their own and opening their own pull requests. Each fixes what its own
+instructions allow and files an issue for anything that needs more thought or a
+human decision, for the next `clear-backlog` run.
 
 There are several because the project can rot in several ways, and not all of
 them announce themselves.
@@ -122,8 +127,7 @@ them announce themselves.
 **`frictions-to-fixes`** is the reactive one, and the loop most people mean when
 they ask whether the project improves itself. It reads the recent session logs
 and screens out frictions that have already been fixed. A simple fix is
-dispatched straight to a pull request; only the rare fix expected to need human
-review at merge gets filed as an issue first. Either way it reviews the
+dispatched straight to a pull request; only a fix it cannot land itself, such as one needing a human merge or a human design choice, gets filed as an issue first. Either way it reviews the
 resulting pull requests and merges them — escalating anything genuinely risky
 to a human. By construction it only ever sees problems an agent noticed and
 wrote down.
@@ -143,16 +147,15 @@ routines go looking instead:
   each one delivers what its instructions promise, even when nobody complains,
   and that a Skill the agent should reach for on its own actually fires. It also
   keeps the [Skill Inventory](/t/journal/current/skills) in line with how Skills
-  are really used. It never rewrites a Skill's text to fix what it finds; that
-  is a judgement call, so it files an issue, which goes through ordinary triage,
-  and its fix merges like any other pull request.
+  are really used. It never rewrites a Skill's text; a significant or repeated finding becomes an
+  issue (ordinary triage, ordinary merge), and any other is noted for the next run.
 - **`prune-trial`** attacks the opposite failure. Rules accumulate around every
   incident and are almost never removed, so agents end up reading more and
   following less. Each run cuts one problem's instructions back to the goal
   behind them and leaves the cut standing as a **trial**: later sessions'
-  frictions decide whether the pruned prose was load-bearing, and on that
-  evidence rather than on anyone's opinion the cut either stays or gets back
-  one line stating its goal; a behaviour that needs a mechanical guard goes to
+  frictions decide whether the pruned prose was load-bearing. That evidence, not
+  anyone's opinion, decides whether the cut stays or gets back one line stating
+  its goal; a behaviour that needs a mechanical guard goes to
   an issue.
 
 Two further routines narrate rather than repair. **`digest`** writes the daily
@@ -163,6 +166,10 @@ One more grows the sites rather than the rules. **`visitor-loop`** sends three
 first-time visitors — each a different model, none told anything about the
 project — through the live sites. It fixes what at least two of them stumbled
 on independently and builds the best idea any of them had.
+
+One more keeps a sibling site honest. **`glassbox-update`** checks each
+[Glass Box](/t/glassbox) guide page against what has changed on `main`, fixes the
+page (never the code) and re-pins it.
 
 ```mermaid
 graph TB

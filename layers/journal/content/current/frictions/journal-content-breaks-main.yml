@@ -1,47 +1,19 @@
 name: journal-content-breaks-main
 summary: >-
-  One session log that broke the tests landed without checks and turned every open change red.
+  A session log that aged out of the live week broke a test, turning every open change red.
 cause: >-
-  Session logs and Digests land on main without a gate (ADR-0009) while e2e tests and the strict session schema assert on them, so one log turns main and every open PR red.
+  Session logs and Digests land on main without a gate (ADR-0009), and the retention sweep moves logs to archived, while e2e and unit tests read specific logs' text or current paths, so the sweep or one log turns the gate red for the Digest PR and others. Signals: a gate red after an archive sweep, a test reading content/current/sessions by path, an assertion on a log's wording.
 surface: safe
-status: open
-ref: "issue #1784; PR #1792 (regressed); issue #2105; PR #2103 blocked on it; fix PR from frictions-to-fixes 2026-10-16"
+status: tracked
+ref: "Issue #2105, reopened 2026-10-23 by audit-skills for the 01T4UbBv retention-sweep break (a test reading a content/current path); that break was fixed by PR #2394, which closed issue #2398 (regression of #2108). A guard against tests reading content/current paths waits for a recurrence."
 fixes:
-  - pr: 1748
-    date: "2026-10-10"
-    summary: "The log lander now refuses to commit a session log that main's schema would reject."
-  - pr: 1792
-    date: "2026-10-11"
-    summary: "The log tool now tells the agent when its log will be held because main's schema rejects it."
   - pr: 2108
     date: "2026-10-16"
     summary: "Removed a browser-test assertion that an archived session log's wording could turn red."
+  - pr: 2394
+    date: "2026-10-22"
+    summary: "A unit test that read a session log by its current path now reads the archived copy, so the retention sweep no longer turns the gate red."
 occurrences:
-  - session: session_01CF4k9jXS9wLrcPVsGduZmn
-    date: "2026-10-08"
-    severity: moderate
-    description: "The e2e smoke tests' not.toContain('No document at') checks can be tripped by any Journal content that quotes the 404 page, which an idea in a session log did; main's push gate went red for three runs and every open PR with it."
-    solution: "PR 1695 matches the markup. Consider the same review for other prose-substring assertions in the e2e suites."
-  - session: session_01KCWd4fWsUfUxL6uT4Bephj
-    date: "2026-10-08"
-    severity: moderate
-    description: "Retention sweep archived a Digest that a blog e2e test hard-coded under current, failing the gate and forcing an out-of-scope test edit."
-    solution: "Make the blog e2e check date-independent, or have the digest Skill warn that the sweep can break date-pinned tests."
-  - session: session_015BjYk46dntcMuAWMn1z4Zw
-    date: "2026-10-10"
-    severity: major
-    description: "Nearly shipped a stitch that writes a new schema field; this session's log would have landed on main and failed main's strict schema for every PR until merge."
-    solution: "Make the lander validate against origin/main's session schema too, or document an expand-then-write order for schema fields in ADR-0009's evolution policy."
-  - session: session_01LzWPjhbEKVo8HK7oTPqWK9
-    date: "2026-10-10"
-    severity: minor
-    description: "Working on the rulesFollowedUp branch, which lacked #1748, risked landing this session's own log with a field main rejects"
-    solution: "Switched back to the #1748 branch before Stop; with #1748 merged, the lander now refuses such logs itself"
-  - session: session_01WoJ2cTAuA3Qo9Mi9fd6Tki
-    date: "2026-10-11"
-    severity: minor
-    description: "The lander validates logs against main's schema, so a session adding log fields cannot use them in its own log until merge; found by reading log-session.ts"
-    solution: "Mention it in the log-session Skill next to the schema note"
   - session: session_01F3a2MbH4xUH7J7Y1hLg2TX
     date: "2026-10-16"
     severity: moderate
@@ -52,3 +24,8 @@ occurrences:
     severity: minor
     description: "The digest run's PR description diagnosed the failure but did not notice that main had already fixed it, so the PR sat red for hours."
     solution: "Have the digest Skill fetch main and re-check a red gate against it before leaving a PR for a human."
+  - session: session_01T4UbBvJmjSunCwb3cUN68Q
+    date: "2026-10-22"
+    severity: moderate
+    description: "Archive sweep moved a session log that a unit test reads by its current path, so the gate failed; the Skill's allowed diff cannot include the fix."
+    solution: "Make the test not depend on a log that ages out (fixture copy), or have the sweep skip it."

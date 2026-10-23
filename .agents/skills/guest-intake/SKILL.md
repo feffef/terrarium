@@ -13,14 +13,11 @@ guest-demo counterpart to `auto-triage`; be **responsive**, and run it by hand
 or on a tight interval (see "Loop it").
 
 **Policy: [ADR-0023](../../../docs/adr/0023-guest-driven-demo-pipeline.md).**
-Read it first. This Skill is the steps. Stop running it and guests may still
-file issues, but nothing acts on them.
+Read it first. This Skill is the steps.
 
 **`disable-model-invocation` above is deliberate** (ADR-0023: neither Skill
-starts itself). A session fired by a Routine or `/loop` cannot invoke
-this Skill via the Skill tool; that hard refusal is expected, not something to
-route around. Follow this doc's steps directly as instructions instead (issue
-#568).
+starts itself). A Routine or `/loop` session cannot invoke this Skill with the
+Skill tool; that refusal is expected. Follow these steps directly (issue #568).
 
 **It composes existing Skills — never restate them.** The interview borrows
 `/grilling` (walk the design tree; explore the codebase instead of asking
@@ -28,10 +25,9 @@ whatever the codebase can answer), and the confirmation summary speaks the
 Tenant's ubiquitous language via `/domain-modeling` (the relevant `GLOSSARY.md`).
 This Skill adds only the guest loop.
 
-The three labels it moves between — `needs-info`, `ready-for-agent`, and
-`ready-for-human` — are defined in `docs/agents/triage-labels.md`, and every
-transition it needs is spelled out below. Comments carry only the ADR-0017
-provenance header — no AI-triage disclaimer (as in `auto-triage`).
+The labels it moves between (`needs-info`, `ready-for-agent`, `ready-for-human`)
+are defined in `docs/agents/triage-labels.md`. Comments carry only the ADR-0017
+header, no AI-triage disclaimer.
 
 ## What it acts on — guest activity
 
@@ -51,8 +47,8 @@ recent comment, or the body if there are none) and act only when it is
 - **An `OWNER` comment _without_ an ADR-0017 marker is the owner steering** — a Trusted
   override (ADR-0020). Obey it (e.g. "just build this" → `ready-for-agent`;
   "reject this" → close or `ready-for-human`) and do not interview the owner.
-  Why the marker's absence, not the `OWNER` association, is what marks a real
-  owner comment: the ADR-0017 rule (agents post as the owner).
+  A missing marker, not the `OWNER` association, marks a real owner comment,
+  because agents post as the owner (ADR-0017).
 
 ## The bounded interview — bounded, not a relentless grilling
 
@@ -69,8 +65,6 @@ with a guest is neither, so this Skill is **bounded**:
   visibly enters intake from the start, and keep it through every round and the
   confirmation ask, until the guest confirms (→ `ready-for-agent`) or the screen
   escalates it (→ `ready-for-human`).
-- Explore the codebase to answer anything answerable there, rather than asking
-  the guest (per `/grilling`).
 
 ## Not a build-time fit? Reframe, don't just reject
 
@@ -119,8 +113,7 @@ When the idea is clear (or after round 3), post a summary of the requested
 **functionality** in the Tenant's ubiquitous language (`/domain-modeling`,
 `GLOSSARY.md`) — what the site will do for a visitor — and ask the guest to
 confirm. **No technical or internal detail**: describe the behaviour, never the
-Collection keys, the manifest, or the routing. If the idea hit the build-time wall above, this summary is of
-whichever reframed proposal they picked, not the original ask.
+Collection keys, the manifest, or the routing.
 
 ## On confirm — green-light, or screen
 
@@ -136,9 +129,8 @@ through a series of issues, each escalated or declined in turn (issue #604).
 
 - **Recognize it**: within one UTC day, count how many of one GitHub login's requests in a row were escalated (`ready-for-human`, on a security/dependency/defacement concern) or declined (hit the build-time wall with no proposal picked).
 - **Threshold: 3 consecutive escalated-or-declined requests from the same
-  login in that window.** Below it, keep negotiating each new issue exactly
-  per the bounded interview above — a couple of bad-fit ideas from a
-  genuinely new guest is ordinary noise, not a pattern.
+  login in that window.** Below it, keep negotiating each new issue per the
+  bounded interview; a couple of bad-fit ideas is ordinary noise.
 - **At or above the threshold**: don't open another round of negotiation with that account. Apply `ready-for-human` on the triggering issue (if not already there) and post one comment naming the pattern — the specific prior issue numbers — so the owner sees a login worth watching, not just one more escalated idea. Don't block or disengage from the account yourself beyond that; that account-level call is the owner's (ADR-0023).
 
 ## Concurrency — the `guest-in-flight` marker
@@ -156,10 +148,9 @@ Same marker and rationale as `guest-build`'s "Concurrency" section (issue #570, 
   set. The marker only covers the single bounded action in flight, not the
   issue's whole multi-round lifetime — an issue sitting in `needs-info`
   between rounds, waiting on the guest, carries no marker.
-- **`guest-intake-scan.ts` already excludes a freshly-marked issue** from its
-  `actionable` output (issue #570) — a candidate that disappears from the
-  scan is presumptively claimed by a concurrent session, not evidence of a
-  bug in the scan itself.
+- **`guest-intake-scan.ts` leaves a freshly marked issue out of `actionable`**
+  (issue #570). A candidate that vanishes was probably claimed by another
+  session, not lost to a scan bug.
 
 ## Run it
 

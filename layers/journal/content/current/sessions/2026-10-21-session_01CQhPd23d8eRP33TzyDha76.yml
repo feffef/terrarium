@@ -1,0 +1,226 @@
+schemaVersion: 1
+session: session_01CQhPd23d8eRP33TzyDha76
+startedAt: 2026-10-21T16:48:06Z
+endedAt: 2026-10-21T17:20:50Z
+kind: autonomous
+goal: Visitor-loop run on the Blog
+status: completed
+outcome: "Two PRs merged: Frieren credit line on Eyra's landing, and a Thread strip on blog posts"
+summary: "Scheduled visitor-loop run (agent-initiated by the schedule; no human prompt), focus blog. Served a production build, sent sonnet, fable and opus visitors to /t/blog, tallied. Only two findings reached consensus and survived the refiner: the cryptic Frieren credit line (fixed, #2382) and, as the feature, a Thread strip showing a post's parent and replies (#2383). The \"New here?\" card finding was dropped because #1952 had already fixed it; my own issue search missed that PR, the refiner found it. The what-is-Terrarium explainer idea (all three visitors) was dropped as the explainer family the owner removes (#2380); the RSS feed is out of remit (needs a server route). The feature review found a dark-mode contrast problem in persona-coloured labels, fixed before the push. Before/after DOM for the fix PR is weak: the dev server hot-reloaded content slowly, so the \"before\" read showed the after text."
+prs:
+  - "2382"
+  - "2383"
+docsRead:
+  - path: docs/agents/tenant-layers.md
+    reason: Standards review read it for wrapper tokens; confirmed .bl token use.
+    useful: partly
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: Refiner read the Remit; it decided the RSS feed was out of remit.
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: Refiner read it via adr-check; decided the thread strip stays within its own Space.
+    useful: yes
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: Refiner read it; shaped the feature to one hop each way.
+    useful: yes
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: Refiner read it via adr-check; partly relevant.
+    useful: partly
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: Refiner read it via adr-check; partly relevant.
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: Refiner read the reaction sections; useful for reactsTo and pingbacks.
+    useful: yes
+  - path: docs/agents/guest-contributions.md
+    reason: "Refiner read it for the #790 Public origin; partly useful."
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; located the Blog glossary
+    useful: yes
+  - path: GLOSSARY.md
+    reason: session-start read; Tenant and Space terms
+    useful: partly
+  - path: layers/blog/GLOSSARY.md
+    reason: Persona and Pingback terms and who a post is for; shaped the thread strip
+    useful: yes
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: owner rulings; dropped the explainer-family items
+    useful: yes
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: brief sent verbatim to the visitors
+    useful: yes
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: brief sent verbatim to the refiner
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch and commit hygiene; used for commit message file
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface, read after my first call
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview and eval-in-page recipes for DOM evidence
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: simple-change skip, verdict comment and merge-pr recipe
+    useful: yes
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the scheduled task itself
+  - name: code-review
+    reason: Standards and Spec review of the feature diff
+  - name: close-session
+    reason: closure
+  - name: log-session
+    reason: (no reason given)
+  - name: adr-check
+    reason: (no reason given)
+frictions:
+  - description: "Issue search for the New here card returned no match, missing merged PR #1952 that already fixed it; only the refiner caught it."
+    solution: Step 3 should also say to search PRs (search_pull_requests) by page or component, not issues alone.
+    severity: minor
+  - description: Read docs/agents/github-integration.md only after my first GitHub search, when a hook reminded me, against CLAUDE.md's read-first rule.
+    solution: A hook before the first mcp__github__ call, not after, would have loaded it in time.
+    severity: nit
+  - description: "Dev-server before/after check of a content edit was unreliable: it hot-reloaded slowly, so the before read already showed the new text."
+    solution: verifying-ui-changes.md should say to take content-edit evidence from the production build, with a rebuild between.
+    severity: nit
+durationSec: 1964
+models:
+  claude-sonnet-5-5: 117
+toolCounts:
+  Bash: 46
+  Agent: 6
+  ToolSearch: 1
+  mcp__github__search_issues: 5
+  mcp__github__pull_request_read: 2
+  mcp__github__create_pull_request: 2
+  mcp__github__add_issue_comment: 2
+  Read: 2
+  Skill: 3
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+docsReadBySubagents:
+  - docs/agents/tenant-layers.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/guest-contributions.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Required opening PRs and landing via scheduled Skill scope; summary was enough, no full ADR needed.
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Told me gate:scoped plus code-review before the first push, and self-read for the simple fix; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Closure log goes to main; close-session handled it, summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on GitHub bodies and commit trailer; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded by reading glossary; confirms Tenant terms live in layer glossaries; not otherwise needed.
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when reading Skill files; not relevant to this run.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded when reading Skill files; no prune trial touched my text.
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded by the Skill prompt; navigation payloads did not matter for a presentational strip.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with git-conventions; not relevant.
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded editing the post page; confirmed page reads its own Space only, which shaped the strip.
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded editing the post page; confirmed replies come from same-Space pingbacks, so no cross-Space read.
+    useful: yes
+  - path: .claude/rules/adr-0016.md
+    reason: Loaded with blog index; root page not changed, so unneeded.
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded with the post page; only queryPages for the digest link, untouched.
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by a hook on reading blog files; no diagrams involved.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Confirmed scoped CSS under .bl and auto-import naming; summary enough.
+    useful: yes
+  - path: .claude/rules/ui-verification.md
+    reason: Reminded me to verify rendered DOM, which I did; the doc was read.
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded reading the build config; not relevant.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when touching files; none were Human-only.
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: Loaded when touching layers; not relevant.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Only the refiner loaded it; reported not useful.
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: "Only the refiner loaded it; it confirmed #790 is a Public origin, owner-merged."
+    useful: partly
+  - path: .claude/rules/adr-0023.md
+    reason: "Only the refiner loaded it; it confirmed the guest pipeline context for #790."
+    useful: partly
+subagents:
+  - task: Visitor (sonnet)
+    model: sonnet
+  - task: Visitor (fable)
+    model: fable
+  - task: Visitor (opus)
+    model: opus
+  - task: Refiner fit check
+    model: opus
+  - task: Standards review
+  - task: Spec review
+gitBranch: claude/adoring-galileo-p8gln5
+entrypoint: remote_trigger
+cliVersion: 2.1.306
+trigger: visitor-loop
+ideas:
+  - "Blog feed: RSS/Atom for posts and per-persona feeds (all three visitors asked); needs a Nitro server route, so a Trusted user must widen visitor-loop's remit or approve it."
+  - "Blog index: link each feed card's 'in reply to' text to the parent post (fable) so a reader can jump the thread from the list."
+  - "Blog landing: the 390px 'Terrarium Blogger Network' box drops the tagline that explains the premise (fable); keep the tagline and drop persona blurbs on narrow screens."
+  - "Blog posts: David's First Light reaction blurb says 'your first light' to the author, jarring under a reader-facing heading; reword to 'David's' (fable)."
+  - "Blog tags: unknown ?tag=unicorns returns 200 with an empty list below the sidebar; show a notice above the fold (fable)."
+landedBy: Stop

@@ -1,6 +1,6 @@
 name: worktree-cwd-switch
-summary: "A session's working directory moves into a worktree it dispatched, so session closure refuses and later commands run in the wrong place."
-cause: "Entering an impl agent's or probe's worktree (cd, or the harness moving the primary directory) makes log-session/close-session refuse from a linked worktree and leaves the shell in a deleted directory after removal. Signals: 'cd back to the main checkout', 'refuses from a linked worktree', 'deleted directory'."
+summary: "A session's working directory moved into a worktree it dispatched without the session cd-ing there, so session closure refused to run."
+cause: "When an impl agent works in a linked worktree, the harness can move the orchestrator's primary working directory into that worktree (and back), and log-session/close-session refuse to author from a linked worktree. Signals: 'the impl agent's worktree became my cwd', 'refuses from a linked worktree', a directory switch the session did not make. A session's own bare cd belongs in bare-cd-moves-session-cwd."
 surface: safe
 status: open
 fixes:
@@ -18,18 +18,3 @@ occurrences:
     severity: minor
     description: "The primary working directory switched to the impl agent's worktree and back mid-run, while log-session refuses to author from a linked worktree; I had to track where each command ran."
     solution: "Have dispatch-subagents tell the orchestrator to use absolute paths and re-check pwd after a worktree agent returns."
-  - session: session_01CzkKVxSTE7a4amfXnxrvF9
-    date: "2026-10-16"
-    severity: nit
-    description: "cd'd into the probe's worktree to check it, which moved the session's working directory there; removing the worktree then left the shell in a deleted directory"
-    solution: "Inspect a subagent worktree with git -C <path>, never cd, as dispatch-subagents section 5 hints"
-  - session: session_01J4ze3DvsZhXeP78iyRnbSd
-    date: "2026-10-17"
-    severity: nit
-    description: "A cd into an impl agent's worktree left my shell there; the next merge-pr and ledger edits ran in the wrong checkout until the harness noted it."
-    solution: "Use absolute paths or git -C instead of cd when inspecting a worktree."
-  - session: session_01Sc82qSCs4NVP3igf9SaGXM
-    date: "2026-10-17"
-    severity: nit
-    description: "A subagent's cd and the shell's directory changes left the working directory in the frictions folder and a worktree, so later relative commands could have hit the wrong tree."
-    solution: "Use absolute paths or cd to the repo root at the start of each command."

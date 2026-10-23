@@ -1,0 +1,172 @@
+schemaVersion: 1
+session: session_016THR5o2Wcj8DYR6voyvXnu
+startedAt: 2026-10-22T19:33:40Z
+endedAt: 2026-10-22T19:52:30Z
+kind: interactive
+goal: Name the Platform's self-improvement loop in the glossary
+status: completed
+outcome: Entry merged via PRs 2419 and 2420; audit-docs follow-up merged via PR 2421
+summary: "The owner asked for an explanation of the Terrarium (answered from the glossaries), then directly for a glossary entry on the self-improvement loop after a short orientation search; I wrote it and merged it as PR 2419 after a green gate and a self-read of the diff. The owner then pointed me at the issue-tracker and triage-labels docs and said Skills should fix problems on their own and escalate harder ones as issues; I found that in triage-labels.md, frictions-to-fixes and audit-skills, and on the owner's explicit yes amended the entry and cut the clear-backlog pickup sentence from triage-labels.md (owner asked to trim or cut it as the wrong location). Review ran code-review's two axes through subagents; I tightened one wording. Opening and merging PRs and the review were agent-initiated per ADR-0003 and ADR-0004. PR 2420 merged after a green gate and a posted verdict. The owner then commented on it asking why audit-docs was missing; I had never looked for it, replied, and on the owner's yes opened PR 2421 adding it. PR 2421 merged after a green gate and a posted verdict. Open question: the owner's earlier remark about overlap in the issue-creation doc was never resolved to a specific pair."
+prs:
+  - "2419"
+  - "2420"
+  - "2421"
+docsRead:
+  - path: GLOSSARY.md
+    reason: Platform terms; showed Observability already mentions self-improvement
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: Tenant list for the explanation
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: Glossary-entry rules incl. rule of two
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: Commit via -F file, no chaining push after gate
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Review before first push, gate, recipe
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP write surface; only needed to open the PR
+    useful: partly
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: Source for the owner-started grill-then-build step
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: Source for friction to ledger to fix PRs
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (read before editing)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: adr-check
+    reason: Before recommending a glossary change
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: Author the log
+  - name: code-review
+    reason: (no reason given)
+frictions:
+  - description: Never read the full diff before the first push; only git diff --stat, though pr-workflow wants a self-read for a simple change.
+    solution: Read git diff origin/main...HEAD before pushing, even for 8 lines.
+    severity: nit
+  - description: adr-check script printed every ADR summary and truncated at 150 lines; most were irrelevant to a glossary edit.
+    solution: Let relevant-adrs.ts take a topic filter, or print only titles first.
+    severity: nit
+  - description: Stop hook asked to push while gate:scoped was still running; held the push per git-conventions.
+    solution: Have the hook skip while a gate run is in flight.
+    severity: nit
+durationSec: 1129
+models:
+  claude-sonnet-5-5: 142
+toolCounts:
+  Read: 11
+  Grep: 2
+  Skill: 4
+  Bash: 37
+  Edit: 5
+  ToolSearch: 2
+  Glob: 1
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  Write: 1
+  mcp__github__pull_request_read: 4
+  mcp__github__add_issue_comment: 3
+  ReadNotifications: 6
+  Agent: 2
+  mcp__github__add_reply_to_pull_request_comment: 1
+filesEdited:
+  - GLOSSARY.md
+  - docs/agents/triage-labels.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0020.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/audit-skills/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Said to open the PR unasked and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Required gate:scoped before first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Confirmed a Platform-wide term belongs in root GLOSSARY.md; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded with adr-check; no prune trial touched the glossary
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with adr-check; about rule placement, not applicable
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills and Routines model; confirmed the Routine versus Skill wording
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Skill Inventory wording; confirmed audit-skills edits only Inventory entries
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: auto-triage rule; not applicable to a glossary edit
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by a hook after reading ADR-0005 text; GLOSSARY.md is not Human-only
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR rewrites; I edited no ADR
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Loaded by reading a Glass Box draft path; not applicable
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by the same read; no diagram involved
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Told me to read a Tenant glossary; I edited only the Platform one
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of glossary diff
+    durationSec: 30
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 5.6
+  - type: general-purpose
+    task: Spec review of glossary diff
+    durationSec: 24
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 5.4
+gitBranch: ccr-e69e9598-3perf5
+entrypoint: remote_mobile
+cliVersion: 2.1.308
+landedBy: Stop

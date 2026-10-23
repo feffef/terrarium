@@ -8,8 +8,7 @@ The sweep only labels, comments and closes; it never builds.
 
 ## Scope
 
-- **Who starts a run.** A Trusted user, by hand, on a Routine or with
-  `/loop`. Starting it approves that run only (ADR-0003), but a
+- **One run.** Starting the sweep approves that run only (ADR-0003), but a
   `ready-for-agent` label the run sets stays the approval a later build acts
   on.
 - **Which issues.** Only issues a Trusted user wrote. The sweep still triages a

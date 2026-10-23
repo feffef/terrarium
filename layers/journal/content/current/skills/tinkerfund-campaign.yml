@@ -1,6 +1,7 @@
 name: tinkerfund-campaign
 category: platform-operation
 importance: specialist
+gist: Adds one new invention Campaign to the Tinkerfund shop.
 role: >-
   Adds one Campaign to Tinkerfund's prod Space: page, crowd numbers, Inventor,
   Updates, comments, and Fable-drawn figures (preview and apply toolkit). The

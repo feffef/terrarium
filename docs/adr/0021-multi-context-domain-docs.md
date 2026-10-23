@@ -12,22 +12,24 @@ no ADR.
   root `GLOSSARY.md`. A term used only while working on one Tenant goes in that
   Tenant's `GLOSSARY.md`. Each term is defined once; other files may point to
   it.
-- **The root `GLOSSARY.md`** is a glossary only, with no implementation details
-  or specs. It also lists the Tenants, each with a link to its glossary, and the
-  terms we stopped using, so older text stays readable.
+- **The root `GLOSSARY.md`** is a glossary only: definitions, with no
+  instructions, rationale, implementation details or specs; those live where
+  they are used. An entry may still say which word to use. It also lists the terms we
+  stopped using, so older text stays readable.
 - **A Tenant's `GLOSSARY.md`** holds that Tenant's glossary, plus why it exists,
   who it is for and its product decisions as they stand. A spec issue may hold
   the detail and the history, linked from the glossary. The file sits directly
   in the Tenant's folder: it is instruction for agents, while the Tenant's
   content is not.
-- **`GLOSSARY-MAP.md`** lists every glossary and how they relate.
+- **`GLOSSARY-MAP.md`** lists every glossary, which is also the list of
+  Tenants, and how they relate. It holds nothing else.
 - **Which decisions get an ADR.** Only decisions about the Platform and how
   agents work on it, and every ADR lives in `docs/adr/`. A Tenant gets one only
   when it changes how the Platform works, as the Journal (ADR-0008) and the
   Commons (ADR-0025) do. Why a demo Tenant exists, and what it should be,
   belongs in its glossary.
-- **Adding a Tenant** means adding its `GLOSSARY.md`, a line in the root
-  list and an entry in `GLOSSARY-MAP.md`. It needs no ADR unless it changes
+- **Adding a Tenant** means adding its `GLOSSARY.md` and an entry in
+  `GLOSSARY-MAP.md`. It needs no ADR unless it changes
   how the Platform works.
 
 ## Why
@@ -51,7 +53,7 @@ map, so we use its shape.
 - **One flat glossary.** Simpler, but every agent pays for every Tenant's
   words on every task.
 - **An ADR, or an ADR folder, per Tenant.** Product choices would sit beside
-  architecture, and agents would search more ADRs to find the ones that bind
+  architecture, and agents would search more ADRs to find the ones relevant to
   the Platform.
 - **A glossary-only file per Tenant, as the Skill's template has.** A Tenant's
   purpose would have no home.
@@ -66,6 +68,6 @@ map, so we use its shape.
 - `GLOSSARY-MAP.md`: the glossaries and how they relate.
 - `docs/agents/domain.md`: how a `GLOSSARY.md` is laid out, and where it
   differs from the `domain-modeling` Skill's templates.
-- `CLAUDE.md` and `.claude/rules/tenant-layers.md`: when to read which glossary.
+- `CLAUDE.md` and `.claude/rules/tenant-glossary.md`: when to read which glossary.
 - `scripts/session/shell-reads.ts`: treats `layers/<tenant>/GLOSSARY.md`, one level
   deep, as instruction and the Tenant's content as not.

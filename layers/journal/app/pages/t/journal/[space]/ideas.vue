@@ -1,7 +1,6 @@
 <script setup lang="ts">
 // A static segment, so it outranks the sibling `[...slug].vue`. Reads only this
 // Space's own sessions via useSpace, like index.vue.
-import type { NoteItem } from '../../../../types/journal'
 
 definePageMeta({ name: 'journal-ideas' })
 const PAGE_TITLE = 'Ideas & learnings'
@@ -27,15 +26,15 @@ async function revealNotes(list: 'ideas' | 'learnings') {
   document.querySelectorAll(`#${list}-h + .notes li`)[NOTES_VISIBLE]?.querySelector<HTMLElement>('a')?.focus()
 }
 
-// Keyed by index: several ideas can share one session.
-const copiedIdeaIndex = ref<number | null>(null)
+// Keyed by list and index: several notes can share one session.
+const copiedKey = ref<string | null>(null)
 let copiedResetTimer: ReturnType<typeof setTimeout> | null = null
-const copyIdeaPrompt = async (item: NoteItem, i: number) => {
+const copyPrompt = async (prompt: string, key: string) => {
   try {
-    await navigator.clipboard.writeText(ideaGrillPrompt(item))
-    copiedIdeaIndex.value = i
+    await navigator.clipboard.writeText(prompt)
+    copiedKey.value = key
     if (copiedResetTimer) clearTimeout(copiedResetTimer)
-    copiedResetTimer = setTimeout(() => (copiedIdeaIndex.value = null), 1600)
+    copiedResetTimer = setTimeout(() => (copiedKey.value = null), 1600)
   } catch {
     // Clipboard unavailable (insecure origin, denied permission): no confirmation.
   }
@@ -70,11 +69,11 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         <li v-for="(item, i) in notes.ideas" v-show="showAllIdeas || i < NOTES_VISIBLE" :key="i">
           <button
             type="button"
-            class="idea-copy"
-            :class="{ copied: copiedIdeaIndex === i }"
+            class="note-copy"
+            :class="{ copied: copiedKey === `idea-${i}` }"
             :aria-label="`Copy a grill-with-docs prompt to refine this idea (from session ${item.session})`"
-            :title="copiedIdeaIndex === i ? 'Copied grill prompt' : 'Copy grill prompt for this idea'"
-            @click="copyIdeaPrompt(item, i)"
+            :title="copiedKey === `idea-${i}` ? 'Copied grill prompt' : 'Copy grill prompt for this idea'"
+            @click="copyPrompt(ideaGrillPrompt(item), `idea-${i}`)"
           >
             <!-- A lightbulb doubled like the copy icon's two-sheet motif: "copy this idea". -->
             <svg
@@ -107,7 +106,23 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
       <h2 id="learnings-h">Learnings <span class="n">{{ notes.learnings.length }}</span></h2>
       <ul v-if="notes.learnings.length" class="notes">
         <li v-for="(item, i) in notes.learnings" v-show="showAllLearnings || i < NOTES_VISIBLE" :key="i">
-          <span class="bullet" aria-hidden="true">›</span>
+          <button
+            type="button"
+            class="note-copy"
+            :class="{ copied: copiedKey === `learning-${i}` }"
+            :aria-label="`Copy a prompt to place this learning in the docs (from session ${item.session})`"
+            :title="copiedKey === `learning-${i}` ? 'Copied docs prompt' : 'Copy prompt: where should this learning live?'"
+            @click="copyPrompt(learningDocsPrompt(item), `learning-${i}`)"
+          >
+            <!-- An open book: "put this learning in the docs". -->
+            <svg
+              viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"
+            >
+              <path d="M2 4h6a4 4 0 0 1 4 4v13a3 3 0 0 0-3-3H2z" />
+              <path d="M22 4h-6a4 4 0 0 0-4 4v13a3 3 0 0 1 3-3h7z" />
+            </svg>
+          </button>
           <span>{{ item.note }}</span>
           <NuxtLink class="src" :to="`/t/journal/${space}#${item.anchor}`" :aria-label="`Source session, ${item.date}`">{{ item.date }} →</NuxtLink>
         </li>
@@ -149,8 +164,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 }
 .show-all:hover { border-color: var(--jd-accent); }
 .notes li:first-child { border-top: 0; }
-.notes li > span:not(.bullet) { overflow-wrap: anywhere; }
-.bullet { color: var(--jd-accent); font-weight: 600; }
+.notes li > span { overflow-wrap: anywhere; }
 .jd-prose .src {
   font-family: var(--jd-mono);
   font-size: 0.7rem;
@@ -159,7 +173,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
   white-space: nowrap;
 }
 .jd-prose .src:hover { color: var(--jd-accent); text-decoration: underline; }
-.idea-copy {
+.note-copy {
   align-self: start;
   display: inline-flex;
   padding: 0;
@@ -170,8 +184,8 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
   cursor: pointer;
   transition: color 0.15s ease, transform 0.15s ease;
 }
-.idea-copy svg { width: 1.05rem; height: 1.05rem; display: block; }
-.idea-copy:hover, .idea-copy.copied { color: var(--jd-accent); }
-.idea-copy.copied { transform: scale(1.12); cursor: default; }
-.idea-copy:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px; border-radius: 4px; }
+.note-copy svg { width: 1.05rem; height: 1.05rem; display: block; }
+.note-copy:hover, .note-copy.copied { color: var(--jd-accent); }
+.note-copy.copied { transform: scale(1.12); cursor: default; }
+.note-copy:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px; border-radius: 4px; }
 </style>

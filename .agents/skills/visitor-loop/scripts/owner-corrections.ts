@@ -124,15 +124,15 @@ export function findCandidates(since: string, prs: Pr[], comments: Comment[]): C
   return out
 }
 
-/** The candidates `tally` doesn't resolve, one per URL. A line resolves the
- *  candidate its first `#N` (a rework PR) or URL names, when it also says
+/** The candidates `tally` doesn't resolve, one per URL. A line resolves every
+ *  candidate it names by `#N` (a rework PR) or URL, when it also says
  *  "not a ruling" or "decisions.md". */
 export function unresolved(candidates: Candidate[], tally: string): Candidate[] {
   const resolved = new Set(
     tally
       .split('\n')
       .filter((l) => /not a ruling|decisions\.md/i.test(l))
-      .map((l) => l.match(/https?:\/\/[^\s<>`*]+|#\d+/)?.[0].replace(/[:,.;)\]]+$/, '')),
+      .flatMap((l) => (l.match(/https?:\/\/[^\s<>`*]+|#\d+/g) ?? []).map((r) => r.replace(/[:,.;)\]]+$/, ''))),
   )
   const seen = new Set<string>()
   return candidates.filter((c) => {
@@ -289,7 +289,7 @@ function main(): void {
     process.stdout.write(JSON.stringify(candidates, null, 2) + '\n')
   } else {
     const missing = unresolved(candidates, readFileSync(tallyFile, 'utf8'))
-    if (missing.length > 0) fail(`unresolved candidates (give each its own line):\n${missing.map((c) => `  ${c.url} ${c.excerpt}`).join('\n')}`)
+    if (missing.length > 0) fail(`unresolved candidates (name each by #N or URL on a "not a ruling" or "decisions.md" line):\n${missing.map((c) => `  ${c.url} ${c.excerpt}`).join('\n')}`)
     console.log(`owner-corrections: all ${new Set(candidates.map((c) => c.url)).size} candidates resolved`)
   }
 }

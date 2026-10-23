@@ -8,6 +8,7 @@ definePageMeta({ name: 'journal-frictions' })
 const PAGE_TITLE = 'Friction Ledger'
 
 const route = useRoute()
+const router = useRouter()
 const { space, collections } = useSpace('journal')
 // Only two Spaces: a session not in this one was moved to the other.
 const otherSpace = Object.keys(routingMap.journal).find((s) => s !== space) ?? space
@@ -39,9 +40,31 @@ function stateHint(e: { state: string; since: number }): string {
   if (e.state === 'accepted') return 'The owner accepts this cost; occurrences are still counted'
   return ''
 }
+// The server's date renders first so hydration matches; then the viewer's clock
+// takes over, since a cached render's "today" can be old (ADR-0028).
+const isoToday = () => new Date().toISOString().slice(0, 10)
+const today = useState('journal-ledger-today', isoToday)
+onMounted(() => (today.value = isoToday()))
+const days = computed({
+  get: () => LEDGER_WINDOWS.find((d) => String(d) === route.query.days) ?? LEDGER_HORIZON_DAYS,
+  set: (d) => router.replace({ query: { ...route.query, days: d === LEDGER_HORIZON_DAYS ? undefined : String(d) } }),
+})
+const windowStart = computed(() => ledgerWindowStart(today.value, days.value))
 const panels = computed(() =>
-  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.own), otherSpace, data.value?.goals),
+  ledgerPanels(data.value?.clusters ?? [], space, new Set(data.value?.own), otherSpace, data.value?.goals, windowStart.value),
 )
+// A fix that merged inside the window should show where it fell among the hits, so a row's
+// "still recurring" or "likely fixed" can be read off its strip.
+function dayStrip(e: { occurrences: { date: string }[]; fixDates: string[] }) {
+  const cells = ledgerDayStrip(e.occurrences.map((o) => o.date), e.fixDates, windowStart.value, today.value)
+  const max = Math.max(1, ...cells.map((c) => c.count))
+  const hits = cells.filter((c) => c.count).map((c) => `${c.date} ${c.count}`).join(', ')
+  const fixes = cells.filter((c) => c.fix).map((c) => c.date).join(', ')
+  return {
+    cells: cells.map((c) => ({ ...c, height: c.count ? 25 + (75 * c.count) / max : 0 })),
+    label: `Sessions per day since ${windowStart.value}: ${hits || 'none'}${fixes ? `. A fix merged on ${fixes}` : ''}`,
+  }
+}
 const sections = computed(() => [
   {
     id: 'severe-h',
@@ -80,6 +103,13 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         sits in the list where it ranks higher. Click a cluster (▸) to expand its
         cause, merged PRs, sessions and logged frictions.
       </p>
+      <p class="window">
+        <label for="ledger-window">Frictions from the last</label>
+        <select id="ledger-window" v-model.number="days">
+          <option v-for="d in LEDGER_WINDOWS" :key="d" :value="d">{{ d }} days</option>
+        </select>
+        <span>Counts, severity and ranking use only those; merged PRs and fix states use all {{ LEDGER_HORIZON_DAYS }} days. The strip on each row shows the sessions that hit it per UTC day, as the agents reported them; a green line under a day marks a merged fix; hover a strip for the dates.</span>
+      </p>
 
       <template v-for="sec in sections" :key="sec.id">
         <h2 :id="sec.id">{{ sec.title }} <span class="n">{{ sec.entries.length }}</span></h2>
@@ -94,17 +124,26 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
                   <span class="pill sev" :class="e.worst" :title="`Worst severity: ${e.worst}`">{{ e.worst }}</span>
                   <span class="pill status" :class="e.state.replace(' ', '-')" :title="stateHint(e)">
                     {{ e.state }}
-                    <template v-if="e.state === 'still recurring'"> · {{ e.since }} since latest</template>
+                    <template v-if="e.state === 'still recurring'"> · {{ e.since }} since last fix</template>
                     <template v-else-if="e.fixes.length"> {{ e.fixes[0]!.date.slice(5) }}</template>
                     <template v-if="e.fixes.length">
                       · {{ e.fixes.length === 1 ? 'PR' : 'PRs' }}
                       <template v-for="(f, i) in e.fixes" :key="f.pr"><a :href="f.url" @click.stop>#{{ f.pr }}</a>{{ i < e.fixes.length - 1 ? ', ' : '' }}</template>
                     </template>
                   </span>
+                  <span v-for="st in [dayStrip(e)]" :key="st.label" class="strip" :title="st.label">
+                    <span class="cells" aria-hidden="true">
+                      <span v-for="c in st.cells" :key="c.date" class="day" :class="{ fix: c.fix }">
+                        <span v-if="c.count" class="bar" :style="{ height: `${c.height}%` }" />
+                      </span>
+                    </span>
+                    <span class="vh">{{ st.label }}</span>
+                  </span>
                 </span>
               </summary>
               <p class="cause">{{ e.cause }}</p>
               <p v-if="e.ref" class="ref-text"><strong>References:</strong> {{ e.ref }}</p>
+              <p v-if="e.notes" class="ref-text notes"><strong>Notes:</strong> {{ e.notes }}</p>
               <template v-if="e.fixes.length">
                 <h3 class="occ-h">Merged PRs to fix it</h3>
                 <p class="occ-intro">Newest first, up to {{ LEDGER_MAX_PRS }}. Merged to fix it, which does not prove it worked.</p>
@@ -139,7 +178,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
             </details>
           </li>
         </ul>
-        <p v-else>No friction clusters in this Space.</p>
+        <p v-else>No friction clusters in this window.</p>
       </template>
     </article>
 
@@ -151,6 +190,17 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 .jd-prose { max-width: 80ch; }
 .n { color: var(--jd-faint); font-weight: 400; margin-left: 0.4rem; }
 .intro { color: var(--jd-muted); font-size: 0.88rem; }
+.window { display: flex; flex-wrap: wrap; align-items: center; gap: 0.4rem 0.6rem; font-size: 0.88rem; }
+.window span { color: var(--jd-muted); font-size: 0.8rem; flex-basis: 100%; }
+.window select {
+  font: inherit;
+  color: var(--jd-ink);
+  background: var(--jd-surface);
+  border: 1px solid var(--jd-line);
+  border-radius: 4px;
+  padding: 0.1rem 0.3rem;
+}
+.window select:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px; }
 .ledger { list-style: none; padding: 0; margin: 0; }
 .ledger > li { margin: 0; border-top: 1px solid var(--jd-line); }
 .ledger > li:first-child { border-top: 0; }
@@ -178,6 +228,12 @@ summary:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px
 .summary::before { content: '▸'; display: inline-block; width: 1rem; color: var(--jd-muted); }
 details[open] .summary::before { content: '▾'; }
 .pills { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.strip { position: relative; margin-left: 0.2rem; }
+.cells { display: inline-flex; align-items: flex-end; gap: 2px; height: 1.1rem; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.day { position: relative; display: flex; align-items: flex-end; width: 5px; height: 100%; border-bottom: 1px solid var(--jd-line); }
+.day.fix { border-bottom: 2px solid var(--jd-accent); }
+.bar { display: block; width: 100%; background: var(--jd-muted); }
 .pill {
   font-family: var(--jd-mono);
   font-size: 0.66rem;
@@ -208,6 +264,7 @@ details[open] .summary::before { content: '▾'; }
 .pill.status.still-recurring { color: var(--jd-ink); border-color: var(--jd-sev-moderate); background: color-mix(in srgb, var(--jd-sev-moderate) 18%, transparent); }
 .pill.status.open { color: var(--jd-ink); border-color: var(--jd-ink); }
 .cause, .ref-text { margin: 0 0 0.4rem 3.3rem; font-size: 0.8rem; color: var(--jd-muted); overflow-wrap: anywhere; }
+.notes { white-space: pre-line; }
 .jd-prose .occ-h { margin: 0.6rem 0 0.1rem 3.3rem; font-size: 0.8rem; color: var(--jd-ink); }
 .occ-intro { margin: 0 0 0.4rem 3.3rem; font-size: 0.75rem; color: var(--jd-muted); }
 .occ {

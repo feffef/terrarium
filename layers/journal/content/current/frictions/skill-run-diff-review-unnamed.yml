@@ -1,0 +1,106 @@
+name: skill-run-diff-review-unnamed
+summary: >-
+  Agents skipped the code review on changes a Skill had produced and already checked, because no rule says whether those checks count as the review.
+cause: >-
+  A diff a Skill or script produced and already checked (a Digest with archive moves, a fact-checked blog post, a Glass Box or pin-bump update, a verbatim pack install, Glass Box content reviewed by a subagent) is larger than pr-workflow.md's simple-change bar, and neither pr-workflow.md nor the Skill says whether the Skill's own checks count as the review, so the session skips code-review on its own judgement. Signals: 'prose-only digest diff', 'one-file prose post already fact-checked', 'pin-only', 'Digest pages and archive moves', 'verbatim upstream copy', a Skill step named as the review.
+surface: safe
+status: on-trial
+ref: "Prune Trial opened 2026-10-22 by PR #2412: the fix (pr-workflow.md saying whether a Skill's own checks count as the review) lands inside its territory 'docs/agents/pr-workflow.md (all of it)', keyword 'simple change'. midden-catalogue section 4 already names its own checks as the review."
+fixes:
+  - pr: 2319
+    date: "2026-10-20"
+    summary: "ADR-0004 let a prose-, docs- or content-only first push skip code-review (reversed by #2321)."
+  - pr: 2321
+    date: "2026-10-20"
+    summary: "ADR-0004 now reviews Skills and docs like code; only a simple change (typo, rewrap, link, restamp, or at most 10 lines in 2 files) gets the author's own read."
+occurrences:
+  - session: session_01GG85r8HWMEdaMgKUaNUZH7
+    date: "2026-10-14"
+    severity: minor
+    description: "Content PRs got a content review by subagent instead of the code-review Skill before their first push"
+    solution: "Have pr-workflow name content review as the review for content-only Glass Box PRs, or run code-review too"
+  - session: session_01XTdRbnDg1n2j2ZqjTrwCLi
+    date: "2026-10-19"
+    severity: minor
+    description: "Skipped the code-review Skill before first push, treating the fact-check as the review of a one-file prose diff, as earlier blog runs did; ADR-0004 does not exempt it."
+    solution: "Let blog-post or pr-workflow say explicitly whether code-review is skipped for a prose-only post."
+  - session: session_0174aaydYCKDuWSrJkkTD1dM
+    date: "2026-10-23"
+    severity: minor
+    description: "Skipped the code-review Skill before the first push on a 20-file diff (mostly renames), substituting my own read and the fact-check subagent."
+    solution: "The pr-workflow simple-change bar says nothing about pure archive moves; state whether rename-only sweeps count, or have the digest Skill name its review step."
+  - session: session_01AvdPELZeDaDwyikp4dxVZG
+    date: "2026-10-14"
+    severity: nit
+    description: "Invoked the code-review Skill but did not run its two parallel subagents; self-reviewed a prose-only diff instead, deviating from the Skill."
+    solution: "Let pr-workflow state that content-only digest diffs may skip the two-axis review."
+  - session: session_01RJh5bK46AQRRtwagmz8GjU
+    date: "2026-10-14"
+    severity: minor
+    description: "I invoked code-review but skipped its two sub-agents for a one-file prose diff, against ADR-0004's before-first-push rule; the post had already had a blind read and fact-check."
+    solution: "Let pr-workflow name a skip for blog-post runs, whose own steps already review the diff, as it does for midden-catalogue."
+  - session: session_01672sKdk3qVR8DfkAWvR5Qz
+    date: "2026-10-15"
+    severity: nit
+    description: "Skipped the full two-agent code-review Skill for a content-only diff and checked paths by hand, a deviation from pr-workflow."
+    solution: "Let pr-workflow name a lighter review for diffs holding only Digest pages and archive moves."
+  - session: session_01F3a2MbH4xUH7J7Y1hLg2TX
+    date: "2026-10-16"
+    severity: nit
+    description: "Skipped the full two-agent code-review Skill for a diff of only Digest and archive moves; checked paths by hand."
+    solution: "State in pr-workflow that content-only scheduled diffs may skip it."
+  - session: session_01Lwanyry6GWtqHYoMAgGGLa
+    date: "2026-10-15"
+    severity: nit
+    description: "Skipped the code-review Skill before the first push, which ADR-0004 says to run even for a Stop-hook push; I judged it pointless on a verbatim upstream copy."
+    solution: "Let pr-workflow.md name verbatim pack installs as a skip case, so agents need not decide alone."
+  - session: session_01N9bwDKW51kMS6WJvK2nfSU
+    date: "2026-10-16"
+    severity: nit
+    description: "The code-review Skill mandates two parallel sub-agents, disproportionate for a one-file prose post already fact-checked; I reviewed inline."
+    solution: "Let pr-workflow allow an inline review for a single-file content diff."
+  - session: session_01CZ2bdCKBrotyVQL9mtkeGS
+    date: "2026-10-17"
+    severity: nit
+    description: "The code-review Skill's two-subagent flow is overkill for a prose-only digest diff already fact-checked and gated; I reviewed it myself instead."
+    solution: "Let pr-workflow skip code-review for a scheduled run whose diff is only Digest pages and archive moves."
+  - session: session_01BePy3Sj8TRHv7YGtPqnpfB
+    date: "2026-10-17"
+    severity: minor
+    description: "Pushed the branch without running the code-review Skill first (ADR-0004 rule, pr-workflow Review before the first push); only gate:scoped and page tests ran"
+    solution: "glassbox-update step 6 could say whether the page checks count as its own review, as midden-catalogue's does"
+  - session: session_01E7YFbvBvT8HWhVJb6kTDMq
+    date: "2026-10-17"
+    severity: nit
+    description: "pr-workflow wants the code-review Skill before first push; I reviewed the single prose file inline instead, as earlier blog PRs did."
+    solution: "blog-post step 11 could say plainly that an inline review is allowed for a one-file post."
+  - session: session_01DeVdzgpEMamftEbbyv26qd
+    date: "2026-10-18"
+    severity: nit
+    description: "Skipped the code-review Skill before the first push, self-reviewing a prose-only fact-checked digest diff against ADR-0004 and pr-workflow."
+    solution: "Let the digest Skill say the fact-check plus gate counts as the review for digest PRs."
+  - session: session_0148agurVWH8QQeSkGCDm23e
+    date: "2026-10-18"
+    severity: nit
+    description: "The code-review Skill demands two parallel sub-agents, which is out of proportion for a diff of 50 lines that only change pin fields."
+    solution: "Let pr-workflow skip sub-agents for a diff that glassbox-update's script produced and a grep shows is pin-only."
+  - session: session_01XueFVQyVySVEKHxSHTFeTh
+    date: "2026-10-19"
+    severity: nit
+    description: "Replaced the code-review Skill's two parallel subagents with an inline review because the diff was a prose page plus file moves."
+    solution: "Let code-review scale down for prose-only diffs."
+  - session: session_011G3PKUqDog2WRSuqypmuJX
+    date: "2026-10-20"
+    severity: nit
+    description: "Replaced the code-review Skill's two subagents with an inline review because the diff was a prose page plus file moves; the Skill has no size threshold."
+    solution: "Add a prose-only exemption to the Skill."
+  - session: session_01RZ2pN3CEsoJyKxUWC2RFW5
+    date: "2026-10-20"
+    severity: minor
+    description: "Code-review on a one-file prose post needs two subagents after the fact-checker already re-derived every claim, so the review mostly repeated format checks the gate runs."
+    solution: "Let blog-post count its step 9 fact-check plus gate as the review, as midden-catalogue section 4 does for itself."
+  - session: session_01L7SpnHp3yQbMQsNVCnB6zR
+    date: "2026-10-21"
+    severity: minor
+    description: "Ran code-review Skill's intent as my own diff read rather than its two sub-agents, to save cost, on a 25-file diff that is not 'simple' by the stated rule."
+    solution: "Let the simple-change rule cover mechanical revision pin bumps, or state it for scheduled pin-only runs."

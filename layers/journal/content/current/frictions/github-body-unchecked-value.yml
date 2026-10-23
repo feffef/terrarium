@@ -1,0 +1,31 @@
+name: github-body-unchecked-value
+summary: >-
+  Agents put an unchecked path, commit or phrase into a GitHub post and had to edit it afterwards.
+cause: >-
+  An issue, PR or comment body cites a path, commit, branch or footer link from memory or an earlier transcript, or is sent without a re-read, instead of being checked against the file tree, git log or the literal reminder text when posting. Signals: 'guessed spec path', 'cited a commit ... a review round had rewritten', a duplicated path segment in a footer link, a garbled phrase edited after filing.
+surface: safe
+status: open
+notes: |-
+  2026-10-23 design: a rule or guard on checking body values dropped: each of the four slips was fixed at once, Verify before you state already covers checking a value against its source, and none involves verdict SHAs or merge-pr.ts (the note copied from verdict-comment-hand-typed at the split did not apply).
+fixes: []
+occurrences:
+  - session: session_012VTgtrUEy7cPVTN5sMriXj
+    date: "2026-10-15"
+    severity: nit
+    description: "Filed #2076 with a guessed spec path (tests/e2e/ instead of layers/tinkerfund/tests/e2e/) before checking it; corrected the body right after."
+    solution: "Verify a path with git ls-files before it goes into an issue body (CLAUDE.md Verify before you state)."
+  - session: session_01TJH95qkztCQJ8PF6G6pvqs
+    date: "2026-10-18"
+    severity: minor
+    description: "After stopping the #2231 build I cited a commit and branch from the builder's first commit; a review round had rewritten them, so I posted a correction."
+    solution: "Read git log in the worktree before quoting a sha from a transcript."
+  - session: session_01P39mjYt8LWVh2TYNyxWdqN
+    date: "2026-10-17"
+    severity: nit
+    description: "The PR's merge-verdict comment's footer link rendered as \"https://claude.ai/code/code\" (a duplicated path segment) instead of \"https://claude.ai/code\", a copy-paste slip in the attribution footer."
+    solution: "Proofread the exact attribution footer text against the system reminder's literal string before posting a GitHub comment, rather than typing it from memory."
+  - session: session_01VH74k3Z27QtjR19XNC76qm
+    date: "2026-10-20"
+    severity: nit
+    description: "Filed regression issue #2332 with a garbled phrase (#321-era follow-up #2321) and had to edit the body after creating it."
+    solution: "Re-read the body before sending, as for any GitHub post."

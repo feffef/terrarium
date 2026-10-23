@@ -1,0 +1,16 @@
+name: inspect-session-workflow-agents-opaque
+summary: The inspect-session Skill cannot answer questions about workflow agents because their turns are not in the session's events.
+cause: >-
+  Workflow subagents (workflow-subagent) run outside the session's event stream and their saved .output stays in the old container, so list_events pages return nothing per agent; inspect-session does not say up front that such questions need the session log or a saved run summary. Signals: "inspect-session", "workflow agents", ".output", a multi-page read that returned nothing per agent.
+surface: safe
+status: open
+fixes:
+  - pr: 2401
+    date: "2026-10-22"
+    summary: "inspect-session now says workflow agents' turns are not in events and points to the log's per-subagent cost fields."
+occurrences:
+  - session: session_01Y8rMxQ5cH3oLqzHegyQnFx
+    date: "2026-10-21"
+    severity: moderate
+    description: "inspect-session can't answer questions about workflow agents: their turns aren't in events and the run's .output stays in the old container, so a 16-page read returned nothing per agent."
+    solution: "inspect-session could say up front that workflow-agent questions need the session log or a saved run summary; clear-backlog could commit per-agent usage into the log."

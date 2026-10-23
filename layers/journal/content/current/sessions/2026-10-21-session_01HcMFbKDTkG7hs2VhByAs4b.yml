@@ -1,0 +1,257 @@
+schemaVersion: 1
+session: session_01HcMFbKDTkG7hs2VhByAs4b
+startedAt: 2026-10-21T04:03:47Z
+endedAt: 2026-10-21T04:15:55Z
+kind: autonomous
+goal: Scheduled docs audit of the docs/agents family
+status: completed
+outcome: Sweep PR 2358 merged green after code-review and a green scoped gate
+summary: Scheduled audit-docs run (no human prompt). Concision family chosen from the newest family commit (root), so this run was docs/agents. Four read-only reviewers (Freshness, Single-home, Concision, Coherence) returned 17 findings; I merged overlaps, and two independent checkers returned 3 CONFIRMED, 5 CONFIRMED-BUT and 9 WRONG. Rejected ones were mostly rewrites that lost a rule, a why, or ground held by an open prune trial or a deliberate earlier audit commit. I applied only checker-confirmed text across seven files, ran code-review (one judgement call, an ambiguous step reference, fixed), ran gate:scoped green, pushed, opened PR 2358, posted the verdict and merged it via merge-pr.ts after CI went green. No ADR edit, no issue filed, so no escalation PR. Everything was agent-initiated under the schedule's stored prompt; no human instruction beyond it.
+prs:
+  - "2358"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: Closing a scheduled run's PR steps and the verdict format
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP-only GitHub writes
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session-start read; no term needed
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; no term needed
+    useful: partly
+  - path: docs/agents/mdc-when-to-use.md
+    reason: edited its worked example; Concision and checker agents agreed no rule lost
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: edited section 10 gate step after drift finding
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: edited crash bullet; checker verified against settings.json
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: edited one pointer sentence
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: edited one sentence
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: edited See-also bullet
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief rules for reviewers; Single-home finding on it was rejected (open prune trial)
+    useful: yes
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: .agents/skills/setup-matt-pocock-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/commons/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled task itself
+  - name: code-review
+    reason: review before first push
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped the adr-check Skill; this scheduled run changed docs with no plan or recommendation step, so the rule seemed not to apply, but I did not confirm that.
+    solution: State in audit-docs whether adr-check applies to scheduled sweeps.
+    severity: nit
+  - description: First PR body miscounted the checker verdicts; I recounted from the ID list and corrected it before the verdict comment.
+    solution: Tally verdicts from a written list while the checkers' replies are in hand.
+    severity: nit
+  - description: The code-review Spec reviewer said pool.md held only Agent A's findings, while the batch-1 checker handled B-D from it; I did not verify the pool contents myself.
+    solution: Have save-handback print the saved byte count per agent so a truncated pool is obvious.
+    severity: nit
+durationSec: 728
+models:
+  claude-sonnet-5-5: 89
+toolCounts:
+  Read: 11
+  Bash: 17
+  Agent: 8
+  Grep: 1
+  Edit: 9
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  ReadNotifications: 1
+  mcp__github__unsubscribe_pr_activity: 1
+filesEdited:
+  - docs/agents/issue-tracker.md
+  - docs/agents/domain.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/guards.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/mdc-when-to-use.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0012.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0025.md
+docsReadBySubagents:
+  - docs/adr/0004-objective-safety-gate.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/tenant-layers.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - docs/agents/triage-labels.md
+  - docs/agents/guest-contributions.md
+  - layers/midden/GLOSSARY.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - docs/research/making-repo-public.md
+  - docs/proposals/README.md
+  - .agents/skills/digest/SKILL.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/public-readiness-review.md
+  - layers/journal/GLOSSARY.md
+  - layers/commons/GLOSSARY.md
+  - layers/blog/GLOSSARY.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run code-review and gate:scoped before first push; summary enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Scheduled run limits and open-PR-at-push; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on GitHub bodies; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Pack Skills untouched, blog-post is ours; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Pack Skills stay as installed; no pack Skill edited
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary scope; confirmed GLOSSARY.md Human-only clause stays; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Checker used it to reject a rewrite in an open prune trial territory
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Freshness agent used it for the orphan lens; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: ADR-only; no ADR edited, so not needed
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Blog pingback rule loaded when reading blog-post; unrelated to this edit
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Audit lens A: Freshness"
+  - type: general-purpose
+    task: "Audit lens B: Single-home"
+  - type: general-purpose
+    task: "Audit lens C: Concision"
+  - type: general-purpose
+    task: "Audit lens D: Coherence"
+  - type: general-purpose
+    task: Fact-check findings batch 1
+  - type: general-purpose
+    task: Fact-check findings batch 2
+  - type: general-purpose
+    task: "Code review: Standards axis"
+  - type: general-purpose
+    task: "Code review: Spec axis"
+gitBranch: claude/festive-mayer-gd3eqd
+entrypoint: remote_trigger
+cliVersion: 2.1.306
+trigger: audit-docs
+landedBy: Stop

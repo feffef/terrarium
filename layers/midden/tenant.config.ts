@@ -1,7 +1,7 @@
 // Manifest for the Midden Tenant — an archaeology-themed re-presentation of the
 // Platform's own discarded work (dead branches, closed-unmerged PRs, deprecated
-// Skills, removed files/dependencies, unapplied proposals). GLOSSARY-MAP.md /
-// GLOSSARY.md Tenants roster: Midden; layers/midden/GLOSSARY.md: Site / Artifact /
+// Skills, removed files/dependencies, unapplied proposals). GLOSSARY-MAP.md:
+// Midden; layers/midden/GLOSSARY.md: Site / Artifact /
 // Dig season / Condition / the two-gate inclusion test; issue #515 (the Wayfinder
 // map that locked every decision below, via its 12 resolved sub-issues #516-528).
 // Declarative intent only (ADR-0002, ADR-0013).

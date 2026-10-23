@@ -1,6 +1,6 @@
 // The Friction Ledger page's ranking (layers/journal/app/utils/ledger.ts).
 import { describe, expect, it } from 'vitest'
-import { ledgerFixState, ledgerPanels } from '../../app/utils/ledger.ts'
+import { ledgerDayStrip, ledgerFixState, ledgerPanels, ledgerWindowStart } from '../../app/utils/ledger.ts'
 import type { FrictionClusterDoc, Severity } from '../../app/types/journal.ts'
 
 function cluster(name: string, severities: Severity[]): FrictionClusterDoc {
@@ -133,5 +133,47 @@ describe('ledgerPanels fixes and state', () => {
     const [e] = ledgerPanels([accepted], 'current', new Set(), 'archived').severe
     expect(e).toMatchObject({ state: 'accepted', since: 0, count: 1 })
     expect(e!.fixes.map((f) => f.pr)).toEqual([1])
+  })
+
+  it('carries notes to the page without changing the state', () => {
+    const notes = '2026-10-20 design: a CLAUDE.md line dropped: costs every session more than the slip'
+    const [e] = ledgerPanels([{ ...cluster('n', ['major']), notes }], 'current', new Set(), 'archived').severe
+    expect(e).toMatchObject({ state: 'open', notes })
+  })
+})
+
+describe('ledgerPanels window', () => {
+  it('counts, ranks and lists only occurrences from the window start, and drops a cluster with none', () => {
+    // cluster() dates occurrence i on 2026-10-0(i+1).
+    const clusters = [cluster('old-major', ['major', 'nit', 'nit']), cluster('gone', ['blocker']), cluster('new', ['nit', 'nit', 'minor'])]
+    const { severe, frequent } = ledgerPanels(clusters, 'current', new Set(), 'archived', {}, '2026-10-02')
+    expect([...severe, ...frequent].map((e) => [e.name, e.count, e.worst])).toEqual([['new', 2, 'minor'], ['old-major', 2, 'nit']])
+    expect(severe[0]!.occurrences.map((o) => o.date)).toEqual(['2026-10-03', '2026-10-02'])
+  })
+
+  it('keeps the fix state on every occurrence, so a fix merged before the window still counts', () => {
+    const c = { ...cluster('x', ['nit', 'nit', 'nit']), fixes: [{ pr: 1, date: '2026-10-01', summary: 'fix' }] }
+    const [e] = ledgerPanels([c], 'current', new Set(), 'archived', {}, '2026-10-03').severe
+    expect(e).toMatchObject({ count: 1, state: 'still recurring', since: 2 })
+  })
+
+  it('covers exactly the last N dates, today included', () => {
+    expect(ledgerWindowStart('2026-10-20', 2)).toBe('2026-10-19')
+    expect(ledgerWindowStart('2026-03-01', 14)).toBe('2026-02-16')
+  })
+})
+
+describe('ledgerDayStrip', () => {
+  it('buckets occurrences per UTC day across the window and marks fix days', () => {
+    const cells = ledgerDayStrip(['2026-10-20', '2026-10-20', '2026-10-22', '2026-10-01'], ['2026-10-21'], '2026-10-20', '2026-10-22')
+    expect(cells).toEqual([
+      { date: '2026-10-20', count: 2, fix: false },
+      { date: '2026-10-21', count: 0, fix: true },
+      { date: '2026-10-22', count: 1, fix: false },
+    ])
+  })
+
+  it('has one cell per day of the window, the window start included', () => {
+    expect(ledgerDayStrip([], [], ledgerWindowStart('2026-10-22', 14), '2026-10-22')).toHaveLength(14)
   })
 })

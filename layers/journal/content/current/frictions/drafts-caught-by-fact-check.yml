@@ -1,0 +1,72 @@
+name: drafts-caught-by-fact-check
+summary: >-
+  First drafts of posts, Digests and PR bodies carried wrong or overstated facts that the fact-check step caught.
+cause: >-
+  A Skill that drafts first and fact-checks after (blog posts, Digests, PR bodies, reports) catches the draft's unchecked dates, counts and claims by design, at the cost of a rewrite round. Signals: "first draft", "the fact-check caught", "Spec reviewer caught" on a written piece.
+surface: safe
+status: accepted
+fixes:
+  - pr: 1756
+    date: "2026-10-11"
+    summary: "Blog reply drafts now get their key claim checked against its source before a reader sees them."
+occurrences:
+  - session: session_01Mw8k3DVnAyVho8fcDofChZ
+    date: "2026-10-10"
+    severity: minor
+    description: "My first drafts overstated several facts that the fact-check then caught. I read \"bot switched on\" off the config commit's author time instead of its merge, said \"both checks were there before\" without dating them, and wrote \"every saved change\" and \"the record holds none\"."
+    solution: "Date a config's effect from its merge to main, not its commit. Check \"every\", \"both\" and \"none\" claims against a listing before writing them. The Skill's two-reviewer loop worked as intended."
+  - session: session_0177ZCpnHq4Sw5wicAEmriDh
+    date: "2026-10-11"
+    severity: nit
+    description: "Fact-check subagent found the first draft's description overbroad; two drafted counts also disagreed with the PR body (CLAUDE.md lines, commit counts), costing re-derivation."
+    solution: "Re-derive counts from git before drafting, as the Skill says."
+  - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
+    date: "2026-10-14"
+    severity: minor
+    description: "First draft's closing claim was wrong (a human does the merging); the fact-check caught it, but I had not read issue 1889's comments."
+    solution: "Read an issue's comments, not just its body, before claiming the state of an open decision."
+  - session: session_01NoQubvnMfCpcq9nkicNsDq
+    date: "2026-10-15"
+    severity: minor
+    description: "First Karen draft asserted rule durations, timing and an ellipsised quote I had not derived from sources; the fact-check found eight wrong or overstated rows and forced a rewrite."
+    solution: "Pin the exact commits and timestamps in scratch notes before drafting a claim about how long a rule said something."
+  - session: session_01NFv67izdzVGrFHb2EVwZJ2
+    date: "2026-10-16"
+    severity: minor
+    description: "First draft said the typed-route {} type appeared 'after a fresh install', backwards from the session logs where a clean reinstall fixed it; Spec reviewer caught it"
+    solution: "Quote the friction's own wording when turning a session-log friction into a watch item"
+  - session: session_018Uhxo4D5VcScugLrS35r4w
+    date: "2026-10-18"
+    severity: minor
+    description: "First draft stated a few things as fact without checking them: Dependabot auto-merge (still only a Proposal), one wrong date, ADR word counts, which July guard was deleted"
+    solution: "Check each claim drawn from a subagent or blog post against git before writing it; the Spec fact-check caught them all before the push"
+  - session: session_01E7YFbvBvT8HWhVJb6kTDMq
+    date: "2026-10-17"
+    severity: nit
+    description: "I first wrote the PR 2221 body saying the second-reader step was skipped, then ran it; the body had to be rewritten."
+    solution: "Run step 12's second reader before opening the PR, as the Skill orders."
+  - session: session_01AwaGncaYJFWdJnc6yqDoTS
+    date: "2026-10-19"
+    severity: nit
+    description: "My first wording for adr-check step 2 was stricter than ADR-0027 and would have blocked an allowed repoint; the Spec review caught it."
+    solution: "Quote the ADR's own verbs when restating its duty in a Skill."
+  - session: session_01BTtvaFQckiQwtGZsasWPJH
+    date: "2026-10-19"
+    severity: nit
+    description: "The first #2233 commit used Closes, which would have closed the issue as completed instead of not planned, and its ref claimed the issue was already closed; the Spec review caught both."
+    solution: "Use a closing keyword only when completed is the right reason; otherwise close by hand."
+  - session: session_01RZ2pN3CEsoJyKxUWC2RFW5
+    date: "2026-10-20"
+    severity: minor
+    description: "Agency in the story was hard to verify: the 'Owner decision' comments and PR text are agent-written under the owner's account, so the first draft credited a human choice the record did not show."
+    solution: "blog-post could tell drafters to check comment headers for the agent line before writing who decided."
+  - session: session_01SaChfBZfspYfAm5F7ArCfK
+    date: "2026-10-21"
+    severity: minor
+    description: "Missed appending today's behaviour-check observation to layers/journal/content/current/skills/digest.yml on the first pass - appended entries for all 14 behaviourChecks Skills via a batch Python script but digest wasn't in that script's dict. Not self-caught; found only by this run's own code-review (Standards axis) subagent, fixed in a follow-up commit. Same first-draft-citation-gap shape issue #2352 (filed this run) names."
+    solution: "Before running code-review, grep the diff's changed-files list against the full behaviourChecks roster to confirm every Skill got an entry, rather than trusting a hand-maintained dict."
+  - session: session_01FNv8z61n7roCRsM4AYVtf6
+    date: "2026-10-21"
+    severity: nit
+    description: "First Journal draft said clear-backlog triages every open issue and merges the rest; both wrong per its SKILL.md. Caught by the spec review."
+    solution: "Check a Skill's claims against its SKILL.md before describing it on the Journal."

@@ -1,0 +1,95 @@
+schemaVersion: 1
+session: session_013VrLZFkT6dnWNMm1wN8Yjj
+startedAt: 2026-10-19T09:18:00Z
+endedAt: 2026-10-19T09:25:39Z
+kind: interactive
+goal: Check a logged learning about GitHub's fork-PR approval label
+status: completed
+outcome: Learning already fixed in the docs by an earlier PR; no edit made, per the owner's decision
+summary: "The user asked me to verify a learning from an earlier session log (GitHub's fork-PR approval option is labelled 'Require approval for all external contributors') and propose its one home, waiting for a go-ahead. I read the log and grepped the docs: guest-contributions.md, making-repo-public.md and public-readiness-review.md already carry the right label (fixed by that session's own docs PR). I could not check GitHub's live settings page. I proposed no new text and offered one optional trim (point guest-contributions.md at making-repo-public.md instead of restating the label); the user answered \"Leave\", so nothing changed. All work was a human-instructed read-only investigation; the closure was agent-initiated per CLAUDE.md."
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; no term needed
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session-start read; confirmed Trusted/Public terms
+    useful: partly
+  - path: docs/agents/guest-contributions.md
+    reason: held the fork-PR approval sentence under review
+    useful: yes
+  - path: docs/research/making-repo-public.md
+    reason: home of the setting's levels, cites GitHub docs
+    useful: yes
+  - path: docs/research/public-readiness-review.md
+    reason: second restatement of the label
+    useful: yes
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: grepped for the actual decision on fork CI approval
+    useful: yes
+  - path: layers/journal/content/current/sessions/2026-10-13-session_01QvnVVurQdA4cvYSZToBvud.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: question-only session closure
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Ran git log -S and git grep to draw a conclusion before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first git command beyond status and diff; a hook reminded me afterwards
+    solution: Read git-conventions.md at session start when the task involves checking history, or use Grep instead of git grep
+    severity: nit
+  - description: Did not run grep -l over docs/adr before proposing a change, as CLAUDE.md asks; I read ADR-0020 via grep only and did not read the full ADR
+    solution: Run the ADR grep first, then read the binding ADRs in full before proposing
+    severity: nit
+durationSec: 459
+models:
+  claude-sonnet-5-5: 24
+toolCounts:
+  Read: 6
+  Glob: 1
+  Grep: 2
+  Bash: 4
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: About gating and merging PRs; no PR opened in this read-only question session.
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session and where the log goes; summary was enough, did not open the ADR.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed no PR or build without approval, so I proposed and waited; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header applies to GitHub writes; I made none this session.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement; no term was added, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Reminded me to cut before adding, which shaped the no-edit recommendation; summary was enough.
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: Gave the Trusted/Public and fork CI approval decision the label relates to; opened the full ADR via grep.
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: About the guest pipeline builds; this was a doc check, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule-versus-CLAUDE.md placement; no instruction was added, so it did not apply.
+    useful: no
+gitBranch: claude/github-fork-pr-approval-label-hlidwm
+entrypoint: remote_mobile
+cliVersion: 2.1.303
+landedBy: Stop

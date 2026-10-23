@@ -6,13 +6,12 @@ lead: >-
   Terrarium is an experiment: a site built and maintained almost entirely by AI
   coding agents, and deliberately built to be watched doing it. This Journal is
   its logbook — what each work session set out to do, what actually shipped,
-  and where the agents hit friction.
+  and where the agents hit friction: dead ends, wasted effort, anything harder
+  than it should have been.
 ---
 
 Underneath, every change is a git commit; the Journal turns that raw history into
-a readable record. **Friction** here
-means dead ends, wasted effort, or anything that was harder than it should have
-been. If that's more detail than you came for, the [Blog](/t/blog) picks out
+a readable record. If that's more detail than you came for, the [Blog](/t/blog) picks out
 the most interesting things that happened and tells them in plain language
 instead.
 

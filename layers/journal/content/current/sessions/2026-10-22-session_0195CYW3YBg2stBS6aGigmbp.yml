@@ -1,0 +1,300 @@
+schemaVersion: 1
+session: session_0195CYW3YBg2stBS6aGigmbp
+startedAt: 2026-10-22T16:48:38Z
+endedAt: 2026-10-22T17:30:02Z
+kind: autonomous
+goal: "Visitor-loop run on the Journal: three blind visitors, fix consensus problems, build one feature"
+status: completed
+outcome: "Both PRs merged (#2413 fixes, #2414 Friction Ledger per-day strip); RSS issue #2415 filed"
+summary: "Scheduled visitor-loop run, focus journal (day-count row 2). Everything was agent-initiated from the stored schedule; no human steered. Served a production build, sent sonnet, fable and opus visitors through /t/journal/current, tallied consensus: three fixes (Routine weekly table clipped at 390px, \"Friction\" defined far below its first use, seven equal-weight start cards) and four consensus findings dropped after verification or on decisions.md rulings (reorder of the real-and-invented card, empty session links that were not empty, ideas jargon already warned, footer sites). An opus refiner kept two fixes, refined the table fix to a .rw-only change that leaves the owner's scroll cue alone, and refined the chosen feature (Friction Ledger cluster sparklines) to follow the ?days window. Fix PR #2413 carries the tally; code-review found one real edge case (empty grid when only the doors exist), fixed, and it merged. The feature PR #2414 (merged) adds a per-day strip to each Friction Ledger cluster; review caught a real bug (fix ticks read from a list capped at five), fixed with a fixDates field. RSS/Atom is out of remit: issue #2415."
+prs:
+  - "2413"
+  - "2414"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: required at start; Tenant glossary map
+    useful: partly
+  - path: layers/journal/GLOSSARY.md
+    reason: Journal purpose and what lives where
+    useful: yes
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: dropped four items on its rulings
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and merge recipe
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: eval-in-page and Playwright recipe for DOM evidence
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: Refiner read it for the Remit
+    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: "Standards reviewer: token inheritance, diff complies"
+    useful: partly
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: "Refiner: feed is baked content, not blocked"
+    useful: partly
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: "Refiner: new features need Trusted approval, so RSS is out of remit"
+    useful: partly
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: "Refiner: only pages get URLs, so RSS is out of remit"
+    useful: yes
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: "Refiner: the Ledger is a derived inventory"
+    useful: partly
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: "Refiner: not relevant"
+    useful: no
+  - path: docs/agents/github-integration.md
+    reason: Read after my first GitHub call; fields and search caveats
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: Fetch-before-trust and commit hygiene
+    useful: partly
+  - path: GLOSSARY.md
+    reason: only the first 2KB showed (output truncated); metaphor and Tenant, Space terms
+    useful: partly
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: brief sent verbatim to each visitor
+    useful: yes
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: brief sent verbatim to the refiner
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "Filing an issue section: what to write, verified vs assumed"
+    useful: yes
+  - path: layers/journal/app/pages/t/journal/[space]/frictions.vue
+    reason: (read before editing)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (read before editing)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+  - name: adr-check
+    reason: (no reason given)
+frictions:
+  - description: Created a stray local branch tmp-none by mistake while checking files, against the stay-on-your-branch rule; noticed and deleted it at once.
+    solution: Never run git checkout -b in an exploratory command; use read-only git commands there.
+    severity: nit
+  - description: Root GLOSSARY.md was catted together with other docs; output overflowed to a file and I read only its first 2KB, not the whole glossary the start-of-session rule requires.
+    solution: Read big required docs in their own Read call so truncation is visible.
+    severity: minor
+  - description: First mcp__github__ call (pull_request_read) came before docs/agents/github-integration.md; a hook flagged it afterwards. The call was right, but the read order was wrong.
+    solution: Read github-integration.md in the same batch as the other start-of-session docs.
+    severity: nit
+  - description: owner-corrections.ts printed 19 candidates for ten PRs, almost all routine bot content PRs; resolving them took several GitHub reads that the previous run had already done.
+    solution: Have the script skip PRs whose title matches a known routine prefix (glassbox-update, journal(digest), blog(...)) or whose author is a Routine session.
+    severity: minor
+  - description: GitHub search_issues returned zero results for plain queries like Friction Ledger, while the refiner's searches found 166; so my no-match search lines were weak evidence.
+    solution: Document in github-integration.md which search tool and query form is reliable for the visitor-loop search step.
+    severity: minor
+  - description: gate:scoped's e2e step reused an .output built before the last commit (L2 reuse), so it did not exercise the final v-if change.
+    solution: Rebuild before gate:scoped when a later commit touches rendered code, or have the gate compare the build's age to the diff.
+    severity: minor
+  - description: Typed an invented commit hash in the verdict comment on PR 2414 instead of copying the real head; caught before merging and corrected with a second comment.
+    solution: Print the head hash and paste it, never type it; merge-pr.ts would have refused the verdict anyway.
+    severity: nit
+durationSec: 2483
+models:
+  claude-sonnet-5-5: 188
+toolCounts:
+  Bash: 64
+  Agent: 8
+  ToolSearch: 1
+  mcp__github__pull_request_read: 5
+  Read: 5
+  mcp__github__search_issues: 4
+  mcp__github__search_pull_requests: 1
+  Skill: 5
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 3
+  ReadNotifications: 2
+  mcp__github__issue_write: 2
+filesEdited:
+  - layers/journal/app/pages/t/journal/[space]/frictions.vue
+  - layers/journal/app/utils/ledger.ts
+  - layers/journal/tests/unit/ledger.spec.ts
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/journal/app/components/content/RoutineWeeklyTable.vue
+  - layers/journal/content/current/pages/index.md
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0006.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/agents/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Said to review and run gate:scoped before the first push and to post a verdict; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to invoke close-session; did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR at once and subscribe; the visitor-loop remit followed from the Skill; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and comment; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Kept the payload unchanged for the on-ramp doors; refiner used it for the feature's data limit; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with the glossary read; nothing in this run changed glossary terms
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded with Journal files; no session-log handling in this run
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded with the Skill files; no prune trial touched this run
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with a docs read; no rule or doc was changed
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when reading the Skill; the Skill was not edited
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Confirmed Journal CSS stays under scoped class names, no layer-wide leakage; Standards reviewer found it useful too
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded by a grep of docs; no MDC change was made
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: Sent me to verifying-ui-changes.md for DOM proof; I read it
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded reading Journal content; no diagram edited
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: "Subagent refiner: it settled that a feed URL is not a pages route, so RSS is out of remit"
+    useful: yes
+  - path: .claude/rules/adr-0016.md
+    reason: Subagent loaded it reading Journal files; not relevant
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: "Subagent: loaded by a grep of tenant.config.ts; not relevant"
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: "Subagent refiner: confirmed the feature may add no stored field"
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: "Subagent: loaded reading a script; not relevant"
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: "Subagent refiner: confirmed a feed would not be blocked by baked content"
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Subagent: loaded by a failed grep; not relevant, none of its paths were touched"
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: "Subagent: loaded by a failed grep; not relevant"
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "Subagent: loaded in passing; not relevant"
+    useful: no
+subagents:
+  - task: Visitor sonnet
+    model: sonnet
+    durationSec: 98
+    toolCalls: 12
+    modelCalls: 10
+    tokenShare: 3.3
+  - task: Visitor fable
+    model: fable
+    durationSec: 362
+    toolCalls: 48
+    modelCalls: 16
+    tokenShare: 8.5
+  - task: Visitor opus
+    model: opus
+    durationSec: 267
+    toolCalls: 25
+    modelCalls: 20
+    tokenShare: 7.3
+  - task: Refiner fit check
+    model: opus
+    durationSec: 314
+    toolCalls: 51
+    modelCalls: 37
+    tokenShare: 15.7
+  - type: general-purpose
+    task: Standards review
+    durationSec: 24
+    toolCalls: 7
+    modelCalls: 2
+    tokenShare: 1.7
+  - type: general-purpose
+    task: Spec review
+    durationSec: 31
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 2
+  - type: general-purpose
+    task: Standards review feature
+    durationSec: 27
+    toolCalls: 9
+    modelCalls: 4
+    tokenShare: 2.2
+  - type: general-purpose
+    task: Spec review feature
+    durationSec: 21
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.8
+gitBranch: claude/adoring-galileo-5ap7ut
+entrypoint: remote_trigger
+cliVersion: 2.1.308
+trigger: visitor-loop
+ideas:
+  - "Friction Ledger cluster sparklines: per-day bars from occurrences, ticks at merged-fix dates, following the ?days window (refined, not yet built)."
+  - RSS/Atom feeds for the Digests and the Blog (raised by two visitors); needs a routing decision under ADR-0006 and Trusted approval.
+  - "Blog post page: prev/next cards overlap on desktop (one visitor, karen/2026-07-12 post): give each card min-width 0 and a title clamp."
+  - "Journal history page is about 11,660px tall on a phone: add an On this page jump list (one visitor)."
+  - Friction Ledger page is 8,500px; show the top 10 of each list with Show all and a count-by-state summary (one visitor).
+  - "Architecture and how-it-works diagrams are clipped at 390px with no scroll cue (one visitor): widen or fade-edge them."
+  - "Friction tile arithmetic: 8 blockers + 3 majors + 651 lesser does not sum to 654 (one visitor, unverified): check frictionOtherCount."
+  - "Session card shows model as opus-5-5 with a raw <synthetic> marker on the archived page (one visitor): hide or label it."
+landedBy: Stop

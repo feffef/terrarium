@@ -1,0 +1,103 @@
+schemaVersion: 1
+session: session_01PaPpUz7irjArWFrkrYgRwH
+startedAt: 2026-10-19T09:15:27Z
+endedAt: 2026-10-19T09:28:03Z
+kind: interactive
+goal: Check a logged learning about gate:scoped reusing a stale build
+status: completed
+outcome: Learning did not hold against the code; no edit proposed or made
+summary: "Human-instructed: the user asked me to check a learning from another session's log against the code and docs, and to propose a home for it, waiting for approval before any change. I read that log, scripts/gate/gate.ts, the e2e global setup, tests/support/fresh-output.ts and tests/README.md. The full gate always runs pnpm build as its own step; only the e2e global setup reuses .output, and only when it is newer than every tracked and untracked file, so a base merge forces a rebuild. The \"L2: reusing .output\" line means e2e is serving the gate's own fresh build. tests/README.md already documents this, so I proposed no edit. The user agreed (\"No edit, but log\"); nothing was changed, no PR opened."
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; no term needed for this question
+    useful: no
+  - path: GLOSSARY.md
+    reason: session-start read; Gate, Floor, Heavy terms matched the code
+    useful: partly
+  - path: tests/README.md
+    reason: already states the e2e build-reuse rule; the single home, so no edit needed
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Read to check whether gate docs carry the learning; they do not mention .output reuse
+    useful: partly
+  - path: .agents/skills/log-session/SKILL.md
+    reason: Log format for closure
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: Searched for rebuild guidance; only points to tests/README.md
+    useful: partly
+  - path: layers/journal/content/current/sessions/2026-10-15-session_019e468BFBTvDPXZuGzLMAL7.yml
+    reason: (no reason given)
+  - path: scripts/gate/gate.ts
+    reason: (no reason given)
+  - path: tests/support/e2e-global-setup.ts
+    reason: (no reason given)
+  - path: tests/support/fresh-output.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: question-only session closure
+  - name: log-session
+    reason: authoring this log
+frictions:
+  - description: Read verifying-ui-changes.md and ran greps through Bash (grep, sed) instead of the Read and Grep tools, against the tool guidance.
+    solution: Use Read with offset/limit and Grep for repo files.
+    severity: nit
+durationSec: 757
+models:
+  claude-sonnet-5-5: 29
+toolCounts:
+  Read: 8
+  Glob: 1
+  Grep: 5
+  Bash: 5
+  Skill: 1
+  Write: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: About pushing and merging; this session changed nothing, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Session-log rule; close-session covers it, summary was enough.
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: PR and approval rule; confirmed no PR was needed for a no-change answer.
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header applies to GitHub writes; I made none.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary layout; no term added.
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Gate CI action rule loaded on reading gate.ts; I edited no gate step.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on a gate path read; nothing was touched.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; none covered the text I read.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rules-loading design; the question of where an instruction lives was relevant but not decisive.
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Skill model; I changed no Skill.
+    useful: no
+gitBranch: claude/gate-scoped-output-reuse-ti1xy4
+entrypoint: remote_mobile
+cliVersion: 2.1.303
+landedBy: Stop

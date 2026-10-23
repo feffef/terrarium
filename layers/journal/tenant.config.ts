@@ -3,6 +3,7 @@
 import { z } from 'zod'
 import { defineTenant } from '../../shared/manifest'
 import { sessionSchema } from '../../shared/schemas/session'
+import { utcTimestamp } from '../../shared/schemas/timestamp'
 
 // A plain UTC calendar date. Used where
 // a fact is date-scoped (at most one entry per day) rather than ordered within a
@@ -47,6 +48,29 @@ export const skillSchema = z
   })
   .strict()
 
+// One Routine's runs, with the cost each took (GLOSSARY.md, issue #2239).
+// `audit-skills` appends rows from the session API's `usage`, which includes
+// subagents' tokens, and `scripts/session/prune-routine-runs.ts` keeps the newest.
+export const routineSchema = z
+  .object({
+    name: z.string(),
+    runs: z.array(
+      z
+        .object({
+          session: z.string(),
+          startedAt: utcTimestamp,
+          durationSeconds: z.number().int().nonnegative(),
+          inputTokens: z.number().nonnegative(),
+          outputTokens: z.number().nonnegative(),
+          cacheReadTokens: z.number().nonnegative(),
+          cacheWriteTokens: z.number().nonnegative(),
+          costUsd: z.number().nonnegative(),
+        })
+        .strict(),
+    ),
+  })
+  .strict()
+
 // The Friction Ledger (GLOSSARY.md). `frictions-to-fixes`' SKILL.md holds its
 // lifecycle. Counts and first/last-seen dates derive from `occurrences`;
 // nothing here is a hand-written total.
@@ -69,9 +93,13 @@ export const frictionClusterSchema = z
     // state (issue #2148). Whether the merged PRs in `fixes` worked is not
     // stored: the page derives it (`ledgerFixState` in `app/utils/ledger.ts`).
     status: z.enum(['open', 'tracked', 'on-trial', 'accepted']),
-    // Agents' notes on the status, not rendered: the tracking issue or open PR,
+    // Agents' notes on the status, shown on the Ledger page: the tracking issue or open PR,
     // the trial's territory match, what a fix left open. Merged PRs go in `fixes`.
     ref: z.string().optional(),
+    // Agents' dated notes for later runs, shown on the Ledger page: above all
+    // a designed solution a run dropped and why, so the next run doesn't
+    // re-propose it without new evidence. One note per line, newest last.
+    notes: z.string().optional(),
     // The merged PRs meant to fix (part of) the cause, oldest first: what the
     // Ledger shows as "Merged PRs to fix it"; a merge does not prove the fix held. `date` is the merge date.
     fixes: z
@@ -144,6 +172,13 @@ export default defineTenant({
     // the Catalog without re-declaring the schema. `scripts/session/log-session.ts`
     // validates authored logs against that same shared schema.
     sessions: { type: 'data', kind: 'session', source: '**/*.yml' },
+    // Cost of each scheduled Routine run, kept apart from the Inventory because
+    // only Skills a Routine runs have it.
+    routines: {
+      type: 'data',
+      source: '**/*.yml',
+      schema: routineSchema,
+    },
     frictions: {
       type: 'data',
       source: '**/*.yml',

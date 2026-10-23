@@ -1,8 +1,8 @@
 ---
 title: Asking for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
-revision: 'dc065a0d75b4be568e3efc8cff6e54334166edab'
-revisionDate: '2026-10-17'
+revision: 'cfce4413a0af4506bf80ba86ef6edccc6ef089fb'
+revisionDate: '2026-10-23'
 ---
 
 Someone with write access asks an agent for a change. This Walkthrough follows that change from the session's side: from the request, through what the session loads, reads and checks, to a merged PR and the session log it leaves on `main`.
@@ -41,7 +41,7 @@ The session edits on a feature branch, never on `main`, and may hand parts of th
 
 ## 5. It checks its own work
 
-Before the first push, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find.
+Before the first push, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find. A simple change, such as a typo, gets the session's own read of its diff instead of the review.
 
 ::stop-links
 [The Gate](/t/glassbox/guide/terrarium-practice/gate)
@@ -81,7 +81,7 @@ If a reviewer asks for changes, the session pushes again and CI runs again. Then
 
 ## 10. It logs its work again
 
-Once the PR has merged, the session runs `close-session` again and marks its log `completed`. The hook commits the new log over the old one on `main`. The merged change itself now waits for the container that serves the site to notice it.
+Once the PR has merged, the session runs `close-session` again. It first looks back over the whole session for costly detours it hasn't logged yet, then marks its log `completed`. The hook commits the new log over the old one on `main`. The merged change itself now waits for the container that serves the site to notice it.
 
 ::stop-links
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · :file[.agents/skills/close-session/SKILL.md]

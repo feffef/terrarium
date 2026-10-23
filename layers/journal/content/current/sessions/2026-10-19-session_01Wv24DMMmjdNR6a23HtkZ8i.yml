@@ -1,0 +1,146 @@
+schemaVersion: 1
+session: session_01Wv24DMMmjdNR6a23HtkZ8i
+startedAt: 2026-10-19T02:07:40Z
+endedAt: 2026-10-19T02:27:41Z
+kind: autonomous
+goal: "Scheduled run: turn the week's logged frictions into fixes"
+status: completed
+outcome: "Ledger PR #2267 merged; 3 regression issues filed; no fix dispatched"
+summary: "Scheduled frictions-to-fixes run, no human input; everything was agent-initiated under the Skill. A survey subagent read 44 sessions, appended 50 occurrences to the ledger and added one entry. I filed regression issues #2264, #2265 and #2266 for the top three regressions without an open issue. A design subagent examined the three never-fixed picks and recommended no fix for each (mixed causes, a guard that already works, or a prose home inside an open Prune Trial). I accepted that, so nothing was dispatched. The ledger PR #2267 (gate green, review comment posted) merged after green CI; the closing status-only PR of section 8 is skipped because no fix PR was opened."
+prs:
+  - "2267"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command; nothing new for this run
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP tool names and overflow guidance
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: how to file the regression issues
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and verdict comment recipe
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the scheduled task itself
+  - name: close-session
+    reason: PR opened
+frictions:
+  - description: "Design brief has no 'no fix' option: it asks for dispatch or issue, so the design agent had to improvise when it found nothing worth fixing."
+    solution: Let design-brief.md's Recommendation line allow 'no fix, with reason'.
+    severity: nit
+  - description: survey-brief says to append every friction but --unledgered drops sessions, and --summary counts regressions by date, so same-day post-fix sessions were missed and needed hand checking.
+    solution: Count regressions by session start in --summary; name a per-cluster dedupe step in the brief.
+    severity: minor
+  - description: Passed the filled survey brief to the subagent as a file path, not pasted verbatim as the Skill says; the Skill does not say which is meant.
+    solution: State in section 1 that pointing at the filled file counts as verbatim.
+    severity: nit
+  - description: Stop hook asked to push twice before the gate and review had run; ADR-0004 says to ignore it, but it nags mid-run on a scheduled routine.
+    solution: Silence the hook while a gated first push is pending.
+    severity: nit
+durationSec: 1200
+models:
+  claude-sonnet-5-5: 64
+toolCounts:
+  Bash: 21
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__issue_write: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Pushed only after gate:scoped and my review; the summary sufficed, ADR not opened.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session; summary sufficed.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to the PR at once; summary sufficed.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the provenance header on issues and PR comments; guard-checked, summary sufficed.
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill layout; this run changed no Skill, did not apply.
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: About pack Skills and Inventory; nothing here touched them.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune Trial territory ruled out one pick (per design agent); summary sufficed.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary layout; unrelated to ledger work.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement; unrelated to this run.
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Triage sweep labels; loaded by reading issue-tracker.md, did not apply.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Subagent-loaded after reading tenant.config.ts; subagent said no.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Subagent-loaded; subagent said no.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Subagent-loaded; subagent said no.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Subagent-loaded; subagent said no.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Subagent-loaded; it helped little.
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Subagent-loaded; pointed to docs/agents/guards.md, which confirmed the loop-only guard roster.
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Survey and screen frictions
+  - type: general-purpose
+    task: Design fixes for picked frictions
+gitBranch: claude/eager-ptolemy-s98mhs
+entrypoint: remote_trigger
+cliVersion: 2.1.303
+trigger: frictions-to-fixes
+landedBy: Stop

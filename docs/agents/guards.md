@@ -28,20 +28,19 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `stale-push-hint.ts` | nothing: a hint, not a guard. After a `git push` rejected as "stale info" it adds the fix to the result | its script header | #1610 |
 | `skill-rules-hint.ts` | nothing: a hint, not a guard. When a Skill runs (Skill tool or slash command) it adds the rules whose `paths` name the Skill's directory | its script header | PR #1741 |
 | `bash-rules-hint.ts` | nothing: a hint, not a guard. After a piped, chained or multi-file Bash read it adds the rules whose `paths` match the files read | its script header | #1764 |
-| `read-first-hint.ts` | nothing: a hint, not a guard. At a session's first git (beyond `status`/`diff`), GitHub or screenshot (`preview.ts shot`/`review`, `screenshot.ts`) call it points to the doc CLAUDE.md says to read first, once per doc. After a successful `mcp__github__create_pull_request` in the main session, unless `close-session` was invoked after that PR call, it says to invoke that Skill now | its script header | #1754, #1859, #2209 |
+| `read-first-hint.ts` | nothing: a hint, not a guard. At a session's first git (beyond `status`/`diff`), GitHub, issue write (`issue_write`, `gh issue create`/`edit`/`close`/`reopen`) or screenshot (`preview.ts shot`/`review`, `screenshot.ts`) call it points to the doc CLAUDE.md or the UI rule says to read first, once per doc. After a successful `mcp__github__create_pull_request` in the main session, unless `close-session` was invoked after that PR call, it says to invoke that Skill | its script header | #1754, #1859, #2209 |
+| `adr-read-hint.ts` | nothing: a hint, not a guard. After an `Edit` or `Write` it points to each ADR whose rule `paths` match the file, or that the edit names, unless this agent already read it in full | its script header | #2286 |
 
 `.claude/settings.json` wires the guards under `hooks.PreToolUse`, and the hints
 under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
 
 ## Conventions every guard follows
 
-- **A crash.** If a hint crashes, the action goes ahead. If a guard crashes, or
-  can't read its context or payload, the action is blocked, except
-  `deferred-tool-guard`, which lets it go ahead. Every other guard's hook entry
-  sets `"onFailure": "block"`, which blocks the call when the hook crashes,
-  can't start or times out (#2073); it needs Claude Code v2.1.295 or later, and
-  an older CLI ignores it and lets the call go ahead. `deferred-tool-guard` and
-  all four hints use a bare `|| true`.
+- **A crash.** A crashing hint or `deferred-tool-guard` lets the action go
+  ahead (both use a bare `|| true`). Any other guard that crashes or can't read
+  its context or payload blocks it: its hook entry sets `"onFailure": "block"`,
+  which also blocks when the hook can't start or times out (#2073). That needs
+  Claude Code v2.1.295 or later; an older CLI ignores it and lets the call go ahead.
 - **Run tsx as `node_modules/.bin/tsx`,** never `pnpm exec tsx`, in every hook
   command and `.sh` pre-filter: `pnpm exec` adds about a second per call. Only
   the SessionStart `pnpm install` stays.
@@ -54,7 +53,7 @@ under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
 - **Never dispatch an unattended or scheduled session to change a guard,
   `.claude/settings.json`'s hook wiring included:** the edit raises a permission
   prompt that no human is present to grant. A routine that finds such a fix files
-  the issue with the fix and stops; a human-attended session builds it. This
+  a `needs-triage` issue with the fix and stops; a human-attended session builds it. This
   limits who implements, not how triage routes: an issue with a settled design is
   still `ready-for-agent`.
 - **A unit test asserts the property, not hand-picked substrings.** A regex on a

@@ -1,0 +1,28 @@
+name: irrelevant-rules-loaded
+summary: >-
+  Rules for unrelated ADRs loaded into sessions whose work they do not touch.
+cause: "Hook-injected or session-start rule files (adr-0005, adr-0021, adr-0027, adr-0029 and others) add context with no bearing on the task. Signals: 'loaded after plain reads of unrelated docs', 'loaded at session start though irrelevant', 'no bearing'."
+surface: guard-or-hook
+status: tracked
+ref: "Issue #2167 revisits the Bash rules hint and loading ADR-0021 on planning Skills around 2026-10-23."
+occurrences:
+  - session: session_0135hcUf12mVM8dEZfDRAkUb
+    date: "2026-10-18"
+    severity: nit
+    description: "Hook-injected rule files (adr-0005, adr-0021, adr-0029 and others) loaded after plain reads of unrelated docs, adding context with no bearing."
+    solution: "Narrow those rules' paths."
+  - session: session_01FPzSKyY66o24rfLL8SJFxw
+    date: "2026-10-19"
+    severity: nit
+    description: "Rules adr-0021, adr-0027 and adr-0029 loaded at session start though irrelevant to a dependency sweep."
+    solution: "None needed beyond narrowing their loading if they are not essential for every session."
+  - session: session_01TFojzwXEByz1nbqt3wcKNL
+    date: "2026-10-14"
+    severity: nit
+    description: "Read .githooks/commit-msg with Bash cat instead of the Read tool (CLAUDE.md), which loaded an irrelevant adr-0004-human-merge.md reminder since I only inspected, never edited, that Human-only file."
+    solution: "Use the Read tool for any file read, even a quick one-off inspection."
+  - session: session_01CfTFFQrkwq1eUsDy61AJzz
+    date: "2026-10-23"
+    severity: nit
+    description: "Subagents' tool results carried many unrelated ADR rules loaded by ledger file reads, costing context in the survey with no use."
+    solution: "Narrow the paths of the rules that load on layers/journal/content/current/frictions/*.yml."

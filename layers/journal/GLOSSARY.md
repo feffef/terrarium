@@ -10,7 +10,7 @@
 
 ## Why it exists — and why it isn't optional
 
-The Journal is not a convenience summary for people who would rather skim than read a session's raw transcript. It is the **only** way any of this becomes visible: nobody but the agent and user present in a session can see its working transcript. Once the session closes, the **session log** it authors (goal, outcome, what it read, every **Friction** it hit, any learnings or ideas) is the sole surviving record; a session that authors no log loses its frictions and ideas. The same holds for the collaboration itself: whether a session was interactive, delegated or autonomous, who prompted it and how far they steered is visible only through the Journal. So `/t/journal/current` is more than a status page: it is the only public record of how the humans and agents building this Platform actually worked together, session by session.
+The Journal is not a convenience summary for skimmers. It is the **only** way any of this becomes visible: once a session closes, its **session log** is the sole surviving record, and a session that authors none loses its frictions and ideas (ADR-0008). The same holds for the collaboration itself: whether a session was interactive, delegated or autonomous, who prompted it and how far they steered is visible only through the Journal. So `/t/journal/current` is the only public record of how the humans and agents building this Platform actually worked together, session by session.
 
 ## Who it's for
 
@@ -34,4 +34,9 @@ A daily catch-up on Platform activity across all Tenants, condensed from git his
 
 - **`layers/journal/app/pages/t/journal/[space]/`** — the pages a visitor sees:
   `index.vue` (digests, stats, session feed), `skills.vue` (Skill Inventory),
-  `ideas.vue` (ideas and learnings) and `frictions.vue` (the Friction Ledger), none a Markdown render of any single file.
+  `ideas.vue` (ideas and learnings) and `frictions.vue` (the Friction Ledger),
+  none a Markdown render of any single file, and `routines.vue` (Routine run
+  costs), which renders `content/current/pages/routines.md` beside its charts.
+- **`layers/journal/app/components/content/`** — the `::routine-chart` and
+  `::routine-weekly-table` blocks that `content/current/pages/routines.md` uses;
+  edit that file's prose without touching the page component.

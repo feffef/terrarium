@@ -1,0 +1,19 @@
+name: worktree-branch-not-designated
+summary: >-
+  A helper agent built in a worktree on a branch name the session could not push, so its commits had to be moved by hand.
+cause: >-
+  A worktree-isolated build or impl agent commits on its own local branch (worktree-wf_..., or a name of its choosing) rather than the session's designated pushable branch, so the orchestrator needs a refspec push or a cherry-pick, and the Stop hook asks to push the other branch. Signals: 'worktree-wf_', 'refspec push', 'cherry-pick its commits onto my branch'.
+surface: safe
+status: open
+fixes: []
+occurrences:
+  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
+    date: "2026-10-16"
+    severity: minor
+    description: "The Fable agent's worktree branch name differed from the branch I may push to, so I had to wait for a PR to merge and cherry-pick its commits onto my branch; the Stop hook kept asking to push the other branch."
+    solution: "Tell worktree-isolated impl agents in the brief to name their branch after the session's designated branch, or let the Stop hook skip unreviewed worktree branches."
+  - session: session_01ATdHzhyNozsTLHHtJGbLsa
+    date: "2026-10-14"
+    severity: nit
+    description: "Building on the session branch made the worktree use a local branch named worktree-wf_..., so it needed a refspec push to reach claude/upbeat-albattani-2ryjxo."
+    solution: "clear-backlog-build could detect a branch already checked out and push HEAD to the named branch itself."

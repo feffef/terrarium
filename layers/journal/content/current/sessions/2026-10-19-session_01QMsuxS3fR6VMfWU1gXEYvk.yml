@@ -1,0 +1,91 @@
+schemaVersion: 1
+session: session_01QMsuxS3fR6VMfWU1gXEYvk
+startedAt: 2026-10-19T09:20:38Z
+endedAt: 2026-10-19T09:27:23Z
+kind: autonomous
+goal: Check a logged learning about merge-pr.ts polling against code and docs
+status: completed
+outcome: Learning checked; the owner chose to write nothing, no edits made
+summary: Triggered by a prompt asking me to verify the learning from session_01DXuGrxEAsk3MjyRx98QTb2 (merge-pr.ts polls the gate, so a long foreground call replaces separate check-run polling) and propose its home, waiting for go-ahead. I read the session log, merge-pr.ts, pr-workflow.md and github-integration.md. The polling half holds and pr-workflow.md step 3 already says it. The foreground half contradicts CLAUDE.md (commands over 2 minutes run in the background; Bash caps foreground at 600s) and the open foreground-gate friction. I proposed writing nothing or a zero-net rewording of step 3; the owner chose writing nothing. Human-instructed throughout; nothing agent-initiated.
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: read first 60 lines at start
+    useful: partly
+  - path: GLOSSARY.md
+    reason: read only first 40 lines, not in full
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: step 3 and 5 already carry the polling fact
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read after my first git fetch, as the hook reminded
+    useful: no
+  - path: docs/agents/github-integration.md
+    reason: read only the polling section, lines 98-129
+    useful: partly
+  - path: scripts/github/merge-pr.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch and git ls-tree before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first git command beyond status and diff.
+    solution: Read git-conventions.md in the first batch whenever the task involves a session log on main.
+    severity: nit
+  - description: Read GLOSSARY.md (40 lines) and github-integration.md (one section) only partly, though CLAUDE.md says read in full; no ADR grep done for the question.
+    solution: Read the trigger docs in full at session start, in the first tool batch.
+    severity: nit
+durationSec: 404
+models:
+  claude-sonnet-5-5: 26
+toolCounts:
+  Bash: 6
+  Read: 5
+  Grep: 2
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Mentions the merge path; summary was enough, no change proposed to it so I skipped the full ADR
+    useful: partly
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to run close-session and keep logs off branches; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: No PR was opened; irrelevant to a question-only session
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: No GitHub write happened, so the provenance header did not apply
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded when I read the glossary map; no glossary change was in scope
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by merge-pr.ts grep hits; confirmed the script is Human-only so I proposed no script edit
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded by a grep hit on prune-trials; reminded me to prefer cutting text over adding, which shaped the proposal
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded alongside the prune rule; no rule or doc placement was changed
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded by reading the double-background guard; background to the foreground-gate finding, not needed in full
+    useful: partly
+gitBranch: claude/merge-pr-gate-polling-hiznnj
+entrypoint: remote_mobile
+cliVersion: 2.1.303
+landedBy: Stop

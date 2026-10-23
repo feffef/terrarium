@@ -2,9 +2,12 @@ name: designated-branch-clash
 summary: >-
   The rule to stay on one git branch clashed with tasks that need another branch or several pull requests.
 cause: >-
-  CLAUDE.md's "Stay on the branch your session started on" and the session's designated-branch instruction collide with tasks that need a PR's branch or several independent PRs, so the session asks or breaks the rule.
+  CLAUDE.md's "Stay on the branch your session started on" and the session's designated-branch instruction collide with tasks that need a PR's branch, several independent PRs or a worktree, so the session asks or breaks the rule. Signals: 'designated branch', 'against stay on the branch', a new branch cut and undone.
 surface: safe
 status: open
+notes: |-
+  2026-10-20 design: a repo doc granting pushes to other branches dropped: the harness pins one pushable branch and a repo doc cannot grant that; issue-tracker.md already says to flag it upfront and ask.
+fixes: []
 occurrences:
   - session: session_01X7EjwNGgzS9n6614B4PTU3
     date: "2026-10-10"
@@ -21,31 +24,11 @@ occurrences:
     severity: minor
     description: "The session's single designated branch clashed with several independent changes; I had to ask before using extra branches."
     solution: "The owner's rule (one branch per change unless clearly related) could live in issue-tracker.md's caller-set-branch line."
-  - session: session_01AnHXyvzXukt6izZTYs3YMr
-    date: "2026-10-13"
-    severity: minor
-    description: "audit-docs step 8 wants a separate escalation PR, but the session may push only its own branch; had to defer the ADR edit to a follow-up PR on the same branch."
-    solution: "Say in audit-docs step 8 that a session limited to one branch opens the escalation as a follow-up PR on that branch after the main PR merges."
-  - session: session_01QvnVVurQdA4cvYSZToBvud
-    date: "2026-10-13"
-    severity: nit
-    description: "Harness says never push to another branch, while audit-docs requires a separate escalation PR; pushed claude/charming-faraday-w968b5-adr on the Skill's authority"
-    solution: "audit-docs could name the escalation branch convention (designated branch + -adr) so the conflict is resolved in one place"
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
     date: "2026-10-14"
     severity: minor
     description: "Impl agent proposed a Skill sentence authorising a second pushed branch against the harness rule; auto mode flagged its report as instruction poisoning."
     solution: "Keep authority changes human-decided; the designated-branch conflict needs an owner decision."
-  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
-    date: "2026-10-16"
-    severity: minor
-    description: "The Fable agent's worktree branch name differed from the branch I may push to, so I had to wait for a PR to merge and cherry-pick its commits onto my branch; the Stop hook kept asking to push the other branch."
-    solution: "Tell worktree-isolated impl agents in the brief to name their branch after the session's designated branch, or let the Stop hook skip unreviewed worktree branches."
-  - session: session_01ATdHzhyNozsTLHHtJGbLsa
-    date: "2026-10-14"
-    severity: nit
-    description: "Building on the session branch made the worktree use a local branch named worktree-wf_..., so it needed a refspec push to reach claude/upbeat-albattani-2ryjxo."
-    solution: "clear-backlog-build could detect a branch already checked out and push HEAD to the named branch itself."
   - session: 1c810a28-81d4-417d-ac20-af374c985683
     date: "2026-10-16"
     severity: nit

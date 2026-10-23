@@ -1,0 +1,223 @@
+schemaVersion: 1
+session: session_01Tqm1brfa296Tbs9QnB7rCG
+startedAt: 2026-10-23T11:03:09Z
+endedAt: 2026-10-23T11:19:09Z
+kind: interactive
+goal: Prune one Platform instruction problem as a trial
+status: completed
+outcome: "Judged the deferred-tool-guard trial (holds); opened and merged the long-command backgrounding trial (PR #2443)"
+summary: "The user invoked /prune-trial. Only the deferred-tool-guard trial was judgeable per the window script; 57 sessions since it landed logged only nit deferred-tool Frictions and no regression issue, so it holds and I deleted it. A Sonnet search subagent found three failed-as-prose candidates, all small. Following the user's preference to ask before assuming, I put three options to the user (backgrounding rule, close-session duplicates, a git-conventions rewrite); the user picked the backgrounding rule. Agent-initiated within that choice: tightening CLAUDE.md's Self-verification bullet (4 to 3 lines), dropping blog-post §10's restatement, and the ledger entry. A Sonnet probe pinned to 9ec29c79 answered correctly. code-review (Standards and Spec subagents) found the ledger's line delta wrong (-3, really -2), fixed by amend. gate:scoped green on 52d89a06; pushed, opened PR #2443 and merged it via merge-pr.ts once CI was green. The cut is tiny (-2 lines): every failed-prose candidate had little prose left to cut."
+prs:
+  - "2443"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; Tenant list
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Prune Trial, Friction, Rule terms
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read after the hook asked; my git use was already fine (merge-base, three-dot diff)
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: before the first MCP call; list-open-issues script over search
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: before dispatch; brief lines, worktree isolation for the pinned probe
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: simple-change bar (3 files means code-review) and the scheduled-run close sequence
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: hook asked after editing blog-post; confirmed scope and verdict rules
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: hook asked after editing CLAUDE.md; confirmed the rule belongs in CLAUDE.md (action-bound)
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: hook asked after editing blog-post; nothing relevant to a prose prune
+    useful: no
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: hook asked after editing blog-post §10; Pingbacks, irrelevant to the gate step
+    useful: no
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: read §10 to cut its restatement of the backgrounding rule
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: the Skill run; Spec reviewer also read it as the spec and reported it useful
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: search subagent read lines 20-32 for the close-session candidate; reported useful
+    useful: yes
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: .agents/prune-trials.yml
+    reason: (read before editing)
+skillsUsed:
+  - name: prune-trial
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: search, probe and review subagents
+  - name: code-review
+    reason: pre-push review of a 3-file diff
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Wrote '-3 net' in the ledger entry without counting; the Spec reviewer found the true delta was -2.
+    solution: Take the line delta from git diff --stat before writing it, per CLAUDE.md 'Verify before you state'.
+    severity: minor
+  - description: My blog-post edit left an over-long joined line, so I needed a second amend just to rewrap it.
+    solution: Rewrap a joined line in the same edit.
+    severity: nit
+  - description: extract-frictions.ts --help printed no help and ran a default window instead; one wasted call.
+    solution: Give the script a --help or document its flags in its header.
+    severity: nit
+  - description: The Skill aims for ~100 lines deleted, but every failed-as-prose candidate had at most 4 lines left; this run cut 2.
+    solution: Let prune-trial say that once failed rules are already one line, a guard issue or a plain rewrite is the better move.
+    severity: minor
+durationSec: 960
+models:
+  claude-opus-5-5: 98
+toolCounts:
+  Bash: 31
+  Agent: 4
+  AskUserQuestion: 1
+  ToolSearch: 2
+  mcp__github__issue_read: 1
+  Read: 3
+  Edit: 2
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/prune-trials.yml
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0012.md
+adrHints:
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 12
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+docsReadBySubagents:
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before the push despite the Stop hook; summary enough, ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open and again at merge; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR right after push and subscribed; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Put the provenance header on the PR body and checked the commit trailer; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Kept the prune clear of open trials' territory; I opened the full ADR when a hook asked and it confirmed the summary
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Confirmed the action-bound backgrounding rule belongs in CLAUDE.md; full ADR read on a hook's ask, summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: About rewriting ADRs; this prune touched no ADR
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading the glossaries; I changed no glossary term
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on editing a Skill; nothing about Skill location changed
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded on editing blog-post §10 (the Gate step); Pingbacks don't apply, a narrower path is impossible for one file
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: I read it to confirm CLAUDE.md and blog-post are not Human-only, so the PR can be self-merged
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Only the search subagent loaded it; it reported it as noise for the task
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Only the search subagent loaded it; it reported it as noise
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Only the search subagent loaded it; it reported it as noise
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Search failed-prose rules
+    model: sonnet
+    durationSec: 89
+    toolCalls: 21
+    modelCalls: 9
+    tokenShare: 13
+  - type: general-purpose
+    task: Probe pruned rule on Sonnet
+    model: sonnet
+    durationSec: 35
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Standards review of prune diff
+    model: sonnet
+    durationSec: 30
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 4.4
+  - type: general-purpose
+    task: Spec review of prune diff
+    model: sonnet
+    durationSec: 33
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 4.7
+gitBranch: ccr-a25b82d5-1wc1xb
+entrypoint: remote_mobile
+cliVersion: 2.1.309
+ideas:
+  - "Teach prune-trial to propose, when the chosen rule is already one line and has failed 3+ times, adding a guard via a needs-triage issue as the trial's main output instead of a near-empty prune; #2426 shows the pattern."
+landedBy: Stop

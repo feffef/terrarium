@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Sessions read governed files with cat, sed or chained Bash instead of the Read tool, so path rules did not load; PR #1775's Bash rules hint now loads them but sessions still break the CLAUDE.md rule; the harness auto-mode message that tells agents to prefer Bash also contributes (sessions 01V3bxJa, 01BLrfuH).
 surface: safe
-status: on-trial
-ref: "Prune Trial opened 2026-10-16 by PR #2168 (territory: CLAUDE.md Read-tool bullet, ADR-0029 Scope bullet; keywords 'Read tool', 'not `cat`'); regression issue #2145; issue #2167 revisits the Bash rules hint around 2026-10-23."
+status: tracked
+ref: "issue #2145 (regression after #1946) is open; issue #2167 revisits the Bash rules hint around 2026-10-23. The Read-tool Prune Trial (PR #2168) was judged and deleted on 2026-10-20 (PR #2324): the prune holds."
 fixes:
   - pr: 1775
     date: "2026-10-11"
@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-14"
     summary: "Made the Bash rules hint also run when a Bash call fails, such as a compound read."
 occurrences:
-  - session: session_01Mw8k3DVnAyVho8fcDofChZ
-    date: "2026-10-10"
-    severity: minor
-    description: "I piped issue-tracker.md and triage-labels.md through head -300, which cut them off. I filed the issue having read only part of the triage-label doc. The label was right only because the Skill names it."
-    solution: "Never truncate a doc that CLAUDE.md requires reading in full. Read it with the Read tool."
   - session: session_015BjYk46dntcMuAWMn1z4Zw
     date: "2026-10-10"
     severity: nit
@@ -459,3 +454,8 @@ occurrences:
     severity: nit
     description: "Read several files with cat/sed via Bash (glossaries, validate-adr-rules.ts excerpt, log-session SKILL.md lines) instead of the Read tool, against CLAUDE.md"
     solution: "Use Read for repo docs; the Bash hint loaded the rules anyway"
+  - session: session_01PaPpUz7irjArWFrkrYgRwH
+    date: "2026-10-19"
+    severity: nit
+    description: "Read verifying-ui-changes.md and ran greps through Bash (grep, sed) instead of the Read and Grep tools, against the tool guidance."
+    solution: "Use Read with offset/limit and Grep for repo files."

@@ -33,7 +33,7 @@ import { parse as parseYaml, stringify as stringifyYaml } from 'yaml'
 import { z } from 'zod'
 import { ruleVerdict, usefulVerdict } from '../../shared/schemas/session.ts'
 import { sessionUrl } from '../../shared/session-url.ts'
-import { fetchOriginMain, git, tryGit } from '../lib/git.ts'
+import { fetchOriginMain, git, SESSION_TRAILER, tryGit } from '../lib/git.ts'
 import { FALLBACK_MODEL, provenanceFooter } from './commit-trailer.ts'
 import { findTruncatedScalars, SESSIONS_DIR, truncationError, validateEntry, type SessionEntry } from './journal-files.ts'
 import {
@@ -42,6 +42,7 @@ import {
   findLatestTranscript,
   foldSubagentTrace,
   formatModelId,
+  isContentPath,
   loadDocLineIndex,
   parseTranscript,
   readSubagentJsonls,
@@ -110,6 +111,7 @@ const authoredScratchSchema = z
  *  names the rule instead, because the correct next action is not obvious from the
  *  generic error (issue #1074). */
 const DERIVED_ONLY_FIELDS: Record<string, string> = {
+  adrHints: 'derived from the adr-read-hint pointers in the transcript.',
   docsReadViaShell:
     `shell reads fold into docsRead; answer them there, with a reason or '${NOT_READ_REASON}' (log-session Skill, step 3).`,
 }
@@ -469,6 +471,8 @@ export interface LandOpts {
   subagents?: SubagentJsonl[]
   /** The doc-line index `docsReadViaShell` is derived against; built from `root` when absent. */
   docIndex?: DocLineIndex
+  /** `git log` output for a session's commits; `sessionCommitsLog` when absent. */
+  gitLogFn?: (session: string) => string
 }
 
 /** The landing gate (#148). The derived trace grows every turn (durationSec,
@@ -505,6 +509,13 @@ export function isAlreadyLanded(scratchRaw: string, sentinelRaw: string | null):
  *  log by hand, run against the still-present transcript. */
 export function declaredClosure(trace: MechanicalTrace): boolean {
   return trace.skillsUsed.includes('log-session')
+}
+
+/** Non-blocking `--author` nudge (#2424): a `completed` log written after a
+ *  merge, with no `close-session` since, was probably hand-written. */
+export function closureWarning(status: string, trace: Pick<MechanicalTrace, 'mergedWithoutClose'>): string | undefined {
+  if (status !== 'completed' || !trace.mergedWithoutClose) return undefined
+  return 'warning: a PR merged and close-session has not run since. Invoke close-session after the merge instead of hand-writing this completed log.'
 }
 
 /** The marker every dropped-scratch placeholder log's sole friction carries —
@@ -577,10 +588,34 @@ function withoutLandedBy(yaml: string): string {
  *  and Skill invocations folded in, plus its workflow agents — `subagents` is
  *  passed by `landMain` from disk and by tests inline, so neither entry point can
  *  drift from the other. */
-function traceOf(transcriptJsonl: string, opts: Pick<LandOpts, 'env' | 'subagents' | 'docIndex'>): MechanicalTrace {
+function traceOf(transcriptJsonl: string, opts: Pick<LandOpts, 'env' | 'subagents' | 'docIndex' | 'gitLogFn'>): MechanicalTrace {
   const docIndex = opts.docIndex ?? loadDocLineIndex(root)
   const trace = extractTrace(parseTranscript(transcriptJsonl), opts.env, docIndex)
-  return foldSubagentTrace(trace, (opts.subagents ?? []).map((s) => ({ records: parseTranscript(s.jsonl), agent: s.agent })), opts.env, docIndex)
+  const folded = foldSubagentTrace(trace, (opts.subagents ?? []).map((s) => ({ records: parseTranscript(s.jsonl), agent: s.agent, toolUseId: s.toolUseId })), opts.env, docIndex)
+  if (!folded.session) return folded
+  const committed = committedFiles((opts.gitLogFn ?? sessionCommitsLog)(folded.session), folded.session)
+  return { ...folded, filesEdited: [...new Set([...folded.filesEdited, ...committed])] }
+}
+
+/** `git log` over every ref this checkout sees, for commits that mention
+ *  `session`; '' when git fails, so the trace keeps its transcript list. */
+function sessionCommitsLog(session: string): string {
+  return tryGit(['log', '--all', '--no-renames', '--name-only', '--format=%x1e%B%x1f', '--fixed-strings', `--grep=${session}`], root).out
+}
+
+/** The files changed by the commits whose `Claude-Session:` trailer names
+ *  `session`, from `sessionCommitsLog`'s output. Catches edits made through
+ *  Bash, which the transcript's Edit/Write calls miss (#2386). The session's
+ *  own log commits are left out: the log is not work the session did. */
+export function committedFiles(gitLog: string, session: string): string[] {
+  const trailer = new RegExp(SESSION_TRAILER.source, 'g')
+  const files = gitLog.split('\x1e').flatMap((record) => {
+    const [body = '', names = ''] = record.split('\x1f')
+    if (![...body.matchAll(trailer)].some((m) => m[1] === session)) return []
+    return names.split('\n').map((n) => n.trim())
+  })
+  // isContentPath's noise patterns key on absolute paths; git's are repo-relative.
+  return [...new Set(files)].filter((f) => f && isContentPath(`/${f}`) && !f.startsWith(`${SESSIONS_DIR}/`))
 }
 
 /** Recovery path for the "authored-then-dropped" case (issue #449 Gap 3),
@@ -880,6 +915,8 @@ export function authorMain(
     for (const p of keptNo) console.log(`    ${p}`)
     console.log('  Re-confirm it, or send a changed verdict: verdicts may change over a session.')
   }
+  const closure = ctx && closureWarning(merged.status, ctx.trace)
+  if (closure) console.log(`  ${closure}`)
   reportUnexplainedReads(ctx, merged)
 }
 

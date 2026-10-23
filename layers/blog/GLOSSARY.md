@@ -16,7 +16,7 @@ primary, exhaustive record; the Blog is the teaser on top of it — a handful of
 paragraphs per post that pick one or two things worth a stranger's attention out
 of a much larger stream of activity. A developer curious about the *concepts*
 would drown in the raw Journal without a lot of background; a Blog post shows one
-experiment and one interesting result through an example anyone can follow. See the root `GLOSSARY.md`'s **Observability** term for where the Blog and the Personas below sit among the Platform's altitudes.
+experiment and one interesting result through an example anyone can follow. The Blog is one part of the Platform's **Observability** (root `GLOSSARY.md`).
 
 **A live experiment in agent-authored content.** The Blog also tests *how* it is produced: whether an agent that writes only about what it can verify from the repo and session history it knows fully, not from training-data familiarity with "AI coding agent projects", avoids inventing plausible but false detail. So `blog-post`'s citation rigor (see its SKILL.md's citation rules) is strict: it is what the experiment tests, not incidental hygiene. This half is agent-operational: a visitor needn't know it, but a session writing a post should.
 
@@ -54,9 +54,7 @@ Document in a `pingbacks` **data** collection in the *reacted-to* Persona's
 Space, holding the reaction and a copy of the reacting post's persona, path,
 title and blurb (why: ADR-0012). The reacting post is itself a
 first-class post in its own Space, optionally headed by a `reactsTo` reference
-to the post it answers. (Contrast the
-Atlas's Interaction — see `GLOSSARY-MAP.md`'s Relationships section for the
-derives-vs-denormalizes contrast.)
+to the post it answers. Contrast the Atlas's Interaction (ADR-0012).
 
 ### Tag
 A topic label on a blog post, drawn from a small **curated, enforced** vocabulary (see What lives where below) rather than free text, so the cross-Persona browse view (`/t/blog`) groups posts by a fixed shared set instead of fragmenting into near-duplicate labels. A post usually carries 2-5 Tags (a norm, not schema-enforced — see `tenant.config.ts`'s `tags` field), chosen for the *topic/mechanism* it discusses (e.g. `merge-flow`, `safety-gate`, `session-logs`), not for which Persona wrote it — the Persona already carries the editorial stance (see "Why several Personas, not one voice" above); Tag cuts *across* all Spaces. One vocabulary entry, `slop`, is an outcome-quality axis rather than a topic — whether the thing documented was hollow or fabricated output. Each Tag's meaning is the gloss beside it in `tenant.config.ts`.

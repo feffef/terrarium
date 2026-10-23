@@ -4,6 +4,8 @@ cause: ".agents/skills/glassbox-update/scripts/glassbox-update.ts matches a page
 surface: safe
 status: open
 ref: "issue #2193 closed by PR #2207"
+notes: |-
+  2026-10-23 survey: issue #2097 (have the report carry each page's cited-file diffs) was closed not planned on 2026-10-16; 01Aji3mg asks for the same after PR #2207.
 fixes:
   - pr: 2207
     date: "2026-10-17"
@@ -19,3 +21,8 @@ occurrences:
     severity: nit
     description: "glassbox-update script pins pages that have changed paths but no edited range, so flagged pages look done before they are reviewed."
     solution: "Report flagged pages after --write too, or pin only after review."
+  - session: session_01Aji3mgX1G7kuK9Bs4mEHX6
+    date: "2026-10-23"
+    severity: minor
+    description: "The report's page list and revision pinning mix flagged-by-path and edited-range pages, so I had to diff each page by hand against 98 commits."
+    solution: "Have the script print, per page, the diff of each changed cited file."

@@ -1,0 +1,21 @@
+name: audit-docs-escalation-second-branch
+summary: >-
+  The doc-audit Skill asks for a separate escalation pull request, but the session may push only one branch.
+cause: >-
+  audit-docs step 8 wants the ADR escalation as its own PR, while the harness lets a session push only its designated branch, so the session defers the edit or pushes a second branch on the Skill's authority. Signals: audit-docs step 8, an '-adr' branch, 'may push only its own branch'.
+surface: safe
+status: open
+notes: |-
+  2026-10-20 design: a repo doc granting pushes to other branches dropped: the harness pins one pushable branch and a repo doc cannot grant that; issue-tracker.md already says to flag it upfront and ask.
+fixes: []
+occurrences:
+  - session: session_01AnHXyvzXukt6izZTYs3YMr
+    date: "2026-10-13"
+    severity: minor
+    description: "audit-docs step 8 wants a separate escalation PR, but the session may push only its own branch; had to defer the ADR edit to a follow-up PR on the same branch."
+    solution: "Say in audit-docs step 8 that a session limited to one branch opens the escalation as a follow-up PR on that branch after the main PR merges."
+  - session: session_01QvnVVurQdA4cvYSZToBvud
+    date: "2026-10-13"
+    severity: nit
+    description: "Harness says never push to another branch, while audit-docs requires a separate escalation PR; pushed claude/charming-faraday-w968b5-adr on the Skill's authority"
+    solution: "audit-docs could name the escalation branch convention (designated branch + -adr) so the conflict is resolved in one place"

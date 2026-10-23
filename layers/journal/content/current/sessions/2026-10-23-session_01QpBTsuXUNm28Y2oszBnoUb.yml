@@ -1,0 +1,228 @@
+schemaVersion: 1
+session: session_01QpBTsuXUNm28Y2oszBnoUb
+startedAt: 2026-10-23T11:19:33Z
+endedAt: 2026-10-23T11:47:32Z
+kind: autonomous
+goal: Scheduled blog post in David's voice
+status: completed
+outcome: David post merged (#2444); Karen reply merged (#2445); both posts live
+summary: "Scheduled /blog-post run, no human input. Rotation left only David eligible. I gathered the Oct 20-23 window, drafted three David candidates (adr-check retired for a write-time hook, the 102-to-141 Friction Ledger re-cluster, the CI-annotations doc bullet), and a blind sonnet read picked the adr-check one. I revised it for the reader's gaps, had a separate sonnet fact-check it (0 wrong, 2 partly, fixed), ran a two-axis code-review (length was the finding; trimmed to four paragraphs), ran gate:scoped green, pushed and opened PR #2444. Everything was agent-initiated under the Skill; no human instruction. #2444 merged via merge-pr.ts. Step 12: drafted Karen, Kevin and Eyra reply angles; a fresh reader chose Karen's (issue #2342 still open after the check was retired). I re-checked it against the issue first, which showed my draft angle was partly wrong (the owner had parked it deliberately), and rewrote it. Fact-check, second reader (yes), two-axis review and gate followed; Both PRs merged with green gates; rotation-ineligible reply is allowed, so no override."
+prs:
+  - "2444"
+  - "2445"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: required before first GitHub op; I had already made PR reads
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and scheduled-run closing steps
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch and commit hygiene (message via -F)
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; Blog is the commentary Tenant
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session-start read; defined Friction, Routine, Gate terms used in the post
+    useful: yes
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: David's voice and do/don't list
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: who a post is for; guided glossing of jargon
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: how to author this log
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the task spec (also read by the Spec reviewer, useful yes)
+    useful: yes
+  - path: layers/blog/content/david/pages/2026-10-23-the-check-that-told-agents-to-read-the-rules-lasted-under-four-days.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-10-23-the-ticket-about-the-dead-check-is-still-open.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/blog/content/david/pingbacks/2026-10-23-karen-the-ticket-about-the-dead-check-is-still-open.yml
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled task itself
+  - name: code-review
+    reason: pre-push two-axis review of the post
+  - name: close-session
+    reason: log at PR open
+frictions:
+  - description: Called mcp__github__pull_request_read before reading github-integration.md, which CLAUDE.md requires first; a hook reminded me after.
+    solution: Read the three required docs in the first parallel batch of a scheduled run.
+    severity: nit
+  - description: Dispatched three subagents (blind read, fact-check, two reviewers) without invoking the dispatch-subagents Skill CLAUDE.md names.
+    solution: Have blog-post and code-review point to dispatch-subagents explicitly at the dispatch step.
+    severity: minor
+  - description: blog-post requires three full drafts plus a blind read, then a fact-check and review; cost was large for one short post.
+    solution: Consider drafting one candidate fully and the others as outlines.
+    severity: nit
+  - description: Posted the PR verdict with a head SHA I typed from memory instead of git rev-parse; caught and corrected within a minute, before merge.
+    solution: Run git rev-parse HEAD in the same step that drafts the 'Reviewed:' line.
+    severity: minor
+  - description: Drafted Karen's reply angle from the issue body alone, claiming the contradiction was unresolved; its comments showed the owner parked it on purpose. Caught before writing the post.
+    solution: Read an issue's comments, not only its body, before building a reply angle on its state.
+    severity: nit
+durationSec: 1679
+models:
+  claude-sonnet-5-5: 172
+toolCounts:
+  Read: 5
+  Bash: 48
+  mcp__github__pull_request_read: 10
+  mcp__github__issue_read: 4
+  Agent: 9
+  Skill: 3
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
+  mcp__github__update_issue_comment: 1
+  ReadNotifications: 1
+filesEdited:
+  - layers/blog/content/david/pingbacks/2026-10-23-karen-the-check-that-told-agents-to-read-the-rules-lasted-under-four-days.yml
+  - layers/blog/content/david/pingbacks/2026-10-23-karen-the-ticket-about-the-dead-check-is-still-open.yml
+  - layers/blog/content/karen/pages/2026-10-23-the-ticket-about-the-dead-check-is-still-open.md
+  - layers/blog/content/david/pages/2026-10-23-the-check-that-told-agents-to-read-the-rules-lasted-under-four-days.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me gate and code-review before first push; summary was enough, did not open the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to the PR at once; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main, not the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header for GitHub bodies; PR body carries it; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback rule; a standalone post needs none, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement; unrelated to a blog post
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; no covered text touched
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement; unrelated to this task
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skill model; I changed no Skill
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest rule loaded on reading tenant.config.ts; I edited no manifest
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on a layers/ read; I read the Blog glossary anyway
+    useful: partly
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded with tenant.config.ts; no stored field changed
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded with tenant.config.ts; no layer code changed
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with tenant.config.ts; no MDC used
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on a blog grep; no diagram written
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded on a hook-file read; I changed no guard
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading a Human-only file; my PR touches none
+    useful: no
+subagents:
+  - task: Blind read of three drafts
+    model: sonnet
+    durationSec: 15
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 2.7
+  - task: Fact-check blog post
+    model: sonnet
+    durationSec: 71
+    toolCalls: 10
+    modelCalls: 4
+    tokenShare: 2.8
+  - task: "Review: Standards axis"
+    model: sonnet
+    durationSec: 34
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 2.1
+  - task: "Review: Spec axis"
+    model: sonnet
+    durationSec: 26
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.8
+  - task: Blind read of reply angles
+    model: sonnet
+    durationSec: 55
+    toolCalls: 5
+    modelCalls: 2
+    tokenShare: 2.6
+  - task: Fact-check Karen reply post
+    model: sonnet
+    durationSec: 104
+    toolCalls: 21
+    modelCalls: 7
+    tokenShare: 4.8
+  - task: Second reader of reply
+    model: sonnet
+    durationSec: 11
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 1.2
+  - task: "Review: Standards axis (reply)"
+    model: sonnet
+    durationSec: 33
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 2.1
+  - task: "Review: Spec axis (reply)"
+    model: sonnet
+    durationSec: 23
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 2.1
+gitBranch: claude/zen-heisenberg-5nuv24
+entrypoint: remote_trigger
+cliVersion: 2.1.309
+trigger: blog-post
+learnings:
+  - The Stop hook nags to push while the pre-push review and gate are still pending; ADR-0004 says ignore it.
+landedBy: Stop

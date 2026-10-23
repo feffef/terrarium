@@ -1,0 +1,194 @@
+schemaVersion: 1
+session: session_01WU8rXHT5rKQKDYbYqCv7Sd
+startedAt: 2026-10-21T07:24:46Z
+endedAt: 2026-10-21T08:04:18Z
+kind: delegated
+goal: Weekly run turning recurring session frictions into fixes
+status: completed
+outcome: Ledger updated, three regression issues filed, one fix merged, four designs dropped
+summary: "Human-instructed: the owner started the frictions-to-fixes Skill with no further input; every later step was the Skill's own, agent-decided. A survey subagent read 24 sessions, appended 17 occurrences to existing clusters and committed the ledger. I filed regression issues #2362, #2363 and #2364 (worktree guard, close-session, search overflow), skipping regressions that already have an open issue. I picked five fixes after adr-check; a design agent recommended building only one (a ledger test rejecting a session listed twice in one cluster) and dropping the other four, with the reasons now in the ledger. A Sonnet agent built the test in a worktree; I reviewed it as a simple change, reran it against the merged ledger and merged it as #2366. The ledger PR #2365 and the closing ledger PR #2367 also merged, each after a green scoped gate. Open: the three regression issues await triage, and issue #2338 (ledger-set helper) still stands."
+prs:
+  - "2365"
+  - "2366"
+  - "2367"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read before the first git command; commit via -F file
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: tool names, fields on searches, listing script
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: how to file the regression issues
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: needs-triage is the label for Skill-filed issues
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, verdict comment step
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; no Tenant work this run
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Friction, Friction Ledger, Prune Trial terms
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: the design brief filled with picks
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: survey brief, used by the survey agent; I read it at the start
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: design agent read it; it found Done already requires ready-for-agent
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: the impl brief I adapted for the build agent
+    useful: yes
+  - path: .claude/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/journal/tests/unit/ledger-content.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the run itself
+  - name: adr-check
+    reason: before picking fixes
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+  - name: dispatch-subagents
+    reason: (no reason given)
+frictions:
+  - description: adr-check printed every ADR summary (24KB) for a pick step where only ADR-0003/0004/0005/0027 and trial territories applied.
+    solution: Let binding.ts take a topic filter, or print only summaries whose paths match.
+    severity: minor
+  - description: Survey and design subagents each skipped or read late the CLAUDE.md-required reads; the design agent also skipped adr-check and cited stale paths from the ledger.
+    solution: Brief templates could list the required reads first, and ledger entries should cite current paths.
+    severity: nit
+  - description: The Stop hook asked twice to push while the gate ran, against ADR-0004's review-and-gate-before-first-push rule.
+    solution: "None here: the owner accepts the nag (stop-hook-nag); declining was correct."
+    severity: nit
+  - description: Survey brief mixes window start and session end dates, and never says which status a ledger entry takes when its issue closes not planned or its Skill sits in a trial.
+    solution: State the window by session start, and list the status for closed-not-planned and on-trial entries in the brief.
+    severity: nit
+  - description: The brief and ledger entries cite scripts/verify-skills-lock.ts and a CLAUDE.md Read-tool rule that no longer exist, so the design agent had to re-check them.
+    solution: Fix the stale path in the ledger entry; cite current paths when an entry is written.
+    severity: nit
+  - description: SKILL.md section 2 and pr-workflow.md leave open whether a test counts as code logic for the simple-change read; I reran the test and read the diff to be safe.
+    solution: Say in pr-workflow.md whether a test-only change of at most 10 lines counts as simple.
+    severity: nit
+  - description: check-conflicting-issues.ts flagged a watch-list issue on the keyword remove, which has nothing to do with the change; reading the issue body cost a call.
+    solution: None needed; it is advisory and one call.
+    severity: nit
+  - description: Ran the Skill with its autonomous decisions and built without the grilling the owner's preference for questions-first suggests; no question was asked.
+    solution: Say in the Skill that the owner's start is the approval for picks, so no question is expected.
+    severity: nit
+durationSec: 2372
+models:
+  claude-sonnet-5-5: 154
+toolCounts:
+  Read: 9
+  Bash: 44
+  Agent: 3
+  ToolSearch: 1
+  mcp__github__issue_write: 3
+  Skill: 5
+  mcp__github__create_pull_request: 3
+  mcp__github__add_issue_comment: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  ReadNotifications: 8
+  mcp__github__pull_request_read: 1
+  Edit: 2
+filesEdited:
+  - layers/journal/content/current/frictions/ledger-yaml-hand-edit-errors.yml
+  - layers/journal/tests/unit/ledger-content.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - .agents/skills/clear-backlog/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me gate and review before the first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: close-session at PR-open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR at once and subscribe; fixes are not new work; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on issues and PR body, trailer check; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on Skill files; confirmed Skills are gated code; did not apply to the picks
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded on skills-lock reads; pack Skills are off limits for fixes, which the design agent used
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Open trial territories kept me off the frictions-to-fixes and close-session text; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement; no glossary change this run
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Where instructions live; no instruction was added
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Triage sweep labels; not relevant to a ledger run
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Design agent: its paths gave the Human-only answer"
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: "Design agent: loaded while grepping, no use"
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: "Survey agent: loaded on the journal config, no use"
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: "Survey agent: partly useful for ledger being derived"
+    useful: partly
+  - path: .claude/rules/data-shapes.md
+    reason: "Survey agent: loaded on ledger reads, no use"
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "Survey agent: no use"
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "Survey agent: no use"
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Survey friction ledger
+  - type: general-purpose
+    task: Design fixes for picks
+  - type: general-purpose
+    task: Build duplicate-session ledger test
+    model: sonnet
+gitBranch: ccr-72c39721-eepaxv
+entrypoint: remote_mobile
+cliVersion: 2.1.306
+landedBy: Stop

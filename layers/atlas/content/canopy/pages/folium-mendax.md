@@ -85,7 +85,7 @@ The reader will forgive the draughtsman a certain defensiveness about Plate IX. 
 
 Its stillness is not the stillness of hiding but of profession. A true leaf trembles at every breath of the vents; the false-leaf has studied this and trembles too, a half-beat behind, which is the only flaw in the performance and requires a wind to expose. The ledger gives its diet as *the unwary*, which is as much precision as the ledger could bear.
 
-But a costume must answer to the season it imitates, and this one answers scrupulously — shedding, greening, gilding, and going fast to the bough each in its turn. We have set the year down not by our calendar but as the false-leaf keeps it: the new blade, the green work, the gilding, and the stem-fast months. Turn the almanac to follow the false-leaf through them; the seasons on the rim only say where in our shared year each of its falls.
+But a costume must answer to the season it imitates, and this one answers scrupulously — shedding, greening, gilding, and going fast to the bough each in its turn. We have set the year down not by our calendar but as the false-leaf keeps it: the new blade, the green work, the gilding, and the stem-fast months. Turn the almanac to follow the false-leaf through them.
 
 ::almanac
 ::

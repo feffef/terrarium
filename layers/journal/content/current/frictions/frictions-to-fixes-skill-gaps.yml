@@ -1,8 +1,9 @@
 name: frictions-to-fixes-skill-gaps
-summary: "The frictions-to-fixes Skill leaves recurring situations unspecified, so the run asks the owner or improvises."
-cause: "SKILL.md does not say what to do when each top regression already has an open issue, that the ledger PR may open before design, or how a ledger ref names a PR that does not exist yet; the user is asked or the run improvises. Signals: \"the Skill says ... but not what to do\", \"had to ask the user how many\"."
+summary: "The frictions-to-fixes SKILL.md leaves recurring situations unspecified, so the run asks the owner or improvises."
+cause: "SKILL.md (not the survey or design briefs or the scripts) does not say how many regressions get issues, what to do when one already has an open issue, how to rank by severity, that a skipped cluster needs a recorded reason, how a ledger ref names a PR that does not exist yet, or that the owner's start approves the run's picks; the user is asked or the run improvises. Brief defects belong to frictions-to-fixes-briefs-mismatch, --summary date counting to ledger-summary-same-day-counting, repeated sessions to survey-appends-duplicate-sessions. Signals: \"the Skill says ... but not what to do\", \"had to ask the user how many\"."
 surface: safe
-status: open
+status: on-trial
+ref: "Inside the open Prune Trial for the frictions-to-fixes plain rewrite (PR #2330): territory path '.agents/skills/frictions-to-fixes/SKILL.md (all of it)'; keywords 'ledger PR', 'closing ledger PR'."
 fixes:
   - pr: 2149
     date: "2026-10-16"
@@ -10,9 +11,9 @@ fixes:
   - pr: 2197
     date: "2026-10-17"
     summary: "The Skill says a regression that already has an open issue needs none and does not count toward the three."
-  - pr: 2213
-    date: "2026-10-17"
-    summary: "The survey brief says --unledgered drops each carried friction verbatim, so a session already in the target cluster must be skipped by hand."
+  - pr: 2345
+    date: "2026-10-20"
+    summary: "Added a no-change outcome to the design step and a notes field in the ledger, so a run that finds nothing worth fixing has an outcome."
 occurrences:
   - session: session_01Mf4dUxuWB7WtkC5fVzByH6
     date: "2026-10-16"
@@ -34,13 +35,18 @@ occurrences:
     severity: minor
     description: "frictions-to-fixes runs left an 11-occurrence cluster open with no recorded reason, so the owner had to ask why."
     solution: "Have the ledger PR description name each high-occurrence open cluster it skipped and why."
-  - session: session_01J4ze3DvsZhXeP78iyRnbSd
-    date: "2026-10-17"
-    severity: minor
-    description: "Survey brief says --unledgered drops carried frictions, yet 7 blocks for sessions already in a cluster reappeared and only surfaced at validate time (survey agent's friction)."
-    solution: "Have the brief say to skip a session already present in the target cluster, or filter by session in the script."
-  - session: session_01Sc82qSCs4NVP3igf9SaGXM
-    date: "2026-10-17"
-    severity: minor
-    description: "The survey subagent reported that the brief gives no cheap way to find merged PRs missing from the ledger and no helper to append occurrences, so it did both by hand."
-    solution: "Add a script that lists merged PRs absent from every ledger fixes entry, and one that appends print-ledger-occurrence output."
+  - session: session_014tr6vJyNXmekdFQtYrEVWT
+    date: "2026-10-21"
+    severity: nit
+    description: "Section 2 says to file the top three regressions by severity, count and proof together, but gives no rule for severity before versus after the fix, so my pick of the third was a judgement call."
+    solution: "Say to rank by the highest severity since the latest fix PR, as the summary shows it."
+  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
+    date: "2026-10-21"
+    severity: nit
+    description: "Ran the Skill with its autonomous decisions and built without the grilling the owner's preference for questions-first suggests; no question was asked."
+    solution: "Say in the Skill that the owner's start is the approval for picks, so no question is expected."
+  - session: session_01CfTFFQrkwq1eUsDy61AJzz
+    date: "2026-10-23"
+    severity: nit
+    description: "SKILL.md §2 ranks regressions to file by severity, count and recurrence together without saying whether entries already tracked by an open issue or on trial count; I chose by judgement."
+    solution: "State that regressions with an open issue, a trial or an owner decision are skipped before ranking."

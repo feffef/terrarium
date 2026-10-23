@@ -2,17 +2,17 @@ name: survey-output-overflow
 summary: >-
   The data this ledger's own survey reads was too large to read in one go.
 cause: >-
-  The frictions-to-fixes survey reads (session-frictions --compact at about 135-150 KB, the ledger directory at about 40 KB) overflow tool results, so subagents slice or hand-digest them.
+  The frictions-to-fixes survey reads (session-frictions / extract-frictions --compact at about 135-150 KB, the ledger directory at about 40 KB) overflow tool results, so subagents slice or hand-digest them.
 surface: safe
 status: open
-ref: "issue #1917 closed 2026-10-14T02:23Z by PR #1918; audit-skills output redirect in frictions-to-fixes §4, 2026-10-16"
+ref: "issue #1917 closed 2026-10-14T02:23Z by PR #1918"
 fixes:
   - pr: 1918
     date: "2026-10-14"
     summary: "Shrank the survey's data reads: compact one-line-per-session output and a short summary of each ledger entry."
-  - pr: 2109
-    date: "2026-10-16"
-    summary: "The survey instructions now say to save the large skill-audit output to a file and read only one part."
+  - pr: 2281
+    date: "2026-10-19"
+    summary: "extract-frictions --compact no longer prints each session's docsRead paths, about half its bytes."
 occurrences:
   - session: session_01GEqB5frKCNtJYAr9KaRxDo
     date: "2026-10-10"
@@ -44,18 +44,18 @@ occurrences:
     severity: minor
     description: "Survey subagent's compact output and ledger dir still overflowed reads (73 KB, 2004 lines), the already-known survey-output-overflow cause."
     solution: "PR 1918 (compact one-line sessions, ledger --summary)."
-  - session: session_01LpcCJWRYb5grgQe3wBGEwb
-    date: "2026-10-15"
-    severity: minor
-    description: "Survey subagent: audit-skills.ts output plus a broad grep printed 56 KB and was persisted to a file; it re-ran with narrow extraction"
-    solution: "audit-skills.ts could offer a --doc-read-counts-only flag"
-  - session: session_01RnZJ7VrgWpgzfJUCEdif77
-    date: "2026-10-16"
-    severity: nit
-    description: "audit-skills.ts printed about 478 KB when run bare by the survey subagent, which had to redirect it to a file."
-    solution: "PR 2109 notes the redirect in frictions-to-fixes section 4."
   - session: session_01RfmdPFPhtKo6h6GFwxLeRb
     date: "2026-10-16"
     severity: minor
     description: "session-frictions output was a 670KB JSON file; finding blog-post hits needed an ad-hoc node filter script."
     solution: "Give the helper a --grep option for keywords."
+  - session: session_0135hcUf12mVM8dEZfDRAkUb
+    date: "2026-10-18"
+    severity: nit
+    description: "The Skill says the survey agent works from a read of the extract file, but the compact output was still 90 KB with long docsRead arrays."
+    solution: "Have extract-frictions --compact drop docsRead."
+  - session: session_01TwTc2v8Afxqc9R4NdUcNPD
+    date: "2026-10-18"
+    severity: nit
+    description: "First dump of eight Skill Inventory entries was 36KB and truncated; a second query for observations was 137KB. Cost two extra calls before I filtered to recent dates."
+    solution: "Filter Inventory observations by date and truncate notes on the first query."

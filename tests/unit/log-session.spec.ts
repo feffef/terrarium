@@ -9,7 +9,9 @@ import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vites
 import { parse as parseYaml } from 'yaml'
 import {
   authorMain,
+  committedFiles,
   CURRENT_SESSIONS_SCHEMA_VERSION,
+  closureWarning,
   expectedFilename,
   land,
   loadAuthorContext,
@@ -17,6 +19,7 @@ import {
   reportUnexplainedReads,
   validateAuthored,
 } from '../../scripts/session/log-session.ts'
+import { extractTrace } from '../../scripts/session/transcript-trace.ts'
 import { findTruncatedScalars, validateEntry } from '../../scripts/session/journal-files.ts'
 import type { AuthoredScratch } from '../../scripts/session/transcript-trace.ts'
 
@@ -81,6 +84,14 @@ describe('validateEntry() — the L1 stand-in', () => {
     expect(validateEntry(valid).ok).toBe(true)
   })
 
+  it('accepts derived adrHints and refuses other shapes, and never takes them authored', () => {
+    const adrHints = [{ adr: 4, via: 'text', readAfter: false, by: 'main' }]
+    expect(validateEntry({ ...valid, adrHints }).ok).toBe(true)
+    expect(validateEntry({ ...valid, adrHints: [{ adr: 4, via: 'bash', readAfter: false, by: 'main' }] }).ok).toBe(false)
+    const authored = { session: 's', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+    expect(validateAuthored({ ...authored, adrHints }).ok).toBe(false)
+  })
+
   it('rejects a non-string entry in learnings (must be a plain string array)', () => {
     expect(validateEntry({ ...valid, learnings: [{ note: 'x' }] }).ok).toBe(false)
   })
@@ -97,7 +108,7 @@ describe('validateEntry() — the L1 stand-in', () => {
 
   // The one log that carried subagentVerdicts, migrated by the owner's one-off exception to ADR-0009.
   it('validates the migrated log, its subagent verdict now in ruleVerdicts', () => {
-    const log = parseYaml(readFileSync('layers/journal/content/current/sessions/2026-10-14-session_01NVG22rfEsjhW9zkcCco6W8.yml', 'utf8'))
+    const log = parseYaml(readFileSync('layers/journal/content/archived/sessions/2026-10-14-session_01NVG22rfEsjhW9zkcCco6W8.yml', 'utf8'))
     expect(validateEntry(log).ok).toBe(true)
     expect(log.ruleVerdicts).toContainEqual(expect.objectContaining({ path: '.claude/rules/tenant-layers.md', useful: 'partly' }))
   })
@@ -589,5 +600,65 @@ describe('mergeAuthored() — merge on re-fire (issue #688)', () => {
   it('replaces, never merges, a scratch left behind by a different session', () => {
     const other = { ...pass2, session: 'session_01B' }
     expect(mergeAuthored(pass1, other)).toEqual(other)
+  })
+})
+
+describe('committedFiles() — files the session changed through its own commits (#2386)', () => {
+  // `git log --name-only --format=%x1e%B%x1f` output: RS, body, US, then the files.
+  const commit = (body: string, files: string[]) => `\x1e${body}\n\x1f\n\n${files.join('\n')}\n`
+  const mine = 'Claude-Session: https://claude.ai/code/session_01A'
+
+  it('lists the files of commits whose trailer names this session, and only those', () => {
+    const log = [
+      commit(`Fix the gate\n\n${mine}\n`, ['scripts/gate/gate.ts', 'docs/x.md']),
+      commit('Fix\n\nClaude-Session: https://claude.ai/code/session_01AB\n', ['other.ts']),
+      commit('Mentions session_01A in prose only\n', ['prose.ts']),
+      commit(`Again\n\n${mine}\n`, ['docs/x.md', 'app/a.vue']),
+    ].join('')
+    expect(committedFiles(log, 'session_01A')).toEqual(['scripts/gate/gate.ts', 'docs/x.md', 'app/a.vue'])
+  })
+
+  it("drops noise paths and the session's own log commits", () => {
+    const log = commit(`Log\n\n${mine}\n`, [
+      'layers/journal/content/current/sessions/2026-10-21-session_01A.yml',
+      'node_modules/x/index.js',
+      'app/b.vue',
+    ])
+    expect(committedFiles(log, 'session_01A')).toEqual(['app/b.vue'])
+  })
+
+  it('is empty when git gave nothing (unavailable or no commits)', () => {
+    expect(committedFiles('', 'session_01A')).toEqual([])
+  })
+})
+
+describe('closureWarning() — a completed log hand-written after a merge (#2424)', () => {
+  const tool = (name: string, input: Record<string, unknown>) => ({
+    type: 'assistant',
+    message: { content: [{ type: 'tool_use', name, input }] },
+  })
+  const merge = tool('Bash', { command: 'pnpm tsx scripts/github/merge-pr.ts 12' })
+  const mcpMerge = tool('mcp__github__merge_pull_request', { pullNumber: 12 })
+  const close = tool('Skill', { skill: 'close-session' })
+  const warn = (status: string, ...records: Record<string, unknown>[]) => closureWarning(status, extractTrace(records))
+
+  it('warns when completed, merged and never closed afterwards', () => {
+    expect(warn('completed', merge)).toMatch(/close-session/)
+    expect(warn('completed', mcpMerge)).toMatch(/close-session/)
+  })
+  it('warns when the only close came before the last merge', () => {
+    expect(warn('completed', close, merge)).toMatch(/close-session/)
+  })
+  it('is silent when close-session ran after the merge', () => {
+    expect(warn('completed', merge, close)).toBeUndefined()
+  })
+  it('is silent when the close Skill call carries its name in `command`', () => {
+    expect(warn('completed', merge, tool('Skill', { command: 'close-session' }))).toBeUndefined()
+  })
+  it('is silent without a merge', () => {
+    expect(warn('completed', tool('Bash', { command: 'ls' }))).toBeUndefined()
+  })
+  it('is silent for a non-completed status', () => {
+    expect(warn('blocked', merge)).toBeUndefined()
   })
 })

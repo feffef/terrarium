@@ -286,3 +286,70 @@ observations:
       re-confirmed via live issue_read (closed/completed, #1626 via a real
       merged fix PR #1662). Deletion sweep found only the two already-known
       disclosed deletions. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 2 sessions freshly
+      end-to-end audited beyond prior entries: session_01GfmoxeLwrvC7CARuaBAXfB
+      (PR #2247/#2250, a user-directed single-reply run that openly
+      disclosed its deviation from the normal 3-candidate flow) and
+      session_01RS1UjFRw38NcGaMRsrEVdE (PR #2248/#2249, full standard flow).
+      All posts/pingbacks confirmed on disk matching PR claims. No reverts
+      of shipped content. Not escalated, but worth watching: 3/3 PRs merged
+      today (#2248/#2249/#2250) openly admit post-fact-check wording edits
+      were never re-dispatched to a checker or cut, though SKILL.md step 9
+      asks for that - every instance is disclosed, so not a silent failure
+      by this audit's definition, but a pattern no prior entry names. Also
+      noted: PR #2249 and #2250 landed concurrent pingbacks into David's
+      Space reacting to the same post from two sessions that couldn't see
+      each other's drafts (content differed, not a duplicate this time) -
+      a latent redundancy risk under concurrent invocation the Skill
+      doesn't address. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): 9/9 usedIn sessions verified,
+      no new silent failure. New, not yet escalated: today's session
+      (session_01XTdRbnDg1n2j2ZqjTrwCLi) logged skipping the code-review Skill
+      before its first push, treating the fact-check as the review instead —
+      self-identified in its own friction as a repeat of earlier blog-post
+      runs' behavior, an ADR-0004 gate-compliance gap this Skill doesn't
+      currently route around. Below this run's escalation bar (no prior
+      observation yet records the pattern, so not yet "repeated" by this
+      Inventory's own definition) — flagged here so a second instance clears
+      it. Grade/role unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check, 9/9 newest runs' PRs verified real and merged via their
+      merge-commit sha, not just trusted from the logs. Deep end-to-end
+      verify of session_01RZ2pN3CEsoJyKxUWC2RFW5 (PR #2322 David post, #2323
+      Karen reply): every timeline claim accurate to the minute against live
+      GitHub. Deletion sweep found only the 2 already-known/disclosed
+      deletions, no new or undisclosed revert. Grade/role unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Behaviour check, 9 runs, all 18 PRs merged. Filed #2370: step 9's
+      "later unchecked edits" shipped in 7 of 8 PR bodies read (#2220 and
+      #2139 re-read here); this repeats the 10-19 entry. code-review was
+      reduced to inline in 4 of 9 runs (session_01XTdRbnDg1n2j2ZqjTrwCLi,
+      session_01E7YFbvBvT8HWhVJb6kTDMq, session_01N9bwDKW51kMS6WJvK2nfSU,
+      session_01RJh5bK46AQRRtwagmz8GjU); that is the closed
+      prepush-gate-review-skipped cluster (#2354), so no issue here.
+      Grade/role unchanged.
+  - date: "2026-10-22"
+    note: >-
+      Behaviour check, 9/9 runs clean, no new silent failure. #2370's fix
+      (PR #2379, merged 2026-10-21T14:09Z, deleting step 9's "list your own
+      later changes separately" sentence) landed after every run in this
+      window started, so it is still untested by a real run — watch next
+      round for whether unchecked-edit language still appears in a PR body
+      under the new text. Grade/role unchanged.
+  - date: "2026-10-23"
+    note: >-
+      Verified silent failure: #2379's fix did not hold on its first real
+      test. session_01Nzhsg2KY7V9o2AmYWK2cqy ran entirely under the
+      post-fix SKILL.md (started ~21h after #2379 merged); PR #2409 and PR
+      #2411 bodies both still ship a "Later unchecked edits: ..." bullet,
+      neither re-dispatched nor cut — the forbidden shape recurring without
+      the sentence that used to sanction it. (Same session's PR #2410, and
+      PR #2374, complied.) Reopened #2370 with this evidence and a
+      proposal: forbid the bullet outright, or add a mechanical check.
+      Grade/role unchanged (routine).

@@ -1,5 +1,5 @@
 /* Blog Tenant theme — deliberately simple, but finished. Self-contained tokens
-   (no sharing with the journal Tenant; GLOSSARY.md isolation stance). Registered
+   (no sharing with the journal Tenant; tenant-layers rule). Registered
    globally by the layer's nuxt.config. Light/dark aware; the per-Persona accent
    (--bl-accent) is set from personas.ts on <body> (via useHead) and on the page
    root. Ornament budget is deliberately small and terrarium-flavoured: a sprout
@@ -396,7 +396,7 @@ body.bl-page {
   margin: 0.4rem 0 0;
   text-wrap: balance;
 }
-.bl .replyto {
+.bl .thread {
   margin: 1rem 0 0;
   font-family: var(--bl-mono);
   font-size: 0.8rem;
@@ -404,8 +404,15 @@ body.bl-page {
   border-left: 2px solid var(--bl-accent);
   padding-left: 0.7rem;
 }
-.bl .replyto a { color: var(--bl-accent); text-decoration: none; }
-.bl .replyto a:hover { text-decoration: underline; }
+.bl .thread-label { margin: 0 0 0.3rem; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.bl .thread ol { list-style: none; margin: 0; padding: 0; }
+.bl .thread li { display: flex; gap: 0.6rem; padding: 0.15rem 0; }
+.bl .thread .who { flex: none; min-width: 3.2rem; }
+.bl .thread li > :last-child { min-width: 0; }
+.bl .thread a { color: var(--bl-accent); text-decoration: none; }
+.bl .thread a:hover { text-decoration: underline; }
+.bl .thread-here { color: var(--bl-ink); font-weight: 600; }
+.bl .thread-here em { font-weight: 400; font-style: normal; color: var(--bl-muted); }
 
 /* Prose (index.md intro + post body). Plain descendant selectors on purpose —
    this is a global stylesheet, and ContentRenderer output is ordinary DOM. */

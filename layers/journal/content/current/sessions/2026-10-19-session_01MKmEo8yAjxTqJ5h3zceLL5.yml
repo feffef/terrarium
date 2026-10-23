@@ -1,0 +1,138 @@
+schemaVersion: 1
+session: session_01MKmEo8yAjxTqJ5h3zceLL5
+startedAt: 2026-10-19T16:06:22Z
+endedAt: 2026-10-19T16:56:15Z
+kind: interactive
+goal: Finish the transcript-search wayfinder map and write the inspect-session Skill spec
+status: completed
+outcome: Mirror ticket resolved (no mirror); inspect-session Skill spec written, approved and sent to triage; map closed
+summary: "The human-instructed kickoff asked me to work one wayfinder ticket (\"Should our hooks mirror each session's raw transcript for the Skill to search?\", #2298) on the transcript-search map (#2291). I found that scripts/session/transcript-trace.ts already derives rule loads and workflow-agent reads into each session log, which covers most of list_events' blind spots. After one grilling round and the user's question about how a mirror relates to the Haiku full tier, the user chose no mirror. I closed the ticket and updated the map. The user then asked me (option 2) to decide the remaining fog inside the spec and write it. I ran adr-check (ADR-0005/0015/0021/0004; no prune trial overlap), checked how Skill scripts are typechecked and tested, and grilled two more rounds. The user pushed back on the name twice: the Skill does more than search, and \"transcript\" is the raw record (Claude Code docs confirm the JSONL meaning, checked by a claude-code-guide subagent). So the Skill reads events, not the transcript, and is named inspect-session; its scratch file is \"flattened events\". The user approved the full list of decisions and asked me to write the spec. I filed \"Spec: the inspect-session Skill\" (#2300) as a child of the map, on hold until a Trusted user approves, with two user-story sub-issues (partial read #2301, full read #2302), and noted on the map that the way is clear. At the user's direction the recipe now leaves github-integration.md entirely and CLAUDE.md gets the trigger for the Skill instead. The user then questioned the five fixed questions (from #2295, settled before the shape ticket); at their direction the spec now centres on one general reconstruction with tagged flattened events and free-form answers, keeping Read check and Dispatches as search selectors. Finally the user renamed the jargon tiers to partial read (default) and full read, and reframed the Skill as know-how for searching events plus a Flatten, a Search script of predefined selectors (tool calls, reads, dispatches, errors) and an Outline. The user then approved the spec; I removed the hold lines, labelled the spec and both stories needs-triage, recorded the approval on the spec and closed the map as its destination was reached. No code, branch or PR."
+prs: []
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start glossary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Session, Routine, Public terms for the resolution
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: wayfinding operations and the spec/sub-issue/hold format
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: map-body header replacement trap and comment vs update
+    useful: yes
+  - path: scripts/session/transcript-trace.ts
+    reason: showed session logs already derive rule loads and workflow-agent reads
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: where Skill files, scripts and tests live
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: confirmed audit-skills need not change
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: a released spec gets needs-triage from a non-triage session
+    useful: yes
+skillsUsed:
+  - name: wayfinder
+    reason: work the transcript-search map's next ticket
+  - name: grilling
+    reason: grilling ticket
+  - name: domain-modeling
+    reason: wayfinder requires it for grilling tickets; no term changed
+  - name: close-session
+    reason: question-only session closure
+  - name: adr-check
+    reason: before writing the spec
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Recommended Q1-Q3 without running the adr-check Skill first, as CLAUDE.md requires before recommending a change.
+    solution: Run adr-check before the first grilling round; the wayfinder Skill could name it for grilling tickets.
+    severity: minor
+  - description: Proposed the name transcript-search and the term flattened transcript before checking how Claude Code defines transcript; the user had to correct both.
+    solution: Check a term against the glossary and the upstream docs before proposing a name built on it.
+    severity: minor
+  - description: "SHELL-READ-DETECTION: a real read went uncounted. Command: git show origin/prototype/transcript-search-shape:.agents/skills/transcript-search/prototype/README.md | head -80 (chained after git fetch and git ls-tree). Expected path: .agents/skills/transcript-search/prototype/README.md"
+    solution: Have shell-reads.ts credit git show <ref>:<path> output against the path after the colon.
+    severity: moderate
+  - description: Carried the shape ticket's internal jargon (budgeted tier, tier) into the spec unexplained; the user caught it.
+    solution: Before filing a spec, check that every coined term is defined under Words or replaced with plain words.
+    severity: minor
+durationSec: 2993
+models:
+  claude-opus-5-5: 130
+toolCounts:
+  Bash: 28
+  ToolSearch: 1
+  mcp__github__issue_read: 6
+  mcp__github__issue_write: 21
+  Skill: 5
+  mcp__github__add_issue_comment: 2
+  Agent: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: No PR or push this session, so the gate and merge rules didn't apply.
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Confirmed the log goes to main via close-session and that new needs become optional log fields (Q3); summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed a question-only wayfinder session needs no PR and that the spec is the approval path; summary was enough.
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Made me start every issue comment and the rewritten map body with this session's header; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Decided that no root glossary term is added for transcript; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded on reading CLAUDE.md-adjacent docs; no instruction was cut or changed this session.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading docs; no rule or instruction placement was in question.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with domain-modeling; no ADR was written or edited.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded because I read settings.json; nothing was changed, so the human-merge list didn't matter.
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded on listing scripts/hooks; no guard was changed or debugged.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Set the spec's file layout under .agents/skills/inspect-session/; I read the full ADR for script and test placement.
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Confirmed audit-skills only edits the Inventory, so the spec leaves it untouched; read the full ADR to be sure.
+    useful: partly
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded on reading gate.ts; the spec changes no gate step.
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Confirmed only triage sets ready-for-agent, so I labelled the approved spec needs-triage; summary was enough.
+    useful: yes
+subagents:
+  - type: claude-code-guide
+    task: How Claude Code docs use transcript
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.303
+landedBy: Stop

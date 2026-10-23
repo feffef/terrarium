@@ -4,10 +4,7 @@ A reference note for the tension issue #348 names: ADR-0009 has
 `scripts/session/log-session.ts` push each session's log commit **directly to `main`**
 (no PR — a deliberate, bounded exception, scoped to exactly one file under
 `layers/journal/content/current/sessions/`). Classic branch protection on
-`main` blocks that direct push. The maintainer removed protection on
-2026-07-11 to let log commits through, which had a side effect: repo-level
-**"Allow auto-merge"** then had nothing to wait on, because every PR was
-immediately mergeable with no protection in place — regressing #231. §1–§5
+`main` blocks that direct push. The maintainer removed protection on 2026-07-11 to let log commits through; repo-level **"Allow auto-merge"** then had nothing to wait on, since every PR was immediately mergeable — regressing #231. §1–§5
 (July 2026) answer: can a **repository ruleset** (Settings → Rules →
 Rulesets) thread that needle instead of classic protection, and if so, how
 precisely. The answer was applied on 2026-10-08; **"Current state"** below is
@@ -215,8 +212,7 @@ bullets hold only the reasons.
 - **Left off, each would break the workflow:** linear history
   (`scripts/github/merge-pr.ts` and humans use merge commits), signed commits
   (session-log commits land unsigned).
-- Agents' self-merges, human merges and the Dependabot workflow (once
-  proposal #1633 is applied) all
+- Agents' self-merges (Dependabot minor and patch bumps included) and human merges all
   merge green PRs and need no bypass. Unverified against GitHub's docs: whether
   an "Always" bypass actor's REST merge passes a red check silently; the merge
   script polls for green first, so it is a safety-net question only.

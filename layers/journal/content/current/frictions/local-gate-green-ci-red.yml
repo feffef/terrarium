@@ -1,11 +1,11 @@
 name: local-gate-green-ci-red
 summary: >-
-  Checks passed on the agent's machine but failed on GitHub, because the two ran against different code.
+  Checks passed on the agent's machine but failed on GitHub, because GitHub tested them against a newer main.
 cause: >-
   CI tests the merge ref against the current main with its own git version; the local gate tests the branch as cut with the container git and may skip Heavy as Inert, so a local green still fails in CI.
 surface: safe
-status: tracked
-ref: "issue #2138 (regression of #1824, filed 2026-10-16)"
+status: open
+ref: "issue #2138 closed not planned on 2026-10-19: the owner chose to do nothing for now and to build merge-ref gating in gate.ts if a third base-drift case lands."
 fixes:
   - pr: 1483
     date: "2026-09-29"
@@ -14,26 +14,6 @@ fixes:
     date: "2026-10-12"
     summary: "Fixed two flaky tests (worktree check timing and a checkout test) that passed locally but failed in CI."
 occurrences:
-  - session: session_014mna6dsd4t2Ui98gbs3jCF
-    date: "2026-10-05"
-    severity: moderate
-    description: "Local gate:scoped passed but CI failed on PR #1622: a test hard-coded git 2.43's `+00:00` %aI output while CI's git 2.55 prints `Z`. Not an inert-classifier skip; the full local gate ran."
-    solution: "Compare parsed instants rather than raw git date strings; note the container-vs-CI git version gap in environment-caveats.md"
-  - session: session_01CF4k9jXS9wLrcPVsGduZmn
-    date: "2026-10-08"
-    severity: major
-    description: "gate:scoped passed locally but CI failed on PR 1690: the docs changeset was Inert so e2e was skipped, and even a Full local gate would have passed because the trigger was a session log that reached main after the branch was cut (base drift, CI tests the merge ref). Cost: a diagnosis round, a second branch, two full local gates and a port."
-    solution: "Not a skip-logic hole: the Inert classification was right. The e2e assertions matched a phrase that real content can contain; fixed in PR 1695 by matching the 404 markup. A smoke assertion on rendered pages should match markup, never prose."
-  - session: session_01S1WwkpNHDfbvKAf5T1afKq
-    date: "2026-10-08"
-    severity: major
-    description: "CI's gate failed once on c1d37255 with a Tinkerfund e2e page.goto timeout, even though gate:scoped passed locally. The PR changed only docs, but CI tests the merge with the newer main, which ran the heavy tier. The next commits went green without a fix."
-    solution: "Treat as a flaky e2e test. It is unrelated to this docs-only diff; the next run on a newer head passed. If it recurs, file it against the tinkerfund e2e test's load timeout."
-  - session: session_01VGLAakRJNm67PuNHpgbEc7
-    date: "2026-10-12"
-    severity: major
-    description: "gate:scoped passed but CI failed on ec89520d in tinkerfund-flows.spec.ts:388 (checkbox state after goForward), which this diff doesn't touch; base drift is unlikely since it passed on earlier commits."
-    solution: "Likely a back/forward form-restore flake in the tinkerfund e2e test; worth an issue if it recurs. Commented on PR 1812 and re-ran once."
   - session: session_01VPNHf6qDdJPXX23GghKs74
     date: "2026-10-16"
     severity: major

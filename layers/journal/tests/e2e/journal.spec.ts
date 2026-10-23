@@ -265,7 +265,43 @@ describe('journal Tenant', async () => {
     if (ordinaryIdea) expect(await $fetch('/t/journal/current/ideas')).toContain(ordinaryIdea)
   })
 
+  it('serves the Routine costs page with one chart per Routine and the weekly table', async () => {
+    const html = await $fetch('/t/journal/current/routines')
+    expect(html).toMatch(/class="jd[\s"]/)
+    expect(html).toContain('Routine costs')
+    expect(html).toContain('significantly lower')
+    expect(html).toContain('Seven days ending (UTC)')
+    expect(html).toContain('aria-label="audit-skills: Cost (USD) per run')
+    expect(html).not.toContain('No Routine named')
+    expect(html).not.toMatch(/No document at <code[\s>]/)
+    // Another Space has no routines, so it must render the empty state.
+    expect(await $fetch('/t/journal/archived/routines')).toContain('No Routine runs are recorded')
+    expect(await $fetch('/t/journal/current')).toContain('href="/t/journal/current/routines"')
+  })
+
+  it('switches every chart and the table to another metric at once', async () => {
+    await withRendered('/t/journal/current/routines', async (page) => {
+      await page.getByRole('button', { name: 'Output tokens' }).click()
+      await page.waitForFunction(
+        "[...document.querySelectorAll('.rc-svg')].every((s) => s.getAttribute('aria-label')?.includes('Output tokens per run'))",
+      )
+      expect(await page.locator('.rw tfoot td').first().textContent()).not.toContain('$')
+    })
+  })
+
+  it('narrows the Friction Ledger to the window in the URL, and keeps a picked one there', async () => {
+    await withRendered('/t/journal/current/frictions?days=5', async (page) => {
+      const select = page.getByLabel('Frictions from the last')
+      expect(await select.inputValue()).toBe('5')
+      await select.selectOption('3')
+      await page.waitForURL(/\?days=3$/)
+      await select.selectOption('14')
+      await page.waitForURL((u) => !u.search)
+    })
+  })
+
   it('hydrates the sub pages with no unresolved components', async () => {
+    await expectCleanHydration('/t/journal/current/routines')
     await expectCleanHydration('/t/journal/current/skills')
     await expectCleanHydration('/t/journal/current/ideas')
     await expectCleanHydration('/t/journal/current/frictions')
@@ -327,10 +363,10 @@ describe('journal Tenant', async () => {
   // The on-ramp pages chain into a short tour in the landing's card order.
   it('ends each on-ramp page with a numbered Read-next step', async () => {
     const first = await $fetch('/t/journal/current/architecture')
-    expect(first).toContain('Start here · 1 of 6')
+    expect(first).toContain('Start here · 1 of 5')
     expect(first).toMatch(/<a[^>]*href="\/t\/journal\/current\/how-it-works"[^>]*rel="next"|<a[^>]*rel="next"[^>]*href="\/t\/journal\/current\/how-it-works"/)
-    const last = await $fetch('/t/journal/current/read-a-session-log')
-    expect(last).toContain('Start here · 6 of 6')
+    const last = await $fetch('/t/journal/current/real-and-invented')
+    expect(last).toContain('Start here · 5 of 5')
     expect(last).toContain('back to the Journal')
     const digest = await $fetch(`/t/journal/current/digests/${currentDigestDates().at(-1)!}`)
     expect(digest).not.toContain('Start here ·')

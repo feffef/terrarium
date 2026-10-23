@@ -22,7 +22,12 @@ describe('atlas Tenant', async () => {
     await withRendered('/t/atlas', async (page) => {
       const today = await page.locator('.today').textContent()
       expect(today).toMatch(/Day \d+ of the Glass Year/)
-      expect(today).toMatch(/Abroad this season:|Nothing is abroad/)
+      expect(today).toMatch(/Abroad in .+|Nothing is abroad/)
+      expect(await page.locator('.today .today-wheel').count()).toBe(1)
+      // Every creature abroad is listed with its wing — no "and N more".
+      const rows = await page.locator('.today .roster-astir li').allTextContents()
+      for (const row of rows) expect(row).toMatch(/The (Canopy|Floor|Pool)$/)
+      expect(today).not.toMatch(/and \d+ more/)
     })
   })
 

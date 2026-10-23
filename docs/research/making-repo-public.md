@@ -2,7 +2,7 @@
 
 Research reference for anyone flipping a GitHub repository from Private to Public. Every claim is sourced from GitHub's docs (`docs.github.com`) and cited inline. `docs.github.com` returns 403 to the automated fetcher here (`docs/agents/environment-caveats.md` owns this caveat), so the content was read from the `github/docs` source files that render those pages; canonical URLs are given.
 
-**This repo**: one repo, one container (`CLAUDE.md`, ADR-0001), human-only merge gates on CI/routing/isolation files (ADR-0004) and a `pnpm gate` safety gate; this document changes none of that. It is the generic grounding for the repo's flip to public on 2026-07-11 (repo-specific findings: `public-readiness-review.md`), kept as reference, not a live proposal.
+**This repo**: one repo, one container (`CLAUDE.md`, ADR-0001), human-only merge gates on CI/routing/isolation files (ADR-0004) and a `pnpm gate` safety gate; this document changes none of that. Generic grounding for the repo's 2026-07-11 flip to public (repo-specific findings: `public-readiness-review.md`); reference only, not a live proposal.
 
 ---
 

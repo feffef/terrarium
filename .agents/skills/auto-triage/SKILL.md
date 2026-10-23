@@ -1,6 +1,6 @@
 ---
 name: auto-triage
-description: Autonomous, brave triage sweep over the issues that need attention — the batch/loop sibling of `triage`. User-invoked; fire it by hand or on an interval via a Routine or `/loop`.
+description: Autonomous, brave triage sweep over the issues that need attention — the batch sibling of `triage`. User-invoked.
 disable-model-invocation: true
 ---
 
@@ -21,8 +21,7 @@ live in `triage`'s Skill Inventory entry.
 
 Scan every **open** issue and in-scope external PR (external-PR scoping is
 `/triage`'s own filter — a collaborator's in-flight PR is never triage work).
-Never scan a `wayfinder:map`, whoever last commented on it (see "Coexisting
-with wayfinder" below).
+Never scan a `wayfinder:map` (an index, not work), whoever last commented on it.
 
 For everything else, fetch the **most recent comment** and check who wrote it:
 
@@ -31,13 +30,13 @@ For everything else, fetch the **most recent comment** and check who wrote it:
   (`docs/agents/issue-tracker.md`'s Specs), which follows the next bullet.
 - **Any other state** (`needs-info`, `ready-for-human`, even `ready-for-agent`)
   **is eligible when its most recent comment is human-authored.**
-  Every agent comment carries an ADR-0017 mark, so its **absence** is the signal (`isAiAuthored`). Never use the author or `author_association`: agents post as the owner (ADR-0017).
+  Every agent comment carries an ADR-0017 mark, so a comment without one is human (`isAiAuthored`). Never go by the author or `author_association`: agents post as the owner.
 
-Skip any other ticket whose most recent comment is already AI's own. That keeps a
-short-interval loop **idempotent**: once an agent answers the human's comment,
+Skip any other ticket whose most recent comment is already AI's own. That keeps
+repeated sweeps **idempotent**: once an agent answers the human's comment,
 the ticket stays quiet until a human writes again, whatever its label reads.
 
-Scan every open issue and fetch its comments, not a label-filtered query: no label can express a state/comment combination. Revisit only when a sweep visibly costs time or API budget, never at a guessed issue count; don't pre-build pagination or caching.
+Scan every open issue and fetch its comments: no label query can express a state/comment combination. Add pagination or caching only after a sweep visibly costs time or API budget, not at a guessed issue count.
 
 ## Be brave — bounded by determinability
 
@@ -72,7 +71,6 @@ ADR-0022.
 Much of the backlog is wayfinder tickets. Overlay triage readiness **without
 fighting wayfinder's mechanics** (read `/wayfinder` for them):
 
-- **Never** triage a `wayfinder:map` — it is an index, not work.
 - **Skip** a **claimed** (assigned) ticket and a **blocked** ticket (an open
   native dependency *or* a `Blocked by:` body line; `docs/agents/issue-tracker.md`'s
   Wayfinding operations): wayfinder's frontier is open + unblocked + unclaimed,
@@ -99,9 +97,8 @@ explicit skip here instead of relying on timing.
 ## Run it
 
 **Full-sweep mode.** Pass `full-sweep` as this Skill's argument (e.g.
-`/auto-triage full-sweep`, or naming it in a Routine's prompt) to disable the
-AI-last-comment idempotency skip above for this run only — every open,
-in-scope issue is eligible regardless of who commented last. Use it only when
+`/auto-triage full-sweep`) to disable the AI-last-comment idempotency skip
+above for this run only — every open, in-scope issue is eligible regardless of who commented last. Use it only when
 a human directs a brave re-triage; an agent never picks it on its own.
 
 1. **Resolve the set.** List every open issue via `pnpm exec tsx scripts/github/list-open-issues.ts`
@@ -129,7 +126,3 @@ a human directs a brave re-triage; an agent never picks it on its own.
    `ready-for-agent` issue (not only this run's), say so, and mark the
    higher-numbered one blocked by the other (`issue-tracker.md`'s Blocking); it
    unblocks when that one closes.
-
-**Loop it** by firing this skill by name on an interval — a Routine (standing,
-survives teardown) or `/loop` (within a live session). Idempotency above keeps a
-tight interval cheap.

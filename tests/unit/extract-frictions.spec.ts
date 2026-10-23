@@ -150,7 +150,7 @@ describe('formatCompact()', () => {
 })
 
 describe('toCompactSession()', () => {
-  it('keeps id/file/startedAt/prs, docsRead paths, subagents and only index/description/severity per friction', () => {
+  it('keeps id/file/startedAt/prs, subagents and only index/description/severity per friction', () => {
     const s = session('session_abc', '2026-07-04T12:00:00Z', {
       goal: 'fix the thing',
       outcome: 'PR',
@@ -166,7 +166,6 @@ describe('toCompactSession()', () => {
       file: s.file,
       startedAt: '2026-07-04T12:00:00Z',
       prs: ['187'],
-      docsRead: ['docs/a.md'],
       subagents: [{ type: 'impl', count: 1 }],
       frictions: [{ index: 3, description: 'a stale claim', severity: 'minor' }],
     })

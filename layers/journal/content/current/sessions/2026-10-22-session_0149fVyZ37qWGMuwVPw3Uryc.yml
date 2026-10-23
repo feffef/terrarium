@@ -1,0 +1,188 @@
+schemaVersion: 1
+session: session_0149fVyZ37qWGMuwVPw3Uryc
+startedAt: 2026-10-22T13:14:13Z
+endedAt: 2026-10-22T13:31:14Z
+kind: autonomous
+goal: Scheduled prune of agent instructions
+status: completed
+outcome: "No trial judgeable; merged PR #2412 rewording pr-workflow.md with a new trial entry"
+summary: "Scheduled prune-trial firing (agent-initiated, no human prompt). find-trial-window.ts showed all five open trials landed under three days ago, so none was judged. A Sonnet search subagent covered the instruction corpus and tracker; the pre-push review/gate rule (#2311, #2354, #2397) ranked first because it failed as prose and nothing guards it. Its mass was small, so I did a plain reword of docs/agents/pr-workflow.md (118 to 115 lines), kept every rule, and opened trial PR #2412 with a ledger entry; a Sonnet probe pinned to the post-prune SHA answered four situations correctly. Standards and Spec review caught that my first draft changed meaning (stricter wording, an inaccurate ledger claim); restored. The gate caught my repoint of a pinned Glass Box excerpt; reverted. Open: the verdict needs sessions to run against the new text; the real fix for #2397 may still be a human-built guard."
+prs:
+  - "2412"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read after first git command via hint; nothing needed
+    useful: no
+  - path: docs/agents/github-integration.md
+    reason: read after first GitHub op via hint; search/fields guidance
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: the pruned doc; push/review/closing steps
+    useful: yes
+  - path: GLOSSARY.md
+    reason: session-start read; Prune Trial term
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: session-start read
+    useful: no
+  - path: docs/agents/guards.md
+    reason: search subagent read the guard roster and enforcement table; it said yes
+    useful: yes
+  - path: .agents/prune-trials.yml
+    reason: exclusion list and ledger format
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: spec reviewer's source for the spec axis; it said yes
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: search subagent grepped it for the pre-push rule; no verdict given
+    useful: partly
+skillsUsed:
+  - name: prune-trial
+    reason: the scheduled task
+  - name: dispatch-subagents
+    reason: briefing search, probe and review agents
+  - name: code-review
+    reason: pre-push Standards and Spec review
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Typed the Reviewed: SHA in the PR verdict from memory; it was wrong and I corrected the comment (CLAUDE.md Verify before you state)."
+    solution: Run git rev-parse HEAD before writing the verdict.
+    severity: minor
+  - description: Repointed the Glass Box excerpt lines= attribute, but the page is pinned to its own revision; gate:scoped failed and I reverted.
+    solution: Note in pr-workflow.md or the glassbox rule that excerpts are pinned to a revision and need no repoint.
+    severity: minor
+  - description: Ran first git command and first GitHub call before reading git-conventions.md and github-integration.md; the hook hint triggered the late read.
+    solution: Read the triggered docs before the first command.
+    severity: nit
+  - description: "Stacked run_in_background with a text-level & (blocked by the double-background guard, #1208); the wrapper echo also reported exit 0 for a failed gate."
+    solution: Run the gate as a plain background command and read the log for the result.
+    severity: nit
+  - description: First draft of the reword added stricter rules and an inaccurate ledger claim, caught by Standards/Spec review; a prune must not change meaning.
+    solution: Diff the old and new text rule by rule before committing.
+    severity: nit
+  - description: The chosen problem's prose mass was small (-3 net against a ~100-line target), so the run bought little.
+    solution: Consider the always-loaded read-first section of CLAUDE.md next run, or file the guard issue for the pre-push rule.
+    severity: nit
+durationSec: 1021
+models:
+  claude-sonnet-5-5: 107
+toolCounts:
+  Read: 6
+  Bash: 28
+  Skill: 4
+  Agent: 4
+  ReadNotifications: 3
+  Grep: 2
+  ToolSearch: 2
+  mcp__github__issue_read: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__update_issue_comment: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - docs/agents/pr-workflow.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to gate and code-review before first push despite the Stop hook; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to the PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header and the provenance of PR/comment bodies; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Told me not to touch open-trial territory; did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded after a Bash read; not relevant to a doc reword
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR rewrites; this run edited no ADR
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement; no term was added
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Loaded when I read the Glass Box page; confirmed the page prose needed no edit
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded with the Glass Box page; no diagrams touched
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Subagent loaded it; not relevant, subagent said no
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Subagent loaded it; not relevant, subagent said no
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Subagent loaded it; not relevant, subagent said no
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Subagent loaded it; not relevant, subagent said no
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Find failed-prose prune candidate
+    model: sonnet
+    durationSec: 89
+    toolCalls: 19
+    modelCalls: 10
+    tokenShare: 11
+  - type: general-purpose
+    task: Sonnet probe of pruned doc
+    model: sonnet
+    durationSec: 18
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 2.2
+  - type: general-purpose
+    task: Standards review of diff
+    model: sonnet
+    durationSec: 35
+    toolCalls: 3
+    modelCalls: 4
+    tokenShare: 3.7
+  - type: general-purpose
+    task: Spec review of diff
+    model: sonnet
+    durationSec: 47
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 5.3
+gitBranch: claude/practical-rubin-a1h3dh
+entrypoint: remote_trigger
+cliVersion: 2.1.308
+trigger: prune-trial
+landedBy: Stop

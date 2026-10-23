@@ -1,0 +1,82 @@
+schemaVersion: 1
+session: session_017X5SQqh4JtkECD69pftATE
+startedAt: 2026-10-20T17:41:18Z
+endedAt: 2026-10-20T17:45:02Z
+kind: interactive
+goal: Would a PreToolUse reminder stop late reads of read-first docs
+status: completed
+outcome: Answered; the owner chose to leave the read-first hint as it is
+summary: "Human-instructed: the owner quoted a visitor loop session's Friction (git fetch and a GitHub search before reading git-conventions.md and github-integration.md) and asked how a PreToolUse reminder would work and whether it solves the recurring friction. I read read-first-hint.ts, the guards index, settings.json wiring and the late-read-first-docs ledger entry. Finding: a PreToolUse hint arrives with the call just as the PostToolUse one does, so only a deny guard would act before it; that is #1819, which the owner declined in PR 2066 by accepting late reads. The ledger shows 81 occurrences (63 nit, 18 minor) still logged after acceptance, and a deny would cover only the git, GitHub and screenshot triggers. I offered three options; the owner chose 3, leave it as is. No code changes and no PR. Agent-initiated: nothing beyond the answer and this log."
+prs: []
+docsRead:
+  - path: scripts/hooks/read-first-hint.ts
+    reason: header states the owner accepts the late first call; READ_FIRST list
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: guard conventions and roster; guard changes are Human-only
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read late after the hint fired; my read-only git log was already fine
+    useful: partly
+  - path: layers/journal/content/current/frictions/late-read-first-docs.yml
+    reason: occurrence counts and the accepted status from PR 2066
+    useful: yes
+skillsUsed:
+  - name: adr-check
+    reason: opinion asked in chat on a guard change
+  - name: close-session
+    reason: session only answered a question
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skipped the session-start GLOSSARY-MAP.md and GLOSSARY.md reads CLAUDE.md requires; no wrong term resulted in this answer-only session
+    solution: Read both in the first batch of tool calls; a SessionStart hint could name them
+    severity: nit
+  - description: adr-check says to read the full ADR behind any related summary; I relied on the ADR-0027 and ADR-0029 summaries without opening them
+    solution: Summaries sufficed since no change was planned; read the full ADRs if option 1 or 2 is ever built
+    severity: nit
+durationSec: 224
+models:
+  claude-opus-5-5: 23
+toolCounts:
+  Bash: 10
+  Skill: 3
+rulesLoaded:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: No PR or push this session, so the gate and merge rules did not apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session for an answer-only session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: No change landed; it only confirmed building a guard needs owner approval, summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: No GitHub or git writes this session
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by reading settings.json; confirmed a guard change needs a human merge
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Pointed me to docs/agents/guards.md, which held the roster and Human-only merge fact
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Flagged close-session as prune-trial territory I could not reword; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded via binding.ts output; nothing about rule placement was at stake
+    useful: no
+gitBranch: ccr-0326738d-wbf567
+entrypoint: remote_mobile
+cliVersion: 2.1.304
+landedBy: Stop

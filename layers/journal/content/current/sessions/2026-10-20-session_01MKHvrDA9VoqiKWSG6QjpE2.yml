@@ -1,0 +1,366 @@
+schemaVersion: 1
+session: session_01MKHvrDA9VoqiKWSG6QjpE2
+startedAt: 2026-10-20T19:19:58Z
+endedAt: 2026-10-20T19:59:46Z
+kind: interactive
+goal: "Clear the triage backlog: 10 new frictions-to-fixes and Atlas issues"
+status: completed
+outcome: 6 issues closed by 5 merged PRs (#2346-#2350); 4 parked or deferred by the owner
+summary: "The owner invoked clear-backlog. The default sweep found 10 eligible needs-triage issues; #2286 and #2137 were skipped as on-hold specs, and no ready-for-agent or wayfinder issues existed. clear-backlog-explore triaged all ten: #2329 and #2340 build, #2341 time-blocked, seven to grill. I verified the picks' claims (trial covers only frictions-to-fixes SKILL.md; ledgerFixState compares date strings; the page renders ref; session 012f7o6F's log confirms #2332; tenant.config.ts is not Human-only), ran adr-check, merged overlapping questions and changed the #2338 pick. Owner answers (human-instructed): park #2332/#2342 blocked by #2286; script-derived times for #2333/#2339; keep ref free text for #2344; defer #2338; run-summary.ts for #2334. The owner then said not to expect further answers, so the rest ran unattended (agent-run per the Skill). Merged branches: #2346 (#2329) atlas-specimen intro nudge now says to word it fresh; I cut the suggested example because it matched 10 of 15 pages. #2347 (#2340) survey and design briefs match the repo (ended-since notice, list-then-closed-search tracker check, on-trial back to open, read logs only where needed, repo named, stale size cut); open calls: a partly redundant closed-unmerged clause, repo line placement. #2348 (#2333, #2339) prune-friction-ledger counts merge-day regressions by startedAt vs merge commit time with a by-date fallback list, and adds --candidates; the Journal page still compares dates (owner-accepted); open calls: shallow probe per fallback, regex startedAt read. #2349 (#2344) comment-only ref fixes. #2350 (#2334) run-summary.ts --triage/--build/--verdicts; open call: --verdicts takes one run, so cross-run merging is still manual (I hit it writing this log). My hand edits on #2346, #2347, #2348 (a self-contradicting label), #2349 and #2350 were agent-initiated from reviewer judgement calls. #2341 waits for two more surveys."
+prs:
+  - "2346"
+  - "2347"
+  - "2348"
+  - "2349"
+  - "2350"
+docsRead:
+  - path: GLOSSARY.md
+    reason: session-start glossary; Session kind and Friction grading
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: session-start map of glossaries
+    useful: partly
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: step 1 set resolution and on-hold/last-comment eligibility
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before diffing, commit -F, trailer check
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: label sets replace, blocked_by curl recipe, list over search
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push, simple-change self-read, verdict and merge-pr recipe
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: which labels the grilling answers imply
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: on-hold specs, external PR listing, Blocking edges
+    useful: yes
+  - path: .agents/skills/grilling/SKILL.md
+    reason: round format for the one grilling sitting
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: PR-open log step
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: authored log fields
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: size ceiling for model sonnet
+    useful: partly
+  - path: .agents/prune-trials.yml
+    reason: verified trial territory is frictions-to-fixes SKILL.md only
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "adr-check: trials bind briefs only if in territory"
+    useful: yes
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: "adr-check: ledger is derived, logs never edited"
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "adr-check: whether any branch needs a human merge"
+    useful: yes
+  - path: .agents/skills/adr-check/SKILL.md
+    reason: "subagents: triage #2329: Invoked as the task asked; its binding.ts listing confirmed no prune trial covers atlas-specimen; triage #2332: The task required it. It is also where the premise rule now lives, which was the key finding.; triage #2334: The task required the adr-check Skill; its binding.ts listed the summaries and prune trials; triage #2339: Required before recommending; binding.ts listed"
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: "subagents: triage #2332: Read §1-§2 to see where session 012f7o6F changed its picks.; triage #2334: This is the area the issue covers; it showed the result-key note is still present and that no reader script is named; build clear-backlog-run-summary-2334: File under edit; showed where §1/§3/§4 read results."
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "subagents: Spec atlas-specimen-dial-nudge-2329 r1: The task told me to read it. Its Spec axis brief (missing, scope creep, wrong) set the review structure.; Spec frictions-briefs-fixes-2340 r1: The task said to read it and apply its Spec axis; Spec frictions-briefs-fixes-2340 r2: The task told me to apply its Spec axis; Standards ledger-same-day-regressions-2333-2339 r1: Task said to apply its Sta"
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "subagents: triage #2341: To check how regressions after a fix are detected and handled"
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "subagents: build atlas-specimen-dial-nudge-2329: Brief told me to read and follow it. It says to use tdd and to commit.; build frictions-briefs-fixes-2340: The task told me to read it. It is thin: it says to use tdd, run the tests, then commit.; build ledger-same-day-regressions-2333-2339: brief said to follow it; build ledger-ref-comment-fix-2344: The brief told me to read it. It says to use tdd "
+    useful: partly
+  - path: .agents/skills/triage/SKILL.md
+    reason: "subagents: triage #2334: The task required it; gave the redundancy check and the state roles; triage #2338: Required by the task; per-issue rules and the redundancy check; triage #2339: Required by the brief; gave the per-issue steps and the labels.; triage #2342: The task required it. Gave the state roles and the verify-claims step.; triage #2344: The task brief required it; it supplied the per-i"
+    useful: yes
+  - path: .claude/skills/adr-check/SKILL.md
+    reason: "subagents: triage #2338: Required before recommending; its binding.ts surfaced the open frictions-to-fixes trial"
+    useful: yes
+  - path: CLAUDE.md
+    reason: "subagents: Standards atlas-specimen-dial-nudge-2329 r1: Project instructions; its keep-it-short standard applies to the diff.; Spec frictions-briefs-fixes-2340 r1: Loaded at session start; 'Keep it short' and 'cut before adding' were the simplicity yardstick for this review; Standards frictions-briefs-fixes-2340 r2: Project instructions, loaded at start; its 'Keep it short' rule is the main standa"
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: "subagents: triage #2334: The binding ADR for Skill and workflow code"
+    useful: partly
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "subagents: triage #2329: Read in full via adr-check to confirm a Trusted issue with a settled design gets ready-for-agent; triage #2333: Read via adr-check. 'Several valid approaches' counts as design doubt; triage #2339: Read in full via adr-check; its definition of real design doubt (several valid approaches) decided grill.; triage #2340: adr-check: what counts as a judgment call; triage #2341: "
+    useful: yes
+  - path: scripts/lib/cli.ts
+    reason: "subagents: Standards clear-backlog-run-summary-2334 r1: Read to check the script's `fail`/`runIfMain` use. Its comments state the expected-failure convention behind the main finding.; fix clear-backlog-run-summary-2334 r1: Read it to confirm the fail/runIfMain contract the first finding relies on. It confirmed the finding."
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: "read the #2340, #2344 and #2348 diffs to check each branch's claims; subagents edited it"
+    useful: yes
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: "subagents: triage #2329 and its builder read §3 to find the copied nudge; I read the diff"
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: "subagents: triage #2340 checked its claims line by line; the #2340 builder edited it"
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: clear-backlog
+    reason: owner invoked it; drove the whole run
+  - name: adr-check
+    reason: before recommending grilling picks
+  - name: grilling
+    reason: one sitting for seven grill results
+  - name: close-session
+    reason: PR-open in-review log
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: "Hand-parsed both workflow outputs (explore, build) with ad-hoc node -e scripts, the exact pain #2334 reports."
+    solution: "#2334's run-summary.ts, being built in this run."
+    severity: minor
+  - description: "My #2329 build brief copied the triage agent's replacement example without checking the pages; review found it already closes 10 of 15 specimens, so I cut it by hand."
+    solution: When a brief proposes example wording to stop repetition, grep the content for it first.
+    severity: minor
+  - description: "The #2340 build agent did not read the issue its brief told it to read and relayed only the four listed edits; I had to check the seven items myself."
+    solution: clear-backlog-build could have the Spec reviewer always read the issue body (it may already); keep verifying ready-to-push claims.
+    severity: nit
+  - description: Two triage agents repeated the issue's wrong claim that the frictions-to-fixes briefs are in the prune trial, and one wrongly called tenant.config.ts Human-only; caught on verification.
+    solution: Triage briefs could tell agents to check trial territory and the Human-only list rather than relay the issue's constraint lines.
+    severity: nit
+  - description: Ran git rev-parse and git fetch before reading git-conventions.md (CLAUDE.md read-first trigger); the late read showed the calls were right.
+    solution: None needed; hook caught it.
+    severity: nit
+  - description: Push notification said 5 questions but the round had 6 (the last was 'accept the rest').
+    solution: Count the accept-the-rest line or not, consistently.
+    severity: nit
+  - description: "Amended a merge commit by mistake on the #2344 branch (git commit --amend after git merge), so I had to squash the unpushed branch with reset --soft."
+    solution: Check git log -1 before amending after a merge.
+    severity: minor
+  - description: run-summary.ts --verdicts merges one run at a time, so merging three runs' verdicts for this log still needed a hand-written script.
+    solution: "Let --verdicts accept several .output paths (left open on #2350)."
+    severity: minor
+durationSec: 2388
+models:
+  claude-opus-5-5: 178
+toolCounts:
+  Bash: 56
+  Workflow: 3
+  ToolSearch: 3
+  Skill: 2
+  PushNotification: 1
+  mcp__github__add_issue_comment: 12
+  mcp__github__issue_write: 4
+  mcp__github__create_pull_request: 5
+  mcp__claude-code-remote__subscribe_pr_activity: 5
+  mcp__github__pull_request_read: 2
+  ReadNotifications: 1
+filesEdited:
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/frictions-to-fixes/tests/unit/prune-friction-ledger.spec.ts
+  - .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts
+  - .agents/skills/clear-backlog/tests/unit/fixtures/explore.output
+  - .agents/skills/clear-backlog/tests/unit/fixtures/build.output
+  - .agents/skills/clear-backlog/tests/unit/run-summary.spec.ts
+  - .agents/skills/clear-backlog/scripts/run-summary.ts
+  - .agents/skills/clear-backlog/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0015.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
+rulesLoadedBySubagents:
+  - .claude/rules/data-shapes.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+docsReadBySubagents:
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0005-skill-model.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/implement/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped before first push and decide agent vs human merge; opened the full ADR for the exception list
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open and keep logs off the branches
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed PRs open right after push and builds need the owner's grilling approval
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the session header on every issue comment and PR body
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Set what triage may label ready-for-agent for these Trusted issues; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed Skill edits land as gated PRs and run-summary.ts sits beside its Skill
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: All issues were OWNER-authored, so no Public-request merge hold applied
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with the glossaries; no glossary term changed this run
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: "Key check: kept every branch out of the frictions-to-fixes SKILL.md trial; opened the full ADR to confirm briefs are outside it"
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading rule files; nothing about rule placement changed
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: "Confirmed the Friction Ledger is a derived Inventory and session logs stay untouched; opened ADR for #2333 design"
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on reading the Journal layer; no layer code changed by me
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Its paths showed tenant.config.ts is not Human-only, correcting a triage claim
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading ADRs; no ADR was edited
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded on reading frictions-to-fixes scripts; no pack Skill involved
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: "Made #2344 a stored-shape question for the owner and kept #2333 to no new field"
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: "subagents: triage #2333: Loaded when I read tenant.config.ts. The schema lives in the manifest"
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "subagents: triage #2333: Loaded when I read layers/journal. Not relevant; triage #2339: Loaded with the journal layer; not relevant.; build ledger-ref-comment-fix-2344: Loaded when I read the tenant manifest. Not relevant to a comment edit."
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: "triage #2329"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2334"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2340"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2339"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2338"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2344"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2332"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2333"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2342"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2341"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec frictions-briefs-fixes-2340 r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards frictions-briefs-fixes-2340 r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build atlas-specimen-dial-nudge-2329
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Spec frictions-briefs-fixes-2340 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build frictions-briefs-fixes-2340
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Spec atlas-specimen-dial-nudge-2329 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards frictions-briefs-fixes-2340 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix frictions-briefs-fixes-2340 r1
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards atlas-specimen-dial-nudge-2329 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec clear-backlog-run-summary-2334 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards clear-backlog-run-summary-2334 r3
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build ledger-same-day-regressions-2333-2339
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec clear-backlog-run-summary-2334 r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build clear-backlog-run-summary-2334
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards ledger-same-day-regressions-2333-2339 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix clear-backlog-run-summary-2334 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards clear-backlog-run-summary-2334 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build ledger-ref-comment-fix-2344
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Spec clear-backlog-run-summary-2334 r3
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards ledger-ref-comment-fix-2344 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards clear-backlog-run-summary-2334 r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec ledger-ref-comment-fix-2344 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec ledger-same-day-regressions-2333-2339 r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix clear-backlog-run-summary-2334 r2
+    model: claude-opus-5-5
+gitBranch: ccr-0cbc3a35-jl7x9b
+entrypoint: remote_mobile
+cliVersion: 2.1.304
+landedBy: Stop

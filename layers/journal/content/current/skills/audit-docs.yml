@@ -304,3 +304,71 @@ observations:
       usedIn session ran after the fix landed, so it is untested live yet -
       worth confirming next run. No reverts of audit-docs-delivered content
       in the 2-week sweep. No new silent failure. Grade/role unchanged.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check): the predicted risk named
+      2026-10-18 materialized on the first live run after the fix.
+      session_019U9RYQ9iFv8fwp2VQvwGny (2026-10-18, PR #2237, the first
+      usedIn session to start after PR #2205 merged) hit a NEW silent
+      failure: `scripts/session/save-handback.ts`'s `finalText()` returns
+      undefined whenever the subagent's last assistant record contains any
+      `tool_use` block, but a subagent hand-back in this harness *is* a
+      `SubagentHandback` tool call, so the script can never succeed for the
+      actual reply mechanism it exists to extract. Confirmed by reading the
+      script directly and by the session's own friction ("save-handback.ts
+      failed on every reviewer... so I retyped the pool by hand", severity
+      minor) and `learnings` entry. This is the Friction Ledger's 9th
+      occurrence of `findings-retyped-by-hand` across 4 fix attempts
+      (#1699, #1768, #2060, #2205) - escalated as new issue #2262 (no
+      duplicate open issue found via search_issues and a local open-issues
+      scan; #2196 itself is closed). PR #2237's actual fix content was
+      otherwise genuine (verified against live PR bodies). Other 9 usedIn
+      sessions and the revert sweep stayed clean. Grade/role unchanged
+      (routine) - this is a shared-script mechanism bug, not audit-docs's
+      own design.
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): all 10 usedIn sessions
+      re-verified against live GitHub, 2 freshly end-to-end (PR #2268, #2237),
+      8 via the corroborated trail. Issue #2262 (save-handback.ts regression,
+      the Ledger's findings-retyped-by-hand cluster) confirmed CLOSED via
+      merged PR #2269 — the fix itself read directly and correct (extracts a
+      SubagentHandback tool call's input.message). But no usedIn session has
+      run since the 2026-10-19T06:25:04Z merge, so the fix is still untested
+      live after 4 prior fix attempts that each broke on first real use. Next
+      run should confirm it held. No new silent failure, no reverts found.
+      Grade/role unchanged (routine).
+  - date: "2026-10-21"
+    note: >-
+      Self-check, 9/9 PRs confirmed merged, no reverts. Resolved the 10-20
+      observation's open question: the save-handback.ts fix (PR #2269,
+      merged 10-19T06:25) held on its first live use -
+      session_012XnetQuxWoyaVFYw1BqMoy (started after the fix) logged no
+      save-handback friction; session_0183U5MkKrjuhRKdjpFxD9Xj's identical
+      hit on the same already-tracked #2262 bug confirms pre-fix timing, not
+      a new occurrence. Side note, not scored: a same-day prune-trial
+      rewrite of audit-docs/SKILL.md self-caught and restored an unapproved
+      cut before merging (PR #2343). Grade/role unchanged (routine).
+  - date: "2026-10-21"
+    note: >-
+      Behaviour check, 9 runs, all PRs merged, no reverts. Verified, not
+      escalated: session_012XnetQuxWoyaVFYw1BqMoy (PR #2317) listed five
+      source conflicts under "Not in this PR (needs a human)" and filed no
+      needs-triage issue or escalation PR, though SKILL.md then said to file
+      one for a true factual conflict. One of them (ADR-0004 vs merge-pr.ts
+      on minor/patch bumps) is still live and untracked; #1889 is closed.
+      Single run, nothing damaged; a second such run clears the bar. Also
+      unverified: whether session_01HcMFbKDTkG7hs2VhByAs4b's pool.md held
+      both agents' findings. Grade/role unchanged (routine).
+  - date: "2026-10-22"
+    note: >-
+      Escalated as issue #2395: the 2026-10-21 "second run clears the bar"
+      condition is now met. Independently re-verified in source: package.json
+      sits unconditionally on the Human-only paths list, and
+      merge-pr.ts's dependabotBumpRefusal only fires for dependabot[bot] —
+      so ADR-0004's "an agent may merge its own minor/patch bump" promise
+      holds only for Dependabot, never an agent's own direct bump, a gap
+      #1889's closing PR never addressed. Two runs named it and filed
+      nothing: session_017xginqTj2NjZ8XgrbRqvkm (PR #2110/#2111) and
+      session_012XnetQuxWoyaVFYw1BqMoy (PR #2317, after #1889 closed). Full
+      detail on #2395. Grade/role unchanged (routine).

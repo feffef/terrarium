@@ -1,0 +1,206 @@
+schemaVersion: 1
+session: session_01TwTc2v8Afxqc9R4NdUcNPD
+startedAt: 2026-10-18T13:15:26Z
+endedAt: 2026-10-18T15:09:28Z
+kind: interactive
+goal: Routine cost analysis, then a Routine costs page for the Journal
+status: completed
+outcome: Analysis answered in chat; PR 2253 merged, adding the Routine costs page and an eighth landing card
+summary: "The user asked for the cost usage of the Routines in the new Journal collection, then (follow-ups, all human-instructed) to correlate cost changes with Skill Inventory events, and finally to build a Journal page with a diagram per Routine and a weekly table, driven by the collection, with a shared metric switch, a dollar-cost disclaimer, and a link as the eighth onboarding card. I asked clarifying questions first, as the user prefers, and the user chose the design: a page component holding switch, state and disclaimer, plus an MDC body so a later routine edits only Markdown; one chart per Routine; history left at the existing run cap. Analysis findings: audit-skills rose about 8x with its 09-27 rewrite; a platform-wide drop on 09-29 lines up with a model change, not a Skill edit; a 121 dollar visitor-loop run was agents polling builds. Built the page, util with unit tests, two MDC components, e2e tests and the card; ran the gate (green) and code-review (one real finding, a stale MDC doc sentence, fixed). Agent-initiated, not asked: clipping the shared scale at an outlier (disclosed in the PR), and the seed routines.md text. Two owner follow-ups during review changed the weekly table: complete weeks only, then rolling seven-day windows ending at the newest run. PR merged on green CI after gate and verdict. The explanation routine is next week's work."
+prs:
+  - "2253"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: required session-start read; located Journal Tenant
+    useful: yes
+  - path: GLOSSARY.md
+    reason: defined Routine, Journal and Session terms used in the answer
+    useful: yes
+  - path: layers/journal/tenant.config.ts
+    reason: routineSchema fields and the pages schema with onramp fields
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read late, after the first git log; later git calls used origin/main scoping from it
+    useful: yes
+  - path: docs/agents/mdc-when-to-use.md
+    reason: checklist decided the page-component plus thin MDC split; its Journal has none sentence went stale and I fixed it
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: gate:scoped and code-review before first push, verdict and merge steps
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts review for screenshots in light, dark and phone width
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP write route and polling notes before the first GitHub call
+    useful: partly
+  - path: layers/journal/GLOSSARY.md
+    reason: What lives where list, which I updated
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: "first 40 lines: only pages get URLs, so a static routines.vue beside a page doc fits"
+    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: Standards subagent read it for content-component override rules; no breach found
+    useful: partly
+  - path: layers/journal/app/pages/t/journal/[space]/skills.vue
+    reason: (no reason given)
+  - path: layers/journal/app/pages/t/journal/[space]/[...slug].vue
+    reason: (no reason given)
+  - path: layers/journal/app/pages/t/journal/[space]/index.vue
+    reason: (read before editing)
+  - path: layers/journal/app/components/journal/StatTile.vue
+    reason: (no reason given)
+  - path: layers/journal/app/components/journal/FrictionStrata.vue
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: PR opened, then re-invoked per question
+  - name: log-session
+    reason: author the session log
+  - name: code-review
+    reason: required before first push; Standards and Spec sub-agents
+frictions:
+  - description: Ran `git log` to find the routines commit before reading docs/agents/git-conventions.md, which CLAUDE.md requires first. No impact; a hook reminded me.
+    solution: Read git-conventions.md before the first git command beyond status and diff.
+    severity: nit
+  - description: Gave recommendations on Routine cost before checking the ADRs that bind them, as CLAUDE.md asks. ADR-0015 loaded only afterwards via a hook; no conflict found.
+    solution: Run grep -l on docs/adr before recommending a change.
+    severity: nit
+  - description: First dump of eight Skill Inventory entries was 36KB and truncated; a second query for observations was 137KB. Cost two extra calls before I filtered to recent dates.
+    solution: Filter Inventory observations by date and truncate notes on the first query.
+    severity: nit
+  - description: The Stop hook asked to push twice while the required gate and code-review were still running, and again for an uncommitted doc fix. It pushed against ADR-0004's order but cost only reply turns.
+    solution: Have the Stop hook skip its push nudge while a gate run is in the background.
+    severity: nit
+durationSec: 6842
+models:
+  claude-sonnet-5-5: 201
+toolCounts:
+  Read: 18
+  Grep: 1
+  Bash: 55
+  AskUserQuestion: 2
+  Skill: 5
+  Write: 9
+  Edit: 10
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/app/utils/routineRuns.ts
+  - layers/journal/app/types/journal.ts
+  - layers/journal/app/composables/routineData.ts
+  - layers/journal/app/components/content/RoutineChart.vue
+  - layers/journal/app/components/content/RoutineWeeklyTable.vue
+  - layers/journal/app/pages/t/journal/[space]/routines.vue
+  - layers/journal/content/current/pages/routines.md
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/journal/GLOSSARY.md
+  - layers/journal/tests/unit/routineRuns.spec.ts
+  - layers/journal/tests/e2e/journal.spec.ts
+  - docs/agents/mdc-when-to-use.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - docs/agents/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded when I read the routines files; confirms audit-skills owns Routine run costs. Summary was enough.
+    useful: partly
+  - path: .claude/rules/adr-0004.md
+    reason: Gate and code-review before first push, self-merge conditions; summary was enough, pr-workflow had the steps.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session after answering and at PR open; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR without asking and subscribe; also that a new page needs approval, which I got first. Summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary layout; I changed no terms, so unrelated.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest rule loaded on reading tenant.config.ts; I changed no manifest, so unrelated.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal is the logbook; context only, summary enough.
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Pointed me at the MDC checklist, which I read in full and used.
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Auto-import naming and relative type imports applied to the new util and composable.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded on reading the Skill Inventory; prune-trial context, unrelated.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading the Skill Inventory; rule placement, unrelated.
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Only pages get URLs; confirmed a static routines.vue beside a pages doc is the pattern. Summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0016.md
+    reason: Tenant root pages; unrelated to a Space sub-page.
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Keep useAsyncData results small; I selected only name and runs.
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: ADR history rule; I edited no ADR.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Checked my paths against the Human-only list; none touched, so I may self-merge.
+    useful: yes
+  - path: .claude/rules/glassbox-content.md
+    reason: Glass Box prose rule; unrelated to the Journal.
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Mermaid diagram rule; I drew SVG, unrelated.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of Routine costs page
+    model: sonnet
+  - type: general-purpose
+    task: Spec review of Routine costs page
+    model: sonnet
+gitBranch: ccr-d927423c-8hxohb
+entrypoint: remote_mobile
+cliVersion: 2.1.302
+learnings:
+  - Routine run records are capped at 30 per Routine (RUNS_KEPT), so the oldest and often most expensive rows are dropped and trends cover only the survivors.
+  - Routine cost tracks cache-read tokens, not wall-clock time; a 6.6 hour audit-docs run cost only $12.
+  - A platform-wide cost step on one date across all Routines points to a model or environment change; check the sessions' models field before attributing it to a Skill edit.
+  - A page component can provide data with provide/inject so MDC blocks, which take only a Routine name as a prop, can read one shared collection load and one shared metric state.
+ideas:
+  - Have the weekly explanation routine for the Routine costs page also re-check that every Routine in the collection has a chart block in routines.md, and file or fix the gap, so a new Routine never silently misses a chart.
+landedBy: Stop

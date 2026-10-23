@@ -23,111 +23,190 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      Started by the owner (a Trusted user, ADR-0027): the "read files with the
-      Read tool, not cat" instruction cut from CLAUDE.md's Working conventions
-      and from ADR-0029's Scope (-4). Its only reason was that the Read tool
-      always loads a file's rules. It failed as prose: 85 "used cat/sed instead
-      of Read" Frictions in 82 of 137 sessions, 2026-10-11 to 10-16 (all nit or
-      minor). The rules still load: Claude Code itself loads them on a simple
-      one-file Bash read, `bash-rules-hint.ts` does for the rest, `skill-rules-hint.ts`
-      on a Skill run, and Edit refuses a file the Read tool hasn't opened.
-      A read-only survey of that window found at most 225 of 521 useful
-      path-scoped rule loads came only from a read, about 40 of which changed an
-      action, mostly where the governing doc was read in the same command. The
-      hook and every rule's `paths` are unchanged.
+      `frictions-to-fixes` SKILL.md rewritten plainly at a Trusted user's request
+      (1936 words to about 1730; 213 lines to 250, the extra lines being per-step
+      headings): an overview of the run's three PR kinds, then each step as a
+      goal paragraph, numbered instructions with their script and subagent calls,
+      a done-when line, and an edge-case list. Every rule kept: the regression
+      and issue caps of three and their exemptions, never-dispatch surfaces, the
+      ledger PR every run, review comment before merge, the escalation ledger
+      entry, the closing status-only PR. Cut: the when-to-run line, the
+      merge-by-judgement restatement, and a few short why-clauses (why a drop
+      needs no PR, why guards need a human session, "git keeps them").
+      Section numbers §1 to §8 kept, since
+      `guest-build` cites §6 and §7. The briefs are unchanged. Later, at the
+      same user's request, §4–§5 and the design brief gained a third outcome
+      (no change: drop the fix and note the dropped solution in the entry's
+      new `notes`); that is added behaviour, not restored text.
     territory:
       paths:
-        - "CLAUDE.md: the Working conventions bullet on reading files"
-        - "docs/adr/0029-instructions-load-with-the-files-they-govern.md: the Scope bullet on reading files, and the See entry for bash-rules-hint.ts"
+        - ".agents/skills/frictions-to-fixes/SKILL.md (all of it)"
       keywords:
-        - Read tool
-        - not `cat`
-    opened: 2026-10-16
-    proven: true
+        - ledger PR
+        - closing ledger PR
+    opened: 2026-10-20
     check: >
-      Damage is a major or blocker Friction where a session missed guidance a
-      path-scoped rule holds, because it read the governing file in a way that
-      loaded no rule, and acted against that rule. NOT damage: a session reading
-      with cat or sed; the Bash hook or a Skill run loading a rule; a rule
-      loading where it didn't apply. Since this trial cuts an ADR, a major or
-      blocker verdict restores the cut text in both files.
+      Damage is a major or blocker Friction in a frictions-to-fixes run that the
+      old text would have prevented: the ledger PR not opened, a regression
+      dispatched, more than three capped issues filed, a fix PR merged with no
+      review comment, an escalated PR without its own `fixes` entry, or the
+      closing ledger PR skipped or wrong. NOT damage: a run that hits a survey
+      or design brief problem (the briefs did not change), or a friction the
+      old text did not cover either.
   - problem: >
-      `close-session` SKILL.md rewritten plainly, 60 lines to 46 (-14): the
-      three logging conditions and the PR-open sequence cut to one goal-shaped
-      paragraph and a numbered list, every rule kept (re-read, log, re-invoke,
-      HUMAN-PROMPTED-CLOSURE, no worktree self-invoke). The rule failed as prose:
-      skipped after PR #1821 (#1859) and after the hint of PR #1868 (#2023, both
-      read in full via the search subagent). `read-first-hint.ts` now holds the
-      PR-open invocation, not the re-invocation. The subagent covered the
-      instruction corpus (not the Journal) and the tracker; runners-up: the
-      read-first triggers in CLAUDE.md (#1754, held by the same hint) and the
-      restart-after-merge paragraph in pr-workflow.md (held by
-      `stale-info-hint.ts`). The mass here was small. No trial was judgeable.
+      `audit-docs` SKILL.md rewritten plainly and then pruned, both at a Trusted
+      user's request (PRs #2331 and this one): 2058 words to about 1630, 249
+      lines to 230. Shape as `frictions-to-fixes` (#2330): an overview of the
+      run's two PRs, a "What you may edit" reference (the tiers), then each
+      step as a goal paragraph, instructions, a done-when line and edge cases.
+      Cut because something else enforces it: the open-trial check (the
+      ADR-0027 rule loads with this Skill), the Pack-generic detail
+      (`verify:skills-lock`), the leaf-agent rule (spawn depth 1), the issue's
+      provenance header (the provenance guard), the gate-scope notes (the gate
+      picks its scope). Cut as no-ops or impossible: the branch step, globbing
+      and classifying every surface, "audit the source not the render",
+      "isolation logic" in the escalation list, the day-of-year family
+      fallback, the "Command-only" note. Simplified: the checkers' six
+      per-lens sources to one rule (every rule, condition, exception and why
+      kept), Agent B no longer runs `audit-skills.ts` for read counts (they
+      could only corroborate), one "don't regress" example instead of three,
+      the duplicate-issue lookup to "search open issues first", no reuse of an
+      earlier escalation PR, and the Pack-generic "note it in a Live doc"
+      (ADR-0015 puts such notes in the Inventory entry). Tier, lens and family names unchanged, since
+      `frictions-to-fixes`' briefs, `prune-trial` and the commit-subject
+      rotation use them. `audit-skills.ts`' docstring no longer names
+      audit-docs as a reader.
     territory:
       paths:
-        - ".agents/skills/close-session/SKILL.md (all of it)"
-        - ".agents/skills/blog-post/SKILL.md: the `Done when` line near the end"
+        - ".agents/skills/audit-docs/SKILL.md (all of it)"
       keywords:
-        - HUMAN-PROMPTED-CLOSURE
-        - logging duty
-    opened: 2026-10-15
+        - concision family
+        - escalation PR
+    opened: 2026-10-20
+    check: >
+      Damage is a major or blocker Friction in an audit-docs run that the old text
+      would have prevented: a Historical or Pack-generic file edited, an ADR edit
+      or route-changing page move self-merged instead of escalated, a fix applied
+      without a checker's CONFIRMED, the wrong concision family picked, text in an
+      open trial's territory reworded, a "don't regress" reason cut, a
+      duplicate issue filed, or a Single-home finding missed that a read count
+      would have surfaced. NOT damage: a reviewer or checker finding that is
+      simply wrong, a branch clash over the escalation PR, or a second
+      escalation PR beside an open one.
+  - problem: >
+      `docs/agents/github-integration.md` "Overflow and precision traps" search
+      bullets tightened to the goal (-4 net): the `fields`
+      rule now lives in `github-search-fields-guard.ts`' deny message, which the
+      doc only points to. Chosen after the search subagent covered the
+      instruction corpus, guard headers and the tracker: the rule failed as prose
+      (#1860, again #2210; #1860 read in full) and the guard holds it. Runners-up:
+      Stop-hook inherited-commits advice in `git-conventions.md` (#2233, nothing
+      in the repo enforces it), "Verify before you state" in CLAUDE.md (#2341, too
+      fresh). Same run judged and deleted the close-session, background-guard and
+      provenance-guard trials: only nit/minor Frictions (#2363's close-session
+      recurrences trace to the read-first hint being deferred, not to cut text).
+      The mass here was small.
+    territory:
+      paths:
+        - "docs/agents/github-integration.md: the 'Overflow and precision traps' search bullets"
+      keywords:
+        - search_issues fields
+        - search_pull_requests
+    opened: 2026-10-21
     proven: true
     check: >
-      Damage is a major or blocker Friction where a session ended with its log
-      missing or left at `in-review` after the work landed, or reran close-session
-      without the always-loaded re-read, and a line the old Skill carried would have
-      prevented it. NOT damage: the read-first hint firing, or a session that
-      logs `HUMAN-PROMPTED-CLOSURE` correctly.
+      Damage is a major or blocker Friction where a session flooded its context
+      with a search or list result, or asserted "nothing exists" from an empty
+      search, and the cut text would have prevented it. NOT damage: the fields
+      guard denying and the session fixing itself from its message.
   - problem: >
-      `docs/agents/pr-workflow.md` rewritten plainly, 116 lines to 104 (-12): the
-      self-merge discipline (verdict comment, `Reviewed: <sha>`, no auto-merge,
-      closing keywords) cut to the rule and a pointer to `merge-pr.ts`, which now
-      holds it mechanically; issue histories cut. Step numbers and section names
-      kept (cited elsewhere). The rule failed as prose: #1113 then #1276 (read in
-      full via the search subagent), fixed by the `merge-pr.ts` check (#1311).
-      The subagent covered the instruction corpus, guard headers and the tracker;
-      runners-up: provenance-header restatements (about half is skill-specific),
-      backgrounding rules (about 8 lines). `merge-pr.ts` itself is Human-only, so
-      its header was left. Same run judged and deleted the `blog-post` step 12
-      trial (landed 6a8a02ca, judgeable from 2026-10-16T12:30Z per the window script): only
-      nit/minor Frictions, no regression issue. Sonnet probe read SHA a5eaf65b. The mass
-      here was small; no criterion-1 candidate cleared the bar for a larger cut.
+      `docs/agents/pr-workflow.md` plainly reworded (-3 net: 118 lines to 115;
+      the pre-push review section's "simple change" bar is reworded, with one
+      added line (count, don't judge); the integration-PR, recipe steps 2-3, closing-keyword, "Who merges" and
+      "Closing a scheduled run's PR" prose shortened, every rule kept.
+      The Glass Box page's excerpt is pinned to its own `revision`, so it is
+      untouched. Chosen after the search
+      subagent covered the instruction corpus and the tracker: the pre-push
+      gate/review rule failed as prose repeatedly (#2311, #2354, #2397; #2397
+      read in full) and no guard holds it (#2397 left the guard question open;
+      ADR-0004's summary rule, untouched, still carries the rule). Runners-up:
+      Stop-hook inherited-commit advice (#2233, owner accepted the cost),
+      CLAUDE.md read-first triggers (#1754, partly held by read-first-hint.ts).
+      The mass here was small; no trial was judgeable this run (all five landed
+      under three days ago, per the window script).
     territory:
       paths:
         - "docs/agents/pr-workflow.md (all of it)"
       keywords:
-        - Reviewed:
-        - enable_pr_auto_merge
-        - closing keyword
-    opened: 2026-10-16
+        - Review before the first push
+        - simple change
+    opened: 2026-10-22
     proven: true
     check: >
-      Damage is a major or blocker Friction where a session merged without a
-      verdict naming the head, called `enable_pr_auto_merge`, closed an issue its
-      PR only related to, or skipped the pre-push review, and a line the old page
-      carried would have prevented it. NOT damage: `merge-pr.ts` refusing and the
-      session fixing itself from its message.
+      Damage is a major or blocker Friction where a session skipped `code-review`
+      or `gate:scoped` before a first push, judged a non-simple change simple,
+      merged without a verdict, or mishandled a closing keyword, and the old
+      wording would have prevented it. NOT damage: the nit-level chaining or
+      Stop-hook slips #2397 already records, which this prune did not touch.
   - problem: >
-      The two background-guard headers (`subagent-background-guard.ts`,
-      `double-background-guard.ts`) cut to the rule, the issue pointers and
-      `docs/agents/guards.md` (-34, comments only; no code changed). Chosen after
-      the search subagent covered the instruction corpus, guard headers and the
-      tracker: the rule failed as prose (#694, #964, #1208) and the guards now
-      hold it. Runners-up: provenance header (overlaps the github-integration
-      trial's territory), read-first triggers (overlaps the close-session trial).
-      Same run judged and deleted the github-integration trial: only nit/minor
-      Frictions. The mass here was small.
+      Long-command backgrounding cut to one home (-2 net): CLAUDE.md's
+      Self-verification bullet tightened (4 lines to 3, rule and 600s why kept),
+      and `blog-post` §10's restatement ("`run_in_background: true`, logging to
+      the scratchpad") dropped. Chosen, at a Trusted user's pick, after the
+      search subagent covered the instruction corpus, guard headers and the
+      tracker: the rule failed as prose three times (#1293, #2265, #2426; all
+      three read in full by the subagent, #2426 by me) and nothing holds it for
+      the main session (`double-background-guard` and
+      `subagent-background-guard` cover adjacent cases). #2426 already proposes
+      the guard. Runners-up: close-session duplicates (#2424, #2209; partly held
+      by read-first-hint), a plain rewrite of `git-conventions.md`. Same run
+      judged and deleted the deferred-tool-guard trial (landed d895e7ec,
+      judgeable from 2026-10-22T15:31Z per the window script): 57 sessions, only
+      nit deferred-tool Frictions (Monitor called unloaded, self-corrected), no
+      regression issue. The mass here was small.
     territory:
       paths:
-        - "scripts/hooks/subagent-background-guard.ts: header and hasBackgroundOperator comment"
-        - "scripts/hooks/double-background-guard.ts: header"
+        - "CLAUDE.md: the Self-verification 'Run anything that can take over 2 minutes' bullet"
+        - ".agents/skills/blog-post/SKILL.md: §10 (Gate)"
       keywords:
-        - double-background
-        - subagent background guard
-    opened: 2026-10-17
-    proven: true
+        - run_in_background
+        - foreground-gate
+    opened: 2026-10-23
     check: >
-      Damage is a major or blocker Friction where a session or subagent
-      backgrounded a command, stalled waiting on it, or reported a double-
-      backgrounded run as finished, and the cut header text would have prevented
-      it. NOT damage: a guard denying and the session fixing itself.
+      Damage is a major or blocker Friction where a session ran a long command
+      (gate:scoped, a build, e2e) in the foreground and lost it to the 600s cap,
+      or started it with a shell `&` it then could not wait on, and the cut
+      wording (or blog-post's restatement) would have prevented it. NOT damage:
+      the nit/minor slips #2426 already records at the old wording's rate, or a
+      guard denying and the session fixing itself.
+  - problem: >
+      Workflow-write ban (cloud session cannot write `.github/workflows/*`) cut
+      to its one home each (-27 net): the `workflow-edit-guard.ts` header
+      (40 lines to 20) keeps purpose, usage and the fail-open list but drops the
+      mechanic retelling and incident asides; the `.sh` pre-filter comment and
+      the `environment-caveats.md` bullet are shortened (recovery recipe, proposals
+      pointer and issue pointers kept). Chosen after the search subagent covered
+      the instruction corpus, guard headers and the tracker (it ran list and REST
+      reads of issues 1247-2439, about 60 bodies): the ban failed as prose (#897,
+      again #1955) and the wired guard (unit-tested) holds it. Larger candidates
+      were read-first triggers (about 69 lines; #1754, #1819, #2146; the owner
+      accepted late reads, nothing denies) and provenance header (about 37 lines).
+      Judged and deleted the dispatch-subagents §3 trial (landed 81bc1915,
+      judgeable from 2026-10-23T12:28Z per the window script): 47 sessions, no
+      major or blocker Friction traces to it (a shared-checkout `git checkout`
+      by a triage agent, g9zpjr, was minor; the foreground-gate clash with
+      CLAUDE.md was a nit, already #2426).
+    territory:
+      paths:
+        - "scripts/hooks/workflow-edit-guard.ts and .sh: header comments"
+        - "docs/agents/environment-caveats.md: the `.github/workflows/*` bullet"
+      keywords:
+        - workflow scope
+        - workflow-edit-guard
+    opened: 2026-10-23
+    check: >
+      Damage is a major or blocker Friction where a cloud session committed a
+      change to `.github/workflows/*` (or stranded commits behind a rejected
+      push) and could not recover or knew no recovery because the cut text was
+      gone. NOT damage: the guard denying a write and the session moving the
+      edit to `docs/proposals/`, or a local session pushing a workflow file.

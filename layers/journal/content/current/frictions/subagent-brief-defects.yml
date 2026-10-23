@@ -1,14 +1,23 @@
 name: subagent-brief-defects
 summary: >-
-  Briefs for helper agents carried a wrong path, value, check or unfilled placeholder, which cost a wasted run or a review catch.
+  Briefs for helper agents carried a wrong path, value or unfilled placeholder that the orchestrator wrote from memory, which cost a wasted run or a review catch.
 cause: >-
-  Orchestrators write briefs from memory: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value restated wrongly, a check grepping output that lists only failures. The agent runs on the bad brief before anyone notices. Signals: "brief", "placeholder", "path did not exist".
+  Orchestrators write briefs from memory instead of copying from the source, and send them without re-reading: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value, ADR level or scope claim restated wrongly. The agent runs on the bad brief before anyone notices. Signals: "brief", "placeholder", "path did not exist", a value in a brief that differs from its source. A brief that relays another agent's unchecked claim belongs in relayed-subagent-claims; a missing CLAUDE.md brief line in subagent-brief-omits-verdict-ask.
 surface: safe
-status: open
+status: on-trial
+ref: "Prune Trial opened 2026-10-20 by PR #2324 (territory: dispatch-subagents SKILL.md section 3; keywords 'subagent brief', 'stranded'); regression issue #2312 closed by PR #2318."
 fixes:
   - pr: 2150
     date: "2026-10-16"
     summary: dispatch-subagents §3 now says to re-read a brief before dispatch (placeholders filled, paths existing, values copied from source).
+  - pr: 2318
+    date: "2026-10-20"
+    summary: "The frictions-to-fixes impl brief now names a scratch folder to write to, and audit-skills asks for session ids instead of a count."
+  - pr: 2324
+    date: "2026-10-20"
+    summary: "dispatch-subagents section 3 (Write the brief) cut to the rule per line, with one line added to create each agent artifact folder first (a Prune Trial)."
+notes: |-
+  2026-10-23 re-cluster: 01Fay2Gi (a check grepping failure-only output), 013RCsUF (dated content not excluded), 011RZgGT (explore triage schema lacks the ADR-0004 exception), 011xvPjJ (audit-skills ids, PR 2318), 01XWMuHG (auth research boundary), 01WxHaU2 (workflow agent asked to dispatch), 0135hcUf and 01VH74k3 (frictions-to-fixes Skill briefs) each need their own fix; left here as single low-severity strays.
 occurrences:
   - session: session_011JKK8rrCwea3xSmL4kw6si
     date: "2026-10-14"
@@ -45,3 +54,28 @@ occurrences:
     severity: minor
     description: "The explore triage brief for #2147 stated the fix may be agent-merged because the file is not Human-only, missing ADR-0004's untested-behaviour exception; I caught it only at close-session."
     solution: "Have clear-backlog-explore's triage schema ask which ADR-0004 exception applies, not just whether a path is Human-only."
+  - session: session_011xvPjJVknZzx45v7NjhebT
+    date: "2026-10-19"
+    severity: minor
+    description: "The 12 behaviour-check subagent briefs didn't ask each subagent to name a specific new session/PR/issue id directly in its summary prose (vs. a parenthetical count like '7/7 sessions') - two of the 12 Inventory entries I drafted from their reports were bare re-confirmations with no visible new citation, caught only by the Spec-axis code-review pass rather than earlier."
+    solution: "When drafting an Inventory observation from a subagent's report, name the specific session/PR/issue id in the note's own prose before code-review has to catch a missing citation."
+  - session: session_018i6d2BQPkf9cq6jSEqCNSX
+    date: "2026-10-10"
+    severity: minor
+    description: "My #868 resolution and #1730 brief called the Journal leak test ADR-0004 L2; it is L3 (isolation invariant). A reviewer caught it, costing one fix round and a correction comment"
+    solution: "Verify level/term definitions against the ADR before stating them in a brief"
+  - session: session_01La82mxqduxHnRS9jRfNHmU
+    date: "2026-10-12"
+    severity: minor
+    description: "My triage brief said the 16:43Z resets undid dry-run-1 answers, but only 4 issues had resets; 8 subagents each flagged the ambiguity"
+    solution: "Check which issues carry a reset before writing a shared brief; the Skill could say how a prior run's answers bind"
+  - session: session_01XWMuHGcaNTvRPHfYb9T7z2
+    date: "2026-10-19"
+    severity: minor
+    description: "The sources research brief told the subagent to inspect MCP config and env var names; it drifted into probing how the CLI's worker credential is sourced until the classifier blocked it"
+    solution: "Research briefs that touch auth should say: never investigate credential sourcing; report the endpoint and stop"
+  - session: session_01WxHaU21bCG18GRezDo4Yfe
+    date: "2026-10-19"
+    severity: nit
+    description: "The #2262 triage brief told the builder to dispatch a probe subagent, which a workflow agent may not be able to do; I ran the probe myself"
+    solution: "clear-backlog-explore triage could note when a fact needs the orchestrator to gather it"

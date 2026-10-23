@@ -1,0 +1,107 @@
+schemaVersion: 1
+session: session_01QEZ5a5X44d3ZzbF2vPwmAo
+startedAt: 2026-10-19T06:33:25Z
+endedAt: 2026-10-19T06:43:35Z
+kind: autonomous
+goal: Scheduled Glass Box sync to latest main
+status: completed
+outcome: All 25 guide pages re-pinned to 03ccaff and merged; no prose needed changing
+summary: Scheduled glassbox-update run (agent-initiated by the schedule, no human ask). Ran the report, advanced pins with --write, then re-read the four flagged pages (claude-md, skills, hooks, file-routing) against their changed cited files and swept 96 commits for concept drift; nothing taught changed, so the PR is revision/revisionDate bumps only. Gate, page spec and validate:content green. I reviewed the mechanical diff inline instead of dispatching the two code-review subagents, since it was 50 identical-shape lines. Opened PR 2270, posted the verdict and merged it once CI was green.
+prs:
+  - "2270"
+docsRead:
+  - path: GLOSSARY.md
+    reason: platform terms
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: page shapes and Excerpt rules
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin and Check steps
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: scheduled-run closing steps
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read after first fetch, hook reminded; no change needed
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: glassbox-update
+    reason: (invoked as a slash command)
+frictions:
+  - description: Read git-conventions only after first git fetch, because the hook reminded me; I batched it with other docs.
+    solution: Read the Before-first-git docs in the same opening batch as the glossary.
+    severity: nit
+durationSec: 609
+models:
+  claude-sonnet-5-5: 58
+toolCounts:
+  Bash: 24
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Gate-before-push and merge limits; summary enough, skipped full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: PR opened at once and subscribed; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on PR body; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; glassbox glossary read directly.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as code; did not apply to a content-only run.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; only relevant as page subject, no edit.
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Rules load with files; did not apply.
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Drift rule loaded on page read; no prose edited so it was moot.
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagrams touched; did not apply.
+    useful: no
+gitBranch: claude/ecstatic-euler-ulgee8
+entrypoint: remote_trigger
+cliVersion: 2.1.303
+trigger: glassbox-update
+landedBy: Stop

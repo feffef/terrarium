@@ -1,33 +1,143 @@
 name: prepush-gate-review-skipped
 summary: >-
-  Agents pushed changes without running the required checks and review first.
+  Agents skipped the required code review before a branch's first push, or gave a change their own read when it was not simple.
 cause: >-
-  ADR-0004's before-first-push gate:scoped plus code-review is skipped or the gate is not rerun after late edits.
+  ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push. A gate:scoped run that did not test the final head belongs to edit-during-gate-run.
 surface: guard-or-hook
-status: open
+status: on-trial
+ref: "Prune Trial opened 2026-10-22 by PR #2412 (territory: docs/agents/pr-workflow.md (all of it); keywords 'Review before the first push', 'simple change'). Earlier: issue #2311 closed by PR #2319, reversed by PR #2321. Left open: pr-workflow.md and ADR-0004 must still agree on the review skip. code-review is in skills-lock.json (ADR-0015): a note on the Skill itself belongs in its Skill Inventory entry (audit-skills)."
+fixes:
+  - pr: 1852
+    date: "2026-10-12"
+    summary: "clear-backlog runs the full code-review Skill on every branch and opens the PR only once review is done."
+  - pr: 1853
+    date: "2026-10-12"
+    summary: "pr-workflow.md asks for code-review before every branch's first push, and build agents hand back unpushed branches for review."
+  - pr: 1854
+    date: "2026-10-12"
+    summary: "The safety-gate rule now requires review before the first push; prose-only follow-ups may rely on CI."
+  - pr: 2319
+    date: "2026-10-20"
+    summary: "ADR-0004 let a prose-, docs- or content-only first push skip code-review (reversed by #2321)."
+  - pr: 2321
+    date: "2026-10-20"
+    summary: "ADR-0004 now reviews Skills and docs like code; only a simple change (typo, rewrap, link, restamp, or at most 10 lines in 2 files) gets the author's own read."
+  - pr: 2412
+    date: "2026-10-22"
+    summary: "pr-workflow.md reworded plainly (-3 net) with one line added (count, don't judge a simple change), and a Prune Trial opened."
 occurrences:
   - session: session_011t1xXHxqwrfAjt83s9oTEP
     date: "2026-10-15"
     severity: minor
     description: "Pushed follow-up branch for PR #2088 before running gate:scoped and code-review, which ADR-0004 asks for before a first push."
     solution: "Treat a branch restarted after merge as a first push; run gate:scoped before git push. It passed afterwards."
-  - session: session_01NqN7omu3o4kxoGeQzzSXhK
-    date: "2026-10-15"
-    severity: minor
-    description: "Committed small wording fixes on the 2029 and 2071 worktrees after their gate ran and pushed without rerunning gate:scoped (validate-adr-rules only); the nuxt.config.ts edit is a comment in a code file"
-    solution: "Run pnpm validate:content or gate:scoped for any non-doc follow-up, even a comment"
-  - session: session_01JkzKjuQD4wH34MjxMjKHaX
-    date: "2026-10-14"
-    severity: nit
-    description: "Pushed the prototype branch without pnpm gate:scoped, code-review or reading pr-workflow.md (ADR-0004, CLAUDE.md read-first). Low impact: Markdown on a never-merged branch."
-    solution: "Same exception as above: state that never-merged prototype branches skip the pre-push steps."
-  - session: session_01GG85r8HWMEdaMgKUaNUZH7
-    date: "2026-10-14"
-    severity: minor
-    description: "Content PRs got a content review by subagent instead of the code-review Skill before their first push"
-    solution: "Have pr-workflow name content review as the review for content-only Glass Box PRs, or run code-review too"
   - session: session_01VPNHf6qDdJPXX23GghKs74
     date: "2026-10-16"
     severity: nit
     description: "Fixed preview.ts stop's exit code myself after the build review and pushed with gate:scoped only, without another code-review pass on that one-line delta"
     solution: "Re-run the branch through clear-backlog-build with the fix in its brief, or run code-review on the delta"
+  - session: session_01F2JGBVz5DXj7Yi8x2NBZcM
+    date: "2026-10-19"
+    severity: nit
+    description: "Amended the commit after code-review to trim one sentence, then pushed without re-running review, since the change was a pure deletion in a docs file."
+    solution: "State in pr-workflow whether a review-driven trim needs a re-review."
+  - session: session_01Uq2Kx5jumw8Va6DETgxNV8
+    date: "2026-10-20"
+    severity: minor
+    description: "Review before first push: I ran code-review only on the code branch and self-reviewed the 13-line doc diff and the ledger-only PR, though ADR-0004 asks for the Skill."
+    solution: "Say in pr-workflow whether a ledger-only or tiny doc diff may be self-reviewed."
+  - session: session_012f7o6FcYxq1MWxvsdgKS6m
+    date: "2026-10-20"
+    severity: nit
+    description: "After the workflow's review I hand-edited wording on both branches and pushed after re-running gate:scoped but without a fresh code-review of those edits, the very edge #2311 reports."
+    solution: "Under #2319 these prose-only edits need no review; until it merges, the pre-merge verdict must review the final head."
+  - session: session_01LKNUYveJSHpf9NV8zN8K5b
+    date: "2026-10-21"
+    severity: minor
+    description: "Last follow-up commit touched 3 files (7+/4-), over pr-workflow.md's 2-file simple bar, yet I gave it only my own read, skipping code-review. Gate passed."
+    solution: "Count files against the simple-change bar before choosing the review path, or run code-review on any follow-up that is not clearly simple."
+  - session: session_01CKXPocBm85jSCheqepKn2v
+    date: "2026-10-22"
+    severity: moderate
+    description: "Misjudged the Inventory-sweep diff (10 files, 164 lines) as a \"simple change\" under ADR-0004/pr-workflow.md and skipped the mandatory code-review Skill before the first push, even though pr-workflow.md's simple-change bar is \"at most 10 lines in at most 2 files\" and this Skill's own Inventory history repeatedly treats a skipped code-review as a real finding on itself."
+    solution: "Check the diff's file/line count against pr-workflow.md's literal \"simple\" definition before the push, not by file type (YAML-only, no code) alone. Caught it myself during close-session's step 1, before any human or subagent flagged it; ran code-review after the push instead, which cost an extra push cycle fixing what it found (notes over the word cap, one duplicated fact)."
+  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
+    date: "2026-10-21"
+    severity: nit
+    description: "SKILL.md section 2 and pr-workflow.md leave open whether a test counts as code logic for the simple-change read; I reran the test and read the diff to be safe."
+    solution: "Say in pr-workflow.md whether a test-only change of at most 10 lines counts as simple."
+  - session: session_016THR5o2Wcj8DYR6voyvXnu
+    date: "2026-10-22"
+    severity: nit
+    description: "Never read the full diff before the first push; only git diff --stat, though pr-workflow wants a self-read for a simple change."
+    solution: "Read git diff origin/main...HEAD before pushing, even for 8 lines."
+  - session: session_016ZibVzWmCmiQkdt6hF5fy9
+    date: "2026-10-13"
+    severity: nit
+    description: "code-review skill prescribes two parallel subagents; for a 2-file prose diff I self-reviewed instead, deviating from the skill as written."
+    solution: "Let code-review state a prose-only shortcut."
+  - session: session_01ERZa4fUGxpF81MeLhZMkSB
+    date: "2026-10-14"
+    severity: nit
+    description: "Skipped the code-review Skill on the two small PRs (poll config, docs) and reviewed inline, though pr-workflow says run it before the first push."
+    solution: "Either run it for tiny diffs or let pr-workflow state a size skip."
+  - session: session_01AdUi9nKLGKyPFfBe4HYvqG
+    date: "2026-10-14"
+    severity: nit
+    description: "The code-review Skill says to spawn two parallel sub-agents; I reviewed the four-file diff inline instead, a deviation from the Skill."
+    solution: "Let the Skill say when a tiny diff may be reviewed inline."
+  - session: session_01RnZJ7VrgWpgzfJUCEdif77
+    date: "2026-10-16"
+    severity: nit
+    description: "ADR-0004 asks code-review before every first push; I ran the two-agent review on one of three branches and read the other diffs myself (a one-line deletion, a ledger and doc diff)."
+    solution: "Let the rule or pr-workflow name a size floor below which a read of the diff counts."
+  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
+    date: "2026-10-16"
+    severity: nit
+    description: "code-review Skill mandates two parallel sub-agents, disproportionate for a 5-line CSS and markup change; I reviewed inline."
+    solution: "Let the pre-push rule allow an inline review for diffs under a few dozen lines."
+  - session: session_01AaqTUSRhRmRpBxM8E4QSPR
+    date: "2026-10-16"
+    severity: minor
+    description: "Two parallel review subagents plus a doc-heavy PR flow for a two-line template change cost far more than the change"
+    solution: "Let code-review run inline for diffs of a few lines"
+  - session: session_01LpcCJWRYb5grgQe3wBGEwb
+    date: "2026-10-15"
+    severity: nit
+    description: "code-review's two parallel review agents for a one-line --first-parent diff cost about 125k subagent tokens"
+    solution: "Let code-review scale down to one inline pass for a diff under ~5 lines (pack Skill: note it in its Inventory entry)"
+  - session: session_018sAirSgDY1Nv82JVogjcyR
+    date: "2026-10-16"
+    severity: minor
+    description: "The code-review Skill ran two Sonnet subagents on a 6-line doc diff, costing about 120k tokens for judgement-call-only findings."
+    solution: "Let the Skill run Standards alone for a doc-only diff under about 20 lines."
+  - session: session_01Sc82qSCs4NVP3igf9SaGXM
+    date: "2026-10-17"
+    severity: minor
+    description: "Skipped the code-review Skill before the first push of both PRs, self-reviewing two small diffs instead, against ADR-0004 and pr-workflow."
+    solution: "Say in frictions-to-fixes section 7 whether a self-review of a tiny doc diff may replace the code-review Skill."
+  - session: session_01C2XPRCDijGcdz27Kw6gi3s
+    date: "2026-10-18"
+    severity: nit
+    description: "code-review Skill mandates two parallel sub-agents; I reviewed a 3-line prose diff inline instead, deviating from the Skill's steps."
+    solution: "Let code-review state a size threshold below which an inline review is fine."
+  - session: session_01VcVVq7cXavEqXGmXucBLbK
+    date: "2026-10-18"
+    severity: nit
+    description: "Ran code-review as a lean self-check instead of the Skill's two parallel subagents, because the diff was comments-only."
+    solution: "Let the code-review Skill say when a comments-only diff may skip the subagents."
+  - session: session_01Bopw6N86uYzPzfaRpVqzhU
+    date: "2026-10-19"
+    severity: nit
+    description: "The code-review Skill prescribes two parallel sub-agents, disproportionate for a one-word label change; I reviewed inline, deviating from the Skill."
+    solution: "Let pr-workflow.md or the Skill allow an inline review for diffs under a few lines."
+  - session: session_016Nsq9SWL64V4RqDJPQYodp
+    date: "2026-10-19"
+    severity: nit
+    description: "Ran code-review inline rather than the Skill's two subagents because the diff was comments only; the Skill has no size threshold."
+    solution: "Let code-review say when a comments-only diff may skip the subagents."
+  - session: session_01TFojzwXEByz1nbqt3wcKNL
+    date: "2026-10-14"
+    severity: moderate
+    description: "Ran /code-review only after the first push instead of before it (ADR-0004); it caught 5 citation-rule violations that needed a second push to fix."
+    solution: "Run code-review on the committed diff before the first push, even for a content-only Inventory change, as ADR-0004 literally requires."

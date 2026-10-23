@@ -4,9 +4,9 @@ change they propose in line with the Platform and with the intent behind what
 they are looking at, so nothing gets built that fights a decision already made.
 
 Read the tally. For every item marked *fix* or *out of remit*, and for the
-chosen feature, find what binds it:
+chosen feature, find what is relevant to it:
 
-- the ADRs (`grep -l <path-or-term> docs/adr/*`, then read the hits in full);
+- the full ADR behind any summary rule that governs it;
 - `GLOSSARY.md` and the glossary of each Tenant it touches, above all its
   "Why it exists", "Who it's for" and "Product decisions";
 - `docs/agents/` and the Skill that writes the content it touches, if any;
@@ -22,8 +22,9 @@ Then give each item one verdict:
   smallest one that still answers what the visitors noticed. A refined fix or
   feature stays inside the Remit in `.agents/skills/visitor-loop/SKILL.md`;
   one that can't becomes *out of remit*;
-- **drop**: it contradicts a decision or the intent, or an issue or PR
-  already settles it.
+- **drop**: it contradicts a decision or the intent, falls in the same family
+  as a `decisions.md` ruling (e.g. another explainer page after the owner
+  removed one), or an issue or PR already settles it.
 
 Every verdict names its source (ADR number, file and heading, `decisions.md`
 line, or issue/PR number) and says in one line what that source decides. A

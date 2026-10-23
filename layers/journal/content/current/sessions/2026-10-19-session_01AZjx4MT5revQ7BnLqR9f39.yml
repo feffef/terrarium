@@ -1,0 +1,132 @@
+schemaVersion: 1
+session: session_01AZjx4MT5revQ7BnLqR9f39
+startedAt: 2026-10-19T09:16:21Z
+endedAt: 2026-10-19T09:29:12Z
+kind: interactive
+goal: Home a session's MDC naming learning in the docs
+status: completed
+outcome: "PR #2280 merged: MDC naming constraint now in the research doc"
+summary: "Human-instructed: the owner asked me to check a learning from another session (an MDC component must not share a name with an HTML tag) against the code and docs, find its one home, and propose the exact edit before changing anything; after my proposal the owner replied \"Yes\". I read that session's log, confirmed in the installed @nuxtjs/mdc 0.23.2 that MDCRenderer skips component lookup for tags in html-tags-list (source is in it), and chose the component-resolution list in docs/research/nuxt-content-review-grounding.md section 13 as the home, since docs/agents/mdc-when-to-use.md already points there; a rule or agents-doc copy would break one-home-per-fact. After the go-ahead I added the bullet, ran gate:scoped (green) and code-review with Standards and Spec subagents (no defects). Agent-initiated within that approval: trimming one redundant clause the Standards reviewer flagged, and defaulting to the current branch with an immediately opened PR (ADR-0003) because the owner did not answer my branch-or-PR question. Left open and not changed: the same section pins @nuxtjs/mdc 0.22.1 while 0.23.2 is installed."
+prs:
+  - "2280"
+docsRead:
+  - path: GLOSSARY.md
+    reason: session-start read; no term was needed for a docs edit
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: session-start read; no Tenant glossary was relevant
+    useful: no
+  - path: docs/agents/mdc-when-to-use.md
+    reason: named section 13 of the research doc as the home for resolution mechanics, which fixed the edit location
+    useful: yes
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: section 13 resolution list was the place for the new bullet
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit via -F file and amend only the tip commit
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: required gate:scoped plus code-review before the first push, even with the Stop hook nagging
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: listed PR tools and the writing-through-MCP rule before opening the PR
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: Standards subagent reported its pruning rule backed trimming the redundant clause
+    useful: partly
+  - path: layers/journal/content/current/sessions/2026-10-14-session_01Qp5NojwQhExSmToPJtnQNV.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: pre-push Standards and Spec review of the one-commit diff
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: authoring the in-review log
+frictions:
+  - description: Before recommending the edit I did not run grep -l on docs/adr/* for the file or term, as CLAUDE.md requires before recommending a change; I relied on the loaded rule summaries.
+    solution: Run the ADR grep before proposing; for a docs-only edit to a research note it found nothing binding, so impact was nil.
+    severity: nit
+  - description: First Bash call set run_in_background and also ended with a shell &, so the double-background guard blocked the whole call, including the status check chained before it.
+    solution: Pass run_in_background alone with a plain foreground command and redirect output to a file.
+    severity: nit
+  - description: A cd into node_modules during verification moved the primary working directory; I had to cd back before git commands.
+    solution: Use absolute paths or a subshell instead of a bare cd into a dependency directory.
+    severity: nit
+durationSec: 772
+models:
+  claude-sonnet-5-5: 89
+toolCounts:
+  Read: 9
+  Glob: 2
+  Grep: 4
+  Bash: 19
+  Edit: 2
+  Skill: 3
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - docs/research/nuxt-content-review-grounding.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0005.md
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Required gate:scoped and code-review before the first push despite the Stop hook; the summary was enough, I did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR right after the first push and subscribe; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the PR body its session-link header; the summary was enough, I did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Confirmed the log goes straight to main, not in the PR branch; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded by the glossary reads; no glossary term was added so it decided nothing here
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Its paths list showed docs/research is not Human-only, so an agent may merge
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Supported keeping the fact in one doc rather than a path-scoped rule; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: No instruction text was cut or reworded, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded via an ADR file read; no ADR was written or changed
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Subagent-loaded only; the Standards reviewer reported it not applicable to a docs review
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of docs edit
+  - type: general-purpose
+    task: Spec review of docs edit
+gitBranch: claude/mdc-naming-constraints-0plwja
+entrypoint: remote_mobile
+cliVersion: 2.1.303
+landedBy: Stop

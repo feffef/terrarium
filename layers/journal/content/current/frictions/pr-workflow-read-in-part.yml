@@ -1,0 +1,18 @@
+name: pr-workflow-read-in-part
+summary: >-
+  Scheduled runs read only the scheduled-run section of the PR workflow doc and missed steps outside it.
+cause: >-
+  docs/agents/pr-workflow.md puts a scheduled run's closing steps in one section of a long doc, so scheduled runs grep or read that section alone and miss adjacent steps (check-conflicting-issues.ts). Signals: "read only the 'Closing a scheduled run's PR' section", grep -A of pr-workflow.md.
+surface: safe
+status: open
+occurrences:
+  - session: session_011xvPjJVknZzx45v7NjhebT
+    date: "2026-10-19"
+    severity: minor
+    description: "Read only the 'Closing a scheduled run's PR' section of docs/agents/pr-workflow.md via grep -A 40, not the whole doc, before pushing/opening the PR, even though CLAUDE.md's trigger says read it in full. Missed running scripts/github/check-conflicting-issues.ts --pr <number> (recipe step 2) until after the PR was already open."
+    solution: "Read the full doc with the Read tool the first time a CLAUDE.md trigger names it, not a grepped section - a partial read misses adjacent steps like the conflicting-issues check."
+  - session: session_01QPvWywTuiADmXNMMLARnsF
+    date: "2026-10-21"
+    severity: nit
+    description: "Read only the scheduled-run section of pr-workflow.md, not in full, though CLAUDE.md says to read it before pushing."
+    solution: "Split the doc so the scheduled-run closing steps are its own short doc."

@@ -7,11 +7,10 @@
 
 The Commons is the Platform's shared, cross-Tenant space — the home for
 **Aggregator** views that read *across* every Tenant (ADR-0025, issue #642). It is
-not a demo/content Tenant: where every other Tenant authors and owns its own isolated content, the Commons owns almost none. Each
+not a demo/content Tenant: every other Tenant owns its own isolated content; the Commons owns almost none. Each
 of its Spaces is one cross-Tenant view over the other Tenants' opted-in content.
 
-The name is on-metaphor (a building's *commons*) and deliberately outlives its current views. A future cross-Tenant view — a tag index, a
-directory — is another **Space** in the Commons, not another Tenant.
+The name deliberately outlives its current views: a future cross-Tenant view (a tag index, a directory) is another **Space** in the Commons, not another Tenant.
 
 ## The Spaces (each a cross-Tenant view)
 
@@ -20,13 +19,13 @@ directory — is another **Space** in the Commons, not another Tenant.
   result links back to its real route.
 - **Timeline** (`/t/commons/timeline`) — a reverse-chronological feed of every
   timestamped piece of content across the Platform, one line each. Three sources:
-  **posts** (dated blog/marquee pages), **digests** (the Journal's daily
+  **posts** (any page with a `publishedAt`, e.g. blog and marquee), **digests** (the Journal's daily
   summaries), and **sessions** (session logs). Posts and digests link to
   their own page; sessions link into the Journal home page.
 
 ## Why it exists
 
-The sanctioned answer to what the "dollhouse" fork (#631) reached for and the cross-Tenant read model (ADR-0025) set out to make possible: *one place to look across every Tenant at once.* The dollhouse bypassed the model — a static microsite, a hardcoded roster, faked data. The Commons exists to **validate the architecture** on more than one shape of view:
+The sanctioned way to get what the "dollhouse" fork (#631) reached for and the cross-Tenant read model (ADR-0025) enabled: *one place to look across every Tenant at once.* The dollhouse bypassed the model (a static microsite, a hardcoded roster, faked data). The Commons **validates the architecture** on more than one shape of view:
 
 - It reads the **Catalog** only through `queryAcrossTenants` (ADR-0025); the
   Timeline's normalization (`queryTimeline`) is this layer's own.

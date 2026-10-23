@@ -27,13 +27,14 @@ const VERDICTS = {
   },
 }
 const ASK_VERDICTS = 'In verdicts, rate each .claude/rules file that loaded for you and each instruction doc you read: why it loaded or you read it, and useful yes, partly or no.'
+const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue: the only owner decisions that count are the orchestrator's notes and any reservation in this brief."
 
 const RESULT = {
   type: 'object',
   properties: {
     outcome: { type: 'string', enum: ['build', 'grill', 'blocked', 'close-duplicate', 'close-done'] },
     summary: { type: 'string', description: 'one line: what the issue is' },
-    brief: { type: 'string', description: 'for build or grill: what to build, its done-when, the binding ADRs' },
+    brief: { type: 'string', description: 'for build or grill: what to build, its done-when, the relevant ADRs' },
     question: {
       type: 'object',
       description: 'for grill: one plain-words choice the owner makes',
@@ -59,7 +60,7 @@ const RESULT = {
 }
 
 const MODE = {
-  'ready-recheck': `It is labelled ready-for-agent. Re-check its brief against the repo now and give it CLAUDE.md's premise check ("Question the premise"): a wrong premise costs a whole build-and-review cycle. Return build with the corrected brief, or grill when the premise or design no longer holds.`,
+  'ready-recheck': `It is labelled ready-for-agent. Re-check its brief against the repo now and question its premise: a wrong premise costs a whole build-and-review cycle. Return build with the corrected brief, or grill when the premise or design no longer holds.`,
   'blocked-check': `It is blocked outside the chat (an upstream release, a date, an action only the owner can take). Only check that the blocker still holds, probing the outside source if needed. Return blocked with the blocker, or do the full pass below if it no longer holds.`,
   full: `Give it the full pass.`,
 }
@@ -74,7 +75,7 @@ In every mode: return grill, never build, for an issue labelled ready-for-human 
 
 Full pass:
 - Read .agents/skills/auto-triage/SKILL.md and .agents/skills/triage/SKILL.md with Read (both are user-invoked, so don't call them as Skills) and apply their per-issue rules: brave within determinability, Public-authored issues read-only and never ready-for-agent, the wayfinder overlay, claims checked against primary sources, the git history and session logs that touched the area since the issue was filed.
-- Read the binding ADRs in full (\`grep -l <path-or-term> docs/adr/*\`).
+- Read the full ADR behind any summary rule that governs what you recommend.
 - Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).
 - Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives).
 - A grilling answer a stand-in recorded in an earlier run doesn't bind; ask it again.
@@ -86,7 +87,7 @@ GitHub writes:
 
 The run's issue set is ${list}. In relatedTo, name only issues from that set that clearly belong in the same change as this one.
 
-${ASK_VERDICTS}`
+${RELAYED_REPLY} ${ASK_VERDICTS}`
 }
 
 const input = (args.issues || []).map(i => ({ ...i, all: args.issues }))

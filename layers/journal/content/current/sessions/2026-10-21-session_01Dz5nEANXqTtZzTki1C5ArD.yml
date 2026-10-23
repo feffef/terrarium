@@ -1,0 +1,121 @@
+schemaVersion: 1
+session: session_01Dz5nEANXqTtZzTki1C5ArD
+startedAt: 2026-10-21T00:16:18Z
+endedAt: 2026-10-21T00:25:14Z
+kind: autonomous
+goal: Write the 2026-10-20 Journal Digest
+status: completed
+outcome: Digest and retention sweep merged in PR 2351, gate green
+summary: "Scheduled /digest run, agent-initiated by the schedule with no human instruction. Listed one closed day (2026-10-20), gathered its data, wrote the Digest, ran the archive sweep, fact-checked with a sonnet subagent (2 loose claims fixed, the #2346 wording and the Atlas site description), ran gate:scoped on the final text, self-read the prose-plus-moves diff, pushed and opened PR 2351. Merged on a green gate."
+prs:
+  - "2351"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: review, gate-last and scheduled-run closing steps
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit hygiene; no chained push after gate
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: catted in one large output that was truncated; not fully read
+    useful: partly
+  - path: layers/journal/content/current/pages/digests/2026-10-20.md
+    reason: (no reason given)
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git status before reading git-conventions.md and read the large GLOSSARY and github docs in one truncated cat.
+    solution: Read the docs one at a time before the first git command.
+    severity: nit
+  - description: Stop hook asked three times to commit and push while fact-check and gate were still running, against ADR-0004 order.
+    solution: Make the stop hook skip while a background gate or subagent runs.
+    severity: nit
+durationSec: 535
+models:
+  claude-sonnet-5-5: 52
+toolCounts:
+  Bash: 19
+  Agent: 1
+  ReadNotifications: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+rulesLoaded:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0008.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Gate-last and self-read rule shaped the order; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: PR opened without asking; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Digest lands by gated PR, never rewritten; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; did not apply to this task
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; did not apply to this task
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement; did not apply to this task
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Mermaid lanes; unrelated, loaded by a gather read
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: "Subagent: not applicable to read-only check"
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: "Subagent: not applicable to read-only check"
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: "Subagent: not applicable to read-only check"
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "Subagent: not applicable to read-only check"
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "Subagent: not applicable to read-only check"
+    useful: no
+subagents:
+  - task: Fact-check Digest 2026-10-20
+    model: sonnet
+gitBranch: claude/compassionate-lovelace-gjgozl
+entrypoint: remote_trigger
+cliVersion: 2.1.305
+trigger: digest
+landedBy: Stop

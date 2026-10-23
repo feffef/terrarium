@@ -29,3 +29,8 @@ occurrences:
     severity: minor
     description: "Reviewers quoted multi-line text as flat sentences, so exact-string edits failed and a checker had to re-derive each wrapped quote."
     solution: "Tell reviewers to quote with the file's own line breaks, or give a grep-able anchor."
+  - session: session_01Hw8mVJmgWejGc6YWi8ngnm
+    date: "2026-10-23"
+    severity: nit
+    description: "A reviewer's quote of blog-post differed in line wrapping from the file, so the scripted edit failed once and needed a re-view."
+    solution: "Tell reviewers to copy quotes from the file with line breaks verbatim, or have checkers return grep-verified text."

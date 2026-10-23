@@ -1,0 +1,27 @@
+name: ledger-summary-same-day-counting
+summary: >-
+  The ledger summary script compared dates, not times, so sessions later on the day a fix merged were not counted as regressions.
+cause: >-
+  prune-friction-ledger.ts --summary (and --unledgered) compared a session's date string with the fix's merge date, so a session that started after a fix merged on the same day was hidden and the survey agent counted it by hand. Signals: "same-day post-fix sessions", "compares dates as strings", counting regressions by hand.
+surface: safe
+status: open
+fixes:
+  - pr: 2348
+    date: "2026-10-20"
+    summary: "The ledger summary counts same-day regressions by merge time and a new --candidates option prints the survey labels from the ledger."
+occurrences:
+  - session: session_01Wv24DMMmjdNR6a23HtkZ8i
+    date: "2026-10-19"
+    severity: minor
+    description: "survey-brief says to append every friction but --unledgered drops sessions, and --summary counts regressions by date, so same-day post-fix sessions were missed and needed hand checking."
+    solution: "Count regressions by session start in --summary; name a per-cluster dedupe step in the brief."
+  - session: session_01Uq2Kx5jumw8Va6DETgxNV8
+    date: "2026-10-20"
+    severity: minor
+    description: "The survey subagent's ledger commit and --unledgered/--summary date-only counting made same-day post-fix sessions invisible; it counted them by hand."
+    solution: "Make --summary compare session start time to the fix's merged_at, not dates."
+  - session: session_01VH74k3Z27QtjR19XNC76qm
+    date: "2026-10-20"
+    severity: minor
+    description: "prune-friction-ledger.ts --summary compares dates as strings, hiding same-day post-fix sessions; the survey agent counted them by hand. Same cause as open issue #2333, and one subagent hit three ledger YAML edit hazards (blank line, quoting)."
+    solution: "Compare session start time with the fix merged_at, as issue #2333 proposes."

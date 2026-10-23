@@ -1,0 +1,778 @@
+schemaVersion: 1
+session: session_012Yzae3uty5Jj8ZPug9zpjr
+startedAt: 2026-10-23T11:47:05Z
+endedAt: 2026-10-23T14:05:29Z
+kind: interactive
+goal: Clear the issue backlog (clear-backlog run)
+status: completed
+outcome: "8 PRs merged (#2446, #2448, #2450-#2455) closing 11 issues; #2105, #2137, #2286, #2415 closed without a PR"
+summary: "The owner invoked /clear-backlog and confirmed the 16-issue sweep set (human-instructed). Triage: one build (#2439), one close-done (#2286), two time-gated (#2432 until 10-26, #2373 until 10-24), twelve grilled; #2433 skipped as blocked by #2432. The owner answered 1a 2a 3c 4a-11a 12c 13c, asked for an ELI5 of Q3, and rejected my proposed extra \"already loaded, do not re-read\" note for the glossary import as redundant, so it was dropped. Merged: #2446 (#2439 read-first-hint issue-write docs; owner merge), #2448 (#2437 CLAUDE.md glossary @-import + #2438 narrower dispatch trigger; owner merge, import expansion untestable by the gate), #2450 (#2434 gate stale-tree warning; owner merge, Human-only), #2451 (#2436 survey brief list scan + --summary since-fix severity), #2452 (#2424 log-session closure warning), #2453 (#2370 + #2425 blog-post step 9 and claim source), #2454 (#2435 counts-from-wrong-filter cluster), #2455 (#2415 owner decision: no feeds). Closed without PR: #2105 (done), #2415 (not wanted), #2286 (done in triage), #2137 (one-off review agent posted findings and filed #2449). Parked: #2426 until the long-command Prune Trial verdict. Judgement calls left open are listed in each PR body (small simplifications, wording). Side finding 13 (read-first-hint repeats pointers in subagents) was dropped on the owner's 13c."
+prs:
+  - "2446"
+  - "2448"
+  - "2450"
+  - "2451"
+  - "2452"
+  - "2453"
+  - "2454"
+  - "2455"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: "Standards claude-md-glossary-import-and-dispatch-trigger r1: Read to check whether an open trial covers the edited lines; Spec claude-md-glossary-import-and-dispatch-trigger r1: Read to check that no open trial covers the edited lines; only dispatch-subagents §3 is covered.; Standards claude-md-glossary-import-and-dispatch-trigger r2: Read to check whether any open trial covers the edited lines.; Standards claude-md-glossary-import-and-dispatch-trigger r3: Grepped to check that no open trial covers an edited line.; Standards blog-post-step9-and-claims r1: Read to check the build's no-overlap claim."
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "triage #2105: The brief told me to read it. It gave the brave-within-determinability rule and the closing rules.; triage #2137: The brief told me to read it; gave the per-issue rules and the label overlay; triage #2286: The brief required it. Gave the closing rule (already-implemented, point to where it lives) and the check of later git history.; triage #2370: Required by the brief. It set the brave-vs-escalate line and the label-replace rule.; triage #2415: The brief required it. It set the brave-within-determinability rule and the closing rules.; triage #2424: Required by the brief. Its per-issue rules and comment policy applied.; triage #2425: The brief required it; per-issue rules and comment rules.; triage #2426: The brief required it. It sets the per-issue rules and the history check.; triage #2434: The brief told me to read it; it set the brave/determinability line, the comment-on-uncommented rule and the label replacement rule; triage #2435: The brief required it; it gave the brave/determinability line and the comment rule; triage #2436: Required by the brief; per-issue sweep rules.; triage #2437: Required by the brief; the brave/determinability rule and comment-on-uncommented rule; triage #2438: The brief required it; it sets the per-issue sweep rules; triage #2439: Required by brief; brave/determinability, label replace, wayfinder overlay"
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: "triage #2137: Read to see whether a non-PR output can be built; it says a non-PR issue goes to the report"
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: "triage #2424: Read to see what a hand-written log skips."
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: "triage #2105: I read the retention sweep section to check that moves go from current to archived only."
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "Standards counts-not-tallied-recluster r1: Read for the ledger conventions the brief cites. §5.3 defines when an entry is `tracked`.; Spec counts-not-tallied-recluster r2: I grepped its status and ref rules to check that `status: open` is valid on the new cluster."
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: "Standards counts-not-tallied-recluster r1: Read for the meaning of `status` and `ref`. Its lines 46 and 52-53 back the main finding."
+    useful: yes
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: "triage #2439: Format of the posted brief"
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2415: The brief required it. It set the redundancy check and the label roles.; triage #2424: Required by the brief. Supplied the label states and verification step.; triage #2425: The brief required it; the label state machine.; triage #2426: The brief required it. It sets the labels and the state machine.; triage #2435: The brief required it; it gave the per-issue rules and roles; triage #2436: Required by the brief; label state machine.; triage #2437: Required by the brief; the label roles (one category plus one state); triage #2438: The brief required it; it sets the label state machine; triage #2439: Required by brief; per-issue rules"
+    useful: yes
+  - path: CLAUDE.md
+    reason: "Standards claude-md-glossary-import-and-dispatch-trigger r2: Loaded at session start. It is also the main file under review, for its read-first triggers, keep-it-short goal and one-home-per-fact rule.; build claude-md-glossary-import-and-dispatch-trigger: Project instructions; the file I edited.; Standards claude-md-glossary-import-and-dispatch-trigger r1: Loaded at start; holds the 'One home per fact' and 'Keep it short' rules used for the domain.md and intro findings; Spec claude-md-glossary-import-and-dispatch-trigger r1: Loaded at session start; it is also the file under review.; fix claude-md-glossary-import-and-dispatch-trigger r1: Project instructions loaded at session start; they set the commit, gate and no-push rules.; Spec claude-md-glossary-import-and-dispatch-trigger r2: Loaded at session start. It is also the main file under review; its \"One home per fact\" convention exposed the stale Glassbox statements.; fix claude-md-glossary-import-and-dispatch-trigger r2: Project instructions loaded at session start. It states the one-home-per-fact and commit rules that the fix relied on.; Standards claude-md-glossary-import-and-dispatch-trigger r3: Loaded at session start. It is the file under review and gives the keep-it-short and one-home-per-fact standards.; Spec claude-md-glossary-import-and-dispatch-trigger r3: Loaded at session start. It is also the file under review, so I needed it to check the edits against the read-first section.; Standards log-session-closure-warning r2: Loaded as project instructions; supplied the comment rule (why, not what) and the verify-before-you-state rule, both used to judge the build decisions.; Standards counts-not-tallied-recluster r2: Loaded at session start. 'One home per fact' and 'Verify before you state' were the main checks for the cross-pointer and the counts.; Standards counts-not-tallied-recluster r3: Loaded at session start. 'Verify before you state' and 'One home per fact' set up the count check and the cross-pointer check.; build gate-stale-tree-warning: Project instructions, loaded at session start.; Standards gate-stale-tree-warning r1: Loaded at session start; gave the comment rule (why, not what), keep-it-short, and verify-before-stating, which I used to check the build decisions.; build survey-brief-closed-issue-check: Project instructions loaded at session start; set git-doc and TDD workflow expectations; Standards survey-brief-closed-issue-check r1: Loaded at start; its 'one home per fact' and 'keep it short' rules drove the main finding; fix survey-brief-closed-issue-check r1: Project instructions, loaded at session start; one-home-per-fact guided the brief fix; Spec blog-post-step9-and-claims r1: Loaded at session start. It sets keep-it-short and ADR-0027 cut-before-add, which are the main bar for this simplicity review.; fix counts-not-tallied-recluster r1: Project instructions loaded at start; gave the scope and rules for this task."
+    useful: yes
+  - path: docs/adr/0006 (requests reach one Space by path prefix)
+    reason: "triage #2415: The full ADR behind the routing question. It produced the per-Space feed option."
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: "triage #2437: The full ADR behind the recommendation"
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "triage #2137: Full ADR behind the governing rule; judgment call vs settled design; triage #2286: Read in full because it governs the close decision: closing needs proof from the repo.; triage #2370: Governs the label decision. Its 'several valid approaches' test is what made this grill.; triage #2415: The full ADR behind the rule that decided the outcome. It defines design doubt.; triage #2424: Read in full. Its 'several valid approaches' counts as real design doubt, which is why this goes to grill.; triage #2425: Read in full to confirm what counts as a judgment call.; triage #2426: The full ADR on what counts as a judgment call.; triage #2434: Full ADR behind the outcome; it defines a judgment call (a governance or guard choice) that sends this to ready-for-human; triage #2435: Read for the definition of 'several valid approaches' as real design doubt; triage #2436: Read in full to judge judgment call vs settled design.; triage #2437: The full ADR defining a judgment call; triage #2438: Read in full for the definition of a judgment call; triage #2439: Full ADR behind the governing rule; confirmed concrete design means ready-for-agent"
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "triage #2426: The full ADR behind the recommendation. It says a trial's verdict files the hook issue."
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: "build claude-md-glossary-import-and-dispatch-trigger: Read after the first git hint, before the first git commands.; build gate-stale-tree-warning: A hook asked me to read it before the first git command. I read it only after those commands, but they were safe anyway.; build survey-brief-closed-issue-check: Read before first git command beyond status, per CLAUDE.md; build log-session-closure-warning: A hook hint after my first git command pointed to it and CLAUDE.md requires reading it before git. I read it late, after the first git calls, and the calls turned out fine.; fix log-session-closure-warning r1: A PostToolUse hook told me to read it after my first git commands. I read it late, after the stash, add and commit. My calls already matched it: one git command per call, commit with -F, and no push in the gate run.; build blog-post-step9-and-claims: Hook hint after first git command; I read it late, my calls were already consistent.; Spec blog-post-step9-and-claims r1: The read-first hook asked for it after my read-only git diff and log calls. It confirmed the three-dot diff against origin/main was the right one.; build counts-not-tallied-recluster: Read after a hook hint following my first git command (CLAUDE.md requires it before the first git command beyond status/diff).; build visitor-loop-no-feeds: A hook asked me to read it after my first git commands; I read it late and my calls were already right (the fetch, rev-parse and checkout)."
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: "Spec claude-md-glossary-import-and-dispatch-trigger r2: Triggered by my first GitHub operation (issue_read). It confirms issue_read is the right tool.; Spec counts-not-tallied-recluster r2: A hook asked me to read it after my first issue_read call. It confirmed that issue_read was the right tool, so the late read is not a Friction.; build survey-brief-closed-issue-check: Grepped for its search_* versus list_* guidance, which the brief change follows; Standards survey-brief-closed-issue-check r1: Grepped (not read in full) to check that the brief's list_issues guidance matches it; this showed the duplication; Spec survey-brief-closed-issue-check r1: Read its Overflow section (grep and sed) to check the new closed-issue wording against it. It confirmed the list_issues fields/perPage guidance.; Standards survey-brief-closed-issue-check r2: Grepped to check that the brief's new pointer for list_issues parameters (fields, perPage, closed paging) resolves to real guidance, which it does.; Spec survey-brief-closed-issue-check r2: Required before GitHub operations, and needed to check that the brief's new list_issues pointer matches its guidance (it does)."
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: "triage #2426: I read it to check whether any guard covers the main session. It confirmed none does and that guards are human merges."
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "triage #2137: Specs section: an on-hold issue carries no label until its condition clears; triage #2426: Required before triage. It holds the Prune Trial overlap check.; triage #2434: CLAUDE.md trigger before triage; it pointed me to the supersession and prune-trial overlap checks"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: "triage #2137: CLAUDE.md trigger before labelling; label strings; triage #2415: Required before triage. It mapped the label names.; triage #2424: Read before labelling. Confirmed the label strings.; triage #2425: Required before labelling; label strings.; triage #2435: Required before labelling; confirmed the label strings; triage #2436: Required before labelling.; triage #2437: CLAUDE.md trigger before labelling; the label strings; triage #2438: CLAUDE.md trigger before labelling; it confirmed the label strings; triage #2439: CLAUDE.md trigger before labelling; label strings"
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Spec claude-md-glossary-import-and-dispatch-trigger r1: The brief said to read it; it defines the Spec axis (missing, unasked, wrong).; Spec claude-md-glossary-import-and-dispatch-trigger r2: The task asked me to read it and apply its Spec axis.; Standards claude-md-glossary-import-and-dispatch-trigger r3: Read because the task said to, for the Standards axis and its smell baseline.; Spec claude-md-glossary-import-and-dispatch-trigger r3: The task told me to read it and apply its Spec axis. The (a)/(b)/(c) checks gave the review its shape.; Standards gate-stale-tree-warning r1: Read as the task asked, for the Standards axis and the smell baseline.; Spec gate-stale-tree-warning r1: The task told me to read it to apply the Spec axis. Its three questions (missing, scope creep, looks wrong) set the shape of this review.; Standards survey-brief-closed-issue-check r1: Read as the task directed; gave the smell baseline (Duplicated Code finding); Spec survey-brief-closed-issue-check r1: The task said to apply its Spec axis. Its (a) missing / (b) creep / (c) wrong framing shaped this review.; Standards survey-brief-closed-issue-check r2: The task told me to read it; source of the Standards axis and the smell baseline.; Spec survey-brief-closed-issue-check r2: The task said to apply its Spec axis; it gave the missing / scope-creep / wrong structure.; Standards log-session-closure-warning r1: The task said to read it; it supplied the Standards axis and the smell baseline; Spec log-session-closure-warning r1: The task said to read it and apply its Spec axis brief.; Standards log-session-closure-warning r2: Read as the task instructed, for the Standards axis and its smell baseline.; Spec log-session-closure-warning r2: The task asked me to read it and apply its Spec axis brief (missing, scope creep, wrong); Standards blog-post-step9-and-claims r1: Read as the brief required, for the Standards axis and smell baseline.; Spec blog-post-step9-and-claims r1: The brief told me to read it and apply its Spec axis: missing requirements, scope creep, wrong implementation.; Standards counts-not-tallied-recluster r2: Required by the task for the Standards axis and smell baseline.; Spec counts-not-tallied-recluster r3: The task told me to read it and apply its Spec axis. Its missing/scope-creep/wrong framing gave the review its structure.; Spec visitor-loop-no-feeds r1: The task said to read it and apply its Spec axis (missing requirements, scope creep, wrong implementation).; Spec counts-not-tallied-recluster r1: The task told me to read it for the Spec axis (missing parts, scope creep, wrong implementation).; Spec counts-not-tallied-recluster r2: The task told me to read it and apply its Spec axis brief (missing, scope creep, wrong)."
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "build claude-md-glossary-import-and-dispatch-trigger: The brief told me to follow it.; build gate-stale-tree-warning: The task told me to read it. It set the test-first flow and commit step.; build survey-brief-closed-issue-check: Task said to read and follow it; build log-session-closure-warning: The task told me to read and follow it."
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "build gate-stale-tree-warning: A hook asked for it after I edited gate.ts. It confirmed the human-merge requirement."
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: Session-start read; Tenant list
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Session-start read; Trusted, Prune Trial and Friction terms used in the questions
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: "Recipe for pushing and opening PR #2446, and the verdict-before-merge step"
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: Fields and passes for this log
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: "Standards claude-md-glossary-import-and-dispatch-trigger r1: Read the edited section in context; Standards claude-md-glossary-import-and-dispatch-trigger r2: Read the edited section in context to judge the repointed line.; Standards claude-md-glossary-import-and-dispatch-trigger r3: Read because it is in the diff, to check the repointed line in context."
+    useful: yes
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: 'The owner-decisions list the #2415 "no feeds" line went into'
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: "Read only its first 80 lines before writing the #2137 review brief (sections 1-3)"
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: "Standards blog-post-step9-and-claims r1: The file under review. Read the context around both hunks."
+    useful: yes
+  - path: .claude/skills/tdd/SKILL.md
+    reason: "build gate-stale-tree-warning: Invoked as the tdd Skill. It said to work test-first at one seam, and I did."
+    useful: yes
+  - path: .claude/worktrees/wf_0c0559a2-098-5/.agents/skills/frictions-to-fixes/SKILL.md
+    reason: "Spec counts-not-tallied-recluster r1: Brief names it for ledger conventions; checked status/ref semantics."
+    useful: yes
+  - path: .claude/worktrees/wf_0c0559a2-098-5/.agents/skills/frictions-to-fixes/survey-brief.md
+    reason: "Spec counts-not-tallied-recluster r1: Read to check how a `tracked` entry is handled. It showed that the status finding fixes itself once #2435 closes."
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: "build gate-stale-tree-warning: A hook asked for it after I edited gate.ts. It was not relevant to a warning-only change."
+    useful: no
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: "#2137 review agent: read for the checklist rewrite"
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: "#2137 review agent: read for the checklist rewrite"
+    useful: yes
+  - path: tests/unit/log-session.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: clear-backlog
+    reason: owner-invoked run
+  - name: grilling
+    reason: one sitting of 13 questions
+  - name: close-session
+    reason: (no reason given)
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: A triage subagent ran git checkout origin/main -- in the shared checkout, detaching HEAD briefly; it restored the branch itself.
+    solution: Triage agents in clear-backlog-explore should read from git show origin/main:path, never checkout, in the shared checkout
+    severity: minor
+  - description: read-first-hint repeated github-integration.md and git-conventions.md pointers on every call in five workflow subagents, even after they had read the doc
+    solution: Check subagent transcript resolution and Bash-read detection in read-first-hint.ts (raised as Q13)
+    severity: minor
+  - description: I read git-conventions.md and github-integration.md after my first git log/fetch call, not before, as the hook pointed out
+    solution: Read both at session start alongside the glossaries when a Skill will drive git and GitHub
+    severity: nit
+  - description: "Read only the first 80 lines of dispatch-subagents SKILL.md before writing the #2137 review brief, though CLAUDE.md says read the doc in full"
+    solution: Read trigger docs with one Read call and no head/sed limit
+    severity: nit
+  - description: 'I proposed an extra "already loaded, do not re-read" CLAUDE.md note for #2437; the owner rejected it as redundant, since the import block names its file'
+    solution: "Before adding a note, ask whether what the agent already sees makes it obvious (ADR-0027: cut before adding)"
+    severity: nit
+  - description: "I counted #2286 and #2137 as always-eligible unlabelled issues, but both are on-hold specs whose last comment was an agent's, so auto-triage's on-hold exception would have skipped them; the owner confirmed the set anyway"
+    solution: Apply auto-triage's on-hold-spec exception when resolving the set; a helper printing eligibility per issue would make it mechanical (#2435's counts-from-wrong-filter cluster)
+    severity: minor
+  - description: "Wrote #2454's verdict Reviewed: SHA from a guessed expansion of the short hash instead of reading the head; caught right after and edited the comment before merging"
+    solution: Read the PR head SHA (gh api pulls/N --jq .head.sha) before writing a verdict
+    severity: minor
+  - description: My log-merge helper reset ruleVerdicts and docsRead on each pass, so earlier verdicts were only kept by log-session's own list union
+    solution: Merge into the existing lists; better, a log-session --merge-verdicts flag that takes run-summary --verdicts output
+    severity: nit
+durationSec: 8304
+models:
+  claude-opus-5-5: 198
+toolCounts:
+  Bash: 54
+  AskUserQuestion: 1
+  Workflow: 4
+  Skill: 2
+  ToolSearch: 5
+  PushNotification: 1
+  mcp__github__create_pull_request: 8
+  mcp__claude-code-remote__subscribe_pr_activity: 8
+  ReadNotifications: 10
+  mcp__github__add_issue_comment: 18
+  mcp__github__issue_write: 10
+  Agent: 1
+  mcp__github__update_issue_comment: 1
+filesEdited:
+  - tests/unit/gate-stale-tree.spec.ts
+  - scripts/gate/gate.ts
+  - tests/unit/log-session.spec.ts
+  - scripts/session/transcript-trace.ts
+  - scripts/session/log-session.ts
+  - tests/unit/read-first-hint.spec.ts
+  - scripts/hooks/read-first-hint.ts
+  - docs/agents/guards.md
+  - CLAUDE.md
+  - docs/agents/domain.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/03.glossaries.md
+  - layers/glassbox/content/guide/pages/claude-code/07.subagents-worktrees.md
+  - layers/journal/content/current/frictions/counts-from-wrong-filter.yml
+  - .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - layers/journal/content/current/frictions/counts-not-tallied.yml
+  - .agents/skills/frictions-to-fixes/tests/unit/prune-friction-ledger.spec.ts
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/visitor-loop/decisions.md
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+adrHints:
+  - adr: 4
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 26
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 29
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 21
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 5
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 22
+    via: path
+    readAfter: false
+    by: subagent
+rulesLoadedBySubagents:
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/mermaid-lanes.md
+docsReadBySubagents:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - docs/agents/domain.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - docs/agents/guards.md
+  - docs/adr/0027-prune-trials.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: "build claude-md-glossary-import-and-dispatch-trigger: Loaded at session start. It was not relevant.; Standards claude-md-glossary-import-and-dispatch-trigger r1: Loaded at start; PR governance, not relevant to a read-only review; Spec claude-md-glossary-import-and-dispatch-trigger r1: Loaded at session start; not relevant to this review.; fix claude-md-glossary-import-and-dispatch-trigger r1: Loaded at session start; it was not relevant to this fix step.; Standards claude-md-glossary-import-and-dispatch-trigger r2: Loaded at session start. Not relevant to a read-only review.; Spec claude-md-glossary-import-and-dispatch-trigger r2: Loaded at session start. It doesn't bear on a read-only review.; fix claude-md-glossary-import-and-dispatch-trigger r2: Loaded at session start. It covers PR rules, which the orchestrator handles, so it did not apply to this step.; Standards claude-md-glossary-import-and-dispatch-trigger r3: Loaded at session start. Does not apply to a read-only review.; Spec claude-md-glossary-import-and-dispatch-trigger r3: Loaded at session start. It has no bearing on a read-only review.; build log-session-closure-warning: It loaded at session start. The orchestrator opens the PR, so it did not change what I did.; Standards visitor-loop-no-feeds r1: Loaded at session start. It confirmed that recording an owner decision is not new work that needs approval.; Spec visitor-loop-no-feeds r1: Loaded at session start. It confirms that recording an owner decision is not new work that needs approval.; Spec counts-not-tallied-recluster r2: Loaded at session start. It confirmed that the owner's pick on #2435 is the approval this work needed."
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "build gate-stale-tree-warning: Loaded after I touched gate.ts. It confirms gate.ts is on the Human-only list.; Standards gate-stale-tree-warning r1: Grepped, not loaded in full, to check the claim that gate.ts is Human-only (line 21)."
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: "build claude-md-glossary-import-and-dispatch-trigger: Loaded at session start. It confirms the human-merge need.; build gate-stale-tree-warning: Loaded at session start. It says Human-only files need a human merge.; build log-session-closure-warning: It loaded at session start. It told me to run gate:scoped before the first push, which I did.; Spec log-session-closure-warning r1: Loaded at session start; confirmed scripts/session/ is not Human-only, so an agent may merge this change.; Spec log-session-closure-warning r2: Loaded at session start; confirmed scripts/session/ is not Human-only, so the agent may merge this; build counts-not-tallied-recluster: Loaded at session start; gate:scoped requirement applied.; Spec counts-not-tallied-recluster r1: Loaded at session start. Confirms that a ledger-only change can be merged by an agent, but it does not bear on the Spec axis."
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: "build claude-md-glossary-import-and-dispatch-trigger: Loaded when I touched Skill files.; Standards claude-md-glossary-import-and-dispatch-trigger r1: Loaded on touching .agents/skills; confirms pack Skills stay as installed; Spec claude-md-glossary-import-and-dispatch-trigger r1: Loaded on Skill files; confirmed pack Skills stay as installed.; Standards claude-md-glossary-import-and-dispatch-trigger r2: Loaded when I read a Skill file. It backs leaving the pack Skills as installed.; Spec claude-md-glossary-import-and-dispatch-trigger r2: Loaded when I read Skill files. It confirms pack Skills stay as installed.; Standards claude-md-glossary-import-and-dispatch-trigger r3: Loaded when I read a Skill file. Confirms that pack Skills stay as installed.; Spec claude-md-glossary-import-and-dispatch-trigger r3: Loaded when I read the code-review Skill. It confirms pack Skills stay as installed and our own Skill edits go through a gated PR.; build survey-brief-closed-issue-check: Loaded on touching a Skill file; build blog-post-step9-and-claims: Loaded on touching a Skill file.; build visitor-loop-no-feeds: Loaded when I touched a file under .agents/skills/.; Standards visitor-loop-no-feeds r1: Loaded when I touched a Skill file. It confirmed that Skill files change through a gated PR, which this branch does.; Spec counts-not-tallied-recluster r1: Loaded when I read the code-review Skill. Not relevant.; Spec counts-not-tallied-recluster r2: Loaded when I touched Skill files. It is about where Skills live, which is not relevant to this diff."
+    useful: partly
+  - path: .claude/rules/adr-0009.md
+    reason: "build claude-md-glossary-import-and-dispatch-trigger: Loaded at session start. It was not relevant, since I did not close the session.; Standards claude-md-glossary-import-and-dispatch-trigger r1: Loaded at start; session logs, not relevant to this review; Spec claude-md-glossary-import-and-dispatch-trigger r1: Loaded at session start; session logs are not relevant to a read-only review.; fix claude-md-glossary-import-and-dispatch-trigger r1: Loaded at session start; it was not relevant to this fix step.; Standards claude-md-glossary-import-and-dispatch-trigger r2: Loaded at session start. Not relevant to a read-only review.; Spec claude-md-glossary-import-and-dispatch-trigger r2: Loaded at session start. Session logs don't apply to a read-only review.; fix claude-md-glossary-import-and-dispatch-trigger r2: Loaded at session start. It covers session logs, which the orchestrator handles, so it did not apply to this step.; Standards claude-md-glossary-import-and-dispatch-trigger r3: Loaded at session start. Does not apply to a read-only review.; Spec claude-md-glossary-import-and-dispatch-trigger r3: Loaded at session start. It has no bearing on a read-only review.; build log-session-closure-warning: It governs session logs, which this change touches. It confirmed that I should not run close-session or log-session from the build step.; Standards log-session-closure-warning r1: Loaded at session start; it governs session logs, which log-session.ts writes; Spec log-session-closure-warning r1: Loaded at session start; holds the close-session-on-merge rule that this warning backs up.; Spec log-session-closure-warning r2: Loaded at session start; it is the closure rule the warning enforces; Spec counts-not-tallied-recluster r1: Loaded at session start. Session logs are not in this diff.; Spec counts-not-tallied-recluster r2: Loaded at session start. It covers session logs, which are not relevant here."
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: "triage #2105: Loaded when I read the digest Skill. It confirmed that moving Digests to archived is the expected behaviour.; triage #2415: Loaded when I grepped the Digest file. It confirmed what Digests are."
+    useful: partly
+  - path: .claude/rules/adr-0012.md
+    reason: "build blog-post-step9-and-claims: Loaded with blog-post SKILL; irrelevant to this edit."
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "build survey-brief-closed-issue-check: Loaded on touching a Skill file; the Skill is not a pack Skill, so it did not apply; build counts-not-tallied-recluster: Loaded when I touched the frictions-to-fixes skill files; not relevant."
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: "build claude-md-glossary-import-and-dispatch-trigger: Loaded at session start. The commit trailer applied.; fix claude-md-glossary-import-and-dispatch-trigger r1: Loaded at session start; it covers the commit trailer. I wrote no GitHub bodies.; Standards log-session-closure-warning r2: Loaded at session start; used to check the commit trailer and Claude-Session line.; Spec counts-not-tallied-recluster r1: Loaded at session start. I made no writes.; Spec counts-not-tallied-recluster r2: Loaded at session start. It covers provenance for writes, and I made none."
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: "triage #2370: Loaded at session start and on reading author-trust.ts. Confirmed OWNER is Trusted.; triage #2439: Loaded; author trust tier (OWNER is Trusted)"
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: "build claude-md-glossary-import-and-dispatch-trigger: Loaded when I touched domain.md and the glossary.; Spec claude-md-glossary-import-and-dispatch-trigger r1: Read with cat to check that its summary does not restate the session-start read; it does not."
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: "build claude-md-glossary-import-and-dispatch-trigger: Loaded when I touched clear-backlog."
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: "build gate-stale-tree-warning: Loaded when I touched gate.ts. It warns about gate step parity, which does not apply to this change."
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: "build claude-md-glossary-import-and-dispatch-trigger: Loaded at session start. I used it to check the prune trials.; Standards claude-md-glossary-import-and-dispatch-trigger r1: Loaded on touching .agents/skills; used to check the edits against open Prune Trials; Spec claude-md-glossary-import-and-dispatch-trigger r1: Loaded when reading the diff; framed the prune-trial overlap check.; Standards claude-md-glossary-import-and-dispatch-trigger r2: Loaded when I read a governed file. It frames the check that no open prune trial covers the edited lines.; Spec claude-md-glossary-import-and-dispatch-trigger r2: Loaded when I read Skill files. It prompted the check of open Prune Trials against the edited lines.; Standards claude-md-glossary-import-and-dispatch-trigger r3: Loaded when I read the code-review Skill. It is the reason to check the prune trials against the edited lines.; Spec claude-md-glossary-import-and-dispatch-trigger r3: Loaded when I read the code-review Skill. It is the reason to check that no open trial in .agents/prune-trials.yml covers the edited lines.; build survey-brief-closed-issue-check: Loaded when reading survey-brief.md; checked no open trial covers the edited text (SKILL.md left alone); build blog-post-step9-and-claims: Loaded on reading the SKILL file; told me to check open prune trials.; Spec blog-post-step9-and-claims r1: Loaded when I read .agents/prune-trials.yml. It told me to check open trials for overlap, and there is none.; Spec counts-not-tallied-recluster r1: Loaded mid-task. Supports the owner's choice to add no prose, which confirmed the no-instruction-change requirement.; Spec counts-not-tallied-recluster r2: Loaded when I read the ledger or Skill files. It supports the 'don't add prose first' reasoning behind option 1."
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: "build claude-md-glossary-import-and-dispatch-trigger: Loaded when I touched CLAUDE.md.; Spec blog-post-step9-and-claims r1: Loaded with the files I read. It confirmed that summary rules in .claude/rules/ are what sessions load, which backs the #2425 clause.; Spec counts-not-tallied-recluster r2: Loaded mid-review. It is about where instructions are placed, and this diff changes no instructions."
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: "build gate-stale-tree-warning: Loaded after the first git and gate.ts reads. It covers ADR wording and did not apply here."
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "triage #2439: Loaded on reading hook files; pointed me to the guards roster, which I checked; build read-first-hint-issue-writes: Loaded when I read the hook files; it points to guards.md, which I edited."
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: "triage #2415: Loaded by a file read. It was not relevant to this task."
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: "build counts-not-tallied-recluster: Loaded when I worked in layers/journal; I did not read the journal GLOSSARY."
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: "Loaded when I grepped for the owner-decisions file; payload caching had nothing to do with this run; build visitor-loop-no-feeds: Loaded with the Skill-file edit; not relevant to a docs line.; Spec visitor-loop-no-feeds r1: Loaded after the issue read, probably because the issue mentions routing. It's unrelated to this diff."
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "#2137 frictions-to-fixes review"
+    durationSec: 871
+    toolCalls: 64
+    modelCalls: 63
+    tokenShare: 12.1
+  - type: workflow-subagent
+    task: Spec visitor-loop-no-feeds r1
+    model: claude-opus-5-5
+    durationSec: 22
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 0.4
+  - type: workflow-subagent
+    task: Spec counts-not-tallied-recluster r1
+    model: claude-opus-5-5
+    durationSec: 83
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 1
+  - type: workflow-subagent
+    task: fix counts-not-tallied-recluster r1
+    model: claude-sonnet-5-5
+    durationSec: 244
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: Standards gate-stale-tree-warning r1
+    model: claude-opus-5-5
+    durationSec: 59
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: fix survey-brief-closed-issue-check r1
+    model: claude-sonnet-5-5
+    durationSec: 175
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: Standards counts-not-tallied-recluster r1
+    model: claude-opus-5-5
+    durationSec: 66
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Spec gate-stale-tree-warning r1
+    model: claude-opus-5-5
+    durationSec: 52
+    toolCalls: 9
+    modelCalls: 5
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: Standards counts-not-tallied-recluster r2
+    model: claude-opus-5-5
+    durationSec: 49
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: build blog-post-step9-and-claims
+    model: claude-sonnet-5-5
+    durationSec: 185
+    toolCalls: 13
+    modelCalls: 11
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: build gate-stale-tree-warning
+    model: claude-sonnet-5-5
+    durationSec: 516
+    toolCalls: 17
+    modelCalls: 11
+    tokenShare: 2
+  - type: workflow-subagent
+    task: Standards visitor-loop-no-feeds r1
+    model: claude-opus-5-5
+    durationSec: 24
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: build survey-brief-closed-issue-check
+    model: claude-sonnet-5-5
+    durationSec: 354
+    toolCalls: 22
+    modelCalls: 19
+    tokenShare: 2.4
+  - type: workflow-subagent
+    task: Spec counts-not-tallied-recluster r2
+    model: claude-opus-5-5
+    durationSec: 48
+    toolCalls: 9
+    modelCalls: 4
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: fix counts-not-tallied-recluster r2
+    model: claude-sonnet-5-5
+    durationSec: 226
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: Standards survey-brief-closed-issue-check r2
+    model: claude-opus-5-5
+    durationSec: 33
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: build log-session-closure-warning
+    model: claude-sonnet-5-5
+    durationSec: 744
+    toolCalls: 37
+    modelCalls: 25
+    tokenShare: 3.4
+  - type: workflow-subagent
+    task: Standards blog-post-step9-and-claims r1
+    model: claude-opus-5-5
+    durationSec: 31
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 0.4
+  - type: workflow-subagent
+    task: Spec survey-brief-closed-issue-check r1
+    model: claude-opus-5-5
+    durationSec: 51
+    toolCalls: 8
+    modelCalls: 4
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: Spec log-session-closure-warning r1
+    model: claude-opus-5-5
+    durationSec: 41
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: Standards log-session-closure-warning r2
+    model: claude-opus-5-5
+    durationSec: 35
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.4
+  - type: workflow-subagent
+    task: Spec blog-post-step9-and-claims r1
+    model: claude-opus-5-5
+    durationSec: 37
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: Standards counts-not-tallied-recluster r3
+    model: claude-opus-5-5
+    durationSec: 43
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: Spec survey-brief-closed-issue-check r2
+    model: claude-opus-5-5
+    durationSec: 43
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: build visitor-loop-no-feeds
+    model: claude-sonnet-5-5
+    durationSec: 181
+    toolCalls: 15
+    modelCalls: 12
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: Spec log-session-closure-warning r2
+    model: claude-opus-5-5
+    durationSec: 53
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: build counts-not-tallied-recluster
+    model: claude-sonnet-5-5
+    durationSec: 526
+    toolCalls: 16
+    modelCalls: 13
+    tokenShare: 2
+  - type: workflow-subagent
+    task: Spec counts-not-tallied-recluster r3
+    model: claude-opus-5-5
+    durationSec: 45
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: Standards survey-brief-closed-issue-check r1
+    model: claude-opus-5-5
+    durationSec: 50
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: Standards log-session-closure-warning r1
+    model: claude-opus-5-5
+    durationSec: 41
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: fix log-session-closure-warning r1
+    model: claude-sonnet-5-5
+    durationSec: 287
+    toolCalls: 13
+    modelCalls: 11
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: "triage #2105"
+    model: claude-opus-5-5
+    durationSec: 122
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: "triage #2432"
+    model: claude-opus-5-5
+    durationSec: 29
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.4
+  - type: workflow-subagent
+    task: "triage #2425"
+    model: claude-opus-5-5
+    durationSec: 82
+    toolCalls: 12
+    modelCalls: 7
+    tokenShare: 1
+  - type: workflow-subagent
+    task: "triage #2137"
+    model: claude-opus-5-5
+    durationSec: 130
+    toolCalls: 19
+    modelCalls: 14
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: "triage #2373"
+    model: claude-opus-5-5
+    durationSec: 18
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 0.4
+  - type: workflow-subagent
+    task: "triage #2438"
+    model: claude-opus-5-5
+    durationSec: 96
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: "triage #2437"
+    model: claude-opus-5-5
+    durationSec: 137
+    toolCalls: 16
+    modelCalls: 12
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: "triage #2436"
+    model: claude-opus-5-5
+    durationSec: 138
+    toolCalls: 18
+    modelCalls: 14
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: "triage #2435"
+    model: claude-opus-5-5
+    durationSec: 74
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: "triage #2424"
+    model: claude-opus-5-5
+    durationSec: 210
+    toolCalls: 23
+    modelCalls: 17
+    tokenShare: 2.1
+  - type: workflow-subagent
+    task: "triage #2434"
+    model: claude-opus-5-5
+    durationSec: 149
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: "triage #2286"
+    model: claude-opus-5-5
+    durationSec: 134
+    toolCalls: 20
+    modelCalls: 13
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: "triage #2439"
+    model: claude-opus-5-5
+    durationSec: 122
+    toolCalls: 15
+    modelCalls: 11
+    tokenShare: 2
+  - type: workflow-subagent
+    task: "triage #2415"
+    model: claude-opus-5-5
+    durationSec: 105
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 1
+  - type: workflow-subagent
+    task: "triage #2426"
+    model: claude-opus-5-5
+    durationSec: 95
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: "triage #2370"
+    model: claude-opus-5-5
+    durationSec: 102
+    toolCalls: 16
+    modelCalls: 12
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: Spec read-first-hint-issue-writes r2
+    model: claude-opus-5-5
+    durationSec: 29
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: Standards read-first-hint-issue-writes r1
+    model: claude-opus-5-5
+    durationSec: 43
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: build read-first-hint-issue-writes
+    model: claude-sonnet-5-5
+    durationSec: 476
+    toolCalls: 22
+    modelCalls: 13
+    tokenShare: 2.7
+  - type: workflow-subagent
+    task: Spec read-first-hint-issue-writes r1
+    model: claude-opus-5-5
+    durationSec: 52
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 1
+  - type: workflow-subagent
+    task: Standards read-first-hint-issue-writes r2
+    model: claude-opus-5-5
+    durationSec: 34
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: fix read-first-hint-issue-writes r1
+    model: claude-sonnet-5-5
+    durationSec: 271
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: fix claude-md-glossary-import-and-dispatch-trigger r2
+    model: claude-sonnet-5-5
+    durationSec: 316
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: Spec claude-md-glossary-import-and-dispatch-trigger r3
+    model: claude-opus-5-5
+    durationSec: 46
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Spec claude-md-glossary-import-and-dispatch-trigger r1
+    model: claude-opus-5-5
+    durationSec: 78
+    toolCalls: 13
+    modelCalls: 7
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: Standards claude-md-glossary-import-and-dispatch-trigger r2
+    model: claude-opus-5-5
+    durationSec: 49
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: Spec claude-md-glossary-import-and-dispatch-trigger r2
+    model: claude-opus-5-5
+    durationSec: 87
+    toolCalls: 15
+    modelCalls: 10
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: Standards claude-md-glossary-import-and-dispatch-trigger r3
+    model: claude-opus-5-5
+    durationSec: 44
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: Standards claude-md-glossary-import-and-dispatch-trigger r1
+    model: claude-opus-5-5
+    durationSec: 88
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: build claude-md-glossary-import-and-dispatch-trigger
+    model: claude-sonnet-5-5
+    durationSec: 217
+    toolCalls: 25
+    modelCalls: 18
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: fix claude-md-glossary-import-and-dispatch-trigger r1
+    model: claude-sonnet-5-5
+    durationSec: 73
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 0.5
+gitBranch: ccr-b79b92ab-ao2dsp
+entrypoint: remote_mobile
+cliVersion: 2.1.309
+landedBy: Stop

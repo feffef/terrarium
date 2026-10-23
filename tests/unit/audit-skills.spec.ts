@@ -4,6 +4,9 @@
 // the Skill.
 import { describe, expect, it } from 'vitest'
 import {
+  adrHintReport,
+  adrReadReport,
+  buildBrief,
   buildDocReadCounts,
   buildSkillRows,
   findHumanPromptedClosures,
@@ -11,6 +14,7 @@ import {
   findOrphanedSessions,
   groupSessionReferences,
   hasHumanPromptedClosure,
+  issuesNamingSkill,
   HUMAN_PROMPTED_CLOSURE,
   isSessionLogPath,
   lastUsed,
@@ -19,8 +23,11 @@ import {
   parseMergedPullRequests,
   parseSessionTrailers,
   pickBehaviourChecks,
+  pickRoutineRuns,
   pickSkillChanges,
   pickWindow,
+  skillQuery,
+  startedWindow,
   pullRequestSessionRef,
   REC,
   RESCUED_GAP_HOURS,
@@ -53,6 +60,10 @@ function sess(over: Partial<Session> = {}): Session {
     humanInvoked: [],
     humanPromptedClosure: false,
     docsRead: [],
+    docsReadBySubagents: [],
+    filesEdited: [],
+    adrHints: [],
+    trigger: null,
     ...over,
   }
 }
@@ -200,6 +211,22 @@ describe('pickBehaviourChecks()', () => {
   })
 })
 
+describe('pickRoutineRuns()', () => {
+  it('groups Routine-fired sessions by Routine, sorted by name, and skips the rest', () => {
+    const sessions = [
+      sess({ session: 'd2', trigger: 'digest' }),
+      sess({ session: 'a1', trigger: 'audit-skills' }),
+      sess({ session: 'i1' }),
+      sess({ session: 'd1', trigger: 'digest' }),
+    ]
+    const at = { session: expect.any(String), startedAt: '2026-07-05T09:00:00Z', durationSeconds: 3600 }
+    expect(pickRoutineRuns(sessions)).toEqual([
+      { routine: 'audit-skills', runs: [{ ...at, session: 'a1' }] },
+      { routine: 'digest', runs: [{ ...at, session: 'd2' }, { ...at, session: 'd1' }] },
+    ])
+  })
+})
+
 describe('buildDocReadCounts()', () => {
   it('counts sessions per path, descending, and never a doc twice for one session', () => {
     const sessions = [
@@ -236,6 +263,10 @@ describe('toSession() — external exclusion (ADR-0009)', () => {
       humanInvoked: [],
       humanPromptedClosure: true,
       docsRead: ['CLAUDE.md'],
+      docsReadBySubagents: [],
+      filesEdited: [],
+      adrHints: [],
+      trigger: null,
     })
   })
 
@@ -255,6 +286,12 @@ describe('toSession() — external exclusion (ADR-0009)', () => {
     const s = toSession(raw, 'f.yml', names)!
     expect(s.mentioned.sort()).toEqual(['code-review', 'grill-with-docs', 'tdd'])
     expect(s.humanInvoked).toEqual(['grill-with-docs', 'tdd'])
+  })
+
+  it('names the Routine only for a Routine-fired log (entrypoint remote_trigger)', () => {
+    const fired = { session: 's', endedAt: '2026-07-20T00:00:00Z', entrypoint: 'remote_trigger', trigger: 'digest' }
+    expect(toSession(fired, 'f.yml', skillNames)?.trigger).toBe('digest')
+    expect(toSession({ ...fired, entrypoint: 'cli' }, 'f.yml', skillNames)?.trigger).toBeNull()
   })
 
   it('tolerates a log with no docsRead at all (older logs predate the field)', () => {
@@ -858,5 +895,126 @@ describe('findManuallyRescuedClosures()', () => {
     const sessions = [sess({ session: 's', endedAt: '2026-07-13T02:00:00Z' })] // 2h gap
     expect(findManuallyRescuedClosures(refs, sessions, RESCUED_GAP_HOURS)).toEqual([]) // below default 6h
     expect(findManuallyRescuedClosures(refs, sessions, 1)).toHaveLength(1) // above a 1h threshold
+  })
+})
+
+describe('buildBrief()', () => {
+  const win = (session: string, startedAt: string, skillsUsed: string[] = []) => ({
+    session,
+    file: `${session}.yml`,
+    kind: 'autonomous',
+    goal: `goal of ${session}`,
+    startedAt,
+    endedAt: startedAt,
+    skillsUsed,
+  })
+  const row = (over: Partial<SkillRow> = {}): SkillRow => ({
+    name: 'demo',
+    onDisk: true,
+    inventoried: true,
+    external: false,
+    modelInvoked: false,
+    category: null,
+    importance: null,
+    role: null,
+    observations: [],
+    description: null,
+    useCount: 0,
+    usedIn: [],
+    mentionedIn: [],
+    humanInvokedIn: [],
+    allTimeUses: 0,
+    lastUsed: null,
+    changes: [],
+    ...over,
+  })
+
+  it('lists the newest runs first, capped, with their log files', () => {
+    const w = Array.from({ length: 12 }, (_, i) => win(`s${i}`, `2026-10-${String(i + 1).padStart(2, '0')}T00:00:00Z`, ['demo']))
+    const out = buildBrief(row({ usedIn: w.map((x) => x.session) }), w)
+    const runs = out.split('\n').filter((l) => l.startsWith('- s'))
+    expect(runs).toHaveLength(10)
+    expect(runs[0]).toContain('s11 ·')
+    expect(runs[0]).toContain('s11.yml')
+    expect(out).not.toContain('Sessions that did not use it')
+  })
+
+  it('gives a model-invoked Skill the sessions that did not use it, and names each landing', () => {
+    const w = [win('a', '2026-10-02T00:00:00Z', ['demo']), win('b', '2026-10-01T00:00:00Z', ['other'])]
+    const out = buildBrief(
+      row({ modelInvoked: true, usedIn: ['a'], changes: [{ sha: 'abc123', landedAt: '2026-10-03T00:00:00Z', paths: ['x'] }], observations: [{ date: '2026-10-01', note: 'one\n  two' }] }),
+      w,
+    )
+    expect(out).toContain('b · 2026-10-01T00:00:00Z · b.yml · goal: goal of b · skillsUsed: other')
+    expect(out).toContain('abc123 · 2026-10-03T00:00:00Z · x')
+    expect(out).toContain('- 2026-10-01: one two')
+  })
+})
+
+describe('one-Skill query', () => {
+  const adr = (n: string) => `docs/adr/${n}.md`
+  it('windows by start time, boundary inclusive', () => {
+    const a = sess({ session: 'a', startedAt: '2026-10-19T09:55:49Z', endedAt: '2026-10-20T00:00:00Z' })
+    const b = sess({ session: 'b', startedAt: '2026-10-19T09:55:48Z', endedAt: '2026-10-21T00:00:00Z' })
+    expect(startedWindow([a, b], '2026-10-19T09:55:49Z').map((s) => s.session)).toEqual(['a'])
+  })
+  it('groups used and unused by kind, keeping main-agent ADR reads apart from subagent ones', () => {
+    const sessions = [
+      sess({ session: 'u1', kind: 'interactive', skillsUsed: ['x'], docsRead: [adr('0001'), adr('0002'), 'docs/agents/a.md'], docsReadBySubagents: [adr('0002')] }),
+      sess({ session: 'n1', kind: 'routine' }),
+      sess({ session: 'n2', kind: 'interactive', docsRead: [adr('0003')] }),
+    ]
+    const q = skillQuery(sessions, 'x')
+    expect(q.used).toEqual({ interactive: [{ session: 'u1', adrsRead: [adr('0001')], adrsReadBySubagents: [adr('0002')] }] })
+    expect(Object.keys(q.notUsed).sort()).toEqual(['interactive', 'routine'])
+    expect(q.notUsed.interactive).toEqual([{ session: 'n2', adrsRead: [adr('0003')], adrsReadBySubagents: [] }])
+  })
+  it('matches open issues by whole-token Skill name in title or body, skipping PRs', () => {
+    const r = (number: number, title: string, body: string | null, extra = {}) => ({ number, title, body, labels: [], updated_at: '2026-10-01T00:00:00Z', ...extra })
+    const got = issuesNamingSkill(
+      [r(1, 'tdd is slow', null), r(2, 'other', 'see `tdd`'), r(3, 'other', 'tdd-ish'), r(4, 'tdd', '', { pull_request: {} })],
+      'tdd',
+    )
+    expect(got.map((i) => i.number)).toEqual([1, 2])
+  })
+})
+
+describe('governing-ADR reads', () => {
+  const rule = (paths: string[]) => `---\nadr: x\npaths:\n${paths.map((p) => `  - "${p}"`).join('\n')}\n---\nbody\n`
+  const rules = [
+    { file: 'adr-0004.md', text: '---\nadr: x\n---\nloads at session start\n' },
+    { file: 'adr-0004-human-merge.md', text: rule(['scripts/hooks/**']) },
+    { file: 'adr-0021.md', text: rule(['GLOSSARY.md', 'layers/*/GLOSSARY.md']) },
+    { file: 'adr-0029.md', text: rule(['.claude/rules/**', 'scripts/hooks/**']) },
+    { file: 'guards.md', text: rule(['scripts/hooks/**']) },
+  ]
+  const adr = (n: string) => `docs/adr/${n}-x.md`
+
+  it('counts each session-ADR pair a rule path governs, and which were read in full by the session or a subagent', () => {
+    const sessions = [
+      sess({ session: 'a', kind: 'interactive', filesEdited: ['scripts/hooks/x.ts', 'GLOSSARY.md'], docsRead: [adr('0004'), adr('0021')], docsReadBySubagents: [adr('0021')] }),
+      sess({ session: 'b', kind: 'autonomous', filesEdited: ['layers/atlas/GLOSSARY.md'], docsRead: ['docs/adr/0021'] }),
+      sess({ session: 'c', kind: 'autonomous', filesEdited: ['scripts/hooks/y.ts'], docsRead: [adr('0029'), adr('0004')] }),
+      sess({ session: 'd', kind: 'autonomous', filesEdited: ['README.md'], docsRead: [adr('0004')] }),
+    ]
+    expect(adrReadReport(sessions, rules)).toEqual({
+      all: { sessions: 4, governed: 3, pairs: 6, readInFull: 4, readInFullPct: 67, readAll: 1, readNone: 1 },
+      interactive: { sessions: 1, governed: 1, pairs: 3, readInFull: 2, readInFullPct: 67, readAll: 0, readNone: 0 },
+      autonomous: { sessions: 3, governed: 2, pairs: 3, readInFull: 2, readInFullPct: 67, readAll: 1, readNone: 1 },
+    })
+  })
+
+  it('counts hinted contexts per ADR and via, main and subagents apart, and the share read after', () => {
+    const hint = (adr: number, readAfter: boolean, by: 'main' | 'subagent' = 'main', via: 'path' | 'text' = 'path') => ({ adr, via, readAfter, by })
+    const sessions = [sess({ adrHints: [hint(4, true), hint(4, false, 'subagent'), hint(4, false, 'main', 'text'), hint(21, false)] }), sess({ adrHints: [hint(4, true)] })]
+    expect(adrHintReport(sessions)).toEqual({
+      'ADR-0004 path': { contextsHinted: 3, readAfter: 2, readAfterPct: 67 },
+      'ADR-0004 text': { contextsHinted: 1, readAfter: 0, readAfterPct: 0 },
+      'ADR-0021 path': { contextsHinted: 1, readAfter: 0, readAfterPct: 0 },
+    })
+  })
+
+  it('reports no percentage when nothing is governed', () => {
+    expect(adrReadReport([sess()], rules).all).toEqual({ sessions: 1, governed: 0, pairs: 0, readInFull: 0, readInFullPct: null, readAll: 0, readNone: 0 })
   })
 })

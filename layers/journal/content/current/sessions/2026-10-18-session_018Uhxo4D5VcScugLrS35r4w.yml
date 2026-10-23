@@ -1,0 +1,199 @@
+schemaVersion: 1
+session: session_018Uhxo4D5VcScugLrS35r4w
+startedAt: 2026-10-18T22:27:36Z
+endedAt: 2026-10-18T23:46:56Z
+kind: interactive
+goal: Add a 3–17 October period to the Journal History page
+status: completed
+outcome: "Period merged in PR #2259; table rows link to their sections via PR #2260, also merged"
+summary: "Human-instructed: the owner asked for a new History period after reading the current page, an Explore agent over the daily digests since 2 Oct (sessions, issues, PRs), and later a second agent collecting the best blog posts. Over clarifying questions the owner chose an end date of 17 Oct, a full refresh of the page framing, and an agent-proposed angle. After my outline (centred on agents merging their own work) the owner reframed it: the focus was simplifying the rules (CLAUDE.md and the ADRs), in size and in plain language, while making sure things still work, with less human review as a second goal. I rewrote the section around that. Agent-initiated: correcting the \"owner returns\" row from 52% to 56% (that row had counted only autonomous sessions), and noting that the 8 Oct ruleset bypass covers every agent session. Stats were recomputed from the session logs with the method that reproduces the earlier rows. The two code-review axes (Standards; Spec as a full fact-check) found nine overstated or slightly wrong claims (dates, ADR word counts, which guard was deleted, \"nine in ten\"), all fixed before the first push. I kept the PR unmerged for the owner to read. Human-instructed follow-ups: cut the section to the length of the others (775 to about 450 words), frame Glass Box as a test of the new rules on a mostly autonomous build, and explain the Friction Ledger and Routine costs (about $320 for 51 runs in 11-17 Oct, computed from the routines collection) with links to their pages. The owner merged the PR. Then, at the owner's ask, PR #2260 links each period name in the table to its section anchor (ids read from the built content database, checked in a dev build with Playwright)."
+prs:
+  - "2259"
+  - "2260"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session start; pointed to the Journal glossary
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Rule, Gate, Human-only and retired terms used in the new prose
+    useful: yes
+  - path: layers/journal/GLOSSARY.md
+    reason: Digest and what the Journal pages are
+    useful: partly
+  - path: layers/journal/content/current/pages/history.md
+    reason: the page being extended; tone, table, link form
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch-first and three-dot diff before review; read after my first git log
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, verdict line, who merges
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP for writes in the cloud
+    useful: partly
+  - path: .agents/skills/close-session/SKILL.md
+    reason: Spec subagent grepped it to confirm sessions re-read CLAUDE.md at closure
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: Spec subagent and I grepped it to confirm the per-run concision family and plain-word lens
+    useful: yes
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: blog and standards subagents checked the ruleset bypass covers every agent session
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec (fact-check) axes before the first push
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: author this log
+frictions:
+  - description: Ran git log to draw conclusions about how earlier periods were added before reading docs/agents/git-conventions.md, as CLAUDE.md requires
+    solution: Read git-conventions.md at the first git log; the hook reminder did fire right after
+    severity: nit
+  - description: "First draft stated a few things as fact without checking them: Dependabot auto-merge (still only a Proposal), one wrong date, ADR word counts, which July guard was deleted"
+    solution: Check each claim drawn from a subagent or blog post against git before writing it; the Spec fact-check caught them all before the push
+    severity: minor
+  - description: My first outline guessed the period's focus (merge handover); the owner had to reframe it twice (rule simplification, then language and less review)
+    solution: Ask what the owner saw as the period's focus before proposing, as the user preference asks
+    severity: minor
+  - description: Stop hook asked twice to push before the review had finished, against ADR-0004's review-before-first-push
+    solution: The Stop hook could skip its push nudge while a review subagent is running
+    severity: nit
+  - description: The published 'owner returns' row used a different agent-initiated definition (autonomous only) from every other row, unnoticed for two weeks
+    solution: Put the History stats method in one script the page cites, so each period is computed the same way
+    severity: minor
+  - description: First draft of the period was 775 words, far longer than the 300-440 of the other periods; the owner had to point it out
+    solution: Measure the sibling sections' length before writing a new one and aim for the same
+    severity: minor
+  - description: Read 'link the concepts' as 'link the pages'; it took two more owner prompts to land on explaining both concepts with links
+    solution: Ask one clarifying question when a short instruction has two readings
+    severity: minor
+  - description: Typed the review verdict's head SHA from memory and got its tail wrong; merge-pr.ts refused the merge until the comment was corrected
+    solution: Paste the SHA from git rev-parse HEAD into the verdict rather than retyping it; the script's exact-SHA check worked as designed
+    severity: nit
+durationSec: 4760
+models:
+  claude-opus-5-5: 236
+toolCounts:
+  Bash: 80
+  Agent: 5
+  AskUserQuestion: 2
+  ReadNotifications: 15
+  Skill: 3
+  ToolSearch: 3
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 4
+  mcp__claude-code-remote__send_later: 1
+  Edit: 2
+  mcp__github__update_pull_request: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  Read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__update_issue_comment: 1
+filesEdited:
+  - layers/journal/content/current/pages/history.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0026.md
+docsReadBySubagents:
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push and hold the push; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open and keep the log out of the branch; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Made me open the PR right after the push and subscribe to it; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the session header for the PR body and the commit-trailer check; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on GLOSSARY-MAP; no glossary change in this task
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Confirmed the History page is derived prose over session logs, which stay untouched; summary enough
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded with history.md; the page has no diagram
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by a git log over ADR files; history.md is not Human-only; subagents also said no
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Context for describing prune trials in the new period; no trial text changed
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Confirmed how Rules load, which fixed my 'loads only with files' claim; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Context for the ADR-rewrite paragraph; no ADR edited
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded reading the Glass Box manifest for its route; not relevant
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded reading layers/; the change is plain Markdown
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded reading layers/; no layer code touched
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by greps of Skill files for facts; no Skill changed
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded by greps of Skill files; no Inventory change
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Subagents loaded it reading blog posts; they reported it irrelevant
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Spec subagent loaded it via package.json; partly useful as Gate context
+    useful: partly
+subagents:
+  - type: Explore
+    task: Research Oct 2-17 platform history
+  - type: Explore
+    task: Collect notable Oct blog posts
+  - type: general-purpose
+    task: Standards review of history page
+  - type: general-purpose
+    task: Spec and fact review of history
+  - type: general-purpose
+    task: Review anchor-link diff
+gitBranch: ccr-e7674e08-6hkaj2
+entrypoint: remote_mobile
+cliVersion: 2.1.302
+ideas:
+  - Add scripts/journal/history-stats.ts that prints the History table row (sessions per week, agent-initiated, frictions per session) and the header totals for any date range, and have validate:content check that the page's table matches it, so a period row can't drift from the method again
+landedBy: Stop

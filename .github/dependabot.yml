@@ -1,6 +1,6 @@
 # Dependabot version updates. ADR-0004 lets agents merge minor/patch bumps
-# and keeps major bumps for a human; until #1889 lands, `package.json` being
-# Human-only means a human merges them all.
+# and keeps major bumps for a human: the `dependabot-sweep` Skill reviews each
+# PR, and `merge-pr.ts` merges only a plain minor/patch bump.
 version: 2
 updates:
   - package-ecosystem: npm

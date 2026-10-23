@@ -1,0 +1,197 @@
+schemaVersion: 1
+session: session_01T4UbBvJmjSunCwb3cUN68Q
+startedAt: 2026-10-22T00:16:03Z
+endedAt: 2026-10-22T05:33:05Z
+kind: autonomous
+goal: Write the 2026-10-21 Journal Digest
+status: completed
+outcome: "PR #2394 merged by a human: Digest, retention sweep and a one-line test repoint"
+summary: "Scheduled /digest run (agent-initiated by the schedule; no human instruction in-session). Wrote the 2026-10-21 Digest from gather output, fact-checked it with a subagent (4 claims fixed), ran Standards and Spec review, then the retention sweep. The sweep archived a session log that tests/unit/log-session.spec.ts reads by its current path, so the gate failed; I repointed that one test line, re-ran the gate green and pushed. Because that test file is outside the Digest skill's allowed diff, I did not self-merge; a human merged PR #2394 after a green gate."
+prs:
+  - "2394"
+docsRead:
+  - path: GLOSSARY.md
+    reason: read only in a truncated cat; no term needed
+    useful: no
+  - path: docs/agents/git-conventions.md
+    reason: first 60 lines read after my first commands
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: scheduled-run close steps and review-before-push rule
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before creating the PR; nothing new needed
+    useful: partly
+  - path: .agents/skills/digest/SKILL.md
+    reason: the Skill I ran; the subagents also used it as spec and format source
+    useful: yes
+  - path: layers/journal/GLOSSARY.md
+    reason: Standards subagent only; confirmed the Digest term
+    useful: partly
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: Spec subagent only; checked written-once and move rules
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: log format
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: session-start read in a truncated cat; no term needed
+    useful: no
+  - path: layers/journal/content/current/pages/digests/2026-10-21.md
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Archive sweep moved a session log that a unit test reads by its current path, so the gate failed; the Skill's allowed diff cannot include the fix.
+    solution: Make the test not depend on a log that ages out (fixture copy), or have the sweep skip it.
+    severity: moderate
+  - description: Read GLOSSARY-MAP, GLOSSARY and two docs in one cat that truncated at 30KB; never read the rest of GLOSSARY or the full git-conventions.
+    solution: Read each required doc with its own Read call.
+    severity: minor
+  - description: Ran the first gate:scoped in the same command as git commit --amend, against git-conventions.
+    solution: Commit first, then start the gate alone.
+    severity: nit
+  - description: Stop hook asked to push three times while review and gate were still running, against ADR-0004 order.
+    solution: Make the hook skip when a gate or review is pending.
+    severity: nit
+durationSec: 19022
+models:
+  claude-sonnet-5-5: 73
+toolCounts:
+  Bash: 20
+  Write: 1
+  Agent: 3
+  ReadNotifications: 5
+  Edit: 3
+  Skill: 2
+  Read: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  PushNotification: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-10-21.md
+  - tests/unit/log-session.spec.ts
+  - layers/journal/content/archived/pages/digests/2026-10-14.md
+  - layers/journal/content/archived/sessions/2026-10-14-session_011JKK8rrCwea3xSmL4kw6si.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_015dUGRadEQP1bvv6KytKLXT.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01675UWGBfCMALkurUr58cxM.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_018wtKTCgkvJwgb3gS8o8JKA.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01ATdHzhyNozsTLHHtJGbLsa.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01AdUi9nKLGKyPFfBe4HYvqG.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01AvdPELZeDaDwyikp4dxVZG.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01BdQnbVQmdfrD1PPyZTnL9w.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01BpePUUjkw8MVBXM2oiDnsj.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01CJix3AqBpX5KrAENqNp1M7.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01D2JnZT1y8zCvC9GJc27pZp.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01Dcufz27EyPsKy6sYafpKRg.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01Dfw9sJon2e4UsaVoiCLhSJ.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01ERZa4fUGxpF81MeLhZMkSB.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01G6m9SbDppX4TE87Mp3m5Dk.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01JYFKBPoDVHJanBhFhmw1kR.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01JkzKjuQD4wH34MjxMjKHaX.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01M9Ryb84DYs5HxKy2Z3cpA2.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01NVG22rfEsjhW9zkcCco6W8.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01Nh8fwUMyekCqCTFjgVzv5Z.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01Qp5NojwQhExSmToPJtnQNV.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01R8ZgGod9KTmxwvnDyB4PQY.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01RAEu4CBfQptjCtKnJpUw8q.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01RBVYHX1FsYogHEgzgyRV6P.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01RJh5bK46AQRRtwagmz8GjU.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01TFojzwXEByz1nbqt3wcKNL.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01U6EF8qk4ANQLqE5KXmJgEY.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01VkVtDd4YKNa2KYRyRo8Uvy.yml
+  - layers/journal/content/archived/sessions/2026-10-14-session_01XJ9iR9EbRT2iV7afhytND8.yml
+  - layers/journal/content/current/pages/digests/2026-10-14.md
+rulesLoaded:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - .agents/skills/digest/SKILL.md
+  - layers/journal/GLOSSARY.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run code-review and gate:scoped before the first push; summary was enough, skipped the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main via close-session; summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and subscribe; this run's diff left scope so I did not self-merge; summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body needed the session header line; summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Confirmed a Digest lands by gated PR and is never rewritten; ADR not opened, summary enough; the Standards and Spec subagents agreed
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split rule; no glossary change here
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; no instruction text changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Where instructions live; no instruction edits
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on a journal read; no diagram involved
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as code; I ran a Skill but changed none
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Only a subagent loaded it; not relevant to the diff
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Only a subagent loaded it; the test edit is not a Human-only file
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Only a subagent loaded it; not relevant
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Fact-check 2026-10-21 Digest
+    model: sonnet
+    durationSec: 56
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 10.6
+  - type: general-purpose
+    task: Standards review of digest diff
+    model: sonnet
+    durationSec: 24
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 4.1
+  - type: general-purpose
+    task: Spec review of digest diff
+    model: sonnet
+    durationSec: 25
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 4.8
+gitBranch: claude/compassionate-lovelace-fr6s7k
+entrypoint: remote_trigger
+cliVersion: 2.1.307
+trigger: digest
+landedBy: Stop

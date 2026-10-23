@@ -102,3 +102,37 @@ observations:
       Human-only paths from the diff, not from build agents) but
       `gatePassed` itself still relies on self-report per the workflow's
       schema. No new finding. Grade unchanged (specialist).
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 2 sessions freshly
+      end-to-end audited: session_01TJH95qkztCQJ8PF6G6pvqs (PRs
+      #2240-#2246, all verified merged with gate-then-verdict-then-merge
+      ordering intact) and session_01JygBaHorymh1xgVBsaTh3E (PRs
+      #2215-#2217, including a correct human-merge deferral for a
+      Human-only path). Other 8 usedInLogs sessions reconfirmed clean via
+      a 2-week revert/regression sweep - no regression of prior fixes
+      found. Known historical failures (#1840 unreviewed self-merge, a
+      skipped explore pass) stay fixed. No new silent failure. Grade/role
+      unchanged (specialist).
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): issue #2232's fix (PR #2240,
+      cut the hook/guard-wiring exclusion from §1) CONFIRMED HOLDING on its
+      first real test — the next 16-issue sweep
+      (session_01BTtvaFQckiQwtGZsasWPJH) correctly auto-included a hook-wiring
+      issue (#2233) with no owner intervention, unlike every prior occurrence.
+      9 PRs and 2 issues cross-checked live, no reverts in the 2-week sweep.
+      One near-miss, not a failure: a run forgot to relabel 2 owner-approved
+      issues ready-for-agent before building, caught by merge-pr.ts's own guard
+      before any bad merge. Grade/role unchanged (specialist).
+  - date: "2026-10-21"
+    note: >-
+      Self-check, all 39 PRs across the 10 newest runs verified real and
+      merged via a live list_pull_requests cross-check. Human-only PRs
+      (#2272, #2120) confirmed merged_by the repo owner, not the agent -
+      ADR-0004's human-merge rule held in practice. Gate-to-verdict-to-merge
+      ordering independently verified on PR #2240 (not a rubber stamp). A
+      "reversed" PR described in session_012f7o6FcYxq1MWxvsdgKS6m's log was
+      an ordinary same-day follow-up PR (#2321), not a git revert - both
+      stand merged. No reverts in the 2-week sweep. Grade/role unchanged
+      (specialist).

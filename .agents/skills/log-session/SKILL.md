@@ -6,7 +6,8 @@ description: Create **or update** this session's log entry — the authored half
 Record one honest **session log** for this Claude session. You write only the
 **interpretive** half: goal, outcome, summary, and every friction. A committed
 hook derives the **mechanical** half (timings, models, tool counts, files read
-and edited, subagents, branch) from the transcript, so **do not write it**. You
+and edited, subagents, branch) from the transcript and your own commits, so
+**do not write it**. You
 write a scratch file; the hook stitches the two and commits to `main`, live on
 the `Stop` hook at the end of the turn you invoke this Skill in, not at session
 teardown. `SessionEnd` is only a fallback for a session `Stop` never fired for
@@ -34,11 +35,10 @@ broken external dependency) that could still let the goal resume later;
 `abandoned` — deliberately dropped, with no intent to resume this goal. Pick
 whichever actually describes what happened.
 
-Re-invoking is cheap and safe: authoring merges with what you authored earlier
-this session — lists (`frictions`, `prs`, …) union, prose takes your latest
-wording — and the next live `Stop` (or, failing that, a `SessionEnd`/resume
-fallback) lands the merged result. So if you call closure and then more work
-happens, just **invoke again**.
+Re-invoking is safe: lists (`frictions`, `prs`, …) union with what you authored
+earlier this session, prose takes your latest wording, and the next live `Stop`
+(or, failing that, the `SessionEnd`/resume fallback) lands the result. If more
+work happens after closure, **invoke again**.
 
 **"Latest wording" means replace, not append.** On a re-invoke, write `summary`, `goal` and `outcome` whole and current, never a short delta or placeholder: `summary: "just fixed the CI flake"` becomes the **entire summary**.
 
@@ -83,9 +83,25 @@ ideas:                             # OPTIONAL — omit unless something sparked
   - Auto-cluster recurring `ideas` entries into GitHub issues weekly, so an idea doesn't die in a YAML file no one re-reads
 ```
 
-- **`kind` is judged by who prompted, not by what the session did.** Classify it
-  against `GLOSSARY.md` → **Session** (which also says what does *not* count as
-  a human prompt), not from memory.
+- **`kind` is judged by who prompted, not by what the session did:**
+  **interactive** (a human prompted again after kickoff), **delegated** (one
+  human prompt, the kickoff) or **autonomous** (none: a schedule or another
+  Session started it). Machinery prompts (a scheduled check-in, a webhook
+  event, a hook reminder) are not human prompts. Kind grants no authority:
+  what a Session may merge doesn't vary by kind.
+- **Grade a friction's `severity` by what this instance cost,** not by how
+  notorious its failure class is; recurrence is counted in the Friction Ledger,
+  not by inflating severity. A mistake caught before landing (self-review, a
+  guard working as designed) stays `nit` or `minor`. A few named frictions
+  have a fixed grade, stated where they are used.
+  - `nit`: an annoyance with no real cost.
+  - `minor`: a contained papercut (extra steps, a few tokens) that didn't
+    change the outcome.
+  - `moderate`: cost real time or tokens, or forced a workaround, but the goal
+    was reached.
+  - `major`: derailed part of the session (a wrong turn undone, a redo) or
+    degraded the outcome.
+  - `blocker`: the goal couldn't proceed without a workaround or human help.
 - **`learnings`/`ideas` are optional: add one only when the session genuinely
   produced it.** `GLOSSARY.md` → **Session** and **Idea** define them; don't restate them here.
   - `learnings` — a fact you read from a file is a `docsRead` entry, not a
@@ -97,14 +113,14 @@ ideas:                             # OPTIONAL — omit unless something sparked
     welcome; "someone should look into X" is too vague.
 
 - **Don't set `external`.** That optional boolean marks a log from a *different*
-  harness (an outside contributor's own agent); absent means internal
-  (`GLOSSARY.md` → **Session**), and ADR-0009 says what it changes for mining.
-- `docsRead`/`skillsUsed` are your **curated** picks (the ones worth a `reason`).
-  A `docsRead` `reason` says briefly what the doc told you; `useful` says
-  whether that helped your task. Step 3 says what a `ruleVerdicts` entry says. You don't have to list
-  everything you touched — the extractor folds observed reads in. A read you
-  cite keeps your `reason`; the rest get `(read before editing)` if you also
-  edited that path, otherwise `(no reason given)`.
+  harness (an outside contributor's own agent); absent means internal, and
+  ADR-0009 says what it changes for mining.
+- `docsRead`/`skillsUsed` are your **curated** picks (worth a `reason`); you need
+  not list everything you touched, since the extractor folds observed reads in.
+  A cited read keeps your `reason`; the rest get `(read before editing)` if you
+  also edited that path, otherwise `(no reason given)`. A `docsRead` `reason`
+  says briefly what the doc told you; `useful` says whether it helped. Step 3
+  covers `ruleVerdicts`.
 - **frictions is the point.** List *every* one — anything that felt unnecessarily
   complex, token-heavy, or repetitive. A **doc contradiction found mid-session** is
   itself a friction: record it with a `solution` pointing at the single home to fix.
@@ -140,8 +156,7 @@ pnpm exec tsx scripts/session/log-session.ts --author <path-to-authored.yml>
 ```
 
 It validates the interpretive fields and writes `.session-logs/pending.scratch.json`
-(gitignored). That's all you do — the hook described above
-takes it from here, **only if** the scratch exists, which is why authoring it *is*
+(gitignored). The hook lands it only if the scratch exists, so authoring it *is*
 your "this session is done" signal.
 
 ## 3. Answer the reads report

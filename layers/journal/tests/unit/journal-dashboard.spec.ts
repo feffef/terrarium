@@ -20,6 +20,7 @@ import {
   summaryParagraphs,
   countOf,
   ideaGrillPrompt,
+  learningDocsPrompt,
   sessionNotes,
   sessionAnchor,
   sessionDurationMin,
@@ -27,6 +28,7 @@ import {
   externalSkillCount,
   sessionWhen,
   sessionModelsLabel,
+  subagentUsageLabel,
   frictionCount,
   frictionOtherCount,
   frictionTotals,
@@ -291,6 +293,18 @@ describe('skillUrl', () => {
   })
 })
 
+describe('subagentUsageLabel', () => {
+  it('shows a whole-percent share and minutes and seconds', () => {
+    expect(subagentUsageLabel({ tokenShare: 41.6, durationSec: 192 })).toBe('42% · 3m 12s')
+    expect(subagentUsageLabel({ tokenShare: 0.8, durationSec: 45 })).toBe('<1% · 45s')
+  })
+  it('leaves out a value an older log lacks', () => {
+    expect(subagentUsageLabel({ durationSec: 60 })).toBe('1m 0s')
+    expect(subagentUsageLabel({ tokenShare: 10 })).toBe('10%')
+    expect(subagentUsageLabel({})).toBe('')
+  })
+})
+
 describe('sessionDurationLabel', () => {
   it('shows hours from 60 minutes up', () => {
     expect(sessionDurationLabel(596)).toBe('9 h 56 min')
@@ -341,7 +355,7 @@ describe('sessionCardViews', () => {
     })
     const [c] = sessionCardViews([s])
     expect(c!.model).toBe('opus-4-8 · sonnet-5')
-    expect(c!.subagents).toEqual([{ type: 'general-purpose', task: 'survey', model: 'sonnet' }])
+    expect(c!.subagents).toEqual([{ type: 'general-purpose', task: 'survey', model: 'sonnet', usage: '' }])
     expect(c!.filesEdited).toEqual(['a.ts', 'b.vue'])
     expect(c!.tools).toEqual([{ name: 'Bash', count: 9 }, { name: 'Read', count: 2 }])
   })
@@ -517,6 +531,16 @@ describe('ideaGrillPrompt', () => {
     expect(ideaGrillPrompt(idea!)).toBe(
       '/grill-with-docs to refine this idea from session session_01ABC:\n\nAuto-cluster ideas into issues',
     )
+  })
+})
+
+describe('learningDocsPrompt', () => {
+  it('tags the prompt with the session id and learning, and asks for a proposal before any edit', () => {
+    const [learning] = sessionNotes([session({ session: 'session_01ABC', learnings: ['Layer aliases resolve to the main app'] })]).learnings
+    const prompt = learningDocsPrompt(learning!)
+    expect(prompt).toContain('Session session_01ABC logged this learning:\n\nLayer aliases resolve to the main app')
+    expect(prompt).toContain('*-session_01ABC.yml')
+    expect(prompt).toContain('wait for my go-ahead')
   })
 })
 

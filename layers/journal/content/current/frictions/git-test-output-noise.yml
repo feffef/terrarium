@@ -15,3 +15,8 @@ occurrences:
     severity: nit
     description: "Test runs print noisy 'fatal: expected acknowledgments' and 'no-such-ref' git lines that look like failures."
     solution: "Silence or document these fixture-git messages in the test support."
+  - session: session_01MeatWCLdQDV2rWVNHumqX7
+    date: "2026-10-19"
+    severity: minor
+    description: "gate:scoped output is dominated by 'fatal: not a git repository' lines from tests, which briefly looked like a gate failure before the run ended."
+    solution: "Silence git stderr in the tests that run git in temp folders, or have gate.ts filter that line."

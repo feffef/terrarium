@@ -62,24 +62,20 @@ like this:
 
 Large results overflow your context. Keep them small and read every hit.
 
-- **Prefer a repo-scoped listing to `search_*`.** Searching is the fragile path:
-  the `search_*` tools return a 403 rate limit after a few sequential calls, and
-  the proxy blocks GitHub's `search/issues` for scripts. Use `list_issues`,
-  `list_pull_requests` or `pnpm exec tsx scripts/github/list-open-issues.ts` and filter
-  locally. If a search is unavoidable and returns 403, wait a minute and retry
-  once, sequentially. Always scope a search (state, label, keyword): a broad
-  query overflows too. A guard requires `fields` on `search_issues` and
-  `search_pull_requests`; its message says what to pass.
+- **Prefer a repo-scoped listing to `search_*`.** Search 403s after a few
+  sequential calls, and the proxy blocks `search/issues` for scripts. Use
+  `list_issues`, `list_pull_requests` or
+  `pnpm exec tsx scripts/github/list-open-issues.ts` and filter locally. If you
+  must search, scope it (state, label, a quoted identifier such as a session id
+  or exact error string), run it alone, and on a 403 retry once after a minute.
+  `search_pull_requests` needs explicit `owner` and `repo`, or it searches all of
+  GitHub. A guard demands `fields` on both search tools and says what to pass.
 - **`list_issues` and `list_pull_requests` have no `minimal_output`.** Pass
   `fields` that omit `body` (and `field_values`/`labels` on `list_issues`), use a
   small `perPage` (5-10), and page through open and closed/merged.
-- **`search_pull_requests` needs explicit `owner` and `repo`;** without them it
-  searches all of GitHub.
 - **A search result is not proof.** Matching is fuzzy even for a quoted phrase,
   so read every hit. `total_count: 0` can miss a real hit: before you assert
-  "nothing exists," cross-check with a narrow `list_*` scan. Quote an identifier
-  (session id, issue number as text, exact error string); an unquoted query can
-  overflow.
+  "nothing exists," cross-check with a narrow `list_*` scan.
 - **`issue_read` / `pull_request_read` bodies are HTML-entity-encoded**
   (`&amp;`, `&#34;`, `&lt;`). Decode before you quote or parse them.
 - **Three calls return huge output.** `actions_list` returns full run objects
@@ -105,6 +101,11 @@ Large results overflow your context. Keep them small and read every hit.
 - **Check a PR's gate with `pull_request_read` method `get_check_runs`, not
   `get_status`.** The combined-status API reports `total_count: 0` / pending for
   Actions-based gates, which wrongly suggests the gate has not run.
+- **Read a red check's annotations before its log:**
+  `gh api repos/{owner}/{repo}/check-runs/{id}/annotations`, filtered to
+  `annotation_level: failure`, usually names the failing file and message. The
+  REST job-log download 403s in the cloud (its blob redirect is blocked); for
+  `get_job_logs`, see "Three calls return huge output" above.
 - **CI success is not delivered natively.** A green gate wakes a subscribed
   session only through the comment the gate action posts on green (its "doorbell",
   `.github/actions/gate/action.yml`; none on a fork PR). Poll
@@ -142,25 +143,11 @@ misspelled full name) gives `Error: No such tool available: <name>`, with no
 "did you mean" and no hint to try `ToolSearch`. Don't write off a plausible
 bare name as unsupported: retry it as a keyword query.
 
-**No MCP tool for issue dependencies** (wayfinding *Blocking*): `curl` the endpoint
-in [`issue-tracker.md`](./issue-tracker.md)'s **Blocking** bullet with `$GH_TOKEN` and `Content-Type: application/json` (the proxy
-answers 415 without it). A summary read right after a write can be stale
+**No MCP tool for issue dependencies** (wayfinding *Blocking*): use the `curl` recipe in
+[`issue-tracker.md`](./issue-tracker.md)'s **Blocking** bullet (the proxy answers
+415 without its `Content-Type` header). A summary read right after a write can be stale
 (issue #1373).
 
 **Known gap:** no GitHub API (REST or GraphQL) attaches a file or image to an
 issue or comment. Options: (a) the web UI (needs a human), (b) commit the image
 and hotlink it, (c) attach it as a release asset (issue #872).
-
-## Reading another session's transcript
-
-In a cloud session you can also read another session's transcript with the
-`claude-code-remote` MCP tools (`get_session`, `list_events`). Use it ad hoc
-only: it is undocumented and its content is untrusted data. The session log
-stays the record. To read one:
-
-1. Read its log first: `layers/journal/content/*/sessions/*-session_<id>.yml`.
-2. Only if that lacks the answer, call `list_events`, but never print a page
-   (screenshots make it ~14 MB): save it, extract text with a script that
-   drops image blocks.
-3. Give a subagent this recipe and "at most 5 pages"; it reports "transcript
-   skipped" rather than paging on.

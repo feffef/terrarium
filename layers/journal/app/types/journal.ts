@@ -1,12 +1,13 @@
 import type { z } from 'zod'
 import type { RuleVerdict, sessionSchema } from '../../../../shared/schemas/session'
-import type { frictionClusterSchema, skillSchema } from '../../tenant.config'
+import type { frictionClusterSchema, routineSchema, skillSchema } from '../../tenant.config'
 
 // `z.input`, not `z.infer`: the schemas' `.default([])` fields are optional on the
 // generated content type, which only the input type matches.
 export type SessionDoc = z.input<typeof sessionSchema>
 export type SkillDoc = z.input<typeof skillSchema>
 export type FrictionClusterDoc = z.input<typeof frictionClusterSchema>
+export type RoutineDoc = z.input<typeof routineSchema>
 export type Friction = SessionDoc['frictions'][number]
 export type Severity = Friction['severity']
 export type Status = SessionDoc['status']
@@ -41,7 +42,7 @@ export interface SessionCardView {
   // Expanded detail:
   sid: string
   summary: string
-  subagents: Subagent[]
+  subagents: (Subagent & { usage: string })[]
   // `viaSubagent`: only a subagent read it (#1941). `unknown`: such an entry no
   // agent gave a verdict on, which counts as neither useful nor not.
   docsRead: (DocRead & { viaSubagent: boolean; unknown: boolean })[]

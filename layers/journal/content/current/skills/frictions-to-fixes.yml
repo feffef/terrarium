@@ -6,10 +6,9 @@ role: >-
   The consuming half of the self-improvement loop `log-session` feeds. Keeps
   the Friction Ledger (every logged friction by root cause, with the PRs that
   tried to fix it), picks up to 10 frictions, has a design agent design
-  each fix and rate its risk, files the risky ones as issues, dispatches impl
-  agents for the rest, reviews
-  and merges their gated PRs itself, and escalates only genuinely high-risk
-  changes. Reach for it when frictions pile up.
+  and risk-rate each fix, files the risky ones as issues, dispatches impl
+  agents for the rest, reviews and merges their gated PRs itself, and escalates
+  only genuinely high-risk changes. Reach for it when frictions pile up.
 observations:
   - date: 2026-09-28
     note: >-
@@ -289,3 +288,36 @@ observations:
       re-confirmed correctly tracked, not recurring undetected. No reverts
       of this Skill's ledger/fix work in the 2-week sweep. No new silent
       failure. Grade/role unchanged.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 10/10 usedInLogs sessions
+      checked; 3 newest (session_0135hcUf12mVM8dEZfDRAkUb PRs #2234-#2236,
+      session_01Sc82qSCs4NVP3igf9SaGXM PRs #2212-#2214, session_01J4ze3DvsZhXeP78iyRnbSd
+      PRs #2194/#2197-#2200/#2199) freshly end-to-end verified against
+      live GitHub (23 PRs, 18 issues, all real with correct dispositions);
+      7 others reconfirmed via prior entries plus fresh issue spot-checks.
+      Ledger data-hygiene clean - no stale `ref`/`fixedOn` fields, confirms
+      the earlier #2024 bug stayed fixed. No reverts in the 2-week sweep.
+      No new silent failure. Grade/role unchanged.
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): the Friction Ledger's
+      findings-retyped-by-hand entry (9 occurrences, fixes
+      #1699/#1768/#2060/#2205) correctly did NOT duplicate or re-fix issue
+      #2262 — #2262 was filed by a sibling Skill (audit-skills) and already
+      open when this window's frictions-to-fixes run executed, so per §2 it was
+      correctly left to the issue tracker. The real fix, PR #2269, merged via
+      clear-backlog afterward. No frictions-to-fixes run has executed since PR
+      #2269 merged, so the Ledger not yet listing it as the 5th fix is a timing
+      gap, not a miss — the next run should add "fixes: #2269" and refresh the
+      stale ref line. No reverts found. Grade/role unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check, 10/10 newest runs' fix/ledger/closing PRs and regression
+      issues verified real and merged: session_01VH74k3Z27QtjR19XNC76qm
+      (PRs #2335-2337, issues #2332-2334 resolved by #2348/#2350),
+      session_01Uq2Kx5jumw8Va6DETgxNV8 (PRs #2313-2316, issues #2310-2312
+      resolved by #2318/#2319), session_01Wv24DMMmjdNR6a23HtkZ8i (PR #2267,
+      issues #2264-2266 resolved by #2271-2273). The 10-20 observation's
+      open ledger-timing gap (fix PR #2269 not yet recorded) self-healed,
+      confirmed in PR #2313's own body. No reverts. Grade/role unchanged.

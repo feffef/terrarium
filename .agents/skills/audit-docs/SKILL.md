@@ -6,243 +6,225 @@ disable-model-invocation: true
 
 # Audit Docs
 
-Keep the repo's prose honest against the code, and plain enough to act on.
-Agents act on documented state, so a stale or muddled doc is a **behavioural**
-bug. This self-improvement Skill runs **without
-interaction**: it fact-checks each finding, fixes it, and self-merges its own
-gated PR on green.
+Agents act on what the docs say, so a stale or muddled doc is a behaviour
+bug. This run keeps the repo's prose true to the code and plain enough to act
+on. It runs without a human: reviewers find problems, checkers confirm them,
+you fix them and merge your own PR on a green gate. CLAUDE.md's "Keep it
+short" governs every edit.
 
-> **Bounded.** The self-merged PR carries only fact-checked fixes that touch no
-> human-only surface (the `paths` of `.claude/rules/adr-0004-human-merge.md`). It edits only *Live*
-> docs (and a wrong fact in a Digest) — never a session log, a blog post or a
-> pack template; an ADR fix goes only in the separate escalation PR (step 8).
+A run opens up to two PRs (§6): the **sweep PR**, holding every fix that
+isn't escalated, which you merge; and the **escalation PR**, holding the few
+fixes a human must merge.
 
-> **Keep it short** (CLAUDE.md) governs every edit this run makes.
+## What you may edit
 
-> **Command-only.** Invoked as `/audit-docs`; `disable-model-invocation` keeps
-> the Skill tool from invoking it, even when the slash command preloads it.
-
-## The four tiers — what you may touch
-
-Classify every surface **before** editing.
-
-- **Live** — fix these. `CLAUDE.md`, `GLOSSARY.md`, `GLOSSARY-MAP.md`,
+- **Live** (fix these): `CLAUDE.md`, `GLOSSARY.md`, `GLOSSARY-MAP.md`,
   `README.md`, `SECURITY.md`, `docs/agents/*`, `docs/research/*`,
   `docs/proposals/README.md`, `tests/README.md`, `deploy/README.md`, each
   `layers/<tenant>/GLOSSARY.md`, our own Skills (not keyed in
-  `skills-lock.json`) with their sibling files, and the current journal's
-  facing pages,
-  `layers/journal/content/current/pages/{architecture,highlights,history,how-it-works,index,real-and-invented}.md`,
+  `skills-lock.json`) with their sibling files, the journal's facing pages
+  `layers/journal/content/current/pages/{architecture,highlights,history,how-it-works,index,real-and-invented,routines}.md`,
   and Skill Inventory entries (`layers/journal/content/current/skills/*.yml`;
-  never an `importance` grade).
-  Audit the source `.md`, not the render (the dashboard renders only part of
-  `index.md`; its source still counts).
-- **Decisions** — `docs/adr/*`. An ADR states the current decision
-  (ADR-0030): fix a drifted one in place, but never change what it decided.
-  Any ADR edit is human-only to merge, so it escalates (step 8).
-- **Historical** — the append-only record: session logs, blog posts. Never
-  edited. A journal Digest is a summary, not a record: fix a wrong fact in it
-  by an ordinary PR (ADR-0010).
-- **Pack-generic** — external-pack Skills (keyed in `skills-lock.json`, e.g.
-  `setup-matt-pocock-skills/*`, the `*-FORMAT.md` templates). A re-install
-  clobbers any edit, so never rewrite them; note where they diverge
-  from the repo in a Live doc instead.
+  never their `importance` grade).
+- **Decisions:** `docs/adr/*`. An ADR states the current decision
+  (ADR-0030). Fix a drifted one in place, but never change what it decided.
+  Every ADR edit escalates.
+- **Historical:** session logs and blog posts. Never edit them. A journal
+  Digest is a summary, not a record: fix a wrong fact in it like any Live
+  doc (ADR-0010).
+- **Pack-generic:** external pack Skills (keyed in `skills-lock.json`). Never
+  edit them; the gate rejects it.
+- **Skip:** Tenant content that makes no claim about the Terrarium
+  (`GLOSSARY-MAP.md`'s Relationships section names those Tenants), Glass Box
+  pages (`glassbox-update` keeps them), `docs/proposals/<N>-*.md` bodies and
+  `.out-of-scope/*.md`.
 
-**Skip entirely:** Tenant content that makes no claim about the Terrarium
-(`GLOSSARY-MAP.md`'s Relationships section says which Tenants), Glass Box
-pages (`glassbox-update` keeps them), `docs/proposals/<N>-*.md`
-bodies, and `.out-of-scope/*.md`.
+## 1. Review with the eight lenses
 
-## The eight lenses, in four paired agents
+Goal: a pool of findings from four reviewer agents, each looking through two
+lenses.
 
-Run four read-only reviewer agents in parallel, two lenses each. Each is a leaf:
-tell it to do the review itself and return findings directly, with no
-sub-agents and no waiting on other agents. Every finding is the file plus
-the exact sentence, quoted whole, line breaks kept; no line ranges, which reviewers get wrong. A
-finding outside an agent's own lenses is still reported, named by lens, and
-joins the pool like any other.
+### Instructions
 
-**Agent A — Freshness.** Both lenses start from `git log --since="48 hours ago" origin/main`
-(fetch first, `docs/agents/git-conventions.md`) and its diff.
+1. Fetch `origin/main` (`docs/agents/git-conventions.md`), then pick this
+   run's **concision family** (for Agent C): the one after the family named
+   by the newest `origin/main` commit whose subject ends
+   `(<name> concision family)`, wrapping from 4 to 0.
+   - 0 `root`: `CLAUDE.md`, `GLOSSARY*.md`, every Live README, `SECURITY.md`,
+     `layers/*/GLOSSARY.md`;
+   - 1 `docs/agents`: `docs/agents/*`;
+   - 2 `docs/research`: `docs/research/*`;
+   - 3 `skills`: our own Skills with their sibling files;
+   - 4 `journal`: the journal's facing pages and Inventory entries.
+2. Dispatch four read-only reviewer agents in parallel, one per pair of
+   lenses below.
+3. Tell every agent the finding format: the file plus the exact sentence,
+   quoted whole with its line breaks, plus replacement text. No line ranges
+   (reviewers get them wrong). A finding outside its own lenses is still
+   reported, named by its lens, and joins the pool like any other.
+4. Save each agent's reply verbatim into one pooled scratchpad file with
+   `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`.
 
-- **Drift** — a doc describes a mechanism, path, or term the code no longer
-  matches. Most often a decision changed at its new home but its referrers
-  weren't updated: grep each removed noun from the diff (an old path, a deleted
-  job name) across all docs. For a Skill, its Inventory entry's `observations`
-  (`layers/journal/content/current/skills/<name>.yml`) can corroborate a
-  finding; it is optional context.
-- **Orphan-addition** — something added in the last 48h that lacks the
-  reference it needs. Only two cases: (1) a new `docs/agents/*` doc named
-  neither in CLAUDE.md's "Docs you must read first" list nor by a
-  `.claude/rules/` rule (ADR-0029; `docs/research/` is deliberately unindexed) —
-  add the link;
-  (2) a new ADR that changes another's decision while the old ADR still states
-  it (ADR-0030) — rewriting the old one is an ADR edit, so it escalates
-  (step 8). Never add a hand-kept ADR list to `CLAUDE.md`. Older additions are
-  out of scope.
+**Agent A, Freshness.** Start from `git log --since="48 hours ago"
+origin/main` and its diff.
 
-**Agent B — Single-home.** `pnpm exec tsx scripts/session/audit-skills.ts` reports
-`docReadCounts` (how many recent sessions opened each doc). A fact in a doc
-nobody opens is mis-homed, however correct. Use the count only to corroborate a
-finding reached another way; the field's docstring lists why it undercounts.
+- **Drift:** a doc describes a mechanism, path or term the code no longer
+  matches. Most often a decision changed at its new home and its referrers
+  weren't updated, so
+  grep every noun the diff removed (an old path, a deleted job name) across
+  all docs. For a Skill, its Inventory entry's `observations` may back up a
+  finding.
+- **Orphan-addition:** something added in the last 48 hours that lacks the
+  reference it needs. Only two cases count:
+  1. a new `docs/agents/*` doc named neither in CLAUDE.md's "Docs you must
+     read first" nor by a `.claude/rules/` rule (ADR-0029): add the link.
+     `docs/research/` is unindexed on purpose.
+  2. a new ADR that changes another ADR's decision while the old one still
+     states it (ADR-0030): rewrite the old ADR (it escalates).
 
-- **Duplication** — a fact restated in more than one place. The home keeps it;
+  Older additions are out of scope. Never add a hand-kept ADR list to
+  `CLAUDE.md`.
+
+**Agent B, Single-home.**
+
+- **Duplication:** a fact stated in more than one place. The home keeps it;
   every copy becomes a pointer. A file stating its own specific case plus a
-  pointer to the home is fine, not a duplicate. The ADR rules in
-  `.claude/rules/` are a deliberate exception: each summarises its ADR so the
-  rule can load on its own, and `validate-adr-rules` keeps the two in step.
-- **Mis-location** — a fact or file in the wrong home: implementation detail in
-  `GLOSSARY.md`, a status narrative in `CLAUDE.md`, a repo-wide convention buried
-  in a `docs/agents/*` topic file (fix: move it, leave a pointer), or a misfiled
-  file (fix: `git mv`). Moving a journal `pages/*.md` changes its route
-  (ADR-0006), so that move escalates (step 8).
+  pointer to the home is fine. The ADR summary rules in `.claude/rules/` are
+  a deliberate copy of their ADRs; `validate-adr-rules` keeps the two in
+  step.
+- **Mis-location:** a fact or file in the wrong home: implementation detail
+  in `GLOSSARY.md`, a status story in `CLAUDE.md`, a repo-wide convention
+  buried in a `docs/agents/*` topic file (move it, leave a pointer), or a
+  misfiled file (`git mv` it).
 
-**Agent C — Concision.** Cut words, never meaning or a load-bearing "why".
-Each run covers one family of Live docs: the one after the family named by the
-newest origin/main commit subject ending `(<name> concision family)`, wrapping
-after 4; with no such commit, number `$(( 10#$(date +%j) % 5 ))`. Families,
-by number and name: 0 `root` (`CLAUDE.md`, `GLOSSARY*.md`, every Live README,
-`SECURITY.md`, `layers/*/GLOSSARY.md`), 1 `docs/agents` (`docs/agents/*`),
-2 `docs/research` (`docs/research/*`), 3 `skills` (our own Skills with their
-sibling files), 4 `journal` (the journal's facing pages and Inventory
-entries). Brief it
-with that family's full file list. It reads every file in full and reports
-every finding, with no cap; split the family across agents if one can't.
+**Agent C, Concision.** Cut words, never meaning or a load-bearing "why".
+Brief it with the concision family's full file list; it reads every file in
+full and reports every finding, with no cap. Split the family across agents if one can't
+hold it.
 
-- **Verbose** — wording more complicated than its meaning needs: the same fact
-  said twice, filler, long or nested sentences, stacked caveats and
-  parentheticals, jargon or coined terms where a plain word is exact. Rewrite it
-  in the plainest words that keep every rule, condition, exception, and pointer
-  of the original. If you can't simplify without dropping one, leave it.
-- **Stale-narration** — a doc correct about the present that still narrates a
-  superseded state ("we used to do X"). Cut it only where the history changes
-  no reader's action, and cut to the rule plus a pointer to where the history
-  lives (an issue or PR). Keep every "don't regress to the old way" rationale (e.g.
-  `CLAUDE.md`'s never-`pkill` rule, `dispatch-subagents`' worktree-HEAD rule,
-  `environment-caveats.md`'s `permissions.allow` bullet); retiring one is a
-  Prune Trial's call, not yours.
+- **Verbose:** wording more complicated than its meaning: the same fact said
+  twice, filler, long or nested sentences, stacked caveats and
+  parentheticals, jargon or coined terms where a plain word is exact.
+  Rewrite it in the plainest words that keep every rule, condition,
+  exception and pointer; otherwise leave it.
+- **Stale-narration:** a doc correct about the present that still tells a
+  superseded past ("we used to do X"). Cut it to the rule plus a pointer to
+  where the history lives (an issue or PR), and only where the history
+  changes no reader's action.
 
-**Agent D — Coherence.**
+**Agent D, Coherence.**
 
-- **Contradiction** — two docs, or two parts of one, give opposite instructions
-  or state facts that can't both be true now.
-- **Ambiguity** — no single clear instruction can be read out: an undefined
-  threshold that gates an action, an enum listed only by its endpoints at its
-  home, or a "see X" where X doesn't hold the thing.
+- **Contradiction:** two docs, or two parts of one, give opposite
+  instructions or state facts that can't both be true now.
+- **Ambiguity:** no single clear instruction can be read out: an undefined
+  threshold that gates an action, an enum listed only by its endpoints at
+  its home, or a "see X" where X doesn't hold the thing.
 
-Before any lens touches text, check `.agents/prune-trials.yml`: text in an open
-Prune Trial's territory is terse on purpose and under observation.
-Don't restore or reword it; record what you found as a Friction and leave it to
-`prune-trial`.
+Done when every agent has reported, every file in the concision family was
+read in full, and every reply is in the pooled file.
 
-## Fact-check before you touch anything
+### Edge cases
 
-Every finding is a hypothesis until checked against primary sources. Dispatch
-independent checkers (split a large pool) that re-derive each claim from
-scratch and return **CONFIRMED**, **CONFIRMED-BUT** (with the corrected line or
-quote), or **WRONG**. Act only on a checker's CONFIRMED(-BUT), never on your
-own inline check: a wrong finding acted on is new drift you authored.
+- **Keep "don't regress" reasons.** Stale-narration never cuts a reason that
+  stops the old way coming back (e.g. `CLAUDE.md`'s never-`pkill` rule).
+  Retiring one is a Prune Trial's call.
+- Moving a journal `pages/*.md` changes its route (ADR-0006), so that move
+  escalates.
 
-What each lens is checked against:
+## 2. Merge overlapping findings
 
-- **Drift, Contradiction** — the code (`scripts/`, `content.config.ts`, `shared/`,
-  `modules/`, the schemas) and the ADRs.
-- **Duplication, Mis-location, Ambiguity** — the home convention: which doc
-  owns the fact, and does it really hold it. A cited read count is re-run,
-  never remembered. For Mis-location, first read any originating issue/PR the
-  target doc names or implies; an explicit placement there wins.
-- **Orphan-addition** — git history (added inside 48h?) and the expected home
-  (reference really missing?).
-- **Verbose** — the original text. List every rule, condition, exception, and
-  pointer in it; the proposed rewrite must keep each one and be shorter or
-  plainer. Anything lost or changed makes the finding **WRONG**.
-- **Stale-narration** — the superseded state (really gone?), and the proposed
-  cut must keep any "don't regress" why, or it is **WRONG**.
-- **Every lens, when the fix edits an ADR or an ADR summary rule** — from the
-  original text, state what the ADR allows, forbids and excepts; the rewrite
-  changing any of them is **WRONG**.
+Goal: one finding per stretch of text, so two fixes never fight over the
+same words.
 
-## Fix bravely — escalate only a true factual conflict
+### Instructions
 
-Fix every confirmed finding, and decide scope yourself; don't ask, and don't
-file an issue for a judgement call. Only the fixes listed in step 8 escalate
-instead of self-merging.
+1. Merge findings whose quotes overlap, across agents too.
+2. Where two agents reach opposite verdicts on the same text, read the
+   primary source and keep one.
 
-Two ADRs that contradict each other: fix it in the escalation PR, keeping the
-more specific ADR unless git history or the code shows it is a leftover. File
-an issue only when neither settles it.
+Done when no two findings cover the same text.
 
-File a `needs-triage` issue for one thing only: two sources state conflicting
-facts and no primary source (code, schemas, ADRs) settles which is true. Give
-both readings and your best guess, leave that finding, and move on. Check for
-an open duplicate first (`scripts/github/list-open-issues.ts` or a scoped
-`list_issues`; `docs/agents/github-integration.md`), never re-file one, and open with the
-provenance header.
+## 3. Fact-check every finding
 
-## 1. Get on a working branch
+Goal: act only on findings an independent checker confirmed, never on your
+own inline check. A wrong finding acted on is new drift you wrote.
 
-CLAUDE.md's "Stay on the branch your session started on" rule.
+### Instructions
 
-## 2. Inventory & classify
+1. Dispatch independent checkers over the whole pool (split a large pool).
+   Point each at the pooled file to read; never retype findings into a
+   prompt.
+2. Each checker re-derives every claim from its primary source (code,
+   schemas, ADRs, git history) and returns **CONFIRMED**, **CONFIRMED-BUT**
+   (with the corrected line or quote) or **WRONG**. For a rewrite or cut, it
+   first lists every rule, condition, exception, pointer and "why" in the
+   original (for an ADR: what it allows, forbids and excepts); a fix that
+   loses or changes one, or is not shorter or plainer, is **WRONG**. For
+   Mis-location, it first reads any originating issue or PR the doc names or
+   implies; a placement stated there wins.
+3. Drop every WRONG; apply every CONFIRMED-BUT correction.
 
-Glob every `*.md` outside `node_modules`, plus each `.agents/skills/*/` and the
-Skill Inventory `*.yml` (`layers/journal/content/current/skills/`), and put each
-surface in a tier or on the Skip list. Done when every surface has one.
+Done when every finding has a verdict, and every CONFIRMED(-BUT) one has an
+accurate `file:line`.
 
-## 3. Review across the eight lenses
+## 4. Fix
 
-Run the reviewer agents; each returns its findings in its final reply, in the
-format above plus replacement text. Pool them into one scratchpad file, copied,
-never retyped (`pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`
-saves a reply verbatim). Done when every one has reported and every file in the
-concision family was read in full.
+Goal: every confirmed finding fixed, without asking anyone.
 
-## 4. Dedupe the pool
+### Instructions
 
-Merge findings whose quotes overlap, even across agents,
-so two fixes don't fight over one span. Where two agents reach opposite
-verdicts on the same span, read the primary source and keep one. Done when no
-two findings cover the same text.
+1. Fix every surviving finding in place, using only the checker-confirmed
+   text. Decide scope yourself. Don't ask, and don't file an issue for a
+   judgement call.
+2. Two ADRs that contradict each other: fix it in the escalation PR, keeping
+   the more specific ADR unless git history or the code shows it is a
+   leftover.
+3. File a `needs-triage` issue for one thing only: two sources state
+   conflicting facts and no primary source settles which is true, including
+   two ADRs that neither history nor code settles. Search open issues first, then file per
+   `docs/agents/issue-tracker.md`'s "Filing an issue" with both readings and
+   your best guess. Leave that finding unfixed.
 
-## 5. Fact-check the findings
+Done when every finding is fixed, or filed as a true factual conflict.
 
-Run the checkers over the whole pool, pointing each at the pooled file to read,
-never retyping findings into a prompt; drop every WRONG, apply every
-CONFIRMED-BUT correction. Done when each finding has a verdict and each
-CONFIRMED(-BUT) has an accurate `file:line`. The session log's summary names the
-concision family and the verdict counts (CONFIRMED / CONFIRMED-BUT / WRONG).
+### Edge cases
 
-## 6. Fix
+- If the confirmed text leaves a gap (it names a place but doesn't word the
+  fix), send the gap back to a checker as a new finding. Never fill it
+  yourself.
 
-Fix every surviving finding in place, using only the checker-confirmed text. A
-gap that text leaves (a site it names but doesn't word) goes back to a checker
-as a new finding; it is never filled ad hoc. Done when each is fixed, or filed
-as a true factual conflict.
+## 5. Commit, review and gate
 
-## 7. Clear the safety gate
+Goal: a committed, reviewed head with a green gate, ready to push.
 
-Run `pnpm gate:scoped` (step 1 of `docs/agents/pr-workflow.md`'s "Closing a
-scheduled run's PR"). Run it even for doc-only edits: an edit under
-`layers/` (an Inventory `.yml`, a journal page) runs the full gate, and the
-floor still runs `verify:skills-lock` and `validate:content`. Done when green.
+### Instructions
 
-## 8. Commit, review, push, open one gated PR, self-merge on green
+Follow step 1 of `docs/agents/pr-workflow.md`'s "Closing a scheduled run's
+PR": commit, review, then run `pnpm gate:scoped` last, on the final head.
 
-Follow `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR".
-One commit and PR (the escalation PR below is separate), self-merged on green
-(ADR-0004) like `digest`; its subject ends with the family's name, e.g.
-`audit-docs: 2026-10-14 sweep (docs/research concision family)`; its body lists
-the fixes and any issue filed, and a PR comment records the audit in one line
-plus `Reviewed: <head sha>`, as its step-4 verdict.
+Done when the gate is green.
 
-**These fixes escalate instead:** any change to a Human-only path (the `paths`
-of `.claude/rules/adr-0004-human-merge.md`; any ADR edit, an Orphan-addition fix
-included, is one), isolation logic, and a journal `pages/*.md` move that changes
-its route. Bundle all of them from
-this sweep into **one** separate, human-reviewed PR, subscribe to it, and
-babysit it to merge or close. If an earlier sweep's escalation PR is still open
-and touches the same file, add to it instead of opening another.
+## 6. Open the PRs and merge
 
-Done when the PR is merged green, or open and honestly escalated.
+Goal: the sweep PR merged on green, and any escalated fixes in front of a
+human.
 
-Log the session per the ADR-0009 rule (`.claude/rules/adr-0009.md`).
+### Instructions
+
+1. Follow the rest of `docs/agents/pr-workflow.md`'s "Closing a scheduled
+   run's PR" for **one** sweep PR with one commit:
+   - its subject ends with the concision family's name, e.g.
+     `audit-docs: 2026-10-14 sweep (docs/research concision family)`;
+   - its body lists the fixes and any issue filed;
+   - its verdict comment records the audit in one line plus
+     `Reviewed: <head sha>` (`pr-workflow.md`'s "The recipe", step 4).
+   Merge it yourself on green (ADR-0004).
+2. Put the fixes a human must merge into **one** separate escalation PR:
+   any change to a Human-only path (`.claude/rules/adr-0004-human-merge.md`),
+   which includes every ADR edit, and any journal `pages/*.md` move that
+   changes its route. Subscribe to it and follow it until it merges or
+   closes.
+3. Log the session (ADR-0009). Its summary names the concision family and
+   the verdict counts (CONFIRMED / CONFIRMED-BUT / WRONG).
+
+Done when the sweep PR has merged green, or is open and honestly escalated.

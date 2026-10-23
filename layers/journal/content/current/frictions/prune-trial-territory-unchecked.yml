@@ -1,0 +1,19 @@
+name: prune-trial-territory-unchecked
+summary: Agents state or ignore what an open Prune Trial covers without reading the trial ledger, so a wrong claim reaches a PR or a build starts inside a trial.
+cause: >-
+  A triage agent's claim about a trial's territory (close-session in a trial that was judged and deleted; the frictions-to-fixes briefs in a trial that covers only SKILL.md) is relayed or acted on without opening .agents/prune-trials.yml on origin/main, and a build is launched before the territory is checked. Signals: "prune trial", "open trial", "territory", "needed an owner question afterwards".
+surface: safe
+status: open
+notes: |-
+  2026-10-22 design: one sentence in clear-backlog-explore.js brief() to quote the trial territory line dropped: adr-check already lists open trials, the failure is orchestrators skipping adr-check (covered by binding-docs-skipped), and the one wrong triage claim was caught; revisit on a second wrong trial claim from a triage agent
+occurrences:
+  - session: session_01C32ny8wWXkJLgyHd9wiD1J
+    date: "2026-10-21"
+    severity: minor
+    description: "A triage agent claimed close-session/SKILL.md sits in an open prune trial; .agents/prune-trials.yml shows that trial was judged and deleted."
+    solution: "The explore workflow's triage brief could ask agents to quote the matching territory line from prune-trials.yml on origin/main."
+  - session: session_013n8e5pQ7h9GevyhHvtm4c3
+    date: "2026-10-21"
+    severity: minor
+    description: "Launched the #2388 rename build before checking prune-trials.yml; dispatch-subagents section 3 was in an open trial and needed an owner question afterwards"
+    solution: "Check .agents/prune-trials.yml territories before filing a wording-change issue, as adr-check would have"

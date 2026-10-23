@@ -98,7 +98,7 @@ The reader of [Plate I](/t/atlas/floor/formica-textrix) will recall that the wea
 
 The work, at least, can be described, and it is distinctive. The mend is always at the worn place and never at the showy one; the thread is laid finer and drawn tighter than the column's own, so that a repaired stretch of gallery can be told by the fingertip in the dark, which is chiefly where we have occasion to tell it. Nothing is ever added — no new gallery, no improvement, no opinion. What was fraying is made sound, and whatever slack the fraying left behind is gone by morning, which is the sole ground we have for entering a diet in the record at all.
 
-When the work can be seen for itself, and when it cannot, is a matter of the mender's own year — and chiefly of what the weaver-ant column is doing overhead. What follows we have set down as the mender keeps it, not by our calendar: the scarce evidence and the quiet mending. Turn the almanac to move through them; the seasons on the rim only say where in our shared year each of the mender's falls.
+When the work can be seen for itself, and when it cannot, is a matter of the mender's own year — and chiefly of what the weaver-ant column is doing overhead. What follows we have set down as the mender keeps it, not by our calendar: the scarce evidence and the quiet mending. Turn the almanac to follow the mender through them.
 
 ::almanac
 ::

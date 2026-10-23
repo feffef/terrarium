@@ -1,0 +1,127 @@
+schemaVersion: 1
+session: session_01XueFVQyVySVEKHxSHTFeTh
+startedAt: 2026-10-19T00:16:35Z
+endedAt: 2026-10-19T00:25:42Z
+kind: autonomous
+goal: Write the 2026-10-18 Journal Digest
+status: completed
+outcome: Digest and retention sweep merged in PR 2261, gate green
+summary: Scheduled digest run, agent-initiated by the schedule with no human prompt. Gathered the 2026-10-18 day (27 PRs, 17 sessions), wrote the Digest around the day's Routine cost-tracking theme, fact-checked it with a sonnet subagent (2 wrong and 3 imprecise claims, all fixed), ran the archive sweep (1 Digest, 21 session logs), passed gate:scoped, and opened PR 2261, which merged on a green gate. Review was an inline check rather than the two-subagent code-review, since the diff is prose and file moves only.
+prs:
+  - "2261"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before git commands; nothing new for this run
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read before opening the PR; no trap hit
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: scheduled-run PR closing steps and review-before-push order
+    useful: yes
+  - path: GLOSSARY.md
+    reason: required session-start read; digest prose avoids its terms
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: required session-start read; no Tenant glossary needed
+    useful: partly
+  - path: layers/journal/content/current/pages/digests/2026-10-17.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-10-18.md
+    reason: (read before editing)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+skillsUsed:
+  - name: digest
+    reason: the scheduled task itself
+  - name: code-review
+    reason: invoked but replaced by an inline review of a prose-only diff
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The Stop hook asked three times to commit and push while the fact-check and gate were still running, against ADR-0004's gate-and-review-before-first-push order.
+    solution: Make the Stop hook skip its nag while a background gate or subagent is pending.
+    severity: nit
+  - description: Replaced the code-review Skill's two parallel subagents with an inline review because the diff was a prose page plus file moves.
+    solution: Let code-review scale down for prose-only diffs.
+    severity: nit
+durationSec: 546
+models:
+  claude-sonnet-5-5: 63
+toolCounts:
+  Bash: 18
+  Read: 6
+  Write: 1
+  Agent: 1
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-10-18.md
+rulesLoaded:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0008.md
+docsReadBySubagents:
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/issue-tracker.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Kept me from pushing on the Stop hook's nags until gate passed; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Confirmed Digest lands by gated PR and a wrong fact is fixed by PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to the PR at once; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Explained why the log stays out of the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and the commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; irrelevant to writing a Digest
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; not touched by this run
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement; not touched by this run
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagrams in a Digest
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded only for the fact-check subagent; it reported it not useful
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded only for the fact-check subagent; it reported it not useful
+    useful: no
+subagents:
+  - task: Fact-check 2026-10-18 digest
+    model: sonnet
+gitBranch: claude/compassionate-lovelace-5psn46
+entrypoint: remote_trigger
+cliVersion: 2.1.303
+trigger: digest
+landedBy: Stop

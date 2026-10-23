@@ -1,0 +1,194 @@
+schemaVersion: 1
+session: session_01Aji3mgX1G7kuK9Bs4mEHX6
+startedAt: 2026-10-23T06:33:21Z
+endedAt: 2026-10-23T06:45:31Z
+kind: autonomous
+goal: Weekly sync of the Glass Box guide pages to the code
+status: completed
+outcome: "PR 2430 merged: guide Space re-pinned to cfce441 with seven stale statements fixed"
+summary: "Scheduled glassbox-update run, no human prompts. Ran the report, advanced pins, read the 98 commits since the old pin against the 15 flagged pages and 22 terms. Edited the pr-workflow Excerpt, the Human-only Excerpt hash, and prose on dispatch, Tenant glossary, severity grades, Ledger and close-session look-back; refreshed two terms. Review (Standards and Spec subagents) and gate:scoped were clean; PR 2430 opened, CI went green and I merged it with merge-pr.ts. A first fix cited a Skill file a draft walkthrough also cites, which the layer test caught; I reworded it. Open: a stale line in a draft page, left for a later run."
+prs:
+  - "2430"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: page shapes and Excerpt rules
+    useful: yes
+  - path: .claude/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin and Check steps
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: scheduled-run closing steps and the changed Excerpt source
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: hook asked for it before git; nothing new for this run
+    useful: no
+  - path: docs/agents/github-integration.md
+    reason: before opening the PR; confirmed MCP write
+    useful: partly
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: Spec reviewer read it as the spec; it called it useful
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: Standards reviewer grepped it for severity wording; incidental
+    useful: no
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: Standards reviewer checked the Dependabot wording against it
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-update
+    reason: the assigned task
+  - name: code-review
+    reason: Standards and Spec review before first push
+  - name: dispatch-subagents
+    reason: read before dispatching the two reviewers
+  - name: close-session
+    reason: closure after PR open
+frictions:
+  - description: Citing the log-session Skill as a file on a guide page broke the layer test because a draft walkthrough cites the same file.
+    solution: EVERY-PAGE could say a file cited by a draft walkthrough stays out of the guide Lessons.
+    severity: nit
+  - description: The report's page list and revision pinning mix flagged-by-path and edited-range pages, so I had to diff each page by hand against 98 commits.
+    solution: Have the script print, per page, the diff of each changed cited file.
+    severity: minor
+durationSec: 730
+models:
+  claude-sonnet-5-5: 83
+toolCounts:
+  Bash: 36
+  Skill: 2
+  Agent: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+  - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/claude-code/03.skills.md
+  - layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+  - layers/glassbox/content/guide/pages/claude-code/07.subagents-worktrees.md
+  - layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+  - layers/glassbox/content/guide/pages/index.md
+  - layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/02.one-table-per-key.md
+  - layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/05.use-space.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+  - layers/glassbox/content/guide/terms/friction-ledger.yml
+  - layers/glassbox/content/guide/terms/human-only.yml
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/data-shapes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to review and gate before first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main via hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body header; summary was enough
+    useful: yes
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept ids and counts out of the prose; summary was enough
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagrams touched
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by a read of the report script; not about page edits
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded when the glossaries were read; explained the glossary map change
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded with the glossary read; no prune trial touched
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with a report read; not relevant
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read that file; no Human-only file changed
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading the human-merge rule; not relevant
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on touching layer files; already read the glossary
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded by a Tenant-file read; no catalog change in scope
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded by a schema file read; no stored field changed
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of glassbox diff
+    durationSec: 50
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 9.1
+  - type: general-purpose
+    task: Spec review of glassbox diff
+    durationSec: 78
+    toolCalls: 15
+    modelCalls: 13
+    tokenShare: 16.4
+gitBranch: claude/ecstatic-euler-jcd8pj
+entrypoint: remote_trigger
+cliVersion: 2.1.309
+trigger: glassbox-update
+learnings:
+  - A flagged page whose Excerpt shows a rule's frontmatter hash fails the layer test after any restamp; run the test right after advancing.
+landedBy: Stop

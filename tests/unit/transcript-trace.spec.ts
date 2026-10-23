@@ -5,6 +5,7 @@
 // merge rules, and prove a stitched entry satisfies the frozen schema.
 import { describe, expect, it } from 'vitest'
 import {
+  adrReadInFull,
   NOT_READ_REASON,
   DERIVED_REASON_COMMAND,
   DERIVED_REASON_EDITED,
@@ -27,6 +28,7 @@ import { validateEntry } from '../../scripts/session/journal-files.ts'
 import { DERIVED_REASON } from '../../shared/trace-fields.ts'
 import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { buildDocLineIndex } from '../../scripts/session/shell-reads.ts'
+import { adrHintLine } from '../../scripts/lib/adr-rules.ts'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
@@ -136,7 +138,7 @@ describe('foldSubagentTrace() — subagent work counts as the session\'s (issue 
   it('adds a workflow agent to subagents, with its busiest model', () => {
     const agent = { type: 'workflow-subagent', task: 'triage #1778' }
     const withAgent = foldSubagentTrace(parent, [{ records: parseTranscript(subagentTranscript), agent }], NO_ENV)
-    expect(withAgent.subagents).toEqual([...parent.subagents, { ...agent, model: 'claude-sonnet-5' }])
+    expect(withAgent.subagents).toEqual([...parent.subagents, { ...agent, model: 'claude-sonnet-5', durationSec: 60, toolCalls: 4 }])
     expect(withAgent.models).toEqual(parent.models)
   })
 
@@ -151,6 +153,49 @@ describe('foldSubagentTrace() — subagent work counts as the session\'s (issue 
     expect(entry.docsReadBySubagents).toEqual(['docs/agents/pr-workflow.md'])
     expect(validateEntry(entry).ok).toBe(true)
     expect(stitch({ session: 'session_01ABC', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, parent)).not.toHaveProperty('docsReadBySubagents')
+  })
+})
+
+// The harness writes one record per content block, each repeating its response's
+// id and usage, so a response counts once.
+describe('usage — tokens, duration and tool calls per agent', () => {
+  const call = (id: string, at: string, usage: object) => ({
+    type: 'assistant', timestamp: at, message: { id, model: 'claude-sonnet-5', usage, content: [read] },
+  })
+  const read = { type: 'tool_use', name: 'Read', input: { file_path: '/repo/a.md' } }
+  const m1 = { input_tokens: 2, output_tokens: 10, cache_read_input_tokens: 100, cache_creation_input_tokens: 40 }
+  const m2 = { ...m1, input_tokens: 1, cache_read_input_tokens: 300, cache_creation: { ephemeral_5m_input_tokens: 0, ephemeral_1h_input_tokens: 40 } }
+  const sub = [call('m1', '2026-07-06T10:01:00Z', m1), call('m1', '2026-07-06T10:01:00Z', m1), call('m2', '2026-07-06T10:02:30Z', m2)]
+  // 3 input + 0.1 × 400 read + 1.25 × 40 short write + 2 × 40 hour write; output ignored
+  const usage = { modelCalls: 2, weightedTokens: 173 }
+  const stats = { durationSec: 90, toolCalls: 3, ...usage }
+  const dispatch = { type: 'assistant', message: { content: [{ type: 'tool_use', id: 'toolu_1', name: 'Agent', input: { subagent_type: 'Explore', description: 'find X' } }] } }
+
+  it('weights a transcript\'s tokens by price, counting each response once', () => {
+    expect(extractTrace(sub, NO_ENV).usage).toEqual(usage)
+    expect(extractTrace([dispatch], NO_ENV).usage).toBeUndefined()
+  })
+
+  it('attaches a dispatched agent\'s stats to its entry, matched by tool-use id', () => {
+    const folded = foldSubagentTrace(extractTrace([dispatch], NO_ENV), [{ records: sub, agent: { task: 'find X' }, toolUseId: 'toolu_1' }], NO_ENV)
+    expect(folded.subagents).toEqual([{ type: 'Explore', task: 'find X', toolUseId: 'toolu_1', ...stats }])
+  })
+
+  it('lists an agent its parent never dispatched, such as a nested one', () => {
+    const folded = foldSubagentTrace(extractTrace([dispatch], NO_ENV), [{ records: sub, agent: { task: 'nested' }, toolUseId: 'toolu_2' }], NO_ENV)
+    expect(folded.subagents.map((s) => s.task)).toEqual(['find X', 'nested'])
+  })
+
+  it('attaches a workflow agent\'s stats to the entry it adds', () => {
+    const folded = foldSubagentTrace(extractTrace([dispatch], NO_ENV), [{ records: sub, agent: { task: 'fix r1' } }], NO_ENV)
+    expect(folded.subagents[1]).toEqual({ task: 'fix r1', model: 'claude-sonnet-5', ...stats })
+  })
+
+  it('stitches each agent\'s share of the session\'s tokens into a valid entry, without the id', () => {
+    const folded = foldSubagentTrace(extractTrace([...sub, dispatch], NO_ENV), [{ records: sub, toolUseId: 'toolu_1' }], NO_ENV)
+    const entry = stitch({ session: 'session_01ABC', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }, folded)
+    expect(entry.subagents).toEqual([{ type: 'Explore', task: 'find X', durationSec: 90, toolCalls: 3, modelCalls: 2, tokenShare: 50 }])
+    expect(validateEntry(entry).ok).toBe(true)
   })
 })
 
@@ -271,6 +316,12 @@ describe('rulesFollowedUp — a rule whose ADR was read after it loaded', () => 
     expect(extractTrace(records, NO_ENV).rulesFollowedUp).toEqual([])
   })
 
+  it('shares its full-read test as adrReadInFull()', () => {
+    expect(adrReadInFull([...base, read('/repo/docs/adr/0012-x.md')], '0012')).toBe(true)
+    expect(adrReadInFull([...base, read('/repo/docs/adr/0012-x.md')], '0004')).toBe(false)
+    expect(adrReadInFull([...base, { type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/docs/adr/0012-x.md', offset: 5 } }] } }], '0012')).toBe(false)
+  })
+
   it('folds in a subagent, and is written by the stitch and accepted by the schema', () => {
     const trace = extractTrace(base, NO_ENV)
     const sub = [...parseTranscript(subagentTranscript), rule('/repo/.claude/rules/adr-0012.md'), read('/repo/docs/adr/0012-x.md')]
@@ -279,6 +330,42 @@ describe('rulesFollowedUp — a rule whose ADR was read after it loaded', () => 
     const authored: AuthoredScratch = { session: 'session_01RF', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
     const entry = stitch(authored, folded)
     expect(entry.rulesFollowedUp).toEqual(['.claude/rules/adr-0012.md'])
+    expect(validateEntry(entry).ok).toBe(true)
+  })
+})
+
+describe('adrHints — the ADRs adr-read-hint pointed to', () => {
+  const hint = (adrs: [string, 'path' | 'text'][]) => ({
+    type: 'attachment',
+    attachment: { type: 'hook_additional_context', content: [adrHintLine(adrs.map(([adr, via]) => ({ adr, via, doc: `docs/adr/${adr}-x.md`, file: 'GLOSSARY.md' })))] },
+  })
+  const read = (file_path: string) => ({ type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path } }] } })
+  const base = parseTranscript(transcript)
+
+  it('finds each pointer, and whether a full read followed it', () => {
+    const records = [...base, read('/repo/docs/adr/0004-x.md'), hint([['0021', 'path'], ['0004', 'text']]), read('/repo/docs/adr/0021-x.md'), hint([['0004', 'text']])]
+    expect(extractTrace(records, NO_ENV).adrHints).toEqual([
+      { adr: 21, via: 'path', readAfter: true, by: 'main' },
+      { adr: 4, via: 'text', readAfter: false, by: 'main' },
+    ])
+    expect(extractTrace(base, NO_ENV).adrHints).toEqual([])
+  })
+
+  it("folds subagents' in as by: subagent, one entry per (adr, via, by), read if any context read it", () => {
+    const main = extractTrace([...base, hint([['0021', 'path']])], NO_ENV)
+    const sub = (more: Record<string, unknown>[]) => ({ records: [...parseTranscript(subagentTranscript), hint([['0021', 'path']]), ...more] })
+    const folded = foldSubagentTrace(main, [sub([]), sub([read('/repo/docs/adr/0021-x.md')])], NO_ENV)
+    expect(folded.adrHints).toEqual([
+      { adr: 21, via: 'path', readAfter: false, by: 'main' },
+      { adr: 21, via: 'path', readAfter: true, by: 'subagent' },
+    ])
+  })
+
+  it('is written by the stitch only when non-empty, and accepted by the schema', () => {
+    const authored: AuthoredScratch = { session: 'session_01AH', goal: 'g', status: 'completed', outcome: 'o', summary: 's', frictions: [] }
+    expect('adrHints' in stitch(authored, extractTrace(base, NO_ENV))).toBe(false)
+    const entry = stitch(authored, extractTrace([...base, hint([['0004', 'text']])], NO_ENV))
+    expect(entry.adrHints).toEqual([{ adr: 4, via: 'text', readAfter: false, by: 'main' }])
     expect(validateEntry(entry).ok).toBe(true)
   })
 })
@@ -342,7 +429,7 @@ describe('readSubagentJsonls()', () => {
     // A directory named like a transcript: readdir lists it, readFileSync throws
     // on it — the hook must lose that one contribution, not the whole trace.
     mkdirSync(join(subs, 'agent-b.jsonl'))
-    expect(readSubagentJsonls(parent)).toEqual([{ label: 'a', jsonl: 'A' }])
+    expect(readSubagentJsonls(parent)).toEqual([{ label: 'a', jsonl: 'A', agent: { task: 'a' } }])
   })
 
   it('returns [] for a session that dispatched nobody', () => {
@@ -352,9 +439,8 @@ describe('readSubagentJsonls()', () => {
     expect(readSubagentJsonls(parent)).toEqual([])
   })
 
-  // An Agent/Task dispatch is already a tool call in the parent; a workflow
-  // agent shows up only under workflows/ (#1876).
-  it('names a workflow agent as a subagent, and only a workflow agent', () => {
+  // The id lets the fold skip an agent the parent already lists as a dispatch (#1876).
+  it('names every agent, and keeps the dispatch id that joins it to its parent', () => {
     const dir = mkdtempSync(join(tmpdir(), 'trace-'))
     const parent = join(dir, 'session-uuid.jsonl')
     writeFileSync(parent, '')
@@ -366,10 +452,11 @@ describe('readSubagentJsonls()', () => {
     writeFileSync(join(run, 'agent-x.jsonl'), assistant)
     writeFileSync(join(run, 'agent-x.meta.json'), JSON.stringify({ agentType: 'workflow-subagent', description: 'triage #1778' }))
     writeFileSync(join(run, 'agent-y.jsonl'), '')
-    expect(readSubagentJsonls(parent).map((s) => s.agent)).toEqual([
-      undefined,
-      { type: 'workflow-subagent', task: 'triage #1778' },
-      { task: 'y' },
+    writeFileSync(join(subs, 'agent-a.meta.json'), JSON.stringify({ description: 'a', toolUseId: 'toolu_a' }))
+    expect(readSubagentJsonls(parent).map((s) => [s.agent, s.toolUseId])).toEqual([
+      [{ task: 'a' }, 'toolu_a'],
+      [{ type: 'workflow-subagent', task: 'triage #1778' }, undefined],
+      [{ task: 'y' }, undefined],
     ])
   })
 })
@@ -550,6 +637,7 @@ describe('stitch()', () => {
     expect(withNotes.ideas).toEqual(['cluster frictions into tags'])
     expect(validateEntry(withNotes).ok).toBe(true)
   })
+
 })
 
 describe('docsReadViaShell (issues #1074, #1545)', () => {
@@ -563,6 +651,7 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
     { path: 'docs/agents/guards.md', text: GUARDS },
     { path: 'docs/agents/domain.md', text: DOMAIN },
     { path: 'GLOSSARY.md', text: CONTEXT },
+    { path: 'layers/tinkerfund/GLOSSARY.md', text: '# Tinkerfund glossary\n\nThe crowdfunding shop vocabulary of invented products.' },
   ])
   let n = 0
   const bash = (command: string, output = ''): Record<string, unknown>[] => {
@@ -697,6 +786,17 @@ describe('docsReadViaShell (issues #1074, #1545)', () => {
       const preview = `Output too large. Full output saved to: ${saved}\n\nPreview:\n# Guards`
       const scan = shellReadScanOf(withCwd(bash('cat docs/agents/guards.md', preview)), [], { docIndex: index })
       expect(scan.paths).toEqual(['docs/agents/guards.md'])
+    })
+
+    it('drops the unshown near-miss for a doc absent from the checkout: no output could credit it', () => {
+      const scan = shellReadScanOf(withCwd(bash('cat docs/agents/branch-only.md', '(Bash completed with no output)')), [], { docIndex: index })
+      expect(scan.nearMisses).toEqual([])
+    })
+
+    it('keeps the near-miss for a symlinked .claude/skills path whose canonical doc is in the checkout', () => {
+      const idx = buildDocLineIndex([{ path: '.agents/skills/foo/notes.md', text: '# Foo skill\n\nA distinctive line about the foo skill workflow.' }])
+      const scan = shellReadScanOf(withCwd(bash('cat .claude/skills/foo/notes.md', '(Bash completed with no output)')), [], { docIndex: idx })
+      expect(scan.nearMisses).toHaveLength(1)
     })
 
     it('names the cd-resolved path in a near-miss, so the agent recognizes which file went unshown (#1454)', () => {

@@ -185,7 +185,7 @@ Docs: `nuxt/nuxt` `docs/2.directory-structure/1.layers.md` and
   does not check for a config file, but the docs state the contract: "Every
   layer **must have** a `nuxt.config.ts` file to be recognized as a valid
   layer, even if it's empty." (Every layer in this repo has one — see
-  `GLOSSARY.md`'s Tenants roster for the current count.)
+  `GLOSSARY-MAP.md` for the current list of Tenants.)
 - **Priority** (getting-started/14.layers.md "Layer Priority", highest first):
   1. **project files**, 2. **auto-scanned `~~/layers`** — "sorted
   alphabetically (**Z has higher priority than A**)", 3. **`extends` entries**
@@ -462,6 +462,11 @@ Rule of thumb: **one rich blurb → slots; a uniform list → a YAML array prop.
   hands the map to `MDCRenderer`. So MDC resolves **through the ordinary
   `<ContentRenderer :value="doc" />` call** — the same one used to render any
   page body.
+- **A component's name must not be an HTML tag.** `MDCRenderer` renders any tag in
+  its `html-tags-list` (for example `source`) as a native element and never looks up
+  a component of that name, silently. Pick a name outside that list
+  (`@nuxtjs/mdc/dist/runtime/parser/utils/html-tags-list`); Glass Box renamed
+  `source` to `file`.
 - Practical cost in a layer that doesn't already use MDC: you must **create the
   `components/content/` dir and a new SFC**.
 

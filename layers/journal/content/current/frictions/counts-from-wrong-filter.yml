@@ -1,0 +1,25 @@
+name: counts-from-wrong-filter
+summary: >-
+  Agents quoted counts from a script, window or eligibility filter that was wrong, and had to correct them.
+cause: >-
+  A number is taken from a throwaway script, a measurement window or an eligibility set whose filter was not checked against its source (a dropped outlier, a window start not taken from the issue, an eligibility rule not applied), so the count is wrong even though it was computed. Signals: "throwaway script", "window", "would skip", "eligible".
+surface: safe
+status: open
+ref: "issue #2435 (split from counts-not-tallied)"
+fixes: []
+occurrences:
+  - session: session_01BYiuxza1S1QZgmyXngfzLE
+    date: "2026-10-22"
+    severity: minor
+    description: "I counted #2286 and #2137 eligible as unlabelled issues, but both are on-hold specs whose last comment is an agent's, so auto-triage would skip them; #2286's hold had not lifted yet."
+    solution: "Apply auto-triage's on-hold-spec exception (issue-tracker.md Specs) when resolving the set; a helper that prints eligibility per issue would make it mechanical."
+  - session: session_01PWZU3TqUdSp6uD1KaoQXit
+    date: "2026-10-23"
+    severity: minor
+    description: "Posted baseline numbers to #2286 from a throwaway script that dropped sessions reading 20+ ADRs; the real audit shows autonomous 40% to 51%, not flat."
+    solution: "Report medians or state outlier exclusions next to any read-share figure; the PR now does."
+  - session: session_01XfQgmS9ArvbD9WSoPgkKfM
+    date: "2026-10-21"
+    severity: minor
+    description: "Started the analysis window at the adr-check commit time, not #2284's merge, so 7 pre-landing sessions counted as non-users in two chat answers."
+    solution: "Take a measurement window from the issue's stated landing time; issue 2286 named it."

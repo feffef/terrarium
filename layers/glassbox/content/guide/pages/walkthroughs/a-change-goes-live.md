@@ -1,8 +1,8 @@
 ---
 title: A change goes live
 description: How a commit on main reaches visitors, through one container that notices it, builds it beside the live site and swaps only a good build.
-revision: '8ac5621f974770abfe88f714f788215d9d74437b'
-revisionDate: '2026-10-17'
+revision: 'cfce4413a0af4506bf80ba86ef6edccc6ef089fb'
+revisionDate: '2026-10-23'
 ---
 
 A commit lands on `main`, and with no one running a deploy, the live site changes. This Walkthrough follows that commit from the container's side: from noticing it, through the install and the build, to the restarted server that answers the next visitor.
@@ -54,6 +54,10 @@ The restarted server serves the new build. The first query for each Collection c
 ::stop-links
 [The content database](/t/glassbox/guide/nuxt-content/content-database)
 ::
+
+## A real case
+
+On 17 October 2026 an agent session's PR, [#2225](https://github.com/feffef/terrarium/pull/2225), merged into `main` as commit `7bef79d1` at 17:21 UTC. It changed eight files: a stylesheet, two components, a page and four Markdown files, and not :file[pnpm-lock.yaml]. The container's script treats every commit alike: it skips the install while the lockfile's hash matches the one it saved, builds beside the live site and swaps in a good build. A commit that leaves the lockfile alone, as this one did, never reaches the install. The Gate runs on every push to `main`, and the container doesn't wait for it.
 
 ## Where next
 

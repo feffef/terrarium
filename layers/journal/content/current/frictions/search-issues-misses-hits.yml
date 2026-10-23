@@ -1,0 +1,22 @@
+name: search-issues-misses-hits
+summary: >-
+  A GitHub issue search returned nothing for something that exists, so a "no match" claim rested on weak evidence.
+cause: >-
+  mcp__github__search_issues matches fuzzily and can return zero results or miss a merged fix for plain queries; github-integration.md already warns that total_count 0 is not proof (issue #741) but sessions state "no match" from one search. Signals: "search returned no match", "returned zero results for plain queries", a refiner or later search finding the issue or PR.
+surface: safe
+status: open
+fixes:
+  - pr: 744
+    date: "2026-07-30"
+    summary: "github-integration.md warns that a search's total_count 0 is not proof of absence and to cross-check with a narrow list scan."
+occurrences:
+  - session: session_01CQhPd23d8eRP33TzyDha76
+    date: "2026-10-21"
+    severity: minor
+    description: "Issue search for the New here card returned no match, missing merged PR #1952 that already fixed it; only the refiner caught it."
+    solution: "Step 3 should also say to search PRs (search_pull_requests) by page or component, not issues alone."
+  - session: session_0195CYW3YBg2stBS6aGigmbp
+    date: "2026-10-22"
+    severity: minor
+    description: "GitHub search_issues returned zero results for plain queries like Friction Ledger, while the refiner's searches found 166; so my no-match search lines were weak evidence."
+    solution: "Document in github-integration.md which search tool and query form is reliable for the visitor-loop search step."

@@ -1,0 +1,30 @@
+name: clear-backlog-grilling-owner-deferrals
+summary: >-
+  The backlog Skill's grilling asked the owner about every deferred issue again, so the owner had to narrow the round.
+cause: >-
+  clear-backlog section 2 required grilling every owner-deferred issue, not only those the run's own sweep picked up, so the owner was asked again about issues nothing had changed for. Signals: the owner narrowing the grilling round to fresh issues, a grilling list padded with old deferrals. Full re-triage cost of deferred issues belongs in clear-backlog-deferred-issue-full-retriage; owner reservations in clear-backlog-owner-reservation-unhandled.
+surface: safe
+status: open
+fixes:
+  - pr: 1826
+    date: "2026-10-12"
+    summary: "Added the clear-backlog Skill and folded in findings from its first dry run."
+  - pr: 1833
+    date: "2026-10-12"
+    summary: "Folded in second dry-run findings: deferred issues stay in grilling; dropped an extra triage check."
+  - pr: 1863
+    date: "2026-10-13"
+    summary: "The grilling now covers only issues the run's own sweep picked up."
+notes: |-
+  2026-10-23 re-cluster: 01DtK8w6 (no rule for who may answer a delegated grilling) needs its own fix; left here as a single low-severity stray.
+occurrences:
+  - session: session_01DtK8w6aJ3361uPK73VAxhi
+    date: "2026-10-12"
+    severity: minor
+    description: "The Skill gave no rule for who may answer the grilling when the owner delegates; I had to invent a defer-the-consequential-ones policy on the fly in the dry run."
+    solution: "If delegated grilling recurs, state in clear-backlog what a stand-in may decide."
+  - session: session_01STVS35HcxNZp7dQ1pPnrhW
+    date: "2026-10-13"
+    severity: moderate
+    description: "clear-backlog §2 required grilling every deferred issue; the owner had to interrupt to narrow the round to the four fresh ones"
+    solution: "PR #1863 scopes the grilling to the sweep's own set"

@@ -22,8 +22,9 @@ or leaving the Markdown file.** The lens for every decision below is
 *author-facing, in-prose composition*.
 
 Using MDC in a layer needs a `components/content/` dir and a new SFC
-(mechanics: the research doc's §13). Atlas, glassbox and midden have one;
-Journal has none (its components sit in the prefixed `components/journal/` dir).
+(mechanics: the research doc's §13). Atlas, glassbox, midden and the Journal
+(its routine chart blocks) have one; the rest of the Journal's components sit in
+the prefixed `components/journal/` dir.
 
 ## The validation caveat (important in this repo)
 
@@ -48,6 +49,10 @@ composition**:
   agents) to compose from reusable blocks without touching Vue.
 - **One block with rich content** — a slot that holds formatted Markdown
   (emphasis, links, nested blocks) is exactly what slots are for.
+- **Blocks that share page data** — a block gets only what the Markdown names
+  (a Routine name, say). The page component loads the data once and `provide()`s
+  it; the blocks `inject()` it. Example: the Journal's `RoutineChart` and
+  `RoutineWeeklyTable` (`composables/routineData.ts`).
 
 ## When MDC is the wrong tool
 
@@ -69,8 +74,7 @@ code) when:
   page*, for content that used to be a small array, you've added moving parts,
   not removed them.
 - **Logic must wrap the block** — filtering, gating on other data, ordering.
-  That logic lives naturally in the SFC/computed, not in a body node the layout
-  has to reach into.
+  That logic lives naturally in the SFC/computed, not in a body node.
 
 ## Decision checklist
 
@@ -107,19 +111,18 @@ rendering through the existing `<ContentRenderer :value="rootDoc" />`. But it
 failed the checklist:
 
 1. **Placement (checklist #2).** The cards sit *between* the editorial intro and
-   the daily digests — a position the **page layout** owns. Body MDC would render
+   the daily digests, a position the **page layout** owns. Body MDC would render
    the block *inside* the intro's `<ContentRenderer>` output, wherever it sits in
-   `index.md`. There's no clean hoist; the workarounds (the `excerpt`
-   single-cut, or reading the body AST in the SFC to pull the node out) are
-   fragile.
-2. **Machinery (checklist #5).** It would add a `components/content/` dir, a new
-   SFC, and force the scoped `.onramp*` CSS out of `index.vue` — more parts, not
-   fewer — to replace a small array.
+   `index.md`; hoisting it out (the `excerpt` single-cut, or reading the body AST
+   in the SFC) is fragile.
+2. **Machinery (checklist #5).** A `components/content/` dir, a new SFC and the
+   scoped `.onramp*` CSS moved out of `index.vue`: more parts, not fewer, to
+   replace a small array.
 3. **Validation (checklist #3).** Body MDC skips Zod, so the card data would get
    no gate coverage.
-4. **Logic ("Logic must wrap the block").** The cards are filtered so a card only shows
-   when its target page exists in-Space — layout logic that lives cleanly in a
-   `computed`, awkwardly in a body node.
+4. **Logic ("Logic must wrap the block").** A card shows only when its target
+   page exists in-Space: layout logic that lives cleanly in a `computed`,
+   awkwardly in a body node.
 
 **What was chosen instead:** frontmatter on the *target* pages. Each explainer
 page declares its own `onramp` order + `onrampLabel`/`onrampBlurb`, and the

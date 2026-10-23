@@ -7,16 +7,11 @@ disable-model-invocation: true
 # atlas-specimen
 
 Add **one specimen** (or an interaction, or an observation) to the **Atlas of the
-Terrarium** — the design-heavy field-guide Tenant (spec #64; layers/atlas/GLOSSARY.md:
-Biome, Specimen, Interaction, Observation). A specimen is the Atlas's atomic unit
-of contribution: one Markdown file carrying the museum-label record in its
-frontmatter, the field-note essay in its body, and the engraved plate as an inline
-SVG. This Skill is the **single home** for the two things that keep the guide
-coherent: the **naturalist's voice** (#75) and the **engraved-plate art
-direction** (#74).
-
-> **Manually invoked** (`disable-model-invocation: true`). Lands through an
-> ordinary gated PR on a feature branch.
+Terrarium**, the field-guide Tenant (spec #64; terms in
+`layers/atlas/GLOSSARY.md`). A specimen is one Markdown file: the museum-label
+record in frontmatter, the field-note essay in the body, the engraved plate as
+inline SVG. This Skill is the single home for the **naturalist's voice** (#75)
+and the **engraved-plate art direction** (#74).
 
 Everything textual — field notes, log lines, relation notes, even empty states —
 speaks in the one naturalist's voice. Everything drawn obeys the one plate style.
@@ -116,7 +111,7 @@ Write to `layers/atlas/content/<biome>/pages/<slug>.md` where `<biome>` is one o
 museum-label record. The full schema is authoritative in
 `layers/atlas/tenant.config.ts`.
 
-**Give every new specimen its year.** The engraved almanac dial is the specimen page's primary instrument and reads the `phenology` block below (#279). Add `phenology` when you author a specimen, not afterward: a creature with no phases gives the dial nothing to show. `activity` carries the daily fact as the museum-label caption (`activity.label` — "a dusk-flier"); its hour `bands` don't drive the page's primary visual, so one honest band is enough.
+**Give every new specimen its year.** The almanac dial, the specimen page's main instrument, reads the `phenology` block below (#279), so add it when you author the specimen: with no phases the dial shows nothing. `activity.label` ("a dusk-flier") is the museum-label caption; its hour `bands` don't drive the main visual, so one honest band is enough.
 
 ```markdown
 ---
@@ -162,8 +157,8 @@ illustration: |
 A general introduction to the specimen, in the naturalist's voice (§1) — how it
 was found, its character, one anecdote. Prose, not bullets. No leading `#` (the
 binomial comes from the frontmatter). One or two short paragraphs, ending with a
-nudge to the dial ("… Turn the almanac to move through them; the seasons on the
-rim only say where in our shared year each falls.").
+short nudge to the dial in the creature's own terms, worded fresh for each
+specimen.
 
 ::almanac
 ::
@@ -180,9 +175,9 @@ dated observation nests inside the phase whose span contains its date.
 :::
 ```
 
-**`phenology.phases`** (#279) places the creature on the **Glass Year** as `activity`
-places it on the day; the Glass Year is the real 365-day calendar a specimen's
-`date`-bearing facts already use, not an invented one. Phases are free-form and
+**`phenology.phases`** (#279) places the creature on the **Glass Year** (the real 365-day
+calendar that a specimen's `date`-bearing facts already use) as `activity`
+places it on the day. Phases are free-form and
 per-creature, and **the essay is structured by them**: one `::phase-note` each, so
 a specimen's field note follows its own arc. The six Glass-Year *seasons* (a
 tenant-wide constant in `utils/almanac.ts`) stay on the dial's rim as context;
@@ -225,7 +220,7 @@ Write to `layers/atlas/content/<biome>/interactions/<from>-<kind>-<to>.yml`:
 from: lumina-fabulae      # actor slug
 to: mycora-susurrans      # acted-upon slug
 kind: pollinates          # preys-on | pollinates | mimics | shelters | fears
-note: tends the whisper mold at dusk, and is the only thing that does.
+note: "tends the whisper mold at dusk, and is the only thing that does."
 ```
 Both slugs must be specimens **in the same biome**. The `note` is one line in the
 voice — it reads the same from either side, so write it direction-neutral or from
@@ -241,7 +236,7 @@ Write to `layers/atlas/content/<biome>/observations/<date>-<slug-or-note>.yml`:
 date: 2026-07-06          # YYYY-MM-DD
 time: dusk                # dawn | noon | dusk | night
 specimen: lumina-fabulae  # slug observed — omit for an ambient note
-note: first sighting this season, near the west glass.
+note: "first sighting this season, near the west glass."
 ```
 
 ## 6. Hidden portraits (#76) — subtext, never reporting
@@ -257,7 +252,7 @@ innocent of the whole thing.
 
 ## 7. Verify
 
-Run `pnpm gate:scoped` before opening the PR (`scripts/gate/gate.ts` owns what it runs). Then eyeball the render — a specimen is a visual artifact,
-so screenshot the entry and the biome landing
-(`pnpm exec tsx scripts/ui/screenshot.ts <url> <out.png>`), don't trust the HTML text
+Run `pnpm gate:scoped` before opening the PR. Then screenshot the entry and the
+biome landing (`pnpm exec tsx scripts/ui/screenshot.ts <url> <out.png>`), since a
+specimen is a visual artifact: don't trust the HTML text
 (`docs/agents/verifying-ui-changes.md`: grepping SSR HTML is not proof a plate rendered).

@@ -1,0 +1,218 @@
+schemaVersion: 1
+session: session_018DaeF1okx3CjHh1GwVpwPf
+startedAt: 2026-10-19T16:48:11Z
+endedAt: 2026-10-19T17:10:51Z
+kind: autonomous
+goal: "Visitor-loop run on the homepage: three blind visitors, one feature"
+status: completed
+outcome: "No consensus fix survived; feature PR #2303 (real/invented tags on homepage cards) merged"
+summary: "Scheduled visitor-loop run (all agent-initiated; no human instruction). Focus was the homepage. Served a production build and sent sonnet, fable and opus visitors. Three consensus clusters came back (footer omits Glass Box; /t/glassbox vs /guide \"same page\"; Blog posts assume insider context); all were dropped, on decisions.md's footer ruling, because /t/glassbox is a 302 redirect, and because published posts are authored history. So there was no fix PR. My first feature pick (a counts pulse in the hero digest list) was dropped by the refiner: the hero is owner-protected and no merged-PR count exists. I built the refiner's replacement, a small real/invented tag beside each homepage card title (opus's idea), with an e2e test, DOM screenshots at 1280 and 390, gate:scoped green, and a code-review whose one important finding (inaccurate prop comment) I fixed. PR #2303 merged on a green gate."
+prs:
+  - "2303"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: relationships between Tenants, used to pick the tag wording
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read after hook prompt, alongside first fetch
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: push and merge steps for scheduled PRs
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: shot/review tooling
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read only by the refiner subagent, which called it partly useful; I did not open it
+    useful: partly
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: app/pages/index.vue
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: (no reason given)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the scheduled task itself
+  - name: code-review
+    reason: pre-push Standards and Spec review
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+  - name: adr-check
+    reason: (no reason given)
+frictions:
+  - description: Called mcp__github__search_issues before reading docs/agents/github-integration.md, which CLAUDE.md requires first; the hook only reminded me afterwards.
+    solution: No harm done; a rule-loading hook on the first mcp__github__ call would put the doc in front of the call.
+    severity: nit
+  - description: Tried a Bash call that was both run_in_background and ended in a shell backgrounding; the double-background guard blocked it and a sleep was blocked too.
+    solution: "The Skill text for visitor-loop could say once: wait for subagents by ending the turn, run gates with run_in_background only."
+    severity: nit
+durationSec: 1360
+models:
+  claude-sonnet-5-5: 98
+toolCounts:
+  Bash: 35
+  Agent: 6
+  ToolSearch: 1
+  mcp__github__search_issues: 3
+  Read: 2
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 2
+  ReadNotifications: 2
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/ui-verification.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0025.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/mermaid-lanes.md
+docsReadBySubagents:
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/github-integration.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - layers/journal/GLOSSARY.md
+  - .agents/skills/digest/SKILL.md
+  - layers/glassbox/GLOSSARY.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR at once and keep to the Skill's remit; summary was enough, no full ADR read.
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Required gate:scoped and code-review before the first push; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed no Human-only file changed; refiner and reviewers used it too.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main, not the branch; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Needed the session header on the PR body and comment; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded on index.vue; refiner cited it to drop the pulse feature; I did not open the full ADR.
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill layout; this run changed no Skill.
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Routing; not touched by a card tag.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal self-documentation; loaded for a subagent only, not relevant to the change.
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Digest rule; refiner used it to show digests hold no counts.
+    useful: partly
+  - path: .claude/rules/adr-0016.md
+    reason: Explained /t/glassbox as a root redirect, which dropped the visitors' same-page finding.
+    useful: yes
+  - path: .claude/rules/adr-0018.md
+    reason: Layer layout; not touched.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary split; loaded on glossary reads, not needed for this change.
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Cleared the homepage reading Tenants directly; I did not open the full ADR.
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; none touched my files.
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Payload caching; the card tag adds no data or request.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement; unrelated to this change.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading index.vue; unrelated to a text tag.
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on reading the Blog glossary via a subagent; unrelated to a card tag.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Layer conventions; the change was in main app files, so it did not apply.
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: Pointed me to verifying-ui-changes.md, which I used for screenshots.
+    useful: yes
+subagents:
+  - type: general-purpose
+    task: Visitor sonnet
+    model: sonnet
+  - type: general-purpose
+    task: Visitor fable
+    model: fable
+  - type: general-purpose
+    task: Visitor opus
+    model: opus
+  - type: general-purpose
+    task: Refiner fit check
+    model: opus
+  - type: general-purpose
+    task: Standards review
+  - type: general-purpose
+    task: Spec review
+gitBranch: claude/adoring-galileo-x4zixp
+entrypoint: remote_trigger
+cliVersion: 2.1.303
+trigger: visitor-loop
+ideas:
+  - "Blog post prev/next cards overflow at 390px on long titles and cause horizontal scroll (fable, single): let titles wrap and stack the two cards under 600px."
+  - "Journal /routines week table is clipped at 390px (fable, single): wrap it in an overflow-x container."
+  - "Journal digest stats sit jammed in the Also shipped paragraph (fable, single): move Sessions/Problems noted onto their own line."
+  - "Friction Ledger has 88 unfiltered clusters (fable, single): add status filter chips and top-15 collapse."
+  - "Commons search lists 20 Atlas spiders first, alphabetically (fable, single): default to newest-first or group by site."
+  - "Tinkerfund rewards say Est. delivery after the campaign shipped (fable, single): show Delivered once the shipped update exists."
+  - "Tinkerfund qa room note reads as dev-speak (fable, single): keep the qa term, reword after the dash to the test shop of odd campaigns."
+  - "Home digest teasers clamp mid-sentence on phones (sonnet, single): end the clamp with an ellipsis."
+  - "Atlas rarity row shows five filled dots for COMMON (sonnet, single): label it Very common or invert the dots."
+  - "Glass Box code excerpts are clipped at 390px with no scroll cue (opus, single): wrap long lines or add an edge fade."
+  - "Glass Box draft and guide chips are labelled inconsistently and the editions' commits differ unlabelled (opus, single): label chips by kind and show the edition commit."
+  - "Footer Elsewhere lists five sites though Glass Box now has its own homepage band (opus and fable): ask the owner whether decisions.md's five-site footer ruling should now include Glass Box."
+  - "RSS or Atom feed for Journal digests and Blog posts (opus, fable): needs a server route, out of this Skill's remit; file for a Trusted user."
+landedBy: Stop

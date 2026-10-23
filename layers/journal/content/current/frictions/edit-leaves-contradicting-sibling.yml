@@ -5,6 +5,10 @@ cause: >-
   After adding a section, the author did not search the same file for statements the new text overrides. Signals: leftover bullet contradicting a new section; caught by code-review.
 surface: safe
 status: open
+fixes:
+  - pr: 2336
+    date: "2026-10-20"
+    summary: "CLAUDE.md \"Verify before you state\" now names subagent reports, script behaviour from recall, \"only\"/\"every\"/\"nothing\" claims and one-test causes; \"One home per fact\" says to grep for other statements when changing one."
 occurrences:
   - session: session_01Fay2GiWTwxDKnnqS9DznHk
     date: "2026-10-16"
@@ -26,3 +30,23 @@ occurrences:
     severity: nit
     description: "Inserting a step into a numbered Skill forced renumbering and six cross-reference edits; two were nearly missed."
     solution: "Name steps by heading instead of number in visitor-loop so inserts don't ripple."
+  - session: session_01NqN7omu3o4kxoGeQzzSXhK
+    date: "2026-10-15"
+    severity: minor
+    description: "Build agents' decisions contradicted themselves: 2071 said the 22.13 claim was both verified and unverified; 2069 said expand-transition was left excluded, then kept re-included"
+    solution: "Have the fix agent rewrite decisions whole each round instead of appending, so stale lines drop out"
+  - session: session_01BePy3Sj8TRHv7YGtPqnpfB
+    date: "2026-10-17"
+    severity: minor
+    description: "My Hooks rewrite claimed every guard sets onFailure though the page itself said one fails open; only the late code-review caught it"
+    solution: "Check the rewritten claim against the page's own other lines (EVERY-PAGE.md Test the lede) before committing"
+  - session: session_012f7o6FcYxq1MWxvsdgKS6m
+    date: "2026-10-20"
+    severity: minor
+    description: "#2319 left pr-workflow step 4 demanding a code-review sha for PRs the new skip exempted, a contradiction I only found when the owner asked what guarantees review."
+    solution: "When an ADR change adds a skip, grep every consumer of the skipped step (merge-pr.ts verdict, step 4) in the same PR."
+  - session: session_019CbZiWqLbydExXQCmHRDyg
+    date: "2026-10-22"
+    severity: minor
+    description: "First commit left many callers pointing at removed glossary sections (manifests, theme.css, session.ts, an Atlas page); review caught them."
+    solution: "Before cutting a section, grep for its heading and phrases across code comments, not only Markdown (CLAUDE.md one home per fact)."

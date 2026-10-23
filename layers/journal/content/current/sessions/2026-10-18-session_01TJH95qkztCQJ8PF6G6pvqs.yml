@@ -1,0 +1,408 @@
+schemaVersion: 1
+session: session_01TJH95qkztCQJ8PF6G6pvqs
+startedAt: 2026-10-18T05:48:58Z
+endedAt: 2026-10-18T07:21:24Z
+kind: interactive
+goal: Clear the backlog of issues opened today
+status: completed
+outcome: "Seven issues triaged: five fixed and merged in six PRs, two parked by the owner"
+summary: "The owner ran clear-backlog on 'all issues opened today' (2026-10-18) and, when asked, widened the set to ready-for-agent issues (none) and the hook-wiring issue #2233. Explore triaged all seven; one grilling round plus follow-ups settled the picks, all human-instructed: #2232 cut the clear-backlog hook-wiring exclusion and accept string picks (PR #2240); #2229 allow batched visitor-loop tally lines, a deliberate policy change since the issue's 'regex bug' was intended behaviour (#2241); #2238 gate audit-skills observations on new evidence (#2242); #2228 correct the close-session prune-trial stat to 59 to 40 (#2245). #2239 shipped in #2243 with a per-run mean, which I had relayed from the issue without asking about the data shape; the owner then asked for one cost row per Routine run, never in session logs, Routine-fired runs only, plus a 40-day backfill, which landed in #2246 (265 runs, one row spot-checked against get_session). Parked by the owner: #2233 (stop-hook-nag) until the pr-workflow.md prune trial is judged, and #2231 (Journal accordion e2e race) after the owner stopped the reproduction: 285 local runs never reproduced it, it recurred once in a gate today, and the candidate fix (wait out the digest pin) is pushed without a PR on fix/2231-journal-accordion-e2e-race. Agent-initiated: separate branches for #2238 and #2239, and merging main into #2243. All PRs merged by me via merge-pr.ts; none touched a Human-only path."
+prs:
+  - "2240"
+  - "2241"
+  - "2242"
+  - "2243"
+  - "2245"
+  - "2246"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start glossary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: session-start glossary; Routine, Prune Trial, Human-only
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: "Subagents (24: yes 3, partly 20, no 1) e.g. The git hint pointed to it. Grepped only its Stop hook section to see what #2188 covered."
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: "Subagents (12: yes 1, partly 8, no 3) e.g. CLAUDE.md trigger before GitHub ops; confirmed that a label update replaces the set and th"
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: before pushing and opening PRs; verdict and merge-pr.ts steps
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: "Subagents (7: yes 4, partly 3, no 0) e.g. CLAUDE.md trigger before labelling; the label strings"
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "Subagents (4: yes 0, partly 4, no 0) e.g. CLAUDE.md trigger before labelling; skimmed with grep only"
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: "Subagents (2: yes 2, partly 0, no 0) e.g. The issue cites it. Showed that no guard or hook in the roster is the nag's source, which "
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "Subagents (7: yes 7, partly 0, no 0) e.g. Brief required it; the brave/determinability line and the closing rules"
+    useful: yes
+  - path: .agents/prune-trials.yml
+    reason: "Subagents (2: yes 2, partly 0, no 0) e.g. Read to answer whether the change falls in an open trial's territory."
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: "Subagents (1: yes 1, partly 0, no 0) e.g. The issue's target Skill; used to check its steps 1 and 5"
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Subagents (20: yes 16, partly 4, no 0) e.g. The task told me to read it and apply its Spec axis"
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "Subagents (3: yes 3, partly 0, no 0) e.g. Read to see whether fix PRs edit the ledger. They do not; §8 records the PR number."
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "Subagents (8: yes 2, partly 6, no 0) e.g. The task told me to read it and follow it."
+    useful: partly
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: "Subagents (1: yes 1, partly 0, no 0) e.g. Read to check how ledger stats are used (§5 line delta) and the trial-territory rules"
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "Subagents (7: yes 5, partly 2, no 0) e.g. Brief required it; the per-issue steps and labels"
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Subagents (2: yes 2, partly 0, no 0) e.g. Read with cat to check whether any touched path is Human-only. None is."
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: "Subagents (1: yes 0, partly 1, no 0) e.g. Read with cat because it governs audit-skills paths. It confirmed the Inventory-only write"
+    useful: partly
+  - path: .claude/skills/tdd/SKILL.md
+    reason: "Subagents (1: yes 1, partly 0, no 0) e.g. Invoked per brief for test-first."
+    useful: yes
+  - path: CLAUDE.md
+    reason: "Subagents (18: yes 10, partly 8, no 0) e.g. Loaded at session start. Its rule to question the premise led straight to the key finding."
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: "Subagents (1: yes 0, partly 1, no 0) e.g. Read as a possibly binding ADR for Skill and workflow changes. It confirmed both change th"
+    useful: partly
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: "Subagents (2: yes 2, partly 0, no 0) e.g. The binding ADR found by grep for audit-skills; confirmed the issue doesn't change its dec"
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "Subagents (6: yes 6, partly 0, no 0) e.g. Binding ADR for the sweep's labelling authority"
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "Subagents (2: yes 2, partly 0, no 0) e.g. Binding ADR for prune-trials.yml"
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: "Subagents (2: yes 2, partly 0, no 0) e.g. Read for Playwright click and scroll caveats; its point that click auto-scrolls the target"
+    useful: yes
+  - path: layers/journal/content/current/frictions/clear-backlog-gaps.yml
+    reason: "Subagents (1: yes 1, partly 0, no 0) e.g. Ledger entry named in the brief; read for the two frictions and the existing fixes shape."
+    useful: yes
+  - path: shared/schemas/session.ts
+    reason: "Subagents (1: yes 1, partly 0, no 0) e.g. Read to check the trigger/entrypoint semantics behind finding 1."
+    useful: yes
+  - path: tests/README.md
+    reason: "Subagents (2: yes 2, partly 0, no 0) e.g. Read to learn how e2e specs run and reuse the build; it showed my scratch spec would be pi"
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: How to author this log and answer the reads report
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: Grepped to verify triage's claim that one-candidate-per-line was the documented rule
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: "The Skill this run followed (delivered inline); the #2232 builder edited its §1"
+    useful: yes
+  - path: scripts/session/audit-skills.ts
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (read before editing)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/journal/tests/e2e/journal.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: clear-backlog
+    reason: owner-invoked backlog run
+  - name: grilling
+    reason: one round plus one follow-up for the five grill issues
+  - name: close-session
+    reason: PR-open log
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: list_issues' since filter is by update time, not creation, so 'opened today' needed a separate check of created_at on every hit.
+    solution: Note in github-integration.md that since filters updated_at.
+    severity: nit
+  - description: "The #2239 build agent reasoned about an owner question on 'pick 5' that its brief never contained, and spent words answering it."
+    solution: Find how chat text reaches workflow build agents; keep their input to brief and picks.
+    severity: minor
+  - description: "clear-backlog §1 again left the hook-wiring issue out by default, so I had to ask the owner, the same gap #2232 reports."
+    solution: "PR #2240 cuts the rule."
+    severity: nit
+  - description: "Broke CLAUDE.md 'Ask before building a data shape they may prefer': Q3 on #2239 never asked per-run vs mean, so #2243 shipped means and needed a second PR plus backfill."
+    solution: When a grill question settles a stored field, ask its shape explicitly; clear-backlog-explore could flag new schema fields as owner questions.
+    severity: moderate
+  - description: "After stopping the #2231 build I cited a commit and branch from the builder's first commit; a review round had rewritten them, so I posted a correction."
+    solution: Read git log in the worktree before quoting a sha from a transcript.
+    severity: minor
+  - description: Deleting the redundant prototype/2231-accordion-pin-wait branch I had just pushed was blocked by the auto-mode classifier, so it stays on origin.
+    solution: Don't push a prototype/ copy before the owner names the branch; ask the owner to delete it.
+    severity: nit
+  - description: "The #2246 build's first gate:scoped failed the flaky Journal accordion e2e (#2231), which its diff doesn't touch; the rerun passed."
+    solution: "Land a fix for #2231 once the owner un-parks it."
+    severity: minor
+durationSec: 5546
+models:
+  claude-opus-5-5: 199
+toolCounts:
+  Bash: 47
+  ToolSearch: 4
+  Read: 1
+  mcp__github__list_issues: 2
+  AskUserQuestion: 1
+  Workflow: 5
+  PushNotification: 1
+  Skill: 2
+  mcp__claude-code-remote__get_session: 2
+  mcp__github__add_issue_comment: 16
+  mcp__github__issue_write: 6
+  mcp__github__create_pull_request: 6
+  mcp__claude-code-remote__subscribe_pr_activity: 6
+  ReadNotifications: 6
+  TaskStop: 2
+filesEdited:
+  - layers/journal/tests/unit/skill-schema.spec.ts
+  - layers/journal/tenant.config.ts
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/prune-trials.yml
+  - layers/journal/tests/e2e/zz-repro-2231.spec.ts
+  - layers/journal/tests/e2e/journal.spec.ts
+  - layers/journal/content/current/frictions/flaky-e2e-matcher-timeouts.yml
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0015.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0025.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0014.md
+docsReadBySubagents:
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/prune-trial/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0009.md
+    reason: "Me: Made me log at PR open and keep logs off the branches. Subagents (38: yes 2, partly 7, no 29) e.g. Loaded at session start; not relevant to a triage subagent"
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: "Me: Made me open each PR right after its push and subscribe, and push the parked #2231 fix only as the owner asked. Subagents (38: yes 0, partly 4, no 34) e.g. Loaded at session start. Not needed for a triage-only pass."
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: "Me: Every issue comment and PR body carried the session header. Subagents (38: yes 8, partly 11, no 19) e.g. Loaded at session start; I made no GitHub writes"
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: "Me: Set what the sweep may label ready-for-agent versus grill. Subagents (8: yes 7, partly 0, no 1) e.g. Loaded at start and again on reading the triage Skills; it told me the sweep may grant rea"
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: "Me: Gate and review before first push, verdict comment, and who merges. Subagents (39: yes 10, partly 19, no 10) e.g. Loaded at session start; whether the fix needs a human merge"
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: "Subagents (34: yes 1, partly 3, no 30) e.g. Loaded on reading Skill files; not relevant"
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: "Me: Confirmed all seven issues came from the Trusted owner. Subagents (7: yes 3, partly 4, no 0) e.g. Loaded with the triage tools. Confirmed the OWNER author is Trusted."
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: "Subagents (3: yes 0, partly 0, no 3) e.g. Loaded when I read GLOSSARY.md."
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: "Me: Shaped picks 1a and 2a and the #2233 prune-trial check. Subagents (36: yes 16, partly 14, no 6) e.g. Loaded on reading prune-trials.yml; I needed to know whether fixing the ledger rewords an "
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: "Subagents (18: yes 0, partly 0, no 18) e.g. Loaded on reading Skill/doc files; not relevant"
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Me: Confirmed settings.json and scripts/hooks are Human-only, the premise of pick 1a. Subagents (12: yes 6, partly 3, no 3) e.g. Loaded when I touched Skill files; the Human-only list confirmed prune-trials.yml is not o"
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: "Subagents (2: yes 0, partly 0, no 2) e.g. Loaded on file reads. Unrelated to this issue."
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "Subagents (9: yes 0, partly 0, no 9) e.g. Loaded when the human-merge list was read; not relevant"
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "Me: Pointed to guards.md, read to judge #2233. Subagents (1: yes 0, partly 1, no 0) e.g. Loaded on reading .claude/settings.json. Pointed to guards.md."
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: "Subagents (6: yes 0, partly 3, no 3) e.g. Loaded with tenant.config.ts; confirmed a schema field belongs in the manifest"
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: "Subagents (8: yes 2, partly 6, no 0) e.g. Loaded on reading the journal layer. Confirmed the Ledger is derived and refreshed in plac"
+    useful: partly
+  - path: .claude/rules/adr-0014.md
+    reason: "Subagents (3: yes 0, partly 0, no 3) e.g. Loaded on reading vitest.config.ts; not relevant."
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "Me: Loaded on the audit-skills worktree; confirmed audit-skills writes only Inventory entries. Subagents (5: yes 3, partly 1, no 1) e.g. Loaded when I read audit-skills files; it limits audit-skills to editing Inventory entries"
+    useful: partly
+  - path: .claude/rules/adr-0025.md
+    reason: "Subagents (1: yes 0, partly 0, no 1) e.g. Loaded on reading shared/schemas/session.ts; no cross-Tenant read."
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "Subagents (6: yes 0, partly 0, no 6) e.g. Loaded on reading journal content. Not relevant."
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "Subagents (8: yes 0, partly 0, no 8) e.g. Loaded on reading the layers/ files. Not relevant."
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: Standards feat/2239-routine-token-usage r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix fix/2229-owner-corrections-batched-lines r1
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: build feat/2239-routine-token-usage
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build fix/2232-clear-backlog-cut-hook-exclusion
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards fix/2229-owner-corrections-batched-lines r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec fix/2238-audit-skills-observation-evidence r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec fix/2229-owner-corrections-batched-lines r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards fix/2238-audit-skills-observation-evidence r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec feat/2239-routine-token-usage r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec feat/2239-routine-token-usage r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec fix/2232-clear-backlog-cut-hook-exclusion r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build fix/2229-owner-corrections-batched-lines
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: build fix/2238-audit-skills-observation-evidence
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards fix/2229-owner-corrections-batched-lines r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec fix/2229-owner-corrections-batched-lines r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix feat/2239-routine-token-usage r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards feat/2239-routine-token-usage r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards fix/2232-clear-backlog-cut-hook-exclusion r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec fix/2239-per-run-token-costs r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards fix/2239-per-run-token-costs r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build fix/2239-per-run-token-costs
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards fix/2231-journal-accordion-e2e-race r3
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build fix/2228-prune-trial-line-delta
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: Standards fix/2231-journal-accordion-e2e-race r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec fix/2231-journal-accordion-e2e-race r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards fix/2228-prune-trial-line-delta r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec fix/2228-prune-trial-line-delta r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec fix/2231-journal-accordion-e2e-race r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix fix/2231-journal-accordion-e2e-race r2
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Spec fix/2231-journal-accordion-e2e-race r3
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build fix/2231-journal-accordion-e2e-race
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: fix fix/2231-journal-accordion-e2e-race r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: Standards fix/2231-journal-accordion-e2e-race r1
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: build fix/2239-per-run-token-costs
+    model: claude-sonnet-5-5
+  - type: workflow-subagent
+    task: "triage #2231"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2232"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2239"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2228"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2233"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2229"
+    model: claude-opus-5-5
+  - type: workflow-subagent
+    task: "triage #2238"
+    model: claude-opus-5-5
+gitBranch: ccr-180fd3aa-efiahz
+entrypoint: remote_mobile
+cliVersion: 2.1.302
+landedBy: Stop

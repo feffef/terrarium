@@ -4,18 +4,22 @@
 // closure-completeness signals — and prints compact JSON. Every judgement stays
 // with the Skill's session.
 //
-// Usage:  tsx scripts/session/audit-skills.ts [--days N]
-import { existsSync, readFileSync, readdirSync } from 'node:fs'
-import { join } from 'node:path'
+// Usage:  tsx scripts/session/audit-skills.ts [--days N] [--briefs DIR]
+//         tsx scripts/session/audit-skills.ts --skill NAME --since ISO   (one Skill's usage instead)
+//         tsx scripts/session/audit-skills.ts --adr-reads --since ISO [--until ISO]   (governing ADRs read in full)
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
+import { join, matchesGlob } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { isContentPath } from './transcript-trace.ts'
-import { isExternalSession } from '../../shared/schemas/session.ts'
+import { adrHint, isExternalSession, type AdrHint } from '../../shared/schemas/session.ts'
 import { git, SESSION_TRAILER } from '../lib/git.ts'
 import { asRecord, frontmatterBlock } from '../lib/frontmatter.ts'
 import { listAll, resolveAccess, type Access } from '../lib/github-client.ts'
 import { readProvenanceHeader } from '../lib/provenance-header.ts'
+import { toOpenIssue, type OpenIssue, type RawIssueApiRecord } from '../github/list-open-issues.ts'
 import { ARCHIVED_SESSIONS_DIR, readSessionLogs, SESSIONS_DIR } from './journal-files.ts'
 import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
+import { adrDocNumber, loadRules, RULES_DIR, ruleAdr, rulePaths, type RuleFile } from '../lib/adr-rules.ts'
 
 /** The observation window, in days before now. Time-based rather than a session
  *  count, so the scheduled Routines' own runs can't shrink it to a couple of days. */
@@ -82,9 +86,15 @@ export interface Session {
   humanPromptedClosure: boolean
   /** `docsRead` paths, feeding `docReadCounts`. */
   docsRead: string[]
+  /** `docsReadBySubagents` paths (a subset of `docsRead`), feeding `skillQuery`. */
+  docsReadBySubagents: string[]
+  filesEdited: string[]
+  adrHints: AdrHint[]
+  /** The Routine that fired it (`entrypoint: remote_trigger`), else null. */
+  trigger: string | null
 }
 /** A windowed session as printed — what the Skill judges "kind of work" from. */
-export type WindowSession = Omit<Session, 'humanPromptedClosure' | 'docsRead' | 'mentioned' | 'humanInvoked'>
+export type WindowSession = Omit<Session, 'humanPromptedClosure' | 'docsRead' | 'docsReadBySubagents' | 'mentioned' | 'humanInvoked' | 'trigger' | 'filesEdited' | 'adrHints'>
 export interface OnDiskSkill {
   description: string
   /** False when its frontmatter sets `disable-model-invocation: true`. */
@@ -140,6 +150,11 @@ export interface SkillRow {
    *  untested by it, not broken (#1479, #1515). The CLI warns on stderr for
    *  each behaviour-checked Skill this is non-empty for. */
   changes: Landing[]
+}
+/** One Routine's windowed runs; the agent looks up each id's usage (issue #2239). */
+export interface RoutineRuns {
+  routine: string
+  runs: { session: string; startedAt: string; durationSeconds: number }[]
 }
 
 /** issue #349's orphaned-session signal. */
@@ -197,6 +212,7 @@ export interface Scorecard {
   since: string
   window: WindowSession[]
   skills: SkillRow[]
+  routineRuns: RoutineRuns[]
   /** Own Skills used in ≥ `BEHAVIOUR_CHECK_MIN_USES` windowed sessions. */
   behaviourChecks: string[]
   orphanedSessions: OrphanedSession[]
@@ -212,7 +228,7 @@ export interface Scorecard {
   /** Path → how many windowed sessions opened it.
    *
    *  **This docstring is the single home for how to read a doc-read count**
-   *  (read by `audit-docs` and `frictions-to-fixes`). A doc a Skill tells you
+   *  (read by `frictions-to-fixes`). A doc a Skill tells you
    *  to read, sitting at 0, is evidence the pointer isn't landing — but only
    *  ever *corroborating* evidence, for three independent reasons: a
    *  topic-scoped doc reads 0 because that work didn't come up; a shell read
@@ -232,6 +248,94 @@ export function pickWindow(sessions: readonly Session[], since: string): Session
   return sessions
     .filter((s) => Date.parse(s.endedAt) >= from)
     .sort((a, b) => b.endedAt.localeCompare(a.endedAt) || b.session.localeCompare(a.session))
+}
+
+/** The sessions that STARTED at or after `since`: one that began before a Skill
+ *  landed couldn't use it, so an end-time window misleads (#2384). */
+export function startedWindow(sessions: readonly Session[], since: string): Session[] {
+  const from = Date.parse(since)
+  return sessions.filter((s) => Date.parse(s.startedAt) >= from)
+}
+
+export interface SkillQuerySession {
+  session: string
+  /** `docs/adr/` paths the main agent read; `docsRead` also holds the subagents' reads. */
+  adrsRead: string[]
+  adrsReadBySubagents: string[]
+}
+export interface SkillQuery {
+  used: Record<string, SkillQuerySession[]>
+  notUsed: Record<string, SkillQuerySession[]>
+}
+
+/** `sessions` split by whether they used `skill`, each side grouped by kind. */
+export function skillQuery(sessions: readonly Session[], skill: string): SkillQuery {
+  const adrs = (paths: readonly string[]) => paths.filter((p) => p.startsWith('docs/adr/'))
+  const out: SkillQuery = { used: {}, notUsed: {} }
+  for (const s of sessions) {
+    const side = s.skillsUsed.includes(skill) ? out.used : out.notUsed
+    ;(side[s.kind] ??= []).push({ session: s.session, adrsRead: adrs(s.docsRead).filter((p) => !s.docsReadBySubagents.includes(p)), adrsReadBySubagents: adrs(s.docsReadBySubagents) })
+  }
+  return out
+}
+
+export interface AdrReads {
+  sessions: number
+  /** Sessions with at least one governing ADR. */
+  governed: number
+  /** Session–ADR pairs where a rule's `paths` match a file the session edited. */
+  pairs: number
+  readInFull: number
+  readInFullPct: number | null
+  /** Governed sessions that read every governing ADR in full, or none. */
+  readAll: number
+  readNone: number
+}
+
+/** Per session kind and overall: how many governing ADRs each session read in
+ *  full, by its own or a subagent's read (`docsRead` holds both). Measures the
+ *  write-time hint, `scripts/hooks/adr-read-hint.ts`. */
+export function adrReadReport(sessions: readonly Session[], rules: readonly RuleFile[]): Record<string, AdrReads> {
+  const globs = rules.flatMap((r) => rulePaths(r.text).map((g) => [ruleAdr(r.file), g] as const)).filter(([n]) => n)
+  const out: Record<string, AdrReads> = {}
+  for (const s of sessions) {
+    const governing = new Set(globs.filter(([, g]) => s.filesEdited.some((f) => matchesGlob(f, g))).map(([n]) => n!))
+    // A log records a partial Read like a full one, so this is an upper bound.
+    const read = [...governing].filter((n) => s.docsRead.some((p) => adrDocNumber(p) === n)).length
+    for (const key of ['all', s.kind]) {
+      const a = (out[key] ??= { sessions: 0, governed: 0, pairs: 0, readInFull: 0, readInFullPct: null, readAll: 0, readNone: 0 })
+      a.sessions++
+      if (!governing.size) continue
+      a.governed++
+      a.pairs += governing.size
+      a.readInFull += read
+      if (read === governing.size) a.readAll++
+      if (read === 0) a.readNone++
+      a.readInFullPct = Math.round((100 * a.readInFull) / a.pairs)
+    }
+  }
+  return out
+}
+
+/** Per ADR and how it matched: the `adrHints` entries, so each session counts
+ *  once for its main agent and once for all its subagents together, and how
+ *  many of those read the ADR in full afterwards. */
+export function adrHintReport(sessions: readonly Session[]): Record<string, { contextsHinted: number; readAfter: number; readAfterPct: number }> {
+  const out: Record<string, { contextsHinted: number; readAfter: number; readAfterPct: number }> = {}
+  for (const h of sessions.flatMap((s) => s.adrHints)) {
+    const a = (out[`ADR-${String(h.adr).padStart(4, '0')} ${h.via}`] ??= { contextsHinted: 0, readAfter: 0, readAfterPct: 0 })
+    a.contextsHinted++
+    if (h.readAfter) a.readAfter++
+    a.readAfterPct = Math.round((100 * a.readAfter) / a.contextsHinted)
+  }
+  return out
+}
+
+export type IssueRecord = RawIssueApiRecord & { body?: string | null }
+
+/** Open issues whose title or body names `skill` as a whole token. */
+export function issuesNamingSkill(records: readonly IssueRecord[], skill: string): OpenIssue[] {
+  return records.filter((r) => namesSkill(`${r.title}\n${r.body ?? ''}`, skill)).flatMap((r) => toOpenIssue(r) ?? [])
 }
 
 /** Skill name → the ids of the sessions that used it (or, via `field`, named or
@@ -338,9 +442,50 @@ export function pickSkillChanges(landings: readonly Landing[], name: string, scr
   })
 }
 
+/** How many of a Skill's newest runs its behaviour-check subagent reads. */
+export const BRIEF_RUNS = 10
+
+/** The data half of a behaviour-check brief (step 2): what the parent would
+ *  otherwise assemble by hand from the scorecard. The ask itself is the
+ *  Skill's `brief.md`. */
+export function buildBrief(row: SkillRow, window: readonly WindowSession[]): string {
+  const byId = new Map(window.map((w) => [w.session, w]))
+  const newestFirst = (ids: readonly string[]) =>
+    ids.map((id) => byId.get(id)).filter((w): w is WindowSession => Boolean(w)).sort((a, b) => b.startedAt.localeCompare(a.startedAt))
+  const runLine = (w: WindowSession) => `- ${w.session} · ${w.startedAt} · ${w.file}`
+  const lines = [`# ${row.name}`, '', `SKILL.md: ${SKILLS_DIR}/${row.name}/SKILL.md`, '', '## Changes since the earliest run started']
+  if (row.changes.length) {
+    lines.push('A run whose `startedAt` precedes a landing is graded against the text before it (`git show <sha>^:<path>`).')
+    for (const c of row.changes) lines.push(`- ${c.sha} · ${c.landedAt} · ${c.paths.join(', ')}`)
+  } else lines.push('None: every run is graded against the files on disk.')
+  lines.push('', `## Runs (newest ${BRIEF_RUNS}; log files to read)`)
+  const runs = newestFirst(row.usedIn).slice(0, BRIEF_RUNS)
+  lines.push(...(runs.length ? runs.map(runLine) : ['None.']))
+  if (row.modelInvoked) {
+    const used = new Set(row.usedIn)
+    lines.push('', '## Sessions that did not use it (rule each in or out)')
+    const others = window.filter((w) => !used.has(w.session)).sort((a, b) => b.startedAt.localeCompare(a.startedAt))
+    lines.push(...others.map((w) => `${runLine(w)} · goal: ${w.goal} · skillsUsed: ${w.skillsUsed.join(', ') || 'none'}`))
+  }
+  lines.push('', '## Observations (what is already known)')
+  lines.push(...(row.observations.length ? row.observations.map((o) => `- ${o.date}: ${o.note.replace(/\s+/g, ' ').trim()}`) : ['None.']))
+  return lines.join('\n') + '\n'
+}
+
 /** Own, on-disk Skills used often enough in the window to judge their behaviour. */
 export function pickBehaviourChecks(rows: readonly SkillRow[], minUses = BEHAVIOUR_CHECK_MIN_USES): string[] {
   return rows.filter((r) => r.onDisk && !r.external && r.useCount >= minUses).map((r) => r.name)
+}
+
+/** Routine-fired sessions grouped by Routine, sorted by name, keeping input order within one. */
+export function pickRoutineRuns(sessions: readonly Session[]): RoutineRuns[] {
+  const byRoutine = new Map<string, RoutineRuns['runs']>()
+  for (const s of sessions) {
+    if (!s.trigger) continue
+    const durationSeconds = Math.round((Date.parse(s.endedAt) - Date.parse(s.startedAt)) / 1000)
+    byRoutine.set(s.trigger, [...(byRoutine.get(s.trigger) ?? []), { session: s.session, startedAt: s.startedAt, durationSeconds }])
+  }
+  return [...byRoutine].sort(([a], [b]) => a.localeCompare(b)).map(([routine, runs]) => ({ routine, runs }))
 }
 
 /** Path → how many sessions opened it; a session reading a path twice counts once. */
@@ -391,6 +536,10 @@ export function toSession(raw: Record<string, unknown>, file: string, skillNames
     docsRead: (Array.isArray(raw.docsRead) ? raw.docsRead : [])
       .map((d: Record<string, unknown>) => String(d.path ?? ''))
       .filter(isContentPath),
+    docsReadBySubagents: (Array.isArray(raw.docsReadBySubagents) ? raw.docsReadBySubagents : []).map(String),
+    filesEdited: (Array.isArray(raw.filesEdited) ? raw.filesEdited : []).map(String),
+    adrHints: adrHint.array().catch([]).parse(raw.adrHints ?? []),
+    trigger: raw.entrypoint === 'remote_trigger' && raw.trigger ? String(raw.trigger) : null,
   }
 }
 
@@ -843,6 +992,7 @@ export function scorecard(windowDays = DEFAULT_WINDOW_DAYS, cwd = root, now = Da
     since,
     window: window.map(({ session, file, kind, goal, startedAt, endedAt, skillsUsed }) => ({ session, file, kind, goal, startedAt, endedAt, skillsUsed })),
     skills,
+    routineRuns: pickRoutineRuns(window),
     behaviourChecks: pickBehaviourChecks(skills),
     orphanedSessions: orphans.orphaned,
     orphanScan: scan.status,
@@ -853,10 +1003,43 @@ export function scorecard(windowDays = DEFAULT_WINDOW_DAYS, cwd = root, now = Da
   }
 }
 
+/** The one-Skill query: windowed usage plus live open issues naming the Skill
+ *  (GitHub stays the only home for whether an issue is open); a failed fetch is
+ *  reported in the output, not thrown. */
+export function skillReport(skill: string, since: string, cwd = root) {
+  const skillNames = readSkillNames(cwd)
+  if (!skillNames.has(skill)) fail(`unknown Skill: ${skill}`)
+  if (!Number.isFinite(Date.parse(since))) fail(`--since is not a timestamp: ${since}`)
+  let issues: { openIssues: OpenIssue[] } | { openIssuesError: string }
+  try {
+    issues = { openIssues: issuesNamingSkill(listAll<IssueRecord>(resolveAccess(cwd), 'issues', { state: 'open' }), skill) }
+  } catch (err) {
+    issues = { openIssuesError: err instanceof Error ? err.message : String(err) }
+  }
+  return { skill, since, ...issues, ...skillQuery(startedWindow(readSessions(cwd, skillNames), since), skill) }
+}
+
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
 function main(): void {
   const argv = process.argv.slice(2)
+  if (argv.includes('--adr-reads')) {
+    const since = flagValue(argv, '--since')
+    const until = flagValue(argv, '--until') ?? new Date().toISOString()
+    if (!since || ![since, until].every((t) => Number.isFinite(Date.parse(t)))) fail('--adr-reads needs --since ISO, and --until ISO if given')
+    const sessions = startedWindow(readSessions(root, readSkillNames()), since).filter((s) => Date.parse(s.startedAt) < Date.parse(until))
+    const report = { since, until, ...adrReadReport(sessions, loadRules(join(root, RULES_DIR))), hints: adrHintReport(sessions) }
+    process.stdout.write(JSON.stringify(report, null, 2) + '\n')
+    return
+  }
+  const skill = flagValue(argv, '--skill')
+  if (argv.includes('--skill')) {
+    const since = flagValue(argv, '--since')
+    if (!skill || skill.startsWith('--')) fail('--skill needs a Skill name')
+    if (!since) fail('--skill needs --since ISO')
+    process.stdout.write(JSON.stringify(skillReport(skill, since)) + '\n')
+    return
+  }
   const daysArg = flagValue(argv, '--days')
   const days = daysArg ? Number(daysArg) : DEFAULT_WINDOW_DAYS
   if (!Number.isInteger(days) || days <= 0) fail('--days must be a positive integer')
@@ -864,6 +1047,13 @@ function main(): void {
   for (const row of card.skills) {
     if (card.behaviourChecks.includes(row.name) && row.changes.length) {
       console.error(`audit-skills: warning: ${row.name} changed while its runs were happening (${row.changes.length} landing(s), see its \`changes\`) — a run that started before one is graded against the earlier text`)
+    }
+  }
+  const briefsDir = flagValue(argv, '--briefs')
+  if (briefsDir) {
+    mkdirSync(briefsDir, { recursive: true })
+    for (const row of card.skills) {
+      if (card.behaviourChecks.includes(row.name)) writeFileSync(join(briefsDir, `${row.name}.md`), buildBrief(row, card.window))
     }
   }
   process.stdout.write(JSON.stringify(card, null, 2) + '\n')

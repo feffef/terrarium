@@ -373,3 +373,71 @@ observations:
       rather than this Skill's own Agent-tool remit, a shape the 2026-10-15
       entry already names. No new silent failure, no new missed invocation.
       Grade/role unchanged (essential).
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 10/10 usedInLogs sessions
+      clean (no stranded work, no `merge-pr.ts` delegated to a subagent,
+      worktree isolation used correctly on every git-touching dispatch,
+      including session_013RCsUF234qAGu3CJr3v2on's 6-agent `scripts/`
+      restructure and session_01CtktRkpbF4wQ3TTQVYUqLz's 6-parallel
+      glassbox-update recheck). ~121 nonUsersInWindow screened by goal
+      (~105 ruled out directly), 4 opened in full as ambiguous shapes
+      (session_0166zWrnaKYByq5Z2Qj5nXRM, session_01NFv67izdzVGrFHb2EVwZJ2,
+      session_01BdQnbVQmdfrD1PPyZTnL9w, session_018KSwetqxttBFszkhTKZkF1)
+      - all strictly read-only or orchestrator-authored dispatches, so
+      worktree isolation was never actually required; no missed invocation
+      with damage. Recurring already-tracked, owner-accepted footguns
+      recurred in session_01J4ze3DvsZhXeP78iyRnbSd and
+      session_01CzkKVxSTE7a4amfXnxrvF9 (#1480 cd-into-worktree),
+      session_018sAirSgDY1Nv82JVogjcyR (#847/#1191 scratchpad-naming
+      collision), and 3 of the 4 fully-opened sessions above (#1586/#1915
+      skillsUsed-crediting gap on this Skill's own reads) - not new
+      instances. No new silent failure, no new missed invocation.
+      Grade/role unchanged (essential).
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): 10/10 usedIn clean, pnpm
+      check:worktrees passes, no new stranding/collision. Two new instances of
+      the already-tracked, owner-closed-wontfix #1586/#1915
+      skillsUsed-crediting gap: session_011xvPjJVknZzx45v7NjhebT (the prior
+      week's audit-skills orchestrator) and session_01BTtvaFQckiQwtGZsasWPJH (a
+      clear-backlog sweep) each read dispatch-subagents/SKILL.md before
+      dispatching but omitted it from skillsUsed — sub-threshold, no damage
+      (isolation correctly judged unnecessary / handled via the Workflow tool
+      carve-out in both cases). windowNotUsed: 133 screened, 4 opened fully, no
+      missed invocation. Grade/role unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check, 10/10 newest usedIn clean, including a 26-subagent
+      scripts/ restructure with correct worktree isolation at scale. Noted,
+      not escalated: a push-responsibility ambiguity in SKILL.md section 3
+      when the build agent is worktree-isolated (session_01VH74k3Z27QtjR19XNC76qm,
+      self-caught, no damage); recurrences of the closed-wontfix
+      #1480/#1586 shapes (self-caught); a major screenshot-read-loop
+      incident (session_01CtktRkpbF4wQ3TTQVYUqLz, 10-17) already fixed the
+      next day via merged PR #2235. ~123 nonUsers triaged by goal, no new
+      missed invocation found. Grade/role unchanged.
+  - date: "2026-10-22"
+    note: >-
+      Self-check, 10/10 usedIn clean (no stranding, no merge-pr.ts-to-subagent,
+      no new branch/worktree collision beyond the already-closed-not_planned
+      #1480/#1586 shapes recurring self-caught). NEW, single-instance, not
+      escalated: session_01Y8rMxQ5cH3oLqzHegyQnFx found that
+      clear-backlog-build's fix loop spawns a fresh Workflow-tool agent per
+      review round rather than resuming one, because the Workflow API can't
+      continue a stopped run — directly contrary to this Skill's "never
+      re-dispatch, always resume" rule (now §6), and the fresh agent's
+      prompt omits the prior round's build decisions. No open issue names
+      it; the session's own outcome left it for the owner to decide rather
+      than filing. Worth escalating if it recurs or if a human wants it
+      filed now. Grade/role unchanged (essential).
+  - date: "2026-10-23"
+    note: >-
+      10/10 usedIn clean (no stranding, no merge-pr.ts-to-subagent, no new
+      collision beyond the already-closed-not_planned #1480/#1586 shapes
+      recurring self-caught); check:worktrees passes. One new,
+      single-instance, unverified-severity note: session_01JkRFBik4MUWwZcP45q7egk
+      found SKILL.md's "run the gate in the foreground" line contradicts
+      CLAUDE.md's "background anything over 2 minutes" rule; it followed
+      CLAUDE.md and the gate passed, no damage. Worth escalating if it ever
+      causes a real backgrounding failure. Grade/role unchanged (essential).

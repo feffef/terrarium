@@ -1,0 +1,189 @@
+schemaVersion: 1
+session: session_01GfmoxeLwrvC7CARuaBAXfB
+startedAt: 2026-10-18T07:39:05Z
+endedAt: 2026-10-18T11:50:43Z
+kind: interactive
+goal: Move Routine run costs to a journal collection; Karen replies to David on the Glass Box cost
+status: completed
+outcome: PR 2247 (routines collection) and PR 2250 (Karen's reply on the Glass Box cost) both merged
+summary: "First task, human-instructed: move Routine run costs from the Skill Inventory into a journal routines collection. I asked first, the user chose the shape (one doc per Routine, move rows, startedAt and durationSeconds, current Space only, prune to 30), and PR 2247 merged after a human review of its ADR-0015 change. Second task, human-instructed via /blog-post: a Karen reply to David explaining the expensive Glass Box session. I wrongly framed the target as David's visitor-loop outlier in my question; the user corrected me, so the post is about session_01CtktRkpbF4wQ3TTQVYUqLz ($88.32, a screenshot-review subagent reading 76 shots). The user wanted the cause to be image handling failing; the transcript reader could not reach that phase, so the post rests on the session log, the friction cluster, PR 2235 and the API cost, and says the share of cost spent on the pictures is unknown. Agent-chosen: Karen's voice and angle, the sources, the fact-check and the wording fixes after the blind read. PR 2250 merged on a green gate after my verdict comment; I skipped the Skill's step 12 reply round because the user asked for one reply, and said so on the PR."
+prs:
+  - "2247"
+  - "2250"
+docsRead:
+  - path: GLOSSARY.md
+    reason: Routine, Skill Inventory, Importance definitions
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: required session-start read; Journal glossary pointer
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, PR recipe
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit message and trailer hygiene
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP write path for the PR
+    useful: partly
+  - path: docs/agents/mdc-when-to-use.md
+    reason: checklist for a new data Collection; a data collection fit
+    useful: partly
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: steps 1, 5, 6 held the runCosts instructions I rewrote
+    useful: yes
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: Karen's voice and do/don't list for the draft
+    useful: yes
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (no reason given)
+  - path: layers/journal/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/journal/tests/unit/skill-schema.spec.ts
+    reason: (no reason given)
+  - path: scripts/session/audit-skills.ts
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-10-18-the-priciest-session-never-made-the-cost-ledger.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-17-session_01CtktRkpbF4wQ3TTQVYUqLz.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec review before the first push
+  - name: close-session
+    reason: PR opened
+  - name: blog-post
+    reason: user invoked it for the Karen reply
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git log on the skill files before reading git-conventions.md, which CLAUDE.md requires before the first git command beyond status and diff.
+    solution: Read the doc at session start together with the glossary, or have the hook fire before the first Bash call.
+    severity: nit
+  - description: First migration script re-serialized skill YAML, reformatting every long prose field, so I had to restore the files and redo the edit as a text cut.
+    solution: Edit YAML as text or with parseDocument for a field removal; check git diff --stat right after any data migration.
+    severity: minor
+  - description: The scratchpad cannot resolve node modules, so the migration script failed once and needed a temporary copy in the repo root.
+    solution: Note in environment-caveats that one-off tsx scripts must run from the repo.
+    severity: nit
+  - description: Spawned two review subagents without invoking the dispatch-subagents Skill, which CLAUDE.md names for subagents that touch git; they only ran read-only git diff.
+    solution: Say in CLAUDE.md that read-only subagents need no Skill, or invoke it anyway.
+    severity: nit
+  - description: My first Angle question described David's visitor-loop outlier as the target of the reply, though the user meant the Glass Box drafts session, so the investigation took a detour until corrected.
+    solution: Search the ledger and logs for the named session type before offering choices, and ask which session in plain words.
+    severity: moderate
+  - description: A subagent could not reach the screenshot phase of the stuck session through list_events, so image handling as the cause stayed unconfirmed after a full run.
+    solution: The transcript recipe could say pages span only minutes and to expect the log, not the transcript, to hold late phases.
+    severity: nit
+durationSec: 15097
+models:
+  claude-sonnet-5-5: 196
+toolCounts:
+  Read: 12
+  Grep: 4
+  Bash: 47
+  AskUserQuestion: 4
+  Skill: 6
+  Agent: 5
+  ToolSearch: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 6
+  mcp__github__pull_request_read: 5
+  mcp__claude-code-remote__get_session: 2
+  mcp__github__add_issue_comment: 2
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the first push; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log-session rule; the summary was enough to know the log goes straight to main.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR without asking and subscribe; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and the commit trailer; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement; I added no term, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Its scope line was stale after my change, so I updated the ADR and the rule; I opened the ADR for the exact wording.
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on editing tenant.config.ts; nothing in it applied to a manifest-only change.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Confirmed the new Collection belongs in the manifest only; the summary was enough.
+    useful: yes
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded for a new data Collection; confirmed a data collection fits, and I read the doc.
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: Inventories are derived; did not change what I did.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; no open trial covered the text I changed.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rules load with their files; it guided adding paths to the ADR-0015 rule.
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are code; the audit-skills edit went through a gated PR as it says.
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Showed docs/adr and .claude/rules need a human merge, which I stated in the PR.
+    useful: yes
+  - path: .claude/rules/adr-0025.md
+    reason: Cross-Tenant catalog; the routines Collection opts into no kind, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Told me to rewrite the ADR in place and re-stamp the hash; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback goes in David's Space in the same PR; the summary was enough
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by reading a post; no diagram involved
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+  - type: general-purpose
+    task: Spec review of diff
+  - type: general-purpose
+    task: Read stuck session transcript
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check Karen's post
+    model: sonnet
+  - type: general-purpose
+    task: Blind read of Karen's post
+    model: sonnet
+gitBranch: ccr-caf968a5-v5wawo
+entrypoint: remote_mobile
+cliVersion: 2.1.302
+landedBy: Stop

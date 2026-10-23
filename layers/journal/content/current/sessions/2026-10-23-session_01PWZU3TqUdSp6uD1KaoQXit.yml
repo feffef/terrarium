@@ -1,0 +1,349 @@
+schemaVersion: 1
+session: session_01PWZU3TqUdSp6uD1KaoQXit
+startedAt: 2026-10-23T05:04:29Z
+endedAt: 2026-10-23T07:46:06Z
+kind: interactive
+goal: Judge whether the adr-check Skill helps, and replace it with a write-time ADR hint
+status: completed
+outcome: "PR #2431 merged: adr-read-hint hook and adrHints log field replace adr-check; relevantAdrs removed"
+summary: "Human-instructed throughout. The owner asked me to read #2286 and critically review whether adr-check had any positive impact; I asked how to judge it (owner: outcome, process and cost signals, an equal pre-#2284 baseline, chat first). A throwaway analysis of every session log in both windows and all 120 ADR-related Frictions showed a modest interactive process gain, no drop in ADR-content mistakes, and real cost. At the owner's request three inspect-session reads verified that the counted \"users\" were inflated (skillsUsed folds subagent calls) and that the three post-landing errors came from adr-check not running, its output cut by head -150, or the touched ADR going unread. The owner asked for a simpler mechanism; I proposed a write-time hint (rule paths plus ADR numbers named in the edit), a Fable agent designed it at the owner's request, and the owner chose to retire adr-check and the relevantAdrs prompt together with the hint; I posted the plan to #2286. The owner then ran /implement asking for an Opus subagent: I asked the plan's open questions first (owner: no log field, text match everywhere but content, one PR, no Bash writes), then the owner revised to add a derived adrHints field with a settled shape and to remove relevantAdrs fully from schema and logs with an ADR-0009 exception (I flagged the ADR conflict and asked first). The Opus agent built it in a worktree; two-axis code-review on the branch and on its fix commit found and fixed an index divergence between hook and trace, a pre-filter cost and rule-wording drift. A live probe in this session showed the hint firing once and staying silent on a repeat. Pushed and opened PR #2431, which the owner merged. The real audit's baseline differs from my posted throwaway numbers (autonomous 40% to 51%, not flat), driven by audit runs that read all 30 ADRs; the PR says so. After the merge, at the owner's request, I filed #2432 with step-by-step instructions to verify the hint after three days (on hold until 2026-10-26T07:43Z), and #2433 for the Bash-write follow-up, on hold until #2432 reports."
+prs:
+  - "2431"
+docsRead:
+  - path: GLOSSARY.md
+    reason: session-start read; Friction, Skill, Rule, Prune Trial terms
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: session-start read
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP issue read and comment route
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: read late after a hook pointer; fetch-before-history held
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: rules can't order a step before the read; rejected session-start hook; framed the write-time hint
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: simplify before adding; retiring a Skill is never a trial
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "schema only grows: why relevantAdrs can't be repurposed or deleted"
+    useful: yes
+  - path: .agents/skills/adr-check/SKILL.md
+    reason: the Skill under review; also ran it before recommending
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "Fable design agent: hint conventions, pre-filter, fail-open, probing gaps (it rated yes)"
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "Fable agent: untested-behaviour and Human-only constraints on the hook (it rated yes)"
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: "Fable agent: retiring a Skill needs Trusted approval (it rated yes)"
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: "Fable agent: only where the Skill script lives (it rated partly)"
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-first-push, follow-up review rule, verdict and merge recipe
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: Fable agent read it for the log field option; no verdict in its reply
+    useful: partly
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Fable agent: confirmed code-review is a pack Skill for alternative B; no verdict in its reply"
+    useful: partly
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: "Standards reviewer and Opus agent: checked ADR edits carry no history notes (they rated yes)"
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: "Opus agent: explained the worktree guard refusing a git call (it rated partly)"
+    useful: partly
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: Opus agent repointed its adr-check line
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: Opus agent repointed its adr-check line
+    useful: yes
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: Opus agent edited it to point to the ADR-0009 exception (it rated yes)
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+skillsUsed:
+  - name: adr-check
+    reason: before recommending a replacement; read the full 447-line output, then ADR-0029/0027/0009
+  - name: inspect-session
+    reason: verify three sessions' adr-check runs from events
+  - name: dispatch-subagents
+    reason: before dispatching the inspect readers and the Fable design agent
+  - name: close-session
+    reason: answer and plan posted
+  - name: log-session
+    reason: called by close-session
+  - name: code-review
+    reason: two-axis review of the Opus branch and of its fix commit before the first push
+  - name: context
+    reason: (invoked as a slash command)
+  - name: implement
+    reason: (invoked as a slash command)
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: Gave an impact verdict and fix proposals in my first report before running adr-check, which CLAUDE.md requires before any recommendation; ran it only for the later hint proposal.
+    solution: "Retire the chat-recommendation trigger with adr-check as planned on #2286, or run it at the first evaluative reply."
+    severity: minor
+  - description: First report counted three post-landing errors as happening despite adr-check, trusting skillsUsed; inspect-session showed 012f7o6F's main session never ran it.
+    solution: Note in docs/agents (or log-session) that skillsUsed folds subagent and workflow calls, so it can't show who ran a Skill.
+    severity: minor
+  - description: Two inspect-session partial reads hit their page limit before the session start (about a minute of events per page), needing resumes; 019CbZiW never reached it after 20 pages.
+    solution: inspect-session could estimate pages from get_session duration and say so, or offer a start-first cursor walk for questions about a session's opening.
+    severity: minor
+  - description: Relayed the Fable agent's derived-log-field option without checking that the authored relevantAdrs field already existed; the owner asked and I found it then.
+    solution: Grep shared/schemas/session.ts for a field before relaying a proposal that adds one.
+    severity: minor
+  - description: Tried docsRead SKILL.md entries to split main-session from subagent adr-check use; dead end, since the log omits the Skill read even when the parent ran it.
+    solution: Record per-Skill caller (main vs subagent) in the derived trace.
+    severity: nit
+  - description: "Posted baseline numbers to #2286 from a throwaway script that dropped sessions reading 20+ ADRs; the real audit shows autonomous 40% to 51%, not flat."
+    solution: Report medians or state outlier exclusions next to any read-share figure; the PR now does.
+    severity: minor
+  - description: The Stop hook asked four times to push the impl branch while code-review and the follow-up review ran; each needed a reply.
+    solution: Let the Stop hook stay quiet while a subagent is running or a review is in progress.
+    severity: nit
+  - description: The Standards reviewer reported prose mentions of relevantAdrs in three logs as schema violations; I had to check and discard it.
+    solution: Have reviewers distinguish a YAML key from prose before calling a schema break.
+    severity: nit
+durationSec: 9697
+models:
+  claude-opus-5-5: 247
+toolCounts:
+  Bash: 59
+  ToolSearch: 4
+  mcp__github__issue_read: 3
+  AskUserQuestion: 3
+  Read: 2
+  Skill: 6
+  Agent: 9
+  SendMessage: 5
+  mcp__github__add_issue_comment: 2
+  Write: 2
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__github__issue_write: 2
+filesEdited:
+  - adr-hint-probe.md
+  - tests/unit/adr-read-hint.spec.ts
+  - scripts/hooks/adr-read-hint.ts
+  - scripts/hooks/adr-read-hint.sh
+  - .claude/settings.json
+  - docs/agents/guards.md
+  - .claude/rules/adr-0009.md
+  - scripts/lib/adr-rules.ts
+  - scripts/session/audit-skills.ts
+  - scripts/session/transcript-trace.ts
+  - tests/unit/audit-skills.spec.ts
+  - .claude/rules/adr-0008.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - layers/journal/app/components/journal/SessionCard.vue
+  - layers/journal/app/types/journal.ts
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - scripts/session/log-session.ts
+  - shared/schemas/session.ts
+  - tests/unit/log-session.spec.ts
+  - tests/unit/transcript-trace.spec.ts
+  - .claude/rules/adr-0029.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - .agents/skills/adr-check/SKILL.md
+  - .agents/skills/adr-check/scripts/relevant-adrs.ts
+  - .agents/skills/adr-check/tests/unit/relevant-adrs.spec.ts
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/visitor-loop/refiner-brief.md
+  - .claude/skills/adr-check
+  - .claude/workflows/clear-backlog-explore.js
+  - CLAUDE.md
+  - scripts/gate/validate-prune-trials.ts
+  - scripts/hooks/bash-rules-hint.ts
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0008.md
+adrHints:
+  - adr: 21
+    via: text
+    readAfter: false
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/ui-verification.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0005-skill-model.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/visitor-loop/refiner-brief.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Confirmed hooks and settings.json need a human merge, shaping the two-PR plan; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Retiring a Skill needs Trusted approval; the owner gave it in chat; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Pointed me to the schema-only-grows rule; opened the ADR for the relevantAdrs question
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: "Header line on the #2286 comment; summary enough"
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded by the glossary read; mattered only as the ADR 016THR5o missed
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Simplify before adding; opened the ADR to confirm Skill retirement is not a trial
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Core constraint for the hint design; opened the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by reading adr-check files; Skill placement not at issue
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded reading scripts/hooks; confirmed the hook PR waits for a human
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Loaded reading scripts/hooks; Fable agent used guards.md conventions
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: ADR edits rewritten in place with summaries re-stamped in the same PR; reviewers checked it; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded by reading skills-lock.json; confirmed code-review is a pack Skill
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded reading journal code; logs are ground truth, consistent with not repurposing
+    useful: partly
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded reading journal dashboard code; not relevant
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Stored field shapes need the owner; made the hint-field shape an open question
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded reading journal code; not relevant
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded by a ledger read; not relevant
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded for the Opus agent on the workflow script; navigation payloads not relevant (it rated no)
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: Loaded for the Opus agent on the Journal card; it did not UI-check the removed block and said so (it rated partly)
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Inspect 012f7o6F adr-check timing
+    durationSec: 184
+    toolCalls: 43
+    modelCalls: 42
+    tokenShare: 5
+  - type: general-purpose
+    task: Inspect 019CbZiW adr-check timing
+    durationSec: 223
+    toolCalls: 53
+    modelCalls: 51
+    tokenShare: 6.2
+  - type: general-purpose
+    task: Inspect 016THR5o adr-check output use
+    durationSec: 189
+    toolCalls: 36
+    modelCalls: 35
+    tokenShare: 4.4
+  - type: general-purpose
+    task: Design ADR edit-time hint hook
+    model: fable
+    durationSec: 326
+    toolCalls: 18
+    modelCalls: 16
+    tokenShare: 4
+  - type: general-purpose
+    task: Implement adr-read-hint and retire adr-check
+    model: opus
+    durationSec: 1536
+    toolCalls: 111
+    modelCalls: 98
+    tokenShare: 25.4
+  - type: general-purpose
+    task: Standards review of adr-read-hint branch
+    durationSec: 76
+    toolCalls: 8
+    modelCalls: 8
+    tokenShare: 2
+  - type: general-purpose
+    task: Spec review of adr-read-hint branch
+    durationSec: 173
+    toolCalls: 18
+    modelCalls: 16
+    tokenShare: 2.9
+  - type: general-purpose
+    task: Standards review of follow-up commit
+    durationSec: 123
+    toolCalls: 10
+    modelCalls: 10
+    tokenShare: 1.4
+  - type: general-purpose
+    task: Spec review of follow-up commit
+    durationSec: 54
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 0.9
+gitBranch: claude/check-adrs-impact-review-mgf6ps
+entrypoint: remote_mobile
+cliVersion: 2.1.309
+learnings:
+  - skillsUsed in a session log folds in subagent and workflow Skill calls, and docsRead does not reliably list a Skill's SKILL.md, so a log cannot show whether the main session itself ran a Skill.
+  - inspect-session pages cover roughly one minute of a busy session each, so reaching the start of a 40-minute session takes 30+ pages.
+ideas:
+  - "Add a derived skillCallers map (Skill name to main or subagent ids) to the session trace, so Skill audits like #2286 can tell a main-session call from a triage agent's without paging events."
+landedBy: Stop

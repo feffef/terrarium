@@ -21,3 +21,18 @@ occurrences:
     severity: nit
     description: "git push --force-with-lease was rejected as stale info after the earlier PR merged and its remote branch was deleted."
     solution: "pr-workflow.md says to push plainly on a restarted branch; point the restart recipe at git remote prune first."
+  - session: session_01XTdRbnDg1n2j2ZqjTrwCLi
+    date: "2026-10-19"
+    severity: nit
+    description: "Remote branch vanished after PR 2289 merged, so the first --force-with-lease push after restarting the branch was rejected as stale until git remote prune."
+    solution: "Mention in git-conventions that a merged PR's deleted branch needs git remote prune before pushing a restarted branch."
+  - session: session_011W3gVNQAR433FiJcPAAEDK
+    date: "2026-10-20"
+    severity: nit
+    description: "First follow-up push with --force-with-lease was rejected as stale info because the merged PR's branch had been deleted on the remote."
+    solution: "After a merged PR, run git remote prune origin before pushing the restarted branch (the hook hint said so)."
+  - session: session_01EjH3TbrydEY2sArBMYE5Gy
+    date: "2026-10-22"
+    severity: nit
+    description: "Pushed the restarted branch with --force-with-lease and it failed; pr-workflow.md, read earlier, says to push a restarted branch plainly"
+    solution: "Apply the doc's restarted-branch line; none needed beyond that"

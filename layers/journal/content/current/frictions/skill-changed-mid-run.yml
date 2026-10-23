@@ -5,6 +5,8 @@ cause: >-
   A Skill merged to main minutes after a run started, so the run used a stale copy (visitor-loop focus and refiner step); one-off race.
 surface: safe
 status: open
+notes: |-
+  2026-10-23 design: a re-fetch-and-re-read step for every Skill run dropped: two one-off races in different Skills, none since 2026-10-15, and git-conventions.md already says to re-fetch in long sessions.
 occurrences:
   - session: session_019e468BFBTvDPXZuGzLMAL7
     date: "2026-10-15"

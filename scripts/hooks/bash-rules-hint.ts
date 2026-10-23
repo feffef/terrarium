@@ -37,7 +37,7 @@ export function bashRulesHint(command: string, cwd: string, root: string, rules:
 }
 
 /** Nearest ancestor holding `.claude/rules`, so a worktree matches its own tree. */
-function repoRoot(cwd: string): string | null {
+export function repoRoot(cwd: string): string | null {
   for (let d = cwd; ; d = dirname(d)) {
     if (existsSync(join(d, RULES_DIR))) return d
     if (dirname(d) === d) return null

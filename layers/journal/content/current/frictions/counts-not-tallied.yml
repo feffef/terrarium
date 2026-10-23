@@ -1,0 +1,56 @@
+name: counts-not-tallied
+summary: >-
+  Agents posted counts in PR bodies and issues without counting, and had to correct them.
+cause: >-
+  A number (verdict counts, line totals, regression counts) goes into a GitHub body as an estimate or from a report not yet final, instead of being tallied by hand from every item. Signals: "about N", a PR body count corrected by an edit, "without tallying", "without counting". Counts a script or filter got wrong are in counts-from-wrong-filter.
+surface: safe
+status: tracked
+ref: "issue #2435 (regression of #2378)"
+fixes:
+  - pr: 2336
+    date: "2026-10-20"
+    summary: "CLAUDE.md \"Verify before you state\" now names subagent reports, script behaviour from recall, \"only\"/\"every\"/\"nothing\" claims and one-test causes; \"One home per fact\" says to grep for other statements when changing one."
+  - pr: 2378
+    date: "2026-10-21"
+    summary: "Restored the shorter \"Verify before you state\" bullet in CLAUDE.md, and the Standards reviewer in clear-backlog-build now flags a count or subagent claim that cites no source."
+occurrences:
+  - session: session_01Tcn6x6mZizT14rJuQqYivt
+    date: "2026-10-10"
+    severity: minor
+    description: "Posted a PR verdict comment with approximate verdict counts (about 33 confirmed) without tallying, breaking verify-before-you-state; needed a correcting comment."
+    solution: "Tally from the verdict files before writing any count."
+  - session: session_01AnHXyvzXukt6izZTYs3YMr
+    date: "2026-10-13"
+    severity: nit
+    description: "First PR body stated 49 CONFIRMED verdicts without summing the three checker reports; the true count was 45, corrected by an edit."
+    solution: "Sum counts from the saved checker files before writing them anywhere (CLAUDE.md Verify before you state)."
+  - session: session_01QvnVVurQdA4cvYSZToBvud
+    date: "2026-10-13"
+    severity: minor
+    description: "PR #1908 body first stated verdict counts 22/22/5 without tallying every checker item; corrected to 21/22/4 after counting"
+    solution: "Tally verdicts from the checker files before writing a count (CLAUDE.md: a count is a fact only after you read every item)"
+  - session: session_011xN2Zi67cjpCguuMiZbsJ6
+    date: "2026-10-13"
+    severity: minor
+    description: "Stated 6,600 old ADR lines in the PR body without counting; the real total was 3,768. Broke CLAUDE.md 'Verify before you state'."
+    solution: "Count before writing any number into a PR body."
+  - session: session_01Mf4dUxuWB7WtkC5fVzByH6
+    date: "2026-10-16"
+    severity: minor
+    description: "Quoted survey regression counts (28, 20, 10) in three issues before the ledger patch was applied; the schema-deduped counts were 26, 19, 6, so issues needed correction comments."
+    solution: "File regression issues after the ledger edit is applied, or have the Skill say to quote counts from --summary run on the patched ledger."
+  - session: session_016zEtXv32CmX793LgZvt7Hm
+    date: "2026-10-20"
+    severity: nit
+    description: "My first ledger draft gave section line counts taken from diff hunks, not read from the file; both reviewers caught it."
+    solution: "Count with the file in hand before writing a number."
+  - session: session_01MKHvrDA9VoqiKWSG6QjpE2
+    date: "2026-10-20"
+    severity: nit
+    description: "Push notification said 5 questions but the round had 6 (the last was 'accept the rest')."
+    solution: "Count the accept-the-rest line or not, consistently."
+  - session: session_01HcMFbKDTkG7hs2VhByAs4b
+    date: "2026-10-21"
+    severity: nit
+    description: "First PR body miscounted the checker verdicts; I recounted from the ID list and corrected it before the verdict comment."
+    solution: "Tally verdicts from a written list while the checkers' replies are in hand."

@@ -7,6 +7,7 @@
 //     — decision only, for CI to guard its own heavy steps on (#445; the CI
 //       half now lives in .github/actions/gate/action.yml — ADR-0026)
 import { spawnSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { appendFileSync, linkSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
@@ -247,6 +248,30 @@ export function acquireHeavySlot(dir = SLOT_DIR, slots = HEAVY_SLOTS, pollMs = 2
   }
 }
 
+// ── Stale-tree warning (#2434) ──────────────────────────────────────────────
+// A pass only vouches for the tree it started on; edits or commits made while
+// it ran (a parallel session, a rebase) leave it vouching for nothing.
+export interface TreeState {
+  head: string
+  tree: string
+}
+
+export function treeChange(before: TreeState, after: TreeState): string | null {
+  const what = [before.head !== after.head && 'HEAD', before.tree !== after.tree && 'working tree'].filter(Boolean)
+  if (what.length === 0) return null
+  return `gate:scoped: WARNING: ${what.join(' and ')} changed during the run, so this result does not cover the final tree — re-run the gate on the final head`
+}
+
+// `status` catches new untracked files; `diff HEAD` catches staged and unstaged edits.
+function snapshotTree(): TreeState | null {
+  try {
+    const tree = createHash('sha256').update(git(['status', '--porcelain=v1', '-z'], root)).update(git(['diff', 'HEAD'], root)).digest('hex')
+    return { head: git(['rev-parse', 'HEAD'], root).trim(), tree }
+  } catch {
+    return null // can't tell; stay silent rather than cry wolf
+  }
+}
+
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
 const RESET_HINT_STEPS = ['typecheck', 'build']
@@ -286,6 +311,13 @@ function main(): void {
   console.log(`gate:scoped: ${scope.reason}`)
   console.log(`gate:scoped: ${dry ? 'would run' : 'running'} ${steps.join(' → ')}`)
   if (dry) return
+  const before = snapshotTree()
+  // `run` exits the process on a failed step, so an exit hook covers pass and fail.
+  process.on('exit', () => {
+    const after = before && snapshotTree()
+    const warning = before && after && treeChange(before, after)
+    if (warning) console.error(warning)
+  })
   for (const step of steps) {
     // planSteps puts HEAVY at the end. A Skill-only plan (#1603) runs `test`
     // without BUILT and takes no slot: #1800 traced the OOM to `test:e2e`. The

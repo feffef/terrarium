@@ -6,6 +6,8 @@ cause: >-
 surface: guard-or-hook
 status: open
 ref: "issue #1499 closed 2026-10-12 by PR #1825, but #1499 is the worktree-isolation guard, not waiting; nothing tracks this cause"
+notes: |-
+  2026-10-20 design: a CLAUDE.md clause (end your turn; the notification wakes you) dropped: the guard denials already name the alternative, each occurrence costs a call or two, and the clause would cost words in every session.
 occurrences:
   - session: session_01P7kLLJwHBgCaeVSUjhbScg
     date: "2026-10-15"
@@ -17,3 +19,63 @@ occurrences:
     severity: nit
     description: "Called ScheduleWakeup to wait on a running subagent instead of just ending the turn; it was blocked outright by the /loop-only tool guard (issue #814), since this is not a /loop session."
     solution: "No cost beyond one wasted tool call - the guard's error message was clear and I ended the turn correctly afterward. Remember that a dispatched Agent-tool subagent self-notifies on completion; no wait/poll tool is ever needed for it."
+  - session: session_01Ai3w5epHj4PWgBC8XSoEwz
+    date: "2026-10-18"
+    severity: nit
+    description: "Tried ScheduleWakeup and a foreground sleep to wait for visitors; both were blocked by guards, wasting two calls."
+    solution: "Visitor-loop step 2 could say: subagents self-notify, end the turn and wait."
+  - session: session_0183U5MkKrjuhRKdjpFxD9Xj
+    date: "2026-10-19"
+    severity: nit
+    description: "Monitor until-loop matched an early tool-use name and ended before the agent finished; foreground sleep was also blocked."
+    solution: "Match only the final-message shape; poll from the first attempt."
+  - session: session_011G3PKUqDog2WRSuqypmuJX
+    date: "2026-10-20"
+    severity: nit
+    description: "ScheduleWakeup was blocked by the loop-only guard; the tool list offers it outside /loop."
+    solution: "Hide ScheduleWakeup outside /loop sessions."
+  - session: session_012XnetQuxWoyaVFYw1BqMoy
+    date: "2026-10-20"
+    severity: nit
+    description: "Tried a foreground sleep to wait for agents, then a run_in_background command that also used a trailing ampersand; both were blocked by guards."
+    solution: "The tool descriptions already say not to; waiting for agent notifications needs no polling."
+  - session: session_011W3gVNQAR433FiJcPAAEDK
+    date: "2026-10-20"
+    severity: nit
+    description: "A foreground pgrep wait loop for the background gate hit the 600s timeout and was moved to background; the gate's completion notification would have sufficed."
+    solution: "Wait for the background task notification instead of polling."
+  - session: session_01FTPnEsW1XNhaqYFdxaE24v
+    date: "2026-10-20"
+    severity: nit
+    description: "My first gate-wait loop grepped the gate log for an EXIT marker that only the outer task output held, so it could never end; stopped it."
+    solution: "Wait on the background task's own completion notification instead of polling a log for a marker the command writes elsewhere."
+  - session: session_011UkamwPwXvoBVMmNHuoBaD
+    date: "2026-10-21"
+    severity: nit
+    description: "Started a pointless background sleep to wait on the subagent, wasting two calls."
+    solution: "End the turn and wait for the notification."
+  - session: session_01NHHafnvmf9qkvq85pvMYzc
+    date: "2026-10-09"
+    severity: nit
+    description: "tail-pipe guard denied a chained command, and a Monitor until-loop grepping a subagent transcript matched early and gave a false done."
+    solution: "Redirect to a file and read it; wait for subagent completion notifications instead of grepping their transcripts."
+  - session: session_018DaeF1okx3CjHh1GwVpwPf
+    date: "2026-10-19"
+    severity: nit
+    description: "Tried a Bash call that was both run_in_background and ended in a shell backgrounding; the double-background guard blocked it and a sleep was blocked too."
+    solution: "The Skill text for visitor-loop could say once: wait for subagents by ending the turn, run gates with run_in_background only."
+  - session: session_01N9bwDKW51kMS6WJvK2nfSU
+    date: "2026-10-16"
+    severity: nit
+    description: "A Bash call with run_in_background plus a trailing & was blocked by the double-background guard, and a sleep-then-tail wait was blocked, costing two retries."
+    solution: "Use run_in_background alone and a Monitor until-loop from the start."
+  - session: session_01Dz52W6wWZWUgKwPtdxabzJ
+    date: "2026-10-12"
+    severity: nit
+    description: "A Bash call with run_in_background plus a trailing ampersand was denied by the double-background guard; a chained sleep was also blocked."
+    solution: "Use run_in_background alone and Monitor with an until-loop; the guard message said so."
+  - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
+    date: "2026-10-22"
+    severity: nit
+    description: "A backgrounded gate command with a trailing ampersand plus run_in_background was blocked by the double-background guard; a chained sleep was also blocked. Both resent correctly."
+    solution: "The Skill step 10 could say: gate in background with run_in_background alone, then a Monitor on its log."

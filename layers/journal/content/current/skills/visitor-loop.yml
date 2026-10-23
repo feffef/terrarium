@@ -393,3 +393,47 @@ observations:
       one. Grade/role unchanged (routine) - the dispatch/consensus/build
       mechanics remain sound; only the owner-memory mechanical gate is
       broken.
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 9/9 usedInLogs sessions
+      checked. Good news on the prior entry's open watch-item: issue #2229
+      (owner-correction regex only credited the first #N/URL per line) is
+      now fixed by PR #2241 - a real code fix (`.match(...).g` +
+      `.flatMap`, confirmed in the current file), not the prose-only
+      attempt #1912 was. It passed its first live test,
+      session_01Ai3w5epHj4PWgBC8XSoEwz (PR #2255): 3 candidates each on
+      their own line, no batching. Worth one more live cycle before fully
+      retiring the watch-item. No new silent failure. Grade/role unchanged
+      (routine).
+  - date: "2026-10-20"
+    note: >-
+      Self-check (audit-skills behaviour check): 8/8 usedIn verified against
+      live GitHub/git. CLOSING a long-tracked watch item: the owner-memory
+      batching bug (#1452→...→#2229, fixed by PR #2241) has now passed two
+      consecutive live tests — PR #2255 (trivial, unbatched) and PR #2303
+      (2026-10-19), which genuinely stress-tested the batched-line case the bug
+      lived in (8 PR numbers on one "not a ruling" line, all correctly
+      credited, verified against the live unresolved() code and each cited PR).
+      No further watching needed on this item. Non-escalated note: SKILL.md's
+      "paste the tally into the fix PR" requirement (§5) has no equivalent for
+      a feature-only PR (§6) — worth flagging if the Skill is next revised. No
+      reverts found. Grade/role unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Self-check, 8/8 newest runs clean. Freshly verified: the Atlas run
+      (PR #2326/#2328 merged; its out-of-remit finding became issue #2329,
+      closed via merged fix #2346) and the homepage run (PR #2303 merged,
+      owner-memory batching confirmed still fixed post-#2241). The
+      previously escalated issues #1515/#1721/#1912/#2229 all independently
+      reconfirmed closed via real merged fixes, none reopened. No reverts
+      beyond the already-tracked cases. Grade/role unchanged.
+  - date: "2026-10-21"
+    note: >-
+      Filed #2369 (verified, repeated): the owner removed the session-log
+      explainer (built 10-15, session_019e468BFBTvDPXZuGzLMAL7, #2092) and
+      the Glass Box Try it page (session_01CXxyUmwkN3Rx5DTSK2s391, #2226;
+      sidebar from session_01Ai3w5epHj4PWgBC8XSoEwz, #2255) in a2127e01d on
+      10-18, recording both in decisions.md. Owner memory worked after the
+      fact; nothing predicted the rejection. Hypothesis only: picks are
+      filtered by decisions.md lines written after a rejection. Other 5 runs
+      clean. Grade/role unchanged (routine).

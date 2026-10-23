@@ -1,0 +1,25 @@
+name: diagnosis-from-partial-evidence
+summary: >-
+  Agents settled on a cause or on which PR made a change from one test or a commit list, and it was wrong.
+cause: >-
+  A diagnosis or attribution (why something behaves as it does, which PR made a change) is generalised from partial evidence, a single test or a merge-commit list, without varying one factor per test or reading the diff. Signals: "from one test", "without checking its diff", a cause reversed by a controlled test or git show.
+surface: safe
+status: open
+fixes:
+  - pr: 2336
+    date: "2026-10-20"
+    summary: "CLAUDE.md \"Verify before you state\" now names subagent reports, script behaviour from recall, \"only\"/\"every\"/\"nothing\" claims and one-test causes; \"One home per fact\" says to grep for other statements when changing one."
+  - pr: 2378
+    date: "2026-10-21"
+    summary: "Restored the shorter \"Verify before you state\" bullet in CLAUDE.md, and the Standards reviewer in clear-backlog-build now flags a count or subagent claim that cites no source."
+occurrences:
+  - session: session_01LARTWkGx5vBwRwsMrdftPD
+    date: "2026-10-11"
+    severity: minor
+    description: "Broke 'Verify before you state': declared Bash reads never load rules from one chained-command test; PR #1741 evidence and controlled tests showed lone single-file reads do."
+    solution: "Vary one factor per test before generalising; check prior evidence (PR #1741 Checks) first."
+  - session: session_01XJ9iR9EbRT2iV7afhytND8
+    date: "2026-10-14"
+    severity: minor
+    description: "Labelled the ADR-0030 rewrite as PR #1909 from a merge-commit list without checking its diff; it was #1898, and #1909 only changed hash lines"
+    solution: "Check a merge's diff with git show --stat before naming it as the cause of a cohort split"

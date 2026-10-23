@@ -1,6 +1,6 @@
 name: worktree-guard-false-positive
-summary: The container's worktree safety check refused ordinary git commands, so helper agents worked around it.
-cause: "Container-level worktree-isolation guard refuses a command that names git twice, counting a branch name containing 'git' (git-conventions-stop-hook-note) or compound/heredoc Bash. environment-caveats.md lists 'a command naming git twice' but not branch names; the build workflow brief only says one git command per call. Signals: 'worktree guard refused', 'containing git twice'."
+summary: The container's worktree safety check refused git commands on a branch whose name contains "git", so helper agents committed under another branch name.
+cause: "The container-level worktree-isolation guard refuses a command that names git twice, and counts a branch or file name containing 'git' (git-conventions-stop-hook-note, git-conventions-foreground-gate-chain) as the second; the build agent then commits on a temp or renamed branch. Signals: 'worktree guard refused', 'containing git twice', a planned branch name with 'git' in it. Compound-command refusals belong in worktree-guard-blocks-compound-bash."
 surface: outside
 status: open
 fixes:
@@ -10,29 +10,22 @@ fixes:
   - pr: 2140
     date: "2026-10-16"
     summary: "The build workflow brief now says a branch name or path containing git counts toward the worktree guard's two-git limit."
+  - pr: 2377
+    date: "2026-10-21"
+    summary: "clear-backlog-build now refuses a planned branch name containing \"git\" before any agent runs, replacing the prose warning in its build brief."
 occurrences:
   - session: session_01VPNHf6qDdJPXX23GghKs74
     date: "2026-10-16"
     severity: minor
     description: "The worktree guard refused any git command containing 'git' twice, so the build agent for branch git-conventions-stop-hook-note committed on a temp branch"
     solution: "Fix the worktree guard's match so a branch name containing 'git' is not read as a second git command"
-  - session: session_01LpcCJWRYb5grgQe3wBGEwb
-    date: "2026-10-15"
-    severity: nit
-    description: "Digest impl agent: the worktree guard refused several compound Bash commands (loops, variables, heredocs piped to node), forcing plain calls and a helper script"
-    solution: "The dispatch brief could say up front to write helper scripts with Write instead of compound Bash"
-  - session: session_01XUuxhnMc7t2zXaH9ebtxKZ
-    date: "2026-10-16"
-    severity: nit
-    description: "The impl agent's Bash commands hit the worktree guard on compound commands and a pipe, the same behaviour fix 1 addresses."
-    solution: "The new clause in the build workflow brief; the guard itself is outside the repo."
-  - session: session_013RCsUF234qAGu3CJr3v2on
-    date: "2026-10-16"
-    severity: minor
-    description: "Impl agents repeatedly hit the worktree shell guard on compound commands, heredocs and variable expansion, and worked around it with helper scripts; one ran a stale helper left in the shared scratchpad."
-    solution: "Briefs tell agents to name scratch helpers uniquely; consider documenting the guard's triggers where dispatch-subagents points."
   - session: session_018sAirSgDY1Nv82JVogjcyR
     date: "2026-10-16"
     severity: minor
     description: "The harness refused the impl agent's git commands when the word git appeared twice (a branch or file name), so it renamed its branch and logs."
     solution: "Note the guard's trigger in dispatch-subagents section 3 beside the one-git-command-per-call line."
+  - session: session_01QsVUJGmHhhoAn8T6ewjnLP
+    date: "2026-10-21"
+    severity: minor
+    description: "The build agent's worktree guard refused every command naming the branch git-conventions-foreground-gate-chain because it contains 'git', so the commit sat on the worktree branch and I pushed it under another name."
+    solution: "Narrow the guard's match so that a branch name containing the word git is not treated as a git command."

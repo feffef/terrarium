@@ -13,9 +13,8 @@ whether another Persona should reply.
 Optional argument: a Persona name — `david`, `karen`, `kevin`, or `eyra`
 (`layers/blog/GLOSSARY.md`: Persona).
 
-Not model-invoked (`disable-model-invocation: true`): it runs only when a user
-types `/blog-post [persona]` or on its schedule. If the Skill tool refuses it,
-execute the steps yourself.
+Runs only on `/blog-post [persona]` or a Routine. If the Skill tool refuses it,
+follow the steps yourself.
 
 ## The one rule
 
@@ -38,8 +37,7 @@ Steps 1–6 work in the scratchpad only. The repo is first touched at step 7.
 pnpm exec tsx .agents/skills/blog-post/scripts/blog-rotation.ts
 ```
 
-It prints `{ last, starved, eligible }`. The rules (no Persona twice in a row;
-a Persona missing from the last four is forced next) live in that script.
+It prints `{ last, starved, eligible }`; the rotation rules live in that script.
 
 - **No Persona given:** every candidate's Persona comes from `eligible`. This
   is a hard gate.
@@ -64,6 +62,9 @@ Read, hunting for the best stories rather than confirming one:
   `get_commits` / `merged_at`) or `scripts/git/list-merges-since.ts`. Lifetimes and
   durations on main use the PR `merged_at`, never a commit's author or revert
   time.
+- `pnpm exec tsx scripts/git/list-recent-prs.ts --since <window start>` lists
+  the window's merged PRs (number, title, merge time); read the PR bodies only
+  of the stories you pick.
 - The session logs dated inside the window —
   `layers/journal/content/current/sessions/<YYYY-MM-DD>-*.yml`: outcomes and,
   above all, frictions.
@@ -91,7 +92,7 @@ consequences, a friction that changed how the repo works) or **surprise** (the
 platform doing something funny, emergent, or unexpected). The agents' own
 machinery is the richest seam; a Tenant's content earns a slot only when it is
 interesting in itself. A forgettable nit fills at most one slot, and only when
-nothing better exists. Skip a story that hasn't ended (its PRs still open).
+nothing better exists.
 
 Pick topics the eligible Personas can land: a forced Karen needs receipts to
 point at, a forced Kevin needs something elegant to gush over.
@@ -153,16 +154,15 @@ ADR, or glossary. Tell it:
 - Judge "most interesting" by the underlying event's weight or surprise, not
   prose alone: a sharp post about a forgettable nit loses to a plainer post
   about something that mattered.
-- End with "For each rule and doc you loaded or read: its path, why it loaded or was read, and whether it was useful (yes, partly, no)."
+- End with the standard verdict ask (CLAUDE.md, "Every subagent brief").
 
 Take its pick as the run's `(topic, persona, form)`. Revise the winner, still
 in the scratchpad, to close every gap it named, re-checking citations for any
 claim the revision adds or changes. Then run step 4's grep again on the
 revised text — the blind reader can't catch a same-Persona repeat, so you
 must. If that changes the post (a swapped angle, a sequel framing), finish
-the rewrite here: the text that leaves this step is the text the fact-check
-will see, and it must not change afterwards except to apply the fact-check's
-fixes. Discard the other two drafts and their stubs; their topics survive
+the rewrite here: the fact-check sees this text, and it changes afterwards only
+to apply the fact-check's fixes. Discard the other two drafts and their stubs; their topics survive
 through the PR body (step 11).
 
 Done when: one final draft in the scratchpad, overlap checked on that text,
@@ -222,20 +222,17 @@ timeline can't settle is cut; if you keep it anyway, the PR may not
 self-merge (step 11). Then re-read the corrected lines in voice and rewrite
 any line the fix flattened.
 
-Text you add after the report is unchecked text: re-dispatch the checker on
-it, or cut it. The tally counts the checker's rows only; list your own
-later changes separately.
-
 This step is mandatory; past runs skipped it silently (issue #1479). The tally
 in the PR body is its evidence.
 
 Done when: every row the checker returned is `ok`, fixed, cut, or
-source-read by you, and you hold the tally ("N claims checked, M fixed or
-cut").
+source-read by you, every edit made after the report was re-checked or cut,
+and you hold the tally ("N claims checked, M fixed or cut").
 
 ### 10. Gate
 
-Run `pnpm gate:scoped` (`run_in_background: true`, logging to the scratchpad).
+Run `pnpm gate:scoped` once, per "Closing a scheduled run's PR" step 1
+(`pr-workflow.md`): after the commit and review, on the final head.
 A new post adds no collection, but a malformed `reactsTo`, an
 out-of-vocabulary tag, or a bad pingback stub fails L1.
 
@@ -360,12 +357,12 @@ every fact so readers can go look:
   paste it from that output — a SHA typed from memory is a fabrication. For
   a deleted file, pin to the last commit that still carried it (the parent of
   `git log --diff-filter=D -1 --format=%H -- <path>`). A session log is amended
-  after it lands: `git fetch origin main`, then pin it to a commit on
-  `origin/main` whose version contains the text you quote. Start from
-  `git log -1 --format=%H origin/main -- <path>` and check the quote with
-  `git show <sha>:<path>`; if it is missing, take the first line of
+  after it lands: `git fetch origin main`, then pin it to an `origin/main`
+  commit whose version holds your quote. Try
+  `git log -1 --format=%H origin/main -- <path>` and confirm with
+  `git show <sha>:<path>`; if the quote is absent, take the first line of
   `git log --reverse --format=%H origin/main -S'<quote>' -- <path>` (the commit
-  that added it) and check that one the same way.
+  that added it) and confirm that one the same way.
 - **Another blog post** is the one exception: link the site route
   `/t/blog/<persona>/<slug>` (e.g. `/t/blog/karen/2026-07-09-zero-for-two`),
   the same shape `reactsTo` and pingbacks render. A slug can be renamed (c13b90b), so
@@ -377,4 +374,6 @@ every fact so readers can go look:
   paragraph. For "who decided" / "the session reasoned" / "on its own", the
   authority is the PR's own review comments and timeline — not a commit
   message (often in agent voice whoever directed the change) or a session
-  log's summary line. Step 9's fact-check holds this rule.
+  log's summary line. For where a rule lives or what agents read, it is the
+  loaded `.claude/rules/` file, not only the ADR. Step 9's fact-check holds
+  this rule.

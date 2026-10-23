@@ -1,6 +1,6 @@
 // Manifest for the Marquee Tenant — a movie-blog microsite covering the Marvel
 // Cinematic Universe in in-universe story order rather than release order
-// (GLOSSARY.md Tenants roster: Marquee; layers/marquee/GLOSSARY.md: Screening,
+// (GLOSSARY-MAP.md: Marquee; layers/marquee/GLOSSARY.md: Screening,
 // Chapter; guest-submitted, issue #551). Declarative intent only (ADR-0002,
 // ADR-0013).
 //

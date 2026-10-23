@@ -3,18 +3,11 @@
 Our repo's Actions jobs stopped starting with the message *"The job was not started because recent
 account payments have failed or your spending limit needs to be increased.
 Please check the 'Billing & plans' section in your settings"*. Would making the
-repo **public** change the billing/limits picture? (Asked before the repo went
-public on 2026-07-11.) The answer is at the
-bottom; each fact cites the GitHub Docs page that owns it.
+repo **public** change the billing/limits picture? (Asked before the repo went public on 2026-07-11.) The answer is at the bottom; each fact cites its owning GitHub Docs page.
 
 **Verified against** the official GitHub Docs (docs.github.com), **accessed
 2026-07-11**. Prices, quotas and limits change: re-check the linked pages
-before relying on a number. `docs.github.com` returns 403 to the automated
-fetcher here (`docs/agents/environment-caveats.md` owns this caveat), so the
-quotes were read from the **canonical Markdown source** of the same pages in
-the public [`github/docs`](https://github.com/github/docs) repository
-(`content/…` and `data/reusables/…`); each fact is cited to the docs.github.com
-page it renders on. A fact corroborated only by a non-owning source (e.g. a
+before relying on a number. `docs.github.com` returns 403 to the automated fetcher here (`docs/agents/environment-caveats.md` owns this caveat), so quotes come from the same pages' **canonical Markdown source** in the public [`github/docs`](https://github.com/github/docs) repository (`content/…`, `data/reusables/…`); each fact cites the docs.github.com page it renders on. A fact corroborated only by a non-owning source (e.g. a
 community thread) is marked as such.
 
 ---

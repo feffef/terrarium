@@ -3,10 +3,9 @@ category: platform-operation
 importance: essential
 gist: Wraps up a session and writes its honest closing diary entry.
 role: >-
-  The model-facing front door for Session closure: when a session wraps up it
-  re-reads CLAUDE.md and the always-loaded rules, logs a Friction for each one
-  broken, writes the session log via `log-session`, and babysits its gated PR
-  to merge. It makes the self-judged "invoke at closure" rule fire reliably;
+  The model-facing front door for Session closure: re-reads CLAUDE.md and the
+  always-loaded rules, logs a Friction for each rule broken, writes the session
+  log via `log-session`, and babysits the session's gated PR to merge. It makes the self-judged "invoke at closure" rule fire reliably;
   its invocation rate is the evidence for ADR-0009's choice of a Skill over a
   reminder hook.
 observations:
@@ -317,3 +316,42 @@ observations:
       owner's own kickoff) - the 9th consecutive run reaching this verdict
       on the same session id. No new finding. Grade/role unchanged
       (essential).
+  - date: "2026-10-19"
+    note: >-
+      Self-check (audit-skills behaviour check), 10/10 usedInLogs sessions
+      cross-checked against live GitHub state (`gh api .../pulls/<n>`):
+      every `status: completed` log's `endedAt` lands within seconds of its
+      last PR's real `merged_at`, 0/10 stale, several logs honestly
+      self-report lateness against other rules (not HUMAN-PROMPTED-CLOSURE
+      cases). This window's one humanPromptedClosures signal,
+      session_014uXxmT6359K4Z42a6We6Gh (2026-10-12), is the same session
+      already fully investigated and confirmed GENUINE in the 2026-10-13
+      entry - no new fact to add, still n=1, not re-escalated. The window's
+      1 notUsedWindow session (session_01NVG22rfEsjhW9zkcCco6W8) reconfirmed
+      equivalent-closure a further time, same pattern. orphanSuppressionLog
+      (2 entries, both already resolvedBy #736/#1063) and
+      manuallyRescuedClosures ([]) both clean. No new silent failure, no
+      new missed invocation. Grade/role unchanged (essential).
+  - date: "2026-10-21"
+    note: >-
+      Self-check (audit-skills behaviour check), 10 newest invocations (PRs
+      #2318-#2351), all independently verified against live GitHub: every
+      `status: completed` log's `endedAt` lands within seconds-minutes of its
+      PR's real `merged_at`, 0/10 stale. The window's 1 notUsedWindow session
+      (session_01NVG22rfEsjhW9zkcCco6W8) reconfirmed the known
+      equivalent-closure pattern via log-session alone (no new fact).
+      session_01TMgZyrN42pwudxkUdHLKwP stays settled per the 2026-10-06 call.
+      No reverts of close-session mechanics in the 2-week sweep. No new
+      finding. Grade/role unchanged (essential).
+  - date: "2026-10-23"
+    note: >-
+      Self-check (audit-skills behaviour check), 0/10 silent failures, 0/10
+      missed invocations; all PRs and log commits verified live, including
+      this window's own SKILL.md change (#2417/#2418 look-back step, landed
+      intact, no revert). One further confirmed instance of the
+      already-tracked re-invocation/closing-late pattern:
+      session_01EjH3TbrydEY2sArBMYE5Gy self-logged a major
+      HUMAN-PROMPTED-CLOSURE friction (wrote the completed log directly
+      instead of invoking close-session after PR #2418 merged); matches
+      prior instances (10-04, 10-12, 10-13), no damage, correct once
+      prompted. Grade/role unchanged (essential).

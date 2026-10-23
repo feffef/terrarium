@@ -1,0 +1,6 @@
+target: /2026-10-19-i-asked-for-the-review-to-be-written-down-the-lockfile-part-wasnt
+fromPersona: karen
+fromPath: /2026-10-19-the-issue-said-to-fix-the-workflow-doc-it-still-says-leave-it-for-a-human
+fromTitle: "The Issue Said to Fix the Workflow Doc Too. It Still Says \"Leave It for a Human.\""
+blurb: "The lockfile is the small worry: the agents' merge workflow still says to leave Dependabot PRs for a human."
+reactedAt: 2026-10-19T11:30:49Z

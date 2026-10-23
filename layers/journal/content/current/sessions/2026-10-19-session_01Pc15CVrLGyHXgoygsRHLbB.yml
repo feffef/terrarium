@@ -1,0 +1,200 @@
+schemaVersion: 1
+session: session_01Pc15CVrLGyHXgoygsRHLbB
+startedAt: 2026-10-19T16:57:20Z
+endedAt: 2026-10-19T17:28:19Z
+kind: autonomous
+goal: Build the inspect-session Skill
+status: completed
+outcome: "inspect-session Skill shipped: partial read (PR 2304) and full read (PR 2305) merged, spec 2300 closed"
+summary: "Human-instructed: @feffef approved spec #2300 in session_01MKmEo8yAjxTqJ5h3zceLL5, and that session started this one to implement both stories (#2301 and #2302), each as its own gated PR. Nothing here was agent-initiated beyond the two small sample dispatches, which captured real event shapes. The prototype branch's flattener was the starting point. Before writing fixtures I read four real pages of a past session and this session's own newest page. That showed every Agent dispatch, foreground ones included, now returns only a receipt: the reply arrives as a hand-back user event (origin.handback, origin.from) and is joined by agent id. Flatten keeps a call's result on the call's own line and adds a `target` field for reads, a small refinement on the spec's field list. A live partial read of the spec session answered a free-form question correctly in 2 pages (0 inline). It also showed that the `prompts` selector's FOUND can fire before the answer is in range, so the recipe now stops when the question is answered. Code review (Standards and Spec) found an over-broad Bash-read rule, a single read target per line, session-log hits not counting toward FOUND, and WHAT-comments; all fixed, and PR 2304 merged on a green gate. Story 2 added ranges.ts and the full-read recipe. A live full read of the 50-minute spec session took about 3 minutes and 250k Haiku tokens (walker plus 3 parallel fetchers, 11 pages, no wrong pages); all 14 human-prompt tags were genuine. The walker loaded the whole Skill on its own because of the new CLAUDE.md trigger, so every brief now says it holds all the subagent needs. Review of story 2 caught that a repeated cursor from the walker would poison the ranges, and that the merge test could not fail; both are fixed. PR 2305 merged on a green gate, and spec 2300 was closed with a comment listing where the build refined the spec."
+prs:
+  - "2304"
+  - "2305"
+docsRead:
+  - path: GLOSSARY-MAP.md
+    reason: session-start vocabulary map
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Session, Friction, Skill terms; kind classification
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: fetch before diffing; commit -F for backticks; trailer check
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP surface, and the transcript section this PR moves into the Skill
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: gate and code-review before the first push; merge recipe
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: Skill folder plus .claude/skills link
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: confirmed no Human-only file, so the PR is agent-mergeable
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: approval via the Trusted user's request; open the PR without asking
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: how to shape SKILL.md (pointers, disclosure, negation)
+    useful: partly
+  - path: .agents/skills/writing-for-agents/SKILL-MECHANICS.md
+    reason: model-invoked description choice
+    useful: partly
+  - path: .agents/skills/implement-spec/SKILL.md
+    reason: checked if it governs this build; it is user-invoked and integration-branch shaped, so not used
+    useful: no
+  - path: docs/research/cloud-session-transcript-tools.md
+    reason: event shapes, paging, spill threshold, read via git show from its research branch
+    useful: yes
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: the Standards reviewer read it to review; it reported sprawl and one-home issues
+    useful: yes
+  - path: .gitignore
+    reason: (no reason given)
+skillsUsed:
+  - name: adr-check
+    reason: binding ADRs before planning the Skill
+  - name: code-review
+    reason: Standards and Spec review before the first push; found 3 real spec bugs
+  - name: close-session
+    reason: in-review log at PR open
+  - name: log-session
+    reason: author this log
+  - name: inspect-session
+    reason: (no reason given)
+frictions:
+  - description: Dispatched code-review subagents that ran git diff without first reading the dispatch-subagents Skill, which CLAUDE.md requires for subagents that touch git
+    solution: The CLAUDE.md trigger says 'touches git'; read-only git diffs are ambiguous. Clarify whether read-only git counts.
+    severity: nit
+  - description: An ad-hoc python analysis of saved list_events pages printed a whole hand-back body, about 20k characters, into the main context
+    solution: Truncate every printed field from the first run; the new Flatten plus grep -oE now does this by default
+    severity: minor
+  - description: First draft of the scripts carried WHAT-comments and duplicated helpers, which the code-review Standards pass had to flag
+    solution: Re-read CLAUDE.md's comment rule before writing code comments
+    severity: nit
+  - description: A Bash call with run_in_background plus a subshell '&' was blocked by the double-background guard; resent without the '&'
+    solution: Use run_in_background alone with a foreground command
+    severity: nit
+  - description: git checkout -b from origin/main left the new branch tracking origin/main; had to unset the upstream to avoid a push to main
+    solution: Use git checkout --no-track -b <branch> origin/main
+    severity: nit
+  - description: "SHELL-READ-DETECTION: a real read went uncounted. Command: git show origin/research/cloud-session-transcript-tools:docs/research/cloud-session-transcript-tools.md (after a git fetch on the same line). Expected path: docs/research/cloud-session-transcript-tools.md"
+    solution: Teach scripts/session/shell-reads.ts that git show <ref>:<path> reads <path> when its output is shown
+    severity: moderate
+durationSec: 1858
+models:
+  claude-opus-5-5: 332
+toolCounts:
+  Bash: 87
+  ToolSearch: 3
+  mcp__github__issue_read: 11
+  Skill: 4
+  mcp__claude-code-remote__list_events: 5
+  Agent: 11
+  Write: 17
+  Edit: 14
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 3
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
+  ReadNotifications: 3
+  mcp__github__issue_write: 1
+filesEdited:
+  - .agents/skills/inspect-session/scripts/flat.ts
+  - .agents/skills/inspect-session/scripts/flatten.ts
+  - .agents/skills/inspect-session/scripts/search.ts
+  - .agents/skills/inspect-session/scripts/outline.ts
+  - .agents/skills/inspect-session/tests/unit/flatten.spec.ts
+  - .agents/skills/inspect-session/tests/unit/search.spec.ts
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/inspect-session/scripts/ranges.ts
+  - .agents/skills/inspect-session/tests/unit/ranges.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0014.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - .agents/skills/inspect-session/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push; opened the full ADR to judge merge rights
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to close-session at PR open and keep the log off the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed the Trusted request is the approval and to open the PR without asking; read the full ADR for what counts as new work
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Shaped the PR body header and commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading GLOSSARY.md; no glossary term was added, as the spec says
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded with CLAUDE.md; my CLAUDE.md edit sits outside the open trial's territory, which the adr-check listing confirmed
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with CLAUDE.md; the new trigger is a cross-session pointer, which belongs in CLAUDE.md
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Its paths confirmed no Human-only file changes, so the PR is agent-mergeable
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded while reading ADRs; no ADR changed
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Set the Skill folder and its .claude/skills link; read the full ADR for workflow-script placement
+    useful: yes
+  - path: .claude/rules/adr-0014.md
+    reason: Loaded on reading vitest.config.ts; no routing or manifest work here
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Only the Standards reviewer loaded it, reading Skill files; it reported no
+    useful: no
+subagents:
+  - task: Sample background dispatch
+    model: haiku
+  - task: Sample foreground dispatch
+    model: haiku
+  - task: Live partial read of spec session
+  - type: general-purpose
+    task: Standards review of inspect-session
+  - type: general-purpose
+    task: Spec review of inspect-session
+  - task: "Full read: walk cursors"
+    model: haiku
+  - task: "Full read: fetch range 1"
+    model: haiku
+  - task: "Full read: fetch range 2"
+    model: haiku
+  - task: "Full read: fetch range 3"
+    model: haiku
+  - type: general-purpose
+    task: Standards review of full read
+  - type: general-purpose
+    task: Spec review of full read
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.303
+learnings:
+  - In list_events, every Agent dispatch result (foreground too) is now only a receipt; the real reply is a later user event with origin.handback true and origin.from set to the agent id, and the foreground result also carries tool_use_result.handbackReport.text
+  - A typed human prompt carries client_platform and no origin; task notifications carry origin.kind task-notification, and hand-backs carry isSynthetic plus origin.kind peer
+landedBy: Stop
