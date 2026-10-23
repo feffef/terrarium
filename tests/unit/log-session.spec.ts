@@ -652,6 +652,9 @@ describe('closureWarning() — a completed log hand-written after a merge (#2424
   it('is silent when close-session ran after the merge', () => {
     expect(warn('completed', merge, close)).toBeUndefined()
   })
+  it('is silent when the close Skill call carries its name in `command`', () => {
+    expect(warn('completed', merge, tool('Skill', { command: 'close-session' }))).toBeUndefined()
+  })
   it('is silent without a merge', () => {
     expect(warn('completed', tool('Bash', { command: 'ls' }))).toBeUndefined()
   })

@@ -639,8 +639,9 @@ export function extractTrace(
       if (name === 'Read') reads.push(input.file_path as string)
       else if (EDIT_TOOLS.has(name)) edits.push(input.file_path as string)
       else if (name === 'Skill') {
-        skills.push((input.skill ?? input.command) as string)
-        if (input.skill === 'close-session') mergedWithoutClose = false
+        const skill = (input.skill ?? input.command) as string
+        skills.push(skill)
+        if (skill === 'close-session') mergedWithoutClose = false
       } else if (name === 'Agent' || name === 'Task') {
         subagents.push({
           type: input.subagent_type as string,
