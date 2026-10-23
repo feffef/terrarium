@@ -28,7 +28,7 @@ a missing one when a term or decision needs resolving.
 
 ## Use the glossary's vocabulary
 
-CLAUDE.md's glossary-term rule covers every output that names a domain concept: an issue
+CLAUDE.md's *Words we use* covers every output that names a domain concept: an issue
 title, a refactor proposal, a hypothesis, a test name.
 
 A concept missing from the glossary means either you're inventing language
