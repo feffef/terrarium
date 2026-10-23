@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-12"
     summary: "Fixed two flaky tests (worktree check timing and a checkout test) that passed locally but failed in CI."
 occurrences:
-  - session: session_01CF4k9jXS9wLrcPVsGduZmn
-    date: "2026-10-08"
-    severity: major
-    description: "gate:scoped passed locally but CI failed on PR 1690: the docs changeset was Inert so e2e was skipped, and even a Full local gate would have passed because the trigger was a session log that reached main after the branch was cut (base drift, CI tests the merge ref). Cost: a diagnosis round, a second branch, two full local gates and a port."
-    solution: "Not a skip-logic hole: the Inert classification was right. The e2e assertions matched a phrase that real content can contain; fixed in PR 1695 by matching the 404 markup. A smoke assertion on rendered pages should match markup, never prose."
-  - session: session_01S1WwkpNHDfbvKAf5T1afKq
-    date: "2026-10-08"
-    severity: major
-    description: "CI's gate failed once on c1d37255 with a Tinkerfund e2e page.goto timeout, even though gate:scoped passed locally. The PR changed only docs, but CI tests the merge with the newer main, which ran the heavy tier. The next commits went green without a fix."
-    solution: "Treat as a flaky e2e test. It is unrelated to this docs-only diff; the next run on a newer head passed. If it recurs, file it against the tinkerfund e2e test's load timeout."
   - session: session_01VGLAakRJNm67PuNHpgbEc7
     date: "2026-10-12"
     severity: major

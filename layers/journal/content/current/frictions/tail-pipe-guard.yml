@@ -11,21 +11,6 @@ fixes:
     date: "2026-10-11"
     summary: "Removed the check that blocked whole commands for ending in a pipe to tail or head."
 occurrences:
-  - session: df390af0-11a7-4415-9bb9-b24cea702246
-    date: "2026-10-08"
-    severity: nit
-    description: "Hit tail-pipe-guard by piping a multi-command grep chain into head"
-    solution: "Redirect to a scratch file and Read it, as the guard says; habit from other repos"
-  - session: session_01StQjYSNRStTihgZimvvx2r
-    date: "2026-10-08"
-    severity: nit
-    description: "The tail-pipe guard blocked two commands I piped into tail, and a foreground sleep was blocked, costing three wasted calls."
-    solution: "Redirect to a log file and read it, as the guard says."
-  - session: session_01UvFUKPkQSkZS1qS7VndRqX
-    date: "2026-10-08"
-    severity: nit
-    description: "A Bash call piped into tail was denied by the tail-pipe guard, costing one retry."
-    solution: "Redirect to a file and read it, as the guard says."
   - session: session_01Jo3m1r8fyuGvjtRE9qDrPH
     date: "2026-10-09"
     severity: nit

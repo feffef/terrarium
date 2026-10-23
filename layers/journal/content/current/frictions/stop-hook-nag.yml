@@ -20,41 +20,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_01449u16G5rFweMPGkKZe9Tv
-    date: "2026-10-08"
-    severity: nit
-    description: "The Stop hook reminder to commit and push fired twice while the gate and the fact-check were still running."
-    solution: "Have the reminder skip while a backgrounded gate:scoped or subagent is running"
-  - session: session_016ZmB2wonEm8Aki1P4V59cK
-    date: "2026-10-08"
-    severity: minor
-    description: "Pushed and opened the PR after the gate but before the fact-check subagent reported, out of the blog-post Skill's step order, under repeated Stop-hook push reminders; the PR body carries no tally yet."
-    solution: "Treat the Stop hook's push nag as noise while a dispatched checker is running, or have the hook honour a pending-check marker in the scratchpad."
-  - session: session_017tt8CbwHqFWqw7PJZ7u7AL
-    date: "2026-10-08"
-    severity: nit
-    description: "The Stop hook demanded a push while the gate was still running; CLAUDE.md says to wait, so I had to hold the push against the hook's reminder."
-    solution: "Known: the hook cannot see a running gate (CLAUDE.md Self-verification). No change needed."
-  - session: session_01CF4k9jXS9wLrcPVsGduZmn
-    date: "2026-10-08"
-    severity: nit
-    description: "The harness Stop hook demanded a push while gate:scoped was still running, as CLAUDE.md predicts."
-    solution: "Already documented; ignored it and pushed after the gate passed."
-  - session: session_01KCWd4fWsUfUxL6uT4Bephj
-    date: "2026-10-08"
-    severity: minor
-    description: "Stop hook asked to commit and push three times while the fact-check and gate were still running, costing explanatory turns."
-    solution: "Make the Stop hook aware of a running gate."
-  - session: session_01S1WwkpNHDfbvKAf5T1afKq
-    date: "2026-10-08"
-    severity: moderate
-    description: "Read 'let me review and decide' as 'do not push'; the maintainer had to ask twice to commit and push so they could review on GitHub, while the Stop hook kept nagging."
-    solution: "On an open PR branch, push the reviewable draft after gate:scoped and say it is a draft; reviewing happens on GitHub."
-  - session: session_01StQjYSNRStTihgZimvvx2r
-    date: "2026-10-08"
-    severity: nit
-    description: "The Stop hook repeatedly told me to push unpushed commits while CLAUDE.md says push only after gate:scoped passes; I held the push each time."
-    solution: "Make the Stop hook aware of a running gate, as CLAUDE.md already notes it cannot."
   - session: session_01Jo3m1r8fyuGvjtRE9qDrPH
     date: "2026-10-09"
     severity: nit

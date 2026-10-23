@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-19"
     summary: "Moved the ADR grep before a recommendation into a model-invoked adr-check Skill that prints every ADR summary and reads the related ADRs in full."
 occurrences:
-  - session: session_011p9VA5A1CWNG9xd2VrQf8N
-    date: "2026-10-08"
-    severity: major
-    description: "Gave an opinion and recommended moving the Routine's cron as the cheapest fix without reading the prune-trial Skill, its ADR-0027, the Routine config or the ledger; CLAUDE.md requires the binding ADRs before planning a change. The move would have changed nothing."
-    solution: "When asked about a fix to a Skill's behaviour, read that Skill and the ADRs that bind it first, then model what sets each variable; SKILL.md sections 2 and 5 showed the dependency at once."
   - session: session_018i6d2BQPkf9cq6jSEqCNSX
     date: "2026-10-10"
     severity: moderate

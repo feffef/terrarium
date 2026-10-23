@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   How a script, guard, rule, harness setting or data format behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set. A reviewer, the owner or a later check finds it false. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed"; a regex written without the real data.
 surface: safe
-status: open
+status: tracked
+ref: "issue #2425 (regression of #2378)"
 fixes:
   - pr: 2336
     date: "2026-10-20"
@@ -13,11 +14,6 @@ fixes:
     date: "2026-10-21"
     summary: "Restored the shorter \"Verify before you state\" bullet in CLAUDE.md, and the Standards reviewer in clear-backlog-build now flags a count or subagent claim that cites no source."
 occurrences:
-  - session: 1f97b613-f529-4487-a7e9-1115a44b84c7
-    date: "2026-10-08"
-    severity: moderate
-    description: "The overview's first draft carried several unchecked simplifications: guards as 'code that blocks', audit-docs as 'docs vs code', 'Nitro runs the Vue app', and 'design' as the only difference between tenants. Each was easy to verify in the skill or guard docs but went unchecked until the maintainer's review."
-    solution: "Before handing over a plain-language summary, re-read the primary file behind each one-line description (SKILL.md, guards.md, the package source) and check the simplification still holds"
   - session: session_01DtK8w6aJ3361uPK73VAxhi
     date: "2026-10-12"
     severity: moderate

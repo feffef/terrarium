@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-10"
     summary: "Removed the commit-trailer guard, so hand-written trailers are no longer denied; recognised current models."
 occurrences:
-  - session: session_015UvXah6phvbuMpUWmf5rYs
-    date: "2026-10-08"
-    severity: minor
-    description: "Hand-wrote Co-Authored-By and Claude-Session trailers in a commit, copying the harness reminder; commit-trailer-guard denied it, nothing ran."
-    solution: "The system reminder's attribution text conflicts with the CLAUDE.md rule; the repo rule should win, or the reminder should be dropped here."
-  - session: session_01UvFUKPkQSkZS1qS7VndRqX
-    date: "2026-10-08"
-    severity: nit
-    description: "The harness attribution reminder says to end commits and PR bodies with trailers, but CLAUDE.md says never hand-write the commit trailer; I followed CLAUDE.md and the hook added it."
-    solution: "Make the harness reminder and CLAUDE.md agree, or point CLAUDE.md at the guard that names the marker."
   - session: session_01GGSSswkV3J9p255u5hcvSp
     date: "2026-10-09"
     severity: minor

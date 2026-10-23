@@ -6,6 +6,8 @@ cause: >-
 surface: safe
 status: open
 fixes: []
+notes: |-
+  2026-10-23 design: a subscribe-after-create sentence or guard dropped: the only home is ADR-0003 (Human-only, an ADR summary cannot add to its ADR) or a guard that cannot tell a guess from a real number, and a wrong guess costs one resubscribe.
 occurrences:
   - session: session_013RCsUF234qAGu3CJr3v2on
     date: "2026-10-16"

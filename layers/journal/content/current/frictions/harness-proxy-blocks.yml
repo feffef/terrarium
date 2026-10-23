@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-16"
     summary: "verifying-ui-changes.md now says the deployed site is blocked in cloud sessions (plus a preview.ts review verb)."
 occurrences:
-  - session: session_01CF4k9jXS9wLrcPVsGduZmn
-    date: "2026-10-08"
-    severity: moderate
-    description: "The agent proxy refuses POST repos/{owner}/{repo}/rulesets (403 'Write access to this GitHub API path is not permitted'), so the owner-approved ruleset could not be applied from the session."
-    solution: "Recorded in environment-caveats; the config shipped as a Proposal with a one-line local gh command. Stage 2 (issue 1689) notes the same proxy may block an App token mint."
   - session: session_018i6d2BQPkf9cq6jSEqCNSX
     date: "2026-10-10"
     severity: moderate

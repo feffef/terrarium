@@ -20,16 +20,6 @@ fixes:
     date: "2026-10-22"
     summary: "A unit test that read a session log by its current path now reads the archived copy, so the retention sweep no longer turns the gate red."
 occurrences:
-  - session: session_01CF4k9jXS9wLrcPVsGduZmn
-    date: "2026-10-08"
-    severity: moderate
-    description: "The e2e smoke tests' not.toContain('No document at') checks can be tripped by any Journal content that quotes the 404 page, which an idea in a session log did; main's push gate went red for three runs and every open PR with it."
-    solution: "PR 1695 matches the markup. Consider the same review for other prose-substring assertions in the e2e suites."
-  - session: session_01KCWd4fWsUfUxL6uT4Bephj
-    date: "2026-10-08"
-    severity: moderate
-    description: "Retention sweep archived a Digest that a blog e2e test hard-coded under current, failing the gate and forcing an out-of-scope test edit."
-    solution: "Make the blog e2e check date-independent, or have the digest Skill warn that the sweep can break date-pinned tests."
   - session: session_015BjYk46dntcMuAWMn1z4Zw
     date: "2026-10-10"
     severity: major

@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_01449u16G5rFweMPGkKZe9Tv
-    date: "2026-10-08"
-    severity: minor
-    description: "My first combined Bash call put run_in_background true and a trailing ampersand; the double-background guard denied the whole call, including an unrelated edit, costing a retry."
-    solution: "Pass run_in_background alone with a plain foreground command, and keep file edits in a separate call"
   - session: session_01KRLFYUD31NaEVTs4Qs1Tzj
     date: "2026-10-10"
     severity: nit

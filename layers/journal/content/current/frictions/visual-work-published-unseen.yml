@@ -14,21 +14,6 @@ fixes:
     date: "2026-10-16"
     summary: "The read-first hint now points to verifying-ui-changes.md when a session takes a screenshot."
 occurrences:
-  - session: 1f97b613-f529-4487-a7e9-1115a44b84c7
-    date: "2026-10-08"
-    severity: major
-    description: "Three review rounds optimised the two briefs locally (terms, tables, completeness) but never questioned their framing. The diagrams built from them missed the most basic fact (everything lives in one repo and becomes a database at build time) and over-weighted build internals; only the maintainer's verdict on the rendered diagrams exposed it"
-    solution: "For overview docs, start by grilling the maintainer on the framing (zones, audience, what one picture must show) before any review rounds polish the details"
-  - session: 355d2d64-55fc-4515-81c1-e831f8b84601
-    date: "2026-10-08"
-    severity: major
-    description: "User judged both published diagrams not to work well; I published after one self-check each and never showed a draft or layout sketch before building"
-    solution: "For a diagram from a brief, share a rough layout or a first draft for a quick reaction before polishing and publishing; record the user's reasons in the briefs"
-  - session: 49f1fea0-270e-4851-9cc7-3dbf8cc8609a
-    date: "2026-10-08"
-    severity: major
-    description: "User judged both delivered diagrams not to work well for several reasons, despite every Archify gate passing and my own screenshot review; reasons not yet stated."
-    solution: "Before rendering, agree with the user on the reader, the one question each diagram answers, and the scope per view; treat passing gates as necessary, not sufficient."
   - session: session_01E2zbWEQmuUrEhWvbzNpBba
     date: "2026-10-15"
     severity: moderate

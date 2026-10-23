@@ -7,6 +7,7 @@ surface: safe
 status: open
 notes: |-
   2026-10-21 design: a rewrite-discipline line dropped: one session, the owner caught the drift in the same session, no deletion-style fix exists, and the open trials on the rewritten Skills will judge the damage.
+  2026-10-23 design: a rewrite-discipline line dropped: the two newer sessions were caught by code-review before merge, no session shipped the drift, and the candidate homes sit in open Prune Trial territory.
 occurrences:
   - session: session_01FTPnEsW1XNhaqYFdxaE24v
     date: "2026-10-20"
