@@ -48,6 +48,9 @@ function gitSubcommand(words: string[]): string | undefined {
   }
 }
 
+const issueWrite = (tool: string, segs: string[][]) => tool === 'mcp__github__issue_write'
+  || runs(segs, 'gh', (w) => w[1] === 'issue' && ['create', 'edit', 'close', 'reopen'].includes(w[2]!))
+
 export const READ_FIRST: ReadFirst[] = [
   {
     doc: 'docs/agents/git-conventions.md',
@@ -61,6 +64,12 @@ export const READ_FIRST: ReadFirst[] = [
     trigger: 'Before your first GitHub operation',
     matches: (tool, segs) => tool.startsWith('mcp__github__') || runs(segs, 'gh'),
   },
+  ...['docs/agents/issue-tracker.md', 'docs/agents/triage-labels.md'].map((doc) => ({
+    doc,
+    source: 'CLAUDE.md',
+    trigger: 'Before you file, triage or label an issue',
+    matches: issueWrite,
+  })),
   {
     doc: 'docs/agents/verifying-ui-changes.md',
     source: '.claude/rules/ui-verification.md',
