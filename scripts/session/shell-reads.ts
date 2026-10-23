@@ -77,9 +77,12 @@ const INSTRUCTION_DOC_PATTERNS = [
 
 const GLOB_OR_VAR = /[*?$`~[\]{}]/
 
-/** Brackets pass: Nuxt routes (`[space]`) use them literally, and an unmatched
- *  `[…]` reaches the command unexpanded. */
-const isLiteralPath = (text: string): boolean => !GLOB_OR_VAR.test(text.replace(/[[\]]/g, ''))
+/** `bashReadPaths`' test for a file it may name. Brackets pass: Nuxt routes
+ *  (`[space]`) use them literally, and an unmatched `[…]` reaches the command
+ *  unexpanded. */
+function isReadablePathArg(text: string): boolean {
+  return !GLOB_OR_VAR.test(text.replace(/[[\]]/g, ''))
+}
 
 /** Why a token that named an in-scope doc was NOT counted — surfaced to the
  *  authoring agent so checking for a MISS is recognition rather than recall. */
@@ -787,7 +790,7 @@ export function bashReadPaths(command: string, cwd: string): { paths: string[]; 
       const text = a.text.replace(/^</, '')
       if (a.skip || !text) continue
       files++
-      if (!isLiteralPath(text) || !(dir || isAbsolute(text))) continue
+      if (!isReadablePathArg(text) || !(dir || isAbsolute(text))) continue
       // A trailing `/` marks a directory for the hint; resolve() would drop it.
       paths.push(resolve(dir ?? '/', text) + (text.endsWith('/') ? '/' : ''))
     }
@@ -809,6 +812,8 @@ export function shellSegments(
     const out = { tokens, whole: tokens.length === seg.tokens.length, dir }
     if (tokens[0]?.text.replace(/^.*\//, '') === 'cd') {
       const to = tokens[1]?.text
+      // Stays strict: github-provenance-guard.ts reads bodies from this `dir`
+      // and fails closed when it is unknown.
       dir = dir && to && to !== '-' && !GLOB_OR_VAR.test(to) ? resolve(dir, to) : undefined
     }
     return out
