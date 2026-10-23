@@ -85,6 +85,9 @@ export const ruleDocPaths = (ruleText: string): string[] => [
  *  `adr-0004-<topic>.md` covers a part of that ADR with its own `paths`. */
 export const ruleAdr = (file: string) => /^adr-(\d{4})(?:-[a-z0-9-]+)?\.md$/.exec(file)?.[1]
 
+/** The ADR number of a repo-relative ADR file, else undefined. */
+export const adrDocNumber = (path: string) => /^docs\/adr\/(\d{4})-[^/]*\.md$/.exec(path)?.[1]
+
 export type AdrHintVia = 'path' | 'text'
 export interface AdrPointer {
   adr: string

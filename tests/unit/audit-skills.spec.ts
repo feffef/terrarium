@@ -1004,12 +1004,13 @@ describe('governing-ADR reads', () => {
     })
   })
 
-  it('counts each hint per ADR, by main and subagent apart, and the share read after', () => {
-    const hint = (adr: number, readAfter: boolean, by: 'main' | 'subagent' = 'main') => ({ adr, via: 'path' as const, readAfter, by })
-    const sessions = [sess({ adrHints: [hint(4, true), hint(4, false, 'subagent'), hint(21, false)] }), sess({ adrHints: [hint(4, true)] })]
+  it('counts hinted contexts per ADR and via, main and subagents apart, and the share read after', () => {
+    const hint = (adr: number, readAfter: boolean, by: 'main' | 'subagent' = 'main', via: 'path' | 'text' = 'path') => ({ adr, via, readAfter, by })
+    const sessions = [sess({ adrHints: [hint(4, true), hint(4, false, 'subagent'), hint(4, false, 'main', 'text'), hint(21, false)] }), sess({ adrHints: [hint(4, true)] })]
     expect(adrHintReport(sessions)).toEqual({
-      'ADR-0004': { fired: 3, readAfter: 2, readAfterPct: 67 },
-      'ADR-0021': { fired: 1, readAfter: 0, readAfterPct: 0 },
+      'ADR-0004 path': { contextsHinted: 3, readAfter: 2, readAfterPct: 67 },
+      'ADR-0004 text': { contextsHinted: 1, readAfter: 0, readAfterPct: 0 },
+      'ADR-0021 path': { contextsHinted: 1, readAfter: 0, readAfterPct: 0 },
     })
   })
 

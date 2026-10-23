@@ -45,7 +45,7 @@ import {
   type NearMiss,
   type ShellCommand,
 } from './shell-reads.ts'
-import { adrHintsIn, ruleAdr, ruleBlockFiles, type AdrHintVia } from '../lib/adr-rules.ts'
+import { adrDocNumber, adrHintsIn, ruleAdr, ruleBlockFiles, type AdrHintVia } from '../lib/adr-rules.ts'
 import { root, runIfMain } from '../lib/cli.ts'
 
 /** The one authored-scratch file per container (one session per container in the
@@ -556,7 +556,7 @@ export function adrReadInFull(
   docIndex?: DocLineIndex,
   rel: (p: string) => string = relativizer(records),
 ): boolean {
-  const isAdr = (p: string) => p.startsWith(`docs/adr/${n}-`)
+  const isAdr = (p: string) => adrDocNumber(p) === n
   const read = records.some((r) => {
     const content = (r.message as { content?: unknown } | undefined)?.content
     return Array.isArray(content) && content.some((b: { type?: string; name?: string; input?: Record<string, unknown> }) =>

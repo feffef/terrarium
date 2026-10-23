@@ -79,8 +79,8 @@ describe('agentTranscript()', () => {
 
 describe('the sh pre-filter', () => {
   const sh = readFileSync(join(repo, 'scripts/hooks/adr-read-hint.sh'), 'utf8').replace(/^printf .*adr-read-hint\.ts$/m, 'echo PASS')
-  const passes = (tool_input: object) =>
-    spawnSync('sh', ['-c', sh], { input: JSON.stringify({ tool_name: 'Edit', tool_input }), encoding: 'utf8' }).stdout.trim() === 'PASS'
+  const passes = (tool_input: object, tool_response: object = {}) =>
+    spawnSync('sh', ['-c', sh], { input: JSON.stringify({ tool_name: 'Edit', tool_input, tool_response }), encoding: 'utf8' }).stdout.trim() === 'PASS'
 
   it("passes a file under every ADR rule glob's first segment", () => {
     const globs = loadRules(join(repo, '.claude/rules')).filter((r) => ruleAdr(r.file)).flatMap((r) => rulePaths(r.text))
@@ -91,6 +91,7 @@ describe('the sh pre-filter', () => {
   it('passes an edit naming an ADR, and skips one outside every glob', () => {
     expect(passes({ file_path: '/tmp/x.md', new_string: 'see ADR-0004' })).toBe(true)
     expect(passes({ file_path: '/tmp/notes/x.md', new_string: 'nothing' })).toBe(false)
+    expect(passes({ file_path: '/tmp/notes/x.md', new_string: 'nothing' }, { originalFile: 'per ADR-0004', filePath: '/r/docs/x.md' })).toBe(false)
   })
 })
 
@@ -131,6 +132,9 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
   it('stays silent for an ADR read in full or already pointed to, and only for that ADR', () => {
     const readT = transcript('read.jsonl', [start, read(`${repo}/${ADR21}`)])
     expect(run(edit({ transcript_path: readT })).stdout).toBe('')
+    const bash = { type: 'assistant', message: { content: [{ type: 'tool_use', id: 'b', name: 'Bash', input: { command: `cat ${ADR21}` } }] } }
+    const shown = { type: 'user', message: { content: [{ type: 'tool_result', tool_use_id: 'b', content: readFileSync(join(repo, ADR21), 'utf8') }] } }
+    expect(run(edit({ transcript_path: transcript('shell.jsonl', [start, bash, shown]) })).stdout).toBe('')
     const first = context(run(edit()))
     const pointed = transcript('pointed.jsonl', [start, { type: 'attachment', attachment: { type: 'hook_additional_context', content: [first] } }])
     expect(run(edit({ transcript_path: pointed })).stdout).toBe('')

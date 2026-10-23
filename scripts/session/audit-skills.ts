@@ -19,7 +19,7 @@ import { readProvenanceHeader } from '../lib/provenance-header.ts'
 import { toOpenIssue, type OpenIssue, type RawIssueApiRecord } from '../github/list-open-issues.ts'
 import { ARCHIVED_SESSIONS_DIR, readSessionLogs, SESSIONS_DIR } from './journal-files.ts'
 import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
-import { loadRules, RULES_DIR, ruleAdr, rulePaths, type RuleFile } from '../lib/adr-rules.ts'
+import { adrDocNumber, loadRules, RULES_DIR, ruleAdr, rulePaths, type RuleFile } from '../lib/adr-rules.ts'
 
 /** The observation window, in days before now. Time-based rather than a session
  *  count, so the scheduled Routines' own runs can't shrink it to a couple of days. */
@@ -300,7 +300,8 @@ export function adrReadReport(sessions: readonly Session[], rules: readonly Rule
   const out: Record<string, AdrReads> = {}
   for (const s of sessions) {
     const governing = new Set(globs.filter(([, g]) => s.filesEdited.some((f) => matchesGlob(f, g))).map(([n]) => n!))
-    const read = [...governing].filter((n) => s.docsRead.some((p) => p.startsWith(`docs/adr/${n}-`))).length
+    // A log records a partial Read like a full one, so this is an upper bound.
+    const read = [...governing].filter((n) => s.docsRead.some((p) => adrDocNumber(p) === n)).length
     for (const key of ['all', s.kind]) {
       const a = (out[key] ??= { sessions: 0, governed: 0, pairs: 0, readInFull: 0, readInFullPct: null, readAll: 0, readNone: 0 })
       a.sessions++
@@ -316,15 +317,16 @@ export function adrReadReport(sessions: readonly Session[], rules: readonly Rule
   return out
 }
 
-/** Per ADR: how many times the hint fired (each `by` counts) and how many of
- *  those were followed by a full read. */
-export function adrHintReport(sessions: readonly Session[]): Record<string, { fired: number; readAfter: number; readAfterPct: number }> {
-  const out: Record<string, { fired: number; readAfter: number; readAfterPct: number }> = {}
+/** Per ADR and how it matched: the `adrHints` entries, so each session counts
+ *  once for its main agent and once for all its subagents together, and how
+ *  many of those read the ADR in full afterwards. */
+export function adrHintReport(sessions: readonly Session[]): Record<string, { contextsHinted: number; readAfter: number; readAfterPct: number }> {
+  const out: Record<string, { contextsHinted: number; readAfter: number; readAfterPct: number }> = {}
   for (const h of sessions.flatMap((s) => s.adrHints)) {
-    const a = (out[`ADR-${String(h.adr).padStart(4, '0')}`] ??= { fired: 0, readAfter: 0, readAfterPct: 0 })
-    a.fired++
+    const a = (out[`ADR-${String(h.adr).padStart(4, '0')} ${h.via}`] ??= { contextsHinted: 0, readAfter: 0, readAfterPct: 0 })
+    a.contextsHinted++
     if (h.readAfter) a.readAfter++
-    a.readAfterPct = Math.round((100 * a.readAfter) / a.fired)
+    a.readAfterPct = Math.round((100 * a.readAfter) / a.contextsHinted)
   }
   return out
 }

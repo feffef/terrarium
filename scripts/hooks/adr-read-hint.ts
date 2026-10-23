@@ -15,13 +15,13 @@
 //   tsx scripts/hooks/adr-read-hint.ts                # hook payload on stdin
 //   tsx scripts/hooks/adr-read-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
 //     (with no transcript_path, the dry run assumes an empty transcript)
-import { readdirSync, readFileSync } from 'node:fs'
+import { readdirSync } from 'node:fs'
 import { isAbsolute, join, matchesGlob, relative } from 'node:path'
 import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runGuard } from './hook-io.ts'
 import { repoRoot } from './bash-rules-hint.ts'
-import { adrReadInFull, agentTranscript, hintText } from '../session/transcript-trace.ts'
-import { buildDocLineIndex } from '../session/shell-reads.ts'
-import { ADR_DIR, adrHintLine, adrHintsIn, loadRules, RULES_DIR, ruleAdr, rulePaths, type AdrHintVia, type RuleFile } from '../lib/adr-rules.ts'
+import { adrReadInFull, agentTranscript, hintText, loadDocLineIndex } from '../session/transcript-trace.ts'
+import type { DocLineIndex } from '../session/shell-reads.ts'
+import { ADR_DIR, adrDocNumber, adrHintLine, adrHintsIn, loadRules, RULES_DIR, ruleAdr, rulePaths, type AdrHintVia, type RuleFile } from '../lib/adr-rules.ts'
 
 export interface AdrHit {
   adr: string
@@ -41,7 +41,7 @@ export function adrsForWrite(file: string, texts: string[], rules: RuleFile[], a
     if (rulePaths(r.text).some((g) => matchesGlob(file, g))) add(ruleAdr(r.file), 'path')
   }
   if (!NO_TEXT_MATCH.some((g) => matchesGlob(file, g))) {
-    add(/^docs\/adr\/(\d{4})-/.exec(file)?.[1], 'text')
+    add(adrDocNumber(file), 'text')
     for (const m of texts.join('\n').matchAll(/\bADR-(\d{4})\b/g)) add(m[1], 'text')
   }
   return [...hits].map(([adr, via]) => ({ adr, via }))
@@ -62,7 +62,7 @@ function hintFor(payload: unknown, dryRun = false): string | null {
   if (typeof filePath !== 'string' || !root) return null
   const file = relative(root, filePath).replace(/^\.claude\/worktrees\/[^/]+\//, '')
   if (file.startsWith('..') || isAbsolute(file)) return null
-  const adrs = new Map(readdirSync(join(root, ADR_DIR)).flatMap((f) => /^(\d{4})-.*\.md$/.exec(f) ? [[f.slice(0, 4), `${ADR_DIR}/${f}`] as const] : []))
+  const adrs = new Map(readdirSync(join(root, ADR_DIR)).map((f) => `${ADR_DIR}/${f}`).flatMap((p) => adrDocNumber(p) ? [[adrDocNumber(p)!, p] as const] : []))
   const texts = ['old_string', 'new_string', 'content'].map((k) => prop(input, k)).filter((t): t is string => typeof t === 'string')
   const hits = adrsForWrite(file, texts, loadRules(join(root, RULES_DIR)), adrs)
   if (hits.length === 0) return null
@@ -72,9 +72,11 @@ function hintFor(payload: unknown, dryRun = false): string | null {
   if (typeof parent !== 'string') records = dryRun && parent === undefined ? [] : null
   else records = readTranscript(agent === undefined ? parent : agentTranscript(parent, String(agent)))
   if (!records) return null
-  const index = buildDocLineIndex(hits.map((h) => ({ path: adrs.get(h.adr)!, text: readFileSync(join(root, adrs.get(h.adr)!), 'utf8') })))
   const pointed = pointedTo(records)
-  const due = hits.filter((h) => !pointed.has(h.adr) && !adrReadInFull(records, h.adr, index))
+  // The session log's index, so a shell read counts the same in both; built
+  // only when a Read hasn't settled it, since it reads the whole checkout.
+  let index: DocLineIndex | undefined
+  const due = hits.filter((h) => !pointed.has(h.adr) && !adrReadInFull(records, h.adr) && !adrReadInFull(records, h.adr, (index ??= loadDocLineIndex(root))))
   if (due.length === 0) return null
   return `${adrHintLine(due.map((h) => ({ ...h, doc: adrs.get(h.adr)!, file })))}\n${LATE_READ_NOTE}`
 }
