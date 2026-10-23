@@ -3,7 +3,7 @@ summary: >-
   A Journal browser test that opens a session card fails at random, so unrelated changes fail once and pass on a retry.
 cause: >-
   The Journal accordion e2e test (journal.spec.ts, the session-card head toggle) times out in gate:scoped or CI on diffs that do not touch it and passes on re-run; raising expect.poll's timeout to 10 s (PR #1919) did not stop it. Signals: 'Journal accordion e2e', journal.spec.ts:393, a gate red on an unrelated Journal test that passes on rerun.
-  The fix (issue #2231) opens the digest with openAndAwaitPin, so the click waits for the scroll pin to settle; not reproduced locally, judged by whether gate runs stop failing on it.
+  Most likely (issue #2231; not reproduced, 120 throttled Chromium runs passed, commit 19077ebc): the test clicked a session card while the digest it had just opened was still expanding, so the card moved under the click. Judged by whether gate runs stop failing.
 surface: safe
 status: tracked
 ref: "issue #2231 (regression of PR #1919)"

@@ -409,7 +409,7 @@ describe('journal Tenant', async () => {
       // it (the accordion defaults closed), so a click must make it visible.
       // openAndAwaitPin waits out the digest's pin, which outlasts its expand:
       // the digest growing under the card click is the most likely cause of
-      // the misses in issue #2231 (not reproduced).
+      // the misses in issue #2231 (not reproduced; evidence in the flaky-e2e-matcher-timeouts ledger entry).
       expect(await page.locator('.digest-body').count()).toBe(0) // collapsed: not mounted
       await openAndAwaitPin(page, page.locator('.digest .drow').first(), page.locator('.digest-body').first())
       expect(await page.locator('.digest-body').count()).toBe(1)
