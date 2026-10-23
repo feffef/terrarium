@@ -137,7 +137,7 @@ whatever happens to the fixes.
    description. Outside the cap: §2's regression issues, and fixes blocked
    only by a Human-only file or a guard (still filed, as `needs-triage`).
 3. **Update the ledger** on your branch, on top of the survey's commit
-   (`status`, `ref` and `fixes` through `scripts/ledger-set.ts`):
+   (`status` and `ref` through `scripts/ledger-set.ts`):
    - set `status: tracked` on every entry this run files or dispatches, with
      the issue number in `ref` for a filed one;
    - for each dropped fix, append a line to its entry's `notes` (a `|-`

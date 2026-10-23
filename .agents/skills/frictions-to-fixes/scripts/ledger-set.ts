@@ -39,13 +39,6 @@ function put(doc: Document, key: string, value: unknown): void {
   map.items.splice(at < 0 ? map.items.length : at, 0, doc.createPair(key, value))
 }
 
-/** Keeps an existing scalar's node, so its comments survive. */
-function setScalar(doc: Document, key: string, value: string): void {
-  const node = doc.get(key, true)
-  if (isScalar(node)) node.value = value
-  else put(doc, key, value)
-}
-
 function append(doc: Document, key: string, items: unknown[], replace = false): void {
   const seq = doc.get(key, true)
   if (isSeq(seq) && !replace) seq.items.push(...items)
@@ -61,8 +54,8 @@ function fixNode(doc: Document, fix: Fix) {
 /** The entry's new text; throws when the result fails the ledger schema. */
 export function setEntry(text: string, changes: LedgerChanges): string {
   const doc = parseDocument(text)
-  if (changes.status !== undefined) setScalar(doc, 'status', changes.status)
-  if (changes.ref !== undefined) setScalar(doc, 'ref', changes.ref)
+  if (changes.status !== undefined) put(doc, 'status', changes.status)
+  if (changes.ref !== undefined) put(doc, 'ref', changes.ref)
   if (changes.fixes || changes.replaceFixes) append(doc, 'fixes', (changes.fixes ?? []).map((f) => fixNode(doc, f)), changes.replaceFixes)
   if (changes.occurrences !== undefined) {
     const blocks = parseDocument(changes.occurrences).contents
