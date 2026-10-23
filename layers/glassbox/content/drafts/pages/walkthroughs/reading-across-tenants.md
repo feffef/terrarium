@@ -20,7 +20,7 @@ The Blog's :term[manifest] gives its `pages` :term[Collection] one extra field, 
 When `expand()` builds the Blog's collections, it adds the `page` contract's fields to the Blog's own page schema, keeping any Blog field of the same name. The Blog's schema doesn't declare `publishedAt`; its posts get that field from the contract. `pnpm validate:content` checks every post against the combined schema, so a reader can rely on those fields' names and types.
 
 ::stop-links
-[Manifest collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Schemas give column types, not validation](/t/glassbox/drafts/zod/schemas-column-types)
+[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Schemas give column types, not validation](/t/glassbox/drafts/zod/schemas-column-types)
 ::
 
 ## 3. The build lists it in the Catalog
@@ -44,7 +44,7 @@ A visitor opens `/t/commons/search`. The Commons layer's Space page renders its 
 The server renders the first rows; the whole list travels in the page's data. Typing in the box filters that list in the browser, by title, description, Tenant and Space, with no new query. The filter and the sort order are code in the Commons layer, not in the shared read functions. A click on a result goes to the post's own address under `/t/blog/`, where the Blog's own pages render it.
 
 ::stop-links
-[useAsyncData & payloads](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/commons/app/components/commons/Search.vue] · :file[layers/commons/app/pages/t/commons/]
+[Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/commons/app/components/commons/Search.vue] · :file[layers/commons/app/pages/t/commons/]
 ::
 
 ## 6. Where the reading stops
@@ -52,7 +52,7 @@ The server renders the first rows; the whole list travels in the page's data. Ty
 The Commons's own `pages` name no kind, so its Search never lists itself. A Collection with no `kind`, such as the Blog's `pingbacks`, is on no list, though no test stops a layer that passes another Tenant's key to `queryCollection` directly. The one exception to the Catalog is the Platform home page, which reads the Tenants it features directly.
 
 ::stop-links
-[One table per key](/t/glassbox/guide/nuxt-content/one-table-per-key) · :file[layers/commons/tenant.config.ts] · :file[app/pages/index.vue]
+[Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · :file[layers/commons/tenant.config.ts] · :file[app/pages/index.vue]
 ::
 
 ## Where next
@@ -60,5 +60,5 @@ The Commons's own `pages` name no kind, so its Search never lists itself. A Coll
 - [Reading across Tenants through opted-in kinds](/t/glassbox/drafts/terrarium-practice/cross-tenant-kinds)
 - [queryCollection patterns](/t/glassbox/drafts/nuxt-content/query-collection-patterns)
 - [A module that generates virtual # imports](/t/glassbox/drafts/nuxt-vue/virtual-imports)
-- [Adding a Tenant](/t/glassbox/guide/walkthroughs/adding-a-tenant)
+- [Adding a site](/t/glassbox/guide/walkthroughs/adding-a-tenant)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)
