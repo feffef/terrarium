@@ -1,0 +1,203 @@
+schemaVersion: 1
+session: session_019SNgYeofJtzoLvh8QNAwYD
+startedAt: 2026-10-23T20:13:09Z
+endedAt: 2026-10-23T20:36:48Z
+kind: interactive
+goal: Audit the ui-verification rule, fix its missed triggers, move the glossary read-first into a rule
+status: in-review
+outcome: "Bracket-path fix PR #2467 and glossary-terms rule PR #2469 open; #2469 waits for a human merge"
+summary: 'All work was human-instructed, step by step. The owner asked which read-first line was moved into a rule alongside the now-retired adr-check Skill (01177f458: the UI-verification line became .claude/rules/ui-verification.md). They then asked how often that rule fired since, how useful it was, and whether the linked doc was read. Across 82 session logs: 16 loads; 8 in the main session, 6 of them rated useful with verifying-ui-changes.md read; the 9 subagent-only loads were noise. The owner then asked me to check for missed triggers. Matching UI-path commits on main to sessions through their Claude-Session trailers found 12 UI-changing sessions, 2 of which never loaded the rule. Both edited the bracketed frictions.vue through Bash alone. The cause: bashReadPaths dropped any token containing [ or ], so bash-rules-hint never fires for Nuxt dynamic routes (31 of 40 page files). The owner said "fix it right away". PR #2467 accepts brackets as literal in read arguments, with tests. A cd into a bracketed directory stays strict, because github-provenance-guard reads request bodies from that directory and fails closed when it is unknown; the PR records this as a known limit. Two review rounds (Standards and Spec) shaped the helper and its comments. The owner then asked which other read-first lines suit path-bound rules. Only domain.md fits; the rest trigger on actions. They approved moving it as a separate PR. That branch (ccr-7abdc1fd-hjtj4f-glossary-rule) adds .claude/rules/glossary-terms.md, a Human-only path, so PR #2469 waits for a human merge; its gate passed.'
+prs:
+  - "2467"
+  - "2469"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: scope git log -S to origin/main; commit hygiene
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: simple-change bar; review then gate before the first push
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface for creating the PR
+    useful: partly
+  - path: docs/agents/domain.md
+    reason: checked its pointer to CLAUDE.md and its rule-of-two and Term-layout sections for the new rule's goal
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: "Standards reviewer: settled rule-vs-CLAUDE.md and the Skill-path pattern"
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: "Standards reviewer: domain.md sits only under See, so no ADR-0021 summary edit"
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: state the goal in a pointer; I and a reviewer read it
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: "Standards reviewer: only the hint's roster line applied"
+    useful: partly
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: "Spec reviewer: confirmed domain.md stays reachable"
+    useful: yes
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: scripts/session/shell-reads.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec review of both branches
+  - name: dispatch-subagents
+    reason: before the reviewer briefs
+  - name: writing-for-agents
+    reason: before editing CLAUDE.md and adding a rule
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git log --all -S in the same call that first read git-conventions.md, which says to scope -S to origin/main, never --all.
+    solution: Read git-conventions.md in its own call before any history query; the read-first hint fires after the call, too late.
+    severity: nit
+  - description: Told the owner that session 01Wd2W never loaded ui-verification.md; it had. I misread my own script output and stated it unchecked.
+    solution: "Verify before you state: grep the log file itself before reporting a per-session claim from a script's summary line."
+    severity: minor
+  - description: First audit script compared a YAML datetime's str() against an ISO string, silently dropping every 2026-10-19 session; caught before reporting.
+    solution: Normalize timestamps (or parse them) before comparing; print the count of sessions in scope as a sanity check.
+    severity: nit
+  - description: Loosened the shared cd check in shellSegments before grepping its callers, then reverted once I saw github-provenance-guard depends on it.
+    solution: "One home per fact: grep consumers of a shared helper before changing it."
+    severity: minor
+  - description: Answered the first two research questions without invoking close-session, which CLAUDE.md asks for when a session only answers a question.
+    solution: Invoke close-session after a question-only turn; logging self-heals so early logging is free.
+    severity: nit
+  - description: session logs' filesEdited omits shell edits for part of the month, so a missed-trigger audit must fall back to commit trailers on main.
+    solution: Derive filesEdited from the session's own commits for every log (2964475de started this on 10-21).
+    severity: minor
+durationSec: 1419
+models:
+  claude-opus-5-5: 216
+toolCounts:
+  Read: 3
+  Bash: 76
+  Edit: 6
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 1
+  Skill: 5
+  Agent: 4
+  SendMessage: 4
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  Write: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - tests/unit/shell-reads.spec.ts
+  - scripts/session/shell-reads.ts
+  - .claude/rules/glossary-terms.md
+  - docs/agents/domain.md
+  - CLAUDE.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0021.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0029.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/audit-docs/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before the first push despite Stop-hook nags; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open; close-session Skill held the steps, so no full ADR read
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself and babysit it; the owner approved both changes directly
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on the PR body and the commit trailer check; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Sent me and a reviewer to prune-trials.yml; no open trial covered domain.md or the read-first list
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Decided that only domain.md fits a path rule and the rest stay in CLAUDE.md; summary enough, reviewer read the ADR
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed scripts/session is agent-mergeable and .claude/rules/** is Human-only
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading ADR-0021 and the human-merge list; no ADR was changed
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded reading the provenance guard; it pointed to the roster, which needed no change
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Showed its paths already cover the glossaries but it cannot point to domain.md, so a separate rule was needed
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Only a reviewer loaded it on a Skill read; no Skill changed
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: "Reviewers: showed the stale Glass Box page is pinned to a revision, so it was left alone"
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Reviewer loaded it on a content read; no diagram involved
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Reviewer compared it as the house shape and ruled out merging into it
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Reviewer loaded it on a Skill read; no Inventory edit
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of bracket fix
+    durationSec: 168
+    toolCalls: 10
+    modelCalls: 7
+    tokenShare: 5.5
+  - type: general-purpose
+    task: Spec review of bracket fix
+    durationSec: 171
+    toolCalls: 10
+    modelCalls: 9
+    tokenShare: 5.8
+  - type: general-purpose
+    task: "Standards review: glossary rule"
+    durationSec: 162
+    toolCalls: 9
+    modelCalls: 9
+    tokenShare: 6.1
+  - type: general-purpose
+    task: "Spec review: glossary rule"
+    durationSec: 161
+    toolCalls: 10
+    modelCalls: 9
+    tokenShare: 6.2
+gitBranch: ccr-7abdc1fd-hjtj4f
+entrypoint: remote_mobile
+cliVersion: 2.1.309
+learnings:
+  - Claude Code loads path-scoped rules only for Read/Edit tools or one simple shell read; bash-rules-hint fills the rest, so its path parser decides rule coverage for Bash-only sessions.
+ideas:
+  - "Add a weekly rule-coverage audit script: for each path-scoped rule, list sessions whose commits touched its paths but whose log never loaded it. It turns this session's manual check into a regression alarm for hook and glob gaps."
+landedBy: Stop
