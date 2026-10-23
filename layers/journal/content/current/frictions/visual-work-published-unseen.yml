@@ -44,3 +44,8 @@ occurrences:
     severity: minor
     description: "I pushed and opened the PR before the screenshot-review agent returned, so the PR's screenshot line claims shots taken, not reviewed"
     solution: "Wait for the shot review before pushing, or start it right after the build, in parallel with gate:scoped earlier"
+  - session: session_01G2d5G6TrdoTQYQr7S2Eu7o
+    date: "2026-10-22"
+    severity: nit
+    description: "Screenshot step skipped for the changed session-logs page, a deviation from the Skill's Check step."
+    solution: "Skill could say when a one-sentence wording edit needs no shot."

@@ -73,3 +73,8 @@ occurrences:
     severity: minor
     description: "Did not invoke close-session after the first two answers, though CLAUDE.md asks for it when a session only answers a question."
     solution: "Invoke close-session at the end of each answer turn; re-invoking is cheap."
+  - session: session_01EjH3TbrydEY2sArBMYE5Gy
+    date: "2026-10-22"
+    severity: major
+    description: "HUMAN-PROMPTED-CLOSURE: after PR #2418 merged I authored the completed log directly instead of invoking close-session (ADR-0009 rule), skipping step 1's rule re-read; the user had to ask for a proper close"
+    solution: "Invoke the close-session Skill at every merge, even when its text is in context from editing it; having edited a Skill is not having run it"

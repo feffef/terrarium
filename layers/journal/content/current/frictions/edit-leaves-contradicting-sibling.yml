@@ -50,3 +50,8 @@ occurrences:
     severity: minor
     description: "#2319 left pr-workflow step 4 demanding a code-review sha for PRs the new skip exempted, a contradiction I only found when the owner asked what guarantees review."
     solution: "When an ADR change adds a skip, grep every consumer of the skipped step (merge-pr.ts verdict, step 4) in the same PR."
+  - session: session_019CbZiWqLbydExXQCmHRDyg
+    date: "2026-10-22"
+    severity: minor
+    description: "First commit left many callers pointing at removed glossary sections (manifests, theme.css, session.ts, an Atlas page); review caught them."
+    solution: "Before cutting a section, grep for its heading and phrases across code comments, not only Markdown (CLAUDE.md one home per fact)."

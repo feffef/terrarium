@@ -38,3 +38,13 @@ occurrences:
     severity: nit
     description: "Committed while a gate run was still in progress, which pr-workflow.md forbids (edit nothing until it ends); I re-ran the gate on the final head."
     solution: "Wait for the gate notification before touching the tree."
+  - session: session_012rLVzSFUzNKnypyiRd1X2X
+    date: "2026-10-22"
+    severity: minor
+    description: "Ran gate:scoped before code-review, then edited during the run; pr-workflow says review first and edit nothing until the gate ends, so one gate run was wasted"
+    solution: "Make scripts/gate/gate.ts record HEAD and the working-tree state at start and fail at the end if either changed, so a stale run is caught mechanically"
+  - session: session_019CbZiWqLbydExXQCmHRDyg
+    date: "2026-10-22"
+    severity: minor
+    description: "Edited files while the first gate:scoped run was in flight, so it had to be re-run on the final head (pr-workflow: edit nothing until it ends)."
+    solution: "Apply review fixes before starting the gate, then wait."

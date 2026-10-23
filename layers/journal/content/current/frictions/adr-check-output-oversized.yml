@@ -20,3 +20,18 @@ occurrences:
     severity: minor
     description: "adr-check printed every ADR summary (24KB) for a pick step where only ADR-0003/0004/0005/0027 and trial territories applied."
     solution: "Let binding.ts take a topic filter, or print only summaries whose paths match."
+  - session: session_012rLVzSFUzNKnypyiRd1X2X
+    date: "2026-10-22"
+    severity: minor
+    description: "adr-check's relevant-adrs.ts printed all 30 ADR summaries (about 6k tokens), including the always-loaded ones, for a 30-line display change"
+    solution: "Skip the always-loaded rules (no paths) and print one line per ADR, so the agent opens only the summaries that bear on the change"
+  - session: session_01EjH3TbrydEY2sArBMYE5Gy
+    date: "2026-10-22"
+    severity: nit
+    description: "Look-back: adr-check's relevant-adrs.ts printed every ADR summary; I cut it with head -150 and needed a second call to see ADRs 21-30 and the prune trials"
+    solution: "Read the script's output whole the first time, or have it print prune trials first since they are short and decisive"
+  - session: session_016THR5o2Wcj8DYR6voyvXnu
+    date: "2026-10-22"
+    severity: nit
+    description: "adr-check script printed every ADR summary and truncated at 150 lines; most were irrelevant to a glossary edit."
+    solution: "Let relevant-adrs.ts take a topic filter, or print only titles first."

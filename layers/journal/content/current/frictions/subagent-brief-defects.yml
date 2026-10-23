@@ -97,3 +97,8 @@ occurrences:
     severity: nit
     description: "The #2262 triage brief told the builder to dispatch a probe subagent, which a workflow agent may not be able to do; I ran the probe myself"
     solution: "clear-backlog-explore triage could note when a fact needs the orchestrator to gather it"
+  - session: session_01VH74k3Z27QtjR19XNC76qm
+    date: "2026-10-20"
+    severity: minor
+    description: "Design brief says read the full log of every occurrence, impossible for 35 occurrences; the design agent scripted extracts and listed what it read. It also gave no repo slug, so a GitHub read failed on a wrong owner."
+    solution: "Brief: full logs for moderate and above plus the newest three; give feffef/terrarium as owner/repo."

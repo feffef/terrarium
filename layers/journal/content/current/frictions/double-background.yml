@@ -96,3 +96,13 @@ occurrences:
     severity: nit
     description: "My first pnpm gate:scoped background run failed immediately because the scratchpad/logs directory I'd meant to create in the same shell call never existed - an earlier combined mkdir-then-gate call with a trailing shell \"&\" was correctly refused outright by the double-background guard, but I didn't notice the guard's \"nothing in this call ran\" meant the mkdir was skipped too, not just the backgrounded command."
     solution: "After a blocked double-background call, re-issue every part of it, since the guard refuses the whole call, not just the backgrounded part."
+  - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
+    date: "2026-10-22"
+    severity: nit
+    description: "A backgrounded gate command with a trailing ampersand plus run_in_background was blocked by the double-background guard; a chained sleep was also blocked. Both resent correctly."
+    solution: "The Skill step 10 could say: gate in background with run_in_background alone, then a Monitor on its log."
+  - session: session_0149fVyZ37qWGMuwVPw3Uryc
+    date: "2026-10-22"
+    severity: nit
+    description: "Stacked run_in_background with a text-level & (blocked by the double-background guard, #1208); the wrapper echo also reported exit 0 for a failed gate."
+    solution: "Run the gate as a plain background command and read the log for the result."

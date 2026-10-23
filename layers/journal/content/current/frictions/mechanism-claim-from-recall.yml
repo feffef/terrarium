@@ -83,3 +83,8 @@ occurrences:
     severity: minor
     description: "Offered to check sessions against 'the ADRs adr-check said bind', assuming the Skill outputs such a list; it does not, so I had to ask the owner for a method."
     solution: "Read a Skill's SKILL.md before proposing an analysis built on its output."
+  - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
+    date: "2026-10-22"
+    severity: minor
+    description: "My Kevin post said a rule was written down where agents read it, but the session-start ADR-0004 summary omits that clause; I only noticed after it merged and fixed it in a second PR."
+    solution: "The fact-check brief should name sentences that characterise where a rule lives so the checker opens the loaded rule file, not just the ADR."

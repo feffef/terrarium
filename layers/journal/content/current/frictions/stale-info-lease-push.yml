@@ -31,3 +31,8 @@ occurrences:
     severity: nit
     description: "First follow-up push with --force-with-lease was rejected as stale info because the merged PR's branch had been deleted on the remote."
     solution: "After a merged PR, run git remote prune origin before pushing the restarted branch (the hook hint said so)."
+  - session: session_01EjH3TbrydEY2sArBMYE5Gy
+    date: "2026-10-22"
+    severity: nit
+    description: "Pushed the restarted branch with --force-with-lease and it failed; pr-workflow.md, read earlier, says to push a restarted branch plainly"
+    solution: "Apply the doc's restarted-branch line; none needed beyond that"

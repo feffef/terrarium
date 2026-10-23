@@ -22,3 +22,8 @@ occurrences:
     severity: nit
     description: "Subscribed to PR #2326 by guessing the next PR number before reading create_pull_request's result (#2327); had to unsubscribe and resubscribe."
     solution: "Subscribe only after reading the PR number from the create result."
+  - session: session_01EjH3TbrydEY2sArBMYE5Gy
+    date: "2026-10-22"
+    severity: minor
+    description: "Called subscribe_pr_activity in parallel with create_pull_request, guessing PR number 2418 before the create result returned"
+    solution: "Subscribe only after the create result gives the number"

@@ -554,3 +554,28 @@ occurrences:
     severity: nit
     description: "Survey and design subagents each skipped or read late the CLAUDE.md-required reads; the design agent also skipped adr-check and cited stale paths from the ledger."
     solution: "Brief templates could list the required reads first, and ledger entries should cite current paths."
+  - session: session_01G2d5G6TrdoTQYQr7S2Eu7o
+    date: "2026-10-22"
+    severity: nit
+    description: "Read git-conventions only after the hook pointed to it, following my first git command."
+    solution: "Read the doc before the first git command, as CLAUDE.md says."
+  - session: session_01BYiuxza1S1QZgmyXngfzLE
+    date: "2026-10-22"
+    severity: nit
+    description: "My first git command (rev-parse, branch) ran in the same call as reading git-conventions.md, so the hook flagged a late read."
+    solution: "Read git-conventions.md in its own call before any git command."
+  - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
+    date: "2026-10-22"
+    severity: nit
+    description: "Ran git fetch and log before reading docs/agents/git-conventions.md, and a PR read before github-integration.md; the hooks only reminded me afterwards."
+    solution: "Read both docs in the same first step as the glossaries when a Skill obviously needs git and GitHub."
+  - session: session_0149fVyZ37qWGMuwVPw3Uryc
+    date: "2026-10-22"
+    severity: nit
+    description: "Ran first git command and first GitHub call before reading git-conventions.md and github-integration.md; the hook hint triggered the late read."
+    solution: "Read the triggered docs before the first command."
+  - session: session_0195CYW3YBg2stBS6aGigmbp
+    date: "2026-10-22"
+    severity: nit
+    description: "First mcp__github__ call (pull_request_read) came before docs/agents/github-integration.md; a hook flagged it afterwards. The call was right, but the read order was wrong."
+    solution: "Read github-integration.md in the same batch as the other start-of-session docs."

@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   ADR-0004's before-first-push gate:scoped plus code-review is skipped or the gate is not rerun after late edits.
 surface: guard-or-hook
-status: tracked
-ref: "Issue #2397 (regression of #2359). Issue #2354 (regression of #2321: a push chained after a gate run) closed by PR #2359, a doc rule with no guard. Earlier: issue #2311 closed by PR #2319, reversed by PR #2321. Left open: pr-workflow.md and ADR-0004 must still agree on the review skip."
+status: on-trial
+ref: "Prune Trial opened 2026-10-22 by PR #2412 (territory: docs/agents/pr-workflow.md (all of it); keywords 'Review before the first push', 'simple change'). Issue #2397 (regression of #2359) closed by PR #2407. Issue #2354 closed by PR #2359, a doc rule with no guard. Earlier: issue #2311 closed by PR #2319, reversed by PR #2321. Left open: pr-workflow.md and ADR-0004 must still agree on the review skip."
 fixes:
   - pr: 1852
     date: "2026-10-12"
@@ -25,6 +25,12 @@ fixes:
   - pr: 2359
     date: "2026-10-21"
     summary: "git-conventions.md's rule against chaining a push after a gate run now covers foreground runs too, and says to read the exit status in a separate step first (doc only; no guard or hook)."
+  - pr: 2407
+    date: "2026-10-22"
+    summary: "git-conventions.md's chaining rule now forbids a push or other state-changing git only when it comes later in the same command as a gate or test run."
+  - pr: 2412
+    date: "2026-10-22"
+    summary: "pr-workflow.md reworded plainly (-3 net) with one line added (count, don't judge a simple change), and a Prune Trial opened."
 occurrences:
   - session: session_011t1xXHxqwrfAjt83s9oTEP
     date: "2026-10-15"
@@ -126,3 +132,23 @@ occurrences:
     severity: nit
     description: "SKILL.md section 2 and pr-workflow.md leave open whether a test counts as code logic for the simple-change read; I reran the test and read the diff to be safe."
     solution: "Say in pr-workflow.md whether a test-only change of at most 10 lines counts as simple."
+  - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
+    date: "2026-10-22"
+    severity: minor
+    description: "Pushed the reply branch in the same command that printed the gate log tail, though the gate had exited 1 (a Journal accordion e2e test outside the diff). A re-run passed."
+    solution: "Read the gate exit status in its own step before any push, as git-conventions says; the Monitor result alone showed EXIT=1."
+  - session: session_016THR5o2Wcj8DYR6voyvXnu
+    date: "2026-10-22"
+    severity: nit
+    description: "Never read the full diff before the first push; only git diff --stat, though pr-workflow wants a self-read for a simple change."
+    solution: "Read git diff origin/main...HEAD before pushing, even for 8 lines."
+  - session: session_0174aaydYCKDuWSrJkkTD1dM
+    date: "2026-10-23"
+    severity: minor
+    description: "Skipped the code-review Skill before the first push on a 20-file diff (mostly renames), substituting my own read and the fact-check subagent."
+    solution: "The pr-workflow simple-change bar says nothing about pure archive moves; state whether rename-only sweeps count, or have the digest Skill name its review step."
+  - session: session_012rLVzSFUzNKnypyiRd1X2X
+    date: "2026-10-22"
+    severity: minor
+    description: "Ran gate:scoped before code-review, then edited during the run; pr-workflow says review first and edit nothing until the gate ends, so one gate run was wasted"
+    solution: "Make scripts/gate/gate.ts record HEAD and the working-tree state at start and fail at the end if either changed, so a stale run is caught mechanically"

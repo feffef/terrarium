@@ -11,6 +11,9 @@ fixes:
   - pr: 2314
     date: "2026-10-20"
     summary: "pr-workflow.md now says Dependabot PRs go through the dependabot-sweep Skill, replacing the stale claim that merge-pr.ts refuses them."
+  - pr: 2406
+    date: "2026-10-22"
+    summary: "ADR-0004's bump exception is narrowed to a same-repo Dependabot bump touching only package.json and the lockfile, matching merge-pr.ts."
 occurrences:
   - session: session_01743kiGL2igSyAHJ77heWSV
     date: "2026-10-13"

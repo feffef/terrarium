@@ -13,3 +13,13 @@ occurrences:
     severity: moderate
     description: "The audit-docs restructure in #2331 grew the file instead of pruning it; the user had to point out it was not a real prune."
     solution: "In a prune-trial rewrite, ask of each line whether a rule, guard or the gate already enforces it before moving it; moving text is not pruning."
+  - session: session_0149fVyZ37qWGMuwVPw3Uryc
+    date: "2026-10-22"
+    severity: nit
+    description: "First draft of the reword added stricter rules and an inaccurate ledger claim, caught by Standards/Spec review; a prune must not change meaning."
+    solution: "Diff the old and new text rule by rule before committing."
+  - session: session_019CbZiWqLbydExXQCmHRDyg
+    date: "2026-10-22"
+    severity: minor
+    description: "Trimming the Human-only definition dropped ADR-0004's Dependabot exception, a meaning change caught in the second review."
+    solution: "When compressing a definition, diff each qualifier against its ADR before committing."
