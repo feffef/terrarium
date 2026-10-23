@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_01E3XmTJcpKMZstW7MHL2eks
 startedAt: 2026-10-23T07:46:35Z
-endedAt: 2026-10-23T08:46:50Z
+endedAt: 2026-10-23T08:52:10Z
 kind: interactive
 goal: Re-cluster the Friction Ledger by fix, then run frictions-to-fixes
 status: in-review
-outcome: "Ledger re-clustered (102 to 140 entries) and surveyed in PR #2440; six issues filed; doc fix PR #2441 open"
-summary: "The owner invoked frictions-to-fixes with the ask to put extra effort into re-clustering the Friction Ledger so no entry mixes frictions with different root causes or fixes. Before starting I asked four questions; the owner chose: all 102 entries, a dedicated re-cluster pass before the survey, split whenever the occurrences need different fixes, and a full run afterwards. The re-cluster design (five themed slices, one agent each, then one consolidation agent applying the cross-slice moves I approved, then a global pass) was mine. Result: 140 entries; a script showed every distinct occurrence block survived except four duplicates dropped under the one-session rule. The biggest catch-alls (binding-docs-skipped, late-read-first-docs, code-review-skill-two-agents-skipped, closure-not-invoked-on-answers, flaky-e2e) split into pieces whose fixes differ, and statuses moved to the piece they covered (PR #2066 checked for the late-read pieces). Then the Skill ran as written: the survey added 25 occurrences and two missed fix PRs; its ranking covered only window-active entries, so I added never-fixed entries the re-cluster exposed from --candidates. I filed regressions #2434 to #2436. The design agent proposed four fixes for ten picks; the owner chose to file fix A (glossary @imports, #2437) and fix C (dispatch trigger wording, #2438) rather than build them; fix B is Human-only (#2439); five picks were dropped with notes. Fix D (one github-integration.md bullet on check-run annotations) is built by a Sonnet agent; code-review found it overstated annotations and contradicted the doc's get_job_logs tail advice, so it went back for a second commit. Ledger PR #2440 is open with gate:scoped green; fix D's PR and the closing ledger PR are still to come."
+outcome: "Ledger re-clustered (102 to 140 entries) and fix PR #2441 merged; closing ledger PR #2442 open; six issues filed"
+summary: "The owner invoked frictions-to-fixes with the ask to put extra effort into re-clustering the Friction Ledger so no entry mixes frictions with different root causes or fixes. Before starting I asked four questions; the owner chose: all 102 entries, a dedicated re-cluster pass before the survey, split whenever the occurrences need different fixes, and a full run afterwards. The re-cluster design (five themed slices, one agent each, then one consolidation agent applying the cross-slice moves I approved, then a global pass) was mine. Result: 140 entries; a script showed every distinct occurrence block survived except four duplicates dropped under the one-session rule. The biggest catch-alls (binding-docs-skipped, late-read-first-docs, code-review-skill-two-agents-skipped, closure-not-invoked-on-answers, flaky-e2e) split into pieces whose fixes differ, and statuses moved to the piece they covered (PR #2066 checked for the late-read pieces). Then the Skill ran as written: the survey added 25 occurrences and two missed fix PRs; its ranking covered only window-active entries, so I added never-fixed entries the re-cluster exposed from --candidates. I filed regressions #2434 to #2436. The design agent proposed four fixes for ten picks; the owner chose to file fix A (glossary @imports, #2437) and fix C (dispatch trigger wording, #2438) rather than build them; fix B is Human-only (#2439); five picks were dropped with notes. Fix D (one github-integration.md bullet on check-run annotations) is built by a Sonnet agent; code-review found it overstated annotations and contradicted the doc's get_job_logs tail advice, so it went back for a second commit. Ledger PR #2440 merged; fix D merged as #2441 on its own branch (the owner allowed the extra branch); the closing ledger PR #2442 is open."
 prs:
   - "2440"
   - "2441"
+  - "2442"
 docsRead:
   - path: GLOSSARY-MAP.md
     reason: session-start read; the Tenant list
@@ -127,11 +128,17 @@ frictions:
   - description: First draft of the doc fix overstated that annotations always name the failing file and contradicted the same doc's get_job_logs tail advice; code-review caught both before push.
     solution: Fact-check a new doc claim against a live run and grep the target doc for the same tool before drafting the design text.
     severity: nit
-durationSec: 3615
+  - description: Pushed the restarted branch with --force-with-lease and got a stale-info rejection, though pr-workflow.md says to push a branch restarted after its merge plainly.
+    solution: "Follow pr-workflow.md: push plainly after restarting a merged branch."
+    severity: nit
+  - description: A git commit passed both -m and -F and failed, so the closing PR's gate ran on the uncommitted tree; the tree was identical to the commit, but it cost a check.
+    solution: Commit before starting the gate, and check the commit landed before the gate step.
+    severity: nit
+durationSec: 3936
 models:
-  claude-opus-5-5: 169
+  claude-opus-5-5: 196
 toolCounts:
-  Bash: 42
+  Bash: 51
   AskUserQuestion: 3
   Write: 3
   ToolSearch: 2
@@ -140,15 +147,16 @@ toolCounts:
   mcp__github__issue_write: 6
   Skill: 2
   SendMessage: 1
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  mcp__github__add_issue_comment: 3
   mcp__claude-code-remote__send_later: 1
+  ReadNotifications: 3
 filesEdited:
   - layers/journal/content/current/frictions/ledger-yaml-hand-edit-errors.yml
   - docs/agents/github-integration.md
-  - layers/journal/content/current/frictions/auto-mode-self-modification-denials.yml
   - layers/journal/content/current/frictions/ci-job-logs-unreachable.yml
+  - layers/journal/content/current/frictions/auto-mode-self-modification-denials.yml
   - layers/journal/content/current/frictions/counts-not-tallied.yml
   - layers/journal/content/current/frictions/dispatch-subagents-skill-unread.yml
   - layers/journal/content/current/frictions/edit-during-gate-run.yml
@@ -343,68 +351,68 @@ subagents:
     durationSec: 298
     toolCalls: 26
     modelCalls: 24
-    tokenShare: 5.5
+    tokenShare: 5.1
   - type: general-purpose
     task: Recluster ledger slice B
     durationSec: 303
     toolCalls: 21
     modelCalls: 21
-    tokenShare: 5.5
+    tokenShare: 5.1
   - type: general-purpose
     task: Recluster ledger slice C
     durationSec: 504
     toolCalls: 26
     modelCalls: 25
-    tokenShare: 7
+    tokenShare: 6.5
   - type: general-purpose
     task: Recluster ledger slice D
     durationSec: 470
     toolCalls: 25
     modelCalls: 24
-    tokenShare: 6.4
+    tokenShare: 6
   - type: general-purpose
     task: Recluster ledger slice E
     durationSec: 449
     toolCalls: 24
     modelCalls: 24
-    tokenShare: 6.3
+    tokenShare: 5.9
   - type: general-purpose
     task: Consolidate cross-slice ledger moves
     durationSec: 322
     toolCalls: 44
     modelCalls: 42
-    tokenShare: 7.8
+    tokenShare: 7.2
   - type: general-purpose
     task: Survey frictions (§1)
     durationSec: 684
     toolCalls: 65
     modelCalls: 63
-    tokenShare: 17.6
+    tokenShare: 16.4
   - type: general-purpose
     task: Design the 10 picks (§4)
     durationSec: 377
     toolCalls: 42
     modelCalls: 39
-    tokenShare: 8.4
+    tokenShare: 7.8
   - type: general-purpose
     task: Build Fix D doc line (§6)
     model: sonnet
     durationSec: 301
     toolCalls: 21
     modelCalls: 20
-    tokenShare: 3
+    tokenShare: 2.8
   - type: general-purpose
     task: Standards review of Fix D
     durationSec: 47
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: Spec review of Fix D
     durationSec: 19
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.2
+    tokenShare: 1.1
 gitBranch: ccr-9d00cd0e-1pm6tj
 entrypoint: remote_mobile
 cliVersion: 2.1.309
