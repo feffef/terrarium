@@ -4,7 +4,7 @@ summary: >-
 cause: >-
   A number is taken from a throwaway script, a measurement window or an eligibility set whose filter was not checked against its source (a dropped outlier, a window start not taken from the issue, an eligibility rule not applied), so the count is wrong even though it was computed. Signals: "throwaway script", "window", "would skip", "eligible".
 surface: safe
-status: tracked
+status: open
 ref: "issue #2435 (split from counts-not-tallied)"
 fixes: []
 occurrences:
