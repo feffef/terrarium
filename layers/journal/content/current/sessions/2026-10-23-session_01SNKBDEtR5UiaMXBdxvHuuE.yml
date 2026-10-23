@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01SNKBDEtR5UiaMXBdxvHuuE
 startedAt: 2026-10-23T18:33:19Z
-endedAt: 2026-10-23T18:40:21Z
+endedAt: 2026-10-23T20:23:59Z
 kind: interactive
-goal: Audit Glass Box guide pages for title and cut quality
-status: completed
-outcome: "Report delivered: 11 A, 13 B, 0 C; 12 Lesson titles miss the short-concept-name rule"
-summary: "Human-instructed: the user asked for an agent to read all Glass Box guide Lessons and judge quality, titles and standalone cut, then answered my clarifying questions (guide Space only, contract plus newcomer criteria, report first, titles are short general concept names). I dispatched one read-only general-purpose subagent over the 24 guide pages, forwarded the title rule mid-run, spot-checked titles and skip lines against the files, and reported. No edits made; next step (retitling, in-place fixes, approval-gated splits/merges) awaits the user."
-prs: []
+goal: Audit and raise the quality of every Glass Box guide page
+status: in-review
+outcome: "PR #2466 retitles, splits, merges and re-cuts the guide pages; gate green"
+summary: "Human-instructed throughout. The user asked for an agent audit of the Glass Box guide pages (title clarity, one concept per page, standalone), answered scoping questions and set the title rule (a short name of the general concept). After reading the report they agreed to all fixes, including the split, merge and re-cut flagged as new work, in one PR. I did the edits myself rather than dispatching, because the cross-page re-cuts and link renames touch the same files. All pages stay pinned at cfce441; the deleted or renamed URLs (subagents-worktrees, one-table-per-key, use-space) 404 now, with every in-repo link updated. Two review subagents (Standards and Spec) found real gaps: points dropped in the merge, reasons inside In Terrarium, and a wrong ADR cite. All were fixed before the gate ran. Open: CI and merge."
+prs:
+  - "2466"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: Lesson contract and Space layout; subagent also used it as its yardstick
@@ -18,6 +19,66 @@ docsRead:
   - path: docs/adr/0006-runtime-routing-path-prefix.md
     reason: Subagent grepped it to check that a page's Why citation was on point; it was
     useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: pin, title and Check rules for editing pages
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: Lesson placement and joining steps
+    useful: partly
+  - path: .agents/skills/glassbox-walkthrough/SKILL.md
+    reason: Walkthrough stop rules
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: read before the first git fetch and commit
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before the first push, then gate:scoped
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before the issue read and PR open
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts review command for the screenshots
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Brief checklist; Standards reviewer also read it at the revision to check the Subagents and Git worktrees claims
+    useful: yes
+  - path: layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/07.subagents-worktrees.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/02.one-table-per-key.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/05.use-space.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+    reason: (read before editing)
   - path: /home/user/terrarium/app/utils/lesson.ts
     reason: (no reason given)
   - path: app/utils/lesson.ts
@@ -74,7 +135,9 @@ docsRead:
     reason: (no reason given)
 skillsUsed:
   - name: dispatch-subagents
-    reason: brief for the read-only audit agent
+    reason: audit and review briefs
+  - name: code-review
+    reason: Standards and Spec review before the first push
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -86,35 +149,120 @@ frictions:
   - description: I ran always-loaded.ts with its output discarded, so step 1 of close-session was not really done. I relied on the rules already in context.
     solution: Read the script's output in full when closing.
     severity: nit
-durationSec: 422
+  - description: The audit report's spec items were not copied into the PR before the code review. The Spec reviewer found a merged page that had dropped two watch items and cited the wrong ADR.
+    solution: When merging two pages, diff each old page's headings and bullets against the merged page before committing.
+    severity: minor
+  - description: My link-rename regex skipped link text that starts lowercase, such as useAsyncData and useSpace, so it needed a second pass.
+    solution: Map renamed links by URL alone, and treat code-styled lowercase titles as titles.
+    severity: nit
+  - description: Three Why bullets went over page-checks' 65-word cap after my edits, which cost two test round trips.
+    solution: Count words when lengthening a Why bullet; EVERY-PAGE.md could state the cap next to the contract.
+    severity: nit
+durationSec: 6640
 models:
-  claude-opus-5-5: 23
+  claude-opus-5-5: 199
 toolCounts:
-  Bash: 6
-  Skill: 3
-  Agent: 1
+  Bash: 67
+  Skill: 4
+  Agent: 3
   SendMessage: 1
+  Read: 28
+  Write: 3
+  ToolSearch: 1
+  mcp__github__issue_read: 1
+  ScheduleWakeup: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/claude-code/07.subagents-worktrees.md
+  - layers/glassbox/content/guide/pages/claude-code/08.git-worktrees.md
+  - layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+  - layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+  - layers/glassbox/app/utils/subjects.ts
+  - layers/glassbox/content/drafts/pages/claude-code/05.guards.md
+  - layers/glassbox/content/drafts/pages/claude-code/08.workflow-scripts.md
+  - layers/glassbox/content/drafts/pages/claude-code/10.routines.md
+  - layers/glassbox/content/drafts/pages/git-github/03.thin-ci-workflow.md
+  - layers/glassbox/content/drafts/pages/git-github/05.provenance-headers.md
+  - layers/glassbox/content/drafts/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/drafts/pages/git-github/07.dependabot-grouping.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/04.query-collection-patterns.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/05.mdc-components.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/07.mermaid-svg.md
+  - layers/glassbox/content/drafts/pages/nuxt-vue/03.virtual-imports.md
+  - layers/glassbox/content/drafts/pages/skill-pack/01.skill-pack.md
+  - layers/glassbox/content/drafts/pages/skill-pack/03.engineering-loop.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/03.glossaries.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/06.out-of-scope-records.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/08.cross-tenant-kinds.md
+  - layers/glassbox/content/drafts/pages/testing/01.unit-and-e2e.md
+  - layers/glassbox/content/drafts/pages/testing/02.invariants-as-tests.md
+  - layers/glassbox/content/drafts/pages/typescript/01.two-type-checks.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-newcomers-first-hour.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/routines.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/session-log-lands-on-main.md
+  - layers/glassbox/content/drafts/pages/zod/01.manifest-validation.md
+  - layers/glassbox/content/drafts/pages/zod/02.timestamps-as-strings.md
+  - layers/glassbox/content/drafts/pages/zod/04.schemas-column-types.md
+  - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/claude-code/03.skills.md
+  - layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+  - layers/glassbox/content/guide/pages/index.md
+  - layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/02.one-table-per-key.md
+  - layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/05.use-space.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/ui-verification.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
-rulesLoadedBySubagents:
-  - .claude/rules/tenant-layers.md
-  - .claude/rules/glassbox-content.md
-  - .claude/rules/mermaid-lanes.md
-  - .claude/rules/adr-0001.md
-  - .claude/rules/adr-0011.md
 docsReadBySubagents:
-  - GLOSSARY.md
+  - .agents/skills/dispatch-subagents/SKILL.md
   - docs/adr/0006-runtime-routing-path-prefix.md
+  - GLOSSARY.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
-    reason: Read-only audit with no push, so the gate rule did not apply
-    useful: no
+    reason: Made me run gate:scoped and code-review before the first push; the summary was enough
+    useful: yes
   - path: .claude/rules/adr-0009.md
     reason: Told me to log this session straight to main via close-session; the summary was enough
     useful: yes
@@ -134,25 +282,66 @@ ruleVerdicts:
     reason: "Subagent: partly; used it to check claims made in the Layers page"
     useful: partly
   - path: .claude/rules/glassbox-content.md
-    reason: "Subagent: yes; it was the basis for flagging changing facts in page prose"
+    reason: kept counts and ids out of prose; I put the dated issue and PR only in A real case
     useful: yes
   - path: .claude/rules/mermaid-lanes.md
-    reason: "Subagent: partly; it confirmed one diagram's classDef use"
-    useful: partly
+    reason: Loaded with the pages; I changed no diagram
+    useful: no
   - path: .claude/rules/adr-0001.md
-    reason: "Subagent: partly; used it to check the deploy page's claims"
-    useful: partly
+    reason: Confirmed that isolation by table is ADR-0001's decision, after review caught my ADR-0006 cite
+    useful: yes
   - path: .claude/rules/adr-0011.md
-    reason: "Subagent: partly; used it to check the Nuxt Content pages' claims"
+    reason: Confirmed the deploy page's claims about the self-building container
     useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded via the human-merge paths check; confirmed no Human-only file is touched
+    useful: partly
+  - path: .claude/rules/ui-verification.md
+    reason: Sent me to the UI doc before screenshots
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on reading the manifest; no manifest change
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded with the manifest; no stored field changed
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with the layer listing; no MDC decision made
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading Skill files; I only edited one line of EVERY-PAGE.md
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded with the git docs; no prune trial covered the edited text
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the rule files; confirmed the title rule's home is a Skill doc, not a rule
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded via the human-merge file; no ADR edited
+    useful: no
 subagents:
   - type: general-purpose
     task: Audit Glass Box guide pages
     durationSec: 227
     toolCalls: 33
     modelCalls: 13
-    tokenShare: 53.6
+    tokenShare: 8.3
+  - type: general-purpose
+    task: Standards review of guide diff
+    durationSec: 98
+    toolCalls: 17
+    modelCalls: 13
+    tokenShare: 6.8
+  - type: general-purpose
+    task: Spec review of guide diff
+    durationSec: 88
+    toolCalls: 13
+    modelCalls: 11
+    tokenShare: 8.5
 gitBranch: ccr-19d4f19c-eoxob8
 entrypoint: remote_mobile
 cliVersion: 2.1.309
+learnings:
+  - Glass Box's page-checks enforce that capitalised guide link text equals the target's title, so a retitle must sweep every page, drafts included.
 landedBy: Stop
