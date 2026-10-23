@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011hiFhM9A2Sbn4mGYbdtAhJ
 startedAt: 2026-10-23T13:21:09Z
-endedAt: 2026-10-23T13:37:32Z
+endedAt: 2026-10-23T13:51:56Z
 kind: autonomous
 goal: "Scheduled prune trial: judge open trials, prune one problem"
-status: in-review
-outcome: "Judged one trial, opened PR #2447 pruning the workflow-write ban prose (-27 net); awaits a human merge"
-summary: "Scheduled /prune-trial run, no human input. Only the dispatch-subagents §3 trial was judgeable; 47 sessions since it landed showed no major or blocker Friction traceable to it, so its entry was deleted. A search subagent covered the instruction corpus, guard headers and tracker; I picked the workflow-write ban (failed as prose in #897 and #1955, held by a wired unit-tested guard) over larger read-first-trigger and provenance candidates, which the owner accepted or which are partly enforced. Cut the guard header, its .sh comment and the environment-caveats bullet (-27 net), added a ledger entry, probed Sonnet at the pinned SHA (passed), ran code-review (restored a lost HTTPS caveat and a #2174 pointer, fixed ledger counts), gate:scoped green, opened PR #2447. The guard files are Human-only, so it needs a human merge. All work was agent-initiated under the schedule's standing prompt."
+status: completed
+outcome: "Judged one trial and merged PR #2447, pruning the workflow-write ban prose (-27 net)"
+summary: "Scheduled /prune-trial run, no human input. Only the dispatch-subagents §3 trial was judgeable; 47 sessions since it landed showed no major or blocker Friction traceable to it, so its entry was deleted. A search subagent covered the instruction corpus, guard headers and tracker; I picked the workflow-write ban (failed as prose in #897 and #1955, held by a wired unit-tested guard) over larger read-first-trigger and provenance candidates, which the owner accepted or which are partly enforced. Cut the guard header, its .sh comment and the environment-caveats bullet (-27 net), added a ledger entry, probed Sonnet at the pinned SHA (passed), ran code-review (restored a lost HTTPS caveat and a #2174 pointer, fixed ledger counts), gate:scoped green, opened PR #2447. A human merged it (guard files are Human-only). All work was agent-initiated under the schedule's standing prompt."
 prs:
   - "2447"
 docsRead:
@@ -67,11 +67,11 @@ frictions:
   - description: ADR hooks asked to read ADR-0027 and ADR-0029 in full after an edit; I relied on the rule summaries and did not open them.
     solution: Summaries sufficed for a comment-only prune; none needed.
     severity: nit
-durationSec: 983
+durationSec: 1848
 models:
-  claude-sonnet-5-5: 65
+  claude-sonnet-5-5: 77
 toolCounts:
-  Bash: 22
+  Bash: 23
   Read: 1
   Agent: 4
   ScheduleWakeup: 1
@@ -80,6 +80,8 @@ toolCounts:
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 4
+  PushNotification: 1
 filesEdited:
   - docs/agents/environment-caveats.md
   - .agents/prune-trials.yml
@@ -155,28 +157,28 @@ subagents:
     durationSec: 387
     toolCalls: 31
     modelCalls: 29
-    tokenShare: 41.5
+    tokenShare: 36.6
   - type: general-purpose
     task: Probe pruned workflow-ban text
     model: sonnet
     durationSec: 24
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 3
+    tokenShare: 2.6
   - type: general-purpose
     task: Review Standards axis
     model: sonnet
     durationSec: 25
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 3.5
+    tokenShare: 3.1
   - type: general-purpose
     task: Review Spec axis
     model: sonnet
     durationSec: 31
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 4.4
+    tokenShare: 3.9
 gitBranch: claude/practical-rubin-pkt2mv
 entrypoint: remote_trigger
 cliVersion: 2.1.309
