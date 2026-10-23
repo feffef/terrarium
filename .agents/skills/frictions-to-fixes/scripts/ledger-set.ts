@@ -90,6 +90,7 @@ export function parseArgs(argv: string[]): { entry: string; changes: LedgerChang
       changes.fixes = [...(changes.fixes ?? []), { pr, date, summary: value() }]
     } else throw new Error(`unknown flag ${flag}`)
   }
+  if (changes.replaceFixes && !changes.fixes) throw new Error('--replace-fixes needs at least one --fix')
   return { entry, changes }
 }
 

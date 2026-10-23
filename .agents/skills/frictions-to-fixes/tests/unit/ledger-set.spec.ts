@@ -58,4 +58,7 @@ describe('parseArgs()', () => {
       changes: { status: 'open', ref: 'r', fixes: [{ pr: 5, date: '2026-10-01', summary: 'S' }], replaceFixes: true },
     })
   })
+  it('refuses --replace-fixes without a --fix, which would empty the list', () => {
+    expect(() => parseArgs(['x', '--replace-fixes'])).toThrow('--replace-fixes needs at least one --fix')
+  })
 })
