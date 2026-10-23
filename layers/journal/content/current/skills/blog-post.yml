@@ -342,3 +342,14 @@ observations:
       window started, so it is still untested by a real run — watch next
       round for whether unchecked-edit language still appears in a PR body
       under the new text. Grade/role unchanged.
+  - date: "2026-10-23"
+    note: >-
+      Verified silent failure: #2379's fix did not hold on its first real
+      test. session_01Nzhsg2KY7V9o2AmYWK2cqy ran entirely under the
+      post-fix SKILL.md (started ~21h after #2379 merged); PR #2409 and PR
+      #2411 bodies both still ship a "Later unchecked edits: ..." bullet,
+      neither re-dispatched nor cut — the forbidden shape recurring without
+      the sentence that used to sanction it. (Same session's PR #2410, and
+      PR #2374, complied.) Reopened #2370 with this evidence and a
+      proposal: forbid the bullet outright, or add a mechanical check.
+      Grade/role unchanged (routine).

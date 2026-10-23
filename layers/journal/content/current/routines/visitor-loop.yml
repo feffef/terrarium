@@ -224,3 +224,11 @@ runs:
     cacheReadTokens: 12516326
     cacheWriteTokens: 625387
     costUsd: 6.9807475
+  - session: session_0195CYW3YBg2stBS6aGigmbp
+    startedAt: 2026-10-22T16:48:38Z
+    durationSeconds: 2484
+    inputTokens: 748
+    outputTokens: 113053
+    cacheReadTokens: 22280446
+    cacheWriteTokens: 810446
+    costUsd: 9.35698715
