@@ -6,7 +6,7 @@ cause: >-
 surface: safe
 status: open
 notes: |-
-  2026-10-21 design: a pr-workflow line or a guard on hand-typed SHAs and paths dropped: all 8 sessions read pr-workflow.md and slipped anyway, merge-pr.ts already refuses a wrong Reviewed SHA and prints the line, and a guard is a Human-only edit for a nit-level cost.
+  2026-10-23 design: a rule or guard on checking body values dropped: each of the four slips was fixed at once, Verify before you state already covers checking a value against its source, and none involves verdict SHAs or merge-pr.ts (the note copied from verdict-comment-hand-typed at the split did not apply).
 fixes: []
 occurrences:
   - session: session_012VTgtrUEy7cPVTN5sMriXj

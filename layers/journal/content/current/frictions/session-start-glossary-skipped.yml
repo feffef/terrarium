@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   CLAUDE.md's "at session start" read of GLOSSARY-MAP.md and GLOSSARY.md (formerly CONTEXT-MAP.md and CONTEXT.md) is prose with no SessionStart hook, so sessions with a narrow, scheduled, delegated or question-only task skip it or read only its head. Signals: "skipped the session-start read", "GLOSSARY-MAP", "CONTEXT.md only to line 60", "read only the head of GLOSSARY". A read cut short by a truncated cat belongs to required-doc-read-truncated.
 surface: guard-or-hook
-status: open
+status: tracked
+ref: "issue #2437 (load the glossaries with CLAUDE.md through @ imports; owner chose to file it)"
 occurrences:
   - session: session_01EmaH5A6Ziwjndz9esnsJ22
     date: "2026-10-10"

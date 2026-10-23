@@ -5,6 +5,8 @@ cause: >-
   The auto-mode permission classifier denies edits to .claude/settings.json, .claude/rules or guard code (and dispatches that will make them) as Self-Modification; an approval given in chat or in a grilling does not count, so the session finds out only on the denial and needs another round with the owner. Signals: "Self-Modification", "auto-mode classifier denied", an owner-approved guard, hook, rule or settings change.
 surface: safe
 status: open
+notes: |-
+  2026-10-23 design: a doc line on asking for an explicit grant before auto-mode edits dropped: the classifier is the host's, none recurred in 9 days, the denial says what to do, and a line costs more than one round with the owner.
 occurrences:
   - session: session_018i6d2BQPkf9cq6jSEqCNSX
     date: "2026-10-10"

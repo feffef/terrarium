@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   CLAUDE.md's trigger for docs/agents/issue-tracker.md and triage-labels.md is prose with no hint (read-first-hint.ts covers only git, GitHub and screenshots), and the clear-backlog and wayfinder Skills neither name the docs at their label step nor say whether their triage agents' reads cover the orchestrator. Signals: an issue_write label or close before either doc is read, "the triage agents did the labelling".
 surface: safe
-status: open
+status: tracked
+ref: "issue #2439 (read-first-hint points to the triage docs on an issue write; Human-only)"
 occurrences:
   - session: session_015LwBgLjaCn36ayZedges6G
     date: "2026-10-12"

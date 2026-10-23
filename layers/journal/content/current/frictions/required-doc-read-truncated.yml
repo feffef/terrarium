@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A required doc (GLOSSARY, git-conventions, github-integration, issue-tracker, triage-labels, guards, …) was read through a cat, head or sed chain, often several docs in one call, and the output hit the tool's size cap or a head -N limit, so the rest was never seen; the truncation is easy to miss. Signals: "truncated at 30KB", "output went to a file", "head -300 cut it", "read only its first 2KB". The fix is to read each required doc in full with the Read tool, one call each.
 surface: safe
-status: open
+status: tracked
+ref: "issue #2437 (glossary imports, plus a one-Read-call-per-doc clause in CLAUDE.md's read-first intro)"
 occurrences:
   - session: session_01T4UbBvJmjSunCwb3cUN68Q
     date: "2026-10-22"

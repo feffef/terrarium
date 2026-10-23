@@ -7,6 +7,7 @@ surface: safe
 status: open
 notes: |-
   2026-10-20 design: a pr-workflow.md step-4 sentence (do not merge while a question you asked the owner about this PR is unanswered) dropped: one occurrence of that boundary; revisit on a fourth.
+  2026-10-23 design: the pr-workflow.md step-4 sentence dropped again: 01DtK8w6 (moved here by the re-cluster, dated 2026-10-12) is a bare Yes to two combined questions, a different boundary (ask a merge as its own question), and no occurrence is new; pr-workflow.md is in the open Prune Trial (PR #2412), revisit when it is judged.
 occurrences:
   - session: session_01GfmoxeLwrvC7CARuaBAXfB
     date: "2026-10-18"

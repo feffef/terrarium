@@ -5,6 +5,8 @@ cause: >-
   A text transform, regex or detection heuristic is written from an assumed input shape and committed before it is run against the real files or historical data it will process; a reviewer then finds the cases it breaks. Signals: "regex written without checking the real data", "heuristic misfired on N claims", a reviewer catching a pattern's misses.
 surface: safe
 status: open
+notes: |-
+  2026-10-23 design: a general run-it-on-real-data rule dropped: the three transforms differ in kind, code-review caught two before push, and Verify before you state already covers the third.
 occurrences:
   - session: session_01VGLAakRJNm67PuNHpgbEc7
     date: "2026-10-12"
