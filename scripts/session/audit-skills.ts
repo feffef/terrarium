@@ -6,8 +6,9 @@
 //
 // Usage:  tsx scripts/session/audit-skills.ts [--days N] [--briefs DIR]
 //         tsx scripts/session/audit-skills.ts --skill NAME --since ISO   (one Skill's usage instead)
+//         tsx scripts/session/audit-skills.ts --adr-reads --since ISO [--until ISO]   (governing ADRs read in full)
 import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { join, matchesGlob } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { isContentPath } from './transcript-trace.ts'
 import { isExternalSession } from '../../shared/schemas/session.ts'
@@ -18,6 +19,7 @@ import { readProvenanceHeader } from '../lib/provenance-header.ts'
 import { toOpenIssue, type OpenIssue, type RawIssueApiRecord } from '../github/list-open-issues.ts'
 import { ARCHIVED_SESSIONS_DIR, readSessionLogs, SESSIONS_DIR } from './journal-files.ts'
 import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
+import { loadRules, RULES_DIR, ruleAdr, rulePaths, type RuleFile } from '../lib/adr-rules.ts'
 
 /** The observation window, in days before now. Time-based rather than a session
  *  count, so the scheduled Routines' own runs can't shrink it to a couple of days. */
@@ -86,6 +88,7 @@ export interface Session {
   docsRead: string[]
   /** `docsReadBySubagents` paths (a subset of `docsRead`), feeding `skillQuery`. */
   docsReadBySubagents: string[]
+  filesEdited: string[]
   /** The Routine that fired it (`entrypoint: remote_trigger`), else null. */
   trigger: string | null
 }
@@ -271,6 +274,43 @@ export function skillQuery(sessions: readonly Session[], skill: string): SkillQu
   for (const s of sessions) {
     const side = s.skillsUsed.includes(skill) ? out.used : out.notUsed
     ;(side[s.kind] ??= []).push({ session: s.session, adrsRead: adrs(s.docsRead).filter((p) => !s.docsReadBySubagents.includes(p)), adrsReadBySubagents: adrs(s.docsReadBySubagents) })
+  }
+  return out
+}
+
+export interface AdrReads {
+  sessions: number
+  /** Sessions with at least one governing ADR. */
+  governed: number
+  /** Session–ADR pairs where a rule's `paths` match a file the session edited. */
+  pairs: number
+  readInFull: number
+  readInFullPct: number | null
+  /** Governed sessions that read every governing ADR in full, or none. */
+  readAll: number
+  readNone: number
+}
+
+/** Per session kind and overall: how many governing ADRs each session read in
+ *  full, by its own or a subagent's read (`docsRead` holds both). Measures the
+ *  write-time hint, `scripts/hooks/adr-read-hint.ts`. */
+export function adrReadReport(sessions: readonly Session[], rules: readonly RuleFile[]): Record<string, AdrReads> {
+  const globs = rules.flatMap((r) => rulePaths(r.text).map((g) => [ruleAdr(r.file), g] as const)).filter(([n]) => n)
+  const out: Record<string, AdrReads> = {}
+  for (const s of sessions) {
+    const governing = new Set(globs.filter(([, g]) => s.filesEdited.some((f) => matchesGlob(f, g))).map(([n]) => n!))
+    const read = [...governing].filter((n) => s.docsRead.some((p) => p.startsWith(`docs/adr/${n}-`))).length
+    for (const key of ['all', s.kind]) {
+      const a = (out[key] ??= { sessions: 0, governed: 0, pairs: 0, readInFull: 0, readInFullPct: null, readAll: 0, readNone: 0 })
+      a.sessions++
+      if (!governing.size) continue
+      a.governed++
+      a.pairs += governing.size
+      a.readInFull += read
+      if (read === governing.size) a.readAll++
+      if (read === 0) a.readNone++
+      a.readInFullPct = Math.round((100 * a.readInFull) / a.pairs)
+    }
   }
   return out
 }
@@ -481,6 +521,7 @@ export function toSession(raw: Record<string, unknown>, file: string, skillNames
       .map((d: Record<string, unknown>) => String(d.path ?? ''))
       .filter(isContentPath),
     docsReadBySubagents: (Array.isArray(raw.docsReadBySubagents) ? raw.docsReadBySubagents : []).map(String),
+    filesEdited: (Array.isArray(raw.filesEdited) ? raw.filesEdited : []).map(String),
     trigger: raw.entrypoint === 'remote_trigger' && raw.trigger ? String(raw.trigger) : null,
   }
 }
@@ -965,6 +1006,14 @@ export function skillReport(skill: string, since: string, cwd = root) {
 
 function main(): void {
   const argv = process.argv.slice(2)
+  if (argv.includes('--adr-reads')) {
+    const since = flagValue(argv, '--since')
+    const until = flagValue(argv, '--until') ?? new Date().toISOString()
+    if (!since || ![since, until].every((t) => Number.isFinite(Date.parse(t)))) fail('--adr-reads needs --since ISO, and --until ISO if given')
+    const sessions = startedWindow(readSessions(root, readSkillNames()), since).filter((s) => Date.parse(s.startedAt) < Date.parse(until))
+    process.stdout.write(JSON.stringify({ since, until, ...adrReadReport(sessions, loadRules(join(root, RULES_DIR))) }, null, 2) + '\n')
+    return
+  }
   const skill = flagValue(argv, '--skill')
   if (argv.includes('--skill')) {
     const since = flagValue(argv, '--since')
