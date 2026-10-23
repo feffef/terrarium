@@ -5,6 +5,7 @@
 // merge rules, and prove a stitched entry satisfies the frozen schema.
 import { describe, expect, it } from 'vitest'
 import {
+  adrReadInFull,
   NOT_READ_REASON,
   DERIVED_REASON_COMMAND,
   DERIVED_REASON_EDITED,
@@ -312,6 +313,12 @@ describe('rulesFollowedUp — a rule whose ADR was read after it loaded', () => 
     const records = [...base, rule('/repo/.claude/rules/adr-0009.md'), ...bash('b1', `cat ${adr}`, lines.join('\n'))]
     expect(extractTrace(records, NO_ENV, index).rulesFollowedUp).toEqual(['.claude/rules/adr-0009.md'])
     expect(extractTrace(records, NO_ENV).rulesFollowedUp).toEqual([])
+  })
+
+  it('shares its full-read test as adrReadInFull()', () => {
+    expect(adrReadInFull([...base, read('/repo/docs/adr/0012-x.md')], '0012')).toBe(true)
+    expect(adrReadInFull([...base, read('/repo/docs/adr/0012-x.md')], '0004')).toBe(false)
+    expect(adrReadInFull([...base, { type: 'assistant', message: { content: [{ type: 'tool_use', name: 'Read', input: { file_path: '/repo/docs/adr/0012-x.md', offset: 5 } }] } }], '0012')).toBe(false)
   })
 
   it('folds in a subagent, and is written by the stitch and accepted by the schema', () => {

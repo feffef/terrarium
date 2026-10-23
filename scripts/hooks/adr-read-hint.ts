@@ -1,0 +1,99 @@
+// A hint, not a guard (ADR-0029, issue #2286): a summary rule says when to read
+// its ADR in full, but sessions edited what an ADR governs without reading it.
+// After an Edit or Write this points to each ADR whose rule `paths` match the
+// file, or that the old or new text names, unless this agent's own transcript
+// shows it read in full (the session log's test, `adrReadInFull`) or already
+// holds its pointer. The text match skips Tenant content and session logs,
+// where ADR numbers are quoted, not acted on. It arrives after the write, so a
+// closing line says a late read that clears the edit is not a Friction. A
+// subagent or workflow agent is checked against its own transcript; with no
+// transcript it adds nothing, since every edit would repeat the pointer.
+// Bash writes are not seen. Fails open: any error adds nothing.
+// `scripts/hooks/adr-read-hint.sh` is the hot-path pre-filter.
+//
+// Usage:
+//   tsx scripts/hooks/adr-read-hint.ts                # hook payload on stdin
+//   tsx scripts/hooks/adr-read-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
+//     (with no transcript_path, the dry run assumes an empty transcript)
+import { readdirSync, readFileSync } from 'node:fs'
+import { isAbsolute, join, matchesGlob, relative } from 'node:path'
+import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runGuard } from './hook-io.ts'
+import { repoRoot } from './bash-rules-hint.ts'
+import { adrReadInFull, agentTranscript, hintText } from '../session/transcript-trace.ts'
+import { buildDocLineIndex } from '../session/shell-reads.ts'
+import { ADR_DIR, loadRules, RULES_DIR, ruleAdr, rulePaths, type RuleFile } from '../lib/adr-rules.ts'
+
+export interface AdrHit {
+  adr: string
+  /** Why it is due, quoted in the pointer. */
+  why: string
+}
+
+const NO_TEXT_MATCH = ['layers/*/content/**', '.session-logs/**', '.throwaway/**']
+
+/** The ADRs a write to repo-relative `file` touches, path matches first.
+ *  `adrs` maps each ADR number to its file; any other number is dropped. */
+export function adrsForWrite(file: string, texts: string[], rules: RuleFile[], adrs: Map<string, string>): AdrHit[] {
+  const hits = new Map<string, string>()
+  const add = (n: string | undefined, why: string) => {
+    if (n && adrs.has(n) && !hits.has(n)) hits.set(n, why)
+  }
+  for (const r of rules) {
+    const n = ruleAdr(r.file)
+    if (rulePaths(r.text).some((g) => matchesGlob(file, g))) add(n, `ADR-${n} governs \`${file}\``)
+  }
+  if (!NO_TEXT_MATCH.some((g) => matchesGlob(file, g))) {
+    const own = /^docs\/adr\/(\d{4})-/.exec(file)?.[1]
+    add(own, `you edit ADR-${own}`)
+    for (const m of texts.join('\n').matchAll(/\bADR-(\d{4})\b/g)) add(m[1], `your edit names ADR-${m[1]}`)
+  }
+  return [...hits].map(([adr, why]) => ({ adr, why }))
+}
+
+export const HINT_PREFIX = 'Read in full before you go on:'
+export const LATE_READ_NOTE = 'If the ADR shows the edit was already right, the late read is not a Friction.'
+
+/** ADRs this transcript already pointed to: their path on a line this hook wrote. */
+function pointedTo(records: Record<string, unknown>[], path: string): boolean {
+  return records
+    .map((r) => r.attachment as { type?: string; content?: unknown } | undefined)
+    .filter((a) => a?.type === 'hook_additional_context')
+    .flatMap((a) => hintText(a!.content).split('\n'))
+    .some((l) => l.startsWith(HINT_PREFIX) && l.includes(`\`${path}\``))
+}
+
+function hintFor(payload: unknown, dryRun = false): string | null {
+  const input = prop(payload, 'tool_input')
+  const filePath = prop(input, 'file_path')
+  const root = repoRoot(String(prop(payload, 'cwd') ?? process.cwd()))
+  if (typeof filePath !== 'string' || !root) return null
+  const file = relative(root, filePath).replace(/^\.claude\/worktrees\/[^/]+\//, '')
+  if (file.startsWith('..') || isAbsolute(file)) return null
+  const adrs = new Map(readdirSync(join(root, ADR_DIR)).flatMap((f) => /^(\d{4})-.*\.md$/.exec(f) ? [[f.slice(0, 4), `${ADR_DIR}/${f}`] as const] : []))
+  const texts = ['old_string', 'new_string', 'content'].map((k) => prop(input, k)).filter((t): t is string => typeof t === 'string')
+  const hits = adrsForWrite(file, texts, loadRules(join(root, RULES_DIR)), adrs)
+  if (hits.length === 0) return null
+  const parent = prop(payload, 'transcript_path')
+  const agent = prop(payload, 'agent_id')
+  let records: Record<string, unknown>[] | null
+  if (typeof parent !== 'string') records = dryRun && parent === undefined ? [] : null
+  else records = readTranscript(agent === undefined ? parent : agentTranscript(parent, String(agent)))
+  if (!records) return null
+  const index = buildDocLineIndex(hits.map((h) => ({ path: adrs.get(h.adr)!, text: readFileSync(join(root, adrs.get(h.adr)!), 'utf8') })))
+  const due = hits.filter((h) => !pointedTo(records, adrs.get(h.adr)!) && !adrReadInFull(records, h.adr, index))
+  if (due.length === 0) return null
+  return `${HINT_PREFIX} ${due.map((h) => `\`${adrs.get(h.adr)}\` (${h.why})`).join('; ')}.\n${LATE_READ_NOTE}`
+}
+
+function main(): void {
+  const read = readHookPayload()
+  if (read.kind !== 'ok') return
+  const hint = hintFor(read.payload)
+  if (hint) process.stdout.write(JSON.stringify({ hookSpecificOutput: { hookEventName: 'PostToolUse', additionalContext: hint } }))
+}
+
+function dryRun(argv: string[]): void {
+  printDryRunResult({ hint: hintFor(resolveDryRunInput(argv), true) })
+}
+
+runGuard(import.meta.url, { main, dryRun, label: 'ADR read hint', ref: 'issue #2286', failOpen: true })

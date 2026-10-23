@@ -545,6 +545,25 @@ export function findLatestTranscript(cwd: string, home: string | undefined): str
   return jsonls.sort((a, b) => statSync(b).mtimeMs - statSync(a).mtimeMs)[0]
 }
 
+/** Whether `records` read ADR `n` in full: a `Read` with no offset or limit,
+ *  or a shell read whose output showed enough of it (ADR-0009). `rulesFollowedUp`
+ *  and `scripts/hooks/adr-read-hint.ts` share it so they can't diverge. */
+export function adrReadInFull(
+  records: Record<string, unknown>[],
+  n: string,
+  docIndex?: DocLineIndex,
+  rel: (p: string) => string = relativizer(records),
+): boolean {
+  const isAdr = (p: string) => p.startsWith(`docs/adr/${n}-`)
+  const read = records.some((r) => {
+    const content = (r.message as { content?: unknown } | undefined)?.content
+    return Array.isArray(content) && content.some((b: { type?: string; name?: string; input?: Record<string, unknown> }) =>
+      b?.type === 'tool_use' && b.name === 'Read' && b.input?.offset === undefined && b.input?.limit === undefined
+      && typeof b.input?.file_path === 'string' && isAdr(rel(b.input.file_path)))
+  })
+  return read || (!!docIndex && scanShellReadsByOutput(bashCommandsOf(records), docIndex, rel).paths.some(isAdr))
+}
+
 /** Derive the mechanical trace from parsed transcript records. Pure — the
  *  testable core. `env` is injectable (defaults to `process.env`). `docIndex`
  *  is what `docsReadViaShell` is credited against (ADR-0009): the lander and
@@ -567,7 +586,6 @@ export function extractTrace(
   const rules: string[] = []
   const alwaysLoadedRules: string[] = []
   const ruleLoadedAt = new Map<string, number>()
-  const readAt: [string, number][] = []
   const usageById = new Map<string, ApiUsage>()
 
   for (const [i, rec] of records.entries()) {
@@ -599,10 +617,7 @@ export function extractTrace(
       const input = b.input ?? {}
       toolCounts[name] = (toolCounts[name] ?? 0) + 1
 
-      if (name === 'Read') {
-        reads.push(input.file_path as string)
-        if (input.offset === undefined && input.limit === undefined) readAt.push([input.file_path as string, i])
-      }
+      if (name === 'Read') reads.push(input.file_path as string)
       else if (EDIT_TOOLS.has(name)) edits.push(input.file_path as string)
       else if (name === 'Skill') skills.push((input.skill ?? input.command) as string)
       else if (name === 'Agent' || name === 'Task') {
@@ -632,10 +647,7 @@ export function extractTrace(
   const rel = relativizer(records)
   const adrReadAfter = (rule: string, at: number): boolean => {
     const n = ruleAdr(basename(rule))
-    if (n === undefined) return false
-    const isAdr = (p: string) => p.startsWith(`docs/adr/${n}-`)
-    if (readAt.some(([p, j]) => j > at && typeof p === 'string' && isAdr(rel(p)))) return true
-    return !!docIndex && scanShellReadsByOutput(bashCommandsOf(records.slice(at + 1)), docIndex, rel).paths.some(isAdr)
+    return n !== undefined && adrReadInFull(records.slice(at + 1), n, docIndex, rel)
   }
 
   return {
@@ -696,6 +708,13 @@ const subagentsDir = (transcriptPath: string) => join(dirname(transcriptPath), b
 
 /** One depth-1 subagent's transcript, named for the hook payload's `agent_id`. */
 export const subagentTranscript = (transcriptPath: string, agentId: string) => join(subagentsDir(transcriptPath), `agent-${agentId}.jsonl`)
+
+/** An agent's own transcript: a depth-1 subagent's, else one nested deeper,
+ *  such as a workflow agent's under `workflows/<runId>/`. */
+export const agentTranscript = (transcriptPath: string, agentId: string): string | undefined => {
+  const direct = subagentTranscript(transcriptPath, agentId)
+  return existsSync(direct) ? direct : subagentTranscriptPaths(transcriptPath).find((p) => basename(p) === `agent-${agentId}.jsonl`)
+}
 
 /** Every dispatched subagent's own transcript, given the parent's path: the
  *  harness writes them to `<parent-dir>/<parent-basename>/subagents/*.jsonl`

@@ -93,7 +93,7 @@ export interface Session {
   trigger: string | null
 }
 /** A windowed session as printed — what the Skill judges "kind of work" from. */
-export type WindowSession = Omit<Session, 'humanPromptedClosure' | 'docsRead' | 'docsReadBySubagents' | 'mentioned' | 'humanInvoked' | 'trigger'>
+export type WindowSession = Omit<Session, 'humanPromptedClosure' | 'docsRead' | 'docsReadBySubagents' | 'mentioned' | 'humanInvoked' | 'trigger' | 'filesEdited'>
 export interface OnDiskSkill {
   description: string
   /** False when its frontmatter sets `disable-model-invocation: true`. */
