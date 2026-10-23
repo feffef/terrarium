@@ -55,6 +55,25 @@ const assessedSpan = computed(() => {
   return lo === hi ? lo : `${lo} – ${hi}`
 })
 
+// "In this report": the finds in the order the prose embeds them, not query order.
+// Walks the raw minimark body, `[tag, props, ...children]`, so nested embeds count.
+const findList = computed(() => {
+  const slugs: string[] = []
+  const walk = (node: unknown) => {
+    if (!Array.isArray(node)) return
+    if (node[0] === 'midden-artifact') slugs.push(String((node[1] as { slug?: string }).slug))
+    else node.slice(2).forEach(walk)
+  }
+  const body = site.value?.body as { value?: unknown[] } | undefined
+  body?.value?.forEach(walk)
+  return [...new Set(slugs)].flatMap((slug) => siteArtifacts.value.find((a) => a.stem === slug) ?? [])
+})
+// Open where there is room; on a phone it would push the first paragraph down (PR #1709).
+const findsBox = ref<HTMLDetailsElement>()
+onMounted(() => {
+  if (findsBox.value && window.matchMedia('(max-width: 44rem)').matches) findsBox.value.open = false
+})
+
 // The grades present in THIS report's finds, in the canonical decay-then-
 // orthogonal order (#523) — the condition key defines only these.
 const presentGrades = computed<Grade[]>(() => {
@@ -95,6 +114,16 @@ useHead({ title: () => `${site.value?.title.replaceAll('`', '') ?? 'Not found'} 
           <span>{{ siteArtifacts.length }} {{ siteArtifacts.length === 1 ? 'find' : 'finds' }}</span><span class="midden-report__dot">·</span>
           <span>assessed {{ assessedSpan }}</span>
         </div>
+
+        <details v-if="findList.length >= 2" ref="findsBox" open class="midden-report__finds">
+          <summary class="tech">In this report · {{ findList.length }} finds</summary>
+          <ol>
+            <li v-for="a in findList" :key="a.stem">
+              <a :href="`#artifact-${a.stem}`"><MiddenTicks :text="a.title" /></a>
+              <span class="tech midden-report__find-grade">{{ conditionMeta(a.condition).label }}</span>
+            </li>
+          </ol>
+        </details>
       </header>
 
       <MiddenConditionKey v-if="presentGrades.length" :grades="presentGrades" class="midden-report__key" />
@@ -198,6 +227,13 @@ useHead({ title: () => `${site.value?.title.replaceAll('`', '') ?? 'Not found'} 
   color: var(--midden-faint);
 }
 .midden-report__dot { opacity: 0.55; }
+
+.midden-report__finds { margin: 0.9rem 0 0; color: var(--midden-muted); }
+.midden-report__finds summary { cursor: pointer; color: var(--midden-faint); }
+.midden-report__finds ol { margin: 0.5rem 0 0; padding-left: 1.4rem; font-family: var(--midden-serif); }
+.midden-report__finds li { margin: 0.2rem 0; }
+.midden-report__finds a { color: var(--midden-ink); }
+.midden-report__find-grade { margin-left: 0.5rem; color: var(--midden-faint); }
 
 /* The report body is the curator speaking — the serif register; ids, dates and
    provenance inside the finds stay mono (theme.css's two-register split). */
