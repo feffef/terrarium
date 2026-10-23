@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01CMjFaMZxZgD7oTzNXmWwzv
 startedAt: 2026-10-23T18:20:51Z
-endedAt: 2026-10-23T19:12:45Z
+endedAt: 2026-10-23T20:02:23Z
 kind: interactive
 goal: Midden cause of death on every Artifact, with Trench filter chips
-status: in-review
-outcome: "PR #2464 open, gate green, waits for a human merge (Human-only manifest)"
+status: completed
+outcome: "PR #2464 merged by a human: seven causes, 52 Artifacts backfilled, Trench chips live"
 summary: "The owner invoked grill-with-docs on an idea from session_01Wd2WvrPmFRYHAZmf7DYnrG: a cause-of-death tag on each Midden find with filter chips on the Trench. Two grilling rounds settled the shape with the owner (human-instructed): build it in a PR; drop \"superseded\" (it fails Gate B) and \"never used\" (Condition's never-activated covers it); one required, curator-authored cause per Artifact in both Spaces; chips filter Sites; backfill everything now. I proposed the cause set from reading every catalogNote (agent-initiated proposal, owner-approved), and the owner later approved a seventh cause, never-worked, after a spec review showed three finds fit none. I built the schema enum, a single-homed utils/cause.ts, the glossary term, the backfill of 52 Artifacts, link-based ?cause= chips (server-rendered, so they filter without JS too, a deliberate deviation I reported), the cause word on finds and stores cards, a Skill line, and unit and e2e tests. A two-axis code review caught unprefixed auto-import names and five outlived-its-need finds that contradicted their definition; I also found a prototype-key bug in my own query parse. Verified in Chromium (filter, clear, dark mode). Full gate green on the head."
 prs:
   - "2464"
@@ -59,20 +59,24 @@ frictions:
   - description: Initial cause set had only the idea's four values; it couldn't cover files and commits, found only after reading all notes.
     solution: Read the data a closed set must cover before proposing it in grilling round one.
     severity: nit
-durationSec: 3114
+durationSec: 6093
 models:
-  claude-opus-5-5: 133
+  claude-opus-5-5: 152
 toolCounts:
   Skill: 6
-  Bash: 48
+  Bash: 50
   Read: 9
   Write: 1
-  ToolSearch: 2
+  ToolSearch: 3
   Agent: 2
   Edit: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - layers/midden/app/utils/cause.ts
   - layers/midden/app/components/midden/TrenchLanding.vue
@@ -212,13 +216,13 @@ subagents:
     durationSec: 59
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 4
+    tokenShare: 3.3
   - type: general-purpose
     task: Spec review of cause diff
     durationSec: 94
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 5.4
+    tokenShare: 4.6
 gitBranch: ccr-a257d260-axxjz6
 entrypoint: remote_mobile
 cliVersion: 2.1.309
