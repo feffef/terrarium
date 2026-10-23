@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_012Yzae3uty5Jj8ZPug9zpjr
 startedAt: 2026-10-23T11:47:05Z
-endedAt: 2026-10-23T14:01:32Z
+endedAt: 2026-10-23T14:05:29Z
 kind: interactive
 goal: Clear the issue backlog (clear-backlog run)
-status: in-review
-outcome: "PR #2446 merged; PRs #2448 and #2450-#2455 open; #2105, #2137, #2286, #2415 closed"
-summary: 'The owner invoked /clear-backlog and confirmed the 16-issue sweep set (human-instructed). Triage: one build (#2439), one close-done (#2286), two time-gated (#2432, #2373), twelve grilled. #2439 shipped as PR #2446 and the owner merged it. The owner answered the grilling (1a 2a 3c 4a-11a 12c 13c) and challenged two of my proposals: asked for an ELI5 of Q3 and rejected my extra "already loaded, do not re-read" note for the glossary import as redundant, so it was dropped. Building: PR #2448 (CLAUDE.md glossary @-import and narrower dispatch trigger, #2437/#2438; waits for a human merge, import expansion untestable); PRs #2450 (#2434 gate stale-tree warning, human merge), #2451 (#2436 survey brief), #2452 (#2424 log-session warning), #2453 (#2370+#2425 blog-post), #2454 (#2435 ledger re-cluster), #2455 (#2415 owner-decision line). Closed #2105 (done) and #2415 (not wanted); parked #2426 until the long-command Prune Trial verdict; a one-off agent ran the #2137 review, posted findings, filed #2449 (re-cluster tooling) and closed #2137.'
+status: completed
+outcome: "8 PRs merged (#2446, #2448, #2450-#2455) closing 11 issues; #2105, #2137, #2286, #2415 closed without a PR"
+summary: "The owner invoked /clear-backlog and confirmed the 16-issue sweep set (human-instructed). Triage: one build (#2439), one close-done (#2286), two time-gated (#2432 until 10-26, #2373 until 10-24), twelve grilled; #2433 skipped as blocked by #2432. The owner answered 1a 2a 3c 4a-11a 12c 13c, asked for an ELI5 of Q3, and rejected my proposed extra \"already loaded, do not re-read\" note for the glossary import as redundant, so it was dropped. Merged: #2446 (#2439 read-first-hint issue-write docs; owner merge), #2448 (#2437 CLAUDE.md glossary @-import + #2438 narrower dispatch trigger; owner merge, import expansion untestable by the gate), #2450 (#2434 gate stale-tree warning; owner merge, Human-only), #2451 (#2436 survey brief list scan + --summary since-fix severity), #2452 (#2424 log-session closure warning), #2453 (#2370 + #2425 blog-post step 9 and claim source), #2454 (#2435 counts-from-wrong-filter cluster), #2455 (#2415 owner decision: no feeds). Closed without PR: #2105 (done), #2415 (not wanted), #2286 (done in triage), #2137 (one-off review agent posted findings and filed #2449). Parked: #2426 until the long-command Prune Trial verdict. Judgement calls left open are listed in each PR body (small simplifications, wording). Side finding 13 (read-first-hint repeats pointers in subagents) was dropped on the owner's 13c."
 prs:
   - "2446"
   - "2448"
@@ -155,22 +155,29 @@ frictions:
   - description: "I counted #2286 and #2137 as always-eligible unlabelled issues, but both are on-hold specs whose last comment was an agent's, so auto-triage's on-hold exception would have skipped them; the owner confirmed the set anyway"
     solution: Apply auto-triage's on-hold-spec exception when resolving the set; a helper printing eligibility per issue would make it mechanical (#2435's counts-from-wrong-filter cluster)
     severity: minor
-durationSec: 8067
+  - description: "Wrote #2454's verdict Reviewed: SHA from a guessed expansion of the short hash instead of reading the head; caught right after and edited the comment before merging"
+    solution: Read the PR head SHA (gh api pulls/N --jq .head.sha) before writing a verdict
+    severity: minor
+  - description: My log-merge helper reset ruleVerdicts and docsRead on each pass, so earlier verdicts were only kept by log-session's own list union
+    solution: Merge into the existing lists; better, a log-session --merge-verdicts flag that takes run-summary --verdicts output
+    severity: nit
+durationSec: 8304
 models:
-  claude-opus-5-5: 163
+  claude-opus-5-5: 198
 toolCounts:
-  Bash: 45
+  Bash: 54
   AskUserQuestion: 1
   Workflow: 4
   Skill: 2
-  ToolSearch: 4
+  ToolSearch: 5
   PushNotification: 1
   mcp__github__create_pull_request: 8
   mcp__claude-code-remote__subscribe_pr_activity: 8
-  ReadNotifications: 5
-  mcp__github__add_issue_comment: 12
+  ReadNotifications: 10
+  mcp__github__add_issue_comment: 18
   mcp__github__issue_write: 10
   Agent: 1
+  mcp__github__update_issue_comment: 1
 filesEdited:
   - tests/unit/gate-stale-tree.spec.ts
   - scripts/gate/gate.ts
@@ -337,21 +344,21 @@ subagents:
     durationSec: 871
     toolCalls: 64
     modelCalls: 63
-    tokenShare: 12.9
+    tokenShare: 12.1
   - type: workflow-subagent
     task: Spec visitor-loop-no-feeds r1
     model: claude-opus-5-5
     durationSec: 22
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Spec counts-not-tallied-recluster r1
     model: claude-opus-5-5
     durationSec: 83
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: fix counts-not-tallied-recluster r1
     model: claude-sonnet-5-5
@@ -365,7 +372,7 @@ subagents:
     durationSec: 59
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: fix survey-brief-closed-issue-check r1
     model: claude-sonnet-5-5
@@ -379,56 +386,56 @@ subagents:
     durationSec: 66
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Spec gate-stale-tree-warning r1
     model: claude-opus-5-5
     durationSec: 52
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards counts-not-tallied-recluster r2
     model: claude-opus-5-5
     durationSec: 49
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build blog-post-step9-and-claims
     model: claude-sonnet-5-5
     durationSec: 185
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: build gate-stale-tree-warning
     model: claude-sonnet-5-5
     durationSec: 516
     toolCalls: 17
     modelCalls: 11
-    tokenShare: 2.2
+    tokenShare: 2
   - type: workflow-subagent
     task: Standards visitor-loop-no-feeds r1
     model: claude-opus-5-5
     durationSec: 24
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: build survey-brief-closed-issue-check
     model: claude-sonnet-5-5
     durationSec: 354
     toolCalls: 22
     modelCalls: 19
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: workflow-subagent
     task: Spec counts-not-tallied-recluster r2
     model: claude-opus-5-5
     durationSec: 48
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: fix counts-not-tallied-recluster r2
     model: claude-sonnet-5-5
@@ -442,14 +449,14 @@ subagents:
     durationSec: 33
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build log-session-closure-warning
     model: claude-sonnet-5-5
     durationSec: 744
     toolCalls: 37
     modelCalls: 25
-    tokenShare: 3.6
+    tokenShare: 3.4
   - type: workflow-subagent
     task: Standards blog-post-step9-and-claims r1
     model: claude-opus-5-5
@@ -463,7 +470,7 @@ subagents:
     durationSec: 51
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec log-session-closure-warning r1
     model: claude-opus-5-5
@@ -477,7 +484,7 @@ subagents:
     durationSec: 35
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Spec blog-post-step9-and-claims r1
     model: claude-opus-5-5
@@ -491,21 +498,21 @@ subagents:
     durationSec: 43
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec survey-brief-closed-issue-check r2
     model: claude-opus-5-5
     durationSec: 43
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: build visitor-loop-no-feeds
     model: claude-sonnet-5-5
     durationSec: 181
     toolCalls: 15
     modelCalls: 12
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: Spec log-session-closure-warning r2
     model: claude-opus-5-5
@@ -519,7 +526,7 @@ subagents:
     durationSec: 526
     toolCalls: 16
     modelCalls: 13
-    tokenShare: 2.2
+    tokenShare: 2
   - type: workflow-subagent
     task: Spec counts-not-tallied-recluster r3
     model: claude-opus-5-5
@@ -547,7 +554,7 @@ subagents:
     durationSec: 287
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: "triage #2105"
     model: claude-opus-5-5
@@ -561,21 +568,21 @@ subagents:
     durationSec: 29
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: "triage #2425"
     model: claude-opus-5-5
     durationSec: 82
     toolCalls: 12
     modelCalls: 7
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: "triage #2137"
     model: claude-opus-5-5
     durationSec: 130
     toolCalls: 19
     modelCalls: 14
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: workflow-subagent
     task: "triage #2373"
     model: claude-opus-5-5
@@ -589,21 +596,21 @@ subagents:
     durationSec: 96
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: "triage #2437"
     model: claude-opus-5-5
     durationSec: 137
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 1.7
+    tokenShare: 1.5
   - type: workflow-subagent
     task: "triage #2436"
     model: claude-opus-5-5
     durationSec: 138
     toolCalls: 18
     modelCalls: 14
-    tokenShare: 2
+    tokenShare: 1.8
   - type: workflow-subagent
     task: "triage #2435"
     model: claude-opus-5-5
@@ -617,28 +624,28 @@ subagents:
     durationSec: 210
     toolCalls: 23
     modelCalls: 17
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: workflow-subagent
     task: "triage #2434"
     model: claude-opus-5-5
     durationSec: 149
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: "triage #2286"
     model: claude-opus-5-5
     durationSec: 134
     toolCalls: 20
     modelCalls: 13
-    tokenShare: 2
+    tokenShare: 1.8
   - type: workflow-subagent
     task: "triage #2439"
     model: claude-opus-5-5
     durationSec: 122
     toolCalls: 15
     modelCalls: 11
-    tokenShare: 2.1
+    tokenShare: 2
   - type: workflow-subagent
     task: "triage #2415"
     model: claude-opus-5-5
@@ -652,14 +659,14 @@ subagents:
     durationSec: 95
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #2370"
     model: claude-opus-5-5
     durationSec: 102
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Spec read-first-hint-issue-writes r2
     model: claude-opus-5-5
@@ -673,21 +680,21 @@ subagents:
     durationSec: 43
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: build read-first-hint-issue-writes
     model: claude-sonnet-5-5
     durationSec: 476
     toolCalls: 22
     modelCalls: 13
-    tokenShare: 2.8
+    tokenShare: 2.7
   - type: workflow-subagent
     task: Spec read-first-hint-issue-writes r1
     model: claude-opus-5-5
     durationSec: 52
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Standards read-first-hint-issue-writes r2
     model: claude-opus-5-5
@@ -708,21 +715,21 @@ subagents:
     durationSec: 316
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec claude-md-glossary-import-and-dispatch-trigger r3
     model: claude-opus-5-5
     durationSec: 46
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Spec claude-md-glossary-import-and-dispatch-trigger r1
     model: claude-opus-5-5
     durationSec: 78
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Standards claude-md-glossary-import-and-dispatch-trigger r2
     model: claude-opus-5-5
@@ -736,28 +743,28 @@ subagents:
     durationSec: 87
     toolCalls: 15
     modelCalls: 10
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards claude-md-glossary-import-and-dispatch-trigger r3
     model: claude-opus-5-5
     durationSec: 44
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards claude-md-glossary-import-and-dispatch-trigger r1
     model: claude-opus-5-5
     durationSec: 88
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: build claude-md-glossary-import-and-dispatch-trigger
     model: claude-sonnet-5-5
     durationSec: 217
     toolCalls: 25
     modelCalls: 18
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: workflow-subagent
     task: fix claude-md-glossary-import-and-dispatch-trigger r1
     model: claude-sonnet-5-5
