@@ -511,6 +511,13 @@ export function declaredClosure(trace: MechanicalTrace): boolean {
   return trace.skillsUsed.includes('log-session')
 }
 
+/** Non-blocking `--author` nudge (#2424): a `completed` log written after a
+ *  merge, with no `close-session` since, was probably hand-written. */
+export function closureWarning(status: string, trace: Pick<MechanicalTrace, 'mergedWithoutClose'>): string | undefined {
+  if (status !== 'completed' || !trace.mergedWithoutClose) return undefined
+  return 'warning: a PR merged and close-session has not run since. Invoke close-session after the merge instead of hand-writing this completed log.'
+}
+
 /** The marker every dropped-scratch placeholder log's sole friction carries —
  *  greppable, and distinguishes this synthetic entry from a real one. */
 export const DROPPED_SCRATCH_FRICTION = 'issue #449 Gap 3: authored scratch dropped before landing'
@@ -908,6 +915,8 @@ export function authorMain(
     for (const p of keptNo) console.log(`    ${p}`)
     console.log('  Re-confirm it, or send a changed verdict: verdicts may change over a session.')
   }
+  const closure = ctx && closureWarning(merged.status, ctx.trace)
+  if (closure) console.log(`  ${closure}`)
   reportUnexplainedReads(ctx, merged)
 }
 
