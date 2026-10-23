@@ -72,7 +72,7 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   verify against the PR or `main` before dropping.
 - **GitHub-MCP hygiene** (a recurring friction — heed it): load the
   `mcp__github__*` tools you need via `ToolSearch` before the first call (e.g.
-  `select:mcp__github__search_issues,mcp__github__search_pull_requests,mcp__github__issue_read,mcp__github__pull_request_read`
+  `select:mcp__github__list_issues,mcp__github__list_pull_requests,mcp__github__issue_read,mcp__github__pull_request_read`
   — the nearby-issue eyeball step needs the read tools too).
   `docs/agents/github-integration.md` owns name resolution and the
   `list_*`/`search_*` overflow guidance.
@@ -84,7 +84,7 @@ Never re-fix what is already fixed. **First, drop what isn't ours to change:** a
 an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is the trial's
 evidence, not a fix (ADR-0027). The drop reason quotes the matching `territory` path or keyword verbatim; with no quotable match the candidate is not on trial, so classify it below. A
 `blocker` is the exception: list it as a drop flagged `blocker`, and the main
-session files it, naming the trial. Then, for the rest: check the tracker for an issue or PR that already covers it, and confirm against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/git/list-merges-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC, newest-first, `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a window's output can overflow you). Find the fixing commit/PR in it rather than comparing git timestamps by hand. Capture stdout and stderr separately: diagnostics go to stderr, and mixing them into the JSON on stdout breaks parsing. **Before labelling a candidate "never fixed", filter `pnpm exec tsx scripts/github/list-open-issues.ts` output locally for open issues by the friction's tool name and error text, and run one scoped `search_issues` with `state:closed` and the exact identifier for closed ones** (`docs/agents/github-integration.md`). The search tools (e.g. `mcp__github__search_issues`) match semantically, not by substring, so a miss alone doesn't prove never-fixed: also eyeball nearby issues (same file, script or mechanism) for a closed one covering the same root cause in other words. A paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
+session files it, naming the trial. Then, for the rest: check the tracker for an issue or PR that already covers it, and confirm against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/git/list-merges-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC, newest-first, `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a window's output can overflow you). Find the fixing commit/PR in it rather than comparing git timestamps by hand. Capture stdout and stderr separately: diagnostics go to stderr, and mixing them into the JSON on stdout breaks parsing. **Before labelling a candidate "never fixed", filter `pnpm exec tsx scripts/github/list-open-issues.ts` output locally for open issues by the friction's tool name and error text, and page `mcp__github__list_issues` with `state: CLOSED` (parameters per `docs/agents/github-integration.md`), filtering the titles locally for closed ones**. A title match is a hint, not proof, so a miss alone doesn't prove never-fixed: also eyeball nearby issues (same file, script or mechanism) for a closed one covering the same root cause in other words. A paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
 
 - **Never fixed** — no issue/PR addresses it, confirmed by the search
   above.
@@ -123,7 +123,7 @@ commit on the current branch that holds them (`git commit -F <file>`; don't push
 or switch branches). Write each entry as the schema reads (never invented keys
 such as `fixes_append`), with occurrence blocks as `print-ledger-occurrence.ts`
 printed them; **(e) the regressions**: every cluster
-`--summary` shows as `still recurring`, with its count since the latest PR and its highest severity since; and
+`--summary` shows as `still recurring`, with its count since the latest PR and its highest severity since (`--summary`'s `since:`); and
 **(f) each friction `--summary` lists in two clusters**, moved or kept because its text names
 both causes.
 
