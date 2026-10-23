@@ -15,17 +15,13 @@ Only when you were given doc fixes:
 
 - **Never edit an external pack Skill's `SKILL.md`** (a `skills-lock.json`
   name).
-- **The doc fix must itself clear `audit-docs`' house rules** — that Skill is
-  the home for them (`audit-docs/SKILL.md`, not restated here), and the main
-  session self-merges doc commits, so they hold to the same standard the
-  doc-audit sweep verifies. Two axes: (1) respect each surface's **tier** — Live
-  is fixable, but **never edit an ADR** (its PR needs a human merge, ADR-0004, and the main session merges its own), **a Historical
-  record** (session logs, blog posts) **or a Pack-generic template**;
-  (2) don't *author* any defect audit-docs' eight lenses catch — above all
-  **single-home rather than restate** (the CLAUDE.md rule), and make any new
-  `docs/agents/*` file reachable (ADR-0029; audit-docs' orphan-addition
-  lens). A
-  friction doc fix that would become the next audit-docs finding isn't done.
+- **A doc fix must clear `audit-docs`' house rules** (`audit-docs/SKILL.md`),
+  since the main session self-merges doc commits. Never edit an ADR (its PR needs
+  a human merge, ADR-0004), a Historical record (session logs, blog posts) or a
+  Pack-generic template. Author none of the defects audit-docs' eight lenses
+  catch, above all restating a fact instead of pointing to its home, and make any
+  new `docs/agents/*` file reachable (ADR-0029). A fix that would be the next
+  audit-docs finding isn't done.
 
 Also return, for each rule and doc you loaded or read: its path, why it
 loaded or was read, and whether it was useful (yes/partly/no).

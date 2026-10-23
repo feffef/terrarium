@@ -22,10 +22,11 @@ new mechanism. Write scratch files only under {SCRATCH_DIR}.
   *discoverability* failure — the rule's home is wrong, or prose is the wrong
   mechanism entirely; **doc opened and the friction happened anyway** ⇒ the
   prose itself is unclear, wrong, or too easy to read past. Report which, with
-the paths as evidence. **"Opened" can mean a subagent opened it:** subagent reads are folded into the parent's list (`transcript-trace.ts`'s `foldSubagentTrace`), so on a session that delegated, check the `subagents` field before concluding the agent that hit the friction had the rule in front of it. A doc only a subagent opened is closer to *not opened*. Example (doc not opened): the #241/#425 fixes landed in `docs/agents/github-integration.md`, which the affected sessions had no reason to open; the friction recurred until a `PreToolUse` guard replaced the prose.
+the paths as evidence. **"Opened" can mean a subagent opened it:** subagent reads are folded into the parent's list (`transcript-trace.ts`'s `foldSubagentTrace`), so on a session that delegated, check the `subagents` field before concluding the agent that hit the friction had the rule in front of it. A doc only a subagent opened is closer to *not opened*.
 - **Before recommending "add a line to doc X", check that anyone reads doc X.**
-  `pnpm exec tsx scripts/session/audit-skills.ts` (redirect it to a file and read only `docReadCounts`) reports `docReadCounts` — path → how many
-  of the windowed sessions opened it. A doc sitting at **0** is where a prose fix
+  Run `pnpm exec tsx scripts/session/audit-skills.ts` with its output redirected
+  to a file and read only `docReadCounts` (path → how many of the windowed
+  sessions opened it). A doc sitting at **0** is where a prose fix
   goes to die. Prune the instruction that caused it first (CLAUDE.md, "Keep it
   short"); failing that, recommend a mechanism that reaches the session (a
   `PreToolUse` guard, a gate check, a line in a doc sessions demonstrably open),

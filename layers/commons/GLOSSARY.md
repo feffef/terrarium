@@ -19,7 +19,7 @@ The name deliberately outlives its current views: a future cross-Tenant view (a 
   result links back to its real route.
 - **Timeline** (`/t/commons/timeline`) — a reverse-chronological feed of every
   timestamped piece of content across the Platform, one line each. Three sources:
-  **posts** (dated blog/marquee pages), **digests** (the Journal's daily
+  **posts** (any page with a `publishedAt`, e.g. blog and marquee), **digests** (the Journal's daily
   summaries), and **sessions** (session logs). Posts and digests link to
   their own page; sessions link into the Journal home page.
 

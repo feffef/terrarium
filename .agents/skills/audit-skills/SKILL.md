@@ -19,8 +19,6 @@ line with real usage is a by-product of the same evidence.
 
 This Skill writes only Inventory `.yml` entries, Routine run costs and GitHub
 issues (ADR-0015).
-A finding that clears step 4's bar becomes an issue; the rest become
-observations.
 
 ## 1. Gather the scorecard
 
@@ -42,13 +40,12 @@ Done when you hold the scorecard and the usage of every `routineRuns` session.
 
 ## 2. Check behaviour — one subagent per Skill in `behaviourChecks`
 
-A run answers to the Skill as it was when the run started. The scorecard's
+Grade a run against the Skill as it was when the run started. The scorecard's
 `changes` lists what landed in the Skill's folder or scripts during the window
-(and the CLI warns when it is non-empty). Empty: every run is graded against
-the files on disk. Otherwise the data file says when each change landed, and a run
-whose `startedAt` precedes it is graded against the earlier text
-(`git show <sha>^:<path>`) — a fix a run never saw is untested by it, not
-broken (#1479, #1515).
+(the CLI warns when it is non-empty). If it is empty, use the files on disk.
+Otherwise the data file dates each change; for a run whose `startedAt` precedes
+a change, use the earlier text (`git show <sha>^:<path>`): a fix the run never
+saw is untested, not broken (#1479, #1515).
 
 Dispatch one read-only Sonnet subagent (`model: sonnet`) per Skill, all in one
 message. Each brief is [`brief.md`](brief.md) plus the path of the Skill's
@@ -119,7 +116,7 @@ for step 5 as an observation.
 
 ## 5. Tune the Inventory
 
-Grade each Skill's importance (`GLOSSARY.md`) after reading its
+Grade each Skill's importance by the definitions below, after reading its
 `observations`: earlier runs' evidence counts alongside this window's.
 
 - **essential**: essential and broad; its absence would be felt across many
@@ -172,9 +169,8 @@ issue and PR states your notes write.
 ## 6. Land the Inventory PR
 
 If step 5 changed nothing, there is no PR. Otherwise run
-`pnpm exec tsx .agents/skills/audit-skills/scripts/check-states.ts`: every issue
-or PR state the diff writes must match GitHub now, so fix what it flags, or
-reword a flag that misreads ordinary prose (#1627, #1720). Then follow
+`pnpm exec tsx .agents/skills/audit-skills/scripts/check-states.ts` (no `--text`:
+it checks the diff) and fix what it flags, as in step 4. Then follow
 `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR". The diff touches
 only `layers/journal/content/current/skills/*.yml` and `routines/*.yml`, every
 grade change cites its ≥2 sessions, and every removed observation is past 40

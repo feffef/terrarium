@@ -12,16 +12,8 @@ Platform that day — and archive aged-out content. The index overview refreshes
 itself (step 4). A thin, tested helper (`.agents/skills/digest/scripts/digest.ts`) does the
 deterministic gathering; **you write the prose**.
 
-> **Command-only — follow the steps.** A scheduled Routine or a human runs
-> `/digest`; `disable-model-invocation: true` keeps a session from invoking it
-> unprompted.
-
 Digests land through an ordinary gated PR, never the `log-session`
-direct-to-main path (ADR-0010). You merge it yourself once the gate is green
-(step 6).
-
-> **Keep it short** (CLAUDE.md) governs it if this run touches the Platform or
-> its agent instructions.
+direct-to-main path (ADR-0010).
 
 ## 1. Get on a working branch
 
@@ -33,9 +25,8 @@ CLAUDE.md's "Stay on the branch your session started on" rule.
 pnpm exec tsx .agents/skills/digest/scripts/digest.ts list
 ```
 
-It prints the **closed** UTC days that have activity but no digest yet — the
-backfill set, oldest first. Today is never listed (a day is digested only once its
-midnight UTC has passed). An empty list means no new Digests — skip to step 5;
+It prints the **closed** UTC days (midnight UTC has passed; today is never
+listed) that have activity but no digest, oldest first. An empty list means no new Digests — skip to step 5;
 the archive sweep still runs.
 
 Done when you hold the list of days to author.
@@ -115,17 +106,14 @@ Done when every listed day has a `<date>.md` whose `summary` is set, whose body
 leads with narrative and carries the skim footer, and whose fact-check has no
 unfixed `wrong` claim.
 
-## 4. The index refreshes itself — nothing to bake
+## 4. The index refreshes itself
 
-The Journal's Space landing (`/t/journal/current`) is a **live dashboard**
-that queries this Space's collections at request time
-(`layers/journal/GLOSSARY.md`, "What lives where"), so a Digest from step 3
-appears with **no edit to `index.md`**.
-
-`index.md` owns only its **editorial intro** (its Markdown body, rendered above
-the dashboard) and its title/description. Edit those only when the standing
-introduction should change, **never** to bake a per-run overview or a digest
-list.
+The Space landing (`/t/journal/current`) is a live dashboard that queries this
+Space's collections at request time (`layers/journal/GLOSSARY.md`, "What lives
+where"), so a new Digest appears with no `index.md` edit. Edit `index.md`'s
+editorial intro (its Markdown body, above the dashboard) and title/description
+only when the standing introduction should change, never to add a per-run
+overview or digest list (ADR-0010).
 
 Done when you have confirmed the new Digest(s) will show — no index edit is needed.
 
@@ -141,8 +129,8 @@ This `git mv`s the Digests and session logs outside the retention budget (the
 newest `RETAIN_DATES` dates of each kind, in the script) from `current` to
 `archived`, preserving history; every other Journal Collection is untouched.
 The script never commits; its moves ride this run's commit/PR (step 6). Run it
-on **every** invocation, not only on days that produce a new Digest: the sweep
-keeps `current` bounded, and this Skill is its only scheduled trigger.
+on **every** invocation, not only on days that produce a new Digest: this Skill
+is the sweep's only scheduled trigger.
 
 Done when the sweep has run (even a no-op day, reported as such) and any moves
 it made are staged for the commit below.

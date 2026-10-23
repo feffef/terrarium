@@ -22,8 +22,8 @@ first: it holds the Walkthrough contract. The steps every page shares are in
    length; detail a `SKILL.md` or a Lesson holds stays there. Stop text gives no 'so'/'since'/
    'because' reasons, and names the actor by tier (a Trusted user), not 'the
    owner', unless only the owner may act (ADR-0020). Each stop tells this story's part only;
-   how the mechanism works belongs to what its chips link, a Lesson where one
-   exists, within the stop's chip rule in the glossary. Done when every stop
+   how the mechanism works stays in what its chips link (a Lesson where one
+   exists), per the glossary's chip rule. Done when every stop
    is checked against its files at `revision`.
 4. **Diagram** it if one earns its place (EVERY-PAGE.md).
 5. **Check** it (EVERY-PAGE.md).

@@ -6,11 +6,9 @@ disable-model-invocation: true
 
 # Guest build
 
-Watch for `ready-for-agent` and **build** each story into a **gated,
-owner-merged** pull request. The build half of the guest-demo pipeline —
-`guest-intake` is the intake half. Built to run by hand or be fired on a tight
-interval (a Routine or `/loop`), and the goal is to be **responsive**: pick up a
-newly-labelled story and start building it right away.
+Build each `ready-for-agent` story into a **gated, owner-merged** pull request:
+the build half of the guest-demo pipeline (`guest-intake` is the intake half).
+Be **responsive**: start building a newly labelled story right away.
 
 **Policy: [ADR-0023](../../../docs/adr/0023-guest-driven-demo-pipeline.md).**
 Read it first. Stop running this Skill and no new `ready-for-agent` story gets
@@ -19,22 +17,19 @@ built.
 **`disable-model-invocation` above is deliberate** (ADR-0023: neither Skill
 starts itself); see `guest-intake`'s Skill (issue #568).
 
-**It composes existing Skills — never restate them.** The dispatch-and-review
-machinery is `frictions-to-fixes` §6–§7 and the `dispatch-subagents` Skill
-(§3, "Scope and trust": what an impl agent may and may not do); the land
-recipe is `docs/agents/pr-workflow.md`. This Skill adds
-only what a guest-demo build needs — and one hard subtraction.
+**It composes existing Skills; it doesn't restate them.** Dispatch and review:
+`frictions-to-fixes` §6–§7 and `dispatch-subagents` (§3, "Scope and trust").
+Landing: `docs/agents/pr-workflow.md`. This Skill adds only what a guest build
+needs, plus one subtraction.
 
 ## The one hard subtraction — it does NOT merge
 
-`frictions-to-fixes` reviews **and merges** its own dispatched PRs. This Skill
-does **not**: every guest-driven PR is gated and **owner-merged** (ADR-0023).
-It never calls `merge_pull_request` and never enables auto-merge — the owner is
-the sole merge authority for guest work.
+Unlike `frictions-to-fixes`, this Skill never merges: no `merge_pull_request`,
+no auto-merge. The owner merges every guest PR (ADR-0023).
 
 ## What it acts on
 
-Scan open issues labelled `ready-for-agent`. **Skip any that already has an open
+Scan open issues labelled `ready-for-agent` whose author is Public (a guest, ADR-0023). **Skip any that already has an open
 or merged linked PR** — check before dispatching, so a tight loop never
 double-builds a story already in flight. **Also skip any that already carries a
 fresh `guest-in-flight` marker** — see "Concurrency" below;
@@ -87,9 +82,8 @@ against #555 before a human stepped in).
 
 ## Run it
 
-Fire this Skill by name on an interval — a Routine (survives teardown) or `/loop`
-(within a live session). The skip-already-built and skip-already-marked rules
-above keep a tight interval cheap.
+Run it by hand, or by name on an interval (a Routine survives teardown; `/loop`
+lasts the live session). The skips above keep a tight interval cheap.
 
 Comments carry the ADR-0017 header and no AI-triage disclaimer (the override
 `auto-triage` states). MCP mechanics: `docs/agents/github-integration.md`.
