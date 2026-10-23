@@ -76,6 +76,7 @@ const INSTRUCTION_DOC_PATTERNS = [
 ]
 
 const GLOB_OR_VAR = /[*?$`~[\]{}]/
+const NOT_LITERAL = /[*?$`~{}]/
 
 /** Why a token that named an in-scope doc was NOT counted — surfaced to the
  *  authoring agent so checking for a MISS is recognition rather than recall. */
@@ -783,7 +784,9 @@ export function bashReadPaths(command: string, cwd: string): { paths: string[]; 
       const text = a.text.replace(/^</, '')
       if (a.skip || !text) continue
       files++
-      if (GLOB_OR_VAR.test(text) || !(dir || isAbsolute(text))) continue
+      // Brackets stay: Nuxt routes (`[space]`) use them literally, and an
+      // unmatched `[…]` reaches the reader unexpanded.
+      if (NOT_LITERAL.test(text) || !(dir || isAbsolute(text))) continue
       // A trailing `/` marks a directory for the hint; resolve() would drop it.
       paths.push(resolve(dir ?? '/', text) + (text.endsWith('/') ? '/' : ''))
     }

@@ -226,6 +226,14 @@ describe('false positives', () => {
     expect(bashReadPaths('cat a \\\n  b', '/r').paths).toEqual(['/r/a', '/r/b'])
   })
 
+  it("keeps a Nuxt route's brackets: `[space]` names a directory, not a glob", () => {
+    const page = '/r/app/pages/[space]/[...slug].vue'
+    for (const c of ["cat 'app/pages/[space]/[...slug].vue' x", 'cat app/pages/\\[space\\]/\\[...slug\\].vue x', 'sed -n 1,9p "app/pages/[space]/[...slug].vue" | head']) {
+      expect(bashReadPaths(c, '/r').paths, c).toContain(page)
+    }
+    expect(bashReadPaths('cat app/pages/*.vue x', '/r').paths).toEqual(['/r/x'])
+  })
+
   it('marks a one-file read simple, fd redirects included', () => {
     const reads = ['cat f', 'head -50 f', 'head -n 50 f', 'sed -n 1,5p f', 'grep x f']
     const redirected = ['cat f 2>&1', 'cat f >/dev/null 2>/dev/null', 'head -5 f 2> /dev/null', 'cat f >&2']
