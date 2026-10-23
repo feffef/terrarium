@@ -4,7 +4,11 @@ summary: >-
 cause: >-
   The REST job-log endpoint redirects to a blob host the agent proxy blocks (403 Forbidden for gh api or curl on actions/jobs/<id>/logs), and mcp__github__get_job_logs returns one enormous line whose tail shows only cleanup, while the check run's annotations name the failing lint or test; sessions that miss this guess the cause from a local build or a truncated log tail. Signals: "job logs", "403", "blob storage", get_job_logs overflow or a tail of cleanup lines, a misdiagnosed CI failure or a wasted local build before reading the annotations.
 surface: safe
-status: tracked
+status: open
+fixes:
+  - pr: 2441
+    date: "2026-10-23"
+    summary: "github-integration.md now says to read a red check's failure annotations before its log, since the REST job-log download 403s in the cloud."
 occurrences:
   - session: session_01BLrfuHbMMEmjZZ7STpe1AN
     date: "2026-10-11"
