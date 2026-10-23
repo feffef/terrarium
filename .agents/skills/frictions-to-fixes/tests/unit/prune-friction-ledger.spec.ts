@@ -2,7 +2,7 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { candidateLabels, horizonStart, pruneEntry, pruneLedger, regressionCheck, sharedFrictions, summarizeLedger } from '../../scripts/prune-friction-ledger.ts'
+import { candidateLabels, horizonStart, lostOccurrences, moveInLedger, moveOccurrence, pruneEntry, pruneLedger, regressionCheck, sharedFrictions, summarizeLedger } from '../../scripts/prune-friction-ledger.ts'
 import { LEDGER_DIR } from '../../../../../scripts/session/extract-frictions.ts'
 
 const entry = (...occ: [session: string, date: string][]) => `name: x
@@ -185,5 +185,59 @@ describe('sharedFrictions()', () => {
     writeFileSync(join(dir, 'c.yml'), `name: c\n${occ('something else')}`)
     expect(sharedFrictions(cwd)).toEqual(['a, b: s1 "both guards denied"'])
     rmSync(cwd, { recursive: true, force: true })
+  })
+})
+
+describe('moveOccurrence()', () => {
+  const block = (s: string, d: string) => `  - session: ${s}\n    date: "2026-10-01"\n    severity: nit\n    description: "${d}"\n    solution: "fix"\n`
+  const file = (name: string, ...blocks: string[]) => `name: ${name}\n# kept comment\nstatus: open\noccurrences:\n${blocks.join('')}`
+
+  it('moves the session block from one entry to the other', () => {
+    const moved = moveOccurrence('s1', file('a', block('s1', 'one'), block('s2', 'two')), file('b', block('s3', 'three')))
+    expect(moved).toEqual({ from: file('a', block('s2', 'two')), to: file('b', block('s3', 'three'), block('s1', 'one')) })
+  })
+  it('refuses when the target already holds the same friction from that session', () => {
+    expect(() => moveOccurrence('s1', file('a', block('s1', 'one')), file('b', block('s1', 'one'))))
+      .toThrow('duplicate session: the target already holds s1 with the same text')
+  })
+  it('reports a text conflict instead of dropping either text', () => {
+    expect(() => moveOccurrence('s1', file('a', block('s1', 'one')), file('b', block('s1', 'other'))))
+      .toThrow('text conflict: the target already holds s1 (one per entry)\n  moving: "one"\n  target: "other"')
+  })
+
+  describe('lostOccurrences()', () => {
+    it('names each occurrence text present before and missing after', () => {
+      const before = [file('a', block('s1', 'one'), block('s2', 'two')), file('b', block('s3', 'three'))]
+      const after = [file('a', block('s2', 'two')), file('b', block('s3', 'three'))]
+      expect(lostOccurrences(before, after)).toEqual(['s1 "one"'])
+    })
+    it('is empty when every text survived, even when a file is gone', () => {
+      const before = [file('a', block('s1', 'one')), file('b', block('s3', 'three'))]
+      expect(lostOccurrences(before, [null, file('b', block('s3', 'three'), block('s1', 'one'))])).toEqual([])
+    })
+  })
+
+  describe('moveInLedger()', () => {
+    let cwd: string
+    afterEach(() => rmSync(cwd, { recursive: true, force: true }))
+    const setup = (a: string, b: string) => {
+      cwd = mkdtempSync(join(tmpdir(), 'ledger-'))
+      const dir = join(cwd, LEDGER_DIR)
+      mkdirSync(dir, { recursive: true })
+      writeFileSync(join(dir, 'a.yml'), a)
+      writeFileSync(join(dir, 'b.yml'), b)
+      return dir
+    }
+    it('writes both entries and deletes a source left with no occurrence', () => {
+      const dir = setup(file('a', block('s1', 'one')), file('b', block('s3', 'three')))
+      expect(moveInLedger('s1', 'a', 'b', cwd)).toEqual(['moved s1 from a to b', 'a.yml: deleted (no occurrence left; carry its fixes and notes over by hand)'])
+      expect(existsSync(join(dir, 'a.yml'))).toBe(false)
+      expect(readFileSync(join(dir, 'b.yml'), 'utf8')).toBe(file('b', block('s3', 'three'), block('s1', 'one')))
+    })
+    it('writes nothing on a refusal', () => {
+      const dir = setup(file('a', block('s1', 'one')), file('b', block('s1', 'other')))
+      expect(() => moveInLedger('s1', 'a', 'b', cwd)).toThrow('text conflict')
+      expect(readFileSync(join(dir, 'a.yml'), 'utf8')).toBe(file('a', block('s1', 'one')))
+    })
   })
 })
