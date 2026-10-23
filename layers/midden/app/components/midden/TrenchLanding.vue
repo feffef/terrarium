@@ -18,15 +18,21 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
   if (props.front) {
     const count = await queryCollection(resolved.pagesKey).where('path', '<>', '/').count()
     const artifacts = await queryCollection(resolved.collections.artifacts).all()
-    const latest = artifacts
+    const newest = artifacts
       .sort((a, b) => b.assessedAt.localeCompare(a.assessedAt) || a.stem.localeCompare(b.stem))
       .slice(0, 3)
-      .map((a) => ({
-        href: `/t/midden/trench/${a.site}#artifact-${a.stem}`,
-        title: a.title.replaceAll('`', ''),
-        grade: conditionMeta(a.condition).label,
-        assessed: formatMiddenDate(a.assessedAt),
-      }))
+    // Only the three linked reports' titles, not every page (ADR-0028: the payload travels).
+    const reports = await queryCollection(resolved.pagesKey)
+      .where('path', 'IN', newest.map((a) => `/${a.site}`))
+      .select('path', 'title')
+      .all()
+    const latest = newest.map((a) => ({
+      href: `/t/midden/trench/${a.site}#artifact-${a.stem}`,
+      title: a.title.replaceAll('`', ''),
+      report: (reports.find((r) => r.path === `/${a.site}`)?.title ?? '').replaceAll('`', ''),
+      grade: conditionMeta(a.condition).label,
+      assessed: formatMiddenDate(a.assessedAt),
+    }))
     return { intro: null, count, sites: [], latest }
   }
   const pages = await queryCollection(resolved.pagesKey).all()
@@ -39,8 +45,7 @@ const { data } = await useAsyncData(`midden-landing-${props.front ? 'front' : 't
     const hi = formatMiddenDate(dates[dates.length - 1]!)
     return `${dates.length} ${dates.length === 1 ? 'find' : 'finds'} · assessed ${lo === hi ? lo : `${lo} – ${hi}`}`
   }
-  const sites = pages
-    .filter((p) => p.path !== '/')
+  const sites = middenReportOrder(pages.filter((p) => p.path !== '/'), artifacts)
     .map((p, i) => ({
       meta: meta(p.path.slice(1)),
       num: String(i + 1).padStart(2, '0'),
@@ -140,7 +145,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
         <div class="midden-sechead">
           <span id="midden-sites-head" class="hand midden-sechead__title">{{ front ? 'The excavation' : 'The dig reports' }}</span>
           <span class="midden-sechead__rule" />
-          <span v-if="!front" class="mono midden-sechead__aside">{{ count }} site{{ count === 1 ? '' : 's' }}</span>
+          <span v-if="!front" class="mono midden-sechead__aside">{{ count }} site{{ count === 1 ? '' : 's' }} · newest stratum first</span>
         </div>
         <ol v-if="rows.length" class="midden-sites">
           <li v-for="site in rows" :key="site.href" class="midden-sites__item">
@@ -166,7 +171,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
             <li v-for="f in data.latest" :key="f.href">
               <NuxtLink :to="f.href" class="midden-latest__link">
                 <span class="midden-latest__title">{{ f.title }}</span>
-                <span class="tech midden-latest__meta">{{ f.grade }} · assessed {{ f.assessed }}</span>
+                <span class="tech midden-latest__meta">{{ f.grade }} · in {{ f.report }} · assessed {{ f.assessed }}</span>
               </NuxtLink>
             </li>
           </ul>

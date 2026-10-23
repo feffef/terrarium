@@ -61,6 +61,11 @@ describe('midden Tenant', async () => {
     expect(html).toMatch(/href="\/t\/midden\/trench\/[a-z0-9-]+#artifact-[a-z0-9-]+"/)
   })
 
+  it('names the report each latest find sits in', async () => {
+    const html = (await $fetch('/t/midden')) as string
+    expect(html).toMatch(/midden-latest__meta[^>]*>[^<]*· in [^<]+ · assessed/)
+  })
+
   it('404s an unknown Midden Space', async () => {
     expect((await fetch('/t/midden/no-such-space')).status).toBe(404)
   })

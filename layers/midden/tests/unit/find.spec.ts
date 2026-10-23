@@ -3,7 +3,7 @@
 // Pins the file-name-only rule: a repo-root-relative path overflowed the record
 // line on a narrow column, and the provenance link already carries the full path.
 import { describe, expect, it } from 'vitest'
-import { formatMiddenDate, middenProvenanceLine } from '../../app/utils/find.ts'
+import { formatMiddenDate, middenProvenanceLine, middenRemovedInProvenance, middenSeasonSpan } from '../../app/utils/find.ts'
 
 describe('middenProvenanceLine', () => {
   it('shows a file provenance as its file name alone, not its path', () => {
@@ -50,5 +50,32 @@ describe('formatMiddenDate', () => {
   it('renders an ISO date as locale-independent prose', () => {
     expect(formatMiddenDate('2026-07-16')).toBe('16 Jul 2026')
     expect(formatMiddenDate('2026-01-01')).toBe('1 Jan 2026')
+  })
+})
+
+describe('middenRemovedInProvenance', () => {
+  const commit = { kind: 'commit', hash: '226b407aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', path: 'a/session-id-guard.ts' } as const
+
+  it('is true when removedIn is the provenance commit at any hash length', () => {
+    expect(middenRemovedInProvenance(commit, '226b407')).toBe(true)
+    expect(middenRemovedInProvenance(commit, commit.hash)).toBe(true)
+  })
+
+  it('is false for another commit, no removedIn, or another kind', () => {
+    expect(middenRemovedInProvenance(commit, 'b02ca41')).toBe(false)
+    expect(middenRemovedInProvenance(commit)).toBe(false)
+    expect(middenRemovedInProvenance({ kind: 'branch', name: 'x' }, '226b407')).toBe(false)
+  })
+
+  it('folds the removal into the provenance line once', () => {
+    expect(middenProvenanceLine(commit, '226b407')).toBe('removed in 226b407 · session-id-guard.ts')
+    expect(middenProvenanceLine(commit, 'b02ca41')).toBe('commit 226b407 · session-id-guard.ts')
+  })
+})
+
+describe('middenSeasonSpan', () => {
+  it('prints a closed season as a range and the open one as "from"', () => {
+    expect(middenSeasonSpan({ slug: 'a', label: 'A', start: '2026-09-05', end: '2026-10-04' })).toBe('5 Sep 2026 – 4 Oct 2026')
+    expect(middenSeasonSpan({ slug: 'b', label: 'B', start: '2026-10-05', end: null })).toBe('from 5 Oct 2026')
   })
 })

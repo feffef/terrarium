@@ -9,6 +9,7 @@
 // Blog layer already follows with `formatBlogDate`.
 import type { z } from 'zod'
 import type { artifactSchema } from '../../tenant.config'
+import type { DigSeason } from './strata'
 
 /** One raw `artifacts` Document. The filename (`stem`) IS the slug; the schema
  *  carries no `slug` field of its own. */
@@ -34,15 +35,22 @@ function fileNameOf(path: string): string {
   return path.split('/').filter(Boolean).pop() ?? path
 }
 
+/** A commit provenance whose hash is the find's `removedIn` commit: the commit
+ *  that made it is the commit that removed it, so the record line says so once.
+ *  Hashes differ in length (7–40), hence the prefix match. */
+export function middenRemovedInProvenance(p: MiddenProvenance, removedIn?: string): boolean {
+  return p.kind === 'commit' && !!removedIn && (p.hash.startsWith(removedIn) || removedIn.startsWith(p.hash))
+}
+
 /** A kind-appropriate provenance label derived from the REAL discriminated union. */
-export function middenProvenanceLine(p: MiddenProvenance): string {
+export function middenProvenanceLine(p: MiddenProvenance, removedIn?: string): string {
   switch (p.kind) {
     case 'pr':
       return `PR #${p.number} · ${p.merged ? 'merged' : 'closed'}`
     case 'branch':
       return `branch · ${p.name}`
     case 'commit':
-      return `commit ${p.hash.slice(0, 7)}${p.path ? ` · ${fileNameOf(p.path)}` : ''}`
+      return `${middenRemovedInProvenance(p, removedIn) ? 'removed in' : 'commit'} ${p.hash.slice(0, 7)}${p.path ? ` · ${fileNameOf(p.path)}` : ''}`
     case 'file':
       return `file · ${fileNameOf(p.path)}`
     case 'dependency':
@@ -52,4 +60,10 @@ export function middenProvenanceLine(p: MiddenProvenance): string {
     default:
       return p // exhaustive: `p` is `never` if a provenance kind is added unhandled
   }
+}
+
+/** A dig season's dates as prose: `5 Sep 2026 – 4 Oct 2026`, or `from 5 Oct 2026`
+ *  for the open-ended one. */
+export function middenSeasonSpan(season: DigSeason): string {
+  return season.end ? `${formatMiddenDate(season.start)} – ${formatMiddenDate(season.end)}` : `from ${formatMiddenDate(season.start)}`
 }
