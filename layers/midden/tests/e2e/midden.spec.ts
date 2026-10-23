@@ -47,6 +47,15 @@ describe('midden Tenant', async () => {
     }
   })
 
+  it('filters the dig reports by cause of death', async () => {
+    const all = ((await $fetch('/t/midden/trench')) as string).match(/class="midden-sites__item"/g)?.length ?? 0
+    const html = (await $fetch('/t/midden/trench?cause=cost-more-than-it-caught')) as string
+    expect(html).toContain('/t/midden/trench/stood-down')
+    expect(html).not.toContain('/t/midden/trench/the-generated-map')
+    expect(html.match(/class="midden-sites__item"/g)?.length).toBeLessThan(all)
+    expect(html).toMatch(/aria-current="true"[^>]*>cost more than it caught/)
+  })
+
   // The front door's count must match the trench's actual list (the Space
   // index document is not a dig report).
   it('counts the dig reports on the front door correctly', async () => {

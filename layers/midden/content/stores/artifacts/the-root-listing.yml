@@ -1,6 +1,7 @@
 title: the auto-generated tenant/space listing
 stratum: plainer-cut
 condition: fresh
+cause: cut-as-excess
 provenance:
   kind: commit
   hash: 5ebba8e

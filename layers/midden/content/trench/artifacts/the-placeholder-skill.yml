@@ -1,6 +1,7 @@
 title: the `scaffold-tenant` skill entry
 stratum: current-midden
 condition: intact
+cause: built-to-be-discarded
 provenance:
   kind: file
   path: layers/journal/content/archived/skills/scaffold-tenant.yml

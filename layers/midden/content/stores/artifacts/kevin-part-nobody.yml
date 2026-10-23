@@ -1,6 +1,7 @@
 title: "Kevin: “The Part Nobody Would Notice”"
 stratum: routing-excavation
 condition: dissolved
+cause: closed-by-owner
 provenance:
   kind: file
   path: layers/blog/content/kevin/pages/2026-07-07-the-part-nobody-would-notice.md

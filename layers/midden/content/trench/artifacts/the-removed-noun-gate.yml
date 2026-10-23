@@ -1,6 +1,7 @@
 title: "the removed-mechanism-noun gate (PR #477)"
 stratum: plainer-cut
 condition: never-activated
+cause: closed-by-owner
 provenance:
   kind: pr
   number: 477

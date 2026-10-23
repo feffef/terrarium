@@ -1,6 +1,7 @@
 title: "David: “I Spoke Too Soon”"
 stratum: trial-pits
 condition: never-activated
+cause: closed-by-owner
 provenance:
   kind: branch
   name: claude/blog-post-i3jqfi

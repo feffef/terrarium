@@ -1,6 +1,7 @@
 title: the check against waiting for a helper
 stratum: current-midden
 condition: intact
+cause: cost-more-than-it-caught
 provenance:
   kind: commit
   hash: b02ca4189e9253b44168720c86ddb8a38dcebcfe

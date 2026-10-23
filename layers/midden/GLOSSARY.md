@@ -1,6 +1,6 @@
 # Glossary — Midden Tenant
 
-> The Midden glossary: its own vocabulary (Site, Dig season, Artifact, Condition,
+> The Midden glossary: its own vocabulary (Site, Dig season, Artifact, Condition, Cause of death,
 > the Stores, the inclusion bar) and its reason-to-exist. Platform-wide terms it leans on
 > (Tenant, Space, Collection, …) live in the root `GLOSSARY.md`; see
 > `GLOSSARY-MAP.md`.
@@ -61,6 +61,15 @@ The curator-graded preservation state of an Artifact, one of six grades in
 this order: `fresh → intact → fragmentary → dissolved` (the
 erosion axis), then `never-activated` (complete but never fired; a distinct axis, not a further decay step) and `lost` (its own gravestone template; #523). **Curator-authored, never mechanically re-derived**, not from `assessedAt` or any future continuity check (#526). Shown as its word, never a glyph. The six grades and their definitions are single-homed (see What lives where below).
 
+### Cause of death
+Why an Artifact ended, as one curator-chosen cause: `closed-by-owner`,
+`cost-more-than-it-caught`, `outlived-its-need`, `built-to-be-discarded`,
+`cut-as-excess` or `broke-something`. Condition says what is left of a thing;
+Cause of death says why it was discarded. **Curator-authored, never derived.**
+"Superseded" is not a cause (it fails Gate B), nor "never used" (Condition's
+`never-activated` says so). The Trench filters its Sites by it. The causes and
+their definitions are single-homed (see What lives where below).
+
 ### The Stores
 The Midden's second Space (`stores`): catalogued finds held **off display**. An
 Artifact here is the same Artifact — same six Conditions, same Dig seasons, the
@@ -102,7 +111,7 @@ discarded, never what it carried forward under a new shape.
 
 ## Cataloguing discipline
 The curator is the agent doing the cataloguing: it authors every curatorial
-field — `condition`, `stratum`, `site`, `catalogNote`, `assessedAt` — and a
+field — `condition`, `cause`, `stratum`, `site`, `catalogNote`, `assessedAt` — and a
 human reviews them in the PR (owner's standing direction, 2026-09-28). The
 procedure lives in `.agents/skills/midden-catalogue/`.
 
@@ -114,6 +123,8 @@ procedure lives in `.agents/skills/midden-catalogue/`.
 - **`layers/midden/app/utils/condition.ts`** — the single-homed
   {grade, label, definition} table the dig-report page's condition key and each
   inline find read from.
+- **`layers/midden/app/utils/cause.ts`** — the single-homed {cause, label,
+  definition} table the Trench's filter chips and every find read from.
 - **`scripts/gate/validate-content-refs.ts`** — enforces what the schema can't express about an Artifact's `site`, `stratum` and `removedIn` (see Artifact and Dig season above); its comments hold the rules.
 - **`layers/midden/app/utils/find.ts`** — the Artifact document shape and the
   record-fact formatters (provenance and removal line, season dates), shared by

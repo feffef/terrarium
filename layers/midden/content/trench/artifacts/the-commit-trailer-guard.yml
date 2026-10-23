@@ -1,6 +1,7 @@
 title: the check on hand-typed sign-off lines
 stratum: current-midden
 condition: intact
+cause: cost-more-than-it-caught
 provenance:
   kind: commit
   hash: c9763310cf0cf773676e493a03b206732478a0d7

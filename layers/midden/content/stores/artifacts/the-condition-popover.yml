@@ -1,6 +1,7 @@
 title: ConditionPopover.vue (the Tier-2 expansion)
 stratum: plainer-cut
 condition: never-activated
+cause: cut-as-excess
 provenance:
   kind: file
   path: layers/midden/app/components/midden/ConditionPopover.vue

@@ -1,6 +1,7 @@
 title: the authorship-marking probe
 stratum: kiln-wasters
 condition: intact
+cause: built-to-be-discarded
 provenance:
   kind: pr
   number: 1562

@@ -1,6 +1,7 @@
 title: scripts/generate.ts
 stratum: routing-excavation
 condition: intact
+cause: outlived-its-need
 provenance:
   kind: file
   path: scripts/generate.ts

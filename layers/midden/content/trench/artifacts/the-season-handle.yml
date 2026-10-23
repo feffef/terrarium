@@ -1,6 +1,7 @@
 title: Season.vue (:season)
 stratum: almanac-recut
 condition: intact
+cause: outlived-its-need
 provenance:
   kind: file
   path: layers/atlas/app/components/content/Season.vue

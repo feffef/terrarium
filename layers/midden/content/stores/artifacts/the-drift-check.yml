@@ -1,6 +1,7 @@
 title: the L0 · drift gate step
 stratum: routing-excavation
 condition: lost
+cause: outlived-its-need
 provenance:
   kind: commit
   hash: 9ecd4b5

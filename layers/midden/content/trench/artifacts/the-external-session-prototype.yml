@@ -1,6 +1,7 @@
 title: the external-session marking prototype
 stratum: plainer-cut
 condition: dissolved
+cause: built-to-be-discarded
 provenance:
   kind: commit
   hash: 9eeeafa

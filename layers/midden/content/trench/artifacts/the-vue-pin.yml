@@ -1,6 +1,7 @@
 title: the vue 3.5.40 pin
 stratum: kiln-wasters
 condition: fresh
+cause: outlived-its-need
 provenance:
   kind: dependency
   name: vue

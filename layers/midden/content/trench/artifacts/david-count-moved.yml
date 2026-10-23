@@ -1,6 +1,7 @@
 title: "David: “The Count Moved”"
 stratum: spike-ashfall
 condition: intact
+cause: closed-by-owner
 provenance:
   kind: pr
   number: 274

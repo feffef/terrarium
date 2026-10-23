@@ -1,6 +1,7 @@
 title: "the branch-pin guard (PR #1159)"
 stratum: kiln-wasters
 condition: never-activated
+cause: outlived-its-need
 provenance:
   kind: commit
   hash: 2c8156d28e945c82a8e0d869a2214443a176244c

@@ -1,6 +1,7 @@
 title: the `review` entry with no Skill behind it
 stratum: trial-pits
 condition: never-activated
+cause: broke-something
 provenance:
   kind: file
   path: layers/journal/content/current/skills/review.yml

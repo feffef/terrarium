@@ -1,6 +1,7 @@
 title: the position-preserving scroll animation
 stratum: almanac-recut
 condition: dissolved
+cause: broke-something
 provenance:
   kind: commit
   hash: f4e8aba

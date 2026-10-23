@@ -37,6 +37,10 @@ import { defineTenant } from '../../shared/manifest'
 // table this enum backs).
 const condition = z.enum(['fresh', 'intact', 'fragmentary', 'dissolved', 'never-activated', 'lost'])
 
+// Why it ended (GLOSSARY.md's Cause of death): curator-authored, one per find;
+// labels and definitions in layers/midden/app/utils/cause.ts.
+const cause = z.enum(['closed-by-owner', 'cost-more-than-it-caught', 'outlived-its-need', 'built-to-be-discarded', 'cut-as-excess', 'broke-something'])
+
 // Provenance (#518): a discriminated union on `kind`, one variant per kind of
 // discarded thing this Tenant catalogues. `url` and `continuityCheck` are
 // repeated per-variant (rather than expressed as a `.and()` intersection) so
@@ -98,6 +102,7 @@ export const artifactSchema = z
     title: z.string(), // the artifact's own name
     stratum: z.string(), // dig-season slug — validated against utils/strata.ts by scripts/gate/validate-content-refs.ts
     condition,
+    cause,
     provenance,
     // Back-reference to the `pages` (site) Document slug that narrates it.
     // Optional at the SCHEMA level because the policy is per-Space and a

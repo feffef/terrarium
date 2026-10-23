@@ -1,6 +1,7 @@
 title: copy-link affordance on session/digest heads
 stratum: plainer-cut
 condition: fresh
+cause: broke-something
 provenance:
   kind: pr
   number: 480

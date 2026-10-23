@@ -1,6 +1,7 @@
 title: "the rehearsed prune (PR #1022)"
 stratum: wire-cut
 condition: never-activated
+cause: built-to-be-discarded
 provenance:
   kind: pr
   number: 1022

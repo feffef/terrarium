@@ -1,6 +1,7 @@
 title: the two refused bot upgrades
 stratum: current-midden
 condition: intact
+cause: closed-by-owner
 provenance:
   kind: pr
   number: 1636

@@ -1,6 +1,7 @@
 title: the zod 4 upgrade
 stratum: kiln-wasters
 condition: fresh
+cause: closed-by-owner
 provenance:
   kind: pr
   number: 1569
