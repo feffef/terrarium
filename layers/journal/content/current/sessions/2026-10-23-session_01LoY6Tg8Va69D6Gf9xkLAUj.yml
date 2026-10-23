@@ -1,0 +1,115 @@
+schemaVersion: 1
+session: session_01LoY6Tg8Va69D6Gf9xkLAUj
+startedAt: 2026-10-23T17:17:19Z
+endedAt: 2026-10-23T17:27:02Z
+kind: delegated
+goal: Judge the open Prune Trials, without opening a new one
+status: completed
+outcome: "frictions-to-fixes rewrite trial judged as holding and deleted (PR #2461, merged); five trials not yet judgeable"
+summary: 'Human-instructed: the user ran /prune-trial with "only judge, no new", so §2 to §4 were skipped on purpose. The window script showed one judgeable trial, the frictions-to-fixes SKILL.md rewrite (landed d0820057, floor 2026-10-23T17:03Z). The other five were under the floor; the audit-docs trial was about 40 minutes from its floor, and I did not wait for it. The six frictions-to-fixes runs since landing logged only nit and minor Frictions, mostly about the unchanged survey and design briefs and a missing adr-check step that the old text lacked too. Regression #2436 is about the survey brief, which the check rules out. So the prune holds and the entry was deleted. Two Sonnet subagents ran code-review (both clean), gate:scoped was green, and PR #2461 was opened with a verdict comment and merged via merge-pr.ts.'
+prs:
+  - "2461"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: "read before git log/fetch: scope -S to origin/main, commit -F for a body"
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: prefer list scans to search; I used gh api for issues since landing
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: the 10-line simple-change bar sent the 31-line deletion to code-review; recipe and verdict line
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: the spec for §1; the Spec subagent read it and found the verdict matches
+    useful: yes
+skillsUsed:
+  - name: prune-trial
+    reason: §1 judge only, at the user's request
+  - name: code-review
+    reason: 31-line diff is over the simple-change bar
+  - name: dispatch-subagents
+    reason: brief rules for the two review agents
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch/log (inside the window script and my own call) before reading git-conventions.md; the hook reminded me.
+    solution: The doc did not change the calls; no fix needed.
+    severity: nit
+  - description: pr-workflow's 10-line simple-change bar sends a pure ledger-entry deletion (31 lines of YAML) to a full two-agent code-review, and that costs more than the change.
+    solution: "pr-workflow.md (on trial now, so not edited): treat deleting a judged prune-trials.yml entry as simple."
+    severity: minor
+durationSec: 583
+models:
+  claude-opus-5-5: 65
+toolCounts:
+  Bash: 21
+  Read: 3
+  Skill: 4
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0005.md
+docsReadBySubagents:
+  - .agents/skills/prune-trial/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before the first push, and wait out the Stop-hook push nag; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open and again at merge; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed I open the PR myself and babysit it to merge; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the header line for the PR body and verdict comment, and the trailer check
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Explained the trial mechanism; it kept me from editing pr-workflow.md, which is on trial, so I logged a Friction instead
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with prune-trial; this run placed no instruction anywhere
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with prune-trial; no ADR was touched
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Only the review subagents loaded it (workflow scripts); both said it did not apply
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of ledger deletion
+    model: sonnet
+    durationSec: 21
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 11.7
+  - type: general-purpose
+    task: Spec review of ledger deletion
+    model: sonnet
+    durationSec: 58
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 14.8
+gitBranch: ccr-79a599b0-03zc86
+entrypoint: remote_mobile
+cliVersion: 2.1.309
+landedBy: Stop

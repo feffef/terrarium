@@ -23,9 +23,14 @@
 //   Both modes count an occurrence on its latest fix's merge day as a
 //   regression when its session's `startedAt` is after the PR's merge commit on
 //   origin/main (issue #2333); lacking either time they compare dates, and say so.
+//   `--move <session> <from> <to>` moves that session's occurrence from entry
+//   `<from>` to `<to>` (file names, `.yml` optional) for a re-cluster (issue
+//   #2449). It refuses when `<to>` already holds the session, naming a
+//   duplicate or the two conflicting texts, and writes nothing unless every
+//   occurrence text survives; an emptied `<from>` is deleted.
 import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { isMap, isSeq, parse as parseYaml, parseDocument } from 'yaml'
+import { isMap, isSeq, parse as parseYaml, parseDocument, type YAMLMap } from 'yaml'
 import { LEDGER_HORIZON_DAYS, ledgerFixState, ledgerWindowStart } from '../../../../layers/journal/app/utils/ledger.ts'
 import { LEDGER_DIR } from '../../../../scripts/session/extract-frictions.ts'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
@@ -188,7 +193,71 @@ export function sharedFrictions(cwd = root): string[] {
   return [...holders].filter(([, names]) => names.length > 1).map(([key, names]) => `${names.join(', ')}: ${key}`)
 }
 
+/** Moves `session`'s occurrence block from one entry's text to another's,
+ *  keeping both files' comments and styles. Returns `from: null` when the
+ *  source is left with no occurrence. */
+export function moveOccurrence(session: string, fromText: string, toText: string): { from: string | null; to: string } {
+  const from = parseDocument(fromText)
+  const to = parseDocument(toText)
+  const src = from.get('occurrences')
+  const dst = to.get('occurrences')
+  if (!isSeq(src) || !isSeq(dst)) throw new Error('both entries need an occurrences list')
+  const find = (seq: typeof src) => seq.items.findIndex((item) => isMap(item) && item.get('session') === session)
+  const i = find(src)
+  if (i < 0) throw new Error(`the source entry holds no occurrence from ${session}`)
+  const held = find(dst)
+  if (held >= 0) {
+    // One occurrence per session per entry (journal tenant.config.ts), so a
+    // second block would have to replace or drop one of the texts.
+    const text = (seq: typeof src, n: number) => String((seq.items[n] as YAMLMap).get('description'))
+    if (text(src, i) === text(dst, held)) throw new Error(`duplicate session: the target already holds ${session} with the same text`)
+    throw new Error(`text conflict: the target already holds ${session} (one per entry)\n  moving: "${text(src, i)}"\n  target: "${text(dst, held)}"`)
+  }
+  dst.items.push(src.items.splice(i, 1)[0]!)
+  return { from: src.items.length ? from.toString({ lineWidth: 0 }) : null, to: to.toString({ lineWidth: 0 }) }
+}
+
+/** The survival check: each occurrence (session and text) the entry texts held
+ *  before that they no longer hold after, counted per copy; `null` is a deleted entry. */
+export function lostOccurrences(before: string[], after: (string | null)[]): string[] {
+  const keys = (texts: (string | null)[]) => texts.flatMap((t) => (t === null ? [] : ((parseYaml(t) as Entry)?.occurrences ?? []).map((o) => `${o.session} "${o.description}"`)))
+  const left = keys(after)
+  return keys(before).filter((k) => {
+    const i = left.indexOf(k)
+    if (i >= 0) left.splice(i, 1)
+    return i < 0
+  })
+}
+
+/** Moves `session`'s occurrence between two ledger entries (file names without
+ *  `.yml`), writing only once the survival check holds. */
+export function moveInLedger(session: string, from: string, to: string, cwd = root): string[] {
+  if (from === to) throw new Error('source and target are the same entry')
+  const path = (name: string) => join(cwd, LEDGER_DIR, `${name}.yml`)
+  const before = [readFileSync(path(from), 'utf8'), readFileSync(path(to), 'utf8')]
+  const moved = moveOccurrence(session, before[0]!, before[1]!)
+  const lost = lostOccurrences(before, [moved.from, moved.to])
+  if (lost.length) throw new Error(`survival check failed, nothing written; lost:\n${lost.join('\n')}`)
+  writeFileSync(path(to), moved.to)
+  const report = [`moved ${session} from ${from} to ${to}`]
+  if (moved.from === null) {
+    rmSync(path(from))
+    report.push(`${from}.yml: deleted (no occurrence left; carry its fixes and notes over by hand)`)
+  } else writeFileSync(path(from), moved.from)
+  return report
+}
+
 function main(): void {
+  if (process.argv.includes('--move')) {
+    const [session, from, to] = process.argv.slice(process.argv.indexOf('--move') + 1).map((a) => a.replace(/\.yml$/, ''))
+    if (!session || !from || !to) fail('usage: --move <session> <from-entry> <to-entry>')
+    try {
+      console.log(moveInLedger(session, from, to).join('\n'))
+    } catch (err) {
+      fail(err instanceof Error ? err.message : String(err))
+    }
+    return
+  }
   const todayArg = process.argv.includes('--today') ? flagValue(process.argv, '--today') ?? '' : undefined
   const today = todayArg ?? new Date().toISOString().slice(0, 10)
   if (!/^\d{4}-\d{2}-\d{2}$/.test(today)) fail('--today must be YYYY-MM-DD')

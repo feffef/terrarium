@@ -31,6 +31,8 @@ const { data: artifact } = await useAsyncData(`midden-artifact-${props.slug}`, (
   queryCollection(collections.artifacts).where('stem', '=', props.slug).first(),
 )
 
+const season = computed(() => (artifact.value ? digSeasonOf(artifact.value.stratum) : undefined))
+
 // Condition restored as a slug-angled corner STAMP (earlier revisions had it; owner
 // asked for it back). The tilt is derived from the slug so it is SSR-stable —
 // Math.random()/Date would hydrate-mismatch — reading like a specimen physically
@@ -58,7 +60,7 @@ const stampStyle = computed(() => {
     >{{ conditionMeta(artifact.condition).label }}</span>
 
     <header class="midden-find__head">
-      <p v-if="digSeasonOf(artifact.stratum)" class="midden-find__season">{{ digSeasonOf(artifact.stratum)?.label }}</p>
+      <p v-if="season" class="midden-find__season">{{ season.label }} <span class="midden-find__span">· {{ middenSeasonSpan(season) }}</span></p>
 
       <h3 class="mono midden-find__title"><MiddenTicks :text="artifact.title" /></h3>
 
@@ -68,9 +70,9 @@ const stampStyle = computed(() => {
           :href="artifact.provenance.url"
           target="_blank"
           rel="noopener noreferrer"
-        >{{ middenProvenanceLine(artifact.provenance) }}</a>
-        <span v-else>{{ middenProvenanceLine(artifact.provenance) }}</span>
-        <template v-if="artifact.removedIn">
+        >{{ middenProvenanceLine(artifact.provenance, artifact.removedIn) }}</a>
+        <span v-else>{{ middenProvenanceLine(artifact.provenance, artifact.removedIn) }}</span>
+        <template v-if="artifact.removedIn && !middenRemovedInProvenance(artifact.provenance, artifact.removedIn)">
           <span class="midden-find__dot" aria-hidden="true">·</span>
           <a :href="`${REPO_URL}/commit/${artifact.removedIn}`" target="_blank" rel="noopener noreferrer">removed in {{ artifact.removedIn.slice(0, 7) }}</a>
         </template>

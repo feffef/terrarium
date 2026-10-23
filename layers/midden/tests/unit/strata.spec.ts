@@ -3,7 +3,7 @@
 // legend (#528) both depend on: oldest-to-newest order, exactly one open-ended
 // season and it's the last one, no duplicate slugs, and the lookup helper.
 import { describe, expect, it } from 'vitest'
-import { DIG_SEASON_SLUGS, DIG_SEASONS, digSeasonOf } from '../../app/utils/strata.ts'
+import { DIG_SEASON_SLUGS, DIG_SEASONS, digSeasonOf, middenReportOrder } from '../../app/utils/strata.ts'
 
 describe('DIG_SEASONS', () => {
   it('is non-empty', () => {
@@ -57,5 +57,23 @@ describe('digSeasonOf()', () => {
 
   it('returns undefined for an unknown slug', () => {
     expect(digSeasonOf('not-a-real-season')).toBeUndefined()
+  })
+})
+
+describe('middenReportOrder', () => {
+  it('puts the report with the newest stratum first, ties by title, find-less last', () => {
+    const pages = [
+      { path: '/b', title: 'B' },
+      { path: '/a', title: 'A' },
+      { path: '/c', title: 'C' },
+      { path: '/empty', title: 'Empty' },
+    ]
+    const finds = [
+      { site: 'a', stratum: 'routing-excavation' },
+      { site: 'b', stratum: 'routing-excavation' },
+      { site: 'b', stratum: 'current-midden' },
+      { site: 'c', stratum: 'routing-excavation' },
+    ]
+    expect(middenReportOrder(pages, finds).map((p) => p.path)).toEqual(['/b', '/a', '/c', '/empty'])
   })
 })

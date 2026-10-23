@@ -34,7 +34,9 @@ Ledger, which you commit (Report, (d)). The scratchpad is
   open an entry file only for its evidence.
 - **Re-cluster when the ledger says so.** The stored texts show a broad entry
   that holds several causes, or two entries with one: split or merge them,
-  moving the occurrences, without reopening the logs.
+  moving the occurrences, without reopening the logs. Move each with
+  `prune-friction-ledger.ts --move <session> <from> <to>`: it refuses a
+  session the target already holds and checks every text survived.
 - **Record each PR that merged to fix a cluster** as a `fixes` entry on its cluster, oldest
   first: `pr`, `date` (its UTC merge date) and a one-line `summary` of what the
   PR changed, written from the PR's description, not the friction's. Count a PR

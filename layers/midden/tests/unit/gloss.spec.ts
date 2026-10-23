@@ -21,6 +21,12 @@ describe('middenGlossParts', () => {
     expect(seen).toEqual(new Set(['tenant', 'isolation']))
   })
 
+  it('glosses drift once, as the whole word only', () => {
+    expect(middenGlossParts('The drift gate; more drift, and drifts.', new Set())).toEqual([
+      'The ', { key: 'drift', text: 'drift' }, ' ', { key: 'gate', text: 'gate' }, '; more drift, and drifts.',
+    ])
+  })
+
   it('leaves ordinary lowercase words alone', () => {
     expect(middenGlossParts('a space in the platform', new Set())).toEqual(['a space in the platform'])
   })

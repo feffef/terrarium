@@ -23,37 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      `frictions-to-fixes` SKILL.md rewritten plainly at a Trusted user's request
-      (1936 words to about 1730; 213 lines to 250, the extra lines being per-step
-      headings): an overview of the run's three PR kinds, then each step as a
-      goal paragraph, numbered instructions with their script and subagent calls,
-      a done-when line, and an edge-case list. Every rule kept: the regression
-      and issue caps of three and their exemptions, never-dispatch surfaces, the
-      ledger PR every run, review comment before merge, the escalation ledger
-      entry, the closing status-only PR. Cut: the when-to-run line, the
-      merge-by-judgement restatement, and a few short why-clauses (why a drop
-      needs no PR, why guards need a human session, "git keeps them").
-      Section numbers §1 to §8 kept, since
-      `guest-build` cites §6 and §7. The briefs are unchanged. Later, at the
-      same user's request, §4–§5 and the design brief gained a third outcome
-      (no change: drop the fix and note the dropped solution in the entry's
-      new `notes`); that is added behaviour, not restored text.
-    territory:
-      paths:
-        - ".agents/skills/frictions-to-fixes/SKILL.md (all of it)"
-      keywords:
-        - ledger PR
-        - closing ledger PR
-    opened: 2026-10-20
-    check: >
-      Damage is a major or blocker Friction in a frictions-to-fixes run that the
-      old text would have prevented: the ledger PR not opened, a regression
-      dispatched, more than three capped issues filed, a fix PR merged with no
-      review comment, an escalated PR without its own `fixes` entry, or the
-      closing ledger PR skipped or wrong. NOT damage: a run that hits a survey
-      or design brief problem (the briefs did not change), or a friction the
-      old text did not cover either.
-  - problem: >
       `audit-docs` SKILL.md rewritten plainly and then pruned, both at a Trusted
       user's request (PRs #2331 and this one): 2058 words to about 1630, 249
       lines to 230. Shape as `frictions-to-fixes` (#2330): an overview of the

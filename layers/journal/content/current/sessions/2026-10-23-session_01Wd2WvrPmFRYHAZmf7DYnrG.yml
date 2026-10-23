@@ -1,0 +1,197 @@
+schemaVersion: 1
+session: session_01Wd2WvrPmFRYHAZmf7DYnrG
+startedAt: 2026-10-23T16:48:26Z
+endedAt: 2026-10-23T17:32:30Z
+kind: autonomous
+goal: "visitor-loop run, focus midden: fix what visitors agreed on, build one feature"
+status: in-review
+outcome: "Fix PR #2460 merged; feature PR #2462 open, gate green locally"
+summary: "Scheduled visitor-loop run (agent-initiated, no human prompt). Focus row 3, the Midden. Served a production preview, sent three blind visitors (sonnet, fable, opus), tallied consensus, and sent the tally to the refiner. Seven consensus findings: four fixed (latest finds name their report, find shows its season's dates, trench list and pager ordered newest stratum first, a removal commit shown once), one fixed through the gloss layer instead of editing authored cards (drift), two dropped on owner rulings (strata plate #1709, footer #1624). The refiner also dropped my first-choice feature (a by-season browser) as a rebuild of the legend the owner removed in c399e92; I replaced it with an \"In this report\" jump list for the feature PR. Reviewed with code-review, applied its follow-ups, gate:scoped green, merged PR #2460 on green CI. Then built the jump list as PR #2462 (reviewed, gate green); still open: its CI and merge."
+prs:
+  - "2460"
+  - "2462"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (read before editing)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/TrenchLanding.vue
+    reason: (read before editing)
+  - path: layers/midden/app/components/content/MiddenArtifact.vue
+    reason: (read before editing)
+  - path: layers/midden/app/utils/strata.ts
+    reason: (read before editing)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: (no reason given)
+  - path: layers/midden/app/pages/t/midden/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Picked the by-season browser feature without reading the Midden's git history; the refiner then found the owner had removed the same legend, costing a round trip.
+    solution: Before choosing a feature, grep git log and decisions for the thing the idea would rebuild; the Skill could tell step 3 to check `git log -S` on the area.
+    severity: minor
+  - description: Called mcp__github__search_issues without `fields`; the guard blocked it, and the required GitHub doc was read only afterwards.
+    solution: Read docs/agents/github-integration.md before the first GitHub call, as CLAUDE.md says.
+    severity: nit
+  - description: The Stop hook twice asked me to push while gate:scoped was still running, against ADR-0004's gate-before-first-push rule.
+    solution: The hook could stay quiet while a gate log is open; I ignored it and pushed after the gate was green.
+    severity: nit
+durationSec: 2643
+models:
+  claude-sonnet-5-5: 188
+toolCounts:
+  Bash: 61
+  Read: 7
+  Monitor: 5
+  ToolSearch: 1
+  Agent: 8
+  mcp__github__search_issues: 2
+  Write: 1
+  SendMessage: 1
+  Skill: 3
+  mcp__github__create_pull_request: 2
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 1
+  ReadNotifications: 3
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/midden/app/pages/t/midden/[space]/[...slug].vue
+  - layers/midden/tests/e2e/midden.spec.ts
+  - layers/midden/GLOSSARY.md
+  - layers/midden/app/components/content/MiddenArtifact.vue
+  - layers/midden/app/utils/strata.ts
+  - layers/midden/tests/unit/find.spec.ts
+  - layers/midden/app/components/midden/StoresLanding.vue
+  - layers/midden/app/components/midden/TrenchLanding.vue
+  - layers/midden/app/utils/find.ts
+  - layers/midden/app/utils/gloss.ts
+  - layers/midden/tests/unit/gloss.spec.ts
+  - layers/midden/tests/unit/strata.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - docs/agents/tenant-layers.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - GLOSSARY.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - .agents/skills/midden-catalogue/SKILL.md
+subagents:
+  - type: general-purpose
+    task: Visitor sonnet
+    model: sonnet
+    durationSec: 131
+    toolCalls: 11
+    modelCalls: 8
+    tokenShare: 2.8
+  - type: general-purpose
+    task: Visitor fable
+    model: fable
+    durationSec: 331
+    toolCalls: 33
+    modelCalls: 13
+    tokenShare: 5.5
+  - type: general-purpose
+    task: Visitor opus
+    model: opus
+    durationSec: 216
+    toolCalls: 22
+    modelCalls: 18
+    tokenShare: 5.6
+  - type: general-purpose
+    task: Refiner fit check
+    model: opus
+    durationSec: 269
+    toolCalls: 48
+    modelCalls: 29
+    tokenShare: 14.3
+  - type: general-purpose
+    task: "Review: standards axis"
+    durationSec: 49
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 2.3
+  - type: general-purpose
+    task: "Review: spec axis"
+    durationSec: 46
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 2.4
+  - type: general-purpose
+    task: "Review: standards axis"
+    durationSec: 23
+    toolCalls: 8
+    modelCalls: 3
+    tokenShare: 2
+  - type: general-purpose
+    task: "Review: spec axis"
+    durationSec: 25
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 1.9
+gitBranch: claude/adoring-galileo-qtegrz
+entrypoint: remote_trigger
+cliVersion: 2.1.309
+trigger: visitor-loop
+ideas:
+  - "Midden: a 'cause of death' tag on each find (closed by owner, superseded, never used, cost more than it caught) with filter chips on the Trench; needs a stored field, so a Trusted user must settle its shape first."
+  - "Midden: rename the report 'The Current Cut' to 'The July Cut'; its title clashes with the open season 'the Current Midden' and its dek describes a July cut."
+  - "Midden: the pull quote 'You catalogue a corpse only where nothing living grew back.' is all-caps and unattributed; sentence-case it or credit the curator."
+  - "Midden: the condition key says Fresh means 'edges still sharp' but grades are never re-derived, so July 'fresh' finds read false in October; add 'graded once, on the date assessed'."
+  - "Midden: unpublished-dispatches says 'has now lain quiet for forty-nine days', a frozen 'now'; reword to 'had lain quiet for forty-nine days when assessed' (authored prose, needs the owner)."
+  - "Midden: dig-report breadcrumb 'terrarium / the midden' is grey mono text that does not read as links; underline on hover or add a back link."
+  - "Midden: Stood Down cards run ~1,800 words unbroken on a phone; split the prose into short paragraphs or fold each card (authored prose, needs the owner)."
+landedBy: Stop

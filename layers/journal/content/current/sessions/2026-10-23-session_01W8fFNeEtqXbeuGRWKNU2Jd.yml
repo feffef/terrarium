@@ -1,0 +1,497 @@
+schemaVersion: 1
+session: session_01W8fFNeEtqXbeuGRWKNU2Jd
+startedAt: 2026-10-23T15:01:38Z
+endedAt: 2026-10-23T15:49:14Z
+kind: interactive
+goal: Clear the issue backlog (full sweep, minus Node and TypeScript updates)
+status: in-review
+outcome: "12 issues triaged; #2231 and #2449 merged (PRs #2458, #2459); #2457 waits for the owner; 4 closed, 1 filed"
+summary: "Human-instructed: the owner ran /clear-backlog with \"full sweep except for the node and typescript update issues\", then picked full-sweep mode and left out #2373 and #2432 (time-boxed). The explore workflow triaged 12 issues: 11 grill and 1 blocked (#2433 waits for #2432), none build. I verified the picks' key claims on origin/main (adr-check retired in 46886f5a7, #2368 merged, trial verdict in #2324, open prune trials, the 2231 branches) and grilled Q4-Q14 in one round. Owner answers: deferred #1689 and #1904; un-park #2231; park #2426 on the long-command trial; build #2338 and #2449; keep the Bash rules hint (closed #2167); closed #2145, #2332 and #2342 as not planned; left #2352 open until #2373. Agent-initiated: issue #2456 for two Glass Box pages that still mention adr-check. The owner then asked to build #2338 now and to merge its PR themselves after the frictions-to-fixes SKILL.md trial is judged (PR #2457, two minimal SKILL.md pointers), and told me to merge #2231 and #2449 myself. Open judgement calls on #2457: the undocumented empty --replace-fixes, append() naming, and usage text written twice. PR #2458 (#2231) un-parks the accordion pin-wait test fix with main merged in; I cut its spec comment to one line so the cause stays in one place, the ledger entry. PR #2459 (#2449) adds prune-friction-ledger.ts --move; open calls on it: an unreachable survival-failure throw and nested describe blocks."
+prs:
+  - "2457"
+  - "2458"
+  - "2459"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: "build ccr-2338-ledger-set-helper: Required before the first git command. The commit -F and trailer check came from it."
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: "Spec ccr-2338-ledger-set-helper r1: CLAUDE.md requires it before the first GitHub operation, and a hook reminded me after the issue_read call. It confirmed issue_read was the right tool."
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: "triage #2231: Required before triage; it confirmed the label meanings; triage #2332: CLAUDE.md trigger before triage; confirmed the label strings.; triage #2433: CLAUDE.md trigger for triage. It confirms that a spec on hold carries no label.; triage #2449: CLAUDE.md trigger for labelling. Gives the label names."
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: "triage #2433: CLAUDE.md trigger for triage. Its Specs section (on hold means no label) and Blocking section applied."
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before push, verdict comment, merge-pr.ts
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "triage #1689: Required by the brief for its per-issue triage rules.; triage #1904: The brief required it. It gives the bravery limit and the closing rules.; triage #2145: The brief required it; per-issue sweep rules; triage #2167: Brief required it; brave/wayfinder/closing rules; triage #2231: The brief required it; it gave the rules on history and session logs and on bravery; triage #2332: The brief required it; gave the per-issue rules and the obsolete-means-ready-for-human rule.; triage #2338: The brief required it. It gave the brave/determinability line and the history check.; triage #2342: The brief required it; gave the closing and obsolete-issue rules; triage #2352: The brief required it. It says a superseded issue is a judgment call and that I should check the history since the issue was filed.; triage #2426: The brief required it. Gave the per-issue sweep rules.; triage #2433: Required by the brief. Its wayfinder overlay says to skip blocked tickets, which decided the outcome.; triage #2449: The brief requires it. It gives the brave/escalate line and the labelling rules."
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2449: The brief requires it. It gives the per-issue steps and the category and state roles."
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "triage #1689: Full ADR behind the rule that governs the recommended landing change. Confirmed the #1689 revisit bullet and the bypass consequence."
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: "triage #1904: Read to check where the brief sends ADR-0012. It showed CONTEXT.md is now GLOSSARY.md."
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "triage #1904: Read in full because it governs the outcome. Its judgment-call definition puts ADR governance changes with a person.; triage #2167: Full ADR behind the outcome rule; triage #2231: The full ADR behind the governing rule; it confirmed the judgment-call and grill path; triage #2332: The full ADR behind the governing rule; confirmed that obsolete or judgment calls go to a person.; triage #2338: Governs the triage outcome; confirmed this is design doubt and goes to ready-for-human.; triage #2426: The full ADR behind the governing rule. Its definition of a judgment call fits this issue.; triage #2449: The full ADR behind the governing rule. Its 'several valid approaches' clause justifies grill."
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "build ccr-2338-ledger-set-helper: A write hook asked for it after I created the test. It confirmed the minimal-pointer approach."
+    useful: partly
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: "triage #1904: Read its scope to check the rule behind the issue still holds."
+    useful: partly
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Standards ccr-2338-ledger-set-helper r1: The task said to read it for the Standards axis and the smell baseline; Standards ccr-2338-ledger-set-helper r2: The task required it. It supplied the Standards axis and the smell baseline.; Spec ccr-2338-ledger-set-helper r2: The task told me to read it for the Spec axis (missing, scope creep, wrong). It framed the review."
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "build ccr-2338-ledger-set-helper: The task required it."
+    useful: partly
+  - path: .agents/skills/tdd/SKILL.md
+    reason: "build ccr-2449-ledger-move-helper: Invoked as required. Shaped the vertical red-green slices."
+    useful: yes
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: "Standards fix/2231-journal-accordion-e2e-race r2: Loaded at session start. Its 'one home per fact' and 'comments say WHY' rules drove two findings."
+    useful: yes
+  - path: CLAUDE.md
+    reason: "Standards ccr-2338-ledger-set-helper r2: Loaded at session start. Its 'one home per fact' and 'comments say WHY' rules were the main standards applied."
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: "build ccr-2338-ledger-set-helper: A write hook asked for it. Nothing changed my approach."
+    useful: no
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: "build ccr-2338-ledger-set-helper: A write hook asked for it. Not relevant to an own-skill script."
+    useful: no
+  - path: .agents/prune-trials.yml
+    reason: "Standards ccr-2338-ledger-set-helper r2: Read to confirm the open trial's territory covers all of SKILL.md."
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: "Standards ccr-2338-ledger-set-helper r2: Loaded at session start. It confirmed the Journal and Friction Ledger terms."
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/tests/unit/prune-friction-ledger.spec.ts
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: owner-invoked backlog run
+  - name: grilling
+    reason: one round of 11 questions
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: Wrote clear-backlog-build briefs without first reading the dispatch-subagents Skill, which CLAUDE.md requires before writing any subagent brief
+    solution: Have clear-backlog §3 say the dispatch-subagents read applies to the brief text passed to the build workflow
+    severity: minor
+  - description: Tried four times to pull a triage brief out of the explore output and journal; grill results carry no brief field
+    solution: Have run-summary.ts --triage print the brief field when one exists, and say when it is absent
+    severity: minor
+  - description: First git command (rev-parse) ran before git-conventions.md was read; a hook flagged it afterwards
+    solution: "None needed: rev-parse is read-only and the later read showed the call was fine"
+    severity: nit
+durationSec: 2855
+models:
+  claude-opus-5-5: 169
+toolCounts:
+  Bash: 37
+  Read: 5
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  Workflow: 3
+  Skill: 3
+  PushNotification: 1
+  mcp__github__add_issue_comment: 12
+  mcp__github__issue_write: 8
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  Write: 1
+  ReadNotifications: 7
+  Edit: 4
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/tests/e2e/journal.spec.ts
+  - .agents/skills/frictions-to-fixes/tests/unit/ledger-set.spec.ts
+  - .agents/skills/frictions-to-fixes/scripts/ledger-set.ts
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/frictions-to-fixes/tests/unit/prune-friction-ledger.spec.ts
+  - .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts
+  - layers/journal/content/current/frictions/flaky-e2e-matcher-timeouts.yml
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/tenant-glossary.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0009.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 15
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: true
+    by: subagent
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/agents/environment-caveats.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded at session start. Opening PRs is the orchestrator's job.; Standards ccr-2338-ledger-set-helper r1: Loaded at session start; PR governance, not needed for a read-only review; Spec ccr-2338-ledger-set-helper r1: Loaded at session start; not relevant to a read-only review.; fix ccr-2338-ledger-set-helper r1: Loaded at session start. It covers PR governance, which the orchestrator handles.; Standards ccr-2338-ledger-set-helper r2: Loaded at session start. Not relevant to a read-only review.; Spec ccr-2338-ledger-set-helper r2: Loaded at session start. About PR and governance flow, which a read-only review does not touch."
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded on reading tenant.config.ts. I did not edit it, so it does not apply."
+    useful: partly
+  - path: .claude/rules/adr-0004.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded at session start. It sets the gate before push and who merges.; Standards ccr-2338-ledger-set-helper r1: Loaded at session start; sets gate/merge context (Human-only files, human merge); Spec ccr-2338-ledger-set-helper r1: Loaded at session start. It frames who merges; here the brief already requires a human merge after the trial.; fix ccr-2338-ledger-set-helper r1: Loaded at session start. Confirms that gate:scoped must pass and that a human merges this PR.; Standards ccr-2338-ledger-set-helper r2: Loaded at session start. It confirmed the merge gate context; this review did not depend on it.; Spec ccr-2338-ledger-set-helper r2: Loaded at session start. Covers who merges and the gate. The brief already settles that a human merges this PR."
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded on reading skill files. It confirmed the script belongs in the skill folder.; Standards ccr-2338-ledger-set-helper r1: Loaded when reading Skill files; confirmed the scripts belong in the Skill folder; Standards ccr-2338-ledger-set-helper r2: Loaded on reading files under .agents/skills. It confirmed the script belongs in the Skill folder.; Spec ccr-2338-ledger-set-helper r2: Loaded when I read the skill files. It confirmed the helper belongs in the skill's own scripts folder."
+    useful: partly
+  - path: .claude/rules/adr-0009.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded at session start. Session logs are not mine to write here.; Standards ccr-2338-ledger-set-helper r1: Loaded at session start; session logs, not relevant to this read-only review; Spec ccr-2338-ledger-set-helper r1: Loaded at session start; session logs are outside this review.; fix ccr-2338-ledger-set-helper r1: Loaded at session start. It covers session logs, which are not my job here.; Standards ccr-2338-ledger-set-helper r2: Loaded at session start. Not relevant to a read-only review.; Spec ccr-2338-ledger-set-helper r2: Loaded at session start. About session logs, which a read-only review does not touch."
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded on reading skill files. frictions-to-fixes is ours, not a pack Skill."
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded at session start. I checked that the commit trailer landed.; Standards ccr-2338-ledger-set-helper r1: Loaded at session start; confirmed the commit trailer convention, which is present; fix ccr-2338-ledger-set-helper r1: Loaded at session start. Told me to check that the commit trailer landed; it did.; Standards ccr-2338-ledger-set-helper r2: Loaded at session start. I only used it to confirm the commit trailers are present."
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: "triage #1689: Loaded on reading the triage Skill. Confirmed the owner-authored issue is Trusted.; triage #1904: Loaded at the start. Used to check the author tier (OWNER, so Trusted).; triage #2145: Loaded at start; used to check the author tier (OWNER, so Trusted); triage #2167: Loaded with the triage Skills; confirmed the OWNER author is Trusted; triage #2231: Loaded on reading the Skills; confirmed the OWNER author is Trusted; triage #2332: Loaded; used to confirm the author is Trusted (OWNER).; triage #2338: Loaded at triage; confirmed the OWNER author is Trusted.; triage #2342: Loaded with the Skill reads; checked that the author is OWNER, so Trusted; triage #2352: Loaded at the start. The author is OWNER, so Trusted.; triage #2426: Loaded at start. Used to confirm the author is the owner (OWNER), so Trusted.; triage #2433: Loaded when I read the Skill files. The issue's author is OWNER, so it is Trusted.; triage #2449: Loaded for the trust check: the author's association is OWNER, so the author is Trusted."
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: "triage #1689: Loaded on reading the auto-triage Skill. Confirms that a judgment call goes to ready-for-human.; triage #1904: Loaded at the start. It sets what may go to ready-for-agent and what goes to a person (governance and ADR decisions do).; triage #2145: Loaded with auto-triage; it governs the grill/close decision; triage #2167: Loaded with the auto-triage Skill read; sets the grill/ready-for-human outcome; triage #2231: Loaded on reading the auto-triage Skill; it sets the ready-for-human/grill boundary; triage #2332: Loaded for triage work; it set the outcome: ready-for-human, and close only duplicates or already-done work.; triage #2338: Loaded with the auto-triage read; it is the triage outcome rule.; triage #2342: Loaded when I read the auto-triage Skill; confirmed that only duplicates and done work are closed and that judgement calls go to ready-for-human; triage #2352: Loaded with the auto-triage Skill. It sets superseded issues as a judgment call, so the outcome is grill rather than close.; triage #2426: Loaded at session start. It decides what the sweep may mark ready-for-agent and what goes to a human.; triage #2449: Loaded with the triage Skills. It sets when the sweep may mark ready-for-agent and when an issue goes to a human."
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded on reading prune-trials.yml and the skill. It confirmed SKILL.md edits must stay minimal pointers.; Standards ccr-2338-ledger-set-helper r1: Loaded when reading the frictions-to-fixes Skill files; set the bar for the SKILL.md edits under the open prune trial (no restore/reword); Spec ccr-2338-ledger-set-helper r1: Loaded when I read files under the frictions-to-fixes Skill. It says what an open prune trial forbids, which I used to check that the SKILL.md edits are pointers only.; fix ccr-2338-ledger-set-helper r1: Loaded when I edited SKILL.md, which is under a prune trial. Confirmed I should change only our own pointer text.; Standards ccr-2338-ledger-set-helper r2: Loaded on touching a skill file. It was needed to check that the SKILL.md pointers restore or reword no cut text.; Spec ccr-2338-ledger-set-helper r2: Loaded when I read the skill files. It confirmed the SKILL.md pointers may not restore or reword trial text, which I checked."
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded with the rules. Not relevant to this change.; Standards ccr-2338-ledger-set-helper r1: Loaded mid-review; about where instructions live, not touched by this diff; Spec ccr-2338-ledger-set-helper r1: Loaded when I read docs/agents/github-integration.md; not relevant to this diff.; fix ccr-2338-ledger-set-helper r1: Loaded when I edited files under the skill. Not relevant to this fix."
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded on reading ADRs. No ADR was changed."
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "triage #2167: Loaded by bash-rules-hint on the hook read; pointer only"
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded on reading journal content. Not needed for a script change."
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded on reading tenant.config.ts. I only imported the schema."
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded on reading journal files. It is background on the ledger."
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: "build ccr-2449-ledger-move-helper: Loaded on reading the journal layer. Not relevant."
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded on reading tenant.config.ts. It confirmed no stored field changes."
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded on reading journal files. Not relevant."
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded on reading journal files. Not relevant."
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: "build ccr-2338-ledger-set-helper: Loaded on reading journal files. Not relevant."
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: Standards ccr-2338-ledger-set-helper r2
+    model: claude-opus-5-5
+    durationSec: 47
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: Spec ccr-2338-ledger-set-helper r1
+    model: claude-opus-5-5
+    durationSec: 67
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: fix ccr-2338-ledger-set-helper r1
+    model: claude-opus-5-5
+    durationSec: 142
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: build ccr-2338-ledger-set-helper
+    model: claude-opus-5-5
+    durationSec: 354
+    toolCalls: 48
+    modelCalls: 31
+    tokenShare: 6.8
+  - type: workflow-subagent
+    task: Standards ccr-2338-ledger-set-helper r1
+    model: claude-opus-5-5
+    durationSec: 71
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: Spec ccr-2338-ledger-set-helper r2
+    model: claude-opus-5-5
+    durationSec: 54
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: Standards fix/2231-journal-accordion-e2e-race r3
+    model: claude-opus-5-5
+    durationSec: 35
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: Spec ccr-2449-ledger-move-helper r1
+    model: claude-opus-5-5
+    durationSec: 45
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: Standards ccr-2449-ledger-move-helper r2
+    model: claude-opus-5-5
+    durationSec: 43
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: build fix/2231-journal-accordion-e2e-race
+    model: claude-sonnet-5-5
+    durationSec: 457
+    toolCalls: 17
+    modelCalls: 13
+    tokenShare: 2.9
+  - type: workflow-subagent
+    task: Standards fix/2231-journal-accordion-e2e-race r1
+    model: claude-opus-5-5
+    durationSec: 56
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: build ccr-2449-ledger-move-helper
+    model: claude-opus-5-5
+    durationSec: 359
+    toolCalls: 53
+    modelCalls: 30
+    tokenShare: 7.1
+  - type: workflow-subagent
+    task: fix fix/2231-journal-accordion-e2e-race r1
+    model: claude-sonnet-5-5
+    durationSec: 305
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 1
+  - type: workflow-subagent
+    task: fix ccr-2449-ledger-move-helper r1
+    model: claude-opus-5-5
+    durationSec: 124
+    toolCalls: 13
+    modelCalls: 10
+    tokenShare: 1.9
+  - type: workflow-subagent
+    task: Spec fix/2231-journal-accordion-e2e-race r3
+    model: claude-opus-5-5
+    durationSec: 33
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: fix fix/2231-journal-accordion-e2e-race r2
+    model: claude-sonnet-5-5
+    durationSec: 225
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 1
+  - type: workflow-subagent
+    task: Standards ccr-2449-ledger-move-helper r1
+    model: claude-opus-5-5
+    durationSec: 52
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 2
+  - type: workflow-subagent
+    task: Spec ccr-2449-ledger-move-helper r2
+    model: claude-opus-5-5
+    durationSec: 50
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: Spec fix/2231-journal-accordion-e2e-race r2
+    model: claude-opus-5-5
+    durationSec: 54
+    toolCalls: 11
+    modelCalls: 6
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: Spec fix/2231-journal-accordion-e2e-race r1
+    model: claude-opus-5-5
+    durationSec: 47
+    toolCalls: 8
+    modelCalls: 4
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: Standards fix/2231-journal-accordion-e2e-race r2
+    model: claude-opus-5-5
+    durationSec: 44
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: "triage #2352"
+    model: claude-opus-5-5
+    durationSec: 76
+    toolCalls: 16
+    modelCalls: 12
+    tokenShare: 2.8
+  - type: workflow-subagent
+    task: "triage #2167"
+    model: claude-opus-5-5
+    durationSec: 96
+    toolCalls: 22
+    modelCalls: 14
+    tokenShare: 3.5
+  - type: workflow-subagent
+    task: "triage #2426"
+    model: claude-opus-5-5
+    durationSec: 44
+    toolCalls: 12
+    modelCalls: 6
+    tokenShare: 1.7
+  - type: workflow-subagent
+    task: "triage #2231"
+    model: claude-opus-5-5
+    durationSec: 65
+    toolCalls: 16
+    modelCalls: 10
+    tokenShare: 2.4
+  - type: workflow-subagent
+    task: "triage #2433"
+    model: claude-opus-5-5
+    durationSec: 55
+    toolCalls: 15
+    modelCalls: 7
+    tokenShare: 1.9
+  - type: workflow-subagent
+    task: "triage #1904"
+    model: claude-opus-5-5
+    durationSec: 64
+    toolCalls: 14
+    modelCalls: 9
+    tokenShare: 2.2
+  - type: workflow-subagent
+    task: "triage #2338"
+    model: claude-opus-5-5
+    durationSec: 82
+    toolCalls: 18
+    modelCalls: 11
+    tokenShare: 2.8
+  - type: workflow-subagent
+    task: "triage #2449"
+    model: claude-opus-5-5
+    durationSec: 63
+    toolCalls: 16
+    modelCalls: 8
+    tokenShare: 2.8
+  - type: workflow-subagent
+    task: "triage #2145"
+    model: claude-opus-5-5
+    durationSec: 63
+    toolCalls: 15
+    modelCalls: 9
+    tokenShare: 2.1
+  - type: workflow-subagent
+    task: "triage #1689"
+    model: claude-opus-5-5
+    durationSec: 65
+    toolCalls: 12
+    modelCalls: 7
+    tokenShare: 1.9
+  - type: workflow-subagent
+    task: "triage #2342"
+    model: claude-opus-5-5
+    durationSec: 51
+    toolCalls: 13
+    modelCalls: 7
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: "triage #2332"
+    model: claude-opus-5-5
+    durationSec: 75
+    toolCalls: 17
+    modelCalls: 9
+    tokenShare: 2.7
+gitBranch: ccr-4a485c4d-6vjvs2
+entrypoint: remote_mobile
+cliVersion: 2.1.309
+landedBy: Stop
