@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01PWZU3TqUdSp6uD1KaoQXit
 startedAt: 2026-10-23T05:04:29Z
-endedAt: 2026-10-23T07:44:41Z
+endedAt: 2026-10-23T07:46:06Z
 kind: interactive
 goal: Judge whether the adr-check Skill helps, and replace it with a write-time ADR hint
 status: completed
 outcome: "PR #2431 merged: adr-read-hint hook and adrHints log field replace adr-check; relevantAdrs removed"
-summary: "Human-instructed throughout. The owner asked me to read #2286 and critically review whether adr-check had any positive impact; I asked how to judge it (owner: outcome, process and cost signals, an equal pre-#2284 baseline, chat first). A throwaway analysis of every session log in both windows and all 120 ADR-related Frictions showed a modest interactive process gain, no drop in ADR-content mistakes, and real cost. At the owner's request three inspect-session reads verified that the counted \"users\" were inflated (skillsUsed folds subagent calls) and that the three post-landing errors came from adr-check not running, its output cut by head -150, or the touched ADR going unread. The owner asked for a simpler mechanism; I proposed a write-time hint (rule paths plus ADR numbers named in the edit), a Fable agent designed it at the owner's request, and the owner chose to retire adr-check and the relevantAdrs prompt together with the hint; I posted the plan to #2286. The owner then ran /implement asking for an Opus subagent: I asked the plan's open questions first (owner: no log field, text match everywhere but content, one PR, no Bash writes), then the owner revised to add a derived adrHints field with a settled shape and to remove relevantAdrs fully from schema and logs with an ADR-0009 exception (I flagged the ADR conflict and asked first). The Opus agent built it in a worktree; two-axis code-review on the branch and on its fix commit found and fixed an index divergence between hook and trace, a pre-filter cost and rule-wording drift. A live probe in this session showed the hint firing once and staying silent on a repeat. Pushed and opened PR #2431, which the owner merged. The real audit's baseline differs from my posted throwaway numbers (autonomous 40% to 51%, not flat), driven by audit runs that read all 30 ADRs; the PR says so. After the merge, at the owner's request, I filed #2432 with step-by-step instructions to verify the hint after three days (on hold until 2026-10-26T07:43Z)."
+summary: "Human-instructed throughout. The owner asked me to read #2286 and critically review whether adr-check had any positive impact; I asked how to judge it (owner: outcome, process and cost signals, an equal pre-#2284 baseline, chat first). A throwaway analysis of every session log in both windows and all 120 ADR-related Frictions showed a modest interactive process gain, no drop in ADR-content mistakes, and real cost. At the owner's request three inspect-session reads verified that the counted \"users\" were inflated (skillsUsed folds subagent calls) and that the three post-landing errors came from adr-check not running, its output cut by head -150, or the touched ADR going unread. The owner asked for a simpler mechanism; I proposed a write-time hint (rule paths plus ADR numbers named in the edit), a Fable agent designed it at the owner's request, and the owner chose to retire adr-check and the relevantAdrs prompt together with the hint; I posted the plan to #2286. The owner then ran /implement asking for an Opus subagent: I asked the plan's open questions first (owner: no log field, text match everywhere but content, one PR, no Bash writes), then the owner revised to add a derived adrHints field with a settled shape and to remove relevantAdrs fully from schema and logs with an ADR-0009 exception (I flagged the ADR conflict and asked first). The Opus agent built it in a worktree; two-axis code-review on the branch and on its fix commit found and fixed an index divergence between hook and trace, a pre-filter cost and rule-wording drift. A live probe in this session showed the hint firing once and staying silent on a repeat. Pushed and opened PR #2431, which the owner merged. The real audit's baseline differs from my posted throwaway numbers (autonomous 40% to 51%, not flat), driven by audit runs that read all 30 ADRs; the PR says so. After the merge, at the owner's request, I filed #2432 with step-by-step instructions to verify the hint after three days (on hold until 2026-10-26T07:43Z), and #2433 for the Bash-write follow-up, on hold until #2432 reports."
 prs:
   - "2431"
 docsRead:
@@ -118,11 +118,11 @@ frictions:
   - description: The Standards reviewer reported prose mentions of relevantAdrs in three logs as schema violations; I had to check and discard it.
     solution: Have reviewers distinguish a YAML key from prose before calling a schema break.
     severity: nit
-durationSec: 9612
+durationSec: 9697
 models:
-  claude-opus-5-5: 236
+  claude-opus-5-5: 247
 toolCounts:
-  Bash: 55
+  Bash: 59
   ToolSearch: 4
   mcp__github__issue_read: 3
   AskUserQuestion: 3
@@ -139,7 +139,7 @@ toolCounts:
   mcp__github__pull_request_read: 1
   mcp__claude-code-remote__send_later: 1
   mcp__claude-code-remote__delete_trigger: 1
-  mcp__github__issue_write: 1
+  mcp__github__issue_write: 2
 filesEdited:
   - adr-hint-probe.md
   - tests/unit/adr-read-hint.spec.ts
@@ -287,33 +287,33 @@ subagents:
     durationSec: 184
     toolCalls: 43
     modelCalls: 42
-    tokenShare: 5.2
+    tokenShare: 5
   - type: general-purpose
     task: Inspect 019CbZiW adr-check timing
     durationSec: 223
     toolCalls: 53
     modelCalls: 51
-    tokenShare: 6.4
+    tokenShare: 6.2
   - type: general-purpose
     task: Inspect 016THR5o adr-check output use
     durationSec: 189
     toolCalls: 36
     modelCalls: 35
-    tokenShare: 4.6
+    tokenShare: 4.4
   - type: general-purpose
     task: Design ADR edit-time hint hook
     model: fable
     durationSec: 326
     toolCalls: 18
     modelCalls: 16
-    tokenShare: 4.2
+    tokenShare: 4
   - type: general-purpose
     task: Implement adr-read-hint and retire adr-check
     model: opus
     durationSec: 1536
     toolCalls: 111
     modelCalls: 98
-    tokenShare: 26.2
+    tokenShare: 25.4
   - type: general-purpose
     task: Standards review of adr-read-hint branch
     durationSec: 76
@@ -325,13 +325,13 @@ subagents:
     durationSec: 173
     toolCalls: 18
     modelCalls: 16
-    tokenShare: 3
+    tokenShare: 2.9
   - type: general-purpose
     task: Standards review of follow-up commit
     durationSec: 123
     toolCalls: 10
     modelCalls: 10
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Spec review of follow-up commit
     durationSec: 54
