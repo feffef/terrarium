@@ -25,7 +25,7 @@ renders.
   schema change.
 - **Only for facts that cross Spaces.** A link inside one Space, such as the
   Atlas's food-web edges, is stored once, and the page works out its reverse
-  when it reads it (`GLOSSARY-MAP.md`).
+  when it reads it (`layers/atlas/GLOSSARY.md`, Interaction).
 
 ## Why
 
