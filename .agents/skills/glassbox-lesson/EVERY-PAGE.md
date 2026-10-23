@@ -22,7 +22,8 @@ range.
 Frontmatter holds `title`, `description`, `revision`, `revisionDate` and
 `publishedAt` only; the page draws `title` as its heading, so the body has no
 h1.
-`title` is the short general name of the concept, as its official docs or the field call it, never Terrarium's own name for it (a Walkthrough's names its story), and `description` one sentence a visitor reads before
+`title` is the concept's short general name, as its docs or the field call it,
+never Terrarium's own (a Walkthrough's title names its story), and `description` one sentence a visitor reads before
 clicking, each within its cap in `lengths` in `layers/glassbox/page-checks.ts`.
 
 ## Write
