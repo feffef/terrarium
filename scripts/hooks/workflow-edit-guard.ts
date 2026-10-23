@@ -1,43 +1,23 @@
-// Mechanical backstop for issue #897: a cloud session's token has no `workflow`
-// OAuth scope, so a commit touching `.github/workflows/*` is rejected at push time —
-// and the rejection covers the WHOLE ref update, stranding every other commit in
-// the push behind history surgery. `docs/agents/environment-caveats.md` records
-// the mechanic; nothing stopped the edit before the commit existed. This does.
-//
-// Reads only the tool call, so it denies the edit itself rather than the commit:
-// by the time a commit exists the branch is already the expensive case.
-//
-// Runs unattended, so it is human-only to merge (ADR-0004). Pure
-// core (below) split from the shared stdin/`--dry-run`/bootstrap plumbing
-// (`hook-io.ts`, issue #1080), per docs/agents/guards.md.
+// Denies a cloud session's write into `.github/workflows/` (issue #897): its token
+// has no `workflow` OAuth scope, so the push is rejected whole, stranding every
+// other commit in it. Reads only the tool call, so it bites before a commit exists.
+// Rule and recovery: `docs/agents/environment-caveats.md`. Human-only to merge
+// (ADR-0004); core split from the shared plumbing (`hook-io.ts`), per
+// docs/agents/guards.md.
 //
 // Usage:
 //   sh scripts/hooks/workflow-edit-guard.sh                 # the installed hook entry
 //   tsx scripts/hooks/workflow-edit-guard.ts                # payload on stdin
 //   tsx scripts/hooks/workflow-edit-guard.ts --dry-run --tool Edit --input '<json>'
 //
-// Fail-open by construction, in rough order of how often it will matter:
-//   - A local session is never policed: it pushes with the owner's key, which
-//     can push workflows (issue #2174). One pushing over HTTPS with a token
-//     that lacks the scope is still rejected at push.
-//   - A command that names no workflow path cannot be matched at all: `git add .`
-//     and `git add -A`, and `git commit -a` after an out-of-band modification.
-//     The push rejection stays the backstop for those.
-//   - The `.sh` pre-filter only forwards payloads textually mentioning the
-//     directory, so a re-encoded path is never seen.
-//   - `mcp__github__create_or_update_file`/`push_files` write through the
-//     contents API, which refuses with a 404 of its own (environment-caveats)
-//     and never touches a local branch — nothing to strand, so not policed here.
-//   - Bash detection is write-shape matching on a command string, not a shell
-//     AST: a path reached only through a variable, `xargs`, or an editor this
-//     registry does not name passes. Reads deliberately pass too.
-//
-// False-positive shape, accepted — this reads a command string, not a shell AST:
-// a command that merely QUOTES a write against the directory is denied, whether
-// that is an in-place doc edit whose replacement text names it
-// (`sed -i 's|x|.github/workflows/|' docs/…`) or a probe passing an example
-// write as an argument (both hit while building this guard). Use the Edit tool,
-// which CLAUDE.md prefers anyway, or `--dry-run --input-file`.
+// Fails open, so the push rejection stays the backstop for: a local session
+// (pushes with the owner's key, issue #2174); a command naming no workflow path
+// (`git add -A`, `git commit -a`); a re-encoded path (the `.sh` pre-filter only
+// forwards payloads naming the directory); the contents-API tools (they refuse
+// themselves and touch no local branch); a path reached via a variable, `xargs`
+// or an unlisted editor (Bash is write-shape matching, not a shell AST).
+// Accepted false positive: a command that merely QUOTES a write against the
+// directory is denied; use the Edit tool or `--dry-run --input-file`.
 import {
   denyUninspectable,
   buildDenyOutput,
