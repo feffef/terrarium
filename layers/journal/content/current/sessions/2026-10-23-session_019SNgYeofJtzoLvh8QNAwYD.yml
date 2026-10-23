@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019SNgYeofJtzoLvh8QNAwYD
 startedAt: 2026-10-23T20:13:09Z
-endedAt: 2026-10-23T20:36:48Z
+endedAt: 2026-10-23T20:37:44Z
 kind: interactive
 goal: Audit the ui-verification rule, fix its missed triggers, move the glossary read-first into a rule
 status: in-review
-outcome: "Bracket-path fix PR #2467 and glossary-terms rule PR #2469 open; #2469 waits for a human merge"
-summary: 'All work was human-instructed, step by step. The owner asked which read-first line was moved into a rule alongside the now-retired adr-check Skill (01177f458: the UI-verification line became .claude/rules/ui-verification.md). They then asked how often that rule fired since, how useful it was, and whether the linked doc was read. Across 82 session logs: 16 loads; 8 in the main session, 6 of them rated useful with verifying-ui-changes.md read; the 9 subagent-only loads were noise. The owner then asked me to check for missed triggers. Matching UI-path commits on main to sessions through their Claude-Session trailers found 12 UI-changing sessions, 2 of which never loaded the rule. Both edited the bracketed frictions.vue through Bash alone. The cause: bashReadPaths dropped any token containing [ or ], so bash-rules-hint never fires for Nuxt dynamic routes (31 of 40 page files). The owner said "fix it right away". PR #2467 accepts brackets as literal in read arguments, with tests. A cd into a bracketed directory stays strict, because github-provenance-guard reads request bodies from that directory and fails closed when it is unknown; the PR records this as a known limit. Two review rounds (Standards and Spec) shaped the helper and its comments. The owner then asked which other read-first lines suit path-bound rules. Only domain.md fits; the rest trigger on actions. They approved moving it as a separate PR. That branch (ccr-7abdc1fd-hjtj4f-glossary-rule) adds .claude/rules/glossary-terms.md, a Human-only path, so PR #2469 waits for a human merge; its gate passed.'
+outcome: "Bracket-path fix PR #2467 merged; glossary-terms rule PR #2469 green, waiting for a human merge"
+summary: 'All work was human-instructed, step by step. The owner asked which read-first line was moved into a rule alongside the now-retired adr-check Skill (01177f458: the UI-verification line became .claude/rules/ui-verification.md). They then asked how often that rule fired since, how useful it was, and whether the linked doc was read. Across 82 session logs: 16 loads; 8 in the main session, 6 of them rated useful with verifying-ui-changes.md read; the 9 subagent-only loads were noise. The owner then asked me to check for missed triggers. Matching UI-path commits on main to sessions through their Claude-Session trailers found 12 UI-changing sessions, 2 of which never loaded the rule. Both edited the bracketed frictions.vue through Bash alone. The cause: bashReadPaths dropped any token containing [ or ], so bash-rules-hint never fires for Nuxt dynamic routes (31 of 40 page files). The owner said "fix it right away". PR #2467 accepts brackets as literal in read arguments, with tests; it merged on a green gate. A cd into a bracketed directory stays strict, because github-provenance-guard reads request bodies from that directory and fails closed when it is unknown; the PR records this as a known limit. Two review rounds (Standards and Spec) shaped the helper and its comments. The owner then asked which other read-first lines suit path-bound rules. Only domain.md fits; the rest trigger on actions. They approved moving it as a separate PR. That branch (ccr-7abdc1fd-hjtj4f-glossary-rule) adds .claude/rules/glossary-terms.md, a Human-only path, so PR #2469 waits for a human merge; its gate passed.'
 prs:
   - "2467"
   - "2469"
@@ -72,12 +72,12 @@ frictions:
   - description: session logs' filesEdited omits shell edits for part of the month, so a missed-trigger audit must fall back to commit trailers on main.
     solution: Derive filesEdited from the session's own commits for every log (2964475de started this on 10-21).
     severity: minor
-durationSec: 1419
+durationSec: 1475
 models:
-  claude-opus-5-5: 216
+  claude-opus-5-5: 226
 toolCounts:
   Read: 3
-  Bash: 76
+  Bash: 79
   Edit: 6
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
@@ -90,6 +90,8 @@ toolCounts:
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__send_later: 1
+  ReadNotifications: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - tests/unit/shell-reads.spec.ts
   - scripts/session/shell-reads.ts
@@ -174,25 +176,25 @@ subagents:
     durationSec: 168
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 5.5
+    tokenShare: 5.2
   - type: general-purpose
     task: Spec review of bracket fix
     durationSec: 171
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 5.8
+    tokenShare: 5.5
   - type: general-purpose
     task: "Standards review: glossary rule"
     durationSec: 162
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 6.1
+    tokenShare: 5.8
   - type: general-purpose
     task: "Spec review: glossary rule"
     durationSec: 161
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 6.2
+    tokenShare: 5.8
 gitBranch: ccr-7abdc1fd-hjtj4f
 entrypoint: remote_mobile
 cliVersion: 2.1.309
