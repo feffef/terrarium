@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Aji3mgX1G7kuK9Bs4mEHX6
 startedAt: 2026-10-23T06:33:21Z
-endedAt: 2026-10-23T06:42:28Z
+endedAt: 2026-10-23T06:45:31Z
 kind: autonomous
 goal: Weekly sync of the Glass Box guide pages to the code
-status: in-review
-outcome: PR 2430 re-pins the guide Space to cfce441 and fixes seven stale statements
-summary: "Scheduled glassbox-update run, no human prompts. Ran the report, advanced pins, read the 98 commits since the old pin against the 15 flagged pages and 22 terms. Edited the pr-workflow Excerpt, the Human-only Excerpt hash, and prose on dispatch, Tenant glossary, severity grades, Ledger and close-session look-back; refreshed two terms. Review (Standards and Spec subagents) and gate:scoped were clean; PR 2430 opened and subscribed. A first fix cited a Skill file a draft walkthrough also cites, which the layer test caught; I reworded it. Open: a stale line in a draft page, left for a later run."
+status: completed
+outcome: "PR 2430 merged: guide Space re-pinned to cfce441 with seven stale statements fixed"
+summary: "Scheduled glassbox-update run, no human prompts. Ran the report, advanced pins, read the 98 commits since the old pin against the 15 flagged pages and 22 terms. Edited the pr-workflow Excerpt, the Human-only Excerpt hash, and prose on dispatch, Tenant glossary, severity grades, Ledger and close-session look-back; refreshed two terms. Review (Standards and Spec subagents) and gate:scoped were clean; PR 2430 opened, CI went green and I merged it with merge-pr.ts. A first fix cited a Skill file a draft walkthrough also cites, which the layer test caught; I reworded it. Open: a stale line in a draft page, left for a later run."
 prs:
   - "2430"
 docsRead:
@@ -62,15 +62,19 @@ frictions:
   - description: The report's page list and revision pinning mix flagged-by-path and edited-range pages, so I had to diff each page by hand against 98 commits.
     solution: Have the script print, per page, the diff of each changed cited file.
     severity: minor
-durationSec: 547
+durationSec: 730
 models:
-  claude-sonnet-5-5: 72
+  claude-sonnet-5-5: 83
 toolCounts:
-  Bash: 33
+  Bash: 36
   Skill: 2
   Agent: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
@@ -174,13 +178,13 @@ subagents:
     durationSec: 50
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 10.2
+    tokenShare: 9.1
   - type: general-purpose
     task: Spec review of glassbox diff
     durationSec: 78
     toolCalls: 15
     modelCalls: 13
-    tokenShare: 18.3
+    tokenShare: 16.4
 gitBranch: claude/ecstatic-euler-jcd8pj
 entrypoint: remote_trigger
 cliVersion: 2.1.309
