@@ -127,13 +127,15 @@ export function regressionCheck(cwd = root, merges?: Map<number, string>) {
 
 type RegressionCheck = ReturnType<typeof regressionCheck>
 
+const maxSeverity = (occs: Entry['occurrences'] & object) => SEVERITIES[Math.max(-1, ...occs.map((o) => SEVERITIES.indexOf(String(o.severity))))]
+
 /** An entry's in-horizon occurrences, max severity, latest fix and the occurrences after it. */
 function describeEntry(e: Entry, start: string, check: RegressionCheck) {
   const occ = (e.occurrences ?? []).filter((o) => String(o.date) >= start)
-  const max = SEVERITIES[Math.max(-1, ...occ.map((o) => SEVERITIES.indexOf(String(o.severity))))] ?? '-'
+  const max = maxSeverity(occ) ?? '-'
   const last = [...(e.fixes ?? [])].sort((a, b) => a.date.localeCompare(b.date)).at(-1)
   const after = last ? (e.occurrences ?? []).filter((o) => check.after(o, last)) : []
-  const sinceMax = SEVERITIES[Math.max(-1, ...after.map((o) => SEVERITIES.indexOf(String(o.severity))))] ?? 'none'
+  const sinceMax = maxSeverity(after) ?? 'none'
   return { occ, max, last, since: after.length, sinceMax }
 }
 
