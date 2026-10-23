@@ -5,7 +5,11 @@ cause: >-
   CLAUDE.md requires adr-check before any recommendation, but Skills that mandate decisions (frictions-to-fixes picks, clear-backlog grilling picks, audit-docs and audit-skills judgement calls, scheduled sweeps) neither name it nor are exempted, and they do not say whether a triage or design agent's adr-check run covers the orchestrator. Signals: "frictions-to-fixes mandates decisions", "relied on the triage agents' adr-check", "scheduled-sweep adr-check silent-skip", issue #2342.
 surface: safe
 status: tracked
-ref: "issue #2342 (CLAUDE.md demands adr-check before any recommendation, but frictions-to-fixes mandates decisions without it); issue #2286 reviews who invokes adr-check."
+ref: "issue #2342 (CLAUDE.md demands adr-check before any recommendation, but frictions-to-fixes mandates decisions without it) is still open, though PR #2431 retired adr-check and its CLAUDE.md trigger; issue #2286 reviews who invokes adr-check."
+fixes:
+  - pr: 2431
+    date: "2026-10-23"
+    summary: "Retired the adr-check Skill and its CLAUDE.md trigger; a new PostToolUse hook (adr-read-hint.ts) now names, once per agent, each ADR an Edit or Write touches by its rule paths or by number and that the agent has not read in full."
 occurrences:
   - session: session_012f7o6FcYxq1MWxvsdgKS6m
     date: "2026-10-20"
@@ -67,3 +71,8 @@ occurrences:
     severity: minor
     description: "Did not invoke the adr-check Skill before recommending fixes/wording and a label change in GitHub comments on #2370, #2105 and #2286 - the same scheduled-sweep adr-check silent-skip pattern this run's own adr-check behaviour check found and escalated (as a 5th instance) for 5 other sessions."
     solution: "Scheduled Skill runs that end up making small judgment calls (a proposed fix framing, a label) should treat that as recommending a change and run adr-check, or CLAUDE.md's trigger should name an explicit exemption for judgment calls a Skill's own numbered steps already walk through."
+  - session: session_01CfTFFQrkwq1eUsDy61AJzz
+    date: "2026-10-23"
+    severity: minor
+    description: "Decided which fixes to drop or file without invoking adr-check, though CLAUDE.md asks for it before any recommendation; the frictions-to-fixes Skill has no step for it."
+    solution: "Add an adr-check step to the Skill's §5, or drop the CLAUDE.md trigger for scheduled sweeps."

@@ -45,3 +45,8 @@ occurrences:
     severity: nit
     description: "Ran the Skill with its autonomous decisions and built without the grilling the owner's preference for questions-first suggests; no question was asked."
     solution: "Say in the Skill that the owner's start is the approval for picks, so no question is expected."
+  - session: session_01CfTFFQrkwq1eUsDy61AJzz
+    date: "2026-10-23"
+    severity: nit
+    description: "SKILL.md §2 ranks regressions to file by severity, count and recurrence together without saying whether entries already tracked by an open issue or on trial count; I chose by judgement."
+    solution: "State that regressions with an open issue, a trial or an owner decision are skipped before ranking."

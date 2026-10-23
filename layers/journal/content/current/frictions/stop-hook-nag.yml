@@ -339,3 +339,13 @@ occurrences:
     severity: nit
     description: "Stop hook asked to commit and push while the fact-check was still running and before review and gate, conflicting with the review-first rule."
     solution: "Let the stop hook ignore a session with a running subagent."
+  - session: session_01Hw8mVJmgWejGc6YWi8ngnm
+    date: "2026-10-23"
+    severity: minor
+    description: "Stop hook asked to push four times before the gate finished, against ADR-0004; I waited, but each nudge cost a turn."
+    solution: "Have the hook skip its push request while a gate is running or before the first review."
+  - session: session_01PWZU3TqUdSp6uD1KaoQXit
+    date: "2026-10-23"
+    severity: nit
+    description: "The Stop hook asked four times to push the impl branch while code-review and the follow-up review ran; each needed a reply."
+    solution: "Let the Stop hook stay quiet while a subagent is running or a review is in progress."

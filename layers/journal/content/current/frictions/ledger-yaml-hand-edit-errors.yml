@@ -2,7 +2,7 @@ name: ledger-yaml-hand-edit-errors
 summary: >-
   Hand edits to the Journal's YAML data files (this ledger, prune trials, Skill Inventory) broke their format.
 cause: >-
-  Ledger, prune-trials and Skill Inventory YAML are patched by string replacement or hand-typed: unquoted dates, hashes or colons, a hyphen-split folded scalar, a replaced ref or a match inside a comment broke the file (gate or repair needed). A session repeated in one entry belongs to survey-appends-duplicate-sessions.
+  Ledger, prune-trials and Skill Inventory YAML are patched by string replacement or hand-typed: unquoted dates, hashes or colons, a hyphen-split folded scalar, a replaced ref or a match inside a comment broke the file (gate or repair needed), or, with no helper that writes into a named entry, the survey scripts its own splitter to place print-ledger-occurrence.ts blocks. A session repeated in one entry belongs to survey-appends-duplicate-sessions.
 surface: safe
 status: tracked
 ref: "issue #2338 (a ledger-set helper); fixes so far covered occurrence appends, prune-trial path types and YAML examples, not status, ref and fixes edits."
@@ -57,3 +57,8 @@ occurrences:
     severity: nit
     description: "A word split across a line-wrapped hyphen in visitor-loop.yml's new note (\"Previously-\" / \"escalated\") failed validate-content-schema on the first gate:scoped run, costing one full gate cycle (~2 minutes) before the real failure was caught and fixed."
     solution: "After writing any new folded-scalar note by hand, grep the diff for lines ending in a hyphen before running the gate, not after."
+  - session: session_01CfTFFQrkwq1eUsDy61AJzz
+    date: "2026-10-23"
+    severity: minor
+    description: "print-ledger-occurrence.ts prints blocks without cluster labels, so the survey agent wrote a splitter to place 45 blocks."
+    solution: "Add a --cluster flag or labelled output to the script."

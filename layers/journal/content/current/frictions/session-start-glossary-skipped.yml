@@ -156,3 +156,8 @@ occurrences:
     severity: nit
     description: "Read GLOSSARY.md only through a grep for Friction/session terms, not in full as CLAUDE.md's session-start rule asks"
     solution: "Read GLOSSARY.md in full at session start; the grep was enough for this task but skipped the rule"
+  - session: session_01Y8rMxQ5cH3oLqzHegyQnFx
+    date: "2026-10-21"
+    severity: nit
+    description: "Skipped the session-start GLOSSARY-MAP.md and GLOSSARY.md reads CLAUDE.md requires; no wrong term resulted that I know of."
+    solution: "Read them in the first tool call even for a chat-only question."

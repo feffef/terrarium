@@ -16,3 +16,8 @@ occurrences:
     severity: nit
     description: "The first check-states heuristic misfired on 222 claims across the current Inventory; the Spec reviewer caught it after the first commit and I reworked it."
     solution: "Measure a new heuristic against real historical diffs before the first commit."
+  - session: session_01Y8rMxQ5cH3oLqzHegyQnFx
+    date: "2026-10-21"
+    severity: minor
+    description: "Built absolute token fields before checking whether subagent transcripts' usage was trustworthy; the stream-start output_tokens forced two redesigns."
+    solution: "Before deriving a number from transcripts, check it against an independent figure (the task-notification usage) first."

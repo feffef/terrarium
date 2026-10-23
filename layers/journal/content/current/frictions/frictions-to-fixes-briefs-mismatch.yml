@@ -35,3 +35,8 @@ occurrences:
     severity: minor
     description: "Design brief says read the full log of every occurrence, impossible for 35 occurrences; the design agent scripted extracts and listed what it read. It also gave no repo slug, so a GitHub read failed on a wrong owner."
     solution: "Brief: full logs for moderate and above plus the newest three; give feffef/terrarium as owner/repo."
+  - session: session_01CfTFFQrkwq1eUsDy61AJzz
+    date: "2026-10-23"
+    severity: minor
+    description: "The survey subagent reported survey-brief.md pulls opposite ways: it tells agents to search_issues for closed issues while github-integration.md says to prefer list scans."
+    solution: "Make the brief point to github-integration.md for search instead of restating it."

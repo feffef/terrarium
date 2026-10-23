@@ -75,3 +75,8 @@ occurrences:
     severity: moderate
     description: "SHELL-READ-DETECTION: docs/agents/github-integration.md was credited from shell output, but the session marked it (not read)"
     solution: "Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts"
+  - session: session_012rLVzSFUzNKnypyiRd1X2X
+    date: "2026-10-22"
+    severity: nit
+    description: "log-session --author listed a reviewer subagent's shell command as this session's own read, asking me to account for it"
+    solution: "Have scripts/session/shell-reads.ts tag each shell read with the agent that ran it, as the rules report already does"

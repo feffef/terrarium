@@ -494,3 +494,8 @@ occurrences:
     severity: nit
     description: "Subagents reported the read-first hint for github-integration.md kept firing after they had read it with cat (hint counts only Read-tool reads)."
     solution: "Let the read-first hint count shell reads the trace already detects."
+  - session: session_01CfTFFQrkwq1eUsDy61AJzz
+    date: "2026-10-23"
+    severity: nit
+    description: "Ran git status before reading docs/agents/git-conventions.md; a hook reminded me after the first git command."
+    solution: "Read the git doc together with the session-start docs."

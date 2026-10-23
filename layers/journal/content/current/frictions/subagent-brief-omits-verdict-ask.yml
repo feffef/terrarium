@@ -50,3 +50,8 @@ occurrences:
     severity: nit
     description: "The first two recipe runs wrote their output to .throwaway rather than a scratchpad subfolder named for each subagent, as CLAUDE.md asks."
     solution: "Put the OUT folder under the scratchpad, named per subagent, in every brief."
+  - session: session_01Hw8mVJmgWejGc6YWi8ngnm
+    date: "2026-10-23"
+    severity: nit
+    description: "The two code-review agent prompts omitted the CLAUDE.md request for a rule and doc verdict in the final reply."
+    solution: "Put the verdict request in a reusable brief snippet so every dispatch carries it."

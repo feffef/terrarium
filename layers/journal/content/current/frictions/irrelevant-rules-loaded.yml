@@ -21,3 +21,8 @@ occurrences:
     severity: nit
     description: "Read .githooks/commit-msg with Bash cat instead of the Read tool (CLAUDE.md), which loaded an irrelevant adr-0004-human-merge.md reminder since I only inspected, never edited, that Human-only file."
     solution: "Use the Read tool for any file read, even a quick one-off inspection."
+  - session: session_01CfTFFQrkwq1eUsDy61AJzz
+    date: "2026-10-23"
+    severity: nit
+    description: "Subagents' tool results carried many unrelated ADR rules loaded by ledger file reads, costing context in the survey with no use."
+    solution: "Narrow the paths of the rules that load on layers/journal/content/current/frictions/*.yml."

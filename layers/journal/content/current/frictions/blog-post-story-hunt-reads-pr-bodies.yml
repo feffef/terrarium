@@ -10,6 +10,9 @@ fixes:
   - pr: 2216
     date: "2026-10-17"
     summary: "blog-post step 2 now finds the last blog PRs from a titles-only listing instead of a body search."
+  - pr: 2379
+    date: "2026-10-21"
+    summary: "Added list-recent-prs.ts --since, listing every PR merged in the window by number, title and merge time, and blog-post step 2 names it so a run reads only the bodies of the stories it picks."
 occurrences:
   - session: session_01N9bwDKW51kMS6WJvK2nfSU
     date: "2026-10-16"

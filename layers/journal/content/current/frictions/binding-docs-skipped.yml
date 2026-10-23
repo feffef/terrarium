@@ -5,11 +5,14 @@ cause: >-
   CLAUDE.md asks for the ADR check (the grep of docs/adr, since PR #2284 the adr-check Skill) before any plan or recommendation, an opinion in chat included, but it is prose and nothing hooks it, so the agent answers first and checks late or never. Signals: "recommended ... before grepping docs/adr", "without running adr-check", "the owner had to ask whether any ADRs were read", a grilling round or chat opinion given before the ADR read. A Skill-scripted decision skipping it belongs to adr-check-scope-in-skill-runs; a full ADR left unread after its summary rule loaded, to full-adr-read-skipped; the session-start glossary read, to session-start-glossary-skipped.
 surface: guard-or-hook
 status: tracked
-ref: "issue #2146 closed by PR #2284 (adr-check Skill); issue #2286 reviews adr-check around 2026-10-22; PR #2287 trimmed its output."
+ref: "issue #2146 closed by PR #2284 (adr-check Skill); PR #2431 retired adr-check for the adr-read-hint hook; issue #2432 checks the hook after 3 days and #2433 asks it to catch Bash writes; issue #2286 (the adr-check review) is still open."
 fixes:
   - pr: 2284
     date: "2026-10-19"
     summary: "Moved the ADR grep before a recommendation into a model-invoked adr-check Skill that prints every ADR summary and reads the related ADRs in full."
+  - pr: 2431
+    date: "2026-10-23"
+    summary: "Retired the adr-check Skill and its CLAUDE.md trigger; a new PostToolUse hook (adr-read-hint.ts) now names, once per agent, each ADR an Edit or Write touches by its rule paths or by number and that the agent has not read in full."
 occurrences:
   - session: session_018i6d2BQPkf9cq6jSEqCNSX
     date: "2026-10-10"
@@ -246,3 +249,13 @@ occurrences:
     severity: minor
     description: "Started forming a recommendation before running adr-check (CLAUDE.md requires it before any opinion); caught at close-session and ran it before answering."
     solution: "Run adr-check as soon as the ask is an opinion on a change."
+  - session: session_01PWZU3TqUdSp6uD1KaoQXit
+    date: "2026-10-23"
+    severity: minor
+    description: "Gave an impact verdict and fix proposals in my first report before running adr-check, which CLAUDE.md requires before any recommendation; ran it only for the later hint proposal."
+    solution: "Retire the chat-recommendation trigger with adr-check as planned on #2286, or run it at the first evaluative reply."
+  - session: session_01Hw8mVJmgWejGc6YWi8ngnm
+    date: "2026-10-23"
+    severity: nit
+    description: "Skipped the adr-check Skill and the full ADR-0030 read before editing two ADRs; the edits were only pointer fixes, so no impact."
+    solution: "Say in CLAUDE.md or audit-docs that a pointer-only ADR fix needs neither."

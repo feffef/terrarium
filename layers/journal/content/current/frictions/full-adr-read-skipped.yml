@@ -9,6 +9,9 @@ fixes:
   - pr: 2165
     date: "2026-10-16"
     summary: "Each ADR summary rule now says when to read its full ADR, naming what only the ADR holds."
+  - pr: 2431
+    date: "2026-10-23"
+    summary: "Retired the adr-check Skill and its CLAUDE.md trigger; a new PostToolUse hook (adr-read-hint.ts) now names, once per agent, each ADR an Edit or Write touches by its rule paths or by number and that the agent has not read in full."
 occurrences:
   - session: session_01Tjsmye34hk57NtioyWQG4h
     date: "2026-10-11"
