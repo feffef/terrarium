@@ -121,9 +121,9 @@ useHead({ title: 'The Stores · The Midden' })
                 :href="find.provenance.url"
                 target="_blank"
                 rel="noopener noreferrer"
-              >{{ middenProvenanceLine(find.provenance) }}</a>
-              <span v-else>{{ middenProvenanceLine(find.provenance) }}</span>
-              <template v-if="find.removedIn">
+              >{{ middenProvenanceLine(find.provenance, find.removedIn) }}</a>
+              <span v-else>{{ middenProvenanceLine(find.provenance, find.removedIn) }}</span>
+              <template v-if="find.removedIn && !middenRemovedInProvenance(find.provenance, find.removedIn)">
                 <span class="midden-entry__dot" aria-hidden="true">·</span>
                 <a
                   :href="`${REPO_URL}/commit/${find.removedIn}`"

@@ -26,7 +26,7 @@ const { data, error } = await useAsyncData(route.path, async () => {
   // Only this site's own finds are needed — for the compact meta line below.
   const artifacts = await queryCollection(collections.artifacts).where('site', '=', siteSlug.value).all()
   // Same order as the trench landing's list (TrenchLanding.vue).
-  const order = pages.filter((p) => p.path !== '/')
+  const order = middenReportOrder(pages.filter((p) => p.path !== '/'), await queryCollection(collections.artifacts).all())
   const at = order.findIndex((p) => p.path === path)
   const link = (p?: (typeof pages)[number]) => (p ? { title: p.title ?? p.path.slice(1), href: `/t/midden/${space}${p.path}` } : null)
   return { site, artifacts, prev: at > 0 ? link(order[at - 1]) : null, next: at >= 0 ? link(order[at + 1]) : null }

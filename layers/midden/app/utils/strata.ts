@@ -140,3 +140,19 @@ const BY_SLUG: Record<string, DigSeason> = Object.fromEntries(DIG_SEASONS.map((s
 export function digSeasonOf(slug: string): DigSeason | undefined {
   return BY_SLUG[slug]
 }
+
+/** Dig reports newest stratum first: a report sits at the newest season any of its
+ * finds came from, ties by title, reports with no finds last. The trench list and
+ * every report's prev/next read this one order so they cannot disagree. */
+export function middenReportOrder<P extends { path: string; title?: string }>(
+  pages: P[],
+  finds: { site?: string; stratum: string }[],
+): P[] {
+  // -1 (no finds) sorts below every season, which is where find-less reports belong.
+  const newestStratum = (page: P) =>
+    Math.max(-1, ...finds.filter((f) => `/${f.site}` === page.path).map((f) => DIG_SEASON_SLUGS.indexOf(f.stratum)))
+  return pages
+    .map((page) => ({ page, newest: newestStratum(page) }))
+    .sort((a, b) => b.newest - a.newest || (a.page.title ?? a.page.path).localeCompare(b.page.title ?? b.page.path))
+    .map(({ page }) => page)
+}
