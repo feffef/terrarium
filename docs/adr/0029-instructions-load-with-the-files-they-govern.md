@@ -31,7 +31,8 @@ commit or a PR, stay in `CLAUDE.md`.
 - **A rule says what to know, not when to act.** It arrives after the read or
   edit that loads it, so it can't order a step before that or make the agent
   read its source. Such steps stay in `CLAUDE.md`. A rule that loads at
-  session start may say when to act.
+  session start may say when to act, and a hint after a write may point to
+  the ADR the write touches.
 
 ## Why
 
@@ -60,8 +61,9 @@ each kind of instruction has one home.
 
 - When sessions miss a file-bound line in `CLAUDE.md`, the default fix is to
   move it into a rule.
-- A plan often comes before any file is opened, so `CLAUDE.md` points to the
-  Skill that finds the relevant ADRs before a plan or recommendation.
+- A summary rule loads on a read, so an agent can edit what an ADR governs
+  without reading it in full. A hint after each write points to every such
+  ADR it hasn't read, and to any ADR the write names.
 - A rule that loads where it doesn't apply is logged as a Friction, so a
   too-broad glob gets narrowed.
 
@@ -71,5 +73,6 @@ each kind of instruction has one home.
 - `scripts/hooks/skill-rules-hint.ts`: adds a Skill's rules when it runs.
 - `scripts/hooks/bash-rules-hint.ts`: which Bash reads load rules.
 - `scripts/hooks/read-first-hint.ts`: points to a doc at a matching action.
+- `scripts/hooks/adr-read-hint.ts`: points to an unread ADR a write touches.
 - `.agents/skills/audit-docs/SKILL.md`: checks that `docs/agents/` is reached.
 - `.agents/skills/log-session/SKILL.md`: logging an unrelated rule.
