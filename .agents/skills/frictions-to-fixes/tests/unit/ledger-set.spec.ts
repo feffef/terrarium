@@ -59,6 +59,6 @@ describe('parseArgs()', () => {
     })
   })
   it('refuses --replace-fixes without a --fix, which would empty the list', () => {
-    expect(() => parseArgs(['x', '--replace-fixes'])).toThrow('--replace-fixes needs at least one --fix')
+    expect(() => setEntry(entry, parseArgs(['x', '--replace-fixes']).changes)).toThrow('--replace-fixes needs at least one --fix')
   })
 })

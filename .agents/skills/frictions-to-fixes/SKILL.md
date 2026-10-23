@@ -221,7 +221,8 @@ For each branch the agent hands back:
      *Scope* list in `docs/adr/0004-objective-safety-gate.md` against the
      diff). Once the ledger PR has merged, have the agent merge `origin/main`
      into the branch and commit the PR's own `fixes` ledger entry, dated
-     today, through `scripts/ledger-set.ts`. Leave the PR open and say exactly why in a PR comment.
+     today, through `scripts/ledger-set.ts`. Leave the PR open and say
+     exactly why in a PR comment.
 
 Done when every fix PR has a posted review comment and is merged, escalated
 or abandoned.

@@ -9,8 +9,9 @@
 //     [--fix <pr> <YYYY-MM-DD> <summary>]... [--replace-fixes]
 //     [--occurrences <file>|-]
 //   `<entry>` is the file name without `.yml`. `--fix` appends, oldest first;
-//   with `--replace-fixes` the given fixes replace the stored ones. `-` reads
-//   the occurrence blocks from stdin, e.g. piped from print-ledger-occurrence.ts.
+//   with `--replace-fixes` (needs at least one `--fix`) the given fixes
+//   replace the stored ones. `-` reads the occurrence blocks from stdin, e.g.
+//   piped from print-ledger-occurrence.ts.
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { isMap, isScalar, isSeq, parseDocument, Scalar, type Document } from 'yaml'
@@ -56,7 +57,8 @@ export function setEntry(text: string, changes: LedgerChanges): string {
   const doc = parseDocument(text)
   if (changes.status !== undefined) put(doc, 'status', changes.status)
   if (changes.ref !== undefined) put(doc, 'ref', changes.ref)
-  if (changes.fixes || changes.replaceFixes) append(doc, 'fixes', (changes.fixes ?? []).map((f) => fixNode(doc, f)), changes.replaceFixes)
+  if (changes.replaceFixes && !changes.fixes?.length) throw new Error('--replace-fixes needs at least one --fix')
+  if (changes.fixes) append(doc, 'fixes', changes.fixes.map((f) => fixNode(doc, f)), changes.replaceFixes)
   if (changes.occurrences !== undefined) {
     const blocks = parseDocument(changes.occurrences).contents
     if (!isSeq(blocks)) throw new Error('occurrences: expected the list print-ledger-occurrence.ts prints')
@@ -90,7 +92,6 @@ export function parseArgs(argv: string[]): { entry: string; changes: LedgerChang
       changes.fixes = [...(changes.fixes ?? []), { pr, date, summary: value() }]
     } else throw new Error(`unknown flag ${flag}`)
   }
-  if (changes.replaceFixes && !changes.fixes) throw new Error('--replace-fixes needs at least one --fix')
   return { entry, changes }
 }
 
