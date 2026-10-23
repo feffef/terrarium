@@ -1,5 +1,5 @@
 ---
-title: Terrarium, seen through the glass.
+title: Glass Box guide
 description: Each Lesson explains one tool or practice in general terms, then shows how and why Terrarium uses it, with the real files.
 revision: 'cfce4413a0af4506bf80ba86ef6edccc6ef089fb'
 revisionDate: '2026-10-23'

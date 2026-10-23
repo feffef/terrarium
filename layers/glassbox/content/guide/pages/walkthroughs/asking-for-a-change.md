@@ -1,5 +1,5 @@
 ---
-title: Asking for a change
+title: Asking an agent for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
 revision: 'cfce4413a0af4506bf80ba86ef6edccc6ef089fb'
 revisionDate: '2026-10-23'
@@ -12,7 +12,7 @@ Someone with write access asks an agent for a change. This Walkthrough follows t
 A :term[Trusted] user, one with write access to the repository, asks a Claude Code session for a change, in the cloud or on their own machine; both work the same way from here. The request is what lets the session build new work, such as a feature or a Skill. Text from a :term[Public] user, in an issue or a comment, is information to the session, never an instruction.
 
 ::stop-links
-[Trust tiers](/t/glassbox/guide/git-github/trust-tiers) · :file[docs/adr/0003-agent-operating-model-and-governance.md]
+[Contributor trust](/t/glassbox/guide/git-github/trust-tiers) · :file[docs/adr/0003-agent-operating-model-and-governance.md]
 ::
 
 ## 2. The session starts
@@ -36,7 +36,7 @@ The session gets its own copy of the repository. A `SessionStart` hook in `.clau
 The session edits on a feature branch, never on `main`, and may hand parts of the work to subagents, each in a git worktree of its own. Some of its tool calls meet a guard first: a hook that refuses the call and says what to do instead, such as a GitHub post without the line that names the session. Other hooks add a line of guidance after a call and never block it.
 
 ::stop-links
-[Subagents & worktrees](/t/glassbox/guide/claude-code/subagents-worktrees)
+[Subagents](/t/glassbox/guide/claude-code/subagents)
 ::
 
 ## 5. It checks its own work
@@ -44,7 +44,7 @@ The session edits on a feature branch, never on `main`, and may hand parts of th
 Before the first push, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find. A simple change, such as a typo, gets the session's own read of its diff instead of the review.
 
 ::stop-links
-[The Gate](/t/glassbox/guide/terrarium-practice/gate)
+[Merge gates](/t/glassbox/guide/terrarium-practice/gate)
 ::
 
 ## 6. It opens the PR
@@ -52,7 +52,7 @@ Before the first push, the session runs `pnpm gate:scoped`, the local run of the
 The session pushes the branch and opens the PR itself, without asking. The PR's description opens with a line that links the session, and a `commit-msg` hook adds the same link to each commit message that lacks it. Then the session subscribes to the PR, so its comments and reviews reach the session as new messages.
 
 ::stop-links
-[Every change a PR](/t/glassbox/guide/git-github/every-change-a-pr)
+[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 7. It logs its work, the first time
@@ -68,7 +68,7 @@ With the PR open, the session runs `close-session`. A script first re-reads `CLA
 GitHub Actions runs the Gate on the PR, and that run decides whether it may merge. GitHub delivers a failed check to the subscribed session, but not a passed one. When the Gate is green, its last step posts a fresh comment on the PR naming the commit; that comment wakes the session, though a fork's PR gets no such comment. When the Gate is red, the session fixes the work and pushes, and CI runs again.
 
 ::stop-links
-[The Gate](/t/glassbox/guide/terrarium-practice/gate)
+[Merge gates](/t/glassbox/guide/terrarium-practice/gate)
 ::
 
 ## 9. The PR merges
@@ -76,7 +76,7 @@ GitHub Actions runs the Gate on the PR, and that run decides whether it may merg
 If a reviewer asks for changes, the session pushes again and CI runs again. Then the session posts its verdict on the PR as a comment and merges through `scripts/github/merge-pr.ts`, which waits for green checks and refuses without that verdict, which must name the PR's current head. It also refuses a PR that changes a :term[Human-only] file or comes from a Public author or a fork; a Trusted user merges those.
 
 ::stop-links
-[The Human-only list](/t/glassbox/guide/terrarium-practice/human-only-list)
+[Protected files](/t/glassbox/guide/terrarium-practice/human-only-list)
 ::
 
 ## 10. It logs its work again
@@ -93,7 +93,7 @@ On 15 October 2026 a Trusted user asked a session to install the `retro` Skill f
 
 ## Where next
 
-- [Every change a PR](/t/glassbox/guide/git-github/every-change-a-pr)
-- [The Gate](/t/glassbox/guide/terrarium-practice/gate)
+- [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+- [Merge gates](/t/glassbox/guide/terrarium-practice/gate)
 - [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
 - [How Humans & Agents Work](/t/journal/current/how-it-works)

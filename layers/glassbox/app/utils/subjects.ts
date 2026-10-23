@@ -2,14 +2,14 @@
 export const glassboxSubjects = [
   { slug: 'claude-code', name: 'Claude Code', blurb: 'The agent harness: what a session reads, runs and may start.' },
   { slug: 'skill-pack', name: 'Skill pack', blurb: 'Outside Skills the agents plan and build with.' },
-  { slug: 'nuxt-vue', name: 'Nuxt & Vue', blurb: 'One app, one page file, one composable, many sites.' },
+  { slug: 'nuxt-vue', name: 'Nuxt & Vue', blurb: 'One app, one page file, many sites.' },
   { slug: 'nuxt-content', name: 'Nuxt Content', blurb: 'Files to tables: collections, isolation, the database.' },
   { slug: 'zod', name: 'Zod', blurb: 'Schemas that check manifests and content.' },
   { slug: 'typescript', name: 'TypeScript', blurb: 'The type checks the Gate runs.' },
   { slug: 'testing', name: 'Testing', blurb: 'Unit and browser tests, each Tenant its own.' },
   { slug: 'deploy', name: 'Deploy', blurb: 'One container that builds and swaps main.' },
   { slug: 'git-github', name: 'Git & GitHub', blurb: 'Pull requests and who may direct an agent.' },
-  { slug: 'terrarium-practice', name: 'House rules', blurb: 'The Gate, ADRs, session logs, the Human-only list.' },
+  { slug: 'terrarium-practice', name: 'House rules', blurb: 'Merge gates, decision records, session logs, protected files.' },
 ] as const
 
 /** The landing's term strip: `terms` entries a newcomer meets first, picked from what guide Lessons expand most. */

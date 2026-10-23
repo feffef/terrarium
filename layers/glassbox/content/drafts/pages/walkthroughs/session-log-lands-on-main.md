@@ -20,7 +20,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 `close-session` calls `log-session`, and the agent writes a small YAML file with the fields only it can know: its goal, a status, an outcome, a summary, the docs and Skills that mattered, and every :term[Friction]. `scripts/session/log-session.ts --author` checks those fields and saves them as a scratch file, `.session-logs/pending.scratch.json`, which git ignores, so nothing is committed yet. Run again later in the session, the command merges the new pass with the earlier one. It refuses to run from a linked git worktree, where a dispatched subagent shares its parent's scratch path.
 
 ::stop-links
-[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · :file[.agents/skills/log-session/SKILL.md]
+[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Subagents](/t/glassbox/guide/claude-code/subagents) · :file[.agents/skills/log-session/SKILL.md]
 ::
 
 ## 3. The turn ends and a hook takes over
@@ -36,7 +36,7 @@ When Claude finishes responding, Claude Code fires the `Stop` hook wired in `.cl
 Nobody writes the rest of the log: `scripts/session/transcript-trace.ts` reads the transcript, the JSON Lines file in which Claude Code records every message and tool call, and derives the timings, models, tool counts, files read and edited, subagents, Skills used and rules loaded, folding in each subagent's own transcript, which sits beside its parent's. A doc read through the shell instead of the Read tool counts only when the command's output shows enough of that instruction doc's distinctive lines: long lines that appear in no other doc, which `scripts/session/shell-reads.ts` looks for in the output. A Skill started as a slash command, the way a Routine starts a run, appears in the transcript as the command's expanded text rather than as a tool call, and is counted from that; the trace and the scratch are then stitched into one entry.
 
 ::stop-links
-[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Subagents and worktrees](/t/glassbox/guide/claude-code/subagents-worktrees) · :file[scripts/session/shell-reads.ts]
+[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Subagents](/t/glassbox/guide/claude-code/subagents) · :file[scripts/session/shell-reads.ts]
 ::
 
 ## 5. The entry is checked against main
@@ -65,7 +65,7 @@ A normal `git commit` takes what the session has staged, on whatever branch it i
 `idxEnv` sets `GIT_INDEX_FILE` to the temporary index.
 
 ::stop-links
-[Every change as a PR](/t/glassbox/guide/git-github/every-change-a-pr)
+[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 7. The push retries until it lands
@@ -81,7 +81,7 @@ Before pushing, the lander diffs the new commit against `main` and refuses unles
 The log shows on the Journal's dashboard. Each run of `pnpm validate:content`, a step of the :term[Gate], checks it along with every other log. If the session's work goes on, say its PR merges, it runs `close-session` again: the scratch changes, and the next `Stop` lands the new version over the old file. No other session edits it.
 
 ::stop-links
-[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [The Gate](/t/glassbox/guide/terrarium-practice/gate) · [Journal dashboard](/t/journal/current)
+[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Merge gates](/t/glassbox/guide/terrarium-practice/gate) · [Journal dashboard](/t/journal/current)
 ::
 
 ## Where next

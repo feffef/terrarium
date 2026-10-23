@@ -1,5 +1,5 @@
 ---
-title: Adding a Tenant
+title: Adding a site
 description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
 revision: 'cfce4413a0af4506bf80ba86ef6edccc6ef089fb'
 revisionDate: '2026-10-23'
@@ -12,7 +12,7 @@ A new site joins Terrarium. This Walkthrough follows the work from the side of t
 A :term[Trusted] user approves the new :term[Tenant], for example by asking for it in a session or by labelling its issue `ready-for-agent`, before an agent starts on it. The agent then works on a feature branch, and the result lands as a PR like any other change.
 
 ::stop-links
-[Every change a PR](/t/glassbox/guide/git-github/every-change-a-pr)
+[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 2. A folder becomes a layer
@@ -28,7 +28,7 @@ The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which ca
 Beside it goes the :term[manifest], `tenant.config.ts`: the Tenant's name, its :term[Spaces]{id="space"}, and the :term[Collections]{id="collection"} that every Space holds, each of type `page` or `data`. Marquee's is about as small as one gets, with one Space, `reel`, and one Collection, `pages`, the only name that gets addresses. Before anything is built from it, `validateManifest()` checks it, and a misspelt key or a Collection the rules don't allow stops the build with a line that names the field.
 
 ::stop-links
-[Manifest collections](/t/glassbox/guide/nuxt-content/manifest-collections) · :file[layers/marquee/tenant.config.ts]
+[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · :file[layers/marquee/tenant.config.ts]
 ::
 
 ## 4. Its content gets tables of its own
@@ -36,7 +36,7 @@ Beside it goes the :term[manifest], `tenant.config.ts`: the Tenant's name, its :
 The Tenant's files go under `content/<space>/<collection>/` in its folder, and each Space's `pages` folder gets an `index.md`, the Space's front page. Nobody lists the new collections anywhere: `content.config.ts` runs `expand()` over every manifest each time Nuxt Content loads it, and the new Spaces and Collections come out as keys such as `marquee_reel_pages`. Each key is its own table in the content database, so the new content shares no table with any other Space.
 
 ::stop-links
-[Manifest collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [One table per key](/t/glassbox/guide/nuxt-content/one-table-per-key)
+[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
 ::
 
 ## 5. The routes follow
@@ -68,7 +68,7 @@ It writes its own `GLOSSARY.md` for the words only it uses. Then it adds itself 
 No test config names the new Tenant. The smoke test reads its entry addresses from the manifests, so it loads each new Space's front page in a browser, and fails on a console error or a front page with no Document. What only this Tenant has, such as its root page's redirect, goes in its own e2e spec under `tests/e2e/` in its folder, which the e2e project's glob picks up. The :term[Gate] runs them all.
 
 ::stop-links
-[The Gate](/t/glassbox/guide/terrarium-practice/gate) · :file[layers/marquee/tests/e2e/marquee.spec.ts]
+[Merge gates](/t/glassbox/guide/terrarium-practice/gate) · :file[layers/marquee/tests/e2e/marquee.spec.ts]
 ::
 
 ## 9. Who else can see it
@@ -81,7 +81,7 @@ Its pages appear in the Commons Search only if its `pages` Collection names the 
 
 ## Where next
 
-- [Manifest collections](/t/glassbox/guide/nuxt-content/manifest-collections)
+- [Content collections](/t/glassbox/guide/nuxt-content/manifest-collections)
 - [Layers](/t/glassbox/guide/nuxt-vue/layers)
 - [File routing](/t/glassbox/guide/nuxt-vue/file-routing)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)

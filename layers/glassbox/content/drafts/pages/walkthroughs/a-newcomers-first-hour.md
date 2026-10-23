@@ -20,7 +20,7 @@ The home page says what Terrarium is in a few lines, links the repository's issu
 The Journal's landing page opens with "New here? Start with the short version", a row of cards, each a door to one explainer page. No list of those pages exists in code: a page joins the tour through its own frontmatter, where `onramp` holds its place in the order and `onrampLabel` and `onrampBlurb` the card's text. The fields are optional parts of the Journal's `pages` schema, so an ordinary page leaves them out. The landing page reads every page of its :term[Space], keeps those that set `onramp` and a label, sorts them by it and draws a card for each, then adds one card of its own for the :term[Friction Ledger], a Vue page with no frontmatter to set.
 
 ::stop-links
-[Manifest collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Schemas give column types, not validation](/t/glassbox/drafts/zod/schemas-column-types) · :file[layers/journal/tenant.config.ts] · :file[layers/journal/app/utils/onramp.ts]
+[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Schemas give column types, not validation](/t/glassbox/drafts/zod/schemas-column-types) · :file[layers/journal/tenant.config.ts] · :file[layers/journal/app/utils/onramp.ts]
 ::
 
 ## 3. Each tour page leads to the next
@@ -52,7 +52,7 @@ The tour links the repository's issues and pull requests, and from there the new
 `CLAUDE.md` sends every session to the glossaries before anything else: the glossary map, which points to a Tenant's own glossary, then the Platform glossary, with words such as Tenant, Space and Friction. A newcomer who reads them in that order learns the words the docs, the code and the agents all use. The decisions behind the words are ADRs, one decision each, and each ADR's summary reaches agents as a rule.
 
 ::stop-links
-[Several glossaries](/t/glassbox/drafts/terrarium-practice/glossaries) · [ADRs](/t/glassbox/guide/terrarium-practice/adrs)
+[Several glossaries](/t/glassbox/drafts/terrarium-practice/glossaries) · [Decision records](/t/glassbox/guide/terrarium-practice/adrs)
 ::
 
 ## A real case
