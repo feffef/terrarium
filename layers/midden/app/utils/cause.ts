@@ -14,11 +14,12 @@ export interface MiddenCauseMeta {
 
 // Order is the chip order.
 export const MIDDEN_CAUSES: MiddenCauseMeta[] = [
-  { cause: 'closed-by-owner', label: 'closed by owner', definition: 'Someone with the say chose not to land or keep it.' },
+  { cause: 'closed-by-owner', label: 'closed by owner', definition: 'Someone with the say chose not to land or keep it, or left it unlanded.' },
   { cause: 'cost-more-than-it-caught', label: 'cost more than it caught', definition: 'A check or guard whose friction outweighed the mistakes it stopped.' },
   { cause: 'outlived-its-need', label: 'outlived its need', definition: 'The need it served went away or moved elsewhere, leaving it nothing to do.' },
   { cause: 'built-to-be-discarded', label: 'built to be discarded', definition: 'A spike, probe, rehearsal or prototype, thrown away as planned.' },
-  { cause: 'cut-as-excess', label: 'cut as excess', definition: 'It worked, or could have, but added nothing worth keeping.' },
+  { cause: 'cut-as-excess', label: 'cut as excess', definition: 'It worked, but added nothing worth keeping.' },
+  { cause: 'never-worked', label: 'never worked', definition: 'It could not have done its job as built.' },
   { cause: 'broke-something', label: 'broke something', definition: 'Removed because it caused a fault.' },
 ]
 

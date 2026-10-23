@@ -64,7 +64,7 @@ erosion axis), then `never-activated` (complete but never fired; a distinct axis
 ### Cause of death
 Why an Artifact ended, as one curator-chosen cause: `closed-by-owner`,
 `cost-more-than-it-caught`, `outlived-its-need`, `built-to-be-discarded`,
-`cut-as-excess` or `broke-something`. Condition says what is left of a thing;
+`cut-as-excess`, `never-worked` or `broke-something`. Condition says what is left of a thing;
 Cause of death says why it was discarded. **Curator-authored, never derived.**
 "Superseded" is not a cause (it fails Gate B), nor "never used" (Condition's
 `never-activated` says so). The Trench filters its Sites by it. The causes and

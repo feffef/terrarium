@@ -1,7 +1,7 @@
 title: app.vue
 stratum: routing-excavation
 condition: intact
-cause: cut-as-excess
+cause: never-worked
 provenance:
   kind: file
   path: app.vue

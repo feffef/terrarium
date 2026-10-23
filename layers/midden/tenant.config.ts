@@ -39,7 +39,7 @@ const condition = z.enum(['fresh', 'intact', 'fragmentary', 'dissolved', 'never-
 
 // Why it ended (GLOSSARY.md's Cause of death): curator-authored, one per find;
 // labels and definitions in layers/midden/app/utils/cause.ts.
-const cause = z.enum(['closed-by-owner', 'cost-more-than-it-caught', 'outlived-its-need', 'built-to-be-discarded', 'cut-as-excess', 'broke-something'])
+const cause = z.enum(['closed-by-owner', 'cost-more-than-it-caught', 'outlived-its-need', 'built-to-be-discarded', 'cut-as-excess', 'never-worked', 'broke-something'])
 
 // Provenance (#518): a discriminated union on `kind`, one variant per kind of
 // discarded thing this Tenant catalogues. `url` and `continuityCheck` are
