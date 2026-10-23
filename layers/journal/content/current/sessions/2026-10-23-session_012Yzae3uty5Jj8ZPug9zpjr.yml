@@ -1,0 +1,409 @@
+schemaVersion: 1
+session: session_012Yzae3uty5Jj8ZPug9zpjr
+startedAt: 2026-10-23T11:47:05Z
+endedAt: 2026-10-23T12:17:22Z
+kind: interactive
+goal: Clear the issue backlog (clear-backlog run)
+status: in-review
+outcome: "16 issues triaged, #2286 closed as done, PR #2446 open for #2439; 13 owner questions pending"
+summary: "The owner invoked /clear-backlog and confirmed the sweep set of 16 issues (human-instructed). The explore workflow triaged all 16: one build (#2439), one close-done (#2286), two time-gated (#2432, #2373) and twelve that need a decision; triage agents relabelled them ready-for-human with comments. The build workflow built #2439 (read-first-hint points to issue-tracker.md and triage-labels.md at an issue write) and returned it ready-to-push after two review rounds; PR #2446 is open and touches the Human-only scripts/hooks/read-first-hint.ts, so a human merges it. Judgement calls left open: inline the single-use issueWrite helper; extra matcher test cases. Thirteen grilling questions went to the owner, including a new side finding (five triage agents saw read-first-hint repeat pointers in subagents). Building waits on the answers."
+prs:
+  - "2446"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: "triage #2137: Checked for an open trial on frictions-to-fixes; found one that overlaps this review; triage #2424: Read to check the trial territory the issue cites. Confirmed pr-workflow.md is under an open trial.; triage #2435: Checked for an open trial covering the CLAUDE.md bullet; none does; triage #2437: Checked for an open trial over CLAUDE.md's read-first section (none)"
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "triage #2105: The brief told me to read it. It gave the brave-within-determinability rule and the closing rules.; triage #2137: The brief told me to read it; gave the per-issue rules and the label overlay; triage #2286: The brief required it. Gave the closing rule (already-implemented, point to where it lives) and the check of later git history.; triage #2370: Required by the brief. It set the brave-vs-escalate line and the label-replace rule.; triage #2415: The brief required it. It set the brave-within-determinability rule and the closing rules.; triage #2424: Required by the brief. Its per-issue rules and comment policy applied.; triage #2425: The brief required it; per-issue rules and comment rules.; triage #2426: The brief required it. It sets the per-issue rules and the history check.; triage #2434: The brief told me to read it; it set the brave/determinability line, the comment-on-uncommented rule and the label replacement rule; triage #2435: The brief required it; it gave the brave/determinability line and the comment rule; triage #2436: Required by the brief; per-issue sweep rules.; triage #2437: Required by the brief; the brave/determinability rule and comment-on-uncommented rule; triage #2438: The brief required it; it sets the per-issue sweep rules; triage #2439: Required by brief; brave/determinability, label replace, wayfinder overlay"
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: "triage #2137: Read to see whether a non-PR output can be built; it says a non-PR issue goes to the report"
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: "triage #2424: Read to see what a hand-written log skips."
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: "triage #2105: I read the retention sweep section to check that moves go from current to archived only."
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "triage #2435: Grepped its regression rule, which sends regressions to a human; triage #2436: Checked the regression rule and how part (e) is used."
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: "triage #2436: Primary source for the claims."
+    useful: yes
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: "triage #2439: Format of the posted brief"
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2415: The brief required it. It set the redundancy check and the label roles.; triage #2424: Required by the brief. Supplied the label states and verification step.; triage #2425: The brief required it; the label state machine.; triage #2426: The brief required it. It sets the labels and the state machine.; triage #2435: The brief required it; it gave the per-issue rules and roles; triage #2436: Required by the brief; label state machine.; triage #2437: Required by the brief; the label roles (one category plus one state); triage #2438: The brief required it; it sets the label state machine; triage #2439: Required by brief; per-issue rules"
+    useful: yes
+  - path: CLAUDE.md
+    reason: "triage #2424: Loaded at session start. Gave the provenance and close-session conventions the issue is about.; Standards read-first-hint-issue-writes r1: Loaded at start as project instructions. Its 'One home per fact' and 'Keep it short' rules shaped the header-drift and inline findings.; Spec read-first-hint-issue-writes r2: Loaded as project instructions. I used it to confirm the trigger text that the new entries quote."
+    useful: yes
+  - path: docs/adr/0006 (requests reach one Space by path prefix)
+    reason: "triage #2415: The full ADR behind the routing question. It produced the per-Space feed option."
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: "triage #2437: The full ADR behind the recommendation"
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "triage #2137: Full ADR behind the governing rule; judgment call vs settled design; triage #2286: Read in full because it governs the close decision: closing needs proof from the repo.; triage #2370: Governs the label decision. Its 'several valid approaches' test is what made this grill.; triage #2415: The full ADR behind the rule that decided the outcome. It defines design doubt.; triage #2424: Read in full. Its 'several valid approaches' counts as real design doubt, which is why this goes to grill.; triage #2425: Read in full to confirm what counts as a judgment call.; triage #2426: The full ADR on what counts as a judgment call.; triage #2434: Full ADR behind the outcome; it defines a judgment call (a governance or guard choice) that sends this to ready-for-human; triage #2435: Read for the definition of 'several valid approaches' as real design doubt; triage #2436: Read in full to judge judgment call vs settled design.; triage #2437: The full ADR defining a judgment call; triage #2438: Read in full for the definition of a judgment call; triage #2439: Full ADR behind the governing rule; confirmed concrete design means ready-for-agent"
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "triage #2426: The full ADR behind the recommendation. It says a trial's verdict files the hook issue."
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: "triage #2439: CLAUDE.md trigger before git log; fetch before trusting history; fix read-first-hint-issue-writes r1: The hook asked for it after my first commit. I read it late and found my call was already right.; build read-first-hint-issue-writes: The CLAUDE.md trigger before the first git command; I read it at the start of the task.; Standards read-first-hint-issue-writes r1: Read after the read-first hint fired on my git log call. It confirmed the three-dot diff against origin/main was right.; Standards read-first-hint-issue-writes r2: Read after the read-first hook pointed to it following my git log. It confirmed the three-dot diff and the commit-hygiene checks."
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: "triage #2286: Required before the first GitHub operation; read after the first reads. Confirmed list-open-issues.ts, and that a comment goes through add_issue_comment, not an issue_write body.; triage #2436: Required before GitHub operations, and it is the doc the issue says the brief contradicts.; triage #2439: CLAUDE.md trigger before GitHub ops; label-replace and comment-tool rules"
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "triage #2426: I read it to check whether any guard covers the main session. It confirmed none does and that guards are human merges."
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "triage #2137: Specs section: an on-hold issue carries no label until its condition clears; triage #2426: Required before triage. It holds the Prune Trial overlap check.; triage #2434: CLAUDE.md trigger before triage; it pointed me to the supersession and prune-trial overlap checks"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: "triage #2137: CLAUDE.md trigger before labelling; label strings; triage #2415: Required before triage. It mapped the label names.; triage #2424: Read before labelling. Confirmed the label strings.; triage #2425: Required before labelling; label strings.; triage #2435: Required before labelling; confirmed the label strings; triage #2436: Required before labelling.; triage #2437: CLAUDE.md trigger before labelling; the label strings; triage #2438: CLAUDE.md trigger before labelling; it confirmed the label strings; triage #2439: CLAUDE.md trigger before labelling; label strings"
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Standards read-first-hint-issue-writes r1: The task told me to read it. Its Standards axis and smell baseline (Duplicated Code, Speculative Generality) framed the findings.; Spec read-first-hint-issue-writes r1: The brief told me to read it. Its Spec axis brief (missing, scope creep, wrong implementation) framed this review.; Standards read-first-hint-issue-writes r2: The task said to read it. Its smell baseline is where the inline-the-const call comes from.; Spec read-first-hint-issue-writes r2: The task told me to read it and apply its Spec axis. It set the categories I checked: missing, scope creep and wrong implementation."
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "build read-first-hint-issue-writes: The brief told me to read and follow it."
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "build read-first-hint-issue-writes: The hook told me to read it after I edited a file it governs."
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: Session-start read; Tenant list
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Session-start read; Trusted, Prune Trial and Friction terms used in the questions
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: "Recipe for pushing and opening PR #2446, and the verdict-before-merge step"
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: Fields and passes for this log
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: owner-invoked run
+  - name: grilling
+    reason: one sitting of 13 questions
+  - name: close-session
+    reason: (no reason given)
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: A triage subagent ran git checkout origin/main -- in the shared checkout, detaching HEAD briefly; it restored the branch itself.
+    solution: Triage agents in clear-backlog-explore should read from git show origin/main:path, never checkout, in the shared checkout
+    severity: minor
+  - description: read-first-hint repeated github-integration.md and git-conventions.md pointers on every call in five workflow subagents, even after they had read the doc
+    solution: Check subagent transcript resolution and Bash-read detection in read-first-hint.ts (raised as Q13)
+    severity: minor
+  - description: I read git-conventions.md and github-integration.md after my first git log/fetch call, not before, as the hook pointed out
+    solution: Read both at session start alongside the glossaries when a Skill will drive git and GitHub
+    severity: nit
+durationSec: 1817
+models:
+  claude-opus-5-5: 50
+toolCounts:
+  Bash: 20
+  AskUserQuestion: 1
+  Workflow: 2
+  Skill: 2
+  ToolSearch: 2
+  PushNotification: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - tests/unit/read-first-hint.spec.ts
+  - scripts/hooks/read-first-hint.ts
+  - docs/agents/guards.md
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+adrHints:
+  - adr: 4
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 29
+    via: path
+    readAfter: false
+    by: subagent
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/mermaid-lanes.md
+docsReadBySubagents:
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/domain.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - docs/agents/guards.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: "triage #2415: Loaded at session start. It says new features need a Trusted user's approval, which is the main reason this is a grill and not a build.; build read-first-hint-issue-writes: Loaded at session start; not relevant to this build, since the orchestrator opens the PR.; Standards read-first-hint-issue-writes r1: Loaded at start. It covers PR and governance, which this review doesn't act on.; Spec read-first-hint-issue-writes r1: Loaded at session start. It covers PR and approval flow, which a read-only review does not touch.; Standards read-first-hint-issue-writes r2: Loaded at session start. It covers PR and approval governance, which this review doesn't need.; Spec read-first-hint-issue-writes r2: Loaded at session start. It is not relevant to a read-only review.; fix read-first-hint-issue-writes r1: Loaded at session start. It covers opening PRs, which the orchestrator handles."
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "triage #2424: Loaded on reading scripts/hooks and merge-pr.ts. Its paths confirmed that read-first-hint.ts and merge-pr.ts are Human-only and scripts/session is not.; triage #2434: Loaded when I read gate and hook files; it confirmed gate.ts, scripts/hooks and .githooks are Human-only; triage #2438: Loaded when I read it to check whether CLAUDE.md is Human-only (it is not); triage #2439: Loaded when I read scripts/hooks files; it confirmed they are Human-only; build read-first-hint-issue-writes: Loaded when I edited a Human-only file."
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: "triage #2424: Loaded at start. Decided which fix options need a human merge.; triage #2434: Loaded at session start; it shows that a guard or gate.ts fix needs a human merge; triage #2437: Loaded at session start; decides whether the resulting PR needs a human merge (the untested-behaviour exception); triage #2439: Loaded at session start; it settles that the hook change needs a human merge but can still be built; build read-first-hint-issue-writes: Loaded at session start. It confirms scripts/hooks/** needs a human merge.; fix read-first-hint-issue-writes r1: Loaded at session start; it governs the gate and the Human-only merge."
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: "triage #2105: Loaded when I read Skill files. Not relevant to this issue.; triage #2137: Loaded on reading Skill files; not relevant; triage #2286: Loaded on reading SKILL.md files. Not relevant.; triage #2370: Loaded on reading the Skill files. Not relevant here.; triage #2415: Loaded with the Skill files. It was not relevant to this task.; triage #2424: Loaded on reading Skills. Not relevant here.; triage #2425: Loaded on reading Skill files; no bearing.; triage #2426: Loaded with the Skill reads. Not relevant here.; triage #2434: Loaded on reading Skill files; not relevant; triage #2435: Loaded when I read Skill files; not relevant; triage #2436: Loaded when reading Skill files; not decisive.; triage #2437: Loaded when I read the Skill files; not relevant here; triage #2438: Loaded on reading Skill files; not relevant to the decision; triage #2439: Loaded on reading Skill files; not relevant to this issue; build read-first-hint-issue-writes: Loaded when I read the implement Skill; not relevant to this change.; Standards read-first-hint-issue-writes r1: Loaded when I read the code-review Skill. It governs Skill placement, which this diff doesn't touch.; Spec read-first-hint-issue-writes r1: Loaded when I read the code-review Skill. It covers where Skills live, which does not bear on this diff.; Standards read-first-hint-issue-writes r2: Loaded when I read the code-review Skill. It is about Skill placement, which this diff doesn't touch.; Spec read-first-hint-issue-writes r2: Loaded when I read the code-review Skill. It is not relevant to this diff."
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: "triage #2424: Loaded at start. Confirmed the merge-time re-invoke rule already exists.; build read-first-hint-issue-writes: Loaded at session start; not relevant, since the orchestrator runs close-session.; Standards read-first-hint-issue-writes r1: Loaded at start. It covers session logs, which this read-only review doesn't touch.; Spec read-first-hint-issue-writes r1: Loaded at session start. It covers session logs, which a read-only review does not touch.; Standards read-first-hint-issue-writes r2: Loaded at session start. It covers session logs, which a read-only review doesn't touch.; Spec read-first-hint-issue-writes r2: Loaded at session start. Session logs are not relevant to this review.; fix read-first-hint-issue-writes r1: Loaded at session start. It covers session logs, which the orchestrator handles, so it did not apply to my step."
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: "triage #2105: Loaded when I read the digest Skill. It confirmed that moving Digests to archived is the expected behaviour.; triage #2415: Loaded when I grepped the Digest file. It confirmed what Digests are."
+    useful: partly
+  - path: .claude/rules/adr-0012.md
+    reason: "triage #2425: Loaded on reading the blog-post Skill; no bearing."
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "triage #2434: Loaded on reading the frictions-to-fixes Skill; not relevant; triage #2435: Loaded when I read Skill files; not relevant; triage #2436: Loaded when reading Skill files; confirmed frictions-to-fixes is not a pack Skill problem."
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: "triage #2105: Loaded at session start. It set the provenance header on my comment.; triage #2137: Cross-cutting, loaded at start; provenance header on the comment; triage #2286: Loaded at session start. Gave the header line for the comment.; triage #2370: Loaded at session start. It set the header line on the comment.; triage #2415: Loaded at session start. It sets the provenance header that starts the comment.; triage #2424: Loaded at start. Header for the comment.; triage #2425: Session start; header on the comment.; triage #2426: Loaded at session start. It gives the comment header.; triage #2434: Loaded at session start; provenance header on the comment; triage #2435: Loaded at session start; set the comment header; triage #2436: Session start; provenance header on the comment.; triage #2437: Loaded at session start; the provenance header for my comment; triage #2438: Loaded at start; it sets the comment header; triage #2439: Loaded at session start; provenance header on the comment; Standards read-first-hint-issue-writes r1: Loaded at start. I used it to check that the commit's Claude-Session trailer landed.; Standards read-first-hint-issue-writes r2: Loaded at session start. I used it to check that the commit trailers landed.; fix read-first-hint-issue-writes r1: Loaded at session start. It covers provenance on writes, and the commit trailer did land."
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: "triage #2370: Loaded at session start and on reading author-trust.ts. Confirmed OWNER is Trusted.; triage #2439: Loaded; author trust tier (OWNER is Trusted)"
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: "triage #2437: Loaded when I read GLOSSARY files; the ADR behind the issue's main argument"
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: "triage #2105: Loaded with the triage task. It sent the close-or-guard judgment call to ready-for-human.; triage #2137: Loaded when I read the auto-triage Skill; it governs ready-for-human vs ready-for-agent; triage #2286: Loaded during triage. Sets that the sweep closes only already-done work or duplicates, which decided this close.; triage #2370: Loaded with the auto-triage Skill read. Points to the full ADR.; triage #2415: Loaded when I read the auto-triage Skill. It sends judgment calls to ready-for-human.; triage #2424: Loaded on reading the triage Skills. Set the ready-for-human bar.; triage #2425: Loaded during triage. Picking a fix is a judgment call, so the issue goes to ready-for-human.; triage #2426: Loaded when I read the auto-triage Skill. It sets what the sweep may label.; triage #2434: Loaded on reading the auto-triage Skill; it points to the full ADR; triage #2435: Loaded with auto-triage; it gave the judgment-call / design-doubt line, and I read the full ADR; triage #2436: Loaded at session start; governs what the sweep may label ready-for-agent.; triage #2437: Loaded when I read the auto-triage Skill; the judgment-call bar for sending this to ready-for-human; triage #2438: Loaded at start and again on reading the triage docs; it decides that reversing a same-day wording choice goes to ready-for-human; triage #2439: Loaded with the triage Skills; it governs the ready-for-agent call"
+    useful: yes
+  - path: .claude/rules/adr-0026.md
+    reason: "triage #2434: Loaded on reading gate.ts; gate parity matters only if steps change, which they don't here"
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: "triage #2105: Loaded at session start and when I read Skill files. It backs my pick to avoid a new guard.; triage #2137: Loaded when I read the Skills and the trials file; pointed me to the open frictions-to-fixes Prune Trial; triage #2370: Loaded on reading the Skills and prune-trials.yml. It shaped the pick (move text, don't add it) and the check that no trial covers step 9.; triage #2424: Loaded on reading prune-trials. Ruled out the pr-workflow.md option during the open trial.; triage #2425: Loaded; the issue cites cut-before-add. It shaped the pick and the prune-trial overlap check.; triage #2426: Loaded with the triage reads. It pointed to the open Prune Trial check, which decided the outcome.; triage #2434: Loaded on reading prune-trials.yml; pr-workflow.md is in an open trial's territory; triage #2435: Loaded at session start; it supported picking 'cut before adding' and the prune-trial overlap check; triage #2436: Loaded with the frictions-to-fixes files; needed to check whether the open Prune Trial covers the briefs.; triage #2437: Loaded when I read the Skills and prune-trials.yml; told me to check for an overlapping open trial; triage #2438: Loaded on reading prune-trials and skills; I used it to confirm the edits fall outside the open trial's territory; Standards read-first-hint-issue-writes r1: Loaded when I read the code-review Skill. It is the background for the 'cut before you add' simplicity lens.; Spec read-first-hint-issue-writes r2: Loaded when I read the code-review Skill. Its 'cut before adding' principle backed the simplicity focus.; fix read-first-hint-issue-writes r1: Loaded at session start. It covers prune trials, which did not apply."
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: "triage #2425: Loaded on reading the frictions file; it confirmed that summary rules are the files sessions load, which supports the blog clause.; triage #2437: Loaded when I read CLAUDE.md and docs; confirms every-session instructions belong in CLAUDE.md; triage #2438: Loaded on reading CLAUDE.md and Skills; it confirms read triggers belong in CLAUDE.md; triage #2439: Loaded on reading hook files; it confirms the trigger's home in CLAUDE.md; Standards read-first-hint-issue-writes r2: Loaded when I read docs/agents. It confirmed that the guards.md row is the right home for the trigger list.; fix read-first-hint-issue-writes r1: Loaded at session start. It covers where instructions live, which did not apply."
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: "triage #2137: Loaded when I read an ADR; not relevant; triage #2286: Loaded on reading an ADR. Not relevant.; triage #2370: Loaded on reading the ADR. Not relevant here.; triage #2415: Loaded when I read the ADRs. It was not relevant to this task.; triage #2424: Loaded on reading an ADR. Not relevant.; triage #2425: Loaded on reading the blog-post Skill; no bearing.; triage #2426: Loaded on the ADR reads. Not relevant.; triage #2434: Loaded on reading ADR files; not relevant; triage #2435: Loaded when I read files; not relevant; triage #2436: Loaded when reading ADR-0022; not relevant.; triage #2437: Loaded when I read docs/adr files; not relevant here; triage #2438: Loaded on reading files near the ADRs; not relevant; triage #2439: Loaded on reading ADR-0022; not relevant; build read-first-hint-issue-writes: Loaded after my edits; not relevant, since I changed no ADR."
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "triage #2439: Loaded on reading hook files; pointed me to the guards roster, which I checked; build read-first-hint-issue-writes: Loaded when I read the hook files; it points to guards.md, which I edited."
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: "triage #2415: Loaded by a file read. It was not relevant to this task."
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: "triage #2415: Loaded by the Digest read. I didn't need the Tenant terms for this question.; triage #2424: Loaded on reading journal content. Not needed.; triage #2425: Loaded on reading journal files; not needed.; triage #2426: Loaded on the journal layer read. Not needed for a ledger file.; triage #2435: Loaded when I read the journal layer ledger; not needed; triage #2436: Loaded when reading a journal ledger entry; not needed.; triage #2439: Loaded on reading the journal ledger file; not relevant"
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: "triage #2105"
+    model: claude-opus-5-5
+    durationSec: 122
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 3.1
+  - type: workflow-subagent
+    task: "triage #2432"
+    model: claude-opus-5-5
+    durationSec: 29
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: "triage #2425"
+    model: claude-opus-5-5
+    durationSec: 82
+    toolCalls: 12
+    modelCalls: 7
+    tokenShare: 3.1
+  - type: workflow-subagent
+    task: "triage #2137"
+    model: claude-opus-5-5
+    durationSec: 130
+    toolCalls: 19
+    modelCalls: 14
+    tokenShare: 5.4
+  - type: workflow-subagent
+    task: "triage #2373"
+    model: claude-opus-5-5
+    durationSec: 18
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: "triage #2438"
+    model: claude-opus-5-5
+    durationSec: 96
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 3.4
+  - type: workflow-subagent
+    task: "triage #2437"
+    model: claude-opus-5-5
+    durationSec: 137
+    toolCalls: 16
+    modelCalls: 12
+    tokenShare: 4.6
+  - type: workflow-subagent
+    task: "triage #2436"
+    model: claude-opus-5-5
+    durationSec: 138
+    toolCalls: 18
+    modelCalls: 14
+    tokenShare: 5.5
+  - type: workflow-subagent
+    task: "triage #2435"
+    model: claude-opus-5-5
+    durationSec: 74
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 3.1
+  - type: workflow-subagent
+    task: "triage #2424"
+    model: claude-opus-5-5
+    durationSec: 210
+    toolCalls: 23
+    modelCalls: 17
+    tokenShare: 6.4
+  - type: workflow-subagent
+    task: "triage #2434"
+    model: claude-opus-5-5
+    durationSec: 149
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 3.9
+  - type: workflow-subagent
+    task: "triage #2286"
+    model: claude-opus-5-5
+    durationSec: 134
+    toolCalls: 20
+    modelCalls: 13
+    tokenShare: 5.5
+  - type: workflow-subagent
+    task: "triage #2439"
+    model: claude-opus-5-5
+    durationSec: 122
+    toolCalls: 15
+    modelCalls: 11
+    tokenShare: 5.9
+  - type: workflow-subagent
+    task: "triage #2415"
+    model: claude-opus-5-5
+    durationSec: 105
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 2.9
+  - type: workflow-subagent
+    task: "triage #2426"
+    model: claude-opus-5-5
+    durationSec: 95
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 4.2
+  - type: workflow-subagent
+    task: "triage #2370"
+    model: claude-opus-5-5
+    durationSec: 102
+    toolCalls: 16
+    modelCalls: 12
+    tokenShare: 4.2
+  - type: workflow-subagent
+    task: Spec read-first-hint-issue-writes r2
+    model: claude-opus-5-5
+    durationSec: 29
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.7
+  - type: workflow-subagent
+    task: Standards read-first-hint-issue-writes r1
+    model: claude-opus-5-5
+    durationSec: 43
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 2.8
+  - type: workflow-subagent
+    task: build read-first-hint-issue-writes
+    model: claude-sonnet-5-5
+    durationSec: 476
+    toolCalls: 22
+    modelCalls: 13
+    tokenShare: 7.9
+  - type: workflow-subagent
+    task: Spec read-first-hint-issue-writes r1
+    model: claude-opus-5-5
+    durationSec: 52
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 3.1
+  - type: workflow-subagent
+    task: Standards read-first-hint-issue-writes r2
+    model: claude-opus-5-5
+    durationSec: 34
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.7
+  - type: workflow-subagent
+    task: fix read-first-hint-issue-writes r1
+    model: claude-sonnet-5-5
+    durationSec: 271
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.7
+gitBranch: ccr-b79b92ab-ao2dsp
+entrypoint: remote_mobile
+cliVersion: 2.1.309
+landedBy: Stop
