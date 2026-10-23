@@ -1,6 +1,6 @@
 ---
 name: dispatch-subagents
-description: "Dispatch work to subagents — use when about to spawn one or several (especially parallel, or any that will touch git), when authoring a dispatch brief, when checking that dispatched work actually landed, or when a subagent stopped mid-run and needs resuming. Other Skills that dispatch impl agents reach it by name."
+description: "Dispatch work to subagents — use when about to write a subagent brief (especially for parallel agents, or any that will touch git), when checking that dispatched work actually landed, or when a subagent stopped mid-run and needs resuming. Other Skills that dispatch impl agents reach it by name."
 ---
 
 Goal: every subagent's work lands, is right, and is never **stranded**

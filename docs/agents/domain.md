@@ -8,8 +8,8 @@ glossary plus one per Tenant) is in `GLOSSARY-MAP.md` (ADR-0021).
 
 ## Before exploring, read these
 
-Reading order and triggers (`GLOSSARY-MAP.md`, `GLOSSARY.md`, relevant ADRs):
-see CLAUDE.md's "Docs you must read first", not this page.
+`GLOSSARY-MAP.md` and `GLOSSARY.md` load with `CLAUDE.md`; when to read an ADR:
+`CLAUDE.md`, not this page.
 
 This repo deliberately diverges from the `domain-modeling` Skill's generic
 templates:
