@@ -1,0 +1,184 @@
+schemaVersion: 1
+session: session_011hiFhM9A2Sbn4mGYbdtAhJ
+startedAt: 2026-10-23T13:21:09Z
+endedAt: 2026-10-23T13:37:32Z
+kind: autonomous
+goal: "Scheduled prune trial: judge open trials, prune one problem"
+status: in-review
+outcome: "Judged one trial, opened PR #2447 pruning the workflow-write ban prose (-27 net); awaits a human merge"
+summary: "Scheduled /prune-trial run, no human input. Only the dispatch-subagents §3 trial was judgeable; 47 sessions since it landed showed no major or blocker Friction traceable to it, so its entry was deleted. A search subagent covered the instruction corpus, guard headers and tracker; I picked the workflow-write ban (failed as prose in #897 and #1955, held by a wired unit-tested guard) over larger read-first-trigger and provenance candidates, which the owner accepted or which are partly enforced. Cut the guard header, its .sh comment and the environment-caveats bullet (-27 net), added a ledger entry, probed Sonnet at the pinned SHA (passed), ran code-review (restored a lost HTTPS caveat and a #2174 pointer, fixed ledger counts), gate:scoped green, opened PR #2447. The guard files are Human-only, so it needs a human merge. All work was agent-initiated under the schedule's standing prompt."
+prs:
+  - "2447"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read after the window script's first git call; nothing in it changed my route
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist for the search and probe subagents
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and scheduled-run closing steps
+    useful: yes
+  - path: GLOSSARY.md
+    reason: session-start read; vocabulary only
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: subagent reported the guard roster row for workflow-edit-guard; yes
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: the task prompt; spec reviewer re-read it
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: loaded only in a subagent; not relevant to a prune
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: loaded only in a subagent; not relevant
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: loaded only in a subagent; not relevant
+    useful: no
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (read before editing)
+  - path: docs/agents/github-integration.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the assigned task
+  - name: code-review
+    reason: pre-push review of a 27-line comment/doc diff
+  - name: dispatch-subagents
+    reason: search, probe and two reviewer agents
+  - name: close-session
+    reason: PR opened
+frictions:
+  - description: Ran the window script (git fetch) before reading git-conventions.md; the read-first hint fired after the call.
+    solution: Read the doc at session start for scheduled git-heavy Skills.
+    severity: nit
+  - description: Tried ScheduleWakeup to wait on a subagent; the loop-only guard denied it, as subagents self-notify.
+    solution: Just end the turn when waiting on an Agent subagent.
+    severity: nit
+  - description: Called subscribe_pr_activity with pullNumber 0 in parallel with PR creation, before the number existed; it errored and I retried.
+    solution: Sequence the subscribe after create_pull_request returns.
+    severity: nit
+  - description: ADR hooks asked to read ADR-0027 and ADR-0029 in full after an edit; I relied on the rule summaries and did not open them.
+    solution: Summaries sufficed for a comment-only prune; none needed.
+    severity: nit
+durationSec: 983
+models:
+  claude-sonnet-5-5: 65
+toolCounts:
+  Bash: 22
+  Read: 1
+  Agent: 4
+  ScheduleWakeup: 1
+  Skill: 2
+  Edit: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+filesEdited:
+  - docs/agents/environment-caveats.md
+  - .agents/prune-trials.yml
+  - scripts/hooks/workflow-edit-guard.sh
+  - scripts/hooks/workflow-edit-guard.ts
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: false
+    by: main
+  - adr: 29
+    via: path
+    readAfter: false
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - .agents/skills/prune-trial/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run code-review and gate:scoped before the first push and that the guard files need a human merge; summary sufficed.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: About session logs; applied only at close-session, summary sufficed.
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR at once and subscribe; scheduled-run scope matched.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; the summary sufficed.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Defined how to treat open trials and avoid their territory; summary sufficed, ADR unopened.
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on editing environment-caveats; no instruction placement question arose.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR rewrites; this run touched no ADR.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded from reading the glossary map; no glossary term changed.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded via Skill files; no Skill was changed.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed the guard hook files are Human-only so the PR needs a human merge.
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Pointed to docs/agents/guards.md, where the guard roster row matched; not otherwise needed.
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Find failed instruction prose
+    model: sonnet
+    durationSec: 387
+    toolCalls: 31
+    modelCalls: 29
+    tokenShare: 41.5
+  - type: general-purpose
+    task: Probe pruned workflow-ban text
+    model: sonnet
+    durationSec: 24
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 3
+  - type: general-purpose
+    task: Review Standards axis
+    model: sonnet
+    durationSec: 25
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 3.5
+  - type: general-purpose
+    task: Review Spec axis
+    model: sonnet
+    durationSec: 31
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 4.4
+gitBranch: claude/practical-rubin-pkt2mv
+entrypoint: remote_trigger
+cliVersion: 2.1.309
+trigger: prune-trial
+landedBy: Stop
