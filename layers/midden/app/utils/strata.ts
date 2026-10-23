@@ -148,10 +148,11 @@ export function middenReportOrder<P extends { path: string; title?: string }>(
   pages: P[],
   finds: { site?: string; stratum: string }[],
 ): P[] {
-  const depth = (p: P) =>
-    Math.max(-1, ...finds.filter((f) => `/${f.site}` === p.path).map((f) => DIG_SEASON_SLUGS.indexOf(f.stratum)))
+  // -1 (no finds) sorts below every season, which is where find-less reports belong.
+  const newestStratum = (page: P) =>
+    Math.max(-1, ...finds.filter((f) => `/${f.site}` === page.path).map((f) => DIG_SEASON_SLUGS.indexOf(f.stratum)))
   return pages
-    .map((p) => ({ p, d: depth(p) }))
-    .sort((a, b) => b.d - a.d || (a.p.title ?? a.p.path).localeCompare(b.p.title ?? b.p.path))
-    .map(({ p }) => p)
+    .map((page) => ({ page, newest: newestStratum(page) }))
+    .sort((a, b) => b.newest - a.newest || (a.page.title ?? a.page.path).localeCompare(b.page.title ?? b.page.path))
+    .map(({ page }) => page)
 }

@@ -2,6 +2,7 @@
 // shared by both Midden renderers — MiddenArtifact.vue and StoresLanding.vue.
 // Pins the file-name-only rule: a repo-root-relative path overflowed the record
 // line on a narrow column, and the provenance link already carries the full path.
+// Also pins the removal fold and the season dates.
 import { describe, expect, it } from 'vitest'
 import { formatMiddenDate, middenProvenanceLine, middenRemovedInProvenance, middenSeasonSpan } from '../../app/utils/find.ts'
 
