@@ -20,8 +20,6 @@ act, once per session.
   the cross-cutting ones load at session start, the rest when you read or edit
   a file they govern or run a Skill they name. When a summary says so, read the
   full ADR before you act.
-- **Before you plan or recommend a change** (an opinion asked in chat counts):
-  the `adr-check` Skill.
 - **Before your first git command** beyond `status` and `diff` (commit, fetch,
   pull, rebase, amend, reset, or `log`/`blame` to draw a conclusion):
   `docs/agents/git-conventions.md`.

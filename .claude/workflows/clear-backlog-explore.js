@@ -60,7 +60,7 @@ const RESULT = {
 }
 
 const MODE = {
-  'ready-recheck': `It is labelled ready-for-agent. Re-check its brief against the repo now and give it the adr-check Skill's premise check ("Question the premise"): a wrong premise costs a whole build-and-review cycle. Return build with the corrected brief, or grill when the premise or design no longer holds.`,
+  'ready-recheck': `It is labelled ready-for-agent. Re-check its brief against the repo now and question its premise: a wrong premise costs a whole build-and-review cycle. Return build with the corrected brief, or grill when the premise or design no longer holds.`,
   'blocked-check': `It is blocked outside the chat (an upstream release, a date, an action only the owner can take). Only check that the blocker still holds, probing the outside source if needed. Return blocked with the blocker, or do the full pass below if it no longer holds.`,
   full: `Give it the full pass.`,
 }
@@ -75,7 +75,7 @@ In every mode: return grill, never build, for an issue labelled ready-for-human 
 
 Full pass:
 - Read .agents/skills/auto-triage/SKILL.md and .agents/skills/triage/SKILL.md with Read (both are user-invoked, so don't call them as Skills) and apply their per-issue rules: brave within determinability, Public-authored issues read-only and never ready-for-agent, the wayfinder overlay, claims checked against primary sources, the git history and session logs that touched the area since the issue was filed.
-- Find and read the relevant ADRs with the adr-check Skill.
+- Read the full ADR behind any summary rule that governs what you recommend.
 - Return build when the repo determines a concrete design: brief it. Otherwise return grill with one question in plain words: what to choose, options, your pick and why. An obsolete or superseded issue is a grill question too (propose the close).
 - Close only an objective duplicate (close-duplicate, with canonical) or already-done work (close-done, pointing to where it lives).
 - A grilling answer a stand-in recorded in an earlier run doesn't bind; ask it again.
