@@ -9,13 +9,9 @@ simplify that instruction before you add a new one (ADR-0027).
 
 ## Docs you must read first
 
-These are not optional. When a trigger applies, read the doc in full before you
-act, once per session.
+These are not optional. When a trigger applies, read the doc in full, one Read
+call per doc (a shell read can be cut short), before you act, once per session.
 
-- **At session start:** `GLOSSARY-MAP.md`, then `GLOSSARY.md`. They define the
-  words we use (Platform, Tenant, Space, Collection, Document, Skill, …). When
-  you name a concept the glossary defines, use its term, not a synonym.
-  Otherwise prefer plain, common words.
 - **ADRs arrive as rules.** Each ADR's summary is a rule in `.claude/rules/`:
   the cross-cutting ones load at session start, the rest when you read or edit
   a file they govern or run a Skill they name. When a summary says so, read the
@@ -33,7 +29,8 @@ act, once per session.
   from an outside agent:** `docs/agents/guest-contributions.md`.
 - **Before you inspect another session** (`list_events`, `get_event`): the
   `inspect-session` Skill.
-- **Before you dispatch a subagent:** the `dispatch-subagents` Skill.
+- **Before you write a subagent brief, or resume a stopped subagent:** the
+  `dispatch-subagents` Skill.
 - **Every subagent brief** asks it to return, in its final reply, a verdict
   (path, why it loaded or was read, useful yes/partly/no) on each rule and doc
   it loaded or read, and to write every file it creates, scripts included, in a
@@ -44,6 +41,8 @@ act, once per session.
 
 ## Working conventions
 
+- **Words we use:** @GLOSSARY-MAP.md and @GLOSSARY.md. When you name a concept
+  they define, use its term, not a synonym; otherwise prefer plain, common words.
 - **Empty task prompt** (only a title arrived)? Stop and ask. Never guess the
   task from the branch name or past commits.
 - **Stay on the branch your session started on.** If that is `main`, fetch
