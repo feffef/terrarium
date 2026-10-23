@@ -136,7 +136,8 @@ whatever happens to the fixes.
    label it `needs-triage`. List the fixes over the cap in the ledger PR's
    description. Outside the cap: §2's regression issues, and fixes blocked
    only by a Human-only file or a guard (still filed, as `needs-triage`).
-3. **Update the ledger** on your branch, on top of the survey's commit:
+3. **Update the ledger** on your branch, on top of the survey's commit
+   (`status`, `ref` and `fixes` through `scripts/ledger-set.ts`):
    - set `status: tracked` on every entry this run files or dispatches, with
      the issue number in `ref` for a filed one;
    - for each dropped fix, append a line to its entry's `notes` (a `|-`
@@ -240,7 +241,7 @@ is honest.
 1. Wait until the ledger PR has merged and every fix PR is merged,
    escalated or abandoned.
 2. From `origin/main`, land **one** status-only PR, the same way as the
-   ledger PR:
+   ledger PR, through `scripts/ledger-set.ts`:
    - **merged** fix PR: add a `fixes` entry (`pr`, its UTC merge date, a
      one-line summary from its description) and set `status: open`;
    - **abandoned:** set `status: open`;
