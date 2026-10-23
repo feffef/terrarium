@@ -13,7 +13,7 @@ provenance:
     in its place is a different answer to the same fault: an error dialog that
     shows the failure and offers a reload, still live on main. The workspace
     file that existed only to declare the patch went out in the same commit.
-site: the-current-cut
+site: barely-cold
 catalogNote: >-
   One hundred and seven lines patched into a dependency's compiled dist: retry
   the SQL dump fetch four times, and evict the cached load promise in a

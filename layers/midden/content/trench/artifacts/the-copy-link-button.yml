@@ -9,7 +9,7 @@ provenance:
   continuityCheck: "closed unmerged with CI unstable; no JournalCopyLinkButton
     component or copy-link control exists on main — #450’s sub-item one landed
     nowhere"
-site: the-current-cut
+site: barely-cold
 catalogNote: >-
   Seventy-six lines of Vue that copied a session or digest deep-link to the
   clipboard. The .stop modifiers keeping the button from toggling its parent
