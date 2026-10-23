@@ -7,4 +7,4 @@ paths:
 # Glossary terms
 
 **Before you add or change a glossary term:** read `docs/agents/domain.md`,
-so the term lands in the right glossary in its layout.
+so a new term passes the rule of two and uses the `### Term` layout.
