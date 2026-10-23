@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Hw8mVJmgWejGc6YWi8ngnm
 startedAt: 2026-10-23T04:03:42Z
-endedAt: 2026-10-23T04:28:22Z
+endedAt: 2026-10-23T04:30:49Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs (skills concision family)
 status: in-review
-outcome: Sweep PR 2428 open with 22 files fixed; escalation PR 2429 holds two ADR pointer fixes for a human merge
-summary: "Scheduled audit-docs run, started by a Routine with no human prompt; every step was agent-initiated under the Skill's own authority. Concision family picked from the newest origin/main commit (docs/research, so skills). Five read-only reviewers (freshness, single-home, two concision halves, coherence) produced 80 findings; three independent checkers returned 50 CONFIRMED, 20 CONFIRMED-BUT, 9 WRONG, and 1 finding was dropped because its file is in an open Prune Trial's territory. Applied the survivors in one sweep commit (22 files, none Human-only), ran code-review and gate:scoped, pushed and opened the sweep PR with a verdict comment. The two ADR pointer fixes (ADR-0021, ADR-0012, plus their rule hash restamps) went to a separate escalation PR that waits for a human merge. Open: sweep PR CI and merge, escalation PR review. Chose to keep edits the code-review Standards reviewer second-guessed (guest-build author filter, CLAUDE.md trigger) because the checkers had verified them against primary sources."
+outcome: Sweep PR 2428 merged green (22 files fixed); escalation PR 2429 with two ADR pointer fixes waits for a human merge
+summary: Scheduled audit-docs run, started by a Routine with no human prompt; every step was agent-initiated under the Skill's own authority. Concision family picked from the newest origin/main commit (docs/research, so skills). Five read-only reviewers (freshness, single-home, two concision halves, coherence) produced 80 findings; three independent checkers returned 50 CONFIRMED, 20 CONFIRMED-BUT, 9 WRONG, and 1 finding was dropped because its file is in an open Prune Trial's territory. Applied the survivors in one sweep commit (22 files, none Human-only), ran code-review and gate:scoped, pushed and opened the sweep PR with a verdict comment. The two ADR pointer fixes (ADR-0021, ADR-0012, plus their rule hash restamps) went to a separate escalation PR that waits for a human merge.  Chose to keep edits the code-review Standards reviewer second-guessed (guest-build author filter, CLAUDE.md trigger) because the checkers had verified them against primary sources. The sweep PR merged on a green gate (merge commit c9b73d91a); the escalation PR is open for a human merge and still watched.
 prs:
   - "2428"
   - "2429"
@@ -258,21 +258,23 @@ frictions:
   - description: One concision reviewer claimed a guard enforces ToolSearch-before-call; the checker found the premise false, so the finding was dropped.
     solution: Tell reviewers to verify any claim about a mechanism before reporting a cut that depends on it.
     severity: nit
-durationSec: 1480
+durationSec: 1627
 models:
-  claude-sonnet-5-5: 147
+  claude-sonnet-5-5: 168
 toolCounts:
   Read: 5
-  Bash: 48
+  Bash: 52
   Agent: 10
-  ReadNotifications: 2
+  ReadNotifications: 4
   Skill: 2
   ToolSearch: 1
   mcp__github__get_file_contents: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 3
+  mcp__github__issue_read: 2
+  PushNotification: 1
 filesEdited:
   - .claude/rules/adr-0012.md
   - .claude/rules/adr-0021.md
@@ -507,61 +509,61 @@ subagents:
     durationSec: 130
     toolCalls: 29
     modelCalls: 25
-    tokenShare: 6.6
+    tokenShare: 6.3
   - type: general-purpose
     task: "Audit B: single-home"
     durationSec: 411
     toolCalls: 54
     modelCalls: 51
-    tokenShare: 21.2
+    tokenShare: 20.3
   - type: general-purpose
     task: "Audit C1: skills concision"
     durationSec: 222
     toolCalls: 27
     modelCalls: 5
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: general-purpose
     task: "Audit C2: skills concision"
     durationSec: 170
     toolCalls: 24
     modelCalls: 6
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: general-purpose
     task: "Audit D: coherence"
     durationSec: 624
     toolCalls: 68
     modelCalls: 66
-    tokenShare: 26.5
+    tokenShare: 25.3
   - type: general-purpose
     task: Check group X findings
     durationSec: 105
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: Check group Y findings
     durationSec: 218
     toolCalls: 22
     modelCalls: 20
-    tokenShare: 4.3
+    tokenShare: 4.1
   - type: general-purpose
     task: Check group Z findings
     durationSec: 145
     toolCalls: 25
     modelCalls: 23
-    tokenShare: 3.5
+    tokenShare: 3.4
   - type: general-purpose
     task: "Code review: Standards"
     durationSec: 58
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: "Code review: Spec"
     durationSec: 56
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 1.8
+    tokenShare: 1.7
 gitBranch: claude/festive-mayer-j96ird
 entrypoint: remote_trigger
 cliVersion: 2.1.309
