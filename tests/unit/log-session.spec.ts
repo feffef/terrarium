@@ -11,6 +11,7 @@ import {
   authorMain,
   committedFiles,
   CURRENT_SESSIONS_SCHEMA_VERSION,
+  closureWarning,
   expectedFilename,
   land,
   loadAuthorContext,
@@ -18,6 +19,7 @@ import {
   reportUnexplainedReads,
   validateAuthored,
 } from '../../scripts/session/log-session.ts'
+import { extractTrace } from '../../scripts/session/transcript-trace.ts'
 import { findTruncatedScalars, validateEntry } from '../../scripts/session/journal-files.ts'
 import type { AuthoredScratch } from '../../scripts/session/transcript-trace.ts'
 
@@ -627,5 +629,36 @@ describe('committedFiles() — files the session changed through its own commits
 
   it('is empty when git gave nothing (unavailable or no commits)', () => {
     expect(committedFiles('', 'session_01A')).toEqual([])
+  })
+})
+
+describe('closureWarning() — a completed log hand-written after a merge (#2424)', () => {
+  const tool = (name: string, input: Record<string, unknown>) => ({
+    type: 'assistant',
+    message: { content: [{ type: 'tool_use', name, input }] },
+  })
+  const merge = tool('Bash', { command: 'pnpm tsx scripts/github/merge-pr.ts 12' })
+  const mcpMerge = tool('mcp__github__merge_pull_request', { pullNumber: 12 })
+  const close = tool('Skill', { skill: 'close-session' })
+  const warn = (status: string, ...records: Record<string, unknown>[]) => closureWarning(status, extractTrace(records))
+
+  it('warns when completed, merged and never closed afterwards', () => {
+    expect(warn('completed', merge)).toMatch(/close-session/)
+    expect(warn('completed', mcpMerge)).toMatch(/close-session/)
+  })
+  it('warns when the only close came before the last merge', () => {
+    expect(warn('completed', close, merge)).toMatch(/close-session/)
+  })
+  it('is silent when close-session ran after the merge', () => {
+    expect(warn('completed', merge, close)).toBeUndefined()
+  })
+  it('is silent when the close Skill call carries its name in `command`', () => {
+    expect(warn('completed', merge, tool('Skill', { command: 'close-session' }))).toBeUndefined()
+  })
+  it('is silent without a merge', () => {
+    expect(warn('completed', tool('Bash', { command: 'ls' }))).toBeUndefined()
+  })
+  it('is silent for a non-completed status', () => {
+    expect(warn('blocked', merge)).toBeUndefined()
   })
 })

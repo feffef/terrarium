@@ -143,6 +143,8 @@ export interface MechanicalTrace {
   commandSkills: string[]
   subagents: SubagentRef[]
   prSignals: string[]
+  /** A PR merge ran and no `close-session` Skill call followed the last one (#2424). */
+  mergedWithoutClose: boolean
 }
 
 const EDIT_TOOLS = new Set(['Edit', 'Write', 'NotebookEdit'])
@@ -595,6 +597,7 @@ export function extractTrace(
   const commandSkills: string[] = []
   const subagents: SubagentRef[] = []
   const prSignals: string[] = []
+  let mergedWithoutClose = false
   const rules: string[] = []
   const alwaysLoadedRules: string[] = []
   const ruleLoadedAt = new Map<string, number>()
@@ -635,8 +638,11 @@ export function extractTrace(
 
       if (name === 'Read') reads.push(input.file_path as string)
       else if (EDIT_TOOLS.has(name)) edits.push(input.file_path as string)
-      else if (name === 'Skill') skills.push((input.skill ?? input.command) as string)
-      else if (name === 'Agent' || name === 'Task') {
+      else if (name === 'Skill') {
+        const skill = (input.skill ?? input.command) as string
+        skills.push(skill)
+        if (skill === 'close-session') mergedWithoutClose = false
+      } else if (name === 'Agent' || name === 'Task') {
         subagents.push({
           type: input.subagent_type as string,
           task: input.description as string,
@@ -645,10 +651,13 @@ export function extractTrace(
         })
       } else if (name.includes('create_pull_request')) {
         prSignals.push((input.title as string) ?? '(pr)')
+      } else if (name.endsWith('merge_pull_request')) {
+        mergedWithoutClose = true
       }
 
       if (name === 'Bash') {
         const cmd = (input.command as string) ?? ''
+        if (cmd.includes('scripts/github/merge-pr.ts')) mergedWithoutClose = true
         if (cmd.includes('git push') || cmd.includes('pr create')) {
           prSignals.push(`(bash) ${cmd.slice(0, 60)}`)
         }
@@ -691,6 +700,7 @@ export function extractTrace(
     commandSkills: dedup(commandSkills),
     subagents,
     prSignals,
+    mergedWithoutClose,
   }
 }
 
