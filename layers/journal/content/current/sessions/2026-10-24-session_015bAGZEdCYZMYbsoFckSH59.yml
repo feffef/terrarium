@@ -1,0 +1,490 @@
+schemaVersion: 1
+session: session_015bAGZEdCYZMYbsoFckSH59
+startedAt: 2026-10-24T19:33:44Z
+endedAt: 2026-10-24T20:33:37Z
+kind: interactive
+goal: Bring every Glass Box guide Lesson to one quality standard
+status: in-review
+outcome: Three review-fix-review rounds took the guide Lessons from 15 A / 10 B / 1 C to 23 A / 3 B; PR 2500 open
+summary: "Human-instructed: the user asked an agent to read all Glass Box guide Lessons and judge title, standalone cut and quality; chose scope (guide Lessons only), output (report plus fix PR) and the title test (clear, consistent, short); then asked to also find better examples in the source, and to repeat a Fable-model re-rating plus applying agreed suggestions with code-review runs in between until all Lessons reach a high standard, then merge. Agent-decided: which suggestions to accept (rejected splitting Self-improvement loop into a new Lesson since a Prune Trials draft exists and a new Lesson is new work; kept tool-prefixed titles where the bare word is ambiguous; refused to add publishedAt to old pages); splitting round 1 across three disjoint worktree agents, then one impl agent per later round. Reviewers sometimes reversed each other (Author trust vs Author association); the dispatcher settled those once and told later raters not to re-raise them, which made the ratings converge. The page check's link-title rule meant every rename had to touch link text across Lessons, Walkthroughs and drafts. Open: small round-3 review edits and a round-4 Fable rating, then merge."
+prs:
+  - "2500"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch first, three-dot diffs, commit -F
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push; verdict and merge-pr recipe
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping for PR create and comments
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson contract, Excerpt and Term rules
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin and publishedAt rules, title rule
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: how a Lesson is written
+    useful: partly
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: facts for the Skill audits paragraph
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: briefs, worktrees; also an Excerpt source for Subagents
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: facts for the Self-improvement loop
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: the screening rules the Lesson now links
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: Excerpt source for the verdict rule
+    useful: yes
+  - path: GLOSSARY.md
+    reason: checked Term definitions and that ADR has no entry
+    useful: partly
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: Content collections cost
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: Merge gate costs
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: Only pages has URLs cost
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: outside pack wording
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: Prune Trial facts for the loop Lesson
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: Data fetching costs, and the fix of a wrong one
+    useful: yes
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: Decision records costs
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: r3 reviewer checked the new Term against the rule of two
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: source for the Git worktrees guard claim
+    useful: yes
+  - path: docs/agents/mdc-when-to-use.md
+    reason: round-1 Standards reviewer read it; no MDC change
+    useful: no
+  - path: layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+    reason: (read before editing)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/testing/01.unit-and-e2e-tests.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/typescript/01.type-checking.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/zod/01.content-validation.md
+    reason: (no reason given)
+  - path: layers/glassbox/app/utils/subjects.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: worktree isolation and briefs for reviewer and impl agents
+  - name: code-review
+    reason: two-axis review after each round
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires before a first fetch; a hook flagged it.
+    solution: Read git-conventions.md before the first git command beyond status/diff; no harm here since the fetch was read-only.
+    severity: nit
+  - description: Successive reviewers reversed each other's title proposals (Author association vs Author trust), costing a round of re-judging.
+    solution: Record settled decisions in the rater brief from the first round, so later raters don't re-raise them.
+    severity: minor
+  - description: Renaming a Lesson forces link-text edits across many pages because the page check fails a link whose text differs from the title; parallel agents collided on Where next lists.
+    solution: Give one agent ownership of all link-text fixes per round, or let the page render link text from the target title.
+    severity: minor
+  - description: Wrote 'Six renames' in the PR body while listing eight titles.
+    solution: Count the list before writing a number; fix the description in the next push.
+    severity: nit
+durationSec: 3593
+models:
+  claude-opus-5-5: 167
+toolCounts:
+  Bash: 38
+  AskUserQuestion: 1
+  Skill: 4
+  Agent: 18
+  SendMessage: 1
+  Read: 5
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+  - layers/glassbox/content/guide/pages/claude-code/03.skills.md
+  - layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+  - layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/terms/adr.yml
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+  - layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+  - layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+  - layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+  - layers/glassbox/content/guide/pages/testing/01.unit-and-e2e-tests.md
+  - layers/glassbox/content/guide/pages/typescript/01.type-checking.md
+  - layers/glassbox/content/drafts/pages/claude-code/06.hints.md
+  - layers/glassbox/content/drafts/pages/claude-code/10.routines.md
+  - layers/glassbox/content/drafts/pages/git-github/03.thin-ci-workflow.md
+  - layers/glassbox/content/drafts/pages/git-github/05.provenance-headers.md
+  - layers/glassbox/content/drafts/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/drafts/pages/git-github/07.dependabot-grouping.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/03.glossaries.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/05.prune-trials.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/06.out-of-scope-records.md
+  - layers/glassbox/content/drafts/pages/testing/02.invariants-as-tests.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-newcomers-first-hour.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/routines.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/session-log-lands-on-main.md
+  - layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+  - layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0002.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0012.md
+docsReadBySubagents:
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/agents/environment-caveats.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/adr/0027-prune-trials.md
+  - docs/agents/mdc-when-to-use.md
+  - GLOSSARY.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/domain.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Held the first push until code-review and gate:scoped passed despite repeated Stop-hook prompts; summary enough, full ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Made me open the PR right after the push and judge a new Lesson as new work; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line on the PR body; commit trailer checked by agents; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading the Glass Box glossary; no glossary term was added
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Subagents used it to check the Self-improvement loop's Prune Trial claims; no open trial covered our text
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Subagents reported it backed the CLAUDE.md watch item on rules loading after their files
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Round-1 agent took the Decision records costs from ADR-0030's text
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading Skill files; no Skill was changed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed Glass Box content is not Human-only, so I may merge myself
+    useful: yes
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept counts and issue ids out of Lesson prose; agents and reviewers applied it
+    useful: yes
+  - path: .claude/rules/tenant-glossary.md
+    reason: Made me read the Glass Box glossary before working on the Tenant
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: Round-3 agent confirmed no root ADR entry, so the new Term has no source
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagram changed
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Round-1 agent took the Content collections cost from ADR-0002
+    useful: partly
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded on reading manifests; no data shape changed
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: No MDC component added
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Source of the new Path-specific rules Excerpt; confirmed Nuxt layers watch items
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: Fable rater cross-checked Multi-tenant isolation claims against it
+    useful: partly
+  - path: .claude/rules/adr-0013.md
+    reason: Loaded on a source read; did not apply to Lesson prose
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Round-1 agent sourced the Only pages has URLs cost from it
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: Journal infrastructure rule; nothing in the Journal changed
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Routing rule; no route was added
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: No UI code changed; content-only edits, screenshots skipped
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: Loaded on a source read; not relevant to Lesson text
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Confirmed the Hooks Lesson's guard and onFailure claims
+    useful: partly
+  - path: .claude/rules/adr-0011.md
+    reason: Fable rater cross-checked the Continuous deployment claims
+    useful: partly
+  - path: .claude/rules/adr-0026.md
+    reason: Sourced the Merge gate parity-test cost
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: Shaped the Author trust guest-pipeline wording
+    useful: partly
+  - path: .claude/rules/adr-0023.md
+    reason: Shaped the guest-pipeline wording in Author trust
+    useful: partly
+  - path: .claude/rules/adr-0025.md
+    reason: Round-0 reviewer used it for the Cross-tenant reads check
+    useful: partly
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded on a source read; did not apply
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Review Glass Box guide Lessons
+    durationSec: 299
+    toolCalls: 48
+    modelCalls: 22
+    tokenShare: 6.2
+  - type: general-purpose
+    task: "Round 1: Claude Code Lessons"
+    durationSec: 328
+    toolCalls: 53
+    modelCalls: 43
+    tokenShare: 7.2
+  - type: general-purpose
+    task: "Round 1: House rules Lessons"
+    durationSec: 578
+    toolCalls: 102
+    modelCalls: 51
+    tokenShare: 10
+  - type: general-purpose
+    task: "Round 1: Nuxt/TS/test Lessons"
+    durationSec: 334
+    toolCalls: 41
+    modelCalls: 33
+    tokenShare: 5.9
+  - type: general-purpose
+    task: "Code review: Standards axis"
+    durationSec: 124
+    toolCalls: 19
+    modelCalls: 14
+    tokenShare: 3.8
+  - type: general-purpose
+    task: "Code review: Spec axis"
+    durationSec: 99
+    toolCalls: 12
+    modelCalls: 11
+    tokenShare: 3.3
+  - type: general-purpose
+    task: Fable re-rates all Lessons (round 2)
+    model: fable
+    durationSec: 535
+    toolCalls: 47
+    modelCalls: 13
+    tokenShare: 4.8
+  - type: general-purpose
+    task: "Round 2: apply review + Fable fixes"
+    durationSec: 492
+    toolCalls: 87
+    modelCalls: 73
+    tokenShare: 13.1
+  - type: general-purpose
+    task: "Code review r2: Standards"
+    durationSec: 144
+    toolCalls: 22
+    modelCalls: 19
+    tokenShare: 3.1
+  - type: general-purpose
+    task: "Code review r2: Spec"
+    durationSec: 80
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 1.8
+  - type: general-purpose
+    task: Fable re-rates all Lessons (round 3)
+    model: fable
+    durationSec: 368
+    toolCalls: 42
+    modelCalls: 10
+    tokenShare: 3.9
+  - type: general-purpose
+    task: "Round 3: apply review + Fable fixes"
+    durationSec: 314
+    toolCalls: 57
+    modelCalls: 39
+    tokenShare: 6
+  - type: general-purpose
+    task: "Code review r3: Standards"
+    durationSec: 63
+    toolCalls: 11
+    modelCalls: 6
+    tokenShare: 1.2
+  - type: general-purpose
+    task: "Code review r3: Spec"
+    durationSec: 74
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 1.4
+  - type: general-purpose
+    task: Fable re-rates all Lessons (round 4)
+    model: fable
+    durationSec: 277
+    toolCalls: 40
+    modelCalls: 8
+    tokenShare: 3.4
+  - type: general-purpose
+    task: "Code review r4: Standards"
+    durationSec: 9
+    toolCalls: 4
+    modelCalls: 1
+    tokenShare: 0.8
+  - type: general-purpose
+    task: "Code review r4: Spec"
+    durationSec: 4
+    toolCalls: 1
+    modelCalls: 1
+    tokenShare: 0.8
+  - type: general-purpose
+    task: Fable confirms final grades
+    model: fable
+    durationSec: 7
+    toolCalls: 3
+    modelCalls: 1
+    tokenShare: 0.3
+gitBranch: ccr-0463770d-9pltab
+entrypoint: remote_mobile
+cliVersion: 2.1.310
+ideas:
+  - Let Glass Box Where next lists render bare links as the target page's current title, so a Lesson rename touches one file instead of every page that links it; the page check would then only verify the link target exists.
+landedBy: Stop
