@@ -84,7 +84,7 @@ GitHub PR-files API has the same gap: read `previous_filename` too.
 Fix or rewrite only commits this session made. `git log origin/main..HEAD` lists
 the candidates; a commit outside it is public history, so never rebase it (for
 example via the hook's suggested `--reset-author`). In a working copy shared with
-other sessions the list also holds theirs. `--reset-author` may fail to sign: see
+other sessions the list also holds theirs. `--reset-author` may fail to sign: see the signing-key caveat in
 [`environment-caveats.md`](./environment-caveats.md).
 
 If the list is empty but the hook still reports unpushed commits, the hook counts

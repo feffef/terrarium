@@ -113,7 +113,6 @@ trials:
       push) and could not recover or knew no recovery because the cut text was
       gone. NOT damage: the guard denying a write and the session moving the
       edit to `docs/proposals/`, or a local session pushing a workflow file.
-
   - problem: >
       `git-conventions.md` "When the Stop hook flags unpushed or inherited
       commits" reworded to the goal (-4 net: 15 lines to 11, from
@@ -121,8 +120,8 @@ trials:
       made, check `git log origin/main..HEAD`; push the branch when that list is
       empty), the narration dropped. Chosen after the search subagent covered
       the instruction corpus, guard headers and the tracker: the advice failed
-      as prose (#2233 read in full by me, #1712 read by the subagent; four docs
-      fixes did not stop the nag) and nothing in the repo holds it, since the
+      as prose (#2233, read in full: four docs fixes did not stop the nag, then
+      the owner accepted the cost) and nothing in the repo holds it, since the
       nag comes from a harness script (#2233's triage). Runners-up: "Verify
       before you state" family (five homes, #2476, #2435; nothing holds it, so
       the riskiest), CLAUDE.md read-first triggers (31 lines; partly held by
@@ -138,6 +137,7 @@ trials:
         - inherited commits
         - reset-author
     opened: 2026-10-24
+    proven: true
     check: >
       Damage is a major or blocker Friction where a session rebased or rewrote
       public history (a commit outside `git log origin/main..HEAD`), or pushed
