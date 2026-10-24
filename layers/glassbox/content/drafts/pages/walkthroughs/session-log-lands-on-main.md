@@ -65,7 +65,7 @@ A normal `git commit` takes what the session has staged, on whatever branch it i
 `idxEnv` sets `GIT_INDEX_FILE` to the temporary index.
 
 ::stop-links
-[Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr)
+[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 7. The push retries until it lands
