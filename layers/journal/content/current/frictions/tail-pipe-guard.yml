@@ -11,26 +11,6 @@ fixes:
     date: "2026-10-11"
     summary: "Removed the check that blocked whole commands for ending in a pipe to tail or head."
 occurrences:
-  - session: session_01Jo3m1r8fyuGvjtRE9qDrPH
-    date: "2026-10-09"
-    severity: nit
-    description: "tail-pipe guard denied a gate command chained with echo; reran as a plain redirect."
-    solution: "None needed; the guard worked as designed."
-  - session: session_01NHHafnvmf9qkvq85pvMYzc
-    date: "2026-10-09"
-    severity: nit
-    description: "tail-pipe guard denied a chained command, and a Monitor until-loop grepping a subagent transcript matched early and gave a false done."
-    solution: "Redirect to a file and read it; wait for subagent completion notifications instead of grepping their transcripts."
-  - session: session_01NiXJm2qykEUAL1EnF5LqrB
-    date: "2026-10-09"
-    severity: nit
-    description: "A chained git commit piped through tail was denied by tail-pipe-guard; retried with a redirect."
-    solution: "None needed; the guard worked as designed."
-  - session: session_01VaPP7iMRxMvKvX8KQh1qeY
-    date: "2026-10-09"
-    severity: nit
-    description: "tail-pipe-guard denied two of my commands (a background wait loop piped to grep, an amend piped to head); fixed in one retry each from the deny message."
-    solution: "Redirect to a file and read it, as the deny message says."
   - session: session_015BjYk46dntcMuAWMn1z4Zw
     date: "2026-10-10"
     severity: nit

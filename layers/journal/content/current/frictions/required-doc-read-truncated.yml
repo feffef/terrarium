@@ -56,11 +56,6 @@ occurrences:
     severity: nit
     description: "Read files with cat/sed/head through Bash instead of the Read tool (CLAUDE.md), including a head -300 that cut guards.md short"
     solution: "Use Read for docs; bash-rules-hint loaded the rules anyway"
-  - session: session_01AuUp8RpGpxhyoa3yctctHN
-    date: "2026-10-09"
-    severity: nit
-    description: "My git-conventions.md read was cut off by a head -200 pipe before subagents ran git log/show (CLAUDE.md read-before-git rule); harmless here as all git use was read-only"
-    solution: "Read required docs with the Read tool, not a truncated cat chain"
   - session: session_0148agurVWH8QQeSkGCDm23e
     date: "2026-10-18"
     severity: nit

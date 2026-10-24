@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-17"
     summary: "The premise rule now fires when a change is recommended, implemented or hardened, and drops any part with no reason from the current goal."
 occurrences:
-  - session: session_01VaPP7iMRxMvKvX8KQh1qeY
-    date: "2026-10-09"
-    severity: moderate
-    description: "I spent two fix-and-review rounds hardening session-id-guard's ownership parsing before checking whether the guard caught anything at all; the Journal showed its three findings ever were all false positives, so the right fix was deletion. The user had to prompt the step back."
-    solution: "Before fixing a recurring false positive in a guard, count its true positives in the Journal first; a guard with none and a stronger point-of-action cover is a deletion candidate (CLAUDE.md: cut before you add)."
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"
     severity: moderate

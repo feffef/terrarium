@@ -54,11 +54,6 @@ occurrences:
     severity: nit
     description: "Started a pointless background sleep to wait on the subagent, wasting two calls."
     solution: "End the turn and wait for the notification."
-  - session: session_01NHHafnvmf9qkvq85pvMYzc
-    date: "2026-10-09"
-    severity: nit
-    description: "tail-pipe guard denied a chained command, and a Monitor until-loop grepping a subagent transcript matched early and gave a false done."
-    solution: "Redirect to a file and read it; wait for subagent completion notifications instead of grepping their transcripts."
   - session: session_018DaeF1okx3CjHh1GwVpwPf
     date: "2026-10-19"
     severity: nit

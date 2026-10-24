@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   prune-trial SKILL.md aims at around 100 lines deleted, yet every candidate that failed as prose had at most a handful of lines left (a net of -2 or -3), so the run buys little. Signals: 'prose mass was small', 'net against a ~100-line target', a trial that cut under 5 lines.
 surface: safe
-status: open
+status: tracked
+ref: "dispatched 2026-10-24: drop the ~100-line aim"
 occurrences:
   - session: session_0149fVyZ37qWGMuwVPw3Uryc
     date: "2026-10-22"

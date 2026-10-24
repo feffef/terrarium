@@ -6,6 +6,8 @@ cause: >-
 surface: safe
 status: open
 ref: "issue #2435 (split from counts-not-tallied)"
+notes: |-
+  2026-10-24 design: a CLAUDE.md or doc line dropped: CLAUDE.md already says a count is a fact only after you read every item, it was in context for all 5, and the five causes (eligibility rule, outlier drop, window start, ls headers) share no mechanism a helper could check.
 fixes: []
 occurrences:
   - session: session_01BYiuxza1S1QZgmyXngfzLE

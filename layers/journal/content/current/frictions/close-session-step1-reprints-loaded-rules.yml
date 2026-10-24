@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   close-session step 1 runs always-loaded.ts, which prints CLAUDE.md and the always-loaded rules already in context: a large output for a short session, or the output is discarded and the step counts as done unread. Signals: 'close-session step 1', 'always-loaded.ts', 'already in context'.
 surface: safe
-status: open
+status: tracked
+ref: "dispatched 2026-10-24: delete the always-loaded.ts step"
 occurrences:
   - session: session_01EjH3TbrydEY2sArBMYE5Gy
     date: "2026-10-22"

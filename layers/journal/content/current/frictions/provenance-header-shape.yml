@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-10"
     summary: "The provenance rule now requires only the session link, not a model name, and its example label is 'Claude'."
 occurrences:
-  - session: session_01Pps6pXDX7ahChHwQajVZNc
-    date: "2026-10-09"
-    severity: nit
-    description: "The PR create call was denied by the provenance guard because the header was not the first line in the required shape; the retry worked."
-    solution: "Digest Skill step 7 could show the header shape."
   - session: session_01EmaH5A6Ziwjndz9esnsJ22
     date: "2026-10-10"
     severity: nit
