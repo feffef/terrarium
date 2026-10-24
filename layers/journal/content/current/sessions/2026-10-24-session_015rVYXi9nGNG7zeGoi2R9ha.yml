@@ -1,14 +1,17 @@
 schemaVersion: 1
 session: session_015rVYXi9nGNG7zeGoi2R9ha
 startedAt: 2026-10-24T02:07:53Z
-endedAt: 2026-10-24T02:28:34Z
+endedAt: 2026-10-24T02:42:02Z
 kind: autonomous
 goal: Turn the week's logged frictions into fixes
-status: in-review
-outcome: "Ledger PR #2477 open and green; 3 regression issues filed; 2 doc fixes built, awaiting review"
-summary: "Scheduled frictions-to-fixes run, no human prompt. A survey subagent clustered 85 unledgered frictions from 27 sessions into the ledger, recorded 17 merged fixes and returned a ranked, screened list. I picked three never-fixed clusters, a design subagent recommended dispatching two (delete close-session step 1's script; drop prune-trial's unreachable ~100-line aim) and dropping the third (counts-from-wrong-filter: CLAUDE.md already covers it). I filed regression issues #2474, #2475 and #2476 (edit-during-gate-run, dispatch-subagents-skill-unread, relayed-subagent-claims) and rejected local-gate-green-ci-red and bash-rules-hint-failure-path as non-regressions (owner decision, false alarm). Ledger edits went into PR #2477 after a green gate:scoped. The prune-trial fix came back committed and gate-green; the close-session build is still running. All of this was agent-initiated under the Skill, none human-instructed beyond the schedule itself. Still open Close-out: review and PR for both fix branches, then the closing ledger PR."
+status: completed
+outcome: Ledger and two fix PRs merged; 3 regression issues filed
+summary: "Scheduled frictions-to-fixes run, no human prompt; every step was agent-initiated under the Skill. A survey subagent clustered 85 unledgered frictions from 27 sessions into the ledger, recorded 17 merged fixes and returned a screened ranking. I picked three never-fixed clusters; a design subagent recommended dispatching two (delete close-session step 1's script; drop prune-trial's unreachable ~100-line aim) and dropping counts-from-wrong-filter (CLAUDE.md already covers it). I filed regression issues #2474, #2475 and #2476 and rejected local-gate-green-ci-red and bash-rules-hint-failure-path as non-regressions. Ledger PR #2477, fix PRs #2478 and #2479 (Sonnet builds, Standards and Spec review, no findings) and the closing ledger PR #2480 all merged by merge-pr.ts after green CI. Open for humans: the three regression issues."
 prs:
   - "2477"
+  - "2478"
+  - "2479"
+  - "2480"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: required before first git command; commit with -F and trailer check
@@ -49,7 +52,11 @@ docsRead:
     reason: (no reason given)
   - path: /home/user/terrarium/docs/agents/github-integration.md
     reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
   - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
     reason: (no reason given)
 skillsUsed:
   - name: frictions-to-fixes
@@ -59,6 +66,8 @@ skillsUsed:
   - name: close-session
     reason: PR opened
   - name: log-session
+    reason: (no reason given)
+  - name: code-review
     reason: (no reason given)
 frictions:
   - description: close-session step 1 told me to run always-loaded.ts, which re-prints rules already in context; I skipped it, the same cause I had just queued a fix for.
@@ -73,35 +82,37 @@ frictions:
   - description: The skill says to open three regression issues by severity, but the two highest-severity candidates (major, moderate) were not real regressions and needed checking against ledger dates by hand.
     solution: Have the survey report mark whether the recurrence post-dates the issue's closure.
     severity: minor
-durationSec: 1242
+durationSec: 2049
 models:
-  claude-sonnet-5-5: 71
+  claude-sonnet-5-5: 144
 toolCounts:
-  Bash: 18
+  Bash: 36
   Read: 9
-  Agent: 4
-  ReadNotifications: 1
+  Agent: 6
+  ReadNotifications: 10
   ToolSearch: 1
   mcp__github__issue_write: 3
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
-  Skill: 2
+  mcp__github__create_pull_request: 4
+  mcp__github__subscribe_pr_activity: 4
+  Skill: 3
   Write: 1
+  mcp__github__add_issue_comment: 4
+  PushNotification: 1
 filesEdited:
   - .agents/skills/prune-trial/SKILL.md
+  - layers/journal/content/current/frictions/close-session-step1-reprints-loaded-rules.yml
+  - layers/journal/content/current/frictions/prune-trial-target-unreachable.yml
   - .agents/skills/close-session/SKILL.md
   - .agents/skills/close-session/scripts/always-loaded.ts
   - .agents/skills/close-session/tests/unit/always-loaded.spec.ts
   - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
   - layers/journal/content/current/frictions/blocked-waiting.yml
-  - layers/journal/content/current/frictions/close-session-step1-reprints-loaded-rules.yml
   - layers/journal/content/current/frictions/commit-trailer-guard.yml
   - layers/journal/content/current/frictions/counts-from-wrong-filter.yml
   - layers/journal/content/current/frictions/dispatch-subagents-skill-unread.yml
   - layers/journal/content/current/frictions/edit-during-gate-run.yml
   - layers/journal/content/current/frictions/premise-not-questioned.yml
   - layers/journal/content/current/frictions/provenance-header-shape.yml
-  - layers/journal/content/current/frictions/prune-trial-target-unreachable.yml
   - layers/journal/content/current/frictions/relayed-subagent-claims.yml
   - layers/journal/content/current/frictions/required-doc-read-truncated.yml
   - layers/journal/content/current/frictions/shell-read-detector-false-credit.yml
@@ -182,14 +193,19 @@ rulesLoadedBySubagents:
   - .claude/rules/data-shapes.md
   - .claude/rules/mdc-when-to-use.md
   - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
 docsReadBySubagents:
   - .agents/skills/prune-trial/SKILL.md
   - docs/adr/0027-prune-trials.md
   - docs/adr/0005-skill-model.md
   - docs/adr/0029-instructions-load-with-the-files-they-govern.md
   - docs/adr/0030-adrs-document-a-decision-not-its-history.md
-  - .agents/skills/close-session/SKILL.md
   - .agents/skills/log-session/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - layers/glassbox/GLOSSARY.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Told me gate:scoped before first push and who merges; summary was enough, did not open the full ADR
@@ -221,27 +237,39 @@ subagents:
     durationSec: 676
     toolCalls: 44
     modelCalls: 41
-    tokenShare: 43.7
+    tokenShare: 26
   - type: general-purpose
     task: Design friction fixes
     durationSec: 97
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 5.3
+    tokenShare: 3.1
   - type: general-purpose
     task: Build close-session fix
     model: sonnet
-    durationSec: 51
-    toolCalls: 14
-    modelCalls: 10
-    tokenShare: 6.4
+    durationSec: 360
+    toolCalls: 16
+    modelCalls: 12
+    tokenShare: 4.2
   - type: general-purpose
     task: Build prune-trial fix
     model: sonnet
     durationSec: 140
     toolCalls: 20
     modelCalls: 12
-    tokenShare: 8
+    tokenShare: 4.7
+  - type: general-purpose
+    task: Standards review of fix branches
+    durationSec: 33
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 3.2
+  - type: general-purpose
+    task: Spec review of fix branches
+    durationSec: 31
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 3.1
 gitBranch: claude/eager-ptolemy-8cxvfe
 entrypoint: remote_trigger
 cliVersion: 2.1.310
