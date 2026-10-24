@@ -1,0 +1,189 @@
+schemaVersion: 1
+session: session_01XUmLg8WmTPPmqqnjHA59oX
+startedAt: 2026-10-24T13:10:26Z
+endedAt: 2026-10-24T13:21:51Z
+kind: autonomous
+goal: "Scheduled prune trial: judge open trials, prune one problem"
+status: in-review
+outcome: "PR #2493 open: two trials judged and deleted, git-conventions Stop-hook section pruned (-4), Sonnet probe passed"
+summary: "Autonomous scheduled run of prune-trial; nothing was human-instructed. Judged the audit-docs and github-integration search-bullets trials from 59 sessions of Frictions (one major, a close-session slip, unrelated), so both prunes hold and their entries were deleted. A search subagent ranked six prose-that-failed candidates; I rejected the close-session restatements (one-liners carrying step detail, nothing for the answer-only case) and the verify-before-you-state family (nothing enforces it, too risky) and pruned git-conventions' Stop-hook section, which failed as prose (#2233) and which only a harness script drives. A Sonnet probe pinned to the post-prune SHA answered all four situations correctly. Code-review (Standards and Spec) caught two ledger-claim overstatements and a missing proven field, fixed before the push. Gate passed. Open: the trial verdict, due after sessions run against it."
+prs:
+  - "2493"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before git; also the prune target
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before GitHub reads; the search-fields guard rule
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR sequence
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: read while weighing the close-session restatement candidate
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: sed excerpt only, checking close-session restatements
+    useful: partly
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: sed excerpt only, checking close-session restatements
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: sed excerpt only, checking close-session restatements
+    useful: partly
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: "Spec reviewer's spec; its view: caught ledger-claim and proven gaps"
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: search agent read it as a candidate home
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: search agent checked the guard roster
+    useful: yes
+  - path: .agents/prune-trials.yml
+    reason: (read before editing)
+  - path: scripts/hooks/read-first-hint.ts
+    reason: (no reason given)
+  - path: .github/pull_request_template.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the scheduled task
+  - name: dispatch-subagents
+    reason: briefs for the search, probe and review agents
+  - name: code-review
+    reason: pre-push review of a non-simple diff
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: "Ledger first said a #1712 was 'read by the subagent' and that #2233 showed the inherited-commits advice failed; Spec review caught both overstatements."
+    solution: Cite only what I read this run and check each issue is about the rule being pruned before naming it as its failure.
+    severity: minor
+  - description: The Stop hook asked for a push twice before gate and review had finished; declined per ADR-0004.
+    solution: "None repo-side (harness script, accepted in #2233)."
+    severity: nit
+durationSec: 685
+models:
+  claude-sonnet-5-5: 81
+toolCounts:
+  Read: 7
+  Bash: 17
+  Skill: 4
+  Agent: 4
+  ReadNotifications: 3
+  Grep: 2
+  ToolSearch: 2
+  mcp__github__issue_read: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - docs/agents/git-conventions.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0028.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0026.md
+docsReadBySubagents:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/prune-trial/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Pre-push gate and review before the first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR without asking and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Open-trial territory check for the prune; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Where instructions live; confirmed no rule needed changing
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR rewrites; no ADR touched
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skill model; no Skill changed
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Points to guards.md; I did not need the roster myself
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded after a read; no Human-only file touched
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Digest page rule; unrelated to this prune
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Blog pingbacks; unrelated
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Pack Skill rule; unrelated
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Triage sweep; unrelated
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Navigation payloads; unrelated
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Only the search agent loaded it; it reported it unhelpful
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Find prose that already failed
+    model: sonnet
+    durationSec: 165
+    toolCalls: 23
+    modelCalls: 17
+    tokenShare: 23.5
+  - type: general-purpose
+    task: Sonnet probe of pruned section
+    model: sonnet
+    durationSec: 19
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 3.8
+  - type: general-purpose
+    task: Standards review of prune diff
+    model: sonnet
+    durationSec: 24
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 6.2
+  - type: general-purpose
+    task: Spec review of prune diff
+    model: sonnet
+    durationSec: 47
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 8.2
+gitBranch: claude/practical-rubin-s3dbmi
+entrypoint: remote_trigger
+cliVersion: 2.1.310
+trigger: prune-trial
+landedBy: Stop
