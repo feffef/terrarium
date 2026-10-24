@@ -1,9 +1,10 @@
 import { spawnSync } from 'node:child_process'
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { parse } from 'yaml'
+import { root } from '../../scripts/lib/cli'
 import { appendRuns, pruneRuns, ROUTINES_DIR, RUNS_KEPT, run } from '../../scripts/session/prune-routine-runs'
 
 const seedRun = (n: number) =>
@@ -77,6 +78,14 @@ describe('run()', () => {
     expect(kept.at(-1)).toBe('s99')
   })
 
+  it('creates no file for a Routine whose runs all lack usage', () => {
+    const cwd = tmp()
+    writeFileSync(join(cwd, 'usage.jsonl'), '')
+    writeFileSync(join(cwd, 'scorecard.json'), JSON.stringify({ routineRuns: [{ routine: 'digest', runs: [scored('s9')] }] }))
+    run(['--append', join(cwd, 'usage.jsonl'), '--scorecard', join(cwd, 'scorecard.json')], cwd)
+    expect(existsSync(join(cwd, ROUTINES_DIR, 'digest.yml'))).toBe(false)
+  })
+
   it('only prunes without --append', () => {
     const cwd = tmp()
     writeFileSync(join(cwd, ROUTINES_DIR, 'digest.yml'), file(Array.from({ length: RUNS_KEPT + 2 }, (_, i) => i + 1)))
@@ -84,7 +93,7 @@ describe('run()', () => {
   })
 
   it('fails with a non-zero exit when --append comes without --scorecard', () => {
-    const r = spawnSync('pnpm', ['exec', 'tsx', 'scripts/session/prune-routine-runs.ts', '--append', 'usage.jsonl'], { encoding: 'utf8' })
+    const r = spawnSync('pnpm', ['exec', 'tsx', 'scripts/session/prune-routine-runs.ts', '--append', 'usage.jsonl'], { cwd: root, encoding: 'utf8' })
     expect(r.status).not.toBe(0)
     expect(r.stderr).toContain('--append <usage.jsonl> and --scorecard <scorecard.json> go together')
   })

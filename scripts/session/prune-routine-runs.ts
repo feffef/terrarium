@@ -8,7 +8,7 @@
 import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { isMap, isSeq, parseDocument, type YAMLSeq } from 'yaml'
-import { fail, root, runIfMain } from '../lib/cli.ts'
+import { fail, flagValue, root, runIfMain } from '../lib/cli.ts'
 import type { RoutineRuns } from './audit-skills.ts'
 
 export const ROUTINES_DIR = 'layers/journal/content/current/routines'
@@ -97,17 +97,16 @@ export function appendRoutines(usageJsonl: string, scorecardJson: string, cwd = 
     const before = existsSync(path) ? readFileSync(path, 'utf8') : undefined
     const { text, appended, skipped } = appendRuns(before, routine, runs, usage)
     const pruned = pruneRuns(text)
-    if (pruned.text !== before) writeFileSync(path, pruned.text)
+    if ((before !== undefined || appended) && pruned.text !== before) writeFileSync(path, pruned.text)
     const missing = skipped.length ? ` (${skipped.join(', ')})` : ''
     return `${f}: appended ${appended}, skipped ${skipped.length} without usage${missing}, dropped ${pruned.dropped}`
   })
 }
 
 export function run(argv: string[], cwd = root): string[] {
-  const flag = (name: string) => (argv.includes(name) ? (argv[argv.indexOf(name) + 1] ?? '') : undefined)
-  const usage = flag('--append')
-  const scorecard = flag('--scorecard')
-  if (usage === undefined && scorecard === undefined) return pruneRoutines(cwd)
+  if (!argv.includes('--append') && !argv.includes('--scorecard')) return pruneRoutines(cwd)
+  const usage = flagValue(argv, '--append')
+  const scorecard = flagValue(argv, '--scorecard')
   if (!usage || !scorecard) fail('--append <usage.jsonl> and --scorecard <scorecard.json> go together')
   return [...appendRoutines(readFileSync(usage, 'utf8'), readFileSync(scorecard, 'utf8'), cwd), ...pruneRoutines(cwd)]
 }
