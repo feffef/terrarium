@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Ku4KD2Ua5MXi6eQ95TG4aj
 startedAt: 2026-10-24T04:03:25Z
-endedAt: 2026-10-24T04:32:53Z
+endedAt: 2026-10-24T04:33:50Z
 kind: autonomous
 goal: Scheduled audit of the Platform's docs (journal concision family)
 status: in-review
-outcome: "Sweep PR #2481 and escalation PR #2482 open, gate green"
-summary: "Scheduled audit-docs run, no human prompt. Six reviewers (four lenses, concision split three ways) produced about 110 findings; four checkers confirmed or corrected about 40 and rejected about 35. Applied the in-scope ones in sweep PR #2481 (Inventory wording, Journal page fixes, single-home pointers, ledger-set path). Skipped recent observation deletions (audit-skills keeps 40 days) and the adr-check.yml deletion (checkers disagreed); pr-workflow.md and github-integration search bullets are in open Prune Trials. The ADR-0004 0.x-minor wording went to escalation PR #2482. The ADR-0023 wording drift was dropped from it because rewording would change the decision. code-review caught a wrong step pointer and the contested deletion; both fixed. Open: merge #2481 on green, #2482 awaits a human."
+outcome: Sweep PR 2481 merged; escalation PR 2482 awaits a human merge
+summary: "Scheduled audit-docs run, no human prompt. Six reviewers (four lenses, concision split three ways) produced about 110 findings; four checkers confirmed or corrected about 40 and rejected about 35. Applied the in-scope ones in sweep PR #2481 (Inventory wording, Journal page fixes, single-home pointers, ledger-set path). Skipped recent observation deletions (audit-skills keeps 40 days) and the adr-check.yml deletion (checkers disagreed); pr-workflow.md and github-integration search bullets are in open Prune Trials. The ADR-0004 0.x-minor wording went to escalation PR #2482. The ADR-0023 wording drift was dropped from it because rewording would change the decision. code-review caught a wrong step pointer and the contested deletion; both fixed.  Sweep #2481 merged on a green gate; #2482 awaits a human merge."
 prs:
   - "2481"
   - "2482"
@@ -289,18 +289,21 @@ frictions:
   - description: A git add with an excluded ignored directory failed and the chained commit silently did not run; HEAD stayed on an old commit until I noticed.
     solution: Use plain git add -A with .throwaway ignored; check git log after commit.
     severity: nit
-durationSec: 1768
+durationSec: 1824
 models:
-  claude-sonnet-5-5: 117
+  claude-sonnet-5-5: 129
 toolCounts:
   Read: 3
-  Bash: 40
+  Bash: 42
   Skill: 4
   Agent: 13
   mcp__github__create_pull_request: 2
   mcp__github__add_issue_comment: 1
   mcp__github__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__issue_read: 1
 filesEdited:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0004.md
@@ -477,67 +480,67 @@ subagents:
     durationSec: 56
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Single-home reviewer
     durationSec: 495
     toolCalls: 56
     modelCalls: 52
-    tokenShare: 16.1
+    tokenShare: 15.6
   - task: Coherence reviewer
     durationSec: 611
     toolCalls: 90
     modelCalls: 73
-    tokenShare: 30.5
+    tokenShare: 29.6
   - task: "Concision: journal pages"
     durationSec: 128
     toolCalls: 10
     modelCalls: 3
-    tokenShare: 1.6
+    tokenShare: 1.5
   - task: "Concision: inventory A-I"
     durationSec: 126
     toolCalls: 33
     modelCalls: 7
-    tokenShare: 3.2
+    tokenShare: 3.1
   - task: "Concision: inventory L-Z"
     durationSec: 223
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Check single-home findings
     durationSec: 223
     toolCalls: 34
     modelCalls: 29
-    tokenShare: 4.6
+    tokenShare: 4.4
   - task: Check inventory A-I and freshness
     durationSec: 337
     toolCalls: 36
     modelCalls: 34
-    tokenShare: 8.6
+    tokenShare: 8.4
   - task: Check inventory L-Z findings
     durationSec: 379
     toolCalls: 18
     modelCalls: 14
-    tokenShare: 4.1
+    tokenShare: 4
   - task: Check journal pages findings
     durationSec: 122
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Standards review of sweep diff
     durationSec: 59
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1.8
+    tokenShare: 1.7
   - task: Spec review of sweep diff
     durationSec: 57
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 2.3
+    tokenShare: 2.2
   - task: Review escalation diff
     durationSec: 19
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.2
+    tokenShare: 1.1
 gitBranch: claude/festive-mayer-kqx5oi
 entrypoint: remote_trigger
 cliVersion: 2.1.310
