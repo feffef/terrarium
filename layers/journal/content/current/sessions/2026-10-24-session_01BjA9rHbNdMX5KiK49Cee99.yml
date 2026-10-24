@@ -1,47 +1,89 @@
 schemaVersion: 1
 session: session_01BjA9rHbNdMX5KiK49Cee99
 startedAt: 2026-10-24T18:10:32Z
-endedAt: 2026-10-24T18:16:46Z
-kind: delegated
-goal: Review the Glass Box draft Lessons for quality and coverage gaps
-status: completed
-outcome: One agent graded all 31 draft Lessons against the guide; report given in chat, nothing changed in the repo
-summary: "The human asked for an agent to read every Glass Box draft and judge quality, titles, cut, fixes to reach guide level, and which drafts fill real coverage gaps. I asked four scoping questions (the human chose Lessons only, report in chat, gaps measured against what Terrarium actually uses, one agent). One read-only general-purpose agent read the 20 guide Lessons and the 31 drafts. Two conflicting reports reached me; the subagent hand-back matched the files (31 drafts, real titles, revision 75deb948) and the other did not, so I discarded it after checking titles, pins, two Why sections and the Dependabot staleness claim against source. Main finding: no draft is guide-ready, because every draft's \"Why it's built this way\" is ADR pointer lines rather than the contract's bold-lead-in bullets. No PR; nothing was agent-initiated beyond the review."
-prs: []
+endedAt: 2026-10-24T19:10:24Z
+kind: interactive
+goal: Review the Glass Box drafts, then promote five Lessons and write The self-improvement loop
+status: in-review
+outcome: "PR #2498 open: five draft Lessons rewritten into the guide, one new Lesson, cross-links from existing guide pages"
+summary: "Human-instructed throughout. First the human asked for an agent review of every Glass Box draft Lesson (quality, titles, cut, fixes, coverage gaps); I asked four scoping questions, ran one review agent, and reported in chat. The human then asked to improve and promote five drafts (type checks, unit/e2e tests, Zod content validation, MCP, cross-tenant kinds), write a guide Lesson on the self-improvement loop, and later to add cross-references from existing guide Lessons. I asked four more questions (loop scope, landing Space, titles, PR count); the human rejected my suggested titles as too long, so I chose 1-3 word concept titles. Six writer agents ran in parallel in the shared checkout, each owning one page; I did the draft relinking and the Where next / Walkthrough joins myself. Several agents handed back \"done\" reports before writing anything, and reports cited files that don't exist, so every page was verified on disk and by the page checks before use. code-review (Standards + Spec) found real issues (loosely related ADR citations, motive clauses in In Terrarium, a changing count, a misattributed incident, two missing Walkthrough chips), all fixed; two Standards findings were checked and rejected as wrong. Gate green after one clean run (earlier runs overlapped). Open: CI and merge."
+prs:
+  - "2498"
 docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: Lesson contract and Spaces; agent agreed it was the key source
     useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: before commits; confirmed fetch and trailer checks
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push, verdict comment, merge recipe
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tools for PR; also used to sanity-check the MCP page
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts review for the four screenshots
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: Lesson steps, including the join step
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: pin, write rules, check steps
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: checked whether it applied; it syncs pages, not promotions
+    useful: no
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/typescript/01.type-checking.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/testing/01.unit-and-e2e-tests.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/zod/01.content-validation.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/drafts/pages/typescript/01.two-type-checks.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/drafts/pages/claude-code/09.mcp.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/drafts/pages/terrarium-practice/08.cross-tenant-kinds.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+    reason: (read before editing)
   - path: layers/glassbox/app/utils/lesson.ts
     reason: (no reason given)
   - path: layers/glassbox/app/utils/subjects.ts
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
-    reason: (no reason given)
-  - path: layers/glassbox/content/guide/pages/claude-code/04.hooks.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/claude-code/07.subagents.md
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
     reason: (no reason given)
-  - path: layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
-    reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
     reason: (no reason given)
-  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
-    reason: (no reason given)
-  - path: layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
-    reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
@@ -49,25 +91,21 @@ docsRead:
   - path: layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
-    reason: (no reason given)
-  - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
     reason: (no reason given)
   - path: layers/glassbox/content/drafts/pages/claude-code/05.guards.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/drafts/pages/claude-code/06.hints.md
     reason: (no reason given)
   - path: layers/glassbox/content/drafts/pages/claude-code/08.workflow-scripts.md
     reason: (no reason given)
-  - path: layers/glassbox/content/drafts/pages/claude-code/09.mcp.md
-    reason: (no reason given)
   - path: layers/glassbox/content/drafts/pages/claude-code/10.routines.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/drafts/pages/claude-code/11.cloud-sessions.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/drafts/pages/git-github/03.thin-ci-workflow.md
     reason: (no reason given)
   - path: layers/glassbox/content/drafts/pages/git-github/05.provenance-headers.md
@@ -79,7 +117,7 @@ docsRead:
   - path: layers/glassbox/content/drafts/pages/nuxt-content/04.query-collection-patterns.md
     reason: (no reason given)
   - path: layers/glassbox/content/drafts/pages/nuxt-content/05.mdc-components.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/drafts/pages/nuxt-content/06.prose-overrides.md
     reason: (no reason given)
   - path: layers/glassbox/content/drafts/pages/nuxt-content/07.mermaid-svg.md
@@ -102,25 +140,57 @@ docsRead:
     reason: (no reason given)
   - path: layers/glassbox/content/drafts/pages/terrarium-practice/06.out-of-scope-records.md
     reason: (no reason given)
-  - path: layers/glassbox/content/drafts/pages/terrarium-practice/08.cross-tenant-kinds.md
-    reason: (no reason given)
   - path: layers/glassbox/content/drafts/pages/testing/01.unit-and-e2e.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/drafts/pages/testing/02.invariants-as-tests.md
-    reason: (no reason given)
-  - path: layers/glassbox/content/drafts/pages/typescript/01.two-type-checks.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/drafts/pages/zod/01.manifest-validation.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/drafts/pages/zod/02.timestamps-as-strings.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/drafts/pages/zod/03.schema-only-grows.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/glassbox/content/drafts/pages/zod/04.schemas-column-types.md
+    reason: (read before editing)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (no reason given)
+  - path: layers/commons/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
     reason: (no reason given)
 skillsUsed:
   - name: dispatch-subagents
-    reason: brief for the review agent
+    reason: briefs for the review agent and six writer agents
+  - name: code-review
+    reason: required review before first push
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -132,14 +202,69 @@ frictions:
   - description: A second, fabricated-looking subagent report (wrong titles, 30 pages, A grades) arrived beside the real hand-back and contradicted it.
     solution: Verify subagent claims against source before relaying; done here by listing titles and revisions.
     severity: minor
-durationSec: 374
+  - description: Four of six writer subagents sent 'done' hand-backs before writing any file; some reports cited nonexistent test files and passing checks that had failed.
+    solution: Verify every subagent claim on disk (ls, git status, page checks) before acting; dispatch-subagents could say hand-backs can precede the work.
+    severity: moderate
+  - description: I started gate:scoped in the background, got an early 'completed' notice with a truncated log, and started two more runs that overlapped and clobbered .nuxt and the build lock.
+    solution: Before rerunning a gate, check with ps that no gate.ts or nuxt process is alive; run it in the foreground with a 600s timeout when it fits.
+    severity: moderate
+  - description: The Standards reviewer returned two different reports; the first had two wrong findings (layer nuxt.config coverage, ADR-0018 relevance).
+    solution: Check each review finding against the source before applying it, as done here.
+    severity: minor
+  - description: A writer agent's date command was denied, leaving publishedAt as a placeholder until another edit replaced it.
+    solution: Give the timestamp in the brief, or have the orchestrator set publishedAt.
+    severity: nit
+durationSec: 3592
 models:
-  claude-opus-5-5: 27
+  claude-opus-5-5: 256
 toolCounts:
-  Bash: 8
-  AskUserQuestion: 1
-  Skill: 3
-  Agent: 1
+  Bash: 75
+  AskUserQuestion: 2
+  Skill: 4
+  Agent: 9
+  Read: 16
+  Write: 2
+  SendMessage: 4
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/typescript/01.type-checking.md
+  - layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+  - layers/glassbox/content/guide/pages/testing/01.unit-and-e2e-tests.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+  - layers/glassbox/content/guide/pages/zod/01.content-validation.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+  - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+  - layers/glassbox/content/guide/pages/claude-code/03.skills.md
+  - layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+  - layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+  - layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/drafts/pages/claude-code/05.guards.md
+  - layers/glassbox/content/drafts/pages/claude-code/09.mcp.md
+  - layers/glassbox/content/drafts/pages/claude-code/10.routines.md
+  - layers/glassbox/content/drafts/pages/claude-code/11.cloud-sessions.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/05.mdc-components.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/08.cross-tenant-kinds.md
+  - layers/glassbox/content/drafts/pages/testing/01.unit-and-e2e.md
+  - layers/glassbox/content/drafts/pages/testing/02.invariants-as-tests.md
+  - layers/glassbox/content/drafts/pages/typescript/01.two-type-checks.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-newcomers-first-hour.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/routines.md
+  - layers/glassbox/content/drafts/pages/zod/01.manifest-validation.md
+  - layers/glassbox/content/drafts/pages/zod/02.timestamps-as-strings.md
+  - layers/glassbox/content/drafts/pages/zod/03.schema-only-grows.md
+  - layers/glassbox/content/drafts/pages/zod/04.schemas-column-types.md
+  - layers/glassbox/content/guide/terms/aggregator.yml
 rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/glossary-terms.md
@@ -148,32 +273,60 @@ rulesLoaded:
   - .claude/rules/glassbox-content.md
   - .claude/rules/mermaid-lanes.md
   - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0004-human-merge.md
 rulesLoadedBySubagents:
   - .claude/rules/adr-0001.md
   - .claude/rules/adr-0011.md
-  - .claude/rules/adr-0027.md
-  - .claude/rules/adr-0030.md
   - .claude/rules/guards.md
   - .claude/rules/adr-0018.md
   - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/agents/environment-caveats.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - layers/commons/GLOSSARY.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - GLOSSARY.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - docs/research/nuxt-content-review-grounding.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
-    reason: Agent used it to show the Dependabot draft is stale; no gate needed for a read-only review
-    useful: partly
+    reason: Ran code-review and gate:scoped before the first push; content-only, so agent-mergeable
+    useful: yes
   - path: .claude/rules/adr-0009.md
     reason: Told me to log this session via close-session; summary was enough
     useful: yes
   - path: .claude/rules/adr-0003.md
-    reason: No PR or new work in a read-only review
-    useful: no
+    reason: Opened the PR without asking and subscribed, as it says
+    useful: yes
   - path: .claude/rules/adr-0017.md
-    reason: Agent checked provenance draft facts against it; I posted nothing to GitHub
-    useful: partly
+    reason: PR body and comment open with the session header
+    useful: yes
   - path: .claude/rules/adr-0021.md
     reason: Agent used it to judge the glossaries draft
     useful: partly
@@ -187,7 +340,7 @@ ruleVerdicts:
     reason: Loaded on reading package.json; nothing was edited
     useful: no
   - path: .claude/rules/glassbox-content.md
-    reason: Agent used it to flag facts that change (model names, counts) in drafts
+    reason: Drove the 'Three Skills' and 'two optional fields' fixes
     useful: yes
   - path: .claude/rules/mermaid-lanes.md
     reason: No diagram was written
@@ -202,10 +355,10 @@ ruleVerdicts:
     reason: "Agent: loaded on the isolation Lesson, not needed"
     useful: no
   - path: .claude/rules/adr-0027.md
-    reason: Agent used it for the prune-trials draft
+    reason: Writers used it for the loop Lesson's Prune Trials part
     useful: partly
   - path: .claude/rules/adr-0030.md
-    reason: "Agent: loaded on a docs/adr listing, not needed"
+    reason: Loaded on reading ADR-0018 to check a citation; no ADR edited
     useful: no
   - path: .claude/rules/guards.md
     reason: "Agent: loaded on a scripts/hooks listing, not needed"
@@ -216,14 +369,73 @@ ruleVerdicts:
   - path: .claude/rules/adr-0028.md
     reason: "Agent: loaded on nuxt.config.ts, not needed"
     useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded on reading gate.ts; no gate step changed
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading Skills; no Skill changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading a rule; nothing to place
+    useful: no
 subagents:
   - type: general-purpose
     task: Review Glass Box draft Lessons
     durationSec: 228
     toolCalls: 59
     modelCalls: 20
-    tokenShare: 64.6
+    tokenShare: 7.4
+  - type: general-purpose
+    task: Promote type-checks Lesson
+    durationSec: 306
+    toolCalls: 45
+    modelCalls: 35
+    tokenShare: 7
+  - type: general-purpose
+    task: Promote unit/e2e tests Lesson
+    durationSec: 309
+    toolCalls: 50
+    modelCalls: 40
+    tokenShare: 8.1
+  - type: general-purpose
+    task: Promote Zod content-validation Lesson
+    durationSec: 277
+    toolCalls: 48
+    modelCalls: 36
+    tokenShare: 7.3
+  - type: general-purpose
+    task: Promote MCP servers Lesson
+    durationSec: 277
+    toolCalls: 41
+    modelCalls: 33
+    tokenShare: 7
+  - type: general-purpose
+    task: Promote cross-tenant reads Lesson
+    durationSec: 288
+    toolCalls: 45
+    modelCalls: 33
+    tokenShare: 7.1
+  - type: general-purpose
+    task: Write self-improvement loop Lesson
+    durationSec: 271
+    toolCalls: 33
+    modelCalls: 28
+    tokenShare: 6.6
+  - type: general-purpose
+    task: Standards review of Glass Box diff
+    durationSec: 237
+    toolCalls: 42
+    modelCalls: 36
+    tokenShare: 9
+  - type: general-purpose
+    task: Spec review of Glass Box diff
+    durationSec: 92
+    toolCalls: 14
+    modelCalls: 13
+    tokenShare: 3.3
 gitBranch: ccr-6a0d47d4-40ms5i
 entrypoint: remote_mobile
 cliVersion: 2.1.310
+learnings:
+  - Background-task 'completed' notifications in this harness can arrive before the work ends; trust process state and files, not the notice.
 landedBy: Stop
