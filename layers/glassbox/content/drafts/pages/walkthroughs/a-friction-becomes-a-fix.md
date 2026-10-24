@@ -63,7 +63,7 @@ The subagent drops a Friction that a merged change already fixed, one that an op
 The run weighs recurrence and severity together and picks the top candidates, and one design subagent reads each occurrence's full log and designs every fix. For a Friction that a doc already covers, it checks whether the session had opened that doc: if not, the instruction sits where nobody looks; if so, its wording failed. A fix that would touch a :term[Human-only] file, a guard or the hook wiring, or that turns on a design choice a person should make, is never built in this run: it gets an issue with the design instead.
 
 ::stop-links
-[Required reviewers](/t/glassbox/guide/terrarium-practice/human-only-list) · [Guards that fail closed](/t/glassbox/drafts/claude-code/guards) · [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · :file[.agents/skills/frictions-to-fixes/design-brief.md]
+[Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · [Guards that fail closed](/t/glassbox/drafts/claude-code/guards) · [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · :file[.agents/skills/frictions-to-fixes/design-brief.md]
 ::
 
 ## 7. Helper agents write the fixes
@@ -79,7 +79,7 @@ Helper agents write the fixes, each in a git worktree of its own, run the Gate a
 The run reviews each branch itself, opens its PR and posts its verdict there as a comment. A clean, low-risk fix it merges through `scripts/github/merge-pr.ts`, which refuses without that verdict and refuses a PR that changes a Human-only file. A fix whose diff needs a human merge stays open, with the reason, for a Trusted user.
 
 ::stop-links
-[Merge gate](/t/glassbox/guide/terrarium-practice/gate) · [Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr)
+[Merge gate](/t/glassbox/guide/terrarium-practice/gate) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 9. The next session reads the fix

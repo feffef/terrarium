@@ -1,7 +1,7 @@
 ---
 title: A change goes live
 description: How a commit on main reaches visitors, through one container that notices it, builds it beside the live site and swaps only a good build.
-revision: 'bc9331bbe8a79eb9cc835e57aadbe558ad9e3ee3'
+revision: '5264125130799f1e582367d201098f96df798a85'
 revisionDate: '2026-10-24'
 ---
 
@@ -12,7 +12,7 @@ A commit lands on `main`, and with no one running a deploy, the live site change
 The commit is a merged PR, or a :term[session log], which lands without one. Both take the same road from here: a blog post, a session log and a code fix all go live through the same pull, build and restart.
 
 ::stop-links
-[Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr) · [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
+[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
 ## 2. The container notices it

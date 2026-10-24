@@ -1,7 +1,7 @@
 ---
 title: Adding a site
 description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
-revision: 'bc9331bbe8a79eb9cc835e57aadbe558ad9e3ee3'
+revision: '5264125130799f1e582367d201098f96df798a85'
 revisionDate: '2026-10-24'
 ---
 
@@ -12,7 +12,7 @@ A new site joins Terrarium. This Walkthrough follows the work from the side of t
 A :term[Trusted] user approves the new :term[Tenant], for example by asking for it in a session or by labelling its issue `ready-for-agent`, before an agent starts on it. The agent then works on a feature branch, and the result lands as a PR like any other change.
 
 ::stop-links
-[Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr)
+[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 2. A folder becomes a layer
@@ -68,7 +68,7 @@ It writes its own `GLOSSARY.md` for the words only it uses. Then it adds itself 
 No test config names the new Tenant. The smoke test reads its entry addresses from the manifests, so it loads each new Space's front page in a browser, and fails on a console error or a front page with no Document. What only this Tenant has, such as its root page's redirect, goes in its own e2e spec under `tests/e2e/` in its folder, which the e2e project's glob picks up. The :term[Gate] runs them all.
 
 ::stop-links
-[Unit and e2e tests](/t/glassbox/guide/testing/unit-and-e2e-tests) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · :file[layers/marquee/tests/e2e/marquee.spec.ts]
+[Testing](/t/glassbox/guide/testing/unit-and-e2e-tests) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · :file[layers/marquee/tests/e2e/marquee.spec.ts]
 ::
 
 ## 9. Who else can see it

@@ -44,7 +44,7 @@ Some sites here record the real build and some are fiction, and a newcomer can't
 The tour links the repository's issues and pull requests, and from there the newcomer opens the code. A good first file is the one every agent session reads first: `CLAUDE.md`. It is short, sets the house style and names the doc to read before each kind of action, rather than copying the docs in. Instructions about particular files live in rules, which load when an agent reads or edits those files.
 
 ::stop-links
-[CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Path-scoped rules](/t/glassbox/guide/claude-code/path-scoped-rules)
+[CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules)
 ::
 
 ## 6. The words before the code
@@ -52,7 +52,7 @@ The tour links the repository's issues and pull requests, and from there the new
 `CLAUDE.md` sends every session to the glossaries before anything else: the glossary map, which points to a Tenant's own glossary, then the Platform glossary, with words such as Tenant, Space and Friction. A newcomer who reads them in that order learns the words the docs, the code and the agents all use. The decisions behind the words are ADRs, one decision each, and each ADR's summary reaches agents as a rule.
 
 ::stop-links
-[Several glossaries](/t/glassbox/drafts/terrarium-practice/glossaries) · [Decision records (ADRs)](/t/glassbox/guide/terrarium-practice/adrs)
+[Several glossaries](/t/glassbox/drafts/terrarium-practice/glossaries) · [Decision records](/t/glassbox/guide/terrarium-practice/adrs)
 ::
 
 ## A real case
