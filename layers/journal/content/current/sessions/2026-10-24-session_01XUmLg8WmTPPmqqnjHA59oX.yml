@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01XUmLg8WmTPPmqqnjHA59oX
 startedAt: 2026-10-24T13:10:26Z
-endedAt: 2026-10-24T13:21:51Z
+endedAt: 2026-10-24T13:25:58Z
 kind: autonomous
 goal: "Scheduled prune trial: judge open trials, prune one problem"
-status: in-review
-outcome: "PR #2493 open: two trials judged and deleted, git-conventions Stop-hook section pruned (-4), Sonnet probe passed"
-summary: "Autonomous scheduled run of prune-trial; nothing was human-instructed. Judged the audit-docs and github-integration search-bullets trials from 59 sessions of Frictions (one major, a close-session slip, unrelated), so both prunes hold and their entries were deleted. A search subagent ranked six prose-that-failed candidates; I rejected the close-session restatements (one-liners carrying step detail, nothing for the answer-only case) and the verify-before-you-state family (nothing enforces it, too risky) and pruned git-conventions' Stop-hook section, which failed as prose (#2233) and which only a harness script drives. A Sonnet probe pinned to the post-prune SHA answered all four situations correctly. Code-review (Standards and Spec) caught two ledger-claim overstatements and a missing proven field, fixed before the push. Gate passed. Open: the trial verdict, due after sessions run against it."
+status: completed
+outcome: "PR #2493 merged: two trials judged and deleted, git-conventions Stop-hook section pruned (-4), Sonnet probe passed"
+summary: "Autonomous scheduled run of prune-trial; nothing was human-instructed. Judged the audit-docs and github-integration search-bullets trials from 59 sessions of Frictions (one major, a close-session slip, unrelated), so both prunes hold and their entries were deleted. A search subagent ranked six prose-that-failed candidates; I rejected the close-session restatements (one-liners carrying step detail, nothing for the answer-only case) and the verify-before-you-state family (nothing enforces it, too risky) and pruned git-conventions' Stop-hook section, which failed as prose (#2233) and which only a harness script drives. A Sonnet probe pinned to the post-prune SHA answered all four situations correctly. Code-review (Standards and Spec) caught two ledger-claim overstatements and a missing proven field, fixed before the push. Gate passed. PR #2493 merged after green CI and a posted verdict. Open: the trial verdict, due after sessions run against it."
 prs:
   - "2493"
 docsRead:
@@ -64,20 +64,23 @@ frictions:
   - description: The Stop hook asked for a push twice before gate and review had finished; declined per ADR-0004.
     solution: "None repo-side (harness script, accepted in #2233)."
     severity: nit
-durationSec: 685
+durationSec: 932
 models:
-  claude-sonnet-5-5: 81
+  claude-sonnet-5-5: 101
 toolCounts:
   Read: 7
-  Bash: 17
-  Skill: 4
+  Bash: 20
+  Skill: 5
   Agent: 4
-  ReadNotifications: 3
+  ReadNotifications: 5
   Grep: 2
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__issue_read: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - docs/agents/git-conventions.md
@@ -160,28 +163,28 @@ subagents:
     durationSec: 165
     toolCalls: 23
     modelCalls: 17
-    tokenShare: 23.5
+    tokenShare: 19.7
   - type: general-purpose
     task: Sonnet probe of pruned section
     model: sonnet
     durationSec: 19
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 3.8
+    tokenShare: 3.2
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 24
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 6.2
+    tokenShare: 5.2
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 47
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 8.2
+    tokenShare: 6.9
 gitBranch: claude/practical-rubin-s3dbmi
 entrypoint: remote_trigger
 cliVersion: 2.1.310
