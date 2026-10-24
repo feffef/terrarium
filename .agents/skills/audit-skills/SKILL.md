@@ -144,7 +144,7 @@ Grade each Skill's importance by the definitions below, after reading its
   grade is the lever.
 - **`role`** stays ≤ ~50 words and free of PR, issue or session ids. The
   scorecard prints it; rewrite any claim this run's evidence contradicts.
-- **`observations`** hold 40 days of history. Append
+- **`observations`** hold a 40-day window of history. Append
   `{ date: <today, UTC>, note }` for a grade or role change, a finding
   (verified or unverified, say which) or an idea; a clean check appends
   nothing. Write the note fresh, ≤ ~100 words: what this run found and the ids
