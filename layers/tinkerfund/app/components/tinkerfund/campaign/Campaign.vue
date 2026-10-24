@@ -35,6 +35,20 @@ const from = computed(() => campaignPriceFrom(c.value.rewards))
 const category = computed(() => categories.value.find((x) => x.slug === c.value.category))
 
 const drawer = useTemplateRef('drawer')
+const rewardsEl = useTemplateRef('rewardsEl')
+// A column taller than the viewport sticks by its bottom edge, so no Reward is ever clipped.
+const tall = ref(false)
+const measureRewards = () => { tall.value = (rewardsEl.value?.offsetHeight ?? 0) > window.innerHeight - 136 }
+const rewardsObserver = import.meta.client ? new ResizeObserver(measureRewards) : undefined
+onMounted(() => {
+  if (rewardsEl.value) rewardsObserver?.observe(rewardsEl.value)
+  window.addEventListener('resize', measureRewards)
+  measureRewards()
+})
+onBeforeUnmount(() => {
+  rewardsObserver?.disconnect()
+  window.removeEventListener('resize', measureRewards)
+})
 const refusals = ref<Record<string, string>>({})
 const pledge = computed(() => tinkerfundPledgeFor(pledges.value, slug.value))
 const needsReward = computed(() => !tinkerfundRewarded(
@@ -115,7 +129,7 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
         </template>
       </section>
 
-      <section id="rewards" class="rewards" aria-labelledby="rewards-h" tabindex="-1">
+      <section id="rewards" ref="rewardsEl" class="rewards" :class="{ tall }" aria-labelledby="rewards-h" tabindex="-1">
         <h2 id="rewards-h">Rewards</h2>
         <p v-for="deal in deals" :key="deal.stem"><TinkerfundCampaignDealBadge :promotion="deal" /></p>
         <TinkerfundCampaignRewardCard v-for="reward in c.rewards" :key="reward.id" :reward="reward" :backing="backing" :now="now" :zone-name="zoneName" />
@@ -178,10 +192,10 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
     align-self: start;
     position: sticky;
     top: 120px;
-    max-height: calc(100vh - 136px);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    padding-right: 4px;
+  }
+  .rewards.tall {
+    top: auto;
+    bottom: 16px;
   }
 }
 

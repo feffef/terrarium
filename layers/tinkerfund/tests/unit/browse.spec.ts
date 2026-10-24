@@ -165,6 +165,11 @@ describe('Home', () => {
     expect(titles(home.justLaunched)).toEqual(['stapler'])
   })
 
+  it('caps Just launched at six so the grid ends on a full row', () => {
+    const many = tinkerfundListings(Array.from({ length: 8 }, (_, i) => doc(`new${i}`, { launch: '-1d', end: '+9d' })), [], NOW)
+    expect(tinkerfundHomeSections(many, NOW).justLaunched).toHaveLength(6)
+  })
+
   it('leaves a section empty when nothing fits, so it can hide', () => {
     const quiet = tinkerfundHomeSections(tinkerfundListings([doc('old', { launch: '-15d', end: '+15d' })], [], NOW), NOW)
     expect(quiet.featured?.title).toBe('old')
