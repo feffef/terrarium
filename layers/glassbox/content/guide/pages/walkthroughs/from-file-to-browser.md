@@ -44,7 +44,7 @@ The Tenant's :term[manifest] lists its Spaces and Collections. Each time Nuxt Co
 `pnpm build` runs `nuxt build`, and Nuxt Content parses every file a collection matches. It inserts each Collection's rows into a table of its own in an SQLite database, and packs each table's SQL dump into the server it builds. The build writes no HTML: every page is rendered when someone asks for it. [A change goes live](/t/glassbox/guide/walkthroughs/a-change-goes-live) follows that build onto the live server.
 
 ::stop-links
-[Content database](/t/glassbox/guide/nuxt-content/content-database)
+[Content database](/t/glassbox/guide/nuxt-content/content-database) · [Content validation](/t/glassbox/guide/zod/content-validation)
 ::
 
 ## 4. A request renders it, or the cache answers

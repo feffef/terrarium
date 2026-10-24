@@ -60,7 +60,7 @@ The session pushes the branch and opens the PR itself, without asking. The PR's 
 With the PR open, the session runs `close-session`. The session first checks itself against `CLAUDE.md` and the always-loaded rules, then writes its :term[session log]: its goal, how far it got and every :term[Friction], one for each rule it broke or skipped. At the end of that turn a `Stop` hook commits that one file straight to `main`.
 
 ::stop-links
-[Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
+[Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [The self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop)
 ::
 
 ## 8. CI runs the same Gate
