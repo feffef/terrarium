@@ -1,0 +1,547 @@
+schemaVersion: 1
+session: session_01Ku4KD2Ua5MXi6eQ95TG4aj
+startedAt: 2026-10-24T04:03:25Z
+endedAt: 2026-10-24T04:32:53Z
+kind: autonomous
+goal: Scheduled audit of the Platform's docs (journal concision family)
+status: in-review
+outcome: "Sweep PR #2481 and escalation PR #2482 open, gate green"
+summary: "Scheduled audit-docs run, no human prompt. Six reviewers (four lenses, concision split three ways) produced about 110 findings; four checkers confirmed or corrected about 40 and rejected about 35. Applied the in-scope ones in sweep PR #2481 (Inventory wording, Journal page fixes, single-home pointers, ledger-set path). Skipped recent observation deletions (audit-skills keeps 40 days) and the adr-check.yml deletion (checkers disagreed); pr-workflow.md and github-integration search bullets are in open Prune Trials. The ADR-0004 0.x-minor wording went to escalation PR #2482. The ADR-0023 wording drift was dropped from it because rewording would change the decision. code-review caught a wrong step pointer and the contested deletion; both fixed. Open: merge #2481 on green, #2482 awaits a human."
+prs:
+  - "2481"
+  - "2482"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read before git; fetch before trusting history
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR steps and review rule
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before PR creation
+    useful: partly
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .claude/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (read before editing)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/architecture.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/highlights.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/history.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (read before editing)
+  - path: layers/journal/content/current/pages/index.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/real-and-invented.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/routines.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/adr-check.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/ask-matt.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/atlas-specimen.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/audit-docs.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/audit-skills.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/auto-triage.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/blog-post.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/claude-handoff.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/clear-backlog.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/close-session.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/code-review.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/codebase-design.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/dependabot-sweep.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/diagnosing-bugs.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/digest.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/dispatch-subagents.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/domain-modeling.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/frictions-to-fixes.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/glassbox-lesson.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/glassbox-update.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/grill-me.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/grill-with-docs.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/grilling.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/guest-build.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/guest-intake.yml
+    reason: (read before editing)
+  - path: layers/journal/content/current/skills/handoff.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/implement.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/improve-codebase-architecture.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/skills/inspect-session.yml
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (read before editing)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: layers/atlas/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/commons/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (read before editing)
+  - path: layers/marquee/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (read before editing)
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-walkthrough/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: (no reason given)
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/brief.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: (no reason given)
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (no reason given)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
+  - path: docs/adr/0013-content-config-built-from-manifests.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0019-content-load-error-recovery.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+  - path: docs/adr/TEMPLATE.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the task itself
+  - name: dispatch-subagents
+    reason: brief rules for reviewers and checkers
+  - name: code-review
+    reason: review before first push
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: A git add with an excluded ignored directory failed and the chained commit silently did not run; HEAD stayed on an old commit until I noticed.
+    solution: Use plain git add -A with .throwaway ignored; check git log after commit.
+    severity: nit
+durationSec: 1768
+models:
+  claude-sonnet-5-5: 117
+toolCounts:
+  Read: 3
+  Bash: 40
+  Skill: 4
+  Agent: 13
+  mcp__github__create_pull_request: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0004.md
+  - docs/adr/0004-objective-safety-gate.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - CLAUDE.md
+  - GLOSSARY.md
+  - docs/agents/github-integration.md
+  - layers/journal/GLOSSARY.md
+  - layers/journal/content/current/pages/highlights.md
+  - layers/journal/content/current/pages/history.md
+  - layers/journal/content/current/pages/how-it-works.md
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/audit-skills.yml
+  - layers/journal/content/current/skills/close-session.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - layers/journal/content/current/skills/glassbox-update.yml
+  - layers/journal/content/current/skills/guest-build.yml
+  - layers/journal/content/current/skills/guest-intake.yml
+  - layers/journal/content/current/skills/inspect-session.yml
+  - layers/journal/content/current/skills/midden-catalogue.yml
+  - layers/journal/content/current/skills/midden-survey.yml
+  - layers/journal/content/current/skills/prune-trial.yml
+  - layers/journal/content/current/skills/resolving-merge-conflicts.yml
+  - layers/journal/content/current/skills/retro.yml
+  - layers/journal/content/current/skills/tinkerfund-campaign.yml
+  - layers/journal/content/current/skills/writing-for-agents.yml
+  - layers/midden/GLOSSARY.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0026.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0024.md
+docsReadBySubagents:
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/guards.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - docs/agents/domain.md
+  - docs/proposals/README.md
+  - GLOSSARY.md
+  - layers/atlas/GLOSSARY.md
+  - layers/blog/GLOSSARY.md
+  - layers/commons/GLOSSARY.md
+  - layers/glassbox/GLOSSARY.md
+  - layers/journal/GLOSSARY.md
+  - layers/marquee/GLOSSARY.md
+  - layers/midden/GLOSSARY.md
+  - layers/tinkerfund/GLOSSARY.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - .agents/skills/glassbox-walkthrough/SKILL.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/research/public-readiness-review.md
+  - docs/research/making-repo-public.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/shell-reads-by-output-matching.md
+  - docs/research/content-client-queries-without-wasm.md
+  - docs/research/nuxt-content-review-grounding.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/audit-skills/brief.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+  - .agents/skills/blog-post/personas/karen.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0007-derived-files-built-not-committed.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+  - docs/adr/0013-content-config-built-from-manifests.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0019-content-load-error-recovery.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - docs/adr/TEMPLATE.md
+  - docs/research/mermaid-server-side-rendering.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/visitor-loop/decisions.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/visitor-loop/refiner-brief.md
+subagents:
+  - task: Freshness reviewer
+    durationSec: 56
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 2
+  - task: Single-home reviewer
+    durationSec: 495
+    toolCalls: 56
+    modelCalls: 52
+    tokenShare: 16.1
+  - task: Coherence reviewer
+    durationSec: 611
+    toolCalls: 90
+    modelCalls: 73
+    tokenShare: 30.5
+  - task: "Concision: journal pages"
+    durationSec: 128
+    toolCalls: 10
+    modelCalls: 3
+    tokenShare: 1.6
+  - task: "Concision: inventory A-I"
+    durationSec: 126
+    toolCalls: 33
+    modelCalls: 7
+    tokenShare: 3.2
+  - task: "Concision: inventory L-Z"
+    durationSec: 223
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 2
+  - task: Check single-home findings
+    durationSec: 223
+    toolCalls: 34
+    modelCalls: 29
+    tokenShare: 4.6
+  - task: Check inventory A-I and freshness
+    durationSec: 337
+    toolCalls: 36
+    modelCalls: 34
+    tokenShare: 8.6
+  - task: Check inventory L-Z findings
+    durationSec: 379
+    toolCalls: 18
+    modelCalls: 14
+    tokenShare: 4.1
+  - task: Check journal pages findings
+    durationSec: 122
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 2
+  - task: Standards review of sweep diff
+    durationSec: 59
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 1.8
+  - task: Spec review of sweep diff
+    durationSec: 57
+    toolCalls: 10
+    modelCalls: 7
+    tokenShare: 2.3
+  - task: Review escalation diff
+    durationSec: 19
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.2
+gitBranch: claude/festive-mayer-kqx5oi
+entrypoint: remote_trigger
+cliVersion: 2.1.310
+trigger: audit-docs
+learnings:
+  - save-handback.ts overwrites its output file, so one pooled file needs a concat step.
+landedBy: Stop
