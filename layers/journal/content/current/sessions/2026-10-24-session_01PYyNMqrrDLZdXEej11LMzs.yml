@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_01PYyNMqrrDLZdXEej11LMzs
 startedAt: 2026-10-24T05:31:24Z
-endedAt: 2026-10-24T05:51:50Z
+endedAt: 2026-10-24T05:56:41Z
 kind: interactive
 goal: Clear the issue backlog (clear-backlog run)
 status: in-review
@@ -9,6 +9,8 @@ outcome: "8 issues triaged; owner grilled on 5; PR #2483 open, three more branch
 summary: "The owner invoked /clear-backlog (human-instructed). The default-mode sweep set was eight needs-triage or unlabeled issues; the six ready-for-human issues had an AI last comment and were skipped, and there were no external PRs. Explore gave #2471 build; #2432 and #2433 blocked (date hold until 2026-10-26, and Blocked by #2432); and #2373, #2472, #2474, #2475 and #2476 grill. Owner answers: #2474 is a new design of the owner's own (re-snapshot the tree between gate steps and abort on a change, keep the exit check, no guard); #2475 adds a read-first-hint entry for dispatch-subagents; #2476 makes sideFindings require a source; #2472 stays parked until the pr-workflow.md trial is judged; #2373 goes to a new read-only Opus session (session_019nDDDS9GsXdTKWK44j18fT) that reports on the issue. Agent-initiated: only orchestration (labels and comments recording the owner's answers, the briefs). #2471 built and reviewed by the workflow; I checked its diff and opened PR #2483 (agent-mergeable). The #2474, #2475 and #2476 builds are running; #2474 and #2475 touch Human-only paths and will wait for a human merge."
 prs:
   - "2483"
+  - "2484"
+  - "2485"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
     reason: step 1 eligibility rules for the sweep set
@@ -35,7 +37,7 @@ docsRead:
   - path: scripts/hooks/read-first-hint.ts
     reason: (read before editing)
   - path: tests/unit/read-first-hint.spec.ts
-    reason: (no reason given)
+    reason: (read before editing)
   - path: docs/adr/0004-objective-safety-gate.md
     reason: (no reason given)
   - path: .agents/skills/triage/SKILL.md
@@ -55,7 +57,7 @@ docsRead:
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: (no reason given)
   - path: docs/agents/guards.md
-    reason: (no reason given)
+    reason: (read before editing)
 skillsUsed:
   - name: clear-backlog
     reason: owner-invoked run
@@ -73,25 +75,33 @@ frictions:
   - description: Sent follow-up grilling Q6/Q7 in a message that also made tool calls; the owner never saw them and had to ask
     solution: "Follow clear-backlog's rule: when waiting on an answer, the questions are the whole message, with no tool calls in that turn"
     severity: minor
-durationSec: 1227
+  - description: "Two parallel Bash pushes using cd raced on the shared cwd; the #2475 commit went to fix/2476-sidefinding-sources. Force-push was denied, so #2476 moved to a new branch and a stray branch was left"
+    solution: Never run git in parallel Bash calls that rely on cd; use git -C with an absolute worktree path, one push per call
+    severity: moderate
+durationSec: 1517
 models:
-  claude-opus-5-5: 87
+  claude-opus-5-5: 133
 toolCounts:
-  Bash: 18
+  Bash: 35
   Read: 6
   Workflow: 4
   ToolSearch: 3
   Skill: 4
   PushNotification: 1
-  mcp__github__add_issue_comment: 4
+  mcp__github__add_issue_comment: 5
   mcp__github__issue_write: 3
   mcp__claude-code-remote__create_session: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 2
 filesEdited:
   - scripts/hooks/read-first-hint.ts
   - scripts/hooks/read-first-hint.sh
   - .agents/skills/prune-trial/SKILL.md
+  - .claude/settings.json
+  - docs/agents/guards.md
+  - tests/unit/read-first-hint.spec.ts
   - .agents/skills/clear-backlog/scripts/run-summary.ts
   - .agents/skills/clear-backlog/tests/unit/fixtures/explore.output
   - .agents/skills/clear-backlog/tests/unit/run-summary.spec.ts
@@ -209,133 +219,161 @@ subagents:
     durationSec: 37
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 2.2
+    tokenShare: 1.7
+  - type: workflow-subagent
+    task: Spec fix/2475-dispatch-subagents-read-first-hint r1
+    model: claude-opus-5-5
+    durationSec: 56
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 2
   - type: workflow-subagent
     task: Standards fix/2476-sidefinding-sources r1
     model: claude-opus-5-5
     durationSec: 34
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.6
+    tokenShare: 1.2
   - type: workflow-subagent
     task: build fix/2476-sidefinding-sources
     model: claude-sonnet-5-5
     durationSec: 287
     toolCalls: 19
     modelCalls: 15
-    tokenShare: 6
+    tokenShare: 4.6
   - type: workflow-subagent
     task: build fix/2475-dispatch-subagents-read-first-hint
     model: claude-opus-5-5
-    durationSec: 657
-    toolCalls: 27
-    modelCalls: 15
-    tokenShare: 7
+    durationSec: 702
+    toolCalls: 33
+    modelCalls: 20
+    tokenShare: 9.2
+  - type: workflow-subagent
+    task: Standards fix/2475-dispatch-subagents-read-first-hint r1
+    model: claude-opus-5-5
+    durationSec: 49
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 1.8
   - type: workflow-subagent
     task: "triage #2472"
     model: claude-opus-5-5
     durationSec: 119
     toolCalls: 23
     modelCalls: 14
-    tokenShare: 6.1
+    tokenShare: 4.7
   - type: workflow-subagent
     task: "triage #2471"
     model: claude-opus-5-5
     durationSec: 114
     toolCalls: 21
     modelCalls: 14
-    tokenShare: 5.7
+    tokenShare: 4.4
   - type: workflow-subagent
     task: "triage #2475"
     model: claude-opus-5-5
     durationSec: 94
     toolCalls: 19
     modelCalls: 8
-    tokenShare: 4.5
+    tokenShare: 3.4
   - type: workflow-subagent
     task: "triage #2476"
     model: claude-opus-5-5
     durationSec: 96
     toolCalls: 16
     modelCalls: 10
-    tokenShare: 6.1
+    tokenShare: 4.6
   - type: workflow-subagent
     task: "triage #2373"
     model: claude-opus-5-5
     durationSec: 90
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 4.2
+    tokenShare: 3.2
   - type: workflow-subagent
     task: "triage #2474"
     model: claude-opus-5-5
     durationSec: 100
     toolCalls: 19
     modelCalls: 12
-    tokenShare: 5.4
+    tokenShare: 4.1
   - type: workflow-subagent
     task: "triage #2433"
     model: claude-opus-5-5
     durationSec: 75
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 3.8
+    tokenShare: 2.9
   - type: workflow-subagent
     task: "triage #2432"
     model: claude-opus-5-5
     durationSec: 25
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.7
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: Standards fix/2474-gate-abort-on-tree-change r1
+    model: claude-opus-5-5
+    durationSec: 39
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.5
   - type: workflow-subagent
     task: build fix/2474-gate-abort-on-tree-change
     model: claude-opus-5-5
-    durationSec: 116
-    toolCalls: 19
-    modelCalls: 13
-    tokenShare: 4.1
+    durationSec: 712
+    toolCalls: 21
+    modelCalls: 15
+    tokenShare: 4.5
+  - type: workflow-subagent
+    task: Spec fix/2474-gate-abort-on-tree-change r1
+    model: claude-opus-5-5
+    durationSec: 39
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Standards fix/2471-prune-trial-line-delta r1
     model: claude-opus-5-5
     durationSec: 56
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 3.6
+    tokenShare: 2.7
   - type: workflow-subagent
     task: Standards fix/2471-prune-trial-line-delta r2
     model: claude-opus-5-5
     durationSec: 34
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.6
+    tokenShare: 1.2
   - type: workflow-subagent
     task: fix fix/2471-prune-trial-line-delta r1
     model: claude-sonnet-5-5
     durationSec: 384
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3
+    tokenShare: 2.3
   - type: workflow-subagent
     task: Spec fix/2471-prune-trial-line-delta r2
     model: claude-opus-5-5
     durationSec: 36
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2
+    tokenShare: 1.5
   - type: workflow-subagent
     task: build fix/2471-prune-trial-line-delta
     model: claude-sonnet-5-5
     durationSec: 417
     toolCalls: 16
     modelCalls: 13
-    tokenShare: 6.4
+    tokenShare: 4.9
   - type: workflow-subagent
     task: Spec fix/2471-prune-trial-line-delta r1
     model: claude-opus-5-5
     durationSec: 27
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 1.5
+    tokenShare: 1.2
 gitBranch: ccr-637e7a15-ka1mn0
 entrypoint: remote_mobile
 cliVersion: 2.1.310
