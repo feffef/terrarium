@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_015XP8ctSXnTaR7KEnyPpUP1
 startedAt: 2026-10-24T16:48:32Z
-endedAt: 2026-10-24T17:16:44Z
+endedAt: 2026-10-24T17:29:16Z
 kind: autonomous
 goal: "Scheduled visitor-loop on Tinkerfund: fix consensus problems, build one feature"
-status: in-review
-outcome: "Fix PR #2495 open with green gate; feature PR not yet built"
-summary: "Scheduled run, no human prompts. Focus was tinkerfund (row 4). Served a production build, sent sonnet, fable and opus visitors, tallied consensus, and had an opus refiner check fit. Three consensus fixes survived (Rewards panel inner scroll, Just launched orphan card, Reset demo wording); the FIG. 1 label was dropped on the refiner's reading of #1362/#1363, an aria-hidden claim was disproved in the DOM, and clock drift was dropped per decisions.md. The code review caught that a bottom-only sticky would unstick short Reward columns, so I reworked it into a measured top-or-bottom sticky and re-measured in the browser. Chosen feature, still to build: a plain Recently ended section at the end of the Tinkerfund home. All of it is agent-initiated under the Skill's remit."
+status: completed
+outcome: "Fix PR #2495 and feature PR #2496 (Recently ended on the home) merged"
+summary: "Scheduled run, no human prompts. Focus was tinkerfund (row 4). Served a production build, sent sonnet, fable and opus visitors, tallied consensus, and had an opus refiner check fit. Three consensus fixes survived (Rewards panel inner scroll, Just launched orphan card, Reset demo wording); the FIG. 1 label was dropped on the refiner's reading of #1362/#1363, an aria-hidden claim was disproved in the DOM, and clock drift was dropped per decisions.md. The code review caught that a bottom-only sticky would unstick short Reward columns, so I reworked it into a measured top-or-bottom sticky and re-measured in the browser. The feature, a plain Recently ended section at the end of the Tinkerfund home (three newest ended Campaigns, see-all link to Discover), merged as #2496 after its own review and gate. All of it is agent-initiated under the Skill's remit."
 prs:
   - "2495"
+  - "2496"
 docsRead:
   - path: docs/agents/pr-workflow.md
     reason: review before first push, recipe, verdict format
@@ -33,7 +34,7 @@ docsRead:
   - path: .agents/skills/visitor-loop/SKILL.md
     reason: (no reason given)
   - path: layers/tinkerfund/app/components/tinkerfund/browse/Home.vue
-    reason: (no reason given)
+    reason: (read before editing)
   - path: layers/tinkerfund/app/components/tinkerfund/campaign/Campaign.vue
     reason: (read before editing)
   - path: .agents/skills/visitor-loop/visitor-brief.md
@@ -55,28 +56,31 @@ frictions:
   - description: gate:scoped reused an e2e build made before my last refactor, so the final head was not actually exercised until I forced a fresh build.
     solution: Have gate:scoped rebuild when layer sources are newer than .output.
     severity: minor
-durationSec: 1692
+durationSec: 2444
 models:
-  claude-sonnet-5-5: 128
+  claude-sonnet-5-5: 183
 toolCounts:
-  Bash: 43
-  Read: 4
+  Bash: 59
+  Read: 5
   Skill: 4
-  Agent: 6
+  Agent: 7
   mcp__github__list_pull_requests: 1
   mcp__github__search_issues: 3
   mcp__github__search_pull_requests: 2
-  Monitor: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  Monitor: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
   mcp__github__pull_request_read: 1
+  ReadNotifications: 5
 filesEdited:
-  - layers/tinkerfund/app/components/tinkerfund/campaign/Campaign.vue
+  - layers/tinkerfund/app/components/tinkerfund/browse/Home.vue
   - layers/tinkerfund/app/utils/browse.ts
+  - layers/tinkerfund/tests/e2e/tinkerfund.spec.ts
+  - layers/tinkerfund/tests/unit/browse.spec.ts
+  - layers/tinkerfund/app/components/tinkerfund/campaign/Campaign.vue
   - layers/tinkerfund/content/prod/pages/how-it-works.md
   - layers/tinkerfund/content/qa/pages/how-it-works.md
-  - layers/tinkerfund/tests/unit/browse.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0005.md
@@ -148,39 +152,50 @@ subagents:
     durationSec: 124
     toolCalls: 17
     modelCalls: 12
-    tokenShare: 5.6
+    tokenShare: 4.1
   - task: "Visitor: fable"
     model: fable
     durationSec: 550
     toolCalls: 52
     modelCalls: 27
-    tokenShare: 13.7
+    tokenShare: 10
   - task: "Visitor: opus"
     model: opus
     durationSec: 410
     toolCalls: 30
     modelCalls: 23
-    tokenShare: 11
+    tokenShare: 8
   - task: "Refiner: fit check"
     model: opus
     durationSec: 147
     toolCalls: 36
     modelCalls: 23
-    tokenShare: 13.2
+    tokenShare: 9.7
   - type: general-purpose
     task: "Review: Standards axis"
     durationSec: 27
     toolCalls: 6
     modelCalls: 2
-    tokenShare: 2.7
+    tokenShare: 2
   - type: general-purpose
     task: "Review: Spec axis"
     durationSec: 31
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 3
+    tokenShare: 2.2
+  - type: general-purpose
+    task: "Review: feature Standards"
+    durationSec: 30
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 2.8
 gitBranch: claude/adoring-galileo-743bi1
 entrypoint: remote_trigger
 cliVersion: 2.1.310
 trigger: visitor-loop
+ideas:
+  - "Tinkerfund campaign page on phones: collapse the 7 gallery thumbnails into a swipe strip so title and price show on the first screen (sonnet, single)"
+  - "Tinkerfund: let Pledge-linked Campaigns on /account link to their Campaign page, and add an Ended X ago line on ended cards (opus, sonnet, singles)"
+  - "Tinkerfund: a Following list on /account fed by Notify me, so the upcoming-Campaign action has a payoff (fable, single)"
+  - "Tinkerfund Deals: hide the Copy code button until the Deal starts, and rename Keyboard Week to match its everything-applies scope (opus, singles)"
 landedBy: Stop
