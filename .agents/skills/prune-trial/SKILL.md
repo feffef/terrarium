@@ -133,10 +133,11 @@ entry is what the verdict reads later. Never treat the step as satisfied.
 
 ## 5. Ship and record
 
-One PR, the line delta in its title. Follow `docs/agents/pr-workflow.md`'s
-"Closing a scheduled run's PR" sequence. You may prune any instruction text,
-a script's comments included; changing what runs is not a prune: escalate
-that (ADR-0027).
+One PR. Take the line delta for its title and the ledger entry from
+`git diff --numstat` against the cut's parent commit, never a hand count.
+Follow `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR"
+sequence. You may prune any instruction text, a script's comments included;
+changing what runs is not a prune: escalate that (ADR-0027).
 
 ## Bounds
 

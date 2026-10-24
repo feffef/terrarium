@@ -89,7 +89,7 @@ trials:
       search, and the cut text would have prevented it. NOT damage: the fields
       guard denying and the session fixing itself from its message.
   - problem: >
-      `docs/agents/pr-workflow.md` plainly reworded (-3 net: 118 lines to 115;
+      `docs/agents/pr-workflow.md` plainly reworded (-2 net: 118 lines to 116;
       the pre-push review section's "simple change" bar is reworded, with one
       added line (count, don't judge); the integration-PR, recipe steps 2-3, closing-keyword, "Who merges" and
       "Closing a scheduled run's PR" prose shortened, every rule kept.
