@@ -1,0 +1,178 @@
+schemaVersion: 1
+session: session_01LEbdj6aqcGncPCZnNtS2ZX
+startedAt: 2026-10-24T11:08:50Z
+endedAt: 2026-10-24T11:19:12Z
+kind: autonomous
+goal: Write one Blog post in Eyra's voice
+status: in-review
+outcome: Eyra post on the gate's warn-then-abort change opened as PR 2491, awaiting CI and merge
+summary: Scheduled blog-post run, all agent-initiated (no human prompt). Rotation allowed only Eyra. Drafted three candidates (gate warn-to-abort, Midden cause of death, Friction Ledger strips); a blind Sonnet read picked the gate story. Revised for its confusions, fact-checked by a second Sonnet agent (4 problems fixed), reviewed on both code-review axes, gate green, pushed and opened PR 2491. Step 12 (reply decision) and the final close happen after merge.
+prs:
+  - "2491"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: git rules before first git command
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR sequence
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: read after hint; briefs were read-only so little applied
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: spec for the run; the Spec reviewer also read it and found it useful
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: audience and gloss rule, read by the Standards reviewer
+    useful: yes
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: Eyra voice and palette, read in step 2 and by the Standards reviewer
+    useful: yes
+  - path: layers/midden/GLOSSARY.md
+    reason: grepped only the Cause of death entry for a losing draft
+    useful: partly
+  - path: layers/blog/content/eyra/pages/2026-10-24-the-smoke-alarm-became-a-tripwire-in-sixteen-hours.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: the run's Skill
+  - name: code-review
+    reason: pre-push two-axis review
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read dispatch-subagents SKILL only after the first subagent dispatch, when the hook hinted; CLAUDE.md says read it before writing a brief.
+    solution: Read it before the step 6 brief; the blog-post Skill could name it at step 6.
+    severity: minor
+  - description: Ran the rotation script and git status in one call before reading git-conventions.md, against CLAUDE.md's read-first trigger.
+    solution: Read the three docs first, as CLAUDE.md orders.
+    severity: nit
+durationSec: 623
+models:
+  claude-sonnet-5-5: 90
+toolCounts:
+  Bash: 26
+  Read: 5
+  mcp__github__pull_request_read: 5
+  mcp__github__issue_read: 3
+  Agent: 4
+  Skill: 3
+  ReadNotifications: 4
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-10-24-the-smoke-alarm-became-a-tripwire-in-sixteen-hours.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/mermaid-lanes.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to review and run gate:scoped before the first push despite the Stop hook; summary was enough, did not open the ADR.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed opening the PR myself and subscribing; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to run close-session at PR open; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Confirmed a reaction needs a Pingback; this post was standalone so it did not apply. Subagents also reported it irrelevant.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune-trial rule; no instruction text of mine was involved.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; not relevant to a blog post.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skills as code; I only ran a Skill, not changed one.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on touching the Blog; I read the Blog glossary section on audience via the subagent instead.
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Layer code rules; no code changed.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when gate.ts was read for citation; the post touches no Human-only file.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary layout rule; no glossary edited.
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Gate-step parity rule loaded by reading gate.ts; no gate change made.
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; none added.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest rule loaded by reading tenant.config.ts; no manifest edited.
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Stored-field rule; the post adds no field.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: MDC checklist; the post is plain markdown.
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded for the fact-check subagent; irrelevant to a read-only check, per its report.
+    useful: no
+subagents:
+  - task: Blind read of three drafts
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 6.3
+  - task: Fact-check Eyra post
+    model: sonnet
+    durationSec: 48
+    toolCalls: 10
+    modelCalls: 4
+    tokenShare: 5.6
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 33
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 7.9
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 32
+    toolCalls: 9
+    modelCalls: 3
+    tokenShare: 8.3
+gitBranch: claude/zen-heisenberg-srcr14
+entrypoint: remote_trigger
+cliVersion: 2.1.310
+trigger: blog-post
+landedBy: Stop
