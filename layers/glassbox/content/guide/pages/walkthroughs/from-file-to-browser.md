@@ -36,7 +36,7 @@ A :term[Document] starts as a Markdown or YAML file in its Tenant's folder under
 The Tenant's :term[manifest] lists its Spaces and Collections. Each time Nuxt Content loads `content.config.ts`, `expand()` turns every manifest into one collection per Tenant, Space and Collection, each pointed at its own folder and named by a key such as `blog_david_pages`. That key is the name of the file's table.
 
 ::stop-links
-[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
+[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Isolation by table](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
 ::
 
 ## 3. The build parses it into SQLite and a dump
@@ -52,7 +52,7 @@ The Tenant's :term[manifest] lists its Spaces and Collections. Each time Nuxt Co
 A Caddy proxy passes the visitor's request to :term[Nitro], Nuxt's server, which first checks its page cache: a copy rendered moments ago goes back as it is. On a miss, Nuxt picks the page file that matches the address, and its `useSpace` turns the address into the keys of one Space's Collections, or a 404. The page's `useAsyncData` then calls `queryCollection` with its key, on the server.
 
 ::stop-links
-[Nitro](/t/glassbox/guide/nuxt-vue/nitro) · [Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
+[Nitro server engine](/t/glassbox/guide/nuxt-vue/nitro) · [useAsyncData and payloads](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [Isolation by table](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
 ::
 
 ## 5. The first query restores the table from the dump
@@ -60,7 +60,7 @@ A Caddy proxy passes the visitor's request to :term[Nitro], Nuxt's server, which
 The first query for a Collection since the server started compares the checksum stored with its table to the build's. Where they differ, Nuxt Content runs that Collection's dump into the server's SQLite database before it answers; where they match, it answers from the table as it is. Either way the query reads only its key's table.
 
 ::stop-links
-[Content database](/t/glassbox/guide/nuxt-content/content-database) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
+[Content database](/t/glassbox/guide/nuxt-content/content-database) · [Isolation by table](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
 ::
 
 ## 6. The browser hydrates, then navigates by payload
@@ -68,13 +68,13 @@ The first query for a Collection since the server started compares the checksum 
 Vue renders the page to HTML with the `useAsyncData` result inside, and the browser shows it, then takes the page over without fetching that data again. When the pointer rests on a link, a finger touches it or the keyboard focuses it, the browser fetches that route's code and its `_payload.json`, and the click builds the next page from them with no query. A route the server doesn't cache has no payload: its query runs in an SQLite database in the browser, which first downloads a WebAssembly runtime and the Collection's dump.
 
 ::stop-links
-[Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [Content database](/t/glassbox/guide/nuxt-content/content-database)
+[useAsyncData and payloads](/t/glassbox/guide/nuxt-vue/use-async-data) · [Content database](/t/glassbox/guide/nuxt-content/content-database)
 ::
 
 ## Where next
 
 - [Content collections](/t/glassbox/guide/nuxt-content/manifest-collections)
 - [Content database](/t/glassbox/guide/nuxt-content/content-database)
-- [Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data)
+- [useAsyncData and payloads](/t/glassbox/guide/nuxt-vue/use-async-data)
 - [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container)
 - [A change goes live](/t/glassbox/guide/walkthroughs/a-change-goes-live)

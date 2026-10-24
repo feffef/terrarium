@@ -39,7 +39,7 @@ A hook commits the :term[session log] straight to `main`, without a PR. The Fric
 A :term[Routine] starts a session that runs the `frictions-to-fixes` Skill, or a Trusted user runs it by hand. It is a session like any other, following the Skill's steps.
 
 ::stop-links
-[Routines, scheduled tasks and /loop](/t/glassbox/drafts/claude-code/routines) · [Skills](/t/glassbox/guide/claude-code/skills) · :file[.agents/skills/frictions-to-fixes/SKILL.md]
+[Routines, scheduled tasks and /loop](/t/glassbox/drafts/claude-code/routines) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · :file[.agents/skills/frictions-to-fixes/SKILL.md]
 ::
 
 ## 4. A subagent reads the logs
@@ -63,7 +63,7 @@ The subagent drops a Friction that a merged change already fixed, one that an op
 The run weighs recurrence and severity together and picks the top candidates, and one design subagent reads each occurrence's full log and designs every fix. For a Friction that a doc already covers, it checks whether the session had opened that doc: if not, the instruction sits where nobody looks; if so, its wording failed. A fix that would touch a :term[Human-only] file, a guard or the hook wiring, or that turns on a design choice a person should make, is never built in this run: it gets an issue with the design instead.
 
 ::stop-links
-[Protected files](/t/glassbox/guide/terrarium-practice/human-only-list) · [Guards that fail closed](/t/glassbox/drafts/claude-code/guards) · [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · :file[.agents/skills/frictions-to-fixes/design-brief.md]
+[Base-branch merge policy](/t/glassbox/guide/terrarium-practice/human-only-list) · [Guards that fail closed](/t/glassbox/drafts/claude-code/guards) · [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · :file[.agents/skills/frictions-to-fixes/design-brief.md]
 ::
 
 ## 7. Helper agents write the fixes
@@ -79,7 +79,7 @@ Helper agents write the fixes, each in a git worktree of its own, run the Gate a
 The run reviews each branch itself, opens its PR and posts its verdict there as a comment. A clean, low-risk fix it merges through `scripts/github/merge-pr.ts`, which refuses without that verdict and refuses a PR that changes a Human-only file. A fix whose diff needs a human merge stays open, with the reason, for a Trusted user.
 
 ::stop-links
-[Merge gates](/t/glassbox/guide/terrarium-practice/gate) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+[Merge gate](/t/glassbox/guide/terrarium-practice/gate) · [Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 9. The next session reads the fix
@@ -87,7 +87,7 @@ The run reviews each branch itself, opens its PR and posts its verdict there as 
 The fix lands in a doc, a repo-owned Skill, a script or config. A later session that opens that doc or runs that Skill gets the new text, and its log lists that doc among the docs it read, or that Skill among the Skills it used. The Ledger entry records the fix's PR and the date it merged, and from then on only sessions that started after the fix count as a recurrence.
 
 ::stop-links
-[Skills](/t/glassbox/guide/claude-code/skills) · [CLAUDE.md as the every-session contract](/t/glassbox/guide/claude-code/claude-md) · [Friction Ledger](/t/journal/current/frictions)
+[Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [CLAUDE.md as the every-session contract](/t/glassbox/guide/claude-code/claude-md) · [Friction Ledger](/t/journal/current/frictions)
 ::
 
 ## A real case
@@ -98,6 +98,6 @@ In July 2026 a session waited about two hours on a PR's CI. It had called `Sched
 
 - [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
 - [Routines, scheduled tasks and /loop](/t/glassbox/drafts/claude-code/routines)
-- [Skills](/t/glassbox/guide/claude-code/skills)
+- [Claude Code Skills](/t/glassbox/guide/claude-code/skills)
 - [Asking an agent for a change](/t/glassbox/guide/walkthroughs/asking-for-a-change)
 - [Friction Ledger](/t/journal/current/frictions)

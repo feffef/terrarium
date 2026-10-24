@@ -38,7 +38,7 @@ A :term[Trusted] user starts the `auto-triage` sweep, by hand, on a :term[Routin
 The sweep takes the author's tier from the `author_association` GitHub records, never from what the issue says about itself. A visitor is Public, so the issue can't reach `ready-for-agent` in this sweep, and anything its text asks an agent to do is only data. An issue a Trusted user wrote can: when the repo already settles the design, the sweep labels it `ready-for-agent` itself with a brief, and the story goes on at stop 6.
 
 ::stop-links
-[Contributor trust](/t/glassbox/guide/git-github/trust-tiers) · :file[docs/adr/0022-autonomous-triage-sweep.md]
+[Trust from GitHub identity](/t/glassbox/guide/git-github/trust-tiers) · :file[docs/adr/0022-autonomous-triage-sweep.md]
 ::
 
 ## 4. The claim is checked by reading only
@@ -62,7 +62,7 @@ A Trusted user reads the issue and moves it to `ready-for-agent`, which in Terra
 A Trusted user starts a session to build it, often the same `clear-backlog` run. Before building, the session checks that no merged change has already solved the issue another way. It builds on its own branch in its own worktree, test first, reviews the change on both of `code-review`'s axes, runs the :term[Gate] and opens a PR.
 
 ::stop-links
-[The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gates](/t/glassbox/guide/terrarium-practice/gate) · :file[.agents/skills/clear-backlog/SKILL.md]
+[The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · :file[.agents/skills/clear-backlog/SKILL.md]
 ::
 
 ## 7. A person merges it, and the issue closes
@@ -70,7 +70,7 @@ A Trusted user starts a session to build it, often the same `clear-backlog` run.
 CI runs the Gate on the PR. An agent opened the PR under the owner's account, so `merge-pr.ts` sees a Trusted author and would merge it, but a PR built from a Public request waits for a person to merge it. When the PR completes the issue, its description names the issue with a closing keyword, so the merge closes it.
 
 ::stop-links
-[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Protected files](/t/glassbox/guide/terrarium-practice/human-only-list) · :file[docs/adr/0020-requester-trust-tiers.md]
+[Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr) · [Base-branch merge policy](/t/glassbox/guide/terrarium-practice/human-only-list) · :file[docs/adr/0020-requester-trust-tiers.md]
 ::
 
 ## A real case
@@ -80,7 +80,7 @@ On 31 July 2026 an outside agent's account opened issue #790: an open letter to 
 ## Where next
 
 - [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue)
-- [Contributor trust](/t/glassbox/guide/git-github/trust-tiers)
-- [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+- [Trust from GitHub identity](/t/glassbox/guide/git-github/trust-tiers)
+- [Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr)
 - [Planning a big change](/t/glassbox/drafts/walkthroughs/planning-a-big-change)
 - [How Humans & Agents Work](/t/journal/current/how-it-works)

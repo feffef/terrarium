@@ -12,7 +12,7 @@ An agent session finishes a piece of work and writes down what happened. This Wa
 When its work reaches a coherent state, such as a PR opened or a question answered, the agent runs the `close-session` Skill. No hook prompts it: the Skill's description tells the model when to run it, and the agent judges the moment itself. Once the agent has written its part, hooks do the rest, but a session that never gets here leaves no :term[session log].
 
 ::stop-links
-[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Skills](/t/glassbox/guide/claude-code/skills) · :file[.agents/skills/close-session/SKILL.md]
+[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · :file[.agents/skills/close-session/SKILL.md]
 ::
 
 ## 2. The agent writes only its judgement
@@ -28,7 +28,7 @@ When its work reaches a coherent state, such as a PR opened or a question answer
 When Claude finishes responding, Claude Code fires the `Stop` hook wired in `.claude/settings.json`. It checks that a scratch file exists and, if so, runs `log-session.ts --land`, with the hook's payload on stdin; the payload names the session's transcript. Hooks on `SessionEnd` and on `SessionStart` at resume run the same command, in case `Stop` missed it. The lander never exits with an error, and if this exact scratch has landed already, it stops there.
 
 ::stop-links
-[Hooks](/t/glassbox/guide/claude-code/hooks) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
+[Claude Code hooks](/t/glassbox/guide/claude-code/hooks) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
 ## 4. The transcript supplies the facts
@@ -65,7 +65,7 @@ A normal `git commit` takes what the session has staged, on whatever branch it i
 `idxEnv` sets `GIT_INDEX_FILE` to the temporary index.
 
 ::stop-links
-[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+[Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 7. The push retries until it lands
@@ -81,13 +81,13 @@ Before pushing, the lander diffs the new commit against `main` and refuses unles
 The log shows on the Journal's dashboard. Each run of `pnpm validate:content`, a step of the :term[Gate], checks it along with every other log. If the session's work goes on, say its PR merges, it runs `close-session` again: the scratch changes, and the next `Stop` lands the new version over the old file. No other session edits it.
 
 ::stop-links
-[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Merge gates](/t/glassbox/guide/terrarium-practice/gate) · [Journal dashboard](/t/journal/current)
+[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · [Journal dashboard](/t/journal/current)
 ::
 
 ## Where next
 
 - [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
-- [Hooks](/t/glassbox/guide/claude-code/hooks)
+- [Claude Code hooks](/t/glassbox/guide/claude-code/hooks)
 - [A schema that only grows](/t/glassbox/drafts/zod/schema-only-grows)
 - [Provenance headers and commit trailers](/t/glassbox/drafts/git-github/provenance-headers)
 - [The Routines](/t/glassbox/drafts/walkthroughs/routines)

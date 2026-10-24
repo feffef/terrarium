@@ -44,7 +44,7 @@ A visitor opens `/t/commons/search`. The Commons layer's Space page renders its 
 The server renders the first rows; the whole list travels in the page's data. Typing in the box filters that list in the browser, by title, description, Tenant and Space, with no new query. The filter and the sort order are code in the Commons layer, not in the shared read functions. A click on a result goes to the post's own address under `/t/blog/`, where the Blog's own pages render it.
 
 ::stop-links
-[Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/commons/app/components/commons/Search.vue] · :file[layers/commons/app/pages/t/commons/]
+[useAsyncData and payloads](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/commons/app/components/commons/Search.vue] · :file[layers/commons/app/pages/t/commons/]
 ::
 
 ## 6. Where the reading stops
@@ -52,7 +52,7 @@ The server renders the first rows; the whole list travels in the page's data. Ty
 The Commons's own `pages` name no kind, so its Search never lists itself. A Collection with no `kind`, such as the Blog's `pingbacks`, is on no list, though no test stops a layer that passes another Tenant's key to `queryCollection` directly. The one exception to the Catalog is the Platform home page, which reads the Tenants it features directly.
 
 ::stop-links
-[Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · :file[layers/commons/tenant.config.ts] · :file[app/pages/index.vue]
+[Isolation by table](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · :file[layers/commons/tenant.config.ts] · :file[app/pages/index.vue]
 ::
 
 ## Where next
