@@ -11,9 +11,9 @@ import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { isMap, isSeq, parseDocument } from 'yaml'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { INVENTORY_DIR } from '../../../../scripts/session/audit-skills.ts'
 
-export const SKILLS_DIR = 'layers/journal/content/current/skills'
-export const WINDOW_DAYS = 40
+export const OBSERVATION_DAYS = 40
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/
 
 export interface Pruned {
@@ -24,7 +24,7 @@ export interface Pruned {
 
 export function cutoffFor(today: string): string {
   const d = new Date(`${today}T00:00:00Z`)
-  d.setUTCDate(d.getUTCDate() - WINDOW_DAYS)
+  d.setUTCDate(d.getUTCDate() - OBSERVATION_DAYS)
   return d.toISOString().slice(0, 10)
 }
 
@@ -50,7 +50,7 @@ export function pruneObservations(text: string, cutoff: string): Pruned {
 }
 
 export function pruneInventory(today: string, cwd = root): string[] {
-  const dir = join(cwd, SKILLS_DIR)
+  const dir = join(cwd, INVENTORY_DIR)
   const cutoff = cutoffFor(today)
   const report: string[] = []
   for (const f of readdirSync(dir).filter((n) => n.endsWith('.yml')).sort()) {
@@ -67,7 +67,7 @@ function main(): void {
   const today = flagValue(process.argv.slice(2), '--today') ?? new Date().toISOString().slice(0, 10)
   if (!ISO_DATE.test(today)) fail(`--today must be YYYY-MM-DD, got ${today}`)
   const report = pruneInventory(today)
-  console.log(report.length ? report.join('\n') : `prune-observations: nothing older than ${WINDOW_DAYS} days (before ${cutoffFor(today)})`)
+  console.log(report.length ? report.join('\n') : `prune-observations: nothing older than ${OBSERVATION_DAYS} days (before ${cutoffFor(today)})`)
 }
 
 runIfMain(import.meta.url, main)
