@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019nDDDS9GsXdTKWK44j18fT
 startedAt: 2026-10-24T05:43:30Z
-endedAt: 2026-10-24T06:16:24Z
+endedAt: 2026-10-24T06:16:46Z
 kind: interactive
 goal: Inspect audit-skills after its rewrite and fix its step text
-status: in-review
-outcome: Inspection posted on issue 2373; item 6 Skill text fix open as PR 2487
-summary: "Started by another session, not by a human prompt. The task came from the owner's decision in a clear-backlog grilling (session_01PYyNMqrrDLZdXEej11LMzs): a read-only inspection of issue 2373. One inspect-session subagent per scheduled run (10-22, 10-23, 10-24) read its events in full. I checked state claims, clean-report claims, scope and Skill text myself. To measure re-audit overlap, I replayed audit-skills.ts --briefs at each run's start commit with a faked clock. Consecutive runs re-list 61 to 74% of run sessions, but only 11 to 53% when any SKILL.md commit resets the list. Both issues filed on 10-24 came from sessions the 10-23 run had already passed. The cheap $8.36 run differed in model and effort, not only in the Skill text. I posted verdicts (keep 2368 and 2372, fix item 6) and recommended not building `audited` now; the owner decides that. The user then asked directly for the item 6 fix (human-instructed). Step 1 now fetches usage only for Routine runs its Routine file doesn't list yet, and the ignored clean-report send-back sentence is cut (ADR-0027). code-review found no hard findings; I took one judgement call (step 1 points to step 5 for the file instead of repeating its path). gate:scoped was green. Opening PR 2487, subscribing and posting the verdict were agent-initiated per ADR-0003 and ADR-0004."
+status: completed
+outcome: Inspection posted on issue 2373; item 6 Skill text fix merged as PR 2487
+summary: "Started by another session, not by a human prompt. The task came from the owner's decision in a clear-backlog grilling (session_01PYyNMqrrDLZdXEej11LMzs): a read-only inspection of issue 2373. One inspect-session subagent per scheduled run (10-22, 10-23, 10-24) read its events in full. I checked state claims, clean-report claims, scope and Skill text myself. To measure re-audit overlap, I replayed audit-skills.ts --briefs at each run's start commit with a faked clock. Consecutive runs re-list 61 to 74% of run sessions, but only 11 to 53% when any SKILL.md commit resets the list. Both issues filed on 10-24 came from sessions the 10-23 run had already passed. The cheap $8.36 run differed in model and effort, not only in the Skill text. I posted verdicts (keep 2368 and 2372, fix item 6) and recommended not building `audited` now; the owner decides that. The user then asked directly for the item 6 fix (human-instructed). Step 1 now fetches usage only for Routine runs its Routine file doesn't list yet, and the ignored clean-report send-back sentence is cut (ADR-0027). code-review found no hard findings; I took one judgement call (step 1 points to step 5 for the file instead of repeating its path). gate:scoped was green. Opening PR 2487, subscribing, posting the verdict and merging it (558691f05) on green CI were agent-initiated per ADR-0003 and ADR-0004."
 prs:
   - "2487"
 docsRead:
@@ -66,15 +66,15 @@ frictions:
   - description: Edited SKILL.md before reading ADR-0005, ADR-0015 and ADR-0027 in full; the hook asked for them after the edit, and they confirmed the edit.
     solution: Read the governing ADRs a Skill file loads before the first edit, not after.
     severity: nit
-durationSec: 1974
+durationSec: 1996
 models:
-  claude-opus-5-5: 175
+  claude-opus-5-5: 179
 toolCounts:
   Skill: 5
   ToolSearch: 3
   mcp__github__issue_read: 2
   Read: 8
-  Bash: 56
+  Bash: 58
   mcp__claude-code-remote__list_triggers: 1
   mcp__claude-code-remote__get_session: 3
   Agent: 5
@@ -84,6 +84,7 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .throwaway/overlap/comment.md
   - .agents/skills/audit-skills/SKILL.md
@@ -164,17 +165,17 @@ subagents:
     durationSec: 815
     toolCalls: 141
     modelCalls: 141
-    tokenShare: 22.7
+    tokenShare: 22.5
   - task: Inspect audit-skills run 10-23
     durationSec: 1001
     toolCalls: 147
     modelCalls: 147
-    tokenShare: 24.7
+    tokenShare: 24.4
   - task: Inspect audit-skills run 10-24
     durationSec: 930
     toolCalls: 146
     modelCalls: 146
-    tokenShare: 23.7
+    tokenShare: 23.4
   - task: Standards review of audit-skills fix
     durationSec: 44
     toolCalls: 11
