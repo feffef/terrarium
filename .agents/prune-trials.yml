@@ -23,72 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      `audit-docs` SKILL.md rewritten plainly and then pruned, both at a Trusted
-      user's request (PRs #2331 and this one): 2058 words to about 1630, 249
-      lines to 230. Shape as `frictions-to-fixes` (#2330): an overview of the
-      run's two PRs, a "What you may edit" reference (the tiers), then each
-      step as a goal paragraph, instructions, a done-when line and edge cases.
-      Cut because something else enforces it: the open-trial check (the
-      ADR-0027 rule loads with this Skill), the Pack-generic detail
-      (`verify:skills-lock`), the leaf-agent rule (spawn depth 1), the issue's
-      provenance header (the provenance guard), the gate-scope notes (the gate
-      picks its scope). Cut as no-ops or impossible: the branch step, globbing
-      and classifying every surface, "audit the source not the render",
-      "isolation logic" in the escalation list, the day-of-year family
-      fallback, the "Command-only" note. Simplified: the checkers' six
-      per-lens sources to one rule (every rule, condition, exception and why
-      kept), Agent B no longer runs `audit-skills.ts` for read counts (they
-      could only corroborate), one "don't regress" example instead of three,
-      the duplicate-issue lookup to "search open issues first", no reuse of an
-      earlier escalation PR, and the Pack-generic "note it in a Live doc"
-      (ADR-0015 puts such notes in the Inventory entry). Tier, lens and family names unchanged, since
-      `frictions-to-fixes`' briefs, `prune-trial` and the commit-subject
-      rotation use them. `audit-skills.ts`' docstring no longer names
-      audit-docs as a reader.
-    territory:
-      paths:
-        - ".agents/skills/audit-docs/SKILL.md (all of it)"
-      keywords:
-        - concision family
-        - escalation PR
-    opened: 2026-10-20
-    check: >
-      Damage is a major or blocker Friction in an audit-docs run that the old text
-      would have prevented: a Historical or Pack-generic file edited, an ADR edit
-      or route-changing page move self-merged instead of escalated, a fix applied
-      without a checker's CONFIRMED, the wrong concision family picked, text in an
-      open trial's territory reworded, a "don't regress" reason cut, a
-      duplicate issue filed, or a Single-home finding missed that a read count
-      would have surfaced. NOT damage: a reviewer or checker finding that is
-      simply wrong, a branch clash over the escalation PR, or a second
-      escalation PR beside an open one.
-  - problem: >
-      `docs/agents/github-integration.md` "Overflow and precision traps" search
-      bullets tightened to the goal (-4 net): the `fields`
-      rule now lives in `github-search-fields-guard.ts`' deny message, which the
-      doc only points to. Chosen after the search subagent covered the
-      instruction corpus, guard headers and the tracker: the rule failed as prose
-      (#1860, again #2210; #1860 read in full) and the guard holds it. Runners-up:
-      Stop-hook inherited-commits advice in `git-conventions.md` (#2233, nothing
-      in the repo enforces it), "Verify before you state" in CLAUDE.md (#2341, too
-      fresh). Same run judged and deleted the close-session, background-guard and
-      provenance-guard trials: only nit/minor Frictions (#2363's close-session
-      recurrences trace to the read-first hint being deferred, not to cut text).
-      The mass here was small.
-    territory:
-      paths:
-        - "docs/agents/github-integration.md: the 'Overflow and precision traps' search bullets"
-      keywords:
-        - search_issues fields
-        - search_pull_requests
-    opened: 2026-10-21
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session flooded its context
-      with a search or list result, or asserted "nothing exists" from an empty
-      search, and the cut text would have prevented it. NOT damage: the fields
-      guard denying and the session fixing itself from its message.
-  - problem: >
       `docs/agents/pr-workflow.md` plainly reworded (-2 net: 118 lines to 116;
       the pre-push review section's "simple change" bar is reworded, with one
       added line (count, don't judge); the integration-PR, recipe steps 2-3, closing-keyword, "Who merges" and
@@ -179,3 +113,34 @@ trials:
       push) and could not recover or knew no recovery because the cut text was
       gone. NOT damage: the guard denying a write and the session moving the
       edit to `docs/proposals/`, or a local session pushing a workflow file.
+  - problem: >
+      `git-conventions.md` "When the Stop hook flags unpushed or inherited
+      commits" reworded to the goal (-4 net: 15 lines to 11, from
+      `git diff --numstat`): the two rules kept (fix only commits this session
+      made, check `git log origin/main..HEAD`; push the branch when that list is
+      empty), the narration dropped. Chosen after the search subagent covered
+      the instruction corpus, guard headers and the tracker: the advice failed
+      as prose (#2233, read in full: four docs fixes did not stop the nag, then
+      the owner accepted the cost) and nothing in the repo holds it, since the
+      nag comes from a harness script (#2233's triage). Runners-up: "Verify
+      before you state" family (five homes, #2476, #2435; nothing holds it, so
+      the riskiest), CLAUDE.md read-first triggers (31 lines; partly held by
+      `read-first-hint.ts`), `close-session` restatements (one-liners that
+      carry step detail). Same run judged and deleted the audit-docs and
+      github-integration search-bullets trials (landed e07c4a65 and ad00ba7d):
+      59 sessions since e07c4a65, no major or blocker Friction traces to either
+      (the one major is a close-session slip, #2418).
+    territory:
+      paths:
+        - "docs/agents/git-conventions.md: the Stop-hook section"
+      keywords:
+        - inherited commits
+        - reset-author
+    opened: 2026-10-24
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session rebased or rewrote
+      public history (a commit outside `git log origin/main..HEAD`), or pushed
+      `main` or forced a push, to quiet the Stop hook, and the cut wording would
+      have prevented it. NOT damage: the nag itself, or a session declining it
+      (#2233 accepted that cost).
