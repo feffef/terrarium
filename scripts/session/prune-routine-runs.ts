@@ -1,13 +1,15 @@
 // Keeps the newest `RUNS_KEPT` runs in each Routine's file, so the cost history
 // stays a window git already backs up. `audit-skills` calls it after appending.
 //
-// Usage: tsx scripts/session/prune-routine-runs.ts
+// Usage: tsx scripts/session/prune-routine-runs.ts [--append <usage.jsonl> --scorecard <scorecard.json>]
 //   Edits `layers/journal/content/current/routines/*.yml` in place and prints
-//   what it dropped.
-import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
+//   what it dropped. `--append` first adds each scorecard `routineRuns` run the
+//   file lacks, its tokens and cost from a `get_session` `usage` line per session.
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { isMap, isSeq, parseDocument } from 'yaml'
-import { root, runIfMain } from '../lib/cli.ts'
+import { isMap, isSeq, parseDocument, type YAMLSeq } from 'yaml'
+import { fail, root, runIfMain } from '../lib/cli.ts'
+import type { RoutineRuns } from './audit-skills.ts'
 
 export const ROUTINES_DIR = 'layers/journal/content/current/routines'
 export const RUNS_KEPT = 30
@@ -24,6 +26,49 @@ export function pruneRuns(text: string, keep = RUNS_KEPT): { text: string; dropp
   return { text: doc.toString({ lineWidth: 0 }), dropped }
 }
 
+/** One line of `get_session`'s `usage`, as the Routine run's caller saves it. */
+export interface Usage {
+  session: string
+  input_tokens: number
+  output_tokens: number
+  cache_read_tokens: number
+  cache_write_tokens: number
+  cost_usd: number
+}
+
+/** One Routine file with the scorecard's unlisted runs appended. A run without
+ *  usage is skipped, not written with blanks: the schema needs every cost. */
+export function appendRuns(
+  text: string | undefined,
+  routine: string,
+  runs: RoutineRuns['runs'],
+  usage: ReadonlyMap<string, Usage>,
+): { text: string; appended: number; skipped: string[] } {
+  const doc = parseDocument(text ?? `name: ${routine}\nruns:\n`)
+  if (!isSeq(doc.get('runs'))) doc.set('runs', doc.createNode([]))
+  const seq = doc.get('runs') as YAMLSeq
+  const listed = new Set(seq.items.map((item) => (isMap(item) ? String(item.get('session')) : '')))
+  const skipped: string[] = []
+  let appended = 0
+  for (const run of runs.filter((r) => !listed.has(r.session))) {
+    const u = usage.get(run.session)
+    if (!u) {
+      skipped.push(run.session)
+      continue
+    }
+    seq.add(doc.createNode({
+      ...run,
+      inputTokens: u.input_tokens,
+      outputTokens: u.output_tokens,
+      cacheReadTokens: u.cache_read_tokens,
+      cacheWriteTokens: u.cache_write_tokens,
+      costUsd: u.cost_usd,
+    }))
+    appended++
+  }
+  return { text: appended ? doc.toString({ lineWidth: 0 }) : (text ?? ''), appended, skipped }
+}
+
 export function pruneRoutines(cwd = root): string[] {
   const dir = join(cwd, ROUTINES_DIR)
   const report: string[] = []
@@ -38,8 +83,37 @@ export function pruneRoutines(cwd = root): string[] {
   return report
 }
 
+/** Appends the scorecard's runs to each Routine file, pruning it in the same write. */
+export function appendRoutines(usageJsonl: string, scorecardJson: string, cwd = root): string[] {
+  const usage = new Map<string, Usage>()
+  for (const line of usageJsonl.split('\n').filter((l) => l.trim())) {
+    const u = JSON.parse(line) as Usage
+    usage.set(u.session, u)
+  }
+  const { routineRuns } = JSON.parse(scorecardJson) as { routineRuns: RoutineRuns[] }
+  return routineRuns.map(({ routine, runs }) => {
+    const f = `${routine}.yml`
+    const path = join(cwd, ROUTINES_DIR, f)
+    const before = existsSync(path) ? readFileSync(path, 'utf8') : undefined
+    const { text, appended, skipped } = appendRuns(before, routine, runs, usage)
+    const pruned = pruneRuns(text)
+    if (pruned.text !== before) writeFileSync(path, pruned.text)
+    const missing = skipped.length ? ` (${skipped.join(', ')})` : ''
+    return `${f}: appended ${appended}, skipped ${skipped.length} without usage${missing}, dropped ${pruned.dropped}`
+  })
+}
+
+export function run(argv: string[], cwd = root): string[] {
+  const flag = (name: string) => (argv.includes(name) ? (argv[argv.indexOf(name) + 1] ?? '') : undefined)
+  const usage = flag('--append')
+  const scorecard = flag('--scorecard')
+  if (usage === undefined && scorecard === undefined) return pruneRoutines(cwd)
+  if (!usage || !scorecard) fail('--append <usage.jsonl> and --scorecard <scorecard.json> go together')
+  return [...appendRoutines(readFileSync(usage, 'utf8'), readFileSync(scorecard, 'utf8'), cwd), ...pruneRoutines(cwd)]
+}
+
 function main(): void {
-  const report = pruneRoutines()
+  const report = run(process.argv.slice(2))
   console.log(report.length ? report.join('\n') : `prune-routine-runs: nothing beyond ${RUNS_KEPT} runs`)
 }
 
