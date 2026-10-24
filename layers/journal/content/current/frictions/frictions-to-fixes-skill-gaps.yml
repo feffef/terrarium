@@ -50,3 +50,8 @@ occurrences:
     severity: nit
     description: "SKILL.md §2 ranks regressions to file by severity, count and recurrence together without saying whether entries already tracked by an open issue or on trial count; I chose by judgement."
     solution: "State that regressions with an open issue, a trial or an owner decision are skipped before ranking."
+  - session: session_01E3XmTJcpKMZstW7MHL2eks
+    date: "2026-10-23"
+    severity: minor
+    description: "Re-clustering reached misread-owner-instruction's 'revisit on a fourth' threshold with no new occurrence, and gave worktree-guard-blocks-compound-bash PR #1825 as a fix though #1825 introduced the guard, so it reads as a regression."
+    solution: "When a re-cluster moves fix PRs or occurrences, add a dated note on each entry whose counts or fix state changed without new evidence."

@@ -1,0 +1,18 @@
+name: close-session-step1-reprints-loaded-rules
+summary: >-
+  close-session's first step prints rule text the session already holds, or a session skips it because it knows it does.
+cause: >-
+  close-session step 1 runs always-loaded.ts, which prints CLAUDE.md and the always-loaded rules already in context: a large output for a short session, or the output is discarded and the step counts as done unread. Signals: 'close-session step 1', 'always-loaded.ts', 'already in context'.
+surface: safe
+status: open
+occurrences:
+  - session: session_01EjH3TbrydEY2sArBMYE5Gy
+    date: "2026-10-22"
+    severity: nit
+    description: "Look-back: close-session step 1 re-printed CLAUDE.md and the always-loaded rules already in context, a large output for a short session"
+    solution: "None needed for this session; worth watching whether always-loaded.ts output is skimmed rather than read"
+  - session: session_01SNKBDEtR5UiaMXBdxvHuuE
+    date: "2026-10-23"
+    severity: nit
+    description: "I ran always-loaded.ts with its output discarded, so step 1 of close-session was not really done. I relied on the rules already in context."
+    solution: "Read the script's output in full when closing."

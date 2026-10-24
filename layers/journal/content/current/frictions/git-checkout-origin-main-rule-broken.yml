@@ -22,3 +22,8 @@ occurrences:
     severity: moderate
     description: "Tried 'git checkout origin/main -- .' plus 'git stash' to read files from main; the classifier blocked it. git-conventions.md forbids it, and it could have overwritten the tree."
     solution: "Use git show or git grep on origin/main to read main's files, as git-conventions.md says."
+  - session: session_012Yzae3uty5Jj8ZPug9zpjr
+    date: "2026-10-23"
+    severity: minor
+    description: "A triage subagent ran git checkout origin/main -- in the shared checkout, detaching HEAD briefly; it restored the branch itself."
+    solution: "Triage agents in clear-backlog-explore should read from git show origin/main:path, never checkout, in the shared checkout"

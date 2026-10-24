@@ -349,3 +349,13 @@ occurrences:
     severity: nit
     description: "The Stop hook asked four times to push the impl branch while code-review and the follow-up review ran; each needed a reply."
     solution: "Let the Stop hook stay quiet while a subagent is running or a review is in progress."
+  - session: session_01Wd2WvrPmFRYHAZmf7DYnrG
+    date: "2026-10-23"
+    severity: nit
+    description: "The Stop hook twice asked me to push while gate:scoped was still running, against ADR-0004's gate-before-first-push rule."
+    solution: "The hook could stay quiet while a gate log is open; I ignored it and pushed after the gate was green."
+  - session: session_015Nvs8t9mqbbyFbkR9Pb1nk
+    date: "2026-10-24"
+    severity: minor
+    description: "Stop hook asked me to push six times while the fact-check, reviews and gate were still pending, each nudge costing a turn."
+    solution: "Make the Stop hook skip the push nag while the branch has no pushed gate-green head, or while background agents run."

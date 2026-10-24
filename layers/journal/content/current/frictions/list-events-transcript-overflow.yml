@@ -18,6 +18,9 @@ fixes:
   - pr: 2307
     date: "2026-10-19"
     summary: "inspect-session takes bare page names, does a partial read for short sessions and has a replies selector."
+  - pr: 2463
+    date: "2026-10-23"
+    summary: "inspect-session says the tool-results spill cut-off is likely counted in tokens, so no character count predicts it."
 occurrences:
   - session: session_01GVmwHZQthucdGcVwe3HAUL
     date: "2026-10-17"
@@ -49,3 +52,8 @@ occurrences:
     severity: minor
     description: "A Haiku chain link reported a deterministic cursor loop; it was one wrong page from the server, which cost a verification round."
     solution: "The transcript Skill should check each first_id is new and retry once; fetchers should report, not diagnose."
+  - session: session_01PWZU3TqUdSp6uD1KaoQXit
+    date: "2026-10-23"
+    severity: minor
+    description: "Two inspect-session partial reads hit their page limit before the session start (about a minute of events per page), needing resumes; 019CbZiW never reached it after 20 pages."
+    solution: "inspect-session could estimate pages from get_session duration and say so, or offer a start-first cursor walk for questions about a session's opening."

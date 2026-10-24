@@ -1,0 +1,18 @@
+name: prune-trial-target-unreachable
+summary: >-
+  The prune-trial Skill asks for about 100 deleted lines, but the problems it can cut as prose leave only a few.
+cause: >-
+  prune-trial SKILL.md aims at around 100 lines deleted, yet every candidate that failed as prose had at most a handful of lines left (a net of -2 or -3), so the run buys little. Signals: 'prose mass was small', 'net against a ~100-line target', a trial that cut under 5 lines.
+surface: safe
+status: open
+occurrences:
+  - session: session_0149fVyZ37qWGMuwVPw3Uryc
+    date: "2026-10-22"
+    severity: nit
+    description: "The chosen problem's prose mass was small (-3 net against a ~100-line target), so the run bought little."
+    solution: "Consider the always-loaded read-first section of CLAUDE.md next run, or file the guard issue for the pre-push rule."
+  - session: session_01Tqm1brfa296Tbs9QnB7rCG
+    date: "2026-10-23"
+    severity: minor
+    description: "The Skill aims for ~100 lines deleted, but every failed-as-prose candidate had at most 4 lines left; this run cut 2."
+    solution: "Let prune-trial say that once failed rules are already one line, a guard issue or a plain rewrite is the better move."

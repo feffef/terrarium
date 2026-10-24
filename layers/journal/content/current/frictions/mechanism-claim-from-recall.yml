@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   How a script, guard, rule, harness setting or data format behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set. A reviewer, the owner or a later check finds it false. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed".
 surface: safe
-status: tracked
-ref: "issue #2425 (regression of #2378)"
+status: open
+ref: "issue #2425 closed by PR #2453"
 fixes:
   - pr: 2336
     date: "2026-10-20"
@@ -13,6 +13,9 @@ fixes:
   - pr: 2378
     date: "2026-10-21"
     summary: "Restored the shorter \"Verify before you state\" bullet in CLAUDE.md, and the Standards reviewer in clear-backlog-build now flags a count or subagent claim that cites no source."
+  - pr: 2453
+    date: "2026-10-23"
+    summary: "blog-post takes rule-location claims from the loaded rule file, not only the ADR, and re-checks edits made after the report."
 occurrences:
   - session: session_01DtK8w6aJ3361uPK73VAxhi
     date: "2026-10-12"
@@ -84,3 +87,13 @@ occurrences:
     severity: minor
     description: "First report counted three post-landing errors as happening despite adr-check, trusting skillsUsed; inspect-session showed 012f7o6F's main session never ran it."
     solution: "Note in docs/agents (or log-session) that skillsUsed folds subagent and workflow calls, so it can't show who ran a Skill."
+  - session: session_01E3XmTJcpKMZstW7MHL2eks
+    date: "2026-10-23"
+    severity: nit
+    description: "First draft of the doc fix overstated that annotations always name the failing file and contradicted the same doc's get_job_logs tail advice; code-review caught both before push."
+    solution: "Fact-check a new doc claim against a live run and grep the target doc for the same tool before drafting the design text."
+  - session: session_019SNgYeofJtzoLvh8QNAwYD
+    date: "2026-10-23"
+    severity: minor
+    description: "Told the owner that session 01Wd2W never loaded ui-verification.md; it had. I misread my own script output and stated it unchecked."
+    solution: "Verify before you state: grep the log file itself before reporting a per-session claim from a script's summary line."

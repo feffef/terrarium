@@ -36,3 +36,8 @@ occurrences:
     severity: nit
     description: "Pushed the restarted branch with --force-with-lease and it failed; pr-workflow.md, read earlier, says to push a restarted branch plainly"
     solution: "Apply the doc's restarted-branch line; none needed beyond that"
+  - session: session_01E3XmTJcpKMZstW7MHL2eks
+    date: "2026-10-23"
+    severity: nit
+    description: "Pushed the restarted branch with --force-with-lease and got a stale-info rejection, though pr-workflow.md says to push a branch restarted after its merge plainly."
+    solution: "Follow pr-workflow.md: push plainly after restarting a merged branch."

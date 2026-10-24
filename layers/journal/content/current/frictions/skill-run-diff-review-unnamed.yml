@@ -104,3 +104,8 @@ occurrences:
     severity: minor
     description: "Ran code-review Skill's intent as my own diff read rather than its two sub-agents, to save cost, on a 25-file diff that is not 'simple' by the stated rule."
     solution: "Let the simple-change rule cover mechanical revision pin bumps, or state it for scheduled pin-only runs."
+  - session: session_01LoY6Tg8Va69D6Gf9xkLAUj
+    date: "2026-10-23"
+    severity: minor
+    description: "pr-workflow's 10-line simple-change bar sends a pure ledger-entry deletion (31 lines of YAML) to a full two-agent code-review, and that costs more than the change."
+    solution: "pr-workflow.md (on trial now, so not edited): treat deleting a judged prune-trials.yml entry as simple."

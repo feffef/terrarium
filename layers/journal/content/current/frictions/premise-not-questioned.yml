@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   An agent implements or hardens a solution before asking whether the change should exist or how big it should be; the triage-brief shape was fixed 2026-10-06 (auto-triage SKILL line 57), later cases differ.
 surface: safe
-status: tracked
-ref: "issue #2332 (regression of #2206)"
+status: open
+ref: "issue #2332 closed superseded 2026-10-23: the premise rule was adr-check step 3, retired by PR #2431; issue #2432 re-measures after 2026-10-26."
 fixes:
   - pr: 1821
     date: "2026-10-12"

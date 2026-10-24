@@ -1,0 +1,22 @@
+name: governing-doc-read-after-draft
+summary: >-
+  A doc that governs a Tenant's content or glossary is read only after the agent drafted or added text it governs.
+cause: >-
+  A Tenant Skill's voice rule (midden-catalogue) or docs/agents/domain.md (the glossary-terms rule) governs new text, but the agent drafted or added the text first and a reviewer or the rule's late load found the miss. Signals: 'without first reading', 'plain-words voice rule', 'domain.md', a reviewer correcting wording or a term the doc already settles.
+surface: safe
+status: open
+fixes:
+  - pr: 2469
+    date: "2026-10-23"
+    summary: "The glossary-term read-first moves into a path-scoped rule that loads on GLOSSARY.md files and the domain-modeling Skill."
+occurrences:
+  - session: session_01CMjFaMZxZgD7oTzNXmWwzv
+    date: "2026-10-23"
+    severity: minor
+    description: "Added a glossary term without reading docs/agents/domain.md first, as CLAUDE.md requires."
+    solution: "Read it when the domain-modeling Skill loads; the Skill could name it."
+  - session: session_01RbgM2L9pxGwnDWbc3Aw6Vq
+    date: "2026-10-23"
+    severity: minor
+    description: "Proposed dek and body wording naming the season without first reading midden-catalogue's plain-words voice rule; review caught it and cost a fourth question round."
+    solution: "Read the Tenant's curatorial voice rules before proposing exact prose for its pages."

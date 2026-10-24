@@ -4,8 +4,12 @@ summary: >-
 cause: >-
   A required doc (GLOSSARY, git-conventions, github-integration, issue-tracker, triage-labels, guards, …) was read through a cat, head or sed chain, often several docs in one call, and the output hit the tool's size cap or a head -N limit, so the rest was never seen; the truncation is easy to miss. Signals: "truncated at 30KB", "output went to a file", "head -300 cut it", "read only its first 2KB". The fix is to read each required doc in full with the Read tool, one call each.
 surface: safe
-status: tracked
-ref: "issue #2437 (glossary imports, plus a one-Read-call-per-doc clause in CLAUDE.md's read-first intro)"
+status: open
+ref: "issue #2437 closed by PR #2448"
+fixes:
+  - pr: 2448
+    date: "2026-10-23"
+    summary: "CLAUDE.md's read-first intro says one Read call per doc, since a shell read can be cut short."
 occurrences:
   - session: session_01T4UbBvJmjSunCwb3cUN68Q
     date: "2026-10-22"
@@ -67,3 +71,8 @@ occurrences:
     severity: nit
     description: "Read GLOSSARY-MAP.md and GLOSSARY.md via cat piped to head -300, which cut GLOSSARY.md short, so the session-start glossary read was incomplete"
     solution: "Read the glossary files whole with the Read tool, not a capped pipe"
+  - session: session_012Yzae3uty5Jj8ZPug9zpjr
+    date: "2026-10-23"
+    severity: nit
+    description: "Read only the first 80 lines of dispatch-subagents SKILL.md before writing the #2137 review brief, though CLAUDE.md says read the doc in full"
+    solution: "Read trigger docs with one Read call and no head/sed limit"

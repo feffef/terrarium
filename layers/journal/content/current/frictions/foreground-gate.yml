@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Sessions run pnpm gate:scoped (about 3 minutes) in the foreground although CLAUDE.md says to background commands over 2 minutes; only a guard would reach them.
 surface: guard-or-hook
-status: tracked
-ref: "issue #2426 (regression of #2271). Earlier: issue #2265 closed by PR #2271; fix #1790 did not hold"
+status: on-trial
+ref: "Prune Trial opened 2026-10-23 by PR #2443 (territory: CLAUDE.md 'Run anything that can take over 2 minutes' bullet and blog-post SKILL.md §10 (Gate); keywords 'run_in_background', 'foreground-gate'). Issue #2426 is parked until the verdict; a guard only if it finds major damage."
 fixes:
   - pr: 1790
     date: "2026-10-11"
@@ -13,6 +13,9 @@ fixes:
   - pr: 2271
     date: "2026-10-19"
     summary: "CLAUDE.md now says to start any command over 2 minutes with run_in_background and a redirected log, dropping the foreground-with-timeout option."
+  - pr: 2443
+    date: "2026-10-23"
+    summary: "Cut long-command backgrounding to one home: CLAUDE.md's Self-verification bullet tightened and blog-post §10's restatement dropped."
 occurrences:
   - session: session_015BjYk46dntcMuAWMn1z4Zw
     date: "2026-10-10"

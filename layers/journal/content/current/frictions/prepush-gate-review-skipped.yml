@@ -141,3 +141,8 @@ occurrences:
     severity: moderate
     description: "Ran /code-review only after the first push instead of before it (ADR-0004); it caught 5 citation-rule violations that needed a second push to fix."
     solution: "Run code-review on the committed diff before the first push, even for a content-only Inventory change, as ADR-0004 literally requires."
+  - session: session_01CMjFaMZxZgD7oTzNXmWwzv
+    date: "2026-10-23"
+    severity: minor
+    description: "Two follow-up commits (6 files) got only my own read, not code-review, against pr-workflow.md's follow-up rule; disclosed in the PR."
+    solution: "Run code-review on any follow-up over the simple-change line, or batch follow-ups before the review."

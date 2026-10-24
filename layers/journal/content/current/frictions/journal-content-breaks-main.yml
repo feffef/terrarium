@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Session logs and Digests land on main without a gate (ADR-0009), and the retention sweep moves logs to archived, while e2e and unit tests read specific logs' text or current paths, so the sweep or one log turns the gate red for the Digest PR and others. Signals: a gate red after an archive sweep, a test reading content/current/sessions by path, an assertion on a log's wording.
 surface: safe
-status: tracked
-ref: "Issue #2105, reopened 2026-10-23 by audit-skills for the 01T4UbBv retention-sweep break (a test reading a content/current path); that break was fixed by PR #2394, which closed issue #2398 (regression of #2108). A guard against tests reading content/current paths waits for a recurrence."
+status: open
+ref: "issue #2105 closed completed 2026-10-23: no test names a real content/current file, no guard will be added. PR #2394 closed issue #2398 (regression of #2108)."
 fixes:
   - pr: 2108
     date: "2026-10-16"

@@ -4,8 +4,12 @@ summary: >-
 cause: >-
   CLAUDE.md's dispatch-subagents trigger is prose with no hint (read-first-hint.ts covers only git, GitHub and screenshots), and agents read it as not covering read-only git or a saved workflow (clear-backlog-build, explore) that dispatches for them. Signals: "without reading the dispatch-subagents Skill", "read-only git diff", "the workflow does the dispatch".
 surface: safe
-status: tracked
-ref: "issue #2438 (trigger on writing a brief, not on every dispatch)"
+status: open
+ref: "issue #2438 closed by PR #2448"
+fixes:
+  - pr: 2448
+    date: "2026-10-23"
+    summary: "CLAUDE.md's dispatch-subagents trigger now fires on writing a brief, not on every dispatch."
 occurrences:
   - session: session_01LtYEkEsZ2cxf4uRFJvq4n9
     date: "2026-10-12"
@@ -42,3 +46,23 @@ occurrences:
     severity: nit
     description: "Dispatched code-review subagents that ran git diff without first reading the dispatch-subagents Skill, which CLAUDE.md requires for subagents that touch git"
     solution: "The CLAUDE.md trigger says 'touches git'; read-only git diffs are ambiguous. Clarify whether read-only git counts."
+  - session: session_01QpBTsuXUNm28Y2oszBnoUb
+    date: "2026-10-23"
+    severity: minor
+    description: "Dispatched three subagents (blind read, fact-check, two reviewers) without invoking the dispatch-subagents Skill CLAUDE.md names."
+    solution: "Have blog-post and code-review point to dispatch-subagents explicitly at the dispatch step."
+  - session: session_01W8fFNeEtqXbeuGRWKNU2Jd
+    date: "2026-10-23"
+    severity: minor
+    description: "Wrote clear-backlog-build briefs without first reading the dispatch-subagents Skill, which CLAUDE.md requires before writing any subagent brief"
+    solution: "Have clear-backlog §3 say the dispatch-subagents read applies to the brief text passed to the build workflow"
+  - session: session_015Nvs8t9mqbbyFbkR9Pb1nk
+    date: "2026-10-24"
+    severity: minor
+    description: "Dispatched the fact-check and review subagents without invoking the dispatch-subagents Skill that CLAUDE.md names before writing a brief."
+    solution: "Have the digest Skill's fact-check step point to dispatch-subagents."
+  - session: session_013SbWSgqz4tjVcTMz9vF1mu
+    date: "2026-10-24"
+    severity: minor
+    description: "Wrote 13 parallel behaviour-check subagent briefs without first reading the dispatch-subagents Skill, although CLAUDE.md requires it before writing any subagent brief"
+    solution: "Read dispatch-subagents' SKILL.md before the first brief of a multi-agent dispatch, even when the brief's shape (scratchpad subfolder, verdict reporting) is already familiar from the task's own instructions"

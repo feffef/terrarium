@@ -499,3 +499,43 @@ occurrences:
     severity: nit
     description: "Ran git status before reading docs/agents/git-conventions.md; a hook reminded me after the first git command."
     solution: "Read the git doc together with the session-start docs."
+  - session: session_01E3XmTJcpKMZstW7MHL2eks
+    date: "2026-10-23"
+    severity: nit
+    description: "Ran git log, fetch and merge --ff-only before reading git-conventions.md, which CLAUDE.md requires before the first git command beyond status and diff."
+    solution: "Read git-conventions.md in the session-start batch when a Skill run will touch git; read-only here, no harm."
+  - session: session_01QpBTsuXUNm28Y2oszBnoUb
+    date: "2026-10-23"
+    severity: nit
+    description: "Called mcp__github__pull_request_read before reading github-integration.md, which CLAUDE.md requires first; a hook reminded me after."
+    solution: "Read the three required docs in the first parallel batch of a scheduled run."
+  - session: session_012Yzae3uty5Jj8ZPug9zpjr
+    date: "2026-10-23"
+    severity: nit
+    description: "I read git-conventions.md and github-integration.md after my first git log/fetch call, not before, as the hook pointed out"
+    solution: "Read both at session start alongside the glossaries when a Skill will drive git and GitHub"
+  - session: session_011hiFhM9A2Sbn4mGYbdtAhJ
+    date: "2026-10-23"
+    severity: nit
+    description: "Ran the window script (git fetch) before reading git-conventions.md; the read-first hint fired after the call."
+    solution: "Read the doc at session start for scheduled git-heavy Skills."
+  - session: session_01W8fFNeEtqXbeuGRWKNU2Jd
+    date: "2026-10-23"
+    severity: nit
+    description: "First git command (rev-parse) ran before git-conventions.md was read; a hook flagged it afterwards"
+    solution: "None needed: rev-parse is read-only and the later read showed the call was fine"
+  - session: session_01LoY6Tg8Va69D6Gf9xkLAUj
+    date: "2026-10-23"
+    severity: nit
+    description: "Ran git fetch/log (inside the window script and my own call) before reading git-conventions.md; the hook reminded me."
+    solution: "The doc did not change the calls; no fix needed."
+  - session: session_012YhKmFBfKqZH9hVKJoifLV
+    date: "2026-10-23"
+    severity: nit
+    description: "Ran git fetch, ls-remote and log to draw conclusions before reading docs/agents/git-conventions.md, against CLAUDE.md's read-first trigger."
+    solution: "Read git-conventions.md before the first fetch; the calls happened to match it, so no harm."
+  - session: session_01RbgM2L9pxGwnDWbc3Aw6Vq
+    date: "2026-10-23"
+    severity: nit
+    description: "Ran git log to draw a conclusion about the page's history before reading docs/agents/git-conventions.md, as CLAUDE.md requires."
+    solution: "Read git-conventions before the first conclusion-drawing git log; no harm here."
