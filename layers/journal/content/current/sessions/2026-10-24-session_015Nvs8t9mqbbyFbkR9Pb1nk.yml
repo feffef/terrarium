@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015Nvs8t9mqbbyFbkR9Pb1nk
 startedAt: 2026-10-24T00:16:00Z
-endedAt: 2026-10-24T00:23:54Z
+endedAt: 2026-10-24T00:27:22Z
 kind: autonomous
 goal: Write the 2026-10-23 Journal Digest and archive aged-out content
-status: in-review
-outcome: "PR 2470 open: 2026-10-23 Digest and retention sweep, gate green, awaiting CI and merge"
-summary: Scheduled digest run (agent-initiated by the schedule; no human instruction). One closed day was missing a Digest, 2026-10-23, so I gathered its material, wrote the page, fact-checked it with a sonnet subagent (26 claims; one wording fix, one claim left unverifiable), ran the retention sweep (1 Digest and 31 session logs to archived), committed, ran code-review (Standards and Spec agents, no findings), ran gate:scoped green, pushed and opened PR 2470. The Stop hook asked to push several times while review and gate were pending; I waited per ADR-0004.
+status: completed
+outcome: "PR 2470 merged green: 2026-10-23 Digest and retention sweep"
+summary: Scheduled digest run (agent-initiated by the schedule; no human instruction). One closed day was missing a Digest, 2026-10-23, so I gathered its material, wrote the page, fact-checked it with a sonnet subagent (26 claims; one wording fix, one claim left unverifiable), ran the retention sweep (1 Digest and 31 session logs to archived), committed, ran code-review (Standards and Spec agents, no findings), ran gate:scoped green, pushed, opened PR 2470, and merged it on green CI with a verdict comment. The Stop hook asked to push several times while review and gate were pending; I waited per ADR-0004.
 prs:
   - "2470"
 docsRead:
@@ -48,18 +48,22 @@ frictions:
   - description: Dispatched the fact-check and review subagents without invoking the dispatch-subagents Skill that CLAUDE.md names before writing a brief.
     solution: Have the digest Skill's fact-check step point to dispatch-subagents.
     severity: minor
-durationSec: 475
+durationSec: 683
 models:
-  claude-sonnet-5-5: 46
+  claude-sonnet-5-5: 64
 toolCounts:
-  Bash: 10
+  Bash: 14
   Read: 5
   Write: 1
   Agent: 3
   Edit: 1
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-23.md
   - layers/journal/content/archived/pages/digests/2026-10-16.md
@@ -175,21 +179,21 @@ subagents:
     durationSec: 97
     toolCalls: 22
     modelCalls: 12
-    tokenShare: 26.3
+    tokenShare: 21.2
   - type: general-purpose
     task: Standards review of digest diff
     model: sonnet
     durationSec: 23
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 6.4
+    tokenShare: 5.2
   - type: general-purpose
     task: Spec review of digest diff
     model: sonnet
     durationSec: 28
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 6.5
+    tokenShare: 5.3
 gitBranch: claude/compassionate-lovelace-neo9i1
 entrypoint: remote_trigger
 cliVersion: 2.1.310
