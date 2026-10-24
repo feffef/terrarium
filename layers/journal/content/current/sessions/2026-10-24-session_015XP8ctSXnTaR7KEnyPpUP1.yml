@@ -1,0 +1,186 @@
+schemaVersion: 1
+session: session_015XP8ctSXnTaR7KEnyPpUP1
+startedAt: 2026-10-24T16:48:32Z
+endedAt: 2026-10-24T17:16:44Z
+kind: autonomous
+goal: "Scheduled visitor-loop on Tinkerfund: fix consensus problems, build one feature"
+status: in-review
+outcome: "Fix PR #2495 open with green gate; feature PR not yet built"
+summary: "Scheduled run, no human prompts. Focus was tinkerfund (row 4). Served a production build, sent sonnet, fable and opus visitors, tallied consensus, and had an opus refiner check fit. Three consensus fixes survived (Rewards panel inner scroll, Just launched orphan card, Reset demo wording); the FIG. 1 label was dropped on the refiner's reading of #1362/#1363, an aria-hidden claim was disproved in the DOM, and clock drift was dropped per decisions.md. The code review caught that a bottom-only sticky would unstick short Reward columns, so I reworked it into a measured top-or-bottom sticky and re-measured in the browser. Chosen feature, still to build: a plain Recently ended section at the end of the Tinkerfund home. All of it is agent-initiated under the Skill's remit."
+prs:
+  - "2495"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, recipe, verdict format
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: required before first GitHub op; search needs fields
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: eval-in-page recipe for DOM evidence
+    useful: yes
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/components/tinkerfund/browse/Home.vue
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/components/tinkerfund/campaign/Campaign.vue
+    reason: (read before editing)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the scheduled task
+  - name: code-review
+    reason: pre-push review; caught the short-column sticky regression
+  - name: dispatch-subagents
+    reason: before writing visitor and refiner briefs
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: gate:scoped reused an e2e build made before my last refactor, so the final head was not actually exercised until I forced a fresh build.
+    solution: Have gate:scoped rebuild when layer sources are newer than .output.
+    severity: minor
+durationSec: 1692
+models:
+  claude-sonnet-5-5: 128
+toolCounts:
+  Bash: 43
+  Read: 4
+  Skill: 4
+  Agent: 6
+  mcp__github__list_pull_requests: 1
+  mcp__github__search_issues: 3
+  mcp__github__search_pull_requests: 2
+  Monitor: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - layers/tinkerfund/app/components/tinkerfund/campaign/Campaign.vue
+  - layers/tinkerfund/app/utils/browse.ts
+  - layers/tinkerfund/content/prod/pages/how-it-works.md
+  - layers/tinkerfund/content/qa/pages/how-it-works.md
+  - layers/tinkerfund/tests/unit/browse.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+docsReadBySubagents:
+  - docs/agents/tenant-layers.md
+  - layers/tinkerfund/GLOSSARY.md
+  - .agents/skills/visitor-loop/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to review and gate before pushing; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and subscribe without asking; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Session header on PR and comment; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Pointed me to close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by reading the Skill; did not apply
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded by reading the Skill; no trial touched
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Payload caching; no conflict with the changes
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule-placement guidance; did not apply
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary rule; did not apply
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Reminded me to read the Tinkerfund glossary via the refiner
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: No cross-Tenant code; confirmed layer-local edits
+    useful: partly
+  - path: .claude/rules/ui-verification.md
+    reason: Pointed to the verification doc, which I read
+    useful: yes
+  - path: .claude/rules/glossary-terms.md
+    reason: Glossary-term rule; no term changed
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Mermaid rule; irrelevant
+    useful: no
+subagents:
+  - task: "Visitor: sonnet"
+    model: sonnet
+    durationSec: 124
+    toolCalls: 17
+    modelCalls: 12
+    tokenShare: 5.6
+  - task: "Visitor: fable"
+    model: fable
+    durationSec: 550
+    toolCalls: 52
+    modelCalls: 27
+    tokenShare: 13.7
+  - task: "Visitor: opus"
+    model: opus
+    durationSec: 410
+    toolCalls: 30
+    modelCalls: 23
+    tokenShare: 11
+  - task: "Refiner: fit check"
+    model: opus
+    durationSec: 147
+    toolCalls: 36
+    modelCalls: 23
+    tokenShare: 13.2
+  - type: general-purpose
+    task: "Review: Standards axis"
+    durationSec: 27
+    toolCalls: 6
+    modelCalls: 2
+    tokenShare: 2.7
+  - type: general-purpose
+    task: "Review: Spec axis"
+    durationSec: 31
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 3
+gitBranch: claude/adoring-galileo-743bi1
+entrypoint: remote_trigger
+cliVersion: 2.1.310
+trigger: visitor-loop
+landedBy: Stop
