@@ -1,51 +1,67 @@
 schemaVersion: 1
 session: session_01PYyNMqrrDLZdXEej11LMzs
 startedAt: 2026-10-24T05:31:24Z
-endedAt: 2026-10-24T05:56:41Z
+endedAt: 2026-10-24T06:02:05Z
 kind: interactive
 goal: Clear the issue backlog (clear-backlog run)
 status: in-review
-outcome: "8 issues triaged; owner grilled on 5; PR #2483 open, three more branches building, #2373 handed to a new session"
-summary: "The owner invoked /clear-backlog (human-instructed). The default-mode sweep set was eight needs-triage or unlabeled issues; the six ready-for-human issues had an AI last comment and were skipped, and there were no external PRs. Explore gave #2471 build; #2432 and #2433 blocked (date hold until 2026-10-26, and Blocked by #2432); and #2373, #2472, #2474, #2475 and #2476 grill. Owner answers: #2474 is a new design of the owner's own (re-snapshot the tree between gate steps and abort on a change, keep the exit check, no guard); #2475 adds a read-first-hint entry for dispatch-subagents; #2476 makes sideFindings require a source; #2472 stays parked until the pr-workflow.md trial is judged; #2373 goes to a new read-only Opus session (session_019nDDDS9GsXdTKWK44j18fT) that reports on the issue. Agent-initiated: only orchestration (labels and comments recording the owner's answers, the briefs). #2471 built and reviewed by the workflow; I checked its diff and opened PR #2483 (agent-mergeable). The #2474, #2475 and #2476 builds are running; #2474 and #2475 touch Human-only paths and will wait for a human merge."
+outcome: "PRs #2483 and #2485 merged; #2484 and #2486 green and waiting for a human merge; #2373 handed to a new session"
+summary: "The owner invoked /clear-backlog (human-instructed). The default-mode sweep set was eight needs-triage or unlabeled issues; six ready-for-human issues had an AI last comment and were skipped, and there were no external PRs. Explore: #2471 build; #2432 blocked (date hold to 2026-10-26); #2433 blocked by #2432; #2373, #2472, #2474, #2475 and #2476 grill. Owner answers (all human-instructed): #2474 the owner's own design (re-snapshot the tree between gate steps and abort on change, keep the exit check, no guard); #2475 a read-first-hint entry; #2476 sideFindings require a source; #2472 parked until the pr-workflow.md trial is judged; #2373 run by a new read-only Opus session (session_019nDDDS9GsXdTKWK44j18fT) that reports on the issue. Agent-initiated: orchestration only (briefs, labels and comments recording answers, verdicts). Branches: #2483 (#2471) fixed the prune-trial ledger delta and named git diff --numstat as its source, merged. #2485 (#2476) made side findings {finding, source}, merged; it sits on branch fix/2476-sidefinding-source-field because a parallel-push cwd race put the #2475 commit on fix/2476-sidefinding-sources, and force-push was denied, so that stray branch remains for the owner to delete. #2484 (#2475) adds the dispatch-subagents pointer on Agent/Workflow/SendMessage, Human-only, green, waits for a human. #2486 (#2474) aborts gate:scoped before a step when HEAD or the tree changed; I ran the full gate locally on it with no false abort; Human-only, waits for a human. Open judgement calls: symlink-path reads may not dedupe in #2484; the running-time figure in #2486 is estimated, not timed."
 prs:
   - "2483"
   - "2484"
   - "2485"
+  - "2486"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
-    reason: step 1 eligibility rules for the sweep set
+    reason: "me: step 1 eligibility rules for the sweep set; triage #2373: The brief required it. Gave the brave/determinability line and the closing rules.; triage #2433: The brief required it. Its wayfinder overlay says to skip blocked tickets, and that set the outcome.; triage #2471: Required by the brief; brave-within-determinability and closing rules; triage #2472: Brief required it; brave/determinability and history-check rules; triage #2474: The brief told me to read it. It gave the brave/determinability line and the comment and label rules.; triage #2475: Required by the brief; per-issue sweep rules.; triage #2476: The brief required it; it gives the per-issue sweep rules (an obsolete issue is a judgment call, history check, one comment)"
     useful: yes
   - path: docs/agents/git-conventions.md
-    reason: fetch before trusting history; read after first git call, call was right
-    useful: partly
+    reason: "me: fetch before trusting history; read after first git call, call was right; triage #2373: CLAUDE.md trigger before git log. Told me to fetch first.; triage #2474: CLAUDE.md trigger before git log. I read it after my first log call; I had already fetched origin/main as it asks.; triage #2475: CLAUDE.md trigger before git log/fetch.; fix fix/2471-prune-trial-line-delta r1: CLAUDE.md requires it before the first git command beyond status and diff, and a hook pointed to it. It gave the rules for amending the tip commit with -F and checking the trailer.; build fix/2475-dispatch-subagents-read-first-hint: CLAUDE.md says to read it before the first git command. It helped with commit -F and with not chaining git commands.; Standards fix/2475-dispatch-subagents-read-first-hint r1: The read-first hint pointed to it after my first git command (git log/diff). It confirmed that the three-dot diff against origin/main was the right choice.; build fix/2476-sidefinding-sources: A hook asked for it after my first git command; I read it late, and my calls (fetch, checkout -b, commit -F) already complied.; build fix/2474-gate-abort-on-tree-change: CLAUDE.md requires it before git commands; it confirmed using -F for commit messages and checking the trailer; Standards fix/2474-gate-abort-on-tree-change r1: Read at the hook's prompt after git log/diff. It confirms the three-dot origin/main...HEAD diff; my calls were already right."
+    useful: yes
   - path: docs/agents/github-integration.md
-    reason: use gh api for bulk reads and MCP for writes
+    reason: "me: use gh api for bulk reads and MCP for writes; triage #2373: CLAUDE.md trigger before GitHub operations. Confirmed that a label update replaces the set.; triage #2432: Read because a hook said to after my first GitHub call (CLAUDE.md requires it before any GitHub operation). It confirmed issue_read was the right tool and that no write was needed.; triage #2433: CLAUDE.md requires it before the first GitHub operation, and I read it late. My calls were already right.; triage #2471: CLAUDE.md trigger before GitHub operations; confirmed that a label update replaces the set and that comments go through add_issue_comment; triage #2472: CLAUDE.md trigger before GitHub ops; label-replace and comment tool; triage #2474: CLAUDE.md trigger for a first GitHub op; read just after the first issue_read. It confirmed that a label update replaces the set and that comments go through add_issue_comment.; triage #2475: CLAUDE.md trigger before GitHub operations; confirmed label replace semantics.; triage #2476: CLAUDE.md trigger before the first GitHub operation; confirmed that a label update replaces the whole set and that comments go through add_issue_comment; Spec fix/2476-sidefinding-sources r1: The hook asked for it before GitHub reads. It confirmed issue_read was the right tool."
     useful: partly
   - path: docs/agents/pr-workflow.md
-    reason: landing recipe and verdict before merge
+    reason: "me: landing recipe and verdict before merge; triage #2472: The doc the issue is about; showed digest's review step is reached via scheduled-run step 1"
     useful: yes
   - path: docs/agents/triage-labels.md
-    reason: label strings for recording answers
-    useful: partly
+    reason: "me: label strings for recording answers; triage #2474: CLAUDE.md trigger before labelling. It confirmed the label strings."
+    useful: yes
   - path: docs/agents/issue-tracker.md
-    reason: external PR listing and Specs hold rule
-    useful: partly
+    reason: "me: external PR listing and Specs hold rule; triage #2433: Required before triage. Its Specs rule (an issue on hold gets no label) decided the label question.; triage #2472: CLAUDE.md trigger before triage; its supersession/prune-trial overlap check mattered; triage #2475: CLAUDE.md trigger before triage; pointed to the prune-trial overlap check."
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2373: The brief required it. Gave the per-issue rules and the labels.; triage #2471: Required by the brief; per-issue verify and redundancy steps; triage #2474: The brief told me to read it. It gave the per-issue steps (the redundancy check, claim verification).; triage #2475: Required by the brief; states and outcomes."
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "triage #2472: Full ADR governing pre-push review; its rejected push-hook alternative rules out the guard option; build fix/2475-dispatch-subagents-read-first-hint: The edit hook pointed to it after I edited Human-only files. It confirmed that agents may edit those files and only the merge waits for a human."
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "triage #2373: The full ADR behind the governing rule. Its definition of a judgment call decided the result.; triage #2471: Read in full because it governs the ready-for-agent label I recommended; triage #2472: Full ADR for the grill vs build line; triage #2474: Read for its definition of a judgment call or real design doubt. It settled the grill outcome (several valid approaches).; triage #2475: Full ADR behind the governing rule; defines judgment call and design doubt.; triage #2476: The full ADR behind the ready-for-human decision (judgment call or real design doubt)"
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "triage #2471: Read in full because the fix edits the prune-trial Skill; confirmed a Skill edit is allowed and prose rules tend not to hold; triage #2472: Full ADR behind the trial constraint my recommendation rests on; build fix/2471-prune-trial-line-delta: A hook asked for it after I edited the prune-trial Skill."
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "triage #2474: The issue cited it. It confirmed guards are Human-only and need a human-attended build session."
+    useful: yes
   - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
+    reason: "Spec fix/2471-prune-trial-line-delta r1: The task told me to read it and apply its Spec axis. It framed the missing, scope-creep and wrong checks.; Standards fix/2471-prune-trial-line-delta r2: The task required it for the Standards axis and its smell baseline.; Spec fix/2471-prune-trial-line-delta r2: The task said to read it. Its Spec axis (missing, scope creep, wrong) framed the review.; Standards fix/2475-dispatch-subagents-read-first-hint r1: Read as the task required, for the Standards axis and the smell baseline.; Spec fix/2475-dispatch-subagents-read-first-hint r1: The task asked me to read it and apply its Spec axis; it gave the report shape (missing / scope creep / wrong).; Standards fix/2476-sidefinding-sources r1: Read as the task required; it supplied the smell baseline I applied (Speculative Generality was considered for the third finding).; Spec fix/2476-sidefinding-sources r1: The task required it, for the Spec axis criteria (missing, scope creep, wrong).; Standards fix/2474-gate-abort-on-tree-change r1: The task named it. I used the Standards axis and the smell baseline from it.; Spec fix/2474-gate-abort-on-tree-change r1: Read as the task told me to, for the Spec axis brief: missing items, scope creep, wrong implementation."
+    useful: yes
   - path: .agents/skills/implement/SKILL.md
-    reason: (no reason given)
+    reason: "build fix/2471-prune-trial-line-delta: The brief told me to read and follow it; it is short.; build fix/2476-sidefinding-sources: The task told me to read it; it said to use tdd, run typecheck and tests, and commit.; build fix/2474-gate-abort-on-tree-change: Required by the task; generic steps"
+    useful: yes
+  - path: CLAUDE.md
+    reason: "build fix/2471-prune-trial-line-delta: Project instructions loaded at start; it sent me to the git-conventions doc.; build fix/2475-dispatch-subagents-read-first-hint: Loaded at session start. It is the source of the trigger wording quoted in the pointer.; Standards fix/2476-sidefinding-sources r1: Loaded as project instructions; 'One home per fact' and 'Keep it short' drove the first finding."
+    useful: yes
+  - path: .claude/skills/tdd/SKILL.md
+    reason: "build fix/2475-dispatch-subagents-read-first-hint: The task said to invoke it. I followed red-then-green, with the seams the brief listed.; build fix/2474-gate-abort-on-tree-change: Invoked as the task required; I followed its red-then-green loop"
+    useful: partly
   - path: scripts/hooks/read-first-hint.ts
     reason: (read before editing)
   - path: tests/unit/read-first-hint.spec.ts
     reason: (read before editing)
-  - path: docs/adr/0004-objective-safety-gate.md
-    reason: (no reason given)
-  - path: .agents/skills/triage/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0027-prune-trials.md
-    reason: (no reason given)
-  - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: (no reason given)
   - path: layers/journal/content/current/frictions/relayed-subagent-claims.yml
     reason: (no reason given)
   - path: .agents/skills/prune-trial/SKILL.md
@@ -56,8 +72,6 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: (no reason given)
-  - path: docs/agents/guards.md
-    reason: (read before editing)
 skillsUsed:
   - name: clear-backlog
     reason: owner-invoked run
@@ -78,22 +92,22 @@ frictions:
   - description: "Two parallel Bash pushes using cd raced on the shared cwd; the #2475 commit went to fix/2476-sidefinding-sources. Force-push was denied, so #2476 moved to a new branch and a stray branch was left"
     solution: Never run git in parallel Bash calls that rely on cd; use git -C with an absolute worktree path, one push per call
     severity: moderate
-durationSec: 1517
+durationSec: 1841
 models:
-  claude-opus-5-5: 133
+  claude-opus-5-5: 167
 toolCounts:
-  Bash: 35
+  Bash: 44
   Read: 6
   Workflow: 4
   ToolSearch: 3
   Skill: 4
   PushNotification: 1
-  mcp__github__add_issue_comment: 5
+  mcp__github__add_issue_comment: 7
   mcp__github__issue_write: 3
   mcp__claude-code-remote__create_session: 1
-  mcp__github__create_pull_request: 3
-  mcp__claude-code-remote__subscribe_pr_activity: 3
-  ReadNotifications: 1
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
+  ReadNotifications: 5
   mcp__github__pull_request_read: 2
 filesEdited:
   - scripts/hooks/read-first-hint.ts
@@ -168,50 +182,53 @@ docsReadBySubagents:
   - docs/agents/guards.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
-    reason: "Decided which branches I may merge (#2471, #2476) and which wait for a human; summary was enough"
+    reason: "me: Decided which branches I may merge (#2471, #2476) and which wait for a human; summary was enough; triage #2472: Loaded at session start; it governs the pre-push review rule this issue is about; triage #2474: Loaded at session start. It confirmed that any fix to gate.ts or a guard needs a human merge.; Standards fix/2471-prune-trial-line-delta r1: Loaded at session start; it sets when a human must merge, which I needed to test the human-merge build decision.; fix fix/2471-prune-trial-line-delta r1: Loaded at session start (cross-cutting). It says the agent merges its own PR unless a Human-only file is touched.; build fix/2475-dispatch-subagents-read-first-hint: Loaded at start. It explains the gate and human-merge requirements.; Standards fix/2475-dispatch-subagents-read-first-hint r1: Loaded at session start. It confirmed that the scripts/hooks and settings.json edits are Human-only, so the PR waits for a human merge.; build fix/2474-gate-abort-on-tree-change: Loaded at session start; confirmed gate.ts needs a human merge and the gate must pass before push; Standards fix/2474-gate-abort-on-tree-change r1: Loaded at session start. It confirms gate.ts is Human-only, so the PR waits for a human merge; the build decisions say so."
     useful: yes
   - path: .claude/rules/adr-0009.md
-    reason: Told me to invoke close-session when the PR opened; summary enough
+    reason: "me: Told me to invoke close-session when the PR opened; summary enough; triage #2472: Loaded at session start; told me where session logs live, which I used to verify the claim; build fix/2471-prune-trial-line-delta: Loaded at session start. It governs session logs, which the orchestrator handles.; Standards fix/2471-prune-trial-line-delta r1: Loaded at session start; not relevant to a read-only review.; Spec fix/2471-prune-trial-line-delta r1: Loaded at session start. It is not relevant here.; fix fix/2471-prune-trial-line-delta r1: Loaded at session start. Not relevant, since the orchestrator handles close-session.; Standards fix/2471-prune-trial-line-delta r2: Loaded at session start; this is a read-only review, so it didn't apply.; Spec fix/2471-prune-trial-line-delta r2: Loaded at session start. Not relevant to a read-only review.; build fix/2475-dispatch-subagents-read-first-hint: Loaded at start. Not relevant, because the orchestrator writes the session logs.; Standards fix/2475-dispatch-subagents-read-first-hint r1: Loaded at session start. Not relevant to a read-only review.; Spec fix/2475-dispatch-subagents-read-first-hint r1: Loaded at session start; covers session logs, which a read-only review doesn't touch.; build fix/2476-sidefinding-sources: Loaded at session start. It had no bearing on this task.; Standards fix/2476-sidefinding-sources r1: Loaded at session start; it is about session logs, which this read-only review does not touch.; Spec fix/2476-sidefinding-sources r1: Loaded at session start. It covers session logs, which this task does not touch.; build fix/2474-gate-abort-on-tree-change: Loaded at session start; not relevant, since the orchestrator writes the logs; Standards fix/2474-gate-abort-on-tree-change r1: Loaded at session start. Session logs are not touched in this read-only review.; Spec fix/2474-gate-abort-on-tree-change r1: Loaded at session start; about session logs, not relevant to a read-only review."
     useful: yes
   - path: .claude/rules/adr-0003.md
-    reason: Owner answers counted as approval for the new builds; open the PR right after the push
+    reason: "me: Owner answers counted as approval for the new builds; open the PR right after the push; triage #2373: Cross-cutting, loaded at start. Background on approval.; build fix/2471-prune-trial-line-delta: Loaded at session start. It governs PRs, which the orchestrator handles.; Standards fix/2471-prune-trial-line-delta r1: Loaded at session start; not relevant to a read-only review.; Spec fix/2471-prune-trial-line-delta r1: Loaded at session start. It is not relevant to a read-only spec review.; fix fix/2471-prune-trial-line-delta r1: Loaded at session start. Not relevant to this fix.; Standards fix/2471-prune-trial-line-delta r2: Loaded at session start; no effect on a review of a scoped fix.; Spec fix/2471-prune-trial-line-delta r2: Loaded at session start. Not relevant to this review.; build fix/2475-dispatch-subagents-read-first-hint: Loaded at start. Not relevant, because the orchestrator opens the PR.; Standards fix/2475-dispatch-subagents-read-first-hint r1: Loaded at session start. Not relevant to a read-only review.; Spec fix/2475-dispatch-subagents-read-first-hint r1: Loaded at session start; covers PR governance, which doesn't apply to a read-only review.; build fix/2476-sidefinding-sources: Loaded at session start. It had no bearing on this task.; Standards fix/2476-sidefinding-sources r1: Loaded at session start; it is about PR governance and does not bear on a review.; Spec fix/2476-sidefinding-sources r1: Loaded at session start. It covers PR and approval governance and was not relevant here.; build fix/2474-gate-abort-on-tree-change: Loaded at session start; not relevant, since the orchestrator opens the PR; Standards fix/2474-gate-abort-on-tree-change r1: Loaded at session start. Not relevant to a read-only review.; Spec fix/2474-gate-abort-on-tree-change r1: Loaded at session start; about PR and approval governance, not needed for this review."
     useful: yes
   - path: .claude/rules/adr-0017.md
-    reason: Header on every GitHub comment and the PR body
+    reason: "me: Header on every GitHub comment and the PR body; triage #2373: Cross-cutting, loaded at start. Set the comment header.; triage #2433: Loads at session start. It set the comment header.; triage #2471: Session-start rule; provenance header on the comment; triage #2472: Loaded at session start; provenance header on my comment; triage #2474: Loaded at start. It set the comment header.; triage #2475: Session start; provenance header on the comment.; triage #2476: Session-start rule; the comment header; Standards fix/2471-prune-trial-line-delta r2: Loaded at session start. Used it to check the commit trailer.; build fix/2475-dispatch-subagents-read-first-hint: Loaded at start. I checked that the commit trailer landed.; Standards fix/2475-dispatch-subagents-read-first-hint r1: Loaded at session start. I checked that the commit trailer landed.; build fix/2476-sidefinding-sources: Loaded at session start. It led me to check that the commit trailer landed, which it did.; Standards fix/2476-sidefinding-sources r1: Loaded at session start; it let me confirm the commit carries the Claude-Session trailer.; build fix/2474-gate-abort-on-tree-change: Loaded at session start; led me to check that the commit trailer landed; Standards fix/2474-gate-abort-on-tree-change r1: Loaded at session start. I checked the commit's Claude-Session trailer and it is present."
     useful: yes
   - path: .claude/rules/adr-0022.md
-    reason: Set what the sweep may label ready-for-agent; triage agents applied it
+    reason: "me: Set what the sweep may label ready-for-agent; triage agents applied it; triage #2373: Loaded with the auto-triage Skill read. It decides what the sweep may label.; triage #2471: Loaded during the triage Skill read; decides whether the sweep may set ready-for-agent; triage #2472: Loaded with auto-triage; it decides grill vs build; triage #2474: Loaded with the auto-triage Skill. It governs the ready-for-human routing; I read the full ADR.; triage #2475: Loaded with auto-triage; decides ready-for-agent vs ready-for-human.; triage #2476: Loaded with the auto-triage Skill; sets which outcomes the sweep may choose; build fix/2476-sidefinding-sources: Loaded by the triage workflow file. It had no bearing on this change."
     useful: yes
   - path: .claude/rules/adr-0027.md
-    reason: "Shaped briefs: edit, don't add; respect open trial territory"
-    useful: partly
+    reason: "me: Shaped briefs: edit, don't add; respect open trial territory; triage #2433: Loaded with the triage reads. It led me to check for the prune-trial overlap.; triage #2471: Loaded on reading the prune-trial ledger and Skill; the territory check and 'cut before adding' shaped the brief; triage #2472: Loaded with the skills and digest reads; it pointed me to the open trial check, which decided the outcome; triage #2475: Loaded; the issue's claim rests on a Prune Trial.; triage #2476: Loaded with the auto-triage and frictions-to-fixes reads; its 'cut before adding' line backs my pick; build fix/2471-prune-trial-line-delta: Loaded when I read the prune-trials ledger. It confirmed that a Skill change and a ledger correction are allowed.; Standards fix/2471-prune-trial-line-delta r1: Loaded when I read the prune-trial files; it confirmed the brief's 'edit, don't add' rule and the open-trial constraint.; Standards fix/2471-prune-trial-line-delta r2: Loaded on reading files under .agents. Confirmed that editing the existing sentence (not adding a paragraph) is the right shape, and that no open trial covers prune-trial SKILL.md.; Spec fix/2471-prune-trial-line-delta r2: Loaded when I read the prune-trial area. It confirmed the 'cut or simplify before adding' check the brief applies to §5.; Standards fix/2475-dispatch-subagents-read-first-hint r1: Loaded when I read a Skill file. It led me to check prune-trials.yml territory.; Spec fix/2475-dispatch-subagents-read-first-hint r1: Loaded when I read the code-review Skill; it led me to check that no prune-trial text was reworded.; Standards fix/2476-sidefinding-sources r1: Loaded on reading the workflow file; it backs the 'edit, don't add a paragraph' check, which the diff passes.; Standards fix/2474-gate-abort-on-tree-change r1: Loaded when I read the code-review Skill. It sent me to check .agents/prune-trials.yml for trials covering gate.ts; I found none."
+    useful: yes
   - path: .claude/rules/adr-0020.md
-    reason: All issues Trusted-authored, so no Public gating applied
-    useful: no
+    reason: "me: All issues Trusted-authored, so no Public gating applied; triage #2373: Loaded at session start. Confirmed the owner-authored issue is Trusted.; triage #2433: Loaded with the triage reads. The author is OWNER, so Trusted.; triage #2471: Loaded at triage start; author is OWNER, so Trusted; triage #2472: Loaded; author-trust check (owner, so Trusted); triage #2474: Loaded at start, for the Public-author check. The author is OWNER, so Trusted.; triage #2475: Loaded; needed to check the author tier (OWNER, Trusted).; triage #2476: Loaded with the triage Skills; used to confirm the author is Trusted (OWNER)"
+    useful: partly
   - path: .claude/rules/adr-0005.md
-    reason: Confirmed workflow scripts are Skill code, not Human-only
+    reason: "me: Confirmed workflow scripts are Skill code, not Human-only; triage #2373: Loaded with the Skill-folder reads. Not relevant here.; triage #2433: Loaded on reading the Skills. Not relevant.; triage #2471: Loaded on reading Skill files; not relevant to this outcome; triage #2472: Loaded on Skill reads; not relevant to the decision; triage #2474: Loaded on reading the Skills. Not relevant.; triage #2475: Loaded on reading Skill files; not relevant here.; triage #2476: Loaded on reading Skill files; not relevant here; build fix/2471-prune-trial-line-delta: Loaded when I read the Skill file.; Standards fix/2471-prune-trial-line-delta r1: Loaded on reading the Skill files; nothing in this diff touched it.; Spec fix/2471-prune-trial-line-delta r1: Loaded when I read Skill files. It is not relevant to this diff.; Standards fix/2471-prune-trial-line-delta r2: Loaded on reading a Skill file; nothing in it bore on this diff.; Spec fix/2471-prune-trial-line-delta r2: Loaded alongside the skill read. Not relevant to a prose edit.; build fix/2476-sidefinding-sources: Loaded when I touched .claude/workflows and .agents/skills. It confirmed that workflow scripts are Skill code that goes through a gated PR.; build fix/2474-gate-abort-on-tree-change: Loaded when I read the implement Skill; not relevant; Standards fix/2474-gate-abort-on-tree-change r1: Loaded when I read a Skill file. Not relevant to this diff.; Spec fix/2474-gate-abort-on-tree-change r1: Loaded when I read the code-review Skill; about where Skills live, not relevant here."
     useful: partly
   - path: .claude/rules/adr-0029.md
-    reason: Loaded on doc reads; nothing to decide here
+    reason: "me: Loaded on doc reads; nothing to decide here; triage #2373: Loaded on the docs reads. Not relevant.; triage #2432: Loaded during the session. It doesn't apply here.; triage #2433: Loaded on reading the docs/agents files. Not relevant.; triage #2471: Loaded on reading .claude/rules and Skill files; not relevant; triage #2472: Loaded on docs/agents reads; not relevant here; triage #2474: Loaded on reading docs. Not relevant to triage.; triage #2475: Loaded on reading .claude/rules; not relevant.; triage #2476: Loaded on reading Skill and rule files; not relevant here; build fix/2471-prune-trial-line-delta: Loaded when I read the Skill file.; Standards fix/2471-prune-trial-line-delta r1: Loaded on reading the rules file; not relevant to this diff.; fix fix/2471-prune-trial-line-delta r1: Loaded alongside the others. Not relevant to this fix.; Standards fix/2471-prune-trial-line-delta r2: Loaded during the review; nothing in it bore on this diff.; build fix/2475-dispatch-subagents-read-first-hint: Loaded when I read the hooks and docs. Not relevant to this change.; Standards fix/2475-dispatch-subagents-read-first-hint r1: Loaded when I read docs/agents. Not relevant to this diff.; build fix/2476-sidefinding-sources: Loaded automatically. It had no bearing on this change.; Spec fix/2476-sidefinding-sources r1: Loaded during the review. Not relevant to this diff.; build fix/2474-gate-abort-on-tree-change: Loaded during the session; not relevant to a code fix; Standards fix/2474-gate-abort-on-tree-change r1: Loaded when I read docs/agents. Not relevant to this diff."
     useful: no
   - path: .claude/rules/adr-0030.md
-    reason: Loaded on reading the ledger; no ADR was changed
+    reason: "me: Loaded on reading the ledger; no ADR was changed; triage #2373: Loaded on the ADR read. Not relevant.; triage #2471: Loaded on reading the rules dir; no ADR change involved; triage #2472: Loaded on ADR reads; not relevant here; triage #2474: Loaded on reading journal files. Not relevant.; triage #2475: Loaded on reading .claude/rules; not relevant.; triage #2476: Loaded on reading an ADR; not relevant; build fix/2471-prune-trial-line-delta: Loaded when I read the Skill file.; build fix/2475-dispatch-subagents-read-first-hint: Loaded when I read the ADR-0004 doc. Not relevant, because I edited no ADR."
     useful: no
   - path: .claude/rules/adr-0015.md
-    reason: Loaded on audit-skills reads; no Inventory change in this session
-    useful: no
+    reason: "me: Loaded on audit-skills reads; no Inventory change in this session; triage #2373: Loaded on the Inventory reads. Confirmed audit-skills writes only Inventory, routines and issues, so the scope matched."
+    useful: partly
   - path: .claude/rules/tenant-glossary.md
-    reason: Loaded on Journal content reads; no Tenant work
+    reason: "me: Loaded on Journal content reads; no Tenant work; triage #2373: Loaded on the Journal content reads. Not needed.; triage #2476: Loaded on reading the journal friction file; not needed"
     useful: no
   - path: .claude/rules/adr-0004-human-merge.md
-    reason: "Its paths showed gate.ts and scripts/hooks are Human-only, so #2474 and #2475 wait for the owner"
+    reason: "me: Its paths showed gate.ts and scripts/hooks are Human-only, so #2474 and #2475 wait for the owner; triage #2471: Loaded when I read it to check whether the touched files are Human-only (they are not); triage #2474: Loaded when I read scripts/gate/gate.ts. Its paths confirm gate.ts is Human-only.; triage #2475: Loaded on reading scripts/hooks; confirmed read-first-hint.ts is Human-only.; build fix/2471-prune-trial-line-delta: Loaded after I touched a Human-only file.; Standards fix/2471-prune-trial-line-delta r1: I read it to check whether either touched file is Human-only; its paths show neither is.; build fix/2475-dispatch-subagents-read-first-hint: Loaded when I touched scripts/hooks and settings.json. It flagged that a human must merge.; build fix/2474-gate-abort-on-tree-change: Loaded when I read gate.ts; confirmed it is Human-only"
     useful: yes
   - path: .claude/rules/adr-0026.md
-    reason: Loaded on the gate.ts read; brief told the builder to keep gate-parity intact
+    reason: "me: Loaded on the gate.ts read; brief told the builder to keep gate-parity intact; triage #2474: Loaded on reading gate.ts. Only relevant if a gate step is added; option 2 doesn't add one.; build fix/2474-gate-abort-on-tree-change: Loaded with gate.ts; reminded me that changing the step list touches parity, which I avoided"
     useful: partly
   - path: .claude/rules/guards.md
-    reason: Loaded on reading read-first-hint.ts; pointer only
-    useful: no
+    reason: "me: Loaded on reading read-first-hint.ts; pointer only; triage #2433: Loaded when I read the hooks. It points to guards.md, which a blocked outcome didn't need.; triage #2475: Loaded on reading scripts/hooks; pointer only.; build fix/2475-dispatch-subagents-read-first-hint: Loaded with scripts/hooks. It pointed me to the guards.md roster, which I updated."
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: "triage #2472: Loaded on the digest SKILL read; confirmed digest lands by gated PR"
+    useful: partly
 subagents:
   - type: workflow-subagent
     task: Spec fix/2476-sidefinding-sources r1
@@ -219,161 +236,161 @@ subagents:
     durationSec: 37
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.7
+    tokenShare: 1.5
   - type: workflow-subagent
     task: Spec fix/2475-dispatch-subagents-read-first-hint r1
     model: claude-opus-5-5
     durationSec: 56
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 2
+    tokenShare: 1.7
   - type: workflow-subagent
     task: Standards fix/2476-sidefinding-sources r1
     model: claude-opus-5-5
     durationSec: 34
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: build fix/2476-sidefinding-sources
     model: claude-sonnet-5-5
     durationSec: 287
     toolCalls: 19
     modelCalls: 15
-    tokenShare: 4.6
+    tokenShare: 4.1
   - type: workflow-subagent
     task: build fix/2475-dispatch-subagents-read-first-hint
     model: claude-opus-5-5
     durationSec: 702
     toolCalls: 33
     modelCalls: 20
-    tokenShare: 9.2
+    tokenShare: 8.2
   - type: workflow-subagent
     task: Standards fix/2475-dispatch-subagents-read-first-hint r1
     model: claude-opus-5-5
     durationSec: 49
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.8
+    tokenShare: 1.6
   - type: workflow-subagent
     task: "triage #2472"
     model: claude-opus-5-5
     durationSec: 119
     toolCalls: 23
     modelCalls: 14
-    tokenShare: 4.7
+    tokenShare: 4.2
   - type: workflow-subagent
     task: "triage #2471"
     model: claude-opus-5-5
     durationSec: 114
     toolCalls: 21
     modelCalls: 14
-    tokenShare: 4.4
+    tokenShare: 3.9
   - type: workflow-subagent
     task: "triage #2475"
     model: claude-opus-5-5
     durationSec: 94
     toolCalls: 19
     modelCalls: 8
-    tokenShare: 3.4
+    tokenShare: 3.1
   - type: workflow-subagent
     task: "triage #2476"
     model: claude-opus-5-5
     durationSec: 96
     toolCalls: 16
     modelCalls: 10
-    tokenShare: 4.6
+    tokenShare: 4.1
   - type: workflow-subagent
     task: "triage #2373"
     model: claude-opus-5-5
     durationSec: 90
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 3.2
+    tokenShare: 2.8
   - type: workflow-subagent
     task: "triage #2474"
     model: claude-opus-5-5
     durationSec: 100
     toolCalls: 19
     modelCalls: 12
-    tokenShare: 4.1
+    tokenShare: 3.7
   - type: workflow-subagent
     task: "triage #2433"
     model: claude-opus-5-5
     durationSec: 75
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 2.9
+    tokenShare: 2.6
   - type: workflow-subagent
     task: "triage #2432"
     model: claude-opus-5-5
     durationSec: 25
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards fix/2474-gate-abort-on-tree-change r1
     model: claude-opus-5-5
     durationSec: 39
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 1.3
   - type: workflow-subagent
     task: build fix/2474-gate-abort-on-tree-change
     model: claude-opus-5-5
     durationSec: 712
     toolCalls: 21
     modelCalls: 15
-    tokenShare: 4.5
+    tokenShare: 4
   - type: workflow-subagent
     task: Spec fix/2474-gate-abort-on-tree-change r1
     model: claude-opus-5-5
     durationSec: 39
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Standards fix/2471-prune-trial-line-delta r1
     model: claude-opus-5-5
     durationSec: 56
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.7
+    tokenShare: 2.4
   - type: workflow-subagent
     task: Standards fix/2471-prune-trial-line-delta r2
     model: claude-opus-5-5
     durationSec: 34
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: fix fix/2471-prune-trial-line-delta r1
     model: claude-sonnet-5-5
     durationSec: 384
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.3
+    tokenShare: 2
   - type: workflow-subagent
     task: Spec fix/2471-prune-trial-line-delta r2
     model: claude-opus-5-5
     durationSec: 36
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: build fix/2471-prune-trial-line-delta
     model: claude-sonnet-5-5
     durationSec: 417
     toolCalls: 16
     modelCalls: 13
-    tokenShare: 4.9
+    tokenShare: 4.3
   - type: workflow-subagent
     task: Spec fix/2471-prune-trial-line-delta r1
     model: claude-opus-5-5
     durationSec: 27
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 1.2
+    tokenShare: 1
 gitBranch: ccr-637e7a15-ka1mn0
 entrypoint: remote_mobile
 cliVersion: 2.1.310
