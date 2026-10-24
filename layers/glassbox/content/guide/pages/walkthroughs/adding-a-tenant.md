@@ -68,7 +68,7 @@ It writes its own `GLOSSARY.md` for the words only it uses. Then it adds itself 
 No test config names the new Tenant. The smoke test reads its entry addresses from the manifests, so it loads each new Space's front page in a browser, and fails on a console error or a front page with no Document. What only this Tenant has, such as its root page's redirect, goes in its own e2e spec under `tests/e2e/` in its folder, which the e2e project's glob picks up. The :term[Gate] runs them all.
 
 ::stop-links
-[Merge gate](/t/glassbox/guide/terrarium-practice/gate) · :file[layers/marquee/tests/e2e/marquee.spec.ts]
+[Unit and e2e tests](/t/glassbox/guide/testing/unit-and-e2e-tests) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · :file[layers/marquee/tests/e2e/marquee.spec.ts]
 ::
 
 ## 9. Who else can see it
@@ -76,7 +76,7 @@ No test config names the new Tenant. The smoke test reads its entry addresses fr
 Its pages appear in the Commons Search only if its `pages` Collection names the `page` :term[kind]{id="collection-kind"}, as Marquee's does. The Platform home page lists no new Tenant by itself: it is a hand-picked showcase, and a Tenant joins it when someone adds its tile to :file[app/pages/index.vue].
 
 ::stop-links
-:file[layers/marquee/tenant.config.ts] · :file[app/pages/index.vue]
+[Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · :file[layers/marquee/tenant.config.ts]
 ::
 
 ## Where next

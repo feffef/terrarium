@@ -44,7 +44,7 @@ The session edits on a feature branch, never on `main`, and may hand parts of th
 Before the first push, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find. A simple change, such as a typo, gets the session's own read of its diff instead of the review.
 
 ::stop-links
-[Merge gate](/t/glassbox/guide/terrarium-practice/gate)
+[Merge gate](/t/glassbox/guide/terrarium-practice/gate) · [Type checking](/t/glassbox/guide/typescript/type-checking) · [Unit and e2e tests](/t/glassbox/guide/testing/unit-and-e2e-tests)
 ::
 
 ## 6. It opens the PR
@@ -52,7 +52,7 @@ Before the first push, the session runs `pnpm gate:scoped`, the local run of the
 The session pushes the branch and opens the PR itself, without asking. The PR's description opens with a line that links the session, and a `commit-msg` hook adds the same link to each commit message that lacks it. Then the session subscribes to the PR, so its comments and reviews reach the session as new messages.
 
 ::stop-links
-[Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr)
+[Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr) · [MCP servers](/t/glassbox/guide/claude-code/mcp-servers)
 ::
 
 ## 7. It logs its work, the first time
