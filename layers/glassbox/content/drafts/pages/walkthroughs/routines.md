@@ -13,7 +13,7 @@ Some of Terrarium's work happens without anyone asking. A :term[Routine] starts 
 A Routine, set up in a claude.ai account and kept out of the repo, starts a cloud session on a fresh clone, and the session runs the Skill's slash command, such as `/digest`. Each of the Skills below turns model invocation off, so no session starts one on its own. From there the session follows the Skill's `SKILL.md`, which also says what the run's PR may change.
 
 ::stop-links
-[Routines, scheduled tasks and /loop](/t/glassbox/drafts/claude-code/routines) · [Skills](/t/glassbox/guide/claude-code/skills) · [Cloud sessions, settings and permissions](/t/glassbox/drafts/claude-code/cloud-sessions)
+[Routines, scheduled tasks and /loop](/t/glassbox/drafts/claude-code/routines) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Cloud sessions, settings and permissions](/t/glassbox/drafts/claude-code/cloud-sessions)
 ::
 
 ## 2. audit-docs: the docs checked against the code
@@ -21,7 +21,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 `audit-docs` reviews the repo's own prose, from `CLAUDE.md` to its Skills, for drift, duplication, wordiness and contradiction, and fixes only the findings that separate checker subagents confirm from primary sources. It never edits session logs, blog posts or the pack's Skills, and leaves text inside an open :term[Prune Trial] as it is. The fixes land in one PR the run merges itself; fixes a person must merge, such as an ADR edit or a change to another :term[Human-only] file, go into a second PR, and a conflict no source settles becomes an issue.
 
 ::stop-links
-[Subagents](/t/glassbox/guide/claude-code/subagents) · [Path-scoped rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Prune Trials](/t/glassbox/drafts/terrarium-practice/prune-trials) · [Protected files](/t/glassbox/guide/terrarium-practice/human-only-list) · :file[.agents/skills/audit-docs/SKILL.md]
+[Subagents](/t/glassbox/guide/claude-code/subagents) · [Path-scoped rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Prune Trials](/t/glassbox/drafts/terrarium-practice/prune-trials) · [Required reviewers](/t/glassbox/guide/terrarium-practice/human-only-list) · :file[.agents/skills/audit-docs/SKILL.md]
 ::
 
 ## 3. audit-skills: do the Skills do their job?
@@ -29,7 +29,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 `audit-skills` checks recent session logs for a Skill that ran but didn't deliver what its `SKILL.md` promises, and for one that should have run but didn't, with one subagent per Skill. It may change only entries in the :term[Skill Inventory]: notes on what it found, and a Skill's importance, moved only on evidence from sessions it cites. A finding that did real damage or repeats an earlier one becomes an issue, unless it is about a pack Skill, and the Inventory changes leave in one PR, or none when nothing changed.
 
 ::stop-links
-[The Skill pack](/t/glassbox/drafts/skill-pack/skill-pack) · [Skills](/t/glassbox/guide/claude-code/skills) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Skill Inventory](/t/journal/current/skills) · :file[.agents/skills/audit-skills/SKILL.md]
+[The Skill pack](/t/glassbox/drafts/skill-pack/skill-pack) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Skill Inventory](/t/journal/current/skills) · :file[.agents/skills/audit-skills/SKILL.md]
 ::
 
 ## 4. prune-trial: a rule cut on trial
@@ -69,7 +69,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 Each run that changes something closes the same way: it runs `pnpm gate:scoped`, the local run of the :term[Gate], commits, and opens one PR, or the ones its Skill names. At that moment it runs `close-session`, and its :term[session log] lands on `main`. Once CI is green, it posts its verdict, naming the head commit it reviewed, and merges through `scripts/github/merge-pr.ts`, which refuses a PR that changes a Human-only file or has no such verdict. If anything its Skill doesn't allow rode into the PR, or the Gate failed for a reason that isn't the run's own, it leaves the PR open for a person, and once the PR is merged or left open, it logs again.
 
 ::stop-links
-[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gates](/t/glassbox/guide/terrarium-practice/gate) · [Protected files](/t/glassbox/guide/terrarium-practice/human-only-list) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
+[Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · [Required reviewers](/t/glassbox/guide/terrarium-practice/human-only-list) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
 ## Where next
@@ -77,5 +77,5 @@ Each run that changes something closes the same way: it runs `pnpm gate:scoped`,
 - [Routines, scheduled tasks and /loop](/t/glassbox/drafts/claude-code/routines)
 - [Subagents](/t/glassbox/guide/claude-code/subagents)
 - [Prune Trials](/t/glassbox/drafts/terrarium-practice/prune-trials)
-- [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+- [Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr)
 - [A session log lands on main](/t/glassbox/drafts/walkthroughs/session-log-lands-on-main)

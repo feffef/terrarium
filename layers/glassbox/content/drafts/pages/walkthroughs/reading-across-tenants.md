@@ -44,7 +44,7 @@ A visitor opens `/t/commons/search`. The Commons layer's Space page renders its 
 The server renders the first rows; the whole list travels in the page's data. Typing in the box filters that list in the browser, by title, description, Tenant and Space, with no new query. The filter and the sort order are code in the Commons layer, not in the shared read functions. A click on a result goes to the post's own address under `/t/blog/`, where the Blog's own pages render it.
 
 ::stop-links
-[Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/commons/app/components/commons/Search.vue] · :file[layers/commons/app/pages/t/commons/]
+[useAsyncData and payloads](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/commons/app/components/commons/Search.vue] · :file[layers/commons/app/pages/t/commons/]
 ::
 
 ## 6. Where the reading stops

@@ -12,7 +12,7 @@ A developer has just heard of Terrarium and has an hour to spare. This Walkthrou
 The home page says what Terrarium is in a few lines, links the repository's issues and pull requests, and offers one button: "Enter the Journal". The Journal is the :term[Tenant] that documents the Platform itself; the other sites are listed further down.
 
 ::stop-links
-[Layers](/t/glassbox/guide/nuxt-vue/layers) · [The Journal](/t/journal/current) · :file[app/pages/index.vue] · :file[app/utils/sites.ts]
+[Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [The Journal](/t/journal/current) · :file[app/pages/index.vue] · :file[app/utils/sites.ts]
 ::
 
 ## 2. "New here?" offers a short tour
@@ -52,7 +52,7 @@ The tour links the repository's issues and pull requests, and from there the new
 `CLAUDE.md` sends every session to the glossaries before anything else: the glossary map, which points to a Tenant's own glossary, then the Platform glossary, with words such as Tenant, Space and Friction. A newcomer who reads them in that order learns the words the docs, the code and the agents all use. The decisions behind the words are ADRs, one decision each, and each ADR's summary reaches agents as a rule.
 
 ::stop-links
-[Several glossaries](/t/glassbox/drafts/terrarium-practice/glossaries) · [Decision records](/t/glassbox/guide/terrarium-practice/adrs)
+[Several glossaries](/t/glassbox/drafts/terrarium-practice/glossaries) · [Decision records (ADRs)](/t/glassbox/guide/terrarium-practice/adrs)
 ::
 
 ## A real case

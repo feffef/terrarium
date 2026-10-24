@@ -12,7 +12,7 @@ The owner has an idea too big for one session, and the way to it isn't clear yet
 The owner types `/wayfinder` with the idea; the Skill never starts on its own. The session first grills the owner to name the destination, such as a spec ready to build, then grills again across the whole idea for the open decisions. It writes the result as one issue labelled `wayfinder:map`: the destination, notes every later session should read, an empty list of decisions so far, and the questions that can't be asked sharply yet.
 
 ::stop-links
-[Planning with the pack](/t/glassbox/drafts/skill-pack/planning-with-the-pack) · [Skills](/t/glassbox/guide/claude-code/skills) · :file[.agents/skills/wayfinder/SKILL.md]
+[Planning with the pack](/t/glassbox/drafts/skill-pack/planning-with-the-pack) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · :file[.agents/skills/wayfinder/SKILL.md]
 ::
 
 ## 2. Each sharp question becomes a ticket
@@ -36,7 +36,7 @@ A later session loads the map and takes the first open ticket that nothing block
 A grilling ticket is a conversation with the owner, run with `grilling` and `domain-modeling`, which writes settled words into a glossary and settled decisions into an ADR. A prototype ticket builds something rough to react to with `prototype`; a research ticket reads primary sources with `research`; a task ticket does the work a decision is waiting on. An agent never resolves a grilling or prototype ticket alone.
 
 ::stop-links
-[The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Several glossaries](/t/glassbox/drafts/terrarium-practice/glossaries) · [Decision records](/t/glassbox/guide/terrarium-practice/adrs) · :file[.agents/skills/grilling/SKILL.md]
+[The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Several glossaries](/t/glassbox/drafts/terrarium-practice/glossaries) · [Decision records (ADRs)](/t/glassbox/guide/terrarium-practice/adrs) · :file[.agents/skills/grilling/SKILL.md]
 ::
 
 ## 5. The map hands off to a spec
@@ -52,7 +52,7 @@ When nothing is left to decide, the way is clear and the work is handed off. `to
 From here each story is ordinary work. A session builds it on its own branch, reviews it, runs the :term[Gate] and opens a PR; a story the issue view shows as blocked waits for its blockers to close.
 
 ::stop-links
-[The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gates](/t/glassbox/guide/terrarium-practice/gate)
+[The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate)
 ::
 
 ## A real case

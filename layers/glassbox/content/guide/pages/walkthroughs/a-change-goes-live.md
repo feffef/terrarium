@@ -12,7 +12,7 @@ A commit lands on `main`, and with no one running a deploy, the live site change
 The commit is a merged PR, or a :term[session log], which lands without one. Both take the same road from here: a blog post, a session log and a code fix all go live through the same pull, build and restart.
 
 ::stop-links
-[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
+[Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr) · [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
 ## 2. The container notices it
@@ -20,7 +20,7 @@ The commit is a merged PR, or a :term[session log], which lands without one. Bot
 The script that runs the container fetches `main` again after each pause. When `origin/main` differs from its checkout, it resets the checkout to the new commit. It doesn't wait for CI: the Gate also runs on every push to `main`, but nothing in the container reads the result.
 
 ::stop-links
-[Continuous deployment](/t/glassbox/guide/deploy/self-updating-container) · [Merge gates](/t/glassbox/guide/terrarium-practice/gate) · :file[.github/workflows/gate.yml]
+[Continuous deployment](/t/glassbox/guide/deploy/self-updating-container) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · :file[.github/workflows/gate.yml]
 ::
 
 ## 3. Packages, only when the lockfile changed
@@ -36,7 +36,7 @@ The script compares a hash of `pnpm-lock.yaml` with the hash it saved after its 
 The build runs in the checkout, beside the live server, which keeps answering. It writes `.output/`: a server that runs on its own, with each :term[Collection]'s content dump inside. If the build fails, nothing is swapped, and the old build stays live.
 
 ::stop-links
-[Content database](/t/glassbox/guide/nuxt-content/content-database) · [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container) · [Nitro](/t/glassbox/guide/nuxt-vue/nitro) · :file[package.json]
+[Content database](/t/glassbox/guide/nuxt-content/content-database) · [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container) · [Nitro server engine](/t/glassbox/guide/nuxt-vue/nitro) · :file[package.json]
 ::
 
 ## 5. The swap
@@ -63,6 +63,6 @@ On 9 October 2026 an agent checking a diagram of this story against :file[deploy
 
 - [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container)
 - [Content database](/t/glassbox/guide/nuxt-content/content-database)
-- [Merge gates](/t/glassbox/guide/terrarium-practice/gate)
+- [Merge gate](/t/glassbox/guide/terrarium-practice/gate)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)
 - [Architecture & Deployment](/t/journal/current/architecture)

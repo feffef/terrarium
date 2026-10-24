@@ -12,7 +12,7 @@ A new site joins Terrarium. This Walkthrough follows the work from the side of t
 A :term[Trusted] user approves the new :term[Tenant], for example by asking for it in a session or by labelling its issue `ready-for-agent`, before an agent starts on it. The agent then works on a feature branch, and the result lands as a PR like any other change.
 
 ::stop-links
-[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+[Pull request workflow](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 2. A folder becomes a layer
@@ -20,7 +20,7 @@ A :term[Trusted] user approves the new :term[Tenant], for example by asking for 
 The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which can be as small as `defineNuxtConfig({})`. Nuxt registers every folder under `layers/` by itself, so the root config is left alone. From now on the folder is also read as a Tenant: the build stops if it holds no `tenant.config.ts`, or one whose name differs from the folder's.
 
 ::stop-links
-[Layers](/t/glassbox/guide/nuxt-vue/layers) · :file[layers/marquee/nuxt.config.ts]
+[Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · :file[layers/marquee/nuxt.config.ts]
 ::
 
 ## 3. The manifest says what it holds
@@ -68,7 +68,7 @@ It writes its own `GLOSSARY.md` for the words only it uses. Then it adds itself 
 No test config names the new Tenant. The smoke test reads its entry addresses from the manifests, so it loads each new Space's front page in a browser, and fails on a console error or a front page with no Document. What only this Tenant has, such as its root page's redirect, goes in its own e2e spec under `tests/e2e/` in its folder, which the e2e project's glob picks up. The :term[Gate] runs them all.
 
 ::stop-links
-[Merge gates](/t/glassbox/guide/terrarium-practice/gate) · :file[layers/marquee/tests/e2e/marquee.spec.ts]
+[Merge gate](/t/glassbox/guide/terrarium-practice/gate) · :file[layers/marquee/tests/e2e/marquee.spec.ts]
 ::
 
 ## 9. Who else can see it
@@ -82,6 +82,6 @@ Its pages appear in the Commons Search only if its `pages` Collection names the 
 ## Where next
 
 - [Content collections](/t/glassbox/guide/nuxt-content/manifest-collections)
-- [Layers](/t/glassbox/guide/nuxt-vue/layers)
+- [Nuxt layers](/t/glassbox/guide/nuxt-vue/layers)
 - [File routing](/t/glassbox/guide/nuxt-vue/file-routing)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)
