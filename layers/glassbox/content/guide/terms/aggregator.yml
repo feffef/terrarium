@@ -1,0 +1,3 @@
+term: Aggregator
+definition: A view whose job is to read across Tenants, such as a search or an activity feed. It reads only the Catalog and writes nothing; views made just for this are Spaces of the Commons Tenant.
+source: GLOSSARY.md
