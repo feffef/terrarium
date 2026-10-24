@@ -1,0 +1,229 @@
+schemaVersion: 1
+session: session_01BjA9rHbNdMX5KiK49Cee99
+startedAt: 2026-10-24T18:10:32Z
+endedAt: 2026-10-24T18:16:46Z
+kind: delegated
+goal: Review the Glass Box draft Lessons for quality and coverage gaps
+status: completed
+outcome: One agent graded all 31 draft Lessons against the guide; report given in chat, nothing changed in the repo
+summary: "The human asked for an agent to read every Glass Box draft and judge quality, titles, cut, fixes to reach guide level, and which drafts fill real coverage gaps. I asked four scoping questions (the human chose Lessons only, report in chat, gaps measured against what Terrarium actually uses, one agent). One read-only general-purpose agent read the 20 guide Lessons and the 31 drafts. Two conflicting reports reached me; the subagent hand-back matched the files (31 drafts, real titles, revision 75deb948) and the other did not, so I discarded it after checking titles, pins, two Why sections and the Dependabot staleness claim against source. Main finding: no draft is guide-ready, because every draft's \"Why it's built this way\" is ADR pointer lines rather than the contract's bold-lead-in bullets. No PR; nothing was agent-initiated beyond the review."
+prs: []
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson contract and Spaces; agent agreed it was the key source
+    useful: yes
+  - path: layers/glassbox/app/utils/lesson.ts
+    reason: (no reason given)
+  - path: layers/glassbox/app/utils/subjects.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/claude-code/05.guards.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/claude-code/06.hints.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/claude-code/08.workflow-scripts.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/claude-code/09.mcp.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/claude-code/10.routines.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/claude-code/11.cloud-sessions.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/git-github/03.thin-ci-workflow.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/git-github/05.provenance-headers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/git-github/06.work-queue.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/git-github/07.dependabot-grouping.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-content/04.query-collection-patterns.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-content/05.mdc-components.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-content/06.prose-overrides.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-content/07.mermaid-svg.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-vue/03.virtual-imports.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-vue/04.auto-imports.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-vue/07.theming-wrapper-class.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/skill-pack/01.skill-pack.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/skill-pack/02.planning-with-the-pack.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/skill-pack/03.engineering-loop.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/terrarium-practice/03.glossaries.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/terrarium-practice/05.prune-trials.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/terrarium-practice/06.out-of-scope-records.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/terrarium-practice/08.cross-tenant-kinds.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/testing/01.unit-and-e2e.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/testing/02.invariants-as-tests.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/typescript/01.two-type-checks.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/zod/01.manifest-validation.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/zod/02.timestamps-as-strings.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/zod/03.schema-only-grows.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/zod/04.schemas-column-types.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief for the review agent
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: I told the agent there were 30 draft Lessons from eyeballing a wc listing; there are 31. The agent corrected it.
+    solution: Count with a command (ls | wc -l) before putting a count in a brief, per CLAUDE.md 'Verify before you state'.
+    severity: nit
+  - description: A second, fabricated-looking subagent report (wrong titles, 30 pages, A grades) arrived beside the real hand-back and contradicted it.
+    solution: Verify subagent claims against source before relaying; done here by listing titles and revisions.
+    severity: minor
+durationSec: 374
+models:
+  claude-opus-5-5: 27
+toolCounts:
+  Bash: 8
+  AskUserQuestion: 1
+  Skill: 3
+  Agent: 1
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Agent used it to show the Dependabot draft is stale; no gate needed for a read-only review
+    useful: partly
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log this session via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: No PR or new work in a read-only review
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Agent checked provenance draft facts against it; I posted nothing to GitHub
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Agent used it to judge the glossaries draft
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: No glossary term was added or changed
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pointed at the Glass Box glossary, which I had already opened
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading package.json; nothing was edited
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Agent used it to flag facts that change (model names, counts) in drafts
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagram was written
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Agent used it for the theming and auto-imports drafts
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: "Agent: loaded on the deploy Lesson, not needed"
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: "Agent: loaded on the isolation Lesson, not needed"
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Agent used it for the prune-trials draft
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: "Agent: loaded on a docs/adr listing, not needed"
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "Agent: loaded on a scripts/hooks listing, not needed"
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: "Agent: loaded on nuxt.config.ts, not needed"
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: "Agent: loaded on nuxt.config.ts, not needed"
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Review Glass Box draft Lessons
+    durationSec: 228
+    toolCalls: 59
+    modelCalls: 20
+    tokenShare: 64.6
+gitBranch: ccr-6a0d47d4-40ms5i
+entrypoint: remote_mobile
+cliVersion: 2.1.310
+landedBy: Stop
