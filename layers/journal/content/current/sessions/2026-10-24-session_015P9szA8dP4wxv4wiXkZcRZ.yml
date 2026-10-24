@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_015P9szA8dP4wxv4wiXkZcRZ
 startedAt: 2026-10-24T17:07:41Z
-endedAt: 2026-10-24T17:43:21Z
+endedAt: 2026-10-24T17:45:24Z
 kind: interactive
 goal: Even out the quality of Glass Box guide Lessons
-status: in-review
-outcome: "Review of 20 guide Lessons done; fix PR #2497 open with retitles, three re-cuts and sourced corrections"
+status: completed
+outcome: "Review of 20 guide Lessons done; PR #2497 merged with retitles, three re-cuts and sourced corrections"
 summary: "Human-instructed: the owner asked for an agent to read every Glass Box guide Lesson and judge quality, titles and how well each is cut, then bring the weak ones up. Through questions the owner chose the scope (guide Lessons only), both readers (newcomer and experienced), report plus fix PR, the contract check, plain noun-phrase titles, keeping URLs, and all three large fixes. Mid-session the owner also asked for an Explore agent per rebuilt page to dig facts out of Terrarium and node_modules, then chose field-name titles, the File routing re-split and keeping publishedAt. Agent-initiated: one reviewer subagent scored the Lessons; I wrote all edits myself (not dispatched, since the large fixes touched overlapping files); two code-review rounds and four research agents found real errors in my first rewrite (cached payloads are rendered on request, not written; a false worktree claim; an empty catch-all param is absent; titles breaking EVERY-PAGE's title rule), all fixed and verified against sources before the push. Left open: Continuous deployment keeps its Docker Compose Full reference, and a CODEOWNERS sentence was skipped because docs.github.com is blocked."
 prs:
   - "2497"
@@ -129,20 +129,24 @@ frictions:
   - description: docs.github.com is blocked by the proxy (WebFetch DNS fail, curl 403), so a GitHub docs claim could not be verified and was dropped.
     solution: EVERY-PAGE's fallback (sparse clone of github/docs) costs more than one sentence; allowlisting docs.github.com would help Glass Box work.
     severity: minor
-durationSec: 2140
+durationSec: 2263
 models:
-  claude-opus-5-5: 223
+  claude-opus-5-5: 247
 toolCounts:
-  Bash: 72
+  Bash: 77
   AskUserQuestion: 3
   Skill: 4
   Agent: 9
   Read: 3
   Write: 4
-  ToolSearch: 2
+  ToolSearch: 4
   WebFetch: 3
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
   - layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
@@ -339,55 +343,55 @@ subagents:
     durationSec: 115
     toolCalls: 26
     modelCalls: 7
-    tokenShare: 3.9
+    tokenShare: 3.6
   - type: general-purpose
     task: Standards review of Lesson edits
     durationSec: 109
     toolCalls: 16
     modelCalls: 13
-    tokenShare: 5.2
+    tokenShare: 4.7
   - type: general-purpose
     task: Spec review of Lesson edits
     durationSec: 68
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 4
+    tokenShare: 3.7
   - type: Explore
     task: "Explore facts: Isolation by table"
     durationSec: 117
     toolCalls: 16
     modelCalls: 16
-    tokenShare: 3.6
+    tokenShare: 3.3
   - type: Explore
     task: "Explore facts: File routing"
     durationSec: 147
     toolCalls: 28
     modelCalls: 26
-    tokenShare: 5.3
+    tokenShare: 4.9
   - type: Explore
     task: "Explore facts: Git worktrees"
     durationSec: 60
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 2
+    tokenShare: 1.9
   - type: Explore
     task: "Explore facts: useAsyncData and payloads"
     durationSec: 224
     toolCalls: 41
     modelCalls: 37
-    tokenShare: 8.4
+    tokenShare: 7.7
   - type: general-purpose
     task: Standards review of follow-up
     durationSec: 194
     toolCalls: 35
     modelCalls: 32
-    tokenShare: 8.3
+    tokenShare: 7.6
   - type: general-purpose
     task: Spec review of follow-up
     durationSec: 84
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 4
+    tokenShare: 3.7
 gitBranch: ccr-92887c02-iloins
 entrypoint: remote_mobile
 cliVersion: 2.1.310
