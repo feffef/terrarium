@@ -52,7 +52,14 @@ const RESULT = {
     relatedTo: { type: 'array', items: { type: 'number' }, description: 'other issues in this set that belong in the same change' },
     publicAuthor: { type: 'boolean', description: 'author_association is on the Public side of scripts/lib/author-trust.ts' },
     readyForHuman: { type: 'boolean', description: 'labelled ready-for-human' },
-    sideFindings: { type: 'array', items: { type: 'string' } },
+    sideFindings: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: { finding: { type: 'string' }, source: { type: 'string', description: 'file:line, commit SHA or issue/comment URL you checked, or "unverified" plus what would verify it' } },
+        required: ['finding', 'source'],
+      },
+    },
     writes: { type: 'array', items: { type: 'string' }, description: 'every comment and label change you made on GitHub' },
     verdicts: VERDICTS,
   },
@@ -83,7 +90,7 @@ Full pass:
 GitHub writes:
 - Comment only on a label change, a fact that changes the outcome, or an issue with no comments yet; at most one comment. Every GitHub body starts with this exact first line: ${HEADER}
 - A label update replaces the set: pass the complete final set and keep every wayfinder:* label.
-- Return side findings (bugs or gaps outside this issue) in sideFindings instead of filing them.
+- Return side findings (bugs or gaps outside this issue) in sideFindings instead of filing them, each with the primary source you checked or the word unverified plus what would verify it.
 
 The run's issue set is ${list}. In relatedTo, name only issues from that set that clearly belong in the same change as this one.
 

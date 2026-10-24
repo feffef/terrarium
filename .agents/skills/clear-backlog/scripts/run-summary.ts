@@ -19,7 +19,7 @@ type Triage = {
   blocker?: string
   files: string[]
   relatedTo: number[]
-  sideFindings: string[]
+  sideFindings: { finding: string; source: string }[]
   writes: string[]
   verdicts?: Verdict[]
 }
@@ -58,7 +58,7 @@ function triage(r: Explore): string[] {
     ...field('blocker', t.blocker),
     ...field('files', t.files.join(', ')),
     ...field('relatedTo', issues(t.relatedTo)),
-    ...list('sideFindings', t.sideFindings),
+    ...list('sideFindings', t.sideFindings.map((s) => `${s.finding} (source: ${s.source})`)),
     ...list('writes', t.writes),
   ].join('\n'))
   return [
