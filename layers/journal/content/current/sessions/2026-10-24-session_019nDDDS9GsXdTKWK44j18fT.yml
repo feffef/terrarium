@@ -1,0 +1,120 @@
+schemaVersion: 1
+session: session_019nDDDS9GsXdTKWK44j18fT
+startedAt: 2026-10-24T05:43:30Z
+endedAt: 2026-10-24T06:09:06Z
+kind: autonomous
+goal: Inspect audit-skills after its rewrite and judge the audited field
+status: completed
+outcome: Verdicts, re-audit overlap and an audited recommendation posted on issue 2373
+summary: "Started by another session, not by a human prompt. The task came from the owner's decision in a clear-backlog grilling (session_01PYyNMqrrDLZdXEej11LMzs): inspect issue 2373 read-only, build nothing, open no PR. That makes the scope human-decided; how I inspected was my own choice. The runs in scope were the three scheduled ones (10-22, 10-23, 10-24). I found no human-invoked run in the logs. One inspect-session subagent per run did a full read of its events. I checked the Inventory and PR-body state claims myself, sampled six clean-report claims on GitHub, and checked the scope and the Skill text. To measure overlap, I replayed audit-skills.ts --briefs in throwaway worktrees at each run's start commit with a faked clock. The file counts matched the real runs. Consecutive runs re-list 61 to 74% of run sessions, but only 11 to 53% if any SKILL.md commit resets the list. The surprise was that both issues filed on 10-24 came from sessions the 10-23 run had already audited and passed. That argues against `audited` under a lax reset rule. The cheap $8.36 run turned out to differ in model too: claude-sonnet-5-5 at medium effort, against the Routine's pinned claude-sonnet-5 with no effort set. Posted one comment: keep 2368 and 2372, a small fix for the step-1 usage fetch and the clean-report rule, and a recommendation not to build `audited` now. The owner decides that, and any Routine model or effort change."
+prs: []
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: MCP for writes, gh api for bulk REST reads
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; git show origin/main for files
+    useful: partly
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: step text for section 6 (usage fetch, clean-report rule, check-states)
+    useful: yes
+  - path: .agents/skills/audit-skills/brief.md
+    reason: what behaviour-check subagents are asked to report
+    useful: yes
+  - path: .throwaway/overlap/comment.md
+    reason: (read before editing)
+skillsUsed:
+  - name: inspect-session
+    reason: full read of each audit-skills run via one subagent per run
+  - name: dispatch-subagents
+    reason: before writing the three inspection briefs
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first git command beyond status and diff.
+    solution: Read the git doc together with the GitHub doc at the start of any task that will read history.
+    severity: nit
+  - description: "Measuring the overlap between consecutive runs needed a hand-built replay: worktrees at old commits plus a Date-faking import, because audit-skills.ts only computes its window from now."
+    solution: Give audit-skills.ts an --at ISO flag so a past run's data files can be rebuilt in one command.
+    severity: minor
+  - description: The first inspection subagent left the oldest inline page unsaved, so its coverage never reached the session start (that page held no relevant events).
+    solution: The inspect-session brief could say that an inline first page must still be written to Out before Flatten runs.
+    severity: nit
+durationSec: 1537
+models:
+  claude-opus-5-5: 124
+toolCounts:
+  Skill: 4
+  ToolSearch: 2
+  mcp__github__issue_read: 2
+  Read: 3
+  Bash: 42
+  mcp__claude-code-remote__list_triggers: 1
+  mcp__claude-code-remote__get_session: 3
+  Agent: 3
+  Write: 2
+  Edit: 3
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .throwaway/overlap/comment.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Read-only task with no PR, so the gate and merge rules didn't apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to close with close-session and keep the log off any branch; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed that building nothing and opening no PR was right for an inspection; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Set the provenance header on the issue comment; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Gave the scope check for section 7 (Inventory and routines only, no pack Skill issues); summary enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Shaped the recommendation to cut the ignored clean-report sentence instead of adding to brief.md
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the Skill files; nothing about rule placement came up
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when reading Skill files; no Skill was changed
+    useful: no
+subagents:
+  - task: Inspect audit-skills run 10-22
+    durationSec: 815
+    toolCalls: 141
+    modelCalls: 141
+    tokenShare: 25.8
+  - task: Inspect audit-skills run 10-23
+    durationSec: 1001
+    toolCalls: 147
+    modelCalls: 147
+    tokenShare: 28
+  - task: Inspect audit-skills run 10-24
+    durationSec: 930
+    toolCalls: 146
+    modelCalls: 146
+    tokenShare: 26.9
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.310
+learnings:
+  - Scheduled Routine sessions show no effort_level in get_session, while an app-started session records one. Compare model and effort before crediting a cost change to a Skill edit.
+ideas:
+  - Add audit-skills.ts --at ISO to replay a past run's scorecard and briefs from the commit and time it started. That makes overlap and regression questions like issue 2373 a one-line check instead of a worktree-and-clock-shim job.
+landedBy: Stop
