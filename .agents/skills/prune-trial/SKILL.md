@@ -94,9 +94,9 @@ means from a goal as readily as you can. A goal it can't act on isn't simpler,
 just shorter — and neither is a surviving rule now buried mid-paragraph where a
 skimmer will miss it.
 
-Aim for around 100 lines **deleted** (the goal you write back and the ledger
-entry don't count). Get there by retiring a whole problem. Never pad the scope,
-and never delete the worked examples a weaker reader needs.
+Size follows the problem. Cut the whole of one problem's instructions; a small
+cut is fine. Never pad the scope, and never delete the worked examples a weaker
+reader needs.
 
 **You may also rewrite any Markdown file in scope plainly** (see Bounds),
 alongside a prune or instead of one; do this when no problem clears the bar. Use
