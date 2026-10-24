@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_019nDDDS9GsXdTKWK44j18fT
 startedAt: 2026-10-24T05:43:30Z
-endedAt: 2026-10-24T06:16:46Z
+endedAt: 2026-10-24T07:51:10Z
 kind: interactive
-goal: Inspect audit-skills after its rewrite and fix its step text
-status: completed
-outcome: Inspection posted on issue 2373; item 6 Skill text fix merged as PR 2487
-summary: "Started by another session, not by a human prompt. The task came from the owner's decision in a clear-backlog grilling (session_01PYyNMqrrDLZdXEej11LMzs): a read-only inspection of issue 2373. One inspect-session subagent per scheduled run (10-22, 10-23, 10-24) read its events in full. I checked state claims, clean-report claims, scope and Skill text myself. To measure re-audit overlap, I replayed audit-skills.ts --briefs at each run's start commit with a faked clock. Consecutive runs re-list 61 to 74% of run sessions, but only 11 to 53% when any SKILL.md commit resets the list. Both issues filed on 10-24 came from sessions the 10-23 run had already passed. The cheap $8.36 run differed in model and effort, not only in the Skill text. I posted verdicts (keep 2368 and 2372, fix item 6) and recommended not building `audited` now; the owner decides that. The user then asked directly for the item 6 fix (human-instructed). Step 1 now fetches usage only for Routine runs its Routine file doesn't list yet, and the ignored clean-report send-back sentence is cut (ADR-0027). code-review found no hard findings; I took one judgement call (step 1 points to step 5 for the file instead of repeating its path). gate:scoped was green. Opening PR 2487, subscribing, posting the verdict and merging it (558691f05) on green CI were agent-initiated per ADR-0003 and ADR-0004."
+goal: Inspect audit-skills after its rewrite and script its bookkeeping
+status: in-review
+outcome: Inspection on issue 2373; Skill text fix merged as PR 2487; append and prune scripts open as PR 2489
+summary: "Started by another session, not by a human prompt. The task came from the owner's decision in a clear-backlog grilling: a read-only inspection of issue 2373. One inspect-session subagent per scheduled run (10-22, 10-23, 10-24) read its events in full. Replaying audit-skills.ts at each run's start commit measured the re-audit overlap (61 to 74%, or 11 to 53% with a SKILL.md reset). Both issues filed on 10-24 came from sessions the 10-23 run had passed, so I recommended against `audited` for now. The user then directed three follow-ups (human-instructed). First, the item 6 text fix, merged as PR 2487. Second, they asked for more ideas, and I listed five. Third, verifying idea 3 with inspect-session: classifying the already-flattened events showed the step between hand-backs and the PR costs 54 to 104 calls, partly hand bookkeeping. The user then asked to implement ideas 1 and 2 with subagents and picked the designs via AskUserQuestion: a usage JSONL plus scorecard append, a Skill-local prune script, one PR. Two worktree subagents built them test-first. I rewired SKILL.md, cherry-picked their commits and ran code-review. It found two real defects: an empty Routine file for a new Routine with no usage, and step 1's redirect into a missing directory. Both were fixed (I resumed the builders for theirs). A second code-review on the fix commits was clean, and gate:scoped was green. Opening PR 2489, subscribing, posting the verdict and starting merge-pr.ts were agent-initiated per ADR-0003 and ADR-0004."
 prs:
   - "2487"
+  - "2489"
 docsRead:
   - path: docs/agents/github-integration.md
     reason: MCP for writes, gh api for bulk REST reads
@@ -23,7 +24,7 @@ docsRead:
     reason: what behaviour-check subagents are asked to report
     useful: yes
   - path: docs/agents/pr-workflow.md
-    reason: a Skill meaning change is not simple, so code-review first, then gate:scoped and a verdict naming the head
+    reason: review before first push; a larger follow-up gets code-review on its own diff
     useful: yes
   - path: docs/adr/0005-skill-model.md
     reason: a Skill changes through a gated PR like any code
@@ -40,19 +41,30 @@ docsRead:
   - path: GLOSSARY.md
     reason: "Standards reviewer: confirmed Routine and Skill Inventory used correctly"
     useful: partly
+  - path: .agents/skills/tdd/SKILL.md
+    reason: "Builders: red-green slices for both scripts; some tests were green on first write"
+    useful: yes
   - path: .throwaway/overlap/comment.md
     reason: (read before editing)
+  - path: scripts/session/prune-routine-runs.ts
+    reason: (read before editing)
+  - path: tests/unit/prune-routine-runs.spec.ts
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/scripts/check-states.ts
+    reason: (no reason given)
 skillsUsed:
   - name: inspect-session
-    reason: full read of each audit-skills run via one subagent per run
+    reason: "idea 3: reused the flattened events instead of fetching again"
   - name: dispatch-subagents
-    reason: before writing the three inspection briefs
+    reason: worktree isolation, pinned SHA, resume builders for fixes rather than re-dispatch
   - name: code-review
-    reason: two-axis review before the first push of the Skill fix
+    reason: "two rounds: whole branch, then the fix commits"
   - name: close-session
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: implement
+    reason: (invoked as a slash command)
 frictions:
   - description: Ran git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first git command beyond status and diff.
     solution: Read the git doc together with the GitHub doc at the start of any task that will read history.
@@ -66,28 +78,41 @@ frictions:
   - description: Edited SKILL.md before reading ADR-0005, ADR-0015 and ADR-0027 in full; the hook asked for them after the edit, and they confirmed the edit.
     solution: Read the governing ADRs a Skill file loads before the first edit, not after.
     severity: nit
-durationSec: 1996
+  - description: After the PR merged, the branch was restarted from origin/main, and the Stop hook then flagged inherited main commits as unpushed three times while builders and the gate ran.
+    solution: The Stop hook could count only commits not on origin/main, as git-conventions.md already advises readers to check by hand.
+    severity: nit
+  - description: First idea-3 script compared ISO timestamps against bare HH:MM:SS strings and printed nothing; cost one rerun.
+    solution: Slice the time field before comparing in throwaway event scripts.
+    severity: nit
+durationSec: 7660
 models:
-  claude-opus-5-5: 179
+  claude-opus-5-5: 286
 toolCounts:
-  Skill: 5
+  Skill: 6
   ToolSearch: 3
   mcp__github__issue_read: 2
-  Read: 8
-  Bash: 58
+  Read: 9
+  Bash: 86
   mcp__claude-code-remote__list_triggers: 1
   mcp__claude-code-remote__get_session: 3
-  Agent: 5
+  Agent: 11
   Write: 2
-  Edit: 6
-  mcp__github__add_issue_comment: 2
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Edit: 16
+  mcp__github__add_issue_comment: 3
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  ReadNotifications: 1
+  AskUserQuestion: 1
+  SendMessage: 2
 filesEdited:
   - .throwaway/overlap/comment.md
   - .agents/skills/audit-skills/SKILL.md
+  - tests/unit/prune-routine-runs.spec.ts
+  - scripts/session/prune-routine-runs.ts
+  - .agents/skills/audit-skills/tests/unit/prune-observations.spec.ts
+  - .agents/skills/audit-skills/scripts/prune-observations.ts
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
@@ -95,6 +120,7 @@ rulesLoaded:
   - .claude/rules/adr-0015.md
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0030.md
+  - .claude/rules/tenant-glossary.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -117,12 +143,33 @@ adrHints:
     via: path
     readAfter: true
     by: main
+  - adr: 15
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 5
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: true
+    by: subagent
 rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
   - .claude/rules/adr-0021.md
   - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0014.md
 docsReadBySubagents:
   - .agents/skills/writing-for-agents/SKILL.md
   - GLOSSARY.md
+  - .agents/skills/tdd/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Sent me to code-review and gate:scoped before the push and to a verdict before merging; read pr-workflow.md for steps
@@ -160,37 +207,95 @@ ruleVerdicts:
   - path: .claude/rules/glossary-terms.md
     reason: Standards reviewer only; loaded on reading GLOSSARY.md, no term added
     useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on reading Journal Inventory files; no Tenant terms were coined or changed
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: "Builders and reviewers: confirmed usage.jsonl is scratch and no stored field was added"
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on reading tenant.config.ts in subagents; schema untouched
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded on reading Journal files in subagents; nothing Journal-specific changed
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on reading content config in subagents; no MDC content written
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on reading layer files in subagents; no layer code changed
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded in a builder on reading content files; did not apply to a script change
+    useful: no
+  - path: .claude/rules/adr-0013.md
+    reason: Loaded in a builder on reading content files; did not apply
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: Loaded when a builder read tsconfig.node.json; no TS config change
+    useful: no
 subagents:
   - task: Inspect audit-skills run 10-22
     durationSec: 815
     toolCalls: 141
     modelCalls: 141
-    tokenShare: 22.5
+    tokenShare: 15.6
   - task: Inspect audit-skills run 10-23
     durationSec: 1001
     toolCalls: 147
     modelCalls: 147
-    tokenShare: 24.4
+    tokenShare: 16.9
   - task: Inspect audit-skills run 10-24
     durationSec: 930
     toolCalls: 146
     modelCalls: 146
-    tokenShare: 23.4
+    tokenShare: 16.2
   - task: Standards review of audit-skills fix
     durationSec: 44
     toolCalls: 11
     modelCalls: 5
-    tokenShare: 1.8
+    tokenShare: 1.2
   - task: Spec review of audit-skills fix
     durationSec: 36
     toolCalls: 4
     modelCalls: 4
+    tokenShare: 1
+  - task: Build routine-runs --append
+    durationSec: 521
+    toolCalls: 50
+    modelCalls: 24
+    tokenShare: 2.8
+  - task: Build prune-observations script
+    durationSec: 522
+    toolCalls: 44
+    modelCalls: 28
+    tokenShare: 3.1
+  - task: Standards review of append+prune scripts
+    durationSec: 56
+    toolCalls: 8
+    modelCalls: 6
     tokenShare: 1.4
+  - task: Spec review of append+prune scripts
+    durationSec: 97
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 1.6
+  - task: Standards review of follow-up fixes
+    durationSec: 34
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.6
+  - task: Spec review of follow-up fixes
+    durationSec: 38
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.5
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.310
 learnings:
   - Scheduled Routine sessions show no effort_level in get_session, while an app-started session records one. Compare model and effort before crediting a cost change to a Skill edit.
+  - In audit-skills runs, the expensive part is the main session's verify-and-edit step after the checks return, not the parallel checks themselves.
 ideas:
   - Add audit-skills.ts --at ISO to replay a past run's scorecard and briefs from the commit and time it started. That makes overlap and regression questions like issue 2373 a one-line check instead of a worktree-and-clock-shim job.
 landedBy: Stop
