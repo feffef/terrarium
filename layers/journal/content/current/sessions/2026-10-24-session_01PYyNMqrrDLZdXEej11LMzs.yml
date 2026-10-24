@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01PYyNMqrrDLZdXEej11LMzs
 startedAt: 2026-10-24T05:31:24Z
-endedAt: 2026-10-24T06:02:05Z
+endedAt: 2026-10-24T06:05:15Z
 kind: interactive
 goal: Clear the issue backlog (clear-backlog run)
-status: in-review
-outcome: "PRs #2483 and #2485 merged; #2484 and #2486 green and waiting for a human merge; #2373 handed to a new session"
-summary: "The owner invoked /clear-backlog (human-instructed). The default-mode sweep set was eight needs-triage or unlabeled issues; six ready-for-human issues had an AI last comment and were skipped, and there were no external PRs. Explore: #2471 build; #2432 blocked (date hold to 2026-10-26); #2433 blocked by #2432; #2373, #2472, #2474, #2475 and #2476 grill. Owner answers (all human-instructed): #2474 the owner's own design (re-snapshot the tree between gate steps and abort on change, keep the exit check, no guard); #2475 a read-first-hint entry; #2476 sideFindings require a source; #2472 parked until the pr-workflow.md trial is judged; #2373 run by a new read-only Opus session (session_019nDDDS9GsXdTKWK44j18fT) that reports on the issue. Agent-initiated: orchestration only (briefs, labels and comments recording answers, verdicts). Branches: #2483 (#2471) fixed the prune-trial ledger delta and named git diff --numstat as its source, merged. #2485 (#2476) made side findings {finding, source}, merged; it sits on branch fix/2476-sidefinding-source-field because a parallel-push cwd race put the #2475 commit on fix/2476-sidefinding-sources, and force-push was denied, so that stray branch remains for the owner to delete. #2484 (#2475) adds the dispatch-subagents pointer on Agent/Workflow/SendMessage, Human-only, green, waits for a human. #2486 (#2474) aborts gate:scoped before a step when HEAD or the tree changed; I ran the full gate locally on it with no false abort; Human-only, waits for a human. Open judgement calls: symlink-path reads may not dedupe in #2484; the running-time figure in #2486 is estimated, not timed."
+status: completed
+outcome: "Four PRs merged (#2483 #2484 #2485 #2486); #2373 handed to a new session; #2472 parked; #2432 and #2433 on hold"
+summary: "The owner invoked /clear-backlog (human-instructed). The default-mode sweep set was eight needs-triage or unlabeled issues; six ready-for-human issues had an AI last comment and were skipped, and there were no external PRs. Explore: #2471 build; #2432 blocked (date hold to 2026-10-26); #2433 blocked by #2432; #2373, #2472, #2474, #2475 and #2476 grill. Owner answers (all human-instructed): #2474 the owner's own design (re-snapshot the tree between gate steps and abort on change, keep the exit check, no guard); #2475 a read-first-hint entry; #2476 sideFindings require a source; #2472 parked until the pr-workflow.md trial is judged; #2373 run by a new read-only Opus session (session_019nDDDS9GsXdTKWK44j18fT) that reports on the issue. Agent-initiated: orchestration only (briefs, labels and comments recording answers, verdicts). Branches: #2483 (#2471) fixed the prune-trial ledger delta and named git diff --numstat as its source, merged. #2485 (#2476) made side findings {finding, source}, merged; it sits on branch fix/2476-sidefinding-source-field because a parallel-push cwd race put the #2475 commit on fix/2476-sidefinding-sources, and force-push was denied, so that stray branch remains for the owner to delete. #2484 (#2475) adds the dispatch-subagents pointer on Agent/Workflow/SendMessage, Human-only, green, waits for a human. #2486 (#2474) aborts gate:scoped before a step when HEAD or the tree changed; I ran the full gate locally on it with no false abort; Human-only, merged by the owner via auto-merge. Open judgement calls: symlink-path reads may not dedupe in #2484; the running-time figure in #2486 is estimated, not timed."
 prs:
   - "2483"
   - "2484"
@@ -92,22 +92,22 @@ frictions:
   - description: "Two parallel Bash pushes using cd raced on the shared cwd; the #2475 commit went to fix/2476-sidefinding-sources. Force-push was denied, so #2476 moved to a new branch and a stray branch was left"
     solution: Never run git in parallel Bash calls that rely on cd; use git -C with an absolute worktree path, one push per call
     severity: moderate
-durationSec: 1841
+durationSec: 2031
 models:
-  claude-opus-5-5: 167
+  claude-opus-5-5: 189
 toolCounts:
-  Bash: 44
+  Bash: 48
   Read: 6
   Workflow: 4
   ToolSearch: 3
   Skill: 4
   PushNotification: 1
-  mcp__github__add_issue_comment: 7
+  mcp__github__add_issue_comment: 8
   mcp__github__issue_write: 3
   mcp__claude-code-remote__create_session: 1
   mcp__github__create_pull_request: 4
   mcp__claude-code-remote__subscribe_pr_activity: 4
-  ReadNotifications: 5
+  ReadNotifications: 10
   mcp__github__pull_request_read: 2
 filesEdited:
   - scripts/hooks/read-first-hint.ts
@@ -236,154 +236,154 @@ subagents:
     durationSec: 37
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Spec fix/2475-dispatch-subagents-read-first-hint r1
     model: claude-opus-5-5
     durationSec: 56
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: Standards fix/2476-sidefinding-sources r1
     model: claude-opus-5-5
     durationSec: 34
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: build fix/2476-sidefinding-sources
     model: claude-sonnet-5-5
     durationSec: 287
     toolCalls: 19
     modelCalls: 15
-    tokenShare: 4.1
+    tokenShare: 3.7
   - type: workflow-subagent
     task: build fix/2475-dispatch-subagents-read-first-hint
     model: claude-opus-5-5
     durationSec: 702
     toolCalls: 33
     modelCalls: 20
-    tokenShare: 8.2
+    tokenShare: 7.5
   - type: workflow-subagent
     task: Standards fix/2475-dispatch-subagents-read-first-hint r1
     model: claude-opus-5-5
     durationSec: 49
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.6
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #2472"
     model: claude-opus-5-5
     durationSec: 119
     toolCalls: 23
     modelCalls: 14
-    tokenShare: 4.2
+    tokenShare: 3.8
   - type: workflow-subagent
     task: "triage #2471"
     model: claude-opus-5-5
     durationSec: 114
     toolCalls: 21
     modelCalls: 14
-    tokenShare: 3.9
+    tokenShare: 3.6
   - type: workflow-subagent
     task: "triage #2475"
     model: claude-opus-5-5
     durationSec: 94
     toolCalls: 19
     modelCalls: 8
-    tokenShare: 3.1
+    tokenShare: 2.8
   - type: workflow-subagent
     task: "triage #2476"
     model: claude-opus-5-5
     durationSec: 96
     toolCalls: 16
     modelCalls: 10
-    tokenShare: 4.1
+    tokenShare: 3.8
   - type: workflow-subagent
     task: "triage #2373"
     model: claude-opus-5-5
     durationSec: 90
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 2.8
+    tokenShare: 2.6
   - type: workflow-subagent
     task: "triage #2474"
     model: claude-opus-5-5
     durationSec: 100
     toolCalls: 19
     modelCalls: 12
-    tokenShare: 3.7
+    tokenShare: 3.4
   - type: workflow-subagent
     task: "triage #2433"
     model: claude-opus-5-5
     durationSec: 75
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: workflow-subagent
     task: "triage #2432"
     model: claude-opus-5-5
     durationSec: 25
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Standards fix/2474-gate-abort-on-tree-change r1
     model: claude-opus-5-5
     durationSec: 39
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: build fix/2474-gate-abort-on-tree-change
     model: claude-opus-5-5
     durationSec: 712
     toolCalls: 21
     modelCalls: 15
-    tokenShare: 4
+    tokenShare: 3.7
   - type: workflow-subagent
     task: Spec fix/2474-gate-abort-on-tree-change r1
     model: claude-opus-5-5
     durationSec: 39
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards fix/2471-prune-trial-line-delta r1
     model: claude-opus-5-5
     durationSec: 56
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.4
+    tokenShare: 2.2
   - type: workflow-subagent
     task: Standards fix/2471-prune-trial-line-delta r2
     model: claude-opus-5-5
     durationSec: 34
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: fix fix/2471-prune-trial-line-delta r1
     model: claude-sonnet-5-5
     durationSec: 384
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: Spec fix/2471-prune-trial-line-delta r2
     model: claude-opus-5-5
     durationSec: 36
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.4
+    tokenShare: 1.2
   - type: workflow-subagent
     task: build fix/2471-prune-trial-line-delta
     model: claude-sonnet-5-5
     durationSec: 417
     toolCalls: 16
     modelCalls: 13
-    tokenShare: 4.3
+    tokenShare: 4
   - type: workflow-subagent
     task: Spec fix/2471-prune-trial-line-delta r1
     model: claude-opus-5-5
