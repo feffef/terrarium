@@ -256,10 +256,20 @@ export interface TreeState {
   tree: string
 }
 
-export function treeChange(before: TreeState, after: TreeState): string | null {
+function changed(before: TreeState, after: TreeState): string | null {
   const what = [before.head !== after.head && 'HEAD', before.tree !== after.tree && 'working tree'].filter(Boolean)
-  if (what.length === 0) return null
-  return `gate:scoped: WARNING: ${what.join(' and ')} changed during the run, so this result does not cover the final tree — re-run the gate on the final head`
+  return what.length ? what.join(' and ') : null
+}
+
+export function treeChange(before: TreeState, after: TreeState): string | null {
+  const what = changed(before, after)
+  return what && `gate:scoped: WARNING: ${what} changed during the run, so this result does not cover the final tree — re-run the gate on the final head`
+}
+
+// Checked between steps (#2474) so a stale run stops early instead of finishing for nothing.
+export function stepAbort(before: TreeState | null, now: TreeState | null, next: string): string | null {
+  const what = before && now && changed(before, now)
+  return what ? `gate:scoped: ABORTED before \`${next}\`: ${what} changed during the run — re-run the gate so the next run covers the final tree` : null
 }
 
 // `status` catches new untracked files; `diff HEAD` catches staged and unstaged edits.
@@ -312,13 +322,20 @@ function main(): void {
   console.log(`gate:scoped: ${dry ? 'would run' : 'running'} ${steps.join(' → ')}`)
   if (dry) return
   const before = snapshotTree()
+  let aborted = false
   // `run` exits the process on a failed step, so an exit hook covers pass and fail.
   process.on('exit', () => {
-    const after = before && snapshotTree()
+    const after = before && !aborted && snapshotTree()
     const warning = before && after && treeChange(before, after)
     if (warning) console.error(warning)
   })
-  for (const step of steps) {
+  for (const [i, step] of steps.entries()) {
+    const abort = i > 0 && stepAbort(before, before && snapshotTree(), step)
+    if (abort) {
+      aborted = true
+      console.error(abort)
+      process.exit(1)
+    }
     // planSteps puts HEAVY at the end. A Skill-only plan (#1603) runs `test`
     // without BUILT and takes no slot: #1800 traced the OOM to `test:e2e`. The
     // slot is freed on exit.
