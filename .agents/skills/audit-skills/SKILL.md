@@ -32,11 +32,14 @@ The `Scorecard` type in `scripts/session/audit-skills.ts` documents every
 field.
 
 Then dispatch one Sonnet subagent to call `get_session` (claude-code-remote
-MCP) on every `session` in `routineRuns`, so the raw responses stay out of
-your context. It returns, per run, `input_tokens`, `output_tokens`,
-`cache_read_tokens`, `cache_write_tokens` and `cost_usd` as the API gives them.
+MCP) on every `session` in `routineRuns` that its
+`layers/journal/content/current/routines/<routine>.yml` doesn't list yet, so
+the raw responses stay out of your context. It returns, per run,
+`input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens` and
+`cost_usd` as the API gives them.
 
-Done when you hold the scorecard and the usage of every `routineRuns` session.
+Done when you hold the scorecard and the usage of every unlisted
+`routineRuns` session.
 
 ## 2. Check behaviour — one subagent per Skill in `behaviourChecks`
 
@@ -54,9 +57,7 @@ file from step 1's `<dir>`.
 A subagent's report is hearsay until you have verified it (CLAUDE.md): check
 each finding against the source it cites before you use it. A finding that
 holds up in part but not enough to act on is **unverified**: it goes into the
-Skill's `observations` (step 5), so a later run can build on it. A clean report
-names every session its brief listed; one that doesn't goes back to its
-subagent.
+Skill's `observations` (step 5), so a later run can build on it.
 
 Done when every subagent has reported and each finding is verified, unverified
 or dropped.
