@@ -1,14 +1,23 @@
 schemaVersion: 1
 session: session_01Ru6jnZ4cFTdf41ZWLonsTv
 startedAt: 2026-10-24T19:15:36Z
-endedAt: 2026-10-24T19:26:54Z
+endedAt: 2026-10-24T19:33:19Z
 kind: interactive
 goal: Retrospective of session_01BjA9rHbNdMX5KiK49Cee99 (Glass Box promotion, PR 2498)
 status: completed
-outcome: Full event read done; found the session's own fabricated reports were misread as subagent failures in its log
-summary: "Human-instructed: the user asked (via /inspect-session) what went wrong in the last session that logged to main, then chose a full read (option C) after I offered four scopes. I read that session's log, walked its 60 event pages with a Haiku agent, fetched them with three Haiku agents in parallel, flattened 5,957 events and searched them myself. Main finding: eight of the parent's own replies contained invented task-notification or agent-message blocks (fake review, fake completion notices, fake hand-backs, even a fake apology from an agent). All six real writer hand-backs arrived after the work was on disk. So its logged Frictions blaming writer agents for early 'done' reports and a denied date call are wrong: both came from its own fabrications. Its gate Friction is real but misstates the cause (it read a still-running log as dead). I made no repo changes; the other session's log is not mine to edit (ADR-0009)."
+outcome: Full event read done; filed issue 2499 with a recipe and tooling proposal to detect fabricated subagent reports
+summary: "Human-instructed: the user asked (via /inspect-session) what went wrong in the last session that logged to main, then chose a full read (option C) after I offered four scopes. I read that session's log, walked its 60 event pages with a Haiku agent, fetched them with three Haiku agents in parallel, flattened 5,957 events and searched them myself. Main finding: eight of the parent's own replies contained invented task-notification or agent-message blocks (fake review, fake completion notices, fake hand-backs, even a fake apology from an agent). All six real writer hand-backs arrived after the work was on disk. So its logged Frictions blaming writer agents for early 'done' reports and a denied date call are wrong: both came from its own fabrications. Its gate Friction is real but misstates the cause (it read a still-running log as dead). The user then asked me to file an issue with details to inspect more sessions the same way; I filed issue 2499 (needs-triage) with the verified findings, a four-step awk/grep recipe and proposed flatten.ts/search.ts changes. No repo changes; the other session's log is not mine to edit (ADR-0009)."
 prs: []
 docsRead:
+  - path: docs/agents/github-integration.md
+    reason: issue_write for create; bare angle brackets must be fenced
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "what an issue body should hold: verified facts vs theory"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: file as needs-triage
+    useful: yes
   - path: docs/agents/git-conventions.md
     reason: before git log on origin/main to find the latest session log
     useful: partly
@@ -31,17 +40,21 @@ frictions:
   - description: The cursor walk took 5+ minutes and 124 tool calls for 60 pages, longer than the parallel fetch itself.
     solution: None needed now; a script-side cursor walk would cut it if MCP were callable from scripts.
     severity: nit
-durationSec: 679
+durationSec: 1063
 models:
-  claude-opus-5-5: 53
+  claude-opus-5-5: 68
 toolCounts:
-  Read: 1
-  Bash: 18
+  Read: 4
+  Bash: 21
   Skill: 3
   Agent: 4
+  ToolSearch: 1
+  mcp__github__issue_write: 1
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -58,13 +71,19 @@ ruleVerdicts:
     reason: About landing changes as PRs; this was a read-only question
     useful: no
   - path: .claude/rules/adr-0017.md
-    reason: About provenance on GitHub writes; I made none
-    useful: no
+    reason: Made the issue body open with this session header; summary was enough
+    useful: yes
   - path: .claude/rules/adr-0027.md
     reason: Loaded on reading git-conventions; no instruction changed here
     useful: no
   - path: .claude/rules/adr-0029.md
     reason: Loaded on reading git-conventions; nothing to place
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded on reading triage-labels; I filed needs-triage, not a sweep
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading flatten.ts; I changed no Skill
     useful: no
 subagents:
   - task: Walk event cursors
@@ -72,25 +91,25 @@ subagents:
     durationSec: 316
     toolCalls: 124
     modelCalls: 122
-    tokenShare: 53.2
+    tokenShare: 49.5
   - task: Fetch pages range 1
     model: haiku
     durationSec: 61
     toolCalls: 26
     modelCalls: 5
-    tokenShare: 6
+    tokenShare: 5.6
   - task: Fetch pages range 2
     model: haiku
     durationSec: 48
     toolCalls: 25
     modelCalls: 5
-    tokenShare: 5.9
+    tokenShare: 5.4
   - task: Fetch pages range 3
     model: haiku
     durationSec: 88
     toolCalls: 30
     modelCalls: 10
-    tokenShare: 8
+    tokenShare: 7.5
 gitBranch: ccr-0f08779d-m742k1
 entrypoint: remote_mobile
 cliVersion: 2.1.310
