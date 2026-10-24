@@ -23,6 +23,7 @@ issues (ADR-0015).
 ## 1. Gather the scorecard
 
 ```
+mkdir -p <dir>
 pnpm exec tsx scripts/session/audit-skills.ts --briefs <dir> > <dir>/scorecard.json
 ```
 
@@ -150,14 +151,12 @@ Grade each Skill's importance by the definitions below, after reading its
   (PRs, issues, sessions, commits) a later run needs to pick up the thread,
   nothing git or GitHub already shows. Then run
   `pnpm exec tsx .agents/skills/audit-skills/scripts/prune-observations.ts`,
-  which removes every entry dated more than 40 days before today (git keeps
-  the history) and prints what it removed.
+  which removes entries past that window (git keeps the history) and prints
+  what it removed.
 - **Routine runs**: run
   `pnpm exec tsx scripts/session/prune-routine-runs.ts --append <dir>/usage.jsonl --scorecard <dir>/scorecard.json`.
-  It appends a row to `layers/journal/content/current/routines/<routine>.yml`
-  for each step 1 run that file doesn't list yet, creating the file if absent,
-  keeps the newest 30 per Routine, and reports any run it skipped for missing
-  usage.
+  It appends each step 1 run to its Routine's file, prunes old rows and
+  reports what it appended, skipped and dropped.
 - **Coverage gaps**: create an entry for a Skill that is used but not
   inventoried (`category` is `general-engineering` for a pack Skill,
   `platform-operation` for our own). Propose removing an entry whose Skill is
@@ -176,7 +175,8 @@ If step 5 changed nothing, there is no PR. Otherwise run
 it checks the diff) and fix what it flags, as in step 4. Then follow
 `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR". The diff touches
 only `layers/journal/content/current/skills/*.yml` and `routines/*.yml`, every
-grade change cites its ≥2 sessions. Anything else in the diff means you leave the PR open for a human.
+grade change cites its ≥2 sessions. Anything else in the diff means you leave
+the PR open for a human.
 
 Invoke `close-session`, with the step 3
 results (`orphanScan` included) in the log's summary.
