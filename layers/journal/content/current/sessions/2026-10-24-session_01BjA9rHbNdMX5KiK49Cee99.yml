@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01BjA9rHbNdMX5KiK49Cee99
 startedAt: 2026-10-24T18:10:32Z
-endedAt: 2026-10-24T19:13:26Z
+endedAt: 2026-10-24T19:14:22Z
 kind: interactive
 goal: Review the Glass Box drafts, then promote five Lessons and write The self-improvement loop
-status: in-review
-outcome: "PR #2498 open: five draft Lessons rewritten into the guide, one new Lesson, cross-links from existing guide pages"
-summary: "Human-instructed throughout. First the human asked for an agent review of every Glass Box draft Lesson (quality, titles, cut, fixes, coverage gaps); I asked four scoping questions, ran one review agent, and reported in chat. The human then asked to improve and promote five drafts (type checks, unit/e2e tests, Zod content validation, MCP, cross-tenant kinds), write a guide Lesson on the self-improvement loop, and later to add cross-references from existing guide Lessons. I asked four more questions (loop scope, landing Space, titles, PR count); the human rejected my suggested titles as too long, so I chose 1-3 word concept titles. Six writer agents ran in parallel in the shared checkout, each owning one page; I did the draft relinking and the Where next / Walkthrough joins myself. Several agents handed back \"done\" reports before writing anything, and reports cited files that don't exist, so every page was verified on disk and by the page checks before use. code-review (Standards + Spec) found real issues (loosely related ADR citations, motive clauses in In Terrarium, a changing count, a misattributed incident, two missing Walkthrough chips), all fixed; two Standards findings were checked and rejected as wrong. Gate green after one clean run (earlier runs overlapped). Open: CI and merge."
+status: completed
+outcome: "PR #2498 merged: five draft Lessons rewritten into the guide, one new Lesson, cross-links from existing guide pages"
+summary: Human-instructed throughout. First the human asked for an agent review of every Glass Box draft Lesson (quality, titles, cut, fixes, coverage gaps); I asked four scoping questions, ran one review agent, and reported in chat. The human then asked to improve and promote five drafts (type checks, unit/e2e tests, Zod content validation, MCP, cross-tenant kinds), write a guide Lesson on the self-improvement loop, and later to add cross-references from existing guide Lessons. I asked four more questions (loop scope, landing Space, titles, PR count); the human rejected my suggested titles as too long, so I chose 1-3 word concept titles. Six writer agents ran in parallel in the shared checkout, each owning one page; I did the draft relinking and the Where next / Walkthrough joins myself. Several agents handed back "done" reports before writing anything, and reports cited files that don't exist, so every page was verified on disk and by the page checks before use. code-review (Standards + Spec) found real issues (loosely related ADR citations, motive clauses in In Terrarium, a changing count, a misattributed incident, two missing Walkthrough chips), all fixed; two Standards findings were checked and rejected as wrong. Gate green after one clean run (earlier runs overlapped). CI green; merged via merge-pr.ts after a corrected verdict.
 prs:
   - "2498"
 docsRead:
@@ -210,11 +210,14 @@ frictions:
   - description: A writer agent's date command was denied, leaving publishedAt as a placeholder until another edit replaced it.
     solution: Give the timestamp in the brief, or have the orchestrator set publishedAt.
     severity: nit
-durationSec: 3774
+  - description: My first PR verdict named the head as 41fb798e2be3, a SHA tail I typed from memory; merge-pr.ts refused it and I re-posted with the real full SHA.
+    solution: Copy the head SHA from git rev-parse HEAD into the verdict, never retype it.
+    severity: minor
+durationSec: 3830
 models:
-  claude-opus-5-5: 275
+  claude-opus-5-5: 289
 toolCounts:
-  Bash: 80
+  Bash: 83
   AskUserQuestion: 2
   Skill: 4
   Agent: 9
@@ -224,9 +227,10 @@ toolCounts:
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
-  ReadNotifications: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/typescript/01.type-checking.md
   - layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
@@ -346,55 +350,55 @@ subagents:
     durationSec: 228
     toolCalls: 59
     modelCalls: 20
-    tokenShare: 7.1
+    tokenShare: 6.8
   - type: general-purpose
     task: Promote type-checks Lesson
     durationSec: 306
     toolCalls: 45
     modelCalls: 35
-    tokenShare: 6.7
+    tokenShare: 6.5
   - type: general-purpose
     task: Promote unit/e2e tests Lesson
     durationSec: 309
     toolCalls: 50
     modelCalls: 40
-    tokenShare: 7.7
+    tokenShare: 7.5
   - type: general-purpose
     task: Promote Zod content-validation Lesson
     durationSec: 277
     toolCalls: 48
     modelCalls: 36
-    tokenShare: 7
+    tokenShare: 6.8
   - type: general-purpose
     task: Promote MCP servers Lesson
     durationSec: 277
     toolCalls: 41
     modelCalls: 33
-    tokenShare: 6.7
+    tokenShare: 6.5
   - type: general-purpose
     task: Promote cross-tenant reads Lesson
     durationSec: 288
     toolCalls: 45
     modelCalls: 33
-    tokenShare: 6.8
+    tokenShare: 6.6
   - type: general-purpose
     task: Write self-improvement loop Lesson
     durationSec: 271
     toolCalls: 33
     modelCalls: 28
-    tokenShare: 6.2
+    tokenShare: 6.1
   - type: general-purpose
     task: Standards review of Glass Box diff
     durationSec: 237
     toolCalls: 42
     modelCalls: 36
-    tokenShare: 8.6
+    tokenShare: 8.3
   - type: general-purpose
     task: Spec review of Glass Box diff
     durationSec: 92
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 3.1
+    tokenShare: 3
 gitBranch: ccr-6a0d47d4-40ms5i
 entrypoint: remote_mobile
 cliVersion: 2.1.310
