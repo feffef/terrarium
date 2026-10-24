@@ -228,7 +228,7 @@ describe('tinkerfund Tenant', async () => {
       const html = main(await $fetch('/t/tinkerfund/prod'))
       expect(html).toMatch(/id="tf-featured"[^>]*>Counterclockwise Mug</)
       expect(html).toMatch(/340<small[^>]*>% funded/)
-      const order = ['tf-featured', 'tf-ending', '15% off the Rain-Aware Umbrella', 'tf-categories-h', 'tf-popular', 'tf-launched']
+      const order = ['tf-featured', 'tf-ending', '15% off the Rain-Aware Umbrella', 'tf-categories-h', 'tf-popular', 'tf-launched', 'tf-ended']
       const at = order.map((marker) => html.indexOf(marker))
       expect(at.every((i) => i > 0), `missing: ${order.filter((_, i) => at[i]! < 0).join(', ')}`).toBe(true)
       expect(at).toEqual([...at].sort((a, b) => a - b))
