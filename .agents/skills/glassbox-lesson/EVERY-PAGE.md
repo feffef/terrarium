@@ -32,8 +32,7 @@ clicking, each within its cap in `lengths` in `layers/glassbox/page-checks.ts`.
   `ADR-NNNN (:file[docs/adr/NNNN-….md])`, and a Journal page by its site path
   (a content page, or `/t/journal/<space>/{skills,frictions,ideas}`). A path
   holding `[` can't go in `:file[…]`: cite its folder. An Excerpt's `lines`
-  starts on its first line and ends on its last; with two or more gaps, give
-  one range per run (Excerpt in the glossary). Don't Excerpt a Markdown table
+  follow its glossary entry. Don't Excerpt a Markdown table
   wider than about 80 characters: Excerpt the prose next to it, or link the
   table.
 - **Don't paraphrase an ADR** in In Terrarium or What to watch for: show the

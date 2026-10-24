@@ -137,7 +137,7 @@ whatever happens to the fixes.
    description. Outside the cap: §2's regression issues, and fixes blocked
    only by a Human-only file or a guard (still filed, as `needs-triage`).
 3. **Update the ledger** on your branch, on top of the survey's commit
-   (`status` and `ref` through `scripts/ledger-set.ts`):
+   (`status` and `ref` through `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/ledger-set.ts`):
    - set `status: tracked` on every entry this run files or dispatches, with
      the issue number in `ref` for a filed one;
    - for each dropped fix, append a line to its entry's `notes` (a `|-`
@@ -221,7 +221,7 @@ For each branch the agent hands back:
      *Scope* list in `docs/adr/0004-objective-safety-gate.md` against the
      diff). Once the ledger PR has merged, have the agent merge `origin/main`
      into the branch and commit the PR's own `fixes` ledger entry, dated
-     today, through `scripts/ledger-set.ts`. Leave the PR open and say
+     today, through `ledger-set.ts` (§5 step 3). Leave the PR open and say
      exactly why in a PR comment.
 
 Done when every fix PR has a posted review comment and is merged, escalated
@@ -242,7 +242,7 @@ is honest.
 1. Wait until the ledger PR has merged and every fix PR is merged,
    escalated or abandoned.
 2. From `origin/main`, land **one** status-only PR, the same way as the
-   ledger PR, through `scripts/ledger-set.ts`:
+   ledger PR, through `ledger-set.ts` (§5 step 3):
    - **merged** fix PR: add a `fixes` entry (`pr`, its UTC merge date, a
      one-line summary from its description) and set `status: open`;
    - **abandoned:** set `status: open`;

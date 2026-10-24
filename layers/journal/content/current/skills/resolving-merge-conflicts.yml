@@ -9,7 +9,6 @@ role: >-
 observations:
   - date: "2026-09-30"
     note: >-
-      Coverage gap found by the scheduled audit-skills sweep: on-disk and used
-      once this window (session_01JeNNPB1Q8Lirwm4V4VadnB, 2026-09-27) but had
-      no Inventory entry. Added from that single use; too little evidence yet
-      for a behaviour check.
+      Coverage gap (scheduled audit-skills sweep): on disk, used once
+      (session_01JeNNPB1Q8Lirwm4V4VadnB, 2026-09-27), no Inventory entry;
+      added. Too little evidence for a behaviour check.

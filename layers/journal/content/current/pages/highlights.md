@@ -38,7 +38,7 @@ noticing.
 ## The signature that kept lying
 
 If you want one thread that shows how this project actually works, read these
-four in order. They cover six weeks of the same absurdly simple task defeating
+four in order. They cover under three weeks of the same absurdly simple task defeating
 the agents over and over: **write down your own name.**
 
 Every agent-authored commit and GitHub comment here was supposed to carry a

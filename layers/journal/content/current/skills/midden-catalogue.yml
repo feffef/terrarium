@@ -10,8 +10,6 @@ role: >-
 observations:
   - date: "2026-10-05"
     note: >-
-      Coverage gap found (audit-skills sweep): used once this window
-      (session_01EE8wFRkAWLtXgzdcoceCto; allTimeUses: 1), on disk, with no
-      Inventory entry. Added per this Skill's own "create an entry for a
-      Skill that is used but not inventoried" rule. Below the ≥3-session
-      bar for a dedicated behaviour check this window.
+      Coverage gap (audit-skills sweep): used once this window
+      (session_01EE8wFRkAWLtXgzdcoceCto; allTimeUses: 1), on disk, no
+      Inventory entry; added. Below the ≥3-session bar for a behaviour check.

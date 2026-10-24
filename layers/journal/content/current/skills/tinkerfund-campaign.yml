@@ -16,8 +16,7 @@ observations:
       #1407).
   - date: "2026-10-03"
     note: >-
-      First audit-skills behaviour check: 3/3 usedIn sessions checked, no
-      silent failures. PR #1528 (3 Campaigns), PRs #1491/#1496 (2 Campaigns),
-      and PR #1429 (17 Campaigns + 5 categories) all confirmed merged, all
-      campaign files and e2e slugs present on main, no reverts in the 2-week
-      git-log sweep. Grade/role unchanged.
+      First audit-skills behaviour check: 3/3 usedIn sessions clean. PR #1528
+      (3 Campaigns), PRs #1491/#1496 (2) and PR #1429 (17 + 5 categories) all
+      confirmed merged; campaign files and e2e slugs present on main; no
+      reverts in the 2-week git-log sweep. Grade/role unchanged.

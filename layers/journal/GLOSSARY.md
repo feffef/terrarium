@@ -21,8 +21,8 @@ Anyone who wants the Platform's actual current state, or how it got there, witho
 - **Inventories** — curated/derived current-state readouts (the Skill Inventory
   and the Friction Ledger; defined in the root `GLOSSARY.md`), refreshed from repo
   state rather than appended to.
-- **Session logs** — primary, append-only records the agents author
-  themselves (see above).
+- **Session logs** — primary records the agents author
+  themselves, one per session (see above).
 - **Digests** — derived daily summaries, written once per day (see the glossary below).
 
 ## Glossary

@@ -3,9 +3,9 @@ category: platform-operation
 importance: routine
 gist: Keeps the list of which Skills matter, and why, up to date.
 role: >-
-  One of the self-improvement Skills. Checks that our own Skills fire when
-  they should and deliver what they promise, even without frictions, and files
-  significant or repeated findings as issues rather than editing a Skill. Keeps the Skill
+  A self-improvement Skill. Checks that our own Skills fire when they should and
+  deliver what they promise, even without frictions; files significant or
+  repeated findings as issues, never editing a Skill. Keeps the Skill
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 observations:
@@ -16,7 +16,7 @@ observations:
       2026-07-27, one confirmed regression-watch finding (#1206), and most of
       the issues it filed concerned its own tooling. The regression watch is gone; each own
       Skill used in ≥3 sessions of a 7-day window now gets a behaviour-check
-      subagent. The 2026-09-13 bracketing idea above is superseded.
+      subagent.
   - date: 2026-09-28
     note: >-
       Self-check, verified: this is the first real scheduled run under the
