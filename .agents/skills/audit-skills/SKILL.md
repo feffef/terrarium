@@ -23,19 +23,21 @@ issues (ADR-0015).
 ## 1. Gather the scorecard
 
 ```
-pnpm exec tsx scripts/session/audit-skills.ts --briefs <dir>
+pnpm exec tsx scripts/session/audit-skills.ts --briefs <dir> > <dir>/scorecard.json
 ```
 
 It prints JSON for the last 7 days of session logs (`--days N` widens or
 narrows that) and writes one data file per `behaviourChecks` entry to `<dir>`.
+Step 5 reads `scorecard.json` back.
 The `Scorecard` type in `scripts/session/audit-skills.ts` documents every
 field.
 
 Then dispatch one Sonnet subagent to call `get_session` (claude-code-remote
 MCP) on every `routineRuns` session its Routine file (step 5) doesn't list
-yet, so the raw responses stay out of your context. It returns, per run,
-`input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens` and
-`cost_usd` as the API gives them.
+yet, so the raw responses stay out of your context. It writes
+`<dir>/usage.jsonl`, one JSON line per run: `session`, `input_tokens`,
+`output_tokens`, `cache_read_tokens`, `cache_write_tokens` and `cost_usd` as
+the API gives them.
 
 Done when you hold the scorecard and the usage of each of those sessions.
 
@@ -146,14 +148,16 @@ Grade each Skill's importance by the definitions below, after reading its
   (verified or unverified, say which) or an idea; a clean check appends
   nothing. Write the note fresh, ≤ ~100 words: what this run found and the ids
   (PRs, issues, sessions, commits) a later run needs to pick up the thread,
-  nothing git or GitHub already shows. Remove every entry dated more than 40
-  days before today; git keeps the history. If none remain, the field is `[]`.
-- **Routine runs**: in `layers/journal/content/current/routines/<routine>.yml`
-  (create it with `name: <routine>` and `runs: []` if absent), append a row for
-  each step 1 run whose `session` isn't listed yet: its `routineRuns` entry
-  (`session`, `startedAt`, `durationSeconds`) plus the usage. Then run
-  `pnpm exec tsx scripts/session/prune-routine-runs.ts`, which keeps the newest
-  30 per Routine.
+  nothing git or GitHub already shows. Then run
+  `pnpm exec tsx .agents/skills/audit-skills/scripts/prune-observations.ts`,
+  which removes every entry dated more than 40 days before today (git keeps
+  the history) and prints what it removed.
+- **Routine runs**: run
+  `pnpm exec tsx scripts/session/prune-routine-runs.ts --append <dir>/usage.jsonl --scorecard <dir>/scorecard.json`.
+  It appends a row to `layers/journal/content/current/routines/<routine>.yml`
+  for each step 1 run that file doesn't list yet, creating the file if absent,
+  keeps the newest 30 per Routine, and reports any run it skipped for missing
+  usage.
 - **Coverage gaps**: create an entry for a Skill that is used but not
   inventoried (`category` is `general-engineering` for a pack Skill,
   `platform-operation` for our own). Propose removing an entry whose Skill is
@@ -172,8 +176,7 @@ If step 5 changed nothing, there is no PR. Otherwise run
 it checks the diff) and fix what it flags, as in step 4. Then follow
 `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR". The diff touches
 only `layers/journal/content/current/skills/*.yml` and `routines/*.yml`, every
-grade change cites its ≥2 sessions, and every removed observation is past 40
-days. Anything else in the diff means you leave the PR open for a human.
+grade change cites its ≥2 sessions. Anything else in the diff means you leave the PR open for a human.
 
 Invoke `close-session`, with the step 3
 results (`orphanScan` included) in the log's summary.
