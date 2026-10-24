@@ -1,12 +1,12 @@
 // A hint, not a guard (issue #1754): the action-bound "read first" triggers in
 // CLAUDE.md and the UI rule are prose, and sessions read the doc after the
-// action. At the first matching git, GitHub or screenshot call this adds one line pointing to the doc, alongside
+// action. At the first matching git, GitHub, screenshot or subagent dispatch call this adds one line pointing to the doc, alongside
 // that call's result (PostToolUse, and PostToolUseFailure for a failed call).
 // It cannot stop the first call, and the owner accepts that, so a closing line
 // says a late read that clears the call is not a Friction (Friction Ledger
 // `binding-docs-skipped`). Once per doc per agent context: silent when the
 // transcript shows the doc read (Read tool, or a shell read the session trace
-// recognises) or already holds the pointer. A subagent dedupes against its own
+// recognises), its Skill invoked, or already holds the pointer. A subagent dedupes against its own
 // transcript beside its parent's; if that is missing it points anyway. A missing
 // main transcript adds nothing, since every call would repeat the pointer.
 // After a successful `mcp__github__create_pull_request` in the main session it
@@ -33,6 +33,8 @@ interface ReadFirst {
   source: string
   /** Its wording of the trigger, quoted in the pointer. */
   trigger: string
+  /** The Skill whose invocation counts as reading `doc`. */
+  skill?: string
   /** `segs`: each Bash segment's words, verb first; empty for other tools. */
   matches: (tool: string, segs: string[][]) => boolean
 }
@@ -77,6 +79,13 @@ export const READ_FIRST: ReadFirst[] = [
     // Run through tsx, the script path is a later word, not the verb.
     matches: (_t, segs) => segs.some((w) => w.some((x, i) => /(^|\/)screenshot\.ts$/.test(x) || (/(^|\/)preview\.ts$/.test(x) && ['shot', 'review'].includes(w[i + 1]!)))),
   },
+  {
+    doc: '.agents/skills/dispatch-subagents/SKILL.md',
+    source: 'CLAUDE.md',
+    trigger: 'Before you write a subagent brief, or resume a stopped subagent',
+    skill: 'dispatch-subagents',
+    matches: (tool) => ['Agent', 'Workflow', 'SendMessage'].includes(tool),
+  },
 ]
 
 export function triggeredDocs(tool: string, command: unknown): ReadFirst[] {
@@ -98,7 +107,8 @@ function seen(records: Record<string, unknown>[], docs: ReadFirst[], trace: Retu
     .filter((a) => a?.type === 'hook_additional_context')
     .map((a) => hintText(a!.content))
     .join('\n')
-  return new Set(docs.filter((r) => read.some((p) => p === r.doc || p.endsWith(`/${r.doc}`)) || hinted.includes(pointer(r))).map((r) => r.doc))
+  return new Set(docs.filter((r) => read.some((p) => p === r.doc || p.endsWith(`/${r.doc}`))
+    || (r.skill && trace.skillsUsed.includes(r.skill)) || hinted.includes(pointer(r))).map((r) => r.doc))
 }
 
 /** The record holding the latest `create_pull_request` call: the one this hook
