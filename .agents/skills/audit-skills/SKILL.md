@@ -32,14 +32,12 @@ The `Scorecard` type in `scripts/session/audit-skills.ts` documents every
 field.
 
 Then dispatch one Sonnet subagent to call `get_session` (claude-code-remote
-MCP) on every `session` in `routineRuns` that its
-`layers/journal/content/current/routines/<routine>.yml` doesn't list yet, so
-the raw responses stay out of your context. It returns, per run,
+MCP) on every `routineRuns` session its Routine file (step 5) doesn't list
+yet, so the raw responses stay out of your context. It returns, per run,
 `input_tokens`, `output_tokens`, `cache_read_tokens`, `cache_write_tokens` and
 `cost_usd` as the API gives them.
 
-Done when you hold the scorecard and the usage of every unlisted
-`routineRuns` session.
+Done when you hold the scorecard and the usage of each of those sessions.
 
 ## 2. Check behaviour — one subagent per Skill in `behaviourChecks`
 
