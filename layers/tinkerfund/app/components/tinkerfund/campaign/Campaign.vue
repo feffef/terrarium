@@ -176,12 +176,9 @@ const backing = computed<TinkerfundBacking>(() => ({ slug: slug.value, state: st
     grid-column: 2;
     grid-row: 1 / span 3;
     align-self: start;
+    /* Pinned by its bottom edge: the column outgrows the viewport, and an inner scroll box hid Add-ons. */
     position: sticky;
-    top: 120px;
-    max-height: calc(100vh - 136px);
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    padding-right: 4px;
+    bottom: 16px;
   }
 }
 

@@ -48,4 +48,5 @@ can be combined with an automatic discount but not with another code.
 
 Nothing here is real. No money moves, nothing ships, and no real payment
 details are ever asked for. Your Cart and Pledges last until you close the
-tab, and **Reset demo** puts everything back the way it was.
+tab. Once you have changed something, **Reset demo** appears in the top bar and
+the footer and puts everything back the way it was.
