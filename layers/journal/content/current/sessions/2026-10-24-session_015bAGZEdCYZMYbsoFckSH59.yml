@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_015bAGZEdCYZMYbsoFckSH59
 startedAt: 2026-10-24T19:33:44Z
-endedAt: 2026-10-24T20:33:37Z
+endedAt: 2026-10-24T20:42:08Z
 kind: interactive
 goal: Bring every Glass Box guide Lesson to one quality standard
-status: in-review
-outcome: Three review-fix-review rounds took the guide Lessons from 15 A / 10 B / 1 C to 23 A / 3 B; PR 2500 open
-summary: "Human-instructed: the user asked an agent to read all Glass Box guide Lessons and judge title, standalone cut and quality; chose scope (guide Lessons only), output (report plus fix PR) and the title test (clear, consistent, short); then asked to also find better examples in the source, and to repeat a Fable-model re-rating plus applying agreed suggestions with code-review runs in between until all Lessons reach a high standard, then merge. Agent-decided: which suggestions to accept (rejected splitting Self-improvement loop into a new Lesson since a Prune Trials draft exists and a new Lesson is new work; kept tool-prefixed titles where the bare word is ambiguous; refused to add publishedAt to old pages); splitting round 1 across three disjoint worktree agents, then one impl agent per later round. Reviewers sometimes reversed each other (Author trust vs Author association); the dispatcher settled those once and told later raters not to re-raise them, which made the ratings converge. The page check's link-title rule meant every rename had to touch link text across Lessons, Walkthroughs and drafts. Open: small round-3 review edits and a round-4 Fable rating, then merge."
+status: completed
+outcome: Four review-fix-review rounds took the 26 guide Lessons from 15 A / 10 B / 1 C to all A; PR 2500 merged
+summary: "Human-instructed: the user asked an agent to read all Glass Box guide Lessons and judge title, standalone cut and quality; chose scope (guide Lessons only), output (report plus fix PR) and the title test (clear, consistent, short); then asked to also find better examples in the source, and to repeat a Fable-model re-rating plus applying agreed suggestions with code-review runs in between until all Lessons reach a high standard, then merge. Agent-decided: which suggestions to accept (rejected splitting Self-improvement loop into a new Lesson since a Prune Trials draft exists and a new Lesson is new work; kept tool-prefixed titles where the bare word is ambiguous; refused to add publishedAt to old pages); splitting round 1 across three disjoint worktree agents, then one impl agent per later round. Reviewers sometimes reversed each other (Author trust vs Author association); the dispatcher settled those once and told later raters not to re-raise them, which made the ratings converge. The page check's link-title rule meant every rename had to touch link text across Lessons, Walkthroughs and drafts. A fourth round fixed the last two B Lessons (Skills, Hooks) and review nits; a final Fable check graded every Lesson A, and the PR merged after green CI."
 prs:
   - "2500"
 docsRead:
@@ -76,6 +76,20 @@ docsRead:
   - path: docs/agents/mdc-when-to-use.md
     reason: round-1 Standards reviewer read it; no MDC change
     useful: no
+  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
@@ -88,27 +102,17 @@ docsRead:
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
     reason: (read before editing)
-  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
-    reason: (read before editing)
-  - path: layers/glassbox/content/guide/pages/claude-code/04.hooks.md
-    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/claude-code/07.subagents.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
     reason: (read before editing)
-  - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
-    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
-    reason: (read before editing)
-  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
-    reason: (read before editing)
-  - path: layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
     reason: (read before editing)
@@ -116,11 +120,7 @@ docsRead:
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
     reason: (read before editing)
-  - path: layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
-    reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
-    reason: (read before editing)
-  - path: layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
     reason: (read before editing)
@@ -154,20 +154,27 @@ frictions:
   - description: Wrote 'Six renames' in the PR body while listing eight titles.
     solution: Count the list before writing a number; fix the description in the next push.
     severity: nit
-durationSec: 3593
+  - description: Word-cap trims to fit the 65-word Why-bullet limit repeatedly dropped a bullet's reason (Merge gate's 'fails safer'), needing two more review rounds to restore it.
+    solution: When a bullet hits the cap, cut a different clause than its reason, and re-read the bullet's logic before committing.
+    severity: minor
+durationSec: 4104
 models:
-  claude-opus-5-5: 167
+  claude-opus-5-5: 225
 toolCounts:
-  Bash: 38
+  Bash: 52
   AskUserQuestion: 1
   Skill: 4
-  Agent: 18
+  Agent: 19
   SendMessage: 1
   Read: 5
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
+  ReadNotifications: 5
+  mcp__github__update_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
   - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
@@ -237,6 +244,9 @@ rulesFollowedUp:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0002.md
 rulesLoadedBySubagents:
+  - .claude/rules/adr-0026.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0010.md
   - .claude/rules/adr-0002.md
   - .claude/rules/data-shapes.md
   - .claude/rules/mdc-when-to-use.md
@@ -248,9 +258,7 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0016.md
   - .claude/rules/ui-verification.md
   - .claude/rules/adr-0014.md
-  - .claude/rules/guards.md
   - .claude/rules/adr-0011.md
-  - .claude/rules/adr-0026.md
   - .claude/rules/adr-0020.md
   - .claude/rules/adr-0023.md
   - .claude/rules/adr-0025.md
@@ -375,113 +383,119 @@ subagents:
     durationSec: 299
     toolCalls: 48
     modelCalls: 22
-    tokenShare: 6.2
+    tokenShare: 5.3
   - type: general-purpose
     task: "Round 1: Claude Code Lessons"
     durationSec: 328
     toolCalls: 53
     modelCalls: 43
-    tokenShare: 7.2
+    tokenShare: 6.2
   - type: general-purpose
     task: "Round 1: House rules Lessons"
     durationSec: 578
     toolCalls: 102
     modelCalls: 51
-    tokenShare: 10
+    tokenShare: 8.5
   - type: general-purpose
     task: "Round 1: Nuxt/TS/test Lessons"
     durationSec: 334
     toolCalls: 41
     modelCalls: 33
-    tokenShare: 5.9
+    tokenShare: 5
   - type: general-purpose
     task: "Code review: Standards axis"
     durationSec: 124
     toolCalls: 19
     modelCalls: 14
-    tokenShare: 3.8
+    tokenShare: 3.2
   - type: general-purpose
     task: "Code review: Spec axis"
     durationSec: 99
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 3.3
+    tokenShare: 2.9
   - type: general-purpose
     task: Fable re-rates all Lessons (round 2)
     model: fable
     durationSec: 535
     toolCalls: 47
     modelCalls: 13
-    tokenShare: 4.8
+    tokenShare: 4.1
   - type: general-purpose
     task: "Round 2: apply review + Fable fixes"
     durationSec: 492
     toolCalls: 87
     modelCalls: 73
-    tokenShare: 13.1
+    tokenShare: 11.2
   - type: general-purpose
     task: "Code review r2: Standards"
     durationSec: 144
     toolCalls: 22
     modelCalls: 19
-    tokenShare: 3.1
+    tokenShare: 2.7
   - type: general-purpose
     task: "Code review r2: Spec"
     durationSec: 80
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 1.8
+    tokenShare: 1.6
   - type: general-purpose
     task: Fable re-rates all Lessons (round 3)
     model: fable
     durationSec: 368
     toolCalls: 42
     modelCalls: 10
-    tokenShare: 3.9
+    tokenShare: 3.4
   - type: general-purpose
     task: "Round 3: apply review + Fable fixes"
     durationSec: 314
     toolCalls: 57
     modelCalls: 39
-    tokenShare: 6
+    tokenShare: 5.2
   - type: general-purpose
     task: "Code review r3: Standards"
     durationSec: 63
     toolCalls: 11
     modelCalls: 6
-    tokenShare: 1.2
+    tokenShare: 1
   - type: general-purpose
     task: "Code review r3: Spec"
     durationSec: 74
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 1.4
+    tokenShare: 1.2
   - type: general-purpose
     task: Fable re-rates all Lessons (round 4)
     model: fable
     durationSec: 277
     toolCalls: 40
     modelCalls: 8
-    tokenShare: 3.4
+    tokenShare: 2.9
   - type: general-purpose
     task: "Code review r4: Standards"
-    durationSec: 9
-    toolCalls: 4
-    modelCalls: 1
-    tokenShare: 0.8
+    durationSec: 42
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 1.3
   - type: general-purpose
     task: "Code review r4: Spec"
-    durationSec: 4
-    toolCalls: 1
-    modelCalls: 1
-    tokenShare: 0.8
+    durationSec: 28
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 0.9
   - type: general-purpose
     task: Fable confirms final grades
     model: fable
-    durationSec: 7
-    toolCalls: 3
-    modelCalls: 1
-    tokenShare: 0.3
+    durationSec: 111
+    toolCalls: 18
+    modelCalls: 8
+    tokenShare: 1.4
+  - type: general-purpose
+    task: Code review of final rewordings
+    durationSec: 29
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.1
 gitBranch: ccr-0463770d-9pltab
 entrypoint: remote_mobile
 cliVersion: 2.1.310
