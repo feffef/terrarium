@@ -6,6 +6,8 @@ cause: >-
 surface: safe
 status: open
 ref: "issue #2435 (split from counts-not-tallied)"
+notes: |-
+  2026-10-24 design: a CLAUDE.md or doc line dropped: CLAUDE.md already says a count is a fact only after you read every item, it was in context for all 5, and the five causes (eligibility rule, outlier drop, window start, ls headers) share no mechanism a helper could check.
 fixes: []
 occurrences:
   - session: session_01BYiuxza1S1QZgmyXngfzLE
@@ -23,3 +25,13 @@ occurrences:
     severity: minor
     description: "Started the analysis window at the adr-check commit time, not #2284's merge, so 7 pre-landing sessions counted as non-users in two chat answers."
     solution: "Take a measurement window from the issue's stated landing time; issue 2286 named it."
+  - session: session_012Yzae3uty5Jj8ZPug9zpjr
+    date: "2026-10-23"
+    severity: minor
+    description: "I counted #2286 and #2137 as always-eligible unlabelled issues, but both are on-hold specs whose last comment was an agent's, so auto-triage's on-hold exception would have skipped them; the owner confirmed the set anyway"
+    solution: "Apply auto-triage's on-hold-spec exception when resolving the set; a helper printing eligibility per issue would make it mechanical (#2435's counts-from-wrong-filter cluster)"
+  - session: session_01CMjFaMZxZgD7oTzNXmWwzv
+    date: "2026-10-23"
+    severity: minor
+    description: "Told the owner there were 65 Artifacts from an ls line count that included directory headers; real count 52."
+    solution: "Count files with a glob, not ls output; CLAUDE.md's verify-before-you-state already says so."

@@ -50,3 +50,13 @@ occurrences:
     severity: nit
     description: "Typed an invented commit hash in the verdict comment on PR 2414 instead of copying the real head; caught before merging and corrected with a second comment."
     solution: "Print the head hash and paste it, never type it; merge-pr.ts would have refused the verdict anyway."
+  - session: session_01QpBTsuXUNm28Y2oszBnoUb
+    date: "2026-10-23"
+    severity: minor
+    description: "Posted the PR verdict with a head SHA I typed from memory instead of git rev-parse; caught and corrected within a minute, before merge."
+    solution: "Run git rev-parse HEAD in the same step that drafts the 'Reviewed:' line."
+  - session: session_012Yzae3uty5Jj8ZPug9zpjr
+    date: "2026-10-23"
+    severity: minor
+    description: "Wrote #2454's verdict Reviewed: SHA from a guessed expansion of the short hash instead of reading the head; caught right after and edited the comment before merging"
+    solution: "Read the PR head SHA (gh api pulls/N --jq .head.sha) before writing a verdict"

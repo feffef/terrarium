@@ -106,3 +106,8 @@ occurrences:
     severity: nit
     description: "Started the gate with a trailing & plus run_in_background; the double-background guard blocked it and nothing ran."
     solution: "Pass run_in_background alone with a plain command (the guard already says so)."
+  - session: session_013SbWSgqz4tjVcTMz9vF1mu
+    date: "2026-10-24"
+    severity: nit
+    description: "Combined `nohup ... &` with `run_in_background: true` for gate:scoped, blocked by the double-background guard (#1208); its bundled `mkdir -p` also silently never ran, costing a second retry to recreate the log directory"
+    solution: "Pass run_in_background: true with a plain foreground command only, never nohup/&; never bundle an mkdir into a command that might be blocked"

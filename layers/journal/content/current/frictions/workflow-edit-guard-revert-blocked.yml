@@ -3,12 +3,15 @@ summary: >-
   A safety check blocked undoing an accidental edit to a GitHub workflow file.
 cause: A comment edit under .github/workflows/ got committed with other work; the push was rejected and workflow-edit-guard then also denied the revert to main's version, leaving no documented way to undo it (environment-caveats says only "put the edit in docs/proposals/").
 surface: guard-or-hook
-status: open
-ref: "issue #1955 closed by PR #1976 (undo recipe in docs)"
+status: on-trial
+ref: "Prune Trial opened 2026-10-23 by PR #2447 (territory: workflow-edit-guard.ts and .sh header comments; environment-caveats.md '.github/workflows/*' bullet; keywords 'workflow scope', 'workflow-edit-guard')."
 fixes:
   - pr: 1976
     date: "2026-10-14"
     summary: "Documented how to drop a committed workflow-file edit with a rebase or soft reset, since revert is blocked."
+  - pr: 2447
+    date: "2026-10-23"
+    summary: "Pruned the workflow-write ban prose to one home each (guard comments and the caveats bullet)."
 occurrences:
   - session: session_011xN2Zi67cjpCguuMiZbsJ6
     date: "2026-10-13"

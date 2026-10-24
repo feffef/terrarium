@@ -16,3 +16,8 @@ occurrences:
     severity: minor
     description: "Pushed the prototype/ branch without reading docs/agents/pr-workflow.md, which CLAUDE.md requires before any push."
     solution: "Read pr-workflow.md before pushing any branch, even a prototype/ branch that gets no PR."
+  - session: session_01E3XmTJcpKMZstW7MHL2eks
+    date: "2026-10-23"
+    severity: nit
+    description: "Pushed the branch (inherited session-log commit only) at a Stop-hook nag before reading pr-workflow.md, which CLAUDE.md requires before any push."
+    solution: "Read pr-workflow.md before answering the first Stop-hook push nag."

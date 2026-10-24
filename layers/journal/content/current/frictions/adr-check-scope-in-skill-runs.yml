@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   CLAUDE.md requires adr-check before any recommendation, but Skills that mandate decisions (frictions-to-fixes picks, clear-backlog grilling picks, audit-docs and audit-skills judgement calls, scheduled sweeps) neither name it nor are exempted, and they do not say whether a triage or design agent's adr-check run covers the orchestrator. Signals: "frictions-to-fixes mandates decisions", "relied on the triage agents' adr-check", "scheduled-sweep adr-check silent-skip", issue #2342.
 surface: safe
-status: tracked
-ref: "issue #2342 (CLAUDE.md demands adr-check before any recommendation, but frictions-to-fixes mandates decisions without it) is still open, though PR #2431 retired adr-check and its CLAUDE.md trigger; issue #2286 reviews who invokes adr-check."
+status: open
+ref: "issue #2342 closed not planned 2026-10-23 (adr-check and its CLAUDE.md line are gone, PR #2431); issue #2286 closed completed."
 fixes:
   - pr: 2431
     date: "2026-10-23"

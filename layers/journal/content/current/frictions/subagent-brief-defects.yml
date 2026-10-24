@@ -79,3 +79,13 @@ occurrences:
     severity: nit
     description: "The #2262 triage brief told the builder to dispatch a probe subagent, which a workflow agent may not be able to do; I ran the probe myself"
     solution: "clear-backlog-explore triage could note when a fact needs the orchestrator to gather it"
+  - session: session_01E3XmTJcpKMZstW7MHL2eks
+    date: "2026-10-23"
+    severity: nit
+    description: "My consolidation brief listed session ids partly as suffixes (ki1C5ArD, NqN7), copied from slice reports; the agent had to add suffix matching to find them."
+    solution: "Give full session ids in briefs; slice agents should report full ids, not trimmed ones."
+  - session: session_01SNKBDEtR5UiaMXBdxvHuuE
+    date: "2026-10-23"
+    severity: nit
+    description: "My subagent brief named app/utils/lesson.ts; the file lives at layers/glassbox/app/utils/lesson.ts. The glossary's path is layer-relative, and I copied it without checking."
+    solution: "Check that every path in a brief exists, as dispatch-subagents §3 already says; the glossary could write the path repo-relative."

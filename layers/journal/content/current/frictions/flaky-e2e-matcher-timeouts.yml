@@ -2,15 +2,17 @@ name: flaky-e2e-matcher-timeouts
 summary: >-
   A Journal browser test that opens a session card fails at random, so unrelated changes fail once and pass on a retry.
 cause: >-
-  The Journal accordion e2e test (journal.spec.ts, the session-card head toggle) times out in gate:scoped or CI on diffs that do not touch it and passes on re-run; raising expect.poll's timeout to 10 s (PR #1919) did not stop it. Signals: 'Journal accordion e2e', journal.spec.ts:393, a gate red on an unrelated Journal test that passes on rerun.
-  Most likely (issue #2231; not reproduced, 120 throttled Chromium runs passed, commit 19077ebc): the test clicked a session card while the digest it had just opened was still expanding, so the card moved under the click.
+  The Journal accordion e2e test (journal.spec.ts, the session-card head toggle) times out in gate:scoped or CI on diffs that do not touch it and passes on re-run; raising expect.poll's timeout to 10 s (PR #1919) did not stop it. Signals: 'Journal accordion e2e', journal.spec.ts:393, a gate red on an unrelated Journal test that passes on rerun. Most likely (issue #2231; not reproduced, 120 throttled Chromium runs passed, commit 19077ebc): the test clicked a session card while the digest it had just opened was still expanding, so the card moved under the click.
 surface: safe
-status: tracked
-ref: "issue #2231 (regression of PR #1919)"
+status: open
+ref: "issue #2231 closed by PR #2458"
 fixes:
   - pr: 1919
     date: "2026-10-14"
     summary: "Browser tests now wait up to 10 seconds instead of 1 second before failing."
+  - pr: 2458
+    date: "2026-10-23"
+    summary: "The Journal accordion e2e waits for the digest's scroll pin to settle before clicking a card."
 occurrences:
   - session: session_01JW1NEbkjzCyx2myBjt9X8V
     date: "2026-10-13"

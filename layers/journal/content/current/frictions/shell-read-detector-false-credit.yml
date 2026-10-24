@@ -10,11 +10,6 @@ fixes:
     date: "2026-10-10"
     summary: "The read detector stopped crediting docs that merely appeared quoted in GitHub or session-log output."
 occurrences:
-  - session: session_01VaPP7iMRxMvKvX8KQh1qeY
-    date: "2026-10-09"
-    severity: moderate
-    description: "SHELL-READ-DETECTION false positive: docs/agents/environment-caveats.md credited from command `sed -n 70,96p layers/journal/content/current/sessions/2026-10-08-1f97b613-f529-4487-a7e9-1115a44b84c7.yml; grep -rn worktree CLAUDE.md docs/agents/*.md | head`. Its output was a session log's friction quoting the doc's fix, not the doc; grep -rn showed only one environment-caveats line about a worktree guard."
-    solution: "Credit a doc only when the matching line's output source is that file (grep -rn prefixes it); a quoted fix inside another file should not count."
   - session: session_01JR1AZGGyi6AEh1SHTp6qsH
     date: "2026-10-10"
     severity: moderate

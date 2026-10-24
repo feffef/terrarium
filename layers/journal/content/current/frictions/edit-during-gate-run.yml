@@ -3,11 +3,14 @@ summary: "The gate passed on a different tree than the one pushed, because files
 cause: "Agents start gate:scoped before the final head exists: they keep editing while it runs, so the e2e step builds the old tree then runs new tests, or they run it before code-review or commit, amend or fix wording after it and push without rerunning it. Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\", gate run before code-review, an amend or follow-up commit pushed after the gate."
 surface: safe
 status: tracked
-ref: "issue #2434 (regression of #2314)"
+ref: "issue #2474 (regression of #2450)"
 fixes:
   - pr: 2314
     date: "2026-10-20"
     summary: "pr-workflow.md now orders the pre-push steps commit, code-review, then gate:scoped last with no edits during it."
+  - pr: 2450
+    date: "2026-10-23"
+    summary: "gate:scoped now warns at exit when HEAD or the working tree changed during its run."
 occurrences:
   - session: session_01WynjtDHvk8MajTsgr59Ckt
     date: "2026-10-16"
@@ -64,3 +67,13 @@ occurrences:
     severity: minor
     description: "Ran pnpm gate:scoped before committing and running code-review, against pr-workflow.md's order (gate last on the final head); harmless only because review led to no edits."
     solution: "Read pr-workflow.md before starting the gate, not before the push; CLAUDE.md's trigger 'before you push' came too late for the gate step."
+  - session: session_01CMjFaMZxZgD7oTzNXmWwzv
+    date: "2026-10-23"
+    severity: moderate
+    description: "Edited files while pnpm gate:scoped ran; the build read a half-renamed export and the whole gate run was wasted."
+    solution: "pr-workflow.md already says edit nothing until the gate ends; run fixes only after it exits."
+  - session: session_0195CYW3YBg2stBS6aGigmbp
+    date: "2026-10-22"
+    severity: minor
+    description: "gate:scoped's e2e step reused an .output built before the last commit (L2 reuse), so it did not exercise the final v-if change."
+    solution: "Rebuild before gate:scoped when a later commit touches rendered code, or have the gate compare the build's age to the diff."

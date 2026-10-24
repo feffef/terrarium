@@ -29,3 +29,13 @@ occurrences:
     severity: minor
     description: "Called subscribe_pr_activity in parallel with create_pull_request, guessing PR number 2418 before the create result returned"
     solution: "Subscribe only after the create result gives the number"
+  - session: session_011hiFhM9A2Sbn4mGYbdtAhJ
+    date: "2026-10-23"
+    severity: nit
+    description: "Called subscribe_pr_activity with pullNumber 0 in parallel with PR creation, before the number existed; it errored and I retried."
+    solution: "Sequence the subscribe after create_pull_request returns."
+  - session: session_01SNKBDEtR5UiaMXBdxvHuuE
+    date: "2026-10-23"
+    severity: nit
+    description: "I guessed the new PR number when subscribing (2470) instead of reading create_pull_request's result (2468), and had to unsubscribe and resubscribe."
+    solution: "Subscribe only after reading the PR number from the create result, not in the same parallel batch."

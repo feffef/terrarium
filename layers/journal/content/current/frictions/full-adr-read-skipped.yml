@@ -88,3 +88,13 @@ occurrences:
     severity: nit
     description: "I did not open ADR-0004's full text before pushing, although its rule says to; I relied on pr-workflow.md, which carries the same steps."
     solution: "Let the ADR-0004 summary rule say pr-workflow.md suffices for pushing."
+  - session: session_011hiFhM9A2Sbn4mGYbdtAhJ
+    date: "2026-10-23"
+    severity: nit
+    description: "ADR hooks asked to read ADR-0027 and ADR-0029 in full after an edit; I relied on the rule summaries and did not open them."
+    solution: "Summaries sufficed for a comment-only prune; none needed."
+  - session: session_015Nvs8t9mqbbyFbkR9Pb1nk
+    date: "2026-10-24"
+    severity: nit
+    description: "Wrote the Digest before reading ADR-0010 in full; the post-write hook prompted the read. The page was already right."
+    solution: "The digest Skill could name ADR-0010 as read-first, or the rule could load on reading the Skill."

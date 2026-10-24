@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Sessions read governed files with cat, sed or chained Bash instead of the Read tool, so path rules did not load; PR #1775's Bash rules hint now loads them but sessions still break the CLAUDE.md rule; the harness auto-mode message that tells agents to prefer Bash also contributes (sessions 01V3bxJa, 01BLrfuH).
 surface: safe
-status: tracked
-ref: "issue #2145 (regression after #1946) is open; issue #2167 revisits the Bash rules hint around 2026-10-23. The Read-tool Prune Trial (PR #2168) was judged and deleted on 2026-10-20 (PR #2324): the prune holds."
+status: open
+ref: "issues #2145 (closed not planned 2026-10-23: superseded by the Read-tool trial verdict, PR #2324) and #2167 (closed: bash-rules-hint kept as is) are closed; no open issue or trial tracks it."
 fixes:
   - pr: 1775
     date: "2026-10-11"
@@ -13,6 +13,9 @@ fixes:
   - pr: 1946
     date: "2026-10-14"
     summary: "Made the Bash rules hint also run when a Bash call fails, such as a compound read."
+  - pr: 2467
+    date: "2026-10-23"
+    summary: "bash-rules-hint now loads rules for shell reads of bracketed Nuxt route paths."
 occurrences:
   - session: session_015BjYk46dntcMuAWMn1z4Zw
     date: "2026-10-10"

@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "The primary working directory switched to the impl agent's worktree and back mid-run, while log-session refuses to author from a linked worktree; I had to track where each command ran."
     solution: "Have dispatch-subagents tell the orchestrator to use absolute paths and re-check pwd after a worktree agent returns."
+  - session: session_01E3XmTJcpKMZstW7MHL2eks
+    date: "2026-10-23"
+    severity: nit
+    description: "After the impl agent's hand-back the harness moved my working directory into its worktree, the worktree-cwd-switch cluster again; I kept to absolute paths."
+    solution: "Accepted harness behaviour; absolute paths."
