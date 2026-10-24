@@ -6,7 +6,7 @@ role: >-
   The model-facing front door for reading another session's events
   (`list_events`/`get_event`): answers from the session's log and cheap reads
   first, then dispatches a subagent to search the raw events so they never
-  enter the asking session's own context. Essential whenever a session must
+  enter the asking session's context. Essential whenever a session must
   inspect a sibling's history, rare otherwise.
 observations:
   - date: "2026-10-20"

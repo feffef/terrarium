@@ -5,8 +5,8 @@ gist: Keeps every Glass Box guide page pinned to what the code does.
 role: >-
   The one-way code-to-pages sync for the Glass Box textbook: re-pins every
   guide page (drafts opt-in) and term to a commit, flags the ones whose prose
-  or diagrams may now be stale, and lands a self-merging PR once they're re-checked. Essential
-  to keeping Glass Box honest as the Platform it documents changes under it.
+  or diagrams may now be stale, and lands a self-merging PR once they're
+  re-checked. Essential to keeping Glass Box honest as the Platform changes.
 observations:
   - date: "2026-10-16"
     note: >-

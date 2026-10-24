@@ -335,20 +335,14 @@ observations:
   - date: "2026-10-16"
     note: >-
       Audited (audit-skills behaviour check), 7 newest usedIn sessions.
-      New finding, verified but minor — not escalated as an issue:
-      session_0147UencKKZS3WLHvsbgywp7 (2026-10-15, PR #2063, close-session
-      SKILL.md prune) misreported its line delta — commit/PR/ledger all say
-      "60→46, -14" but `git show` confirms the real delta is 59→40, -19
-      (~35% understatement). The prune's substance held (every rule
-      preserved, Sonnet probe genuinely pinned, PR merged clean) — only the
-      self-reported stat was wrong, a letter-of-instruction miss on
-      SKILL.md §5's "line delta in its title" clause. Cross-checked the
-      other 6 sessions' quantified prunes against git — all accurate (PR
-      #1936: 190→159 confirmed; PR #1891: 392→378 matches its hedged "about
-      -15"). Ledger/window state verified live: 3 open trials, all
-      correctly "not yet judgeable." #1856 (ADR-0027 grace mismatch)
-      re-confirmed structurally resolved via the ADR-0030 rewrite. No
-      reverts in the 2-week sweep. Grade unchanged.
+      Minor, verified, not escalated: session_0147UencKKZS3WLHvsbgywp7
+      (2026-10-15, PR #2063, close-session SKILL.md prune) reported its line
+      delta in commit, PR and ledger as "60→46, -14"; git show gives 59→40,
+      -19. The prune's substance held; only the stat that SKILL.md §5's "line
+      delta in its title" clause requires was wrong. The other 6 sessions'
+      quantified prunes (e.g. PR #1936, PR #1891) check out against git.
+      #1856 (ADR-0027 grace mismatch) is structurally resolved via the
+      ADR-0030 rewrite. No reverts in the 2-week sweep. Grade unchanged.
   - date: "2026-10-17"
     note: >-
       Self-check (audit-skills behaviour check): all 8 usedIn sessions

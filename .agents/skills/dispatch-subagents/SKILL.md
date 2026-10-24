@@ -54,9 +54,8 @@ every line that applies.
 - Long runs bank progress to disk after each step. The harness refuses a
   subagent's Write of report or findings files, so bank to logs and have it
   return structured results in its final message for you to save.
-- Name every artifact the agent writes uniquely to that agent and create its
-  folder first: subagents share your scratchpad, and a shared name silently
-  collides.
+- Create the agent's scratchpad subfolder first (CLAUDE.md); a shared name
+  silently collides.
 - Run `pnpm gate:scoped` and other checks in the foreground (a guard denies
   backgrounding; `docs/agents/guards.md`). If a check may outlast one call, name
   a log-file marker as the done signal and resume with `SendMessage`, pasting the

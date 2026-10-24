@@ -185,17 +185,7 @@ observations:
       session_01LuXuScHA2QsY4RXipy9nAt (ledger PR #1787, issues
       #1784/#1785/#1786 filed). All three deliver exactly as claimed — diffs
       match logs, issues real and correctly labeled, no revert in the
-      2-week sweep. No new silent failure in this Skill's own delivery. One
-      loose end, not escalated: issue #1786 (filed by
-      session_01LuXuScHA2QsY4RXipy9nAt as a shell-read-detection regression)
-      was later re-triaged and found to actually be a different bug
-      (log-session's "(not read)" refusal, not the shell-read detector) — a
-      correct, self-healing re-triage, but `shell-read-detection.yml`'s
-      `cause` field and `ref` line still describe #1786 as belonging to
-      this Ledger entry, now slightly stale; worth a line fix on this
-      Skill's next pass (see log-session's own entry above for #1786's
-      reopening, for an unrelated reason — the fix PR itself didn't cover
-      the reported shell-output case). Grade/role unchanged.
+      2-week sweep. No new silent failure in this Skill's own delivery. Grade/role unchanged.
   - date: "2026-10-13"
     note: >-
       Self-check (audit-skills behaviour check): newest 10 of 11 usedIn

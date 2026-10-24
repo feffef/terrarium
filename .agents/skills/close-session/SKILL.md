@@ -23,8 +23,6 @@ this session, with its final status.
    five values). Never default a stalled or abandoned session to `completed`.
    If a PR-open step (`subscribe_pr_activity`, or this Skill) was rejected, log
    anyway, as `in-review`, and name the skipped step.
-4. **Gated PR:** open it, subscribe to its activity, and babysit it to merge or
-   close.
 
 **Re-invoke** `/close-session` whenever more work follows, such as another PR or
 the merge. Each log replaces the last.

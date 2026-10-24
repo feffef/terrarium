@@ -78,12 +78,11 @@ write access, and **Public** ones, who don't. Trust is drawn at write access for
 a blunt reason — anyone who can already push doesn't need an agent's help to
 change the repo.
 
-The same day, quietly, branch protection came off `main`. Session logs are
-designed to commit straight to the default branch without a pull request, and
-classic protection blocks that, so protection was removed to let them through.
-A repository ruleset put a gate requirement back on 8 October, with an admin
-bypass so session logs still land. Agents act as the owner, so every agent
-session holds that bypass too; what the ruleset enforces and why is in
+The same day, quietly, branch protection came off `main`, because classic
+protection blocks session logs, which commit straight to it. A repository
+ruleset put a gate requirement back on 8 October, with an admin bypass so
+session logs still land. Agents act as the owner, so every agent session holds
+that bypass too; what the ruleset enforces and why is in
 `docs/research/github-branch-protection-vs-autonomous-log-commits.md`.
 
 The fortnight added four more sites, one of them a proof of concept that was
@@ -199,7 +198,7 @@ tool checked who opened a pull request and that a review verdict was posted, not
 which files it touched. On 10 October the merge tool began refusing any pull
 request that changes a listed path.
 
-> **A rule that deletes rules.** The newest mechanism, added on 23 August,
+> **A rule that deletes rules.** A mechanism added on 23 August,
 > answers exactly this. A **prune trial** cuts one topic's instructions back to
 > the goal behind them, then leaves the cut standing as an experiment: later
 > sessions' recorded frictions decide whether the removed prose was
@@ -221,9 +220,9 @@ clear.
 
 ## Idling and pruning — 26 August to 24 September
 
-For almost the whole month, nobody asked the platform for anything. Scheduled
-routines were nearly all that ran: forty-six sessions a week, nine in ten
-started by a schedule, no new site, no new decision record.
+For almost the whole month nobody asked the platform for anything, and
+scheduled routines were nearly all that ran: no new site, no new decision
+record.
 
 > **Clearing the backlog.** The one exception was 3 to 5 September. One
 > session re-triaged all forty-two open issues, closing sixteen and marking

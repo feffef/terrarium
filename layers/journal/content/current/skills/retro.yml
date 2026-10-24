@@ -11,11 +11,10 @@ role: >-
 observations:
   - date: "2026-10-16"
     note: >-
-      Coverage gap found (audit-skills sweep): first-ever use this window
-      (allTimeUses: 1, session_019ZQjo7wiuxrS9KLEG2GiTU, invoked as /retro
-      after a glassbox-update drafts run), on disk, no prior Inventory
-      entry. Verified genuine: listed 8 candidates, the owner picked 2 to
-      file, and both exist as real open issues (#2096 sentence-count check
-      for Walkthrough stops; #2097 a --diff flag for glassbox-update), each
-      citing the session that found them. Below the ≥3-session bar for a
-      dedicated behaviour check.
+      Coverage gap (audit-skills sweep): first use this window
+      (allTimeUses: 1, session_019ZQjo7wiuxrS9KLEG2GiTU, /retro after a
+      glassbox-update drafts run), on disk, no Inventory entry; added.
+      Verified genuine: 8 candidates listed, the owner picked 2 to file, both
+      exist as open issues (#2096 sentence-count check for Walkthrough stops;
+      #2097 a --diff flag for glassbox-update), each citing the session that
+      found it. Below the ≥3-session bar for a behaviour check.

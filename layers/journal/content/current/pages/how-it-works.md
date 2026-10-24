@@ -1,6 +1,6 @@
 ---
 title: How Humans & Agents Work
-description: How humans, agents, and code work together in Terrarium — one session start to finish, how issues and pull requests carry the work, who is allowed to merge, and the routines that run with nobody watching.
+description: How humans, agents, and code work together in Terrarium — one session start to finish, how issues and pull requests carry the work, who is allowed to merge, and the Routines that run with nobody watching.
 onramp: 2
 onrampLabel: How humans + agents work
 onrampBlurb: The loop — from a prompt to a reviewed, gated PR, to agents fixing their own instructions.
@@ -28,7 +28,7 @@ A human with access to the repo opens [claude.ai/code](https://claude.ai/code)
 `feffef/terrarium` through the built-in GitHub integration, and asks for
 something: a feature, a fix, an investigation. From there the agent works
 largely on its own. It is steered by the repo's own written conventions — a
-root instruction file, a small set of Architecture Decision Records, and a
+root instruction file, Architecture Decision Records, and a
 library of **[Skills](/t/journal/current/skills)**, which are reusable instructions for jobs this project
 does repeatedly — plus [Matt Pocock's engineering
 skills](https://github.com/mattpocock/skills). It plans, writes the code and
@@ -116,7 +116,7 @@ graph TB
 ## What runs when nobody asked
 
 Some of the work here starts from a schedule instead of a prompt. These are
-Claude **routines** — the same kind of session, with no human in it, waking up
+Claude **Routines** — the same kind of session, with no human in it, waking up
 on their own and opening their own pull requests. Each fixes what its own
 instructions allow and files an issue for anything that needs more thought or a
 human decision, for the next `clear-backlog` run.
@@ -136,7 +136,7 @@ That limit matters because much rot is never reported: a document can stop
 describing the code, a Skill's description can drift from its real use, and
 instructions can be individually correct and collectively unreadable. No session
 logs a friction for any of it, so the reactive loop never learns of it. Three
-routines go looking instead:
+Routines go looking instead:
 
 - **`audit-docs`** re-reads every live document and Skill against the code it
   claims to describe, hunting drift, duplication, contradiction, descriptions of
@@ -158,7 +158,7 @@ routines go looking instead:
   its goal; a behaviour that needs a mechanical guard goes to
   an issue.
 
-Two further routines narrate rather than repair. **`digest`** writes the daily
+Two further Routines narrate rather than repair. **`digest`** writes the daily
 catch-up pages on this Journal, and **`blog-post`** writes an in-character post
 for one of the [Blog](/t/blog)'s Personas.
 

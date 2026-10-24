@@ -46,7 +46,7 @@ Journal record of its goal, how far it got, what it read, which Skills it used,
 every **Friction** it hit, and optionally its **learnings** (knowledge it
 inferred rather than read) and **ideas** (see Idea). A session log is ground
 truth, not a projection of repo state (ADR-0008). It records the Session's
-**kind** (interactive, delegated or autonomous); `log-session` defines them.
+**kind**; `log-session` defines the values.
 
 ### Idea
 An optional note in a session log: an ambitious, concrete proposal for the
@@ -62,8 +62,7 @@ JS/TS).
 ### Friction
 One recorded pain-point within a Session: something that went wrong, was
 needlessly complex, or wasted effort or tokens. It has a description, a possible
-solution and a severity (`nit < minor < moderate < major < blocker`; grading:
-`log-session`).
+solution and a severity (grading: `log-session`).
 
 ### Friction Ledger
 An **Inventory** of Friction clusters: one entry per root cause, with each
@@ -81,8 +80,7 @@ current-state readout refreshed in place, not appended to.
 
 ### Importance (of a Skill)
 How essential a Skill is when its kind of work comes up, never how often it
-runs. Five grades: essential, routine, specialist, supporting, peripheral
-(defined in `audit-skills`; ADR-0015).
+runs. The grades are defined in `audit-skills` (ADR-0015).
 
 ### Role (of a Skill)
 A Skill Inventory entry's plain-prose account of what the Skill is for on this

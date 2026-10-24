@@ -62,9 +62,7 @@ this order: `fresh → intact → fragmentary → dissolved` (the
 erosion axis), then `never-activated` (complete but never fired; a distinct axis, not a further decay step) and `lost` (its own gravestone template; #523). **Curator-authored, never mechanically re-derived**, not from `assessedAt` or any future continuity check (#526). Shown as its word, never a glyph. The six grades and their definitions are single-homed (see What lives where below).
 
 ### Cause of death
-Why an Artifact ended, as one curator-chosen cause: `closed-by-owner`,
-`cost-more-than-it-caught`, `outlived-its-need`, `built-to-be-discarded`,
-`cut-as-excess`, `never-worked` or `broke-something`. Condition says what is left of a thing;
+Why an Artifact ended, as one curator-chosen cause. Condition says what is left of a thing;
 Cause of death says why it was discarded. **Curator-authored, never derived.**
 "Superseded" is not a cause (it fails Gate B), nor "never used" (Condition's
 `never-activated` says so). The Trench filters its Sites by it. The causes and
