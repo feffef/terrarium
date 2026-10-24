@@ -165,6 +165,10 @@ describe('Home', () => {
     expect(titles(home.justLaunched)).toEqual(['stapler'])
   })
 
+  it('lists the Campaigns that ended most recently first', () => {
+    expect(titles(tinkerfundHomeSections(listings, NOW).recentlyEnded)).toEqual(['hammock', 'ruler'])
+  })
+
   it('caps Just launched at six so the grid ends on a full row', () => {
     const many = tinkerfundListings(Array.from({ length: 8 }, (_, i) => doc(`new${i}`, { launch: '-1d', end: '+9d' })), [], NOW)
     expect(tinkerfundHomeSections(many, NOW).justLaunched).toHaveLength(6)
@@ -175,7 +179,7 @@ describe('Home', () => {
     expect(quiet.featured?.title).toBe('old')
     expect(quiet.endingSoon).toEqual([])
     expect(quiet.justLaunched).toEqual([])
-    expect(tinkerfundHomeSections([], NOW)).toEqual({ featured: undefined, endingSoon: [], popular: [], justLaunched: [] })
+    expect(tinkerfundHomeSections([], NOW)).toEqual({ featured: undefined, endingSoon: [], popular: [], justLaunched: [], recentlyEnded: [] })
   })
 })
 
