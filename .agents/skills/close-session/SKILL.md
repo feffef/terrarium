@@ -6,12 +6,11 @@ description: "Invoke when this Claude session is wrapping up — coming to a clo
 You've reached **Session closure**. Goal: the Journal holds an honest log of
 this session, with its final status.
 
-1. **Re-read CLAUDE.md and the always-loaded rules** with
-   `pnpm exec tsx .agents/skills/close-session/scripts/always-loaded.ts`, not by
-   opening the rule files (that loads unrelated rules into your log). For every
-   rule or step in them that this session broke or skipped, log a Friction that
-   names the rule, even if you fixed it later. Say what impact breaking it had or
-   could have had, and what would have made you read it at the time.
+1. **Check this session against CLAUDE.md and the always-loaded rules** (already
+   in your context; do not reopen the files). For every rule or step in them that
+   this session broke or skipped, log a Friction that names the rule, even if you
+   fixed it later. Say what impact breaking it had or could have had, and what
+   would have made you read it at the time.
 2. **Look back once more when this close sets `completed`.** From memory, with
    no transcript read, hunt what the whole session cost: knowledge you found
    too late that would have changed your route, and detours (repeated
