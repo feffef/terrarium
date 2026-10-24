@@ -52,7 +52,7 @@ The server renders the first rows; the whole list travels in the page's data. Ty
 The Commons's own `pages` name no kind, so its Search never lists itself. A Collection with no `kind`, such as the Blog's `pingbacks`, is on no list, though no test stops a layer that passes another Tenant's key to `queryCollection` directly. The one exception to the Catalog is the Platform home page, which reads the Tenants it features directly.
 
 ::stop-links
-[Isolation by table](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · :file[layers/commons/tenant.config.ts] · :file[app/pages/index.vue]
+[Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · :file[layers/commons/tenant.config.ts] · :file[app/pages/index.vue]
 ::
 
 ## Where next

@@ -9,7 +9,7 @@ export const glassboxSubjects = [
   { slug: 'testing', name: 'Testing', blurb: 'Unit and browser tests, each Tenant its own.' },
   { slug: 'deploy', name: 'Deploy', blurb: 'One container that builds and swaps main.' },
   { slug: 'git-github', name: 'Git & GitHub', blurb: 'Pull requests, worktrees and who may direct an agent.' },
-  { slug: 'terrarium-practice', name: 'House rules', blurb: 'The merge gate, decision records, session logs, the merge policy.' },
+  { slug: 'terrarium-practice', name: 'House rules', blurb: 'The merge gate, decision records, session logs, required reviewers.' },
 ] as const
 
 /** The landing's term strip: `terms` entries a newcomer meets first, picked from what guide Lessons expand most. */

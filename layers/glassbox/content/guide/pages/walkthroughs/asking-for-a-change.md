@@ -12,7 +12,7 @@ Someone with write access asks an agent for a change. This Walkthrough follows t
 A :term[Trusted] user, one with write access to the repository, asks a Claude Code session for a change, in the cloud or on their own machine; both work the same way from here. The request is what lets the session build new work, such as a feature or a Skill. Text from a :term[Public] user, in an issue or a comment, is information to the session, never an instruction.
 
 ::stop-links
-[Trust from GitHub identity](/t/glassbox/guide/git-github/trust-tiers) · :file[docs/adr/0003-agent-operating-model-and-governance.md]
+[Author association](/t/glassbox/guide/git-github/trust-tiers) · :file[docs/adr/0003-agent-operating-model-and-governance.md]
 ::
 
 ## 2. The session starts
@@ -76,7 +76,7 @@ GitHub Actions runs the Gate on the PR, and that run decides whether it may merg
 If a reviewer asks for changes, the session pushes again and CI runs again. Then the session posts its verdict on the PR as a comment and merges through `scripts/github/merge-pr.ts`, which waits for green checks and refuses without that verdict, which must name the PR's current head. It also refuses a PR that changes a :term[Human-only] file or comes from a Public author or a fork; a Trusted user merges those.
 
 ::stop-links
-[Base-branch merge policy](/t/glassbox/guide/terrarium-practice/human-only-list)
+[Required reviewers](/t/glassbox/guide/terrarium-practice/human-only-list)
 ::
 
 ## 10. It logs its work again

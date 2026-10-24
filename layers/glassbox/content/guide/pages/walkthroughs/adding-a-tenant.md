@@ -36,7 +36,7 @@ Beside it goes the :term[manifest], `tenant.config.ts`: the Tenant's name, its :
 The Tenant's files go under `content/<space>/<collection>/` in its folder, and each Space's `pages` folder gets an `index.md`, the Space's front page. Nobody lists the new collections anywhere: `content.config.ts` runs `expand()` over every manifest each time Nuxt Content loads it, and the new Spaces and Collections come out as keys such as `marquee_reel_pages`. Each key is its own table in the content database, so the new content shares no table with any other Space.
 
 ::stop-links
-[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Isolation by table](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
+[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
 ::
 
 ## 5. The routes follow
