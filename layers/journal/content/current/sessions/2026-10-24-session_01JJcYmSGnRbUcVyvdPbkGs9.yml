@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_01JJcYmSGnRbUcVyvdPbkGs9
 startedAt: 2026-10-24T06:33:34Z
-endedAt: 2026-10-24T06:40:35Z
+endedAt: 2026-10-24T06:44:48Z
 kind: autonomous
 goal: Weekly sync of the Glass Box textbook with the code
-status: in-review
-outcome: "PR #2488 opened: pages re-pinned to bc9331bbe, three pages edited"
+status: completed
+outcome: "PR #2488 merged: guide re-pinned to bc9331bbe, three pages edited"
 summary: Scheduled glassbox-update run, no human prompts. Advanced all pages to main at bc9331bbe, read the 182 commits since the oldest pin against every flagged page and term, and edited three pages (session-logs, gate, human-only-list) where the code had moved; the other flagged pages and all 22 terms still matched. One test failed on a stale ADR hash inside an Excerpt and was fixed. Reviewed the diff myself instead of running code-review (mostly pin restamps), took no screenshots. gate:scoped passed before the first push. All work was agent-initiated under the schedule.
 prs:
   - "2488"
@@ -26,9 +26,11 @@ docsRead:
     reason: MCP write traps before creating the PR
     useful: partly
   - path: .agents/skills/close-session/SKILL.md
-    reason: (no reason given)
+    reason: diffed to check the pages that cite it
+    useful: yes
   - path: GLOSSARY.md
-    reason: (no reason given)
+    reason: diffed to check term definitions against source
+    useful: yes
 skillsUsed:
   - name: glassbox-update
     reason: the task itself
@@ -46,18 +48,23 @@ frictions:
   - description: The update script flags every page and term on any path change, so reading 182 commits per page took many tool calls.
     solution: Have the script print per-page diffs of just the cited paths.
     severity: minor
-durationSec: 421
+  - description: Ran log-session --author for the completed log before re-invoking close-session after the merge; the script warned and I corrected it.
+    solution: After merge, invoke close-session first, then author the log.
+    severity: nit
+durationSec: 673
 models:
-  claude-sonnet-5-5: 73
+  claude-sonnet-5-5: 90
 toolCounts:
-  Bash: 31
+  Bash: 36
   Read: 5
   Monitor: 2
-  ReadNotifications: 1
+  ReadNotifications: 3
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
