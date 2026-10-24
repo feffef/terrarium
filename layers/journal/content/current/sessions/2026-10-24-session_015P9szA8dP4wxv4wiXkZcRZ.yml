@@ -1,0 +1,399 @@
+schemaVersion: 1
+session: session_015P9szA8dP4wxv4wiXkZcRZ
+startedAt: 2026-10-24T17:07:41Z
+endedAt: 2026-10-24T17:43:21Z
+kind: interactive
+goal: Even out the quality of Glass Box guide Lessons
+status: in-review
+outcome: "Review of 20 guide Lessons done; fix PR #2497 open with retitles, three re-cuts and sourced corrections"
+summary: "Human-instructed: the owner asked for an agent to read every Glass Box guide Lesson and judge quality, titles and how well each is cut, then bring the weak ones up. Through questions the owner chose the scope (guide Lessons only), both readers (newcomer and experienced), report plus fix PR, the contract check, plain noun-phrase titles, keeping URLs, and all three large fixes. Mid-session the owner also asked for an Explore agent per rebuilt page to dig facts out of Terrarium and node_modules, then chose field-name titles, the File routing re-split and keeping publishedAt. Agent-initiated: one reviewer subagent scored the Lessons; I wrote all edits myself (not dispatched, since the large fixes touched overlapping files); two code-review rounds and four research agents found real errors in my first rewrite (cached payloads are rendered on request, not written; a false worktree claim; an empty catch-all param is absent; titles breaking EVERY-PAGE's title rule), all fixed and verified against sources before the push. Left open: Continuous deployment keeps its Docker Compose Full reference, and a CODEOWNERS sentence was skipped because docs.github.com is blocked."
+prs:
+  - "2497"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson and Walkthrough contracts, Subject rule
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin, title rule, writing rules; the title rule decided a second retitle round
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: How Lessons are placed and joined
+    useful: partly
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: Checked how re-pinning works
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: Three-dot diffs, commit -F for messages
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Review before first push, follow-up review rule
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP for writes in the cloud
+    useful: partly
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: Scope confirmed separate tables and opt-in cross-Tenant reads
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: Checked what the payload and Nitro watch items may say without restating it
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Brief rules; subagents also read it for the worktree Lesson
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: "Reviewer subagent: confirmed useSpace claims"
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: "Worktrees subagent: source for the git-command guard (I kept the Claude Code docs wording)"
+    useful: partly
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: "Payload subagent: measurements behind 'several to dozens of times lighter'"
+    useful: yes
+  - path: layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+    reason: (read before editing)
+  - path: /home/user/terrarium/layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: index.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/layers/glassbox/app/utils/subjects.ts
+    reason: (no reason given)
+  - path: claude-code/01.claude-md.md
+    reason: (no reason given)
+  - path: claude-code/02.path-scoped-rules.md
+    reason: (no reason given)
+  - path: claude-code/03.skills.md
+    reason: (no reason given)
+  - path: claude-code/04.hooks.md
+    reason: (no reason given)
+  - path: claude-code/07.subagents.md
+    reason: (no reason given)
+  - path: claude-code/08.git-worktrees.md
+    reason: (no reason given)
+  - path: deploy/01.self-updating-container.md
+    reason: (no reason given)
+  - path: git-github/01.every-change-a-pr.md
+    reason: (no reason given)
+  - path: git-github/04.trust-tiers.md
+    reason: (no reason given)
+  - path: nuxt-content/01.manifest-collections.md
+    reason: (no reason given)
+  - path: nuxt-content/02.multi-tenant-isolation.md
+    reason: (no reason given)
+  - path: nuxt-content/03.content-database.md
+    reason: (no reason given)
+  - path: nuxt-vue/01.layers.md
+    reason: (no reason given)
+  - path: nuxt-vue/02.file-routing.md
+    reason: (no reason given)
+  - path: nuxt-vue/06.use-async-data.md
+    reason: (no reason given)
+  - path: nuxt-vue/09.nitro.md
+    reason: (no reason given)
+  - path: terrarium-practice/01.gate.md
+    reason: (no reason given)
+  - path: terrarium-practice/02.adrs.md
+    reason: (no reason given)
+  - path: terrarium-practice/04.session-logs.md
+    reason: (no reason given)
+  - path: terrarium-practice/07.human-only-list.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: Briefs for reviewer, research and code-review agents
+  - name: code-review
+    reason: Two rounds before the first push
+  - name: close-session
+    reason: Log at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Asked the owner to pick a title style before reading EVERY-PAGE's title rule; the picked titles broke it and needed a second owner decision and retitle round.
+    solution: Read the Tenant's writing Skill (glassbox-lesson/EVERY-PAGE.md) before asking a design question it already settles; the Tenant glossary could point to it.
+    severity: moderate
+  - description: Told the owner the guide had 25 Lessons before counting; it has 20 (I had counted Walkthroughs and the index). Breaks CLAUDE.md's verify-before-you-state.
+    solution: Count from the file list (excluding walkthroughs/ and index.md) before stating a number.
+    severity: minor
+  - description: First rewrite stated facts from memory (payload files written for cached routes, unpushed commits being the only copy) that source research later proved wrong.
+    solution: Before rewriting a Lesson's teaching, check each mechanism claim in node_modules or the cited file, as EVERY-PAGE's Write step implies.
+    severity: moderate
+  - description: Ran git fetch and git log before reading docs/agents/git-conventions.md; a hook flagged it.
+    solution: Read git-conventions at session start when a task will commit.
+    severity: nit
+  - description: Offered 'keep URLs' and 'rehome Git worktrees' as independent options though rehoming changes a URL; the answers conflicted.
+    solution: When options interact, say so in the question.
+    severity: nit
+  - description: docs.github.com is blocked by the proxy (WebFetch DNS fail, curl 403), so a GitHub docs claim could not be verified and was dropped.
+    solution: EVERY-PAGE's fallback (sparse clone of github/docs) costs more than one sentence; allowlisting docs.github.com would help Glass Box work.
+    severity: minor
+durationSec: 2140
+models:
+  claude-opus-5-5: 223
+toolCounts:
+  Bash: 72
+  AskUserQuestion: 3
+  Skill: 4
+  Agent: 9
+  Read: 3
+  Write: 4
+  ToolSearch: 2
+  WebFetch: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+  - layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+  - layers/glassbox/app/utils/subjects.ts
+  - layers/glassbox/content/drafts/pages/git-github/03.thin-ci-workflow.md
+  - layers/glassbox/content/drafts/pages/git-github/05.provenance-headers.md
+  - layers/glassbox/content/drafts/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/drafts/pages/git-github/07.dependabot-grouping.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/04.query-collection-patterns.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/08.cross-tenant-kinds.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/routines.md
+  - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+  - layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+  - layers/glassbox/content/guide/terms/full-gate.yml
+  - layers/glassbox/content/drafts/pages/claude-code/05.guards.md
+  - layers/glassbox/content/drafts/pages/claude-code/06.hints.md
+  - layers/glassbox/content/drafts/pages/claude-code/08.workflow-scripts.md
+  - layers/glassbox/content/drafts/pages/claude-code/09.mcp.md
+  - layers/glassbox/content/drafts/pages/claude-code/10.routines.md
+  - layers/glassbox/content/drafts/pages/claude-code/11.cloud-sessions.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/06.prose-overrides.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/07.mermaid-svg.md
+  - layers/glassbox/content/drafts/pages/nuxt-vue/03.virtual-imports.md
+  - layers/glassbox/content/drafts/pages/nuxt-vue/04.auto-imports.md
+  - layers/glassbox/content/drafts/pages/nuxt-vue/07.theming-wrapper-class.md
+  - layers/glassbox/content/drafts/pages/skill-pack/01.skill-pack.md
+  - layers/glassbox/content/drafts/pages/skill-pack/03.engineering-loop.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/03.glossaries.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/06.out-of-scope-records.md
+  - layers/glassbox/content/drafts/pages/testing/01.unit-and-e2e.md
+  - layers/glassbox/content/drafts/pages/testing/02.invariants-as-tests.md
+  - layers/glassbox/content/drafts/pages/typescript/01.two-type-checks.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-newcomers-first-hour.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/session-log-lands-on-main.md
+  - layers/glassbox/content/drafts/pages/zod/01.manifest-validation.md
+  - layers/glassbox/content/drafts/pages/zod/04.schemas-column-types.md
+  - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+  - layers/glassbox/content/guide/pages/claude-code/03.skills.md
+  - layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+  - layers/glassbox/content/guide/pages/claude-code/08.git-worktrees.md
+  - layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/ui-verification.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/agents/environment-caveats.md
+  - docs/research/content-client-queries-without-wasm.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before the first push despite Stop-hook nagging; summary enough, ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session at PR open; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself on first push and subscribe; the owner had already approved the fix PR
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body header line with this session's link; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading the Glass Box glossary; I changed no glossary terms
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: No term added or changed; only deleted an unused Glass Box term file
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Confirmed reading layers/glassbox/GLOSSARY.md first, which held the Lesson contract
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded with Skill files; no prune trial covered the pages I edited
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with Skill files; no instruction placement changed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read a Human-only file; I checked no Human-only path changed in the PR
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading Skill folders; no Skill changed
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept issue ids and counts out of the new prose, e.g. the useSpace caller count stayed out
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagram edited
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded reading a layer component; no layer code changed
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded reading ADR-0028; no ADR edited
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Confirmed the isolation Lesson's claims; the summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded reading shared/expand.ts; context only
+    useful: no
+  - path: .claude/rules/adr-0013.md
+    reason: Loaded reading shared/expand.ts; context only
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Confirmed cross-Tenant reads go through catalog.ts, which the isolation Lesson now cites
+    useful: yes
+  - path: .claude/rules/ui-verification.md
+    reason: Loaded reading a Tinkerfund component; prose-only change, I took no screenshots and claim no UI result
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Subagents reported it confirmed useSpace and resolveSpaceRoute claims
+    useful: yes
+  - path: .claude/rules/adr-0016.md
+    reason: Subagent reported it confirmed the root-page claims
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Subagent reported partly useful for the payload Lesson
+    useful: partly
+  - path: .claude/rules/adr-0012.md
+    reason: Subagent loaded it; reported not useful
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: Reviewer subagent said it confirmed Continuous deployment claims
+    useful: partly
+  - path: .claude/rules/adr-0014.md
+    reason: "Routing subagent loaded it; reported partly useful for the #routing alias"
+    useful: partly
+  - path: .claude/rules/adr-0018.md
+    reason: Subagents loaded it; reported not useful
+    useful: no
+  - path: .claude/rules/adr-0007.md
+    reason: Subagent loaded it; reported not useful
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Subagent loaded it; reported not useful
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Worktrees subagent loaded it; reported not useful
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Review Glass Box guide Lessons
+    durationSec: 115
+    toolCalls: 26
+    modelCalls: 7
+    tokenShare: 3.9
+  - type: general-purpose
+    task: Standards review of Lesson edits
+    durationSec: 109
+    toolCalls: 16
+    modelCalls: 13
+    tokenShare: 5.2
+  - type: general-purpose
+    task: Spec review of Lesson edits
+    durationSec: 68
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 4
+  - type: Explore
+    task: "Explore facts: Isolation by table"
+    durationSec: 117
+    toolCalls: 16
+    modelCalls: 16
+    tokenShare: 3.6
+  - type: Explore
+    task: "Explore facts: File routing"
+    durationSec: 147
+    toolCalls: 28
+    modelCalls: 26
+    tokenShare: 5.3
+  - type: Explore
+    task: "Explore facts: Git worktrees"
+    durationSec: 60
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 2
+  - type: Explore
+    task: "Explore facts: useAsyncData and payloads"
+    durationSec: 224
+    toolCalls: 41
+    modelCalls: 37
+    tokenShare: 8.4
+  - type: general-purpose
+    task: Standards review of follow-up
+    durationSec: 194
+    toolCalls: 35
+    modelCalls: 32
+    tokenShare: 8.3
+  - type: general-purpose
+    task: Spec review of follow-up
+    durationSec: 84
+    toolCalls: 13
+    modelCalls: 11
+    tokenShare: 4
+gitBranch: ccr-92887c02-iloins
+entrypoint: remote_mobile
+cliVersion: 2.1.310
+learnings:
+  - Nuxt Content's server query route re-checks SQL and throws for any table but the named collection's (security.js assertSafeQuery).
+  - For a cached (not prerendered) route, Nuxt renders _payload.json on request; only prerendering writes it as a file.
+ideas:
+  - Add a page-checks.ts rule that flags a guide Lesson over ~1,200 prose words or with more than 5 Why bullets, so two-concept pages like Multi-tenant isolation are caught at write time instead of by a review.
+landedBy: Stop
