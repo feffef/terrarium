@@ -12,7 +12,7 @@
         "readyForHuman": false,
         "files": ["README.md", "docs/a.md"],
         "relatedTo": [12],
-        "sideFindings": ["docs/b.md links nowhere"],
+        "sideFindings": [{ "finding": "docs/b.md links nowhere", "source": "docs/b.md:3" }],
         "writes": ["labelled ready-for-agent"],
         "verdicts": [
           { "path": ".claude/rules/adr-0004.md", "kind": "rule", "reason": "SECRET-11-RULE", "useful": "no" },

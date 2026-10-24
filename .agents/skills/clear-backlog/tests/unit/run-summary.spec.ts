@@ -23,7 +23,7 @@ describe('--triage', () => {
     )
     expect(out).toContain('#13 blocked publicAuthor=false\n  summary: Wait for Nuxt 5\n  blocker: Nuxt 5 is unreleased (npm view nuxt version)')
     expect(out).toContain('#15 close-duplicate publicAuthor=false\n  summary: Same as #11\n  canonical: #11')
-    expect(out).toContain('  relatedTo: #12\n  sideFindings:\n    - docs/b.md links nowhere\n  writes:\n    - labelled ready-for-agent')
+    expect(out).toContain('  relatedTo: #12\n  sideFindings:\n    - docs/b.md links nowhere (source: docs/b.md:3)\n  writes:\n    - labelled ready-for-agent')
   })
 
   it('ends with missing and grouping, and never prints verdicts', () => {
