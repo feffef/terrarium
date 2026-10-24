@@ -79,18 +79,14 @@ GitHub PR-files API has the same gap: read `previous_filename` too.
   `git stash pop` once failed, and a later comparison tested the base tree.
   Check the exit code and stderr.
 
-## When the Stop hook flags commits you inherited from `main`
+## When the Stop hook flags unpushed or inherited commits
 
-The closure Stop hook can flag inherited commits already on `origin/main`. Run
-`git log origin/main..HEAD` first: a commit outside that list is public
-history, so never rebase or rewrite it (for example via the hook's suggested
-`--reset-author`). Even inside the list, a commit is yours to fix only if this
-session made it; in a working copy shared with other sessions, the list also
-holds theirs. `--reset-author` may also fail to sign: see the signing-key
-caveat in [`environment-caveats.md`](./environment-caveats.md).
+Fix or rewrite only commits this session made. `git log origin/main..HEAD` lists
+the candidates; a commit outside it is public history, so never rebase it (for
+example via the hook's suggested `--reset-author`). In a working copy shared with
+other sessions the list also holds theirs. `--reset-author` may fail to sign: see
+[`environment-caveats.md`](./environment-caveats.md).
 
-If the hook reports unpushed commits on a branch that exists on `origin` but
-that list is empty, push this session's branch (`git push origin HEAD`, never
-`main`, never forced). Every commit it sends is already on `origin/main`, so
-none of your own work goes out and no PR follows; the nag stops because the
-hook counts against the remote branch, not `origin/main`.
+If the list is empty but the hook still reports unpushed commits, the hook counts
+against your branch on `origin`, not `origin/main`: run `git push origin HEAD`
+(never `main`, never forced). No work of yours goes out and no PR follows.
