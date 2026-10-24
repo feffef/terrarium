@@ -32,7 +32,7 @@ A human merges the few PRs whose risk the gate cannot see.
 
   An agent may still merge a minor or patch npm bump that Dependabot opens
   from this repo, if it changes only `package.json` and the lockfile and stays
-  within each package's major.
+  within each package's major (a 0.x minor counts as a major).
 - **The Human-only list** holds the files where a bad change escapes the gate
   or weakens the merge check itself. The list is the `paths` of the
   human-merge rule.
