@@ -286,3 +286,16 @@ observations:
       human merge (test fix outside digest's allowed diff, ADR-0003).
       Reopened #2105 with this evidence; relabeled needs-triage. Grade/role
       unchanged (routine).
+  - date: "2026-10-24"
+    note: >-
+      Verified silent failure (audit-skills behaviour check):
+      session_0174aaydYCKDuWSrJkkTD1dM (2026-10-23 digest, PR #2422, 20
+      files/15 insertions, 19 pure renames) skipped `code-review` before its
+      first push although its own log says the diff was beyond the
+      simple-change bar. Self-disclosed as a minor Friction, no damage, one
+      day's lapse (the next run, PR #2470, ran code-review correctly).
+      Matches the recurring `prepush-gate-review-skipped` family
+      (#2311/#2354/#2397, last fixed by #2407) but in a new failure shape —
+      correctly judged non-simple, skipped anyway. The prior thread (#2397)
+      is closed, so this opened as new issue #2472 instead. Grade/role
+      unchanged (routine).

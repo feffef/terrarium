@@ -74,3 +74,13 @@ observations:
       beside the four already cited there. Commented onto #2286 (still
       open, review overdue since 2026-10-22T10:00Z). Grade/role unchanged
       (essential).
+  - date: "2026-10-24"
+    note: >-
+      Coverage gap, proposed removal: #2286 (the owner's own review) closed
+      2026-10-23T11:59:42Z, and commit 46886f5a7 (same day, 07:14:17Z,
+      session_01PWZU3TqUdSp6uD1KaoQXit) retired the Skill entirely —
+      SKILL.md, its script and test, the three subagent-brief pointers and
+      the CLAUDE.md step all removed. Not a built-in CLI Skill, so per this
+      Skill's own coverage-gap rule: propose removing this Inventory entry
+      in the next Inventory PR a human reviews, rather than deleting it
+      here. useCount 0 this window, as expected for a retired Skill.

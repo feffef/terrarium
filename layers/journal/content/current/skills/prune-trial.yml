@@ -413,3 +413,14 @@ observations:
       friction) but the verdict itself stays correct either way - not
       escalating, extends the 10-20 "mechanism working as designed"
       observation. Grade/role unchanged.
+  - date: "2026-10-24"
+    note: >-
+      Verified silent failure (audit-skills behaviour check), recurrence of
+      #2228 on a different trial: session_0149fVyZ37qWGMuwVPw3Uryc (PR #2412)
+      reported its pr-workflow.md prune as "-3 net: 118 to 115" in the live,
+      unjudged ledger entry; `git show` gives 118 to 116, -2. #2228 (closed
+      via #2245) fixed the same defect shape for PR #2063's trial, but
+      nothing re-verifies a self-reported delta against `git show` before it
+      lands in the ledger. Escalated as new issue #2471; the entry is still
+      live, so the number should be corrected before a verdict is judged
+      against it. Grade/role unchanged.
