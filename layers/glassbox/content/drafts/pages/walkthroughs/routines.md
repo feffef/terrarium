@@ -45,7 +45,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 `visitor-loop` serves a production preview of the site and sends blind visitor subagents, each on a different model, through it with no knowledge of the repo, then a read-only subagent keeps, refines or drops each finding and the chosen feature against the ADRs, glossaries and issues. The run fixes the problems at least two visitors hit on their own, in one PR, and builds the one feature idea it judges best in a second. Both stay inside existing Tenants and the app files an agent may merge. A finding outside that becomes an issue, and the rest become ideas in its session log.
 
 ::stop-links
-[Subagents](/t/glassbox/guide/claude-code/subagents) · [The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Testing](/t/glassbox/guide/testing/unit-and-e2e-tests) · :file[.agents/skills/visitor-loop/SKILL.md] · :file[.agents/skills/visitor-loop/decisions.md]
+[Subagents](/t/glassbox/guide/claude-code/subagents) · [The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Testing](/t/glassbox/guide/verification/unit-and-e2e-tests) · :file[.agents/skills/visitor-loop/SKILL.md] · :file[.agents/skills/visitor-loop/decisions.md]
 ::
 
 ## 6. digest: the day written up
@@ -69,7 +69,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 Each run that changes something closes the same way: it commits, has the change reviewed, runs `pnpm gate:scoped`, the local run of the :term[Gate], on the final head, and opens one PR, or the ones its Skill names. At that moment it runs `close-session`, and its :term[session log] lands on `main`. Once CI is green, it posts its verdict, naming the head commit it reviewed, and merges through `scripts/github/merge-pr.ts`, which refuses a PR that changes a Human-only file or has no such verdict. If anything its Skill doesn't allow rode into the PR, or the Gate failed for a reason that isn't the run's own, it leaves the PR open for a person, and once the PR is merged or left open, it logs again.
 
 ::stop-links
-[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · [Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
+[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/verification/gate) · [Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
 ## Where next

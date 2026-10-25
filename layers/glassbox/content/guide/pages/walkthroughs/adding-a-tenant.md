@@ -68,7 +68,7 @@ It writes its own `GLOSSARY.md` for the words only it uses. Then it adds itself 
 No test config names the new Tenant. The smoke test reads its entry addresses from the manifests, so it loads each new Space's front page in a browser, and fails on a console error or a front page with no Document. What only this Tenant has, such as its root page's redirect, goes in its own e2e spec under `tests/e2e/` in its folder, which the e2e project's glob picks up. The :term[Gate] runs them all.
 
 ::stop-links
-[Testing](/t/glassbox/guide/testing/unit-and-e2e-tests) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · :file[layers/marquee/tests/e2e/marquee.spec.ts]
+[Testing](/t/glassbox/guide/verification/unit-and-e2e-tests) · [Merge gate](/t/glassbox/guide/verification/gate) · :file[layers/marquee/tests/e2e/marquee.spec.ts]
 ::
 
 ## 9. Who else can see it

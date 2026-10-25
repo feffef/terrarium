@@ -20,7 +20,7 @@ The Blog's :term[manifest] gives its `pages` :term[Collection] one extra field, 
 When `expand()` builds the Blog's collections, it adds the `page` contract's fields to the Blog's own page schema, keeping any Blog field of the same name. The Blog's schema doesn't declare `publishedAt`; its posts get that field from the contract. `pnpm validate:content` checks every post against the combined schema, so a reader can rely on those fields' names and types.
 
 ::stop-links
-[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Content validation](/t/glassbox/guide/zod/content-validation)
+[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Content validation](/t/glassbox/guide/verification/content-validation)
 ::
 
 ## 3. The build lists it in the Catalog

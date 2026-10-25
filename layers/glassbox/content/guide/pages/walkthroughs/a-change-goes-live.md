@@ -20,7 +20,7 @@ The commit is a merged PR, or a :term[session log], which lands without one. Bot
 The script that runs the container fetches `main` again after each pause. When `origin/main` differs from its checkout, it resets the checkout to the new commit. It doesn't wait for CI: the Gate also runs on every push to `main`, but nothing in the container reads the result.
 
 ::stop-links
-[Continuous deployment](/t/glassbox/guide/deploy/self-updating-container) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · :file[.github/workflows/gate.yml]
+[Continuous deployment](/t/glassbox/guide/deploy/self-updating-container) · [Merge gate](/t/glassbox/guide/verification/gate) · :file[.github/workflows/gate.yml]
 ::
 
 ## 3. Packages, only when the lockfile changed
@@ -63,6 +63,6 @@ On 9 October 2026 an agent checking a diagram of this story against :file[deploy
 
 - [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container)
 - [Content database](/t/glassbox/guide/nuxt-content/content-database)
-- [Merge gate](/t/glassbox/guide/terrarium-practice/gate)
+- [Merge gate](/t/glassbox/guide/verification/gate)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)
 - [Architecture & Deployment](/t/journal/current/architecture)

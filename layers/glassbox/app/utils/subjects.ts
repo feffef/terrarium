@@ -4,12 +4,12 @@ export const glassboxSubjects = [
   { slug: 'skill-pack', name: 'Skill pack', blurb: 'Outside Skills the agents plan and build with.' },
   { slug: 'nuxt-vue', name: 'Nuxt & Vue', blurb: 'One app, one page file, many sites.' },
   { slug: 'nuxt-content', name: 'Nuxt Content', blurb: 'Files to tables: collections, isolation, the database.' },
+  { slug: 'verification', name: 'Verification', blurb: 'The merge gate and its checks: types, content, tests.' },
   { slug: 'zod', name: 'Zod', blurb: 'Schemas that check manifests and content.' },
-  { slug: 'typescript', name: 'TypeScript', blurb: 'The type checks the Gate runs.' },
   { slug: 'testing', name: 'Testing', blurb: 'Unit and browser tests, each Tenant its own.' },
   { slug: 'deploy', name: 'Deploy', blurb: 'One container that builds and swaps main.' },
   { slug: 'git-github', name: 'Git & GitHub', blurb: 'Pull requests, worktrees and who may direct an agent.' },
-  { slug: 'terrarium-practice', name: 'House rules', blurb: 'The merge gate, decision records, session logs, required reviewers.' },
+  { slug: 'terrarium-practice', name: 'House rules', blurb: 'Decision records, session logs, required reviewers.' },
 ] as const
 
 /** The landing's term strip: `terms` entries a newcomer meets first, picked from what guide Lessons expand most. */
