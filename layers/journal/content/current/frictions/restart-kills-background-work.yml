@@ -23,3 +23,8 @@ occurrences:
     severity: nit
     description: "The worker process restarted twice mid-session; files survived, but each restart re-ran setup and cost a recheck."
     solution: "None in the repo; check scratch files on resume, as done."
+  - session: session_013QKXoGLaEHEJanyw5TrPqj
+    date: "2026-10-25"
+    severity: nit
+    description: "The container restarted while the second build ran; the result survived only because the workflow had finished and its output file was intact."
+    solution: "None needed this time; clear-backlog already says to check the run journal mtime after a restart."

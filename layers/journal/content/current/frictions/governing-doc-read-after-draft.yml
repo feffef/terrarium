@@ -4,12 +4,15 @@ summary: >-
 cause: >-
   A Tenant Skill's voice rule (midden-catalogue) or docs/agents/domain.md (the glossary-terms rule) governs new text, but the agent drafted or added the text first and a reviewer or the rule's late load found the miss. Signals: 'without first reading', 'plain-words voice rule', 'domain.md', a reviewer correcting wording or a term the doc already settles.
 surface: safe
-status: tracked
-ref: "issue #2505 (regression of #2469)"
+status: open
+ref: "Issue #2505 closed by PR #2514."
 fixes:
   - pr: 2469
     date: "2026-10-23"
     summary: "The glossary-term read-first moves into a path-scoped rule that loads on GLOSSARY.md files and the domain-modeling Skill."
+  - pr: 2514
+    date: "2026-10-25"
+    summary: "Added a What lives where section to the Glass Box glossary that points to the Skills holding its writing rules."
 occurrences:
   - session: session_01CMjFaMZxZgD7oTzNXmWwzv
     date: "2026-10-23"

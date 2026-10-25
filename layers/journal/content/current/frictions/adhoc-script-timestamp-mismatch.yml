@@ -1,0 +1,18 @@
+name: adhoc-script-timestamp-mismatch
+summary: >-
+  Throwaway audit scripts compared timestamps in different formats, silently dropping rows or printing nothing.
+cause: >-
+  A one-off script compares a parsed YAML datetime's str() or a bare HH:MM:SS string against ISO timestamps, so the comparison never matches and rows drop without an error. Signals: 'silently dropping', 'printed nothing', 'compared ISO timestamps against'.
+surface: safe
+status: open
+occurrences:
+  - session: session_019SNgYeofJtzoLvh8QNAwYD
+    date: "2026-10-23"
+    severity: nit
+    description: "First audit script compared a YAML datetime's str() against an ISO string, silently dropping every 2026-10-19 session; caught before reporting."
+    solution: "Normalize timestamps (or parse them) before comparing; print the count of sessions in scope as a sanity check."
+  - session: session_019nDDDS9GsXdTKWK44j18fT
+    date: "2026-10-24"
+    severity: nit
+    description: "First idea-3 script compared ISO timestamps against bare HH:MM:SS strings and printed nothing; cost one rerun."
+    solution: "Slice the time field before comparing in throwaway event scripts."

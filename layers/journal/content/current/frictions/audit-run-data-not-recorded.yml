@@ -1,0 +1,13 @@
+name: audit-run-data-not-recorded
+summary: >-
+  Judging a past audit run needed event-reading helper agents because its logs and PR bodies did not record the numbers asked for.
+cause: >-
+  audit-docs session logs and sweep PR bodies do not record per-lens finding and verdict counts, so a later session that judges one lens reads raw events through subagents (about 270k tokens) and can hit the inspect-session partial-read page limit before the needed hand-back. Signals: 'per-lens counts', 'two event-reading subagents', 'partial read hit its 25-page limit'. PR #2518 dropped the Concision lens, so the lens asked about is gone.
+surface: safe
+status: open
+occurrences:
+  - session: session_01VW5yg4NTMt1JBnXCcrhjw9
+    date: "2026-10-25"
+    severity: moderate
+    description: "audit-docs session logs and sweep PR bodies don't record per-lens finding and verdict counts, so judging one lens took two event-reading subagents (~270k tokens)"
+    solution: "Have audit-docs step 6.3 put per-lens CONFIRMED/WRONG counts in the log summary"

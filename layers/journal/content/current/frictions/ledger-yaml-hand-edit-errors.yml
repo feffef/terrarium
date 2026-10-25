@@ -70,3 +70,8 @@ occurrences:
     severity: nit
     description: "Brief cannot set ledger notes through ledger-set.ts, so recording a dropped design needed a hand edit of the YAML."
     solution: "Add a --note flag to ledger-set.ts."
+  - session: session_019jfJv6yLmcLUAJiTTomyeu
+    date: "2026-10-25"
+    severity: minor
+    description: "ledger-set.ts has no flag for entry notes, so the two design-drop notes had to be hand-edited into the YAML despite the 'never by hand' rule."
+    solution: "Add a --note flag to ledger-set.ts, or say hand-editing notes is allowed."

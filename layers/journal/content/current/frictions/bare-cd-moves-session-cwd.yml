@@ -51,3 +51,8 @@ occurrences:
     severity: moderate
     description: "Two parallel Bash pushes using cd raced on the shared cwd; the #2475 commit went to fix/2476-sidefinding-sources. Force-push was denied, so #2476 moved to a new branch and a stray branch was left"
     solution: "Never run git in parallel Bash calls that rely on cd; use git -C with an absolute worktree path, one push per call"
+  - session: session_019jfJv6yLmcLUAJiTTomyeu
+    date: "2026-10-25"
+    severity: nit
+    description: "I cd'd into the frictions folder and later into a subagent worktree, moving the primary cwd, the very friction this run was fixing; later calls needed absolute paths."
+    solution: "Use git -C and absolute paths in the primary session; the PR in this run corrects the dispatch-subagents wording."

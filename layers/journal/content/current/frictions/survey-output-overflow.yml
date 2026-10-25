@@ -54,3 +54,8 @@ occurrences:
     severity: nit
     description: "First dump of eight Skill Inventory entries was 36KB and truncated; a second query for observations was 137KB. Cost two extra calls before I filtered to recent dates."
     solution: "Filter Inventory observations by date and truncate notes on the first query."
+  - session: session_019jfJv6yLmcLUAJiTTomyeu
+    date: "2026-10-25"
+    severity: minor
+    description: "Survey subagent reported: --summary | head truncated the two-cluster list, large outputs needed --out, and ledger-set refuses a session already in an entry with no way to upgrade its severity."
+    solution: "Brief should say the two-cluster list is at the end of --summary, to use --out, and what to do when a new friction outranks the stored one."

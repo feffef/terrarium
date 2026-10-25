@@ -26,3 +26,8 @@ occurrences:
     severity: nit
     description: "Subagents' tool results carried many unrelated ADR rules loaded by ledger file reads, costing context in the survey with no use."
     solution: "Narrow the paths of the rules that load on layers/journal/content/current/frictions/*.yml."
+  - session: session_01PGQQj6iUaMYCkphVjFEsBP
+    date: "2026-10-25"
+    severity: minor
+    description: "Every subagent loaded about a dozen unrelated rules (ADR summaries, mermaid-lanes, glossary rules) for prose-only work, and each had to grade them."
+    solution: "Narrow the paths of adr-0021, tenant-glossary, glossary-terms and mermaid-lanes so they do not load when reading Glass Box content pages."

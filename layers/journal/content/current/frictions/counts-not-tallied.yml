@@ -77,3 +77,8 @@ occurrences:
     severity: nit
     description: "Wrote 'Six renames' in the PR body while listing eight titles."
     solution: "Count the list before writing a number; fix the description in the next push."
+  - session: session_01PGQQj6iUaMYCkphVjFEsBP
+    date: "2026-10-25"
+    severity: nit
+    description: "Told the user three agents were still running when four were, a miscount from memory instead of the launch list."
+    solution: "Count from the launch calls before stating a number."

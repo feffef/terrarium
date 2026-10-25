@@ -18,3 +18,8 @@ occurrences:
     severity: nit
     description: "dispatch-subagents §3 says to run pnpm gate:scoped in the foreground while CLAUDE.md says run_in_background; I hit the conflict choosing how to run the gate."
     solution: "Point §3 to CLAUDE.md and state that only dispatched subagents run it in the foreground."
+  - session: session_019jfJv6yLmcLUAJiTTomyeu
+    date: "2026-10-25"
+    severity: minor
+    description: "CLAUDE.md says run gate:scoped in the background with a log, while dispatch-subagents says run it in the foreground because a guard denies backgrounding; I used background for my own gate and it worked."
+    solution: "Make the two agree: say which applies to the primary session and which to subagents."

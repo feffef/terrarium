@@ -29,3 +29,8 @@ occurrences:
     severity: major
     description: "Merged PR 1826 on a bare 'Yes' that answered two questions at once, while a further dry run was planned and the Skill was clearly unfinished; the user had to point it out."
     solution: "Ask merge and other irreversible actions as their own question, and hold a merge while more validation runs are planned."
+  - session: session_01VW5yg4NTMt1JBnXCcrhjw9
+    date: "2026-10-25"
+    severity: moderate
+    description: "I took 'coherence lens' literally and spent ~270k subagent tokens on it; the user meant concision"
+    solution: "When a user's lens name doesn't match their stated symptom (churn), ask which one first"

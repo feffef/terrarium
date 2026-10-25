@@ -1,0 +1,23 @@
+name: chained-git-step-fails-silently
+summary: >-
+  A failed git add or commit inside a chained command meant the commit never happened, and the agent reviewed or gated the wrong state.
+cause: >-
+  A git add with an ignored pathspec, or a commit given both -m and -F, errors; `&&` skips the commit (or the commit fails unseen) and the session carries on, reading an older HEAD or running the gate on an uncommitted tree. git-conventions.md covers only a branch rename or create chained with the commit. Signals: 'git add' error, 'HEAD stayed on an old commit', 'git log -1 showed an older commit', 'both -m and -F'.
+surface: safe
+status: open
+occurrences:
+  - session: session_01Ku4KD2Ua5MXi6eQ95TG4aj
+    date: "2026-10-24"
+    severity: nit
+    description: "A git add with an excluded ignored directory failed and the chained commit silently did not run; HEAD stayed on an old commit until I noticed."
+    solution: "Use plain git add -A with .throwaway ignored; check git log after commit."
+  - session: session_01EQ8sMcrX7UwDXFBx6tfUWu
+    date: "2026-10-25"
+    severity: nit
+    description: "git add with an ignored pathspec errored, && skipped the commit, and git log -1 showed an older commit; I almost reviewed the wrong state."
+    solution: "Use git add -u for tracked edits; never && chain commit after add without checking."
+  - session: session_01E3XmTJcpKMZstW7MHL2eks
+    date: "2026-10-23"
+    severity: nit
+    description: "A git commit passed both -m and -F and failed, so the closing PR's gate ran on the uncommitted tree; the tree was identical to the commit, but it cost a check."
+    solution: "Commit before starting the gate, and check the commit landed before the gate step."

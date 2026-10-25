@@ -349,3 +349,13 @@ occurrences:
     severity: nit
     description: "Stop hook asked me to commit and push three times while fact-check, review and gate were still running."
     solution: "Stop hook could skip nudging while a background gate is running"
+  - session: session_019jfJv6yLmcLUAJiTTomyeu
+    date: "2026-10-25"
+    severity: nit
+    description: "The Stop hook asked me to push the ledger branch while its gate was still running; pushing then would have gone out before the gate result was read."
+    solution: "Have the Stop hook skip its nag while a gate:scoped process is alive."
+  - session: session_01PGQQj6iUaMYCkphVjFEsBP
+    date: "2026-10-25"
+    severity: minor
+    description: "The Stop hook asked me to commit and push about ten times while subagents were still editing, each needing a reply, though the PR workflow forbids pushing before review and gate."
+    solution: "Let the stop-git-check skip while background Agent tasks run or while pr-workflow's pre-push review is pending."
