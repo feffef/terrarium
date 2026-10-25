@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01FDWjoePShpq7fov1iKn4GB
 startedAt: 2026-10-25T00:16:07Z
-endedAt: 2026-10-25T00:25:43Z
+endedAt: 2026-10-25T00:28:36Z
 kind: autonomous
 goal: Write the 2026-10-24 Journal Digest and archive aged-out content
-status: in-review
-outcome: PR 2501 open with the 2026-10-24 Digest and retention sweep; gate green, awaiting CI to merge
-summary: 'Scheduled digest run (agent-initiated by the schedule; no human prompts). Gathered the one missing closed day, wrote its Digest, fact-checked it with a sonnet subagent (two claims fixed: a "three fabricated reports" overstatement and a "two ideas" gloss), ran the archive sweep (1 Digest and 15 session logs, pure renames), ran Standards and Spec reviews and gate:scoped, pushed and opened PR 2501 with the verdict comment. Merge follows on green CI.'
+status: completed
+outcome: "PR 2501 merged green: 2026-10-24 Digest and retention sweep"
+summary: 'Scheduled digest run (agent-initiated by the schedule; no human prompts). Gathered the one missing closed day, wrote its Digest, fact-checked it with a sonnet subagent (two claims fixed: a "three fabricated reports" overstatement and a "two ideas" gloss), ran the archive sweep (1 Digest and 15 session logs, pure renames), ran Standards and Spec reviews and gate:scoped, pushed and opened PR 2501 with the verdict comment. PR merged on a green gate.'
 prs:
   - "2501"
 docsRead:
@@ -57,19 +57,20 @@ frictions:
   - description: First Digest draft overstated a session's fabricated-report count and glossed three re-cuts as two-idea splits; fact-check caught both.
     solution: Quote the session's own wording or the source count instead of paraphrasing from gather output
     severity: minor
-durationSec: 576
+durationSec: 748
 models:
-  claude-sonnet-5-5: 53
+  claude-sonnet-5-5: 61
 toolCounts:
-  Bash: 12
+  Bash: 14
   Read: 6
   Write: 1
-  Skill: 4
+  Skill: 5
   Agent: 3
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-24.md
   - layers/journal/content/archived/pages/digests/2026-10-17.md
@@ -170,21 +171,21 @@ subagents:
     durationSec: 109
     toolCalls: 17
     modelCalls: 10
-    tokenShare: 22.4
+    tokenShare: 20.3
   - type: general-purpose
     task: Digest standards review
     model: sonnet
     durationSec: 22
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 9.6
+    tokenShare: 8.7
   - type: general-purpose
     task: Digest spec review
     model: sonnet
     durationSec: 25
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 11.2
+    tokenShare: 10.2
 gitBranch: claude/compassionate-lovelace-mh1a8h
 entrypoint: remote_trigger
 cliVersion: 2.1.310
