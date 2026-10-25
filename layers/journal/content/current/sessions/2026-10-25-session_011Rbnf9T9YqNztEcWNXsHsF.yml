@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_011Rbnf9T9YqNztEcWNXsHsF
 startedAt: 2026-10-25T00:46:26Z
-endedAt: 2026-10-25T01:00:40Z
+endedAt: 2026-10-25T01:03:57Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "Inventory sweep PR #2502 open, gate green; 3 issue comments posted"
-summary: "Scheduled audit-skills run (no human prompted it). Gathered the 7-day scorecard, fetched usage for 8 unlisted routine runs via one subagent, and dispatched 13 read-only behaviour-check subagents. Verified the findings that could clear the escalation bar against GitHub and the session log: commented on #2499 (the fabricating session's log blames subagents for its own fabrications), reopened #2370 with a comment (the step 9 fix from #2453 did not hold in PR #2491), and commented on #2472 (a first-push code-review skip). Everything else went into Skill observations, marked unverified where I did not re-read the source. No grade or role changed (no skill had two cited sessions of evidence). Removed the adr-check entry (Skill retired in 46886f5a7). Appended 8 routine run rows. code-review (two subagents) found one wrong line cite, fixed before the first push. gate:scoped green; PR #2502 opened and subscribed. Step 3: orphan scan clean (1633 merged PRs, 1476 with a session), both candidates carry resolvedBy; one humanPromptedClosures entry (session_01EjH3TbrydEY2sArBMYE5Gy) I did not examine."
+status: completed
+outcome: "Inventory sweep PR #2502 merged; 3 issue comments posted"
+summary: "Scheduled audit-skills run (no human prompted it). Gathered the 7-day scorecard, fetched usage for 8 unlisted routine runs via one subagent, and dispatched 13 read-only behaviour-check subagents. Verified the findings that could clear the escalation bar against GitHub and the session log: commented on #2499 (the fabricating session's log blames subagents for its own fabrications), reopened #2370 with a comment (the step 9 fix from #2453 did not hold in PR #2491), and commented on #2472 (a first-push code-review skip). Everything else went into Skill observations, marked unverified where I did not re-read the source. No grade or role changed (no skill had two cited sessions of evidence). Removed the adr-check entry (Skill retired in 46886f5a7). Appended 8 routine run rows. code-review (two subagents) found one wrong line cite, fixed before the first push. gate:scoped green; PR #2502 merged via merge-pr.ts after a green CI gate. Step 3: orphan scan clean (1633 merged PRs, 1476 with a session), both candidates carry resolvedBy; one humanPromptedClosures entry (session_01EjH3TbrydEY2sArBMYE5Gy) I did not examine."
 prs:
   - "2502"
 docsRead:
@@ -99,23 +99,29 @@ frictions:
   - description: The close-session note cited log line 210 for a claim it did not support; the Spec reviewer caught it before the first push.
     solution: Re-open the cited lines when writing a note, not rely on the subagent's line numbers.
     severity: nit
-durationSec: 855
+  - description: Hand-authored the completed log before invoking close-session after the merge; log-session.ts warned and I invoked close-session next.
+    solution: Invoke close-session first after a merge, then author.
+    severity: nit
+durationSec: 1052
 models:
-  claude-sonnet-5-5: 127
+  claude-sonnet-5-5: 149
 toolCounts:
-  Bash: 31
-  Read: 5
-  Skill: 4
+  Bash: 35
+  Read: 6
+  Skill: 5
   Agent: 16
   ToolSearch: 2
   mcp__github__issue_read: 3
   mcp__github__list_issues: 1
-  mcp__github__pull_request_read: 1
-  mcp__github__add_issue_comment: 3
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 4
   mcp__github__issue_write: 1
   Edit: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__unsubscribe_pr_activity: 1
+  PushNotification: 1
 filesEdited:
   - layers/journal/content/current/skills/close-session.yml
   - layers/journal/content/current/routines/audit-docs.yml
@@ -177,6 +183,15 @@ docsReadBySubagents:
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/skills/digest/SKILL.md
 ruleVerdicts:
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded by the blog-post subagent; it reported it confirmed pingback scope (partly useful)
+    useful: partly
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded for the visitor-loop subagent after reading a session log; not needed
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Loaded for the digest subagent; it reported it confirmed one Digest per day
+    useful: yes
   - path: .claude/rules/adr-0004.md
     reason: Told me to review and gate before pushing and who may merge; the summary was enough
     useful: yes
@@ -213,15 +228,6 @@ ruleVerdicts:
   - path: .claude/rules/tenant-glossary.md
     reason: Loaded by reading journal files; no Tenant work
     useful: no
-  - path: .claude/rules/adr-0012.md
-    reason: Loaded by the blog-post subagent; it reported it confirmed pingback scope (partly useful)
-    useful: partly
-  - path: .claude/rules/adr-0028.md
-    reason: Loaded for the visitor-loop subagent after reading a session log; not needed
-    useful: no
-  - path: .claude/rules/adr-0010.md
-    reason: Loaded for the digest subagent; it reported it confirmed one Digest per day
-    useful: yes
 subagents:
   - type: general-purpose
     task: Fetch routine run usage
@@ -229,112 +235,112 @@ subagents:
     durationSec: 28
     toolCalls: 11
     modelCalls: 4
-    tokenShare: 2.2
+    tokenShare: 2
   - type: general-purpose
     task: Check audit-docs behaviour
     model: sonnet
     durationSec: 82
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 3.8
+    tokenShare: 3.5
   - type: general-purpose
     task: Check audit-skills behaviour
     model: sonnet
     durationSec: 110
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 5
+    tokenShare: 4.6
   - type: general-purpose
     task: Check blog-post behaviour
     model: sonnet
     durationSec: 100
     toolCalls: 23
     modelCalls: 13
-    tokenShare: 5.7
+    tokenShare: 5.3
   - type: general-purpose
     task: Check clear-backlog behaviour
     model: sonnet
     durationSec: 174
     toolCalls: 17
     modelCalls: 12
-    tokenShare: 5.2
+    tokenShare: 4.9
   - type: general-purpose
     task: Check close-session behaviour
     model: sonnet
     durationSec: 86
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 3.9
+    tokenShare: 3.7
   - type: general-purpose
     task: Check digest behaviour
     model: sonnet
     durationSec: 68
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 3.5
+    tokenShare: 3.2
   - type: general-purpose
     task: Check dispatch-subagents behaviour
     model: sonnet
     durationSec: 136
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 6.5
+    tokenShare: 6.1
   - type: general-purpose
     task: Check frictions-to-fixes behaviour
     model: sonnet
     durationSec: 115
     toolCalls: 15
     modelCalls: 12
-    tokenShare: 4.9
+    tokenShare: 4.5
   - type: general-purpose
     task: Check glassbox-update behaviour
     model: sonnet
     durationSec: 65
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 3
+    tokenShare: 2.8
   - type: general-purpose
     task: Check inspect-session behaviour
     model: sonnet
     durationSec: 108
     toolCalls: 15
     modelCalls: 12
-    tokenShare: 5.4
+    tokenShare: 5.1
   - type: general-purpose
     task: Check log-session behaviour
     model: sonnet
     durationSec: 91
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 4.5
+    tokenShare: 4.2
   - type: general-purpose
     task: Check prune-trial behaviour
     model: sonnet
     durationSec: 91
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 3.9
+    tokenShare: 3.6
   - type: general-purpose
     task: Check visitor-loop behaviour
     model: sonnet
     durationSec: 152
     toolCalls: 23
     modelCalls: 18
-    tokenShare: 7.1
+    tokenShare: 6.6
   - type: general-purpose
     task: Standards review of Inventory diff
     model: sonnet
     durationSec: 28
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.4
+    tokenShare: 2.2
   - type: general-purpose
     task: Spec review of Inventory diff
     model: sonnet
     durationSec: 27
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 2.6
+    tokenShare: 2.4
 gitBranch: claude/upbeat-sagan-xhq2qy
 entrypoint: remote_trigger
 cliVersion: 2.1.310
