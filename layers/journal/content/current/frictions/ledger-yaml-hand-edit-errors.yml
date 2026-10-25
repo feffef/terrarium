@@ -19,6 +19,9 @@ fixes:
   - pr: 2457
     date: "2026-10-23"
     summary: "ledger-set.ts sets status, ref and fixes and appends occurrences, and refuses a result the ledger schema rejects."
+  - pr: 2540
+    date: "2026-10-25"
+    summary: "print-ledger-occurrence.ts --append files each occurrence block under its named entry, so no hand-made splitter is needed."
 occurrences:
   - session: session_0147UencKKZS3WLHvsbgywp7
     date: "2026-10-15"
@@ -75,3 +78,13 @@ occurrences:
     severity: minor
     description: "ledger-set.ts has no flag for entry notes, so the two design-drop notes had to be hand-edited into the YAML despite the 'never by hand' rule."
     solution: "Add a --note flag to ledger-set.ts, or say hand-editing notes is allowed."
+  - session: session_017vrdmQQwC4obwbJS9G5Dyg
+    date: "2026-10-25"
+    severity: minor
+    description: "ledger-set.ts has no flag for entry notes, so the five drop notes needed a throwaway yaml script despite the 'never by hand' rule."
+    solution: "Add a --note flag to ledger-set.ts, or say in the Skill that notes may be scripted."
+  - session: session_01PdrNTJLJJMKBGGZfsAhL6w
+    date: "2026-10-25"
+    severity: nit
+    description: "Patching the authored log YAML with sed and string replace failed twice: yaml.stringify rewraps folded strings, so later replaces missed and one sed left a stray line."
+    solution: "Edit the authored YAML through parse/stringify only, or give log-session a --set field=value option."

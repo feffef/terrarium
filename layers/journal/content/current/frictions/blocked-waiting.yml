@@ -84,3 +84,8 @@ occurrences:
     severity: nit
     description: "A foreground sleep to wait for subagents was blocked by a guard; the harness notifies on completion anyway."
     solution: "End the turn and wait for notifications instead of sleeping."
+  - session: session_01BZNS3KuWTBxqAHxTfx3uzp
+    date: "2026-10-25"
+    severity: nit
+    description: "Called ScheduleWakeup to wait for the build; the loop-only guard blocked it because this was not a /loop session."
+    solution: "Visitor-loop SKILL could say to end the turn on a backgrounded build instead of polling."

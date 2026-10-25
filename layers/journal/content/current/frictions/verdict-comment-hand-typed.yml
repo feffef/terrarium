@@ -70,3 +70,8 @@ occurrences:
     severity: nit
     description: "My first verdict comment on the closing ledger PR said 'see PR head' instead of the head SHA, so I posted a second comment with the real SHA before merge-pr would accept it."
     solution: "Read git rev-parse HEAD before writing the verdict line."
+  - session: session_016edAfTmLE1szSBGNZTorPH
+    date: "2026-10-25"
+    severity: minor
+    description: "My verdict comment on PR #2540 named a Reviewed SHA I expanded from the short hash instead of copying it, so it was wrong; merge-pr.ts would have refused it and a wrong id sat in a public comment until I corrected it one call later."
+    solution: "Copy the full SHA from git rev-parse in the same turn as the comment, never from a short hash; CLAUDE.md's verify-before-you-state covers this and I skipped it."

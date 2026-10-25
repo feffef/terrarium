@@ -84,3 +84,8 @@ occurrences:
     severity: nit
     description: "My subagent brief named app/utils/lesson.ts; the file lives at layers/glassbox/app/utils/lesson.ts. The glossary's path is layer-relative, and I copied it without checking."
     solution: "Check that every path in a brief exists, as dispatch-subagents §3 already says; the glossary could write the path repo-relative."
+  - session: session_016edAfTmLE1szSBGNZTorPH
+    date: "2026-10-25"
+    severity: nit
+    description: "My first survey-brief draft told the agent to print all occurrence pairs in one call and pipe them into one entry's ledger-set.ts call, which cannot route blocks to several entries; the probe and the Spec review caught it."
+    solution: "Fixed in the second commit: one print, one --occurrences file per entry. A print-ledger-occurrence flag that groups output by entry would remove the split."

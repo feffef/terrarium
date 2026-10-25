@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, search guidance that contradicts github-integration.md, no named way to find merged PRs missing from the ledger, an impossible "read every full log" ask, no owner/repo slug. Signals: a survey or design subagent reporting the brief "says ... but", a glob matching nothing, work done by hand that the brief should have pointed to.
 surface: safe
-status: open
-ref: "issue #2436 closed by PR #2451"
+status: on-trial
+ref: "Prune Trial opened 2026-10-25 by PR #2539 (territory: survey-brief.md, design-brief.md and impl-brief.md, all of each; keywords 'survey-brief', 'design-brief', 'impl-brief')."
 fixes:
   - pr: 2347
     date: "2026-10-20"
@@ -16,6 +16,9 @@ fixes:
   - pr: 2459
     date: "2026-10-23"
     summary: "prune-friction-ledger.ts --move re-clusters one session's occurrence and refuses a duplicate or a text conflict."
+  - pr: 2539
+    date: "2026-10-25"
+    summary: "Rewrote the three frictions-to-fixes briefs in the per-step shape and fixed the dangling opening, the audit-docs pointer and the survey's candidate set."
 occurrences:
   - session: session_01Sc82qSCs4NVP3igf9SaGXM
     date: "2026-10-17"
@@ -52,3 +55,13 @@ occurrences:
     severity: minor
     description: "design-brief.md has a dangling fragment after PICKS ('...what the survey found about it). You') and points to audit-docs house rules that SKILL.md has no section for; the design agent used the eight lenses."
     solution: "Fix the sentence and name the eight lenses in design-brief.md (tracked with the briefs regression, issue #2436)."
+  - session: session_017vrdmQQwC4obwbJS9G5Dyg
+    date: "2026-10-25"
+    severity: minor
+    description: "Screening the workflow-gate issue against closed issues covered only the newest 60 of 833, so a paraphrased older closure could be missed; the design agent made no tracker check at all."
+    solution: "Give the screen a script that filters all closed issue titles locally, as the survey brief asks for open ones."
+  - session: session_016edAfTmLE1szSBGNZTorPH
+    date: "2026-10-25"
+    severity: nit
+    description: "The design brief's docsReadViaShell caveat (logs older than 2026-10-10) is stale: the 14-day ledger horizon no longer reaches such logs, so every design agent reads a dead branch."
+    solution: "Cut the sentence; proposed to the owner among five cuts, awaiting their answer."

@@ -4,9 +4,9 @@ summary: >-
 cause: >-
   A session that has the close-session or log-session text in context (for example from editing it) authors the log directly instead of invoking the Skill, skipping its steps such as the rule re-read. Signals: HUMAN-PROMPTED-CLOSURE after a merge, 'authored the completed log directly', 'having edited a Skill is not having run it'.
 surface: safe
-status: tracked
-ref: "issue #2521"
-fixes: [ { pr: 2452, date: "2026-10-23", summary: "log-session --author now warns when a completed log follows a merge with no close-session call." } ]
+status: open
+ref: "issue #2521 closed by PR #2536"
+fixes: [ { pr: 2452, date: "2026-10-23", summary: "log-session --author now warns when a completed log follows a merge with no close-session call." }, { pr: 2536, date: "2026-10-25", summary: "log-session --author now refuses a completed log after a merge with no close-session call, and writes no scratch." } ]
 occurrences:
   - session: session_01EjH3TbrydEY2sArBMYE5Gy
     date: "2026-10-22"
@@ -33,3 +33,18 @@ occurrences:
     severity: nit
     description: "Set the log to completed by editing the scratch by hand right after the merge, before invoking close-session; the script warned against it."
     solution: "After merging, invoke close-session first and let it drive the final log."
+  - session: session_017vrdmQQwC4obwbJS9G5Dyg
+    date: "2026-10-25"
+    severity: nit
+    description: "Hand-authored the completed log with log-session --author after the merges, before re-invoking close-session; the warning fired. The same slip I had just filed as regression issue 2521."
+    solution: "After the last merge invoke close-session first, as the Skill says; the ledger run's closing step could name it."
+  - session: session_01WKUyPyRBzirHHAhDr7Y8Ek
+    date: "2026-10-25"
+    severity: nit
+    description: "Hand-authored the completed log with log-session --author right after the merge, before invoking close-session; the script warned and I then invoked it."
+    solution: "Have the merge-pr.ts output remind the caller to invoke close-session, matching the existing warning in log-session."
+  - session: session_01PdrNTJLJJMKBGGZfsAhL6w
+    date: "2026-10-25"
+    severity: nit
+    description: "After the first merges (PRs 2532-2534) I updated the log with log-session directly instead of re-invoking close-session, which the ADR-0009 rule asks for at a merge."
+    solution: "Re-invoke close-session at every merge, not log-session; PR #2536 now refuses only the completed case."

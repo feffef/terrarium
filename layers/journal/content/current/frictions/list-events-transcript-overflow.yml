@@ -57,3 +57,8 @@ occurrences:
     severity: minor
     description: "Two inspect-session partial reads hit their page limit before the session start (about a minute of events per page), needing resumes; 019CbZiW never reached it after 20 pages."
     solution: "inspect-session could estimate pages from get_session duration and say so, or offer a start-first cursor walk for questions about a session's opening."
+  - session: session_01VW5yg4NTMt1JBnXCcrhjw9
+    date: "2026-10-25"
+    severity: minor
+    description: "The 10-24 partial read hit its 25-page limit before reaching Agent D's hand-back; it answered from the checker's re-listing"
+    solution: "For an audit run, page limit ~40, or search for the reviewer dispatch first"

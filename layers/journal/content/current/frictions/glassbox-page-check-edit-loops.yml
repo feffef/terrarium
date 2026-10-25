@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "Word-cap trims to fit the 65-word Why-bullet limit repeatedly dropped a bullet's reason (Merge gate's 'fails safer'), needing two more review rounds to restore it."
     solution: "When a bullet hits the cap, cut a different clause than its reason, and re-read the bullet's logic before committing."
+  - session: session_01Hpd1KMhzJC2NxHSxp7erFi
+    date: "2026-10-25"
+    severity: minor
+    description: "Found only after announcing the plan that moving the gate Lesson out of terrarium-practice/ breaks the Full reference exemption in page-checks.ts"
+    solution: "grep page-checks.ts for folder-specific rules before proposing a Glass Box folder move"

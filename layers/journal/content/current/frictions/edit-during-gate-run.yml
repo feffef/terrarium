@@ -80,3 +80,18 @@ occurrences:
     severity: minor
     description: "gate:scoped's e2e step reused an .output built before the last commit (L2 reuse), so it did not exercise the final v-if change."
     solution: "Rebuild before gate:scoped when a later commit touches rendered code, or have the gate compare the build's age to the diff."
+  - session: session_01PdrNTJLJJMKBGGZfsAhL6w
+    date: "2026-10-25"
+    severity: minor
+    description: "On #2527 I pushed a prose follow-up commit without re-running gate:scoped on the final head, which pr-workflow.md asks for before the first push."
+    solution: "Re-read the pr-workflow.md 'Review before the first push' recipe before any hand edit to a ready-to-push branch."
+  - session: session_015XP8ctSXnTaR7KEnyPpUP1
+    date: "2026-10-24"
+    severity: minor
+    description: "gate:scoped reused an e2e build made before my last refactor, so the final head was not actually exercised until I forced a fresh build."
+    solution: "Have gate:scoped rebuild when layer sources are newer than .output."
+  - session: session_013Hy2tG56JDVU7649kkyZCb
+    date: "2026-10-25"
+    severity: minor
+    description: "Full gate ran on the first commit, then review fixes forced a second full gate run, doubling gate time."
+    solution: "Run code-review before starting gate:scoped, since the review changes the head."

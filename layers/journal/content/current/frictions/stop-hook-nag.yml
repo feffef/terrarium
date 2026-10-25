@@ -359,3 +359,23 @@ occurrences:
     severity: minor
     description: "The Stop hook asked me to commit and push about ten times while subagents were still editing, each needing a reply, though the PR workflow forbids pushing before review and gate."
     solution: "Let the stop-git-check skip while background Agent tasks run or while pr-workflow's pre-push review is pending."
+  - session: session_017vrdmQQwC4obwbJS9G5Dyg
+    date: "2026-10-25"
+    severity: nit
+    description: "The Stop hook asked me to push the ledger branch three times while gate:scoped was running or subagents were building; pushing then would have broken the review-and-gate-first rule."
+    solution: "Have the stop-git-check skip its nag while a gate:scoped process or background agent is alive."
+  - session: session_016edAfTmLE1szSBGNZTorPH
+    date: "2026-10-25"
+    severity: nit
+    description: "The Stop hook asked to push three times while code-review and the gate ran; ADR-0004 says hold the first push until both finish."
+    solution: "None: the owner accepted this cost (issue 2233)."
+  - session: session_013Hy2tG56JDVU7649kkyZCb
+    date: "2026-10-25"
+    severity: nit
+    description: "Launched gate:scoped as a blocking-style background job, then idled turns waiting on it while the Stop hook nagged to push three times."
+    solution: "Review first, gate once; the Stop-hook nag is known and accepted (#2233)."
+  - session: session_01BZNS3KuWTBxqAHxTfx3uzp
+    date: "2026-10-25"
+    severity: nit
+    description: "The Stop hook repeatedly demanded a push while ADR-0004 required review and gate first, and it counted three unpushed commits after I re-cut the branch from the merged main."
+    solution: "Have the hook count against origin/main when the branch has no remote tip, and stay quiet while a gate is running."

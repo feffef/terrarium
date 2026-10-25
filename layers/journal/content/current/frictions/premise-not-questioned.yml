@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   An agent implements or hardens a solution before asking whether the change should exist or how big it should be; the triage-brief shape was fixed 2026-10-06 (auto-triage SKILL line 57), later cases differ.
 surface: safe
-status: tracked
-ref: "issue #2520"
+status: open
+ref: "issue #2520 closed by PR #2535"
 fixes:
   - pr: 1821
     date: "2026-10-12"
@@ -13,6 +13,9 @@ fixes:
   - pr: 2206
     date: "2026-10-17"
     summary: "The premise rule now fires when a change is recommended, implemented or hardened, and drops any part with no reason from the current goal."
+  - pr: 2535
+    date: "2026-10-25"
+    summary: "Added a general 'Question the premise' bullet to CLAUDE.md's Working conventions, in the wording the owner approved."
 occurrences:
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"

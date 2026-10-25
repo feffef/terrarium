@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   mcp__github__search_issues and search_pull_requests return full bodies unless `fields` omits them, so a broad or early query floods context. The guard now denies a search without `fields`. Signals: a search_issues or search_pull_requests result of many full bodies, a guard deny for a missing `fields`.
 surface: guard-or-hook
-status: open
-ref: "Its Prune Trial (PR #2375) was judged by PR #2493 and left prune-trials.yml; no open trial, issue or PR tracks it. Earlier: issue #1860; PR #1869 (github-search-fields-guard)."
+status: on-trial
+ref: "Prune Trial opened 2026-10-25 by PR #2538 (territory: github-integration.md angle-bracket section and the first two 'Overflow and precision traps' bullets; keywords 'Bare angle brackets', 'minimal_output', 'Prefer a repo-scoped listing'). Earlier: PR #2375 trial judged by PR #2493; issue #1860; PR #1869."
 fixes:
   - pr: 1869
     date: "2026-10-13"
@@ -13,6 +13,9 @@ fixes:
   - pr: 2375
     date: "2026-10-21"
     summary: "Tightened the search bullets in github-integration.md to the goal (-4 lines), leaving the fields rule to the search guard's deny message (a Prune Trial)."
+  - pr: 2538
+    date: "2026-10-25"
+    summary: "Cut the angle-bracket and search/list-overflow traps in github-integration.md to the goal, keeping the fields rule."
 occurrences:
   - session: session_0147GPfMLJfFV6JbmC4HZGHb
     date: "2026-10-12"
@@ -39,3 +42,8 @@ occurrences:
     severity: nit
     description: "Called search_issues without `fields`, blocked by the GitHub search-fields guard (#1860); retried immediately with fields"
     solution: "Pass `fields` on every search_issues/search_pull_requests call from the start, per github-integration.md's own warning"
+  - session: session_01BZNS3KuWTBxqAHxTfx3uzp
+    date: "2026-10-25"
+    severity: nit
+    description: "Called search_issues without the required fields array before reading github-integration.md, which CLAUDE.md says to read before any GitHub operation; a guard blocked it."
+    solution: "Read the doc first; the guard message was enough to recover."

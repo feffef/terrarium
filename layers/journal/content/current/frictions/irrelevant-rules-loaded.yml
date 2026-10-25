@@ -31,3 +31,8 @@ occurrences:
     severity: minor
     description: "Every subagent loaded about a dozen unrelated rules (ADR summaries, mermaid-lanes, glossary rules) for prose-only work, and each had to grade them."
     solution: "Narrow the paths of adr-0021, tenant-glossary, glossary-terms and mermaid-lanes so they do not load when reading Glass Box content pages."
+  - session: session_017vrdmQQwC4obwbJS9G5Dyg
+    date: "2026-10-25"
+    severity: nit
+    description: "Reading ledger and tenant.config.ts files loaded five unrelated rules (adr-0002, adr-0008, data-shapes, mdc-when-to-use, tenant-layers) into this ledger-only run."
+    solution: "Narrow those rules' paths so reading the Journal ledger files does not load them."
