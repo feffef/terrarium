@@ -1,14 +1,17 @@
 schemaVersion: 1
 session: session_013QKXoGLaEHEJanyw5TrPqj
 startedAt: 2026-10-25T05:32:55Z
-endedAt: 2026-10-25T05:46:41Z
-kind: delegated
+endedAt: 2026-10-25T06:33:40Z
+kind: interactive
 goal: Clear the issue backlog
 status: in-review
-outcome: "Triaged 6 issues; PR #2511 (#2499 detection) open; 4 grilling questions await the owner"
-summary: "The owner invoked /clear-backlog (human-instructed). In default mode the sweep found 6 eligible issues: #2505, #2504, #2503, #2370 and #2499 in full mode, and #2432 as a blocked-check, since it is on hold until 2026-10-26. #2433 was skipped as blocked by #2432. clear-backlog-explore labelled #2499 ready-for-agent and sent #2370, #2503, #2504 and #2505 to ready-for-human, each with a question. The proposed grouping put #2499 with #2503. I split them (agent call): #2503 is a design grill whose hook lives in Human-only files. Then clear-backlog-build built #2499 alone. I checked its 2 commits and full diff. It is pushed to the session branch as PR #2511, which closes #2499 and relates to #2503. Before asking, I checked each grill pick's key claim against its source; the #2504 review-caught claim was only partly verified. Q1-Q4 await the owner's answers. Landing #2511 waits on CI."
+outcome: "PR #2511 (#2499) merged; PRs #2512-#2514 open; #2503 hook branch in gate"
+summary: "The owner invoked /clear-backlog (human-instructed). In default mode the sweep found 6 eligible issues; #2433 was skipped as blocked by #2432, and #2432 is on hold until 2026-10-26. clear-backlog-explore labelled #2499 ready-for-agent and sent four issues to grilling. I split #2499 from #2503 (agent call), and #2499 was built, checked and merged as PR #2511. The owner answered 1a 2a 3b 4b, overriding my pick on Q4 (I had said wait), and allowed separate branches. The build run then produced #2370 as PR #2512 (blog-post fact-check after review), #2504 as PR #2513 (ledger entry accepted; I close the issue as not planned on merge) and #2505 as PR #2514 (Glass Box glossary pointer). The #2503 Stop hook hit the review cap. I fixed it by hand: cut a WHAT comment, removed an escape clause ('if you only quoted the tag, carry on') that let a fabricating agent wave off the one block, and pointed the ledger ref at both issues. It awaits gate and a human merge (Human-only paths). The container restarted mid-run, and the build output survived."
 prs:
   - "2511"
+  - "2512"
+  - "2513"
+  - "2514"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
     reason: "step 1 eligibility rule (no state label or human-last comment) and wayfinder blocked skip; triage #2370: Read as the brief required; set the brave/determinability line and the rule that superseded/reopened design goes to a human; triage #2499: The brief told me to read it. It gave the rules on being brave, closing and wayfinder.; triage #2503: Required by the brief. It gave the brave-within-determinability rule and the comment and label rules.; triage #2504: The brief told me to read it; it gives the sweep rules (brave within determinability, closing, the wayfinder overlay); triage #2505: B..."
@@ -41,11 +44,11 @@ docsRead:
     reason: "triage #2505: Read because the options involve a path-scoped rule"
     useful: yes
   - path: docs/agents/issue-tracker.md
-    reason: "triage #2370: CLAUDE.md trigger before labeling; the prune-trial overlap check led me to the trial side finding; triage #2499: Required before triage. The supersession and prune-trial checks applied here.; triage #2503: CLAUDE.md trigger for triage. It gave the supersession and prune-trial checks.; triage #2504: Required before triaging; its rule to check for an open Prune Trial overlap applied; triage #2505: CLAUDE.md read-first for triage"
-    useful: partly
-  - path: docs/agents/triage-labels.md
-    reason: "triage #2505: CLAUDE.md read-first for labelling"
+    reason: flagged asking before splitting issues off a caller-set branch, so I asked
     useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: clear-backlog may set ready-for-agent
+    useful: partly
   - path: .agents/skills/code-review/SKILL.md
     reason: "Standards inspect-session-fabricated-handbacks r1: The task said to read it. Its smell baseline gave the Duplicated Code framing.; Spec inspect-session-fabricated-handbacks r1: The task told me to read it. Its Spec-axis brief (missing parts, scope creep, wrong implementation) shaped this review.; Standards inspect-session-fabricated-handbacks r2: The task named it. It supplied the Standards axis and the smell baseline.; Spec inspect-session-fabricated-handbacks r2: The task said to read it and apply its Spec axis. Its three questions (missing, scope creep, wrong) set the shape of this review."
     useful: yes
@@ -64,6 +67,26 @@ docsRead:
   - path: docs/adr/0005-skill-model.md
     reason: "build inspect-session-fabricated-handbacks: A hook asked for it after I wrote a Skill file. Nothing in it changed the work."
     useful: no
+  - path: layers/journal/content/current/frictions/relayed-subagent-claims.yml
+    reason: (read before editing)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/guards.md
+    reason: (read before editing)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (read before editing)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: scripts/hooks/harness-tag-stop.ts
+    reason: (read before editing)
+  - path: tests/unit/harness-tag-stop.spec.ts
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
   - path: .agents/skills/inspect-session/scripts/flatten.ts
     reason: (read before editing)
   - path: .agents/skills/inspect-session/scripts/search.ts
@@ -72,15 +95,15 @@ docsRead:
     reason: (read before editing)
   - path: scripts/lib/author-trust.ts
     reason: (no reason given)
-  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
-    reason: (no reason given)
-  - path: layers/glassbox/GLOSSARY.md
-    reason: (no reason given)
   - path: layers/midden/GLOSSARY.md
     reason: (no reason given)
-  - path: .agents/skills/glassbox-lesson/SKILL.md
+  - path: .agents/skills/glassbox-update/SKILL.md
     reason: (no reason given)
-  - path: .agents/skills/blog-post/SKILL.md
+  - path: layers/atlas/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/SKILL.md
     reason: (no reason given)
 skillsUsed:
   - name: clear-backlog
@@ -103,18 +126,23 @@ frictions:
   - description: "run-summary's grouping put #2499 (build) with #2503 (grill) because #2503 listed flatten.ts only as background. Following it would have held up a ready build."
     solution: run-summary.ts could group only issues with the same outcome, or ignore files a grill result lists as background.
     severity: minor
-durationSec: 826
+durationSec: 3646
 models:
-  claude-opus-5-5: 59
+  claude-opus-5-5: 116
 toolCounts:
-  Bash: 18
-  Read: 6
-  Workflow: 2
-  ToolSearch: 2
+  Bash: 32
+  Read: 8
+  Workflow: 3
+  ToolSearch: 3
   PushNotification: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
   Skill: 2
+  mcp__github__add_issue_comment: 5
+  mcp__github__issue_write: 4
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  AskUserQuestion: 1
 filesEdited:
   - .agents/skills/inspect-session/tests/unit/fixtures/page-fabricated.txt
   - .agents/skills/inspect-session/tests/unit/flatten.spec.ts
@@ -122,6 +150,16 @@ filesEdited:
   - .agents/skills/inspect-session/scripts/flat.ts
   - .agents/skills/inspect-session/scripts/flatten.ts
   - .agents/skills/inspect-session/SKILL.md
+  - tests/unit/harness-tag-guard.spec.ts
+  - scripts/hooks/harness-tag-guard.ts
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/guards.md
+  - layers/journal/content/current/frictions/relayed-subagent-claims.yml
+  - scripts/hooks/harness-tag-stop.ts
+  - .claude/settings.json
+  - tests/unit/harness-tag-stop.spec.ts
+  - layers/journal/content/current/frictions/mechanism-claim-from-recall.yml
   - .agents/skills/inspect-session/scripts/search.ts
 rulesLoaded:
   - .claude/rules/adr-0022.md
@@ -133,6 +171,8 @@ rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/glossary-terms.md
   - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -141,6 +181,8 @@ rulesGlobal:
 rulesFollowedUp:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0012.md
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0029.md
 adrHints:
@@ -152,33 +194,47 @@ adrHints:
     via: path
     readAfter: true
     by: subagent
+  - adr: 4
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 21
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 12
+    via: path
+    readAfter: true
+    by: subagent
 rulesLoadedBySubagents:
   - .claude/rules/adr-0030.md
-  - .claude/rules/adr-0004-human-merge.md
-  - .claude/rules/adr-0008.md
   - .claude/rules/adr-0015.md
-  - .claude/rules/guards.md
+  - .claude/rules/adr-0008.md
 docsReadBySubagents:
   - .agents/skills/implement/SKILL.md
   - docs/adr/0005-skill-model.md
   - docs/adr/0027-prune-trials.md
   - .agents/skills/code-review/SKILL.md
-  - .agents/skills/triage/SKILL.md
-  - docs/agents/issue-tracker.md
-  - docs/agents/triage-labels.md
-  - docs/adr/0022-autonomous-triage-sweep.md
-  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
-  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
-  - layers/glassbox/GLOSSARY.md
+  - docs/agents/guards.md
+  - docs/agents/domain.md
   - layers/midden/GLOSSARY.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - layers/glassbox/GLOSSARY.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - layers/atlas/GLOSSARY.md
+  - layers/blog/GLOSSARY.md
+  - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+  - .agents/skills/triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
   - .agents/skills/glassbox-lesson/SKILL.md
-  - .agents/skills/blog-post/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0003.md
     reason: "triage #2370: Session start; background on approval; triage #2499: Loaded at session start. It was background on approving new work.; build inspect-session-fabricated-handbacks: Loaded at session start. The orchestrator handles the PR, so it did not apply to this step.; Standards inspect-session-fabricated-handbacks r1: Loaded at session start. Not relevant to a read-only review.; Spec inspect-session-fabricated-handbacks r1: Loaded at session start. It does not bear on a read-only review.; fix inspect-session-fabricated-handbacks r1: Loaded at session start. Not relevant, because the orche..."
     useful: yes
   - path: .claude/rules/adr-0004-human-merge.md
-    reason: "triage #2503: Loaded when I read scripts/hooks and settings.json. It confirmed the prevention files are Human-only.; build inspect-session-fabricated-handbacks: Loaded when I read docs/adr files. No Human-only file was changed, so it did not apply."
+    reason: "Me: confirmed the #2503 hook PR needs a human merge; subagents reported the same"
     useful: yes
   - path: .claude/rules/adr-0004.md
     reason: "triage #2503: Loaded at session start. It says a hook fix needs a human merge.; build inspect-session-fabricated-handbacks: Loaded at session start. Gate before push; no Human-only paths touched.; Me: kept #2511 an agent merge (no Human-only paths); summary was enough"
@@ -223,7 +279,7 @@ ruleVerdicts:
     reason: "triage #2505: Loaded on reading GLOSSARY files; this is the #2469 fix under discussion; Me: loaded checking #2505 glossaries; I changed no term"
     useful: yes
   - path: .claude/rules/guards.md
-    reason: "triage #2503: Loaded when I grepped scripts/hooks. It points to the guard conventions a future hook would follow."
+    reason: Loaded editing the hook branch; pointed to the guards roster I deduplicated
     useful: partly
   - path: .claude/rules/tenant-glossary.md
     reason: "triage #2505: Loaded on reading layer files; it is a candidate home for option 3; Me: loaded checking #2505 glossaries; no Tenant work"
@@ -235,84 +291,280 @@ subagents:
     durationSec: 274
     toolCalls: 30
     modelCalls: 20
-    tokenShare: 12.7
+    tokenShare: 5.3
   - type: workflow-subagent
     task: Spec inspect-session-fabricated-handbacks r1
     model: claude-opus-5-5
     durationSec: 52
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 3.9
+    tokenShare: 1.6
   - type: workflow-subagent
     task: Spec inspect-session-fabricated-handbacks r2
     model: claude-opus-5-5
     durationSec: 46
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3.4
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Standards inspect-session-fabricated-handbacks r1
     model: claude-opus-5-5
     durationSec: 46
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 4.8
+    tokenShare: 2
   - type: workflow-subagent
     task: fix inspect-session-fabricated-handbacks r1
     model: claude-opus-5-5
     durationSec: 98
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 3
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Standards inspect-session-fabricated-handbacks r2
     model: claude-opus-5-5
     durationSec: 48
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2.5
+    tokenShare: 1
+  - type: workflow-subagent
+    task: Spec fabricated-handback-stop-hook r1
+    model: claude-opus-5-5
+    durationSec: 64
+    toolCalls: 10
+    modelCalls: 4
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: fix fabricated-handback-stop-hook r2
+    model: claude-opus-5-5
+    durationSec: 59
+    toolCalls: 12
+    modelCalls: 12
+    tokenShare: 2.1
+  - type: workflow-subagent
+    task: Spec glassbox-glossary-skill-pointer r1
+    model: claude-opus-5-5
+    durationSec: 50
+    toolCalls: 8
+    modelCalls: 4
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: Spec blog-post-factcheck-after-review r1
+    model: claude-opus-5-5
+    durationSec: 65
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: Spec ledger-accept-mechanism-claim r1
+    model: claude-opus-5-5
+    durationSec: 42
+    toolCalls: 9
+    modelCalls: 5
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: fix blog-post-factcheck-after-review r1
+    model: claude-sonnet-5-5
+    durationSec: 63
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: build fabricated-handback-stop-hook
+    model: claude-opus-5-5
+    durationSec: 762
+    toolCalls: 31
+    modelCalls: 27
+    tokenShare: 5.5
+  - type: workflow-subagent
+    task: fix glassbox-glossary-skill-pointer r2
+    model: claude-sonnet-5-5
+    durationSec: 214
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: Standards ledger-accept-mechanism-claim r1
+    model: claude-opus-5-5
+    durationSec: 44
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1
+  - type: workflow-subagent
+    task: build blog-post-factcheck-after-review
+    model: claude-sonnet-5-5
+    durationSec: 146
+    toolCalls: 17
+    modelCalls: 10
+    tokenShare: 2.9
+  - type: workflow-subagent
+    task: Spec glassbox-glossary-skill-pointer r3
+    model: claude-opus-5-5
+    durationSec: 33
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1
+  - type: workflow-subagent
+    task: Standards glassbox-glossary-skill-pointer r3
+    model: claude-opus-5-5
+    durationSec: 47
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: fix glassbox-glossary-skill-pointer r1
+    model: claude-sonnet-5-5
+    durationSec: 266
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: Spec fabricated-handback-stop-hook r2
+    model: claude-opus-5-5
+    durationSec: 80
+    toolCalls: 20
+    modelCalls: 8
+    tokenShare: 1.9
+  - type: workflow-subagent
+    task: Standards blog-post-factcheck-after-review r2
+    model: claude-opus-5-5
+    durationSec: 62
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: build glassbox-glossary-skill-pointer
+    model: claude-sonnet-5-5
+    durationSec: 417
+    toolCalls: 15
+    modelCalls: 11
+    tokenShare: 3.7
+  - type: workflow-subagent
+    task: Standards blog-post-factcheck-after-review r1
+    model: claude-opus-5-5
+    durationSec: 39
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: Standards fabricated-handback-stop-hook r2
+    model: claude-opus-5-5
+    durationSec: 83
+    toolCalls: 17
+    modelCalls: 11
+    tokenShare: 2.1
+  - type: workflow-subagent
+    task: Standards fabricated-handback-stop-hook r1
+    model: claude-opus-5-5
+    durationSec: 69
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: Standards glassbox-glossary-skill-pointer r1
+    model: claude-opus-5-5
+    durationSec: 50
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: fix fabricated-handback-stop-hook r1
+    model: claude-opus-5-5
+    durationSec: 349
+    toolCalls: 11
+    modelCalls: 10
+    tokenShare: 1.7
+  - type: workflow-subagent
+    task: Standards blog-post-factcheck-after-review r3
+    model: claude-opus-5-5
+    durationSec: 51
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: Spec blog-post-factcheck-after-review r2
+    model: claude-opus-5-5
+    durationSec: 79
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: fix blog-post-factcheck-after-review r2
+    model: claude-sonnet-5-5
+    durationSec: 71
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: Spec blog-post-factcheck-after-review r3
+    model: claude-opus-5-5
+    durationSec: 42
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: build ledger-accept-mechanism-claim
+    model: claude-sonnet-5-5
+    durationSec: 409
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 3.1
+  - type: workflow-subagent
+    task: Standards glassbox-glossary-skill-pointer r2
+    model: claude-opus-5-5
+    durationSec: 32
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: Spec glassbox-glossary-skill-pointer r2
+    model: claude-opus-5-5
+    durationSec: 45
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #2499"
     model: claude-opus-5-5
     durationSec: 126
     toolCalls: 24
     modelCalls: 15
-    tokenShare: 10
+    tokenShare: 4.2
   - type: workflow-subagent
     task: "triage #2504"
     model: claude-opus-5-5
     durationSec: 130
     toolCalls: 23
     modelCalls: 15
-    tokenShare: 9.2
+    tokenShare: 3.8
   - type: workflow-subagent
     task: "triage #2505"
     model: claude-opus-5-5
     durationSec: 116
     toolCalls: 21
     modelCalls: 11
-    tokenShare: 9.3
+    tokenShare: 3.9
   - type: workflow-subagent
     task: "triage #2370"
     model: claude-opus-5-5
     durationSec: 96
     toolCalls: 19
     modelCalls: 11
-    tokenShare: 7.1
+    tokenShare: 3
   - type: workflow-subagent
     task: "triage #2432"
     model: claude-opus-5-5
     durationSec: 23
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2.1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: "triage #2503"
     model: claude-opus-5-5
     durationSec: 113
     toolCalls: 21
     modelCalls: 12
-    tokenShare: 7.4
+    tokenShare: 3.1
 gitBranch: ccr-eb476594-o15r1g
 entrypoint: remote_mobile
 cliVersion: 2.1.310
