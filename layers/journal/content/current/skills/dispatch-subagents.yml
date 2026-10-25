@@ -441,3 +441,13 @@ observations:
       CLAUDE.md's "background anything over 2 minutes" rule; it followed
       CLAUDE.md and the gate passed, no damage. Worth escalating if it ever
       causes a real backgrounding failure. Grade/role unchanged (essential).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 10 runs, all PRs merged. Unverified (from logs):
+      session_01PYyNMqrrDLZdXEej11LMzs ran two parallel cd-prefixed pushes
+      that raced, putting the #2475 commit on fix/2476-sidefinding-sources;
+      the stray branch is harmless. session_015bAGZEdCYZMYbsoFckSH59 had a
+      same-file collision on Where-next lists (step 4 miss, reconciled).
+      session_01BjA9rHbNdMX5KiK49Cee99 fabricated hand-backs and clobbered
+      .nuxt with overlapping background gates (#2499, #2426). Grade/role
+      unchanged (essential).

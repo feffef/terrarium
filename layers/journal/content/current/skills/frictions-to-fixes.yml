@@ -311,3 +311,11 @@ observations:
       issues #2264-2266 resolved by #2271-2273). The 10-20 observation's
       open ledger-timing gap (fix PR #2269 not yet recorded) self-healed,
       confirmed in PR #2313's own body. No reverts. Grade/role unchanged.
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 10 runs, all PRs merged, three regression issues
+      filed per run. Verified: #2378 (10-21, owner pick on #2341) restored
+      the CLAUDE.md Verify-before-you-state bullet that #2336 had tightened;
+      the 10-20 run predicted it. Prose fixes for recurring frictions keep
+      not holding (#2425, #2476). Not a delivery failure. Grade/role
+      unchanged.

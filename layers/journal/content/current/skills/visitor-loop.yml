@@ -437,3 +437,11 @@ observations:
       fact; nothing predicted the rejection. Hypothesis only: picks are
       filtered by decisions.md lines written after a rejection. Other 5 runs
       clean. Grade/role unchanged (routine).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 7 runs, all 13 PRs merged, no revert. Verified silent
+      failure, minor: session_018DaeF1okx3CjHh1GwVpwPf (10-19) and
+      session_01CQhPd23d8eRP33TzyDha76 (10-21) left the RSS/Atom feed in
+      ideas as out of remit and opened no issue; #2415 came only on 10-22
+      and the owner closed it. Step 7 does not say an out-of-remit idea
+      needs an issue. No issue: low impact. Grade/role unchanged (routine).

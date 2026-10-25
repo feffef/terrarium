@@ -353,3 +353,12 @@ observations:
       PR #2374, complied.) Reopened #2370 with this evidence and a
       proposal: forbid the bullet outright, or add a mechanical check.
       Grade/role unchanged (routine).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 8 runs, all PRs merged. Verified repeat of #2370:
+      session_01LEbdj6aqcGncPCZnNtS2ZX (10-24, PR #2491) ran under the
+      post-#2453 text yet shipped code-review's edits (commit 8259a340f)
+      after the checker's report without re-dispatch or cut;
+      session_01QpBTsuXUNm28Y2oszBnoUb (PR #2444) has the same shape.
+      Reopened #2370 with this evidence; the edits come from code-review
+      inside the PR, after step 9. Grade/role unchanged (routine).

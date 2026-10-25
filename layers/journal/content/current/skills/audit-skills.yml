@@ -623,3 +623,12 @@ observations:
       Step 3: orphan scan clean (1549 merged PRs, 1393 with a session),
       both candidates carry resolvedBy, humanPromptedClosures and
       manuallyRescuedClosures both empty. Grade/role unchanged (routine).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 8 runs, all 8 PRs merged and YAML-only. Repeated:
+      session_01CKXPocBm85jSCheqepKn2v (10-22, PR #2396) skipped code-review
+      before its first push, a 4th instance after 10-11, 10-12 and 10-14.
+      Step 6 never names code-review. Added to #2472 (parked on the
+      pr-workflow trial); 10-23 and 10-24 complied. #2352 (over-cap notes
+      caught only by review) recurred on 10-22 and 10-24. Grade/role
+      unchanged (routine).

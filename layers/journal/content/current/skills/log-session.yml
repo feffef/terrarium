@@ -377,3 +377,13 @@ observations:
       (transitive credit, the already-tracked #1915 cosmetic gap). No
       reverts of log-session content in the 2-week sweep. Grade/role
       unchanged (essential).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 10 logs landed, 11 PRs merged. Unverified (from logs,
+      no transcript): ruleVerdicts gaps in session_01BjA9rHbNdMX5KiK49Cee99
+      (13 rules), session_015bAGZEdCYZMYbsoFckSH59 (adr-0010) and
+      session_015XP8ctSXnTaR7KEnyPpUP1 (adr-0004-human-merge);
+      session_01FzJhmX3omaAFqoXjXWkcyK has kind autonomous though a slash
+      command started it. The wrong-cause Frictions in
+      session_01BjA9rHbNdMX5KiK49Cee99 are on #2499. Grade/role unchanged
+      (essential).
