@@ -30,8 +30,8 @@ The subagent sees none of your context, so the brief is self-contained. Include
 every line that applies.
 
 **Git and checkout**
-- Prefix every git command with `cd <worktree-root> &&`: the Bash tool resets cwd
-  between calls. One git command per Bash call; a heredoc goes in a script file
+- Run git as `git -C <worktree-root> ...`, never `cd`: the Bash tool keeps its
+  cwd between calls and parallel calls share it. One git command per Bash call; a heredoc goes in a script file
   (`docs/agents/environment-caveats.md`).
 - Have the agent run `pnpm install` in its worktree first; a fresh one has no
   `node_modules`.

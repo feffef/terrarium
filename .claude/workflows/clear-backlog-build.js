@@ -89,7 +89,7 @@ ${picks.length ? `\n## Owner's agreed picks (binding)\n${picks.map(p => `- ${p}`
 
 function rules(b) {
   return `## Rules
-- Bash resets cwd: prefix every command with \`cd <worktree> &&\`, one git command per Bash call.
+- Run git as \`git -C <worktree> ...\`, never \`cd\`: Bash keeps its cwd between calls and parallel calls share it. One git command per Bash call.
 - Run checks in the foreground, logging to your scratchpad with a name unique to you, e.g. \`cd <worktree> && pnpm gate:scoped > <scratchpad>/${slug(b)}-<stage>-gate.log 2>&1; echo EXIT=$? >> <same log>\` with Bash timeout 600000.
 - Commit before you stop, even mid-work. Never push, open a PR, merge, or run close-session/log-session: the orchestrator does those.
 - Every GitHub body you post starts with this exact first line: ${HEADER}
