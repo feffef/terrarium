@@ -19,4 +19,12 @@ describe('glassbox Tenant', async () => {
     expect(html.indexOf('class="directory"')).toBeGreaterThan(0)
     expect(html.indexOf('class="walkthroughs"')).toBeGreaterThan(html.indexOf('class="directory"'))
   })
+
+  // The filter narrows in the browser; the served page lists everything (ADR-0028).
+  it('serves the full Subject list with an empty Find a Lesson box', async () => {
+    const html = await $fetch<string>('/t/glassbox/guide')
+    expect(html).toContain('type="search"')
+    expect(html).toMatch(/role="status"[^>]*><\/p>/)
+    expect(html.match(/class="card gb-pane"/g)?.length).toBeGreaterThan(5)
+  })
 })

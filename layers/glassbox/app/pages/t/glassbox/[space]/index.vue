@@ -35,6 +35,34 @@ const sources = [
   { path: 'GLOSSARY.md', label: 'Terms' },
   { path: 'layers/glassbox/', label: "This site's code" },
 ]
+// Filters in place and never reorders, so the Subject order stays the map's (GLOSSARY.md).
+const query = ref('')
+const matches = (...fields: string[]) => {
+  const words = query.value.toLowerCase().split(/\s+/).filter(Boolean)
+  const text = fields.join(' ').toLowerCase()
+  return words.every((word) => text.includes(word))
+}
+const filtering = computed(() => !!query.value.trim())
+const directory = computed(() =>
+  (data.value?.directory ?? [])
+    .map((subject) => ({
+      ...subject,
+      total: subject.lessons.length,
+      lessons: filtering.value ? subject.lessons.filter((l) => matches(subject.name, l.title, l.description)) : subject.lessons,
+    }))
+    .filter((subject) => subject.lessons.length),
+)
+const walkthroughs = computed(() => {
+  const all = data.value?.walkthroughs ?? []
+  return filtering.value ? all.filter((w) => matches(w.title, w.description)) : all
+})
+// One always-present live region: screen readers skip one that arrives already filled.
+const found = computed(() => {
+  if (!filtering.value) return ''
+  const lessons = directory.value.reduce((sum, subject) => sum + subject.lessons.length, 0)
+  if (!lessons && !walkthroughs.value.length) return `No Lesson or Walkthrough matches “${query.value.trim()}”.`
+  return `${lessons} ${lessons === 1 ? 'Lesson' : 'Lessons'} and ${walkthroughs.value.length} ${walkthroughs.value.length === 1 ? 'Walkthrough' : 'Walkthroughs'} match.`
+})
 const openTerm = ref<string>()
 const openEntry = computed(() => data.value?.words.find((word) => word.stem === openTerm.value))
 const definitionId = useId()
@@ -57,11 +85,16 @@ useSeoMeta({ description: () => landing.value?.description })
 
     <section v-if="data?.directory.length" class="directory">
       <h2>Subjects</h2>
+      <label class="find">
+        <span class="gb-label">Find a Lesson</span>
+        <input v-model="query" type="search" placeholder="Try “cache”, “hooks” or “schema”" autocomplete="off" spellcheck="false">
+      </label>
+      <p class="none" role="status">{{ found }}</p>
       <div class="cards">
-        <section v-for="subject in data.directory" :id="subject.slug" :key="subject.slug" class="card gb-pane">
+        <section v-for="subject in directory" :id="subject.slug" :key="subject.slug" class="card gb-pane">
           <div class="card-head">
             <h3>{{ subject.name }}</h3>
-            <span class="count">{{ subject.lessons.length }} {{ subject.lessons.length === 1 ? 'Lesson' : 'Lessons' }}</span>
+            <span class="count">{{ subject.lessons.length === subject.total ? subject.total : `${subject.lessons.length} of ${subject.total}` }} {{ subject.total === 1 ? 'Lesson' : 'Lessons' }}</span>
           </div>
           <p class="blurb">{{ subject.blurb }}</p>
           <ul>
@@ -74,10 +107,10 @@ useSeoMeta({ description: () => landing.value?.description })
       </div>
     </section>
 
-    <section v-if="data?.walkthroughs.length" class="walkthroughs">
+    <section v-if="walkthroughs.length" class="walkthroughs">
       <h2>Walkthroughs</h2>
       <ul>
-        <li v-for="page in data.walkthroughs" :key="page.path">
+        <li v-for="page in walkthroughs" :key="page.path">
           <NuxtLink :to="`${base}${page.path}`"><strong>{{ page.title }} →</strong><span class="teaser">{{ page.description }}</span></NuxtLink>
         </li>
       </ul>
@@ -174,6 +207,11 @@ section { margin-bottom: 56px; }
   align-items: stretch;
   gap: 14px;
 }
+.find { display: flex; flex-direction: column; gap: 6px; max-width: 420px; margin-bottom: 18px; }
+.find input { padding: 8px 14px; border: 1px solid color-mix(in srgb, var(--gb-ink) 45%, transparent); border-radius: 999px; background: transparent; color: var(--gb-ink); font: inherit; font-size: 15px; }
+.find input:focus-visible { outline: 2px solid var(--gb-accent); outline-offset: 2px; }
+.none { margin: 0 0 18px; color: var(--gb-muted); font-size: 14px; }
+.none:empty { margin: 0; }
 .card {
   display: flex;
   flex-direction: column;
