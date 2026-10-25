@@ -109,19 +109,17 @@ no `tracked` or `on-trial` entry points at something closed.
 - This run's own PRs are recorded by the main session. A PR an earlier run
   missed (its entry still `tracked`, or the PR in that run's log `prs` but
   in no `fixes`) is recorded here.
-- Never record that a fix worked. `status` is the tracking state (`open`,
-  `tracked`, `on-trial`, `accepted`); for an entry with `fixes`, the page
-  and `--summary` derive `fix landed`, `likely fixed` (no occurrence for 3
-  days after the latest PR) or `still recurring` (occurrences after it,
-  counted). A re-fix after a regression needs only its `fixes` entry.
+- Never record that a fix worked. `status` is only the tracking state
+  (`open`, `tracked`, `on-trial`, `accepted`); from `fixes`, the page and
+  `--summary` derive `fix landed`, `likely fixed` (3 quiet days after the
+  latest PR) or `still recurring`. A re-fix after a regression needs only
+  its `fixes` entry. An `accepted` cluster (the owner accepts its cost) is
+  never re-proposed.
 - `ref` holds the tracking issue or open PR, the trial's territory match or
-  what a fix left open, never the merged PRs.
-- An `accepted` cluster (the owner accepts its cost) is never re-proposed
-  for a fix.
-- The horizon is `LEDGER_HORIZON_DAYS` (`layers/journal/app/utils/ledger.ts`;
-  the run prunes the ledger to it). An entry's recurrence is its occurrences
-  within it, counting only sessions that started after its fix merged when
-  it has one.
+  what a fix left open, never a merged PR.
+- Recurrence is an entry's occurrences within the horizon
+  (`LEDGER_HORIZON_DAYS` in `layers/journal/app/utils/ledger.ts`), counting
+  only sessions that started after its fix merged when it has one.
 
 ## 3. Screen every candidate
 
@@ -211,11 +209,9 @@ Every candidate that is not a drop has a rank.
 ### Edge cases
 
 - A Friction alleging a detector, tool or mechanism bug: check the
-  `subagents` field and read the mechanism's source before trusting the
-  Friction's own root-cause guess. A self-diagnosis logged in the moment,
-  without source access, is not evidence: "detector over-credits reads" can
-  be `foldSubagentTrace` correctly unioning a dispatched subagent's reads.
-  Verify against the source before ranking it.
+  `subagents` field and read the mechanism's source before ranking it. A
+  self-diagnosis logged in the moment, without source access, is not
+  evidence.
 
 ## 5. Commit the ledger
 
@@ -223,11 +219,8 @@ Goal: every ledger change in one commit on the current branch.
 
 ### Instructions
 
-1. Check each changed entry reads as the schema does, with occurrence
-   blocks as `print-ledger-occurrence.ts` printed them and no invented key
-   (such as `fixes_append`).
-2. Commit all ledger changes in one commit with `git commit -F <file>`.
-   Don't push, and don't switch branches.
+Commit all ledger changes in one commit with `git commit -F <file>`. Don't
+push, and don't switch branches.
 
 ### Done when
 

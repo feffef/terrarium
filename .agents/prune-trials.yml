@@ -219,9 +219,9 @@ trials:
       session fixing the call, or nit/minor slips #2210 already records.
   - problem: >
       The three `frictions-to-fixes` agent briefs rewritten plainly at a
-      Trusted user's request, in the SKILL.md's per-step shape (+462 −219
+      Trusted user's request, in the SKILL.md's per-step shape (+452 −219
       lines across the three briefs, from `git diff --numstat`; words 2758 to
-      3229, the growth being headings and done-when sections): an opening
+      3133, the growth being headings and done-when sections): an opening
       paragraph naming the role, its inputs and what it may change, then each
       step as a goal paragraph, numbered instructions, a done-when section and
       an edge-case list, then the report. Every rule kept: survey-only and
@@ -236,7 +236,10 @@ trials:
       and the six lenses), and the survey's candidate set (every entry
       `--candidates` lists, not only those that gained occurrences). SKILL.md
       changes two lines: what "verbatim" means for a brief handed by path, and
-      the same `audit-docs` pointer.
+      the same `audit-docs` pointer. Cut at the owner's request: the stale
+      `docsReadViaShell` caveat (its logs are past the horizon), a schema
+      check `ledger-set.ts` already enforces, and the `foldSubagentTrace`
+      incident example behind the mechanism-bug rule.
     territory:
       paths:
         - ".agents/skills/frictions-to-fixes/survey-brief.md (all of it)"

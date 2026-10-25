@@ -38,11 +38,8 @@ failures it is.
 
 ### Instructions
 
-1. Check whether the session that hit it read the doc. `docsRead` holds
-   Read-tool opens plus any the author listed, and since 2026-10-10 shell
-   reads. On an older log a `cat` or `grep` read shows only in the
-   deprecated `docsReadViaShell`, so check it before calling a doc *not
-   opened*.
+1. Check whether the session that hit it read the doc: `docsRead` holds
+   Read-tool opens, shell reads and any the author listed.
 2. On a session that delegated, check its `subagents` field before
    concluding that the agent that hit the Friction had the rule in front
    of it: subagent reads are folded into the parent's list
