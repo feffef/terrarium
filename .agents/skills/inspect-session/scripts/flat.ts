@@ -5,7 +5,6 @@ import { join } from 'node:path'
 
 export type Tag = 'read' | 'dispatch' | 'handback' | 'error' | 'human-prompt' | 'dispatch-not-in-range' | 'fabricated-tag'
 
-/** The agent a task-notification or agent-message opening tag names, from its task-id or from= (#2499). */
 export function claimedAgent(text: string): string | undefined {
   const m = /<task-notification>[\s\S]*?<task-id>([^<\s]+)<\/task-id>|<agent-message\b[^>]*?\bfrom="([^"]+)"/.exec(text)
   return m ? (m[1] ?? m[2]) : undefined
