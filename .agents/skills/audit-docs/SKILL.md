@@ -53,8 +53,9 @@ lenses.
    quoted whole with its line breaks, plus replacement text. No line ranges
    (reviewers get them wrong). A finding outside its own lenses is still
    reported, named by its lens, and joins the pool like any other.
-4. Save each agent's reply verbatim into one pooled scratchpad file with
-   `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`.
+4. Save each agent's reply verbatim to its own file in one scratchpad folder,
+   the pool, with one call per agent:
+   `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <pool>/<agent-id>.md`.
 
 **Agent A, Freshness.** Start from `git log --since="48 hours ago"
 origin/main` and its diff.
@@ -96,7 +97,8 @@ origin/main` and its diff.
   threshold that gates an action, an enum listed only by its endpoints at
   its home, or a "see X" where X doesn't hold the thing.
 
-Done when every agent has reported and every reply is in the pooled file.
+Done when every agent has reported and every reply is saved in the pool
+folder.
 
 ### Edge cases
 
@@ -124,7 +126,7 @@ own inline check. A wrong finding acted on is new drift you wrote.
 ### Instructions
 
 1. Dispatch independent checkers over the whole pool (split a large pool).
-   Point each at the pooled file to read; never retype findings into a
+   Point each at the pool folder to read; never retype findings into a
    prompt.
 2. Each checker re-derives every claim from its primary source (code,
    schemas, ADRs, git history) and returns **CONFIRMED**, **CONFIRMED-BUT**
