@@ -4,5 +4,6 @@ summary: >-
 cause: >-
   read-first-hint.ts (PostToolUse) points to git-conventions.md or github-integration.md on a matching call in every session, including dispatched subagents whose brief limits what they read, and repeats on each call even after the doc was read. Signals: 'hint repeated on every call', 'hint to read git-conventions.md after a detached checkout', a subagent explaining why it ignored the hint.
 surface: guard-or-hook
-status: open
+status: tracked
+ref: "issue #2546"
 occurrences: [ { session: session_012Yzae3uty5Jj8ZPug9zpjr, date: "2026-10-23", severity: minor, description: "read-first-hint repeated github-integration.md and git-conventions.md pointers on every call in five workflow subagents, even after they had read the doc", solution: "Check subagent transcript resolution and Bash-read detection in read-first-hint.ts (raised as Q13)" }, { session: session_016edAfTmLE1szSBGNZTorPH, date: "2026-10-25", severity: nit, description: "Each of three read-only Sonnet probes got a PostToolUse hint to read git-conventions.md after its single detached checkout, which clashed with the brief's rule to read nothing but the briefs; each spent words explaining why it ignored it.", solution: "Let a probe brief name git-conventions.md as pre-read by the orchestrator, or have the hint skip a detached checkout of a pinned SHA." } ]
