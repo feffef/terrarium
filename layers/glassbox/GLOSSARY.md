@@ -127,7 +127,8 @@ turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
 ## What lives where
 
 - **`.agents/skills/glassbox-lesson/`** — how a Lesson gets written;
-  `EVERY-PAGE.md` there holds the steps a Lesson and a Walkthrough share.
+  `EVERY-PAGE.md` there settles a page's title and the steps a Lesson and a
+  Walkthrough share.
 - **`.agents/skills/glassbox-walkthrough/SKILL.md`** — how a Walkthrough gets
   written.
 - **`.agents/skills/glassbox-update/SKILL.md`** — how the guide pages are
