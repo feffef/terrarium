@@ -161,8 +161,7 @@ in the scratchpad, to close every gap it named, re-checking citations for any
 claim the revision adds or changes. Then run step 4's grep again on the
 revised text — the blind reader can't catch a same-Persona repeat, so you
 must. If that changes the post (a swapped angle, a sequel framing), finish
-the rewrite here: the fact-check sees this text, and it changes afterwards only
-to apply the fact-check's fixes. Discard the other two drafts and their stubs; their topics survive
+the rewrite here. Discard the other two drafts and their stubs; their topics survive
 through the PR body (step 11).
 
 Done when: one final draft in the scratchpad, overlap checked on that text,
