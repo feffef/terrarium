@@ -4,8 +4,11 @@ summary: >-
 cause: >-
   A git add with an ignored pathspec, or a commit given both -m and -F, errors; `&&` skips the commit (or the commit fails unseen) and the session carries on, reading an older HEAD or running the gate on an uncommitted tree. git-conventions.md covers only a branch rename or create chained with the commit. Signals: 'git add' error, 'HEAD stayed on an old commit', 'git log -1 showed an older commit', 'both -m and -F'.
 surface: safe
-status: tracked
-ref: Dispatched in the 2026-10-25 frictions-to-fixes run (doc PR).
+status: open
+fixes:
+  - pr: 2525
+    date: "2026-10-25"
+    summary: "Its git-conventions section now also covers a git add of an ignored path and a commit given both -m and -F, and says to read git log -1 before the gate."
 occurrences:
   - session: session_01Ku4KD2Ua5MXi6eQ95TG4aj
     date: "2026-10-24"
