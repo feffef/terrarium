@@ -212,7 +212,8 @@ spots come from.
   full read's cursor walk into range files, one `<before_id> <first_id>` line
   per page.
 - `scripts/outline.ts <flattened file>`: writes an overview, each human prompt
-  followed by one line per tool call, and prints only its path.
+  followed by one line per tool call, and prints its path with the line count,
+  then `COVERAGE`.
 
 ## Worked examples
 
