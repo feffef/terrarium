@@ -1,16 +1,17 @@
 schemaVersion: 1
 session: session_01PdrNTJLJJMKBGGZfsAhL6w
 startedAt: 2026-10-25T11:32:22Z
-endedAt: 2026-10-25T11:49:29Z
-kind: delegated
+endedAt: 2026-10-25T12:05:02Z
+kind: interactive
 goal: Clear the issue backlog with the clear-backlog Skill
-status: blocked
-outcome: Three fixes merged (PRs 2532-2534); three Friction-recurrence issues await the owner's grilling answers
-summary: "The owner invoked /clear-backlog (human-instructed); the rest ran under that opt-in. The sweep set was 8 issues: the 7 with no comments or no state label (#2520-#2523, #2527, #2528, #2432) plus #2433; every other open issue had an AI comment last and there were no external PRs. clear-backlog-explore triaged all 8: build for #2523, #2527 and #2528; grill for #2520, #2521 and #2522; #2432 and #2433 time-gated until 2026-10-26T07:43Z (#2433 is blocked by #2432). clear-backlog-build built and reviewed the three build branches. I checked each branch's commits and diff, and on #2527 I added a small wording follow-up (the pool is a new folder). I pushed all three and opened PR #2532 (final gate agent in clear-backlog-build, with a routing unit test), PR #2533 (audit-docs pool folder) and PR #2534 (inspect-session outline.ts bullet), and merged all three once CI was green, after posting my verdicts; status is blocked only on the owner's grilling answers. None touches a Human-only path. The grill picks I sent the owner (Q1-Q4) are agent recommendations: #2520 c (re-measure, add nothing), #2522 a (accept the cost), #2521 a (accept the cost). I checked each pick against git and the Friction Ledger, but #2521's occurrences only against the ledger, not via inspect-session. Open judgement call on PR #2532: the build and fix prompts still run a gate that nothing reads any more."
+status: in-review
+outcome: "Four fixes merged or open (PRs 2532-2535); #2521 building; prune trial for #2522 next"
+summary: "The owner invoked /clear-backlog (human-instructed); the rest ran under that opt-in. The sweep set was 8 issues: the 7 with no comments or no state label (#2520-#2523, #2527, #2528, #2432) plus #2433; every other open issue had an AI comment last and there were no external PRs. clear-backlog-explore triaged all 8: build for #2523, #2527 and #2528; grill for #2520, #2521 and #2522; #2432 and #2433 time-gated until 2026-10-26T07:43Z (#2433 is blocked by #2432). clear-backlog-build built and reviewed the three build branches. I checked each branch's commits and diff, and on #2527 I added a small wording follow-up (the pool is a new folder). I pushed all three and opened PR #2532 (final gate agent in clear-backlog-build, with a routing unit test), PR #2533 (audit-docs pool folder) and PR #2534 (inspect-session outline.ts bullet), and merged all three once CI was green, after posting my verdicts; The owner then answered 1a 2b 3b and, in a follow-up round, 5a (my wording for the premise line) and 6 (I start the prune trial in a subagent with detailed instructions). I built #2520 myself as PR #2535 (code-review clean) and #2521 via clear-backlog-build; the #2522 prune trial follows once #2535 lands, since both edit CLAUDE.md Working conventions. None touches a Human-only path. The grill picks I sent the owner (Q1-Q4) are agent recommendations: #2520 c (re-measure, add nothing), #2522 a (accept the cost), #2521 a (accept the cost). I checked each pick against git and the Friction Ledger, but #2521's occurrences only against the ledger, not via inspect-session. Open judgement call on PR #2532: the build and fix prompts still run a gate that nothing reads any more."
 prs:
   - "2532"
   - "2533"
   - "2534"
+  - "2535"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
     reason: "step 1 resolves the sweep set and eligibility; triage #2432: Brief required it; gave the on-hold and no-comment rules; triage #2433: The brief told me to read it. It gave the blocked-ticket skip and the wayfinder and determinability rules.; triage #2520: The brief required it. Gave the brave-within-determinability line, the comment-on-an-uncommented-issue rule and the git-history check.; triage #2521: Required by the brief. Gave the per-issue sweep rules.; triage #2522: The brief told me to read it. Its rule that an obsolete or regressed issue goes to ready-for-human decided the outcome.; triage #2523: The brief told me to read it; the brave-within-determinability rule decided build; triage #2527: Required by the brief. Gave the brave-within-determinability bar and the wayfinder overlay (no wayfinder label here).; triage #2528: The brief told me to read it. It gave the brave and determinability rule and the label/comment rules."
@@ -72,6 +73,12 @@ docsRead:
   - path: .agents/skills/audit-docs/SKILL.md
     reason: read its diff and edited step 1.4 wording for PR 2533
     useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
   - path: layers/journal/content/current/frictions/counts-not-tallied.yml
     reason: (no reason given)
   - path: .agents/prune-trials.yml
@@ -105,34 +112,42 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
   - name: tdd
     reason: (no reason given)
 frictions:
   - description: "On #2527 I pushed a prose follow-up commit without re-running gate:scoped on the final head, which pr-workflow.md asks for before the first push."
     solution: Re-read the pr-workflow.md 'Review before the first push' recipe before any hand edit to a ready-to-push branch.
     severity: minor
-durationSec: 1027
+durationSec: 1960
 models:
-  claude-opus-5-5: 101
+  claude-opus-5-5: 168
 toolCounts:
-  Bash: 29
-  Read: 5
-  Workflow: 2
+  Bash: 44
+  Read: 10
+  Workflow: 3
   ToolSearch: 2
-  PushNotification: 1
-  mcp__github__create_pull_request: 3
-  mcp__claude-code-remote__subscribe_pr_activity: 3
-  Skill: 2
-  ReadNotifications: 3
-  mcp__github__add_issue_comment: 3
+  PushNotification: 2
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
+  Skill: 3
+  ReadNotifications: 4
+  mcp__github__add_issue_comment: 7
   mcp__claude-code-remote__unsubscribe_pr_activity: 2
   mcp__github__pull_request_read: 1
   mcp__claude-code-remote__send_later: 1
   mcp__claude-code-remote__delete_trigger: 1
+  mcp__github__issue_write: 3
+  Edit: 1
+  Agent: 2
 filesEdited:
+  - CLAUDE.md
   - tests/unit/workflow-scripts.spec.ts
   - .claude/workflows/clear-backlog-build.js
   - .agents/skills/inspect-session/SKILL.md
+  - tests/unit/log-session.spec.ts
+  - scripts/session/log-session.ts
   - .agents/skills/audit-docs/SKILL.md
 rulesLoaded:
   - .claude/rules/adr-0022.md
@@ -143,17 +158,24 @@ rulesLoaded:
   - .claude/rules/adr-0008.md
   - .claude/rules/tenant-glossary.md
   - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0029.md
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0005.md
 adrHints:
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
   - adr: 5
     via: path
     readAfter: true
@@ -164,17 +186,14 @@ adrHints:
     by: subagent
 rulesLoadedBySubagents:
   - .claude/rules/adr-0015.md
-  - .claude/rules/adr-0030.md
-  - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/guards.md
   - .claude/rules/adr-0021.md
 docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+  - docs/adr/0027-prune-trials.md
   - .agents/skills/triage/SKILL.md
-  - docs/agents/issue-tracker.md
-  - docs/agents/triage-labels.md
   - docs/adr/0022-autonomous-triage-sweep.md
   - .agents/skills/frictions-to-fixes/SKILL.md
-  - docs/adr/0027-prune-trials.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
   - .agents/skills/close-session/SKILL.md
   - .agents/skills/inspect-session/SKILL.md
@@ -236,125 +255,160 @@ ruleVerdicts:
     reason: "triage #2520: Loaded on reading scripts/hooks. Not needed."
     useful: no
 subagents:
+  - type: general-purpose
+    task: Standards review 2520
+    model: sonnet
+    durationSec: 22
+    toolCalls: 5
+    modelCalls: 2
+    tokenShare: 2
+  - type: general-purpose
+    task: Spec review 2520
+    model: sonnet
+    durationSec: 16
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 1.7
   - type: workflow-subagent
     task: "triage #2522"
     model: claude-opus-5-5
     durationSec: 100
     toolCalls: 19
     modelCalls: 9
-    tokenShare: 5.5
+    tokenShare: 4.1
   - type: workflow-subagent
     task: "triage #2433"
     model: claude-opus-5-5
     durationSec: 64
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 4.8
+    tokenShare: 3.5
   - type: workflow-subagent
     task: "triage #2520"
     model: claude-opus-5-5
     durationSec: 133
     toolCalls: 22
     modelCalls: 16
-    tokenShare: 7.1
+    tokenShare: 5.2
   - type: workflow-subagent
     task: "triage #2527"
     model: claude-opus-5-5
     durationSec: 109
     toolCalls: 19
     modelCalls: 11
-    tokenShare: 6.1
+    tokenShare: 4.5
   - type: workflow-subagent
     task: "triage #2521"
     model: claude-opus-5-5
     durationSec: 103
     toolCalls: 20
     modelCalls: 11
-    tokenShare: 5.9
+    tokenShare: 4.3
   - type: workflow-subagent
     task: "triage #2528"
     model: claude-opus-5-5
     durationSec: 83
     toolCalls: 17
     modelCalls: 9
-    tokenShare: 5
+    tokenShare: 3.7
   - type: workflow-subagent
     task: "triage #2432"
     model: claude-opus-5-5
     durationSec: 62
     toolCalls: 14
     modelCalls: 7
-    tokenShare: 4.4
+    tokenShare: 3.2
   - type: workflow-subagent
     task: "triage #2523"
     model: claude-opus-5-5
     durationSec: 117
     toolCalls: 20
     modelCalls: 12
-    tokenShare: 6.2
+    tokenShare: 4.6
   - type: workflow-subagent
     task: Standards fix/2523-build-final-gate r1
     model: claude-opus-5-5
     durationSec: 48
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.8
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Standards fix/2527-audit-docs-pool r1
     model: claude-opus-5-5
     durationSec: 38
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2.7
+    tokenShare: 2
   - type: workflow-subagent
     task: build fix/2523-build-final-gate
     model: claude-opus-5-5
     durationSec: 370
     toolCalls: 32
     modelCalls: 18
-    tokenShare: 6.8
+    tokenShare: 5
   - type: workflow-subagent
     task: build fix/2528-inspect-session-outline
     model: claude-sonnet-5-5
     durationSec: 113
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 3.8
+    tokenShare: 2.8
   - type: workflow-subagent
     task: Standards fix/2528-inspect-session-outline r1
     model: claude-opus-5-5
     durationSec: 42
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.8
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Spec fix/2527-audit-docs-pool r1
     model: claude-opus-5-5
     durationSec: 38
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 1.6
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Spec fix/2523-build-final-gate r1
     model: claude-opus-5-5
     durationSec: 52
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 2
+    tokenShare: 1.5
   - type: workflow-subagent
     task: build fix/2527-audit-docs-pool
     model: claude-sonnet-5-5
     durationSec: 112
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 3.7
+    tokenShare: 2.7
   - type: workflow-subagent
     task: Spec fix/2528-inspect-session-outline r1
     model: claude-opus-5-5
     durationSec: 42
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 2.1
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: Spec fix/2521-refuse-completed-without-close r1
+    model: claude-opus-5-5
+    durationSec: 8
+    toolCalls: 3
+    modelCalls: 1
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: build fix/2521-refuse-completed-without-close
+    model: claude-sonnet-5-5
+    durationSec: 363
+    toolCalls: 25
+    modelCalls: 19
+    tokenShare: 4.8
+  - type: workflow-subagent
+    task: Standards fix/2521-refuse-completed-without-close r1
+    model: claude-opus-5-5
+    durationSec: 5
+    toolCalls: 2
+    modelCalls: 1
+    tokenShare: 1.5
 gitBranch: ccr-f0095617-bc3twc
 entrypoint: remote_mobile
 cliVersion: 2.1.310
