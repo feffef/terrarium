@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01BZNS3KuWTBxqAHxTfx3uzp
 startedAt: 2026-10-25T16:48:22Z
-endedAt: 2026-10-25T17:32:40Z
+endedAt: 2026-10-25T17:35:51Z
 kind: autonomous
 goal: "Visitor-loop run on Glass Box: fix consensus findings, build one feature"
-status: in-review
-outcome: Fix PR 2541 merged; feature PR 2542 (Find a Lesson filter) open, gate pending
-summary: "Scheduled visitor-loop firing (nothing human-instructed beyond the stored prompt; all work agent-initiated within the Skill's remit). Focus row 5, Glass Box. Built and served a production preview, sent sonnet, fable and opus visitors, tallied. Only one consensus finding survived verification: Lesson card teasers clipped by the two-line clamp (all three visitors). Start-here, five-site footer, sticky sidebar, excerpt scroll cue and identical Last-updated dates were dropped as decisions.md rulings, screenshot artifacts or already built or by design. The refiner kept the fix (shorten text, not remove the clamp) and the chosen feature, a Find a Lesson filter box. PR 2541 shortened four descriptions (two clipped on desktop, two more at 390px); my first rewrite lost meaning and one broke YAML, which review and validate:content caught before push. It merged on a green gate. PR 2542 adds the filter box; Standards review caught a misleading filtered count, a non-announcing status region and low input contrast, all fixed before push. No out-of-remit findings, so no issues filed."
+status: completed
+outcome: "Both PRs merged: clipped Lesson teasers fixed (2541) and Find a Lesson filter added (2542)"
+summary: "Scheduled visitor-loop firing (nothing human-instructed beyond the stored prompt; all work agent-initiated within the Skill's remit). Focus row 5, Glass Box. Built and served a production preview, sent sonnet, fable and opus visitors, tallied. Only one consensus finding survived verification: Lesson card teasers clipped by the two-line clamp (all three visitors). Start-here, five-site footer, sticky sidebar, excerpt scroll cue and identical Last-updated dates were dropped as decisions.md rulings, screenshot artifacts or already built or by design. The refiner kept the fix (shorten text, not remove the clamp) and the chosen feature, a Find a Lesson filter box. PR 2541 shortened four descriptions (two clipped on desktop, two more at 390px); my first rewrite lost meaning and one broke YAML, which review and validate:content caught before push. It merged on a green gate. PR 2542 adds the filter box and merged on a green gate; Standards review caught a misleading filtered count, a non-announcing status region and low input contrast, all fixed before push. No out-of-remit findings, so no issues filed."
 prs:
   - "2541"
   - "2542"
@@ -76,11 +76,14 @@ frictions:
   - description: My first shortened descriptions dropped each page's point; the Spec review caught it and I redid three of four, costing an extra build cycle.
     solution: Keep the distinctive clause and cut elsewhere; check against the page body before committing.
     severity: minor
-durationSec: 2658
+  - description: The Stop hook repeatedly demanded a push while ADR-0004 required review and gate first, and it counted three unpushed commits after I re-cut the branch from the merged main.
+    solution: Have the hook count against origin/main when the branch has no remote tip, and stay quiet while a gate is running.
+    severity: nit
+durationSec: 2849
 models:
-  claude-sonnet-5-5: 165
+  claude-sonnet-5-5: 178
 toolCounts:
-  Bash: 49
+  Bash: 53
   Read: 10
   ScheduleWakeup: 1
   Agent: 8
@@ -88,13 +91,13 @@ toolCounts:
   mcp__github__search_pull_requests: 1
   mcp__github__issue_read: 1
   Edit: 2
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 2
   mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 2
-  ReadNotifications: 3
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  ReadNotifications: 5
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
 filesEdited:
   - layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
   - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
@@ -210,52 +213,52 @@ subagents:
     durationSec: 111
     toolCalls: 19
     modelCalls: 13
-    tokenShare: 4.6
+    tokenShare: 4.3
   - type: general-purpose
     task: Visitor (fable)
     model: fable
     durationSec: 504
     toolCalls: 44
     modelCalls: 31
-    tokenShare: 12.5
+    tokenShare: 11.7
   - type: general-purpose
     task: Visitor (opus)
     model: opus
     durationSec: 207
     toolCalls: 28
     modelCalls: 21
-    tokenShare: 8.1
+    tokenShare: 7.6
   - type: general-purpose
     task: Refiner fit check
     model: opus
     durationSec: 136
     toolCalls: 34
     modelCalls: 22
-    tokenShare: 9.7
+    tokenShare: 9
   - type: general-purpose
     task: "Review: standards axis"
     durationSec: 24
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 2.2
+    tokenShare: 2
   - type: general-purpose
     task: "Review: spec axis"
     durationSec: 18
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: general-purpose
     task: "Review feature: standards"
     durationSec: 33
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: general-purpose
     task: "Review feature: spec"
     durationSec: 22
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.2
+    tokenShare: 2
 gitBranch: claude/adoring-galileo-0f4imo
 entrypoint: remote_trigger
 cliVersion: 2.1.310
