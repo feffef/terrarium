@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A session that has the close-session or log-session text in context (for example from editing it) authors the log directly instead of invoking the Skill, skipping its steps such as the rule re-read. Signals: HUMAN-PROMPTED-CLOSURE after a merge, 'authored the completed log directly', 'having edited a Skill is not having run it'.
 surface: safe
-status: open
-ref: "issue #2424 closed by PR #2452 (a warning, never a block)"
+status: tracked
+ref: "issue #2521"
 fixes: [ { pr: 2452, date: "2026-10-23", summary: "log-session --author now warns when a completed log follows a merge with no close-session call." } ]
 occurrences:
   - session: session_01EjH3TbrydEY2sArBMYE5Gy
@@ -23,3 +23,13 @@ occurrences:
     severity: nit
     description: "Hand-authored the completed log before invoking close-session after the merge; log-session.ts warned and I invoked close-session next."
     solution: "Invoke close-session first after a merge, then author."
+  - session: session_019jfJv6yLmcLUAJiTTomyeu
+    date: "2026-10-25"
+    severity: nit
+    description: "I hand-wrote the completed log with log-session --author after the merges, before invoking close-session; the warning fired and I invoked it afterwards."
+    solution: "After the last merge invoke close-session first; the Skill's closing section could say so for scheduled runs."
+  - session: session_01PGQQj6iUaMYCkphVjFEsBP
+    date: "2026-10-25"
+    severity: nit
+    description: "Set the log to completed by editing the scratch by hand right after the merge, before invoking close-session; the script warned against it."
+    solution: "After merging, invoke close-session first and let it drive the final log."

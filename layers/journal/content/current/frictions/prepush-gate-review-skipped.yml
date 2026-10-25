@@ -146,3 +146,8 @@ occurrences:
     severity: minor
     description: "Two follow-up commits (6 files) got only my own read, not code-review, against pr-workflow.md's follow-up rule; disclosed in the PR."
     solution: "Run code-review on any follow-up over the simple-change line, or batch follow-ups before the review."
+  - session: session_01URZoDXk9zQsY2HDhUruLd4
+    date: "2026-10-25"
+    severity: minor
+    description: "Ran no code-review Skill before first push: the diff was 32 files/65 lines, mostly pin restamps, and I judged it by my own read of the 3 prose lines."
+    solution: "glassbox-update should say whether restamp-only files count toward the simple-change limit, or exempt them."

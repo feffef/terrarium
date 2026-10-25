@@ -54,3 +54,8 @@ occurrences:
     severity: minor
     description: "docs.github.com is blocked by the proxy (WebFetch DNS fail, curl 403), so a GitHub docs claim could not be verified and was dropped."
     solution: "EVERY-PAGE's fallback (sparse clone of github/docs) costs more than one sentence; allowlisting docs.github.com would help Glass Box work."
+  - session: session_01Hpd1KMhzJC2NxHSxp7erFi
+    date: "2026-10-25"
+    severity: minor
+    description: "docs.github.com returns 403 through the proxy and github/docs is out of repo scope, so verifying the Full reference URL took a web search detour"
+    solution: "EVERY-PAGE.md could name web search as the fallback for docs.github.com URLs"

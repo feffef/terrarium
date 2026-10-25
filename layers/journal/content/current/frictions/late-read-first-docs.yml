@@ -559,3 +559,13 @@ occurrences:
     severity: nit
     description: "Ran git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires before a first fetch; a hook flagged it."
     solution: "Read git-conventions.md before the first git command beyond status/diff; no harm here since the fetch was read-only."
+  - session: session_013QKXoGLaEHEJanyw5TrPqj
+    date: "2026-10-25"
+    severity: nit
+    description: "Ran git rev-parse --is-shallow-repository before reading git-conventions.md; a hook flagged it. The call was harmless."
+    solution: "clear-backlog §1's first command is a git command; it could name git-conventions.md as the read before it."
+  - session: session_01PGQQj6iUaMYCkphVjFEsBP
+    date: "2026-10-25"
+    severity: nit
+    description: "Read git-conventions.md only after a hook prompted it, following my first git command; CLAUDE.md says to read it before any non-status git command."
+    solution: "Treat the Skill's first step (rev-parse, fetch) as the trigger and read the doc first."

@@ -7,6 +7,7 @@ surface: safe
 status: open
 notes: |-
   2026-10-21 design: a build-workflow precheck dropped: clear-backlog SKILL.md section 2 Done already requires ready-for-agent, and the workflow has no shell, so a check costs an agent call per run.
+  2026-10-25 design: dropped again: the label precheck stays dropped (no shell in the workflow; clear-backlog §2 Done already requires the label), and nothing new since 2026-10-20.
 occurrences:
   - session: session_01BTtvaFQckiQwtGZsasWPJH
     date: "2026-10-19"

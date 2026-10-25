@@ -1,0 +1,18 @@
+name: output-trim-drops-needed-line
+summary: >-
+  An agent trimmed a script's output with tail and lost the line it needed.
+cause: >-
+  A command's output is piped to tail -N assuming the wanted value (a PID, a path) is last, but the script prints other lines after it; later commands get garbage args or fail. The old tail-pipe guard is gone (tail-pipe-guard). Signals: 'tail -3 dropped', 'tail -1 assuming it prints only its path'.
+surface: safe
+status: open
+occurrences:
+  - session: session_01Wd2WvrPmFRYHAZmf7DYnrG
+    date: "2026-10-23"
+    severity: nit
+    description: "Preview start printed PID on the third-last line; my `tail -3` dropped it and the first stop call failed, leaving a server up until I read the log."
+    solution: "preview.ts could print PID last, or accept stop without an argument for the newest server."
+  - session: session_01Ru6jnZ4cFTdf41ZWLonsTv
+    date: "2026-10-24"
+    severity: nit
+    description: "I piped outline.ts through tail -1 assuming it prints only its path; it prints COVERAGE last, so the next commands got garbage args."
+    solution: "inspect-session says outline.ts prints only its path; either make it so or say it also prints COVERAGE."

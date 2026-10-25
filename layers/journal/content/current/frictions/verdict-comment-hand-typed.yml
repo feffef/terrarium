@@ -65,3 +65,8 @@ occurrences:
     severity: minor
     description: "My first PR verdict named the head as 41fb798e2be3, a SHA tail I typed from memory; merge-pr.ts refused it and I re-posted with the real full SHA."
     solution: "Copy the head SHA from git rev-parse HEAD into the verdict, never retype it."
+  - session: session_019jfJv6yLmcLUAJiTTomyeu
+    date: "2026-10-25"
+    severity: nit
+    description: "My first verdict comment on the closing ledger PR said 'see PR head' instead of the head SHA, so I posted a second comment with the real SHA before merge-pr would accept it."
+    solution: "Read git rev-parse HEAD before writing the verdict line."

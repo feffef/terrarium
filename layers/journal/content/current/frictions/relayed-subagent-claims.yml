@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
 surface: safe
-status: tracked
-ref: "issue #2499 (fabricated hand-backs) and issue #2503 (their prevention)"
+status: open
+ref: "Issues #2499 and #2503 closed by PRs #2511 and #2515."
 fixes:
   - pr: 2336
     date: "2026-10-20"
@@ -16,6 +16,12 @@ fixes:
   - pr: 2485
     date: "2026-10-24"
     summary: "Made each triage side finding in clear-backlog-explore carry a required source (file:line, SHA, URL or 'unverified' plus what would verify it)."
+  - pr: 2511
+    date: "2026-10-25"
+    summary: "inspect-session detects a parent line that opens a task-notification or agent-message tag itself (a fabricated hand-back), with a fabricated selector."
+  - pr: 2515
+    date: "2026-10-25"
+    summary: "A new Stop hook blocks once a reply whose own text contains a harness task-notification or agent-message tag."
 occurrences:
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"
