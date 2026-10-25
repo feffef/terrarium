@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01VfbgTTxASAKYdiziaLGuXM
 startedAt: 2026-10-25T20:29:19Z
-endedAt: 2026-10-25T21:07:16Z
+endedAt: 2026-10-25T21:11:11Z
 kind: interactive
 goal: Clear the issue backlog (clear-backlog run)
-status: in-review
-outcome: "#2545 and #2544 merged (PRs #2548, #2549); #2546 + #2543 in PR #2550, waiting for a human merge"
-summary: "The owner invoked clear-backlog (human-instructed). The default sweep picked up four uncommented needs-triage issues (#2543-#2546); none was ready-for-agent. Triage made #2546 build-ready and sent #2543, #2544 and #2545 to grilling. The owner answered 1a and 3c, and had me inspect the session behind #2544 (inspect-session): its events showed the gate reused its own fresh build, newer than the last edit, so the \"stale build\" was a misread log line. Owner then picked 4b. Merged by me: PR #2548 (#2545: one ranking sentence in frictions-to-fixes §2, merged into the existing bullet; judgement call left: the status filter partly restates candidateLabels()) and PR #2549 (#2544: the e2e reuse line now names the latest source edit; freshness rule unchanged; epoch fallback with no sources left as is). Opened PR #2550 for #2546 (read-first and bash-rules hints use agentTranscript for nested workflow agents) plus #2543 (new dispatch-read-guard denying the main session's first Agent/Workflow/SendMessage until dispatch-subagents is read; the hint entry removed); it touches scripts/hooks and .claude/settings.json, so it waits for a human merge. Left open there: shouldDeny is not strictly pure, and a one-line path match is repeated. Side finding: one journal e2e layout test failed once during a build gate run and passed on rerun; possibly flaky, not filed."
+status: completed
+outcome: "All four issues landed: PRs #2548, #2549 merged by the agent; PR #2550 (#2546 + #2543) merged by the owner"
+summary: "The owner invoked clear-backlog (human-instructed). The default sweep picked up four uncommented needs-triage issues (#2543-#2546); none was ready-for-agent. Triage made #2546 build-ready and sent #2543, #2544 and #2545 to grilling. The owner answered 1a and 3c, and had me inspect the session behind #2544 (inspect-session): its events showed the gate reused its own fresh build, newer than the last edit, so the \"stale build\" was a misread log line. Owner then picked 4b. Merged by me: PR #2548 (#2545: one ranking sentence in frictions-to-fixes §2, merged into the existing bullet; judgement call left: the status filter partly restates candidateLabels()) and PR #2549 (#2544: the e2e reuse line now names the latest source edit; freshness rule unchanged; epoch fallback with no sources left as is). Opened PR #2550 for #2546 (read-first and bash-rules hints use agentTranscript for nested workflow agents) plus #2543 (new dispatch-read-guard denying the main session's first Agent/Workflow/SendMessage until dispatch-subagents is read; the hint entry removed); it touches scripts/hooks and .claude/settings.json, so the owner merged it. Left open there: shouldDeny is not strictly pure, and a one-line path match is repeated. Side finding: one journal e2e layout test failed once during a build gate run and passed on rerun; possibly flaky, not filed."
 prs:
   - "2548"
   - "2549"
@@ -93,25 +93,29 @@ frictions:
   - description: A build gate run failed once on an unrelated journal e2e layout check (displacement 16px < 30px) and passed on rerun.
     solution: Track the journal layout test as a possible flake if it recurs.
     severity: nit
-durationSec: 2278
+  - description: Merging five runs of run-summary --verdicts into one ruleVerdicts/docsRead list took a hand-written script and two retries (duplicate YAML key, yes/no parsed as booleans).
+    solution: run-summary.ts --verdicts could take several run outputs and emit one merged block per path.
+    severity: minor
+durationSec: 2512
 models:
-  claude-opus-5-5: 144
+  claude-opus-5-5: 167
 toolCounts:
-  Bash: 39
+  Bash: 43
   Read: 4
   Workflow: 5
   ToolSearch: 3
   PushNotification: 2
-  Skill: 3
+  Skill: 4
   Agent: 1
-  mcp__github__add_issue_comment: 5
+  mcp__github__add_issue_comment: 6
   mcp__github__issue_write: 3
   mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 3
-  ReadNotifications: 5
-  mcp__github__pull_request_read: 2
+  ReadNotifications: 9
+  mcp__github__pull_request_read: 3
   mcp__claude-code-remote__unsubscribe_pr_activity: 2
   mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - tests/unit/read-first-hint.spec.ts
   - tests/unit/bash-rules-hint.spec.ts
@@ -226,56 +230,56 @@ subagents:
     durationSec: 142
     toolCalls: 25
     modelCalls: 24
-    tokenShare: 6.6
+    tokenShare: 6.1
   - type: workflow-subagent
     task: gate fix/e2e-reuse-line-names-latest-edit
     model: claude-sonnet-5-5
     durationSec: 386
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Spec fix/e2e-reuse-line-names-latest-edit r1
     model: claude-opus-5-5
     durationSec: 29
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: build fix/e2e-reuse-line-names-latest-edit
     model: claude-sonnet-5-5
     durationSec: 328
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 2.1
+    tokenShare: 2
   - type: workflow-subagent
     task: Standards fix/e2e-reuse-line-names-latest-edit r1
     model: claude-opus-5-5
     durationSec: 24
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Spec fix/hint-nested-agent-transcript r3
     model: claude-opus-5-5
     durationSec: 23
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: fix fix/hint-nested-agent-transcript r1
     model: claude-sonnet-5-5
     durationSec: 205
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: build fix/hint-nested-agent-transcript
     model: claude-sonnet-5-5
     durationSec: 307
     toolCalls: 24
     modelCalls: 16
-    tokenShare: 4.3
+    tokenShare: 4
   - type: workflow-subagent
     task: Standards fix/hint-nested-agent-transcript r2
     model: claude-opus-5-5
@@ -289,70 +293,70 @@ subagents:
     durationSec: 224
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: fix fix/hint-nested-agent-transcript r2
     model: claude-sonnet-5-5
     durationSec: 233
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Spec fix/hint-nested-agent-transcript r1
     model: claude-opus-5-5
     durationSec: 28
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Spec fix/hint-nested-agent-transcript r2
     model: claude-opus-5-5
     durationSec: 29
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards fix/hint-nested-agent-transcript r1
     model: claude-opus-5-5
     durationSec: 27
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2
+    tokenShare: 1.8
   - type: workflow-subagent
     task: Standards fix/hint-nested-agent-transcript r3
     model: claude-opus-5-5
     durationSec: 22
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Standards fix/hint-nested-agent-transcript r1
     model: claude-opus-5-5
     durationSec: 37
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: workflow-subagent
     task: Spec fix/hint-nested-agent-transcript r1
     model: claude-opus-5-5
     durationSec: 53
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 2.1
+    tokenShare: 2
   - type: workflow-subagent
     task: Standards fix/hint-nested-agent-transcript r2
     model: claude-opus-5-5
     durationSec: 44
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: Spec fix/hint-nested-agent-transcript r2
     model: claude-opus-5-5
     durationSec: 52
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: workflow-subagent
     task: gate fix/hint-nested-agent-transcript
     model: claude-opus-5-5
@@ -366,71 +370,75 @@ subagents:
     durationSec: 428
     toolCalls: 29
     modelCalls: 23
-    tokenShare: 7
+    tokenShare: 6.5
   - type: workflow-subagent
     task: fix fix/hint-nested-agent-transcript r1
     model: claude-opus-5-5
     durationSec: 191
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1.6
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #2544"
     model: claude-opus-5-5
     durationSec: 96
     toolCalls: 21
     modelCalls: 12
-    tokenShare: 3.5
+    tokenShare: 3.2
   - type: workflow-subagent
     task: "triage #2543"
     model: claude-opus-5-5
     durationSec: 74
     toolCalls: 17
     modelCalls: 11
-    tokenShare: 3.2
+    tokenShare: 3
   - type: workflow-subagent
     task: "triage #2545"
     model: claude-opus-5-5
     durationSec: 84
     toolCalls: 18
     modelCalls: 11
-    tokenShare: 3.4
+    tokenShare: 3.1
   - type: workflow-subagent
     task: "triage #2546"
     model: claude-opus-5-5
     durationSec: 78
     toolCalls: 20
     modelCalls: 11
-    tokenShare: 4.3
+    tokenShare: 4
   - type: workflow-subagent
     task: Standards fix/frictions-to-fixes-regression-ranking r1
     model: claude-opus-5-5
     durationSec: 41
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: gate fix/frictions-to-fixes-regression-ranking
     model: claude-sonnet-5-5
     durationSec: 50
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec fix/frictions-to-fixes-regression-ranking r1
     model: claude-opus-5-5
     durationSec: 34
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: build fix/frictions-to-fixes-regression-ranking
     model: claude-sonnet-5-5
     durationSec: 98
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 2
+    tokenShare: 1.9
 gitBranch: ccr-17ff445b-bo6rt6
 entrypoint: remote_mobile
 cliVersion: 2.1.310
+learnings:
+  - PyYAML (YAML 1.1) reads bare yes/no as booleans, so a script re-emitting log verdicts must map them back to strings.
+ideas:
+  - Give run-summary.ts a --verdicts mode over many run outputs plus the orchestrator scratch that emits one merged entry per path, so closing a multi-run clear-backlog session is one command instead of an ad hoc merge script.
 landedBy: Stop
