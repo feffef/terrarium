@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01VW5yg4NTMt1JBnXCcrhjw9
 startedAt: 2026-10-25T07:47:24Z
-endedAt: 2026-10-25T08:08:35Z
+endedAt: 2026-10-25T08:11:34Z
 kind: interactive
 goal: Check whether audit-docs lenses still earn their place
-status: in-review
-outcome: "PR 2518 drops the audit-docs Concision lens. Coherence lens lands real fixes; the Concision lens confirms the churn suspicion: about 19 of 25 landed concision edits in two runs changed no reader action"
-summary: "Human-instructed: the user asked me to use inspect-session on the last two audit-docs runs (session_01Ku4KD2Ua5MXi6eQ95TG4aj on 2026-10-24 and session_01EQ8sMcrX7UwDXFBx6tfUWu on 2026-10-25) to confirm or refute that the Coherence lens (Agent D) only makes churn. The session logs and sweep PR bodies (#2481, #2509) don't split findings by lens, so I dispatched two partial-read subagents, one per session. Results: on 10-25, D made 12 findings and 4 landed (the CLAUDE.md .throwaway contradiction, the Midden trench/stores fact, the close-session Inventory babysit claim, and one mis-labelled glossary move). On 10-24, 12 checked coherence findings produced 4 landings (ADR-0004 0.x-minor escalation, ledger-set path, close-session role, journal glossary wording). The 10-24 reader reached its 25-page limit before Agent D's own hand-back and worked from the checker's re-listing. The verdict the user got: the lens mostly lands real fixes, and most churn in those PRs is concision and Inventory wording. Its real cost is rejected findings that come back every run (visitor-loop \"five homepage sites\", Tinkerfund \"Live ending soon\", pr-workflow under a Prune Trial). The user then clarified they meant the Concision lens (human-instructed follow-up). Resuming the same two readers: on 10-25, C made 39 findings, 7 confirmed, all same-meaning rewordings; on 10-24, about 68 findings, about 29 confirmed, about 6 useful (a wrong \"six weeks\" fact, a stale \"small set of ADRs\", a stale correction note) and the rest wording churn. My own git blame over 16 sweeps since 10-13 showed 10-22% of each sweep's removed lines were written by an earlier sweep. Concision's share of tokens was about 8-20%; Coherence's reviewer alone was 29-33%. The user then picked option 1 of three (remove the lens). I removed Agent C and the concision-family rotation from audit-docs, repointed four references (impl-brief, prune-trial, the Inventory role, the interactive map), left the pinned Glass Box walkthrough alone, and changed the intro's \"plain\" to \"clear\" after both code-review axes flagged it. Gate green; PR 2518 open."
+status: completed
+outcome: "PR 2518 merged: drops the audit-docs Concision lens. Coherence lens lands real fixes; the Concision lens confirms the churn suspicion: about 19 of 25 landed concision edits in two runs changed no reader action"
+summary: "Human-instructed: the user asked me to use inspect-session on the last two audit-docs runs (session_01Ku4KD2Ua5MXi6eQ95TG4aj on 2026-10-24 and session_01EQ8sMcrX7UwDXFBx6tfUWu on 2026-10-25) to confirm or refute that the Coherence lens (Agent D) only makes churn. The session logs and sweep PR bodies (#2481, #2509) don't split findings by lens, so I dispatched two partial-read subagents, one per session. Results: on 10-25, D made 12 findings and 4 landed (the CLAUDE.md .throwaway contradiction, the Midden trench/stores fact, the close-session Inventory babysit claim, and one mis-labelled glossary move). On 10-24, 12 checked coherence findings produced 4 landings (ADR-0004 0.x-minor escalation, ledger-set path, close-session role, journal glossary wording). The 10-24 reader reached its 25-page limit before Agent D's own hand-back and worked from the checker's re-listing. The verdict the user got: the lens mostly lands real fixes, and most churn in those PRs is concision and Inventory wording. Its real cost is rejected findings that come back every run (visitor-loop \"five homepage sites\", Tinkerfund \"Live ending soon\", pr-workflow under a Prune Trial). The user then clarified they meant the Concision lens (human-instructed follow-up). Resuming the same two readers: on 10-25, C made 39 findings, 7 confirmed, all same-meaning rewordings; on 10-24, about 68 findings, about 29 confirmed, about 6 useful (a wrong \"six weeks\" fact, a stale \"small set of ADRs\", a stale correction note) and the rest wording churn. My own git blame over 16 sweeps since 10-13 showed 10-22% of each sweep's removed lines were written by an earlier sweep. Concision's share of tokens was about 8-20%; Coherence's reviewer alone was 29-33%. The user then picked option 1 of three (remove the lens). I removed Agent C and the concision-family rotation from audit-docs, repointed four references (impl-brief, prune-trial, the Inventory role, the interactive map), left the pinned Glass Box walkthrough alone, and changed the intro's \"plain\" to \"clear\" after both code-review axes flagged it. Gate green; PR 2518 merged via merge-pr.ts (309694dfe)."
 prs:
   - "2518"
 docsRead:
@@ -73,12 +73,12 @@ frictions:
   - description: I took 'coherence lens' literally and spent ~270k subagent tokens on it; the user meant concision
     solution: When a user's lens name doesn't match their stated symptom (churn), ask which one first
     severity: moderate
-durationSec: 1271
+durationSec: 1450
 models:
-  claude-opus-5-5: 157
+  claude-opus-5-5: 173
 toolCounts:
   Skill: 5
-  Bash: 44
+  Bash: 49
   Read: 11
   ToolSearch: 3
   mcp__github__pull_request_read: 3
@@ -90,6 +90,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 3
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/audit-docs/SKILL.md
   - .agents/skills/frictions-to-fixes/impl-brief.md
@@ -196,28 +198,28 @@ subagents:
     durationSec: 638
     toolCalls: 80
     modelCalls: 77
-    tokenShare: 28.4
+    tokenShare: 26.2
   - type: general-purpose
     task: Inspect 10-25 audit-docs run
     model: sonnet
     durationSec: 569
     toolCalls: 63
     modelCalls: 61
-    tokenShare: 23
+    tokenShare: 21.2
   - type: general-purpose
     task: Standards review of lens removal
     model: sonnet
     durationSec: 33
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 2.2
+    tokenShare: 2
   - type: general-purpose
     task: Spec review of lens removal
     model: sonnet
     durationSec: 32
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 2.6
+    tokenShare: 2.4
 gitBranch: ccr-22bdc20f-1748gp
 entrypoint: remote_mobile
 cliVersion: 2.1.310
