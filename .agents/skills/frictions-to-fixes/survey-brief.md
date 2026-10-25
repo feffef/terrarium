@@ -53,6 +53,7 @@ You hold the summary and the window's unledgered Frictions.
 Goal: the ledger carries every in-window Friction, each in the cluster of
 its root cause, with every merged fix recorded and every stale status reset.
 Every edit goes through
+`print-ledger-occurrence.ts --append`,
 `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/ledger-set.ts`
 (flags in its header; it refuses a result the schema rejects) or
 `prune-friction-ledger.ts --move`, never by hand.
@@ -60,13 +61,12 @@ Every edit goes through
 ### Instructions
 
 1. **Append each window Friction that matches an entry**, whatever its
-   severity. A session counts once per entry, at its highest severity. An
-   occurrence is the block
-   `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts <session> <index> [<session> <index> …]`
-   prints (the Friction's text copied from the log; a content test checks
-   the copy), never retyped. Print all pairs in one call, as each takes
-   seconds, then give each entry its blocks through
-   `ledger-set.ts <entry> --occurrences <file>`.
+   severity. A session counts once per entry, at its highest severity. One
+   call files them all:
+   `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts --append <entry> <session> <index> [<entry> <session> <index> …]`
+   copies each Friction's text from its log (a content test checks the
+   copy) and appends it under its entry; it refuses a session an entry
+   already holds and then writes nothing. Never type an occurrence by hand.
 2. **Open a new entry** for a cause seen twice, or once at `moderate`,
    `major` or `blocker`. Its `summary` is one plain sentence a visitor can
    read; its `cause` names the root mechanism and the signals that identify

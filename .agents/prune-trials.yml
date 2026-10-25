@@ -239,7 +239,12 @@ trials:
       the same `audit-docs` pointer. Cut at the owner's request: the stale
       `docsReadViaShell` caveat (its logs are past the horizon), a schema
       check `ledger-set.ts` already enforces, and the `foldSubagentTrace`
-      incident example behind the mechanism-bug rule.
+      incident example behind the mechanism-bug rule. Amended the same day:
+      `print-ledger-occurrence.ts --append <entry> <session> <index>…` files
+      each block under its entry itself (through `ledger-set.ts`'s
+      `setEntry`), so survey §2 step 1 is one command and no printed output
+      is split across `ledger-set.ts` calls by hand; the brief's step was
+      reworded to that command, every rule in it kept.
     territory:
       paths:
         - ".agents/skills/frictions-to-fixes/survey-brief.md (all of it)"

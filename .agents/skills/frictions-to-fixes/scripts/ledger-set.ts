@@ -10,8 +10,9 @@
 //     [--occurrences <file>|-]
 //   `<entry>` is the file name without `.yml`. `--fix` appends, oldest first;
 //   with `--replace-fixes` (needs at least one `--fix`) the given fixes
-//   replace the stored ones. `-` reads the occurrence blocks from stdin, e.g.
-//   piped from print-ledger-occurrence.ts.
+//   replace the stored ones. `-` reads the occurrence blocks from stdin.
+//   `print-ledger-occurrence.ts --append` files blocks under their entries
+//   itself, through `setEntry`.
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { isMap, isScalar, isSeq, parseDocument, Scalar, type Document } from 'yaml'

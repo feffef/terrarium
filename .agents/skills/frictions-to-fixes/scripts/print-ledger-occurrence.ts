@@ -1,18 +1,27 @@
 // Prints a Friction Ledger occurrence block for a session's friction, copied
 // from the log the way `layers/journal/tests/unit/ledger-content.spec.ts`
 // checks it (whitespace-normalised text, the session's UTC start date), so the
-// `frictions-to-fixes` survey never retypes it.
+// `frictions-to-fixes` survey never retypes it. With `--append` it also files
+// each block under its entry, so no printed output is split by hand.
 //
 // Usage:
 //   tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
 //     <session> <index> [<session> <index> ...]
+//   tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
+//     --append <entry> <session> <index> [<entry> <session> <index> ...]
 //   `index` is the friction's position in the log's `frictions` list, as
-//   `extract-frictions.ts --compact` prints it. Output is ready to paste under
-//   a cluster's `occurrences:`.
+//   `extract-frictions.ts --compact` prints it. Without `--append`, output is
+//   ready to paste under a cluster's `occurrences:`. With it, `<entry>` is the
+//   ledger file name without `.yml`; the blocks are appended through
+//   `ledger-set.ts`'s `setEntry`, so a result the schema rejects (a session
+//   listed twice in one entry, say) is refused and nothing is written.
+import { readFileSync, writeFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { Document, Scalar } from 'yaml'
-import { flattenText } from '../../../../scripts/session/extract-frictions.ts'
+import { flattenText, LEDGER_DIR } from '../../../../scripts/session/extract-frictions.ts'
 import { readSessionLogs } from '../../../../scripts/session/journal-files.ts'
-import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { setEntry } from './ledger-set.ts'
 
 export function occurrenceBlock(log: Record<string, unknown>, index: number): string {
   const frictions = Array.isArray(log.frictions) ? log.frictions : []
@@ -30,14 +39,69 @@ export function occurrenceBlock(log: Record<string, unknown>, index: number): st
   return doc.toString({ lineWidth: 0 }).replace(/^(?=.)/gm, '  ')
 }
 
+export interface Pick { session: string; index: number }
+
+/** `--append` arguments grouped by entry, in first-seen order. */
+export function groupTriples(argv: string[]): Map<string, Pick[]> {
+  if (argv.length === 0 || argv.length % 3) throw new Error('usage: print-ledger-occurrence.ts --append <entry> <session> <index> [<entry> <session> <index> ...]')
+  const groups = new Map<string, Pick[]>()
+  for (let i = 0; i < argv.length; i += 3) {
+    const entry = argv[i]!
+    const index = Number(argv[i + 2])
+    if (!Number.isInteger(index) || index < 0) throw new Error(`${entry} ${argv[i + 1]}: index must be a whole number, got ${argv[i + 2]}`)
+    groups.set(entry, [...(groups.get(entry) ?? []), { session: argv[i + 1]!, index }])
+  }
+  return groups
+}
+
+/** Each entry's new text with its blocks appended; throws before any write when one fails. */
+export function appendPlan(
+  groups: Map<string, Pick[]>,
+  logs: Map<string, Record<string, unknown>>,
+  readEntry: (entry: string) => string,
+): Map<string, string> {
+  const plan = new Map<string, string>()
+  for (const [entry, picks] of groups) {
+    const blocks = picks.map(({ session, index }) => {
+      const log = logs.get(session)
+      if (!log) throw new Error(`no session log for ${session}`)
+      return occurrenceBlock(log, index)
+    }).join('')
+    try {
+      plan.set(entry, setEntry(readEntry(entry), { occurrences: blocks }))
+    } catch (err) {
+      throw new Error(`${entry}: ${err instanceof Error ? err.message : String(err)}`, { cause: err })
+    }
+  }
+  return plan
+}
+
+function readLogs(): Map<string, Record<string, unknown>> {
+  return new Map(readSessionLogs(root, { archived: true }).map(({ data }) => [String(data.session), data]))
+}
+
 function main(): void {
   const argv = process.argv.slice(2)
-  if (argv.length === 0 || argv.length % 2) throw new Error('usage: tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts <session> <index> [<session> <index> ...]')
-  const logs = new Map(readSessionLogs(root, { archived: true }).map(({ data }) => [String(data.session), data]))
-  for (let i = 0; i < argv.length; i += 2) {
-    const log = logs.get(argv[i]!)
-    if (!log) throw new Error(`no session log for ${argv[i]}`)
-    process.stdout.write(occurrenceBlock(log, Number(argv[i + 1])))
+  try {
+    if (argv[0] === '--append') {
+      const groups = groupTriples(argv.slice(1))
+      const entryPath = (entry: string) => join(root, LEDGER_DIR, `${entry}.yml`)
+      const plan = appendPlan(groups, readLogs(), (entry) => readFileSync(entryPath(entry), 'utf8'))
+      for (const [entry, text] of plan) {
+        writeFileSync(entryPath(entry), text)
+        console.log(`print-ledger-occurrence: appended ${groups.get(entry)!.length} to ${entry}`)
+      }
+      return
+    }
+    if (argv.length === 0 || argv.length % 2) throw new Error('usage: tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts <session> <index> [<session> <index> ...]')
+    const logs = readLogs()
+    for (let i = 0; i < argv.length; i += 2) {
+      const log = logs.get(argv[i]!)
+      if (!log) throw new Error(`no session log for ${argv[i]}`)
+      process.stdout.write(occurrenceBlock(log, Number(argv[i + 1])))
+    }
+  } catch (err) {
+    fail(err instanceof Error ? err.message : String(err))
   }
 }
 
