@@ -123,3 +123,12 @@ stripped of everything but letters, digits, hyphens and spaces, with spaces
 turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
 `:term[ADR-0004]` reads `adr-0004.yml`, and
 `:term[Spaces]{id="space"}` reads `space.yml`.
+
+## What lives where
+
+- **`.agents/skills/glassbox-lesson/`** — how a Lesson gets written;
+  `EVERY-PAGE.md` there settles titles, voice and the Write step for every page.
+- **`.agents/skills/glassbox-walkthrough/SKILL.md`** — how a Walkthrough gets
+  written.
+- **`.agents/skills/glassbox-update/SKILL.md`** — how the guide pages are
+  brought up to date with `main`.
