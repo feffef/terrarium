@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01EQ8sMcrX7UwDXFBx6tfUWu
 startedAt: 2026-10-25T04:03:40Z
-endedAt: 2026-10-25T04:30:19Z
+endedAt: 2026-10-25T05:13:04Z
 kind: autonomous
 goal: Scheduled docs audit (root concision family)
-status: in-review
-outcome: Sweep PR 2509 merged green; escalation PR 2510 awaits a human merge
-summary: 'Scheduled audit-docs run, no human prompted it. Concision family: root (after journal). Four reviewer agents (Freshness, Single-home, Concision, Coherence) produced about 70 findings; three checkers returned 16 CONFIRMED/CONFIRMED-BUT and 41 WRONG (many concision nits dropped a reason or pointer, and findings on text under open prune trials were refused). Fifteen fixes went into sweep PR 2509 (gate green, code-review clean, verdict posted). One fix, the ADR-0004 summary rule missing the "0.x minor counts as a major" clause, edits a Human-only path and went into escalation PR 2510. No issue filed. PR 2509 then merged via merge-pr.ts; the advisory conflicting-issues check hit issue 2432 on CLAUDE.md after I had started the merge, not read first. All work was agent-initiated under the audit-docs Skill.'
+status: completed
+outcome: Sweep PR 2509 merged green; escalation PR 2510 merged by a human
+summary: 'Scheduled audit-docs run, no human prompted it. Concision family: root (after journal). Four reviewer agents (Freshness, Single-home, Concision, Coherence) produced about 70 findings; three checkers returned 16 CONFIRMED/CONFIRMED-BUT and 41 WRONG (many concision nits dropped a reason or pointer, and findings on text under open prune trials were refused). Fifteen fixes went into sweep PR 2509 (gate green, code-review clean, verdict posted). One fix, the ADR-0004 summary rule missing the "0.x minor counts as a major" clause, edits a Human-only path and went into escalation PR 2510. No issue filed. PR 2509 then merged via merge-pr.ts; the advisory conflicting-issues check hit issue 2432 on CLAUDE.md after I had started the merge, not read first. The escalation PR 2510 was later merged by a human. All work was agent-initiated under the audit-docs Skill.'
 prs:
   - "2509"
   - "2510"
@@ -242,13 +242,13 @@ frictions:
   - description: Checkers each saw only their own pool file, so overlapping findings (B F8 and D F11) got different replacement wordings and I had to arbitrate.
     solution: Give every checker the full pooled finding set, or merge overlaps into one finding before dispatch.
     severity: minor
-durationSec: 1600
+durationSec: 4165
 models:
-  claude-sonnet-5-5: 96
+  claude-sonnet-5-5: 104
 toolCounts:
   Read: 4
   Skill: 4
-  Bash: 26
+  Bash: 27
   Agent: 10
   ToolSearch: 1
   mcp__github__create_pull_request: 3
@@ -256,6 +256,7 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 1
   PushNotification: 1
+  ReadNotifications: 3
 filesEdited:
   - .claude/rules/adr-0004.md
   - CLAUDE.md
@@ -446,49 +447,49 @@ subagents:
     durationSec: 128
     toolCalls: 20
     modelCalls: 18
-    tokenShare: 6.3
+    tokenShare: 6
   - task: "Audit B: Single-home"
     durationSec: 290
     toolCalls: 50
     modelCalls: 25
-    tokenShare: 11.6
+    tokenShare: 11.2
   - task: "Audit C: Concision (root)"
     durationSec: 188
     toolCalls: 18
     modelCalls: 2
-    tokenShare: 2.3
+    tokenShare: 2.2
   - task: "Audit D: Coherence"
     durationSec: 549
     toolCalls: 55
     modelCalls: 53
-    tokenShare: 33.7
+    tokenShare: 32.5
   - task: Check findings A+D
     durationSec: 239
     toolCalls: 37
     modelCalls: 34
-    tokenShare: 8
+    tokenShare: 7.7
   - task: Check findings B
     durationSec: 151
     toolCalls: 21
     modelCalls: 20
-    tokenShare: 4.7
+    tokenShare: 4.5
   - task: Check findings C
     durationSec: 208
     toolCalls: 28
     modelCalls: 26
-    tokenShare: 5.9
+    tokenShare: 5.7
   - type: general-purpose
     task: "Review: Standards axis"
     durationSec: 31
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: "Review: Spec axis"
     durationSec: 21
     toolCalls: 5
     modelCalls: 2
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: Review escalation diff
     durationSec: 18
