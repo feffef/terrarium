@@ -1,15 +1,15 @@
 ---
 title: A newcomer's first hour
 description: How a developer new to Terrarium finds their way in, from the home page through the Journal's short tour to the files every agent session reads first.
-revision: '75deb9486800d2fa8ccb7c90bb2e03b566542e8d'
-revisionDate: '2026-10-17'
+revision: 'e0edb8a5963064e5075b668c6512896a6e9fcd4d'
+revisionDate: '2026-10-25'
 ---
 
 A developer has just heard of Terrarium and has an hour to spare. This Walkthrough follows them from the home page, through the Journal's short tour of how the place works, into the repository, where they read the same files every agent session reads first. It ends where the Lessons here take over.
 
 ## 1. The home page points to the Journal
 
-The home page says what Terrarium is in a few lines, links the repository's issues and pull requests, and offers one button: "Enter the Journal". The Journal is the :term[Tenant] that documents the Platform itself; the other sites are listed further down.
+The home page says what Terrarium is in a few lines, links the repository's issues and pull requests, and offers one button: "Enter the Journal". The Journal is the :term[Tenant] that documents the Platform itself; the other sites are listed further down, each with a short label for how it relates to the real build.
 
 ::stop-links
 [Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [The Journal](/t/journal/current) · :file[app/pages/index.vue] · :file[app/utils/sites.ts]
@@ -49,7 +49,7 @@ The tour links the repository's issues and pull requests, and from there the new
 
 ## 6. The words before the code
 
-`CLAUDE.md` sends every session to the glossaries before anything else: the glossary map, which points to a Tenant's own glossary, then the Platform glossary, with words such as Tenant, Space and Friction. A newcomer who reads them in that order learns the words the docs, the code and the agents all use. The decisions behind the words are ADRs, one decision each, and each ADR's summary reaches agents as a rule.
+`CLAUDE.md` pulls two glossaries into every session: the glossary map, which points to a Tenant's own glossary, and the Platform glossary, with words such as Tenant, Space and Friction. A newcomer who reads them learns the words the docs, the code and the agents all use. The decisions behind the words are ADRs, one decision each, and each ADR's summary reaches agents as a rule.
 
 ::stop-links
 [Several glossaries](/t/glassbox/drafts/terrarium-practice/glossaries) · [Decision records](/t/glassbox/guide/terrarium-practice/adrs)

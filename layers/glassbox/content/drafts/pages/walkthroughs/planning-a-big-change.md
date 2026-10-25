@@ -1,8 +1,8 @@
 ---
 title: Planning a big change
 description: How an idea too big for one session becomes a map of decision tickets, then a spec, then stories that agents build one PR at a time.
-revision: '75deb9486800d2fa8ccb7c90bb2e03b566542e8d'
-revisionDate: '2026-10-17'
+revision: 'e0edb8a5963064e5075b668c6512896a6e9fcd4d'
+revisionDate: '2026-10-25'
 ---
 
 The owner has an idea too big for one session, and the way to it isn't clear yet. This Walkthrough follows that idea from the owner's side: it becomes a map of open questions on GitHub, sessions settle the questions one at a time, and the map ends in a spec whose stories agents build.
