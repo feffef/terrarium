@@ -1,0 +1,355 @@
+schemaVersion: 1
+session: session_01PdrNTJLJJMKBGGZfsAhL6w
+startedAt: 2026-10-25T11:32:22Z
+endedAt: 2026-10-25T11:45:56Z
+kind: delegated
+goal: Clear the issue backlog with the clear-backlog Skill
+status: in-review
+outcome: Three fixes open as PRs; three Friction-recurrence issues await the owner's grilling answers
+summary: "The owner invoked /clear-backlog (human-instructed); the rest ran under that opt-in. The sweep set was 8 issues: the 7 with no comments or no state label (#2520-#2523, #2527, #2528, #2432) plus #2433; every other open issue had an AI comment last and there were no external PRs. clear-backlog-explore triaged all 8: build for #2523, #2527 and #2528; grill for #2520, #2521 and #2522; #2432 and #2433 time-gated until 2026-10-26T07:43Z (#2433 is blocked by #2432). clear-backlog-build built and reviewed the three build branches. I checked each branch's commits and diff, and on #2527 I added a small wording follow-up (the pool is a new folder). I pushed all three and opened PR #2532 (final gate agent in clear-backlog-build, with a routing unit test), PR #2533 (audit-docs pool folder) and PR #2534 (inspect-session outline.ts bullet). None touches a Human-only path. The grill picks I sent the owner (Q1-Q4) are agent recommendations: #2520 c (re-measure, add nothing), #2522 a (accept the cost), #2521 a (accept the cost). I checked each pick against git and the Friction Ledger, but #2521's occurrences only against the ledger, not via inspect-session. Open judgement call on PR #2532: the build and fix prompts still run a gate that nothing reads any more."
+prs:
+  - "2532"
+  - "2533"
+  - "2534"
+docsRead:
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "step 1 resolves the sweep set and eligibility; triage #2432: Brief required it; gave the on-hold and no-comment rules; triage #2433: The brief told me to read it. It gave the blocked-ticket skip and the wayfinder and determinability rules.; triage #2520: The brief required it. Gave the brave-within-determinability line, the comment-on-an-uncommented-issue rule and the git-history check.; triage #2521: Required by the brief. Gave the per-issue sweep rules.; triage #2522: The brief told me to read it. Its rule that an obsolete or regressed issue goes to ready-for-human decided the outcome.; triage #2523: The brief told me to read it; the brave-within-determinability rule decided build; triage #2527: Required by the brief. Gave the brave-within-determinability bar and the wayfinder overlay (no wayfinder label here).; triage #2528: The brief told me to read it. It gave the brave and determinability rule and the label/comment rules."
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: "fetch before history; commit -F; trailer check; triage #2432: Required before git log (read late after hook hint); fetch-first advice matched what I did; triage #2433: Required before git log. Its fetch-first and origin/main scoping rules applied.; triage #2520: CLAUDE.md requires it before git log; I read it after my first log call. Only read-only log and show calls were made.; triage #2521: CLAUDE.md trigger before git log. Read late, after the first fetch and log, which was already correct (fetched, scoped to origin/main).; triage #2523: CLAUDE.md requires it before git log; read late, and my fetch-then-log on origin/main was already right; triage #2527: CLAUDE.md read-first before git log; I read it late. Fetch-first advice applied.; triage #2528: CLAUDE.md requires it before git log/fetch. Its fetch-first advice confirmed I was reading current history.; build fix/2523-build-final-gate: read before the first git command; commit -F and trailer check applied; Standards fix/2523-build-final-gate r1: The CLAUDE.md trigger before git log, read after a hook prompted it. My three-dot diff was already correct.; build fix/2527-audit-docs-pool: Read after a hook said to read it before the first git command; Standards fix/2527-audit-docs-pool r1: A hook asked me to read it after my first git log. It confirmed the three-dot diff and the trailer check.; build fix/2528-inspect-session-outline: Hook asked for it before the first git command; I read it after one fetch.; Standards fix/2528-inspect-session-outline r1: The CLAUDE.md trigger before using git log; confirmed that three-dot origin/main...HEAD is the right diff."
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: "write through MCP; list-open-issues script; triage #2432: Required before GitHub ops (hook reminded after first call); my calls were already right; triage #2433: CLAUDE.md requires it before the first GitHub operation. I read it late; my calls were already right.; triage #2520: CLAUDE.md requires it before GitHub operations; I read it right after my first call. Confirmed that a label update replaces the whole set and that comments go through add_issue_comment.; triage #2521: CLAUDE.md trigger before GitHub ops. Confirmed that label replacement and comments go through MCP.; triage #2522: CLAUDE.md requires it before GitHub operations. It confirmed that a label update replaces the whole set and that comments go through add_issue_comment.; triage #2523: CLAUDE.md requires it before GitHub operations (read after the first issue_read); the label set replaces; triage #2527: CLAUDE.md read-first before GitHub operations; I read it after the first read. Confirmed that a label update replaces the set and that comments go through add_issue_comment.; triage #2528: CLAUDE.md requires it before GitHub operations; I read it after my first issue_read. It confirmed that a label update replaces the set.; build fix/2523-build-final-gate: read after a gh api call that read the brief comment; the call was already right; Spec fix/2523-build-final-gate r1: CLAUDE.md requires it before the first GitHub operation (I read it after issue_read; the calls were already right); Spec fix/2528-inspect-session-outline r1: A hook asked me to read it after my first issue_read. My calls were already right."
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: read after the workflow launch on a hook hint; the workflow writes its own briefs
+    useful: no
+  - path: .agents/skills/grilling/SKILL.md
+    reason: round format for the Q1-Q4 list
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review, gate and merge recipe before pushing
+    useful: yes
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: "triage #2523: The Agent Brief format for the comment"
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2520: The brief required it. Gave the state and category labels and the redundancy check.; triage #2521: Required by the brief. Gave the state machine and the redundancy check.; triage #2523: The brief told me to read it; the per-issue steps and labels; triage #2527: Required by the brief. Gave the redundancy check and the outcome format.; triage #2528: The brief told me to read it. It gave the per-issue steps and the categories."
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "triage #2521: Read in full because option 2 would add a block. It rejects reminder or block hooks at every pause, which shaped the options."
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "triage #2520: Read for the definitions of judgment call and real design doubt.; triage #2521: Read in full to confirm that a choice among several valid approaches goes to ready-for-human.; triage #2522: This ADR governs the triage outcome. Its judgment-call and design-doubt criteria supported grill.; triage #2523: Read in full to tell a judgment call from a design the repo settles; triage #2527: The full ADR behind the ready-for-agent recommendation. Confirmed: two options, but the repo settles one, so no real design doubt.; triage #2528: Full ADR behind the ready-for-agent decision. It confirmed that a Trusted issue with a settled design gets ready-for-agent."
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "triage #2527: The full ADR behind the 'cut the instruction first' choice. Confirmed it.; build fix/2528-inspect-session-outline: Hook asked for it after the SKILL.md edit."
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "triage #2432: Required before triage; its Specs section says an on-hold issue carries no label; triage #2433: Required before triage. Its Specs section makes the on-hold line in the body authoritative."
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: "triage #2520: CLAUDE.md requires it before labelling. Gave the label strings.; triage #2521: CLAUDE.md trigger before labeling. Label strings.; triage #2523: CLAUDE.md requires it before labelling; confirmed the label strings"
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Standards fix/2523-build-final-gate r1: Read as the task required, for the Standards axis and the smell baseline.; Spec fix/2523-build-final-gate r1: The task told me to read it and apply the Spec axis; Standards fix/2527-audit-docs-pool r1: The task required it for the Standards axis and the smell baseline.; Spec fix/2527-audit-docs-pool r1: The task told me to read it and apply its Spec axis: missing or partial requirements, scope creep, wrong implementation.; Standards fix/2528-inspect-session-outline r1: The task required it; it defines the Standards axis and the smell baseline.; Spec fix/2528-inspect-session-outline r1: The task told me to read it for the Spec axis. It gave the missing / scope-creep / wrong framing."
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "build fix/2528-inspect-session-outline: Task told me to read it."
+    useful: yes
+  - path: .agents/skills/tdd/SKILL.md
+    reason: "build fix/2523-build-final-gate: invoked per task; drove red-then-green"
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Standards fix/2528-inspect-session-outline r1: Read with sed to check the Human-only paths that the build decision left unchecked.; Spec fix/2528-inspect-session-outline r1: I read it to answer the build's open question. It showed that .agents/skills is not on the Human-only list."
+    useful: yes
+  - path: CLAUDE.md
+    reason: "build fix/2523-build-final-gate: loaded at start; set the scratchpad, gate and git conventions; build fix/2528-inspect-session-outline: Project instructions loaded at session start."
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: "build fix/2523-build-final-gate: hook asked for it after the workflow edit; confirmed workflow-scripts.spec.ts is the test home"
+    useful: partly
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: read its diff and edited step 1.4 wording for PR 2533
+    useful: yes
+  - path: layers/journal/content/current/frictions/counts-not-tallied.yml
+    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: scripts/session/save-handback.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/frictions/close-session-bypassed-by-hand-log.yml
+    reason: (no reason given)
+  - path: .claude/workflows/clear-backlog-build.js
+    reason: (read before editing)
+  - path: tests/unit/workflow-scripts.spec.ts
+    reason: (read before editing)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: owner-invoked orchestration
+  - name: clear-backlog-explore
+    reason: triaged the 8 issues
+  - name: clear-backlog-build
+    reason: built and reviewed the 3 build branches
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: "On #2527 I pushed a prose follow-up commit without re-running gate:scoped on the final head, which pr-workflow.md asks for before the first push."
+    solution: Re-read the pr-workflow.md 'Review before the first push' recipe before any hand edit to a ready-to-push branch.
+    severity: minor
+durationSec: 814
+models:
+  claude-opus-5-5: 68
+toolCounts:
+  Bash: 20
+  Read: 5
+  Workflow: 2
+  ToolSearch: 2
+  PushNotification: 1
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  Skill: 2
+filesEdited:
+  - tests/unit/workflow-scripts.spec.ts
+  - .claude/workflows/clear-backlog-build.js
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0005.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: true
+    by: subagent
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0021.md
+docsReadBySubagents:
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - docs/adr/0005-skill-model.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: "orchestrator: made me check Human-only paths and test coverage before calling the PRs agent-mergeable; summary was enough; triage #2523: Loaded at session start; it told me to flag that the change probably needs a human merge because no test observes the behaviour; build fix/2523-build-final-gate: loaded at start; this is why the test was added; Spec fix/2523-build-final-gate r1: Loaded at session start; needed to judge whether the new test removes the untested-behaviour human-merge reason; Standards fix/2528-inspect-session-outline r1: Loaded at session start; the merge criteria let me settle the Human-only question."
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: "orchestrator: sent me to close-session at PR open; summary was enough; triage #2521: Always loaded. It governs close-session timing, the area of this issue.; build fix/2523-build-final-gate: loaded at start; doesn't apply since logs are the orchestrator's; Standards fix/2523-build-final-gate r1: Loaded at session start. Not relevant to a read-only review.; Spec fix/2523-build-final-gate r1: Loaded at session start; not relevant to a read-only review; build fix/2527-audit-docs-pool: Loaded at session start; not relevant to this change; Standards fix/2527-audit-docs-pool r1: Loaded at session start; covers session logs. Doesn't apply to a read-only review.; Spec fix/2527-audit-docs-pool r1: Loaded at session start. It covers session logs, which have nothing to do with this review.; Standards fix/2528-inspect-session-outline r1: Loaded at session start; about session logs, which do not apply to this review.; Spec fix/2528-inspect-session-outline r1: Loaded at session start. It doesn't apply to a read-only review."
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: "orchestrator: open the PRs at once after push and subscribe; summary was enough; triage #2520: Loaded at session start. Confirms that new instructions need approval, which fits grill over build.; triage #2521: Always loaded. Approval of new work, background only.; triage #2527: Loaded at session start. Background on approval; ADR-0022 is what covers the sweep's label.; build fix/2523-build-final-gate: loaded at start; doesn't apply since PRs are the orchestrator's; Standards fix/2523-build-final-gate r1: Loaded at session start. Not relevant to a read-only review.; Spec fix/2523-build-final-gate r1: Loaded at session start; not relevant to a read-only spec review; build fix/2527-audit-docs-pool: Loaded at session start; not relevant to this change; Standards fix/2527-audit-docs-pool r1: Loaded at session start; covers PR and approval rules. Doesn't apply to this review.; Spec fix/2527-audit-docs-pool r1: Loaded at session start. It covers governance and PRs, which have nothing to do with a spec review.; Standards fix/2528-inspect-session-outline r1: Loaded at session start; about PR and approval rules, which do not apply to a read-only review.; Spec fix/2528-inspect-session-outline r1: Loaded at session start. It doesn't apply to this review."
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: "orchestrator: header line on each PR body; checked commit trailers; triage #2432: Session start; gave the comment header; triage #2520: Loaded at session start. Required the provenance header on the comment.; triage #2521: Always loaded. Set the provenance header on the comment.; triage #2522: Loaded at session start. It set the provenance header I used in the comment.; triage #2523: Loaded at session start; the comment header; triage #2527: Loaded at session start. Gave the required provenance header for the comment.; triage #2528: Loaded at session start. It set the provenance header on my comment.; Standards fix/2527-audit-docs-pool r1: Loaded at session start; prompted the check that the commit trailer landed."
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: "orchestrator: bounds what the sweep may label; Trusted-authored issues only here; triage #2520: Loaded when I read the auto-triage Skill. It set this to ready-for-human because it's a judgment call about our own instructions.; triage #2521: Loaded with auto-triage. It is the rule for judgment call vs ready-for-agent.; triage #2522: Loaded when I read the auto-triage Skill. It led me to the full ADR.; triage #2523: Loaded with the auto-triage Skill; it sets when ready-for-agent is allowed; triage #2527: Loaded when I read the auto-triage Skill. Set the ready-for-agent bar.; triage #2528: Loaded when I read the triage Skills. It governs the label I set.; build fix/2523-build-final-gate: loaded on reading clear-backlog SKILL.md"
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "orchestrator: backed the cut-first picks in the grilling; triage #2433: Loaded with the Skill read. It made me check that the workflow-edit-guard prune trial is still open.; triage #2520: Loaded on reading prune-trials.yml. Its 'cut before you add' line backs my pick, and it sent me to check for an open trial covering this text (none does).; triage #2521: Loaded when reading prune-trials.yml and the Skill. Its cut-first rule weighed against option 3.; triage #2522: Loaded at start and when I read the Skill and prune-trials files. 'Cut before adding' shaped my pick.; triage #2527: Loaded when I read Skill files. Settled the choice to reword the Skill and sent me to check prune-trials.yml.; triage #2528: Loaded with the Skill files. It led me to check prune-trials.yml (no trial covers this text).; build fix/2528-inspect-session-outline: Loaded when the SKILL.md file was read; it prompted the prune-trials.yml check.; Standards fix/2528-inspect-session-outline r1: Loaded when I read the SKILL.md; made me confirm that no prune trial covers the edited text."
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: "orchestrator: confirmed no Public issues or PRs in the set; triage #2433: Loaded with the Skill read and author-trust.ts. It confirms OWNER is Trusted.; triage #2528: Loaded with the triage Skill and author-trust.ts. The author is OWNER, so Trusted."
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: "orchestrator: loaded with the Skill reads; nothing to decide; triage #2523: Loaded on reading the workflow and Skill files; it confirms the script is the Skill's code; triage #2527: Loaded when I read Skill files. Confirms a Skill changes through a gated PR; changed nothing here.; build fix/2523-build-final-gate: loaded on the workflow file; Standards fix/2523-build-final-gate r1: Loaded on reading the workflow script. It confirms the script is the Skill's code and goes through a gated PR.; Spec fix/2523-build-final-gate r1: Loaded when reading the code-review Skill and workflow; confirms a workflow script is its Skill's code; build fix/2527-audit-docs-pool: Loaded when I read a Skill file; build fix/2528-inspect-session-outline: Loaded when the SKILL.md file was read."
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: "orchestrator: loaded with the Skill reads; nothing to decide; triage #2520: Loaded on reading .claude/rules and CLAUDE.md. Relevant to where a restored rule would live (CLAUDE.md versus a rule with paths).; Spec fix/2528-inspect-session-outline r1: Loaded when I read .claude/rules. It confirmed that the human-merge rule's paths are the Human-only list."
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: "orchestrator: loaded reading ledger yml; not needed to verify picks; triage #2522: Loaded when I read Journal ledger files. It confirmed the Friction Ledger is derived and refreshed in place."
+    useful: partly
+  - path: .claude/rules/tenant-glossary.md
+    reason: "orchestrator: loaded reading Journal ledger files; no Tenant work; triage #2520: Loaded on reading Journal content. Its terms weren't needed.; triage #2521: Loaded when reading a Journal layer file. Not needed.; triage #2522: Loaded when I read layers/ files. Not needed: I read the Journal's data and did not work on the Tenant.; triage #2523: Loaded on reading the journal friction yml; not relevant"
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "orchestrator: loaded reading Journal ledger files; no Tenant work; triage #2522: Loaded when I read layers/journal files. Not relevant."
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "triage #2523: Loaded when I read it to check whether .claude/workflows is Human-only (it isn't); triage #2528: Loaded when I read author-trust.ts. It confirmed SKILL.md is not affected (not Human-only)."
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: "triage #2527: Loaded when I read Skill files. Confirmed audit-docs is ours, not a pack Skill, so it can be edited.; build fix/2527-audit-docs-pool: Loaded when I read a Skill file; the audit-docs Skill is not pack-keyed"
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: "triage #2527: Loaded when I read Skill files. Not relevant.; build fix/2527-audit-docs-pool: Loaded alongside the Skill read; not relevant to this change"
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "triage #2520: Loaded on reading the ADR. Not relevant here.; triage #2521: Loaded when reading an ADR. Not relevant.; triage #2522: Loaded when I read an ADR. Not relevant.; triage #2523: Loaded on reading the ADR; not relevant; triage #2527: Loaded when I read Skill files and ADRs. Not relevant; no ADR changes.; triage #2528: Loaded when I read the ADR. Not relevant.; build fix/2523-build-final-gate: loaded on reading an ADR; no ADR was changed; build fix/2527-audit-docs-pool: Loaded alongside the Skill read; not relevant to this change"
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "triage #2520: Loaded on reading scripts/hooks. Not needed."
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: "triage #2522"
+    model: claude-opus-5-5
+    durationSec: 100
+    toolCalls: 19
+    modelCalls: 9
+    tokenShare: 6.3
+  - type: workflow-subagent
+    task: "triage #2433"
+    model: claude-opus-5-5
+    durationSec: 64
+    toolCalls: 16
+    modelCalls: 8
+    tokenShare: 5.4
+  - type: workflow-subagent
+    task: "triage #2520"
+    model: claude-opus-5-5
+    durationSec: 133
+    toolCalls: 22
+    modelCalls: 16
+    tokenShare: 8
+  - type: workflow-subagent
+    task: "triage #2527"
+    model: claude-opus-5-5
+    durationSec: 109
+    toolCalls: 19
+    modelCalls: 11
+    tokenShare: 6.9
+  - type: workflow-subagent
+    task: "triage #2521"
+    model: claude-opus-5-5
+    durationSec: 103
+    toolCalls: 20
+    modelCalls: 11
+    tokenShare: 6.7
+  - type: workflow-subagent
+    task: "triage #2528"
+    model: claude-opus-5-5
+    durationSec: 83
+    toolCalls: 17
+    modelCalls: 9
+    tokenShare: 5.6
+  - type: workflow-subagent
+    task: "triage #2432"
+    model: claude-opus-5-5
+    durationSec: 62
+    toolCalls: 14
+    modelCalls: 7
+    tokenShare: 4.9
+  - type: workflow-subagent
+    task: "triage #2523"
+    model: claude-opus-5-5
+    durationSec: 117
+    toolCalls: 20
+    modelCalls: 12
+    tokenShare: 7.1
+  - type: workflow-subagent
+    task: Standards fix/2523-build-final-gate r1
+    model: claude-opus-5-5
+    durationSec: 48
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 2.1
+  - type: workflow-subagent
+    task: Standards fix/2527-audit-docs-pool r1
+    model: claude-opus-5-5
+    durationSec: 38
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 3.1
+  - type: workflow-subagent
+    task: build fix/2523-build-final-gate
+    model: claude-opus-5-5
+    durationSec: 370
+    toolCalls: 32
+    modelCalls: 18
+    tokenShare: 7.6
+  - type: workflow-subagent
+    task: build fix/2528-inspect-session-outline
+    model: claude-sonnet-5-5
+    durationSec: 113
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 4.3
+  - type: workflow-subagent
+    task: Standards fix/2528-inspect-session-outline r1
+    model: claude-opus-5-5
+    durationSec: 42
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 2
+  - type: workflow-subagent
+    task: Spec fix/2527-audit-docs-pool r1
+    model: claude-opus-5-5
+    durationSec: 38
+    toolCalls: 8
+    modelCalls: 4
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: Spec fix/2523-build-final-gate r1
+    model: claude-opus-5-5
+    durationSec: 52
+    toolCalls: 8
+    modelCalls: 4
+    tokenShare: 2.3
+  - type: workflow-subagent
+    task: build fix/2527-audit-docs-pool
+    model: claude-sonnet-5-5
+    durationSec: 112
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 4.2
+  - type: workflow-subagent
+    task: Spec fix/2528-inspect-session-outline r1
+    model: claude-opus-5-5
+    durationSec: 42
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 2.4
+gitBranch: ccr-f0095617-bc3twc
+entrypoint: remote_mobile
+cliVersion: 2.1.310
+landedBy: Stop
