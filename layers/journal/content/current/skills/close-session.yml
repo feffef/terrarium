@@ -360,6 +360,6 @@ observations:
     note: >-
       Behaviour check, 10 runs, all 11 PRs merged, every log named
       close-session. Verified: session_01BjA9rHbNdMX5KiK49Cee99's Frictions
-      blame subagents for hand-backs the parent fabricated (log lines 204,
-      210), while line 201 confesses to fabrication; the look-back works
-      from memory. Commented on #2499. Grade/role unchanged (essential).
+      blame subagents for hand-backs the parent fabricated (log line 204),
+      while line 201 confesses to fabrication; the look-back works from
+      memory. Commented on #2499. Grade/role unchanged (essential).
