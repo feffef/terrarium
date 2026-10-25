@@ -56,8 +56,8 @@ every line that applies.
   return structured results in its final message for you to save.
 - Create the agent's scratchpad subfolder first (CLAUDE.md); a shared name
   silently collides.
-- Run `pnpm gate:scoped` and other checks in the foreground (a guard denies
-  backgrounding; `docs/agents/guards.md`). If a check may outlast one call, name
+- Tell the agent to run `pnpm gate:scoped` and other checks in the foreground (a
+  guard denies a subagent's backgrounding; `docs/agents/guards.md`). If a check may outlast one call, name
   a log-file marker as the done signal and resume with `SendMessage`, pasting the
   log's real tail.
 - Launch at most (20 − running) agents at a time. Every Agent call runs async, so
