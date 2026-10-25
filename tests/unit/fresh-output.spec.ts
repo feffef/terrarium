@@ -48,8 +48,13 @@ describe('reusableOutput()', () => {
 
   afterEach(() => rmSync(fixture.dir, { recursive: true, force: true }))
 
-  it('reuses an output built after every source, and reports when', () => {
-    expect(reusableOutput(root, {})).toEqual({ dir: join(root, '.output'), builtAt: new Date(BUILT * 1000) })
+  it('reuses an output built after every source, and reports when and the newest source edit', () => {
+    stamp('src/b.ts', OLD + 30)
+    expect(reusableOutput(root, {})).toEqual({
+      dir: join(root, '.output'),
+      builtAt: new Date(BUILT * 1000),
+      latestEditAt: new Date((OLD + 30) * 1000),
+    })
   })
 
   it('stays fresh when a gitignored directory appeared at the root after the build', () => {

@@ -11,7 +11,7 @@ export default function setup(): void {
   const reusable = reusableOutput(root)
   // stdout, not console.log: vitest 5 drops console output from a passing run.
   process.stdout.write(reusable
-    ? `L2: reusing .output built ${reusable.builtAt.toISOString()} (set E2E_FRESH_BUILD=1 to force a build)\n`
+    ? `L2: reusing .output built ${reusable.builtAt.toISOString()} (newer than the latest source edit at ${reusable.latestEditAt.toISOString()}; set E2E_FRESH_BUILD=1 to force a build)\n`
     : 'L2: no fresh .output — building\n')
   if (reusable) return
 

@@ -35,12 +35,14 @@ function sourceMtimes(root: string): number[] {
 export function reusableOutput(
   root: string,
   env: NodeJS.ProcessEnv = process.env,
-): { dir: string, builtAt: Date } | undefined {
+): { dir: string, builtAt: Date, latestEditAt: Date } | undefined {
   if (env.E2E_FRESH_BUILD) return undefined
   const dir = join(root, '.output')
   const outputMtime = mtimeOf(join(dir, 'server', 'index.mjs'))
   try {
-    return isFresh(outputMtime, sourceMtimes(root)) ? { dir, builtAt: new Date(outputMtime!) } : undefined
+    const sources = sourceMtimes(root)
+    if (!isFresh(outputMtime, sources)) return undefined
+    return { dir, builtAt: new Date(outputMtime!), latestEditAt: new Date(sources.reduce((a, b) => Math.max(a, b), 0)) }
   } catch {
     return undefined
   }
