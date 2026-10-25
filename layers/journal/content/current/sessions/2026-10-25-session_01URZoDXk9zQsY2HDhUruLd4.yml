@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01URZoDXk9zQsY2HDhUruLd4
 startedAt: 2026-10-25T07:33:49Z
-endedAt: 2026-10-25T07:40:17Z
+endedAt: 2026-10-25T07:44:05Z
 kind: autonomous
 goal: Bring the Glass Box guide pages up to date with main
-status: in-review
-outcome: "PR #2516 opened: guide re-pinned to main 6b91957, two stale statements and one Term fixed, gate green"
-summary: "Scheduled glassbox-update run, no human prompt. Ran the script, advanced all pages to main 6b91957, then read the commits since the old pin against the six flagged pages and the 23 flagged terms. Only the subagents and worktrees pages (dispatch-subagents now says Bash keeps its cwd and git runs as git -C) and the human-only Term (Dependabot bump must stay within each package's major) needed edits. Every edit was agent-initiated under the Skill. Pages and the layer test, validate:content and gate:scoped are green; no screenshots because teaching did not change. Opened PR #2516 and subscribed to it. I did my own read of the non-restamp diff lines instead of running code-review."
+status: completed
+outcome: "PR #2516 merged: guide re-pinned to main 6b91957, two stale statements and one Term fixed"
+summary: "Scheduled glassbox-update run, no human prompt. Ran the script, advanced all pages to main 6b91957, then read the commits since the old pin against the six flagged pages and the 23 flagged terms. Only the subagents and worktrees pages (dispatch-subagents now says Bash keeps its cwd and git runs as git -C) and the human-only Term (Dependabot bump must stay within each package's major) needed edits. Every edit was agent-initiated under the Skill. Pages and the layer test, validate:content and gate:scoped are green; no screenshots because teaching did not change. Opened PR #2516, posted my verdict and merged it with merge-pr.ts once the gate was green. I did my own read of the non-restamp diff lines instead of running code-review."
 prs:
   - "2516"
 docsRead:
@@ -39,16 +39,20 @@ frictions:
   - description: "Ran no code-review Skill before first push: the diff was 32 files/65 lines, mostly pin restamps, and I judged it by my own read of the 3 prose lines."
     solution: glassbox-update should say whether restamp-only files count toward the simple-change limit, or exempt them.
     severity: minor
-durationSec: 388
+durationSec: 616
 models:
-  claude-sonnet-5-5: 47
+  claude-sonnet-5-5: 65
 toolCounts:
   Read: 5
-  Bash: 19
+  Bash: 22
   ToolSearch: 1
   mcp__github__create_pull_request: 1
-  Skill: 2
+  Skill: 3
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
@@ -91,6 +95,8 @@ rulesLoaded:
   - .claude/rules/adr-0029.md
   - .claude/rules/glassbox-content.md
   - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
