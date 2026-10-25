@@ -1,6 +1,6 @@
 ---
 name: audit-docs
-description: Audit every live doc and Skill for drift, duplication, contradiction, ambiguity, needlessly complicated or verbose wording and stale-narration (one doc family per run), mis-location, and recently-added surfaces missing the reference they deserve — fact-check each finding, fix the safe ones, and file an issue (never ask) only for a factual conflict no primary source settles. Opens one self-merging gated PR, plus one human-reviewed PR for any escalated fix.
+description: Audit every live doc and Skill for drift, duplication, contradiction, ambiguity, mis-location, and recently-added surfaces missing the reference they deserve — fact-check each finding, fix the safe ones, and file an issue (never ask) only for a factual conflict no primary source settles. Opens one self-merging gated PR, plus one human-reviewed PR for any escalated fix.
 disable-model-invocation: true
 ---
 
@@ -39,24 +39,15 @@ fixes a human must merge.
   pages (`glassbox-update` keeps them), `docs/proposals/<N>-*.md` bodies and
   `.out-of-scope/*.md`.
 
-## 1. Review with the eight lenses
+## 1. Review with the six lenses
 
-Goal: a pool of findings from four reviewer agents, each looking through two
+Goal: a pool of findings from three reviewer agents, each looking through two
 lenses.
 
 ### Instructions
 
-1. Fetch `origin/main` (`docs/agents/git-conventions.md`), then pick this
-   run's **concision family** (for Agent C): the one after the family named
-   by the newest `origin/main` commit whose subject ends
-   `(<name> concision family)`, wrapping from 4 to 0.
-   - 0 `root`: `CLAUDE.md`, `GLOSSARY*.md`, every Live README, `SECURITY.md`,
-     `layers/*/GLOSSARY.md`;
-   - 1 `docs/agents`: `docs/agents/*`;
-   - 2 `docs/research`: `docs/research/*`;
-   - 3 `skills`: our own Skills with their sibling files;
-   - 4 `journal`: the journal's facing pages and Inventory entries.
-2. Dispatch four read-only reviewer agents in parallel, one per pair of
+1. Fetch `origin/main` (`docs/agents/git-conventions.md`).
+2. Dispatch three read-only reviewer agents in parallel, one per pair of
    lenses below.
 3. Tell every agent the finding format: the file plus the exact sentence,
    quoted whole with its line breaks, plus replacement text. No line ranges
@@ -97,22 +88,7 @@ origin/main` and its diff.
   buried in a `docs/agents/*` topic file (move it, leave a pointer), or a
   misfiled file (`git mv` it).
 
-**Agent C, Concision.** Cut words, never meaning or a load-bearing "why".
-Brief it with the concision family's full file list; it reads every file in
-full and reports every finding, with no cap. Split the family across agents if one can't
-hold it.
-
-- **Verbose:** wording more complicated than its meaning: the same fact said
-  twice, filler, long or nested sentences, stacked caveats and
-  parentheticals, jargon or coined terms where a plain word is exact.
-  Rewrite it in the plainest words that keep every rule, condition,
-  exception and pointer; otherwise leave it.
-- **Stale-narration:** a doc correct about the present that still tells a
-  superseded past ("we used to do X"). Cut it to the rule plus a pointer to
-  where the history lives (an issue or PR), and only where the history
-  changes no reader's action.
-
-**Agent D, Coherence.**
+**Agent C, Coherence.**
 
 - **Contradiction:** two docs, or two parts of one, give opposite
   instructions or state facts that can't both be true now.
@@ -120,14 +96,10 @@ hold it.
   threshold that gates an action, an enum listed only by its endpoints at
   its home, or a "see X" where X doesn't hold the thing.
 
-Done when every agent has reported, every file in the concision family was
-read in full, and every reply is in the pooled file.
+Done when every agent has reported and every reply is in the pooled file.
 
 ### Edge cases
 
-- **Keep "don't regress" reasons.** Stale-narration never cuts a reason that
-  stops the old way coming back (e.g. `CLAUDE.md`'s never-`pkill` rule).
-  Retiring one is a Prune Trial's call.
 - Moving a journal `pages/*.md` changes its route (ADR-0006), so that move
   escalates.
 
@@ -213,8 +185,7 @@ human.
 
 1. Follow the rest of `docs/agents/pr-workflow.md`'s "Closing a scheduled
    run's PR" for **one** sweep PR with one commit:
-   - its subject ends with the concision family's name, e.g.
-     `audit-docs: 2026-10-14 sweep (docs/research concision family)`;
+   - its subject is `audit-docs: <date> sweep`;
    - its body lists the fixes and any issue filed;
    - its verdict comment records the audit in one line plus
      `Reviewed: <head sha>` (`pr-workflow.md`'s "The recipe", step 4).
@@ -224,7 +195,7 @@ human.
    which includes every ADR edit, and any journal `pages/*.md` move that
    changes its route. Subscribe to it and follow it until it merges or
    closes.
-3. Log the session (ADR-0009). Its summary names the concision family and
-   the verdict counts (CONFIRMED / CONFIRMED-BUT / WRONG).
+3. Log the session (ADR-0009). Its summary gives the verdict counts
+   (CONFIRMED / CONFIRMED-BUT / WRONG).
 
 Done when the sweep PR has merged green, or is open and honestly escalated.

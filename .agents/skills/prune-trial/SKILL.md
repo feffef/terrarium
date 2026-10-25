@@ -86,8 +86,7 @@ a dangling one.
 
 Cut an incident history to **the rule plus a pointer** to where the history
 lives (the issue or PR) — never to a ruleless rule with no forwarding
-address. `audit-docs`' Stale-narration lens owns that shape; it is barred from
-retiring these, and you are not.
+address.
 
 **Write for Sonnet.** It runs most sessions here and cannot reconstruct the
 means from a goal as readily as you can. A goal it can't act on isn't simpler,
