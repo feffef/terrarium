@@ -1,0 +1,266 @@
+schemaVersion: 1
+session: session_016edAfTmLE1szSBGNZTorPH
+startedAt: 2026-10-25T15:28:41Z
+endedAt: 2026-10-25T15:53:59Z
+kind: interactive
+goal: Rewrite the frictions-to-fixes agent briefs in the per-step shape
+status: in-review
+outcome: "PR #2539 open: the three briefs restructured as a Prune Trial, gate green, probe and reviews passed"
+summary: "Human-instructed throughout. The owner asked for the three frictions-to-fixes agent briefs (survey, design, impl) to get the same clean per-step rewrite SKILL.md got on 2026-10-20, keeping every rule. Per their preference I asked three questions first; they chose the SKILL.md shape adapted (role and inputs up front, then Goal / Instructions / Done when / Edge cases per step, then the report), a Prune Trial rather than a plain PR, and four fixes alongside the restructure: the design brief's dangling opening and session-log path, the dead \"audit-docs house rules\" pointer, SKILL.md saying what \"verbatim\" means for a brief handed by path, and the survey's candidate set (every entry --candidates lists). I inventoried every rule of the old briefs before writing, reordered the survey so it screens before it ranks, and committed. A Sonnet probe pinned to that commit answered sixteen scenarios from the briefs alone. code-review (Standards and Spec) found a hedge I had hardened, two done-when lines an agent could not check, a half-made pointer in the impl brief, and an ambiguous pipe of occurrence blocks into ledger-set.ts; the owner meanwhile asked for a Done when section per step. A second commit took all of that; I declined one Standards claim (gh pr view is blocked in the cloud, per github-integration.md) and said why in the brief. Re-probed at the final head, gate green, pushed, PR #2539 opened with the trial entry. Agent-initiated: the step reorder and the verdict comment. Open: the owner asked whether anything could be cut; I proposed five cuts (the ledger data model restated in survey section 2, a stale docsReadViaShell caveat, a no-op schema check, an incident example, script semantics copied from headers) and hold the merge for their answer."
+prs:
+  - "2539"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: commit -F for backticks, amend only the tip, no chaining past a silent step; the Spec reviewer read it too and found it confirmed its git show/three-dot calls
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, gate last on the final head, verdict comment with Reviewed sha, merge-pr.ts
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tools in the cloud, gh pr view GraphQL-blocked (settled a review finding), fields on list calls
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: completion criteria, co-location, negation and no-op tests for the briefs; the Standards reviewer judged the diff against it
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL-MECHANICS.md
+    reason: invocation choice; briefs are not skills, so little applied
+    useful: no
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: worktree isolation, pinned SHA, scratchpad subfolder and verdict lines for the probe and reviewer briefs; check:worktrees at the end
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: the plain-rewrite clause, the Sonnet probe pinned to the post-prune SHA, numstat for the title and entry
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: a whole-file rewrite keeps every rule; trial PR merges like any agent PR
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: confirmed no 'house rules' section exists; 'What you may edit' and six lenses are the real pointers
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: what each step hands its brief and expects back; two lines edited
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: hook asked after the SKILL.md edit; confirmed a Skill edit is an ordinary gated PR
+    useful: partly
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: hook asked after the SKILL.md edit; pack Skills untouched, nothing to change
+    useful: no
+  - path: layers/journal/content/current/frictions/frictions-to-fixes-briefs-mismatch.yml
+    reason: the known brief defects, which shaped the four approved fixes
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: the old brief, inventoried rule by rule before the rewrite; probes and reviewers read the new one
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: the old brief; its dangling opening and dead audit-docs pointer were two of the approved fixes
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: the old brief, the shortest; kept its gate floor and no-merge rule
+    useful: yes
+  - path: .agents/skills/audit-skills/brief.md
+    reason: a sibling brief, read for the house shape of a subagent brief (role, done-when, report)
+    useful: partly
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: another sibling brief, same purpose; confirmed the verdict-lines ending
+    useful: partly
+  - path: GLOSSARY.md
+    reason: only the Standards reviewer read it in full, to check Friction, Friction Ledger, Prune Trial and Skill casing in the briefs; it reported them correct
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: only the Standards reviewer opened it, for the Scope list the design brief cites; it reported the pointer sound
+    useful: partly
+skillsUsed:
+  - name: writing-for-agents
+    reason: editing briefs, the Skill's own trigger
+  - name: dispatch-subagents
+    reason: "three subagent briefs: probe, Standards, Spec"
+  - name: code-review
+    reason: pre-push review of the rewrite, both axes
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The Stop hook asked to push three times while code-review and the gate ran; ADR-0004 says hold the first push until both finish.
+    solution: "None: the owner accepted this cost (issue 2233)."
+    severity: nit
+  - description: Both read-only Sonnet probes left a detached-HEAD worktree behind (the checkout to the pinned SHA defeats auto-cleanup); I removed each by hand before check:worktrees.
+    solution: Have the prune-trial probe brief end with the agent removing nothing but tell the orchestrator to expect the worktree, or let unchanged detached worktrees auto-clean.
+    severity: nit
+  - description: The Standards reviewer called the brief's 'gh pr view is blocked' drift after grepping docs/agents for 'blocked', missing github-integration.md's table that lists it as GraphQL-backed and blocked in the cloud; verifying cost a lookup.
+    solution: A review brief that names github-integration.md among the standards sources whenever the diff cites a gh command; the brief now cites the doc itself.
+    severity: minor
+  - description: My first survey-brief draft told the agent to print all occurrence pairs in one call and pipe them into one entry's ledger-set.ts call, which cannot route blocks to several entries; the probe and the Spec review caught it.
+    solution: "Fixed in the second commit: one print, one --occurrences file per entry. A print-ledger-occurrence flag that groups output by entry would remove the split."
+    severity: nit
+  - description: "The design brief's docsReadViaShell caveat (logs older than 2026-10-10) is stale: the 14-day ledger horizon no longer reaches such logs, so every design agent reads a dead branch."
+    solution: Cut the sentence; proposed to the owner among five cuts, awaiting their answer.
+    severity: nit
+durationSec: 1518
+models:
+  claude-fable-5-1: 134
+toolCounts:
+  Bash: 37
+  Read: 11
+  AskUserQuestion: 1
+  Edit: 2
+  Agent: 4
+  Skill: 3
+  ReadNotifications: 8
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/prune-trials.yml
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0025.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 15
+    via: path
+    readAfter: true
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0026.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - GLOSSARY.md
+  - docs/adr/0004-objective-safety-gate.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Held the push until code-review and gate:scoped ran despite three Stop-hook nags; summary was enough, full ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR on the first pushed commit and subscribed; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me the log goes to main via close-session; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Session header on the PR body and comment, trailer checked on both commits; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Checked no open trial covers the briefs and shaped the entry; read the full ADR for what a plain rewrite may change. Three subagents had it auto-loaded and reported it unused or partly
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on the Skill edit; the impl brief's reachable-doc clause cites it, otherwise not applied
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded on the Skill edit; the briefs keep the pack-Skill ban, no change needed. Subagents reported it unused
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on the Skill edit; confirmed a Skill PR is ordinary. Subagents reported it unused
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on ADR reads; I edited no ADR
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on a grep of shared/schemas; the diff touches no Human-only path, so it only cost a check of its paths list
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded on a GLOSSARY.md grep for term casing; I added no term
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on reading the journal manifest for the ledger schema; nothing about Tenant code applied
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded on the manifest read; no stored field changed
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on the manifest read; I edited no manifest
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded on the manifest read; confirmed the ledger is derived, which the survey brief already says
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on the manifest read; no glossary work
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded on the manifest read; navigation payloads are unrelated to briefs
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded on the ledger.ts read; cross-Tenant reads are unrelated
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on the manifest read; no content component involved
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on the manifest read; I worked on a Skill, not a Tenant
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Only the Standards reviewer had it loaded; it reported no use for a prose review
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Only the Standards reviewer had it loaded while checking the guards.md pointer; it reported the pointer exists and nothing more applied
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Sonnet probe of rewritten briefs
+    model: sonnet
+    durationSec: 39
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 4.4
+  - type: general-purpose
+    task: Standards review of brief rewrite
+    durationSec: 197
+    toolCalls: 19
+    modelCalls: 8
+    tokenShare: 10.6
+  - type: general-purpose
+    task: Spec review of brief rewrite
+    durationSec: 139
+    toolCalls: 13
+    modelCalls: 6
+    tokenShare: 7
+  - type: general-purpose
+    task: Re-probe briefs at final commit
+    model: sonnet
+    durationSec: 32
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 4.2
+gitBranch: ccr-06eb66b7-x79zjy
+entrypoint: remote_mobile
+cliVersion: 2.1.310
+learnings:
+  - Restructuring a brief into per-step Goal / Instructions / Done when / Edge cases while keeping every rule grows it by about a sixth; the words are headings and completion criteria, not new rules.
+ideas:
+  - Let print-ledger-occurrence.ts take entry-session-index triples and append each block to its entry itself (or group its output by entry), so the survey agent never splits one printed output across several ledger-set.ts calls by hand.
+landedBy: Stop
