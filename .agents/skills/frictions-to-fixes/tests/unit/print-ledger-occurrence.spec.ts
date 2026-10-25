@@ -45,6 +45,6 @@ describe('appendPlan()', () => {
   })
   it('names the entry when a block is refused, and plans nothing', () => {
     expect(() => appendPlan(groupTriples(['x', 'session_abc', '0', 'x', 'session_abc', '1']), logs, entry)).toThrow('x: schema refuses')
-    expect(() => appendPlan(groupTriples(['x', 'session_nope', '0']), logs, entry)).toThrow('no session log for session_nope')
+    expect(() => appendPlan(groupTriples(['x', 'session_nope', '0']), logs, entry)).toThrow('x: no session log for session_nope')
   })
 })

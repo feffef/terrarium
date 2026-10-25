@@ -65,8 +65,8 @@ Every edit goes through
    call files them all:
    `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts --append <entry> <session> <index> [<entry> <session> <index> …]`
    copies each Friction's text from its log (a content test checks the
-   copy) and appends it under its entry; it refuses a session an entry
-   already holds and then writes nothing. Never type an occurrence by hand.
+   copy) and appends it under its entry; it refuses a session the entry
+   already holds.
 2. **Open a new entry** for a cause seen twice, or once at `moderate`,
    `major` or `blocker`. Its `summary` is one plain sentence a visitor can
    read; its `cause` names the root mechanism and the signals that identify

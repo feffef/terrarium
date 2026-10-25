@@ -39,36 +39,39 @@ export function occurrenceBlock(log: Record<string, unknown>, index: number): st
   return doc.toString({ lineWidth: 0 }).replace(/^(?=.)/gm, '  ')
 }
 
-export interface Pick { session: string; index: number }
+export interface FrictionRef { session: string; index: number }
+
+type Logs = Map<string, Record<string, unknown>>
+
+function parseIndex(session: string, raw: string | undefined): number {
+  const index = Number(raw)
+  if (!Number.isInteger(index) || index < 0) throw new Error(`${session}: index must be a whole number, got ${raw}`)
+  return index
+}
+
+function blockFor(logs: Logs, { session, index }: FrictionRef): string {
+  const log = logs.get(session)
+  if (!log) throw new Error(`no session log for ${session}`)
+  return occurrenceBlock(log, index)
+}
 
 /** `--append` arguments grouped by entry, in first-seen order. */
-export function groupTriples(argv: string[]): Map<string, Pick[]> {
+export function groupTriples(argv: string[]): Map<string, FrictionRef[]> {
   if (argv.length === 0 || argv.length % 3) throw new Error('usage: print-ledger-occurrence.ts --append <entry> <session> <index> [<entry> <session> <index> ...]')
-  const groups = new Map<string, Pick[]>()
+  const groups = new Map<string, FrictionRef[]>()
   for (let i = 0; i < argv.length; i += 3) {
-    const entry = argv[i]!
-    const index = Number(argv[i + 2])
-    if (!Number.isInteger(index) || index < 0) throw new Error(`${entry} ${argv[i + 1]}: index must be a whole number, got ${argv[i + 2]}`)
-    groups.set(entry, [...(groups.get(entry) ?? []), { session: argv[i + 1]!, index }])
+    const [entry, session] = [argv[i]!, argv[i + 1]!]
+    groups.set(entry, [...(groups.get(entry) ?? []), { session, index: parseIndex(session, argv[i + 2]) }])
   }
   return groups
 }
 
 /** Each entry's new text with its blocks appended; throws before any write when one fails. */
-export function appendPlan(
-  groups: Map<string, Pick[]>,
-  logs: Map<string, Record<string, unknown>>,
-  readEntry: (entry: string) => string,
-): Map<string, string> {
+export function appendPlan(groups: Map<string, FrictionRef[]>, logs: Logs, readEntry: (entry: string) => string): Map<string, string> {
   const plan = new Map<string, string>()
-  for (const [entry, picks] of groups) {
-    const blocks = picks.map(({ session, index }) => {
-      const log = logs.get(session)
-      if (!log) throw new Error(`no session log for ${session}`)
-      return occurrenceBlock(log, index)
-    }).join('')
+  for (const [entry, refs] of groups) {
     try {
-      plan.set(entry, setEntry(readEntry(entry), { occurrences: blocks }))
+      plan.set(entry, setEntry(readEntry(entry), { occurrences: refs.map((ref) => blockFor(logs, ref)).join('') }))
     } catch (err) {
       throw new Error(`${entry}: ${err instanceof Error ? err.message : String(err)}`, { cause: err })
     }
@@ -76,7 +79,7 @@ export function appendPlan(
   return plan
 }
 
-function readLogs(): Map<string, Record<string, unknown>> {
+function readLogs(): Logs {
   return new Map(readSessionLogs(root, { archived: true }).map(({ data }) => [String(data.session), data]))
 }
 
@@ -96,9 +99,8 @@ function main(): void {
     if (argv.length === 0 || argv.length % 2) throw new Error('usage: tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts <session> <index> [<session> <index> ...]')
     const logs = readLogs()
     for (let i = 0; i < argv.length; i += 2) {
-      const log = logs.get(argv[i]!)
-      if (!log) throw new Error(`no session log for ${argv[i]}`)
-      process.stdout.write(occurrenceBlock(log, Number(argv[i + 1])))
+      const session = argv[i]!
+      process.stdout.write(blockFor(logs, { session, index: parseIndex(session, argv[i + 1]) }))
     }
   } catch (err) {
     fail(err instanceof Error ? err.message : String(err))
