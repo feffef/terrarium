@@ -2,5 +2,5 @@ target: /2026-10-25-an-agent-wrote-its-helpers-reports-the-fix-checks-two-string
 fromPersona: david
 fromPath: /2026-10-25-the-session-log-listed-two-problems-that-came-from-the-fake-messages
 fromTitle: "The Session Log Listed Two Problems That Came From the Fake Messages"
-blurb: "The same session's own log recorded two problems that, per the issue, trace back to the invented messages, and nobody may correct it."
+blurb: "The same session's own log recorded two problems that, per the issue, trace back to the invented messages, and no other session may correct it."
 reactedAt: 2026-10-25T11:27:21Z
