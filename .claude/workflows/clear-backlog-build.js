@@ -4,7 +4,7 @@ export const meta = {
   whenToUse: 'Run only from the clear-backlog Skill, with the planned branches as args',
   phases: [
     { title: 'Build', detail: 'one worktree per branch, based on origin/main' },
-    { title: 'Review', detail: 'Standards and Spec reviewers in parallel, then a fix agent, until clean' },
+    { title: 'Review', detail: 'Standards and Spec reviewers in parallel, then a fix agent, until clean; then a final gate agent' },
   ],
 }
 
@@ -139,6 +139,14 @@ Fix each finding in ${wt}, test-first with the tdd Skill where there is logic. Y
 ${rules(b)}`
 }
 
+function gatePrompt(b, wt) {
+  return `You are the FINAL GATE agent, in worktree ${wt} on branch \`${b.name}\`. ${common(b)}
+## Task
+Review is done; this workflow trusts no earlier gate report. Run \`pnpm gate:scoped\` in ${wt} now, on HEAD. If it fails, fix the cause, commit, and run it again, until it exits 0 on HEAD. Report gatePassed true only from that last run's \`EXIT=0\`.
+
+${rules(b)}`
+}
+
 async function buildBranch(b) {
   // Isolated even on a re-run: if b.worktree was auto-removed, the agent starts fresh in its own.
   const r = await agent(buildPrompt(b), { label: `build ${b.name}`, phase: 'Build', schema: WORK, isolation: 'worktree', ...modelOf(b) })
@@ -148,7 +156,7 @@ async function buildBranch(b) {
 async function reviewBranch(built, b) {
   const out = { branch: b.name, issues: b.issues, worktree: built.worktree, commits: built.commits, decisions: [...built.decisions], rounds: 0, verdicts: tagged(built, `build ${b.name}`) }
   if (built.status !== 'done') return { ...out, status: built.status, question: built.question, reason: built.reason }
-  if (!built.gatePassed || !built.worktree) return { ...out, status: 'failed', reason: 'build reported done without a passing gate:scoped or a worktree with commits' }
+  if (!built.worktree) return { ...out, status: 'failed', reason: 'build reported done without a worktree with commits' }
   for (let round = 1; round <= MAX_ROUNDS; round++) {
     out.rounds = round
     const axes = ['Standards', 'Spec']
@@ -159,7 +167,15 @@ async function reviewBranch(built, b) {
     const all = reviews.flatMap(r => r.findings)
     const toFix = all.filter(f => f.worthFixing)
     out.judgementCalls = all.filter(f => !f.worthFixing)
-    if (!toFix.length) return { ...out, status: 'ready-to-push' }
+    if (!toFix.length) {
+      // Re-gate unconditionally: a stale gatePassed: true is the usual failure (#2523).
+      const gate = await agent(gatePrompt(b, out.worktree), { label: `gate ${b.name}`, phase: 'Review', schema: WORK, ...modelOf(b) })
+      out.verdicts.push(...tagged(gate, `gate ${b.name}`))
+      if (!gate || !gate.gatePassed) return { ...out, status: 'failed', reason: `final gate: ${gate ? gate.reason || 'gate:scoped did not pass' : 'gate agent returned nothing'}` }
+      out.commits = gate.commits
+      out.decisions.push(...gate.decisions)
+      return { ...out, status: 'ready-to-push' }
+    }
     if (round === MAX_ROUNDS) {
       log(`${b.name}: review capped at ${MAX_ROUNDS} rounds`)
       return { ...out, status: 'failed', reason: `review capped at ${MAX_ROUNDS} rounds`, openFindings: toFix }
@@ -170,7 +186,6 @@ async function reviewBranch(built, b) {
     out.commits = fix.commits
     out.decisions.push(...fix.decisions)
     if (fix.status !== 'done') return { ...out, status: fix.status, question: fix.question, reason: fix.reason }
-    if (!fix.gatePassed) return { ...out, status: 'failed', reason: `round ${round}: fix reported done without a passing gate:scoped` }
   }
 }
 
