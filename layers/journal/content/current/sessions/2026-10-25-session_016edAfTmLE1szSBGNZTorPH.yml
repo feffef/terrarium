@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_016edAfTmLE1szSBGNZTorPH
 startedAt: 2026-10-25T15:28:41Z
-endedAt: 2026-10-25T15:53:59Z
+endedAt: 2026-10-25T16:00:42Z
 kind: interactive
 goal: Rewrite the frictions-to-fixes agent briefs in the per-step shape
-status: in-review
-outcome: "PR #2539 open: the three briefs restructured as a Prune Trial, gate green, probe and reviews passed"
-summary: "Human-instructed throughout. The owner asked for the three frictions-to-fixes agent briefs (survey, design, impl) to get the same clean per-step rewrite SKILL.md got on 2026-10-20, keeping every rule. Per their preference I asked three questions first; they chose the SKILL.md shape adapted (role and inputs up front, then Goal / Instructions / Done when / Edge cases per step, then the report), a Prune Trial rather than a plain PR, and four fixes alongside the restructure: the design brief's dangling opening and session-log path, the dead \"audit-docs house rules\" pointer, SKILL.md saying what \"verbatim\" means for a brief handed by path, and the survey's candidate set (every entry --candidates lists). I inventoried every rule of the old briefs before writing, reordered the survey so it screens before it ranks, and committed. A Sonnet probe pinned to that commit answered sixteen scenarios from the briefs alone. code-review (Standards and Spec) found a hedge I had hardened, two done-when lines an agent could not check, a half-made pointer in the impl brief, and an ambiguous pipe of occurrence blocks into ledger-set.ts; the owner meanwhile asked for a Done when section per step. A second commit took all of that; I declined one Standards claim (gh pr view is blocked in the cloud, per github-integration.md) and said why in the brief. Re-probed at the final head, gate green, pushed, PR #2539 opened with the trial entry. Agent-initiated: the step reorder and the verdict comment. Open: the owner asked whether anything could be cut; I proposed five cuts (the ledger data model restated in survey section 2, a stale docsReadViaShell caveat, a no-op schema check, an incident example, script semantics copied from headers) and hold the merge for their answer."
+status: completed
+outcome: "PR #2539 merged: the three briefs restructured as a Prune Trial, with the owner's cuts"
+summary: "Human-instructed throughout. The owner asked for the three frictions-to-fixes agent briefs (survey, design, impl) to get the same clean per-step rewrite SKILL.md got on 2026-10-20, keeping every rule. Per their preference I asked three questions first; they chose the SKILL.md shape adapted (role and inputs up front, then Goal / Instructions / Done when / Edge cases per step, then the report), a Prune Trial rather than a plain PR, and four fixes alongside the restructure: the design brief's dangling opening and session-log path, the dead \"audit-docs house rules\" pointer, SKILL.md saying what \"verbatim\" means for a brief handed by path, and the survey's candidate set (every entry --candidates lists). I inventoried every rule of the old briefs before writing, reordered the survey so it screens before it ranks, and committed. A Sonnet probe pinned to that commit answered sixteen scenarios from the briefs alone. code-review (Standards and Spec) found a hedge I had hardened, two done-when lines an agent could not check, a half-made pointer in the impl brief, and an ambiguous pipe of occurrence blocks into ledger-set.ts; the owner meanwhile asked for a Done when section per step. A second commit took all of that; I declined one Standards claim (gh pr view is blocked in the cloud, per github-integration.md) and said why in the brief. Re-probed at the final head, gate green, pushed, PR #2539 opened with the trial entry. Agent-initiated: the step reorder and the verdict comment. The owner then asked whether anything could be cut; I proposed five cuts (the ledger data model restated in survey section 2, a stale docsReadViaShell caveat, a no-op schema check, an incident example, script semantics copied from headers). They said do the cuts but not to expect agents to read script headers, so the fifth stayed and the first became a tightening with every fact inline. A third commit took them, re-probed on Sonnet and reviewed on its own diff (both axes clean); CI green, merged through merge-pr.ts as an ordinary agent PR (ADR-0027: a trial PR merges like any agent's)."
 prs:
   - "2539"
 docsRead:
@@ -97,28 +97,38 @@ frictions:
   - description: "The design brief's docsReadViaShell caveat (logs older than 2026-10-10) is stale: the 14-day ledger horizon no longer reaches such logs, so every design agent reads a dead branch."
     solution: Cut the sentence; proposed to the owner among five cuts, awaiting their answer.
     severity: nit
-durationSec: 1518
+  - description: Each of three read-only Sonnet probes got a PostToolUse hint to read git-conventions.md after its single detached checkout, which clashed with the brief's rule to read nothing but the briefs; each spent words explaining why it ignored it.
+    solution: Let a probe brief name git-conventions.md as pre-read by the orchestrator, or have the hint skip a detached checkout of a pinned SHA.
+    severity: nit
+  - description: "pr-workflow's follow-up rule sent a 30-line owner-directed prose cut, already probed on Sonnet, through a full two-agent code-review before merge: about 170k subagent tokens to confirm nothing."
+    solution: "None proposed: pr-workflow.md is in an open Prune Trial (its 'simple change' bar), so the cost is logged here for that trial's verdict."
+    severity: minor
+durationSec: 1921
 models:
-  claude-fable-5-1: 134
+  claude-fable-5-1: 190
 toolCounts:
-  Bash: 37
+  Bash: 48
   Read: 11
   AskUserQuestion: 1
   Edit: 2
-  Agent: 4
-  Skill: 3
-  ReadNotifications: 8
-  ToolSearch: 1
+  Agent: 7
+  Skill: 4
+  ReadNotifications: 12
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__send_later: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__update_pull_request: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/prune-trials.yml
   - .agents/skills/frictions-to-fixes/design-brief.md
-  - .agents/skills/frictions-to-fixes/impl-brief.md
   - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
@@ -236,26 +246,45 @@ subagents:
     durationSec: 39
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 4.4
+    tokenShare: 2.9
   - type: general-purpose
     task: Standards review of brief rewrite
     durationSec: 197
     toolCalls: 19
     modelCalls: 8
-    tokenShare: 10.6
+    tokenShare: 7
   - type: general-purpose
     task: Spec review of brief rewrite
     durationSec: 139
     toolCalls: 13
     modelCalls: 6
-    tokenShare: 7
+    tokenShare: 4.7
   - type: general-purpose
     task: Re-probe briefs at final commit
     model: sonnet
     durationSec: 32
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 4.2
+    tokenShare: 2.8
+  - type: general-purpose
+    task: Probe briefs after the cuts
+    model: sonnet
+    durationSec: 22
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 2.7
+  - type: general-purpose
+    task: Standards review of the cuts
+    durationSec: 107
+    toolCalls: 12
+    modelCalls: 7
+    tokenShare: 4.7
+  - type: general-purpose
+    task: Spec review of the cuts
+    durationSec: 117
+    toolCalls: 7
+    modelCalls: 7
+    tokenShare: 4.5
 gitBranch: ccr-06eb66b7-x79zjy
 entrypoint: remote_mobile
 cliVersion: 2.1.310
