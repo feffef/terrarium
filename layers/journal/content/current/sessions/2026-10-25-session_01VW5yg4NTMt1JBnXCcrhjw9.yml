@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01VW5yg4NTMt1JBnXCcrhjw9
 startedAt: 2026-10-25T07:47:24Z
-endedAt: 2026-10-25T08:00:33Z
+endedAt: 2026-10-25T08:08:35Z
 kind: interactive
 goal: Check whether audit-docs lenses still earn their place
-status: completed
-outcome: "Coherence lens lands real fixes; the Concision lens confirms the churn suspicion: about 19 of 25 landed concision edits in two runs changed no reader action"
-summary: "Human-instructed: the user asked me to use inspect-session on the last two audit-docs runs (session_01Ku4KD2Ua5MXi6eQ95TG4aj on 2026-10-24 and session_01EQ8sMcrX7UwDXFBx6tfUWu on 2026-10-25) to confirm or refute that the Coherence lens (Agent D) only makes churn. The session logs and sweep PR bodies (#2481, #2509) don't split findings by lens, so I dispatched two partial-read subagents, one per session. Results: on 10-25, D made 12 findings and 4 landed (the CLAUDE.md .throwaway contradiction, the Midden trench/stores fact, the close-session Inventory babysit claim, and one mis-labelled glossary move). On 10-24, 12 checked coherence findings produced 4 landings (ADR-0004 0.x-minor escalation, ledger-set path, close-session role, journal glossary wording). The 10-24 reader reached its 25-page limit before Agent D's own hand-back and worked from the checker's re-listing. The verdict the user got: the lens mostly lands real fixes, and most churn in those PRs is concision and Inventory wording. Its real cost is rejected findings that come back every run (visitor-loop \"five homepage sites\", Tinkerfund \"Live ending soon\", pr-workflow under a Prune Trial). The user then clarified they meant the Concision lens (human-instructed follow-up). Resuming the same two readers: on 10-25, C made 39 findings, 7 confirmed, all same-meaning rewordings; on 10-24, about 68 findings, about 29 confirmed, about 6 useful (a wrong \"six weeks\" fact, a stale \"small set of ADRs\", a stale correction note) and the rest wording churn. My own git blame over 16 sweeps since 10-13 showed 10-22% of each sweep's removed lines were written by an earlier sweep. Concision's share of tokens was about 8-20%; Coherence's reviewer alone was 29-33%. The session changed no files and opened no PR."
-prs: []
+status: in-review
+outcome: "PR 2518 drops the audit-docs Concision lens. Coherence lens lands real fixes; the Concision lens confirms the churn suspicion: about 19 of 25 landed concision edits in two runs changed no reader action"
+summary: "Human-instructed: the user asked me to use inspect-session on the last two audit-docs runs (session_01Ku4KD2Ua5MXi6eQ95TG4aj on 2026-10-24 and session_01EQ8sMcrX7UwDXFBx6tfUWu on 2026-10-25) to confirm or refute that the Coherence lens (Agent D) only makes churn. The session logs and sweep PR bodies (#2481, #2509) don't split findings by lens, so I dispatched two partial-read subagents, one per session. Results: on 10-25, D made 12 findings and 4 landed (the CLAUDE.md .throwaway contradiction, the Midden trench/stores fact, the close-session Inventory babysit claim, and one mis-labelled glossary move). On 10-24, 12 checked coherence findings produced 4 landings (ADR-0004 0.x-minor escalation, ledger-set path, close-session role, journal glossary wording). The 10-24 reader reached its 25-page limit before Agent D's own hand-back and worked from the checker's re-listing. The verdict the user got: the lens mostly lands real fixes, and most churn in those PRs is concision and Inventory wording. Its real cost is rejected findings that come back every run (visitor-loop \"five homepage sites\", Tinkerfund \"Live ending soon\", pr-workflow under a Prune Trial). The user then clarified they meant the Concision lens (human-instructed follow-up). Resuming the same two readers: on 10-25, C made 39 findings, 7 confirmed, all same-meaning rewordings; on 10-24, about 68 findings, about 29 confirmed, about 6 useful (a wrong \"six weeks\" fact, a stale \"small set of ADRs\", a stale correction note) and the rest wording churn. My own git blame over 16 sweeps since 10-13 showed 10-22% of each sweep's removed lines were written by an earlier sweep. Concision's share of tokens was about 8-20%; Coherence's reviewer alone was 29-33%. The user then picked option 1 of three (remove the lens). I removed Agent C and the concision-family rotation from audit-docs, repointed four references (impl-brief, prune-trial, the Inventory role, the interactive map), left the pinned Glass Box walkthrough alone, and changed the intro's \"plain\" to \"clear\" after both code-review axes flagged it. Gate green; PR 2518 open."
+prs:
+  - "2518"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: fetch before trusting origin/main; read after my first fetch, which it shows was right
@@ -21,9 +22,43 @@ docsRead:
   - path: .agents/skills/audit-docs/SKILL.md
     reason: what Agent D's lenses are and how verdicts flow
     useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push, the recipe and verdict-comment format
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: hook-required read; confirmed audit-docs keeps text consistent not smaller, no trial covers the edited files
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: hook-required read on editing a Skill; nothing at stake
+    useful: no
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: role stays plain prose with no ids
+    useful: partly
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: hook-required read; no glossary edited
+    useful: no
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: hook-required read; its pointer to audit-docs reachability check still holds (Agent A)
+    useful: partly
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: hook-required read; no ADR edited
+    useful: no
+  - path: docs/diagrams/interactive-map/README.md
+    reason: checked it is dated history, so left alone
+    useful: partly
+  - path: docs/diagrams/interactive-map/terrarium-overview.md
+    reason: live lens count to repoint
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: read before editing a Skill; the Standards reviewer also applied its pruning rules (partly)
+    useful: partly
 skillsUsed:
   - name: inspect-session
     reason: user asked; partial reads of two audit-docs sessions
+  - name: writing-for-agents
+    reason: editing a Skill
+  - name: code-review
+    reason: review before first push
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -38,28 +73,79 @@ frictions:
   - description: I took 'coherence lens' literally and spent ~270k subagent tokens on it; the user meant concision
     solution: When a user's lens name doesn't match their stated symptom (churn), ask which one first
     severity: moderate
-durationSec: 788
+durationSec: 1271
 models:
-  claude-opus-5-5: 68
+  claude-opus-5-5: 157
 toolCounts:
-  Skill: 3
-  Bash: 19
-  Read: 3
-  ToolSearch: 2
-  mcp__github__pull_request_read: 2
-  Agent: 2
+  Skill: 5
+  Bash: 44
+  Read: 11
+  ToolSearch: 3
+  mcp__github__pull_request_read: 3
+  Agent: 4
   Write: 1
   SendMessage: 2
-  Edit: 1
+  Edit: 6
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/diagrams/interactive-map/terrarium-overview.md
+  - layers/journal/content/current/skills/audit-docs.yml
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 15
+    via: path
+    readAfter: true
+    by: main
+  - adr: 21
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+  - adr: 30
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: No PR or merge here; it also helped me judge the 0.x-minor finding that landed. Summary was enough.
@@ -82,6 +168,27 @@ ruleVerdicts:
   - path: .claude/rules/adr-0005.md
     reason: Loaded reading a Skill; no Skill change made
     useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Inventory role stays id-free; summary enough
+    useful: partly
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded reading a Glass Box page; no Tenant work
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed no edited path is Human-only, so self-merge is allowed
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: No ADR edited
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: No glossary edited
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Confirmed the Glass Box page is pinned to a revision, so leaving it was right
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded reading the diagram doc; no mermaid edited
+    useful: no
 subagents:
   - type: general-purpose
     task: Inspect 10-24 audit-docs run
@@ -89,14 +196,28 @@ subagents:
     durationSec: 638
     toolCalls: 80
     modelCalls: 77
-    tokenShare: 40.8
+    tokenShare: 28.4
   - type: general-purpose
     task: Inspect 10-25 audit-docs run
     model: sonnet
     durationSec: 569
     toolCalls: 63
     modelCalls: 61
-    tokenShare: 33.1
+    tokenShare: 23
+  - type: general-purpose
+    task: Standards review of lens removal
+    model: sonnet
+    durationSec: 33
+    toolCalls: 9
+    modelCalls: 4
+    tokenShare: 2.2
+  - type: general-purpose
+    task: Spec review of lens removal
+    model: sonnet
+    durationSec: 32
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 2.6
 gitBranch: ccr-22bdc20f-1748gp
 entrypoint: remote_mobile
 cliVersion: 2.1.310
