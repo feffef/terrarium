@@ -107,8 +107,7 @@ Act on each branch's `status` (`run-summary.ts --build`):
   other failures.
 - `ready-to-push`: check its `commits` against
   `git log origin/main..HEAD` in its `worktree`, and each claimed fix and
-  decision in its diff, before you trust it: past runs relayed subagent
-  claims unchecked.
+  decision in its diff, before you trust it.
 
 After a session resume or restart, check the run journal's mtime before you
 call a build live: a restart kills running workflows.
