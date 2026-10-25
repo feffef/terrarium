@@ -14,7 +14,7 @@
 import { existsSync, statSync } from 'node:fs'
 import { dirname, isAbsolute, join, matchesGlob, relative } from 'node:path'
 import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runGuard } from './hook-io.ts'
-import { extractTrace, subagentTranscript } from '../session/transcript-trace.ts'
+import { agentTranscript, extractTrace } from '../session/transcript-trace.ts'
 import { bashReadPaths } from '../session/shell-reads.ts'
 import { loadRules, RULES_DIR, ruleBlock, rulePaths, type RuleFile } from '../lib/adr-rules.ts'
 
@@ -54,7 +54,7 @@ function hintFor(payload: unknown): string | null {
   if (!root) return null
   const parent = String(prop(payload, 'transcript_path') ?? '')
   const agent = prop(payload, 'agent_id')
-  const transcript = agent === undefined ? parent : subagentTranscript(parent, String(agent))
+  const transcript = agent === undefined ? parent : agentTranscript(parent, String(agent))
   return bashRulesHint(command, cwd, root, loadRules(join(root, RULES_DIR)), () => new Set(extractTrace(readTranscript(transcript) ?? []).rulesLoaded))
 }
 

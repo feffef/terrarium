@@ -174,6 +174,14 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     expect(context(sub('missing'))).toContain(GIT)
   })
 
+  it('dedupes a workflow agent nested under subagents/workflows/<runId>/ against its own transcript', () => {
+    const parent = transcript('pw.jsonl', [{ type: 'user', message: { content: 'go' } }])
+    transcript('pw/subagents/workflows/run1/agent-w1.jsonl', [toolUse('r', 'Read', { file_path: `${repo}/${GIT}` })])
+    const nested = (agent_id: string) => run(call('git log', { transcript_path: parent, agent_id }))
+    expect(nested('w1').stdout).toBe('')
+    expect(context(nested('w2'))).toContain(GIT)
+  })
+
   it('points to dispatch-subagents on the first Agent call, silent once the Skill is invoked or its file read', () => {
     const agent = (transcript_path: string) => run(call('x', { tool_name: 'Agent', tool_input: { prompt: 'go' }, transcript_path }))
     expect(context(agent(empty))).toContain(DISPATCH)

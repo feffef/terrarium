@@ -23,7 +23,7 @@
 import { readFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runGuard } from './hook-io.ts'
-import { extractTrace, hintText, subagentTranscript } from '../session/transcript-trace.ts'
+import { extractTrace, hintText, agentTranscript } from '../session/transcript-trace.ts'
 import { buildDocLineIndex, commandWords } from '../session/shell-reads.ts'
 import { root } from '../lib/cli.ts'
 
@@ -127,7 +127,7 @@ function hintFor(payload: unknown, dryRun = false): string | null {
   let records: Record<string, unknown>[] | null
   if (typeof parent !== 'string') records = dryRun && parent === undefined ? [] : null
   else if (agent === undefined) records = readTranscript(parent)
-  else records = readTranscript(subagentTranscript(parent, String(agent))) ?? []
+  else records = readTranscript(agentTranscript(parent, String(agent))) ?? []
   if (!records) return null
   const index = buildDocLineIndex(docs.map((r) => ({ path: r.doc, text: readFileSync(join(root, r.doc), 'utf8') })))
   const trace = extractTrace(records, process.env, index)
