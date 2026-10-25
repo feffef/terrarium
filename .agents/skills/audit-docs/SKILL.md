@@ -53,8 +53,7 @@ lenses.
    quoted whole with its line breaks, plus replacement text. No line ranges
    (reviewers get them wrong). A finding outside its own lenses is still
    reported, named by its lens, and joins the pool like any other.
-4. Save each agent's reply verbatim to its own file in one scratchpad folder,
-   the pool, with one call per agent:
+4. Save each agent's reply verbatim into the pool, a new scratchpad folder:
    `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <pool>/<agent-id>.md`.
 
 **Agent A, Freshness.** Start from `git log --since="48 hours ago"
@@ -97,8 +96,7 @@ origin/main` and its diff.
   threshold that gates an action, an enum listed only by its endpoints at
   its home, or a "see X" where X doesn't hold the thing.
 
-Done when every agent has reported and every reply is saved in the pool
-folder.
+Done when every agent has reported and every reply is in the pool.
 
 ### Edge cases
 
