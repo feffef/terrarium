@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01VW5yg4NTMt1JBnXCcrhjw9
 startedAt: 2026-10-25T07:47:24Z
-endedAt: 2026-10-25T07:55:58Z
-kind: delegated
-goal: Check whether the audit-docs Coherence lens still earns its place
+endedAt: 2026-10-25T08:00:33Z
+kind: interactive
+goal: Check whether audit-docs lenses still earn their place
 status: completed
-outcome: "Pushed back: across two runs the lens raised 24 findings and 8 landed, of which most fixed real problems; the waste is dropped findings that come back every run"
-summary: "Human-instructed: the user asked me to use inspect-session on the last two audit-docs runs (session_01Ku4KD2Ua5MXi6eQ95TG4aj on 2026-10-24 and session_01EQ8sMcrX7UwDXFBx6tfUWu on 2026-10-25) to confirm or refute that the Coherence lens (Agent D) only makes churn. The session logs and sweep PR bodies (#2481, #2509) don't split findings by lens, so I dispatched two partial-read subagents, one per session. Results: on 10-25, D made 12 findings and 4 landed (the CLAUDE.md .throwaway contradiction, the Midden trench/stores fact, the close-session Inventory babysit claim, and one mis-labelled glossary move). On 10-24, 12 checked coherence findings produced 4 landings (ADR-0004 0.x-minor escalation, ledger-set path, close-session role, journal glossary wording). The 10-24 reader reached its 25-page limit before Agent D's own hand-back and worked from the checker's re-listing. The verdict the user got: the lens mostly lands real fixes, and most churn in those PRs is concision and Inventory wording. Its real cost is rejected findings that come back every run (visitor-loop \"five homepage sites\", Tinkerfund \"Live ending soon\", pr-workflow under a Prune Trial). The session changed no files and opened no PR."
+outcome: "Coherence lens lands real fixes; the Concision lens confirms the churn suspicion: about 19 of 25 landed concision edits in two runs changed no reader action"
+summary: "Human-instructed: the user asked me to use inspect-session on the last two audit-docs runs (session_01Ku4KD2Ua5MXi6eQ95TG4aj on 2026-10-24 and session_01EQ8sMcrX7UwDXFBx6tfUWu on 2026-10-25) to confirm or refute that the Coherence lens (Agent D) only makes churn. The session logs and sweep PR bodies (#2481, #2509) don't split findings by lens, so I dispatched two partial-read subagents, one per session. Results: on 10-25, D made 12 findings and 4 landed (the CLAUDE.md .throwaway contradiction, the Midden trench/stores fact, the close-session Inventory babysit claim, and one mis-labelled glossary move). On 10-24, 12 checked coherence findings produced 4 landings (ADR-0004 0.x-minor escalation, ledger-set path, close-session role, journal glossary wording). The 10-24 reader reached its 25-page limit before Agent D's own hand-back and worked from the checker's re-listing. The verdict the user got: the lens mostly lands real fixes, and most churn in those PRs is concision and Inventory wording. Its real cost is rejected findings that come back every run (visitor-loop \"five homepage sites\", Tinkerfund \"Live ending soon\", pr-workflow under a Prune Trial). The user then clarified they meant the Concision lens (human-instructed follow-up). Resuming the same two readers: on 10-25, C made 39 findings, 7 confirmed, all same-meaning rewordings; on 10-24, about 68 findings, about 29 confirmed, about 6 useful (a wrong \"six weeks\" fact, a stale \"small set of ADRs\", a stale correction note) and the rest wording churn. My own git blame over 16 sweeps since 10-13 showed 10-22% of each sweep's removed lines were written by an earlier sweep. Concision's share of tokens was about 8-20%; Coherence's reviewer alone was 29-33%. The session changed no files and opened no PR."
 prs: []
 docsRead:
   - path: docs/agents/git-conventions.md
@@ -35,17 +35,22 @@ frictions:
   - description: The 10-24 partial read hit its 25-page limit before reaching Agent D's hand-back; it answered from the checker's re-listing
     solution: For an audit run, page limit ~40, or search for the reviewer dispatch first
     severity: minor
-durationSec: 514
+  - description: I took 'coherence lens' literally and spent ~270k subagent tokens on it; the user meant concision
+    solution: When a user's lens name doesn't match their stated symptom (churn), ask which one first
+    severity: moderate
+durationSec: 788
 models:
-  claude-opus-5-5: 39
+  claude-opus-5-5: 68
 toolCounts:
   Skill: 3
-  Bash: 9
+  Bash: 19
   Read: 3
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__pull_request_read: 2
   Agent: 2
   Write: 1
+  SendMessage: 2
+  Edit: 1
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
@@ -81,17 +86,17 @@ subagents:
   - type: general-purpose
     task: Inspect 10-24 audit-docs run
     model: sonnet
-    durationSec: 348
-    toolCalls: 66
-    modelCalls: 64
-    tokenShare: 40.2
+    durationSec: 638
+    toolCalls: 80
+    modelCalls: 77
+    tokenShare: 40.8
   - type: general-purpose
     task: Inspect 10-25 audit-docs run
     model: sonnet
-    durationSec: 310
-    toolCalls: 58
-    modelCalls: 57
-    tokenShare: 39.9
+    durationSec: 569
+    toolCalls: 63
+    modelCalls: 61
+    tokenShare: 33.1
 gitBranch: ccr-22bdc20f-1748gp
 entrypoint: remote_mobile
 cliVersion: 2.1.310
