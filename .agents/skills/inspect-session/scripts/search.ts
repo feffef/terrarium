@@ -6,16 +6,16 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
 import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
-import { coverageLine, cut, nextLine, readFlat, shown, sibling, skillFile, THINKING, toLine, type FlatLine, type Meta } from './flat.ts'
+import { claimedAgent, coverageLine, cut, nextLine, readFlat, shown, sibling, skillFile, THINKING, toLine, type FlatLine, type Meta } from './flat.ts'
 
 export type Selector =
   | { name: 'tool'; tool: string; input?: string }
   | { name: 'reads'; paths: string[] }
-  | { name: 'dispatches' | 'errors' | 'prompts' }
+  | { name: 'dispatches' | 'errors' | 'prompts' | 'fabricated' }
   | { name: 'last'; n: number }
   | { name: 'replies'; n: number }
 
-const USAGE = 'selectors: tool <name regex> [<input regex>] | reads <path or glob>… | dispatches | errors | prompts | last <N> | replies [<N>]'
+const USAGE = 'selectors: tool <name regex> [<input regex>] | reads <path or glob>… | dispatches | errors | prompts | fabricated | last <N> | replies [<N>]'
 
 const REPLY_CHARS = 300
 
@@ -23,7 +23,7 @@ export function parseSelector(args: string[]): Selector {
   const [name, ...rest] = args
   if (name === 'tool' && rest[0]) return { name, tool: rest[0], input: rest[1] }
   if (name === 'reads' && rest.length) return { name, paths: rest }
-  if (name === 'dispatches' || name === 'errors' || name === 'prompts') return { name }
+  if (name === 'dispatches' || name === 'errors' || name === 'prompts' || name === 'fabricated') return { name }
   if (name === 'last' && Number(rest[0]) > 0) return { name, n: Number(rest[0]) }
   if (name === 'replies' && (!rest[0] || Number(rest[0]) > 0)) return { name, n: Number(rest[0] ?? REPLY_CHARS) }
   throw new Error(USAGE)
@@ -64,6 +64,16 @@ export function search(lines: FlatLine[], sel: Selector, agent?: string): { hits
   } else if (sel.name === 'dispatches') {
     const seen = new Set<string>()
     hits = scoped.filter((l) => l.tags.includes('dispatch') || (l.tags.includes('dispatch-not-in-range') && !seen.has(l.agent) && seen.add(l.agent)))
+  } else if (sel.name === 'fabricated') {
+    const delivers = (l: FlatLine, id: string): boolean =>
+      l.kind === 'user/handback' ? l.input.startsWith(`from ${id},`) : (l.kind === 'user/task-notification' || l.kind === 'user/peer') && claimedAgent(l.input) === id
+    hits = scoped
+      .filter((l) => l.tags.includes('fabricated-tag'))
+      .flatMap((l) => {
+        const id = claimedAgent(l.input) ?? '?'
+        const real = lines.find((d) => delivers(d, id))
+        return [{ ...l, result: `claims ${id}; ${real ? `real delivery L${real.n}` : 'no real delivery in range'}` }, ...(real ? [real] : [])]
+      })
   } else {
     const tag = sel.name === 'errors' ? 'error' : 'human-prompt'
     // The call line already holds a failed result, so its result line would repeat it.

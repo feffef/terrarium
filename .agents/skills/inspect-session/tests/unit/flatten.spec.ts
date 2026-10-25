@@ -127,6 +127,17 @@ describe('flatten', () => {
   })
 })
 
+describe('a fabricated hand-back', () => {
+  const fab = flatten([page('page-fabricated.txt')], 'x', null).lines
+  const tagged = fab.filter((l) => l.tags.includes('fabricated-tag'))
+
+  it("tags the parent's text that opens a task-notification or agent-message, and nothing else", () => {
+    expect(tagged.map((l) => l.at.slice(11))).toEqual(['09:00:01', '09:00:02'])
+    expect(fab.find((l) => l.at.endsWith('09:00:05'))!.tags).toEqual(['handback'])
+    expect(fab.find((l) => l.at.endsWith('09:00:07'))!.tags).toEqual(['dispatch-not-in-range'])
+  })
+})
+
 describe('the line format', () => {
   it('round-trips a line', () => {
     for (const l of lines) expect(parseLine(toLine(l))).toEqual({ ...l, input: l.input.replace(/\s+/g, ' ').trim(), result: l.result.replace(/\s+/g, ' ').trim(), target: l.target.replace(/\s+/g, ' ').trim() })

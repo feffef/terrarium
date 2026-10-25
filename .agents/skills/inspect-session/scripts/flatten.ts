@@ -16,6 +16,7 @@ import {
   findSessionLog,
   nextLine,
   oneLine,
+  OPENS_DELIVERY,
   sibling,
   skillFile,
   toLine,
@@ -185,8 +186,11 @@ export function flatten(pages: Page[], session: string, sessionLog: string | nul
       const outs: string[] = []
       const targets: string[] = []
       for (const b of blocks(e.ca)) {
-        if (b.type === 'text') inputs.push(b.text)
-        else if (b.type === 'thinking') inputs.push(THINKING)
+        if (b.type === 'text') {
+          inputs.push(b.text)
+          // Only the harness delivers these tags; the parent writing one has invented a report (#2499).
+          if (!e.ca.agent_id && OPENS_DELIVERY.test(String(b.text))) tag('fabricated-tag')
+        } else if (b.type === 'thinking') inputs.push(THINKING)
         else if (b.type === 'tool_use') {
           tools.push(b.name)
           const r = results.get(b.id)
