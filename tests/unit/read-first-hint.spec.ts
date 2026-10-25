@@ -86,7 +86,6 @@ describe('triggeredDocs()', () => {
     expect(triggeredDocs('Read', 'git log')).toEqual([])
     expect(triggeredDocs('Bash', undefined)).toEqual([])
   })
-
 })
 
 describe('the hook entry (sh pre-filter → tsx)', () => {
@@ -177,7 +176,6 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     expect(nested('w1').stdout).toBe('')
     expect(context(nested('w2'))).toContain(GIT)
   })
-
 
   it('fails open: malformed payload or missing main transcript adds nothing', () => {
     expect(run('{"tool_input":{"command":"git log"')).toMatchObject({ status: 0, stdout: '' })
