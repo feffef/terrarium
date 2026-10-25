@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_019jfJv6yLmcLUAJiTTomyeu
 startedAt: 2026-10-25T02:07:57Z
-endedAt: 2026-10-25T02:26:13Z
+endedAt: 2026-10-25T02:32:50Z
 kind: autonomous
 goal: Scheduled run turning logged frictions into fixes
 status: in-review
-outcome: "Ledger PR #2506 and one cwd doc-fix PR #2507 open; three regression issues filed; two designs dropped"
+outcome: "Ledger PRs #2506 merged, #2507 merged, closing ledger PR #2508 open; three regression issues filed"
 summary: "Autonomous frictions-to-fixes run (a schedule started it; no human prompted anything). A survey subagent clustered the window's 36 sessions into the Friction Ledger (two new entries, fixes #2483-#2486 recorded, entries whose trials or issues closed set back to open). I filed regression issues for the top three by severity and recurrence (#2503 relayed-subagent-claims, #2504 mechanism-claim-from-recall, #2505 governing-doc-read-after-draft). Only three candidates were never-fixed, so I picked those and had a design subagent assess them: the cwd one was dispatched (a wrong \"Bash resets cwd\" claim in dispatch-subagents §3 and clear-backlog-build.js; a Sonnet agent built it, PR #2507), the gate-overlap lock (Human-only gate.ts, one occurrence) and the Glass Box page-check loops (docs already read, messages clear) were dropped with notes on their entries. Ledger PR #2506 carries statuses, refs, notes and the horizon prune. Still open: both PRs await CI and merge, then the closing ledger PR (§8) records #2507's fix entry."
 prs:
   - "2506"
   - "2507"
+  - "2508"
 docsRead:
   - path: .claude/skills/frictions-to-fixes/survey-brief.md
     reason: survey brief; passed to the subagent by path
@@ -88,29 +89,30 @@ frictions:
   - description: "Design subagent reported: the isolation guard's source is not in the repo, so whether git -C passes had to be tested empirically (the impl agent did), and docsRead merges subagent reasons into one field."
     solution: Document the guard's accepted forms in environment-caveats, or put its source under scripts/hooks.
     severity: nit
-durationSec: 1096
+durationSec: 1493
 models:
-  claude-sonnet-5-5: 83
+  claude-sonnet-5-5: 111
 toolCounts:
   Read: 6
-  Bash: 23
+  Bash: 31
   Skill: 3
   Agent: 3
   ToolSearch: 1
   mcp__github__issue_write: 3
   Edit: 2
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  mcp__github__add_issue_comment: 4
   Write: 1
+  ReadNotifications: 4
 filesEdited:
   - layers/journal/content/current/frictions/gate-overlap-clobbers-build.yml
   - layers/journal/content/current/frictions/glassbox-page-check-edit-loops.yml
   - .agents/skills/dispatch-subagents/SKILL.md
   - .claude/workflows/clear-backlog-build.js
+  - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
   - layers/journal/content/current/frictions/agent-background-flag-guard.yml
   - layers/journal/content/current/frictions/auto-mode-self-modification-denials.yml
-  - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
   - layers/journal/content/current/frictions/bash-reads-not-read-tool.yml
   - layers/journal/content/current/frictions/binding-docs-skipped.yml
   - layers/journal/content/current/frictions/blog-reply-premises-unchecked.yml
@@ -259,20 +261,20 @@ subagents:
     durationSec: 535
     toolCalls: 41
     modelCalls: 38
-    tokenShare: 39.8
+    tokenShare: 32.4
   - type: general-purpose
     task: Design fixes for picked frictions
     durationSec: 101
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 8
+    tokenShare: 6.5
   - type: general-purpose
     task: Build cwd-claim doc fix
     model: sonnet
     durationSec: 194
     toolCalls: 29
     modelCalls: 17
-    tokenShare: 8.4
+    tokenShare: 6.9
 gitBranch: claude/eager-ptolemy-8ii7ao
 entrypoint: remote_trigger
 cliVersion: 2.1.310
