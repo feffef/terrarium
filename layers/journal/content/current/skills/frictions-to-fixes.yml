@@ -319,3 +319,11 @@ observations:
       the 10-20 run predicted it. Prose fixes for recurring frictions keep
       not holding (#2425, #2476). Not a delivery failure. Grade/role
       unchanged.
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 3 newest runs read, PRs #2525, #2507, #2478 merged and
+      live. Repeated: closing log hand-authored before invoking close-session
+      (session_017vrdmQQwC4obwbJS9G5Dyg, session_019jfJv6yLmcLUAJiTTomyeu),
+      tracked in #2521. Unverified: ledger-set.ts has no flag for drop notes
+      or clearing ref, so all 3 runs hand-edited. Grade/role unchanged
+      (routine).

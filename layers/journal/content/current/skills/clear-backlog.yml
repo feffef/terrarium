@@ -136,3 +136,11 @@ observations:
       an ordinary same-day follow-up PR (#2321), not a git revert - both
       stand merged. No reverts in the 2-week sweep. Grade/role unchanged
       (specialist).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 10 runs, all 42 PRs merged. Unverified, from logs
+      only: session_012f7o6FcYxq1MWxvsdgKS6m hand-edited wording after
+      review and re-ran only gate:scoped (the Skill sends failed branches with
+      openFindings that way; session_013QKXoGLaEHEJanyw5TrPqj did the same on
+      #2515); session_01PYyNMqrrDLZdXEej11LMzs sent follow-up grilling
+      questions mixed with tool calls. Grade/role unchanged (specialist).

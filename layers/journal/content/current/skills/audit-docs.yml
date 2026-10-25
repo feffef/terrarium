@@ -376,3 +376,11 @@ observations:
       (10-21), whose Spec reviewer saw only Agent A's findings in pool.md;
       no damage seen. A later run could reword step 1.4 or check the script.
       Grade/role unchanged (routine).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 7 runs, all PRs merged, no revert. Verified silent
+      failure, repeated from the earlier 2026-10-25 note, then unverified: step 1.4 asks for
+      one pooled file but save-handback.ts overwrites its output
+      (session_01Ku4KD2Ua5MXi6eQ95TG4aj, session_01EQ8sMcrX7UwDXFBx6tfUWu;
+      probably session_01HcMFbKDTkG7hs2VhByAs4b). Filed as #2527. Grade/role
+      unchanged (routine).

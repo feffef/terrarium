@@ -70,3 +70,11 @@ observations:
       reviewed change). The 10-20 observation's predicted staleness (a
       claude-code doc citing pre-adr-check behavior) self-corrected the
       very next run via merged PR #2320. No reverts. Grade/role unchanged.
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 8 runs, all 8 PRs merged, no revert. Unverified: step 5
+      screenshots skipped after teaching changes in
+      session_01PGQQj6iUaMYCkphVjFEsBP (PR #2517) and
+      session_01G2d5G6TrdoTQYQr7S2Eu7o (PR #2404); both logs say so, and the
+      Skill has no threshold for small edits. Watch for a third before
+      escalating. Grade/role unchanged (specialist).

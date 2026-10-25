@@ -426,3 +426,10 @@ observations:
       session_011hiFhM9A2Sbn4mGYbdtAhJ (PR #2447) says -27 and the merge
       diff gives -26; that entry is live and unjudged. Runs after the
       numstat clause (9ec52d66d) were correct. Grade/role unchanged.
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 9 runs, all PRs merged. Unverified: stated line deltas
+      disagree with numstat in session_011hiFhM9A2Sbn4mGYbdtAhJ (PR #2447, -27
+      stated vs -26) and session_0149fVyZ37qWGMuwVPw3Uryc (PR #2412, repeat of
+      the 10-24 note). The numstat clause landed after both; no post-review
+      change has tested it. Grade/role unchanged (routine).
