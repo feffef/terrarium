@@ -1,0 +1,206 @@
+schemaVersion: 1
+session: session_01Hpd1KMhzJC2NxHSxp7erFi
+startedAt: 2026-10-25T07:52:07Z
+endedAt: 2026-10-25T08:13:10Z
+kind: interactive
+goal: Group Glass Box verification Lessons under one Subject
+status: in-review
+outcome: "PR #2519 open: gate, type checking, content validation and testing Lessons now under Verification"
+summary: "Human-instructed: the Trusted user proposed a Verification Subject for the guide's single-Lesson TypeScript, Zod and Testing Subjects, plus the gate Lesson. They then answered my questions: move guide Lessons only, move the gate, name it Verification and put it where Zod was, no redirects, and add a Full reference to the gate rather than an exemption. Agent-initiated: the Lesson order (gate, types, content, tests, matching the gate's steps), dropping the now-empty TypeScript Subject while keeping Zod and Testing for their drafts, and rewording the Subject glossary entry and one glassbox-update line after the Standards review. gate:scoped green; code-review on both axes; PR open."
+prs:
+  - "2519"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch and rebase before work; commit-message hygiene
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review then gate before first push; verdict before merge
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP for writes; nothing else applied
+    useful: no
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Subject is defined as one tool and House rules skip Full reference; both needed edits
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: Its major-version step named a Subject as one tool; reworded
+    useful: yes
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: Checked what main enforces before picking a Full reference; mostly about log pushes
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: "Standards agent: asks to verify each official-docs URL, which prompted the web-search check"
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: "Standards agent: rule of two argued against a general 'may instead' clause in Subject"
+    useful: partly
+  - path: layers/glassbox/page-checks.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: two-axis review before first push
+  - name: dispatch-subagents
+    reason: brief the two review agents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Found only after announcing the plan that moving the gate Lesson out of terrarium-practice/ breaks the Full reference exemption in page-checks.ts
+    solution: grep page-checks.ts for folder-specific rules before proposing a Glass Box folder move
+    severity: minor
+  - description: docs.github.com returns 403 through the proxy and github/docs is out of repo scope, so verifying the Full reference URL took a web search detour
+    solution: EVERY-PAGE.md could name web search as the fallback for docs.github.com URLs
+    severity: minor
+durationSec: 1262
+models:
+  claude-opus-5-5: 82
+toolCounts:
+  Bash: 27
+  Read: 4
+  AskUserQuestion: 1
+  Skill: 4
+  Agent: 2
+  ToolSearch: 3
+  WebSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/glassbox-update/SKILL.md
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/content/guide/pages/verification/01.gate.md
+  - layers/glassbox/app/utils/subjects.ts
+  - layers/glassbox/content/drafts/pages/claude-code/05.guards.md
+  - layers/glassbox/content/drafts/pages/claude-code/08.workflow-scripts.md
+  - layers/glassbox/content/drafts/pages/git-github/03.thin-ci-workflow.md
+  - layers/glassbox/content/drafts/pages/git-github/07.dependabot-grouping.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/05.mdc-components.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/07.mermaid-svg.md
+  - layers/glassbox/content/drafts/pages/skill-pack/01.skill-pack.md
+  - layers/glassbox/content/drafts/pages/skill-pack/03.engineering-loop.md
+  - layers/glassbox/content/drafts/pages/testing/02.invariants-as-tests.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-newcomers-first-hour.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/routines.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/session-log-lands-on-main.md
+  - layers/glassbox/content/drafts/pages/zod/01.manifest-validation.md
+  - layers/glassbox/content/drafts/pages/zod/02.timestamps-as-strings.md
+  - layers/glassbox/content/drafts/pages/zod/03.schema-only-grows.md
+  - layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.gate.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+  - layers/glassbox/content/guide/pages/testing/01.unit-and-e2e-tests.md
+  - layers/glassbox/content/guide/pages/typescript/01.type-checking.md
+  - layers/glassbox/content/guide/pages/verification/02.type-checking.md
+  - layers/glassbox/content/guide/pages/verification/03.content-validation.md
+  - layers/glassbox/content/guide/pages/verification/04.unit-and-e2e-tests.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+  - layers/glassbox/content/guide/pages/zod/01.content-validation.md
+rulesLoaded:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - docs/agents/domain.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR and subscribed after the push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Session header on the PR body and the commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/glassbox-content.md
+    reason: Confirmed the new glossary and Full reference text holds no changing facts
+    useful: partly
+  - path: .claude/rules/tenant-glossary.md
+    reason: Sent me to the Glass Box glossary, whose Subject entry needed rewording
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest unchanged; the Subject map lives in app code, not the manifest
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: No stored field changed
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: No MDC component or Collection added
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Nothing about layer code or aliases was touched
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagram edited
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: One Skill line reworded through a gated PR as it asks; nothing more
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: No open prune trial covers the edited text
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Kept the Subject definition in the Tenant glossary; summary was enough
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: Changed an existing term only; the review agent read domain.md and flagged the rule of two
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: No rule or instruction placement changed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Standards agent: confirmed subjects.ts is not Human-only"
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Standards agent loaded it via a hook; not relevant to this review
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+    durationSec: 79
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 18.7
+  - type: general-purpose
+    task: Spec review of diff
+    durationSec: 63
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 15.6
+gitBranch: ccr-f28a6a0a-jaqwp0
+entrypoint: remote_mobile
+cliVersion: 2.1.310
+landedBy: Stop
