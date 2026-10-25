@@ -154,6 +154,16 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     expect(run({ ...payload, agent_id: 'missing' }).stdout).toContain('rules/guards.md')
   })
 
+  it('skips a rule already loaded by a workflow agent nested under subagents/workflows/<runId>/', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'bash-rules-tx-'))
+    writeFileSync(join(dir, 't.jsonl'), '{}\n')
+    mkdirSync(join(dir, 't/subagents/workflows/run1'), { recursive: true })
+    writeFileSync(join(dir, 't/subagents/workflows/run1/agent-w1.jsonl'), `${JSON.stringify({ attachment: { type: 'nested_memory', path: `${repo}/.claude/rules/guards.md` } })}\n`)
+    const payload = { ...bash('cat README.md scripts/hooks/double-background-guard.ts'), transcript_path: join(dir, 't.jsonl') }
+    expect(run({ ...payload, agent_id: 'w1' }).stdout).not.toContain('rules/guards.md')
+    expect(run({ ...payload, agent_id: 'w2' }).stdout).toContain('rules/guards.md')
+  })
+
   it('fails open on invalid JSON, a missing rules dir and a malformed rule', () => {
     expect(run('{"tool_input":{"command":"cat a b"')).toMatchObject({ status: 0, stdout: '' })
     const bare = mkdtempSync(join(tmpdir(), 'bash-rules-hint-'))

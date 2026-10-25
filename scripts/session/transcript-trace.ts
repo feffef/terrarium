@@ -735,13 +735,10 @@ function statsOf(trace: MechanicalTrace): Partial<SubagentRef> {
 
 const subagentsDir = (transcriptPath: string) => join(dirname(transcriptPath), basename(transcriptPath, '.jsonl'), 'subagents')
 
-/** One depth-1 subagent's transcript, named for the hook payload's `agent_id`. */
-export const subagentTranscript = (transcriptPath: string, agentId: string) => join(subagentsDir(transcriptPath), `agent-${agentId}.jsonl`)
-
 /** An agent's own transcript: a depth-1 subagent's, else one nested deeper,
  *  such as a workflow agent's under `workflows/<runId>/`. */
 export const agentTranscript = (transcriptPath: string, agentId: string): string | undefined => {
-  const direct = subagentTranscript(transcriptPath, agentId)
+  const direct = join(subagentsDir(transcriptPath), `agent-${agentId}.jsonl`)
   return existsSync(direct) ? direct : subagentTranscriptPaths(transcriptPath).find((p) => basename(p) === `agent-${agentId}.jsonl`)
 }
 
