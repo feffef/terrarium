@@ -7,7 +7,7 @@ disable-model-invocation: true
 # Audit Docs
 
 Agents act on what the docs say, so a stale or muddled doc is a behaviour
-bug. This run keeps the repo's prose true to the code and plain enough to act
+bug. This run keeps the repo's prose true to the code and clear enough to act
 on. It runs without a human: reviewers find problems, checkers confirm them,
 you fix them and merge your own PR on a green gate. CLAUDE.md's "Keep it
 short" governs every edit.
