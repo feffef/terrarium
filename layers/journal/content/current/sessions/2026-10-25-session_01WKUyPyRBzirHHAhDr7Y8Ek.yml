@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01WKUyPyRBzirHHAhDr7Y8Ek
 startedAt: 2026-10-25T11:10:23Z
-endedAt: 2026-10-25T11:25:47Z
+endedAt: 2026-10-25T11:28:34Z
 kind: delegated
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "Inventory notes and Routine costs in open PR #2530; issues #2527 and #2528 filed, #2472 updated"
-summary: "The user invoked /audit-skills with no other instruction; every step after was agent-initiated under that Skill. I gathered the scorecard, had one subagent fetch usage for the four unlisted Routine runs, and dispatched 13 read-only Sonnet behaviour checks. I verified the findings I acted on at the source (save-handback.ts overwrites its output; outline.ts prints more than its path; the transcript-trace.ts exact match on (not read); digest friction quotes in three logs). Two repeated, now-verified findings became issues (#2527 audit-docs pooled file, #2528 inspect-session outline.ts drift); three newer digest first-push review skips went onto #2472 as a comment. Visitor-loop's out-of-remit gap I did not escalate: Step 7 allows unbuilt ideas to stay in ideas. Ten Inventory entries got observations, no grade or role changed (no entry had two cited sessions of felt-absence evidence). Step 3 closure: both orphans carry resolvedBy, the suppression log is healthy, and the one human-prompted closure (session_01EjH3TbrydEY2sArBMYE5Gy) is already on close-session's observations. The three unused uninventoried Skills (glassbox-walkthrough, implement-spec, wait-what) got no entry because none was used. Code-review found two truncated session ids and three loose wordings, fixed in a second commit. Gate green; PR #2530 open. Not asked: I did not pause to question the user, since the Skill fully specifies the task."
+status: completed
+outcome: "Inventory notes and Routine costs merged in PR #2530; issues #2527 and #2528 filed, #2472 updated"
+summary: "The user invoked /audit-skills with no other instruction; every step after was agent-initiated under that Skill. I gathered the scorecard, had one subagent fetch usage for the four unlisted Routine runs, and dispatched 13 read-only Sonnet behaviour checks. I verified the findings I acted on at the source (save-handback.ts overwrites its output; outline.ts prints more than its path; the transcript-trace.ts exact match on (not read); digest friction quotes in three logs). Two repeated, now-verified findings became issues (#2527 audit-docs pooled file, #2528 inspect-session outline.ts drift); three newer digest first-push review skips went onto #2472 as a comment. Visitor-loop's out-of-remit gap I did not escalate: Step 7 allows unbuilt ideas to stay in ideas. Ten Inventory entries got observations, no grade or role changed (no entry had two cited sessions of felt-absence evidence). Step 3 closure: both orphans carry resolvedBy, the suppression log is healthy, and the one human-prompted closure (session_01EjH3TbrydEY2sArBMYE5Gy) is already on close-session's observations. The three unused uninventoried Skills (glassbox-walkthrough, implement-spec, wait-what) got no entry because none was used. Code-review found two truncated session ids and three loose wordings, fixed in a second commit. Gate green; PR #2530 merged after green CI via merge-pr.ts. Not asked: I did not pause to question the user, since the Skill fully specifies the task."
 prs:
   - "2530"
 docsRead:
@@ -134,11 +134,17 @@ frictions:
   - description: Wrote the observation script to .throwaway/ before the directory existed, so the heredoc failed and I had to retry.
     solution: Have the throwaway-script instruction in CLAUDE.md say to mkdir it first.
     severity: nit
-durationSec: 924
+  - description: Hand-authored the completed log with log-session --author right after the merge, before invoking close-session; the script warned and I then invoked it.
+    solution: Have the merge-pr.ts output remind the caller to invoke close-session, matching the existing warning in log-session.
+    severity: nit
+  - description: "Late look-back: review-fix wording nits (same-day note references, truncated ids) were findable by re-reading my own notes before the first push."
+    solution: Re-read each appended note once for full ids and unambiguous dates before committing.
+    severity: nit
+durationSec: 1092
 models:
-  claude-sonnet-5-5: 142
+  claude-sonnet-5-5: 160
 toolCounts:
-  Bash: 37
+  Bash: 41
   Read: 8
   Agent: 16
   ToolSearch: 1
@@ -146,9 +152,12 @@ toolCounts:
   mcp__github__issue_read: 2
   mcp__github__add_issue_comment: 2
   mcp__github__issue_write: 2
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/clear-backlog.yml
@@ -254,97 +263,97 @@ subagents:
     durationSec: 24
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 2.4
+    tokenShare: 2.2
   - task: Audit audit-docs
     model: sonnet
     durationSec: 69
     toolCalls: 12
     modelCalls: 7
-    tokenShare: 3
+    tokenShare: 2.8
   - task: Audit audit-skills
     model: sonnet
     durationSec: 93
     toolCalls: 17
     modelCalls: 10
-    tokenShare: 5.8
+    tokenShare: 5.4
   - task: Audit blog-post
     model: sonnet
     durationSec: 65
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 3.3
+    tokenShare: 3.1
   - task: Audit clear-backlog
     model: sonnet
     durationSec: 113
     toolCalls: 16
     modelCalls: 11
-    tokenShare: 4.1
+    tokenShare: 3.9
   - task: Audit close-session
     model: sonnet
     durationSec: 90
     toolCalls: 15
     modelCalls: 9
-    tokenShare: 2.9
+    tokenShare: 2.7
   - task: Audit digest
     model: sonnet
     durationSec: 124
     toolCalls: 22
     modelCalls: 16
-    tokenShare: 4.9
+    tokenShare: 4.6
   - task: Audit dispatch-subagents
     model: sonnet
     durationSec: 141
     toolCalls: 27
     modelCalls: 13
-    tokenShare: 8.8
+    tokenShare: 8.2
   - task: Audit frictions-to-fixes
     model: sonnet
     durationSec: 66
     toolCalls: 21
     modelCalls: 9
-    tokenShare: 4.2
+    tokenShare: 4
   - task: Audit glassbox-update
     model: sonnet
     durationSec: 64
     toolCalls: 14
     modelCalls: 8
-    tokenShare: 2.9
+    tokenShare: 2.7
   - task: Audit inspect-session
     model: sonnet
     durationSec: 89
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 4.3
+    tokenShare: 4
   - task: Audit log-session
     model: sonnet
     durationSec: 113
     toolCalls: 19
     modelCalls: 15
-    tokenShare: 4.9
+    tokenShare: 4.6
   - task: Audit prune-trial
     model: sonnet
     durationSec: 76
     toolCalls: 14
     modelCalls: 9
-    tokenShare: 3.5
+    tokenShare: 3.3
   - task: Audit visitor-loop
     model: sonnet
     durationSec: 76
     toolCalls: 22
     modelCalls: 10
-    tokenShare: 4.5
+    tokenShare: 4.2
   - task: Review standards axis
     model: sonnet
     durationSec: 29
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 2.6
+    tokenShare: 2.5
   - task: Review spec axis
     model: sonnet
     durationSec: 55
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 3.2
+    tokenShare: 3
 gitBranch: ccr-191a9d94-l1potx
 entrypoint: remote_mobile
 cliVersion: 2.1.310
