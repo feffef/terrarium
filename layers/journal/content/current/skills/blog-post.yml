@@ -362,3 +362,11 @@ observations:
       session_01QpBTsuXUNm28Y2oszBnoUb (PR #2444) has the same shape.
       Reopened #2370 with this evidence; the edits come from code-review
       inside the PR, after step 9. Grade/role unchanged (routine).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 8 runs, all PRs merged. Verified again:
+      session_01LEbdj6aqcGncPCZnNtS2ZX, session_01QpBTsuXUNm28Y2oszBnoUb and
+      session_01Nzhsg2KY7V9o2AmYWK2cqy changed the post after the fact-check
+      without re-dispatch (#2370). #2512 (fact-check after commit and review)
+      landed after every run, so it is untested. Grade/role unchanged
+      (routine).

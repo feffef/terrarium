@@ -387,3 +387,11 @@ observations:
       command started it. The wrong-cause Frictions in
       session_01BjA9rHbNdMX5KiK49Cee99 are on #2499. Grade/role unchanged
       (essential).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 10 runs, all logs landed. Verified minor: the stitch
+      drops only an exact "(not read)" reason (NOT_READ_REASON in
+      transcript-trace.ts), so session_01URZoDXk9zQsY2HDhUruLd4 and
+      session_01FDWjoePShpq7fov1iKn4GB, which appended an explanation, kept
+      the docs as read, not useful. Two instances; watch for more. Grade/role
+      unchanged (essential).

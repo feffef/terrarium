@@ -445,3 +445,10 @@ observations:
       ideas as out of remit and opened no issue; #2415 came only on 10-22
       and the owner closed it. Step 7 does not say an out-of-remit idea
       needs an issue. No issue: low impact. Grade/role unchanged (routine).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 7 runs, all 13 PRs merged, no revert.
+      session_01Wd2WvrPmFRYHAZmf7DYnrG left two out-of-remit items in ideas
+      and filed no issue. Step 7 says unbuilt ideas go to ideas, so the text
+      allows it; not escalated, but it repeats the 10-25 note on the same
+      wording gap. Grade/role unchanged (routine).

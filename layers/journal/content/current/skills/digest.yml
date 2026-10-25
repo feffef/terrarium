@@ -299,3 +299,10 @@ observations:
       correctly judged non-simple, skipped anyway. The prior thread (#2397)
       is closed, so this opened as new issue #2472 instead. Grade/role
       unchanged (routine).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 7 runs, all 7 PRs merged, no revert. Three more
+      first-push code-review skips on retention sweeps:
+      session_01XueFVQyVySVEKHxSHTFeTh, session_011G3PKUqDog2WRSuqypmuJX,
+      session_01Dz5nEANXqTtZzTki1C5ArD (all verified in logs); added to #2472,
+      parked on the pr-workflow trial. Grade/role unchanged (routine).

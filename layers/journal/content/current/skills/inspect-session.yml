@@ -64,3 +64,11 @@ observations:
       where tail -1 gave the wrong value). Open pain: partial reads hit the
       page limit before the session start. Grade/role unchanged
       (specialist).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 10 runs, all claims held. The outline.ts drift
+      (SKILL.md line 215 vs the script printing OUTLINE and COVERAGE lines) is
+      verified and repeated, so filed as #2528
+      (session_01Ru6jnZ4cFTdf41ZWLonsTv). Partial reads still hit the page
+      limit before the session start (session_01PWZU3T...,
+      session_019nDDDS...). Grade/role unchanged (specialist).
