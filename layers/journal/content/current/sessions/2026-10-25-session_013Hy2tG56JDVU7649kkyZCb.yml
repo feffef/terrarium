@@ -1,0 +1,192 @@
+schemaVersion: 1
+session: session_013Hy2tG56JDVU7649kkyZCb
+startedAt: 2026-10-25T13:10:26Z
+endedAt: 2026-10-25T13:23:41Z
+kind: autonomous
+goal: Scheduled prune trial on the Platform's agent instructions
+status: in-review
+outcome: "PR #2538 opened: one new prune trial on github-integration.md; no open trial was judgeable"
+summary: "Scheduled prune-trial run (agent-initiated, no human prompt). Window script showed all five open trials not yet judgeable, so none was judged. A search subagent covered the instruction corpus and tracker for failed prose; I picked the guard-held GitHub traps (search fields, angle brackets) in github-integration.md, cut them to the goal (-1 net), and added the ledger entry. A Sonnet probe pinned to the post-prune SHA answered correctly. code-review (Standards and Spec subagents) found a dropped detail and wrong ledger counts; fixed, gate:scoped rerun green, pushed, PR #2538 opened with verdict comment and subscription. Mass was small; runners-up are in the ledger entry."
+prs:
+  - "2538"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read-first before git commands; no new facts needed
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: the pruned doc and GitHub read-first
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and merge recipe
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief requirements for the subagents
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: hook-prompted after first edit; confirmed trial scope
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: hook-prompted after first edit; not relevant to this cut
+    useful: no
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: spec for the Spec reviewer; subagent said useful
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: search subagent read it for guard-to-issue map; useful yes
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: search subagent grep for rule homes; partly
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: search subagent checked citations; partly
+    useful: partly
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: search subagent grep only; not useful
+    useful: no
+  - path: .agents/skills/close-session/SKILL.md
+    reason: search subagent read it as candidate; useful yes
+    useful: yes
+  - path: scripts/hooks/github-search-fields-guard.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the scheduled task itself
+  - name: code-review
+    reason: pre-push review per ADR-0004
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: ADR-0027/0029 were read only after the first edit, when the post-edit hook prompted them, not before.
+    solution: The hook caught it; read the governing ADRs before editing a doc.
+    severity: nit
+  - description: Full gate ran on the first commit, then review fixes forced a second full gate run, doubling gate time.
+    solution: Run code-review before starting gate:scoped, since the review changes the head.
+    severity: minor
+durationSec: 795
+models:
+  claude-sonnet-5-5: 69
+toolCounts:
+  Bash: 17
+  Read: 7
+  Agent: 4
+  ReadNotifications: 1
+  Edit: 3
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - docs/agents/github-integration.md
+  - .agents/prune-trials.yml
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+docsReadBySubagents:
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Required gate:scoped and code-review before the first push despite the Stop hook; summary sufficed, ADR not opened.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Pointed to close-session at PR open; summary sufficed.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Said open the PR and subscribe, and a scheduled run changes only its Skill's scope; summary sufficed.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR and comment bodies; summary sufficed.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Told me not to touch open trial territory; I also read the full ADR after the hook prompt, confirming scope.
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: About where rules live; irrelevant to a prose cut of a doc, though a hook prompted the full ADR read.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded by ADR-style hint; this run changed no ADR, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skills as Platform code; I edited no Skill, so it did not apply.
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Pointer to the guards roster; the search subagent used it, I did not need it.
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded because I touched a docs/agents file; it is not Human-only, so no effect.
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Loaded in a subagent or by a hint; unrelated to this GitHub doc cut.
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded in a subagent or by a hint; unrelated to this GitHub doc cut.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded in a subagent or by a hint; unrelated to this GitHub doc cut.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Find failed-prose rule candidates
+    model: sonnet
+    durationSec: 153
+    toolCalls: 32
+    modelCalls: 15
+    tokenShare: 22.8
+  - type: general-purpose
+    task: Probe pruned GitHub doc
+    model: sonnet
+    durationSec: 22
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 3.1
+  - type: general-purpose
+    task: Standards review of prune diff
+    model: sonnet
+    durationSec: 35
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 7.7
+  - type: general-purpose
+    task: Spec review of prune diff
+    model: sonnet
+    durationSec: 44
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 7.9
+gitBranch: claude/practical-rubin-xwtik8
+entrypoint: remote_trigger
+cliVersion: 2.1.310
+trigger: prune-trial
+landedBy: Stop
