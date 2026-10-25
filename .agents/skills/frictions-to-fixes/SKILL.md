@@ -61,8 +61,9 @@ labelled **never-fixed**, **drop**, **open-already** or **regression**.
 - **Regression** (its fix merged, then the friction came back): never pick
   it; a change that already failed once needs human eyes. File an issue saying the earlier fix did not work, linking the earlier
   issue or PR and quoting the original and the new friction. Do this for the
-  top **three** by severity, count and dated proof of recurrence together.
-  List the rest in the ledger PR's description (§5).
+  top **three**. Rank only still-recurring entries whose status is not
+  `accepted`, `on-trial` or `tracked`, by highest severity since the latest fix
+  (the `since:` in the survey's `--summary` report). List the rest in the ledger PR's description (§5).
 
 Done when every candidate is handled as above.
 
