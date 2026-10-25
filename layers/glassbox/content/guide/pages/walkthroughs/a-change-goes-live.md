@@ -1,8 +1,8 @@
 ---
 title: A change goes live
 description: How a commit on main reaches visitors, through one container that notices it, builds it beside the live site and swaps only a good build.
-revision: '5264125130799f1e582367d201098f96df798a85'
-revisionDate: '2026-10-24'
+revision: '6b91957069a4e77c04c7b86a2b7fdbbd07411dc5'
+revisionDate: '2026-10-25'
 ---
 
 A commit lands on `main`, and with no one running a deploy, the live site changes. This Walkthrough follows that commit from the container's side: from noticing it, through the install and the build, to the restarted server that answers the next visitor.
