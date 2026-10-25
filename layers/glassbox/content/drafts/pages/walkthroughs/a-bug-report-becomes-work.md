@@ -60,7 +60,7 @@ A Trusted user reads the issue and moves it to `ready-for-agent`, which in Terra
 
 ## 6. A session builds the fix
 
-A Trusted user starts a session to build it, often the same `clear-backlog` run. The explore pass before it has already checked that no merged change solved the issue another way. The session builds on its own branch in its own worktree, test first, reviews the change on both of `code-review`'s axes, runs the :term[Gate] and opens a PR.
+A Trusted user starts a session to build it, often the same `clear-backlog` run. The explore pass before it has already closed work that is done. The session builds on its own branch in its own worktree, test first, reviews the change on both of `code-review`'s axes, runs the :term[Gate] and opens a PR.
 
 ::stop-links
 [The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · :file[.agents/skills/clear-backlog/SKILL.md]
