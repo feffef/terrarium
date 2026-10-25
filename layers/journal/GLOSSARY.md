@@ -10,7 +10,7 @@
 
 ## Why it exists — and why it isn't optional
 
-The Journal is not a convenience summary for skimmers. It is the **only** way any of this becomes visible: once a session closes, its **session log** is the sole surviving record, and a session that authors none loses its frictions and ideas (ADR-0008). The same holds for the collaboration itself: whether a session was interactive, delegated or autonomous, who prompted it and how far they steered is visible only through the Journal. So `/t/journal/current` is the only public record of how the humans and agents building this Platform actually worked together, session by session.
+The Journal is not a convenience summary for skimmers. It is the **only** way any of this becomes visible: once a session closes, its **session log** is the sole surviving record, and a session that authors none loses its frictions and ideas (ADR-0008). The same holds for how the humans and agents worked together (whether a session was interactive, delegated or autonomous, who prompted it, how far they steered): `/t/journal/current` is the only public record of it, session by session.
 
 ## Who it's for
 
@@ -18,12 +18,10 @@ Anyone who wants the Platform's actual current state, or how it got there, witho
 
 ## What you'll find
 
-- **Inventories** — curated/derived current-state readouts (the Skill Inventory
-  and the Friction Ledger; defined in the root `GLOSSARY.md`), refreshed from repo
-  state rather than appended to.
+- **Inventories** — the Skill Inventory and the Friction Ledger (root `GLOSSARY.md`).
 - **Session logs** — primary records the agents author
-  themselves, one per session (see above).
-- **Digests** — derived daily summaries, written once per day (see the glossary below).
+  themselves, one per session.
+- **Digests** — see Digest below.
 
 ## Glossary
 

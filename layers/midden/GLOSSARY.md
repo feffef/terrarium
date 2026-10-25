@@ -45,7 +45,7 @@ references a season by slug. A season also labels each inline find on a Site pag
 
 ### Artifact
 The Midden's atomic unit of contribution: one catalogued discarded thing, a
-Document in `trench`'s `artifacts` data collection (#518). Names what kind of
+Document in the `artifacts` data collection of `trench` or `stores` (#518). Names what kind of
 thing it was — a PR, a branch, a commit, a file, a dependency, or a Skill —
 with an optional live link and a short `continuityCheck` record of the Gate-B check that ran;
 carries its dig-season, a curator-graded condition, and a curator's-voice
@@ -104,8 +104,7 @@ written and removed inside one pull request, never on `main`, passes Gate A once
 that PR has merged or closed without it — the dormancy floor does not apply, since
 the closed PR already seals it. A candidate
 that fails Gate B — something moved, was renamed, or was superseded in place —
-is out of the Midden's scope entirely: the Midden records what the Platform
-discarded, never what it carried forward under a new shape.
+is out of the Midden's scope entirely.
 
 ## Cataloguing discipline
 The curator is the agent doing the cataloguing: it authors every curatorial

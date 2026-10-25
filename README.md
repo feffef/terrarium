@@ -36,10 +36,8 @@ is; the ADRs record what's decided vs. deliberately left open.
 
 ## Where to look
 
-- **[`CLAUDE.md`](CLAUDE.md)** — the contributor guide: which docs to read first,
-  working conventions and repo layout. The safety gate is ADR-0004.
-  Start here before making changes —
-  humans and agents alike.
+- **[`CLAUDE.md`](CLAUDE.md)** — the contributor guide for humans and agents: which docs to read first,
+  working conventions and repo layout. Start here before making changes. The safety gate is ADR-0004.
 - **[`GLOSSARY-MAP.md`](GLOSSARY-MAP.md)** — the domain model: lists the Tenants and
   indexes the Platform glossary ([`GLOSSARY.md`](GLOSSARY.md)) and each
   Tenant's own `layers/<tenant>/GLOSSARY.md`.

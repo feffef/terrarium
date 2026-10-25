@@ -34,7 +34,8 @@ call per doc (a shell read can be cut short), before you act, once per session.
 - **Every subagent brief** asks it to return, in its final reply, a verdict
   (path, why it loaded or was read, useful yes/partly/no) on each rule and doc
   it loaded or read, and to write every file it creates, scripts included, in a
-  scratchpad subfolder named for itself (subagents share one scratchpad).
+  scratchpad subfolder named for itself (subagents share one scratchpad); a
+  script that imports repo packages goes in `.throwaway/<its name>/` instead.
 - **Before you debug a tool, push, network or permission error** that your
   diff doesn't explain: `docs/agents/environment-caveats.md`.
 

@@ -10,17 +10,13 @@ layout bug, or asserting a style took effect.
 - **The deployed site (terrarium.feffef.de) is blocked in cloud sessions:** the
   proxy answers 403 on CONNECT. Review a local production build instead:
   `pnpm build`, then `scripts/ui/preview.ts start`, `shot` or `review`.
-- **One screenshot:** `pnpm exec tsx scripts/ui/preview.ts shot <route> <out.png> [WxH] [--dev] [--scheme light|dark] [--full] [--mobile]`.
-  It starts a server on its own port, takes the shot and stops the server, so
+- **One screenshot:** `scripts/ui/preview.ts shot` (flags: its `USAGE`).
+  It starts a server on its own port and stops it, so
   there is nothing to `pkill` (issue #240). By default it serves the production
   build (run `pnpm build` first). `--dev` is faster, but its DevTools overlay
-  badge can cover real content and look like a UI bug. `WxH` sets the window
-  size; a `#anchor` in `<route>` scrolls to an element. `--full` captures the
-  whole page; `--mobile` emulates a touch phone at 2x pixel density.
-- **A page review:** `scripts/ui/preview.ts review <route> <out-dir> [--dev] [--wait <ms>] [--wait-for <selector>]`
-  writes four full-page shots from one server: `desktop-light.png` and
-  `desktop-dark.png` at 1280x900, `mobile-light.png` and `mobile-dark.png` at
-  390x844.
+  badge can cover real content and look like a UI bug. A `#anchor` in `<route>`
+  scrolls to an element.
+- **A page review:** `scripts/ui/preview.ts review` writes four full-page shots (desktop and mobile, light and dark) from one server (`USAGE` has the names and sizes).
 - **A server that stays up:** `scripts/ui/preview.ts start [--dev]` prints `PID=`
   and `URL=`; `scripts/ui/preview.ts stop <pid>` stops it (always exits 0).
 - **A URL that is already serving:** `scripts/ui/screenshot.ts <url> <out.png> [WxH]`
@@ -50,10 +46,8 @@ cite it.
   failing assertion pre-existing on a narrowed or stale repro, and CI then failed
   for real on it (issue #907).
 - **To read one in-page value from an already-serving page** (a computed style,
-  a bounding rect, any `page.evaluate` result), use `scripts/ui/eval-in-page.ts` before an
-  ad-hoc script; it handles the gotchas below:
-  `pnpm exec tsx scripts/ui/eval-in-page.ts <url> "<js-expression>"`, e.g.
-  `pnpm exec tsx scripts/ui/eval-in-page.ts http://localhost:3000/t/journal/current "getComputedStyle(document.querySelector('.foo')).color"`.
+  a bounding rect, any `page.evaluate` result), use `scripts/ui/eval-in-page.ts` (usage in its header) before an
+  ad-hoc script; it handles the gotchas below.
 - **To verify a click/interaction, not just a static render**, write a small
   ad-hoc `playwright-core` script and launch the pre-installed Chromium
   `scripts/ui/screenshot.ts` uses with
@@ -123,10 +117,9 @@ chrome/viewport offset uncompensated and ships a frame shorter than requested;
 A screenshot captures whatever frame exists *now*. Two ways the frame is empty:
 
 - **Async client-only content** (e.g. any Nuxt Content body that loads
-  post-hydration) may not have rendered yet. `scripts/ui/preview.ts
-  shot` defaults to a 2s wait (`--wait <ms>`) and supports
-  `--wait-for <selector>`; use the selector wait when you know the element you're
-  waiting on.
+  post-hydration) may not have rendered yet. `scripts/ui/preview.ts shot` waits
+  for it (`--wait`, `--wait-for`; see `USAGE`); use the selector wait when you
+  know the element you're waiting on.
 - **A cold `--dev` server** compiles routes on demand, so the first shot of a
   route can catch a half-built page and read as a false-positive layout bug.
   Prefer built `preview` mode (or a selector wait) before trusting a `--dev`
