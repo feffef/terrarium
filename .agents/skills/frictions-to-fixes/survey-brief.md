@@ -7,7 +7,7 @@ Friction Ledger, which you commit (§5). Write scratch files only under
 
 Every script below runs through `pnpm exec tsx` (bare `tsx` isn't on PATH).
 Before your first GitHub call, load the `mcp__github__*` tools you need via
-`ToolSearch` (for example
+`ToolSearch` (a recurring Friction: heed it) (for example
 `select:mcp__github__list_issues,mcp__github__list_pull_requests,mcp__github__issue_read,mcp__github__pull_request_read`;
 §3's nearby-issue check needs the read tools too).
 `docs/agents/github-integration.md` owns name resolution and the
@@ -37,7 +37,9 @@ you, without opening more logs than needed.
    drops prose and `docsRead`. Re-read a full log via its `file` only when a
    candidate needs it (the doc-read check, say).
 
-Done when you hold the summary and every window session's Frictions.
+### Done when
+
+You hold the summary and the window's unledgered Frictions.
 
 ### Edge cases
 
@@ -50,10 +52,10 @@ Done when you hold the summary and every window session's Frictions.
 
 Goal: the ledger carries every in-window Friction, each in the cluster of
 its root cause, with every merged fix recorded and every stale status reset.
-Set `status`, `ref` and `fixes` and append occurrence blocks with
+Every edit goes through
 `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/ledger-set.ts`
-(flags in its header; it refuses a result the schema rejects), and move
-occurrences with `prune-friction-ledger.ts --move`, never by hand.
+(flags in its header; it refuses a result the schema rejects) or
+`prune-friction-ledger.ts --move`, never by hand.
 
 ### Instructions
 
@@ -62,8 +64,9 @@ occurrences with `prune-friction-ledger.ts --move`, never by hand.
    occurrence is the block
    `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts <session> <index> [<session> <index> …]`
    prints (the Friction's text copied from the log; a content test checks
-   the copy), never retyped. Pass all pairs in one call, as each takes
-   seconds, and pipe the blocks into `ledger-set.ts <entry> --occurrences -`.
+   the copy), never retyped. Print all pairs in one call, as each takes
+   seconds, then give each entry its blocks through
+   `ledger-set.ts <entry> --occurrences <file>`.
 2. **Open a new entry** for a cause seen twice, or once at `moderate`,
    `major` or `blocker`. Its `summary` is one plain sentence a visitor can
    read; its `cause` names the root mechanism and the signals that identify
@@ -83,7 +86,8 @@ occurrences with `prune-friction-ledger.ts --move`, never by hand.
    ledger-only, tracking or session-log one), and add every partial fix.
    `gh api repos/feffef/terrarium/commits/<sha>/pulls` maps a commit to its
    PR and `gh api repos/feffef/terrarium/pulls/<N>` gives its body and
-   `merged_at` (`gh pr view` is blocked); read the body, since a batched doc
+   `merged_at` (`gh pr view` is GraphQL-backed, which the cloud blocks:
+   `docs/agents/github-integration.md`); read the body, since a batched doc
    PR's title names no cluster.
 5. **Reset stale statuses.** A `tracked` or `on-trial` entry whose PR closed
    unmerged, or whose `ref` names no open issue, PR or trial in
@@ -92,7 +96,9 @@ occurrences with `prune-friction-ledger.ts --move`, never by hand.
    `merged_at` (the same call), since an escalated PR dated its own entry
    before it merged.
 
-Done when every window Friction sits in an entry or is too new for one, and
+### Done when
+
+Every window Friction sits in an entry or is too new for one, and
 no `tracked` or `on-trial` entry points at something closed.
 
 ### Edge cases
@@ -123,9 +129,8 @@ Goal: never re-fix what is already fixed. A candidate is a ledger entry (one
 per root cause: every entry `prune-friction-ledger.ts --candidates` lists,
 not only those that gained occurrences this window) or a window Friction too
 new for one. Each ends up labelled **never-fixed**, **drop**,
-**open-already** or **regression**, with its citing issue or PR number where
-one exists. Most of the window's Frictions are already resolved by a later
-in-window session or a merged fix: drop those fast, without re-deriving
+**open-already** or **regression**. Many of the window's Frictions are usually already resolved by a
+later in-window session or a merged fix: drop those fast, without re-deriving
 their history, and save the deep digging for candidates with no in-window
 resolution.
 
@@ -169,7 +174,9 @@ resolution.
    - **Regression:** it reappeared after its fix merged, so the fix did not
      hold.
 
-Done when every candidate is labelled, with its citing number where one
+### Done when
+
+Every candidate is labelled, with its citing number where one
 exists.
 
 ### Edge cases
@@ -197,7 +204,9 @@ together, for the main session to pick from.
 4. Rank low a cluster whose newest note drops a design (`--summary`'s last
    column), unless its entry file shows occurrences dated after that note.
 
-Done when every candidate that is not a drop has a rank.
+### Done when
+
+Every candidate that is not a drop has a rank.
 
 ### Edge cases
 
@@ -220,7 +229,9 @@ Goal: every ledger change in one commit on the current branch.
 2. Commit all ledger changes in one commit with `git commit -F <file>`.
    Don't push, and don't switch branches.
 
-Done when `git log -1` shows the commit and no ledger change is left
+### Done when
+
+`git log -1` shows the commit and no ledger change is left
 uncommitted.
 
 ## 6. Report

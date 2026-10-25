@@ -22,8 +22,9 @@ Goal: the Friction understood from its own record before any design.
 2. Read the pick's `notes`: a solution an earlier run dropped comes back
    only with what has changed since, named in your report.
 
-Done when you can say what causes the Friction and what each session
-already tried.
+### Done when
+
+You can say what causes the Friction.
 
 ### Edge cases
 
@@ -45,7 +46,7 @@ failures it is.
 2. On a session that delegated, check its `subagents` field before
    concluding that the agent that hit the Friction had the rule in front
    of it: subagent reads are folded into the parent's list
-   (`transcript-trace.ts`'s `foldSubagentTrace`). A doc only a subagent
+   (`foldSubagentTrace` in `scripts/session/transcript-trace.ts`). A doc only a subagent
    opened is closer to *not opened*.
 3. Name the failure:
    - **Doc not opened:** a discoverability failure. The rule's home is
@@ -53,7 +54,9 @@ failures it is.
    - **Doc opened and the Friction happened anyway:** the prose itself is
      unclear, wrong or too easy to read past.
 
-Done when you can name which, with the paths as evidence.
+### Done when
+
+You can name which, with the paths as evidence.
 
 ## 3. Check whether anyone reads the doc you would change
 
@@ -71,7 +74,9 @@ Goal: no prose fix goes to a doc nobody opens.
    guard, a gate check, a line in a doc sessions demonstrably open), or
    move the rule to a home that is read.
 
-Done when every prose design names its doc's read count.
+### Done when
+
+You have checked the read count of every doc a design would change.
 
 ### Edge cases
 
@@ -98,7 +103,9 @@ question back.
    (`.agents/skills/audit-docs/SKILL.md`): it stays within "What you may
    edit" and authors none of the defects its six lenses catch.
 
-Done when the design names its files, its changes and its size.
+### Done when
+
+The design names its files, its changes and its size.
 
 ## 5. Assess the risk
 
@@ -116,7 +123,9 @@ Goal: the main session can decide dispatch, issue or drop from your call.
    change helps, or the fix costs more than the Friction), with one line
    why.
 
-Done when every fix has its three answers and a recommendation.
+### Done when
+
+Every fix has its answers to 1 to 3 and a recommendation.
 
 ## 6. Report
 
@@ -126,7 +135,7 @@ Group picks that one change would retire. For each fix, return:
   severities, and §2's doc-read finding where one applies.
 - **Design:** §4's design: the files it touches, exactly what changes in
   each, and its size.
-- **Risk:** §5's three answers.
+- **Risk:** §5's answers.
 - **Recommendation:** dispatch, file as an issue, or no change, with one
   line why.
 

@@ -219,12 +219,12 @@ trials:
       session fixing the call, or nit/minor slips #2210 already records.
   - problem: >
       The three `frictions-to-fixes` agent briefs rewritten plainly at a
-      Trusted user's request, in the SKILL.md's per-step shape (+436 −219
+      Trusted user's request, in the SKILL.md's per-step shape (+462 −219
       lines across the three briefs, from `git diff --numstat`; words 2758 to
-      3214, the growth being headings and done-when lines): an opening
+      3229, the growth being headings and done-when sections): an opening
       paragraph naming the role, its inputs and what it may change, then each
-      step as a goal paragraph, numbered instructions, a done-when line and an
-      edge-case list, then the report. Every rule kept: survey-only and
+      step as a goal paragraph, numbered instructions, a done-when section and
+      an edge-case list, then the report. Every rule kept: survey-only and
       design-only limits, occurrences through print-ledger-occurrence.ts and
       ledger-set.ts, the new-entry bar, the fixes and status rules, the
       screen order (not ours, on trial, tracker and main), the four labels,
