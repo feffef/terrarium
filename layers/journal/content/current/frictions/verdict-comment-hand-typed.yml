@@ -60,3 +60,8 @@ occurrences:
     severity: minor
     description: "Wrote #2454's verdict Reviewed: SHA from a guessed expansion of the short hash instead of reading the head; caught right after and edited the comment before merging"
     solution: "Read the PR head SHA (gh api pulls/N --jq .head.sha) before writing a verdict"
+  - session: session_01BjA9rHbNdMX5KiK49Cee99
+    date: "2026-10-24"
+    severity: minor
+    description: "My first PR verdict named the head as 41fb798e2be3, a SHA tail I typed from memory; merge-pr.ts refused it and I re-posted with the real full SHA."
+    solution: "Copy the head SHA from git rev-parse HEAD into the verdict, never retype it."

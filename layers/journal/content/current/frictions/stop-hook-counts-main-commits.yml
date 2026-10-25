@@ -28,3 +28,8 @@ occurrences:
     severity: nit
     description: "Stop hook asked to push 7 commits that were only inherited from origin/main after my fast-forward, which cost an explanation turn."
     solution: "The hook should compare against origin/main, not the remote branch."
+  - session: session_019nDDDS9GsXdTKWK44j18fT
+    date: "2026-10-24"
+    severity: nit
+    description: "After the PR merged, the branch was restarted from origin/main, and the Stop hook then flagged inherited main commits as unpushed three times while builders and the gate ran."
+    solution: "The Stop hook could count only commits not on origin/main, as git-conventions.md already advises readers to check by hand."

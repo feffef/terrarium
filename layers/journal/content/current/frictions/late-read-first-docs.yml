@@ -539,3 +539,33 @@ occurrences:
     severity: nit
     description: "Ran git log to draw a conclusion about the page's history before reading docs/agents/git-conventions.md, as CLAUDE.md requires."
     solution: "Read git-conventions before the first conclusion-drawing git log; no harm here."
+  - session: session_019SNgYeofJtzoLvh8QNAwYD
+    date: "2026-10-23"
+    severity: nit
+    description: "Ran git log --all -S in the same call that first read git-conventions.md, which says to scope -S to origin/main, never --all."
+    solution: "Read git-conventions.md in its own call before any history query; the read-first hint fires after the call, too late."
+  - session: session_019nDDDS9GsXdTKWK44j18fT
+    date: "2026-10-24"
+    severity: nit
+    description: "Ran git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first git command beyond status and diff."
+    solution: "Read the git doc together with the GitHub doc at the start of any task that will read history."
+  - session: session_01JJcYmSGnRbUcVyvdPbkGs9
+    date: "2026-10-24"
+    severity: nit
+    description: "Ran my first git command before reading git-conventions.md; the hook reminded me afterwards, no harm done."
+    solution: "None needed beyond the existing hint; the doc confirmed the call was fine."
+  - session: session_01LEbdj6aqcGncPCZnNtS2ZX
+    date: "2026-10-24"
+    severity: nit
+    description: "Ran the rotation script and git status in one call before reading git-conventions.md, against CLAUDE.md's read-first trigger."
+    solution: "Read the three docs first, as CLAUDE.md orders."
+  - session: session_015P9szA8dP4wxv4wiXkZcRZ
+    date: "2026-10-24"
+    severity: nit
+    description: "Ran git fetch and git log before reading docs/agents/git-conventions.md; a hook flagged it."
+    solution: "Read git-conventions at session start when a task will commit."
+  - session: session_015bAGZEdCYZMYbsoFckSH59
+    date: "2026-10-24"
+    severity: nit
+    description: "Ran git fetch before reading docs/agents/git-conventions.md, which CLAUDE.md requires before a first fetch; a hook flagged it."
+    solution: "Read git-conventions.md before the first git command beyond status/diff; no harm here since the fetch was read-only."

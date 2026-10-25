@@ -39,3 +39,8 @@ occurrences:
     severity: nit
     description: "Ran the first gate:scoped in the same command as git commit --amend, against git-conventions."
     solution: "Commit first, then start the gate alone."
+  - session: session_01JJcYmSGnRbUcVyvdPbkGs9
+    date: "2026-10-24"
+    severity: nit
+    description: "Chained git commit and gate:scoped in one backgrounded command, which git-conventions warns against; no push followed, so no harm."
+    solution: "Run the commit and the gate as separate calls."

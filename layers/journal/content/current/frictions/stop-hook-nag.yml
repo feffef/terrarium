@@ -349,3 +349,18 @@ occurrences:
     severity: minor
     description: "Stop hook asked me to push six times while the fact-check, reviews and gate were still pending, each nudge costing a turn."
     solution: "Make the Stop hook skip the push nag while the branch has no pushed gate-green head, or while background agents run."
+  - session: session_01LEbdj6aqcGncPCZnNtS2ZX
+    date: "2026-10-24"
+    severity: nit
+    description: "The Stop hook asked to push four times while review and the gate were still running; ADR-0004's rule covered it, so no harm, only noise."
+    solution: "Have the hook skip its nag while a background gate or review agent is running."
+  - session: session_01XUmLg8WmTPPmqqnjHA59oX
+    date: "2026-10-24"
+    severity: nit
+    description: "The Stop hook asked for a push twice before gate and review had finished; declined per ADR-0004."
+    solution: "None repo-side (harness script, accepted in #2233)."
+  - session: session_01FDWjoePShpq7fov1iKn4GB
+    date: "2026-10-25"
+    severity: nit
+    description: "Stop hook asked me to commit and push three times while fact-check, review and gate were still running."
+    solution: "Stop hook could skip nudging while a background gate is running"

@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A number (verdict counts, line totals, regression counts) goes into a GitHub body as an estimate or from a report not yet final, instead of being tallied by hand from every item. Signals: "about N", a PR body count corrected by an edit, "without tallying", "without counting". Counts a script or filter got wrong are in counts-from-wrong-filter.
 surface: safe
-status: tracked
-ref: "issue #2471 (open: prune-trial PR #2412's self-reported -3 net is -2, recurrence of #2228). Issue #2435 closed 2026-10-23 by PR #2454, a ledger-only split."
+status: open
+ref: "Issue #2471 closed completed 2026-10-24. Issue #2435 closed 2026-10-23 by PR #2454, a ledger-only split."
 fixes:
   - pr: 2336
     date: "2026-10-20"
@@ -13,6 +13,9 @@ fixes:
   - pr: 2378
     date: "2026-10-21"
     summary: "Restored the shorter \"Verify before you state\" bullet in CLAUDE.md, and the Standards reviewer in clear-backlog-build now flags a count or subagent claim that cites no source."
+  - pr: 2483
+    date: "2026-10-24"
+    summary: "Made prune-trial take the line delta from git diff --numstat against the cut's parent, and corrected the pr-workflow.md trial's delta to -2."
 occurrences:
   - session: session_01Tcn6x6mZizT14rJuQqYivt
     date: "2026-10-10"
@@ -59,3 +62,23 @@ occurrences:
     severity: minor
     description: "Wrote '-3 net' in the ledger entry without counting; the Spec reviewer found the true delta was -2."
     solution: "Take the line delta from git diff --stat before writing it, per CLAUDE.md 'Verify before you state'."
+  - session: session_015P9szA8dP4wxv4wiXkZcRZ
+    date: "2026-10-24"
+    severity: minor
+    description: "Told the owner the guide had 25 Lessons before counting; it has 20 (I had counted Walkthroughs and the index). Breaks CLAUDE.md's verify-before-you-state."
+    solution: "Count from the file list (excluding walkthroughs/ and index.md) before stating a number."
+  - session: session_01BjA9rHbNdMX5KiK49Cee99
+    date: "2026-10-24"
+    severity: nit
+    description: "I told the review agent there were 30 draft Lessons from eyeballing a wc listing; there are 31. The agent corrected it."
+    solution: "Count with a command (ls | wc -l) before putting a count in a brief, per CLAUDE.md 'Verify before you state'."
+  - session: session_01FDWjoePShpq7fov1iKn4GB
+    date: "2026-10-25"
+    severity: minor
+    description: "First Digest draft overstated a session's fabricated-report count and glossed three re-cuts as two-idea splits; fact-check caught both."
+    solution: "Quote the session's own wording or the source count instead of paraphrasing from gather output"
+  - session: session_015bAGZEdCYZMYbsoFckSH59
+    date: "2026-10-24"
+    severity: nit
+    description: "Wrote 'Six renames' in the PR body while listing eight titles."
+    solution: "Count the list before writing a number; fix the description in the next push."

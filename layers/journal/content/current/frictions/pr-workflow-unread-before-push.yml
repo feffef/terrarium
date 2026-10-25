@@ -21,3 +21,8 @@ occurrences:
     severity: nit
     description: "Pushed the branch (inherited session-log commit only) at a Stop-hook nag before reading pr-workflow.md, which CLAUDE.md requires before any push."
     solution: "Read pr-workflow.md before answering the first Stop-hook push nag."
+  - session: session_01FzJhmX3omaAFqoXjXWkcyK
+    date: "2026-10-24"
+    severity: minor
+    description: "Merged a PR without first reading docs/agents/pr-workflow.md, which CLAUDE.md requires before merging; the Skill's step named merge-pr.ts directly."
+    solution: "Point the dependabot-sweep Skill's merge step at pr-workflow.md, or have merge-pr.ts remind."

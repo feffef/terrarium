@@ -26,3 +26,8 @@ occurrences:
     severity: minor
     description: "The report's page list and revision pinning mix flagged-by-path and edited-range pages, so I had to diff each page by hand against 98 commits."
     solution: "Have the script print, per page, the diff of each changed cited file."
+  - session: session_01JJcYmSGnRbUcVyvdPbkGs9
+    date: "2026-10-24"
+    severity: minor
+    description: "The update script flags every page and term on any path change, so reading 182 commits per page took many tool calls."
+    solution: "Have the script print per-page diffs of just the cited paths."

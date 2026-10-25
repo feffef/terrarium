@@ -49,3 +49,8 @@ occurrences:
     severity: nit
     description: "Deleting the redundant prototype/2231-accordion-pin-wait branch I had just pushed was blocked by the auto-mode classifier, so it stays on origin."
     solution: "Don't push a prototype/ copy before the owner names the branch; ask the owner to delete it."
+  - session: session_015P9szA8dP4wxv4wiXkZcRZ
+    date: "2026-10-24"
+    severity: minor
+    description: "docs.github.com is blocked by the proxy (WebFetch DNS fail, curl 403), so a GitHub docs claim could not be verified and was dropped."
+    solution: "EVERY-PAGE's fallback (sparse clone of github/docs) costs more than one sentence; allowlisting docs.github.com would help Glass Box work."

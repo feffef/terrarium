@@ -1,0 +1,18 @@
+name: glassbox-page-check-edit-loops
+summary: >-
+  Glass Box page checks (the 65-word Why-bullet cap, link text that must equal the Lesson title) failed after edits, so agents learned the limits by repeated test runs and review rounds.
+cause: >-
+  Layer page checks reject a Why bullet over 65 words and a link whose text differs from the target Lesson's title; edits and renames break them, trimming to fit drops a bullet's reason, and parallel agents collide on the same Where next lists. Signals: 'page-checks', '65-word cap', 'link text', 'renamed a Lesson', 'Where next'.
+surface: safe
+status: open
+occurrences:
+  - session: session_01SNKBDEtR5UiaMXBdxvHuuE
+    date: "2026-10-23"
+    severity: nit
+    description: "Three Why bullets went over page-checks' 65-word cap after my edits, which cost two test round trips."
+    solution: "Count words when lengthening a Why bullet; EVERY-PAGE.md could state the cap next to the contract."
+  - session: session_015bAGZEdCYZMYbsoFckSH59
+    date: "2026-10-24"
+    severity: minor
+    description: "Word-cap trims to fit the 65-word Why-bullet limit repeatedly dropped a bullet's reason (Merge gate's 'fails safer'), needing two more review rounds to restore it."
+    solution: "When a bullet hits the cap, cut a different clause than its reason, and re-read the bullet's logic before committing."

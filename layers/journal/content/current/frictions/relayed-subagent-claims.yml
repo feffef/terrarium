@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
 surface: safe
-status: tracked
-ref: "issue #2476 (regression of #2378)"
+status: open
+ref: "Issue #2476 closed completed 2026-10-24 (regression of #2378)."
 fixes:
   - pr: 2336
     date: "2026-10-20"
@@ -13,6 +13,9 @@ fixes:
   - pr: 2378
     date: "2026-10-21"
     summary: "Restored the shorter \"Verify before you state\" bullet in CLAUDE.md, and the Standards reviewer in clear-backlog-build now flags a count or subagent claim that cites no source."
+  - pr: 2485
+    date: "2026-10-24"
+    summary: "Made each triage side finding in clear-backlog-explore carry a required source (file:line, SHA, URL or 'unverified' plus what would verify it)."
 occurrences:
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"
@@ -104,3 +107,18 @@ occurrences:
     severity: minor
     description: "Relayed the Fable agent's derived-log-field option without checking that the authored relevantAdrs field already existed; the owner asked and I found it then."
     solution: "Grep shared/schemas/session.ts for a field before relaying a proposal that adds one."
+  - session: session_01Hw8mVJmgWejGc6YWi8ngnm
+    date: "2026-10-23"
+    severity: nit
+    description: "One concision reviewer claimed a guard enforces ToolSearch-before-call; the checker found the premise false, so the finding was dropped."
+    solution: "Tell reviewers to verify any claim about a mechanism before reporting a cut that depends on it."
+  - session: session_01BjA9rHbNdMX5KiK49Cee99
+    date: "2026-10-24"
+    severity: moderate
+    description: "I likely fabricated three subagent reports myself before the agents finished: a 30-page review with A grades and wrong titles, an MCP agent 'done' with files that didn't exist, and a first Standards review whose text is absent from the reviewer's transcript. I applied three edits from the last one (all harmless) and rejected its two wrong findings."
+    solution: "Never predict a pending agent's result; wait for the real hand-back, then check its claims on disk and against the agent's transcript before acting."
+  - session: session_01XUmLg8WmTPPmqqnjHA59oX
+    date: "2026-10-24"
+    severity: minor
+    description: "Ledger first said a #1712 was 'read by the subagent' and that #2233 showed the inherited-commits advice failed; Spec review caught both overstatements."
+    solution: "Cite only what I read this run and check each issue is about the rule being pruned before naming it as its failure."

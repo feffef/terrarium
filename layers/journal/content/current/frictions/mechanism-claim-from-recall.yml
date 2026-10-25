@@ -97,3 +97,8 @@ occurrences:
     severity: minor
     description: "Told the owner that session 01Wd2W never loaded ui-verification.md; it had. I misread my own script output and stated it unchecked."
     solution: "Verify before you state: grep the log file itself before reporting a per-session claim from a script's summary line."
+  - session: session_015P9szA8dP4wxv4wiXkZcRZ
+    date: "2026-10-24"
+    severity: moderate
+    description: "First rewrite stated facts from memory (payload files written for cached routes, unpushed commits being the only copy) that source research later proved wrong."
+    solution: "Before rewriting a Lesson's teaching, check each mechanism claim in node_modules or the cited file, as EVERY-PAGE's Write step implies."

@@ -41,3 +41,8 @@ occurrences:
     severity: nit
     description: "Ran a cd into the frictions directory in Bash and the primary working directory moved; I had to cd back."
     solution: "Use absolute paths or a subshell instead of a bare cd."
+  - session: session_01PYyNMqrrDLZdXEej11LMzs
+    date: "2026-10-24"
+    severity: moderate
+    description: "Two parallel Bash pushes using cd raced on the shared cwd; the #2475 commit went to fix/2476-sidefinding-sources. Force-push was denied, so #2476 moved to a new branch and a stray branch was left"
+    solution: "Never run git in parallel Bash calls that rely on cd; use git -C with an absolute worktree path, one push per call"

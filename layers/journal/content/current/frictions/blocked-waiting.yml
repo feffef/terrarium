@@ -79,3 +79,8 @@ occurrences:
     severity: nit
     description: "Tried ScheduleWakeup to wait on a subagent; the loop-only guard denied it, as subagents self-notify."
     solution: "Just end the turn when waiting on an Agent subagent."
+  - session: session_011Rbnf9T9YqNztEcWNXsHsF
+    date: "2026-10-25"
+    severity: nit
+    description: "A foreground sleep to wait for subagents was blocked by a guard; the harness notifies on completion anyway."
+    solution: "End the turn and wait for notifications instead of sleeping."

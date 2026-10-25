@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Orchestrators write briefs from memory instead of copying from the source, and send them without re-reading: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value, ADR level or scope claim restated wrongly. The agent runs on the bad brief before anyone notices. Signals: "brief", "placeholder", "path did not exist", a value in a brief that differs from its source. A brief that relays another agent's unchecked claim belongs in relayed-subagent-claims; a missing CLAUDE.md brief line in subagent-brief-omits-verdict-ask.
 surface: safe
-status: on-trial
-ref: "Prune Trial opened 2026-10-20 by PR #2324 (territory: dispatch-subagents SKILL.md section 3; keywords 'subagent brief', 'stranded'); regression issue #2312 closed by PR #2318."
+status: open
+ref: "Its Prune Trial (PR #2324) is no longer in prune-trials.yml; no open trial, issue or PR tracks it. Regression issue #2312 closed by PR #2318."
 fixes:
   - pr: 2150
     date: "2026-10-16"

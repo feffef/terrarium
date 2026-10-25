@@ -34,3 +34,8 @@ occurrences:
     severity: moderate
     description: "I recommended and built #2319's prose-only review skip without weighing that review catches errors in instructions; the owner reversed it the same day, costing a revert and a second ADR PR."
     solution: "When a change removes a review step, ask what kinds of defect that step catches in the files it would skip before recommending it."
+  - session: session_01Wd2WvrPmFRYHAZmf7DYnrG
+    date: "2026-10-23"
+    severity: minor
+    description: "Picked the by-season browser feature without reading the Midden's git history; the refiner then found the owner had removed the same legend, costing a round trip."
+    solution: "Before choosing a feature, grep git log and decisions for the thing the idea would rebuild; the Skill could tell step 3 to check `git log -S` on the area."
