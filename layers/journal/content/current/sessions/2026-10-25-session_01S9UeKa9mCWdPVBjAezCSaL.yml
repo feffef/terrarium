@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01S9UeKa9mCWdPVBjAezCSaL
 startedAt: 2026-10-25T19:00:11Z
-endedAt: 2026-10-25T19:21:14Z
+endedAt: 2026-10-25T19:23:13Z
 kind: delegated
 goal: Turn recurring session Frictions into fixes (frictions-to-fixes run)
-status: in-review
-outcome: Ledger PR 2547 open and gate-green; 4 issues filed, no fix PR dispatched
-summary: "The owner's one prompt was the /frictions-to-fixes Skill invocation; every pick, issue and decision after that was agent-initiated within the Skill. A survey subagent appended 37 occurrences, opened one entry and recorded nine merged fix PRs in the Friction Ledger. I checked the still-recurring list myself and filed regression issues for the three clusters with the most recurrence since their fix (dispatch-subagents-skill-unread, edit-during-gate-run, frictions-to-fixes-skill-gaps) after finding no open issue for them. Of three never-fixed picks, a design subagent verified the survey's source finding for read-first-hint-repeats-in-subagents; I checked it and filed it as an issue because scripts/hooks is Human-only to merge, so no fix was dispatched. The other two (verdict-comment-hand-typed, blocked-waiting) were dropped with notes: no new fact since the earlier dropped designs. The ledger PR passed gate:scoped and carries my verdict. Still open: it must merge when CI is green, and since there is no fix PR the closing ledger PR is skipped. The fixes list in the PR body came from the survey report, and I did not re-check each PR against its source."
+status: completed
+outcome: Ledger PR 2547 merged; 4 issues filed, no fix PR dispatched
+summary: "The owner's one prompt was the /frictions-to-fixes Skill invocation; every pick, issue and decision after that was agent-initiated within the Skill. A survey subagent appended 37 occurrences, opened one entry and recorded nine merged fix PRs in the Friction Ledger. I checked the still-recurring list myself and filed regression issues for the three clusters with the most recurrence since their fix (dispatch-subagents-skill-unread, edit-during-gate-run, frictions-to-fixes-skill-gaps) after finding no open issue for them. Of three never-fixed picks, a design subagent verified the survey's source finding for read-first-hint-repeats-in-subagents; I checked it and filed it as an issue because scripts/hooks is Human-only to merge, so no fix was dispatched. The other two (verdict-comment-hand-typed, blocked-waiting) were dropped with notes: no new fact since the earlier dropped designs. The ledger PR passed gate:scoped and carries my verdict and merged through merge-pr.ts once CI was green; with no fix PR the closing ledger PR (§8) was skipped. The fixes list in the PR body came from the survey report, and I did not re-check each PR against its source."
 prs:
   - "2547"
 docsRead:
@@ -77,21 +77,29 @@ frictions:
   - description: The Stop hook asked twice to push while the gate and the design agent were running; ADR-0004 says review and gate first.
     solution: None; stop-hook-nag is an accepted cluster.
     severity: nit
-durationSec: 1262
+  - description: "Survey agent: no script creates a ledger entry, print-ledger-occurrence --append fails whole on one duplicate session, and gh api --paginate on closed issues hits a proxy 403."
+    solution: Add a ledger-set create flag, name the colliding pair in the append error, and note the pagination trap in github-integration.md.
+    severity: minor
+  - description: "Design agent: survey-brief and design-brief leave audit-skills docReadCounts parsing unspecified (plain text before the JSON), and it never opened the human-merge paths file."
+    solution: Say to parse from the first brace, or give the script a --json flag.
+    severity: nit
+durationSec: 1382
 models:
-  claude-sonnet-5-5: 101
+  claude-sonnet-5-5: 122
 toolCounts:
   Read: 8
-  Bash: 23
-  Skill: 3
+  Bash: 28
+  Skill: 4
   Agent: 2
   ToolSearch: 3
   mcp__github__issue_write: 4
-  Edit: 4
+  Edit: 7
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/frictions/verdict-comment-hand-typed.yml
   - layers/journal/content/current/frictions/blocked-waiting.yml
@@ -217,13 +225,13 @@ subagents:
     durationSec: 526
     toolCalls: 55
     modelCalls: 49
-    tokenShare: 48.8
+    tokenShare: 43.2
   - type: general-purpose
     task: Design fixes for three picks
     durationSec: 215
     toolCalls: 25
     modelCalls: 14
-    tokenShare: 9
+    tokenShare: 8
 gitBranch: ccr-38db7121-rekul0
 entrypoint: remote_mobile
 cliVersion: 2.1.310
