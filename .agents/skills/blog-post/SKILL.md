@@ -161,8 +161,7 @@ in the scratchpad, to close every gap it named, re-checking citations for any
 claim the revision adds or changes. Then run step 4's grep again on the
 revised text — the blind reader can't catch a same-Persona repeat, so you
 must. If that changes the post (a swapped angle, a sequel framing), finish
-the rewrite here: the fact-check sees this text, and it changes afterwards only
-to apply the fact-check's fixes. Discard the other two drafts and their stubs; their topics survive
+the rewrite here. Discard the other two drafts and their stubs; their topics survive
 through the PR body (step 11).
 
 Done when: one final draft in the scratchpad, overlap checked on that text,
@@ -200,7 +199,10 @@ your reply naming what you changed, or confirmed, about its opening, closer,
 and structure against those three posts. A step with no such line did not
 happen.
 
-### 9. Independent fact-check
+### 9. Commit, review, fact-check
+
+Commit the post (and stub), then review it per `pr-workflow.md`'s "Review
+before the first push".
 
 Spawn a fresh read-only subagent (`model: "sonnet"`, repo and GitHub read
 access). Give it the saved post's path (and stub) and the "Re-derive every
@@ -226,13 +228,14 @@ This step is mandatory; past runs skipped it silently (issue #1479). The tally
 in the PR body is its evidence.
 
 Done when: every row the checker returned is `ok`, fixed, cut, or
-source-read by you, every edit made after the report was re-checked or cut,
-and you hold the tally ("N claims checked, M fixed or cut").
+source-read by you, nothing but those fixes (and their in-voice rewrites,
+re-checked) changed the post after the report, the fixes are committed, and
+you hold the tally ("N claims checked, M fixed or cut").
 
 ### 10. Gate
 
 Run `pnpm gate:scoped` once, per "Closing a scheduled run's PR" step 1
-(`pr-workflow.md`): after the commit and review, on the final head.
+(`pr-workflow.md`): on the final head, after step 9's fixes.
 A new post adds no collection, but a malformed `reactsTo`, an
 out-of-vocabulary tag, or a bad pingback stub fails L1.
 
