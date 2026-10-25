@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-24"
     summary: "Made prune-trial take the line delta from git diff --numstat against the cut's parent, and corrected the pr-workflow.md trial's delta to -2."
 occurrences:
-  - session: session_01Tcn6x6mZizT14rJuQqYivt
-    date: "2026-10-10"
-    severity: minor
-    description: "Posted a PR verdict comment with approximate verdict counts (about 33 confirmed) without tallying, breaking verify-before-you-state; needed a correcting comment."
-    solution: "Tally from the verdict files before writing any count."
   - session: session_01AnHXyvzXukt6izZTYs3YMr
     date: "2026-10-13"
     severity: nit

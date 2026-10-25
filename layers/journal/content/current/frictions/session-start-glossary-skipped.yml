@@ -11,41 +11,6 @@ fixes:
     date: "2026-10-23"
     summary: "CLAUDE.md now imports GLOSSARY-MAP.md and GLOSSARY.md with @, replacing the session-start read bullet."
 occurrences:
-  - session: session_01EmaH5A6Ziwjndz9esnsJ22
-    date: "2026-10-10"
-    severity: nit
-    description: "Read CONTEXT.md only to line 60 and only ADR-0010 of the ADRs found by grep, not in full as CLAUDE.md's read-first rules require."
-    solution: "Read the full file or skip claiming it read; the digest touched nothing those parts govern, so no impact."
-  - session: session_01YSGRZcurrkv9WYqPfnRH2t
-    date: "2026-10-10"
-    severity: nit
-    description: "Skipped reading the root CONTEXT.md in full at session start (only ran wc on it), which CLAUDE.md requires."
-    solution: "Read it at session start. The impact was low here, since only Blog terms were used."
-  - session: session_01Tcn6x6mZizT14rJuQqYivt
-    date: "2026-10-10"
-    severity: minor
-    description: "Skipped required reads: CONTEXT.md in full, the ADR list-and-grep, and tenant-layers.md before editing layers/commons and journal pages (CLAUDE.md docs-you-must-read-first)."
-    solution: "Low impact here since checkers read the binding ADRs, but a reader-trigger inside audit-docs step 6 for layers/ edits would have prompted it."
-  - session: session_018AsNh8hqd6jam8x7cSd136
-    date: "2026-10-10"
-    severity: minor
-    description: "Skimmed CONTEXT-MAP.md with head and never read CONTEXT.md or ADR-0009 in full at the start, breaking CLAUDE.md's session-start and ADR read-first rules"
-    solution: "Read both in full at session start even for research-only questions; a session-start hook printing the reminder would help"
-  - session: session_01X7EjwNGgzS9n6614B4PTU3
-    date: "2026-10-10"
-    severity: minor
-    description: "Skipped CLAUDE.md's session-start reads (CONTEXT-MAP.md, CONTEXT.md) and github-integration.md before the first GitHub call; impact was nil for a one-file doc conflict but a wrong-term or tool-trap risk in general"
-    solution: "For a narrowly scoped mechanical task the mandatory reads feel disproportionate; a guard or a scoped exemption for merge-only tasks would make the rule honest"
-  - session: session_015BjYk46dntcMuAWMn1z4Zw
-    date: "2026-10-10"
-    severity: minor
-    description: "Skipped CLAUDE.md's session-start reads of CONTEXT-MAP.md and CONTEXT.md in the main session; only the subagents read CONTEXT.md."
-    solution: "Read both before the first answer. A SessionStart rule without paths that names them would make it automatic."
-  - session: session_01UEeKV1vUyYkM8vedtgWPnY
-    date: "2026-10-10"
-    severity: minor
-    description: "Read only the head of tenant-layers.md, github-integration.md and CONTEXT.md, skipped verifying-ui-changes.md and the ADR grep for touched files, though CLAUDE.md says read in full."
-    solution: "A scheduled run should read the triggered docs in full before editing; the Skill could list the required reads in step 4."
   - session: session_013GkBtC56M36dmz5AtEb1Hp
     date: "2026-10-11"
     severity: nit

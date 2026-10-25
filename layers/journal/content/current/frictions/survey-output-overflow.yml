@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-19"
     summary: "extract-frictions --compact no longer prints each session's docsRead paths, about half its bytes."
 occurrences:
-  - session: session_01GEqB5frKCNtJYAr9KaRxDo
-    date: "2026-10-10"
-    severity: minor
-    description: "session-frictions.ts writes 280 KB for a 40-session window with no compact mode; the survey subagent had to dump frictions-only text and slice it."
-    solution: "Add a compact or frictions-only flag to scripts/session-frictions.ts."
   - session: session_01YBJaRLtVQEr4RshMQG1X7D
     date: "2026-10-11"
     severity: minor

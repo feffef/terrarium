@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A Tenant Skill's voice rule (midden-catalogue) or docs/agents/domain.md (the glossary-terms rule) governs new text, but the agent drafted or added the text first and a reviewer or the rule's late load found the miss. Signals: 'without first reading', 'plain-words voice rule', 'domain.md', a reviewer correcting wording or a term the doc already settles.
 surface: safe
-status: open
+status: tracked
+ref: "issue #2505 (regression of #2469)"
 fixes:
   - pr: 2469
     date: "2026-10-23"

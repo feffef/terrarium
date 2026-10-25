@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-23 design: a doc line on asking for an explicit grant before auto-mode edits dropped: the classifier is the host's, none recurred in 9 days, the denial says what to do, and a line costs more than one round with the owner.
 occurrences:
-  - session: session_018i6d2BQPkf9cq6jSEqCNSX
-    date: "2026-10-10"
-    severity: moderate
-    description: "Auto-mode classifier denied the guards-cluster dispatch twice as Self-Modification, even after the owner approved in chat; it ran only after the owner left auto mode"
-    solution: "For guard or hook changes, ask the owner to leave auto mode before dispatching, instead of discovering the denial"
   - session: session_017NBxJhtBSd9AoCwTzsg6pM
     date: "2026-10-12"
     severity: minor

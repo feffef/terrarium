@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   How a script, guard, rule, harness setting or data format behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set. A reviewer, the owner or a later check finds it false. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed".
 surface: safe
-status: open
-ref: "issue #2425 closed by PR #2453"
+status: tracked
+ref: "issue #2504 (regression of #2453)"
 fixes:
   - pr: 2336
     date: "2026-10-20"

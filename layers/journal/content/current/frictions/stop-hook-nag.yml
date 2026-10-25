@@ -14,21 +14,6 @@ fixes:
     date: "2026-10-05"
     summary: "Moved the end-of-turn reminder caveat into the main project instructions so more sessions read it."
 occurrences:
-  - session: session_01EmaH5A6Ziwjndz9esnsJ22
-    date: "2026-10-10"
-    severity: minor
-    description: "The Stop hook asked to commit and push four times while the fact-check and gate were still running, costing turns."
-    solution: "Stop hook could detect a running gate or pending subagent."
-  - session: session_01KRLFYUD31NaEVTs4Qs1Tzj
-    date: "2026-10-10"
-    severity: minor
-    description: "The Stop hook pushed to commit and push twice while the gate was still running, conflicting with CLAUDE.md's gate-first rule; the Skill's section 4 also says push before the probe, which needs the gate to pass first."
-    solution: "State in prune-trial section 4 that the push waits for gate:scoped."
-  - session: session_01Tcn6x6mZizT14rJuQqYivt
-    date: "2026-10-10"
-    severity: nit
-    description: "The Stop hook demanded a push while the gate was still running; CLAUDE.md already anticipates this and was followed."
-    solution: "None needed."
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"
     severity: minor

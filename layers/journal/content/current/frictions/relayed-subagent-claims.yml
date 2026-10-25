@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
 surface: safe
-status: open
-ref: "Issue #2476 closed completed 2026-10-24 (regression of #2378)."
+status: tracked
+ref: "issue #2503 (regression of #2485)"
 fixes:
   - pr: 2336
     date: "2026-10-20"

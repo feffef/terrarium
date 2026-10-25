@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_01X7EjwNGgzS9n6614B4PTU3
-    date: "2026-10-10"
-    severity: nit
-    description: "Left the session's designated branch (ccr-0682b7a0-5kimb5) to work on the PR's branch, against 'stay on the branch your session started on'; the task required it, and the Stop hook then counted main's merged commits as 22 unpushed"
-    solution: "CLAUDE.md could note that resolving an existing PR's conflict means working on that PR's branch"
   - session: session_013LwpcexAe7t3Qck4CKtj9Y
     date: "2026-10-15"
     severity: nit

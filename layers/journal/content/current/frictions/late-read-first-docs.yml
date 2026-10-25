@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_01Kvr69UAPnNL8SwEMG9GFxF
-    date: "2026-10-10"
-    severity: nit
-    description: "Called mcp__github__issue_read before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation."
-    solution: "Read it at the first GitHub call; a one-issue read had no harm here, but the trigger applies to reads too."
-  - session: session_01WFq4ZnYVWTyGHAAxqo5wKb
-    date: "2026-10-10"
-    severity: minor
-    description: "Called mcp__github__search_pull_requests before reading docs/agents/github-integration.md; the unscoped search returned six full PR bodies (~15k tokens), the overflow trap that doc warns about."
-    solution: "Read github-integration.md before the first mcp__github call, and pass fields omitting body to search_pull_requests."
   - session: session_01WuJh8gfMFWfS5bWEJcdScC
     date: "2026-10-11"
     severity: nit
