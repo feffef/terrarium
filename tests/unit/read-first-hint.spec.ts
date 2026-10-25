@@ -12,7 +12,6 @@ import { runTsx } from '../support/run-script.ts'
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const GIT = 'docs/agents/git-conventions.md'
 const GH = 'docs/agents/github-integration.md'
-const DISPATCH = '.agents/skills/dispatch-subagents/SKILL.md'
 const bashDocs = (command: string) => triggeredDocs('Bash', command).map((r) => r.doc)
 
 describe('the registry', () => {
@@ -20,7 +19,7 @@ describe('the registry', () => {
     for (const r of READ_FIRST) {
       const source = readFileSync(join(repo, r.source), 'utf8').replace(/\*\*/g, '').replace(/\s+/g, ' ')
       expect(existsSync(join(repo, r.doc)), r.doc).toBe(true)
-      expect(source, r.doc).toContain(r.skill ? `\`${r.skill}\` Skill` : r.doc)
+      expect(source, r.doc).toContain(r.doc)
       expect(source, r.trigger).toContain(r.trigger)
     }
   })
@@ -88,9 +87,6 @@ describe('triggeredDocs()', () => {
     expect(triggeredDocs('Bash', undefined)).toEqual([])
   })
 
-  it('matches a subagent dispatch or resume', () => {
-    for (const tool of ['Agent', 'Workflow', 'SendMessage']) expect(triggeredDocs(tool, undefined).map((r) => r.doc), tool).toEqual([DISPATCH])
-  })
 })
 
 describe('the hook entry (sh pre-filter → tsx)', () => {
@@ -182,13 +178,6 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     expect(context(nested('w2'))).toContain(GIT)
   })
 
-  it('points to dispatch-subagents on the first Agent call, silent once the Skill is invoked or its file read', () => {
-    const agent = (transcript_path: string) => run(call('x', { tool_name: 'Agent', tool_input: { prompt: 'go' }, transcript_path }))
-    expect(context(agent(empty))).toContain(DISPATCH)
-    const invoked = transcript('dispatch-skill.jsonl', [toolUse('s', 'Skill', { skill: 'dispatch-subagents' })])
-    const read = transcript('dispatch-read.jsonl', [toolUse('r', 'Read', { file_path: `${repo}/${DISPATCH}` })])
-    for (const t of [invoked, read]) expect(agent(t).stdout, t).toBe('')
-  })
 
   it('fails open: malformed payload or missing main transcript adds nothing', () => {
     expect(run('{"tool_input":{"command":"git log"')).toMatchObject({ status: 0, stdout: '' })
