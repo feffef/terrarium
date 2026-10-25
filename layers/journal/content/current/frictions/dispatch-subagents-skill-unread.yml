@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   CLAUDE.md's dispatch-subagents trigger is prose with no hint (read-first-hint.ts covers only git, GitHub and screenshots), and agents read it as not covering read-only git or a saved workflow (clear-backlog-build, explore) that dispatches for them. Signals: "without reading the dispatch-subagents Skill", "read-only git diff", "the workflow does the dispatch".
 surface: safe
-status: open
-ref: "Issue #2475 closed completed 2026-10-24 (regression of #2448)."
+status: tracked
+ref: "issue #2543"
 fixes:
   - pr: 2448
     date: "2026-10-23"
@@ -74,3 +74,18 @@ occurrences:
     severity: minor
     description: "Read dispatch-subagents SKILL only after the first subagent dispatch, when the hook hinted; CLAUDE.md says read it before writing a brief."
     solution: "Read it before the step 6 brief; the blog-post Skill could name it at step 6."
+  - session: session_01GKJysgAiGN7bmdFJcKvFoC
+    date: "2026-10-25"
+    severity: minor
+    description: "Read dispatch-subagents only after writing and sending the blind-read brief, though CLAUDE.md says to read it before writing any subagent brief."
+    solution: "Read it with the other pre-git docs at the start of a Skill that dispatches subagents."
+  - session: session_01BZNS3KuWTBxqAHxTfx3uzp
+    date: "2026-10-25"
+    severity: minor
+    description: "Wrote three visitor briefs and the refiner brief without first reading the dispatch-subagents Skill that CLAUDE.md requires; a hook reminded me afterwards."
+    solution: "Visitor-loop SKILL could point at dispatch-subagents next to the dispatch step."
+  - session: session_01FDWjoePShpq7fov1iKn4GB
+    date: "2026-10-25"
+    severity: nit
+    description: "Tried to Read docs/agents/dispatch-subagents.md, which does not exist; dispatch-subagents is a Skill."
+    solution: "CLAUDE.md could say Skill, not doc, which it does; I misremembered it"

@@ -102,3 +102,8 @@ occurrences:
     severity: moderate
     description: "First rewrite stated facts from memory (payload files written for cached routes, unpushed commits being the only copy) that source research later proved wrong."
     solution: "Before rewriting a Lesson's teaching, check each mechanism claim in node_modules or the cited file, as EVERY-PAGE's Write step implies."
+  - session: session_011Rbnf9T9YqNztEcWNXsHsF
+    date: "2026-10-25"
+    severity: nit
+    description: "The close-session note cited log line 210 for a claim it did not support; the Spec reviewer caught it before the first push."
+    solution: "Re-open the cited lines when writing a note, not rely on the subagent's line numbers."

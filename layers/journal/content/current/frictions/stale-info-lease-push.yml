@@ -41,3 +41,8 @@ occurrences:
     severity: nit
     description: "Pushed the restarted branch with --force-with-lease and got a stale-info rejection, though pr-workflow.md says to push a branch restarted after its merge plainly."
     solution: "Follow pr-workflow.md: push plainly after restarting a merged branch."
+  - session: session_016edAfTmLE1szSBGNZTorPH
+    date: "2026-10-25"
+    severity: nit
+    description: "Pushing the session branch recut from main was rejected as stale info under --force-with-lease, because the remote branch was deleted on merge; the push hook explained it and a prune plus plain push worked."
+    solution: "None needed: the hook's hint (issue 1610) was exact. The harness instruction to use force-with-lease on a recut branch could say to prune first."

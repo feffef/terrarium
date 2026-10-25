@@ -2,8 +2,8 @@ name: frictions-to-fixes-skill-gaps
 summary: "The frictions-to-fixes SKILL.md leaves recurring situations unspecified, so the run asks the owner or improvises."
 cause: "SKILL.md (not the survey or design briefs or the scripts) does not say how many regressions get issues, what to do when one already has an open issue, how to rank by severity, that a skipped cluster needs a recorded reason, how a ledger ref names a PR that does not exist yet, or that the owner's start approves the run's picks; the user is asked or the run improvises. Brief defects belong to frictions-to-fixes-briefs-mismatch, --summary date counting to ledger-summary-same-day-counting, repeated sessions to survey-appends-duplicate-sessions. Signals: \"the Skill says ... but not what to do\", \"had to ask the user how many\"."
 surface: safe
-status: open
-ref: "Its Prune Trial (PR #2330) was judged as holding by PR #2461 and left prune-trials.yml; no open trial, issue or PR tracks it."
+status: tracked
+ref: "issue #2545"
 fixes:
   - pr: 2149
     date: "2026-10-16"

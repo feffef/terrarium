@@ -34,3 +34,8 @@ occurrences:
     severity: nit
     description: "Screenshot step skipped for the changed session-logs page, a deviation from the Skill's Check step."
     solution: "Skill could say when a one-sentence wording edit needs no shot."
+  - session: session_01PGQQj6iUaMYCkphVjFEsBP
+    date: "2026-10-25"
+    severity: minor
+    description: "Skipped Skill step 5 (build and preview screenshots for pages whose teaching changed) to save time; the PR says so, but the visual check was not done."
+    solution: "Either shoot the few changed-teaching pages or make the Skill say screenshots are optional for drafts."

@@ -2,8 +2,8 @@ name: edit-during-gate-run
 summary: "The gate passed on a different tree than the one pushed, because files were edited during its run or committed after it."
 cause: "Agents start gate:scoped before the final head exists: they keep editing while it runs, so the e2e step builds the old tree then runs new tests, or they run it before code-review or commit, amend or fix wording after it and push without rerunning it. Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\", gate run before code-review, an amend or follow-up commit pushed after the gate."
 surface: safe
-status: open
-ref: "Issue #2474 closed completed 2026-10-24 (regression of #2450)."
+status: tracked
+ref: "issue #2544"
 fixes:
   - pr: 2314
     date: "2026-10-20"
@@ -80,3 +80,18 @@ occurrences:
     severity: minor
     description: "gate:scoped's e2e step reused an .output built before the last commit (L2 reuse), so it did not exercise the final v-if change."
     solution: "Rebuild before gate:scoped when a later commit touches rendered code, or have the gate compare the build's age to the diff."
+  - session: session_01PdrNTJLJJMKBGGZfsAhL6w
+    date: "2026-10-25"
+    severity: minor
+    description: "On #2527 I pushed a prose follow-up commit without re-running gate:scoped on the final head, which pr-workflow.md asks for before the first push."
+    solution: "Re-read the pr-workflow.md 'Review before the first push' recipe before any hand edit to a ready-to-push branch."
+  - session: session_015XP8ctSXnTaR7KEnyPpUP1
+    date: "2026-10-24"
+    severity: minor
+    description: "gate:scoped reused an e2e build made before my last refactor, so the final head was not actually exercised until I forced a fresh build."
+    solution: "Have gate:scoped rebuild when layer sources are newer than .output."
+  - session: session_013Hy2tG56JDVU7649kkyZCb
+    date: "2026-10-25"
+    severity: minor
+    description: "Full gate ran on the first commit, then review fixes forced a second full gate run, doubling gate time."
+    solution: "Run code-review before starting gate:scoped, since the review changes the head."

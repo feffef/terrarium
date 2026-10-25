@@ -21,3 +21,8 @@ occurrences:
     severity: nit
     description: "Explore's proposed grouping bundled #2112/#2113 with the Glass Box issues though they share no file with them"
     solution: "Have the explore grouping union only issues that share a file, not chain through unrelated shared files"
+  - session: session_013QKXoGLaEHEJanyw5TrPqj
+    date: "2026-10-25"
+    severity: minor
+    description: "run-summary's grouping put #2499 (build) with #2503 (grill) because #2503 listed flatten.ts only as background. Following it would have held up a ready build."
+    solution: "run-summary.ts could group only issues with the same outcome, or ignore files a grill result lists as background."

@@ -8,6 +8,7 @@ status: open
 notes: |-
   2026-10-21 design: a pr-workflow line or a guard on hand-typed SHAs and paths dropped: all 8 sessions read pr-workflow.md and slipped anyway, merge-pr.ts already refuses a wrong Reviewed SHA and prints the line, and a guard is a Human-only edit for a nit-level cost.
   2026-10-23 design: a merge-pr.ts flag or hand-typed-value guard dropped again: merge-pr.ts already refuses a wrong Reviewed SHA and prints the exact line, so a slip costs one edit, and a guard is a Human-only edit.
+  2026-10-25 design: no change: the mechanism is unchanged since 10-21 (merge-pr.ts still refuses the SHA and prints the line, pr-workflow.md was only pruned), a guard or merge-pr.ts flag stays a Human-only edit already rejected twice, and the prose half (the verify-before-you-state bullet) is in an open Prune Trial's territory (ADR-0027).
 fixes: []
 occurrences:
   - session: session_01Sc82qSCs4NVP3igf9SaGXM
@@ -70,3 +71,8 @@ occurrences:
     severity: nit
     description: "My first verdict comment on the closing ledger PR said 'see PR head' instead of the head SHA, so I posted a second comment with the real SHA before merge-pr would accept it."
     solution: "Read git rev-parse HEAD before writing the verdict line."
+  - session: session_016edAfTmLE1szSBGNZTorPH
+    date: "2026-10-25"
+    severity: minor
+    description: "My verdict comment on PR #2540 named a Reviewed SHA I expanded from the short hash instead of copying it, so it was wrong; merge-pr.ts would have refused it and a wrong id sat in a public comment until I corrected it one call later."
+    solution: "Copy the full SHA from git rev-parse in the same turn as the comment, never from a short hash; CLAUDE.md's verify-before-you-state covers this and I skipped it."

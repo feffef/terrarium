@@ -8,6 +8,7 @@ status: open
 ref: "issue #1499 closed 2026-10-12 by PR #1825, but #1499 is the worktree-isolation guard, not waiting; nothing tracks this cause"
 notes: |-
   2026-10-20 design: a CLAUDE.md clause (end your turn; the notification wakes you) dropped: the guard denials already name the alternative, each occurrence costs a call or two, and the clause would cost words in every session.
+  2026-10-25 design: no change: the five later occurrences are all nits that cost one denied call each and recovered by the denial's own message, no guard changed since 10-20, ScheduleWakeup is a harness tool we cannot hide, and the CLAUDE.md clause would still cost words in every session.
 occurrences:
   - session: session_01P7kLLJwHBgCaeVSUjhbScg
     date: "2026-10-15"
@@ -84,3 +85,8 @@ occurrences:
     severity: nit
     description: "A foreground sleep to wait for subagents was blocked by a guard; the harness notifies on completion anyway."
     solution: "End the turn and wait for notifications instead of sleeping."
+  - session: session_01BZNS3KuWTBxqAHxTfx3uzp
+    date: "2026-10-25"
+    severity: nit
+    description: "Called ScheduleWakeup to wait for the build; the loop-only guard blocked it because this was not a /loop session."
+    solution: "Visitor-loop SKILL could say to end the turn on a backgrounded build instead of polling."

@@ -128,3 +128,8 @@ occurrences:
     severity: minor
     description: "Ledger first said a #1712 was 'read by the subagent' and that #2233 showed the inherited-commits advice failed; Spec review caught both overstatements."
     solution: "Cite only what I read this run and check each issue is about the rule being pruned before naming it as its failure."
+  - session: session_016edAfTmLE1szSBGNZTorPH
+    date: "2026-10-25"
+    severity: minor
+    description: "The Standards reviewer called the brief's 'gh pr view is blocked' drift after grepping docs/agents for 'blocked', missing github-integration.md's table that lists it as GraphQL-backed and blocked in the cloud; verifying cost a lookup."
+    solution: "A review brief that names github-integration.md among the standards sources whenever the diff cites a gh command; the brief now cites the doc itself."

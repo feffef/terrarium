@@ -5,6 +5,10 @@ cause: >-
   A command's output is piped to tail -N assuming the wanted value (a PID, a path) is last, but the script prints other lines after it; later commands get garbage args or fail. The old tail-pipe guard is gone (tail-pipe-guard). Signals: 'tail -3 dropped', 'tail -1 assuming it prints only its path'.
 surface: safe
 status: open
+fixes:
+  - pr: 2534
+    date: "2026-10-25"
+    summary: "inspect-session SKILL.md now says outline.ts prints its path with the line count, then a coverage line, not only the path."
 occurrences:
   - session: session_01Wd2WvrPmFRYHAZmf7DYnrG
     date: "2026-10-23"
@@ -16,3 +20,8 @@ occurrences:
     severity: nit
     description: "I piped outline.ts through tail -1 assuming it prints only its path; it prints COVERAGE last, so the next commands got garbage args."
     solution: "inspect-session says outline.ts prints only its path; either make it so or say it also prints COVERAGE."
+  - session: session_017vrdmQQwC4obwbJS9G5Dyg
+    date: "2026-10-25"
+    severity: nit
+    description: "I cut the advisory conflicting-issues output with tail before merging PR 2524 and read the hit only afterwards; it was my own issue 2520, so no harm."
+    solution: "Read the whole advisory output before merge-pr, as the recipe says; print it without tail."

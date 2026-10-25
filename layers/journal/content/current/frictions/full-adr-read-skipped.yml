@@ -108,3 +108,8 @@ occurrences:
     severity: nit
     description: "Wrote the Digest before reading ADR-0010 in full; the post-write hook prompted the read. The page was already right."
     solution: "Read the ADR before the Write, as the digest Skill's rule summary implies"
+  - session: session_013Hy2tG56JDVU7649kkyZCb
+    date: "2026-10-25"
+    severity: nit
+    description: "ADR-0027/0029 were read only after the first edit, when the post-edit hook prompted them, not before."
+    solution: "The hook caught it; read the governing ADRs before editing a doc."

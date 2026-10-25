@@ -22,6 +22,9 @@ fixes:
   - pr: 2269
     date: "2026-10-19"
     summary: "save-handback now returns the message of a SubagentHandback tool call instead of refusing the hand-back."
+  - pr: 2533
+    date: "2026-10-25"
+    summary: "audit-docs saves each reviewer reply to its own file in a pool folder, since save-handback.ts overwrites its output file."
 occurrences:
   - session: session_01GbMt1vGTDZpQxZ3h4pNsF8
     date: "2026-10-11"
