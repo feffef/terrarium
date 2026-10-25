@@ -1,135 +1,257 @@
-You survey and screen this window's session-log frictions for the
-`frictions-to-fixes` run and return a **distilled, ranked report**; the main
-session works only from it and never re-reads the raw corpus. You **survey
-only**: file no issues, open no PRs, and change nothing but the Friction
-Ledger, which you commit (Report, (d)). The scratchpad is
+You survey and screen this window's session-log Frictions for the
+`frictions-to-fixes` run and return a distilled, ranked report. The main
+session works only from your report and never re-reads the raw corpus. You
+**survey only**: file no issues, open no PRs, and change nothing but the
+Friction Ledger, which you commit (§5). Write scratch files only under
 {SCRATCH_DIR}.
 
-## Survey
+Every script below runs through `pnpm exec tsx` (bare `tsx` isn't on PATH).
+Before your first GitHub call, load the `mcp__github__*` tools you need via
+`ToolSearch` (a recurring Friction: heed it) (for example
+`select:mcp__github__list_issues,mcp__github__list_pull_requests,mcp__github__issue_read,mcp__github__pull_request_read`;
+§3's nearby-issue check needs the read tools too).
+`docs/agents/github-integration.md` owns name resolution and the
+`list_*`/`search_*` overflow guidance.
 
-- **Start from the Friction Ledger** (`layers/journal/content/current/frictions/*.yml`;
-  schema in `layers/journal/tenant.config.ts`): one entry per cluster of
-  frictions with a common cause, carrying its `status`, `surface` and every
-  `occurrence` so far. Append each friction in the window that matches an
-  entry, whatever its severity; a session counts once, at its highest
-  severity. An occurrence is the block
-  `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts <session> <index> [<session> <index> …]`
-  prints (the friction's text copied from the log; a content test checks the
-  copy), never retyped; pass all pairs in one call, as each takes seconds. A
-  friction sits in one cluster unless its text names two causes. A new entry needs a cause seen twice, or one `moderate`, `major` or
-  `blocker`. Its `summary` is one plain sentence a visitor can read; its
-  `cause` names the root mechanism and the signals that identify a new
-  occurrence (error text, file or tool, trigger), so a later run can match it.
-  A cluster is a shared **root cause**: two frictions days apart, on different
-  tools, belong together when one change would retire both. The ledger's
-  **horizon** is `LEDGER_HORIZON_DAYS` (`layers/journal/app/utils/ledger.ts`; the run prunes it to that): an entry's
-  recurrence is its occurrences within it, counting only sessions that started
-  after its fix merged when it has one. Write the ledger changes (new entries, appended occurrences,
-  status changes) to the entry files; set `status`, `ref` and `fixes` and append
-  occurrence blocks with `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/ledger-set.ts`
-  (flags in its header; it refuses a result the schema rejects), never by hand. Survey the ledger with
-  `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts --summary` (one line per entry
-  with its state, fixes and newest note; it lists the frictions two clusters share, for
-  you to re-judge);
-  open an entry file only for its evidence.
-- **Re-cluster when the ledger says so.** The stored texts show a broad entry
-  that holds several causes, or two entries with one: split or merge them,
-  moving the occurrences, without reopening the logs. Move each with
-  `prune-friction-ledger.ts --move <session> <from> <to>`: it refuses a
-  session the target already holds and checks every text survived.
-- **Record each PR that merged to fix a cluster** as a `fixes` entry on its cluster, oldest
-  first: `pr`, `date` (its UTC merge date) and a one-line `summary` of what the
-  PR changed, written from the PR's description, not the friction's. Count a PR
-  only if it tries to change the cause (not a ledger-only, tracking or session-log
-  one); add every partial fix. Never record that a fix worked: `status` is the
-  tracking state (`open`, `tracked`, `on-trial`, `accepted`), and for an entry with `fixes`
-  the page and `--summary` derive `fix landed`, `likely fixed` (no occurrence
-  for 3 days after the latest PR) or `still recurring` (occurrences after
-  it, counted), so a re-fix after a regression needs only its `fixes` entry.
-  An `accepted` cluster (the owner accepts its cost) is never re-proposed for a fix.
-  `ref` holds the tracking issue or open PR, the trial's territory match or what a fix left
-  open, never the merged PRs. `gh api repos/feffef/terrarium/commits/<sha>/pulls`
-  maps a commit to its PR and `gh api repos/feffef/terrarium/pulls/<N>` gives
-  its body and `merged_at` (`gh pr view` is blocked); read the body, since a
-  batched doc PR's title names no cluster. This run's own PRs are recorded
-  by the main session; a PR an earlier run missed (still `tracked`, or in that run's log `prs`
-  but in no `fixes`) is recorded here. A `tracked` or `on-trial` entry whose PR closed
-  unmerged, or whose `ref` names no open issue, PR or trial in `prune-trials.yml`, goes back to `open`.
-  For one whose `ref` PR merged, set `status: open` and set that PR's `fixes`
-  `date` to its `merged_at` (the same call), since an escalated PR dated its own
-  entry before it merged.
-- **Spend effort on the unfixed tail.** Many of the window's frictions are usually already resolved by a later in-window session or a merged fix: drop those fast (Screen, below) without re-deriving their history, and save deep digging for candidates with no in-window resolution.
-- **Read the window's session logs** via `pnpm exec tsx scripts/session/extract-frictions.ts`
-  (it prints where the window starts; bare `tsx` isn't on PATH). Large output goes to
-  `/tmp/extract-frictions-output.json` and stdout gets only a notice — read the file, or
-  pass `--out PATH`; don't parse stdout. Use `--compact --unledgered` (the latter drops each friction the ledger carries verbatim, and a session with none left; a session's other frictions stay, so skip one already in the target cluster; `--compact` keeps
-  `subagents` and each friction's `index`, drops prose and `docsRead`) and re-read a full log via its `file` when a candidate needs it, such as for the doc-read check. This is a **recency window, not a
-  sample** — read every session in it, don't chase frictions from older,
-  likely-gone sessions. **External sessions are already excluded:** the survey script drops any log flagged `external: true` (ADR-0009). Don't hunt the raw corpus for them.
-- **For a friction alleging a detector/tool/mechanism bug, check the `subagents` field and read the relevant mechanism source before trusting the friction's own root-cause guess.** A self-diagnosis logged in the moment, without source access, is not evidence: e.g. "detector over-credits reads" can be `foldSubagentTrace` correctly unioning a dispatched subagent's reads, not a real detector gap. Verify against source before ranking it.
-- **Group and rank.** A candidate is a ledger entry (one per root cause) or a
-  window friction too new for one; rank by **recurrence and severity together** (severity is an ordered rank, not a number: weigh it qualitatively, never multiply it). **Prioritize `moderate`, `major`, and `blocker` frictions**: these earn a fix on severity alone, even logged once. **Rank a `nit` or `minor` that recurs regularly high**: cheap repeated papercuts add up. What gets dropped is the lone low-severity one-off, not every `nit`. **Rank low a cluster whose newest note drops a design** (`--summary`'s last column) unless the entry file shows occurrences dated after that note.
-- **Screen against the tracker** — apply the Screen rules below to every candidate.
-- **Earlier runs' decisions are the ledger's `status`, `ref` and `notes`.** When an entry
-  lacks them, the window's `trigger: frictions-to-fixes` logs (`summary`,
-  `outcome`, `prs`) are the fallback; a run's summary can be wrong or partial, so
-  verify against the PR or `main` before dropping.
-- **GitHub-MCP hygiene** (a recurring friction — heed it): load the
-  `mcp__github__*` tools you need via `ToolSearch` before the first call (e.g.
-  `select:mcp__github__list_issues,mcp__github__list_pull_requests,mcp__github__issue_read,mcp__github__pull_request_read`
-  — the nearby-issue eyeball step needs the read tools too).
-  `docs/agents/github-integration.md` owns name resolution and the
-  `list_*`/`search_*` overflow guidance.
+## 1. Read the ledger and the window
 
-## Screen against fixes already shipped
+Goal: the ledger's current state and every in-window Friction in front of
+you, without opening more logs than needed.
 
-Never re-fix what is already fixed. **First, drop what isn't ours to change:** a candidate whose only fix edits an **external pack Skill's `SKILL.md`** is off limits (ADR-0015; the gate rejects it). A repo-specific fit-note belongs in that Skill's Inventory entry: `audit-skills`' job, not a friction fix.
-**Next, drop what is on trial:** a candidate whose fix would restore prose inside
-an open **Prune Trial**'s territory (`.agents/prune-trials.yml`) is the trial's
-evidence, not a fix (ADR-0027). The drop reason quotes the matching `territory` path or keyword verbatim; with no quotable match the candidate is not on trial, so classify it below. A
-`blocker` is the exception: list it as a drop flagged `blocker`, and the main
-session files it, naming the trial. Then, for the rest: check the tracker for an issue or PR that already covers it, and confirm against **`main`** where cheap (a "solution" isn't ripe if main already has it). `pnpm exec tsx scripts/git/list-merges-since.ts <friction session's startedAt>` lists every `origin/main` commit landed after that instant (UTC, newest-first, `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a window's output can overflow you). Find the fixing commit/PR in it rather than comparing git timestamps by hand. Capture stdout and stderr separately: diagnostics go to stderr, and mixing them into the JSON on stdout breaks parsing. **Before labelling a candidate "never fixed", filter `pnpm exec tsx scripts/github/list-open-issues.ts` output locally for open issues by the friction's tool name and error text, and page `mcp__github__list_issues` with `state: CLOSED` (parameters per `docs/agents/github-integration.md`), filtering the titles locally for closed ones**. A title match is a hint, not proof, so a miss alone doesn't prove never-fixed: also eyeball nearby issues (same file, script or mechanism) for a closed one covering the same root cause in other words. A paraphrase or a nearby instance of an already-fixed cause is **fixed, not never-fixed** (issue #854). Classify each into one branch:
+### Instructions
 
-- **Never fixed** — no issue/PR addresses it, confirmed by the search
-  above.
-- **Fixed, and not logged since the fix merged** — drop it (cite the issue/PR): a new PR
-  would duplicate work.
-- **Open already** — an **open** issue or **open** PR already tracks it (the
-  ledger's `tracked`; cite the number). One with no
-  commit or comment within the horizon is idle: surface it as a candidate for
-  the main session to pick up or escalate.
-- **Reappeared _after_ its fix merged** — a **regression**: the fix
-  that was supposed to be in place did not hold.
+1. **The Friction Ledger** (`layers/journal/content/current/frictions/*.yml`;
+   schema in `layers/journal/tenant.config.ts`) holds one entry per cluster
+   of Frictions with a common cause, with its `status`, `surface` and every
+   `occurrence` so far. Survey it with
+   `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts --summary`:
+   one line per entry with its state, fixes and newest note, ending with the
+   Frictions two clusters share. Open an entry file only for its evidence.
+2. **The window's session logs:** run
+   `pnpm exec tsx scripts/session/extract-frictions.ts --compact --unledgered`.
+   It prints where the window starts. Large output goes to
+   `/tmp/extract-frictions-output.json` and stdout gets only a notice: read
+   the file, or pass `--out PATH`; don't parse stdout. `--unledgered` drops
+   each Friction the ledger already carries verbatim, and a session with
+   none left; `--compact` keeps `subagents` and each Friction's `index` and
+   drops prose and `docsRead`. Re-read a full log via its `file` only when a
+   candidate needs it (the doc-read check, say).
 
-`prune-friction-ledger.ts --candidates` labels each ledger entry from the
-ledger alone; confirm each label on the tracker. Done when every candidate is labelled never-fixed, drop, open-already, or
-regression — each with its citing issue/PR number where one exists.
+### Done when
 
-## Your own frictions
+You hold the summary and the window's unledgered Frictions.
 
-Return your own frictions from the survey (an MCP disconnect, a tool that resolved only under its full id, an oversized result) alongside the screened list, so they feed the next cycle. Name among them each place
-this brief was confusing or contradicted itself, and each step that was hard
-to follow with this run's data.
+### Edge cases
 
-## Report
+- The window is a recency window, not a sample: read every session in it,
+  and chase no Frictions from older, likely-gone sessions.
+- External sessions (`external: true`, ADR-0009) are already excluded by the
+  script. Don't hunt the raw corpus for them.
 
-Return a structured report: **(a) ranked actionable
-candidates** — each with its ledger entry, severity, recurrence (as counted above), sessions, tracker
-classification (never-fixed / open-already #N / regression of #N) and evidence
-quotes from the friction descriptions, plus everything else you gathered about
-it that the session logs don't hold (what you found in the source, on `main`,
-in the ledger or on the tracker). Report no fix and no session `solution`
-proposals: a later design agent reads the full logs and designs the fix from
-your findings. Cite GitHub
-sources by issue or PR number or commit hash only, without copying their text; **(b) a dropped list** with one-line reasons (an on-trial one quotes its territory match);
-**(c) your own frictions** from the run; **(d) the ledger changes**, each with its evidence, and the hash of the one
-commit on the current branch that holds them (`git commit -F <file>`; don't push
-or switch branches). Write each entry as the schema reads (never invented keys
-such as `fixes_append`), with occurrence blocks as `print-ledger-occurrence.ts`
-printed them; **(e) the regressions**: every cluster
-`--summary` shows as `still recurring`, with its count since the latest PR and its highest severity since (`--summary`'s `since:`); and
-**(f) each friction `--summary` lists in two clusters**, moved or kept because its text names
-both causes.
+## 2. Update the ledger
 
-Also return, for each rule and doc you loaded or read: its path, why it
-loaded or was read, and whether it was useful (yes/partly/no).
+Goal: the ledger carries every in-window Friction, each in the cluster of
+its root cause, with every merged fix recorded and every stale status reset.
+Every edit goes through
+`pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/ledger-set.ts`
+(flags in its header; it refuses a result the schema rejects) or
+`prune-friction-ledger.ts --move`, never by hand.
+
+### Instructions
+
+1. **Append each window Friction that matches an entry**, whatever its
+   severity. A session counts once per entry, at its highest severity. An
+   occurrence is the block
+   `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts <session> <index> [<session> <index> …]`
+   prints (the Friction's text copied from the log; a content test checks
+   the copy), never retyped. Print all pairs in one call, as each takes
+   seconds, then give each entry its blocks through
+   `ledger-set.ts <entry> --occurrences <file>`.
+2. **Open a new entry** for a cause seen twice, or once at `moderate`,
+   `major` or `blocker`. Its `summary` is one plain sentence a visitor can
+   read; its `cause` names the root mechanism and the signals that identify
+   a new occurrence (error text, file or tool, trigger), so a later run can
+   match it.
+3. **Re-cluster when the ledger says so.** A cluster is a shared root cause:
+   two Frictions days apart, on different tools, belong together when one
+   change would retire both. When the stored texts show one broad entry
+   holding several causes, or two entries holding one, split or merge them
+   without reopening the logs: move each occurrence with
+   `prune-friction-ledger.ts --move <session> <from> <to>` (it refuses a
+   session the target already holds and checks every text survived).
+4. **Record each PR that merged to fix a cluster** as a `fixes` entry on it,
+   oldest first: `pr`, `date` (its UTC merge date) and a one-line `summary`
+   of what the PR changed, written from the PR's description, not the
+   Friction's. Count a PR only if it tries to change the cause (not a
+   ledger-only, tracking or session-log one), and add every partial fix.
+   `gh api repos/feffef/terrarium/commits/<sha>/pulls` maps a commit to its
+   PR and `gh api repos/feffef/terrarium/pulls/<N>` gives its body and
+   `merged_at` (`gh pr view` is GraphQL-backed, which the cloud blocks:
+   `docs/agents/github-integration.md`); read the body, since a batched doc
+   PR's title names no cluster.
+5. **Reset stale statuses.** A `tracked` or `on-trial` entry whose PR closed
+   unmerged, or whose `ref` names no open issue, PR or trial in
+   `.agents/prune-trials.yml`, goes back to `open`. One whose `ref` PR
+   merged goes to `open` too, and that PR's `fixes` `date` becomes its
+   `merged_at` (the same call), since an escalated PR dated its own entry
+   before it merged.
+
+### Done when
+
+Every window Friction sits in an entry or is too new for one, and
+no `tracked` or `on-trial` entry points at something closed.
+
+### Edge cases
+
+- A Friction sits in one cluster unless its text names two causes.
+- `--unledgered` drops per Friction, not per session: a session's other
+  Frictions stay listed, so skip one already in the target cluster.
+- This run's own PRs are recorded by the main session. A PR an earlier run
+  missed (its entry still `tracked`, or the PR in that run's log `prs` but
+  in no `fixes`) is recorded here.
+- Never record that a fix worked. `status` is only the tracking state
+  (`open`, `tracked`, `on-trial`, `accepted`); from `fixes`, the page and
+  `--summary` derive `fix landed`, `likely fixed` (3 quiet days after the
+  latest PR) or `still recurring`. A re-fix after a regression needs only
+  its `fixes` entry. An `accepted` cluster (the owner accepts its cost) is
+  never re-proposed.
+- `ref` holds the tracking issue or open PR, the trial's territory match or
+  what a fix left open, never a merged PR.
+- Recurrence is an entry's occurrences within the horizon
+  (`LEDGER_HORIZON_DAYS` in `layers/journal/app/utils/ledger.ts`), counting
+  only sessions that started after its fix merged when it has one.
+
+## 3. Screen every candidate
+
+Goal: never re-fix what is already fixed. A candidate is a ledger entry (one
+per root cause: every entry `prune-friction-ledger.ts --candidates` lists,
+not only those that gained occurrences this window) or a window Friction too
+new for one. Each ends up labelled **never-fixed**, **drop**,
+**open-already** or **regression**. Many of the window's Frictions are usually already resolved by a
+later in-window session or a merged fix: drop those fast, without re-deriving
+their history, and save the deep digging for candidates with no in-window
+resolution.
+
+### Instructions
+
+1. **Drop what isn't ours to change:** a candidate whose only fix edits an
+   external pack Skill's `SKILL.md` (ADR-0015; the gate rejects it). A
+   repo-specific fit-note belongs in that Skill's Inventory entry:
+   `audit-skills`' job, not a Friction fix.
+2. **Drop what is on trial:** a candidate whose fix would restore prose
+   inside an open Prune Trial's territory (`.agents/prune-trials.yml`) is
+   the trial's evidence, not a fix (ADR-0027). The drop reason quotes the
+   matching `territory` path or keyword verbatim; with no quotable match the
+   candidate is not on trial, so carry on.
+3. **Check the rest against the tracker and, where cheap, `main`** (a
+   solution isn't ripe if `main` already has it). `--candidates` labels each
+   entry from the ledger alone; confirm each label:
+   - `pnpm exec tsx scripts/git/list-merges-since.ts <Friction session's startedAt>`
+     lists every `origin/main` commit after that instant (UTC, newest first,
+     `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a
+     window's output can overflow you). Find the fixing commit or PR there
+     rather than comparing git timestamps by hand. Capture stdout and stderr
+     separately: diagnostics go to stderr and break the JSON on stdout.
+   - Before labelling a candidate never-fixed, filter
+     `pnpm exec tsx scripts/github/list-open-issues.ts` output locally by the
+     Friction's tool name and error text, and page `mcp__github__list_issues`
+     with `state: CLOSED` (parameters per `docs/agents/github-integration.md`),
+     filtering titles locally. A title match is a hint, not proof, and a
+     miss alone proves nothing: also eyeball nearby issues (same file,
+     script or mechanism) for a closed one covering the same root cause in
+     other words. A paraphrase or a nearby instance of an already-fixed
+     cause is fixed, not never-fixed (issue #854).
+4. **Label each candidate:**
+   - **Never-fixed:** no issue or PR addresses it, confirmed by step 3.
+   - **Drop:** dropped in step 1 or 2, or fixed and not logged since the fix
+     merged (cite the issue or PR; a new PR would duplicate work).
+   - **Open-already:** an open issue or open PR tracks it (the ledger's
+     `tracked`; cite the number). One with no commit or comment within the
+     horizon is idle: surface it as a candidate for the main session to pick
+     up or escalate.
+   - **Regression:** it reappeared after its fix merged, so the fix did not
+     hold.
+
+### Done when
+
+Every candidate is labelled, with its citing number where one
+exists.
+
+### Edge cases
+
+- A `blocker` on trial is still listed, as a drop flagged `blocker`; the
+  main session files it, naming the trial.
+- An earlier run's decisions are the ledger's `status`, `ref` and `notes`.
+  When an entry lacks them, the window's `trigger: frictions-to-fixes` logs
+  (`summary`, `outcome`, `prs`) are the fallback; a run's summary can be
+  wrong or partial, so verify against the PR or `main` before dropping.
+
+## 4. Rank the candidates
+
+Goal: every candidate that is not a drop ranked by recurrence and severity
+together, for the main session to pick from.
+
+### Instructions
+
+1. Weigh severity as an ordered rank, qualitatively; never multiply it.
+2. Rank `moderate`, `major` and `blocker` Frictions high: they earn a fix on
+   severity alone, even logged once.
+3. Rank a `nit` or `minor` that recurs regularly high too: cheap repeated
+   papercuts add up. What gets dropped is the lone low-severity one-off,
+   not every `nit`.
+4. Rank low a cluster whose newest note drops a design (`--summary`'s last
+   column), unless its entry file shows occurrences dated after that note.
+
+### Done when
+
+Every candidate that is not a drop has a rank.
+
+### Edge cases
+
+- A Friction alleging a detector, tool or mechanism bug: check the
+  `subagents` field and read the mechanism's source before ranking it. A
+  self-diagnosis logged in the moment, without source access, is not
+  evidence.
+
+## 5. Commit the ledger
+
+Goal: every ledger change in one commit on the current branch.
+
+### Instructions
+
+Commit all ledger changes in one commit with `git commit -F <file>`. Don't
+push, and don't switch branches.
+
+### Done when
+
+`git log -1` shows the commit and no ledger change is left
+uncommitted.
+
+## 6. Report
+
+Return, in your final reply:
+
+- **(a) The ranked candidates**, each with its ledger entry, severity,
+  recurrence (as §2 counts it), sessions, label (never-fixed /
+  open-already #N / regression of #N), evidence quotes from the Friction
+  descriptions, and everything else you gathered that the session logs
+  don't hold (what you found in the source, on `main`, in the ledger or on
+  the tracker). Propose no fix and relay no session's `solution`: a later
+  design agent reads the full logs and designs the fix from your findings.
+  Cite GitHub sources by issue or PR number or commit hash only, without
+  copying their text.
+- **(b) The dropped list**, one-line reason each; an on-trial one quotes its
+  territory match.
+- **(c) Your own Frictions** from the run (an MCP disconnect, a tool that
+  resolved only under its full id, an oversized result), naming each place
+  this brief was confusing or contradicted itself, and each step that was
+  hard to follow with this run's data.
+- **(d) The ledger changes**, each with its evidence, and the hash of §5's
+  commit.
+- **(e) The regressions:** every cluster `--summary` shows as
+  `still recurring`, with its count since the latest PR and its highest
+  severity since (`--summary`'s `since:`).
+- **(f) The shared Frictions:** each one `--summary` lists in two clusters,
+  moved or kept because its text names both causes.
+- For each rule and doc you loaded or read: its path, why it loaded or was
+  read, and whether it was useful (yes/partly/no).

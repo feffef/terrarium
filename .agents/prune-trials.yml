@@ -217,3 +217,46 @@ trials:
       overflow that ended the run) or hit a search ban, and the cut wording would
       have prevented it. NOT damage: a guard denying a search or write and the
       session fixing the call, or nit/minor slips #2210 already records.
+  - problem: >
+      The three `frictions-to-fixes` agent briefs rewritten plainly at a
+      Trusted user's request, in the SKILL.md's per-step shape (+452 −219
+      lines across the three briefs, from `git diff --numstat`; words 2758 to
+      3133, the growth being headings and done-when sections): an opening
+      paragraph naming the role, its inputs and what it may change, then each
+      step as a goal paragraph, numbered instructions, a done-when section and
+      an edge-case list, then the report. Every rule kept: survey-only and
+      design-only limits, occurrences through print-ledger-occurrence.ts and
+      ledger-set.ts, the new-entry bar, the fixes and status rules, the
+      screen order (not ours, on trial, tracker and main), the four labels,
+      the ranking rules, the six report parts; the doc-read and read-count
+      checks, the off-limits surfaces and the risk questions; the gate floor
+      and the no-merge rule. Fixed in the same pass: design-brief's dangling
+      opening after `{PICKS}` and its session-log path, the pointer to
+      `audit-docs` "house rules" (no such section; now "What you may edit"
+      and the six lenses), and the survey's candidate set (every entry
+      `--candidates` lists, not only those that gained occurrences). SKILL.md
+      changes two lines: what "verbatim" means for a brief handed by path, and
+      the same `audit-docs` pointer. Cut at the owner's request: the stale
+      `docsReadViaShell` caveat (its logs are past the horizon), a schema
+      check `ledger-set.ts` already enforces, and the `foldSubagentTrace`
+      incident example behind the mechanism-bug rule.
+    territory:
+      paths:
+        - ".agents/skills/frictions-to-fixes/survey-brief.md (all of it)"
+        - ".agents/skills/frictions-to-fixes/design-brief.md (all of it)"
+        - ".agents/skills/frictions-to-fixes/impl-brief.md (all of it)"
+      keywords:
+        - survey-brief
+        - design-brief
+        - impl-brief
+    opened: 2026-10-25
+    check: >
+      Damage is a major or blocker Friction in a frictions-to-fixes run, logged
+      by the main session or one of its agents, that the old brief text would
+      have prevented: a survey agent that hand-edits ledger YAML, retypes an
+      occurrence, files an issue or pushes, or labels a fixed cause
+      never-fixed; a design agent that skips the doc-read or read-count check
+      or designs onto an off-limits surface; an impl agent that merges, pushes
+      or substitutes a bare tsc for the gate. NOT damage: a Friction about
+      SKILL.md or a script (neither is in this trial), or a brief gap the old
+      text had too.

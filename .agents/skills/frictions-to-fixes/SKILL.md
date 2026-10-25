@@ -20,6 +20,8 @@ A run opens three kinds of PR:
 - **The closing ledger PR** (§8): records what happened to the fix PRs.
 
 Work on the session's branch until §6, where fixes move to their own branches.
+A brief goes to its agent verbatim: pasted in full, or handed by path, with
+its `{…}` values supplied either way.
 
 ## 1. Survey the frictions
 
@@ -205,9 +207,9 @@ For each branch the agent hands back:
    it.
 2. **Review the diff** before the first push (`dispatch-subagents` §3, "Scope
    and trust"). Check it implements the §4 design, follows repo conventions
-   and stays on a safe surface. A doc branch must also clear `audit-docs`'
-   house rules ([`impl-brief.md`](impl-brief.md)): a fix that would be a
-   future `audit-docs` finding goes back.
+   and stays on a safe surface. A doc branch must also survive `audit-docs`
+   ([`impl-brief.md`](impl-brief.md)): a fix that would be a future
+   `audit-docs` finding goes back.
 3. **Have the agent push; open the PR yourself.** Its description carries
    the problem, evidence and design. A fix taken from an open issue (§2)
    also `Closes` it.
