@@ -1,8 +1,8 @@
 ---
 title: Adding a site
 description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
-revision: '5264125130799f1e582367d201098f96df798a85'
-revisionDate: '2026-10-24'
+revision: '6b91957069a4e77c04c7b86a2b7fdbbd07411dc5'
+revisionDate: '2026-10-25'
 ---
 
 A new site joins Terrarium. This Walkthrough follows the work from the side of the agent that builds it: from the approval, through one new folder and the manifest inside it, to the site answering at its own address with the Gate checking it. [Marquee](/t/marquee/reel), a small movie-blog Tenant, is the example throughout. Outside that folder, it must change only two glossary files.
