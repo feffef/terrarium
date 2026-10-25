@@ -61,7 +61,7 @@ export function groupTriples(argv: string[]): Map<string, FrictionRef[]> {
   const groups = new Map<string, FrictionRef[]>()
   for (let i = 0; i < argv.length; i += 3) {
     const [entry, session] = [argv[i]!, argv[i + 1]!]
-    groups.set(entry, [...(groups.get(entry) ?? []), { session, index: parseIndex(session, argv[i + 2]) }])
+    groups.set(entry, [...(groups.get(entry) ?? []), { session, index: parseIndex(`${entry} ${session}`, argv[i + 2]) }])
   }
   return groups
 }

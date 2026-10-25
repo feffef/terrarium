@@ -30,7 +30,7 @@ describe('groupTriples()', () => {
   })
   it('refuses a count that is not triples, and an index that is not a whole number', () => {
     expect(() => groupTriples(['x', 'session_abc'])).toThrow('usage')
-    expect(() => groupTriples(['x', 'session_abc', 'one'])).toThrow('whole number')
+    expect(() => groupTriples(['x', 'session_abc', 'one'])).toThrow('x session_abc: index must be a whole number')
   })
 })
 
