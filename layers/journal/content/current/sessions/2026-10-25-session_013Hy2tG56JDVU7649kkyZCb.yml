@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013Hy2tG56JDVU7649kkyZCb
 startedAt: 2026-10-25T13:10:26Z
-endedAt: 2026-10-25T13:23:41Z
+endedAt: 2026-10-25T13:26:25Z
 kind: autonomous
 goal: Scheduled prune trial on the Platform's agent instructions
-status: in-review
-outcome: "PR #2538 opened: one new prune trial on github-integration.md; no open trial was judgeable"
-summary: "Scheduled prune-trial run (agent-initiated, no human prompt). Window script showed all five open trials not yet judgeable, so none was judged. A search subagent covered the instruction corpus and tracker for failed prose; I picked the guard-held GitHub traps (search fields, angle brackets) in github-integration.md, cut them to the goal (-1 net), and added the ledger entry. A Sonnet probe pinned to the post-prune SHA answered correctly. code-review (Standards and Spec subagents) found a dropped detail and wrong ledger counts; fixed, gate:scoped rerun green, pushed, PR #2538 opened with verdict comment and subscription. Mass was small; runners-up are in the ledger entry."
+status: completed
+outcome: "PR #2538 merged: one new prune trial on github-integration.md; no open trial was judgeable"
+summary: "Scheduled prune-trial run (agent-initiated, no human prompt). Window script showed all five open trials not yet judgeable, so none was judged. A search subagent covered the instruction corpus and tracker for failed prose; I picked the guard-held GitHub traps (search fields, angle brackets) in github-integration.md, cut them to the goal (-1 net), and added the ledger entry. A Sonnet probe pinned to the post-prune SHA answered correctly. code-review (Standards and Spec subagents) found a dropped detail and wrong ledger counts; fixed, gate:scoped rerun green, pushed, PR #2538 opened with verdict comment, CI green, merged via merge-pr.ts. Mass was small; runners-up are in the ledger entry."
 prs:
   - "2538"
 docsRead:
@@ -64,20 +64,24 @@ frictions:
   - description: Full gate ran on the first commit, then review fixes forced a second full gate run, doubling gate time.
     solution: Run code-review before starting gate:scoped, since the review changes the head.
     severity: minor
-durationSec: 795
+  - description: Launched gate:scoped as a blocking-style background job, then idled turns waiting on it while the Stop hook nagged to push three times.
+    solution: Review first, gate once; the Stop-hook nag is known and accepted (#2233).
+    severity: nit
+durationSec: 959
 models:
-  claude-sonnet-5-5: 69
+  claude-sonnet-5-5: 82
 toolCounts:
-  Bash: 17
+  Bash: 20
   Read: 7
   Agent: 4
-  ReadNotifications: 1
+  ReadNotifications: 3
   Edit: 3
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
 filesEdited:
   - docs/agents/github-integration.md
   - .agents/prune-trials.yml
@@ -163,28 +167,28 @@ subagents:
     durationSec: 153
     toolCalls: 32
     modelCalls: 15
-    tokenShare: 22.8
+    tokenShare: 19.9
   - type: general-purpose
     task: Probe pruned GitHub doc
     model: sonnet
     durationSec: 22
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 3.1
+    tokenShare: 2.7
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 35
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 7.7
+    tokenShare: 6.7
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 44
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 7.9
+    tokenShare: 6.9
 gitBranch: claude/practical-rubin-xwtik8
 entrypoint: remote_trigger
 cliVersion: 2.1.310
