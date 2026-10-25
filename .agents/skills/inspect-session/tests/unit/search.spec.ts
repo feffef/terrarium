@@ -48,6 +48,17 @@ describe('search', () => {
     expect(search(events, parseSelector(['replies', '5']), 'parent').hits.map((l) => l.input)).toEqual(['Fixe…'])
   })
 
+  it("shows each fabricated hand-back beside the claimed agent's first real delivery", () => {
+    const fab = flatten([page('page-fabricated.txt')], 'x', null).lines
+    const r = search(fab, parseSelector(['fabricated']))
+    expect(r.hits.map((l) => [l.n, l.kind, l.result])).toEqual([
+      [1, 'assistant', 'claims agfx; real delivery L3'],
+      [3, 'user/task-notification', ''],
+      [2, 'assistant', 'claims agnone; no real delivery in range'],
+    ])
+    expect(run(['fabricated']).missing).toEqual(['fabricated'])
+  })
+
   it('rejects an unknown selector', () => {
     expect(() => parseSelector(['everything'])).toThrow(/selectors:/)
   })

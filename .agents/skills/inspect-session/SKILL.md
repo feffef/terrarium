@@ -160,7 +160,7 @@ One line per event, oldest first, images dropped. Fields are tab-separated:
 target, input, result.
 
 - **kind:** `assistant`, `user`, `user/handback`, `user/synthetic`,
-  `user/task-notification`, `user/brief` (a subagent's prompt), `result` (a
+  `user/task-notification`, `user/peer`, `user/brief` (a subagent's prompt), `result` (a
   turn's end), `system/<subtype>`, `other/<type>`.
 - A call's result sits on the call's own line; the result event's line says
   `result of L<n>`.
@@ -177,6 +177,8 @@ target, input, result.
   - `error`: a failed tool call, hook or turn.
   - `human-prompt`: a prompt a human typed, not a hook, task notification,
     hand-back or scheduled check-in.
+  - `fabricated-tag`: the parent's own text opens a `<task-notification>` or
+    `<agent-message>` tag, which only the harness delivers: an invented report.
 
 Grep it with `grep -oE '.{0,150}PATTERN.{0,150}' <file>`, so a long line never
 floods your context.
@@ -201,6 +203,9 @@ spots come from.
     path the log records counts as found.
   - `dispatches`: dispatches with their replies.
   - `errors`, `prompts` (human prompts), `last <N>`.
+  - `fabricated`: each `fabricated-tag` line, then the claimed agent's first
+    real delivery (hand-back, task notification or peer message), or `no real
+    delivery in range`.
   - `replies [<N>]`: the session's text replies, each cut to N characters
     (300 unless set).
 - `scripts/ranges.ts <cursors file> --fetchers <N> --out <dir>`: splits a
@@ -218,4 +223,5 @@ spots come from.
 | Which commands failed? | Partial read, selector `errors` (`--agent` for one subagent) |
 | How did it end? | `get_session`, then `kinds:["result"]` |
 | What did it say to the human? | Selector `prompts`, then `replies` |
+| Did it invent subagent reports? | Selector `fabricated` |
 | What happened last? | Partial read, page limit 1, selector `last 40` |
