@@ -44,7 +44,7 @@ The session edits on a feature branch, never on `main`, and may hand parts of th
 Before the first push, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find. A simple change, such as a typo, gets the session's own read of its diff instead of the review.
 
 ::stop-links
-[Merge gate](/t/glassbox/guide/terrarium-practice/gate) · [Type checking](/t/glassbox/guide/typescript/type-checking) · [Testing](/t/glassbox/guide/testing/unit-and-e2e-tests)
+[Merge gate](/t/glassbox/guide/verification/gate) · [Type checking](/t/glassbox/guide/verification/type-checking) · [Testing](/t/glassbox/guide/verification/unit-and-e2e-tests)
 ::
 
 ## 6. It opens the PR
@@ -68,7 +68,7 @@ With the PR open, the session runs `close-session`. The session first checks its
 GitHub Actions runs the Gate on the PR, and that run decides whether it may merge. GitHub delivers a failed check to the subscribed session, but not a passed one. When the Gate is green, its last step posts a fresh comment on the PR naming the commit; that comment wakes the session, though a fork's PR gets no such comment. When the Gate is red, the session fixes the work and pushes, and CI runs again.
 
 ::stop-links
-[Merge gate](/t/glassbox/guide/terrarium-practice/gate)
+[Merge gate](/t/glassbox/guide/verification/gate)
 ::
 
 ## 9. The PR merges
@@ -94,6 +94,6 @@ On 15 October 2026 a Trusted user asked a session to install the `retro` Skill f
 ## Where next
 
 - [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
-- [Merge gate](/t/glassbox/guide/terrarium-practice/gate)
+- [Merge gate](/t/glassbox/guide/verification/gate)
 - [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
 - [How Humans & Agents Work](/t/journal/current/how-it-works)

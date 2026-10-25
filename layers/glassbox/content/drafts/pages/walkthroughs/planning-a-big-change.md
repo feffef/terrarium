@@ -52,7 +52,7 @@ When nothing is left to decide, the way is clear and the work is handed off. `to
 From here each story is ordinary work. A session builds it on its own branch, reviews it, runs the :term[Gate] and opens a PR; a story the issue view shows as blocked waits for its blockers to close.
 
 ::stop-links
-[The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate)
+[The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/verification/gate)
 ::
 
 ## A real case

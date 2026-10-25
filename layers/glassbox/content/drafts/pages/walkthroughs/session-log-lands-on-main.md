@@ -81,7 +81,7 @@ Before pushing, the lander diffs the new commit against `main` and refuses unles
 The log shows on the Journal's dashboard. Each run of `pnpm validate:content`, a step of the :term[Gate], checks it along with every other log. If the session's work goes on, say its PR merges, it runs `close-session` again: the scratch changes, and the next `Stop` lands the new version over the old file. No other session edits it.
 
 ::stop-links
-[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · [Journal dashboard](/t/journal/current)
+[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Merge gate](/t/glassbox/guide/verification/gate) · [Journal dashboard](/t/journal/current)
 ::
 
 ## Where next
