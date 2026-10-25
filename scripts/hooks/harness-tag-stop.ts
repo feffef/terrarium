@@ -1,8 +1,6 @@
 // Stop hook for issue #2503 (#2499's fix 3): only the harness delivers a
 // `<task-notification>` or `<agent-message` block, so one in the main agent's
-// own reply means it wrote a subagent's report itself (#2499). It blocks the
-// stop once; `stop_hook_active` marks the re-entered stop, which passes. Fails
-// open (`|| true`): a Stop hook must never wedge a session.
+// own reply means it wrote a subagent's report itself (#2499).
 //
 // Usage:
 //   tsx scripts/hooks/harness-tag-stop.ts   # hook: Stop payload on stdin
@@ -40,7 +38,7 @@ export function main(): void {
   if (!tag) return
   const reason =
     `Your reply contains \`${tag}\`, a tag only the harness delivers, so you invented a subagent report (#2499). ` +
-    `Retract it, wait for the real delivery, and check every claim against it. If you only quoted the tag, carry on.`
+    `Retract it, wait for the real delivery, and check every claim against it.`
   process.stdout.write(JSON.stringify({ decision: 'block', reason }))
 }
 
