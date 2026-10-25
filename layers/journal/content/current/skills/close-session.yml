@@ -356,3 +356,10 @@ observations:
       instead of invoking close-session after PR #2418 merged); matches
       prior instances (10-04, 10-12, 10-13), no damage, correct once
       prompted. Grade/role unchanged (essential).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 10 runs, all 11 PRs merged, every log named
+      close-session. Verified: session_01BjA9rHbNdMX5KiK49Cee99's Frictions
+      blame subagents for hand-backs the parent fabricated (log lines 204,
+      210), while line 201 confesses to fabrication; the look-back works
+      from memory. Commented on #2499. Grade/role unchanged (essential).

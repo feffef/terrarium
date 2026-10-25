@@ -418,3 +418,11 @@ observations:
       lands in the ledger. Escalated as new issue #2471; the entry is still
       live, so the number should be corrected before a verdict is judged
       against it. Grade/role unchanged.
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 9 runs, all PRs on main, none reverted. Unverified:
+      two line deltas contradict numstat. session_0149fVyZ37qWGMuwVPw3Uryc
+      (PR #2412) titled -3, numstat gives -2, and the log says 118 to 115.
+      session_011hiFhM9A2Sbn4mGYbdtAhJ (PR #2447) says -27 and the merge
+      diff gives -26; that entry is live and unjudged. Runs after the
+      numstat clause (9ec52d66d) were correct. Grade/role unchanged.

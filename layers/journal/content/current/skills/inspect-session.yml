@@ -56,3 +56,11 @@ observations:
       Skill's own coverage, distinct from the 2026-10-21 missed-invocation
       question; watch for a second occurrence before escalating. Grade/role
       unchanged (specialist).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 10 runs, all claims held, no failure. Unverified
+      drift: SKILL.md says outline.ts prints only its path, but it prints
+      OUTLINE and COVERAGE lines (session_01Ru6jnZ4cFTdf41ZWLonsTv's nit,
+      where tail -1 gave the wrong value). Open pain: partial reads hit the
+      page limit before the session start. Grade/role unchanged
+      (specialist).

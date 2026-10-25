@@ -366,3 +366,13 @@ observations:
       nothing: session_017xginqTj2NjZ8XgrbRqvkm (PR #2110/#2111) and
       session_012XnetQuxWoyaVFYw1BqMoy (PR #2317, after #1889 closed). Full
       detail on #2395. Grade/role unchanged (routine).
+  - date: "2026-10-25"
+    note: >-
+      Behaviour check, 7 runs, all 9 PRs merged (#2237 through #2482), no
+      revert. Unverified: step 1.4 says to save every reply into one pooled
+      file with save-handback.ts, which overwrites its output;
+      session_01Ku4KD2Ua5MXi6eQ95TG4aj (10-24) added a concat step after
+      hitting it. It may also explain session_01HcMFbKDTkG7hs2VhByAs4b
+      (10-21), whose Spec reviewer saw only Agent A's findings in pool.md;
+      no damage seen. A later run could reword step 1.4 or check the script.
+      Grade/role unchanged (routine).
