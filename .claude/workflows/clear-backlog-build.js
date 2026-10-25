@@ -119,7 +119,7 @@ function fresh(b) {
 
 function reviewPrompt(b, axis, wt, round, decisions) {
   const what = axis === 'Standards'
-    ? `the Standards axis: the repo's documented standards plus the smell baseline in that Skill, and one check: every count and every subagent claim in the commit messages or the build decisions listed below cites its source (a file, a command, a commit); flag an uncited one as a finding`
+    ? `the Standards axis: the repo's documented standards plus the smell baseline in that Skill`
     : `the Spec axis, with the brief and picks above as the spec, plus the issues themselves (read them with mcp__github__issue_read via ToolSearch)`
   return `You are the ${axis.toUpperCase()} reviewer, round ${round}. ${common(b)}
 ## Task

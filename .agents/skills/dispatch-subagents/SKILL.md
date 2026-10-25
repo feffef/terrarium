@@ -95,8 +95,6 @@ every line that applies.
   `Read`.
 - Before dispatching, re-read the brief: every `{…}` filled, every path
   repo-relative and existing, every value copied from its source.
-- A subagent's prose is candidate material: re-check any factual or attribution
-  claim against its cited source before it ships.
 
 ## 4. Check for same-file collisions
 

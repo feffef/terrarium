@@ -55,8 +55,7 @@ Dispatch one read-only Sonnet subagent (`model: sonnet`) per Skill, all in one
 message. Each brief is [`brief.md`](brief.md) plus the path of the Skill's
 file from step 1's `<dir>`.
 
-A subagent's report is hearsay until you have verified it (CLAUDE.md): check
-each finding against the source it cites before you use it. A finding that
+Check each finding against the source it cites before you use it. One that
 holds up in part but not enough to act on is **unverified**: it goes into the
 Skill's `observations` (step 5), so a later run can build on it.
 

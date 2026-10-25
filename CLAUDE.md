@@ -49,9 +49,9 @@ call per doc (a shell read can be cut short), before you act, once per session.
   `origin main` and cut a new branch first.
 - **Invoke `close-session`** before the turn that opens a PR ends, and when a session only answers a question.
 - **Merge your own PR** with `scripts/github/merge-pr.ts <number>` once ADR-0004 allows it.
-- **Verify before you state.** Only call something settled (an id, a count, a
-  cause, another session's claim) if you checked it this turn against the
-  source. A count is a fact only after you read every item.
+- **Verify before you state.** State an id, a count, a cause or another agent's
+  claim (a subagent's report too) only after you check it this turn against its
+  source. Count every item; never take a number from memory or a summary.
 - **Ask before building** something the Trusted user will see (the `grilling`
   Skill); don't assume. Data shapes: `.claude/rules/data-shapes.md`.
 - **Question the premise.** Before you recommend, build or harden a change,
