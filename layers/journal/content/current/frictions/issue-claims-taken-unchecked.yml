@@ -5,6 +5,8 @@ cause: >-
   In clear-backlog triage, an issue's constraint lines or candidate fix (what is in a Prune Trial, what is Human-only, which surface the fix needs) are repeated or used to exclude the issue without checking them against the cited sessions, the trial ledger or the Human-only list. Signals: "from the issue text alone", triage agents repeating the issue's claim, an exclusion reversed after a transcript look.
 surface: safe
 status: open
+notes: |-
+  2026-10-25 design: dropped: last occurrence 2026-10-20; clear-backlog-explore.js line 84 and clear-backlog SKILL.md line 56 already say to check claims against primary sources; revisit if it recurs after those.
 occurrences:
   - session: session_01JygBaHorymh1xgVBsaTh3E
     date: "2026-10-17"

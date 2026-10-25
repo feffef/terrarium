@@ -5,6 +5,8 @@ cause: >-
   audit-docs session logs and sweep PR bodies do not record per-lens finding and verdict counts, so a later session that judges one lens reads raw events through subagents (about 270k tokens) and can hit the inspect-session partial-read page limit before the needed hand-back. Signals: 'per-lens counts', 'two event-reading subagents', 'partial read hit its 25-page limit'. PR #2518 dropped the Concision lens, so the lens asked about is gone.
 surface: safe
 status: open
+notes: |-
+  2026-10-25 design: dropped: one occurrence, and PR #2518 dropped the lens it asked about, so per-lens counts would add audit-docs prose for a gone surface.
 occurrences:
   - session: session_01VW5yg4NTMt1JBnXCcrhjw9
     date: "2026-10-25"

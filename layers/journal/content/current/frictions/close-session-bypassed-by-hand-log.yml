@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A session that has the close-session or log-session text in context (for example from editing it) authors the log directly instead of invoking the Skill, skipping its steps such as the rule re-read. Signals: HUMAN-PROMPTED-CLOSURE after a merge, 'authored the completed log directly', 'having edited a Skill is not having run it'.
 surface: safe
-status: open
-ref: "issue #2424 closed by PR #2452 (a warning, never a block)"
+status: tracked
+ref: "issue #2521"
 fixes: [ { pr: 2452, date: "2026-10-23", summary: "log-session --author now warns when a completed log follows a merge with no close-session call." } ]
 occurrences:
   - session: session_01EjH3TbrydEY2sArBMYE5Gy

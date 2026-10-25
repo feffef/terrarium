@@ -5,6 +5,8 @@ cause: >-
   A brief or check script for a rule-loading probe has the tester read rule files or frontmatter first, which loads or credits the rule before the governed-file reads it was meant to observe, so checks cannot be seen. Signals: 'rule files before the governed files', 'frontmatter first', 'could not be observed'.
 surface: safe
 status: open
+notes: |-
+  2026-10-25 design: dropped: all three occurrences are one probe effort from 2026-10-14, none in 11 days, and the probe is done.
 fixes: []
 occurrences:
   - session: session_015dUGRadEQP1bvv6KytKLXT

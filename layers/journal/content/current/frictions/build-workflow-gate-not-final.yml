@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   clear-backlog-build returns gatePassed from a gate:scoped run that may predate its last review-fix round, and clear-backlog section 3 does not say whether the orchestrator re-runs the gate before pushing. Signals: 'reported gatePassed while saying it had not rerun the gate', pushing on the workflow's gatePassed.
 surface: safe
-status: open
+status: tracked
+ref: "issue #2523"
 fixes: []
 occurrences:
   - session: session_016gu9e44jjfAEFMo3CBxzUQ
