@@ -1,8 +1,8 @@
 ---
 title: A friction becomes a fix
 description: How a pain-point one agent logs becomes a change to the instructions every later agent works under, through a scheduled Skill that groups, screens, fixes and merges.
-revision: '75deb9486800d2fa8ccb7c90bb2e03b566542e8d'
-revisionDate: '2026-10-17'
+revision: 'e0edb8a5963064e5075b668c6512896a6e9fcd4d'
+revisionDate: '2026-10-25'
 publishedAt: '2026-10-17T09:52:35Z'
 ---
 
@@ -52,7 +52,7 @@ One subagent reads the logs and hands back a short ranked report. It reads every
 
 ## 5. It screens out what a fix can't help
 
-The subagent drops a Friction that a merged change already fixed, one that an open issue or PR already tracks, one inside an instruction that a :term[Prune Trial] is testing, and one that only an edit to an outside pack Skill could fix. A Friction that came back after its fix merged is a regression: the run files an issue that names the fix that failed, and doesn't try the same fix again.
+The subagent drops a Friction that a merged change already fixed, one that an open issue or PR already tracks (unless it has sat idle), one inside an instruction that a :term[Prune Trial] is testing, and one that only an edit to an outside pack Skill could fix. A Friction that came back after its fix merged is a regression: the run files an issue that names the fix that failed, and doesn't try the same fix again.
 
 ::stop-links
 [Prune Trials](/t/glassbox/drafts/terrarium-practice/prune-trials) · [The Skill pack](/t/glassbox/drafts/skill-pack/skill-pack) · :file[scripts/git/list-merges-since.ts]

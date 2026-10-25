@@ -1,8 +1,9 @@
 ---
 title: A bug report becomes work
 description: How a visitor's issue reaches a merged fix, through a sweep that reads who wrote it, a person's approval, a session that builds it and a merge a person makes.
-revision: '75deb9486800d2fa8ccb7c90bb2e03b566542e8d'
-revisionDate: '2026-10-17'
+revision: 'e0edb8a5963064e5075b668c6512896a6e9fcd4d'
+revisionDate: '2026-10-25'
+publishedAt: '2026-10-25T07:50:28Z'
 ---
 
 A visitor finds something broken and opens an issue. This Walkthrough follows that issue from the tracker's side: a triage sweep reads who wrote it and labels it, a person approves it, a session builds the fix, and a person merges it, which closes the issue.
@@ -27,10 +28,10 @@ Anyone can open an issue on the repository. The new issue has no label. The labe
 
 ## 2. A sweep picks it up
 
-A :term[Trusted] user starts the `auto-triage` sweep, by hand, on a :term[Routine] or with `/loop`. The sweep reads every open issue and acts on those that need attention, and an issue with no label always does. It applies the per-issue rules of the pack's `triage` Skill, one subagent per issue.
+A :term[Trusted] user starts the `auto-triage` sweep by hand, or a `clear-backlog` run resolves the same set of issues and triages them. The sweep reads every open issue and acts on those that need attention, and an issue with no label always does. It applies the per-issue rules of the pack's `triage` Skill, one subagent per issue.
 
 ::stop-links
-[Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · [Routines, scheduled tasks and /loop](/t/glassbox/drafts/claude-code/routines) · [Subagents](/t/glassbox/guide/claude-code/subagents)
+[Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · [Subagents](/t/glassbox/guide/claude-code/subagents)
 ::
 
 ## 3. Who wrote it decides how far it goes
@@ -59,7 +60,7 @@ A Trusted user reads the issue and moves it to `ready-for-agent`, which in Terra
 
 ## 6. A session builds the fix
 
-A Trusted user starts a session to build it, often the same `clear-backlog` run. Before building, the session checks that no merged change has already solved the issue another way. It builds on its own branch in its own worktree, test first, reviews the change on both of `code-review`'s axes, runs the :term[Gate] and opens a PR.
+A Trusted user starts a session to build it, often the same `clear-backlog` run. The explore pass before it has already checked that no merged change solved the issue another way. The session builds on its own branch in its own worktree, test first, reviews the change on both of `code-review`'s axes, runs the :term[Gate] and opens a PR.
 
 ::stop-links
 [The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/terrarium-practice/gate) · :file[.agents/skills/clear-backlog/SKILL.md]
