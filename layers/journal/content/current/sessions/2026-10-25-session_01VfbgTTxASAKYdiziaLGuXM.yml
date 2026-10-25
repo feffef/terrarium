@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01VfbgTTxASAKYdiziaLGuXM
 startedAt: 2026-10-25T20:29:19Z
-endedAt: 2026-10-25T20:42:32Z
+endedAt: 2026-10-25T20:52:41Z
 kind: interactive
 goal: Clear the issue backlog (clear-backlog run)
 status: in-review
-outcome: "Four needs-triage issues triaged and grilled; PR #2548 open, two builds running"
+outcome: "#2545 merged (PR #2548); PR #2549 open for #2544; #2546+#2543 building"
 summary: "The owner invoked clear-backlog (human-instructed). The default sweep picked up the four uncommented needs-triage issues #2543-#2546; nothing was ready-for-agent. Triage made #2546 build-ready and sent #2543, #2544, #2545 to grilling. The owner answered 1a (#2545: one ranking sentence), 3c (#2543: a deny guard on the first dispatch until dispatch-subagents is read) and asked to inspect the session behind #2544. Its events showed the gate's reused .output was the gate's own build, newer than the last edit, so the regression was a misread log line; the owner then picked 4b (keep the freshness rule, make the reuse line name the latest source edit). PR #2548 (#2545, Skill prose) is open. Builds for #2546 (nested workflow transcripts in the read-first and bash-rules hints) and #2544 (reuse-line wording) are running; #2543 will be added to the #2546 branch because both touch scripts/hooks/read-first-hint.ts, so that PR needs a human merge."
 prs:
   - "2548"
+  - "2549"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
     reason: step 1 eligibility rule for the sweep set
@@ -28,26 +29,26 @@ docsRead:
   - path: docs/agents/issue-tracker.md
     reason: "triage #2544 subagent: label and blocking recipe (subagent verdict partly)"
     useful: partly
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
   - path: .agents/skills/implement/SKILL.md
     reason: (no reason given)
   - path: docs/adr/0004-objective-safety-gate.md
     reason: (no reason given)
-  - path: .agents/skills/code-review/SKILL.md
+  - path: docs/agents/guards.md
     reason: (no reason given)
   - path: .agents/skills/triage/SKILL.md
     reason: (no reason given)
   - path: tests/support/fresh-output.ts
-    reason: (no reason given)
+    reason: (read before editing)
   - path: tests/support/e2e-global-setup.ts
-    reason: (no reason given)
+    reason: (read before editing)
   - path: docs/adr/0022-autonomous-triage-sweep.md
     reason: (no reason given)
   - path: docs/agents/triage-labels.md
     reason: (no reason given)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (read before editing)
-  - path: docs/agents/guards.md
-    reason: (no reason given)
   - path: docs/adr/0027-prune-trials.md
     reason: (no reason given)
   - path: .agents/skills/frictions-to-fixes/survey-brief.md
@@ -73,28 +74,36 @@ frictions:
   - description: "Triage of #2544 reasoned the friction was likely a standalone e2e run; the events showed it was the gate's own fresh build, misread as stale."
     solution: For a regression report, inspect the reporting session's events before proposing options.
     severity: minor
-durationSec: 793
+durationSec: 1402
 models:
-  claude-opus-5-5: 83
+  claude-opus-5-5: 109
 toolCounts:
-  Bash: 20
+  Bash: 27
   Read: 4
-  Workflow: 4
+  Workflow: 5
   ToolSearch: 3
   PushNotification: 2
   Skill: 3
   Agent: 1
-  mcp__github__add_issue_comment: 3
+  mcp__github__add_issue_comment: 4
   mcp__github__issue_write: 3
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - tests/unit/read-first-hint.spec.ts
   - tests/unit/bash-rules-hint.spec.ts
   - scripts/hooks/read-first-hint.ts
   - scripts/hooks/bash-rules-hint.ts
+  - tests/unit/dispatch-read-guard.spec.ts
+  - scripts/hooks/dispatch-read-guard.ts
   - .agents/skills/frictions-to-fixes/SKILL.md
   - scripts/session/transcript-trace.ts
+  - tests/support/e2e-global-setup.ts
+  - tests/support/fresh-output.ts
+  - tests/unit/fresh-output.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0022.md
   - .claude/rules/adr-0027.md
@@ -132,15 +141,14 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0026.md
   - .claude/rules/adr-0015.md
 docsReadBySubagents:
+  - .agents/skills/code-review/SKILL.md
   - .agents/skills/implement/SKILL.md
   - docs/adr/0004-objective-safety-gate.md
-  - .agents/skills/code-review/SKILL.md
   - .agents/skills/triage/SKILL.md
   - docs/adr/0022-autonomous-triage-sweep.md
   - docs/agents/triage-labels.md
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/skills/frictions-to-fixes/survey-brief.md
-  - docs/agents/guards.md
   - docs/adr/0027-prune-trials.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
@@ -183,119 +191,168 @@ subagents:
     durationSec: 142
     toolCalls: 25
     modelCalls: 24
-    tokenShare: 11.8
+    tokenShare: 8.7
+  - type: workflow-subagent
+    task: gate fix/e2e-reuse-line-names-latest-edit
+    model: claude-sonnet-5-5
+    durationSec: 386
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: Spec fix/e2e-reuse-line-names-latest-edit r1
+    model: claude-opus-5-5
+    durationSec: 29
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 1.8
   - type: workflow-subagent
     task: build fix/e2e-reuse-line-names-latest-edit
     model: claude-sonnet-5-5
-    durationSec: 51
-    toolCalls: 10
-    modelCalls: 7
-    tokenShare: 2.9
+    durationSec: 328
+    toolCalls: 13
+    modelCalls: 10
+    tokenShare: 2.8
+  - type: workflow-subagent
+    task: Standards fix/e2e-reuse-line-names-latest-edit r1
+    model: claude-opus-5-5
+    durationSec: 24
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: Spec fix/hint-nested-agent-transcript r3
+    model: claude-opus-5-5
+    durationSec: 23
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 1.8
   - type: workflow-subagent
     task: fix fix/hint-nested-agent-transcript r1
     model: claude-sonnet-5-5
     durationSec: 205
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 2
+    tokenShare: 1.5
   - type: workflow-subagent
     task: build fix/hint-nested-agent-transcript
     model: claude-sonnet-5-5
     durationSec: 307
     toolCalls: 24
     modelCalls: 16
-    tokenShare: 7.8
+    tokenShare: 5.7
   - type: workflow-subagent
     task: Standards fix/hint-nested-agent-transcript r2
     model: claude-opus-5-5
     durationSec: 25
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.9
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: gate fix/hint-nested-agent-transcript
+    model: claude-sonnet-5-5
+    durationSec: 224
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 0.9
   - type: workflow-subagent
     task: fix fix/hint-nested-agent-transcript r2
     model: claude-sonnet-5-5
-    durationSec: 9
-    toolCalls: 3
-    modelCalls: 3
-    tokenShare: 1.6
+    durationSec: 233
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 1.5
   - type: workflow-subagent
     task: Spec fix/hint-nested-agent-transcript r1
     model: claude-opus-5-5
     durationSec: 28
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 2.6
+    tokenShare: 1.9
   - type: workflow-subagent
     task: Spec fix/hint-nested-agent-transcript r2
     model: claude-opus-5-5
     durationSec: 29
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.4
+    tokenShare: 1.7
   - type: workflow-subagent
     task: Standards fix/hint-nested-agent-transcript r1
     model: claude-opus-5-5
     durationSec: 27
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 3.6
+    tokenShare: 2.6
+  - type: workflow-subagent
+    task: Standards fix/hint-nested-agent-transcript r3
+    model: claude-opus-5-5
+    durationSec: 22
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: build fix/hint-nested-agent-transcript
+    model: claude-opus-5-5
+    durationSec: 139
+    toolCalls: 20
+    modelCalls: 16
+    tokenShare: 6.8
   - type: workflow-subagent
     task: "triage #2544"
     model: claude-opus-5-5
     durationSec: 96
     toolCalls: 21
     modelCalls: 12
-    tokenShare: 6.2
+    tokenShare: 4.6
   - type: workflow-subagent
     task: "triage #2543"
     model: claude-opus-5-5
     durationSec: 74
     toolCalls: 17
     modelCalls: 11
-    tokenShare: 5.8
+    tokenShare: 4.3
   - type: workflow-subagent
     task: "triage #2545"
     model: claude-opus-5-5
     durationSec: 84
     toolCalls: 18
     modelCalls: 11
-    tokenShare: 6.1
+    tokenShare: 4.5
   - type: workflow-subagent
     task: "triage #2546"
     model: claude-opus-5-5
     durationSec: 78
     toolCalls: 20
     modelCalls: 11
-    tokenShare: 7.8
+    tokenShare: 5.7
   - type: workflow-subagent
     task: Standards fix/frictions-to-fixes-regression-ranking r1
     model: claude-opus-5-5
     durationSec: 41
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 1.7
   - type: workflow-subagent
     task: gate fix/frictions-to-fixes-regression-ranking
     model: claude-sonnet-5-5
     durationSec: 50
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 1.2
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Spec fix/frictions-to-fixes-regression-ranking r1
     model: claude-opus-5-5
     durationSec: 34
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 1.7
   - type: workflow-subagent
     task: build fix/frictions-to-fixes-regression-ranking
     model: claude-sonnet-5-5
     durationSec: 98
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 3.7
+    tokenShare: 2.7
 gitBranch: ccr-17ff445b-bo6rt6
 entrypoint: remote_mobile
 cliVersion: 2.1.310
