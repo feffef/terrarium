@@ -511,8 +511,8 @@ export function declaredClosure(trace: MechanicalTrace): boolean {
   return trace.skillsUsed.includes('log-session')
 }
 
-/** `--author` refusal (#2424, #2521): a `completed` log written after a
- *  merge, with no `close-session` since, was hand-written. */
+/** `--author` refusal (#2424, #2521): a `completed` log after a merge needs
+ *  a `close-session` run after that merge. */
 export function closureRefusal(status: string, trace: Pick<MechanicalTrace, 'mergedWithoutClose'>): string | undefined {
   if (status !== 'completed' || !trace.mergedWithoutClose) return undefined
   return 'refusing a completed log: a PR merged and close-session has not run since. Invoke the close-session Skill first, then author again.'
