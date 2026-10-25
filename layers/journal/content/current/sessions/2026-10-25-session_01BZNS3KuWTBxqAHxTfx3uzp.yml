@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_01BZNS3KuWTBxqAHxTfx3uzp
 startedAt: 2026-10-25T16:48:22Z
-endedAt: 2026-10-25T17:20:30Z
+endedAt: 2026-10-25T17:32:40Z
 kind: autonomous
 goal: "Visitor-loop run on Glass Box: fix consensus findings, build one feature"
 status: in-review
-outcome: Fix PR open (clipped Lesson teasers); feature PR (Find a lesson filter) not started yet
-summary: "Scheduled visitor-loop firing (nothing human-instructed beyond the stored prompt; all work was agent-initiated within the Skill's remit). Focus row 5, Glass Box. Built and served a production preview, sent sonnet, fable and opus visitors, tallied. Only one consensus finding survived verification: Lesson card teasers clipped by the two-line clamp (all three visitors). Start-here, five-site footer, sticky-sidebar, excerpt scroll cue and identical Last-updated dates were dropped as decisions.md rulings, screenshot artifacts or already-built/by-design. The refiner kept the fix (shorten text, not remove the clamp) and the chosen feature, a Find-a-lesson filter box on the landing. Fix PR 2541 shortens four descriptions (two clipped on desktop, two more at 390px); the first rewrite lost meaning and one broke YAML, which review and validate:content caught before push. Gate green; PR opened and verdict posted. Feature PR still to do after 2541 merges."
+outcome: Fix PR 2541 merged; feature PR 2542 (Find a Lesson filter) open, gate pending
+summary: "Scheduled visitor-loop firing (nothing human-instructed beyond the stored prompt; all work agent-initiated within the Skill's remit). Focus row 5, Glass Box. Built and served a production preview, sent sonnet, fable and opus visitors, tallied. Only one consensus finding survived verification: Lesson card teasers clipped by the two-line clamp (all three visitors). Start-here, five-site footer, sticky sidebar, excerpt scroll cue and identical Last-updated dates were dropped as decisions.md rulings, screenshot artifacts or already built or by design. The refiner kept the fix (shorten text, not remove the clamp) and the chosen feature, a Find a Lesson filter box. PR 2541 shortened four descriptions (two clipped on desktop, two more at 390px); my first rewrite lost meaning and one broke YAML, which review and validate:content caught before push. It merged on a green gate. PR 2542 adds the filter box; Standards review caught a misleading filtered count, a non-announcing status region and low input contrast, all fixed before push. No out-of-remit findings, so no issues filed."
 prs:
   - "2541"
+  - "2542"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: read before first git command; nothing new for fetch and reset
@@ -38,11 +39,17 @@ docsRead:
     reason: (no reason given)
   - path: .claude/skills/visitor-loop/refiner-brief.md
     reason: (no reason given)
+  - path: .throwaway/vl/filter-cache.png
+    reason: (no reason given)
+  - path: .throwaway/vl/filter-390.png
+    reason: (no reason given)
   - path: scripts/lib/chromium.ts
     reason: (no reason given)
   - path: .agents/skills/visitor-loop/decisions.md
     reason: (no reason given)
   - path: layers/glassbox/app/pages/t/glassbox/[space]/index.vue
+    reason: (read before editing)
+  - path: docs/agents/tenant-layers.md
     reason: (no reason given)
 skillsUsed:
   - name: visitor-loop
@@ -69,26 +76,30 @@ frictions:
   - description: My first shortened descriptions dropped each page's point; the Spec review caught it and I redid three of four, costing an extra build cycle.
     solution: Keep the distinctive clause and cut elsewhere; check against the page body before committing.
     severity: minor
-durationSec: 1927
+durationSec: 2658
 models:
-  claude-sonnet-5-5: 111
+  claude-sonnet-5-5: 165
 toolCounts:
-  Bash: 35
-  Read: 7
+  Bash: 49
+  Read: 10
   ScheduleWakeup: 1
-  Agent: 6
+  Agent: 8
   mcp__github__search_issues: 3
   mcp__github__search_pull_requests: 1
   mcp__github__issue_read: 1
   Edit: 2
   Skill: 3
-  mcp__github__create_pull_request: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__pull_request_read: 2
+  ReadNotifications: 3
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
   - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+  - layers/glassbox/app/pages/t/glassbox/[space]/index.vue
+  - layers/glassbox/tests/e2e/glassbox.spec.ts
   - layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
   - layers/glassbox/content/guide/pages/verification/03.content-validation.md
 rulesLoaded:
@@ -121,6 +132,7 @@ docsReadBySubagents:
   - .agents/skills/visitor-loop/SKILL.md
   - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - layers/commons/GLOSSARY.md
+  - docs/agents/tenant-layers.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Made me run code-review and gate:scoped before the first push despite the Stop hook; summary was enough, did not open the ADR
@@ -198,44 +210,64 @@ subagents:
     durationSec: 111
     toolCalls: 19
     modelCalls: 13
-    tokenShare: 6.4
+    tokenShare: 4.6
   - type: general-purpose
     task: Visitor (fable)
     model: fable
     durationSec: 504
     toolCalls: 44
     modelCalls: 31
-    tokenShare: 17.3
+    tokenShare: 12.5
   - type: general-purpose
     task: Visitor (opus)
     model: opus
     durationSec: 207
     toolCalls: 28
     modelCalls: 21
-    tokenShare: 11.2
+    tokenShare: 8.1
   - type: general-purpose
     task: Refiner fit check
     model: opus
     durationSec: 136
     toolCalls: 34
     modelCalls: 22
-    tokenShare: 13.3
+    tokenShare: 9.7
   - type: general-purpose
     task: "Review: standards axis"
     durationSec: 24
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 3
+    tokenShare: 2.2
   - type: general-purpose
     task: "Review: spec axis"
     durationSec: 18
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 3.1
+    tokenShare: 2.2
+  - type: general-purpose
+    task: "Review feature: standards"
+    durationSec: 33
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 2.6
+  - type: general-purpose
+    task: "Review feature: spec"
+    durationSec: 22
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 2.2
 gitBranch: claude/adoring-galileo-0f4imo
 entrypoint: remote_trigger
 cliVersion: 2.1.310
 trigger: visitor-loop
 learnings:
   - eval-in-page.ts viewport matters for clamp checks; two descriptions clipped only at 390px so a desktop-only check would have passed wrongly
+ideas:
+  - "Glass Box excerpts: the trust-tiers Excerpt has no line-range badge (opus, single): give every Excerpt its lines range so the badge always shows."
+  - "Glass Box 404 echoes /nope not the full path (opus, single): say No page answers to /t/glassbox/guide/nope and link the nearest Subject."
+  - "Glass Box term definitions open mid-sentence leaving a stray colon (opus, single): open the definition after the paragraph or as a popover."
+  - "Glass Box Terms strip omits terms Lessons underline, e.g. Persona, Routine, Friction, Prune Trial (fable, single): add the most-underlined ones."
+  - "Glass Box walkthrough prev/next cards read Leaving X on a back arrow (fable, single): label them Previous subject / Next subject."
+  - "Glass Box sidebar shows bare counts beside Subjects on walkthrough pages (fable, single): write N lessons."
+  - "Glass Box guide never mentions the Drafts space (fable, single): ask the owner whether the guide may say work-in-progress pages exist."
 landedBy: Stop
