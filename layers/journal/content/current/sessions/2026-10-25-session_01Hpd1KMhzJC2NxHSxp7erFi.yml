@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Hpd1KMhzJC2NxHSxp7erFi
 startedAt: 2026-10-25T07:52:07Z
-endedAt: 2026-10-25T08:13:10Z
+endedAt: 2026-10-25T08:15:42Z
 kind: interactive
 goal: Group Glass Box verification Lessons under one Subject
-status: in-review
-outcome: "PR #2519 open: gate, type checking, content validation and testing Lessons now under Verification"
-summary: "Human-instructed: the Trusted user proposed a Verification Subject for the guide's single-Lesson TypeScript, Zod and Testing Subjects, plus the gate Lesson. They then answered my questions: move guide Lessons only, move the gate, name it Verification and put it where Zod was, no redirects, and add a Full reference to the gate rather than an exemption. Agent-initiated: the Lesson order (gate, types, content, tests, matching the gate's steps), dropping the now-empty TypeScript Subject while keeping Zod and Testing for their drafts, and rewording the Subject glossary entry and one glassbox-update line after the Standards review. gate:scoped green; code-review on both axes; PR open."
+status: completed
+outcome: "PR #2519 merged: gate, type checking, content validation and testing Lessons now under Verification"
+summary: "Human-instructed: the Trusted user proposed a Verification Subject for the guide's single-Lesson TypeScript, Zod and Testing Subjects, plus the gate Lesson. They then answered my questions: move guide Lessons only, move the gate, name it Verification and put it where Zod was, no redirects, and add a Full reference to the gate rather than an exemption. Agent-initiated: the Lesson order (gate, types, content, tests, matching the gate's steps), dropping the now-empty TypeScript Subject while keeping Zod and Testing for their drafts, and rewording the Subject glossary entry and one glassbox-update line after the Standards review. gate:scoped and CI green; code-review on both axes; merged via merge-pr.ts after a posted verdict."
 prs:
   - "2519"
 docsRead:
@@ -52,19 +52,25 @@ frictions:
   - description: docs.github.com returns 403 through the proxy and github/docs is out of repo scope, so verifying the Full reference URL took a web search detour
     solution: EVERY-PAGE.md could name web search as the fallback for docs.github.com URLs
     severity: minor
-durationSec: 1262
+durationSec: 1415
 models:
-  claude-opus-5-5: 82
+  claude-opus-5-5: 101
 toolCounts:
-  Bash: 27
+  Bash: 31
   Read: 4
   AskUserQuestion: 1
   Skill: 4
   Agent: 2
-  ToolSearch: 3
+  ToolSearch: 4
   WebSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/glassbox-update/SKILL.md
   - layers/glassbox/GLOSSARY.md
@@ -193,13 +199,13 @@ subagents:
     durationSec: 79
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 18.7
+    tokenShare: 15.5
   - type: general-purpose
     task: Spec review of diff
     durationSec: 63
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 15.6
+    tokenShare: 12.9
 gitBranch: ccr-f28a6a0a-jaqwp0
 entrypoint: remote_mobile
 cliVersion: 2.1.310
