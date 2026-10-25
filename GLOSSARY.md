@@ -112,10 +112,8 @@ How the Platform fixes itself, semi-autonomously. Each **Session** logs its
 **Frictions**; **Routines** run `frictions-to-fixes` (into the **Friction
 Ledger**, then fix PRs), `audit-skills` (into the **Skill Inventory**) and
 `audit-docs` (doc fixes). What they can't fix themselves they file as
-`needs-triage` issues; the owner starts
-`clear-backlog`, which picks those up, grills them once and builds the approved
-ones. Every PR still clears the **Gate**, and a human decides what ADR-0004
-reserves.
+`needs-triage` issues, which the owner's `clear-backlog` run takes up. Every PR
+still clears the **Gate**, and a human decides what ADR-0004 reserves.
 
 ### Catalog
 The build-time projection of every Collection that opted into a **Collection
@@ -154,7 +152,7 @@ path, not of the change's importance (`scripts/gate/gate.ts`).
 
 ### Human-only
 A path whose PR a **Trusted** human must merge, whatever the **Gate** says,
-bar the exceptions ADR-0004 names (the list is
+except as ADR-0004 allows (the list is
 `.claude/rules/adr-0004-human-merge.md`). Agents may
 still author changes to it.
 

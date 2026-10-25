@@ -14,7 +14,8 @@ Every glossary, which is also the list of Tenants (ADR-0021).
   Interaction, Observation.
   [`layers/atlas/GLOSSARY.md`](./layers/atlas/GLOSSARY.md)
 - **Midden**: an archaeology-themed catalogue of the Platform's discarded work.
-  Site, Dig season, Artifact, Condition, the Stores, the inclusion bar.
+  Site, Dig season, Artifact, Condition, Cause of death, the Stores, the
+  inclusion bar.
   [`layers/midden/GLOSSARY.md`](./layers/midden/GLOSSARY.md)
 - **Marquee**: a movie blog on the Marvel Cinematic Universe in story order;
   guest-requested (ADR-0023). Screening, Chapter, Poster.

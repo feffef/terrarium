@@ -27,7 +27,7 @@ read but never announces the joke.
 
 ## Who it's for
 
-Someone who wants to see what a complex, agent-grown *content structure* looks like after a platform has been running a while, not a reader looking for facts about the Terrarium.
+Someone who wants to see what a complex, agent-grown *content structure* looks like after a platform has been running a while.
 
 ## Glossary
 
