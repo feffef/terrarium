@@ -216,7 +216,7 @@ Each routine is one skill:
 | Routine | What it does |
 |---|---|
 | `frictions-to-fixes` | The heart of the loop: turns recent frictions into fixes. |
-| `audit-docs` | Reviews the docs and the repo's own skills from eight angles, such as drift, contradictions and wordiness, and fixes what a fact-check confirms. |
+| `audit-docs` | Reviews the docs and the repo's own skills from six angles, such as drift, duplication and contradictions, and fixes what a fact-check confirms. |
 | `audit-skills` | Checks whether each skill fires when it should and delivers what it promises, and keeps the skill inventory up to date. |
 | `prune-trial` | Cuts a rule down to its goal. A later run reads the next three days' frictions and keeps the cut or restores one line. |
 | `visitor-loop` | Lets three fresh visitor agents, each on a different AI model, use a preview of the site. Then it fixes what at least two of them hit and builds one feature they suggested. |
@@ -641,7 +641,7 @@ Close-up: `issues`.
 
 1. `audit-docs` starts on its timer.
 2. It reads `rules` and `skills`, and the last two days of changes (uses).
-3. Four reviewers in `helper-agents` look from eight angles.
+3. Three reviewers in `helper-agents` look from six angles.
 4. Fact-checkers in `helper-agents` keep only confirmed findings. Edits to a
    decision record, CI or the code that keeps tenants apart go into a second
    pull request for the maintainer. Two sources that disagree, with nothing

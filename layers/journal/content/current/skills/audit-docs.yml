@@ -4,7 +4,7 @@ importance: routine
 gist: Sweeps the docs for outdated, confusing, or duplicated writing.
 role: >-
   The prose counterpart to `audit-skills`: an autonomous sweep of every live doc
-  and Skill against the code for correctness, single-homing, concision and
+  and Skill against the code for correctness, single-homing and
   clarity. It fact-checks each finding, fixes it bravely, and self-merges its
   gated PR on green (ADR-0003/0004), filing an issue only for a factual conflict
   it can't resolve. Use it when docs and code drift apart.

@@ -18,7 +18,7 @@ Only when you were given doc fixes:
 - **A doc fix must clear `audit-docs`' house rules** (`audit-docs/SKILL.md`),
   since the main session self-merges doc commits. Never edit an ADR (its PR needs
   a human merge, ADR-0004), a Historical record (session logs, blog posts) or a
-  Pack-generic template. Author none of the defects audit-docs' eight lenses
+  Pack-generic template. Author none of the defects audit-docs' six lenses
   catch, above all restating a fact instead of pointing to its home, and make any
   new `docs/agents/*` file reachable (ADR-0029). A fix that would be the next
   audit-docs finding isn't done.
