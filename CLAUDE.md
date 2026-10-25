@@ -54,6 +54,9 @@ call per doc (a shell read can be cut short), before you act, once per session.
   source. A count is a fact only after you read every item.
 - **Ask before building** something the Trusted user will see (the `grilling`
   Skill); don't assume. Data shapes: `.claude/rules/data-shapes.md`.
+- **Question the premise.** Before you recommend, build or harden a change,
+  give each part a reason from the current goal; drop the parts you can't, and
+  add nothing beyond the ask.
 - **One home per fact.** Write each fact once; elsewhere, point to it. When a
   fact and reality differ, fix its home. When you change a fact, grep for its
   other statements and its consumers in the same edit.
