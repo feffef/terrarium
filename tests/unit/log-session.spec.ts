@@ -11,7 +11,7 @@ import {
   authorMain,
   committedFiles,
   CURRENT_SESSIONS_SCHEMA_VERSION,
-  closureWarning,
+  closureRefusal,
   expectedFilename,
   land,
   loadAuthorContext,
@@ -426,16 +426,17 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     // `exit` throws so a refusal is catchable; `log` lines are what the agent sees.
     function author(
       fixture: { home: string; root: string },
-      { mainSchemaFn = () => null, notRead = [], scratchAbs = join(fixture.root, 'scratch.json'), extra = '' }: {
+      { mainSchemaFn = () => null, notRead = [], scratchAbs = join(fixture.root, 'scratch.json'), extra = '', status = 'completed' }: {
         mainSchemaFn?: (entry: unknown) => string | null
         notRead?: string[]
         scratchAbs?: string
         extra?: string
+        status?: string
       } = {},
     ) {
       const yml = join(fixture.root, 'authored.yml')
       const docsRead = notRead.map((p) => `  - { path: ${p}, reason: "(not read)" }\n`).join('')
-      writeFileSync(yml, authored + (docsRead && `docsRead:\n${docsRead}`) + extra)
+      writeFileSync(yml, authored.replace('completed', status) + (docsRead && `docsRead:\n${docsRead}`) + extra)
       const logs: string[] = []
       const errors: string[] = []
       vi.spyOn(console, 'log').mockImplementation((l: string) => void logs.push(l))
@@ -484,6 +485,18 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
       const none = { home: mkdtempSync(join(tmpdir(), 'shellread-empty-')), root: mkdtempSync(join(tmpdir(), 'shellread-noroot-')) }
       tmpDirs.push(none.home, none.root)
       expect(author(none, { notRead: ['GLOSSARY.md'] })).toMatchObject({ exited: false, scratchWritten: true })
+    })
+    // Issue #2521: a completed log after a merge with no close-session since is refused.
+    it('refuses a completed log after a merge without close-session, and writes no scratch', () => {
+      const res = author(store(['pnpm tsx scripts/github/merge-pr.ts 12']))
+      expect(res).toMatchObject({ exited: true, scratchWritten: false })
+      expect(res.errors).toContain('Invoke the close-session Skill first, then author again')
+    })
+
+    it('still accepts a completed log with no merge, or a merge with another status', () => {
+      expect(author(store(['ls']))).toMatchObject({ exited: false, scratchWritten: true })
+      const merged = store(['pnpm tsx scripts/github/merge-pr.ts 12'])
+      expect(author(merged, { status: 'blocked' })).toMatchObject({ exited: false, scratchWritten: true })
     })
     // Issue #1943: a verdict needs a rule that loaded in this session.
     const withRule = () => {
@@ -632,7 +645,7 @@ describe('committedFiles() — files the session changed through its own commits
   })
 })
 
-describe('closureWarning() — a completed log hand-written after a merge (#2424)', () => {
+describe('closureRefusal() — a completed log hand-written after a merge (#2424, #2521)', () => {
   const tool = (name: string, input: Record<string, unknown>) => ({
     type: 'assistant',
     message: { content: [{ type: 'tool_use', name, input }] },
@@ -640,25 +653,25 @@ describe('closureWarning() — a completed log hand-written after a merge (#2424
   const merge = tool('Bash', { command: 'pnpm tsx scripts/github/merge-pr.ts 12' })
   const mcpMerge = tool('mcp__github__merge_pull_request', { pullNumber: 12 })
   const close = tool('Skill', { skill: 'close-session' })
-  const warn = (status: string, ...records: Record<string, unknown>[]) => closureWarning(status, extractTrace(records))
+  const refuse = (status: string, ...records: Record<string, unknown>[]) => closureRefusal(status, extractTrace(records))
 
-  it('warns when completed, merged and never closed afterwards', () => {
-    expect(warn('completed', merge)).toMatch(/close-session/)
-    expect(warn('completed', mcpMerge)).toMatch(/close-session/)
+  it('refuses when completed, merged and never closed afterwards', () => {
+    expect(refuse('completed', merge)).toMatch(/close-session/)
+    expect(refuse('completed', mcpMerge)).toMatch(/close-session/)
   })
-  it('warns when the only close came before the last merge', () => {
-    expect(warn('completed', close, merge)).toMatch(/close-session/)
+  it('refuses when the only close came before the last merge', () => {
+    expect(refuse('completed', close, merge)).toMatch(/close-session/)
   })
   it('is silent when close-session ran after the merge', () => {
-    expect(warn('completed', merge, close)).toBeUndefined()
+    expect(refuse('completed', merge, close)).toBeUndefined()
   })
   it('is silent when the close Skill call carries its name in `command`', () => {
-    expect(warn('completed', merge, tool('Skill', { command: 'close-session' }))).toBeUndefined()
+    expect(refuse('completed', merge, tool('Skill', { command: 'close-session' }))).toBeUndefined()
   })
   it('is silent without a merge', () => {
-    expect(warn('completed', tool('Bash', { command: 'ls' }))).toBeUndefined()
+    expect(refuse('completed', tool('Bash', { command: 'ls' }))).toBeUndefined()
   })
   it('is silent for a non-completed status', () => {
-    expect(warn('blocked', merge)).toBeUndefined()
+    expect(refuse('blocked', merge)).toBeUndefined()
   })
 })

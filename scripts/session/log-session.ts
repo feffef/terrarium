@@ -511,11 +511,11 @@ export function declaredClosure(trace: MechanicalTrace): boolean {
   return trace.skillsUsed.includes('log-session')
 }
 
-/** Non-blocking `--author` nudge (#2424): a `completed` log written after a
- *  merge, with no `close-session` since, was probably hand-written. */
-export function closureWarning(status: string, trace: Pick<MechanicalTrace, 'mergedWithoutClose'>): string | undefined {
+/** `--author` refusal (#2424, #2521): a `completed` log after a merge needs
+ *  a `close-session` run after that merge. */
+export function closureRefusal(status: string, trace: Pick<MechanicalTrace, 'mergedWithoutClose'>): string | undefined {
   if (status !== 'completed' || !trace.mergedWithoutClose) return undefined
-  return 'warning: a PR merged and close-session has not run since. Invoke close-session after the merge instead of hand-writing this completed log.'
+  return 'refusing a completed log: a PR merged and close-session has not run since. Invoke the close-session Skill first, then author again.'
 }
 
 /** The marker every dropped-scratch placeholder log's sole friction carries —
@@ -892,6 +892,8 @@ export function authorMain(
         'Drop them.',
     )
   }
+  const closure = ctx && closureRefusal(merged.status, ctx.trace)
+  if (closure) fail(closure)
   const keptNo = droppedNoVerdicts(merged, result.data)
   // Its existence is the wrap-up signal the landing path gates on.
   mkdirSync(dirname(scratchAbs), { recursive: true })
@@ -915,8 +917,6 @@ export function authorMain(
     for (const p of keptNo) console.log(`    ${p}`)
     console.log('  Re-confirm it, or send a changed verdict: verdicts may change over a session.')
   }
-  const closure = ctx && closureWarning(merged.status, ctx.trace)
-  if (closure) console.log(`  ${closure}`)
   reportUnexplainedReads(ctx, merged)
 }
 
