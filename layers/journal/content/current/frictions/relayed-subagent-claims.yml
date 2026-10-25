@@ -5,7 +5,7 @@ cause: >-
   A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
 surface: safe
 status: tracked
-ref: "issue #2503 (regression of #2485)"
+ref: "issue #2499 (fabricated hand-backs); prevention in the PR that closes issue #2503"
 fixes:
   - pr: 2336
     date: "2026-10-20"

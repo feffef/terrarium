@@ -25,6 +25,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `double-background-guard.ts` | a `Bash` call stacking `run_in_background: true` on a text-level background operator in the command (a bare `&` anywhere, `nohup … &` included) — for **any** caller, main session included (no `detectAgentContext` gate, unlike `subagent-background-guard.ts`) | the deny message | #1208 |
 | `github-provenance-guard.ts` | a GitHub body (MCP, or a Bash `gh api`/`curl` write), or an MCP-API commit, missing this session's provenance in the shape its surface prescribes; also an MCP title or body carrying a bare `<...>` span GitHub silently strips | ADR-0017 — the deny message is the agent-facing home | #886, #1900 |
 | `github-search-fields-guard.ts` | `search_issues` or `search_pull_requests` called with `fields` missing or empty | the deny message | #1860 |
+| `harness-tag-stop.ts` | a Stop hook, not a `PreToolUse` guard: blocks the stop once when this turn's main-agent text holds a `<task-notification>` or `<agent-message` tag, which only the harness delivers. Fails open | its script header | #2499, #2503 |
 | `stale-push-hint.ts` | nothing: a hint, not a guard. After a `git push` rejected as "stale info" it adds the fix to the result | its script header | #1610 |
 | `skill-rules-hint.ts` | nothing: a hint, not a guard. When a Skill runs (Skill tool or slash command) it adds the rules whose `paths` name the Skill's directory | its script header | PR #1741 |
 | `bash-rules-hint.ts` | nothing: a hint, not a guard. After a piped, chained or multi-file Bash read it adds the rules whose `paths` match the files read | its script header | #1764 |
@@ -32,7 +33,7 @@ follow it and don't route around it. If it is wrong, say so on the guard's issue
 | `adr-read-hint.ts` | nothing: a hint, not a guard. After an `Edit` or `Write` it points to each ADR whose rule `paths` match the file, or that the edit names, unless this agent already read it in full | its script header | #2286 |
 
 `.claude/settings.json` wires the guards under `hooks.PreToolUse`, and the hints
-under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`.
+under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`; `harness-tag-stop.ts` runs under `Stop`.
 
 ## Conventions every guard follows
 
