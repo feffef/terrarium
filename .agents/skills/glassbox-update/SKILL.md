@@ -29,7 +29,7 @@ that one commit, never a later fetch.
    step-1 `revision` to the commit, and flag any page whose prose describes
    something that changed even though it cites no changed file (match by
    concept: a renamed step, a moved rule, a retired Skill). A `major` version
-   change also flags *The concept* of every Lesson on that tool.
+   change also flags *The concept* of every Lesson whose Full reference links that tool's docs.
    Done when every commit since the oldest `revision` has been read against
    every page.
 4. **Re-check and edit** each flagged page as a whole, diagrams included,

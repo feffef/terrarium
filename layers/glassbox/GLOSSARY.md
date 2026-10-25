@@ -96,11 +96,11 @@ its Where next, every Walkthrough whose stops or A real case link it that way;
 nobody writes that list.
 
 ### Subject
-The tool a Lesson belongs to: the one whose official docs its *The concept*
-section links. Terrarium's own patterns with no official doc form the
-**House rules** Subject, in the folder `terrarium-practice/`. A Subject may
-instead group several tools' Lessons by what they do, as **Verification**
-groups the merge gate and its checks. Each Subject is a folder.
+The folder a Lesson is grouped under, usually the tool whose official docs its
+*The concept* section links. **Verification** instead groups the merge gate
+with the Lessons on its checks, whatever the tool. Terrarium's own patterns
+with no official doc form the **House rules** Subject, in the folder
+`terrarium-practice/`.
 
 ### Excerpt
 Real Terrarium code copied into a page inside an `::excerpt` block, and checked
