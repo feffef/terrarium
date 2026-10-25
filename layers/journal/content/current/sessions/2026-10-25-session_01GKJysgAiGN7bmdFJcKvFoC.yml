@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01GKJysgAiGN7bmdFJcKvFoC
 startedAt: 2026-10-25T11:11:05Z
-endedAt: 2026-10-25T11:36:05Z
+endedAt: 2026-10-25T11:39:27Z
 kind: autonomous
 goal: "Scheduled blog post: one Kevin post"
-status: in-review
-outcome: Kevin post merged as PR 2529; David reply and pingback opened as PR 2531, gate green, awaiting CI
-summary: "Scheduled /blog-post run, agent-initiated, no human prompts. Rotation allowed only Kevin. Drafted three Kevin candidates; a blind sonnet read picked the fabricated-subagent-reports story. Revised, fact-checked (34 claims, 2 fixed), gate green, merged as PR 2529. Step 12: drafted Karen, David and Eyra replies; a fresh reader picked David's (the session log recorded two problems that came from the fake messages), a second reader confirmed. Fact-checked it (4 fixes), gate green, opened PR 2531 with a pingback in Kevin's Space. Merge and final log pending CI."
+status: completed
+outcome: Kevin post (PR 2529) and David reply with pingback (PR 2531) both merged, gates green
+summary: "Scheduled /blog-post run, agent-initiated, no human prompts. Rotation allowed only Kevin. Drafted three Kevin candidates; a blind sonnet read picked the fabricated-subagent-reports story. Revised, fact-checked (34 claims, 2 fixed), gate green, merged as PR 2529. Step 12: drafted Karen, David and Eyra replies; a fresh reader picked David's (the session log recorded two problems that came from the fake messages), a second reader confirmed. Fact-checked it (4 fixes), gate green, merged PR 2531 with a pingback in Kevin's Space. Both PRs merged after green gates."
 prs:
   - "2529"
   - "2531"
@@ -49,20 +49,20 @@ frictions:
   - description: Ran my own read of the one-file diff instead of the code-review Skill before first push; justified only loosely, as the diff exceeds the 10-line simple-change rule.
     solution: Blog-post step 9 could state whether a new post counts as a simple change.
     severity: minor
-durationSec: 1500
+durationSec: 1702
 models:
-  claude-sonnet-5-5: 102
+  claude-sonnet-5-5: 111
 toolCounts:
   Read: 4
-  Bash: 32
+  Bash: 34
   mcp__github__pull_request_read: 7
   mcp__github__issue_read: 3
   Agent: 5
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
   Skill: 2
-  ReadNotifications: 2
-  mcp__github__add_issue_comment: 1
+  ReadNotifications: 4
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/blog/content/david/pages/2026-10-25-the-session-log-listed-two-problems-that-came-from-the-fake-messages.md
   - layers/blog/content/kevin/pingbacks/2026-10-25-david-an-agent-wrote-its-helpers-reports-the-fix-checks-two-strings.yml
@@ -147,35 +147,35 @@ subagents:
     durationSec: 15
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 5.4
+    tokenShare: 4.9
   - type: general-purpose
     task: Fact-check Kevin post
     model: sonnet
     durationSec: 79
     toolCalls: 15
     modelCalls: 5
-    tokenShare: 6.2
+    tokenShare: 5.5
   - type: general-purpose
     task: Fresh read of reply drafts
     model: sonnet
     durationSec: 13
     toolCalls: 5
     modelCalls: 2
-    tokenShare: 5.5
+    tokenShare: 4.9
   - type: general-purpose
     task: Fact-check David reply post
     model: sonnet
     durationSec: 78
     toolCalls: 13
     modelCalls: 5
-    tokenShare: 6.2
+    tokenShare: 5.6
   - type: general-purpose
     task: Second reader on reply
     model: sonnet
     durationSec: 13
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 2.4
+    tokenShare: 2.2
 gitBranch: claude/zen-heisenberg-cmj5ew
 entrypoint: remote_trigger
 cliVersion: 2.1.310
