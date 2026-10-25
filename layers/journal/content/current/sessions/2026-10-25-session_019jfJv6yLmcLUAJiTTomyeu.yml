@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019jfJv6yLmcLUAJiTTomyeu
 startedAt: 2026-10-25T02:07:57Z
-endedAt: 2026-10-25T02:32:50Z
+endedAt: 2026-10-25T02:37:18Z
 kind: autonomous
 goal: Scheduled run turning logged frictions into fixes
-status: in-review
-outcome: "Ledger PRs #2506 merged, #2507 merged, closing ledger PR #2508 open; three regression issues filed"
-summary: "Autonomous frictions-to-fixes run (a schedule started it; no human prompted anything). A survey subagent clustered the window's 36 sessions into the Friction Ledger (two new entries, fixes #2483-#2486 recorded, entries whose trials or issues closed set back to open). I filed regression issues for the top three by severity and recurrence (#2503 relayed-subagent-claims, #2504 mechanism-claim-from-recall, #2505 governing-doc-read-after-draft). Only three candidates were never-fixed, so I picked those and had a design subagent assess them: the cwd one was dispatched (a wrong \"Bash resets cwd\" claim in dispatch-subagents §3 and clear-backlog-build.js; a Sonnet agent built it, PR #2507), the gate-overlap lock (Human-only gate.ts, one occurrence) and the Glass Box page-check loops (docs already read, messages clear) were dropped with notes on their entries. Ledger PR #2506 carries statuses, refs, notes and the horizon prune. Still open: both PRs await CI and merge, then the closing ledger PR (§8) records #2507's fix entry."
+status: completed
+outcome: "Ledger PRs #2506 and #2508 and cwd doc-fix PR #2507 merged; three regression issues filed"
+summary: "Autonomous frictions-to-fixes run (a schedule started it; no human prompted anything). A survey subagent clustered the window's 36 sessions into the Friction Ledger (two new entries, fixes #2483-#2486 recorded, entries whose trials or issues closed set back to open). I filed regression issues for the top three by severity and recurrence (#2503 relayed-subagent-claims, #2504 mechanism-claim-from-recall, #2505 governing-doc-read-after-draft). Only three candidates were never-fixed, so I picked those and had a design subagent assess them: the cwd one was dispatched (a wrong \"Bash resets cwd\" claim in dispatch-subagents §3 and clear-backlog-build.js; a Sonnet agent built it, PR #2507), the gate-overlap lock (Human-only gate.ts, one occurrence) and the Glass Box page-check loops (docs already read, messages clear) were dropped with notes on their entries. All three PRs merged: ledger #2506, cwd fix #2507 and the closing ledger PR #2508 recording #2507."
 prs:
   - "2506"
   - "2507"
@@ -89,13 +89,19 @@ frictions:
   - description: "Design subagent reported: the isolation guard's source is not in the repo, so whether git -C passes had to be tested empirically (the impl agent did), and docsRead merges subagent reasons into one field."
     solution: Document the guard's accepted forms in environment-caveats, or put its source under scripts/hooks.
     severity: nit
-durationSec: 1493
+  - description: I hand-wrote the completed log with log-session --author after the merges, before invoking close-session; the warning fired and I invoked it afterwards.
+    solution: After the last merge invoke close-session first; the Skill's closing section could say so for scheduled runs.
+    severity: nit
+  - description: My first verdict comment on the closing ledger PR said 'see PR head' instead of the head SHA, so I posted a second comment with the real SHA before merge-pr would accept it.
+    solution: Read git rev-parse HEAD before writing the verdict line.
+    severity: nit
+durationSec: 1761
 models:
-  claude-sonnet-5-5: 111
+  claude-sonnet-5-5: 122
 toolCounts:
   Read: 6
-  Bash: 31
-  Skill: 3
+  Bash: 34
+  Skill: 4
   Agent: 3
   ToolSearch: 1
   mcp__github__issue_write: 3
@@ -104,7 +110,7 @@ toolCounts:
   mcp__github__subscribe_pr_activity: 3
   mcp__github__add_issue_comment: 4
   Write: 1
-  ReadNotifications: 4
+  ReadNotifications: 6
 filesEdited:
   - layers/journal/content/current/frictions/gate-overlap-clobbers-build.yml
   - layers/journal/content/current/frictions/glassbox-page-check-edit-loops.yml
@@ -261,20 +267,20 @@ subagents:
     durationSec: 535
     toolCalls: 41
     modelCalls: 38
-    tokenShare: 32.4
+    tokenShare: 29.7
   - type: general-purpose
     task: Design fixes for picked frictions
     durationSec: 101
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 6.5
+    tokenShare: 6
   - type: general-purpose
     task: Build cwd-claim doc fix
     model: sonnet
     durationSec: 194
     toolCalls: 29
     modelCalls: 17
-    tokenShare: 6.9
+    tokenShare: 6.3
 gitBranch: claude/eager-ptolemy-8ii7ao
 entrypoint: remote_trigger
 cliVersion: 2.1.310
