@@ -14,36 +14,6 @@ fixes:
     date: "2026-10-23"
     summary: "Retired the adr-check Skill and its CLAUDE.md trigger; a new PostToolUse hook (adr-read-hint.ts) now names, once per agent, each ADR an Edit or Write touches by its rule paths or by number and that the agent has not read in full."
 occurrences:
-  - session: session_018i6d2BQPkf9cq6jSEqCNSX
-    date: "2026-10-10"
-    severity: moderate
-    description: "CLAUDE.md ADR trigger: I wrote re-triage verdicts and implementation briefs without reading the binding ADRs (0017, 0022, 0028, 0004) in full myself, and briefed guard changes before reading guards.md; the owner had to ask whether any ADRs were read"
-    solution: "Read binding ADRs and guards.md before writing any brief that edits their territory; require full ADR reads in every Explore brief"
-  - session: session_01Tcn6x6mZizT14rJuQqYivt
-    date: "2026-10-10"
-    severity: minor
-    description: "Skipped required reads: CONTEXT.md in full, the ADR list-and-grep, and tenant-layers.md before editing layers/commons and journal pages (CLAUDE.md docs-you-must-read-first)."
-    solution: "Low impact here since checkers read the binding ADRs, but a reader-trigger inside audit-docs step 6 for layers/ edits would have prompted it."
-  - session: session_018AsNh8hqd6jam8x7cSd136
-    date: "2026-10-10"
-    severity: minor
-    description: "Skimmed CONTEXT-MAP.md with head and never read CONTEXT.md or ADR-0009 in full at the start, breaking CLAUDE.md's session-start and ADR read-first rules"
-    solution: "Read both in full at session start even for research-only questions; a session-start hook printing the reminder would help"
-  - session: session_01KRLFYUD31NaEVTs4Qs1Tzj
-    date: "2026-10-10"
-    severity: minor
-    description: "Did not list or grep docs/adr for pr-workflow.md or read ADR-0027 before planning the prune, against CLAUDE.md's ADR trigger."
-    solution: "Run the grep as the first step of choosing a prune target; the Skill could name it."
-  - session: session_01UEeKV1vUyYkM8vedtgWPnY
-    date: "2026-10-10"
-    severity: minor
-    description: "Read only the head of tenant-layers.md, github-integration.md and CONTEXT.md, skipped verifying-ui-changes.md and the ADR grep for touched files, though CLAUDE.md says read in full."
-    solution: "A scheduled run should read the triggered docs in full before editing; the Skill could list the required reads in step 4."
-  - session: session_01LzWPjhbEKVo8HK7oTPqWK9
-    date: "2026-10-10"
-    severity: minor
-    description: "Recommended a fix design in chat before reading ADR-0009, which CLAUDE.md requires before recommending a change"
-    solution: "grep docs/adr for the path first; ADR-0009 did not contradict the recommendation, so impact was low"
   - session: session_013GkBtC56M36dmz5AtEb1Hp
     date: "2026-10-11"
     severity: nit
@@ -59,11 +29,6 @@ occurrences:
     severity: minor
     description: "Recommended a merge-governance change without reading ADR-0003 in full, though CLAUDE.md requires reading the binding ADRs before recommending"
     solution: "After grep -l, read every hit that governs the change (ADR-0003 holds the merge-authority ledger)"
-  - session: session_01JR1AZGGyi6AEh1SHTp6qsH
-    date: "2026-10-10"
-    severity: minor
-    description: "CLAUDE.md's \"before you plan a change\" rule asks to grep docs/adr/ for every file/term a change touches and read every matching ADR in full. I edited layers/journal/content/current/skills/*.yml all run without reading ADR-0015, which directly governs that path, until step 6 — well after the edits were already made."
-    solution: "Read ADR-0015 before the step-5 Inventory edits, not after. No actual deviation resulted this time (ADR-0015's amendments are already faithfully encoded in audit-skills/SKILL.md, which I did follow), but the rule was still skipped on the letter."
   - session: session_01V3bxJaTSH8AWjrtSoBhNxK
     date: "2026-10-11"
     severity: minor

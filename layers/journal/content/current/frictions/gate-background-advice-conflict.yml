@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   dispatch-subagents section 3 tells a dispatched subagent to run pnpm gate:scoped in the foreground (a guard denies a subagent's backgrounding), while CLAUDE.md's Self-verification bullet tells the session to start it with run_in_background; an orchestrator reading section 3 takes the subagent line as its own and sees a contradiction, though CLAUDE.md already says a dispatched subagent can't background. Signals: "dispatch-subagents says run the gate in the foreground", "CLAUDE.md says run_in_background", the gate-run choice in a session that dispatches.
 surface: safe
-status: on-trial
-ref: "The fix (section 3 saying its foreground line is for subagents only) lands inside the open Prune Trial territory '.agents/skills/dispatch-subagents/SKILL.md: §3 (Write the brief)' (opened 2026-10-20)."
+status: open
+ref: "The dispatch-subagents section 3 trial is no longer in prune-trials.yml; no open trial, issue or PR tracks it."
 fixes: []
 occurrences:
   - session: session_01JkRFBik4MUWwZcP45q7egk

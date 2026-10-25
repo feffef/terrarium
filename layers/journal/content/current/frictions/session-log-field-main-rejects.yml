@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-11"
     summary: "The log tool now tells the agent when its log will be held because main's schema rejects it."
 occurrences:
-  - session: session_015BjYk46dntcMuAWMn1z4Zw
-    date: "2026-10-10"
-    severity: major
-    description: "Nearly shipped a stitch that writes a new schema field; this session's log would have landed on main and failed main's strict schema for every PR until merge."
-    solution: "Make the lander validate against origin/main's session schema too, or document an expand-then-write order for schema fields in ADR-0009's evolution policy."
-  - session: session_01LzWPjhbEKVo8HK7oTPqWK9
-    date: "2026-10-10"
-    severity: minor
-    description: "Working on the rulesFollowedUp branch, which lacked #1748, risked landing this session's own log with a field main rejects"
-    solution: "Switched back to the #1748 branch before Stop; with #1748 merged, the lander now refuses such logs itself"
   - session: session_01WoJ2cTAuA3Qo9Mi9fd6Tki
     date: "2026-10-11"
     severity: minor

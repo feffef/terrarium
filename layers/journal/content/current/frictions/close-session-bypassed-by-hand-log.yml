@@ -13,3 +13,13 @@ occurrences:
     severity: major
     description: "HUMAN-PROMPTED-CLOSURE: after PR #2418 merged I authored the completed log directly instead of invoking close-session (ADR-0009 rule), skipping step 1's rule re-read; the user had to ask for a proper close"
     solution: "Invoke the close-session Skill at every merge, even when its text is in context from editing it; having edited a Skill is not having run it"
+  - session: session_01JJcYmSGnRbUcVyvdPbkGs9
+    date: "2026-10-24"
+    severity: nit
+    description: "Ran log-session --author for the completed log before re-invoking close-session after the merge; the script warned and I corrected it."
+    solution: "After merge, invoke close-session first, then author the log."
+  - session: session_011Rbnf9T9YqNztEcWNXsHsF
+    date: "2026-10-25"
+    severity: nit
+    description: "Hand-authored the completed log before invoking close-session after the merge; log-session.ts warned and I invoked close-session next."
+    solution: "Invoke close-session first after a merge, then author."

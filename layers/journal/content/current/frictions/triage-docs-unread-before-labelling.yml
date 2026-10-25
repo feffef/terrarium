@@ -56,3 +56,8 @@ occurrences:
     severity: minor
     description: "Read docs/agents/issue-tracker.md (Wayfinding operations) only at closure, after claiming, closing and editing issues; CLAUDE.md requires it before triaging issues."
     solution: "wayfinder Skill could name docs/agents/issue-tracker.md by path instead of 'the tracker doc', so the read happens at step 1."
+  - session: session_011Rbnf9T9YqNztEcWNXsHsF
+    date: "2026-10-25"
+    severity: nit
+    description: "Read triage-labels.md and ADR-0015 only after the label write and the close-session.yml edit, when hooks prompted them."
+    solution: "Read each doc in the same batch as the first matching write."

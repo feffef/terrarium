@@ -10,11 +10,6 @@ fixes:
     date: "2026-10-11"
     summary: "Blog-post step 12 now fact-checks reply drafts, closing the gap where bad claims surfaced late."
 occurrences:
-  - session: session_01YSGRZcurrkv9WYqPfnRH2t
-    date: "2026-10-10"
-    severity: moderate
-    description: "The reader judged step-12 replies from scratch drafts whose premises were not verified. Both finalists failed fact-check after about 4 extra subagent rounds, and the run ended with no reply."
-    solution: "Before sending reply drafts to the reader, check each draft's one load-bearing claim against its primary source. The Skill exempts reply drafts from full citation-checking, and that let both premises through."
   - session: session_01QpBTsuXUNm28Y2oszBnoUb
     date: "2026-10-23"
     severity: nit

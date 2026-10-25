@@ -43,3 +43,8 @@ occurrences:
     severity: minor
     description: "Hand-parsed both workflow outputs (explore, build) with ad-hoc node -e scripts, the exact pain #2334 reports."
     solution: "#2334's run-summary.ts, being built in this run."
+  - session: session_01W8fFNeEtqXbeuGRWKNU2Jd
+    date: "2026-10-23"
+    severity: minor
+    description: "Tried four times to pull a triage brief out of the explore output and journal; grill results carry no brief field"
+    solution: "Have run-summary.ts --triage print the brief field when one exists, and say when it is absent"

@@ -11,21 +11,6 @@ fixes:
     date: "2026-10-11"
     summary: "Removed the check that blocked whole commands for ending in a pipe to tail or head."
 occurrences:
-  - session: session_015BjYk46dntcMuAWMn1z4Zw
-    date: "2026-10-10"
-    severity: nit
-    description: "Piped vitest into tail and was blocked by the tail-pipe guard."
-    solution: "Redirect to a log file and check the exit code, as the guard says."
-  - session: session_01LzWPjhbEKVo8HK7oTPqWK9
-    date: "2026-10-10"
-    severity: nit
-    description: "Piped vitest into tail and the tail-pipe guard blocked it"
-    solution: "Redirect to a file and check the exit code, as the guard says"
-  - session: session_01UEeKV1vUyYkM8vedtgWPnY
-    date: "2026-10-10"
-    severity: nit
-    description: "The tail-pipe guard rejected a vitest command piped into tail, and a chained commit plus gate run in the background made the commit look missing for a few seconds."
-    solution: "Redirect to a file first; never chain commit and gate in one backgrounded line."
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"
     severity: nit

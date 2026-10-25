@@ -14,21 +14,6 @@ fixes:
     date: "2026-10-05"
     summary: "Moved the end-of-turn reminder caveat into the main project instructions so more sessions read it."
 occurrences:
-  - session: session_01EmaH5A6Ziwjndz9esnsJ22
-    date: "2026-10-10"
-    severity: minor
-    description: "The Stop hook asked to commit and push four times while the fact-check and gate were still running, costing turns."
-    solution: "Stop hook could detect a running gate or pending subagent."
-  - session: session_01KRLFYUD31NaEVTs4Qs1Tzj
-    date: "2026-10-10"
-    severity: minor
-    description: "The Stop hook pushed to commit and push twice while the gate was still running, conflicting with CLAUDE.md's gate-first rule; the Skill's section 4 also says push before the probe, which needs the gate to pass first."
-    solution: "State in prune-trial section 4 that the push waits for gate:scoped."
-  - session: session_01Tcn6x6mZizT14rJuQqYivt
-    date: "2026-10-10"
-    severity: nit
-    description: "The Stop hook demanded a push while the gate was still running; CLAUDE.md already anticipates this and was followed."
-    solution: "None needed."
   - session: session_01CasnQoauTyLNUxd74agJsP
     date: "2026-10-11"
     severity: minor
@@ -349,3 +334,18 @@ occurrences:
     severity: minor
     description: "Stop hook asked me to push six times while the fact-check, reviews and gate were still pending, each nudge costing a turn."
     solution: "Make the Stop hook skip the push nag while the branch has no pushed gate-green head, or while background agents run."
+  - session: session_01LEbdj6aqcGncPCZnNtS2ZX
+    date: "2026-10-24"
+    severity: nit
+    description: "The Stop hook asked to push four times while review and the gate were still running; ADR-0004's rule covered it, so no harm, only noise."
+    solution: "Have the hook skip its nag while a background gate or review agent is running."
+  - session: session_01XUmLg8WmTPPmqqnjHA59oX
+    date: "2026-10-24"
+    severity: nit
+    description: "The Stop hook asked for a push twice before gate and review had finished; declined per ADR-0004."
+    solution: "None repo-side (harness script, accepted in #2233)."
+  - session: session_01FDWjoePShpq7fov1iKn4GB
+    date: "2026-10-25"
+    severity: nit
+    description: "Stop hook asked me to commit and push three times while fact-check, review and gate were still running."
+    solution: "Stop hook could skip nudging while a background gate is running"

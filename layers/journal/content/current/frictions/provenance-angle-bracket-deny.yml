@@ -7,11 +7,6 @@ surface: guard-or-hook
 status: open
 ref: "issue #886 closed 2026-09-05 (guard denies by design; docs/agents/github-integration.md documents it)"
 occurrences:
-  - session: session_01GEqB5frKCNtJYAr9KaRxDo
-    date: "2026-10-10"
-    severity: nit
-    description: "github-provenance-guard denied the first issue body because of a bare angle-bracket path placeholder; fixed from the deny message on retry."
-    solution: "None needed, the guard worked as designed."
   - session: session_01LuXuScHA2QsY4RXipy9nAt
     date: "2026-10-11"
     severity: nit

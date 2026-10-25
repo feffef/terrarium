@@ -31,11 +31,6 @@ occurrences:
     severity: nit
     description: "Ran git status before reading git-conventions.md and read the large GLOSSARY and github docs in one truncated cat."
     solution: "Read the docs one at a time before the first git command."
-  - session: session_01Mw8k3DVnAyVho8fcDofChZ
-    date: "2026-10-10"
-    severity: minor
-    description: "I piped issue-tracker.md and triage-labels.md through head -300, which cut them off. I filed the issue having read only part of the triage-label doc. The label was right only because the Skill names it."
-    solution: "Never truncate a doc that CLAUDE.md requires reading in full. Read it with the Read tool."
   - session: session_01FNv8z61n7roCRsM4AYVtf6
     date: "2026-10-21"
     severity: nit

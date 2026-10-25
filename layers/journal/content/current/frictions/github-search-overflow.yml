@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   mcp__github__search_issues and search_pull_requests return full bodies unless `fields` omits them, so a broad or early query floods context. The guard now denies a search without `fields`. Signals: a search_issues or search_pull_requests result of many full bodies, a guard deny for a missing `fields`.
 surface: guard-or-hook
-status: on-trial
-ref: "Prune Trial opened 2026-10-21 by PR #2375 (territory: docs/agents/github-integration.md \"Overflow and precision traps\" search bullets; keywords \"search_issues fields\", \"search_pull_requests\"). Earlier: issue #1860; PR #1869 (merged 2026-10-13T06:11Z, github-search-fields-guard denies a search without fields)."
+status: open
+ref: "Its Prune Trial (PR #2375) was judged by PR #2493 and left prune-trials.yml; no open trial, issue or PR tracks it. Earlier: issue #1860; PR #1869 (github-search-fields-guard)."
 fixes:
   - pr: 1869
     date: "2026-10-13"
@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-21"
     summary: "Tightened the search bullets in github-integration.md to the goal (-4 lines), leaving the fields rule to the search guard's deny message (a Prune Trial)."
 occurrences:
-  - session: session_01WFq4ZnYVWTyGHAAxqo5wKb
-    date: "2026-10-10"
-    severity: minor
-    description: "Called mcp__github__search_pull_requests before reading docs/agents/github-integration.md; the unscoped search returned six full PR bodies (~15k tokens), the overflow trap that doc warns about."
-    solution: "Read github-integration.md before the first mcp__github call, and pass fields omitting body to search_pull_requests."
   - session: session_0147GPfMLJfFV6JbmC4HZGHb
     date: "2026-10-12"
     severity: minor

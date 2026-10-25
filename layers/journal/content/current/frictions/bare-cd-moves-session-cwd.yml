@@ -2,7 +2,8 @@ name: bare-cd-moves-session-cwd
 summary: A plain cd in the main agent's shell moved its working directory for every later command, so relative paths and git commands ran in the wrong place.
 cause: "In the primary session the Bash tool keeps the working directory between calls, so a bare cd (into a worktree, the frictions folder, .agents/skills, node_modules) persists: later relative paths fail, git or merge-pr runs in the wrong checkout, and removing a worktree leaves the shell in a deleted directory. Signals: 'a cd into', 'moved the primary working directory', 'had to cd back', 'deleted directory'."
 surface: safe
-status: open
+status: tracked
+ref: "dispatched 2026-10-25: dispatch-subagents §3 cwd line"
 notes: |-
   2026-10-21 design: a hint or guard on a bare cd, or a reworded cd line in docs, dropped: our own briefs tell sessions to run cd <root> &&, so a guard would flag recommended usage; the harness flags the drift and recovery is one cd. Note for any later edit of dispatch-subagents §3 (open trial territory): its claim that the Bash tool resets cwd between calls is wrong for the primary session.
 occurrences:
@@ -41,3 +42,8 @@ occurrences:
     severity: nit
     description: "Ran a cd into the frictions directory in Bash and the primary working directory moved; I had to cd back."
     solution: "Use absolute paths or a subshell instead of a bare cd."
+  - session: session_01PYyNMqrrDLZdXEej11LMzs
+    date: "2026-10-24"
+    severity: moderate
+    description: "Two parallel Bash pushes using cd raced on the shared cwd; the #2475 commit went to fix/2476-sidefinding-sources. Force-push was denied, so #2476 moved to a new branch and a stray branch was left"
+    solution: "Never run git in parallel Bash calls that rely on cd; use git -C with an absolute worktree path, one push per call"

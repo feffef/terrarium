@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A Tenant Skill's voice rule (midden-catalogue) or docs/agents/domain.md (the glossary-terms rule) governs new text, but the agent drafted or added the text first and a reviewer or the rule's late load found the miss. Signals: 'without first reading', 'plain-words voice rule', 'domain.md', a reviewer correcting wording or a term the doc already settles.
 surface: safe
-status: open
+status: tracked
+ref: "issue #2505 (regression of #2469)"
 fixes:
   - pr: 2469
     date: "2026-10-23"
@@ -20,3 +21,8 @@ occurrences:
     severity: minor
     description: "Proposed dek and body wording naming the season without first reading midden-catalogue's plain-words voice rule; review caught it and cost a fourth question round."
     solution: "Read the Tenant's curatorial voice rules before proposing exact prose for its pages."
+  - session: session_015P9szA8dP4wxv4wiXkZcRZ
+    date: "2026-10-24"
+    severity: moderate
+    description: "Asked the owner to pick a title style before reading EVERY-PAGE's title rule; the picked titles broke it and needed a second owner decision and retitle round."
+    solution: "Read the Tenant's writing Skill (glassbox-lesson/EVERY-PAGE.md) before asking a design question it already settles; the Tenant glossary could point to it."

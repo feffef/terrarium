@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-12"
     summary: "Skill-only changes no longer queue for a heavy-test slot."
 occurrences:
-  - session: session_018i6d2BQPkf9cq6jSEqCNSX
-    date: "2026-10-10"
-    severity: minor
-    description: "I ran three full gates in parallel against dispatch-subagents' limit of two; three gate runs died with exit 137 and had to be rerun"
-    solution: "Stagger heavy-gate agents strictly: at most two at a time, including review-fix rounds"
   - session: session_01SZwdbK8GbYtyj926UyJT6o
     date: "2026-10-12"
     severity: minor

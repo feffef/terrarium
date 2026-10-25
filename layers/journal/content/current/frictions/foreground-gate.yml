@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-23"
     summary: "Cut long-command backgrounding to one home: CLAUDE.md's Self-verification bullet tightened and blog-post §10's restatement dropped."
 occurrences:
-  - session: session_015BjYk46dntcMuAWMn1z4Zw
-    date: "2026-10-10"
-    severity: minor
-    description: "Ran `pnpm gate:scoped` in the foreground despite CLAUDE.md's rule to background commands that can take over 2 minutes."
-    solution: "Start the gate with run_in_background and redirect it to a log; it took about 3 minutes."
   - session: session_013GkBtC56M36dmz5AtEb1Hp
     date: "2026-10-11"
     severity: nit

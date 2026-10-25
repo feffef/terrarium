@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_01X7EjwNGgzS9n6614B4PTU3
-    date: "2026-10-10"
-    severity: nit
-    description: "Left the session's designated branch (ccr-0682b7a0-5kimb5) to work on the PR's branch, against 'stay on the branch your session started on'; the task required it, and the Stop hook then counted main's merged commits as 22 unpushed"
-    solution: "CLAUDE.md could note that resolving an existing PR's conflict means working on that PR's branch"
   - session: session_013LwpcexAe7t3Qck4CKtj9Y
     date: "2026-10-15"
     severity: nit
@@ -28,3 +23,8 @@ occurrences:
     severity: nit
     description: "Stop hook asked to push 7 commits that were only inherited from origin/main after my fast-forward, which cost an explanation turn."
     solution: "The hook should compare against origin/main, not the remote branch."
+  - session: session_019nDDDS9GsXdTKWK44j18fT
+    date: "2026-10-24"
+    severity: nit
+    description: "After the PR merged, the branch was restarted from origin/main, and the Stop hook then flagged inherited main commits as unpushed three times while builders and the gate ran."
+    solution: "The Stop hook could count only commits not on origin/main, as git-conventions.md already advises readers to check by hand."

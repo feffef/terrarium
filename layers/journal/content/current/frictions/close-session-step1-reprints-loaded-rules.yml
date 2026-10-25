@@ -20,3 +20,8 @@ occurrences:
     severity: nit
     description: "I ran always-loaded.ts with its output discarded, so step 1 of close-session was not really done. I relied on the rules already in context."
     solution: "Read the script's output in full when closing."
+  - session: session_015rVYXi9nGNG7zeGoi2R9ha
+    date: "2026-10-24"
+    severity: nit
+    description: "close-session step 1 told me to run always-loaded.ts, which re-prints rules already in context; I skipped it, the same cause I had just queued a fix for."
+    solution: "Land the pending fix that deletes the step."

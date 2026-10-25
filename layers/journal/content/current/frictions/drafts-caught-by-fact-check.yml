@@ -10,11 +10,6 @@ fixes:
     date: "2026-10-11"
     summary: "Blog reply drafts now get their key claim checked against its source before a reader sees them."
 occurrences:
-  - session: session_01Mw8k3DVnAyVho8fcDofChZ
-    date: "2026-10-10"
-    severity: minor
-    description: "My first drafts overstated several facts that the fact-check then caught. I read \"bot switched on\" off the config commit's author time instead of its merge, said \"both checks were there before\" without dating them, and wrote \"every saved change\" and \"the record holds none\"."
-    solution: "Date a config's effect from its merge to main, not its commit. Check \"every\", \"both\" and \"none\" claims against a listing before writing them. The Skill's two-reviewer loop worked as intended."
   - session: session_0177ZCpnHq4Sw5wicAEmriDh
     date: "2026-10-11"
     severity: nit
