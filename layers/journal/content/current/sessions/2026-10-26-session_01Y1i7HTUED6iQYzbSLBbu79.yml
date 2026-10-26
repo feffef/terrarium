@@ -1,0 +1,193 @@
+schemaVersion: 1
+session: session_01Y1i7HTUED6iQYzbSLBbu79
+startedAt: 2026-10-26T13:38:34Z
+endedAt: 2026-10-26T13:50:59Z
+kind: autonomous
+goal: Scheduled prune trial of the Platform's agent instructions
+status: in-review
+outcome: "Judged two prune trials (both hold); opened a new one cutting log-session restatements; PR #2571 open"
+summary: "Scheduled /prune-trial run, no human involved. The window script showed two judgeable trials (long-command backgrounding, workflow-write ban). 53 and 51 sessions of Frictions since each landed had no major or blocker damage and no regression issue, so both entries were deleted. A Sonnet search subagent found five failed-as-prose candidates; the ones with a wired guard or an already goal-shaped line had nothing left to cut, and the close-session rule (#2209) is held only by step-specific restatements, so I cut only the duplicated closure prose in log-session's \"When to invoke\" (-8 net), keeping all five status values. A Sonnet probe pinned to the post-prune SHA answered correctly; code-review found two small gaps (dropped \"never completed\" hint, missing proven field), fixed by amend; gate:scoped green; PR #2571 opened. All choices were agent-initiated within the Skill's remit."
+prs:
+  - "2571"
+docsRead:
+  - path: .agents/prune-trials.yml
+    reason: open trials and territory
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: required before GitHub ops; search fields rule
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and closing steps
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief rules before dispatch
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "search subagent: best source for guard-to-issue mapping"
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: "spec reviewer: used as the spec"
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: "standards reviewer: pruning standard"
+    useful: yes
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: search subagent named it in a command; not read for the verdict
+    useful: no
+  - path: docs/agents/environment-caveats.md
+    reason: search subagent named it in a command; not examined
+    useful: no
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Called search_issues without fields; the search-fields guard blocked it and I had to read github-integration.md first.
+    solution: Read github-integration.md before the first GitHub call, as CLAUDE.md says.
+    severity: nit
+  - description: Ran extract-frictions twice; both runs write the same /tmp output file, so the second overwrote the first and I had to rerun.
+    solution: Have extract-frictions take an output path or name the file by --since.
+    severity: nit
+  - description: The code-review Standards subagent ran git checkout --detach despite a read-only brief; it switched back, nothing lost.
+    solution: Brief read-only reviewers to use git show, never checkout.
+    severity: minor
+  - description: Stop hook asked to push three times while the probe and gate were pending; ADR-0004 says review and gate first.
+    solution: "Let the Stop hook skip its push nag while a background gate or agent runs (known, #2233)."
+    severity: nit
+durationSec: 745
+models:
+  claude-sonnet-5-5: 84
+toolCounts:
+  Read: 7
+  Bash: 23
+  mcp__github__search_issues: 2
+  Skill: 4
+  Agent: 4
+  Grep: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - .agents/skills/log-session/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - .agents/skills/visitor-loop/decisions.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: PR-per-change and scheduled-run scope; confirmed I open a PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read a file; this PR touches no Human-only path
+    useful: no
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are code; loaded by a Skill read, did not affect the edit
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main, not the PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Digest rule; loaded by a digest read, unrelated to this task
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Blog pingbacks; loaded by a blog-post read, unrelated
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Pack Skills rule; loaded by Skill reads, log-session is not a pack Skill
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: Every GitHub body starts with the session header; applied it to the PR
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Triage sweep rule; loaded by a grep, unrelated
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Defined territory and trial handling, the core of this task; I did not open the full ADR since the Skill was enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Rules load with files; unrelated to this change
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: ADR history rule; unrelated, no ADR edited
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Pointer to guards.md; I did not need the roster
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Search for failed-as-prose rules
+    model: sonnet
+    durationSec: 97
+    toolCalls: 22
+    modelCalls: 10
+    tokenShare: 15.3
+  - type: general-purpose
+    task: Probe pruned log-session text
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 2.9
+  - type: general-purpose
+    task: Standards review of prune diff
+    model: sonnet
+    durationSec: 45
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 7.6
+  - type: general-purpose
+    task: Spec review of prune diff
+    model: sonnet
+    durationSec: 42
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 7.7
+gitBranch: claude/practical-rubin-pd9yjg
+entrypoint: remote_trigger
+cliVersion: 2.1.310
+trigger: prune-trial
+landedBy: Stop
