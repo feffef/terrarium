@@ -52,68 +52,6 @@ trials:
       wording would have prevented it. NOT damage: the nit-level chaining or
       Stop-hook slips #2397 already records, which this prune did not touch.
   - problem: >
-      Long-command backgrounding cut to one home (-2 net): CLAUDE.md's
-      Self-verification bullet tightened (4 lines to 3, rule and 600s why kept),
-      and `blog-post` §10's restatement ("`run_in_background: true`, logging to
-      the scratchpad") dropped. Chosen, at a Trusted user's pick, after the
-      search subagent covered the instruction corpus, guard headers and the
-      tracker: the rule failed as prose three times (#1293, #2265, #2426; all
-      three read in full by the subagent, #2426 by me) and nothing holds it for
-      the main session (`double-background-guard` and
-      `subagent-background-guard` cover adjacent cases). #2426 already proposes
-      the guard. Runners-up: close-session duplicates (#2424, #2209; partly held
-      by read-first-hint), a plain rewrite of `git-conventions.md`. Same run
-      judged and deleted the deferred-tool-guard trial (landed d895e7ec,
-      judgeable from 2026-10-22T15:31Z per the window script): 57 sessions, only
-      nit deferred-tool Frictions (Monitor called unloaded, self-corrected), no
-      regression issue. The mass here was small.
-    territory:
-      paths:
-        - "CLAUDE.md: the Self-verification 'Run anything that can take over 2 minutes' bullet"
-        - ".agents/skills/blog-post/SKILL.md: §10 (Gate)"
-      keywords:
-        - run_in_background
-        - foreground-gate
-    opened: 2026-10-23
-    check: >
-      Damage is a major or blocker Friction where a session ran a long command
-      (gate:scoped, a build, e2e) in the foreground and lost it to the 600s cap,
-      or started it with a shell `&` it then could not wait on, and the cut
-      wording (or blog-post's restatement) would have prevented it. NOT damage:
-      the nit/minor slips #2426 already records at the old wording's rate, or a
-      guard denying and the session fixing itself.
-  - problem: >
-      Workflow-write ban (cloud session cannot write `.github/workflows/*`) cut
-      to its one home each (-27 net): the `workflow-edit-guard.ts` header
-      (40 lines to 20) keeps purpose, usage and the fail-open list but drops the
-      mechanic retelling and incident asides; the `.sh` pre-filter comment and
-      the `environment-caveats.md` bullet are shortened (recovery recipe, proposals
-      pointer and issue pointers kept). Chosen after the search subagent covered
-      the instruction corpus, guard headers and the tracker (it ran list and REST
-      reads of issues 1247-2439, about 60 bodies): the ban failed as prose (#897,
-      again #1955) and the wired guard (unit-tested) holds it. Larger candidates
-      were read-first triggers (about 69 lines; #1754, #1819, #2146; the owner
-      accepted late reads, nothing denies) and provenance header (about 37 lines).
-      Judged and deleted the dispatch-subagents §3 trial (landed 81bc1915,
-      judgeable from 2026-10-23T12:28Z per the window script): 47 sessions, no
-      major or blocker Friction traces to it (a shared-checkout `git checkout`
-      by a triage agent, g9zpjr, was minor; the foreground-gate clash with
-      CLAUDE.md was a nit, already #2426).
-    territory:
-      paths:
-        - "scripts/hooks/workflow-edit-guard.ts and .sh: header comments"
-        - "docs/agents/environment-caveats.md: the `.github/workflows/*` bullet"
-      keywords:
-        - workflow scope
-        - workflow-edit-guard
-    opened: 2026-10-23
-    check: >
-      Damage is a major or blocker Friction where a cloud session committed a
-      change to `.github/workflows/*` (or stranded commits behind a rejected
-      push) and could not recover or knew no recovery because the cut text was
-      gone. NOT damage: the guard denying a write and the session moving the
-      edit to `docs/proposals/`, or a local session pushing a workflow file.
-  - problem: >
       `git-conventions.md` "When the Stop hook flags unpushed or inherited
       commits" reworded to the goal (-4 net: 15 lines to 11, from
       `git diff --numstat`): the two rules kept (fix only commits this session
@@ -264,3 +202,39 @@ trials:
       or substitutes a bare tsc for the gate. NOT damage: a Friction about
       SKILL.md or a script (neither is in this trial), or a brief gap the old
       text had too.
+  - problem: >
+      `log-session` "When to invoke" cut to the goal (-8 net, from
+      `git diff --numstat`: 11 added, 19 deleted; this entry not counted): the
+      restatements of when to close (the "closure point" paragraph, the
+      Session-closure definition) dropped; the pointer to `close-session`, the
+      update-only use and all five `status` values kept. Chosen after the
+      search subagent covered the instruction corpus, guard headers and the
+      tracker: the close-session rule failed as prose repeatedly (#2209, read
+      in full by the subagent, after #1801, #1821, #1868) and only a hint holds
+      the PR-open half; nothing holds the answer-only half. So the cut is only
+      restatements: CLAUDE.md, `close-session`, the step-specific invocations in
+      other Skills, `read-first-hint.ts` and `pr-workflow.md` (on trial) are
+      untouched. Runners-up: the dispatch-subagents read-first trigger (#2543;
+      a wired guard holds it, but the prose left is one line the guard's deny
+      message quotes), the worktree and SHA bullets of `dispatch-subagents`
+      (#1420, #1944; already one goal-shaped line each, nothing holds them).
+      Same run judged and deleted the long-command backgrounding trial (landed
+      a738a6a8) and the workflow-write ban trial (landed b93f2d0c), both
+      judgeable per the window script: 53 and 51 sessions since, no major or
+      blocker Friction traces to either (the one moderate, overlapping backgrounded
+      gate runs after an early "completed" notice, 9Cee99, is not a lost-to-600s case), and no
+      regression issue.
+    territory:
+      paths:
+        - ".agents/skills/log-session/SKILL.md: the 'When to invoke' section"
+      keywords:
+        - closure point
+        - Session closure
+    opened: 2026-10-26
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session opened a PR or ended
+      work without invoking `close-session`, or logged a wrong `status`, and the
+      cut `log-session` wording would have prevented it. NOT damage: the
+      answer-only or PR-open misses #2209 already records, which the cut did not
+      change (CLAUDE.md and `close-session` still carry the rule).
