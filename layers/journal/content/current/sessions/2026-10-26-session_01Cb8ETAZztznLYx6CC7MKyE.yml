@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Cb8ETAZztznLYx6CC7MKyE
 startedAt: 2026-10-26T08:54:09Z
-endedAt: 2026-10-26T09:29:03Z
+endedAt: 2026-10-26T10:47:21Z
 kind: interactive
 goal: Clear the issue backlog with clear-backlog
-status: in-review
-outcome: "7 of 8 issues landed or closed; #2564 (ADR-0023) waits for a human merge; #2432 runs in its own session"
-summary: "The owner invoked clear-backlog (human-instructed). The sweep found 8 eligible issues: #2562, #2554, #2556, #2558, #2557, #2553, #2551 and #2432. #2433 was skipped because #2432 blocks it, and 7 ready-for-human issues were skipped because an agent wrote their last comment. The explore workflow returned 5 build results and 3 grill results. The owner told me to leave #2432 out and run its measurement in a new Opus session, which I created (session_01Vg1qDutnhKVav7JDNUdr8J). Owner answers in the grilling: #2553 \"only on purpose\"; #2556 superseded by the Verify-before-you-state Prune Trial; #2558 a new rule (no screenshots for content changes, only for layout, feature or diagram changes; Glass Box only). I recorded each answer on its issue. Three build runs produced 6 branches. Merged: #2563 (#2558, Glass Box screenshot rule), #2565 (#2551, the journal e2e flake waits for the digest to open), #2566 (#2557, inspect-session saves every page under Out), #2567 (#2554 and #2562, ledger-set --note/--clear-ref/--create and --append naming colliding sessions), and #2568 (#2556, ledger entry on-trial). #2564 (#2553, ADR-0023 escalation wording) changes Human-only files and waits for the owner's merge. Agent-initiated follow-ups after review, beyond what the build workflow did: I cut the restated rule in glassbox-update step 5, rewrapped the ADR-0023 lead, and fixed the copied ledger ref so it names #2556. Judgement calls left open are listed in each PR body; the notable one is that flatten.ts's bare-name lookup is now unused (a possible follow-up from #2566)."
+status: completed
+outcome: "All 6 clear-backlog PRs merged (7 issues closed); #2432 handed to its own session, which posted its report"
+summary: "The owner invoked clear-backlog (human-instructed). The sweep found 8 eligible issues: #2562, #2554, #2556, #2558, #2557, #2553, #2551 and #2432. #2433 was skipped because #2432 blocks it, and 7 ready-for-human issues were skipped because an agent wrote their last comment. The explore workflow returned 5 build results and 3 grill results. The owner told me to leave #2432 out and run its measurement in a new Opus session, which I created (session_01Vg1qDutnhKVav7JDNUdr8J). Owner answers in the grilling: #2553 \"only on purpose\"; #2556 superseded by the Verify-before-you-state Prune Trial; #2558 a new rule (no screenshots for content changes, only for layout, feature or diagram changes; Glass Box only). I recorded each answer on its issue. Three build runs produced 6 branches. Merged: #2563 (#2558, Glass Box screenshot rule), #2565 (#2551, the journal e2e flake waits for the digest to open), #2566 (#2557, inspect-session saves every page under Out), #2567 (#2554 and #2562, ledger-set --note/--clear-ref/--create and --append naming colliding sessions), and #2568 (#2556, ledger entry on-trial). #2564 (#2553, ADR-0023 escalation wording) changed Human-only files and the owner merged it. Agent-initiated follow-ups after review, beyond what the build workflow did: I cut the restated rule in glassbox-update step 5, rewrapped the ADR-0023 lead, and fixed the copied ledger ref so it names #2556. Judgement calls left open are listed in each PR body; the notable one is that flatten.ts's bare-name lookup is now unused (a possible follow-up from #2566)."
 prs:
   - "2563"
   - "2564"
@@ -117,11 +117,17 @@ frictions:
   - description: My first attempt to gate two branches in one background call with & was blocked by the double-background guard; I resent it as two calls.
     solution: Run one background Bash call per gate from the start.
     severity: nit
-durationSec: 2093
+  - description: "After PRs #2564-#2568 opened I re-authored the log with log-session directly instead of re-invoking close-session as the PR-open hook asked; the log stayed current, but the close-session checklist was skipped for those PRs."
+    solution: Re-invoke close-session on each PR-open hook hint, even when the log was just authored.
+    severity: nit
+  - description: Merging four workflow runs' run-summary --verdicts output into my own ruleVerdicts/docsRead took a hand-written YAML merge script in .throwaway.
+    solution: Give run-summary.ts a mode that merges --verdicts into an authored log YAML, keeping the orchestrator's own entries and appending subagent reasons.
+    severity: minor
+durationSec: 6792
 models:
-  claude-opus-5-5: 170
+  claude-opus-5-5: 189
 toolCounts:
-  Bash: 50
+  Bash: 55
   Workflow: 5
   Read: 1
   ToolSearch: 3
@@ -131,10 +137,11 @@ toolCounts:
   mcp__github__issue_write: 3
   mcp__github__create_pull_request: 6
   mcp__claude-code-remote__subscribe_pr_activity: 6
-  Skill: 2
-  ReadNotifications: 10
+  Skill: 3
+  ReadNotifications: 13
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
-  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__send_later: 2
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/tests/unit/ledger-set.spec.ts
   - .agents/skills/frictions-to-fixes/scripts/ledger-set.ts
@@ -314,7 +321,7 @@ subagents:
     durationSec: 146
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: workflow-subagent
     task: Standards fix/frictions-ledger-script-gaps r1
     model: claude-opus-5-5
@@ -335,7 +342,7 @@ subagents:
     durationSec: 63
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: gate fix/inspect-session-save-every-page
     model: claude-sonnet-5-5
@@ -349,28 +356,28 @@ subagents:
     durationSec: 52
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: build fix/frictions-ledger-script-gaps
     model: claude-opus-5-5
     durationSec: 687
     toolCalls: 67
     modelCalls: 40
-    tokenShare: 8.3
+    tokenShare: 7.8
   - type: workflow-subagent
     task: Standards fix/inspect-session-save-every-page r1
     model: claude-opus-5-5
     durationSec: 40
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: build fix/journal-e2e-sibling-collapse-flake
     model: claude-sonnet-5-5
     durationSec: 459
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: workflow-subagent
     task: Spec fix/journal-e2e-sibling-collapse-flake r2
     model: claude-opus-5-5
@@ -391,7 +398,7 @@ subagents:
     durationSec: 452
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: gate fix/frictions-ledger-script-gaps
     model: claude-opus-5-5
@@ -405,56 +412,56 @@ subagents:
     durationSec: 84
     toolCalls: 18
     modelCalls: 9
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: "triage #2557"
     model: claude-opus-5-5
     durationSec: 115
     toolCalls: 21
     modelCalls: 14
-    tokenShare: 3.1
+    tokenShare: 2.9
   - type: workflow-subagent
     task: "triage #2554"
     model: claude-opus-5-5
     durationSec: 133
     toolCalls: 22
     modelCalls: 14
-    tokenShare: 3.1
+    tokenShare: 2.9
   - type: workflow-subagent
     task: "triage #2556"
     model: claude-opus-5-5
     durationSec: 133
     toolCalls: 25
     modelCalls: 17
-    tokenShare: 3.5
+    tokenShare: 3.3
   - type: workflow-subagent
     task: "triage #2562"
     model: claude-opus-5-5
     durationSec: 111
     toolCalls: 20
     modelCalls: 14
-    tokenShare: 3.6
+    tokenShare: 3.4
   - type: workflow-subagent
     task: "triage #2432"
     model: claude-opus-5-5
     durationSec: 68
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: workflow-subagent
     task: "triage #2551"
     model: claude-opus-5-5
     durationSec: 125
     toolCalls: 21
     modelCalls: 12
-    tokenShare: 2.9
+    tokenShare: 2.7
   - type: workflow-subagent
     task: "triage #2558"
     model: claude-opus-5-5
     durationSec: 119
     toolCalls: 22
     modelCalls: 14
-    tokenShare: 3
+    tokenShare: 2.8
   - type: workflow-subagent
     task: Spec docs/glassbox-shots-layout-only r2
     model: claude-opus-5-5
@@ -475,14 +482,14 @@ subagents:
     durationSec: 94
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: build docs/glassbox-shots-layout-only
     model: claude-sonnet-5-5
     durationSec: 238
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Standards docs/glassbox-shots-layout-only r2
     model: claude-opus-5-5
@@ -496,7 +503,7 @@ subagents:
     durationSec: 27
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: gate docs/glassbox-shots-layout-only
     model: claude-sonnet-5-5
@@ -510,14 +517,14 @@ subagents:
     durationSec: 332
     toolCalls: 16
     modelCalls: 14
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: Spec docs/adr-0023-guest-escalation-on-purpose r1
     model: claude-opus-5-5
     durationSec: 32
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Standards docs/adr-0023-guest-escalation-on-purpose r1
     model: claude-opus-5-5
@@ -538,7 +545,7 @@ subagents:
     durationSec: 679
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 2.4
+    tokenShare: 2.2
   - type: workflow-subagent
     task: Standards chore/relayed-subagent-claims-on-trial r1
     model: claude-opus-5-5
@@ -563,4 +570,6 @@ subagents:
 gitBranch: ccr-35b3dd22-xx5ndj
 entrypoint: remote_mobile
 cliVersion: 2.1.310
+learnings:
+  - "The triage agent for #2556 said the relayed-subagent-claims ledger entry was status open; on main it was tracked (ref issue #2556) by the time I checked, because the survey that filed the issue had already moved it."
 landedBy: Stop
