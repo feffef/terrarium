@@ -1,0 +1,146 @@
+schemaVersion: 1
+session: session_01Vg1qDutnhKVav7JDNUdr8J
+startedAt: 2026-10-26T08:59:34Z
+endedAt: 2026-10-26T09:10:30Z
+kind: autonomous
+goal: "Check whether sessions read the ADRs their edits touch, 3 days after the adr-read-hint hook (issue #2432)"
+status: completed
+outcome: "Report posted on issue #2432: 30 window-C misses, at least 14 Bash writes; hint followed 82%"
+summary: "Started by a scheduled or system-delivered task, not a human prompt. The task told me to run issue #2432's steps 1-7 and post one report comment, with no PR, no hook edit and no follow-up issues; I kept to that. I re-ran audit-skills --adr-reads for windows A, B and C (A and B matched the baseline exactly). A throwaway per-session script reused audit-skills' own functions for outliers, medians, the hint split and the misses. Window C's share read in full, without outliers, was 62%, against 25% (A) and 36% (B). 60 of 73 hints were followed (main 29/31, subagent 31/42), and all were path matches. A hook dry run showed the text match works; window C simply had no edit that needed it. I traced the 30 misses through filesEdited, commit-derived files and main-only toolCounts. Two inspect-session subagents verified 4 Bash writes, and 10 more were inferred from tool counts, 5 were workflow agents' edits and 11 stay unresolved. I read all 230 window Frictions and counted 2 ADR-content mistakes in 51 sessions, against #2286's 4/86 and 3/61. The Friction Ledger has 0 new binding-docs-skipped and 1 premise-not-questioned. Proposals went into the comment for the owner."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; read before git fetch
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP for writes, issue_read for comments, gh api for bulk REST reads
+    useful: yes
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: partial-read brief template and selector for the two transcript checks
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief rules before the two inspection briefs; scratchpad subfolders
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: step 7 saves the post from the scratchpad, which explains the Bash-written Blog misses
+    useful: yes
+  - path: .throwaway/adr-hint-audit/fr.md
+    reason: (no reason given)
+skillsUsed:
+  - name: inspect-session
+    reason: verify how two sessions wrote their governed files (both Bash)
+  - name: dispatch-subagents
+    reason: before writing the two inspection briefs
+  - name: close-session
+    reason: closing after the report comment, as the task asked
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read github-integration.md with cat | head -80 and dispatch-subagents SKILL.md with head -150, against CLAUDE.md's one-Read-call-per-doc rule; parts may have been cut.
+    solution: Read trigger docs with the Read tool, unlimited, at the first GitHub call; nothing I needed was in the cut part this time.
+    severity: minor
+  - description: Told the user '31 misses' in a progress note from an eyeballed list; the scripted count is 30. Broke CLAUDE.md's verify-before-you-state; caught before the report.
+    solution: Print the count from the script before stating any number, even in an interim update.
+    severity: nit
+  - description: First throwaway script used require() in an ES module and failed; one rerun.
+    solution: Use import in .throwaway tsx scripts.
+    severity: nit
+  - description: Session logs can't tell a Bash write from an Edit/Write (filesEdited unions transcript and commit files), so classifying 30 misses needed tool-count inference plus two transcript reads, and 11 stay unresolved.
+    solution: "Owner to decide whether a derived field should split edit sources (data-shape question, proposal 7 on #2432)."
+    severity: moderate
+  - description: Spent a detour checking whether the nested-transcript fix (#2546/#2550) changed adr-read-hint; it already used agentTranscript, so it did not.
+    solution: Grep the hook's own imports first before reading another fix's history.
+    severity: nit
+durationSec: 656
+models:
+  claude-opus-5-5: 123
+toolCounts:
+  Bash: 49
+  ToolSearch: 1
+  mcp__github__issue_read: 2
+  Read: 3
+  Agent: 2
+  Write: 2
+  Edit: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0012.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: About gating and merging PRs; this run opened no PR, though it is window C's ADR for the process-slip counts; summary enough
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to close via close-session and keep the log off any branch; summary was enough, full ADR not needed
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: "Its open-a-PR rule did not apply: the task said read and propose only, with no pushed branch"
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: "Made me start the #2432 comment with this session's header line; summary enough"
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded on reading git-conventions; it framed the cut-before-adding mistake I counted in step 6; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading git-conventions; it gave context for the hint's design but changed nothing I did
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded on reading audit-skills.ts; I only ran it, never edited a Skill, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading shared/schemas; I changed no file, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded with shared/ reads; cross-Tenant reads were unrelated to this audit
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Made proposal 7 a shape question for the owner, not a field to add; it changed the wording
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Loaded on reading the hook; it pointed to the guard roster I didn't need
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading adr-rules.ts; it concerns ADR wording, which this audit did not touch
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded with the dispatch-subagents read; it explained why .agents/skills/** paths draw ADR-0005 hints; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded on the blog-post read; it confirmed that ADR-0012 governs Blog pages, which explained 3 misses; summary enough
+    useful: partly
+subagents:
+  - task: Inspect 01SNK writes
+    model: sonnet
+    durationSec: 144
+    toolCalls: 30
+    modelCalls: 28
+    tokenShare: 14
+  - task: Inspect 019SN writes
+    model: sonnet
+    durationSec: 182
+    toolCalls: 34
+    modelCalls: 33
+    tokenShare: 17.3
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.310
+learnings:
+  - "A session log's toolCounts counts the main agent only, while filesEdited also folds in subagents' edits and the session's committed files (the latter catching Bash writes, #2386)."
+ideas:
+  - "Give adr-read-hint a Bash sibling that runs git diff --name-only after a Bash call that changed the tree and points to the ADRs governing the changed paths: it would catch heredoc, sed -i and python replaces, which made at least 14 of 30 misses (#2433)."
+landedBy: Stop
