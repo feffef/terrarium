@@ -1,0 +1,251 @@
+schemaVersion: 1
+session: session_01AEph4xtY5Zhm8GkQLqacrX
+startedAt: 2026-10-26T18:33:27Z
+endedAt: 2026-10-26T18:52:33Z
+kind: interactive
+goal: Clear the issue backlog
+status: in-review
+outcome: Three issues settled in grilling; one ledger PR open (#2574)
+summary: "The owner started clear-backlog with \"Full sweep, but ignore the node and typescript update\", which I read as auto-triage's full-sweep mode over every open issue except #1551 and #1552 (agent-initiated reading, stated to the owner). Explore triaged #2472, #2352, #2426, #1904 and #1689; all came back grill. The owner then deferred #1689 and #1904 (human-instructed), so they stay ready-for-human untouched by me. Grilling (human-instructed answers): #2472 the owner rejected my pick to exempt pure renames from the simple-change bar; renames need code-review to find broken references and pr-workflow.md must say so explicitly. Labelled ready-for-agent but time-gated: pr-workflow.md is inside an open Prune Trial judgeable from 2026-10-27, so no build this run. #2426 closed not planned as accepted cost; #2352 closed as superseded by #2368. Built one follow-up branch: foreground-gate Friction Ledger entry set to accepted (PR #2574, ledger branch reviewed on both axes; two wording judgement calls left as is)."
+prs:
+  - "2574"
+docsRead:
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "triage #1689: The brief required it. It gives the brave/determinability rule, the closing rules and the wayfinder overlay.; triage #1904: The brief told me to read it. Its per-issue and wayfinder rules apply here.; triage #2352: The brief required it. Gave the rule that a superseded issue goes to ready-for-human and the requirement to check later history.; triage #2426: Read as the brief required; it gave the per-issue rules (obsolete or superseded goes to ready-for-human, and to check later history).; triage #2472: Required by the brief. It sets the brave/judgment-call line and the closing rules."
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: required before triage writes
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: who may set ready-for-agent
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP write mapping and label-replace trap
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: push and verdict steps before landing
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: guard required it before the workflow call; nothing changed the call
+    useful: no
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Spec ccr-d9e7c245-rp2vil r1: The task told me to read it and apply its Spec axis. Its missing/scope-creep/wrong framing structured the check."
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #1689: The brief required it. It gives the per-issue steps and state roles.; triage #1904: The brief told me to read it. It defines the states and the redundancy check.; triage #2352: The brief required it. Gave the per-issue steps, though most of the state machine was not needed for an issue already labelled ready-for-human.; triage #2426: Read as the brief required; it gave the state roles and the outcome rules.; triage #2472: Required by the brief. Supplies the per-issue steps."
+    useful: partly
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "triage #1689: The full ADR behind the summary rule that governs the recommended route. It confirms that 'When to revisit' names #1689 and that the Consequences section accepts the owner-credential risk."
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "triage #2472: The full ADR behind the rule that governs my recommendation (no rewording during an open trial; simplify before adding)."
+    useful: yes
+  - path: /home/user/terrarium/.agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+skillsUsed:
+  - name: clear-backlog
+    reason: owner-invoked sweep
+  - name: grilling
+    reason: one round of three questions
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Tried to invoke clear-backlog through the Skill tool; it is user-invoked only, so the owner had to retype the command (their first try had a trailing period).
+    solution: Recognise a /name. message as a failed slash command and ask the owner to resend it without punctuation.
+    severity: minor
+  - description: The dispatch-read guard blocked the first clear-backlog-explore Workflow call until I read dispatch-subagents, whose brief-writing steps don't apply to a saved workflow the Skill runs by name.
+    solution: Exempt named saved workflows (clear-backlog-explore/build) from the dispatch-read guard, since they brief their own agents.
+    severity: minor
+  - description: The build workflow could not check out the session branch (held by the main checkout), so it committed on a worktree branch and I had to push HEAD to the session branch by hand.
+    solution: clear-backlog-build could push via HEAD:<name> by design, or the Skill could say the session branch name is always held by the main checkout.
+    severity: nit
+durationSec: 1146
+models:
+  claude-opus-5-5: 75
+toolCounts:
+  Skill: 4
+  Bash: 17
+  Read: 7
+  Workflow: 3
+  ToolSearch: 3
+  PushNotification: 1
+  mcp__github__add_issue_comment: 3
+  mcp__github__issue_write: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/frictions/foreground-gate.yml
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0009.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - .agents/skills/code-review/SKILL.md
+  - layers/journal/GLOSSARY.md
+  - .agents/skills/triage/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/adr/0021-multi-context-domain-docs.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0022.md
+    reason: "Settled what the sweep may label; I labelled #2472 ready-for-agent only on the owner's answer. Summary was enough."
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Confirmed the ledger PR is agent-mergeable (no Human-only path, list script empty). Summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Set the header on every comment and PR body I wrote.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "Made #2472 time-gated: pr-workflow.md is in an open Prune Trial. Summary was enough."
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR right after push and subscribe; followed.
+    useful: partly
+  - path: .claude/rules/adr-0009.md
+    reason: This log, kept off the branch.
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: All issues were owner-authored, so no Public gate applied.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About where Skills live; nothing here changed a Skill.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; no rule edited.
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Ledger status value already in the enum; no field shape changed.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on a Journal ledger read; a status edit needed no Journal term.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on tenant.config.ts read; no layer code touched.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on tenant.config.ts read; I only read the ledger enum.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: No Document or Collection authored.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Confirmed the Friction Ledger is refreshed in place, so editing its status is right.
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "triage #1904: Loaded when I read docs/adr. It confirms that any work on this issue needs a human merge."
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: "triage #2352: Loaded when I read audit-skills/SKILL.md through git show. Gave background on what audit-skills may edit, but did not affect the outcome."
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: "build ccr-d9e7c245-rp2vil: Loaded alongside the glossary rules. Not relevant to this edit."
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "triage #1904: Loaded when I read docs/adr. It governs the one-decision-per-ADR goal."
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: "build ccr-d9e7c245-rp2vil: Loaded when I read a glossary. I added no term, so it did not apply."
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: gate ccr-d9e7c245-rp2vil
+    model: claude-sonnet-5-5
+    durationSec: 234
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 2
+  - type: workflow-subagent
+    task: Standards ccr-d9e7c245-rp2vil r1
+    model: claude-opus-5-5
+    durationSec: 25
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 6.5
+  - type: workflow-subagent
+    task: build ccr-d9e7c245-rp2vil
+    model: claude-sonnet-5-5
+    durationSec: 359
+    toolCalls: 13
+    modelCalls: 11
+    tokenShare: 9.6
+  - type: workflow-subagent
+    task: Spec ccr-d9e7c245-rp2vil r1
+    model: claude-opus-5-5
+    durationSec: 28
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 4.5
+  - type: workflow-subagent
+    task: "triage #2472"
+    model: claude-opus-5-5
+    durationSec: 82
+    toolCalls: 14
+    modelCalls: 9
+    tokenShare: 10.7
+  - type: workflow-subagent
+    task: "triage #1689"
+    model: claude-opus-5-5
+    durationSec: 45
+    toolCalls: 11
+    modelCalls: 6
+    tokenShare: 5.8
+  - type: workflow-subagent
+    task: "triage #2426"
+    model: claude-opus-5-5
+    durationSec: 54
+    toolCalls: 12
+    modelCalls: 7
+    tokenShare: 6.8
+  - type: workflow-subagent
+    task: "triage #2352"
+    model: claude-opus-5-5
+    durationSec: 55
+    toolCalls: 13
+    modelCalls: 7
+    tokenShare: 7.2
+  - type: workflow-subagent
+    task: "triage #1904"
+    model: claude-opus-5-5
+    durationSec: 65
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 6.9
+gitBranch: ccr-d9e7c245-rp2vil
+entrypoint: remote_mobile
+cliVersion: 2.1.310
+landedBy: Stop
