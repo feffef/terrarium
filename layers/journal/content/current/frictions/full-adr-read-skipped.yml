@@ -13,16 +13,6 @@ fixes:
     date: "2026-10-23"
     summary: "Retired the adr-check Skill and its CLAUDE.md trigger; a new PostToolUse hook (adr-read-hint.ts) now names, once per agent, each ADR an Edit or Write touches by its rule paths or by number and that the agent has not read in full."
 occurrences:
-  - session: session_01Tjsmye34hk57NtioyWQG4h
-    date: "2026-10-11"
-    severity: nit
-    description: "Did not read the full ADR-0003 and ADR-0004 although their rules say to when the topic is touched; I relied on the rule summaries for the merge flow."
-    solution: "Read the full ADR before the merge step."
-  - session: session_0177ZCpnHq4Sw5wicAEmriDh
-    date: "2026-10-11"
-    severity: nit
-    description: "Did not read docs/adr/0004 in full though the ADR-0004 rule asks for it when touching the topic; I read only the amendment diff."
-    solution: "Read the full ADR before writing about it; a prose-only blog post made the impact low."
   - session: session_01QfaLuSd5cnBQPu8CCRrvkn
     date: "2026-10-12"
     severity: nit

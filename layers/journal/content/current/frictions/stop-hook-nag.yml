@@ -14,41 +14,6 @@ fixes:
     date: "2026-10-05"
     summary: "Moved the end-of-turn reminder caveat into the main project instructions so more sessions read it."
 occurrences:
-  - session: session_01CasnQoauTyLNUxd74agJsP
-    date: "2026-10-11"
-    severity: minor
-    description: "The Stop hook demanded a push about fifteen times while an owner-requested review was still running, and each reply spent tokens declining."
-    solution: "Let the Stop git check honour a session-level hold marker, or fire once per unpushed SHA set."
-  - session: session_01GbMt1vGTDZpQxZ3h4pNsF8
-    date: "2026-10-11"
-    severity: nit
-    description: "Stop hook asked to push uncommitted work while the gate was running; ADR-0004 says push only after it passes, so I waited."
-    solution: "The hook could check for a running or failed gate before nagging."
-  - session: session_01LARTWkGx5vBwRwsMrdftPD
-    date: "2026-10-11"
-    severity: nit
-    description: "Stop hook asked twice to push while gate:scoped was still running; ADR-0004 says to wait, so the hook nag was noise."
-    solution: "Have the Stop hook skip its push reminder while a gate run is in progress (the audit-docs session logged the same)."
-  - session: session_01Tjsmye34hk57NtioyWQG4h
-    date: "2026-10-11"
-    severity: nit
-    description: "The Stop hook asked three times to commit and push while the fact-check and gate were still pending, each time costing a reply to decline per ADR-0004."
-    solution: "Let the Stop git check honour a pending-gate marker or fire once per unpushed SHA set."
-  - session: session_01V3bxJaTSH8AWjrtSoBhNxK
-    date: "2026-10-11"
-    severity: nit
-    description: "Stop hook asked twice to push while gate:scoped was still running."
-    solution: "Known stop-hook-nag cluster in the new ledger."
-  - session: session_01LuXuScHA2QsY4RXipy9nAt
-    date: "2026-10-11"
-    severity: nit
-    description: "The Stop hook demanded commit and push while the scoped gate was still running, against ADR-0004's push-after-gate rule."
-    solution: "Harness-side (issue 1653, closed not-planned); no repo fix."
-  - session: session_01BLrfuHbMMEmjZZ7STpe1AN
-    date: "2026-10-11"
-    severity: nit
-    description: "The Stop hook asked three times to commit and push while agents had work in flight and the gate had not run; each nag cost a turn to decline."
-    solution: "The ADR-0004 rule already covers it; nothing to add."
   - session: session_01QfaLuSd5cnBQPu8CCRrvkn
     date: "2026-10-12"
     severity: nit

@@ -7,11 +7,6 @@ surface: guard-or-hook
 status: open
 ref: "issue #886 closed 2026-09-05 (guard denies by design; docs/agents/github-integration.md documents it)"
 occurrences:
-  - session: session_01LuXuScHA2QsY4RXipy9nAt
-    date: "2026-10-11"
-    severity: nit
-    description: "The provenance guard rejected an issue body for a bare angle-bracket span in prose; one resend was needed."
-    solution: "Already documented in github-integration.md; no change."
   - session: session_01AdUi9nKLGKyPFfBe4HYvqG
     date: "2026-10-14"
     severity: nit

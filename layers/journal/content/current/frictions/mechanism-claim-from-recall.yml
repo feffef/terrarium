@@ -77,11 +77,6 @@ occurrences:
     severity: minor
     description: "My Kevin post said a rule was written down where agents read it, but the session-start ADR-0004 summary omits that clause; I only noticed after it merged and fixed it in a second PR."
     solution: "The fact-check brief should name sentences that characterise where a rule lives so the checker opens the loaded rule file, not just the ADR."
-  - session: session_01LuXuScHA2QsY4RXipy9nAt
-    date: "2026-10-11"
-    severity: minor
-    description: "The survey subagent stated that PR 1775 rewrote scripts/shell-reads.ts and called it a regression of that PR; git log showed no such change. It also admitted it never read the mechanism source."
-    solution: "The Skill brief already asks to read mechanism source for detector claims; make the survey brief require citing the commit for any 'PR X changed file Y' claim."
   - session: session_01PWZU3TqUdSp6uD1KaoQXit
     date: "2026-10-23"
     severity: minor

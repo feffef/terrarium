@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Ledger, prune-trials and Skill Inventory YAML are patched by string replacement or hand-typed: unquoted dates, hashes or colons, a hyphen-split folded scalar, a replaced ref or a match inside a comment broke the file (gate or repair needed), or, with no helper that writes into a named entry, the survey scripts its own splitter to place print-ledger-occurrence.ts blocks. A session repeated in one entry belongs to survey-appends-duplicate-sessions.
 surface: safe
-status: open
-ref: "issue #2338 closed by PR #2457"
+status: tracked
+ref: "issue #2554"
 fixes:
   - pr: 2154
     date: "2026-10-16"

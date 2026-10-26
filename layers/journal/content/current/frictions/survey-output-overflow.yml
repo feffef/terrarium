@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-19"
     summary: "extract-frictions --compact no longer prints each session's docsRead paths, about half its bytes."
 occurrences:
-  - session: session_01YBJaRLtVQEr4RshMQG1X7D
-    date: "2026-10-11"
-    severity: minor
-    description: "Survey subagent made github calls before reading github-integration.md and had to slice a 288KB session-frictions output over several passes."
-    solution: "Issue #1755 makes --compact keep docsRead and subagents and names it in the Skill; #1754 proposes a trigger-time doc reminder hook."
-  - session: session_01V3bxJaTSH8AWjrtSoBhNxK
-    date: "2026-10-11"
-    severity: nit
-    description: "Survey subagent: a 55KB tool result was cut to a 2KB preview, and a Python regex used \\| as alternation and silently matched nothing; both re-run."
-    solution: "Write large extracts to files first; use | in Python regex."
   - session: session_01DXuGrxEAsk3MjyRx98QTb2
     date: "2026-10-12"
     severity: nit
