@@ -150,5 +150,5 @@ observations:
       session_01PdrNTJLJJMKBGGZfsAhL6w pushed a hand edit on a branch marked
       ready-to-push without re-running gate:scoped (the Skill says nothing
       about re-gating after an own edit); step 4's 'push from its
-      worktree' conflicts with the harness (session_013QKXoG, prefix only).
+      worktree' conflicts with the harness (session_013QKXoGLaEHEJanyw5TrPqj).
       Grade/role unchanged.

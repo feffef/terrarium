@@ -456,6 +456,6 @@ observations:
       Behaviour check, 10 runs, no stranded worktree, no reverts.
       Unverified: no log of session_017vrdmQQwC4obwbJS9G5Dyg or
       session_019jfJv6yLmcLUAJiTTomyeu mentions pnpm check:worktrees (step
-      5) after worktree builds. Late reads in 01VfbgTT, 01BZNS and 01GKJy
-      are what PR #2543's guard targets; its effect is not yet observed.
+      5) after worktree builds. Late reads in session_01VfbgTTxASAKYdiziaLGuXM,
+      session_01BZNS3KuWTBxqAHxTfx3uzp and session_01GKJysgAiGN7bmdFJcKvFoC are what PR #2543's guard targets; its effect is not yet observed.
       Grade/role unchanged.
