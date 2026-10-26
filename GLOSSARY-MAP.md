@@ -6,25 +6,21 @@ Every glossary, which is also the list of Tenants (ADR-0021).
 
 - **Platform**: [`GLOSSARY.md`](./GLOSSARY.md).
 - **Journal**: the Platform's self-documentation; Platform infrastructure, not a
-  demo (ADR-0008). Digest.
+  demo (ADR-0008).
   [`layers/journal/GLOSSARY.md`](./layers/journal/GLOSSARY.md)
 - **Blog**: in-character commentary on the experiment from several Personas.
-  Persona, Pingback, Tag. [`layers/blog/GLOSSARY.md`](./layers/blog/GLOSSARY.md)
-- **Atlas**: a fictional natural-history field guide. Biome, Specimen,
-  Interaction, Observation.
+  [`layers/blog/GLOSSARY.md`](./layers/blog/GLOSSARY.md)
+- **Atlas**: a fictional natural-history field guide.
   [`layers/atlas/GLOSSARY.md`](./layers/atlas/GLOSSARY.md)
 - **Midden**: an archaeology-themed catalogue of the Platform's discarded work.
-  Site, Dig season, Artifact, Condition, Cause of death, the Stores, the
-  inclusion bar.
   [`layers/midden/GLOSSARY.md`](./layers/midden/GLOSSARY.md)
 - **Marquee**: a movie blog on the Marvel Cinematic Universe in story order;
-  guest-requested (ADR-0023). Screening, Chapter, Poster.
+  guest-requested (ADR-0023).
   [`layers/marquee/GLOSSARY.md`](./layers/marquee/GLOSSARY.md)
 - **Tinkerfund**: a simulated crowdfunding shop for useless inventions.
-  Campaign, Inventor, Backer, Pledge, Reward, Promotion.
   [`layers/tinkerfund/GLOSSARY.md`](./layers/tinkerfund/GLOSSARY.md)
 - **Glass Box**: a textbook of the concepts Terrarium is built on, with
-  Terrarium as the example. Lesson, Walkthrough, Subject, Excerpt, Term.
+  Terrarium as the example.
   [`layers/glassbox/GLOSSARY.md`](./layers/glassbox/GLOSSARY.md)
 - **Commons**: the first Aggregator, with cross-Tenant Search and Timeline
   Spaces (ADR-0025). Coins no terms of its own.
