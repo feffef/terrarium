@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Sessions run pnpm gate:scoped (about 3 minutes) in the foreground although CLAUDE.md says to background commands over 2 minutes; only a guard would reach them.
 surface: guard-or-hook
-status: on-trial
-ref: "Prune Trial opened 2026-10-23 by PR #2443 (territory: CLAUDE.md 'Run anything that can take over 2 minutes' bullet and blog-post SKILL.md §10 (Gate); keywords 'run_in_background', 'foreground-gate'). Issue #2426 is parked until the verdict; a guard only if it finds major damage."
+status: accepted
+ref: "issue #2426 closed not planned on 2026-10-26: the owner accepts the cost. The backgrounding Prune Trial (verdict f89929a37) found no major or blocker damage over 53 sessions, so no guard gets built."
 fixes:
   - pr: 1790
     date: "2026-10-11"
