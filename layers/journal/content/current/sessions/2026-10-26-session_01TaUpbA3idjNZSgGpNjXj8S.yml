@@ -1,0 +1,323 @@
+schemaVersion: 1
+session: session_01TaUpbA3idjNZSgGpNjXj8S
+startedAt: 2026-10-26T00:47:16Z
+endedAt: 2026-10-26T00:59:50Z
+kind: autonomous
+goal: Weekly check of the Platform's own Skills
+status: in-review
+outcome: "Inventory observations PR #2555 open; 2 issues filed and 1 thread commented"
+summary: "Scheduled /audit-skills firing, no human prompts; every step was agent-initiated. Gathered the 7-day scorecard, had one Sonnet agent fetch usage for 4 unlisted Routine runs and 13 read-only Sonnet agents check one Skill each. Closure signals: both orphan candidates carry resolvedBy, the scan ran (1670 merged PRs, 1513 with a session), no manual rescues, and the one human-prompted closure is already on close-session's observations. Escalated three things after reading source myself: #2553 (audit-docs named an ADR-0023 lead-vs-scope conflict and filed nothing; repeat of #2395's shape), #2554 (frictions-to-fixes step 5 asks for drop notes that ledger-set.ts cannot write; verified in three runs), and a comment on #2472 for one more first-push code-review skip (digest, PR #2552). Everything else became observations on 10 Inventory entries plus 4 Routine run-cost rows. No grade or role changed, since no finding gave two cited sessions for one. Not done: I did not re-verify the subagents' counts for the blog-post and prune-trial notes myself (all PRs merged; the -27 vs -26 delta), so those notes rest on their reports. Code-review and gate:scoped ran before the first push; PR #2555 is open and subscribed."
+prs:
+  - "2555"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command; nothing changed my calls
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: cloud MCP recipes and overflow traps before filing issues
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: how to file an issue
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: needs-triage is the label a non-triage Skill files with
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and scheduled-run closing steps
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: read after a hook prompted it; confirmed the edit was in scope
+    useful: partly
+  - path: .claude/skills/audit-skills/brief.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/brief.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: read before writing 14 subagent briefs
+  - name: code-review
+    reason: Standards and Spec review before the first push
+  - name: close-session
+    reason: in-review log
+  - name: log-session
+    reason: authored this log
+frictions:
+  - description: I wrote a folded YAML note that ended a line in a hyphen; validate:content rejected it as a split word.
+    solution: Have the note-appending step run validate:content right after writing, or wrap without breaking hyphenated words.
+    severity: nit
+  - description: "Draft issue text said #2523 was open; check-states showed it closed, so I reworded before posting."
+    solution: None needed; the check worked as designed.
+    severity: nit
+  - description: Two notes used truncated session ids; code-review caught it and I swapped in full ids.
+    solution: Say in step 5 that a note quotes a full id.
+    severity: nit
+  - description: Subagent reports gave truncated ids and several counts I could not re-check cheaply, so two notes rest on their word.
+    solution: Brief the checkers to quote full session ids and mark each claim verified or reported.
+    severity: minor
+durationSec: 755
+models:
+  claude-sonnet-5-5: 112
+toolCounts:
+  Bash: 27
+  Read: 7
+  Skill: 4
+  Agent: 16
+  mcp__github__issue_read: 3
+  mcp__github__issue_write: 2
+  mcp__github__add_issue_comment: 2
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - layers/journal/content/current/skills/clear-backlog.yml
+  - layers/journal/content/current/skills/dispatch-subagents.yml
+  - layers/journal/content/current/routines/blog-post.yml
+  - layers/journal/content/current/routines/digest.yml
+  - layers/journal/content/current/routines/prune-trial.yml
+  - layers/journal/content/current/routines/visitor-loop.yml
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/audit-skills.yml
+  - layers/journal/content/current/skills/blog-post.yml
+  - layers/journal/content/current/skills/digest.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - layers/journal/content/current/skills/inspect-session.yml
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/prune-trial.yml
+rulesLoaded:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0015.md
+adrHints:
+  - adr: 15
+    via: path
+    readAfter: true
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0021.md
+docsReadBySubagents:
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR and subscribe; the summary was enough, I skipped the full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Set the code-review plus gate:scoped order before the first push; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Explained the log goes straight to main; no full ADR needed. Subagents found it partly useful.
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on issues and comments; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Limits audit-skills to Inventory, run costs and issues; I read the full ADR after a hook prompted it, which confirmed my scope.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Prune-trial territory; no trial text was touched, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where rules live; not relevant to an Inventory edit.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill layout; I edited no Skill, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR wording; I edited no ADR, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Triage sweep labels; I filed needs-triage issues only, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read pr-workflow; no Human-only file was touched.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: About Tenant work; none done here.
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Loaded only by the digest checker; it reported it marginally useful for Digest landing.
+    useful: partly
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded only by the blog-post checker; it explained pingback stubs.
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded only by the audit-docs checker; it did not apply to a read-only audit.
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded only by the visitor-loop checker; it did not apply.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Usage for routine runs
+    model: sonnet
+    durationSec: 22
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 2.3
+  - type: general-purpose
+    task: Check audit-docs behaviour
+    model: sonnet
+    durationSec: 95
+    toolCalls: 18
+    modelCalls: 10
+    tokenShare: 5.2
+  - type: general-purpose
+    task: Check audit-skills behaviour
+    model: sonnet
+    durationSec: 80
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 5.1
+  - type: general-purpose
+    task: Check blog-post behaviour
+    model: sonnet
+    durationSec: 67
+    toolCalls: 15
+    modelCalls: 10
+    tokenShare: 5
+  - type: general-purpose
+    task: Check clear-backlog behaviour
+    model: sonnet
+    durationSec: 84
+    toolCalls: 12
+    modelCalls: 10
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Check close-session behaviour
+    model: sonnet
+    durationSec: 53
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 3.5
+  - type: general-purpose
+    task: Check digest behaviour
+    model: sonnet
+    durationSec: 51
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 3.9
+  - type: general-purpose
+    task: Check dispatch-subagents behaviour
+    model: sonnet
+    durationSec: 109
+    toolCalls: 20
+    modelCalls: 13
+    tokenShare: 6.8
+  - type: general-purpose
+    task: Check frictions-to-fixes behaviour
+    model: sonnet
+    durationSec: 74
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 4.4
+  - type: general-purpose
+    task: Check glassbox-update behaviour
+    model: sonnet
+    durationSec: 48
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 3.3
+  - type: general-purpose
+    task: Check inspect-session behaviour
+    model: sonnet
+    durationSec: 67
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 5
+  - type: general-purpose
+    task: Check log-session behaviour
+    model: sonnet
+    durationSec: 106
+    toolCalls: 16
+    modelCalls: 13
+    tokenShare: 5.9
+  - type: general-purpose
+    task: Check prune-trial behaviour
+    model: sonnet
+    durationSec: 63
+    toolCalls: 16
+    modelCalls: 8
+    tokenShare: 4.1
+  - type: general-purpose
+    task: Check visitor-loop behaviour
+    model: sonnet
+    durationSec: 98
+    toolCalls: 18
+    modelCalls: 11
+    tokenShare: 5.6
+  - type: general-purpose
+    task: Standards review of Inventory commit
+    model: sonnet
+    durationSec: 50
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 3
+  - type: general-purpose
+    task: Spec review of Inventory commit
+    model: sonnet
+    durationSec: 42
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 3.1
+gitBranch: claude/upbeat-sagan-1e09ph
+entrypoint: remote_trigger
+cliVersion: 2.1.310
+trigger: audit-skills
+landedBy: Stop
