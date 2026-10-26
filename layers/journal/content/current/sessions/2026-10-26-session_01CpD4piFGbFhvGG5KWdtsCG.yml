@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01CpD4piFGbFhvGG5KWdtsCG
 startedAt: 2026-10-26T02:08:00Z
-endedAt: 2026-10-26T02:23:32Z
+endedAt: 2026-10-26T02:26:58Z
 kind: autonomous
 goal: Weekly run turning logged session frictions into fixes
-status: in-review
-outcome: Ledger PR open with three regression issues filed; no fix PRs this run, so no closing PR
-summary: "Scheduled frictions-to-fixes run (agent-initiated, no human prompt). A survey subagent appended 26 window Frictions to the ledger, recorded fixes #2548, #2549 and #2550 and reported 12 ranked candidates. I filed regression issues for the top three still-recurring entries (#2556, #2557, #2558), skipping local-gate-green-ci-red (owner closed #2138 not planned) and bash-rules-hint-failure-path (closed as a false alarm). No never-fixed candidate was major or blocker; the design agent covered the two lone minor window Frictions and I dropped both (a one-clause doc fix, and an unknown cause with a self-evident recovery), so nothing was dispatched. The ledger PR (#2559) sets five entries to tracked, prunes old occurrences and passed gate:scoped. Open at close: CI and merge of #2559. After filing #2556 I found I had quoted a subagent-reported friction from a session whose ledger entry did not hold it; I checked it against the session log and corrected the issue."
+status: completed
+outcome: Ledger PR merged and three regression issues filed; no fix PRs this run, so no closing PR
+summary: "Scheduled frictions-to-fixes run (agent-initiated, no human prompt). A survey subagent appended 26 window Frictions to the ledger, recorded fixes #2548, #2549 and #2550 and reported 12 ranked candidates. I filed regression issues for the top three still-recurring entries (#2556, #2557, #2558), skipping local-gate-green-ci-red (owner closed #2138 not planned) and bash-rules-hint-failure-path (closed as a false alarm). No never-fixed candidate was major or blocker; the design agent covered the two lone minor window Frictions and I dropped both (a one-clause doc fix, and an unknown cause with a self-evident recovery), so nothing was dispatched. The ledger PR (#2559) set five entries to tracked, prunes old occurrences and passed gate:scoped. The ledger PR merged after CI went green, so no closing ledger PR was needed. After filing #2556 I found I had quoted a subagent-reported friction from a session whose ledger entry did not hold it; I checked it against the session log and corrected the issue."
 prs:
   - "2559"
 docsRead:
@@ -53,13 +53,13 @@ frictions:
   - description: Survey brief step 5 and the report left the --summary 'since' counts hard to tie to entries; I reran --summary myself to pick the top three regressions.
     solution: Ask the survey to report each regression's since-date severity and a verified count, as SKILL.md section 2 ranks by.
     severity: nit
-durationSec: 932
+durationSec: 1137
 models:
-  claude-sonnet-5-5: 73
+  claude-sonnet-5-5: 85
 toolCounts:
-  Bash: 20
+  Bash: 23
   Read: 6
-  Skill: 3
+  Skill: 4
   Agent: 2
   ToolSearch: 1
   mcp__github__issue_write: 4
@@ -68,6 +68,7 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   Write: 1
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
 filesEdited:
   - layers/journal/content/current/frictions/bash-reads-not-read-tool.yml
   - layers/journal/content/current/frictions/binding-docs-skipped.yml
@@ -160,13 +161,13 @@ subagents:
     durationSec: 335
     toolCalls: 29
     modelCalls: 24
-    tokenShare: 36.4
+    tokenShare: 32
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 78
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 5.4
+    tokenShare: 4.7
 gitBranch: claude/eager-ptolemy-fxqf46
 entrypoint: remote_trigger
 cliVersion: 2.1.310
