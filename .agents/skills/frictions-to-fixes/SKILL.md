@@ -140,11 +140,10 @@ whatever happens to the fixes.
    description. Outside the cap: §2's regression issues, and fixes blocked
    only by a Human-only file or a guard (still filed, as `needs-triage`).
 3. **Update the ledger** on your branch, on top of the survey's commit
-   (`status` and `ref` through `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/ledger-set.ts`):
+   (`status`, `ref` and `notes` through `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/ledger-set.ts`):
    - set `status: tracked` on every entry this run files or dispatches, with
      the issue number in `ref` for a filed one;
-   - for each dropped fix, append a line to its entry's `notes` (a `|-`
-     block, one note per line):
+   - for each dropped fix, append a line to its entry's `notes` with `--note`:
      `<date> design: <the solution> dropped: <the reason>`. The entry keeps
      its status: only that solution is dropped, not the cluster;
    - run `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts`

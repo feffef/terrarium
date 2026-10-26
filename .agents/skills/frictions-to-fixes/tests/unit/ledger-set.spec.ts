@@ -1,5 +1,8 @@
-import { describe, expect, it } from 'vitest'
-import { parseArgs, setEntry } from '../../scripts/ledger-set.ts'
+import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { parseArgs, setEntry, writeEntry } from '../../scripts/ledger-set.ts'
 import { occurrenceBlock } from '../../scripts/print-ledger-occurrence.ts'
 
 const entry = `name: x
@@ -44,6 +47,19 @@ describe('setEntry()', () => {
     const block = occurrenceBlock({ session: 'b', startedAt: '2026-10-05T01:00:00Z', frictions: [{ severity: 'minor', description: 'e', solution: 't' }] }, 0)
     expect(setEntry(entry, { occurrences: block })).toBe(entry + block)
   })
+  it('adds notes as a |- block in field order, one line per note', () => {
+    expect(setEntry(entry, { notes: ['2026-10-05 one', '2026-10-06 two'] })).toBe(
+      entry.replace('status: open\n', 'status: open\nnotes: |-\n  2026-10-05 one\n  2026-10-06 two\n'),
+    )
+  })
+  it('appends a note, keeping the existing lines byte-for-byte', () => {
+    const noted = entry.replace('status: open\n', 'status: open\nnotes: |-\n  2026-10-01 design: "x" dropped: #12 says no\n  2026-10-02 two\n')
+    expect(setEntry(noted, { notes: ['2026-10-03 three'] })).toBe(noted.replace('two\n', 'two\n  2026-10-03 three\n'))
+  })
+  it('removes ref when cleared, keeping the rest as written', () => {
+    const withRef = entry.replace('status: open\n', 'status: open\nref: "#1 open"\n')
+    expect(setEntry(withRef, { ref: '' })).toBe(entry)
+  })
   it('refuses a result the ledger schema rejects, naming the field', () => {
     expect(() => setEntry(entry, { status: 'done' })).toThrow('status')
     const dup = occurrenceBlock({ session: 'a', startedAt: '2026-10-05T01:00:00Z', frictions: [{ severity: 'nit', description: 'e', solution: 't' }] }, 0)
@@ -58,7 +74,39 @@ describe('parseArgs()', () => {
       changes: { status: 'open', ref: 'r', fixes: [{ pr: 5, date: '2026-10-01', summary: 'S' }], replaceFixes: true },
     })
   })
+  it('reads repeated --note, --clear-ref, and --create with its fields', () => {
+    expect(parseArgs(['x', '--note', 'a', '--note', 'b', '--clear-ref']).changes).toEqual({ notes: ['a', 'b'], ref: '' })
+    expect(parseArgs(['y', '--create', '--summary', 'S', '--cause', 'C', '--surface', 'safe']).changes).toEqual({ create: { summary: 'S', cause: 'C', surface: 'safe' } })
+  })
+  it('refuses a ref clear combined with a --ref, and a create field without --create', () => {
+    expect(() => parseArgs(['x', '--ref', 'r', '--clear-ref'])).toThrow('ref given twice')
+    expect(() => parseArgs(['x', '--summary', 'S'])).toThrow('--summary needs --create')
+  })
   it('refuses --replace-fixes without a --fix, which would empty the list', () => {
     expect(() => setEntry(entry, parseArgs(['x', '--replace-fixes']).changes)).toThrow('--replace-fixes needs at least one --fix')
+  })
+})
+
+describe('writeEntry()', () => {
+  let dir: string
+  beforeEach(() => { dir = mkdtempSync(join(tmpdir(), 'ledger-set-')) })
+  afterEach(() => rmSync(dir, { recursive: true, force: true }))
+  const create = { summary: 'S.', cause: 'C.', surface: 'safe' }
+
+  it('creates a new entry, open by default, that an occurrence append then fills', () => {
+    writeEntry(dir, 'y', { create })
+    expect(readFileSync(join(dir, 'y.yml'), 'utf8')).toBe('name: y\nsummary: S.\ncause: C.\nsurface: safe\nstatus: open\noccurrences: []\n')
+    const block = occurrenceBlock({ session: 'b', startedAt: '2026-10-05T01:00:00Z', frictions: [{ severity: 'minor', description: 'e', solution: 't' }] }, 0)
+    writeEntry(dir, 'y', { occurrences: block })
+    expect(readFileSync(join(dir, 'y.yml'), 'utf8')).toBe(`name: y\nsummary: S.\ncause: C.\nsurface: safe\nstatus: open\noccurrences:\n${block}`)
+  })
+  it('refuses to create an entry that exists, and leaves it as written', () => {
+    writeFileSync(join(dir, 'x.yml'), entry)
+    expect(() => writeEntry(dir, 'x', { create })).toThrow('x already exists')
+    expect(readFileSync(join(dir, 'x.yml'), 'utf8')).toBe(entry)
+  })
+  it('refuses to create an entry missing a required field, naming it, and writes nothing', () => {
+    expect(() => writeEntry(dir, 'y', { create: { summary: 'S.', surface: 'safe' } })).toThrow('cause')
+    expect(existsSync(join(dir, 'y.yml'))).toBe(false)
   })
 })
