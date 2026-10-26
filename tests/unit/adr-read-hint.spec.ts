@@ -55,8 +55,11 @@ describe('committedShas()', () => {
     const out = '[main (root-commit) 1a2b3c4] first\n 1 file changed\n[detached HEAD 5d6e7f8a9] second\nnot [x 1234567] a summary'
     expect(committedShas('git add -A && git commit -m x', out)).toEqual(['1a2b3c4', '5d6e7f8a9'])
     expect(committedShas('W=/r/wt\ngit -C "$W" commit -F msg', '[fix/a 0123abc] y')).toEqual(['0123abc'])
-    expect(committedShas('git log -1 --oneline', '[main 1a2b3c4] first')).toEqual([])
-    expect(committedShas('echo commit\ngit status', '[main 1a2b3c4] first')).toEqual([])
+    expect(committedShas('git -C "$W" \\\n  commit -m x', '[fix/a 0123abc] y')).toEqual(['0123abc'])
+    expect(committedShas("git -c user.name='a b' --no-pager commit --amend", '[m 0123abc] y')).toEqual(['0123abc'])
+    for (const c of ['git log -1 --oneline', 'echo commit\ngit status', 'git status && echo commit', 'git log --grep commit']) {
+      expect(committedShas(c, '[main 1a2b3c4] first'), c).toEqual([])
+    }
     expect(committedShas('git commit -q -m x', '')).toEqual([])
   })
 })
@@ -65,13 +68,15 @@ describe('patchWrites()', () => {
   it('lists each touched file with its added and removed lines, new and deleted files included', () => {
     const patch = [
       'diff --git a/GLOSSARY.md b/GLOSSARY.md', 'index 1..2 100644', '--- a/GLOSSARY.md', '+++ b/GLOSSARY.md',
-      '@@ -1 +1 @@', '-old ADR-0004', '+new', '+-- not a header',
+      '@@ -1,2 +1 @@', '-old ADR-0004', '--- a removed line', '+new', '+-- not a header', '\\ No newline at end of file',
       'diff --git a/n.md b/n.md', 'new file mode 100644', '--- /dev/null', '+++ b/n.md', '@@ -0,0 +1 @@', '+per ADR-0029',
+      'diff --git a/a b.md b/a b.md', '--- a/a b.md\t', '+++ b/a b.md\t', '@@ -1 +1 @@', '+é',
       'diff --git a/gone.md b/gone.md', 'deleted file mode 100644', '--- a/gone.md', '+++ /dev/null', '@@ -1 +0,0 @@', '-bye',
     ].join('\n')
     expect(patchWrites(patch)).toEqual([
-      { file: 'GLOSSARY.md', texts: ['old ADR-0004', 'new', '-- not a header'] },
+      { file: 'GLOSSARY.md', texts: ['old ADR-0004', '-- a removed line', 'new', '-- not a header'] },
       { file: 'n.md', texts: ['per ADR-0029'] },
+      { file: 'a b.md', texts: ['é'] },
       { file: 'gone.md', texts: ['bye'] },
     ])
     expect(patchWrites('')).toEqual([])
@@ -120,7 +125,11 @@ describe('the sh pre-filter', () => {
     spawnSync('sh', ['-c', sh], { input: JSON.stringify({ tool_name: 'Bash', tool_input: { command }, tool_response: { stdout: '[m 1234567] x' } }), encoding: 'utf8' }).stdout.trim() === 'PASS'
 
   it('passes every Bash command the hook would read as a commit, and skips one with no git commit', () => {
-    for (const c of ['git commit -m "x"', 'cd /r && git add -A && git commit -F m.txt', 'W=/r/wt; git -C "$W" commit -m \'a "b"\'', 'echo hi\ngit commit --amend --no-edit']) {
+    const pre = ['', 'cd /r && ', 'echo "a\\"b" ; ', 'W=/r/wt\n', 'git add -A &&\n  ']
+    const git = ['git', 'git -C "$W"', "git -c x='a \"b\"'", 'git --no-pager', 'git -C /r \\\n ']
+    const post = [' -m "x"', " -F m.txt", ' --amend --no-edit', " -m 'it\\'s \"q\"'\necho done"]
+    for (const a of pre) for (const g of git) for (const b of post) {
+      const c = `${a}${g} commit${b}`
       expect(committedShas(c, '[m 1234567] x'), c).toEqual(['1234567'])
       expect(passesBash(c), c).toBe(true)
     }
@@ -206,7 +215,8 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     writeFileSync(join(r, 'GLOSSARY.md'), 'a\n')
     writeFileSync(join(r, 'notes.md'), 'per ADR-0004\n')
     g('add', '-A')
-    const sha = g('commit', '-q', '-m', 'x').status === 0 ? g('rev-parse', '--short', 'HEAD').stdout.trim() : ''
+    expect(g('commit', '-q', '-m', 'x').status).toBe(0)
+    const sha = g('rev-parse', '--short', 'HEAD').stdout.trim()
     const t = transcript('repo.jsonl', [{ ...start, cwd: r }])
     const bash = (command: string, extra: object = {}) => ({
       hook_event_name: 'PostToolUse', tool_name: 'Bash', cwd: r, transcript_path: t,

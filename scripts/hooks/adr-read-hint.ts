@@ -8,11 +8,13 @@
 // closing line says a late read that clears the edit is not a Friction. A
 // subagent or workflow agent is checked against its own transcript; with no
 // transcript it adds nothing, since every edit would repeat the pointer.
-// A Bash write is seen at its `git commit` (issue #2433): each commit the output
-// names is diffed, and its files and changed lines are matched the same way, so
-// a script's, a heredoc's or a workflow agent's write is caught before review
-// and push. Not seen: a write never committed, a `git commit -q`, and a commit
-// in a command that fails afterwards (PostToolUseFailure carries no stdout).
+// A Bash write is seen when a Bash call runs `git commit` (issue #2433): each
+// commit its output names is diffed, and the files and changed lines are matched
+// the same way, so a heredoc's, `sed -i`'s or a workflow agent's write is caught
+// before review and push. Not seen: a write never committed, a commit made
+// inside a script, a `git commit -q`, a merge commit, a commit in a command that
+// fails afterwards (PostToolUseFailure carries no stdout), and a path git still
+// quotes (a quote, backslash or control character in it).
 // Fails open: any error adds nothing.
 // `scripts/hooks/adr-read-hint.sh` is the hot-path pre-filter.
 //
@@ -56,29 +58,34 @@ export function adrsForWrite(file: string, texts: string[], rules: RuleFile[], a
 
 export const LATE_READ_NOTE = 'If the ADR shows the edit was already right, the late read is not a Friction.'
 
-/** One written file and the text the write changed. */
 export interface FileWrite {
   file: string
   texts: string[]
 }
 
+/** `git`, its global options, then the `commit` subcommand. */
+const GIT_COMMIT = /\bgit(?:\s+(?:-[cC]\s+(?:[^\s'"]|'[^'\n]*'|"[^"\n]*")+|--?[\w-]+(?:=\S+)?))*\s+commit\b/
+
 /** The commits a Bash `git commit` reports, from git's `[branch sha] subject`
- *  summary lines; none unless a line of the command runs `git … commit`. */
+ *  summary lines; none unless the command runs `git commit`. A trusted summary
+ *  line from another command only adds a pointer, never hides one. */
 export function committedShas(command: string, stdout: string): string[] {
-  if (!command.split('\n').some((l) => /\bgit\b.*\bcommit\b/.test(l))) return []
+  if (!GIT_COMMIT.test(command.replace(/\\\n/g, ' '))) return []
   return [...stdout.matchAll(/^\[(?:[^\]\n]* )?([0-9a-f]{7,40})\] /gm)].map((m) => m[1]!)
 }
 
 /** Each file a `git diff-tree -p -U0` patch touches, with its added and removed
- *  lines as the text to match. */
+ *  lines as the text to match, like an Edit's old and new text. */
 export function patchWrites(patch: string): FileWrite[] {
   const out: FileWrite[] = []
   let cur: FileWrite | undefined
+  let inHunk = false
   for (const line of patch.split('\n')) {
-    if (line.startsWith('diff --git ')) cur = undefined
-    else if (/^(---|\+\+\+) [ab]\//.test(line)) {
-      if (!cur) out.push((cur = { file: line.slice(6).replace(/^"|"$/g, ''), texts: [] }))
-    } else if (cur && /^[+-]/.test(line) && !/^(---|\+\+\+) /.test(line)) cur.texts.push(line.slice(1))
+    if (line.startsWith('diff --git ')) [cur, inHunk] = [undefined, false]
+    else if (line.startsWith('@@')) inHunk = true
+    else if (inHunk) {
+      if (cur && /^[+-]/.test(line)) cur.texts.push(line.slice(1))
+    } else if (!cur && /^(---|\+\+\+) [ab]\//.test(line)) out.push((cur = { file: line.slice(6).replace(/\t$/, ''), texts: [] }))
   }
   return out
 }
@@ -92,7 +99,7 @@ function writesOf(payload: unknown, root: string): FileWrite[] {
     const stdout = prop(prop(payload, 'tool_response'), 'stdout')
     if (typeof command !== 'string' || typeof stdout !== 'string') return []
     return committedShas(command, stdout).flatMap((sha) =>
-      patchWrites(tryGit(['diff-tree', '-p', '-r', '-U0', '--no-commit-id', '--no-renames', '--root', '--no-color', sha], root).out))
+      patchWrites(tryGit(['-c', 'core.quotePath=false', 'diff-tree', '-p', '-r', '-U0', '--no-commit-id', '--no-renames', '--root', '--no-color', sha], root).out))
   }
   const filePath = prop(input, 'file_path')
   if (typeof filePath !== 'string') return []
@@ -111,10 +118,12 @@ const pointedTo = (records: Record<string, unknown>[]) => new Set(records
 function hintFor(payload: unknown, dryRun = false): string | null {
   const root = repoRoot(String(prop(payload, 'cwd') ?? process.cwd()))
   if (!root) return null
+  const writes = writesOf(payload, root)
+  if (writes.length === 0) return null
   const adrs = new Map(readdirSync(join(root, ADR_DIR)).map((f) => `${ADR_DIR}/${f}`).flatMap((p) => adrDocNumber(p) ? [[adrDocNumber(p)!, p] as const] : []))
   const rules = loadRules(join(root, RULES_DIR))
   const hits = new Map<string, AdrHit & { file: string }>()
-  for (const w of writesOf(payload, root)) {
+  for (const w of writes) {
     for (const h of adrsForWrite(w.file, w.texts, rules, adrs)) if (!hits.has(h.adr)) hits.set(h.adr, { ...h, file: w.file })
   }
   if (hits.size === 0) return null
