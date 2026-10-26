@@ -4,8 +4,8 @@ The owner starting the `guest-intake` and `guest-build` Skills is the approval:
 while they run, someone without write access who confirms the idea on their own
 issue gets it built, with no per-issue approval. A request that would break or
 deface the site on purpose, raise a major security concern, add a dependency or
-touch a Human-only file goes to the owner instead. The owner reviews and merges every PR the
-pipeline opens.
+touch a Human-only file goes to the owner instead. The owner reviews and merges
+every PR the pipeline opens.
 
 ## Scope
 
