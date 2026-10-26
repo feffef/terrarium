@@ -8,19 +8,26 @@
 // closing line says a late read that clears the edit is not a Friction. A
 // subagent or workflow agent is checked against its own transcript; with no
 // transcript it adds nothing, since every edit would repeat the pointer.
-// Bash writes are not seen. Fails open: any error adds nothing.
+// A Bash write is seen at its `git commit` (issue #2433): each commit the output
+// names is diffed, and its files and changed lines are matched the same way, so
+// a script's, a heredoc's or a workflow agent's write is caught before review
+// and push. Not seen: a write never committed, a `git commit -q`, and a commit
+// in a command that fails afterwards (PostToolUseFailure carries no stdout).
+// Fails open: any error adds nothing.
 // `scripts/hooks/adr-read-hint.sh` is the hot-path pre-filter.
 //
 // Usage:
 //   tsx scripts/hooks/adr-read-hint.ts                # hook payload on stdin
 //   tsx scripts/hooks/adr-read-hint.ts --dry-run (--input '<payload json>' | --input-file <path>)
-//     (with no transcript_path, the dry run assumes an empty transcript)
+//     (with no transcript_path, the dry run assumes an empty transcript; a Bash
+//     payload needs a `git commit` command and its stdout in tool_response)
 import { readdirSync } from 'node:fs'
 import { isAbsolute, join, matchesGlob, relative } from 'node:path'
 import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runGuard } from './hook-io.ts'
 import { repoRoot } from './bash-rules-hint.ts'
 import { adrReadInFull, agentTranscript, hintText, loadDocLineIndex } from '../session/transcript-trace.ts'
 import type { DocLineIndex } from '../session/shell-reads.ts'
+import { tryGit } from '../lib/git.ts'
 import { ADR_DIR, adrDocNumber, adrHintLine, adrHintsIn, loadRules, RULES_DIR, ruleAdr, rulePaths, type AdrHintVia, type RuleFile } from '../lib/adr-rules.ts'
 
 export interface AdrHit {
@@ -49,6 +56,52 @@ export function adrsForWrite(file: string, texts: string[], rules: RuleFile[], a
 
 export const LATE_READ_NOTE = 'If the ADR shows the edit was already right, the late read is not a Friction.'
 
+/** One written file and the text the write changed. */
+export interface FileWrite {
+  file: string
+  texts: string[]
+}
+
+/** The commits a Bash `git commit` reports, from git's `[branch sha] subject`
+ *  summary lines; none unless a line of the command runs `git … commit`. */
+export function committedShas(command: string, stdout: string): string[] {
+  if (!command.split('\n').some((l) => /\bgit\b.*\bcommit\b/.test(l))) return []
+  return [...stdout.matchAll(/^\[(?:[^\]\n]* )?([0-9a-f]{7,40})\] /gm)].map((m) => m[1]!)
+}
+
+/** Each file a `git diff-tree -p -U0` patch touches, with its added and removed
+ *  lines as the text to match. */
+export function patchWrites(patch: string): FileWrite[] {
+  const out: FileWrite[] = []
+  let cur: FileWrite | undefined
+  for (const line of patch.split('\n')) {
+    if (line.startsWith('diff --git ')) cur = undefined
+    else if (/^(---|\+\+\+) [ab]\//.test(line)) {
+      if (!cur) out.push((cur = { file: line.slice(6).replace(/^"|"$/g, ''), texts: [] }))
+    } else if (cur && /^[+-]/.test(line) && !/^(---|\+\+\+) /.test(line)) cur.texts.push(line.slice(1))
+  }
+  return out
+}
+
+/** The files an Edit or Write touches, or a Bash `git commit` committed, as
+ *  repo-relative paths. */
+function writesOf(payload: unknown, root: string): FileWrite[] {
+  const input = prop(payload, 'tool_input')
+  if (prop(payload, 'tool_name') === 'Bash') {
+    const command = prop(input, 'command')
+    const stdout = prop(prop(payload, 'tool_response'), 'stdout')
+    if (typeof command !== 'string' || typeof stdout !== 'string') return []
+    return committedShas(command, stdout).flatMap((sha) =>
+      patchWrites(tryGit(['diff-tree', '-p', '-r', '-U0', '--no-commit-id', '--no-renames', '--root', '--no-color', sha], root).out))
+  }
+  const filePath = prop(input, 'file_path')
+  if (typeof filePath !== 'string') return []
+  const file = relative(root, filePath).replace(/^\.claude\/worktrees\/[^/]+\//, '')
+  if (file.startsWith('..') || isAbsolute(file)) return []
+  const texts = ['old_string', 'new_string', 'content'].map((k) => prop(input, k)).filter((t): t is string => typeof t === 'string')
+  return [{ file, texts }]
+}
+
 /** ADRs this transcript already pointed to. */
 const pointedTo = (records: Record<string, unknown>[]) => new Set(records
   .map((r) => r.attachment as { type?: string; content?: unknown } | undefined)
@@ -56,16 +109,15 @@ const pointedTo = (records: Record<string, unknown>[]) => new Set(records
   .flatMap((a) => adrHintsIn(hintText(a!.content)).map((h) => h.adr)))
 
 function hintFor(payload: unknown, dryRun = false): string | null {
-  const input = prop(payload, 'tool_input')
-  const filePath = prop(input, 'file_path')
   const root = repoRoot(String(prop(payload, 'cwd') ?? process.cwd()))
-  if (typeof filePath !== 'string' || !root) return null
-  const file = relative(root, filePath).replace(/^\.claude\/worktrees\/[^/]+\//, '')
-  if (file.startsWith('..') || isAbsolute(file)) return null
+  if (!root) return null
   const adrs = new Map(readdirSync(join(root, ADR_DIR)).map((f) => `${ADR_DIR}/${f}`).flatMap((p) => adrDocNumber(p) ? [[adrDocNumber(p)!, p] as const] : []))
-  const texts = ['old_string', 'new_string', 'content'].map((k) => prop(input, k)).filter((t): t is string => typeof t === 'string')
-  const hits = adrsForWrite(file, texts, loadRules(join(root, RULES_DIR)), adrs)
-  if (hits.length === 0) return null
+  const rules = loadRules(join(root, RULES_DIR))
+  const hits = new Map<string, AdrHit & { file: string }>()
+  for (const w of writesOf(payload, root)) {
+    for (const h of adrsForWrite(w.file, w.texts, rules, adrs)) if (!hits.has(h.adr)) hits.set(h.adr, { ...h, file: w.file })
+  }
+  if (hits.size === 0) return null
   const parent = prop(payload, 'transcript_path')
   const agent = prop(payload, 'agent_id')
   let records: Record<string, unknown>[] | null
@@ -76,9 +128,9 @@ function hintFor(payload: unknown, dryRun = false): string | null {
   // The session log's index, so a shell read counts the same in both; built
   // only when a Read hasn't settled it, since it reads the whole checkout.
   let index: DocLineIndex | undefined
-  const due = hits.filter((h) => !pointed.has(h.adr) && !adrReadInFull(records, h.adr) && !adrReadInFull(records, h.adr, (index ??= loadDocLineIndex(root))))
+  const due = [...hits.values()].filter((h) => !pointed.has(h.adr) && !adrReadInFull(records, h.adr) && !adrReadInFull(records, h.adr, (index ??= loadDocLineIndex(root))))
   if (due.length === 0) return null
-  return `${adrHintLine(due.map((h) => ({ ...h, doc: adrs.get(h.adr)!, file })))}\n${LATE_READ_NOTE}`
+  return `${adrHintLine(due.map((h) => ({ ...h, doc: adrs.get(h.adr)! })))}\n${LATE_READ_NOTE}`
 }
 
 function main(): void {

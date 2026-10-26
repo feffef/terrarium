@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { adrsForWrite, LATE_READ_NOTE } from '../../scripts/hooks/adr-read-hint.ts'
+import { adrsForWrite, committedShas, LATE_READ_NOTE, patchWrites } from '../../scripts/hooks/adr-read-hint.ts'
 import { agentTranscript } from '../../scripts/session/transcript-trace.ts'
 import { ADR_HINT_PREFIX, adrHintLine, adrHintsIn, loadRules, ruleAdr, rulePaths } from '../../scripts/lib/adr-rules.ts'
 import { runTsx } from '../support/run-script.ts'
@@ -50,6 +50,34 @@ describe('adrsForWrite()', () => {
   })
 })
 
+describe('committedShas()', () => {
+  it("reads each commit from git's summary lines, only when a command line runs git commit", () => {
+    const out = '[main (root-commit) 1a2b3c4] first\n 1 file changed\n[detached HEAD 5d6e7f8a9] second\nnot [x 1234567] a summary'
+    expect(committedShas('git add -A && git commit -m x', out)).toEqual(['1a2b3c4', '5d6e7f8a9'])
+    expect(committedShas('W=/r/wt\ngit -C "$W" commit -F msg', '[fix/a 0123abc] y')).toEqual(['0123abc'])
+    expect(committedShas('git log -1 --oneline', '[main 1a2b3c4] first')).toEqual([])
+    expect(committedShas('echo commit\ngit status', '[main 1a2b3c4] first')).toEqual([])
+    expect(committedShas('git commit -q -m x', '')).toEqual([])
+  })
+})
+
+describe('patchWrites()', () => {
+  it('lists each touched file with its added and removed lines, new and deleted files included', () => {
+    const patch = [
+      'diff --git a/GLOSSARY.md b/GLOSSARY.md', 'index 1..2 100644', '--- a/GLOSSARY.md', '+++ b/GLOSSARY.md',
+      '@@ -1 +1 @@', '-old ADR-0004', '+new', '+-- not a header',
+      'diff --git a/n.md b/n.md', 'new file mode 100644', '--- /dev/null', '+++ b/n.md', '@@ -0,0 +1 @@', '+per ADR-0029',
+      'diff --git a/gone.md b/gone.md', 'deleted file mode 100644', '--- a/gone.md', '+++ /dev/null', '@@ -1 +0,0 @@', '-bye',
+    ].join('\n')
+    expect(patchWrites(patch)).toEqual([
+      { file: 'GLOSSARY.md', texts: ['old ADR-0004', 'new', '-- not a header'] },
+      { file: 'n.md', texts: ['per ADR-0029'] },
+      { file: 'gone.md', texts: ['bye'] },
+    ])
+    expect(patchWrites('')).toEqual([])
+  })
+})
+
 describe('the pointer line', () => {
   it('parses back to each ADR and how it matched, from pointer lines only', () => {
     const line = adrHintLine([
@@ -78,7 +106,7 @@ describe('agentTranscript()', () => {
 })
 
 describe('the sh pre-filter', () => {
-  const sh = readFileSync(join(repo, 'scripts/hooks/adr-read-hint.sh'), 'utf8').replace(/^printf .*adr-read-hint\.ts$/m, 'echo PASS')
+  const sh = readFileSync(join(repo, 'scripts/hooks/adr-read-hint.sh'), 'utf8').replace(/^( *)printf .*adr-read-hint\.ts$/gm, '$1echo PASS')
   const passes = (tool_input: object, tool_response: object = {}) =>
     spawnSync('sh', ['-c', sh], { input: JSON.stringify({ tool_name: 'Edit', tool_input, tool_response }), encoding: 'utf8' }).stdout.trim() === 'PASS'
 
@@ -86,6 +114,17 @@ describe('the sh pre-filter', () => {
     const globs = loadRules(join(repo, '.claude/rules')).filter((r) => ruleAdr(r.file)).flatMap((r) => rulePaths(r.text))
     expect(globs.length).toBeGreaterThan(0)
     for (const g of globs) expect(passes({ file_path: `/r/${g.replace(/\*+/g, 'x')}` }), g).toBe(true)
+  })
+
+  const passesBash = (command: string) =>
+    spawnSync('sh', ['-c', sh], { input: JSON.stringify({ tool_name: 'Bash', tool_input: { command }, tool_response: { stdout: '[m 1234567] x' } }), encoding: 'utf8' }).stdout.trim() === 'PASS'
+
+  it('passes every Bash command the hook would read as a commit, and skips one with no git commit', () => {
+    for (const c of ['git commit -m "x"', 'cd /r && git add -A && git commit -F m.txt', 'W=/r/wt; git -C "$W" commit -m \'a "b"\'', 'echo hi\ngit commit --amend --no-edit']) {
+      expect(committedShas(c, '[m 1234567] x'), c).toEqual(['1234567'])
+      expect(passesBash(c), c).toBe(true)
+    }
+    for (const c of ['ls docs/adr', 'grep -r ADR-0004 docs', 'cat GLOSSARY.md']) expect(passesBash(c), c).toBe(false)
   })
 
   it('passes an edit naming an ADR, and skips one outside every glob', () => {
@@ -151,6 +190,36 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     expect(run(edit({ transcript_path: parent, agent_id: 'a1' })).stdout).toBe('')
     expect(run(edit({ transcript_path: parent, agent_id: 'gone' })).stdout).toBe('')
     expect(run(edit({ transcript_path: join(dir, 'nope.jsonl') })).stdout).toBe('')
+  })
+
+  it('points to the ADRs a Bash commit touches, once per ADR, and stays silent for read-only Bash or an ADR already pointed to', () => {
+    const r = mkdtempSync(join(tmpdir(), 'adr-hint-repo-'))
+    const g = (...args: string[]) => spawnSync('git', ['-c', 'user.name=t', '-c', 'user.email=t@t', '-C', r, ...args], { encoding: 'utf8' })
+    mkdirSync(join(r, '.claude/rules'), { recursive: true })
+    mkdirSync(join(r, 'docs/adr'), { recursive: true })
+    writeFileSync(join(r, '.claude/rules/adr-0021.md'), rule(['GLOSSARY.md']))
+    writeFileSync(join(r, 'docs/adr/0021-g.md'), '# ADR-0021\n')
+    writeFileSync(join(r, 'docs/adr/0004-s.md'), '# ADR-0004\n')
+    g('init', '-q')
+    g('add', '-A')
+    g('commit', '-q', '-m', 'base')
+    writeFileSync(join(r, 'GLOSSARY.md'), 'a\n')
+    writeFileSync(join(r, 'notes.md'), 'per ADR-0004\n')
+    g('add', '-A')
+    const sha = g('commit', '-q', '-m', 'x').status === 0 ? g('rev-parse', '--short', 'HEAD').stdout.trim() : ''
+    const t = transcript('repo.jsonl', [{ ...start, cwd: r }])
+    const bash = (command: string, extra: object = {}) => ({
+      hook_event_name: 'PostToolUse', tool_name: 'Bash', cwd: r, transcript_path: t,
+      tool_input: { command }, tool_response: { stdout: `[main ${sha}] x\n`, stderr: '' }, ...extra,
+    })
+    const hint = context(run(bash('git add -A && git commit -m x')))
+    expect(hint).toContain('`docs/adr/0021-g.md` (ADR-0021 governs `GLOSSARY.md`)')
+    expect(hint).toContain('`docs/adr/0004-s.md` (your edit names ADR-0004)')
+    expect(hint.match(/ADR-0021 governs/g)).toHaveLength(1)
+    expect(run(bash('git log -1 --oneline')).stdout).toBe('')
+    const pointed = transcript('repo-pointed.jsonl', [{ ...start, cwd: r }, { type: 'attachment', attachment: { type: 'hook_additional_context', content: [hint] } }])
+    expect(run(bash('git commit -m x', { transcript_path: pointed })).stdout).toBe('')
+    expect(run({ ...edit({ cwd: r, transcript_path: pointed }), tool_input: { file_path: join(r, 'GLOSSARY.md'), old_string: 'a', new_string: 'b' } }).stdout).toBe('')
   })
 
   it('fails open on a malformed payload', () => {
