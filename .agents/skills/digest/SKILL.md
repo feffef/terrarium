@@ -34,8 +34,7 @@ Done when you hold the list of days to author.
 ## 3. Write one Digest per day
 
 Before the first Digest you save, read
-`docs/adr/0010-digests-derived-append-only-journal-pages.md` in full: it decides
-which days get one, where it lives and that it is written once.
+`docs/adr/0010-digests-derived-append-only-journal-pages.md` in full.
 
 For each listed `<date>`:
 
