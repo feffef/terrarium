@@ -1,0 +1,111 @@
+schemaVersion: 1
+session: session_011toGE79jTf68dXJDRezEpc
+startedAt: 2026-10-26T20:34:50Z
+endedAt: 2026-10-26T20:45:32Z
+kind: interactive
+goal: How ADR rules and the ADR read hint interact
+status: completed
+outcome: "Answered the owner's questions, measured the hint's read verdicts since 2026-10-23, and filed issue #2575 to revisit on 2026-10-30"
+summary: "The owner asked a chain of questions, all human-instructed: how the ADR summary rules and adr-read-hint.ts interact, whether the rules could go, whether they could drop their read-the-full-ADR lines, and whether the hint triggers needless reads. I read the hook, its pre-filter, adr-rules.ts and the validate-adr-rules check. The hint reads its paths from the rules, so the rules can't go, and the read-the-full-ADR line is gate-checked and still covers reviews. To measure needless reads I joined each session log's adrHints with its docsRead useful verdicts since the hint shipped (63 logs, 70 hint-followed reads: 12 yes, 31 partly, 18 no, 9 unrated). The main causes are broad Skill paths, per-agent dedupe and text matches in test fixtures. The owner then asked why the Frictions don't show this. The hint's own \"late read is not a Friction\" line excuses exactly these cases, and the 4 related occurrences all blame lateness. The owner chose to let the hint run and asked for an issue to revisit in four days, which is #2575 (needs-triage). No code changed."
+prs: []
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting origin/main history; read only after the hint
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: issue_write for creates; list-open-issues script for the duplicate check
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "filing an issue: separate verified fact from working theory"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: a non-triage issue is filed needs-triage
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git log before reading docs/agents/git-conventions.md, against CLAUDE.md's before-first-git-command trigger; the read-first hint caught it, no harm.
+    solution: Read git-conventions.md before any git log used to draw a conclusion, even in a question-only session.
+    severity: nit
+  - description: Guessed the session-log field names (docs_read, then grepped twice) before finding docsRead and adrHints in shared/schemas/session.ts.
+    solution: Read shared/schemas/session.ts first when scanning session logs.
+    severity: minor
+durationSec: 642
+models:
+  claude-opus-5-5: 58
+toolCounts:
+  Bash: 19
+  Read: 4
+  ToolSearch: 1
+  mcp__github__issue_write: 1
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me hook and rule changes need a human merge, which I stated in answers and the issue; summary enough, no full read.
+    useful: partly
+  - path: .claude/rules/adr-0009.md
+    reason: Made me close with a log committed straight to main; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed filing a proposal as an issue without building it; the summary was enough.
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: "Gave the session header line I put at the top of issue #2575; summary enough."
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read hook files; confirmed they are Human-only, which I cited in answers and the issue.
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Loaded on reading the hook; I didn't need the guards roster to answer the questions.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Told me ADR summary-rule cuts need a Trusted-user prune trial, which shaped my answer on dropping the read lines.
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Says each summary rule names when to read its ADR, which is why the rules can't drop that line; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading adr-rules.ts; about writing ADRs, which this session didn't do.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded when I read Journal session logs as data; no Tenant work.
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded on reading audit-skills.ts; I only looked up its --adr-reads flag, not Skill grading.
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded on reading shared/schemas; about cross-Tenant reads, unrelated to this question.
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded on reading the session schema; I added no stored field, only proposed a report.
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded with the triage-labels doc; confirmed I file needs-triage and leave the readiness labels to triage.
+    useful: partly
+gitBranch: ccr-69b8e11b-58jm1j
+entrypoint: remote_mobile
+cliVersion: 2.1.310
+learnings:
+  - The docsRead useful verdicts capture needless hint-prompted ADR reads that the Frictions never see, because the hint excuses a confirming late read as not a Friction.
+ideas:
+  - "Have audit-skills --adr-reads report useful-verdict rates per ADR and per match type (path or text), so a needless pointer shows up without relying on Frictions (tracked in #2575)."
+landedBy: Stop
