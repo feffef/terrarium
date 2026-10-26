@@ -2,8 +2,8 @@ name: edit-during-gate-run
 summary: "The gate passed on a different tree than the one pushed, because files were edited during its run or committed after it."
 cause: "Agents start gate:scoped before the final head exists: they keep editing while it runs, so the e2e step builds the old tree then runs new tests, or they run it before code-review or commit, amend or fix wording after it and push without rerunning it. Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\", gate run before code-review, an amend or follow-up commit pushed after the gate."
 surface: safe
-status: tracked
-ref: "issue #2544"
+status: open
+ref: ""
 fixes:
   - pr: 2314
     date: "2026-10-20"
@@ -14,6 +14,9 @@ fixes:
   - pr: 2486
     date: "2026-10-24"
     summary: "Made gate.ts re-snapshot HEAD and the working tree before each step and abort when either changed."
+  - pr: 2549
+    date: "2026-10-25"
+    summary: "The e2e .output reuse line now names the latest source edit it compared against, so a fresh gate build is not read as stale."
 occurrences:
   - session: session_01WynjtDHvk8MajTsgr59Ckt
     date: "2026-10-16"

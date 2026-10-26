@@ -107,3 +107,8 @@ occurrences:
     severity: nit
     description: "The close-session note cited log line 210 for a claim it did not support; the Spec reviewer caught it before the first push."
     solution: "Re-open the cited lines when writing a note, not rely on the subagent's line numbers."
+  - session: session_01VfbgTTxASAKYdiziaLGuXM
+    date: "2026-10-25"
+    severity: minor
+    description: "Triage of #2544 reasoned the friction was likely a standalone e2e run; the events showed it was the gate's own fresh build, misread as stale."
+    solution: "For a regression report, inspect the reporting session's events before proposing options."

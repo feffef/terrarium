@@ -133,3 +133,8 @@ occurrences:
     severity: minor
     description: "The Standards reviewer called the brief's 'gh pr view is blocked' drift after grepping docs/agents for 'blocked', missing github-integration.md's table that lists it as GraphQL-backed and blocked in the cloud; verifying cost a lookup."
     solution: "A review brief that names github-integration.md among the standards sources whenever the diff cites a gh command; the brief now cites the doc itself."
+  - session: session_01S9UeKa9mCWdPVBjAezCSaL
+    date: "2026-10-25"
+    severity: minor
+    description: "Put the survey agent's list of nine merged fix PRs and its counts into the PR description without re-checking each against its PR, which CLAUDE.md says to do."
+    solution: "Verify each claim against gh api before quoting it, or point to the commit instead of restating it."

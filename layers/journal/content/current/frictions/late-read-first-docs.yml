@@ -574,3 +574,8 @@ occurrences:
     severity: nit
     description: "Ran git rev-parse before reading git-conventions.md; a hook prompted the read after the fact, though CLAUDE.md says to read it before the first non-status git command."
     solution: "Treat any Skill step that touches git as the trigger and read the doc first."
+  - session: session_01S9UeKa9mCWdPVBjAezCSaL
+    date: "2026-10-25"
+    severity: nit
+    description: "Ran git rev-parse HEAD before reading git-conventions.md, though CLAUDE.md names it before any git command beyond status and diff; hook told me afterwards."
+    solution: "Read the doc in the same step as the first Skill-driven git command."

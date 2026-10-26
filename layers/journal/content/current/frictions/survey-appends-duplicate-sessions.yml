@@ -31,3 +31,8 @@ occurrences:
     severity: minor
     description: "Survey subagent hit extract-frictions --unledgered keeping a session's other frictions, so it appended duplicates to 7 clusters and caught them only with its own uniqueness check."
     solution: "Make print-ledger-occurrence.ts refuse a session already in the target cluster."
+  - session: session_01S9UeKa9mCWdPVBjAezCSaL
+    date: "2026-10-25"
+    severity: minor
+    description: "Survey agent: no script creates a ledger entry, print-ledger-occurrence --append fails whole on one duplicate session, and gh api --paginate on closed issues hits a proxy 403."
+    solution: "Add a ledger-set create flag, name the colliding pair in the append error, and note the pagination trap in github-integration.md."

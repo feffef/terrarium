@@ -2,8 +2,8 @@ name: frictions-to-fixes-skill-gaps
 summary: "The frictions-to-fixes SKILL.md leaves recurring situations unspecified, so the run asks the owner or improvises."
 cause: "SKILL.md (not the survey or design briefs or the scripts) does not say how many regressions get issues, what to do when one already has an open issue, how to rank by severity, that a skipped cluster needs a recorded reason, how a ledger ref names a PR that does not exist yet, or that the owner's start approves the run's picks; the user is asked or the run improvises. Brief defects belong to frictions-to-fixes-briefs-mismatch, --summary date counting to ledger-summary-same-day-counting, repeated sessions to survey-appends-duplicate-sessions. Signals: \"the Skill says ... but not what to do\", \"had to ask the user how many\"."
 surface: safe
-status: tracked
-ref: "issue #2545"
+status: open
+ref: ""
 fixes:
   - pr: 2149
     date: "2026-10-16"
@@ -14,6 +14,9 @@ fixes:
   - pr: 2345
     date: "2026-10-20"
     summary: "Added a no-change outcome to the design step and a notes field in the ledger, so a run that finds nothing worth fixing has an outcome."
+  - pr: 2548
+    date: "2026-10-25"
+    summary: "SKILL.md §2 ranks regressions in one sentence: only still-recurring entries not accepted, on-trial or tracked, by highest severity since the latest fix."
 occurrences:
   - session: session_01Mf4dUxuWB7WtkC5fVzByH6
     date: "2026-10-16"
@@ -60,3 +63,8 @@ occurrences:
     severity: minor
     description: "The skill says to open three regression issues by severity, but the two highest-severity candidates (major, moderate) were not real regressions and needed checking against ledger dates by hand."
     solution: "Have the survey report mark whether the recurrence post-dates the issue's closure."
+  - session: session_01S9UeKa9mCWdPVBjAezCSaL
+    date: "2026-10-25"
+    severity: nit
+    description: "SKILL.md §2 says top three regressions by severity and count but not to skip trial, accepted, tracked or owner-closed ones first; I chose by judgement."
+    solution: "State the skip rule in section 2 (filed as issue 2545)."

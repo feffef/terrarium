@@ -89,3 +89,8 @@ occurrences:
     severity: nit
     description: "My first survey-brief draft told the agent to print all occurrence pairs in one call and pipe them into one entry's ledger-set.ts call, which cannot route blocks to several entries; the probe and the Spec review caught it."
     solution: "Fixed in the second commit: one print, one --occurrences file per entry. A print-ledger-occurrence flag that groups output by entry would remove the split."
+  - session: session_01VfbgTTxASAKYdiziaLGuXM
+    date: "2026-10-25"
+    severity: nit
+    description: "Inspect-session brief used a single-string selector; search.ts wants tool and regex as separate args, so the subagent first got usage only."
+    solution: "Show the selector split in the inspect-session brief template, e.g. tool Bash 'regex'."

@@ -49,3 +49,8 @@ occurrences:
     severity: nit
     description: "Full vitest run failed one unrelated journal e2e accordion test that passed when rerun alone, costing an extra rerun."
     solution: "Fix or quarantine the flaky journal accordion e2e test."
+  - session: session_01VfbgTTxASAKYdiziaLGuXM
+    date: "2026-10-25"
+    severity: nit
+    description: "A build gate run failed once on an unrelated journal e2e layout check (displacement 16px < 30px) and passed on rerun."
+    solution: "Track the journal layout test as a possible flake if it recurs."

@@ -379,3 +379,13 @@ occurrences:
     severity: nit
     description: "The Stop hook repeatedly demanded a push while ADR-0004 required review and gate first, and it counted three unpushed commits after I re-cut the branch from the merged main."
     solution: "Have the hook count against origin/main when the branch has no remote tip, and stay quiet while a gate is running."
+  - session: session_01S9UeKa9mCWdPVBjAezCSaL
+    date: "2026-10-25"
+    severity: nit
+    description: "The Stop hook asked twice to push while the gate and the design agent were running; ADR-0004 says review and gate first."
+    solution: "None; stop-hook-nag is an accepted cluster."
+  - session: session_014yTcrjFw1Qa6ABqQoGpzYq
+    date: "2026-10-26"
+    severity: nit
+    description: "Stop hook asked to commit and push three times while the fact-check and gate were running; ADR-0004 says review and gate first."
+    solution: "Have the Stop hook skip its push nag while a background gate or subagent runs."

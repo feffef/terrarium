@@ -88,3 +88,13 @@ occurrences:
     severity: nit
     description: "Patching the authored log YAML with sed and string replace failed twice: yaml.stringify rewraps folded strings, so later replaces missed and one sed left a stray line."
     solution: "Edit the authored YAML through parse/stringify only, or give log-session a --set field=value option."
+  - session: session_01S9UeKa9mCWdPVBjAezCSaL
+    date: "2026-10-25"
+    severity: minor
+    description: "ledger-set.ts has no notes flag, so I appended the two drop notes to the entry files by editing the YAML directly, against the never-by-hand rule."
+    solution: "Add a --note flag to ledger-set.ts (the ledger-yaml-hand-edit-errors cluster, regression of 2457)."
+  - session: session_01TaUpbA3idjNZSgGpNjXj8S
+    date: "2026-10-26"
+    severity: nit
+    description: "I wrote a folded YAML note that ended a line in a hyphen; validate:content rejected it as a split word."
+    solution: "Have the note-appending step run validate:content right after writing, or wrap without breaking hyphenated words."
