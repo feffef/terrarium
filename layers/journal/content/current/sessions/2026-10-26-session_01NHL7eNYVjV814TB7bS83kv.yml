@@ -1,0 +1,195 @@
+schemaVersion: 1
+session: session_01NHL7eNYVjV814TB7bS83kv
+startedAt: 2026-10-26T11:13:09Z
+endedAt: 2026-10-26T11:26:25Z
+kind: autonomous
+goal: "Scheduled blog post: one Persona post on a recent real event"
+status: in-review
+outcome: Karen post on the warning that became a refusal, PR open for a human merge
+summary: "Scheduled /blog-post run with no Persona given: rotation left eyra, karen and kevin eligible. Three candidates were drafted from the last three days (Kevin on the journal e2e flake whose 16px reading was one rem of padding, Karen on log-session turning a warning into a refusal, Eyra on the read-first hint looking one directory too shallow plus the new dispatch guard). A blind sonnet read picked Karen's; I revised it for the gaps it named, then ran Standards and Spec reviewers and a fact-check subagent, fixed the findings (quote case, a wrong claim that #2424 asked for the warning, glosses, length), ran gate:scoped green and opened the PR. Everything was agent-initiated under the scheduled prompt; no human instruction beyond the stored prompt. I kept one agency claim (the owner picked option 2) that rests only on agent-written issue comments, so the PR is left open for a human merge and no step 12 reply was attempted. Eyra's and Kevin's topics remain fresh leads."
+prs:
+  - "2569"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: Read before first git command; fetch-before-trust and commit hygiene
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: Read before first GitHub operation; MCP tool mapping and body encoding
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Review-before-push and closing a scheduled run's PR sequence
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Guard blocked my first Agent call until I read it; brief rules
+    useful: yes
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: Karen's voice and do/don't list; shaped the winning post (Standards reviewer also read it)
+    useful: yes
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: Read to draft the Kevin candidate that was discarded
+    useful: partly
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: Read to draft the Eyra candidate that was discarded
+    useful: partly
+  - path: layers/blog/GLOSSARY.md
+    reason: Standards subagent read it for audience and jargon rules; it reported yes
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: The Skill itself; Standards reviewer used its citation rules and reported yes
+    useful: yes
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-10-26-the-warning-worked-four-times-always-afterwards.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: The run's whole procedure
+  - name: dispatch-subagents
+    reason: Read after the guard denied the first dispatch
+  - name: code-review
+    reason: Invoked, then ran its Standards and Spec axes as two agents by hand
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Wrote the blind-reader brief and called Agent before reading dispatch-subagents, so the dispatch-read guard denied the call, though CLAUDE.md says read it before writing a brief.
+    solution: Read dispatch-subagents at the first sign of a subagent step; the guard caught it at the cost of one retry.
+    severity: nit
+  - description: A Standards reviewer wrongly claimed the closureRefusal line anchor was off by one and a Spec reviewer wrongly said +33 -20 was one commit's numstat; both needed my own git and API checks.
+    solution: Brief reviewers to verify anchors with git show before calling them wrong.
+    severity: nit
+  - description: The Stop hook asked to push five times while the review, fact-check and gate were still running, each time needing a reply to hold the push.
+    solution: Let the Stop hook stay quiet while a scheduled-run gate or subagent is in flight.
+    severity: nit
+durationSec: 796
+models:
+  claude-sonnet-5-5: 113
+toolCounts:
+  Bash: 28
+  Read: 4
+  ToolSearch: 1
+  mcp__github__pull_request_read: 6
+  mcp__github__issue_read: 5
+  Agent: 5
+  Skill: 3
+  ReadNotifications: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  PushNotification: 1
+filesEdited:
+  - layers/blog/content/karen/pages/2026-10-26-the-warning-worked-four-times-always-afterwards.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+docsReadBySubagents:
+  - layers/blog/GLOSSARY.md
+  - .agents/skills/blog-post/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to review and run gate:scoped before the first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Said to invoke close-session at PR open; summary was enough, no full ADR needed
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR and subscribe; this scheduled blog Skill allowed it
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; applied without opening the ADR
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback rule; post was standalone so it did not apply (subagents agreed)
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune-trial rule; no instruction text of ours was changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; not relevant to writing a post
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by a bash read; no diagrams in this task
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Reminded me to read the Tenant glossary; blog post rules came from the Skill and layers/blog/GLOSSARY.md via a subagent
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as Platform code; no Skill was changed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading hook files for the Eyra draft; no Human-only file touched
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Guard roster pointer; I only read the guard source for a blog draft
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest rule loaded by reading tenant.config.ts; I edited no manifest
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Stored-field rule; no field added
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: MDC rule loaded alongside tenant.config.ts; irrelevant to a markdown post
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Layer code rules; I wrote content only
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded for a subagent reading the glossary; not needed by me
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded for a subagent reading the glossary; not needed by me
+    useful: no
+subagents:
+  - task: Blind read of three blog drafts
+    model: sonnet
+  - task: Blind read of three blog drafts
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 5.5
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 43
+    toolCalls: 8
+    modelCalls: 4
+    tokenShare: 7.1
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 50
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 7.4
+  - task: Fact-check blog post claims
+    model: sonnet
+    durationSec: 94
+    toolCalls: 17
+    modelCalls: 5
+    tokenShare: 9.1
+gitBranch: claude/zen-heisenberg-jk8kfi
+entrypoint: remote_trigger
+cliVersion: 2.1.310
+trigger: blog-post
+learnings:
+  - A hook that denies the first dispatch (dispatch-read-guard) fires on blog-post's own blind-read step, so the Skill's steps could say to read dispatch-subagents first.
+landedBy: Stop
