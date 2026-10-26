@@ -63,15 +63,15 @@ export interface FileWrite {
   texts: string[]
 }
 
-/** `git`, its global options, then the `commit` subcommand. */
 /** git's global options that take the next word as their value. */
-const GIT_VALUE_OPTIONS = new Set(['-c', '-C', '--git-dir', '--work-tree', '--namespace'])
+const GIT_VALUE_OPTIONS = new Set(['-c', '-C', '--git-dir', '--work-tree', '--namespace', '--config-env', '--attr-source'])
 
 /** Whether a command runs `git [options] commit`. Tokenized rather than one
- *  regex, which backtracked exponentially on runs of options; each token
- *  alternative starts with a different character, so this stays linear. */
+ *  regex, which backtracked exponentially on runs of options. Each token
+ *  alternative starts with a different character and a backslash escape is
+ *  one unit, so only an unclosed quote can rescan, once. */
 export function runsGitCommit(command: string): boolean {
-  const tokens = command.replace(/\\\n/g, ' ').match(/(?:[^\s;&|()<>`'"]|'[^']*'|"(?:[^"\\]|\\.)*")+|[\n;&|()<>`]/g) ?? []
+  const tokens = command.replace(/\\\n/g, ' ').match(/(?:[^\s;&|()<>`'"\\]|\\.|'[^']*'|"(?:[^"\\]|\\.)*")+|[\n;&|()<>`]/g) ?? []
   return tokens.some((t, i) => {
     if (t !== 'git' && !t.endsWith('/git')) return false
     let j = i + 1

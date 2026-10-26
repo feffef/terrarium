@@ -70,7 +70,7 @@ describe('committedShas()', () => {
 
 describe('committedShas() on a long run of options', () => {
   it('stays linear on runs of options that could parse more than one way', () => {
-    for (const run of [' -c', ' -cx', ' --x', ' -C"a"', " -c 'a b'"]) {
+    for (const run of [' -c', ' -cx', ' --x', ' -C"a"', " -c 'a b'", ' \\"', '\\"', ' "', " '", '\\', ' \\\'']) {
       expect(committedShas(`git${run.repeat(20_000)} y`, '[m 1234567] x'), run).toEqual([])
     }
     expect(committedShas(`git${' -c a=-b'.repeat(20_000)} commit`, '[m 1234567] x')).toEqual(['1234567'])
@@ -139,7 +139,7 @@ describe('the sh pre-filter', () => {
 
   it('passes every Bash command the hook would read as a commit, and skips one with no git commit', () => {
     const pre = ['', 'cd /r && ', 'echo "a\\"b" ; ', 'W=/r/wt\n', 'git add -A &&\n  ']
-    const git = ['git', 'git -C "$W"', "git -c x='a \"b\"'", 'git --no-pager', 'git -C /r \\\n ']
+    const git = ['git', 'git -C "$W"', "git -c x='a \"b\"'", 'git --no-pager', 'git -C /r \\\n ', '(git', '`/usr/bin/git']
     const post = [' -m "x"', " -F m.txt", ' --amend --no-edit', " -m 'it\\'s \"q\"'\necho done"]
     for (const a of pre) for (const g of git) for (const b of post) {
       const c = `${a}${g} commit${b}`
