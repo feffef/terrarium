@@ -177,6 +177,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
             </li>
           </ul>
         </div>
+        <NuxtLink to="/t/journal/current#digests" class="all-digests">All daily digests <span aria-hidden="true">→</span></NuxtLink>
       </section>
     </div>
 
@@ -483,6 +484,14 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   flex-direction: column;
   gap: 0.65rem;
 }
+.all-digests {
+  align-self: flex-start;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--root-accent);
+  text-underline-offset: 2px;
+}
+.all-digests:hover { color: var(--root-ink); }
 .digest-list {
   list-style: none;
   margin: 0;

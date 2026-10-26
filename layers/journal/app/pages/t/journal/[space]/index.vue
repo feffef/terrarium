@@ -212,7 +212,7 @@ useSeoMeta({
       <ContentRenderer :value="rootDoc" />
     </section>
 
-    <section v-if="digests.length" class="panel digests">
+    <section v-if="digests.length" id="digests" class="panel digests">
       <div class="section-head">
         <h2>Daily digests</h2>
         <span class="count">newest first</span>
