@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Vg1qDutnhKVav7JDNUdr8J
 startedAt: 2026-10-26T08:59:34Z
-endedAt: 2026-10-26T15:08:05Z
+endedAt: 2026-10-26T15:09:27Z
 kind: interactive
 goal: Measure the ADR read hint after 3 days, then extend it to Bash commits
-status: in-review
-outcome: "Report on issue #2432; PR #2570 merged (closes #2433); PR #2572 (digest and audit-docs proposals) open"
-summary: "Started from a scheduled task (issue #2432, read-measure-propose only). I re-ran audit-skills --adr-reads for windows A-C, wrote per-session throwaway scripts, and used two inspect-session subagents to verify 4 Bash-write misses. I read all 230 window Frictions and posted the report on #2432: 30 misses, at least 14 of them Bash writes, and 82% of hints followed. The owner then joined (human-instructed from here). They agreed with the proposals and asked what separate Bash/Edit logging would buy; I advised dropping it, since #2433's hint makes it moot. They said to implement #2433 and picked option 2, the commit-time hint, from my question. I extended adr-read-hint.ts to read each commit a Bash `git commit` reports (diff-tree names plus a -U0 patch) and run the same matching and dedupe, widened the matcher to Bash, and added a pre-filter branch and tests. The branch's own first commit was the live probe and drew the new pointer. Five review rounds found real bugs: path quoting, dropped `-- ` lines, hunkless files, and commit detection that backtracked exponentially, then quadratically. The fix was replacing the regex with a tokenizer. gate:scoped and CI were green on 07202cb90, and the owner merged PR #2570 (Human-only hook and settings files), which closed #2433. The owner then approved proposals 5 and 6 as a separate PR and dropped 4. PR #2572 adds an ADR-0010 read to digest step 3 and a Prune Trial skip to the audit-docs reviewer brief, after code-review and a green gate; the new commit hint fired on its own commit (ADR-0015)."
+status: completed
+outcome: "Report on issue #2432; PR #2570 merged (closes #2433, ADR hint at git commit); PR #2572 merged (digest and audit-docs proposals)"
+summary: "Started from a scheduled task (issue #2432, read-measure-propose only). I re-ran audit-skills --adr-reads for windows A-C, wrote per-session throwaway scripts, and used two inspect-session subagents to verify 4 Bash-write misses. I read all 230 window Frictions and posted the report on #2432: 30 misses, at least 14 of them Bash writes, and 82% of hints followed. The owner then joined (human-instructed from here). They agreed with the proposals and asked what separate Bash/Edit logging would buy; I advised dropping it, since #2433's hint makes it moot. They said to implement #2433 and picked option 2, the commit-time hint, from my question. I extended adr-read-hint.ts to read each commit a Bash `git commit` reports (diff-tree names plus a -U0 patch) and run the same matching and dedupe, widened the matcher to Bash, and added a pre-filter branch and tests. The branch's own first commit was the live probe and drew the new pointer. Five review rounds found real bugs: path quoting, dropped `-- ` lines, hunkless files, and commit detection that backtracked exponentially, then quadratically. The fix was replacing the regex with a tokenizer. gate:scoped and CI were green on 07202cb90, and the owner merged PR #2570 (Human-only hook and settings files), which closed #2433. The owner then approved proposals 5 and 6 as a separate PR and dropped 4. PR #2572 adds an ADR-0010 read to digest step 3 and a Prune Trial skip to the audit-docs reviewer brief, after code-review and a green gate; the new commit hint fired on its own commit (ADR-0015). I merged #2572 on green CI."
 prs:
   - "2570"
   - "2572"
@@ -102,24 +102,24 @@ frictions:
   - description: First pre-filter test replaced only an unindented tsx line, so the new indented Bash branch ran real tsx and the test failed for a harness reason; also, one test fixture committed files in the wrong order.
     solution: Make the sh test's substitution global and indentation-tolerant, and build fixtures in commit order.
     severity: nit
-durationSec: 22111
+durationSec: 22194
 models:
-  claude-opus-5-5: 359
+  claude-opus-5-5: 372
 toolCounts:
-  Bash: 115
+  Bash: 119
   ToolSearch: 2
   mcp__github__issue_read: 5
   Read: 13
   Agent: 11
   Write: 3
   Edit: 3
-  mcp__github__add_issue_comment: 2
-  Skill: 6
+  mcp__github__add_issue_comment: 3
+  Skill: 7
   AskUserQuestion: 1
   Grep: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 5
+  ReadNotifications: 7
   mcp__claude-code-remote__send_later: 1
 filesEdited:
   - .agents/skills/digest/SKILL.md
@@ -236,13 +236,13 @@ subagents:
     durationSec: 144
     toolCalls: 30
     modelCalls: 28
-    tokenShare: 3.3
+    tokenShare: 3.1
   - task: Inspect 019SN writes
     model: sonnet
     durationSec: 182
     toolCalls: 34
     modelCalls: 33
-    tokenShare: 4.1
+    tokenShare: 3.9
   - type: general-purpose
     task: Standards review of commit hint
     durationSec: 81
@@ -254,7 +254,7 @@ subagents:
     durationSec: 70
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: Standards review of follow-up
     durationSec: 230
@@ -266,7 +266,7 @@ subagents:
     durationSec: 52
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: general-purpose
     task: Two-axis review of second follow-up
     durationSec: 195
@@ -298,7 +298,7 @@ subagents:
     durationSec: 21
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.2
+    tokenShare: 1.1
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.310
