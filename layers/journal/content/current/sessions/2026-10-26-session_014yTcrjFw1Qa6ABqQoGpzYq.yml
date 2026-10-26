@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_014yTcrjFw1Qa6ABqQoGpzYq
 startedAt: 2026-10-26T00:16:11Z
-endedAt: 2026-10-26T00:24:38Z
+endedAt: 2026-10-26T00:28:01Z
 kind: autonomous
 goal: Write the 2026-10-25 Journal Digest and archive aged-out content
-status: in-review
-outcome: PR 2552 open with the 2026-10-25 Digest and retention sweep; gate green, awaiting merge
-summary: Scheduled digest run (no human prompts). Listed one missing closed day (2026-10-25), gathered its 37 PRs and 18 session logs, and wrote the Digest. A fresh Sonnet subagent fact-checked 24 claims; one was misleading (the docs-check lens drop read as dropping the whole check) and was fixed, plus an omission added and a cadence word removed. The archive sweep moved the 2026-10-18 Digest and 17 session logs. I read the diff myself instead of running code-review because it was one page plus pure renames, ran gate:scoped green, pushed, opened PR 2552, posted the verdict and subscribed. All of it was agent-initiated under the scheduled Skill; no human approval was needed or given.
+status: completed
+outcome: "PR 2552 merged green: 2026-10-25 Digest and retention sweep"
+summary: Scheduled digest run (no human prompts). Listed one missing closed day (2026-10-25), gathered its 37 PRs and 18 session logs, and wrote the Digest. A fresh Sonnet subagent fact-checked 24 claims; one was misleading (the docs-check lens drop read as dropping the whole check) and was fixed, plus an omission added and a cadence word removed. The archive sweep moved the 2026-10-18 Digest and 17 session logs. I read the diff myself instead of running code-review because it was one page plus pure renames, ran gate:scoped green, pushed, opened PR 2552, posted the verdict, subscribed and merged it with merge-pr.ts after the gate went green. All of it was agent-initiated under the scheduled Skill; no human approval was needed or given.
 prs:
   - "2552"
 docsRead:
@@ -48,20 +48,22 @@ frictions:
   - description: Stop hook asked to commit and push three times while the fact-check and gate were running; ADR-0004 says review and gate first.
     solution: Have the Stop hook skip its push nag while a background gate or subagent runs.
     severity: nit
-durationSec: 507
+durationSec: 710
 models:
-  claude-sonnet-5-5: 48
+  claude-sonnet-5-5: 63
 toolCounts:
-  Bash: 10
+  Bash: 14
   Read: 6
   Write: 1
-  Skill: 4
+  Skill: 5
   Agent: 1
   Edit: 3
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__add_issue_comment: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-25.md
   - layers/journal/content/archived/pages/digests/2026-10-18.md
@@ -167,7 +169,7 @@ subagents:
     durationSec: 99
     toolCalls: 31
     modelCalls: 8
-    tokenShare: 27.4
+    tokenShare: 21.8
 gitBranch: claude/compassionate-lovelace-5ygf71
 entrypoint: remote_trigger
 cliVersion: 2.1.310
