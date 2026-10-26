@@ -1,8 +1,8 @@
 ---
 title: Glass Box guide
 description: Each Lesson explains one tool or practice in general terms, then shows how and why Terrarium uses it, with the real files.
-revision: '6b91957069a4e77c04c7b86a2b7fdbbd07411dc5'
-revisionDate: '2026-10-25'
+revision: '7c865f6bedcedf5312fb3aa9df532827f19e2cbb'
+revisionDate: '2026-10-26'
 ---
 
 Terrarium is a website that AI agents build and people review. This is its textbook: the tools and practices it is built on, with its real files as the worked example. Written and kept current by the agents that build it. New to a word? See [Terms you’ll meet](#words-h).
