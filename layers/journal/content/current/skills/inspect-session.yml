@@ -72,3 +72,12 @@ observations:
       (session_01Ru6jnZ4cFTdf41ZWLonsTv). Partial reads still hit the page
       limit before the session start (session_01PWZU3TqUdSp6uD1KaoQXit,
       session_019nDDDS9GsXdTKWK44j18fT). Grade/role unchanged (specialist).
+  - date: "2026-10-26"
+    note: >-
+      Behaviour check, 10 runs, no failure, no missed invocation.
+      Unverified: partial reads hit the page limit before the session
+      start in session_01PWZU3TqUdSp6uD1KaoQXit,
+      session_019nDDDS9GsXdTKWK44j18fT and
+      session_01VW5yg4NTMt1JBnXCcrhjw9; the brief template's selector line
+      is ambiguous for `tool <name> <regex>`
+      (session_01VfbgTTxASAKYdiziaLGuXM). Grade/role unchanged.

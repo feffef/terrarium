@@ -144,3 +144,11 @@ observations:
       openFindings that way; session_013QKXoGLaEHEJanyw5TrPqj did the same on
       #2515); session_01PYyNMqrrDLZdXEej11LMzs sent follow-up grilling
       questions mixed with tool calls. Grade/role unchanged (specialist).
+  - date: "2026-10-26"
+    note: >-
+      Behaviour check, 10 runs, 43 PRs merged, no revert. Unverified:
+      session_01PdrNTJLJJMKBGGZfsAhL6w pushed a hand edit on a branch marked
+      ready-to-push without re-running gate:scoped (the Skill says nothing
+      about re-gating after an own edit); step 4's 'push from its
+      worktree' conflicts with the harness (session_013QKXoGLaEHEJanyw5TrPqj).
+      Grade/role unchanged.

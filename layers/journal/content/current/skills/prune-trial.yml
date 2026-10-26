@@ -433,3 +433,10 @@ observations:
       stated vs -26) and session_0149fVyZ37qWGMuwVPw3Uryc (PR #2412, repeat of
       the 10-24 note). The numstat clause landed after both; no post-review
       change has tested it. Grade/role unchanged (routine).
+  - date: "2026-10-26"
+    note: >-
+      Behaviour check, 9 runs, all PRs merged. Still unverified-by-fix:
+      the live ledger entry for PR #2447 says -27 net, numstat gives -26
+      (session_011hiFhM9A2Sbn4mGYbdtAhJ); the entry is unjudged, so
+      correct it before its verdict. Runs after the numstat clause stated
+      right deltas. Grade/role unchanged (routine).

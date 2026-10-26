@@ -384,3 +384,11 @@ observations:
       (session_01Ku4KD2Ua5MXi6eQ95TG4aj, session_01EQ8sMcrX7UwDXFBx6tfUWu;
       probably session_01HcMFbKDTkG7hs2VhByAs4b). Filed as #2527. Grade/role
       unchanged (routine).
+  - date: "2026-10-26"
+    note: >-
+      Behaviour check, 7 runs, all PRs merged, no revert. Verified silent
+      failure, repeat of #2395's shape: session_01Ku4KD2Ua5MXi6eQ95TG4aj
+      (PR #2482) named an ADR-0023 lead-vs-scope conflict and filed
+      nothing; filed as #2553. Minor: ADR-0004 summary rule left stale
+      until PR #2510; checkers saw only their own pool file
+      (session_01EQ8sMcrX7UwDXFBx6tfUWu). Grade/role unchanged (routine).
