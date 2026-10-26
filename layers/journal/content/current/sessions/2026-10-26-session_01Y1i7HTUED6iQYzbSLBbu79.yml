@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01Y1i7HTUED6iQYzbSLBbu79
 startedAt: 2026-10-26T13:38:34Z
-endedAt: 2026-10-26T13:50:59Z
+endedAt: 2026-10-26T13:54:52Z
 kind: autonomous
 goal: Scheduled prune trial of the Platform's agent instructions
-status: in-review
-outcome: "Judged two prune trials (both hold); opened a new one cutting log-session restatements; PR #2571 open"
-summary: "Scheduled /prune-trial run, no human involved. The window script showed two judgeable trials (long-command backgrounding, workflow-write ban). 53 and 51 sessions of Frictions since each landed had no major or blocker damage and no regression issue, so both entries were deleted. A Sonnet search subagent found five failed-as-prose candidates; the ones with a wired guard or an already goal-shaped line had nothing left to cut, and the close-session rule (#2209) is held only by step-specific restatements, so I cut only the duplicated closure prose in log-session's \"When to invoke\" (-8 net), keeping all five status values. A Sonnet probe pinned to the post-prune SHA answered correctly; code-review found two small gaps (dropped \"never completed\" hint, missing proven field), fixed by amend; gate:scoped green; PR #2571 opened. All choices were agent-initiated within the Skill's remit."
+status: completed
+outcome: "Judged two prune trials (both hold); opened a new one cutting log-session restatements; PR #2571 merged"
+summary: "Scheduled /prune-trial run, no human involved. The window script showed two judgeable trials (long-command backgrounding, workflow-write ban). 53 and 51 sessions of Frictions since each landed had no major or blocker damage and no regression issue, so both entries were deleted. A Sonnet search subagent found five failed-as-prose candidates; the ones with a wired guard or an already goal-shaped line had nothing left to cut, and the close-session rule (#2209) is held only by step-specific restatements, so I cut only the duplicated closure prose in log-session's \"When to invoke\" (-8 net), keeping all five status values. A Sonnet probe pinned to the post-prune SHA answered correctly; code-review found two small gaps (dropped \"never completed\" hint, missing proven field), fixed by amend; gate:scoped green; PR #2571 opened, got a green CI gate and was merged via merge-pr.ts after a verdict comment. All choices were agent-initiated within the Skill's remit."
 prs:
   - "2571"
 docsRead:
@@ -76,19 +76,23 @@ frictions:
   - description: Stop hook asked to push three times while the probe and gate were pending; ADR-0004 says review and gate first.
     solution: "Let the Stop hook skip its push nag while a background gate or agent runs (known, #2233)."
     severity: nit
-durationSec: 745
+durationSec: 978
 models:
-  claude-sonnet-5-5: 84
+  claude-sonnet-5-5: 98
 toolCounts:
   Read: 7
-  Bash: 23
+  Bash: 25
   mcp__github__search_issues: 2
-  Skill: 4
+  Skill: 5
   Agent: 4
   Grep: 1
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - .agents/skills/log-session/SKILL.md
@@ -164,28 +168,28 @@ subagents:
     durationSec: 97
     toolCalls: 22
     modelCalls: 10
-    tokenShare: 15.3
+    tokenShare: 13.2
   - type: general-purpose
     task: Probe pruned log-session text
     model: sonnet
     durationSec: 13
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 2.9
+    tokenShare: 2.5
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 45
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 7.6
+    tokenShare: 6.5
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 42
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 7.7
+    tokenShare: 6.6
 gitBranch: claude/practical-rubin-pd9yjg
 entrypoint: remote_trigger
 cliVersion: 2.1.310
