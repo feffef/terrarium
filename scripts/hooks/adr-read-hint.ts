@@ -64,15 +64,27 @@ export interface FileWrite {
 }
 
 /** `git`, its global options, then the `commit` subcommand. */
-// A value never starts with `-` and no other option is `-c`/`-C`, so each token
-// parses one way only; else backtracking is exponential in repeated `-c`s.
-const GIT_COMMIT = /\bgit(?:\s+(?:-[cC]\s*(?!-)(?:[^\s'"]|'[^'\n]*'|"[^"\n]*")+|--?(?![cC](?:\s|$))[\w-]+(?:=\S+)?))*\s+commit(?![^\s;&|)])/
+/** git's global options that take the next word as their value. */
+const GIT_VALUE_OPTIONS = new Set(['-c', '-C', '--git-dir', '--work-tree', '--namespace'])
+
+/** Whether a command runs `git [options] commit`. Tokenized rather than one
+ *  regex, which backtracked exponentially on runs of options; each token
+ *  alternative starts with a different character, so this stays linear. */
+export function runsGitCommit(command: string): boolean {
+  const tokens = command.replace(/\\\n/g, ' ').match(/(?:[^\s;&|()<>`'"]|'[^']*'|"(?:[^"\\]|\\.)*")+|[\n;&|()<>`]/g) ?? []
+  return tokens.some((t, i) => {
+    if (t !== 'git' && !t.endsWith('/git')) return false
+    let j = i + 1
+    while (tokens[j]?.startsWith('-')) j += GIT_VALUE_OPTIONS.has(tokens[j]!) ? 2 : 1
+    return tokens[j] === 'commit'
+  })
+}
 
 /** The commits a Bash `git commit` reports, from git's `[branch sha] subject`
  *  summary lines; none unless the command runs `git commit`. A summary line
  *  from another command only adds a pointer, never hides one. */
 export function committedShas(command: string, stdout: string): string[] {
-  if (!GIT_COMMIT.test(command.replace(/\\\n/g, ' '))) return []
+  if (!runsGitCommit(command)) return []
   return [...stdout.matchAll(/^\[(?:[^\]\n]* )?([0-9a-f]{7,40})\] /gm)].map((m) => m[1]!)
 }
 

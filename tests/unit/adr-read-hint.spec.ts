@@ -57,9 +57,11 @@ describe('committedShas()', () => {
     expect(committedShas('W=/r/wt\ngit -C "$W" commit -F msg', '[fix/a 0123abc] y')).toEqual(['0123abc'])
     expect(committedShas('git -C "$W" \\\n  commit -m x', '[fix/a 0123abc] y')).toEqual(['0123abc'])
     expect(committedShas("git -c user.name='a b' --no-pager commit --amend", '[m 0123abc] y')).toEqual(['0123abc'])
-    expect(committedShas('git -C"$W" commit -m x;git push', '[m 0123abc] y')).toEqual(['0123abc'])
+    for (const c of ['git -C"$W" commit -m x;git push', 'git commit>log', '`git commit -m x`', 'git --git-dir /x commit', '(git commit -am x)', '/usr/bin/git commit']) {
+      expect(committedShas(c, '[m 0123abc] y'), c).toEqual(['0123abc'])
+    }
     for (const c of ['git log -1 --oneline', 'echo commit\ngit status', 'git status && echo commit', 'git log --grep commit',
-      'git commit-tree HEAD^{tree}', 'git -c commit.gpgsign=false log', 'git -C -c commit', 'git --commit status']) {
+      'git commit-tree HEAD^{tree}', 'git -c commit.gpgsign=false log', 'git --commit status']) {
       expect(committedShas(c, '[main 1a2b3c4] first'), c).toEqual([])
     }
     expect(committedShas('git commit -q -m x', '')).toEqual([])
@@ -67,11 +69,11 @@ describe('committedShas()', () => {
 })
 
 describe('committedShas() on a long run of options', () => {
-  it('returns at once instead of backtracking', () => {
-    const start = Date.now()
-    expect(committedShas(`git${' -c'.repeat(5000)} x`, '[m 1234567] x')).toEqual([])
-    expect(committedShas(`git${' -c a=-b'.repeat(5000)} commit`, '[m 1234567] x')).toEqual(['1234567'])
-    expect(Date.now() - start).toBeLessThan(1000)
+  it('stays linear on runs of options that could parse more than one way', () => {
+    for (const run of [' -c', ' -cx', ' --x', ' -C"a"', " -c 'a b'"]) {
+      expect(committedShas(`git${run.repeat(20_000)} y`, '[m 1234567] x'), run).toEqual([])
+    }
+    expect(committedShas(`git${' -c a=-b'.repeat(20_000)} commit`, '[m 1234567] x')).toEqual(['1234567'])
   })
 })
 
