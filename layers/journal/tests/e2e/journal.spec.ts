@@ -536,6 +536,14 @@ describe('journal Tenant', async () => {
         page.locator('.digest-body').first(),
       )
 
+      // The pin settles before the digest's content renders or its height
+      // transition ends, so wait for both: an unfinished open measures only
+      // the body's 1rem padding-bottom (16px) and fails the premise (#2551).
+      await page.locator('.digest-body > :not(h1)').first().waitFor({ state: 'visible' })
+      await page.waitForFunction(
+        () => !(document.querySelector('.digest-body-clip') as HTMLElement | null)?.style.height,
+      )
+
       const card = page.locator('.feed .card').first()
       const id = (await card.getAttribute('id'))!
       const siblingHeight = await page.evaluate(() => {
