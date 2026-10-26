@@ -52,7 +52,8 @@ lenses.
 3. Tell every agent the finding format: the file plus the exact sentence,
    quoted whole with its line breaks, plus replacement text. No line ranges
    (reviewers get them wrong). A finding outside its own lenses is still
-   reported, named by its lens, and joins the pool like any other.
+   reported, named by its lens, and joins the pool like any other. Tell them
+   to skip text an open trial in `.agents/prune-trials.yml` covers (ADR-0027).
 4. Save each agent's reply verbatim into the pool, a new scratchpad folder:
    `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <pool>/<agent-id>.md`.
 
