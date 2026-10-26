@@ -340,6 +340,8 @@ describe('journal Tenant', async () => {
     const newest = currentDigestDates().at(-1)!
     const html = await $fetch('/t/journal/current')
     expect(html).toContain('Daily digests')
+    expect(html).toContain('id="digests"')
+    expect(await $fetch('/')).toContain('href="/t/journal/current#digests"') // the homepage panel's read-on link
     expect(html).toContain(digestBodySnippet(newest)) // the Digest body, preloaded inline
     const digest = await $fetch(`/t/journal/current/digests/${newest}`)
     expect(digest).toMatch(/<h1[ >]/) // the standalone route still renders
