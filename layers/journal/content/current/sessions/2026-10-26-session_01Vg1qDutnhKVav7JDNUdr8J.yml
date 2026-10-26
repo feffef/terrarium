@@ -1,13 +1,14 @@
 schemaVersion: 1
 session: session_01Vg1qDutnhKVav7JDNUdr8J
 startedAt: 2026-10-26T08:59:34Z
-endedAt: 2026-10-26T09:10:30Z
-kind: autonomous
-goal: "Check whether sessions read the ADRs their edits touch, 3 days after the adr-read-hint hook (issue #2432)"
-status: completed
-outcome: "Report posted on issue #2432: 30 window-C misses, at least 14 Bash writes; hint followed 82%"
-summary: "Started by a scheduled or system-delivered task, not a human prompt. The task told me to run issue #2432's steps 1-7 and post one report comment, with no PR, no hook edit and no follow-up issues; I kept to that. I re-ran audit-skills --adr-reads for windows A, B and C (A and B matched the baseline exactly). A throwaway per-session script reused audit-skills' own functions for outliers, medians, the hint split and the misses. Window C's share read in full, without outliers, was 62%, against 25% (A) and 36% (B). 60 of 73 hints were followed (main 29/31, subagent 31/42), and all were path matches. A hook dry run showed the text match works; window C simply had no edit that needed it. I traced the 30 misses through filesEdited, commit-derived files and main-only toolCounts. Two inspect-session subagents verified 4 Bash writes, and 10 more were inferred from tool counts, 5 were workflow agents' edits and 11 stay unresolved. I read all 230 window Frictions and counted 2 ADR-content mistakes in 51 sessions, against #2286's 4/86 and 3/61. The Friction Ledger has 0 new binding-docs-skipped and 1 premise-not-questioned. Proposals went into the comment for the owner."
-prs: []
+endedAt: 2026-10-26T11:34:29Z
+kind: interactive
+goal: Measure the ADR read hint after 3 days, then extend it to Bash commits
+status: in-review
+outcome: "Report posted on issue #2432; PR #2570 (hint at git commit, issue #2433) open, waiting for a human merge"
+summary: "Started from a scheduled task (issue #2432, read-measure-propose only). I re-ran audit-skills --adr-reads for windows A-C, wrote per-session throwaway scripts, and used two inspect-session subagents to verify 4 Bash-write misses. I read all 230 window Frictions and posted the report on #2432: 30 misses, at least 14 of them Bash writes, and 82% of hints followed. The owner then joined (human-instructed from here). They agreed with the proposals and asked what separate Bash/Edit logging would buy; I advised dropping it, since #2433's hint makes it moot. They said to implement #2433 and picked option 2, the commit-time hint, from my question. I extended adr-read-hint.ts to read each commit a Bash `git commit` reports (diff-tree names plus a -U0 patch) and run the same matching and dedupe, widened the matcher to Bash, and added a pre-filter branch and tests. The branch's own first commit was the live probe and drew the new pointer. Five review rounds found real bugs: path quoting, dropped `-- ` lines, hunkless files, and commit detection that backtracked exponentially, then quadratically. The fix was replacing the regex with a tokenizer. gate:scoped is green on 07202cb90. PR #2570 waits for a human merge (Human-only hook and settings files). Still open with the owner: whether to build proposals 5 and 6 (digest ADR-0010 read, audit-docs reviewers and prune trials) as a separate PR, and whether to drop proposal 4."
+prs:
+  - "2570"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: fetch before trusting history; read before git fetch
@@ -24,8 +25,31 @@ docsRead:
   - path: .agents/skills/blog-post/SKILL.md
     reason: step 7 saves the post from the scratchpad, which explains the Bash-written Blog misses
     useful: yes
+  - path: docs/agents/guards.md
+    reason: "hint conventions: sh pre-filter, fail open, property tests, roster row to update"
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, follow-up review rule, gate last on final head
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: read after the new commit hint fired; confirmed the PR needs a human merge
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: read after the commit hint; confirmed no trial overlap for guards.md
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: read after the commit hint; already describes a hint after each write, so no ADR change needed
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: text-match hint from a test fixture naming it; not relevant to the change
+    useful: no
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: text-match hint from a test fixture naming it; not relevant to the change
+    useful: no
   - path: .throwaway/adr-hint-audit/fr.md
     reason: (no reason given)
+  - path: tests/unit/adr-read-hint.spec.ts
+    reason: (read before editing)
 skillsUsed:
   - name: inspect-session
     reason: verify how two sessions wrote their governed files (both Bash)
@@ -33,6 +57,8 @@ skillsUsed:
     reason: before writing the two inspection briefs
   - name: close-session
     reason: closing after the report comment, as the task asked
+  - name: code-review
+    reason: "Standards and Spec review of the #2433 diff and each review-fix follow-up"
   - name: log-session
     reason: (no reason given)
 frictions:
@@ -51,19 +77,41 @@ frictions:
   - description: Spent a detour checking whether the nested-transcript fix (#2546/#2550) changed adr-read-hint; it already used agentTranscript, so it did not.
     solution: Grep the hook's own imports first before reading another fix's history.
     severity: nit
-durationSec: 656
+  - description: Edited the hook while the first pnpm gate:scoped ran, against pr-workflow.md's 'edit nothing until it ends'; that gate run was wasted.
+    solution: Start the gate only after the last review round has reported.
+    severity: minor
+  - description: "Commit detection took three review rounds: two regex fixes still backtracked exponentially, then the tokenizer was quadratic on unquoted escapes, before an escape-aware tokenizer held."
+    solution: For hook input parsing, start with a tokenizer whose alternatives start with distinct characters, and time adversarial runs before the first review.
+    severity: moderate
+  - description: pr-workflow's follow-up rule sent four review-fix commits through further reviews (about 370k subagent tokens). Each round did find a real bug, but most of the cost came from the regex path.
+    solution: "None proposed: pr-workflow.md is in an open Prune Trial, so the cost is logged here for its verdict."
+    severity: minor
+  - description: First pre-filter test replaced only an unindented tsx line, so the new indented Bash branch ran real tsx and the test failed for a harness reason; also, one test fixture committed files in the wrong order.
+    solution: Make the sh test's substitution global and indentation-tolerant, and build fixtures in commit order.
+    severity: nit
+durationSec: 9295
 models:
-  claude-opus-5-5: 123
+  claude-opus-5-5: 294
 toolCounts:
-  Bash: 49
-  ToolSearch: 1
-  mcp__github__issue_read: 2
-  Read: 3
-  Agent: 2
-  Write: 2
+  Bash: 99
+  ToolSearch: 2
+  mcp__github__issue_read: 4
+  Read: 10
+  Agent: 9
+  Write: 3
   Edit: 1
   mcp__github__add_issue_comment: 1
-  Skill: 2
+  Skill: 4
+  AskUserQuestion: 1
+  Grep: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - scripts/hooks/adr-read-hint.ts
+  - tests/unit/adr-read-hint.spec.ts
+  - scripts/hooks/adr-read-hint.sh
+  - .claude/settings.json
+  - docs/agents/guards.md
 rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
@@ -80,16 +128,43 @@ rulesGlobal:
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+adrHints:
+  - adr: 4
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+  - adr: 21
+    via: text
+    readAfter: true
+    by: main
+  - adr: 30
+    via: text
+    readAfter: true
+    by: main
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
-    reason: About gating and merging PRs; this run opened no PR, though it is window C's ADR for the process-slip counts; summary enough
-    useful: no
+    reason: Held the first push until code-review and gate:scoped were done, despite repeated Stop-hook nags; read the full ADR when the hint fired
+    useful: yes
   - path: .claude/rules/adr-0009.md
     reason: Told me to close via close-session and keep the log off any branch; summary was enough, full ADR not needed
     useful: yes
   - path: .claude/rules/adr-0003.md
-    reason: "Its open-a-PR rule did not apply: the task said read and propose only, with no pushed branch"
-    useful: no
+    reason: "Owner approved #2433 in chat, then I opened PR #2570 right after the first push and subscribed; summary enough"
+    useful: yes
   - path: .claude/rules/adr-0017.md
     reason: "Made me start the #2432 comment with this session's header line; summary enough"
     useful: yes
@@ -97,14 +172,14 @@ ruleVerdicts:
     reason: Loaded on reading git-conventions; it framed the cut-before-adding mistake I counted in step 6; summary enough
     useful: partly
   - path: .claude/rules/adr-0029.md
-    reason: Loaded on reading git-conventions; it gave context for the hint's design but changed nothing I did
-    useful: no
+    reason: Hint design sits under it; the full ADR (read after the hint) confirmed it already covers a hint after each write
+    useful: yes
   - path: .claude/rules/adr-0015.md
     reason: Loaded on reading audit-skills.ts; I only ran it, never edited a Skill, so it did not apply
     useful: no
   - path: .claude/rules/adr-0004-human-merge.md
-    reason: Loaded on reading shared/schemas; I changed no file, so it did not apply
-    useful: no
+    reason: "Told me hooks and settings.json are Human-only, so PR #2570 says it waits for a human merge"
+    useful: yes
   - path: .claude/rules/adr-0025.md
     reason: Loaded with shared/ reads; cross-Tenant reads were unrelated to this audit
     useful: no
@@ -112,8 +187,8 @@ ruleVerdicts:
     reason: Made proposal 7 a shape question for the owner, not a field to add; it changed the wording
     useful: yes
   - path: .claude/rules/guards.md
-    reason: Loaded on reading the hook; it pointed to the guard roster I didn't need
-    useful: no
+    reason: Pointed to docs/agents/guards.md, whose conventions shaped the pre-filter, fail-open and property tests
+    useful: yes
   - path: .claude/rules/adr-0030.md
     reason: Loaded on reading adr-rules.ts; it concerns ADR wording, which this audit did not touch
     useful: no
@@ -129,18 +204,63 @@ subagents:
     durationSec: 144
     toolCalls: 30
     modelCalls: 28
-    tokenShare: 14
+    tokenShare: 4.7
   - task: Inspect 019SN writes
     model: sonnet
     durationSec: 182
     toolCalls: 34
     modelCalls: 33
-    tokenShare: 17.3
+    tokenShare: 5.8
+  - type: general-purpose
+    task: Standards review of commit hint
+    durationSec: 81
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.9
+  - type: general-purpose
+    task: Spec review of commit hint
+    durationSec: 70
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 2
+  - type: general-purpose
+    task: Standards review of follow-up
+    durationSec: 230
+    toolCalls: 11
+    modelCalls: 11
+    tokenShare: 2
+  - type: general-purpose
+    task: Spec review of follow-up
+    durationSec: 52
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 0.8
+  - type: general-purpose
+    task: Two-axis review of second follow-up
+    durationSec: 195
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.1
+  - type: general-purpose
+    task: Two-axis review of tokenizer commit
+    durationSec: 96
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 1.3
+  - type: general-purpose
+    task: Review escape-aware tokenizer commit
+    durationSec: 134
+    toolCalls: 11
+    modelCalls: 8
+    tokenShare: 1.7
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.310
 learnings:
   - "A session log's toolCounts counts the main agent only, while filesEdited also folds in subagents' edits and the session's committed files (the latter catching Bash writes, #2386)."
+  - node:path matchesGlob does not match dotfiles with **, so a rule glob like dir/** misses dir/.gitkeep for both Edit and commit hints.
+  - git diff-tree -p prints no header for an empty, binary or mode-only change; --name-only is needed to list every changed file.
 ideas:
   - "Give adr-read-hint a Bash sibling that runs git diff --name-only after a Bash call that changed the tree and points to the ADRs governing the changed paths: it would catch heredoc, sed -i and python replaces, which made at least 14 of 30 misses (#2433)."
+  - Give hook parsers a shared linear shell tokenizer in scripts/hooks/hook-io.ts with one adversarial timing test, so read-first-hint, bash-rules-hint and adr-read-hint stop growing separate regexes that can backtrack.
 landedBy: Stop
