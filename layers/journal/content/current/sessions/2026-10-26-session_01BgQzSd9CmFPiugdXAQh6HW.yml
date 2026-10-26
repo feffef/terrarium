@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01BgQzSd9CmFPiugdXAQh6HW
 startedAt: 2026-10-26T04:03:30Z
-endedAt: 2026-10-26T04:17:26Z
+endedAt: 2026-10-26T04:20:21Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs for drift and duplication
-status: in-review
-outcome: "Sweep PR #2560 open with 2 confirmed fixes; 5 findings rejected"
-summary: "Scheduled audit-docs run, no human prompts. Three reviewers (Freshness, Single-home, Coherence) returned 7 findings; one checker returned 2 CONFIRMED, 0 CONFIRMED-BUT, 5 WRONG. Applied (agent-initiated, per the Skill): dropped the per-Tenant term lists from GLOSSARY-MAP.md (ADR-0021; Tinkerfund's had drifted) and a duplicated sentence in the Commons glossary. Rejected findings were mostly inside open Prune Trials (pr-workflow, github-integration), which the reviewers had not been told to check. Review and gate:scoped clean, PR opened and subscribed, no escalation PR needed. Open: github-integration.md says a single backtick is not enough for bare angle brackets, but the guard's bareAngleBracketSpan allows inline backticks; left alone because the text is under a trial."
+status: completed
+outcome: "Sweep PR #2560 merged with 2 confirmed fixes; 5 findings rejected"
+summary: "Scheduled audit-docs run, no human prompts. Three reviewers (Freshness, Single-home, Coherence) returned 7 findings; one checker returned 2 CONFIRMED, 0 CONFIRMED-BUT, 5 WRONG. Applied (agent-initiated, per the Skill): dropped the per-Tenant term lists from GLOSSARY-MAP.md (ADR-0021; Tinkerfund's had drifted) and a duplicated sentence in the Commons glossary. Rejected findings were mostly inside open Prune Trials (pr-workflow, github-integration), which the reviewers had not been told to check. Review and gate:scoped clean, PR merged on green, no escalation PR needed. Open: github-integration.md says a single backtick is not enough for bare angle brackets, but the guard's bareAngleBracketSpan allows inline backticks; left alone because the text is under a trial."
 prs:
   - "2560"
 docsRead:
@@ -135,16 +135,20 @@ frictions:
   - description: Worked on a local branch audit-docs/2026-10-26 and pushed it to the designated session branch rather than staying on it.
     solution: Rename the session branch instead of cutting a second one.
     severity: nit
-durationSec: 835
+durationSec: 1011
 models:
-  claude-sonnet-5-5: 57
+  claude-sonnet-5-5: 76
 toolCounts:
   Read: 3
-  Skill: 5
-  Bash: 17
+  Skill: 7
+  Bash: 22
   Agent: 6
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - GLOSSARY-MAP.md
   - layers/commons/GLOSSARY.md
@@ -309,37 +313,37 @@ subagents:
     durationSec: 73
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 9.3
+    tokenShare: 8.2
   - type: general-purpose
     task: "Audit docs: Single-home"
     durationSec: 201
     toolCalls: 43
     modelCalls: 25
-    tokenShare: 23.7
+    tokenShare: 21
   - type: general-purpose
     task: "Audit docs: Coherence"
     durationSec: 132
     toolCalls: 23
     modelCalls: 22
-    tokenShare: 13.6
+    tokenShare: 12
   - type: general-purpose
     task: "Audit docs: fact-check findings"
     durationSec: 172
     toolCalls: 35
     modelCalls: 23
-    tokenShare: 16.1
+    tokenShare: 14.3
   - type: general-purpose
     task: Review standards axis
     durationSec: 25
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 5.4
+    tokenShare: 4.8
   - type: general-purpose
     task: Review spec axis
     durationSec: 18
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 4
+    tokenShare: 3.6
 gitBranch: claude/festive-mayer-mowjs7
 entrypoint: remote_trigger
 cliVersion: 2.1.310
