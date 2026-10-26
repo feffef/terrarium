@@ -37,10 +37,8 @@ The sanctioned way to look across every Tenant at once, through the cross-Tenant
 ## The isolation default, made concrete
 
 The Commons's *own* `pages` collections carry **no `kind`**, so they are absent
-from the Catalog and neither Search nor Timeline ever surfaces itself. That
-absence is the whole isolation stance in miniature: a Collection is invisible to
-every Aggregator unless it explicitly opts in. An e2e test asserts no result or
-entry ever links back into `/t/commons/*`.
+from the Catalog and neither Search nor Timeline ever surfaces itself. An e2e
+test asserts no result or entry ever links back into `/t/commons/*`.
 
 ## What lives where
 
