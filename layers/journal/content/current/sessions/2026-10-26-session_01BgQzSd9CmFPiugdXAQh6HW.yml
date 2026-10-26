@@ -1,0 +1,347 @@
+schemaVersion: 1
+session: session_01BgQzSd9CmFPiugdXAQh6HW
+startedAt: 2026-10-26T04:03:30Z
+endedAt: 2026-10-26T04:17:26Z
+kind: autonomous
+goal: Scheduled audit of the repo's docs for drift and duplication
+status: in-review
+outcome: "Sweep PR #2560 open with 2 confirmed fixes; 5 findings rejected"
+summary: "Scheduled audit-docs run, no human prompts. Three reviewers (Freshness, Single-home, Coherence) returned 7 findings; one checker returned 2 CONFIRMED, 0 CONFIRMED-BUT, 5 WRONG. Applied (agent-initiated, per the Skill): dropped the per-Tenant term lists from GLOSSARY-MAP.md (ADR-0021; Tinkerfund's had drifted) and a duplicated sentence in the Commons glossary. Rejected findings were mostly inside open Prune Trials (pr-workflow, github-integration), which the reviewers had not been told to check. Review and gate:scoped clean, PR opened and subscribed, no escalation PR needed. Open: github-integration.md says a single backtick is not enough for bare angle brackets, but the guard's bareAngleBracketSpan allows inline backticks; left alone because the text is under a trial."
+prs:
+  - "2560"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command; fetch-first guidance
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR steps
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before first GitHub op
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: docs/agents/guest-contributions.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: docs/agents/tenant-layers.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: docs/agents/mdc-when-to-use.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: GLOSSARY.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: yes
+  - path: layers/commons/GLOSSARY.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: layers/journal/GLOSSARY.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: layers/midden/GLOSSARY.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: docs/research/making-repo-public.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: docs/research/public-readiness-review.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: docs/proposals/README.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: .agents/skills/domain-modeling/GLOSSARY-FORMAT.md
+    reason: read by a subagent as audit scope or evidence; per its report
+    useful: partly
+  - path: README.md
+    reason: (no reason given)
+  - path: SECURITY.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (no reason given)
+  - path: deploy/README.md
+    reason: (no reason given)
+  - path: CLAUDE.md
+    reason: (no reason given)
+  - path: GLOSSARY-MAP.md
+    reason: (read before editing)
+skillsUsed:
+  - name: audit-docs
+    reason: the task itself
+  - name: dispatch-subagents
+    reason: brief rules for reviewers and checker
+  - name: code-review
+    reason: pre-push review of the diff
+  - name: github-integration
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Invoked a nonexistent github-integration Skill; the doc is docs/agents/github-integration.md and was read right after.
+    solution: CLAUDE.md already names it as a doc; read it with Read, not Skill.
+    severity: nit
+  - description: Reviewers were not told about open Prune Trials, so 3 of 5 rejected findings targeted text ADR-0027 bars changing.
+    solution: "Add one line to the audit-docs reviewer instructions: skip text covered by .agents/prune-trials.yml."
+    severity: minor
+  - description: Worked on a local branch audit-docs/2026-10-26 and pushed it to the designated session branch rather than staying on it.
+    solution: Rename the session branch instead of cutting a second one.
+    severity: nit
+durationSec: 835
+models:
+  claude-sonnet-5-5: 57
+toolCounts:
+  Read: 3
+  Skill: 5
+  Bash: 17
+  Agent: 6
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - GLOSSARY-MAP.md
+  - layers/commons/GLOSSARY.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/glassbox-content.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - docs/agents/domain.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - layers/commons/GLOSSARY.md
+  - docs/agents/triage-labels.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/close-session/SKILL.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/verifying-ui-changes.md
+  - GLOSSARY.md
+  - docs/adr/0004-objective-safety-gate.md
+  - layers/journal/GLOSSARY.md
+  - layers/glassbox/GLOSSARY.md
+  - layers/midden/GLOSSARY.md
+  - docs/research/making-repo-public.md
+  - docs/research/public-readiness-review.md
+  - docs/proposals/README.md
+  - .agents/skills/inspect-session/SKILL.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - .agents/skills/domain-modeling/GLOSSARY-FORMAT.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Shaped a decision (PR flow, merge, glossary home or trial limits); summary sufficed, full ADR not opened
+    useful: partly
+  - path: .claude/rules/adr-0004.md
+    reason: Shaped a decision (PR flow, merge, glossary home or trial limits); summary sufficed, full ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Shaped a decision (PR flow, merge, glossary home or trial limits); summary sufficed, full ADR not opened
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Shaped a decision (PR flow, merge, glossary home or trial limits); summary sufficed, full ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Shaped a decision (PR flow, merge, glossary home or trial limits); summary sufficed, full ADR not opened
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Shaped a decision (PR flow, merge, glossary home or trial limits); summary sufficed, full ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0025.md
+    reason: Shaped a decision (PR flow, merge, glossary home or trial limits); summary sufficed, full ADR not opened
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded by hook; not about this docs sweep
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Audit docs: Freshness"
+    durationSec: 73
+    toolCalls: 16
+    modelCalls: 12
+    tokenShare: 9.3
+  - type: general-purpose
+    task: "Audit docs: Single-home"
+    durationSec: 201
+    toolCalls: 43
+    modelCalls: 25
+    tokenShare: 23.7
+  - type: general-purpose
+    task: "Audit docs: Coherence"
+    durationSec: 132
+    toolCalls: 23
+    modelCalls: 22
+    tokenShare: 13.6
+  - type: general-purpose
+    task: "Audit docs: fact-check findings"
+    durationSec: 172
+    toolCalls: 35
+    modelCalls: 23
+    tokenShare: 16.1
+  - type: general-purpose
+    task: Review standards axis
+    durationSec: 25
+    toolCalls: 9
+    modelCalls: 4
+    tokenShare: 5.4
+  - type: general-purpose
+    task: Review spec axis
+    durationSec: 18
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 4
+gitBranch: claude/festive-mayer-mowjs7
+entrypoint: remote_trigger
+cliVersion: 2.1.310
+trigger: audit-docs
+landedBy: Stop
