@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01TaUpbA3idjNZSgGpNjXj8S
 startedAt: 2026-10-26T00:47:16Z
-endedAt: 2026-10-26T00:59:50Z
+endedAt: 2026-10-26T01:03:12Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "Inventory observations PR #2555 open; 2 issues filed and 1 thread commented"
-summary: "Scheduled /audit-skills firing, no human prompts; every step was agent-initiated. Gathered the 7-day scorecard, had one Sonnet agent fetch usage for 4 unlisted Routine runs and 13 read-only Sonnet agents check one Skill each. Closure signals: both orphan candidates carry resolvedBy, the scan ran (1670 merged PRs, 1513 with a session), no manual rescues, and the one human-prompted closure is already on close-session's observations. Escalated three things after reading source myself: #2553 (audit-docs named an ADR-0023 lead-vs-scope conflict and filed nothing; repeat of #2395's shape), #2554 (frictions-to-fixes step 5 asks for drop notes that ledger-set.ts cannot write; verified in three runs), and a comment on #2472 for one more first-push code-review skip (digest, PR #2552). Everything else became observations on 10 Inventory entries plus 4 Routine run-cost rows. No grade or role changed, since no finding gave two cited sessions for one. Not done: I did not re-verify the subagents' counts for the blog-post and prune-trial notes myself (all PRs merged; the -27 vs -26 delta), so those notes rest on their reports. Code-review and gate:scoped ran before the first push; PR #2555 is open and subscribed."
+status: completed
+outcome: "Inventory observations merged in #2555; 2 issues filed and 1 thread commented"
+summary: "Scheduled /audit-skills firing, no human prompts; every step was agent-initiated. Gathered the 7-day scorecard, had one Sonnet agent fetch usage for 4 unlisted Routine runs and 13 read-only Sonnet agents check one Skill each. Closure signals: both orphan candidates carry resolvedBy, the scan ran (1670 merged PRs, 1513 with a session), no manual rescues, and the one human-prompted closure is already on close-session's observations. Escalated three things after reading source myself: #2553 (audit-docs named an ADR-0023 lead-vs-scope conflict and filed nothing; repeat of #2395's shape), #2554 (frictions-to-fixes step 5 asks for drop notes that ledger-set.ts cannot write; verified in three runs), and a comment on #2472 for one more first-push code-review skip (digest, PR #2552). Everything else became observations on 10 Inventory entries plus 4 Routine run-cost rows. No grade or role changed, since no finding gave two cited sessions for one. Not done: I did not re-verify the subagents' counts for the blog-post and prune-trial notes myself (all PRs merged; the -27 vs -26 delta), so those notes rest on their reports. Code-review and gate:scoped ran before the first push; PR #2555 merged on a green gate."
 prs:
   - "2555"
 docsRead:
@@ -84,13 +84,16 @@ frictions:
   - description: Subagent reports gave truncated ids and several counts I could not re-check cheaply, so two notes rest on their word.
     solution: Brief the checkers to quote full session ids and mark each claim verified or reported.
     severity: minor
-durationSec: 755
+  - description: Chained cd into the skills folder twice, which silently moved the shell's working directory for later calls.
+    solution: Use absolute paths or git -C instead of cd, as the Bash tool guidance says.
+    severity: nit
+durationSec: 956
 models:
-  claude-sonnet-5-5: 112
+  claude-sonnet-5-5: 126
 toolCounts:
-  Bash: 27
+  Bash: 31
   Read: 7
-  Skill: 4
+  Skill: 5
   Agent: 16
   mcp__github__issue_read: 3
   mcp__github__issue_write: 2
@@ -99,6 +102,7 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
+  ReadNotifications: 2
 filesEdited:
   - layers/journal/content/current/skills/clear-backlog.yml
   - layers/journal/content/current/skills/dispatch-subagents.yml
@@ -210,112 +214,112 @@ subagents:
     durationSec: 22
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: general-purpose
     task: Check audit-docs behaviour
     model: sonnet
     durationSec: 95
     toolCalls: 18
     modelCalls: 10
-    tokenShare: 5.2
+    tokenShare: 4.9
   - type: general-purpose
     task: Check audit-skills behaviour
     model: sonnet
     durationSec: 80
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 5.1
+    tokenShare: 4.8
   - type: general-purpose
     task: Check blog-post behaviour
     model: sonnet
     durationSec: 67
     toolCalls: 15
     modelCalls: 10
-    tokenShare: 5
+    tokenShare: 4.8
   - type: general-purpose
     task: Check clear-backlog behaviour
     model: sonnet
     durationSec: 84
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 4.5
+    tokenShare: 4.3
   - type: general-purpose
     task: Check close-session behaviour
     model: sonnet
     durationSec: 53
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 3.5
+    tokenShare: 3.3
   - type: general-purpose
     task: Check digest behaviour
     model: sonnet
     durationSec: 51
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 3.9
+    tokenShare: 3.7
   - type: general-purpose
     task: Check dispatch-subagents behaviour
     model: sonnet
     durationSec: 109
     toolCalls: 20
     modelCalls: 13
-    tokenShare: 6.8
+    tokenShare: 6.4
   - type: general-purpose
     task: Check frictions-to-fixes behaviour
     model: sonnet
     durationSec: 74
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 4.4
+    tokenShare: 4.1
   - type: general-purpose
     task: Check glassbox-update behaviour
     model: sonnet
     durationSec: 48
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 3.3
+    tokenShare: 3.2
   - type: general-purpose
     task: Check inspect-session behaviour
     model: sonnet
     durationSec: 67
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 5
+    tokenShare: 4.7
   - type: general-purpose
     task: Check log-session behaviour
     model: sonnet
     durationSec: 106
     toolCalls: 16
     modelCalls: 13
-    tokenShare: 5.9
+    tokenShare: 5.6
   - type: general-purpose
     task: Check prune-trial behaviour
     model: sonnet
     durationSec: 63
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 4.1
+    tokenShare: 3.9
   - type: general-purpose
     task: Check visitor-loop behaviour
     model: sonnet
     durationSec: 98
     toolCalls: 18
     modelCalls: 11
-    tokenShare: 5.6
+    tokenShare: 5.3
   - type: general-purpose
     task: Standards review of Inventory commit
     model: sonnet
     durationSec: 50
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 3
+    tokenShare: 2.9
   - type: general-purpose
     task: Spec review of Inventory commit
     model: sonnet
     durationSec: 42
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 3.1
+    tokenShare: 2.9
 gitBranch: claude/upbeat-sagan-1e09ph
 entrypoint: remote_trigger
 cliVersion: 2.1.310
