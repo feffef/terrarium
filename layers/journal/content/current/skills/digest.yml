@@ -306,3 +306,10 @@ observations:
       session_01XueFVQyVySVEKHxSHTFeTh, session_011G3PKUqDog2WRSuqypmuJX,
       session_01Dz5nEANXqTtZzTki1C5ArD (all verified in logs); added to #2472,
       parked on the pr-workflow trial. Grade/role unchanged (routine).
+  - date: "2026-10-26"
+    note: >-
+      Behaviour check, 7 runs, all Digests on main, no revert. Repeat:
+      first-push code-review replaced by a self-read on a sweep diff; new
+      instance session_014yTcrjFw1Qa6ABqQoGpzYq (PR #2552), added to #2472
+      with the earlier ones. Unchecked: PR bodies (GraphQL 403).
+      Grade/role unchanged (routine).

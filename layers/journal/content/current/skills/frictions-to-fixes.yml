@@ -327,3 +327,10 @@ observations:
       tracked in #2521. Unverified: ledger-set.ts has no flag for drop notes
       or clearing ref, so all 3 runs hand-edited. Grade/role unchanged
       (routine).
+  - date: "2026-10-26"
+    note: >-
+      Behaviour check, 3 newest runs, PRs merged, no revert. Verified:
+      step 5 asks for drop notes but ledger-set.ts has no flag, so
+      session_01S9UeKa9mCWdPVBjAezCSaL, session_017vrdmQQwC4obwbJS9G5Dyg
+      and session_019jfJv6yLmcLUAJiTTomyeu hand-edited the YAML. Filed as
+      #2554. Grade/role unchanged (routine).

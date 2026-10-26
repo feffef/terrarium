@@ -370,3 +370,11 @@ observations:
       without re-dispatch (#2370). #2512 (fact-check after commit and review)
       landed after every run, so it is untested. Grade/role unchanged
       (routine).
+  - date: "2026-10-26"
+    note: >-
+      Behaviour check, 7 runs, all 14 PRs merged, no deletion. Repeat of
+      #2370: session_01Nzhsg2KY7V9o2AmYWK2cqy (PRs #2409, #2411) shipped a
+      'Later unchecked edits' bullet under the pre-#2453 text; the 10-25
+      run (session_01GKJysgAiGN7bmdFJcKvFoC) improved, so #2512 is partly
+      tested. Step 9's review is read as ambiguous for prose posts.
+      Grade/role unchanged.
