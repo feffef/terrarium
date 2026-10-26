@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
 surface: safe
-status: tracked
-ref: "issue #2556"
+status: on-trial
+ref: "Prune Trial opened 2026-10-25 by PR #2537 (territory: CLAUDE.md 'Verify before you state' bullet, dispatch-subagents §3 last bullets, audit-skills subagent paragraph, clear-backlog §3 ready-to-push bullet, clear-backlog-build.js reviewPrompt Standards text; keywords 'Verify before you state', 'count is a fact', 'candidate material', 'hearsay'). Issue #2522 closed by PR #2537."
 fixes:
   - pr: 2336
     date: "2026-10-20"
