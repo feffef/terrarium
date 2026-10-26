@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01NHL7eNYVjV814TB7bS83kv
 startedAt: 2026-10-26T11:13:09Z
-endedAt: 2026-10-26T11:26:25Z
+endedAt: 2026-10-26T13:10:10Z
 kind: autonomous
 goal: "Scheduled blog post: one Persona post on a recent real event"
-status: in-review
-outcome: Karen post on the warning that became a refusal, PR open for a human merge
-summary: "Scheduled /blog-post run with no Persona given: rotation left eyra, karen and kevin eligible. Three candidates were drafted from the last three days (Kevin on the journal e2e flake whose 16px reading was one rem of padding, Karen on log-session turning a warning into a refusal, Eyra on the read-first hint looking one directory too shallow plus the new dispatch guard). A blind sonnet read picked Karen's; I revised it for the gaps it named, then ran Standards and Spec reviewers and a fact-check subagent, fixed the findings (quote case, a wrong claim that #2424 asked for the warning, glosses, length), ran gate:scoped green and opened the PR. Everything was agent-initiated under the scheduled prompt; no human instruction beyond the stored prompt. I kept one agency claim (the owner picked option 2) that rests only on agent-written issue comments, so the PR is left open for a human merge and no step 12 reply was attempted. Eyra's and Kevin's topics remain fresh leads."
+status: completed
+outcome: Karen post on the warning that became a refusal, merged by a human as PR 2569
+summary: "Scheduled /blog-post run with no Persona given: rotation left eyra, karen and kevin eligible. Three candidates were drafted from the last three days (Kevin on the journal e2e flake whose 16px reading was one rem of padding, Karen on log-session turning a warning into a refusal, Eyra on the read-first hint looking one directory too shallow plus the new dispatch guard). A blind sonnet read picked Karen's; I revised it for the gaps it named, then ran Standards and Spec reviewers and a fact-check subagent, fixed the findings (quote case, a wrong claim that #2424 asked for the warning, glosses, length), ran gate:scoped green and opened the PR. Everything was agent-initiated under the scheduled prompt; no human instruction beyond the stored prompt. I kept one agency claim (the owner picked option 2) that rests only on agent-written issue comments, so the PR was left open for a human merge and no step 12 reply was attempted; a human merged it later. Eyra's and Kevin's topics remain fresh leads."
 prs:
   - "2569"
 docsRead:
@@ -62,18 +62,18 @@ frictions:
   - description: The Stop hook asked to push five times while the review, fact-check and gate were still running, each time needing a reply to hold the push.
     solution: Let the Stop hook stay quiet while a scheduled-run gate or subagent is in flight.
     severity: nit
-durationSec: 796
+durationSec: 7021
 models:
-  claude-sonnet-5-5: 113
+  claude-sonnet-5-5: 129
 toolCounts:
-  Bash: 28
+  Bash: 30
   Read: 4
   ToolSearch: 1
-  mcp__github__pull_request_read: 6
+  mcp__github__pull_request_read: 7
   mcp__github__issue_read: 5
   Agent: 5
-  Skill: 3
-  ReadNotifications: 2
+  Skill: 4
+  ReadNotifications: 5
   mcp__github__create_pull_request: 1
   mcp__github__update_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
@@ -167,25 +167,25 @@ subagents:
     durationSec: 16
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 5.5
+    tokenShare: 4
   - task: Standards review of blog post
     model: sonnet
     durationSec: 43
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 7.1
+    tokenShare: 5.1
   - task: Spec review of blog post
     model: sonnet
     durationSec: 50
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 7.4
+    tokenShare: 5.4
   - task: Fact-check blog post claims
     model: sonnet
     durationSec: 94
     toolCalls: 17
     modelCalls: 5
-    tokenShare: 9.1
+    tokenShare: 6.6
 gitBranch: claude/zen-heisenberg-jk8kfi
 entrypoint: remote_trigger
 cliVersion: 2.1.310
