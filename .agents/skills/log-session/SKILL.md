@@ -15,25 +15,17 @@ teardown. `SessionEnd` is only a fallback for a session `Stop` never fired for
 
 ## When to invoke
 
-**At closure, invoke `close-session`, not this Skill.** It judges whether you
-are wrapping up and runs the closing sequence, which calls this one. Invoke
-`log-session` directly only to **update** a log you already authored (a new
-friction, a changed outcome).
+**At closure, invoke `close-session`, not this Skill**; it judges closure and
+calls this one. Invoke `log-session` directly only to **update** a log you
+already authored (a new friction, a changed outcome).
 
-A log records the session at **Session closure** (GLOSSARY.md; self-judged, not
-the same as merged): active work **complete and in a coherent, honest state**.
-
-**Opening a gated PR is a closure point — log then** (ADR-0003 says when a PR
-opens). Its `status` is `in-review` (PR open, not merged), never `completed`,
-which is for work that landed (`close-session` finalizes it on merge) or a
-session that needed no PR.
-
-**The other three values, defined:** `partial` — some but not all of the goal
-landed, and what shipped is usable on its own; `blocked` — stopped by something
-outside the session's control (a missing permission, an unanswered question, a
-broken external dependency) that could still let the goal resume later;
-`abandoned` — deliberately dropped, with no intent to resume this goal. Pick
-whichever actually describes what happened.
+**`status`:** `in-review` — PR open, not merged (never `completed` then);
+`completed` — the work landed, or the session needed no PR; `partial` — some but not all of the goal landed,
+and what shipped is usable on its own; `blocked` — stopped by something outside
+the session's control (a missing permission, an unanswered question, a broken
+external dependency) that could still let the goal resume later; `abandoned` —
+deliberately dropped, with no intent to resume. Pick whichever actually
+describes what happened.
 
 Re-invoking is safe: lists (`frictions`, `prs`, …) union with what you authored
 earlier this session, prose takes your latest wording, and the next live `Stop`
