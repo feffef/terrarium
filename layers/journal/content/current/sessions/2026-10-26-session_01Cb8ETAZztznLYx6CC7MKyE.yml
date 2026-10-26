@@ -1,14 +1,18 @@
 schemaVersion: 1
 session: session_01Cb8ETAZztznLYx6CC7MKyE
 startedAt: 2026-10-26T08:54:09Z
-endedAt: 2026-10-26T09:15:28Z
+endedAt: 2026-10-26T09:21:54Z
 kind: interactive
 goal: Clear the issue backlog with clear-backlog
 status: in-review
-outcome: "8 issues triaged, owner grilled, 6 branches building; PR #2563 open for #2558"
+outcome: "8 issues triaged, owner grilled; #2563 merged, PRs #2564-#2567 open, #2556 branch gating"
 summary: "The owner invoked clear-backlog (human-instructed). The sweep found 8 eligible issues: #2562, #2554, #2556, #2558, #2557, #2553, #2551 and #2432. #2433 was skipped because #2432 blocks it, and 7 ready-for-human issues were skipped because an agent wrote their last comment. The explore workflow returned 5 build results and 3 grill results. The owner told me to leave #2432 out of this session and run its measurement in a separate Opus session, which I created (session_01Vg1qDutnhKVav7JDNUdr8J). Owner answers: #2553 1a (escalate only break or deface on purpose); #2556 2a (superseded by the Verify-before-you-state Prune Trial; ledger entry to on-trial); #2558 a new option (no screenshots for content changes, only for layout or feature changes; Glass Box only; diagrams count as layout). I recorded each answer on its issue and relabelled it ready-for-agent. Builds run as three workflow runs. The #2558 branch came back ready-to-push. I cut its glassbox-update step 5 restatement to a pointer (my own call, per one-home-per-fact; the reviewer had flagged it as a judgement call), re-gated and opened PR #2563. The other five branches are still building."
 prs:
   - "2563"
+  - "2564"
+  - "2565"
+  - "2566"
+  - "2567"
 docsRead:
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: Guard demanded it before the Workflow call; confirmed the saved workflows brief and isolate their own agents
@@ -88,21 +92,23 @@ frictions:
   - description: "The triage agent for #2558 said a ledger occurrence was allowed by the rule; I could not verify that cheaply and flagged it as unverified in the grilling."
     solution: Have triage cite the exact rule line and session log line for an 'allowed by rule' claim.
     severity: nit
-durationSec: 1279
+durationSec: 1665
 models:
-  claude-opus-5-5: 88
+  claude-opus-5-5: 124
 toolCounts:
-  Bash: 26
+  Bash: 39
   Workflow: 5
   Read: 1
   ToolSearch: 3
   PushNotification: 2
   mcp__claude-code-remote__create_session: 1
-  mcp__github__add_issue_comment: 3
+  mcp__github__add_issue_comment: 4
   mcp__github__issue_write: 3
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 5
+  mcp__claude-code-remote__subscribe_pr_activity: 5
   Skill: 2
+  ReadNotifications: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/tests/unit/ledger-set.spec.ts
   - .agents/skills/frictions-to-fixes/scripts/ledger-set.ts
@@ -111,10 +117,10 @@ filesEdited:
   - .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
   - layers/journal/tests/e2e/journal.spec.ts
   - layers/journal/content/current/frictions/relayed-subagent-claims.yml
-  - .agents/skills/glassbox-update/SKILL.md
-  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - .claude/rules/adr-0023.md
   - docs/adr/0023-guest-driven-demo-pipeline.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - .agents/skills/inspect-session/SKILL.md
 rulesLoaded:
   - .claude/rules/adr-0022.md
@@ -223,266 +229,266 @@ subagents:
     durationSec: 40
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards fix/journal-e2e-sibling-collapse-flake r2
     model: claude-opus-5-5
     durationSec: 32
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: build fix/inspect-session-save-every-page
     model: claude-sonnet-5-5
     durationSec: 146
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 2.9
+    tokenShare: 2.7
   - type: workflow-subagent
     task: Standards fix/frictions-ledger-script-gaps r1
     model: claude-opus-5-5
     durationSec: 47
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards fix/journal-e2e-sibling-collapse-flake r1
     model: claude-opus-5-5
     durationSec: 58
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: Spec fix/frictions-ledger-script-gaps r1
     model: claude-opus-5-5
     durationSec: 63
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: gate fix/inspect-session-save-every-page
     model: claude-sonnet-5-5
     durationSec: 57
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec fix/journal-e2e-sibling-collapse-flake r1
     model: claude-opus-5-5
     durationSec: 52
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: build fix/frictions-ledger-script-gaps
     model: claude-opus-5-5
     durationSec: 687
     toolCalls: 67
     modelCalls: 40
-    tokenShare: 10.7
+    tokenShare: 9.7
   - type: workflow-subagent
     task: Standards fix/inspect-session-save-every-page r1
     model: claude-opus-5-5
     durationSec: 40
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2.2
+    tokenShare: 2
   - type: workflow-subagent
     task: build fix/journal-e2e-sibling-collapse-flake
     model: claude-sonnet-5-5
     durationSec: 459
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 3.3
+    tokenShare: 3
   - type: workflow-subagent
     task: Spec fix/journal-e2e-sibling-collapse-flake r2
     model: claude-opus-5-5
     durationSec: 40
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1.5
+    tokenShare: 1.3
   - type: workflow-subagent
     task: gate fix/journal-e2e-sibling-collapse-flake
     model: claude-sonnet-5-5
-    durationSec: 3
-    toolCalls: 2
-    modelCalls: 1
-    tokenShare: 0.5
+    durationSec: 318
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.7
   - type: workflow-subagent
     task: fix fix/journal-e2e-sibling-collapse-flake r1
     model: claude-sonnet-5-5
     durationSec: 452
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.8
+    tokenShare: 1.6
   - type: workflow-subagent
     task: gate fix/frictions-ledger-script-gaps
     model: claude-opus-5-5
     durationSec: 254
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: "triage #2553"
     model: claude-opus-5-5
     durationSec: 84
     toolCalls: 18
     modelCalls: 9
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: workflow-subagent
     task: "triage #2557"
     model: claude-opus-5-5
     durationSec: 115
     toolCalls: 21
     modelCalls: 14
-    tokenShare: 3.9
+    tokenShare: 3.6
   - type: workflow-subagent
     task: "triage #2554"
     model: claude-opus-5-5
     durationSec: 133
     toolCalls: 22
     modelCalls: 14
-    tokenShare: 4
+    tokenShare: 3.7
   - type: workflow-subagent
     task: "triage #2556"
     model: claude-opus-5-5
     durationSec: 133
     toolCalls: 25
     modelCalls: 17
-    tokenShare: 4.5
+    tokenShare: 4.1
   - type: workflow-subagent
     task: "triage #2562"
     model: claude-opus-5-5
     durationSec: 111
     toolCalls: 20
     modelCalls: 14
-    tokenShare: 4.7
+    tokenShare: 4.3
   - type: workflow-subagent
     task: "triage #2432"
     model: claude-opus-5-5
     durationSec: 68
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 2.5
+    tokenShare: 2.3
   - type: workflow-subagent
     task: "triage #2551"
     model: claude-opus-5-5
     durationSec: 125
     toolCalls: 21
     modelCalls: 12
-    tokenShare: 3.7
+    tokenShare: 3.4
   - type: workflow-subagent
     task: "triage #2558"
     model: claude-opus-5-5
     durationSec: 119
     toolCalls: 22
     modelCalls: 14
-    tokenShare: 3.8
+    tokenShare: 3.5
   - type: workflow-subagent
     task: Spec docs/glassbox-shots-layout-only r2
     model: claude-opus-5-5
     durationSec: 30
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Standards docs/glassbox-shots-layout-only r1
     model: claude-opus-5-5
     durationSec: 31
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: fix docs/glassbox-shots-layout-only r1
     model: claude-sonnet-5-5
     durationSec: 94
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: build docs/glassbox-shots-layout-only
     model: claude-sonnet-5-5
     durationSec: 238
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: Standards docs/glassbox-shots-layout-only r2
     model: claude-opus-5-5
     durationSec: 27
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Spec docs/glassbox-shots-layout-only r1
     model: claude-opus-5-5
     durationSec: 27
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: gate docs/glassbox-shots-layout-only
     model: claude-sonnet-5-5
     durationSec: 96
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build docs/adr-0023-guest-escalation-on-purpose
     model: claude-sonnet-5-5
     durationSec: 332
     toolCalls: 16
     modelCalls: 14
-    tokenShare: 2.5
+    tokenShare: 2.3
   - type: workflow-subagent
     task: Spec docs/adr-0023-guest-escalation-on-purpose r1
     model: claude-opus-5-5
     durationSec: 32
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards docs/adr-0023-guest-escalation-on-purpose r1
     model: claude-opus-5-5
     durationSec: 25
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Spec chore/relayed-subagent-claims-on-trial r1
     model: claude-opus-5-5
     durationSec: 35
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: build chore/relayed-subagent-claims-on-trial
     model: claude-sonnet-5-5
     durationSec: 679
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 3.1
+    tokenShare: 2.8
   - type: workflow-subagent
     task: Standards chore/relayed-subagent-claims-on-trial r1
     model: claude-opus-5-5
     durationSec: 23
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: gate docs/adr-0023-guest-escalation-on-purpose
     model: claude-sonnet-5-5
     durationSec: 77
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: gate chore/relayed-subagent-claims-on-trial
     model: claude-sonnet-5-5
-    durationSec: 4
-    toolCalls: 2
-    modelCalls: 1
-    tokenShare: 0.5
+    durationSec: 288
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.6
 gitBranch: ccr-35b3dd22-xx5ndj
 entrypoint: remote_mobile
 cliVersion: 2.1.310
