@@ -44,7 +44,19 @@ describe('appendPlan()', () => {
     expect(plan.get('y')).toBe(entry('y') + occurrenceBlock(logs.get('session_def')!, 1))
   })
   it('names the entry when a block is refused, and plans nothing', () => {
-    expect(() => appendPlan(groupTriples(['x', 'session_abc', '0', 'x', 'session_abc', '1']), logs, entry)).toThrow('x: schema refuses')
     expect(() => appendPlan(groupTriples(['x', 'session_nope', '0']), logs, entry)).toThrow('x: no session log for session_nope')
+  })
+  it('refuses a session the entry already holds, naming it', () => {
+    expect(() => appendPlan(groupTriples(['x', 'old', '0']), logs, entry)).toThrow('x: old (already in the entry)')
+  })
+  it('refuses a session the call repeats for one entry, naming it', () => {
+    expect(() => appendPlan(groupTriples(['x', 'session_abc', '0', 'x', 'session_abc', '1']), logs, entry)).toThrow('x: session_abc (repeated in this call)')
+  })
+  it('names every colliding session in one error and reads no other entry', () => {
+    const read: string[] = []
+    const readEntry = (name: string) => (read.push(name), entry(name))
+    expect(() => appendPlan(groupTriples(['x', 'old', '0', 'x', 'session_abc', '0', 'x', 'session_abc', '1', 'y', 'session_def', '0']), logs, readEntry))
+      .toThrow('x: old (already in the entry), session_abc (repeated in this call)')
+    expect(read).toEqual(['x'])
   })
 })

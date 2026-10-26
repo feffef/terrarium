@@ -13,11 +13,12 @@
 //   `extract-frictions.ts --compact` prints it. Without `--append`, output is
 //   ready to paste under a cluster's `occurrences:`. With it, `<entry>` is the
 //   ledger file name without `.yml`; the blocks are appended through
-//   `ledger-set.ts`'s `setEntry`, so a result the schema rejects (a session
-//   listed twice in one entry, say) is refused and nothing is written.
+//   `ledger-set.ts`'s `setEntry`, so a result the schema rejects is refused
+//   and nothing is written; a session the entry already holds, or one the
+//   call repeats, is refused by name.
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { Document, Scalar } from 'yaml'
+import { Document, parse, Scalar } from 'yaml'
 import { flattenText, LEDGER_DIR } from '../../../../scripts/session/extract-frictions.ts'
 import { readSessionLogs } from '../../../../scripts/session/journal-files.ts'
 import { fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
@@ -66,12 +67,28 @@ export function groupTriples(argv: string[]): Map<string, FrictionRef[]> {
   return groups
 }
 
+/** Throws naming every session the entry already holds or `refs` repeats (#2562). */
+function refuseCollisions(text: string, refs: FrictionRef[]): void {
+  const occurrences: unknown = parse(text)?.occurrences
+  const held = new Set(Array.isArray(occurrences) ? occurrences.map((o) => String(o?.session)) : [])
+  const seen = new Set<string>()
+  const collisions = new Map<string, string>()
+  for (const { session } of refs) {
+    if (held.has(session)) collisions.set(session, 'already in the entry')
+    else if (seen.has(session)) collisions.set(session, 'repeated in this call')
+    seen.add(session)
+  }
+  if (collisions.size) throw new Error(`${[...collisions].map(([s, why]) => `${s} (${why})`).join(', ')}; nothing written`)
+}
+
 /** Each entry's new text with its blocks appended; throws before any write when one fails. */
 export function appendPlan(groups: Map<string, FrictionRef[]>, logs: Logs, readEntry: (entry: string) => string): Map<string, string> {
   const plan = new Map<string, string>()
   for (const [entry, refs] of groups) {
     try {
-      plan.set(entry, setEntry(readEntry(entry), { occurrences: refs.map((ref) => blockFor(logs, ref)).join('') }))
+      const text = readEntry(entry)
+      refuseCollisions(text, refs)
+      plan.set(entry, setEntry(text, { occurrences: refs.map((ref) => blockFor(logs, ref)).join('') }))
     } catch (err) {
       throw new Error(`${entry}: ${err instanceof Error ? err.message : String(err)}`, { cause: err })
     }
