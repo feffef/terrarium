@@ -75,11 +75,11 @@ Out: {scratchpad}/inspect-{session id}/
 Load the tool first: ToolSearch "select:mcp__claude-code-remote__list_events" (spelled `mcp__Claude_Code_Remote__list_events` in some sessions).
 Then loop:
 1. Call list_events with session_id, limit 100, no kinds, and before_id from
-   the last NEXT line (none on the first call). The page spills to a
-   tool-results/*.txt file: note its file name. Never print or Read it. If a page
-   lands inline instead, Write it verbatim to {Out}/page-<n>.txt.
+   the last NEXT line (none on the first call). Never print or Read the page.
+   Before the next call, save it as {Out}/page-<n>.txt: cp the tool-results/*.txt
+   spill file there, or Write the page verbatim if it came back inline.
 2. From the repo root run:
-   pnpm exec tsx .agents/skills/inspect-session/scripts/flatten.ts --session {session id} --out {Out} --page-limit {page limit} <every saved page so far>
+   pnpm exec tsx .agents/skills/inspect-session/scripts/flatten.ts --session {session id} --out {Out} --page-limit {page limit} <every {Out}/page-*.txt saved so far>
    On a DUPLICATE line, call list_events with that same before_id once more.
 3. With a selector, run:
    pnpm exec tsx .agents/skills/inspect-session/scripts/search.ts <flattened file> {selector}
@@ -134,14 +134,13 @@ reach you. Make a directory `{Out}` = `{scratchpad}/inspect-{session id}/`.
    ToolSearch "select:mcp__claude-code-remote__list_events" (spelled `mcp__Claude_Code_Remote__list_events` in some sessions). For each line
    "<before_id> <first_id>" of {range file}: call list_events with
    session_id, limit 100, no kinds, and that before_id (leave it out when it
-   is "none"). The page spills to a tool-results/*.txt file; never print or
-   Read it. Check what it returned with
+   is "none"). Never print or Read the page. Before the next call, save it as
+   {Out}/page-{k}-<n>.txt: cp the tool-results/*.txt spill file there, or Write
+   the page verbatim if it came back inline. Check the saved file with
    grep -o '"first_id": *"[^"]*"' <file> | tail -1
    and, unless the line's before_id is "none", call once more if it is not
-   the line's first_id. Append the saved file's name (not its path) to
-   {Out}/manifest-{k}.txt.
-   If a page lands inline instead, Write it verbatim to {Out}/page-{k}-<n>.txt
-   and append that path. Reply only: the manifest's path, the pages saved,
+   the line's first_id. Append the saved path to {Out}/manifest-{k}.txt.
+   Reply only: the manifest's path, the pages saved,
    and any first_id still wrong. Then a verdict (path, why it loaded or was
    read, useful yes/partly/no) on each rule and doc you loaded or read. Write every file you create,
    scripts included, under {Out}.
