@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-25"
     summary: "Added a general 'Question the premise' bullet to CLAUDE.md's Working conventions, in the wording the owner approved."
 occurrences:
-  - session: session_01CasnQoauTyLNUxd74agJsP
-    date: "2026-10-11"
-    severity: moderate
-    description: "Five fix rounds on one PR: directory matching and simple-read silence were my design additions beyond the issues, and the late pre-filter optimization caused the only major flaw."
-    solution: "Split such work into three PRs, keep the hook to file paths first, and add optimizations only after observed noise."
   - session: session_01VkVtDd4YKNa2KYRyRo8Uvy
     date: "2026-10-14"
     severity: minor

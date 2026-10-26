@@ -9,16 +9,6 @@ notes: |-
   2026-10-20 design: a repo doc granting pushes to other branches dropped: the harness pins one pushable branch and a repo doc cannot grant that; issue-tracker.md already says to flag it upfront and ask.
 fixes: []
 occurrences:
-  - session: session_017inrpS21UKrpEun2DpjLd7
-    date: "2026-10-11"
-    severity: nit
-    description: "Created a new branch against the session's designated-branch instruction, then undid it before any commit."
-    solution: "Skill's fallback branch name invites this; state the designated branch wins more loudly."
-  - session: session_01D3gBoQCQTmjVwEyuA3qZkQ
-    date: "2026-10-11"
-    severity: minor
-    description: "The session's single designated branch clashed with several independent changes; I had to ask before using extra branches."
-    solution: "The owner's rule (one branch per change unless clearly related) could live in issue-tracker.md's caller-set-branch line."
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
     date: "2026-10-14"
     severity: minor

@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   CLAUDE.md's dispatch-subagents trigger is prose with no hint (read-first-hint.ts covers only git, GitHub and screenshots), and agents read it as not covering read-only git or a saved workflow (clear-backlog-build, explore) that dispatches for them. Signals: "without reading the dispatch-subagents Skill", "read-only git diff", "the workflow does the dispatch".
 surface: safe
-status: tracked
-ref: "issue #2543"
+status: open
+ref: ""
 fixes:
   - pr: 2448
     date: "2026-10-23"
@@ -13,6 +13,9 @@ fixes:
   - pr: 2484
     date: "2026-10-24"
     summary: "Added a read-first-hint entry that points to the dispatch-subagents Skill on the first Agent, Workflow or SendMessage call, silenced once the Skill is invoked."
+  - pr: 2550
+    date: "2026-10-25"
+    summary: "A guard blocks the first subagent dispatch until the dispatch-subagents Skill is read."
 occurrences:
   - session: session_01LtYEkEsZ2cxf4uRFJvq4n9
     date: "2026-10-12"
@@ -89,3 +92,8 @@ occurrences:
     severity: nit
     description: "Tried to Read docs/agents/dispatch-subagents.md, which does not exist; dispatch-subagents is a Skill."
     solution: "CLAUDE.md could say Skill, not doc, which it does; I misremembered it"
+  - session: session_01VfbgTTxASAKYdiziaLGuXM
+    date: "2026-10-25"
+    severity: nit
+    description: "Read the dispatch-subagents Skill only after the first Workflow call (CLAUDE.md trigger: before writing a subagent brief); the hint caught it, no harm."
+    solution: "Owner chose a deny guard for this (#2543), being built in this run."

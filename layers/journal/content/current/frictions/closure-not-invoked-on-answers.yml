@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-12"
     summary: "Added a CLAUDE.md rule to run close-session when a session only answers a question."
 occurrences:
-  - session: session_01DRBxySwYL4HR4xEEJc3CXX
-    date: "2026-10-11"
-    severity: minor
-    description: "Did not invoke close-session after answering the question (ADR-0009 rule); the user had to ask whether the session was logged"
-    solution: "Treat the user's 'don't do anything' as no-new-work, not as no-logging; invoke close-session when a question is answered"
-  - session: session_01BBQnwhyfsvoksh4oV9MXsU
-    date: "2026-10-11"
-    severity: minor
-    description: "Did not invoke close-session by self-judgment at task end; the user had to ask 'Logged?' (no PR existed, so not HUMAN-PROMPTED-CLOSURE)."
-    solution: "Invoke close-session when the user confirms the work is done."
   - session: session_01EdZyfmrUBL5o3ePoaobtae
     date: "2026-10-13"
     severity: nit

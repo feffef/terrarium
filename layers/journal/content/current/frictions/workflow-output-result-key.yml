@@ -48,3 +48,8 @@ occurrences:
     severity: minor
     description: "Tried four times to pull a triage brief out of the explore output and journal; grill results carry no brief field"
     solution: "Have run-summary.ts --triage print the brief field when one exists, and say when it is absent"
+  - session: session_01VfbgTTxASAKYdiziaLGuXM
+    date: "2026-10-25"
+    severity: minor
+    description: "Merging five runs of run-summary --verdicts into one ruleVerdicts/docsRead list took a hand-written script and two retries (duplicate YAML key, yes/no parsed as booleans)."
+    solution: "run-summary.ts --verdicts could take several run outputs and emit one merged block per path."

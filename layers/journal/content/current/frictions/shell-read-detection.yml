@@ -20,26 +20,6 @@ fixes:
     date: "2026-10-16"
     summary: "Made the shell-read advisory's text neutral: it no longer calls a disputed credit a false positive and tells the agent to check the transcript for the earlier reader."
 occurrences:
-  - session: session_015Hx2GtEuH6WZBL8Hp4aDgg
-    date: "2026-10-11"
-    severity: moderate
-    description: "SHELL-READ-DETECTION false positive: .agents/skills/blog-post/SKILL.md was credited from shell output, but the session marked it (not read)"
-    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
-  - session: session_0177ZCpnHq4Sw5wicAEmriDh
-    date: "2026-10-11"
-    severity: moderate
-    description: "SHELL-READ-DETECTION false positive: docs/agents/github-integration.md was credited from shell output, but the session marked it (not read)"
-    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
-  - session: session_01YBJaRLtVQEr4RshMQG1X7D
-    date: "2026-10-11"
-    severity: moderate
-    description: "SHELL-READ-DETECTION false positive: .agents/skills/blog-post/SKILL.md was credited from shell output, but the session marked it (not read)"
-    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
-  - session: session_01YVCyXmxSSDQ6csSBVJ554H
-    date: "2026-10-11"
-    severity: moderate
-    description: "SHELL-READ-DETECTION false positive: .agents/skills/audit-docs/SKILL.md was credited from shell output, but the session marked it (not read)"
-    solution: "Find the crediting command in the transcript and tighten scripts/shell-reads.ts"
   - session: session_01QfaLuSd5cnBQPu8CCRrvkn
     date: "2026-10-12"
     severity: moderate

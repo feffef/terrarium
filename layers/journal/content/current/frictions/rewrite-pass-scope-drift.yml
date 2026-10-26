@@ -23,3 +23,8 @@ occurrences:
     severity: minor
     description: "Trimming the Human-only definition dropped ADR-0004's Dependabot exception, a meaning change caught in the second review."
     solution: "When compressing a definition, diff each qualifier against its ADR before committing."
+  - session: session_01BZNS3KuWTBxqAHxTfx3uzp
+    date: "2026-10-25"
+    severity: minor
+    description: "My first shortened descriptions dropped each page's point; the Spec review caught it and I redid three of four, costing an extra build cycle."
+    solution: "Keep the distinctive clause and cut elsewhere; check against the page body before committing."

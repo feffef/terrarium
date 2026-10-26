@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   The claude-code-remote list_events tool returns every event including base64 images, so a screenshot-heavy session is about 14 MB per page and paging it is slow; github-integration.md calls it token-heavy but gives no safe recipe. Signals: list_events, get_session, 'MB per page', a subagent skipping a long transcript.
 surface: safe
-status: open
+status: tracked
+ref: "issue #2557"
 fixes:
   - pr: 2235
     date: "2026-10-18"
@@ -62,3 +63,13 @@ occurrences:
     severity: minor
     description: "The 10-24 partial read hit its 25-page limit before reaching Agent D's hand-back; it answered from the checker's re-listing"
     solution: "For an audit run, page limit ~40, or search for the reviewer dispatch first"
+  - session: session_019nDDDS9GsXdTKWK44j18fT
+    date: "2026-10-24"
+    severity: nit
+    description: "The first inspection subagent left the oldest inline page unsaved, so its coverage never reached the session start (that page held no relevant events)."
+    solution: "The inspect-session brief could say that an inline first page must still be written to Out before Flatten runs."
+  - session: session_01Ru6jnZ4cFTdf41ZWLonsTv
+    date: "2026-10-24"
+    severity: nit
+    description: "Range-3 fetch agent saw two spilled pages get the same tool-results file name, one overwriting the other, and had to refetch."
+    solution: "Fetch brief could say: after each call, copy the spill file into Out under a page-numbered name before the next call."

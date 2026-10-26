@@ -14,26 +14,6 @@ fixes:
     date: "2026-10-23"
     summary: "Retired the adr-check Skill and its CLAUDE.md trigger; a new PostToolUse hook (adr-read-hint.ts) now names, once per agent, each ADR an Edit or Write touches by its rule paths or by number and that the agent has not read in full."
 occurrences:
-  - session: session_013GkBtC56M36dmz5AtEb1Hp
-    date: "2026-10-11"
-    severity: nit
-    description: "Read CONTEXT.md only to line 60 and skipped the ADR grep, against CLAUDE.md's session-start and ADR-before-planning rules."
-    solution: "Read CONTEXT.md in full at start; the digest Skill could say which ADRs bind it."
-  - session: session_01SLCo4c8kt3y2B3vP4XQsG4
-    date: "2026-10-11"
-    severity: minor
-    description: "Broke CLAUDE.md \"find the ADRs that bind it with grep -l … docs/adr/* and read them\" before recommending options; read no full ADR (e.g. ADR-0009, ADR-0029)."
-    solution: "The rule summaries sufficed for a display-only change, but the grep step is cheap; do it before the AskUserQuestion recommendations."
-  - session: session_01DRBxySwYL4HR4xEEJc3CXX
-    date: "2026-10-11"
-    severity: minor
-    description: "Recommended a merge-governance change without reading ADR-0003 in full, though CLAUDE.md requires reading the binding ADRs before recommending"
-    solution: "After grep -l, read every hit that governs the change (ADR-0003 holds the merge-authority ledger)"
-  - session: session_01V3bxJaTSH8AWjrtSoBhNxK
-    date: "2026-10-11"
-    severity: minor
-    description: "Broke CLAUDE.md 'find the binding ADRs with grep -l before you recommend' — gave the first cap recommendation and the ledger-shape options before grepping ADRs; read ADR-0008 and ADR-0015 only after the owner chose."
-    solution: "Grep docs/adr for the Skill and Inventory before the first recommendation; ADR-0015's observation retention would have sharpened the comparison."
   - session: session_01VGLAakRJNm67PuNHpgbEc7
     date: "2026-10-12"
     severity: moderate

@@ -26,11 +26,6 @@ fixes:
     date: "2026-10-25"
     summary: "audit-docs saves each reviewer reply to its own file in a pool folder, since save-handback.ts overwrites its output file."
 occurrences:
-  - session: session_01GbMt1vGTDZpQxZ3h4pNsF8
-    date: "2026-10-11"
-    severity: moderate
-    description: "Three of six reviewer subagents could not write their findings file (harness refused), so I transcribed findings into scratchpad files by hand and had to chase C2 a second time."
-    solution: "Tell reviewers up front to return findings as text, and let the orchestrator write the files."
   - session: session_01UZ53YdNvwr2RN4WgF5EjEZ
     date: "2026-10-13"
     severity: minor

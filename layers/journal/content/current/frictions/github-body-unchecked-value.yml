@@ -29,3 +29,8 @@ occurrences:
     severity: nit
     description: "Filed regression issue #2332 with a garbled phrase (#321-era follow-up #2321) and had to edit the body after creating it."
     solution: "Re-read the body before sending, as for any GitHub post."
+  - session: session_01TaUpbA3idjNZSgGpNjXj8S
+    date: "2026-10-26"
+    severity: nit
+    description: "Draft issue text said #2523 was open; check-states showed it closed, so I reworded before posting."
+    solution: "None needed; the check worked as designed."

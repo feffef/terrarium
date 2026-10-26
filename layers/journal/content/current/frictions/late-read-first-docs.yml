@@ -14,21 +14,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_01WuJh8gfMFWfS5bWEJcdScC
-    date: "2026-10-11"
-    severity: nit
-    description: "Called mcp__github__search_issues before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation."
-    solution: "Read the required docs in the first batch of tool calls, before any GitHub tool."
-  - session: session_01KnHp9a9Ljbiuu8NjLLx8i1
-    date: "2026-10-11"
-    severity: minor
-    description: "CLAUDE.md requires reading docs/agents/github-integration.md before this session's first GitHub operation. I ran several mcp__github__ calls (issue_read, issue_write, add_issue_comment, subscribe_pr_activity) before reading it — only read it incidentally, right before opening the PR."
-    solution: "No damage this run (no overflow, no HTML-entity-encoding mishap), but it was blind luck. Read the trigger docs before the first matching tool call, not after — check the \"docs you must read first\" list against the next tool call before making it, not just at session start."
-  - session: session_01YBJaRLtVQEr4RshMQG1X7D
-    date: "2026-10-11"
-    severity: minor
-    description: "Survey subagent made github calls before reading github-integration.md and had to slice a 288KB session-frictions output over several passes."
-    solution: "Issue #1755 makes --compact keep docsRead and subagents and names it in the Skill; #1754 proposes a trigger-time doc reminder hook."
   - session: session_014uXxmT6359K4Z42a6We6Gh
     date: "2026-10-12"
     severity: minor
@@ -574,3 +559,8 @@ occurrences:
     severity: nit
     description: "Ran git rev-parse before reading git-conventions.md; a hook prompted the read after the fact, though CLAUDE.md says to read it before the first non-status git command."
     solution: "Treat any Skill step that touches git as the trigger and read the doc first."
+  - session: session_01S9UeKa9mCWdPVBjAezCSaL
+    date: "2026-10-25"
+    severity: nit
+    description: "Ran git rev-parse HEAD before reading git-conventions.md, though CLAUDE.md names it before any git command beyond status and diff; hook told me afterwards."
+    solution: "Read the doc in the same step as the first Skill-driven git command."
