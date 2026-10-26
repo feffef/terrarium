@@ -64,18 +64,21 @@ export interface FileWrite {
 }
 
 /** `git`, its global options, then the `commit` subcommand. */
-const GIT_COMMIT = /\bgit(?:\s+(?:-[cC]\s+(?:[^\s'"]|'[^'\n]*'|"[^"\n]*")+|--?[\w-]+(?:=\S+)?))*\s+commit\b/
+// A value never starts with `-` and no other option is `-c`/`-C`, so each token
+// parses one way only; else backtracking is exponential in repeated `-c`s.
+const GIT_COMMIT = /\bgit(?:\s+(?:-[cC]\s*(?!-)(?:[^\s'"]|'[^'\n]*'|"[^"\n]*")+|--?(?![cC](?:\s|$))[\w-]+(?:=\S+)?))*\s+commit(?![^\s;&|)])/
 
 /** The commits a Bash `git commit` reports, from git's `[branch sha] subject`
- *  summary lines; none unless the command runs `git commit`. A trusted summary
- *  line from another command only adds a pointer, never hides one. */
+ *  summary lines; none unless the command runs `git commit`. A summary line
+ *  from another command only adds a pointer, never hides one. */
 export function committedShas(command: string, stdout: string): string[] {
   if (!GIT_COMMIT.test(command.replace(/\\\n/g, ' '))) return []
   return [...stdout.matchAll(/^\[(?:[^\]\n]* )?([0-9a-f]{7,40})\] /gm)].map((m) => m[1]!)
 }
 
-/** Each file a `git diff-tree -p -U0` patch touches, with its added and removed
- *  lines as the text to match, like an Edit's old and new text. */
+/** Each file a `git diff-tree -p -U0` patch shows a text change for, with its
+ *  added and removed lines as the text to match, like an Edit's old and new
+ *  text. An empty, binary or mode-only change has no hunk: see `commitWrites`. */
 export function patchWrites(patch: string): FileWrite[] {
   const out: FileWrite[] = []
   let cur: FileWrite | undefined
@@ -90,6 +93,14 @@ export function patchWrites(patch: string): FileWrite[] {
   return out
 }
 
+/** Every file a commit changes, from `--name-only` so a file with no hunk
+ *  still counts, with the text its patch changed. */
+function commitWrites(sha: string, root: string): FileWrite[] {
+  const tree = (...args: string[]) => tryGit(['-c', 'core.quotePath=false', 'diff-tree', '-r', '--no-commit-id', '--no-renames', '--root', ...args, sha], root).out
+  const texts = new Map(patchWrites(tree('-p', '-U0', '--no-color')).map((w) => [w.file, w.texts]))
+  return tree('--name-only', '-z').split('\0').filter(Boolean).map((file) => ({ file, texts: texts.get(file) ?? [] }))
+}
+
 /** The files an Edit or Write touches, or a Bash `git commit` committed, as
  *  repo-relative paths. */
 function writesOf(payload: unknown, root: string): FileWrite[] {
@@ -98,8 +109,7 @@ function writesOf(payload: unknown, root: string): FileWrite[] {
     const command = prop(input, 'command')
     const stdout = prop(prop(payload, 'tool_response'), 'stdout')
     if (typeof command !== 'string' || typeof stdout !== 'string') return []
-    return committedShas(command, stdout).flatMap((sha) =>
-      patchWrites(tryGit(['-c', 'core.quotePath=false', 'diff-tree', '-p', '-r', '-U0', '--no-commit-id', '--no-renames', '--root', '--no-color', sha], root).out))
+    return committedShas(command, stdout).flatMap((sha) => commitWrites(sha, root))
   }
   const filePath = prop(input, 'file_path')
   if (typeof filePath !== 'string') return []
