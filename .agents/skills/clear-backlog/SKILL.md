@@ -8,7 +8,8 @@ Take every issue the sweep picks up (§1) to a merged PR, a closed issue, or
 a decision only the owner can make. The owner is present twice: at the start
 and for one **grilling** in the middle. Everything else runs unattended.
 
-When you wait on an answer, the questions are your whole message.
+Whenever you wait on an answer (the grilling, a follow-up round, a §3 interrupt),
+send the push notification first, then only the questions, with no tool calls.
 
 Two saved workflows do the agent work, so their steps can't be skipped:
 `clear-backlog-explore` (§1) and `clear-backlog-build` (§3). Invoking this
@@ -140,8 +141,9 @@ some of its exceptions.
 
 Report one line per issue: `#N | outcome | PR or "no PR: why" | merged / waits
 for you (why)`. Then re-invoke `close-session`, merging into its own
-`ruleVerdicts` and `docsRead` what `run-summary.ts --verdicts` prints for each
-run (log-session step 3). Its log's `summary` carries one line
-per merged or opened branch: what it changed (from that branch's `decisions`)
-and any judgement calls left open. In a workflow run the orchestrator's log is
-the Journal's only record of what its agents built.
+`ruleVerdicts` and `docsRead` what `run-summary.ts --verdicts` prints when
+passed every run's output in one call (log-session step 3). Its log's
+`summary` carries one line per merged or opened branch: what it changed (from
+that branch's `decisions`) and any judgement calls left open. In a workflow
+run the orchestrator's log is the Journal's only record of what its agents
+built.
