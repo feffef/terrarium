@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_01LyextqGkDsnBpTuPyFxhSm
 startedAt: 2026-10-27T00:16:11Z
-endedAt: 2026-10-27T00:24:52Z
+endedAt: 2026-10-27T00:27:27Z
 kind: autonomous
 goal: Write the 2026-10-26 Journal Digest and archive aged-out content
-status: in-review
-outcome: PR 2576 open with the 2026-10-26 Digest and retention sweep; gate green, awaiting CI and merge
-summary: "Scheduled digest run (agent-initiated by the schedule, no human prompts). Gathered 2026-10-26 (17 PRs, 12 sessions), wrote the Digest, fact-checked it with a subagent (two real errors fixed: issue 2575 was called a session, and a review-round count), ran the retention sweep (1 digest and 29 session logs archived), ran the gate and a Standards and Spec review, then pushed and opened PR 2576 with a verdict comment. Still open: wait for CI, then merge."
+status: completed
+outcome: "PR 2576 merged green: 2026-10-26 Digest and retention sweep"
+summary: "Scheduled digest run (agent-initiated by the schedule, no human prompts). Gathered 2026-10-26 (17 PRs, 12 sessions), wrote the Digest, fact-checked it with a subagent (two real errors fixed: issue 2575 was called a session, and a review-round count), ran the retention sweep (1 digest and 29 session logs archived), ran the gate and a Standards and Spec review, then pushed and opened PR 2576 with a verdict comment. Merged on a green gate via merge-pr."
 prs:
   - "2576"
 docsRead:
@@ -52,19 +52,20 @@ frictions:
   - description: My draft had two factual errors (a follow-up issue called a session; a review-round count) that the fact-check subagent caught.
     solution: Check issue-versus-session wording against the gather output when drafting.
     severity: nit
-durationSec: 521
+durationSec: 675
 models:
-  claude-sonnet-5-5: 57
+  claude-sonnet-5-5: 65
 toolCounts:
-  Bash: 13
+  Bash: 16
   Read: 6
   Write: 2
   Agent: 3
   Edit: 2
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-26.md
   - layers/journal/content/archived/pages/digests/2026-10-19.md
@@ -160,19 +161,19 @@ subagents:
     durationSec: 87
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 18.5
+    tokenShare: 16.4
   - task: Standards review of digest diff
     model: sonnet
     durationSec: 18
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 5.5
+    tokenShare: 4.9
   - task: Spec review of digest diff
     model: sonnet
     durationSec: 23
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 6.6
+    tokenShare: 5.9
 gitBranch: claude/compassionate-lovelace-47idnj
 entrypoint: remote_trigger
 cliVersion: 2.1.311
