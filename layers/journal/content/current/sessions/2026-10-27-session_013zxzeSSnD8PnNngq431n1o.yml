@@ -1,0 +1,176 @@
+schemaVersion: 1
+session: session_013zxzeSSnD8PnNngq431n1o
+startedAt: 2026-10-27T18:54:05Z
+endedAt: 2026-10-27T19:19:56Z
+kind: interactive
+goal: One linear shell tokenizer for the hint hooks
+status: in-review
+outcome: "PR #2601 open, gate green, waiting for a human merge"
+summary: "The owner invoked grill-with-docs to refine an idea from session_01Vg1qDutnhKVav7JDNUdr8J: give the hint hooks a shared linear tokenizer in hook-io.ts with one timing test. Reading the code showed a shared tokenizer already existed (commandWords in shell-reads.ts) and only adr-read-hint kept its own token regex, so the first grilling round reframed the goal; the owner agreed to every recommendation. At the owner's request a Fable agent verified the proposal and found my premise half wrong: commandWords itself was quadratic on blank-line heredoc bodies and overflowed the stack on deep $( nesting, a git-at-first-word match would lose `if git commit`, and one existing spec would break. A second round (agreed by the owner) folded those in. The owner then explicitly said \"build it\". Built: one-pass stripHeredocs, a 100-deep substitution cap, a shared gitSubcommandAt (returning an index so matching git at any word stays linear), adr-read-hint on commandWords, a growth-based adversarial test shown red on the old tokenizer, and a guards.md clause. Two code-review agents found a false guards.md sentence (stale-push-hint keeps a filter regex) and a timing slack that hid the old quadratic marker scan; both fixed. Agent-initiated: those review fixes and the extra heredoc-body spec case. Human-only files, so a human merges."
+prs:
+  - "2601"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: commit hygiene; read after the hint, not before my first git log
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, then gate:scoped last
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP for writes, list with fields
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: the regex bullet the clause extends; reviewer also read it
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: hint after guards.md edit; confirmed no open trial covers it
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: hint after guards.md edit; nothing changed
+    useful: no
+  - path: scripts/session/shell-reads.ts
+    reason: (read before editing)
+  - path: scripts/hooks/adr-read-hint.ts
+    reason: (read before editing)
+  - path: scripts/hooks/read-first-hint.ts
+    reason: (read before editing)
+  - path: scripts/hooks/bash-rules-hint.ts
+    reason: (no reason given)
+  - path: scripts/hooks/hook-io.ts
+    reason: (no reason given)
+  - path: tests/unit/adr-read-hint.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: grilling
+    reason: two rounds to settle the design with the owner
+  - name: domain-modeling
+    reason: loaded by grill-with-docs; no glossary or ADR change was warranted
+  - name: dispatch-subagents
+    reason: brief for the Fable verifier and two reviewers
+  - name: code-review
+    reason: Standards and Spec review before first push
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: grill-with-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: My first grilling round stated commandWords was linear without measuring it; a Fable verifier found it quadratic and crash-prone
+    solution: Before claiming a performance property in a proposal, run a quick timing probe on adversarial input
+    severity: moderate
+  - description: Ran git log on hook history to draw a conclusion before reading git-conventions.md, against CLAUDE.md read-first
+    solution: The read-first hint fired after the call; it worked as designed, no change needed
+    severity: nit
+  - description: Edited docs/agents/guards.md before reading ADR-0027 and ADR-0029, which the adr-read hint then demanded
+    solution: Hint worked as designed; the late read changed nothing
+    severity: nit
+  - description: First timing test used a 20 ms slack that let the old quadratic marker scan pass; spec reviewer caught it
+    solution: Prove a regression test fails on the old code for every case it claims to cover, not only the loudest
+    severity: minor
+durationSec: 1551
+models:
+  claude-opus-5-5: 108
+toolCounts:
+  Skill: 6
+  Bash: 32
+  Agent: 3
+  Read: 6
+  Edit: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - scripts/session/shell-reads.ts
+  - docs/agents/guards.md
+  - tests/unit/shell-reads.spec.ts
+  - scripts/hooks/adr-read-hint.ts
+  - scripts/hooks/read-first-hint.ts
+  - tests/unit/adr-read-hint.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me hold the push until code-review and gate:scoped; summary enough, ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Flagged scripts/hooks and guards.md as Human-only, so the PR says it waits for a human
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Led me to ask the owner to approve the build and to open the PR at once
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session at PR open
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on the PR body; checked the commit trailer landed
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with domain-modeling; no term was added, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with domain-modeling; no ADR changed
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: No glossary term changed
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Pointed to docs/agents/guards.md, where the clause went
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Made me check prune-trials.yml before editing guards.md; summary was enough plus the hinted ADR read
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading guards.md; nothing about rule placement changed
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Verify tokenizer proposal
+    model: fable
+    durationSec: 275
+    toolCalls: 21
+    modelCalls: 7
+    tokenShare: 13.9
+  - type: general-purpose
+    task: Standards review of diff
+    durationSec: 79
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 7.7
+  - type: general-purpose
+    task: Spec review of diff
+    durationSec: 136
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 8.7
+gitBranch: ccr-65eb57ab-fy09gh
+entrypoint: remote_mobile
+cliVersion: 2.1.311
+learnings:
+  - A shared helper that returns a word, called at every match position, can turn a linear scan quadratic; return an index so the caller can skip ahead
+landedBy: Stop
