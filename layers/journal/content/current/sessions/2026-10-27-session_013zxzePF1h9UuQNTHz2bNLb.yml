@@ -1,0 +1,266 @@
+schemaVersion: 1
+session: session_013zxzePF1h9UuQNTHz2bNLb
+startedAt: 2026-10-27T04:03:44Z
+endedAt: 2026-10-27T04:12:34Z
+kind: autonomous
+goal: Scheduled audit of the repo's prose for drift and contradiction
+status: in-review
+outcome: "Sweep PR #2586 opened with one fix; waiting on green CI to merge"
+summary: "Scheduled audit-docs run, so every step was agent-initiated from the stored prompt; no human instruction. Three read-only reviewers (Freshness, Single-home, Coherence) reported; two independently found the same stale audit-docs lens list on the journal how-it-works page. One checker returned CONFIRMED-BUT for it and WRONG for the other three (a close-session restatement that is the digest Skill's own step, a guards.md bullet that needs no move, and a dated probe line that is provenance, not a stale claim). Applied the single fix, self-read it as a simple change, ran gate:scoped green, pushed and opened PR #2586 with no escalation PR needed and no issue filed. Merge and final log follow once CI is green."
+prs:
+  - "2586"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before fetch; fetch-before-trusting-history
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR steps and the simple-change bar
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before the PR; MCP tool mapping
+    useful: partly
+  - path: layers/journal/GLOSSARY.md
+    reason: tenant-glossary rule before editing a journal page
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/how-it-works.md
+    reason: (read before editing)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: GLOSSARY-MAP.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/diagrams/interactive-map/README.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the Skill this run executes
+  - name: dispatch-subagents
+    reason: brief rules for the reviewers and checker
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions: []
+durationSec: 530
+models:
+  claude-sonnet-5-5: 53
+toolCounts:
+  Read: 4
+  Skill: 3
+  Bash: 15
+  Agent: 4
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/how-it-works.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/glossary-terms.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/agents/mdc-when-to-use.md
+  - GLOSSARY.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/domain.md
+  - docs/agents/triage-labels.md
+  - docs/proposals/README.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - GLOSSARY-MAP.md
+  - layers/glassbox/GLOSSARY.md
+  - layers/midden/GLOSSARY.md
+  - .agents/skills/audit-docs/SKILL.md
+  - docs/diagrams/interactive-map/README.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR unasked and subscribed; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and a self-read for a simple change; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to log the session; subagents used it as home of close-session timing
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skills live in .agents/skills; subagents found it partly useful, I did not open the ADR
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Told reviewers not to touch importance grades; subagent reported yes, ADR not opened
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement context for reviewers; ADR not opened
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Made reviewers and checker skip trial-covered text; ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Backed the docs/agents reachability check; ADR not opened
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Defined history-free ADR edits; no ADR edited so ADR not opened
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded by a hint on a subagent Bash read; did not apply to a prose audit
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Confirmed journal inventories are derived; subagent reported partly
+    useful: partly
+  - path: .claude/rules/adr-0010.md
+    reason: Loaded for a subagent; digests were out of this fix's scope
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: Loaded by a subagent hint; did not apply
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded by a subagent hint; did not apply
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Loaded by a subagent hint; Public requests not involved
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded by a subagent hint; did not apply
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Loaded by a subagent hint; guest pipeline not involved
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded by a subagent hint; did not apply
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded by a subagent hint; did not apply
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: Loaded after a doc read; no UI change
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Pointer to guards.md, which a subagent checked; subagent reported partly
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: No glossary term edited
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Journal glossary read before editing a journal page; subagent partly
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagram touched
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Edited file is not Human-only; no escalation PR needed
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Audit docs: Freshness"
+    durationSec: 77
+    toolCalls: 13
+    modelCalls: 12
+    tokenShare: 15.3
+  - type: general-purpose
+    task: "Audit docs: Single-home"
+    durationSec: 141
+    toolCalls: 27
+    modelCalls: 16
+    tokenShare: 22.8
+  - type: general-purpose
+    task: "Audit docs: Coherence"
+    durationSec: 66
+    toolCalls: 11
+    modelCalls: 10
+    tokenShare: 12.8
+  - type: general-purpose
+    task: Fact-check audit findings
+    durationSec: 82
+    toolCalls: 18
+    modelCalls: 9
+    tokenShare: 12.8
+gitBranch: claude/festive-mayer-aaowsu
+entrypoint: remote_trigger
+cliVersion: 2.1.311
+trigger: audit-docs
+landedBy: Stop
