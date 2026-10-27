@@ -334,3 +334,10 @@ observations:
       session_01S9UeKa9mCWdPVBjAezCSaL, session_017vrdmQQwC4obwbJS9G5Dyg
       and session_019jfJv6yLmcLUAJiTTomyeu hand-edited the YAML. Filed as
       #2554. Grade/role unchanged (routine).
+  - date: "2026-10-27"
+    note: >-
+      Behaviour check, 10 runs, PRs merged, no revert. Unverified:
+      session_01CpD4piFGbFhvGG5KWdtsCG (PR #2559) dropped two fixes
+      without the step 5 'design: ... dropped:' note in the ledger; the
+      --note flag from #2567 now exists, so recurrence is unlikely.
+      Grade/role unchanged (routine).

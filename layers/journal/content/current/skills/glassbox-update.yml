@@ -78,3 +78,12 @@ observations:
       session_01G2d5G6TrdoTQYQr7S2Eu7o (PR #2404); both logs say so, and the
       Skill has no threshold for small edits. Watch for a third before
       escalating. Grade/role unchanged (specialist).
+  - date: "2026-10-27"
+    note: >-
+      Behaviour check, 8 runs, all PRs merged, no revert. Verified:
+      first-push code-review skipped on 20+ file pin-restamp diffs in
+      session_01L7SpnHp3yQbMQsNVCnB6zR, session_01URZoDXk9zQsY2HDhUruLd4
+      and session_01A7PwrNRBtY9LTX6HrttXWW; added to #2472. Step 5
+      screenshot skips (a third, session_01R6bzvTEBJCmagf7BbWfBqG) were
+      probably fixed by the 10-26 threshold edit; the 10-26 run shot two
+      pages. Grade/role unchanged (specialist).

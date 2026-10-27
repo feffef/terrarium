@@ -401,3 +401,9 @@ observations:
       unverified as a Skill gap: session_01GKJysgAiGN7bmdFJcKvFoC has no
       ruleVerdicts entry for adr-0030 (loaded by itself) across three log
       commits. Grade/role unchanged.
+  - date: "2026-10-27"
+    note: >-
+      Behaviour check, 10 runs, all logs landed, no revert. Unverified,
+      minor: session_01Vg1qDutnhKVav7JDNUdr8J has no ruleVerdicts for
+      adr-0010 and adr-0021 (third window in a row with a gap).
+      Grade/role unchanged (essential).
