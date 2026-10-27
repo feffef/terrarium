@@ -1,0 +1,220 @@
+schemaVersion: 1
+session: session_013zxzePwzHSC4uh6dyhsHxg
+startedAt: 2026-10-27T16:48:10Z
+endedAt: 2026-10-27T17:08:39Z
+kind: autonomous
+goal: "Visitor-loop run on the Atlas: three blind visitors, fix consensus findings, build one feature"
+status: in-review
+outcome: Fix PR opened with four consensus Atlas fixes; feature PR not yet started
+summary: Scheduled visitor-loop run, focus atlas (row 0). Built and served the site, sent sonnet, fable and opus visitors through /t/atlas, tallied consensus, and had an opus refiner check fit. Four consensus findings survived (field-log link affordance, "past the New Year" wording, dial caption naming Page Up/Down, roster wrap at 390px); the cropped-SVG-at-phone finding was dropped under a decisions.md ruling. All four fixed, DOM-measured before/after, reviewed with two code-review sub-agents, gate:scoped green, PR 2594 opened with a verdict comment. Chosen feature (wing cards name their creatures) is still to build after the fix PR lands. Everything was agent-initiated within the Skill's remit; the schedule was the only instruction.
+prs:
+  - "2594"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review/gate/merge recipe for a scheduled PR
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: explained the search fields guard block
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: a guard demanded it before the first Agent call
+    useful: partly
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+  - path: layers/atlas/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: layers/atlas/app/pages/t/atlas/index.vue
+    reason: (read before editing)
+  - path: layers/atlas/app/components/atlas/PhenologyWheel.vue
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the scheduled task itself
+  - name: code-review
+    reason: pre-push review of the fix commit
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Agent calls were blocked by the dispatch-read guard, so the three visitor dispatches had to be repeated unchanged after reading the Skill.
+    solution: Have visitor-loop step 2 name dispatch-subagents as a read-first, or let the guard accept the Skill's own briefs.
+    severity: nit
+  - description: search_issues was blocked by the fields guard five times in one parallel batch because I omitted fields.
+    solution: visitor-loop step 3 could say to use list-open-issues.ts plus git log --grep rather than search_issues.
+    severity: nit
+  - description: A foreground sleep chain to wait for the build was blocked, costing a retry.
+    solution: Start builds with run_in_background and wait with an until-loop from the first call.
+    severity: nit
+durationSec: 1229
+models:
+  claude-sonnet-5-5: 104
+toolCounts:
+  Bash: 34
+  Read: 4
+  Agent: 9
+  mcp__github__search_issues: 5
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/atlas/app/assets/theme.css
+  - layers/atlas/app/components/content/PhaseNote.vue
+  - layers/atlas/app/pages/t/atlas/[space]/index.vue
+  - layers/atlas/app/pages/t/atlas/index.vue
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/mdc-when-to-use.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0016.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+docsReadBySubagents:
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/agents/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Required gate:scoped and code-review before first push; summary sufficed, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR at once and stay within the Skill's remit; summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session when the PR opens; summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and comment; summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Payload limit shaped the refined feature; refiner read the full ADR
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading the Skill; not relevant to this change
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded on reading the Skill; no open trial covered my edits
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the Skill; not relevant to the fixes
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading the Atlas glossary; not relevant
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded on reading Atlas pages; no routing change
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Loaded on reading the Atlas root page; the refiner used it to drop the explainer idea
+    useful: partly
+  - path: .claude/rules/tenant-glossary.md
+    reason: Prompted reading the Atlas glossary, which held the plates-removed decision
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Confirmed edits stay inside the layer
+    useful: partly
+  - path: .claude/rules/ui-verification.md
+    reason: Prompted DOM measurement before claiming the UI fixes worked
+    useful: yes
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded with the Atlas glossary; no term added
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on Atlas component reads; no MDC change
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Visitor (sonnet)
+    model: sonnet
+  - type: general-purpose
+    task: Visitor (fable)
+    model: fable
+  - type: general-purpose
+    task: Visitor (opus)
+    model: opus
+  - type: general-purpose
+    task: Visitor (sonnet)
+    model: sonnet
+    durationSec: 92
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 5.5
+  - type: general-purpose
+    task: Visitor (fable)
+    model: fable
+    durationSec: 274
+    toolCalls: 36
+    modelCalls: 13
+    tokenShare: 10.6
+  - type: general-purpose
+    task: Visitor (opus)
+    model: opus
+    durationSec: 188
+    toolCalls: 24
+    modelCalls: 21
+    tokenShare: 11
+  - type: general-purpose
+    task: Refiner (fit check)
+    model: opus
+    durationSec: 247
+    toolCalls: 42
+    modelCalls: 24
+    tokenShare: 17.1
+  - type: general-purpose
+    task: "Review: standards axis"
+    durationSec: 40
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 4.3
+  - type: general-purpose
+    task: "Review: spec axis"
+    durationSec: 33
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 3.9
+gitBranch: claude/adoring-galileo-h7ae07
+entrypoint: remote_trigger
+cliVersion: 2.1.311
+trigger: visitor-loop
+ideas:
+  - Make visitor-loop's search step a script (open issues plus git log --grep for a focus keyword) so each finding's search result is one command, not several guarded MCP calls.
+landedBy: Stop
