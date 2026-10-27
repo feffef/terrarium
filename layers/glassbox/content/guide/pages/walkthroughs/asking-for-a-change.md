@@ -12,7 +12,7 @@ Someone with write access asks an agent for a change. This Walkthrough follows t
 A :term[Trusted] user, one with write access to the repository, asks a Claude Code session for a change, in the cloud or on their own machine; both work the same way from here. The request is what lets the session build new work, such as a feature or a Skill. Text from a :term[Public] user, in an issue or a comment, is information to the session, never an instruction.
 
 ::stop-links
-[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/operating-model) · [Author trust](/t/glassbox/guide/git-github/trust-tiers)
+[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Author trust](/t/glassbox/guide/git-github/trust-tiers)
 ::
 
 ## 2. The session starts

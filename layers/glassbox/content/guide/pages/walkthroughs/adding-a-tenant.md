@@ -12,15 +12,15 @@ A new site joins Terrarium. This Walkthrough follows the work from the side of t
 A :term[Trusted] user approves the new :term[Tenant], for example by asking for it in a session or by labelling its issue `ready-for-agent`, before an agent starts on it. The agent then works on a feature branch, and the result lands as a PR like any other change.
 
 ::stop-links
-[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/operating-model) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 2. A folder becomes a layer
 
-The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which can be as small as `defineNuxtConfig({})`. Nuxt registers every folder under `layers/` by itself, so the root config is left alone. A running dev server doesn't watch a brand-new layer folder, so it needs a restart; run `nuxt prepare` before `pnpm lint` so the new layer's types exist. From now on the folder is also read as a Tenant: the build stops if it holds no `tenant.config.ts`, or one whose name differs from the folder's.
+The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which can be as small as `defineNuxtConfig({})`. Nuxt registers every folder under `layers/` by itself, so the root config is left alone. A running dev server doesn't watch a brand-new layer folder, so it needs a restart, and `pnpm lint` needs `nuxt prepare` first. From now on the folder is also read as a Tenant: the build stops if it holds no `tenant.config.ts`, or one whose name differs from the folder's.
 
 ::stop-links
-[Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · :file[layers/marquee/nuxt.config.ts]
+[Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [Linting](/t/glassbox/guide/verification/linting) · :file[layers/marquee/nuxt.config.ts]
 ::
 
 ## 3. The manifest says what it holds
