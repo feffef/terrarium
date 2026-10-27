@@ -1,0 +1,203 @@
+schemaVersion: 1
+session: session_013zxzePJnRATi9QoJAjCxgq
+startedAt: 2026-10-27T13:14:38Z
+endedAt: 2026-10-27T13:27:54Z
+kind: autonomous
+goal: Scheduled prune trial of the Platform's agent instructions
+status: in-review
+outcome: "Two landed trials judged and deleted; environment-caveats.md reworded plainly; PR #2593 open"
+summary: "Scheduled /prune-trial run, agent-initiated; no human instruction beyond the stored prompt. Judged the two trials whose window had passed (pr-workflow rewrite, git-conventions Stop-hook section): no major or blocker Friction in 49 sessions since, so both were deleted. A search subagent (criterion 1) found only tiny or unprunable candidates, so I did a plain rewrite of docs/agents/environment-caveats.md (-1 net) as a new trial. A pinned Sonnet probe passed, code-review (Standards and Spec) found two small wording losses that I restored, gate:scoped was green, PR 2593 opened and subscribed."
+prs:
+  - "2593"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: the judged trial's territory and the closing sequence
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read late after the hook; search needs fields
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: read late after the hook; no conflict with my commits
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: the file I reworded
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: read after the hook; confirmed rewriting a doc is allowed
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: hook-requested; nothing changed
+    useful: no
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: hook-requested; nothing changed
+    useful: no
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: Standards and Spec subagents read it as the spec; yes
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: search subagent read it for the guard roster; yes
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: search subagent read it for a candidate; yes
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: closure steps; followed
+    useful: yes
+skillsUsed:
+  - name: prune-trial
+    reason: the task
+  - name: dispatch-subagents
+    reason: before writing the search brief
+  - name: code-review
+    reason: pre-push review
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Called search_issues without fields; the guard blocked it, wasting one call.
+    solution: Pass fields on every search_issues call, as github-integration.md says.
+    severity: nit
+  - description: Hooks asked for three ADRs and two docs only after I had written the file, so those reads came late and changed nothing.
+    solution: Read ADR-0027 before editing; the post-write hint for ADR-0029 and ADR-0017 was noise for a wording-only rewrite.
+    severity: minor
+  - description: The ledger numbers (66/67) were stale after review-fix edits and had to be recomputed and re-committed.
+    solution: Compute numstat and the ledger entry only after the review fixes land.
+    severity: nit
+  - description: The criterion-1 search found no prunable failed-prose; every candidate was 3-10 lines, so the run fell back to a plain rewrite worth -1 line.
+    solution: Treat repeated tiny-gain runs as the signal to retire or reshape the Routine (file an issue), not a Friction in this run.
+    severity: minor
+durationSec: 796
+models:
+  claude-sonnet-5-5: 74
+toolCounts:
+  Bash: 16
+  Read: 8
+  mcp__github__search_issues: 2
+  mcp__github__issue_read: 1
+  Skill: 4
+  Agent: 4
+  Grep: 1
+  Write: 1
+  Edit: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - docs/agents/environment-caveats.md
+  - .agents/prune-trials.yml
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0017.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+  - adr: 17
+    via: text
+    readAfter: true
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0023.md
+docsReadBySubagents:
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before the first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to log via close-session without putting the log on my branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to the PR myself; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the PR body header; I opened the full ADR when a hook asked, it added nothing
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Defines the trial scope; I opened the full ADR after a hook and it confirmed a doc rewrite is allowed
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded for a docs/agents edit; nothing in it applied to a wording-only rewrite
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR rewrites; I touched no ADR
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I touched a file; told me a human merge may be needed, which merge-pr.ts will decide
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill placement; I changed no Skill
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Subagent search loaded it; it supplied the guard roster for the candidate check
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: Subagent loaded it; did not apply
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Subagent loaded it; did not apply
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Subagent loaded it; did not apply
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Subagent loaded it; did not apply
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Search failed-prose candidates
+    model: sonnet
+    durationSec: 150
+    toolCalls: 39
+    modelCalls: 15
+    tokenShare: 21.2
+  - type: general-purpose
+    task: Sonnet probe of rewritten caveats
+    model: sonnet
+    durationSec: 19
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 3.1
+  - type: general-purpose
+    task: Standards review of prune
+    model: sonnet
+    durationSec: 41
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 8.4
+  - type: general-purpose
+    task: Spec review of prune
+    model: sonnet
+    durationSec: 39
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 8.6
+gitBranch: claude/practical-rubin-x06boa
+entrypoint: remote_trigger
+cliVersion: 2.1.311
+trigger: prune-trial
+landedBy: Stop
