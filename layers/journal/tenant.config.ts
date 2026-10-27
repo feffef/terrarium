@@ -45,7 +45,7 @@ export const skillSchema = z
         note: z
           .string()
           .refine(
-            (v) => !/session_[0-9A-Za-z]{1,23}(?![0-9A-Za-z-])/.test(v),
+            (v) => !/session_01[0-9A-Za-z]{0,21}(?![0-9A-Za-z-])/.test(v),
             'cites a truncated session id; quote the full 24-character id',
           ),
       }),

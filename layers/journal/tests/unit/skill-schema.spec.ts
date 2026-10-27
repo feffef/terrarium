@@ -15,6 +15,10 @@ describe('skillSchema observation notes', () => {
     expect(skillSchema.safeParse(skill('Checked session_01Xw7ZN8ghC7PDemvu9cA9Lo, PR #1809.')).success).toBe(true)
   })
 
+  it('accepts a word like session_id that is not an id', () => {
+    expect(skillSchema.safeParse(skill('Reads the session_id field.')).success).toBe(true)
+  })
+
   it('rejects a truncated session id', () => {
     expect(skillSchema.safeParse(skill('Checked session_01Xw7ZN8.. here.')).success).toBe(false)
   })
