@@ -82,9 +82,37 @@ describe('--verdicts', () => {
       ].join('\n'),
     )
   })
+
+  it('merges several runs into one ruleVerdicts and one docsRead list', () => {
+    expect(runSummary([fixture('explore.output'), fixture('build.output')], '--verdicts')).toBe(
+      [
+        'ruleVerdicts:',
+        '  - { path: ".claude/rules/adr-0004.md", reason: "build fix-typo-11: ran the gate; fix fix-typo-11 r1: ran the gate", useful: yes }',
+        'docsRead:',
+        '  - { path: "docs/agents/issue-tracker.md", reason: "triage #11: told me the labels", useful: yes }',
+        '  - { path: "docs/agents/pr-workflow.md", reason: "build big-13: steps for the push", useful: partly }',
+      ].join('\n'),
+    )
+  })
 })
 
 describe('the command line', () => {
+  const script = join(import.meta.dirname, '../../scripts/run-summary.ts')
+  const cli = (...args: string[]) => spawnSync(process.execPath, ['--import', 'tsx', script, ...args], { encoding: 'utf8' })
+
+  it('takes several outputs for --verdicts', () => {
+    const run = cli(fixture('explore.output'), fixture('build.output'), '--verdicts')
+    expect(run.status).toBe(0)
+    expect(run.stdout.match(/^ruleVerdicts:$/gm)).toHaveLength(1)
+    expect(run.stdout.match(/^docsRead:$/gm)).toHaveLength(1)
+  })
+
+  it.each(['--triage', '--build'])('rejects several outputs for %s with the usage line', (mode) => {
+    const run = cli(fixture('explore.output'), fixture('build.output'), mode)
+    expect(run.status).toBe(1)
+    expect(run.stderr).toContain('usage: run-summary.ts')
+  })
+
   it('rejects an unknown mode with the usage line, not a stack trace', () => {
     const script = join(import.meta.dirname, '../../scripts/run-summary.ts')
     const run = spawnSync(process.execPath, ['--import', 'tsx', script, fixture('build.output'), '--verdict'], { encoding: 'utf8' })

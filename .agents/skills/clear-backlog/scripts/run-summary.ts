@@ -3,7 +3,8 @@
 //
 // Usage:
 //   pnpm exec tsx .agents/skills/clear-backlog/scripts/run-summary.ts
-//     <run .output> --triage | --build | --verdicts
+//     <run .output> --triage | --build
+//     <run .output>... --verdicts
 import { readFileSync } from 'node:fs'
 import { fail, runIfMain } from '../../../../scripts/lib/cli.ts'
 
@@ -84,11 +85,11 @@ function build(r: Branch[]): string[] {
 
 const RANK = { no: 0, partly: 1, yes: 2 }
 
-/** One entry per path, as close-session's `ruleVerdicts` and `docsRead` take them. */
-function verdicts(r: Explore | Branch[]): string[] {
-  const all = Array.isArray(r)
+/** One entry per path across all runs, as close-session's `ruleVerdicts` and `docsRead` take them. */
+function verdicts(runs: (Explore | Branch[])[]): string[] {
+  const all = runs.flatMap((r) => Array.isArray(r)
     ? r.flatMap((b) => b.verdicts ?? [])
-    : Object.entries(r.results).flatMap(([n, t]) => (t.verdicts ?? []).map((v) => ({ ...v, agent: `triage #${n}` })))
+    : Object.entries(r.results).flatMap(([n, t]) => (t.verdicts ?? []).map((v) => ({ ...v, agent: `triage #${n}` }))))
   const best = new Map<string, Verdict[]>()
   for (const v of all) {
     const kept = best.get(v.path)
@@ -109,17 +110,19 @@ function verdicts(r: Explore | Branch[]): string[] {
 }
 
 const MODES = {
-  '--triage': (r: unknown) => triage(r as Explore).join('\n\n'),
-  '--build': (r: unknown) => build(r as Branch[]).join('\n\n'),
-  '--verdicts': (r: unknown) => verdicts(r as Explore | Branch[]).join('\n'),
+  '--triage': ([r]: unknown[]) => triage(r as Explore).join('\n\n'),
+  '--build': ([r]: unknown[]) => build(r as Branch[]).join('\n\n'),
+  '--verdicts': (rs: unknown[]) => verdicts(rs as (Explore | Branch[])[]).join('\n'),
 }
 
-export function runSummary(path: string, mode: keyof typeof MODES): string {
-  return MODES[mode](result(path))
+export function runSummary(paths: string | string[], mode: keyof typeof MODES): string {
+  return MODES[mode]([paths].flat().map(result))
 }
 
 runIfMain(import.meta.url, () => {
-  const [path, mode] = process.argv.slice(2)
-  if (!path || !mode || !Object.hasOwn(MODES, mode)) fail('usage: run-summary.ts <run .output> --triage | --build | --verdicts')
-  console.log(runSummary(path, mode as keyof typeof MODES))
+  const paths = process.argv.slice(2)
+  const mode = paths.pop()
+  if (!paths.length || !mode || !Object.hasOwn(MODES, mode) || (mode !== '--verdicts' && paths.length > 1))
+    fail('usage: run-summary.ts <run .output> --triage | --build, or <run .output>... --verdicts')
+  console.log(runSummary(paths, mode as keyof typeof MODES))
 })
