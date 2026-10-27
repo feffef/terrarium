@@ -2,7 +2,9 @@
 
 The steps a Lesson and a Walkthrough share. Each page's shape, and the Excerpt
 and Term rules, are in `layers/glassbox/GLOSSARY.md`; the drift rule
-(`.claude/rules/glassbox-content.md`) loads when you edit a page.
+(`.claude/rules/glassbox-content.md`) loads when you edit a page. Rulings in
+[`DECISIONS.md`](DECISIONS.md) are closed; [`QUALITY.md`](QUALITY.md) grades a
+page.
 
 ## Pin
 
@@ -22,12 +24,25 @@ range.
 Frontmatter holds `title`, `description`, `revision`, `revisionDate` and
 `publishedAt` only; the page draws `title` as its heading, so the body has no
 h1.
-`title` is the concept's short general name, as its docs or the field call it,
-never Terrarium's own (a Walkthrough's title names its story), and `description` one sentence a visitor reads before
-clicking, each within its cap in `lengths` in `layers/glassbox/page-checks.ts`.
+`title` is the concept's general name, as its docs or the field call it, never
+Terrarium's own: at most four words in sentence case, with no leading article,
+parentheses or code identifier unless that is the concept's name
+(*CLAUDE.md*), and the tool's name in front only when the bare word is
+ambiguous outside its Subject (*Claude Code hooks*). A Walkthrough's title names its story.
+`description` is one sentence a visitor reads before clicking. Each stays within
+its cap in `lengths` in `layers/glassbox/page-checks.ts`. The slug follows the
+title when a page is written or promoted; a retitle keeps the URL.
 
 ## Write
 
+- **From the source, never memory.** Take every claim about a tool or about
+  Terrarium from its source: the cited file at `revision`, the package in
+  `node_modules`, the official docs.
+- **Stand alone.** A reader landing from search follows the page without
+  reading another first: link a sibling for depth, never as a prerequisite.
+- **Excerpts teach.** Excerpt the code that makes the decision, not a comment
+  or a summary of it: short (about 12 lines), readable on its own, ending on a
+  whole statement.
 - **Cite** code with `:file[path]` or `::excerpt`, an ADR as
   `ADR-NNNN (:file[docs/adr/NNNN-….md])`, and a Journal page by its site path
   (a content page, or `/t/journal/<space>/{skills,frictions,ideas}`). A path

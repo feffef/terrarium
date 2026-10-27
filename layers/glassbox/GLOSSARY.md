@@ -61,8 +61,8 @@ Its body follows one contract, which the page frames like design 1b
   `### What to watch for`. Why it's built this way gives each reason one
   short bullet a newcomer can follow, with no unexplained jargon. The bullet
   opens with a bold lead-in naming the reason, then says the problem, what
-  Terrarium chose, and what that costs, if anything. It may end
-  with the ADR that records the decision, as `ADR-NNNN (:file[…])`, or, when
+  Terrarium chose, and, after `The cost:`, what that costs, if anything. It may
+  end with the ADR that records the decision, as `ADR-NNNN (:file[…])`, or, when
   no ADR does, with the file that holds the reason, as `:file[…]`; never a
   loosely related ADR. What to watch for warns
   about consequences for the reader, and links an ADR rather than restating
@@ -129,7 +129,8 @@ turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
 
 - **`.agents/skills/glassbox-lesson/`** — how a Lesson gets written;
   `EVERY-PAGE.md` there settles a page's title and the steps a Lesson and a
-  Walkthrough share.
+  Walkthrough share, `QUALITY.md` how a page is graded and raised, and
+  `DECISIONS.md` the closed rulings.
 - **`.agents/skills/glassbox-walkthrough/SKILL.md`** — how a Walkthrough gets
   written.
 - **`.agents/skills/glassbox-update/SKILL.md`** — how the guide pages are
