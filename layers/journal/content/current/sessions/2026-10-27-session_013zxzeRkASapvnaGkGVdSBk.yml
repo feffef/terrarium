@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeRkASapvnaGkGVdSBk
 startedAt: 2026-10-27T17:48:35Z
-endedAt: 2026-10-27T18:55:16Z
+endedAt: 2026-10-27T19:11:46Z
 kind: interactive
 goal: Review and improve the Glass Box guide with several models
 status: in-review
-outcome: "PR #2598 open: 3 fixes, cross-links, 4 new Lessons, 3 promoted drafts; follow-up for 5 weak pages in progress"
-summary: 'All human-instructed. First the user asked for a three-model (Sonnet, Fable, Opus) review of the Glass Box guide, compared for overlaps; I reported in chat. The user then asked for: a Sonnet agent to fix the three verified errors and add shared cross-links; four Opus agents writing new Lessons via glassbox-lesson (operating model, Vue, linting, pnpm+lockfile only); three Opus agents promoting drafts I picked by overlap rank (guards, provenance, routines); a Fable agent proposing fixes for the five weakest pages, then an Opus judge and a second Fable pass on those plans. The user flagged "fail-closed" and "provenance" as jargon and chose field names with matching slugs (Blocking hooks, Commit and PR attribution; I also renamed operating-model to human-in-the-loop for consistency). Page agents worked in worktrees without editing shared pages; they reported join edits, which the Sonnet agent applied after I cherry-picked all branches. Two code-review passes (the second a fresh one the user asked for) found a reintroduced "new dependency" error, repeated facts, counts in prose and "so" clauses; an Opus agent fixed both rounds. Gate green; PR #2598 opened. Per the user, the five-page improvements go in a follow-up PR; five Opus agents are building it now.'
+outcome: "PR #2598 merged (fixes, cross-links, 4 new Lessons, 3 promoted drafts); follow-up PR #2600 for the five weakest pages open"
+summary: "All human-instructed. First the user asked for a three-model (Sonnet, Fable, Opus) review of the Glass Box guide, compared for overlaps; I reported in chat. The user then asked for: a Sonnet agent to fix the three verified errors and add shared cross-links; four Opus agents writing new Lessons via glassbox-lesson (operating model, Vue, linting, pnpm+lockfile only); three Opus agents promoting drafts I picked by overlap rank (guards, provenance, routines); a Fable agent proposing fixes for the five weakest pages, then an Opus judge and a second Fable pass on those plans. The user flagged \"fail-closed\" and \"provenance\" as jargon and chose field names with matching slugs (Blocking hooks, Commit and PR attribution; I also renamed operating-model to human-in-the-loop for consistency). Page agents worked in worktrees without editing shared pages; they reported join edits, which the Sonnet agent applied after I cherry-picked all branches. Two code-review passes (the second a fresh one the user asked for) found a reintroduced \"new dependency\" error, repeated facts, counts in prose and \"so\" clauses; an Opus agent fixed both rounds. Gate green; PR #2598 opened. Per the user, the five-page improvements go in a follow-up PR; five Opus agents built it from Fable's revised plans; a code-review round and a review of its fixes ran, the gate passed, and PR #2600 is open. #2598 was merged by me via merge-pr.ts after a green CI gate."
 prs:
   - "2598"
+  - "2600"
 docsRead:
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: "brief contents: scratchpad subfolders, save-handback"
@@ -127,6 +128,9 @@ docsRead:
   - path: docs/agents/pr-workflow.md
     reason: "Subagents: source checked for Glass Box page claims or Excerpts"
     useful: yes
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: "Diagram subagent: checked the SVG commit after the fact"
+    useful: partly
   - path: .agents/skills/glassbox-lesson/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
@@ -249,22 +253,32 @@ frictions:
   - description: Briefed Lesson titles without the 'field name, not ours' rule up front; two promoted pages kept project jargon titles until the user flagged it
     solution: Quote EVERY-PAGE.md's title rule in briefs and check titles against the tool's own docs before integrating
     severity: minor
-durationSec: 4001
+  - description: "Subscribed to PR #2599 in the same call batch as creating the PR, guessing its number; the real PR was #2600, so one wrong subscribe had to be undone"
+    solution: Subscribe only after create_pull_request returns the PR number
+    severity: nit
+  - description: First push of the restarted branch failed with --force-with-lease stale info because the merged branch was deleted on the remote
+    solution: Push a restarted branch plainly, as pr-workflow.md says for a branch restarted after its merge
+    severity: nit
+durationSec: 4991
 models:
-  claude-opus-5-5: 205
+  claude-opus-5-5: 274
 toolCounts:
-  Bash: 50
+  Bash: 70
   AskUserQuestion: 1
-  Skill: 6
-  Agent: 24
+  Skill: 7
+  Agent: 28
   Read: 4
-  Write: 3
+  Write: 4
   ToolSearch: 3
   WebFetch: 1
   SendMessage: 2
   mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/10.routines.md
   - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
@@ -281,6 +295,7 @@ filesEdited:
   - layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
   - layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
   - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - app/assets/mermaid/c8c1cc04e54f5ed4.svg
   - layers/glassbox/content/drafts/pages/claude-code/11.cloud-sessions.md
   - layers/glassbox/content/guide/pages/claude-code/04.hooks.md
   - layers/glassbox/content/guide/pages/claude-code/07.subagents.md
@@ -339,10 +354,16 @@ rulesFollowedUp:
   - .claude/rules/adr-0015.md
   - .claude/rules/adr-0017.md
   - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0024.md
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0026.md
   - .claude/rules/adr-0022.md
+adrHints:
+  - adr: 24
+    via: path
+    readAfter: true
+    by: subagent
 rulesLoadedBySubagents:
   - .claude/rules/adr-0015.md
   - .claude/rules/adr-0008.md
@@ -359,6 +380,7 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0010.md
   - .claude/rules/adr-0026.md
   - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0024.md
   - .claude/rules/adr-0018.md
   - .claude/rules/adr-0013.md
   - .claude/rules/adr-0014.md
@@ -387,6 +409,7 @@ docsReadBySubagents:
   - .agents/skills/writing-for-agents/SKILL.md
   - .agents/skills/glassbox-update/SKILL.md
   - docs/agents/verifying-ui-changes.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
   - docs/adr/0004-objective-safety-gate.md
   - docs/adr/0026-gate-workflow-thin-shell.md
   - .agents/skills/dependabot-sweep/SKILL.md
@@ -491,6 +514,9 @@ ruleVerdicts:
   - path: .claude/rules/adr-0023.md
     reason: "Subagents: auto-loaded on file reads; context for operating-model and guest claims at most"
     useful: partly
+  - path: .claude/rules/adr-0024.md
+    reason: "Diagram subagent: confirmed committing the rendered SVG with the fence"
+    useful: yes
 subagents:
   - type: general-purpose
     task: Glass Box review (Sonnet)
@@ -498,164 +524,188 @@ subagents:
     durationSec: 193
     toolCalls: 39
     modelCalls: 11
-    tokenShare: 1.9
+    tokenShare: 1.6
   - type: general-purpose
     task: Glass Box review (Fable)
     model: fable
     durationSec: 574
     toolCalls: 48
     modelCalls: 8
-    tokenShare: 1.9
+    tokenShare: 1.6
   - type: general-purpose
     task: Glass Box review (Opus)
     model: opus
     durationSec: 323
     toolCalls: 52
     modelCalls: 26
-    tokenShare: 3.3
+    tokenShare: 2.9
   - type: general-purpose
     task: Fix errors, add cross-links
     model: sonnet
     durationSec: 831
     toolCalls: 33
     modelCalls: 30
-    tokenShare: 2.8
+    tokenShare: 2.4
   - type: general-purpose
     task: "Lesson: agent operating model"
     model: opus
     durationSec: 507
     toolCalls: 77
     modelCalls: 50
-    tokenShare: 4.6
+    tokenShare: 4
   - type: general-purpose
     task: "Lesson: Vue fundamentals"
     model: opus
     durationSec: 572
     toolCalls: 82
     modelCalls: 66
-    tokenShare: 6.2
+    tokenShare: 5.3
   - type: general-purpose
     task: "Lesson: linting"
     model: opus
     durationSec: 541
     toolCalls: 77
     modelCalls: 56
-    tokenShare: 5.4
+    tokenShare: 4.7
   - type: general-purpose
     task: "Lesson: pnpm and lockfile"
     model: opus
     durationSec: 684
     toolCalls: 100
     modelCalls: 83
-    tokenShare: 8.3
+    tokenShare: 7.2
   - type: general-purpose
     task: "Promote draft: guards"
     model: opus
     durationSec: 438
     toolCalls: 59
     modelCalls: 45
-    tokenShare: 3.8
+    tokenShare: 3.3
   - type: general-purpose
     task: "Promote draft: provenance"
     model: opus
     durationSec: 476
     toolCalls: 66
     modelCalls: 52
-    tokenShare: 4.7
+    tokenShare: 4
   - type: general-purpose
     task: "Promote draft: routines"
     model: opus
     durationSec: 404
     toolCalls: 53
     modelCalls: 46
-    tokenShare: 4.4
+    tokenShare: 3.8
   - type: general-purpose
     task: Ideas for 5 weakest lessons
     model: fable
     durationSec: 498
     toolCalls: 40
     modelCalls: 12
-    tokenShare: 2.6
+    tokenShare: 2.2
   - type: general-purpose
     task: Judge Fable's improvement plans
     model: opus
     durationSec: 387
     toolCalls: 62
     modelCalls: 45
-    tokenShare: 4.8
+    tokenShare: 4.2
   - type: general-purpose
     task: Standards review of branch
     durationSec: 124
     toolCalls: 18
     modelCalls: 12
-    tokenShare: 1.3
+    tokenShare: 1.1
   - type: general-purpose
     task: Spec review of branch
     durationSec: 127
     toolCalls: 24
     modelCalls: 20
-    tokenShare: 1.6
+    tokenShare: 1.4
   - type: general-purpose
     task: Fix review findings
     model: opus
     durationSec: 728
     toolCalls: 70
     modelCalls: 54
-    tokenShare: 5.5
+    tokenShare: 4.7
   - type: general-purpose
     task: Revise improvement plans
     model: fable
     durationSec: 543
     toolCalls: 38
     modelCalls: 18
-    tokenShare: 2.9
+    tokenShare: 2.5
   - type: general-purpose
     task: Fresh standards review
     durationSec: 122
     toolCalls: 16
     modelCalls: 11
-    tokenShare: 1.5
+    tokenShare: 1.3
   - type: general-purpose
     task: Fresh spec review
     durationSec: 138
     toolCalls: 23
     modelCalls: 21
-    tokenShare: 2.3
+    tokenShare: 2
   - type: general-purpose
     task: Improve MCP servers page
     model: opus
     durationSec: 264
     toolCalls: 35
     modelCalls: 26
-    tokenShare: 1.7
+    tokenShare: 1.5
   - type: general-purpose
     task: Improve adding-a-tenant page
     model: opus
     durationSec: 270
     toolCalls: 43
     modelCalls: 33
-    tokenShare: 2.4
+    tokenShare: 2.1
   - type: general-purpose
     task: Improve Skills page
     model: opus
-    durationSec: 283
-    toolCalls: 47
-    modelCalls: 35
-    tokenShare: 2.4
+    durationSec: 313
+    toolCalls: 48
+    modelCalls: 36
+    tokenShare: 2.2
   - type: general-purpose
     task: Improve change-goes-live page
     model: opus
-    durationSec: 274
-    toolCalls: 33
-    modelCalls: 21
-    tokenShare: 1.5
+    durationSec: 524
+    toolCalls: 59
+    modelCalls: 40
+    tokenShare: 2.6
   - type: general-purpose
     task: Improve git-worktrees page
     model: opus
     durationSec: 244
     toolCalls: 31
     modelCalls: 24
-    tokenShare: 1.4
+    tokenShare: 1.2
+  - type: general-purpose
+    task: Standards review follow-up
+    durationSec: 83
+    toolCalls: 16
+    modelCalls: 7
+    tokenShare: 0.7
+  - type: general-purpose
+    task: Spec review follow-up
+    durationSec: 123
+    toolCalls: 27
+    modelCalls: 18
+    tokenShare: 1.7
+  - type: general-purpose
+    task: Standards review of fix commit
+    durationSec: 43
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 0.7
+  - type: general-purpose
+    task: Spec review of fix commit
+    durationSec: 43
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 0.8
 gitBranch: ccr-7b08218f-nvevt2
 entrypoint: remote_mobile
 cliVersion: 2.1.311
