@@ -71,7 +71,7 @@ The script copies the new `.output/` over the folder the server runs from, stops
 The restarted server serves the new build. The first query for each Collection compares its table's checksum with the build's and, where they differ, restores the table from the new dump.
 
 ::stop-links
-[Content database](/t/glassbox/guide/nuxt-content/content-database) · [Nitro server engine](/t/glassbox/guide/nuxt-vue/nitro)
+[Content database](/t/glassbox/guide/nuxt-content/content-database)
 ::
 
 ## A real case
