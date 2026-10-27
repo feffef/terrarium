@@ -1,0 +1,3 @@
+term: session
+definition: One continuous Claude Code working session on the repository, known by its Claude session id. It writes a session log of its work when it closes.
+source: GLOSSARY.md

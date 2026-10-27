@@ -39,7 +39,7 @@ A hook commits the :term[session log] straight to `main`, without a PR. The Fric
 A :term[Routine] starts a session that runs the `frictions-to-fixes` Skill, or a Trusted user runs it by hand. It is a session like any other, following the Skill's steps.
 
 ::stop-links
-[Routines, scheduled tasks and /loop](/t/glassbox/drafts/claude-code/routines) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · :file[.agents/skills/frictions-to-fixes/SKILL.md]
+[Scheduled tasks](/t/glassbox/guide/claude-code/routines) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · :file[.agents/skills/frictions-to-fixes/SKILL.md]
 ::
 
 ## 4. A subagent reads the logs
@@ -63,7 +63,7 @@ The subagent drops a Friction that a merged change already fixed, one that an op
 The run weighs recurrence and severity together and picks the top candidates, and one design subagent reads each occurrence's full log and designs every fix. For a Friction that a doc already covers, it checks whether the session had opened that doc: if not, the instruction sits where nobody looks; if so, its wording failed. A fix that would touch a :term[Human-only] file, a guard or the hook wiring, or that turns on a design choice a person should make, is never built in this run: it gets an issue with the design instead.
 
 ::stop-links
-[Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · [Guards that fail closed](/t/glassbox/drafts/claude-code/guards) · [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · :file[.agents/skills/frictions-to-fixes/design-brief.md]
+[Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · [Blocking hooks](/t/glassbox/guide/claude-code/blocking-hooks) · [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · :file[.agents/skills/frictions-to-fixes/design-brief.md]
 ::
 
 ## 7. Helper agents write the fixes
@@ -97,7 +97,7 @@ In July 2026 a session waited about two hours on a PR's CI. It had called `Sched
 ## Where next
 
 - [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
-- [Routines, scheduled tasks and /loop](/t/glassbox/drafts/claude-code/routines)
+- [Scheduled tasks](/t/glassbox/guide/claude-code/routines)
 - [Claude Code Skills](/t/glassbox/guide/claude-code/skills)
 - [Asking an agent for a change](/t/glassbox/guide/walkthroughs/asking-for-a-change)
 - [Friction Ledger](/t/journal/current/frictions)

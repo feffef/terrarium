@@ -28,7 +28,7 @@ The script that runs the container fetches `main` again after each pause. When `
 The script compares a hash of `pnpm-lock.yaml` with the hash it saved after its last good install. Only when they differ does it install packages again, from the lockfile exactly. If that install fails, the previous build stays live.
 
 ::stop-links
-[Continuous deployment](/t/glassbox/guide/deploy/self-updating-container) · :file[pnpm-lock.yaml]
+[pnpm and the lockfile](/t/glassbox/guide/deploy/pnpm-lockfile) · [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container)
 ::
 
 ## 4. The build runs beside the live site
