@@ -25,6 +25,7 @@ const daySuffix = computed(() => (almanac.day.value === almanac.today ? '' : `?d
 
 const { data } = await useAsyncData('atlas-front', async () => {
   const stats: Record<string, number> = {}
+  const commonNames: Record<string, string[]> = {}
   // Only what the dial reads travels in the payload (ADR-0028): each creature's
   // phase spans, not its prose.
   const creatures: { to: string; label: string; common?: string; wing: string; phases: { span: PhenologyPhase['span']; quiet?: boolean }[] }[] = []
@@ -63,12 +64,14 @@ const { data } = await useAsyncData('atlas-front', async () => {
       recent.push({ date: o.date, note: o.note, name: s?.binomial, to: s && `/t/atlas/${b.slug}${s.path}` })
     }
     stats[b.slug] = docs.length
+    commonNames[b.slug] = docs.map((s) => s.common).filter((c): c is string => Boolean(c))
   }
   recent.sort((a, b) => b.date.localeCompare(a.date))
-  return { stats, creatures, observations, recent: recent.slice(0, SIGHTINGS_SHOWN) }
+  return { stats, commonNames, creatures, observations, recent: recent.slice(0, SIGHTINGS_SHOWN) }
 })
 
 const stats = computed(() => data.value?.stats ?? {})
+const commonNames = computed(() => data.value?.commonNames ?? {})
 const creatures = computed(() => data.value?.creatures ?? [])
 const observations = computed(() => data.value?.observations ?? [])
 // Who is astir on the needle's day: a non-quiet phase covers it. Turning the dial re-reads this.
@@ -122,6 +125,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
             <span class="swatch" :style="{ background: b.accent }" />
             <span class="swatch" :style="{ background: b.accent2 }" />
             <span class="wing-count">{{ stats[b.slug] ?? 0 }} catalogued</span>
+            <span v-if="commonNames[b.slug]?.length" class="wing-names">{{ commonNames[b.slug]!.join(' · ') }}</span>
           </span>
         </NuxtLink>
       </nav>
@@ -267,8 +271,9 @@ useHead({ title: 'The Atlas of the Terrarium' })
 .wing-name { font-family: var(--atlas-display); font-size: 1.5rem; display: block; }
 .wing-char { font-family: var(--atlas-label); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--biome-accent); display: block; margin: 0.1rem 0 0.5rem; }
 .wing-blurb { color: var(--atlas-muted); font-size: 0.98rem; display: block; }
-.wing-foot { grid-area: foot; display: flex; align-items: center; gap: 0.5rem; margin-top: 0.9rem; }
+.wing-foot { grid-area: foot; display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.9rem; }
 .wing-foot .swatch { width: 14px; height: 14px; border-radius: 3px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); }
+.wing-names { flex-basis: 100%; font-style: italic; font-size: 0.88rem; color: var(--atlas-muted); }
 .wing-count { font-family: var(--atlas-data); font-size: 0.72rem; color: var(--atlas-faint); margin-left: 0.3rem; }
 
 .colophon { margin-top: 3rem; text-align: center; font-family: var(--atlas-data); font-size: 0.72rem; color: var(--atlas-faint); line-height: 1.7; }
