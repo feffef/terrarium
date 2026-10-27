@@ -90,8 +90,9 @@ Merge the three reports into one tally file:
   Lesson, which beats a re-cut. A gap a draft fills is filled by promoting
   that draft. Read a candidate draft first: one that needs about half its
   lines changed or more is not promoted this run (an idea); take the next
-  candidate. A gap that needs a new Subject is out of remit. A selected page
-  the step touches leaves the page selection; the step's writer owns it.
+  structural candidate. A gap that needs a new Subject is out of remit. A
+  selected page the step touches leaves the page selection; the step's
+  writer owns it.
 
 Done when every page has its three grades, every consensus deficit is kept or
 dropped with its reason, and the selection says why each item beat the next.
@@ -113,13 +114,14 @@ Dispatch one `opus` writer per selected page and one for the structural step,
 each with `isolation: 'worktree'` and [`writer-brief.md`](writer-brief.md)
 filled in: its task, its deficits (false claims on its pages included), its
 research file, the base, every false claim the run confirmed, and its own
-scratch subfolder. Fix a false claim on a page no writer holds yourself, in
-the run branch, after step 6's merges. Done when every hand-back is saved and
-each writer either has a commit in its worktree that passes EVERY-PAGE's
-Check, or refused or stopped with its reason. Drop a refused or stopped item
+scratch subfolder. Fix a false claim on a page no writer holds, or whose
+writer dropped out, yourself in the run branch after step 6's merges. Done
+when every hand-back is saved and each writer either has a commit in its
+worktree that passes EVERY-PAGE's Check, or refused or stopped with its
+reason. Drop a refused or stopped item
 from the run, remove its worktree (`git worktree remove --force <path>`), and
-say why in the PR body; if nothing remains, invoke `close-session` and
-stop.
+say why in the PR body. If no writer's commit and no false claim remain,
+invoke `close-session` as `completed` and stop.
 
 ## 6. Integrate
 
