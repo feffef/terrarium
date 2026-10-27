@@ -7,6 +7,7 @@ import {
   bashReadPaths,
   buildDocLineIndex,
   canonicalizeInstructionPath,
+  commandWords,
   isInstructionDoc,
   scanShellReads,
   scanShellReadsByOutput,
@@ -768,4 +769,31 @@ describe('shellSegments — the words the provenance guard reads (#1900)', () =>
   it('gives each segment the directory it starts in, unknown after an unfollowable cd', () => {
     expect(words('cd sub && cat a; cd "$D"; cat b').map((s) => s.dir)).toEqual(['/repo', '/repo/sub', '/repo/sub', undefined])
   })
+})
+
+describe('commandWords() on adversarial input', () => {
+  // Every hook that parses a command goes through this tokenizer, so it must
+  // stay linear: doubling the input may not much more than double the time.
+  const fastest = (cmd: string): number => Math.min(...[0, 1, 2].map(() => {
+    const t = performance.now()
+    commandWords(cmd)
+    return performance.now() - t
+  }))
+  const inputs: Record<string, (n: number) => string> = {
+    'option runs': (n) => `git${' -c a=-b'.repeat(n / 8)} commit`,
+    'unclosed quote': (n) => `cat "${'x '.repeat(n / 2)}`,
+    'heredoc markers': (n) => ' <<EOF'.repeat(n / 6),
+    'heredocs': (n) => 'cat <<EOF\nEOF\n'.repeat(n / 14),
+    'blank heredoc body': (n) => `cat <<EOF\n${'\n'.repeat(n)}`,
+    'nested substitutions': (n) => `${'$('.repeat(n / 4)}x${')'.repeat(n / 4)}`,
+    'backticks': (n) => '`'.repeat(n),
+  }
+  for (const [name, build] of Object.entries(inputs)) {
+    it(`stays linear on ${name}`, () => {
+      const small = fastest(build(50_000))
+      const large = fastest(build(100_000))
+      expect(large).toBeLessThan(1000)
+      expect(large).toBeLessThan(3 * small + 2)
+    })
+  }
 })

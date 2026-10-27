@@ -57,11 +57,11 @@ describe('committedShas()', () => {
     expect(committedShas('W=/r/wt\ngit -C "$W" commit -F msg', '[fix/a 0123abc] y')).toEqual(['0123abc'])
     expect(committedShas('git -C "$W" \\\n  commit -m x', '[fix/a 0123abc] y')).toEqual(['0123abc'])
     expect(committedShas("git -c user.name='a b' --no-pager commit --amend", '[m 0123abc] y')).toEqual(['0123abc'])
-    for (const c of ['git -C"$W" commit -m x;git push', 'git commit>log', '`git commit -m x`', 'git --git-dir /x commit', '(git commit -am x)', '/usr/bin/git commit']) {
+    for (const c of ['git -C"$W" commit -m x;git push', '`git commit -m x`', 'git --git-dir /x commit', '(git commit -am x)', '/usr/bin/git commit', 'if git commit -m x; then :; fi', 'xargs git commit']) {
       expect(committedShas(c, '[m 0123abc] y'), c).toEqual(['0123abc'])
     }
     for (const c of ['git log -1 --oneline', 'echo commit\ngit status', 'git status && echo commit', 'git log --grep commit',
-      'git commit-tree HEAD^{tree}', 'git -c commit.gpgsign=false log', 'git --commit status']) {
+      'git commit-tree HEAD^{tree}', "cat > f <<'EOF'\ngit commit -m x\nEOF", 'git -c commit.gpgsign=false log', 'git --commit status']) {
       expect(committedShas(c, '[main 1a2b3c4] first'), c).toEqual([])
     }
     expect(committedShas('git commit -q -m x', '')).toEqual([])

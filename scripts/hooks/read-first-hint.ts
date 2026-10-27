@@ -24,7 +24,7 @@ import { readFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runGuard } from './hook-io.ts'
 import { agentTranscript, extractTrace, hintText } from '../session/transcript-trace.ts'
-import { buildDocLineIndex, commandWords } from '../session/shell-reads.ts'
+import { buildDocLineIndex, commandWords, gitSubcommandAt } from '../session/shell-reads.ts'
 import { root } from '../lib/cli.ts'
 
 interface ReadFirst {
@@ -39,15 +39,6 @@ interface ReadFirst {
 
 const runs = (segs: string[][], name: string, ok = (_w: string[]) => true) => segs.some((w) => basename(w[0] ?? '') === name && ok(w))
 
-/** git's subcommand: the first word after its global options. */
-function gitSubcommand(words: string[]): string | undefined {
-  for (let i = 1; i < words.length; i++) {
-    const w = words[i]!
-    if (w === '-C' || w === '-c') i++
-    else if (!w.startsWith('-')) return w
-  }
-}
-
 const issueWrite = (tool: string, segs: string[][]) => tool === 'mcp__github__issue_write'
   || runs(segs, 'gh', (w) => w[1] === 'issue' && ['create', 'edit', 'close', 'reopen'].includes(w[2]!))
 
@@ -56,7 +47,7 @@ export const READ_FIRST: ReadFirst[] = [
     doc: 'docs/agents/git-conventions.md',
     source: 'CLAUDE.md',
     trigger: 'Before your first git command',
-    matches: (_t, segs) => runs(segs, 'git', (w) => !['status', 'diff', undefined].includes(gitSubcommand(w))),
+    matches: (_t, segs) => runs(segs, 'git', (w) => !['status', 'diff', undefined].includes(w[gitSubcommandAt(w)])),
   },
   {
     doc: 'docs/agents/github-integration.md',

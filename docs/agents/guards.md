@@ -62,7 +62,8 @@ under `PostToolUse`, `PostToolUseFailure` and `UserPromptSubmit`; `harness-tag-s
   negated character class can match across newlines, so a verb on one line
   denied an unrelated action on the next, and 26 single-line tests missed it.
   Cover multi-line and adversarial inputs, and live-probe the real deny path
-  once before trusting the suite.
+  once before trusting the suite. A hint that splits a shell command into words
+  uses `commandWords` (`scripts/session/shell-reads.ts`), whose test keeps it linear.
 
 ## Extending one
 
