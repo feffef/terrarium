@@ -80,3 +80,11 @@ runs:
     cacheReadTokens: 3615721
     cacheWriteTokens: 101534
     costUsd: 0.8940101
+  - session: session_01A7PwrNRBtY9LTX6HrttXWW
+    startedAt: 2026-10-26T07:33:51Z
+    durationSeconds: 870
+    inputTokens: 101
+    outputTokens: 18034
+    cacheReadTokens: 6653860
+    cacheWriteTokens: 148499
+    costUsd: 1.439924

@@ -392,3 +392,12 @@ observations:
       nothing; filed as #2553. Minor: ADR-0004 summary rule left stale
       until PR #2510; checkers saw only their own pool file
       (session_01EQ8sMcrX7UwDXFBx6tfUWu). Grade/role unchanged (routine).
+  - date: "2026-10-27"
+    note: >-
+      Behaviour check, 7 runs, all PRs merged, no revert. Unverified:
+      session_01BgQzSd9CmFPiugdXAQh6HW named a trial-blocked conflict
+      (github-integration.md line 10 vs the provenance guard) in its
+      summary but logged no Friction, as ADR-0027 asks; step 4.3 does
+      not cover it. Repeat of conflicts named but untracked
+      (session_012XnetQuxWoyaVFYw1BqMoy). Grade/role unchanged
+      (routine).

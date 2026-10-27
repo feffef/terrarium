@@ -459,3 +459,12 @@ observations:
       5) after worktree builds. Late reads in session_01VfbgTTxASAKYdiziaLGuXM,
       session_01BZNS3KuWTBxqAHxTfx3uzp and session_01GKJysgAiGN7bmdFJcKvFoC are what PR #2543's guard targets; its effect is not yet observed.
       Grade/role unchanged.
+  - date: "2026-10-27"
+    note: >-
+      Behaviour check, 10 runs, no stranding, no revert. Repeated,
+      unverified: orchestrators relayed subagent claims unchecked
+      (session_01S9UeKa9mCWdPVBjAezCSaL,
+      session_01CpD4piFGbFhvGG5KWdtsCG,
+      session_01TaUpbA3idjNZSgGpNjXj8S); a trial on relayed-subagent-claims is open, so no issue. Dispatch-read guard still fires first
+      (session_01NHL7eNYVjV814TB7bS83kv). Grade/role unchanged
+      (essential).

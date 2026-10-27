@@ -152,3 +152,12 @@ observations:
       about re-gating after an own edit); step 4's 'push from its
       worktree' conflicts with the harness (session_013QKXoGLaEHEJanyw5TrPqj).
       Grade/role unchanged.
+  - date: "2026-10-27"
+    note: >-
+      Behaviour check, 10 runs, no revert. Verified,
+      repeated from the 10-25 and 10-26 notes: §4 push-from-worktree
+      conflicts with the harness (session_013QKXoGLaEHEJanyw5TrPqj,
+      session_01AEph4xtY5Zhm8GkQLqacrX) and §3 follow-up grilling sent
+      with tool calls (session_01PYyNMqrrDLZdXEej11LMzs). Filed as
+      #2577. Unverified: no log mentions check:worktrees. Grade/role
+      unchanged (specialist).

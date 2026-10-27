@@ -639,3 +639,10 @@ observations:
       #2472). Minor: session_011Rbnf9T9YqNztEcWNXsHsF left one
       humanPromptedClosures entry unexamined in step 3; drafting gap still
       tracked in #2352. Grade/role unchanged (routine).
+  - date: "2026-10-27"
+    note: >-
+      Behaviour check, 9 runs. Repeat on
+      #2472: session_01CKXPocBm85jSCheqepKn2v skipped first-push code-review. Minor: session_011Rbnf9T9YqNztEcWNXsHsF left a
+      humanPromptedClosures entry unexamined;
+      session_013SbWSgqz4tjVcTMz9vF1mu gave no orphanScan result in its
+      summary. Grade/role unchanged.

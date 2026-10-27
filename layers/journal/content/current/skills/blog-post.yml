@@ -378,3 +378,9 @@ observations:
       run (session_01GKJysgAiGN7bmdFJcKvFoC) improved, so #2512 is partly
       tested. Step 9's review is read as ambiguous for prose posts.
       Grade/role unchanged.
+  - date: "2026-10-27"
+    note: >-
+      Behaviour check, 7 runs, all merged. Unverified: a post edited
+      after the fact-check without a re-check
+      (session_01LEbdj6aqcGncPCZnNtS2ZX,
+      session_01NHL7eNYVjV814TB7bS83kv), tracked in #2370; dispatch-subagents read after the blind-read brief. Grade/role unchanged.
