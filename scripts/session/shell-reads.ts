@@ -238,27 +238,32 @@ function stripHeredocs(command: string): string {
   // `(?<!<)` and `(?!<)` exclude the `<<<WORD` herestring, which shares the
   // prefix but has no body to strip.
   const marker = /(?<!<)<<-?(?!<)\s*(['"]?)([A-Za-z_][A-Za-z0-9_]*)\1/g
-  let out = command
-  let m: RegExpExecArray | null
-  while ((m = marker.exec(out)) !== null) {
-    const afterMarker = m.index + m[0].length
-    const nl = out.indexOf('\n', m.index)
-    if (nl === -1) {
-      // No body on this command at all (a quoted "<<EOF" in a pattern, or a
-      // truncated command). Drop the marker only — truncating here would eat
-      // every path after it.
-      out = out.slice(0, m.index) + out.slice(afterMarker)
-      marker.lastIndex = m.index
-      continue
+  let out = ''
+  // One forward pass, never a rescan: a per-marker rescan was quadratic.
+  for (let i = 0; i < command.length; ) {
+    const nl = command.indexOf('\n', i)
+    const line = command.slice(i, nl === -1 ? command.length : nl + 1)
+    const words = [...line.matchAll(marker)].map((m) => m[2]!)
+    out += line.replace(marker, '')
+    // No newline means no body at all (a quoted "<<EOF" in a pattern, or a
+    // truncated command): only the marker went, so no path after it is lost.
+    if (nl === -1) break
+    i = nl + 1
+    // Each marker's body follows the line, in order, up to its terminator.
+    for (const word of words) {
+      while (i < command.length) {
+        const end = command.indexOf('\n', i)
+        const stop = end === -1 ? command.length : end
+        const done = command.slice(i, stop).trim() === word
+        i = stop + 1
+        if (done) break
+      }
     }
-    const rest = out.slice(nl + 1)
-    const end = new RegExp(`^\\s*${m[2]!}\\s*$`, 'm').exec(rest)
-    const bodyEnd = end ? nl + 1 + end.index + end[0].length : out.length
-    out = out.slice(0, m.index) + out.slice(afterMarker, nl + 1) + out.slice(bodyEnd)
-    marker.lastIndex = m.index
   }
   return out
 }
+
+const MAX_SUBSTITUTION_DEPTH = 100
 
 /** One command's tokens, split into pipeline/list segments, each tagged with
  *  whether it is immediately followed by `||` rather than an ordinary `|`
@@ -268,7 +273,7 @@ function stripHeredocs(command: string): string {
  *  `split('|')` shreds a quoted alternation (`grep "a\|b" docs/x.md`) and
  *  orphans the path into a segment whose verb is a pattern fragment — #1074's
  *  prototype scored 1/2 until this existed. */
-function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean }[] {
+function segments(rawCommand: string, depth = 0): { tokens: Token[]; followedByOr: boolean }[] {
   // A `\`-newline continues the line; left in, the newline becomes a path.
   const command = stripHeredocs(rawCommand).replace(/\\\r?\n/g, ' ')
   const out: { tokens: Token[]; followedByOr: boolean }[] = []
@@ -292,7 +297,8 @@ function segments(rawCommand: string): { tokens: Token[]; followedByOr: boolean 
     const start = at + (backtick ? 1 : 2)
     const end = backtick ? command.indexOf('`', start) : closingParen(command, start)
     const stop = end < 0 ? command.length : end
-    out.push(...segments(command.slice(start, stop)))
+    // Past the cap, deeper nesting overflowed the stack; no real command nests that far.
+    if (depth < MAX_SUBSTITUTION_DEPTH) for (const s of segments(command.slice(start, stop), depth + 1)) out.push(s)
     cur += '$'
     started = true
     dynamic = true
@@ -399,6 +405,17 @@ function unwrap(tokens: Token[]): Token[] {
  *  prefixes (`sudo`, `FOO=1`) are already resolved. */
 export function commandWords(command: string): string[][] {
   return segments(command).map((s) => unwrap(s.tokens).map((t) => t.text)).filter((w) => w.length > 0)
+}
+
+/** git's global options that take the next word as their value. */
+const GIT_VALUE_OPTIONS = new Set(['-c', '-C', '--git-dir', '--work-tree', '--namespace', '--config-env', '--attr-source'])
+
+/** The index in `words` of git's subcommand, where `words[at]` is `git`: the
+ *  first word after its global options. */
+export function gitSubcommandAt(words: string[], at = 0): number {
+  let i = at + 1
+  for (; words[i]?.startsWith('-'); i++) if (GIT_VALUE_OPTIONS.has(words[i]!)) i++
+  return i
 }
 
 /** `sed -i` edits in place and prints nothing — the doc is written, not read.

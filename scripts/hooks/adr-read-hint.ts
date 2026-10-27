@@ -24,11 +24,11 @@
 //     (with no transcript_path, the dry run assumes an empty transcript; a Bash
 //     payload needs a `git commit` command and its stdout in tool_response)
 import { readdirSync } from 'node:fs'
-import { isAbsolute, join, matchesGlob, relative } from 'node:path'
+import { basename, isAbsolute, join, matchesGlob, relative } from 'node:path'
 import { printDryRunResult, prop, readHookPayload, readTranscript, resolveDryRunInput, runGuard } from './hook-io.ts'
 import { repoRoot } from './bash-rules-hint.ts'
 import { adrReadInFull, agentTranscript, hintText, loadDocLineIndex } from '../session/transcript-trace.ts'
-import type { DocLineIndex } from '../session/shell-reads.ts'
+import { commandWords, gitSubcommandAt, type DocLineIndex } from '../session/shell-reads.ts'
 import { tryGit } from '../lib/git.ts'
 import { ADR_DIR, adrDocNumber, adrHintLine, adrHintsIn, loadRules, RULES_DIR, ruleAdr, rulePaths, type AdrHintVia, type RuleFile } from '../lib/adr-rules.ts'
 
@@ -63,20 +63,13 @@ export interface FileWrite {
   texts: string[]
 }
 
-/** git's global options that take the next word as their value. */
-const GIT_VALUE_OPTIONS = new Set(['-c', '-C', '--git-dir', '--work-tree', '--namespace', '--config-env', '--attr-source'])
-
-/** Whether a command runs `git [options] commit`. Tokenized rather than one
- *  regex, which backtracked exponentially on runs of options. Each token
- *  alternative starts with a different character and a backslash escape is
- *  one unit, so only an unclosed quote can rescan, once. */
+/** Whether a command runs `git [options] commit`, by the shared tokenizer:
+ *  this hook's own regex backtracked exponentially on runs of options. `git` may
+ *  follow another word (`if git commit`, `xargs git commit`). */
 export function runsGitCommit(command: string): boolean {
-  const tokens = command.replace(/\\\n/g, ' ').match(/(?:[^\s;&|()<>`'"\\]|\\.|'[^']*'|"(?:[^"\\]|\\.)*")+|[\n;&|()<>`]/g) ?? []
-  return tokens.some((t, i) => {
-    if (t !== 'git' && !t.endsWith('/git')) return false
-    let j = i + 1
-    while (tokens[j]?.startsWith('-')) j += GIT_VALUE_OPTIONS.has(tokens[j]!) ? 2 : 1
-    return tokens[j] === 'commit'
+  return commandWords(command).some((w) => {
+    for (let i = 0; i < w.length; i++) if (basename(w[i]!) === 'git' && w[(i = gitSubcommandAt(w, i))] === 'commit') return true
+    return false
   })
 }
 
