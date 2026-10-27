@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeRNBrVkwWy4fcM4Pxa
 startedAt: 2026-10-27T02:08:07Z
-endedAt: 2026-10-27T02:34:46Z
+endedAt: 2026-10-27T02:46:01Z
 kind: autonomous
 goal: "Scheduled sweep: turn recurring session Frictions into fixes"
-status: in-review
-outcome: "Ledger PR #2583 open; 3 regression issues and 1 fix issue filed; fix PR #2584 open"
-summary: "Scheduled frictions-to-fixes run (no human prompt; everything here is agent-initiated under the Skill's own allowance). A survey subagent ledgered about 40 window Frictions, recorded six merged fixes and opened three entries. I filed regression issues #2579 (edit-during-gate-run), #2580 (dispatch-subagents-skill-unread) and #2581 (workflow-output-result-key), choosing by severity since the fix and, among minor ties, by recurrence; I skipped local-gate-green-ci-red (owner's #2138 decision predates its only occurrence) and bash-rules-hint-failure-path (logged false alarm). A design subagent covered four picks: one became issue #2582 (data-shape tightening, left to a Trusted user), one a one-sentence clear-backlog §4 doc fix built by a Sonnet agent on claude/fix-clear-backlog-push-hint (rewrapped once after my review, then Standards and Spec review found nothing blocking), two were dropped with ledger notes. Ledger PR #2583 holds the survey and screen commits, gate green. Still open: merge both PRs, then the closing ledger PR (§8)."
+status: completed
+outcome: "Ledger PRs #2583 and #2585 and fix PR #2584 merged; 3 regression issues and 1 fix issue filed"
+summary: "Scheduled frictions-to-fixes run (no human prompt; everything here is agent-initiated under the Skill's own allowance). A survey subagent ledgered about 40 window Frictions, recorded six merged fixes and opened three entries. I filed regression issues #2579 (edit-during-gate-run), #2580 (dispatch-subagents-skill-unread) and #2581 (workflow-output-result-key), choosing by severity since the fix and, among minor ties, by recurrence; I skipped local-gate-green-ci-red (owner's #2138 decision predates its only occurrence) and bash-rules-hint-failure-path (logged false alarm). A design subagent covered four picks: one became issue #2582 (data-shape tightening, left to a Trusted user), one a one-sentence clear-backlog §4 doc fix built by a Sonnet agent on claude/fix-clear-backlog-push-hint (rewrapped once after my review, then Standards and Spec review found nothing blocking), two were dropped with ledger notes. Ledger PR #2583 holds the survey and screen commits, gate green. Still open: nothing; all three PRs merged and the closing ledger PR #2585 recorded fix #2584."
 prs:
   - "2583"
   - "2584"
+  - "2585"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: CLAUDE.md trigger before git; confirmed commit -F rule
@@ -97,22 +98,28 @@ frictions:
   - description: Design subagent found design-brief §3 gives no step for a design that changes no prose and does not say how much session-log reading is enough for a nit.
     solution: State in design-brief §3 that a non-prose design skips the read count, and cap log reading for nits.
     severity: nit
-durationSec: 1599
+  - description: "After #2583 merged I restarted the designated branch from main and tried --force-with-lease; the auto-mode classifier denied it, though the remote branch had already been deleted so a plain push worked."
+    solution: Check git ls-remote for the branch before reaching for a force push; the merged-PR recipe in the system prompt could say the remote branch is usually gone.
+    severity: nit
+durationSec: 2274
 models:
-  claude-sonnet-5-5: 97
+  claude-sonnet-5-5: 136
 toolCounts:
   Read: 8
-  Bash: 26
-  Skill: 4
+  Bash: 41
+  Skill: 5
   Agent: 5
   ToolSearch: 1
   mcp__github__issue_write: 4
   SendMessage: 1
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  mcp__github__add_issue_comment: 3
+  ReadNotifications: 2
+  PushNotification: 1
 filesEdited:
   - .agents/skills/clear-backlog/SKILL.md
+  - layers/journal/content/current/frictions/worktree-branch-not-designated.yml
   - layers/journal/content/current/frictions/auto-mode-self-modification-denials.yml
   - layers/journal/content/current/frictions/bash-reads-not-read-tool.yml
   - layers/journal/content/current/frictions/binding-docs-skipped.yml
@@ -148,7 +155,6 @@ filesEdited:
   - layers/journal/content/current/frictions/survey-output-overflow.yml
   - layers/journal/content/current/frictions/transform-untested-on-real-data.yml
   - layers/journal/content/current/frictions/triage-docs-unread-before-labelling.yml
-  - layers/journal/content/current/frictions/worktree-branch-not-designated.yml
   - layers/journal/content/current/frictions/worktree-subagent-moves-branch.yml
   - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
   - layers/journal/content/current/frictions/close-session-bypassed-by-hand-log.yml
@@ -273,32 +279,32 @@ subagents:
     durationSec: 806
     toolCalls: 43
     modelCalls: 34
-    tokenShare: 30.1
+    tokenShare: 23.7
   - type: general-purpose
     task: Design friction fixes
     durationSec: 175
     toolCalls: 25
     modelCalls: 14
-    tokenShare: 8.4
+    tokenShare: 6.6
   - type: general-purpose
     task: Build clear-backlog doc fix
     model: sonnet
     durationSec: 228
     toolCalls: 25
     modelCalls: 17
-    tokenShare: 8.8
+    tokenShare: 6.9
   - type: general-purpose
     task: Standards review of doc diff
     durationSec: 28
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 4.4
+    tokenShare: 3.4
   - type: general-purpose
     task: Spec review of doc diff
     durationSec: 17
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 3.7
+    tokenShare: 2.9
 gitBranch: claude/eager-ptolemy-1w7jfh
 entrypoint: remote_trigger
 cliVersion: 2.1.311
