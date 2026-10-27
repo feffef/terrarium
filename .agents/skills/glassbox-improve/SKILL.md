@@ -89,9 +89,9 @@ Merge the three reports into one tally file:
   least two, under the same filters; on a tie, a promotion beats a new
   Lesson, which beats a re-cut. A gap a draft fills is filled by promoting
   that draft. Read a candidate draft first: one that needs about half its
-  lines changed or more is not promoted this run (an idea). A gap that needs
-  a new Subject is out of remit. A selected page the step touches leaves the
-  page selection; the step's writer owns it.
+  lines changed or more is not promoted this run (an idea); take the next
+  candidate. A gap that needs a new Subject is out of remit. A selected page
+  the step touches leaves the page selection; the step's writer owns it.
 
 Done when every page has its three grades, every consensus deficit is kept or
 dropped with its reason, and the selection says why each item beat the next.
@@ -102,20 +102,24 @@ If nothing is selected and no false claim is confirmed, invoke
 
 For each selected page and the structural step, dispatch one read-only
 `sonnet` researcher with [`researcher-brief.md`](researcher-brief.md) filled
-in. Done when every hand-back is saved and every claim it says the source
-contradicts is in the tally, confirmed as a false claim or dropped with its
-reason.
+in: its task and deficits, the base as the commit, and its own scratch
+subfolder. Done when every hand-back is saved and every claim it says the
+source contradicts is in the tally, confirmed as a false claim or dropped with
+its reason.
 
 ## 5. Write
 
 Dispatch one `opus` writer per selected page and one for the structural step,
 each with `isolation: 'worktree'` and [`writer-brief.md`](writer-brief.md)
-filled in, including every false claim the run confirmed. No two writers
-share a page. Fix a false claim on a page no writer holds yourself, in the
-run branch, after step 6's merges. Done when every hand-back is saved and each
-writer either has a commit in its worktree that passes EVERY-PAGE's Check, or
-refused or stopped with its reason; drop a refused or stopped item from the
-run, remove its worktree, and say why in the PR body.
+filled in: its task, its deficits (false claims on its pages included), its
+research file, the base, every false claim the run confirmed, and its own
+scratch subfolder. Fix a false claim on a page no writer holds yourself, in
+the run branch, after step 6's merges. Done when every hand-back is saved and
+each writer either has a commit in its worktree that passes EVERY-PAGE's
+Check, or refused or stopped with its reason. Drop a refused or stopped item
+from the run, remove its worktree (`git worktree remove --force <path>`), and
+say why in the PR body; if nothing remains, invoke `close-session` and
+stop.
 
 ## 6. Integrate
 
@@ -125,20 +129,22 @@ the **join edits** the writers reported, on any page: link text after a
 retitle, new Terms (once each, per EVERY-PAGE's Terms), links to a moved
 draft, Walkthrough chips and Where next entries. Add a link only where its
 list has room, replace only a link that broke or was retitled, and keep each
-list's order. Done when EVERY-PAGE's Check passes on the run branch.
+list's order. Pin each page you edit yourself to the base. Done when
+EVERY-PAGE's Check passes on the run branch.
 
 ## 7. Review
 
 Run `code-review` on the run branch against the base, with the tally file as
 the spec. Send each finding on a page to its writer with `SendMessage` and
 merge its new commit; fix join findings yourself. Then dispatch three fresh
-raters (same models, same brief) on only the changed pages, with the run
-branch's tip as the commit and the line "Report section 1 only." Their
-deficits pass step 3's Deficits and Filters before they count. A changed page
-that fewer than two of them grade A gets one more fix round on what remains,
+raters (same models, same brief) on only the pages a writer raised, promoted,
+wrote or re-cut, with the run branch's tip as the commit and the line "Report
+section 1 only." Their deficits pass step 3's Deficits and Filters before they
+count. A page that keeps a consensus deficit gets one more fix round on it,
 then a last re-grade. Stop there: a page still below A stays as that round
-left it, and the PR body says why. Done when the last `code-review` has no
-finding left unfixed and every changed page has its last grades.
+left it, and the PR body says why. Done when every `code-review` finding is
+fixed or refused with its reason in the PR body, and every re-graded page has
+its last grades.
 
 ## 8. Land and file
 
