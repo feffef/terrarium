@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePF1h9UuQNTHz2bNLb
 startedAt: 2026-10-27T04:03:44Z
-endedAt: 2026-10-27T04:12:34Z
+endedAt: 2026-10-27T04:15:48Z
 kind: autonomous
 goal: Scheduled audit of the repo's prose for drift and contradiction
-status: in-review
-outcome: "Sweep PR #2586 opened with one fix; waiting on green CI to merge"
-summary: "Scheduled audit-docs run, so every step was agent-initiated from the stored prompt; no human instruction. Three read-only reviewers (Freshness, Single-home, Coherence) reported; two independently found the same stale audit-docs lens list on the journal how-it-works page. One checker returned CONFIRMED-BUT for it and WRONG for the other three (a close-session restatement that is the digest Skill's own step, a guards.md bullet that needs no move, and a dated probe line that is provenance, not a stale claim). Applied the single fix, self-read it as a simple change, ran gate:scoped green, pushed and opened PR #2586 with no escalation PR needed and no issue filed. Merge and final log follow once CI is green."
+status: completed
+outcome: "Sweep PR #2586 merged with one fix; no escalation or issue needed"
+summary: "Scheduled audit-docs run, so every step was agent-initiated from the stored prompt; no human instruction. Three read-only reviewers (Freshness, Single-home, Coherence) reported; two independently found the same stale audit-docs lens list on the journal how-it-works page. One checker returned CONFIRMED-BUT for it and WRONG for the other three (a close-session restatement that is the digest Skill's own step, a guards.md bullet that needs no move, and a dated probe line that is provenance, not a stale claim). Applied the single fix, self-read it as a simple change, ran gate:scoped green, pushed and opened PR #2586 with no escalation PR needed and no issue filed. Merged on green CI."
 prs:
   - "2586"
 docsRead:
@@ -85,18 +85,25 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
-frictions: []
-durationSec: 530
+frictions:
+  - description: Re-authored the log as completed straight through log-session after the merge; it refused until close-session ran, costing one extra call.
+    solution: After a merge, invoke close-session first, as its re-invoke line says; I went by memory of the earlier flow.
+    severity: nit
+durationSec: 724
 models:
-  claude-sonnet-5-5: 53
+  claude-sonnet-5-5: 72
 toolCounts:
   Read: 4
-  Skill: 3
-  Bash: 15
+  Skill: 4
+  Bash: 19
   Agent: 4
   Edit: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/how-it-works.md
 rulesLoaded:
@@ -240,25 +247,25 @@ subagents:
     durationSec: 77
     toolCalls: 13
     modelCalls: 12
-    tokenShare: 15.3
+    tokenShare: 13.4
   - type: general-purpose
     task: "Audit docs: Single-home"
     durationSec: 141
     toolCalls: 27
     modelCalls: 16
-    tokenShare: 22.8
+    tokenShare: 20
   - type: general-purpose
     task: "Audit docs: Coherence"
     durationSec: 66
     toolCalls: 11
     modelCalls: 10
-    tokenShare: 12.8
+    tokenShare: 11.2
   - type: general-purpose
     task: Fact-check audit findings
     durationSec: 82
     toolCalls: 18
     modelCalls: 9
-    tokenShare: 12.8
+    tokenShare: 11.2
 gitBranch: claude/festive-mayer-aaowsu
 entrypoint: remote_trigger
 cliVersion: 2.1.311
