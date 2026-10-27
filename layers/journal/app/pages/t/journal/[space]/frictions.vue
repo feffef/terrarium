@@ -46,8 +46,8 @@ const isoToday = () => new Date().toISOString().slice(0, 10)
 const today = useState('journal-ledger-today', isoToday)
 onMounted(() => (today.value = isoToday()))
 const days = computed({
-  get: () => LEDGER_WINDOWS.find((d) => String(d) === route.query.days) ?? LEDGER_HORIZON_DAYS,
-  set: (d) => router.replace({ query: { ...route.query, days: d === LEDGER_HORIZON_DAYS ? undefined : String(d) } }),
+  get: () => LEDGER_WINDOWS.find((d) => String(d) === route.query.days) ?? LEDGER_DEFAULT_DAYS,
+  set: (d) => router.replace({ query: { ...route.query, days: d === LEDGER_DEFAULT_DAYS ? undefined : String(d) } }),
 })
 const windowStart = computed(() => ledgerWindowStart(today.value, days.value))
 const panels = computed(() =>
@@ -91,8 +91,9 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
       <h1>{{ PAGE_TITLE }}</h1>
       <p>
         What went wrong, grouped by root cause. Each cluster gathers the
-        <strong>frictions</strong> agents logged in their session logs over the last
-        {{ LEDGER_HORIZON_DAYS }} days (older occurrences are dropped); the
+        <strong>frictions</strong> agents logged in their session logs; occurrences are
+        kept for {{ LEDGER_HORIZON_DAYS }} days, and the page opens on the last
+        {{ LEDGER_DEFAULT_DAYS }}. The
         <code>frictions-to-fixes</code> Skill keeps it current. Fixed clusters stay
         listed: what went wrong matters as much as what is still open. With merged
         PRs a cluster reads <em>fix landed</em> (no occurrence since, under

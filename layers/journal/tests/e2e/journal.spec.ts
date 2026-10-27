@@ -16,6 +16,7 @@ import { expectCleanHydration, expectRedirect, setupL2, withRendered } from '../
 import { DIGESTS_DIR, SESSIONS_DIR } from '../../../../scripts/session/journal-files.ts'
 import { PIN_SETTLED_EVENT } from '../../app/utils/expandTransition.ts'
 import type { PinRecord } from '../../app/utils/expandTransition.ts'
+import { LEDGER_DEFAULT_DAYS } from '../../app/utils/ledger.ts'
 
 // Only a cloud `session_…` id gets a link; a local CLI's bare UUID has no claude.ai page.
 const SESSION_URL = /^https:\/\/claude\.ai\/code\/session_/
@@ -295,8 +296,16 @@ describe('journal Tenant', async () => {
       expect(await select.inputValue()).toBe('5')
       await select.selectOption('3')
       await page.waitForURL(/\?days=3$/)
-      await select.selectOption('14')
+      await select.selectOption(String(LEDGER_DEFAULT_DAYS))
       await page.waitForURL((u) => !u.search)
+      await select.selectOption('14')
+      await page.waitForURL(/\?days=14$/)
+    })
+  })
+
+  it('opens the Friction Ledger on its default window', async () => {
+    await withRendered('/t/journal/current/frictions', async (page) => {
+      expect(await page.getByLabel('Frictions from the last').inputValue()).toBe(String(LEDGER_DEFAULT_DAYS))
     })
   })
 

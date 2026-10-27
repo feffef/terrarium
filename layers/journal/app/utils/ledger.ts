@@ -15,8 +15,11 @@ export type LedgerState = FixState | 'open' | 'tracked' | 'on trial' | 'accepted
 /** Occurrences older than this many days are dropped (`prune-friction-ledger.ts`). */
 export const LEDGER_HORIZON_DAYS = 14
 
+/** The window the page opens on: the last week, not the whole horizon. */
+export const LEDGER_DEFAULT_DAYS = 7
+
 /** The windows a visitor can narrow the page to, in days. */
-export const LEDGER_WINDOWS = [2, 3, 5, 7, 10, LEDGER_HORIZON_DAYS] as const
+export const LEDGER_WINDOWS = [2, 3, 5, LEDGER_DEFAULT_DAYS, 10, LEDGER_HORIZON_DAYS] as const
 
 /** The first date of the last `days` dates, `today` included: 2 days is yesterday and today. */
 export function ledgerWindowStart(today: string, days: number): string {
