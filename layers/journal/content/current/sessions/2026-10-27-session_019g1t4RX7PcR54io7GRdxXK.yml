@@ -1,0 +1,364 @@
+schemaVersion: 1
+session: session_019g1t4RX7PcR54io7GRdxXK
+startedAt: 2026-10-27T00:46:26Z
+endedAt: 2026-10-27T00:59:21Z
+kind: autonomous
+goal: Weekly check of the Platform's own Skills
+status: in-review
+outcome: Inventory notes and Routine run costs in PR 2578; one issue filed and one comment added
+summary: "Scheduled audit-skills run (agent-initiated by the schedule; no human prompt). Gathered the 7-day scorecard, had one Sonnet subagent fetch usage for 8 unlisted Routine runs and 13 more check each Skill's behaviour. Verified the two findings worth escalating against the sessions' own logs: the first-push code-review skip now also seen in glassbox-update (comment on #2472) and two recurring clear-backlog step breaks (new issue #2577). Everything else became an Inventory observation; no grade or role changed. Closure checks were clean: both orphan candidates carry resolvedBy, orphanScan scanned 1687 merged PRs with 1530 tied to a session, and one human-prompted closure (session_01EjH3TbrydEY2sArBMYE5Gy) is already covered by earlier notes. Standards and Spec review caught truncated session ids and GitHub-visible counts in my notes, which I fixed before the push. PR #2578 is open and gated; it is Inventory-only so it may be merged once CI is green."
+prs:
+  - "2578"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: search needs fields and a zero result can be wrong; read after the guard blocked my first search
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: what an issue body must contain
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: confirmed needs-triage for a Skill-filed issue; read after filing
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: fetch before diffing, commit -F; confirmed my calls
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Closing a scheduled run's PR steps and the simple-change count
+    useful: yes
+  - path: .agents/skills/audit-skills/brief.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: Read by a subagent as the spec it audited (or the audit brief); I did not open it, took its verdict
+    useful: yes
+  - path: layers/journal/content/current/sessions/2026-10-26-session_01Y1i7HTUED6iQYzbSLBbu79.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-26-session_01NHL7eNYVjV814TB7bS83kv.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-26-session_01Vg1qDutnhKVav7JDNUdr8J.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-26-session_01BgQzSd9CmFPiugdXAQh6HW.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-26-session_01CpD4piFGbFhvGG5KWdtsCG.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-26-session_01TaUpbA3idjNZSgGpNjXj8S.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-26-session_014yTcrjFw1Qa6ABqQoGpzYq.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-25-session_01S9UeKa9mCWdPVBjAezCSaL.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-25-session_016edAfTmLE1szSBGNZTorPH.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-25-session_01WKUyPyRBzirHHAhDr7Y8Ek.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-25-session_011Rbnf9T9YqNztEcWNXsHsF.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-26-session_01AEph4xtY5Zhm8GkQLqacrX.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-27-session_01LyextqGkDsnBpTuPyFxhSm.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-25-session_01FDWjoePShpq7fov1iKn4GB.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-24-session_015Nvs8t9mqbbyFbkR9Pb1nk.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-23-session_0174aaydYCKDuWSrJkkTD1dM.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-22-session_01T4UbBvJmjSunCwb3cUN68Q.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-10-21-session_01Dz5nEANXqTtZzTki1C5ArD.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: brief rules for 15 read-only subagents
+  - name: code-review
+    reason: Standards and Spec review before the first push
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: first log
+frictions:
+  - description: Called search_issues without fields before reading github-integration.md; the guard blocked it, costing one retry.
+    solution: Read github-integration.md before the first GitHub call, as CLAUDE.md says.
+    severity: nit
+  - description: Filed the issue before reading triage-labels.md, which CLAUDE.md requires before filing; the label I used was right.
+    solution: Read the listed docs when the trigger first applies, not after the hook asks.
+    severity: nit
+  - description: Followed review fixes in 4 files with my own read instead of code-review, though a follow-up over 2 files is not simple by pr-workflow.
+    solution: Count files before choosing the self-read path; the fixes were the reviewers' own findings and the gate passed.
+    severity: minor
+  - description: textwrap split hyphenated words in appended observations, so validate:content failed on four files and I rejoined them by hand.
+    solution: Wrap with break_on_hyphens=False, or give audit-skills a script that appends observations.
+    severity: nit
+  - description: First drafts of notes used truncated session ids and PR counts GitHub already shows; review caught both.
+    solution: Quote full ids from the data file when writing observations; step 5 already says so.
+    severity: nit
+durationSec: 775
+models:
+  claude-sonnet-5-5: 115
+toolCounts:
+  Bash: 29
+  Skill: 4
+  Agent: 16
+  mcp__github__search_issues: 2
+  Read: 5
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__issue_write: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/routines/audit-docs.yml
+  - layers/journal/content/current/routines/audit-skills.yml
+  - layers/journal/content/current/routines/blog-post.yml
+  - layers/journal/content/current/routines/digest.yml
+  - layers/journal/content/current/routines/frictions-to-fixes.yml
+  - layers/journal/content/current/routines/glassbox-update.yml
+  - layers/journal/content/current/routines/prune-trial.yml
+  - layers/journal/content/current/routines/visitor-loop.yml
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/audit-skills.yml
+  - layers/journal/content/current/skills/blog-post.yml
+  - layers/journal/content/current/skills/clear-backlog.yml
+  - layers/journal/content/current/skills/dispatch-subagents.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - layers/journal/content/current/skills/glassbox-update.yml
+  - layers/journal/content/current/skills/inspect-session.yml
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/prune-trial.yml
+  - layers/journal/content/current/skills/visitor-loop.yml
+rulesLoaded:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to gate and review before the first push despite the Stop hook; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR and subscribe after the push; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main by the hook, not my branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on every issue, comment and PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Confirmed I edit only Inventory entries and put pack-skill notes in observations; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Reminded me to check for open trials before suggesting wording changes in the issue; summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on Skill files; did not apply to an Inventory-only change
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on Skill files; about where instructions live, did not apply
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded when reading the clear-backlog Skill data; about the triage sweep, did not apply
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on journal files; I worked on no Tenant
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Loaded for the digest subagent; it reported the rule set the Digest checks, which I did not read
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Subagents said it bore on audit-docs fixes; I did not open it
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Subagents said it bore on audit-docs fixes; I did not open it
+    useful: partly
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded for a subagent reading blog files; not relevant to Inventory notes
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded when a subagent read journal files; not relevant here
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded for a subagent; not relevant to this diff
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded when a subagent read journal files; not relevant here
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded for a subagent; my diff touches no Human-only file
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded for a subagent; no guard bore on this work
+    useful: no
+subagents:
+  - task: Fetch routine run usage
+    model: sonnet
+    durationSec: 23
+    toolCalls: 12
+    modelCalls: 4
+    tokenShare: 2.3
+  - task: Check audit-docs behaviour
+    model: sonnet
+    durationSec: 109
+    toolCalls: 18
+    modelCalls: 14
+    tokenShare: 5.9
+  - task: Check audit-skills behaviour
+    model: sonnet
+    durationSec: 120
+    toolCalls: 19
+    modelCalls: 12
+    tokenShare: 6.6
+  - task: Check blog-post behaviour
+    model: sonnet
+    durationSec: 51
+    toolCalls: 13
+    modelCalls: 7
+    tokenShare: 3.9
+  - task: Check clear-backlog behaviour
+    model: sonnet
+    durationSec: 97
+    toolCalls: 14
+    modelCalls: 10
+    tokenShare: 4.9
+  - task: Check close-session behaviour
+    model: sonnet
+    durationSec: 61
+    toolCalls: 11
+    modelCalls: 6
+    tokenShare: 3
+  - task: Check digest behaviour
+    model: sonnet
+    durationSec: 47
+    toolCalls: 17
+    modelCalls: 6
+    tokenShare: 3.7
+  - task: Check dispatch-subagents behaviour
+    model: sonnet
+    durationSec: 100
+    toolCalls: 25
+    modelCalls: 11
+    tokenShare: 7.2
+  - task: Check frictions-to-fixes behaviour
+    model: sonnet
+    durationSec: 95
+    toolCalls: 23
+    modelCalls: 12
+    tokenShare: 5.9
+  - task: Check glassbox-update behaviour
+    model: sonnet
+    durationSec: 97
+    toolCalls: 21
+    modelCalls: 15
+    tokenShare: 5.4
+  - task: Check inspect-session behaviour
+    model: sonnet
+    durationSec: 58
+    toolCalls: 12
+    modelCalls: 6
+    tokenShare: 3.9
+  - task: Check log-session behaviour
+    model: sonnet
+    durationSec: 58
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 3.6
+  - task: Check prune-trial behaviour
+    model: sonnet
+    durationSec: 59
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 4
+  - task: Check visitor-loop behaviour
+    model: sonnet
+    durationSec: 58
+    toolCalls: 14
+    modelCalls: 8
+    tokenShare: 4.4
+  - task: Standards review of Inventory diff
+    model: sonnet
+    durationSec: 36
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 2.4
+  - task: Spec review of Inventory diff
+    model: sonnet
+    durationSec: 83
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 4.3
+gitBranch: claude/upbeat-sagan-i5ycm3
+entrypoint: remote_trigger
+cliVersion: 2.1.311
+trigger: audit-skills
+learnings:
+  - save-handback-style one-per-Skill subagent checks cost about 1.4M subagent tokens in total; most finished in under two minutes.
+landedBy: Stop
