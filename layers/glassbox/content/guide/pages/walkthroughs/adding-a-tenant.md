@@ -21,7 +21,7 @@ A :term[Trusted] user approves the new :term[Tenant] before an agent starts on i
 The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which can be as small as `defineNuxtConfig({})`. Nuxt registers every folder under `layers/` by itself; the root config stays as it is. A running dev server doesn't watch a brand-new layer folder and needs a restart. From now on the folder is also read as a Tenant: the build stops if it holds no `tenant.config.ts`, or one whose name differs from the folder's.
 
 ::stop-links
-[Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [Linting](/t/glassbox/guide/verification/linting) · :file[layers/marquee/nuxt.config.ts]
+[Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · :file[layers/marquee/nuxt.config.ts]
 ::
 
 ## 3. The manifest says what it holds
@@ -82,7 +82,7 @@ Its pages appear in the Commons Search only if its `pages` Collection names the 
 
 ## A real case
 
-On 17 July 2026 a Public user filed [issue #551](https://github.com/feffef/terrarium/issues/551) at 07:42 UTC, asking for a blog of the Marvel movies in story order with a Ghibli-style image per post. Five minutes later an agent running the guest pipeline asked four questions (which films, which order, how many to start with, and whether original illustrations would do) and labelled the issue `needs-info`. The guest answered at 08:11 and confirmed the agent's summary at 08:14, and the label flipped to `ready-for-agent`. [PR #552](https://github.com/feffef/terrarium/pull/552) opened at 08:41 with 18 files: everything under `layers/marquee/`, with no root page yet, a roster entry in each of the two root glossary files of the time, and two lines in the shared smoke spec that registered its browser tests; today the e2e project's glob finds a layer's own spec instead. The owner merged it at 08:49, as the guest pipeline requires, 67 minutes after the issue was filed.
+On 17 July 2026 a Public user filed [issue #551](https://github.com/feffef/terrarium/issues/551) at 07:42 UTC, asking for a blog of the Marvel movies in chronological order with a Ghibli-style image per post. Five minutes later an agent running the guest pipeline asked four questions (which films, which order, how many to start with, and whether original illustrations would do) and labelled the issue `needs-info`. The guest answered at 08:11 and confirmed the agent's summary at 08:14, and the label flipped to `ready-for-agent`. [PR #552](https://github.com/feffef/terrarium/pull/552) opened at 08:41 with 18 files: everything under `layers/marquee/`, with no root page yet, a roster entry in each of the two root glossary files of the time, and two lines in the shared smoke spec that registered its browser tests; today the e2e project's glob finds a layer's own spec instead. The owner merged it at 08:49, as the guest pipeline requires, 67 minutes after the issue was filed.
 
 ## Where next
 

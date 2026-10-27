@@ -68,7 +68,7 @@ The script copies the new `.output/` over the folder the server runs from, stops
 
 ## 6. The next visitor gets the new content
 
-The restarted server serves the new build. Its page cache lives in memory and starts empty; the first request for each page renders it afresh. The first query for each Collection compares its table's checksum with the build's and, where they differ, restores the table from the new dump.
+The restarted server serves the new build. The first query for each Collection compares its table's checksum with the build's and, where they differ, restores the table from the new dump.
 
 ::stop-links
 [Content database](/t/glassbox/guide/nuxt-content/content-database) · [Nitro server engine](/t/glassbox/guide/nuxt-vue/nitro)
