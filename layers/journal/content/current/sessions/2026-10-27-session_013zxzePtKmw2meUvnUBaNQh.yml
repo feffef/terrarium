@@ -1,0 +1,232 @@
+schemaVersion: 1
+session: session_013zxzePtKmw2meUvnUBaNQh
+startedAt: 2026-10-27T23:20:42Z
+endedAt: 2026-10-27T23:51:34Z
+kind: autonomous
+goal: First glassbox-improve run on the Glass Box guide
+status: in-review
+outcome: "Two false claims fixed in guide Walkthroughs; PR #2605 awaits CI"
+summary: "The run started from the /glassbox-improve slash command with no further human prompt, so every step is agent-initiated within the Skill's remit. No glassbox-update PR was open. This was the Skill's first run, so step 1 fell back to pages changed in the last 14 days, which covered all 37 guide pages and all 30 drafts. Three raters (sonnet, fable, opus) graded every guide page: 33 at A, and three at B by middle grade (Vue components and hydration, Human-in-the-loop agents, pnpm and the lockfile). They agreed on a Vue components split and several draft promotions, but the cooling-off filter dropped all of them. The guest-pipeline gap (two raters, no draft) was dropped as overlapping three existing pages, with no title that passes the rule. With no pages selected there were no researchers or writers. I confirmed two single-rater false claims in the source and fixed them myself: From file to browser said only an uncached route uses the browser database, and Asking an agent for a change defined Frictions as rule breaks. code-review on two axes found the diagram edge still stated the old claim; I relabelled it and re-rendered the SVG, and applied three wording points. Shots were retaken and gate:scoped is green. I filed the fallback problem as out-of-remit issue #2604."
+prs:
+  - "2605"
+docsRead:
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: template for the three rater briefs
+    useful: yes
+  - path: .agents/skills/glassbox-improve/researcher-brief.md
+    reason: read; unused since nothing was selected
+    useful: no
+  - path: .agents/skills/glassbox-improve/writer-brief.md
+    reason: read; unused since no writer was dispatched
+    useful: no
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin, publishedAt, diagram and Check steps for the two fixes
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: grades and the never-undo / fix-named-deficits rules
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: publishedAt ruling; raters also used it
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: "Walkthrough shape: 2-4 sentence stops"
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; commit hygiene
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: MCP list with fields; provenance header
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push; closing a scheduled run's PR
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: body conventions for the out-of-remit issue
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: file the issue needs-triage
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts review for the four shots
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: Checked fable's cite finding; its Rejected alternatives names CI's frozen install, so not a false claim
+    useful: yes
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: Spec reviewer read it for the Remit and step 6 pin; it confirmed the SVG re-render is in remit
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: Opus and sonnet raters checked the Hooks page's ADR-0027 citation against it; holds
+    useful: yes
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: Sonnet rater traced the ADRs Lesson's summary-rule bullet to it; holds
+    useful: yes
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: Fable and sonnet raters traced Attribution's Why bullets to it; holds
+    useful: yes
+  - path: .claude/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-lesson/QUALITY.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-lesson/DECISIONS.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-improve
+    reason: the scheduled run itself
+  - name: dispatch-subagents
+    reason: rater and reviewer briefs
+  - name: code-review
+    reason: step 7 review of the run branch
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: First-run cooling-off fallback (14 days) covered every guide page and draft, so three ~300k-token raters bought only two false-claim fixes
+    solution: "Change glassbox-improve step 1 so a first run's fallback can't cool the whole guide (issue #2604)"
+    severity: moderate
+  - description: Put this run's out-of-remit findings in the new issue's body instead of a per-run comment, as glassbox-improve step 8 asks
+    solution: When opening the issue, give it a standing body and post the run's findings as its first comment
+    severity: nit
+  - description: Standards reviewer flagged missing screenshots I had already taken, because its follow-up brief didn't say so
+    solution: Name the checks already done, with their outputs, in a follow-up review brief
+    severity: nit
+durationSec: 1852
+models:
+  claude-opus-5-5: 190
+toolCounts:
+  Bash: 49
+  Read: 20
+  Skill: 4
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  Agent: 5
+  Write: 2
+  Edit: 9
+  SendMessage: 2
+  mcp__github__issue_write: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - app/assets/mermaid/51871cec9fc00418.svg
+  - app/assets/mermaid/89b365d12bccd83d.svg
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - .agents/skills/glassbox-improve/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before the first push despite Stop-hook nags; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR right after the first push and subscribed; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line on the issue and PR bodies; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main via close-session, not in the PR; summary was enough
+    useful: yes
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept ids and counts out of the corrected prose and diagram label; raters and reviewers used it too
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded with the diagram page; only a label changed, no lanes
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when a command read a rule file; no Human-only path is in the diff
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded with Skill files; no prune trial covered text I changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with Skill files; I placed no instruction
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with the Glass Box glossary; I added no term
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Confirmed reading the Glass Box glossary first, which the Skill also asks
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded with the glossary; I added no glossary term
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded with Skill files; I changed no Skill
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded with triage-labels.md; I only filed needs-triage
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Rate Glass Box guide (sonnet)
+    model: sonnet
+    durationSec: 610
+    toolCalls: 101
+    modelCalls: 23
+    tokenShare: 17.4
+  - type: general-purpose
+    task: Rate Glass Box guide (fable)
+    model: fable
+    durationSec: 870
+    toolCalls: 125
+    modelCalls: 15
+    tokenShare: 14.9
+  - type: general-purpose
+    task: Rate Glass Box guide (opus)
+    model: opus
+    durationSec: 477
+    toolCalls: 85
+    modelCalls: 28
+    tokenShare: 18.3
+  - type: general-purpose
+    task: Standards review of the diff
+    model: opus
+    durationSec: 245
+    toolCalls: 17
+    modelCalls: 10
+    tokenShare: 4.2
+  - type: general-purpose
+    task: Spec review of the diff
+    model: opus
+    durationSec: 241
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 4
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.312
+ideas:
+  - "Propose for DECISIONS.md: re-cut Vue components and hydration into a Hydration Lesson once it cools; all three raters asked for it"
+  - "Promotion candidates all three raters agree on for the next run: zod/01.manifest-validation, git-github/06.work-queue, claude-code/06.hints (title fails the rule), claude-code/11.cloud-sessions (two concepts, needs a split)"
+  - "Guest pipeline Lesson not written: its facts live in Human-in-the-loop, Author trust and Adding a site; a Walkthrough of a Public request might fit better than a Lesson"
+landedBy: Stop
