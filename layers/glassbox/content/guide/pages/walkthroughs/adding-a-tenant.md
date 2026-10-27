@@ -17,7 +17,7 @@ A :term[Trusted] user approves the new :term[Tenant], for example by asking for 
 
 ## 2. A folder becomes a layer
 
-The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which can be as small as `defineNuxtConfig({})`. Nuxt registers every folder under `layers/` by itself, so the root config is left alone. A running dev server doesn't watch a brand-new layer folder, so it needs a restart, and `pnpm lint` needs `nuxt prepare` first. From now on the folder is also read as a Tenant: the build stops if it holds no `tenant.config.ts`, or one whose name differs from the folder's.
+The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which can be as small as `defineNuxtConfig({})`. Nuxt registers every folder under `layers/` by itself; the root config stays as it is. A running dev server doesn't watch a brand-new layer folder and needs a restart. From now on the folder is also read as a Tenant: the build stops if it holds no `tenant.config.ts`, or one whose name differs from the folder's.
 
 ::stop-links
 [Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [Linting](/t/glassbox/guide/verification/linting) · :file[layers/marquee/nuxt.config.ts]
