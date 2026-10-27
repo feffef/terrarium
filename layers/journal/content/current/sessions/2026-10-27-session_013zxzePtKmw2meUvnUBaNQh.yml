@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePtKmw2meUvnUBaNQh
 startedAt: 2026-10-27T23:20:42Z
-endedAt: 2026-10-27T23:51:34Z
+endedAt: 2026-10-27T23:55:27Z
 kind: autonomous
 goal: First glassbox-improve run on the Glass Box guide
-status: in-review
-outcome: "Two false claims fixed in guide Walkthroughs; PR #2605 awaits CI"
-summary: "The run started from the /glassbox-improve slash command with no further human prompt, so every step is agent-initiated within the Skill's remit. No glassbox-update PR was open. This was the Skill's first run, so step 1 fell back to pages changed in the last 14 days, which covered all 37 guide pages and all 30 drafts. Three raters (sonnet, fable, opus) graded every guide page: 33 at A, and three at B by middle grade (Vue components and hydration, Human-in-the-loop agents, pnpm and the lockfile). They agreed on a Vue components split and several draft promotions, but the cooling-off filter dropped all of them. The guest-pipeline gap (two raters, no draft) was dropped as overlapping three existing pages, with no title that passes the rule. With no pages selected there were no researchers or writers. I confirmed two single-rater false claims in the source and fixed them myself: From file to browser said only an uncached route uses the browser database, and Asking an agent for a change defined Frictions as rule breaks. code-review on two axes found the diagram edge still stated the old claim; I relabelled it and re-rendered the SVG, and applied three wording points. Shots were retaken and gate:scoped is green. I filed the fallback problem as out-of-remit issue #2604."
+status: completed
+outcome: "Two false claims fixed in guide Walkthroughs; PR #2605 merged"
+summary: "The run started from the /glassbox-improve slash command with no further human prompt, so every step is agent-initiated within the Skill's remit. No glassbox-update PR was open. This was the Skill's first run, so step 1 fell back to pages changed in the last 14 days, which covered all 37 guide pages and all 30 drafts. Three raters (sonnet, fable, opus) graded every guide page: 33 at A, and three at B by middle grade (Vue components and hydration, Human-in-the-loop agents, pnpm and the lockfile). They agreed on a Vue components split and several draft promotions, but the cooling-off filter dropped all of them. The guest-pipeline gap (two raters, no draft) was dropped as overlapping three existing pages, with no title that passes the rule. With no pages selected there were no researchers or writers. I confirmed two single-rater false claims in the source and fixed them myself: From file to browser said only an uncached route uses the browser database, and Asking an agent for a change defined Frictions as rule breaks. code-review on two axes found the diagram edge still stated the old claim; I relabelled it and re-rendered the SVG, and applied three wording points. Shots were retaken and gate:scoped is green. I filed the fallback problem as out-of-remit issue #2604. CI went green, I posted my verdict, and merge-pr.ts merged PR #2605."
 prs:
   - "2605"
 docsRead:
@@ -97,13 +97,16 @@ frictions:
   - description: Standards reviewer flagged missing screenshots I had already taken, because its follow-up brief didn't say so
     solution: Name the checks already done, with their outputs, in a follow-up review brief
     severity: nit
-durationSec: 1852
+  - description: A one-word wording fix after the screenshots forced a second pnpm build and four more image reads to retake them
+    solution: Apply every review wording point before the first build and shoot
+    severity: nit
+durationSec: 2084
 models:
-  claude-opus-5-5: 190
+  claude-opus-5-5: 208
 toolCounts:
-  Bash: 49
+  Bash: 54
   Read: 20
-  Skill: 4
+  Skill: 5
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
   Agent: 5
@@ -114,6 +117,11 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__claude-code-remote__send_later: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
   - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
@@ -193,35 +201,35 @@ subagents:
     durationSec: 610
     toolCalls: 101
     modelCalls: 23
-    tokenShare: 17.4
+    tokenShare: 16.2
   - type: general-purpose
     task: Rate Glass Box guide (fable)
     model: fable
     durationSec: 870
     toolCalls: 125
     modelCalls: 15
-    tokenShare: 14.9
+    tokenShare: 13.8
   - type: general-purpose
     task: Rate Glass Box guide (opus)
     model: opus
     durationSec: 477
     toolCalls: 85
     modelCalls: 28
-    tokenShare: 18.3
+    tokenShare: 17
   - type: general-purpose
     task: Standards review of the diff
     model: opus
     durationSec: 245
     toolCalls: 17
     modelCalls: 10
-    tokenShare: 4.2
+    tokenShare: 3.9
   - type: general-purpose
     task: Spec review of the diff
     model: opus
     durationSec: 241
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 4
+    tokenShare: 3.7
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.312
