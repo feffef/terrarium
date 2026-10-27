@@ -114,8 +114,7 @@ describe('the command line', () => {
   })
 
   it('rejects an unknown mode with the usage line, not a stack trace', () => {
-    const script = join(import.meta.dirname, '../../scripts/run-summary.ts')
-    const run = spawnSync(process.execPath, ['--import', 'tsx', script, fixture('build.output'), '--verdict'], { encoding: 'utf8' })
+    const run = cli(fixture('build.output'), '--verdict')
     expect(run.status).toBe(1)
     expect(run.stderr).toContain('usage: run-summary.ts')
     expect(run.stderr).not.toMatch(/\n\s+at /)
