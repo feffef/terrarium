@@ -17,16 +17,6 @@ fixes:
     date: "2026-10-25"
     summary: "Cut the angle-bracket and search/list-overflow traps in github-integration.md to the goal, keeping the fields rule."
 occurrences:
-  - session: session_0147GPfMLJfFV6JbmC4HZGHb
-    date: "2026-10-12"
-    severity: minor
-    description: "First search_issues call returned ~10 full issue bodies, flooding context."
-    solution: "Pass fields without body, as github-integration.md says; read it before the first call."
-  - session: session_01BkB4AFUGkEudyf13aa44Wy
-    date: "2026-10-12"
-    severity: minor
-    description: "A broad search_issues query returned huge issue bodies (Tinkerfund spec), flooding context."
-    solution: "Use minimal_output or narrower queries for duplicate searches."
   - session: session_016Nsq9SWL64V4RqDJPQYodp
     date: "2026-10-19"
     severity: nit

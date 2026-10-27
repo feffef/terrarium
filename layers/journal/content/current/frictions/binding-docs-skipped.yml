@@ -16,11 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "adr-read-hint also points at the ADRs a Bash git commit touches."
 occurrences:
-  - session: session_01VGLAakRJNm67PuNHpgbEc7
-    date: "2026-10-12"
-    severity: moderate
-    description: "Recommended option 2 before grepping docs/adr for the ADRs that bind it (CLAUDE.md: an opinion asked in chat counts); I later found ADR-0009 defines the reason field."
-    solution: "Run grep -l for the touched paths in docs/adr before recommending; ADR-0009's reason definition would have surfaced in the first answer."
   - session: session_01RDtAc5Vv37kkRH4yCtRDQB
     date: "2026-10-13"
     severity: nit

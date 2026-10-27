@@ -20,21 +20,6 @@ fixes:
     date: "2026-10-21"
     summary: "CLAUDE.md, pr-workflow.md step 4 and clear-backlog now say to invoke close-session before the turn that opens a PR ends, and the read-first hint says \"before this turn ends\"; the answer-only case stays out of scope."
 occurrences:
-  - session: session_014uXxmT6359K4Z42a6We6Gh
-    date: "2026-10-12"
-    severity: major
-    description: "HUMAN-PROMPTED-CLOSURE: the user had to ask for the log after #1808 had already been opened and merged; I offered it instead of invoking close-session at PR-open."
-    solution: "Invoke close-session at every PR-open, including small chat-directed follow-up PRs, rather than offering it afterwards."
-  - session: session_01SZwdbK8GbYtyj926UyJT6o
-    date: "2026-10-12"
-    severity: minor
-    description: "Opened PR #1827 about 15 minutes before invoking close-session; CLAUDE.md and ADR-0009 say invoke it when you open a PR"
-    solution: "Invoke close-session right after the first PR opens in a multi-PR run; re-invoking is cheap"
-  - session: session_017NBxJhtBSd9AoCwTzsg6pM
-    date: "2026-10-12"
-    severity: minor
-    description: "Broke CLAUDE.md 'Invoke close-session when you open a PR': opened #1840 and several more PRs without logging until the end."
-    solution: "Log at the first PR open; re-invoke later."
   - session: session_013RCsUF234qAGu3CJr3v2on
     date: "2026-10-16"
     severity: minor

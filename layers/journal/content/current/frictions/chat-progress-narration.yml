@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-17"
     summary: "Dropped clear-backlog's rule that the chat holds only questions and the report, so no rule is left to break."
 occurrences:
-  - session: session_017NBxJhtBSd9AoCwTzsg6pM
-    date: "2026-10-12"
-    severity: major
-    description: "Questions for the owner were buried among a stream of status updates; owner had to dig, questions get overlooked and answers misread."
-    solution: "clear-backlog: while waiting on the owner, the chat carries only the open questions; no progress narration; acknowledge events silently."
   - session: session_01STVS35HcxNZp7dQ1pPnrhW
     date: "2026-10-13"
     severity: nit

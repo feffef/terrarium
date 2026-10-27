@@ -10,11 +10,6 @@ fixes:
     date: "2026-10-14"
     summary: "Browser tests now wait up to 10 seconds instead of 1 second before failing."
 occurrences:
-  - session: session_01VGLAakRJNm67PuNHpgbEc7
-    date: "2026-10-12"
-    severity: major
-    description: "gate:scoped passed but CI failed on ec89520d in tinkerfund-flows.spec.ts:388 (checkbox state after goForward), which this diff doesn't touch; base drift is unlikely since it passed on earlier commits."
-    solution: "Likely a back/forward form-restore flake in the tinkerfund e2e test; worth an issue if it recurs. Commented on PR 1812 and re-ran once."
   - session: session_01TW6hQ1C1Fm1aeaaoxQeHEp
     date: "2026-10-13"
     severity: minor

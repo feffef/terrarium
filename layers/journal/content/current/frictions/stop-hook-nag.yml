@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-05"
     summary: "Moved the end-of-turn reminder caveat into the main project instructions so more sessions read it."
 occurrences:
-  - session: session_01QfaLuSd5cnBQPu8CCRrvkn
-    date: "2026-10-12"
-    severity: nit
-    description: "The Stop hook asked to commit and push twice while gate:scoped was still running, each time costing a reply to decline per ADR-0004."
-    solution: "Make the Stop hook skip its nag while a gate run is active."
-  - session: session_018KSwetqxttBFszkhTKZkF1
-    date: "2026-10-12"
-    severity: minor
-    description: "Stop hook repeatedly asks to push unreviewed local commits, contrary to the new review-before-push rule."
-    solution: "pr-workflow now says the rule holds even when the Stop hook asks; the hook could check for a pending review."
   - session: session_01Rn5xT34AdjnywsTJdUtaDm
     date: "2026-10-13"
     severity: nit

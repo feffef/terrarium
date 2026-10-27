@@ -4,7 +4,7 @@ summary: >-
 cause: >-
   A worktree-isolated build or impl agent commits on its own local branch (worktree-wf_..., or a name of its choosing) rather than the session's designated pushable branch, so the orchestrator needs a refspec push or a cherry-pick, and the Stop hook asks to push the other branch. Signals: 'worktree-wf_', 'refspec push', 'cherry-pick its commits onto my branch'.
 surface: safe
-status: open
+status: tracked
 fixes: []
 occurrences:
   - session: session_01DNheR1Cpt9b6vFsmGdzvxq

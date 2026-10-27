@@ -14,26 +14,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_014uXxmT6359K4Z42a6We6Gh
-    date: "2026-10-12"
-    severity: minor
-    description: "Opened PR #1806 before reading docs/agents/pr-workflow.md, and made the first GitHub call before github-integration.md; a hook reminded me only afterwards."
-    solution: "Read both docs when the visitor-loop Skill reaches step 4, or have the Skill's step 4 name pr-workflow.md up front as it does for verifying-ui-changes."
-  - session: session_01Xw7ZN8ghC7PDemvu9cA9Lo
-    date: "2026-10-12"
-    severity: nit
-    description: "Ran my first git commands in the same parallel batch as the git-conventions read, so the doc was not read before them."
-    solution: "Read the doc in a separate earlier call."
-  - session: session_016iE4LmQUcg6ap5YMxJg4oC
-    date: "2026-10-12"
-    severity: nit
-    description: "Ran git branch --show-current before reading git-conventions.md, which CLAUDE.md requires before the first git command."
-    solution: "Read the doc at session start when the task will involve git."
-  - session: session_0147GPfMLJfFV6JbmC4HZGHb
-    date: "2026-10-12"
-    severity: nit
-    description: "Ran the window script (which fetches) and a GitHub search before reading git-conventions.md and github-integration.md, as CLAUDE.md requires."
-    solution: "The prune-trial Skill's first command is a git fetch; have it say to read git-conventions first."
   - session: session_01Rn5xT34AdjnywsTJdUtaDm
     date: "2026-10-13"
     severity: nit

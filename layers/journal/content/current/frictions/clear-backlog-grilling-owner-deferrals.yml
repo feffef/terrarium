@@ -18,11 +18,6 @@ fixes:
 notes: |-
   2026-10-23 re-cluster: 01DtK8w6 (no rule for who may answer a delegated grilling) needs its own fix; left here as a single low-severity stray.
 occurrences:
-  - session: session_01DtK8w6aJ3361uPK73VAxhi
-    date: "2026-10-12"
-    severity: minor
-    description: "The Skill gave no rule for who may answer the grilling when the owner delegates; I had to invent a defer-the-consequential-ones policy on the fly in the dry run."
-    solution: "If delegated grilling recurs, state in clear-backlog what a stand-in may decide."
   - session: session_01STVS35HcxNZp7dQ1pPnrhW
     date: "2026-10-13"
     severity: moderate

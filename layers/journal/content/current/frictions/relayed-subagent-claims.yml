@@ -23,21 +23,6 @@ fixes:
     date: "2026-10-25"
     summary: "A new Stop hook blocks once a reply whose own text contains a harness task-notification or agent-message tag."
 occurrences:
-  - session: session_01LtYEkEsZ2cxf4uRFJvq4n9
-    date: "2026-10-12"
-    severity: minor
-    description: "Ledger occurrences were appended from the subagent's tally and I reviewed only the diff, not each session id against the logs, so the counts rest on one agent's reading."
-    solution: "Have the survey write the ledger changes via a script reading the logs, so the PR reviewer can re-run it."
-  - session: session_01596W4GVWwvN1kfaHsV4ax8
-    date: "2026-10-12"
-    severity: nit
-    description: "I relayed subagent claims (for example the #1818 cause) without re-checking them against the source myself."
-    solution: "Spot-check one claim per hand-back, or have briefs require cited lines."
-  - session: session_017NBxJhtBSd9AoCwTzsg6pM
-    date: "2026-10-12"
-    severity: moderate
-    description: "#1834's premise (a missing commit trailer) came from an earlier subagent's guess relayed unchecked; it cost a triage plus an investigation."
-    solution: "Verify subagent causal claims against the transcript before filing them as issues (CLAUDE.md 'Verify before you state')."
   - session: session_01E2zbWEQmuUrEhWvbzNpBba
     date: "2026-10-15"
     severity: minor

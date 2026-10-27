@@ -59,11 +59,6 @@ occurrences:
     severity: minor
     description: "The 12 behaviour-check subagent briefs didn't ask each subagent to name a specific new session/PR/issue id directly in its summary prose (vs. a parenthetical count like '7/7 sessions') - two of the 12 Inventory entries I drafted from their reports were bare re-confirmations with no visible new citation, caught only by the Spec-axis code-review pass rather than earlier."
     solution: "When drafting an Inventory observation from a subagent's report, name the specific session/PR/issue id in the note's own prose before code-review has to catch a missing citation."
-  - session: session_01La82mxqduxHnRS9jRfNHmU
-    date: "2026-10-12"
-    severity: minor
-    description: "My triage brief said the 16:43Z resets undid dry-run-1 answers, but only 4 issues had resets; 8 subagents each flagged the ambiguity"
-    solution: "Check which issues carry a reset before writing a shared brief; the Skill could say how a prior run's answers bind"
   - session: session_01XWMuHGcaNTvRPHfYb9T7z2
     date: "2026-10-19"
     severity: minor

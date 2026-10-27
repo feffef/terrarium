@@ -17,16 +17,6 @@ fixes:
     date: "2026-10-25"
     summary: "A guard blocks the first subagent dispatch until the dispatch-subagents Skill is read."
 occurrences:
-  - session: session_01LtYEkEsZ2cxf4uRFJvq4n9
-    date: "2026-10-12"
-    severity: nit
-    description: "Dispatched the survey subagent, which ran git commands, before reading the dispatch-subagents Skill that CLAUDE.md names for subagents touching git."
-    solution: "No change needed beyond the existing trigger; I treated a read-only survey as exempt, which the trigger wording does not say."
-  - session: session_01596W4GVWwvN1kfaHsV4ax8
-    date: "2026-10-12"
-    severity: nit
-    description: "I did not read the dispatch-subagents Skill before dispatching; the subagents touched no git, so no harm came of it."
-    solution: "CLAUDE.md trigger says git or worktree only; fine as written."
   - session: session_013FXrBeYrgCUvFvJjysR7yM
     date: "2026-10-13"
     severity: minor
