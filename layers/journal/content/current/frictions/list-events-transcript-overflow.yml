@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   The claude-code-remote list_events tool returns every event including base64 images, so a screenshot-heavy session is about 14 MB per page and paging it is slow; github-integration.md calls it token-heavy but gives no safe recipe. Signals: list_events, get_session, 'MB per page', a subagent skipping a long transcript.
 surface: safe
-status: tracked
-ref: "issue #2557"
+status: open
 fixes:
   - pr: 2235
     date: "2026-10-18"
@@ -22,6 +21,9 @@ fixes:
   - pr: 2463
     date: "2026-10-23"
     summary: "inspect-session says the tool-results spill cut-off is likely counted in tokens, so no character count predicts it."
+  - pr: 2566
+    date: "2026-10-26"
+    summary: "inspect-session briefs save every fetched list_events page under Out with a unique name."
 occurrences:
   - session: session_01GVmwHZQthucdGcVwe3HAUL
     date: "2026-10-17"

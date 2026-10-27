@@ -61,3 +61,8 @@ occurrences:
     severity: nit
     description: "Read only the first 80 lines of dispatch-subagents SKILL.md before writing the #2137 review brief, though CLAUDE.md says read the doc in full"
     solution: "Read trigger docs with one Read call and no head/sed limit"
+  - session: session_01Vg1qDutnhKVav7JDNUdr8J
+    date: "2026-10-26"
+    severity: minor
+    description: "Read github-integration.md with cat | head -80 and dispatch-subagents SKILL.md with head -150, against CLAUDE.md's one-Read-call-per-doc rule; parts may have been cut."
+    solution: "Read trigger docs with the Read tool, unlimited, at the first GitHub call; nothing I needed was in the cut part this time."

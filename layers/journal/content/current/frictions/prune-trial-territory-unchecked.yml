@@ -6,6 +6,10 @@ surface: safe
 status: open
 notes: |-
   2026-10-22 design: one sentence in clear-backlog-explore.js brief() to quote the trial territory line dropped: adr-check already lists open trials, the failure is orchestrators skipping adr-check (covered by binding-docs-skipped), and the one wrong triage claim was caught; revisit on a second wrong trial claim from a triage agent
+fixes:
+  - pr: 2572
+    date: "2026-10-26"
+    summary: "audit-docs step 1 tells reviewer agents to skip text under an open Prune Trial (partial)."
 occurrences:
   - session: session_01C32ny8wWXkJLgyHd9wiD1J
     date: "2026-10-21"
@@ -17,3 +21,8 @@ occurrences:
     severity: minor
     description: "Launched the #2388 rename build before checking prune-trials.yml; dispatch-subagents section 3 was in an open trial and needed an owner question afterwards"
     solution: "Check .agents/prune-trials.yml territories before filing a wording-change issue, as adr-check would have"
+  - session: session_01BgQzSd9CmFPiugdXAQh6HW
+    date: "2026-10-26"
+    severity: minor
+    description: "Reviewers were not told about open Prune Trials, so 3 of 5 rejected findings targeted text ADR-0027 bars changing."
+    solution: "Add one line to the audit-docs reviewer instructions: skip text covered by .agents/prune-trials.yml."

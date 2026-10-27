@@ -564,3 +564,18 @@ occurrences:
     severity: nit
     description: "Ran git rev-parse HEAD before reading git-conventions.md, though CLAUDE.md names it before any git command beyond status and diff; hook told me afterwards."
     solution: "Read the doc in the same step as the first Skill-driven git command."
+  - session: session_01C8G2W6ZfQN7WE4UNUi2GzA
+    date: "2026-10-26"
+    severity: nit
+    description: "Ran my first git command before reading docs/agents/git-conventions.md; the PostToolUse hook flagged it. No harm came of it."
+    solution: "Read the doc at the first git command, as CLAUDE.md says."
+  - session: session_011toGE79jTf68dXJDRezEpc
+    date: "2026-10-26"
+    severity: nit
+    description: "Ran git log before reading docs/agents/git-conventions.md, against CLAUDE.md's before-first-git-command trigger; the read-first hint caught it, no harm."
+    solution: "Read git-conventions.md before any git log used to draw a conclusion, even in a question-only session."
+  - session: session_01LyextqGkDsnBpTuPyFxhSm
+    date: "2026-10-27"
+    severity: nit
+    description: "Ran git status and the digest list before reading git-conventions.md, against CLAUDE.md's before-first-git-command trigger; read it right after."
+    solution: "Read git-conventions.md first in the digest Skill's step 1."

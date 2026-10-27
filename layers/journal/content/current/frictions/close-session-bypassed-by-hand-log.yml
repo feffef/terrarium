@@ -48,3 +48,8 @@ occurrences:
     severity: nit
     description: "After the first merges (PRs 2532-2534) I updated the log with log-session directly instead of re-invoking close-session, which the ADR-0009 rule asks for at a merge."
     solution: "Re-invoke close-session at every merge, not log-session; PR #2536 now refuses only the completed case."
+  - session: session_01Cb8ETAZztznLYx6CC7MKyE
+    date: "2026-10-26"
+    severity: nit
+    description: "After PRs #2564-#2568 opened I re-authored the log with log-session directly instead of re-invoking close-session as the PR-open hook asked; the log stayed current, but the close-session checklist was skipped for those PRs."
+    solution: "Re-invoke close-session on each PR-open hook hint, even when the log was just authored."

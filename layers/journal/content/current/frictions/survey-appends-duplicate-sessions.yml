@@ -15,6 +15,9 @@ fixes:
   - pr: 2366
     date: "2026-10-21"
     summary: "The ledger content test now fails when a session appears twice in one cluster, so a survey that repeats a session cannot land."
+  - pr: 2567
+    date: "2026-10-26"
+    summary: "print-ledger-occurrence --append now names every session already in the entry or repeated in the call."
 occurrences:
   - session: session_01Mf4dUxuWB7WtkC5fVzByH6
     date: "2026-10-16"

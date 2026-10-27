@@ -53,3 +53,8 @@ occurrences:
     severity: minor
     description: "Merging five runs of run-summary --verdicts into one ruleVerdicts/docsRead list took a hand-written script and two retries (duplicate YAML key, yes/no parsed as booleans)."
     solution: "run-summary.ts --verdicts could take several run outputs and emit one merged block per path."
+  - session: session_01Cb8ETAZztznLYx6CC7MKyE
+    date: "2026-10-26"
+    severity: minor
+    description: "Merging four workflow runs' run-summary --verdicts output into my own ruleVerdicts/docsRead took a hand-written YAML merge script in .throwaway."
+    solution: "Give run-summary.ts a mode that merges --verdicts into an authored log YAML, keeping the orchestrator's own entries and appending subagent reasons."

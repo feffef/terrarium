@@ -47,3 +47,18 @@ occurrences:
     severity: nit
     description: "Called search_issues without the required fields array before reading github-integration.md, which CLAUDE.md says to read before any GitHub operation; a guard blocked it."
     solution: "Read the doc first; the guard message was enough to recover."
+  - session: session_01Y1i7HTUED6iQYzbSLBbu79
+    date: "2026-10-26"
+    severity: nit
+    description: "Called search_issues without fields; the search-fields guard blocked it and I had to read github-integration.md first."
+    solution: "Read github-integration.md before the first GitHub call, as CLAUDE.md says."
+  - session: session_01C8G2W6ZfQN7WE4UNUi2GzA
+    date: "2026-10-26"
+    severity: nit
+    description: "First mcp__github__search_issues call omitted the fields array and was blocked; I read github-integration.md only afterwards."
+    solution: "Read the doc before the first GitHub operation."
+  - session: session_019g1t4RX7PcR54io7GRdxXK
+    date: "2026-10-27"
+    severity: nit
+    description: "Called search_issues without fields before reading github-integration.md; the guard blocked it, costing one retry."
+    solution: "Read github-integration.md before the first GitHub call, as CLAUDE.md says."

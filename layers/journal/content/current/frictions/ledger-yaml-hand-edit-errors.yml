@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   Ledger, prune-trials and Skill Inventory YAML are patched by string replacement or hand-typed: unquoted dates, hashes or colons, a hyphen-split folded scalar, a replaced ref or a match inside a comment broke the file (gate or repair needed), or, with no helper that writes into a named entry, the survey scripts its own splitter to place print-ledger-occurrence.ts blocks. A session repeated in one entry belongs to survey-appends-duplicate-sessions.
 surface: safe
-status: tracked
-ref: "issue #2554"
+status: open
 fixes:
   - pr: 2154
     date: "2026-10-16"
@@ -22,6 +21,9 @@ fixes:
   - pr: 2540
     date: "2026-10-25"
     summary: "print-ledger-occurrence.ts --append files each occurrence block under its named entry, so no hand-made splitter is needed."
+  - pr: 2567
+    date: "2026-10-26"
+    summary: "ledger-set.ts gained --note, --clear-ref and --create so entries need no hand edits."
 occurrences:
   - session: session_0147UencKKZS3WLHvsbgywp7
     date: "2026-10-15"
@@ -98,3 +100,13 @@ occurrences:
     severity: nit
     description: "I wrote a folded YAML note that ended a line in a hyphen; validate:content rejected it as a split word."
     solution: "Have the note-appending step run validate:content right after writing, or wrap without breaking hyphenated words."
+  - session: session_01CpD4piFGbFhvGG5KWdtsCG
+    date: "2026-10-26"
+    severity: nit
+    description: "ledger-set.ts cannot set a ref empty or add notes; the survey agent reported its resets left ref empty strings, and the brief does not say if that is acceptable."
+    solution: "Add a clear-ref flag, or say in survey-brief.md step 5 what to do."
+  - session: session_019g1t4RX7PcR54io7GRdxXK
+    date: "2026-10-27"
+    severity: nit
+    description: "textwrap split hyphenated words in appended observations, so validate:content failed on four files and I rejoined them by hand."
+    solution: "Wrap with break_on_hyphens=False, or give audit-skills a script that appends observations."

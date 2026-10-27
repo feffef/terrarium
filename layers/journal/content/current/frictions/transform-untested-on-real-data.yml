@@ -23,3 +23,8 @@ occurrences:
     severity: minor
     description: "Built absolute token fields before checking whether subagent transcripts' usage was trustworthy; the stream-start output_tokens forced two redesigns."
     solution: "Before deriving a number from transcripts, check it against an independent figure (the task-notification usage) first."
+  - session: session_01Vg1qDutnhKVav7JDNUdr8J
+    date: "2026-10-26"
+    severity: moderate
+    description: "Commit detection took three review rounds: two regex fixes still backtracked exponentially, then the tokenizer was quadratic on unquoted escapes, before an escape-aware tokenizer held."
+    solution: "For hook input parsing, start with a tokenizer whose alternatives start with distinct characters, and time adversarial runs before the first review."

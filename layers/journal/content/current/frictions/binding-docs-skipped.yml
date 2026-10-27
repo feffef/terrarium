@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   CLAUDE.md asks for the ADR check (the grep of docs/adr, since PR #2284 the adr-check Skill) before any plan or recommendation, an opinion in chat included, but it is prose and nothing hooks it, so the agent answers first and checks late or never. Signals: "recommended ... before grepping docs/adr", "without running adr-check", "the owner had to ask whether any ADRs were read", a grilling round or chat opinion given before the ADR read. A Skill-scripted decision skipping it belongs to adr-check-scope-in-skill-runs; a full ADR left unread after its summary rule loaded, to full-adr-read-skipped; the session-start glossary read, to session-start-glossary-skipped.
 surface: guard-or-hook
-status: tracked
-ref: "issue #2146 closed by PR #2284 (adr-check Skill); PR #2431 retired adr-check for the adr-read-hint hook; issue #2432 checks the hook after 3 days and #2433 asks it to catch Bash writes; issue #2286 (the adr-check review) is still open."
+status: open
 fixes:
   - pr: 2284
     date: "2026-10-19"
@@ -13,6 +12,9 @@ fixes:
   - pr: 2431
     date: "2026-10-23"
     summary: "Retired the adr-check Skill and its CLAUDE.md trigger; a new PostToolUse hook (adr-read-hint.ts) now names, once per agent, each ADR an Edit or Write touches by its rule paths or by number and that the agent has not read in full."
+  - pr: 2570
+    date: "2026-10-26"
+    summary: "adr-read-hint also points at the ADRs a Bash git commit touches."
 occurrences:
   - session: session_01VGLAakRJNm67PuNHpgbEc7
     date: "2026-10-12"

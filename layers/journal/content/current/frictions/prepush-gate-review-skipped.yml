@@ -166,3 +166,13 @@ occurrences:
     severity: minor
     description: "Ran the git-diff self-read instead of the code-review Skill after invoking it; the diff exceeds the 2-file simple bar though it was only one page plus pure renames."
     solution: "Let pr-workflow's simple-change test exempt pure renames and a single new Digest page."
+  - session: session_01A7PwrNRBtY9LTX6HrttXWW
+    date: "2026-10-26"
+    severity: minor
+    description: "Skipped the code-review Skill for a diff over the simple-change limit, reading the hunks myself because nearly all of it was mechanical pin lines."
+    solution: "pr-workflow could name a pin-only exemption for glassbox-update, or the Skill could say how to review a mostly-mechanical diff."
+  - session: session_019g1t4RX7PcR54io7GRdxXK
+    date: "2026-10-27"
+    severity: minor
+    description: "Followed review fixes in 4 files with my own read instead of code-review, though a follow-up over 2 files is not simple by pr-workflow."
+    solution: "Count files before choosing the self-read path; the fixes were the reviewers' own findings and the gate passed."

@@ -123,3 +123,23 @@ occurrences:
     severity: minor
     description: "Put the survey agent's list of nine merged fix PRs and its counts into the PR description without re-checking each against its PR, which CLAUDE.md says to do."
     solution: "Verify each claim against gh api before quoting it, or point to the commit instead of restating it."
+  - session: session_01TaUpbA3idjNZSgGpNjXj8S
+    date: "2026-10-26"
+    severity: minor
+    description: "Subagent reports gave truncated ids and several counts I could not re-check cheaply, so two notes rest on their word."
+    solution: "Brief the checkers to quote full session ids and mark each claim verified or reported."
+  - session: session_01CpD4piFGbFhvGG5KWdtsCG
+    date: "2026-10-26"
+    severity: minor
+    description: "Quoted the survey agent's 01TaUpbA friction into regression issue #2556 as a ledger occurrence without checking; it was not in the entry, so I corrected the issue after."
+    solution: "Have the survey report mark each quoted friction as in the entry or only in the session log."
+  - session: session_01Cb8ETAZztznLYx6CC7MKyE
+    date: "2026-10-26"
+    severity: nit
+    description: "The triage agent for #2558 said a ledger occurrence was allowed by the rule; I could not verify that cheaply and flagged it as unverified in the grilling."
+    solution: "Have triage cite the exact rule line and session log line for an 'allowed by rule' claim."
+  - session: session_01NHL7eNYVjV814TB7bS83kv
+    date: "2026-10-26"
+    severity: nit
+    description: "A Standards reviewer wrongly claimed the closureRefusal line anchor was off by one and a Spec reviewer wrongly said +33 -20 was one commit's numstat; both needed my own git and API checks."
+    solution: "Brief reviewers to verify anchors with git show before calling them wrong."

@@ -106,3 +106,8 @@ occurrences:
     severity: nit
     description: "First background gate call stacked run_in_background with a trailing & and the double-background guard blocked it; resent as separate calls."
     solution: "None needed; the guard message was clear."
+  - session: session_01Cb8ETAZztznLYx6CC7MKyE
+    date: "2026-10-26"
+    severity: nit
+    description: "My first attempt to gate two branches in one background call with & was blocked by the double-background guard; I resent it as two calls."
+    solution: "Run one background Bash call per gate from the start."

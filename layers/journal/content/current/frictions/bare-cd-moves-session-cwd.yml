@@ -66,3 +66,8 @@ occurrences:
     severity: nit
     description: "Chained cd into the skills folder twice, which silently moved the shell's working directory for later calls."
     solution: "Use absolute paths or git -C instead of cd, as the Bash tool guidance says."
+  - session: session_01Cb8ETAZztznLYx6CC7MKyE
+    date: "2026-10-26"
+    severity: nit
+    description: "A cd into a workflow worktree inside a compound Bash call moved the session's primary working directory to that worktree until the next call."
+    solution: "Use git -C and absolute paths for worktree commands, as dispatch-subagents §3 says for subagents."
