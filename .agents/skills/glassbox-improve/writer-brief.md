@@ -19,9 +19,11 @@ Read in full first: `layers/glassbox/GLOSSARY.md`, and
 `.agents/skills/glassbox-lesson/SKILL.md` as well.
 
 **Your worktree.** Run git as `git -C <worktree> …`, one git command per Bash
-call. Run `pnpm install`, then `git -C <worktree> fetch origin main`, and
-check that HEAD is {BASE}. Pin every page you edit to {BASE} (EVERY-PAGE's
-Pin, with {BASE} in place of `origin/main`).
+call, and every check in the foreground. Run `pnpm install`, then
+`git -C <worktree> fetch origin main`; if HEAD is not {BASE}, run
+`git -C <worktree> reset --hard {BASE}` (the worktree is fresh). Pin every
+page you edit to {BASE} (EVERY-PAGE's Pin, with {BASE} in place of
+`origin/main`).
 
 **Your files.** Edit only the pages your task names; a draft you promote is
 yours to move. Edit a diagram only to fix a deficit in it, then run
@@ -33,8 +35,7 @@ Walkthrough chip, a link to a moved draft.
 **Size.** If a fix needs about half the page or more rewritten, stop and
 report back instead. If a deficit is wrong, refuse it with proof.
 
-Done when `pnpm exec vitest run layers/glassbox/tests/unit/glassbox-pages.spec.ts`
-and `pnpm validate:content` pass and your work is committed. Commit before
+Done when EVERY-PAGE's Check passes and your work is committed. Commit before
 you stop, even mid-check; don't push.
 
 Hand back: the commit, each deficit fixed or refused (with proof), the join
