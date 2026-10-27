@@ -1,0 +1,208 @@
+schemaVersion: 1
+session: session_013zxzeQV6Jcqg4jYk2tkwBq
+startedAt: 2026-10-27T11:12:06Z
+endedAt: 2026-10-27T11:25:40Z
+kind: autonomous
+goal: Write one Blog post as Eyra
+status: in-review
+outcome: Eyra post on the ADR commit-time hint opened as PR 2591, gate green, awaiting CI and merge
+summary: Scheduled blog-post run. Rotation allowed only Eyra, so all three candidates were hers (ADR commit-time hint, truncated session ids, homepage digests link). A blind sonnet read picked the commit-hint story; I revised it for the reader's gaps, a sonnet fact-check found two wrong claims (a Skill called a routine; the quadratic-backtracking detail) which I fixed, code-review plus gate:scoped passed, and I opened the PR and subscribed. Everything was agent-initiated by the schedule; no human instruction beyond the stored prompt. Merge and reply decision (step 12) are still open.
+prs:
+  - "2591"
+docsRead:
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and closing a scheduled run's PR recipe
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command; commit-message via -F
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: required before first GitHub op; MCP tool surface
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: guard demanded it before the first Agent brief
+    useful: partly
+  - path: layers/blog/GLOSSARY.md
+    reason: Who a post is for; read late, after writing
+    useful: partly
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: hook asked after the Write; no pingback needed for a standalone post
+    useful: no
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: voice check; the review subagent read it and called it useful
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the spec; the review subagent also read it and found it useful
+    useful: yes
+  - path: layers/blog/content/eyra/pages/2026-10-27-the-hint-learned-to-read-the-receipt.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled task itself
+  - name: code-review
+    reason: review before first push
+  - name: dispatch-subagents
+    reason: guard-required brief rules
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The dispatch-read guard blocked my first Agent call because I had not read dispatch-subagents SKILL.md; one wasted call.
+    solution: Read dispatch-subagents before the first brief; blog-post step 6 could name it.
+    severity: minor
+  - description: I typed another session's id into the commit trailer, copied from a PR body; the commit-msg hook corrected it.
+    solution: Copy the id only from the system-prompt template.
+    severity: nit
+  - description: I wrote an uncounted claim tally (54) into the PR body, then recounted the fact-check rows (49) and corrected it.
+    solution: Count rows before writing the tally.
+    severity: minor
+  - description: I read layers/blog/GLOSSARY.md and ADR-0012 only after hooks asked, after the post was written.
+    solution: Read the Tenant glossary at step 1, before drafting.
+    severity: nit
+durationSec: 814
+models:
+  claude-sonnet-5-5: 89
+toolCounts:
+  Read: 6
+  Bash: 20
+  ToolSearch: 2
+  mcp__github__pull_request_read: 7
+  mcp__github__issue_read: 3
+  Agent: 5
+  Write: 1
+  Skill: 3
+  Monitor: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__update_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-10-27-the-hint-learned-to-read-the-receipt.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0012.md
+adrHints:
+  - adr: 12
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Gate and review before push, human-merge list; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes straight to main; summary enough, close-session handled it.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: PR opened without asking, scheduled-run scope; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line one on PR body and commit trailer; summary enough, hook fixed the id.
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback rule; a standalone post needed none, and I read the full ADR when the hook asked.
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; nothing I changed was in one.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Where instructions live; not relevant to writing a post.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as code; not touched by this run.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest rule loaded on reading tenant.config.ts; I only read the tag list.
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Stored-field shapes; no field added.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: MDC components; the post is plain Markdown.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Told me to read the Blog glossary, which I read late; its reader rule shaped the glosses.
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Tenant layer code rules; no layer code changed.
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Cross-Tenant reads; not relevant.
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: UI verification; no UI changed.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read scripts; this PR touches no Human-only path.
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Guards roster; the hint post is about a guard but I needed only the PR facts.
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Mermaid diagrams; none involved.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary layout; no glossary edited.
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Glossary term layout; no term added.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: ADR history rule; no ADR edited.
+    useful: no
+subagents:
+  - task: Blind read of three drafts
+    model: sonnet
+  - task: Blind read of three drafts
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 6.8
+  - task: Fact-check the Eyra post
+    model: sonnet
+    durationSec: 67
+    toolCalls: 14
+    modelCalls: 4
+    tokenShare: 7.4
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 37
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 5.2
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 25
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 5
+gitBranch: claude/zen-heisenberg-18p94x
+entrypoint: remote_trigger
+cliVersion: 2.1.311
+trigger: blog-post
+landedBy: Stop
