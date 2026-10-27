@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSSnD8PnNngq431n1o
 startedAt: 2026-10-27T18:54:05Z
-endedAt: 2026-10-27T19:19:56Z
+endedAt: 2026-10-27T19:26:33Z
 kind: interactive
 goal: One linear shell tokenizer for the hint hooks
-status: in-review
-outcome: "PR #2601 open, gate green, waiting for a human merge"
-summary: "The owner invoked grill-with-docs to refine an idea from session_01Vg1qDutnhKVav7JDNUdr8J: give the hint hooks a shared linear tokenizer in hook-io.ts with one timing test. Reading the code showed a shared tokenizer already existed (commandWords in shell-reads.ts) and only adr-read-hint kept its own token regex, so the first grilling round reframed the goal; the owner agreed to every recommendation. At the owner's request a Fable agent verified the proposal and found my premise half wrong: commandWords itself was quadratic on blank-line heredoc bodies and overflowed the stack on deep $( nesting, a git-at-first-word match would lose `if git commit`, and one existing spec would break. A second round (agreed by the owner) folded those in. The owner then explicitly said \"build it\". Built: one-pass stripHeredocs, a 100-deep substitution cap, a shared gitSubcommandAt (returning an index so matching git at any word stays linear), adr-read-hint on commandWords, a growth-based adversarial test shown red on the old tokenizer, and a guards.md clause. Two code-review agents found a false guards.md sentence (stale-push-hint keeps a filter regex) and a timing slack that hid the old quadratic marker scan; both fixed. Agent-initiated: those review fixes and the extra heredoc-body spec case. Human-only files, so a human merges."
+status: completed
+outcome: "PR #2601 merged by the owner; CI green"
+summary: "The owner invoked grill-with-docs to refine an idea from session_01Vg1qDutnhKVav7JDNUdr8J: give the hint hooks a shared linear tokenizer in hook-io.ts with one timing test. Reading the code showed a shared tokenizer already existed (commandWords in shell-reads.ts) and only adr-read-hint kept its own token regex, so the first grilling round reframed the goal; the owner agreed to every recommendation. At the owner's request a Fable agent verified the proposal and found my premise half wrong: commandWords itself was quadratic on blank-line heredoc bodies and overflowed the stack on deep $( nesting, a git-at-first-word match would lose `if git commit`, and one existing spec would break. A second round (agreed by the owner) folded those in. The owner then explicitly said \"build it\". Built: one-pass stripHeredocs, a 100-deep substitution cap, a shared gitSubcommandAt (returning an index so matching git at any word stays linear), adr-read-hint on commandWords, a growth-based adversarial test shown red on the old tokenizer, and a guards.md clause. Two code-review agents found a false guards.md sentence (stale-push-hint keeps a filter regex) and a timing slack that hid the old quadratic marker scan; both fixed. Agent-initiated: those review fixes and the extra heredoc-body spec case. Human-only files; the owner merged it."
 prs:
   - "2601"
 docsRead:
@@ -68,20 +68,23 @@ frictions:
   - description: First timing test used a 20 ms slack that let the old quadratic marker scan pass; spec reviewer caught it
     solution: Prove a regression test fails on the old code for every case it claims to cover, not only the loudest
     severity: minor
-durationSec: 1551
+durationSec: 1948
 models:
-  claude-opus-5-5: 108
+  claude-opus-5-5: 127
 toolCounts:
   Skill: 6
-  Bash: 32
+  Bash: 35
   Agent: 3
   Read: 6
   Edit: 2
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__claude-code-remote__send_later: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - scripts/session/shell-reads.ts
   - docs/agents/guards.md
@@ -155,22 +158,24 @@ subagents:
     durationSec: 275
     toolCalls: 21
     modelCalls: 7
-    tokenShare: 13.9
+    tokenShare: 11.7
   - type: general-purpose
     task: Standards review of diff
     durationSec: 79
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 7.7
+    tokenShare: 6.5
   - type: general-purpose
     task: Spec review of diff
     durationSec: 136
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 8.7
+    tokenShare: 7.3
 gitBranch: ccr-65eb57ab-fy09gh
 entrypoint: remote_mobile
 cliVersion: 2.1.311
 learnings:
   - A shared helper that returns a word, called at every match position, can turn a linear scan quadratic; return an index so the caller can skip ahead
+ideas:
+  - Add a linearity test helper (time at n and 2n, assert ratio) to tests/support and run it over every hook's pure parser (stale-push-hint GIT_PUSH, workflow-edit-guard, subagent-background-guard), so a backtracking regex in any hook fails CI rather than waiting for a session to notice
 landedBy: Stop
