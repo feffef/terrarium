@@ -1,11 +1,11 @@
 ---
 title: From file to browser
 description: How a Markdown file in a Tenant folder becomes a table, a dump, a rendered page and a payload the browser reuses.
-revision: '2864783943ebe98a792cc8f42c65986758528d9b'
-revisionDate: '2026-10-27'
+revision: 'e8cc785faceaf503224e5cb0e0367a9929e624c4'
+revisionDate: '2026-10-28'
 ---
 
-A Markdown file is committed, and later a visitor reads it as a page. This Walkthrough follows one file from its folder to the visitor's screen: through the manifest that names its table, the build that packs the table into a dump, the server that loads the dump and renders the page, and the payload the browser reuses on the next click. Only on a route the server doesn't cache does the browser load the dump into a database of its own.
+A Markdown file is committed, and later a visitor reads it as a page. This Walkthrough follows one file from its folder to the visitor's screen: through the manifest that names its table, the build that packs the table into a dump, the server that loads the dump and renders the page, and the payload the browser reuses on the next click. Only a query no payload answers, on a route the server doesn't cache or outside `useAsyncData`, makes the browser load the dump into a database of its own.
 
 ```mermaid
 flowchart TD
@@ -65,7 +65,7 @@ The first query for a Collection since the server started compares the checksum 
 
 ## 6. The browser hydrates, then navigates by payload
 
-Vue renders the page to HTML with the `useAsyncData` result inside, and the browser shows it, then takes the page over without fetching that data again. When the pointer rests on a link, a finger touches it or the keyboard focuses it, the browser fetches that route's code and its `_payload.json`, and the click builds the next page from them with no query. A route the server doesn't cache has no payload: its query runs in an SQLite database in the browser, which first downloads a WebAssembly runtime and the Collection's dump.
+Vue renders the page to HTML with the `useAsyncData` result inside, and the browser shows it, then takes the page over without fetching that data again. When the pointer rests on a link, a finger touches it or the keyboard focuses it, the browser fetches that route's code and its `_payload.json`, and the click builds the next page from them with no query. A route the server doesn't cache has no payload, and a query outside `useAsyncData`, such as a search run as the visitor types, has none either: such a query runs in an SQLite database in the browser, which first downloads a WebAssembly runtime and the Collection's dump.
 
 ::stop-links
 [Vue components and hydration](/t/glassbox/guide/nuxt-vue/vue-components) · [Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [Content database](/t/glassbox/guide/nuxt-content/content-database)
