@@ -121,8 +121,10 @@ branch, or its question or failure is in the report.
 
 ## 4. Land and report
 
-Push each `ready-to-push` branch from its worktree and open its PR with the
-branch's decisions, its remaining judgement calls, any cherry-picked PR, and
+Push each `ready-to-push` branch from its worktree with
+`git push origin HEAD:<branch>` (a build whose branch the main checkout holds
+commits on a `worktree-wf_…` branch) and open its PR with the branch's
+decisions, its remaining judgement calls, any cherry-picked PR, and
 the Human-only paths that `pnpm exec tsx .agents/skills/clear-backlog/scripts/list-human-only-paths.ts
 <worktree>` prints (a non-zero exit means the list couldn't be read: stop
 and report it); before the turn that opens the first PR ends, invoke `close-session`
