@@ -1,0 +1,255 @@
+schemaVersion: 1
+session: session_013zxzePY9L4aufht9ct94ec
+startedAt: 2026-10-27T18:04:33Z
+endedAt: 2026-10-27T18:39:38Z
+kind: interactive
+goal: Atlas 404 drawn as an engraved plate
+status: in-review
+outcome: "PR #2597 open: Atlas 404 plate plus a per-Tenant not-found seam in app/error.vue"
+summary: "The user invoked grill-with-docs on an idea from another session: style the Atlas 404 as a plate in the book's design. Over two grilling rounds the user decided every branch: cover both 404 shapes (unknown Specimen in a known Biome, and unknown Biome, which fell through to the generic error page), a newly drawn empty-specimen-jar plate, the naturalist's copy kept, a per-Tenant `<Tenant>NotFound` seam in app/error.vue rather than an Atlas-only special case or bypassing useSpace, Biome-accent tint with neutral ink for an unknown Biome, e2e tests plus a one-line doc, one PR built by Fable. The user then said \"build it now\". Agent-initiated within that ask: a Fable subagent built it in a worktree; two code-review rounds found the smudge was never tinted (theme.css binds --sig-1 to the neutral accent on :root, so a Biome class can't re-tint it) and the neutral link failed AA contrast; both were fixed, a tint assertion was added, and I fixed glossary drift (\"wing\" for Biome) in comments myself. No glossary term or ADR: the seam is small and easy to reverse. The seam's opt-in is a `.global.vue` component, because only a globally registered component resolves by a runtime-built name."
+prs:
+  - "2597"
+docsRead:
+  - path: layers/atlas/GLOSSARY.md
+    reason: Biome/Specimen/plate vocabulary for the grilling and to catch 'wing' drift
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit via -F, trailer check, fetch before trusting origin/main
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: follow-up commits over 10 lines need their own code-review before push
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: write through MCP; no PR template to mirror
+    useful: partly
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: Plate art direction and voice; impl agent and reviewers used it; it caught the untinted smudge
+    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: "Impl agent: wrapper tokens and where to document the seam"
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: "Impl agent: preview and screenshot loop for both 404 shapes"
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: "Impl agent: confirmed the page keeps useSpace"
+    useful: partly
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: "Impl agent: governs root pages, not this Space page"
+    useful: no
+  - path: docs/adr/0027-prune-trials.md
+    reason: "Impl agent: confirmed no trial covers tenant-layers.md"
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: "Impl agent: a how-to doc may hold the seam's long form"
+    useful: partly
+  - path: app/error.vue
+    reason: (read before editing)
+  - path: layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+    reason: (read before editing)
+  - path: app/composables/space.ts
+    reason: (no reason given)
+  - path: layers/atlas/app/components/atlas/SpecimenPlate.vue
+    reason: (no reason given)
+  - path: layers/atlas/tests/e2e/atlas.spec.ts
+    reason: (read before editing)
+  - path: layers/atlas/app/utils/biomes.ts
+    reason: (no reason given)
+  - path: layers/atlas/nuxt.config.ts
+    reason: (no reason given)
+  - path: tests/support/e2e.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: grill-with-docs
+    reason: user invoked it to refine the idea
+  - name: grilling
+    reason: two rounds settled the design tree
+  - name: domain-modeling
+    reason: checked whether a glossary term or ADR was warranted; neither was
+  - name: dispatch-subagents
+    reason: brief for the Fable impl agent in a worktree
+  - name: code-review
+    reason: two-axis review of the branch, then of the follow-up commit
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Impl subagent reported the Canopy smudge as green in its screenshots; it was grey (theme.css binds --sig-1 on :root so Biome classes never re-tint it).
+    solution: Read hand-back screenshots yourself before review; the atlas-specimen Skill could note that a plate outside the Specimen page must re-bind --sig-1.
+    severity: moderate
+  - description: The impl agent and its follow-up wrote 'wing' for Biome in code comments despite the tenant-glossary rule loading; caught only by the second review.
+    solution: Brief impl agents to use the Tenant's glossary terms in comments, not only page copy.
+    severity: minor
+  - description: docs/agents/tenant-layers.md gained the not-found seam, but the pointer in .claude/rules/tenant-layers.md can't name it without a human merge, and that rule's paths don't cover app/error.vue.
+    solution: A Trusted user could add 'not-found seam' to that rule's pointer list in a human-merged PR.
+    severity: nit
+  - description: The Stop hook asked to push the impl branch while review fixes were still pending.
+    solution: None needed; ADR-0004 says to ignore it until review is clean.
+    severity: nit
+durationSec: 2105
+models:
+  claude-opus-5-5: 87
+toolCounts:
+  Skill: 6
+  Bash: 23
+  Read: 7
+  Agent: 5
+  Write: 2
+  ToolSearch: 2
+  SendMessage: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/atlas/app/components/atlas/NotFound.global.vue
+  - layers/atlas/app/pages/t/atlas/[space]/[...slug].vue
+  - app/error.vue
+  - layers/atlas/tests/e2e/atlas.spec.ts
+  - docs/agents/tenant-layers.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+adrHints:
+  - adr: 6
+    via: text
+    readAfter: true
+    by: subagent
+  - adr: 16
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 29
+    via: path
+    readAfter: true
+    by: subagent
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+docsReadBySubagents:
+  - docs/agents/tenant-layers.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate before the first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed app/error.vue is not Human-only, so an agent may merge; also why I didn't edit the tenant-layers rule pointer
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR right after the push and subscribed; the user's green-light covered the new seam; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on the PR body and session trailer on my commit; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: This log, kept off the branch; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0006.md
+    reason: Ruled out bypassing useSpace for the unknown-Biome case (grilling Q5); reviewers confirmed it holds; summary enough
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Global auto-import namespace shaped the AtlasNotFound name; layer CSS scoping; summary plus doc enough
+    useful: yes
+  - path: .claude/rules/ui-verification.md
+    reason: Made the impl agent screenshot both shapes in light and dark; I read them myself, which caught the grey smudge
+    useful: yes
+  - path: .claude/rules/tenant-glossary.md
+    reason: Sent me and a reviewer to the Atlas glossary; caught 'wing' used for Biome
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Told me a Tenant product choice goes in the Tenant glossary, not an ADR; nothing needed recording
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: No ADR written this session
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: No glossary term added
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Governs Tenant root pages; this change touched Space pages and error.vue
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading the atlas-specimen Skill; no Skill changed
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Impl agent checked no prune trial covers tenant-layers.md; none did
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Confirmed a docs/agents section can hold the seam without a rule edit
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded for the impl agent; it reported it irrelevant to this task
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: Impl agent reported it partly relevant to its e2e work
+    useful: partly
+  - path: .claude/rules/adr-0028.md
+    reason: Impl agent reported it irrelevant to this task
+    useful: no
+subagents:
+  - task: Build Atlas plate-styled 404
+    model: fable
+    durationSec: 1602
+    toolCalls: 116
+    modelCalls: 40
+    tokenShare: 38.1
+  - type: general-purpose
+    task: Standards review of Atlas 404
+    durationSec: 121
+    toolCalls: 14
+    modelCalls: 14
+    tokenShare: 10.7
+  - type: general-purpose
+    task: Spec review of Atlas 404
+    durationSec: 50
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 6.5
+  - type: general-purpose
+    task: Standards review of follow-up
+    durationSec: 49
+    toolCalls: 7
+    modelCalls: 7
+    tokenShare: 4.3
+  - type: general-purpose
+    task: Spec review of follow-up
+    durationSec: 44
+    toolCalls: 9
+    modelCalls: 4
+    tokenShare: 3.6
+gitBranch: ccr-a11bd673-ds9iuj
+entrypoint: remote_mobile
+cliVersion: 2.1.311
+learnings:
+  - In the Atlas theme, --sig-1 is resolved at :root, so any plate drawn outside a Specimen page must re-bind --sig-1 itself to pick up the Biome accent.
+  - Nuxt resolves a component by a runtime-built name only if it is registered globally (.global.vue); resolveDynamicComponent returns the string unchanged and without a warning when it is missing.
+landedBy: Stop
