@@ -18,6 +18,9 @@ export const LEDGER_HORIZON_DAYS = 14
 /** The windows a visitor can narrow the page to, in days. */
 export const LEDGER_WINDOWS = [2, 3, 5, 7, 10, LEDGER_HORIZON_DAYS] as const
 
+/** The window the page opens on: the current week, not the whole horizon. */
+export const LEDGER_DEFAULT_DAYS = 7
+
 /** The first date of the last `days` dates, `today` included: 2 days is yesterday and today. */
 export function ledgerWindowStart(today: string, days: number): string {
   return new Date(Date.parse(`${today}T00:00:00Z`) - (days - 1) * 86_400_000).toISOString().slice(0, 10)
