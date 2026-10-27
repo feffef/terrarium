@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzePwzHSC4uh6dyhsHxg
 startedAt: 2026-10-27T16:48:10Z
-endedAt: 2026-10-27T17:08:39Z
+endedAt: 2026-10-27T17:18:31Z
 kind: autonomous
 goal: "Visitor-loop run on the Atlas: three blind visitors, fix consensus findings, build one feature"
 status: in-review
-outcome: Fix PR opened with four consensus Atlas fixes; feature PR not yet started
-summary: Scheduled visitor-loop run, focus atlas (row 0). Built and served the site, sent sonnet, fable and opus visitors through /t/atlas, tallied consensus, and had an opus refiner check fit. Four consensus findings survived (field-log link affordance, "past the New Year" wording, dial caption naming Page Up/Down, roster wrap at 390px); the cropped-SVG-at-phone finding was dropped under a decisions.md ruling. All four fixed, DOM-measured before/after, reviewed with two code-review sub-agents, gate:scoped green, PR 2594 opened with a verdict comment. Chosen feature (wing cards name their creatures) is still to build after the fix PR lands. Everything was agent-initiated within the Skill's remit; the schedule was the only instruction.
+outcome: Fix PR merged; feature PR (wing cards name their creatures) open and awaiting CI
+summary: Scheduled visitor-loop run, focus atlas (row 0). Built and served the site, sent sonnet, fable and opus visitors through /t/atlas, tallied consensus, and had an opus refiner check fit. Four consensus findings survived (field-log link affordance, "past the New Year" wording, dial caption naming Page Up/Down, roster wrap at 390px); the cropped-SVG-at-phone finding was dropped under a decisions.md ruling. All four fixed, DOM-measured before/after, reviewed with two code-review sub-agents, gate:scoped green, PR 2594 opened with a verdict comment. The fix PR merged. The chosen feature (wing cards name their creatures) was built, reviewed (two code-review sub-agents; type narrowing and test strength fixed), gate-green and opened as PR 2595. Everything was agent-initiated within the Skill's remit; the schedule was the only instruction.
 prs:
   - "2594"
+  - "2595"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: required before first git command
@@ -65,23 +66,26 @@ frictions:
   - description: A foreground sleep chain to wait for the build was blocked, costing a retry.
     solution: Start builds with run_in_background and wait with an until-loop from the first call.
     severity: nit
-durationSec: 1229
+durationSec: 1821
 models:
-  claude-sonnet-5-5: 104
+  claude-sonnet-5-5: 152
 toolCounts:
-  Bash: 34
-  Read: 4
-  Agent: 9
+  Bash: 48
+  Read: 5
+  Agent: 11
   mcp__github__search_issues: 5
   Skill: 3
-  mcp__github__create_pull_request: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 1
 filesEdited:
+  - layers/atlas/app/pages/t/atlas/index.vue
+  - layers/atlas/tests/e2e/atlas.spec.ts
   - layers/atlas/app/assets/theme.css
   - layers/atlas/app/components/content/PhaseNote.vue
   - layers/atlas/app/pages/t/atlas/[space]/index.vue
-  - layers/atlas/app/pages/t/atlas/index.vue
 rulesLoaded:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0005.md
@@ -95,6 +99,8 @@ rulesLoaded:
   - .claude/rules/tenant-layers.md
   - .claude/rules/ui-verification.md
   - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -103,9 +109,6 @@ rulesGlobal:
 rulesFollowedUp:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0016.md
-rulesLoadedBySubagents:
-  - .claude/rules/adr-0030.md
-  - .claude/rules/adr-0004-human-merge.md
 docsReadBySubagents:
   - .agents/skills/visitor-loop/SKILL.md
   - .agents/skills/atlas-specimen/SKILL.md
@@ -177,44 +180,59 @@ subagents:
     durationSec: 92
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 5.5
+    tokenShare: 3.9
   - type: general-purpose
     task: Visitor (fable)
     model: fable
     durationSec: 274
     toolCalls: 36
     modelCalls: 13
-    tokenShare: 10.6
+    tokenShare: 7.6
   - type: general-purpose
     task: Visitor (opus)
     model: opus
     durationSec: 188
     toolCalls: 24
     modelCalls: 21
-    tokenShare: 11
+    tokenShare: 7.9
   - type: general-purpose
     task: Refiner (fit check)
     model: opus
     durationSec: 247
     toolCalls: 42
     modelCalls: 24
-    tokenShare: 17.1
+    tokenShare: 12.3
   - type: general-purpose
     task: "Review: standards axis"
     durationSec: 40
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 4.3
+    tokenShare: 3.1
   - type: general-purpose
     task: "Review: spec axis"
     durationSec: 33
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 3.9
+    tokenShare: 2.8
+  - type: general-purpose
+    task: "Review 2: standards axis"
+    durationSec: 36
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 2.7
+  - type: general-purpose
+    task: "Review 2: spec axis"
+    durationSec: 27
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 2.3
 gitBranch: claude/adoring-galileo-h7ae07
 entrypoint: remote_trigger
 cliVersion: 2.1.311
 trigger: visitor-loop
 ideas:
   - Make visitor-loop's search step a script (open issues plus git log --grep for a focus keyword) so each finding's search result is one command, not several guarded MCP calls.
+  - "Atlas wing pages: add an 'Other wings' line under the wing intro so a visitor can hop sideways without returning to the front door (fable, single)."
+  - "Atlas front door: show 'Next season in N days' beside 'Today under the glass' to give returning visitors a reason to come back (sonnet, single)."
+  - "Atlas 404: style it as a plate in the book's design instead of the default white page (fable, single)."
 landedBy: Stop
