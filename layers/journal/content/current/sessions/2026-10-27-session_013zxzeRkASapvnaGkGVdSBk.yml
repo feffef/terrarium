@@ -1,0 +1,257 @@
+schemaVersion: 1
+session: session_013zxzeRkASapvnaGkGVdSBk
+startedAt: 2026-10-27T17:48:35Z
+endedAt: 2026-10-27T18:03:07Z
+kind: interactive
+goal: Review the Glass Box guide with three models
+status: completed
+outcome: Ranking, cross-links and gaps compared across Sonnet, Fable and Opus reviewers; report in chat
+summary: "Human-instructed: the user asked for all Glass Box guide pages to be ranked by quality, with inline cross-link and gap analysis by three subagents (Sonnet, Fable, Opus) and a comparison focused on overlaps. After clarifying questions the user chose guide-only ranking with drafts as context and a chat-only report. I dispatched three read-only general-purpose agents with one identical brief and a fixed output structure, saved each hand-back, averaged the three rankings, and verified the overlapping claims myself (the human-only-list \"new dependency\" error, the deferred-tool-guard exception to the hooks page's onFailure claim, the adding-a-tenant \"two glossary files\" lede, and several missing hooks/session-logs/file-routing links). No repo changes, no PR."
+prs: []
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: "brief contents: scratchpad subfolders, save-handback"
+    useful: yes
+  - path: GLOSSARY.md
+    reason: "Subagents: Platform terms; Opus found the self-improvement-loop omission through it"
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: "Subagents: Lesson/Walkthrough contracts framed every ranking"
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: Opus read it after the git hint; backed its git-practice gap
+    useful: partly
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: "Fable: checked asking-for-a-change and adding-a-tenant stop 1"
+    useful: yes
+  - path: layers/glassbox/content/guide/pages/index.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/01.gate.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/02.type-checking.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/03.content-validation.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/04.unit-and-e2e-tests.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: before writing three reviewer briefs
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git rev-parse HEAD before reading docs/agents/git-conventions.md, which CLAUDE.md asks for before git beyond status/diff
+    solution: Harmless read-only command; the hint fired after. Read the doc first or treat rev-parse as exempt like status
+    severity: nit
+  - description: Sonnet reviewer skipped git-conventions.md after its git hint fired; reviewers also re-derived the same ~30 file checks three times
+    solution: For multi-model comparisons, accept the duplicated verification as the cost of independence
+    severity: nit
+durationSec: 872
+models:
+  claude-opus-5-5: 36
+toolCounts:
+  Bash: 10
+  AskUserQuestion: 1
+  Skill: 3
+  Agent: 3
+rulesLoaded:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0003.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0014.md
+docsReadBySubagents:
+  - layers/glassbox/GLOSSARY.md
+  - GLOSSARY.md
+  - docs/agents/git-conventions.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: No PR in this read-only review; did not apply. Reviewers used it to check PR pages
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session for a question-only session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Reviewers used it to check operating-model claims; I opened no PR
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: No GitHub writes this session; did not apply
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Its paths list confirmed package.json is Human-only, verifying the Opus reviewer's error finding
+    useful: yes
+  - path: .claude/rules/glassbox-content.md
+    reason: Reviewers judged staleness by it (all three reported yes)
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Loaded on reading settings.json; pointer only, confirmed the guards.md exception the reviewers cited
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: "Subagents (Opus, Fable): verified deploy/isolation claims; Fable built a gap on it; summary enough"
+    useful: yes
+  - path: .claude/rules/adr-0011.md
+    reason: "Subagents: verified deploy page claims; summary enough"
+    useful: yes
+  - path: .claude/rules/adr-0026.md
+    reason: "Subagents: cross-checked Gate page claims"
+    useful: partly
+  - path: .claude/rules/adr-0025.md
+    reason: "Subagents: verified cross-tenant-reads and adding-a-tenant claims"
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: "Subagents: checked CLAUDE.md page's Prune Trial claims"
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: "Subagents: checked data-fetching page claims"
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: "Subagents: confirmed workflow-scripts gap"
+    useful: partly
+  - path: .claude/rules/adr-0014.md
+    reason: "Fable: exposed adding-a-tenant's missing nuxt prepare/restart step"
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: "Fable: cross-checked Skill Inventory claim on skills page"
+    useful: partly
+  - path: .claude/rules/adr-0018.md
+    reason: "Subagents: checked layers page ADR-0018 story"
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: "Subagents: confirmed glossary scope, no action for a reviewer"
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: "Opus: backed the work-queue gap"
+    useful: partly
+  - path: .claude/rules/adr-0006.md
+    reason: "Fable: loaded by shell reads, not needed for the review"
+    useful: no
+  - path: .claude/rules/adr-0007.md
+    reason: "Fable: loaded by shell reads, background for #catalog gap only"
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: "Fable: background for the Digests gap"
+    useful: partly
+  - path: .claude/rules/adr-0016.md
+    reason: "Fable: loaded by shell reads, not needed"
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: "Subagents: about editing glossaries; read-only review"
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: "Opus: confirmed the UI-verification gap; otherwise not applicable"
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Glass Box review (Sonnet)
+    model: sonnet
+    durationSec: 193
+    toolCalls: 39
+    modelCalls: 11
+    tokenShare: 19.9
+  - type: general-purpose
+    task: Glass Box review (Fable)
+    model: fable
+    durationSec: 574
+    toolCalls: 48
+    modelCalls: 8
+    tokenShare: 20.2
+  - type: general-purpose
+    task: Glass Box review (Opus)
+    model: opus
+    durationSec: 323
+    toolCalls: 52
+    modelCalls: 26
+    tokenShare: 35.4
+gitBranch: ccr-7b08218f-nvevt2
+entrypoint: remote_mobile
+cliVersion: 2.1.311
+learnings:
+  - Three models agreed on top and bottom tiers but each found a different factual error; the union of verified errors is the main value of running three
+landedBy: Stop
