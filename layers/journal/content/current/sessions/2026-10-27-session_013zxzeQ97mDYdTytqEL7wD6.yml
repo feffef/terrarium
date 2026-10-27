@@ -1,0 +1,65 @@
+schemaVersion: 1
+session: session_013zxzeQ97mDYdTytqEL7wD6
+startedAt: 2026-10-27T20:26:03Z
+endedAt: 2026-10-27T20:27:38Z
+kind: delegated
+goal: Read every Glass Box guide Lesson and summarize how Terrarium is built
+status: completed
+outcome: Read all 37 guide pages plus the index and answered in chat; no code changed
+summary: A Trusted user asked the session to read all Lessons in the Glass Box guide Space and summarize how Terrarium is built. The session read every page under layers/glassbox/content/guide/pages (36 Lessons and Walkthroughs plus the index), skipping the drafts Space since the ask named the guide, and wrote the summary in chat. All work was human-instructed; nothing was edited, committed or pushed, so no PR.
+prs: []
+docsRead:
+  - path: layers/glassbox/content/guide/pages/index.md
+    reason: the guide's front page and its two page types
+    useful: yes
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Bundled the Lessons with cat; one output was persisted to a file and a later Read truncated, costing two extra reads
+    solution: Read large page sets in chunks under ~35k tokens per call from the start
+    severity: nit
+durationSec: 94
+models:
+  claude-opus-5-5: 21
+toolCounts:
+  Bash: 6
+  Read: 4
+  Skill: 2
+rulesLoaded:
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: About the gate and merging; this session pushed nothing, so it didn't apply; full ADR not needed
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Confirmed the log goes straight to main via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: About PRs and approving new work; a read-only question opened no branch, so it didn't apply
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: About provenance on GitHub writes; this session made none
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Loaded on reading Glass Box pages; about writing them, and this session only read them
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded with Walkthrough diagrams; about authoring Mermaid, not reading it
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Glass Box terms were already explained in the pages; no Tenant work was done
+    useful: no
+gitBranch: ccr-1ea5c3de-qrxm5v
+entrypoint: remote_mobile
+cliVersion: 2.1.311
+landedBy: Stop
