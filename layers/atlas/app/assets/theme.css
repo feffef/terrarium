@@ -383,7 +383,7 @@
 .atlas-log .when { font-family: var(--atlas-data); font-size: 0.76rem; color: var(--atlas-faint); }
 .atlas-log .tod { font-family: var(--atlas-label); font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--biome-accent); }
 .atlas-log .obs { color: var(--atlas-ink); }
-.atlas-log .obs .who { font-style: italic; text-decoration: none; color: inherit; border-bottom: 1px solid var(--atlas-line); }
+.atlas-log .obs .who { font-style: italic; text-decoration: none; color: inherit; border-bottom: 1px solid var(--atlas-muted); }
 .atlas-log .obs .who:hover { color: var(--biome-accent); }
 .atlas-log .empty { color: var(--atlas-faint); font-style: italic; }
 .atlas-log-more { margin: 0; padding: 0.7rem 0 0; border-top: 1px solid var(--atlas-line); font-family: var(--atlas-data); font-size: 0.74rem; color: var(--atlas-faint); max-width: 34rem; line-height: 1.6; }

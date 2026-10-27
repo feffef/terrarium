@@ -46,11 +46,11 @@ const show = computed(
 )
 
 /** Compact day-span for the header, e.g. "day 100 → 280"; a span that wraps
- *  the New Year says so, so its end reading below its start isn't taken for a typo. */
+ *  the New Year ends "of the next year", so its end reading below its start isn't taken for a typo. */
 const spanText = computed(() => {
   if (!phase.value) return ''
   const [a, b] = phase.value.span
-  return `day ${a} → ${b}${a > b ? ' (past the New Year)' : ''}`
+  return a > b ? `day ${a} → day ${b} of the next year` : `day ${a} → ${b}`
 })
 </script>
 

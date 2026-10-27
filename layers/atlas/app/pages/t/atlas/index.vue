@@ -294,4 +294,8 @@ useHead({ title: 'The Atlas of the Terrarium' })
   .today-wheel { max-width: 20rem; }
   .today-roster { width: 100%; max-width: 30rem; }
 }
+@media (max-width: 30rem) {
+  .roster-astir li { grid-template-columns: 1fr; }
+  .roster-astir .rcommon { text-align: left; }
+}
 </style>
