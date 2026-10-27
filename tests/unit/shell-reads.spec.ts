@@ -793,7 +793,7 @@ describe('commandWords() on adversarial input', () => {
       const small = fastest(build(50_000))
       const large = fastest(build(100_000))
       expect(large).toBeLessThan(1000)
-      expect(large).toBeLessThan(3 * small + 20)
+      expect(large).toBeLessThan(3 * small + 2)
     })
   }
 })
