@@ -68,7 +68,7 @@ The first query for a Collection since the server started compares the checksum 
 Vue renders the page to HTML with the `useAsyncData` result inside, and the browser shows it, then takes the page over without fetching that data again. When the pointer rests on a link, a finger touches it or the keyboard focuses it, the browser fetches that route's code and its `_payload.json`, and the click builds the next page from them with no query. A route the server doesn't cache has no payload: its query runs in an SQLite database in the browser, which first downloads a WebAssembly runtime and the Collection's dump.
 
 ::stop-links
-[Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [Content database](/t/glassbox/guide/nuxt-content/content-database)
+[Vue components and hydration](/t/glassbox/guide/nuxt-vue/vue-components) · [Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [Content database](/t/glassbox/guide/nuxt-content/content-database)
 ::
 
 ## Where next

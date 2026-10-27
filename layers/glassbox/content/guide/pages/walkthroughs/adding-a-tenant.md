@@ -12,7 +12,7 @@ A new site joins Terrarium. This Walkthrough follows the work from the side of t
 A :term[Trusted] user approves the new :term[Tenant], for example by asking for it in a session or by labelling its issue `ready-for-agent`, before an agent starts on it. The agent then works on a feature branch, and the result lands as a PR like any other change.
 
 ::stop-links
-[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/operating-model) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 2. A folder becomes a layer
