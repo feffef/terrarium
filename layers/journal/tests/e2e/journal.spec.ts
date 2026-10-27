@@ -296,7 +296,7 @@ describe('journal Tenant', async () => {
       expect(await select.inputValue()).toBe('5')
       await select.selectOption('3')
       await page.waitForURL(/\?days=3$/)
-      await select.selectOption('7')
+      await select.selectOption(String(LEDGER_DEFAULT_DAYS))
       await page.waitForURL((u) => !u.search)
       await select.selectOption('14')
       await page.waitForURL(/\?days=14$/)
