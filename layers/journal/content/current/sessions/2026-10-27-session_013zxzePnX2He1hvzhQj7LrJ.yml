@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzePnX2He1hvzhQj7LrJ
 startedAt: 2026-10-27T17:56:35Z
-endedAt: 2026-10-27T18:11:54Z
+endedAt: 2026-10-27T18:15:06Z
 kind: delegated
 goal: Keep Tinkerfund Inventor portraits in light colours in dark mode
-status: in-review
-outcome: "Fixed and e2e-pinned in PR #2596; the Oct 4 fix had never applied"
+status: completed
+outcome: "Fixed, e2e-pinned and merged in PR #2596; the Oct 4 fix had never applied"
 summary: "Human-instructed: the user asked that Inventor portraits not invert in dark mode. A fix (f1b551f27, color-scheme: light on the SVG) was already on main, but a production-build screenshot showed it never applied: Lightning CSS lowers light-dark() into --lightningcss-* variables, so tokens resolve where declared (.tf-page), and theme.css's :is(.tf-tokens, :root:has(> .tf-page)) outranked the scoped svg rule. Fix: class tf-tokens on the portrait plus an .intro > svg selector; verified pixel-identical light vs dark. Agent-initiated: an e2e assert in the shell-theme flow (red on main, green here), since the earlier fix shipped without one."
 prs:
   - "2596"
@@ -40,17 +40,26 @@ frictions:
   - description: f1b551f27 claimed a dark-mode fix that never rendered; no test or screenshot covered it, so the bug survived three weeks.
     solution: Pin colour-scheme fixes with a computed-style e2e assert, as this PR does.
     severity: moderate
-durationSec: 920
+  - description: Guessed a first fix (tf-tokens class alone) and spent a production build on it before probing the portrait's computed styles.
+    solution: Read computed color-scheme and token values with a Playwright probe before the first fix attempt.
+    severity: minor
+durationSec: 1111
 models:
-  claude-opus-5-5: 93
+  claude-opus-5-5: 116
 toolCounts:
-  Bash: 36
-  ToolSearch: 2
+  Bash: 41
+  ToolSearch: 3
   Read: 7
   Edit: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/tinkerfund/tests/e2e/tinkerfund-flows.spec.ts
   - layers/tinkerfund/app/components/tinkerfund/inventor/Profile.vue
