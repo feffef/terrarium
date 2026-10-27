@@ -67,15 +67,15 @@ provideAlmanac({
 
 if (!entry.value && !error.value) setResponseStatus(404)
 
-const title = computed(() => entry.value?.specimen.binomial ?? 'Not found')
 useSeoMeta({
-  title: () => `${title.value} · The Atlas of the Terrarium`,
+  title: () => entry.value && `${entry.value.specimen.binomial} · The Atlas of the Terrarium`,
   description: () => entry.value?.specimen.common,
 })
 </script>
 
 <template>
-  <main class="atlas" :class="`atlas--${space}`" :style="sigStyle">
+  <AtlasNotFound v-if="!entry" />
+  <main v-else class="atlas" :class="`atlas--${space}`" :style="sigStyle">
     <div class="atlas-page">
       <nav class="atlas-crumb" aria-label="Breadcrumb">
         <NuxtLink to="/">terrarium</NuxtLink><span class="sep">·</span><NuxtLink to="/t/atlas">the atlas</NuxtLink><span class="sep">·</span>
@@ -157,12 +157,6 @@ useSeoMeta({
         </nav>
       </article>
 
-      <div v-else class="atlas-prose not-found">
-        <h1>Not catalogued</h1>
-        <p>No specimen answers to <code>{{ path }}</code> in {{ meta.name }}. Perhaps it was never here; perhaps it simply prefers to be elsewhere.</p>
-        <p><NuxtLink :to="`/t/atlas/${space}`">Back to {{ meta.name }}</NuxtLink></p>
-      </div>
-
       <SiteFooter />
     </div>
   </main>
@@ -174,5 +168,4 @@ useSeoMeta({
 .specimen-nav { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 1.5rem; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--atlas-rule); font-family: var(--atlas-display); font-style: italic; }
 .specimen-nav a { color: var(--atlas-ink); }
 .specimen-nav a:hover { color: var(--biome-accent); }
-.not-found h1 { font-family: var(--atlas-display); font-size: 2rem; margin: 0 0 0.6rem; }
 </style>

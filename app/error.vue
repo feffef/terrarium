@@ -1,22 +1,28 @@
 <script setup lang="ts">
+import { resolveDynamicComponent } from 'vue'
 import type { NuxtError } from '#app'
 
 const props = defineProps<{ error: NuxtError }>()
 const notFound = computed(() => props.error.statusCode === 404)
 // A dead address inside a Tenant (`/t/atlas/nope`) should lead back to that Tenant first.
 const route = useRoute()
-const tenant = computed(() => {
-  const slug = route.path.split('/')[2]
-  return route.path.startsWith('/t/') ? SITES.find((s) => s.to.split('/')[2] === slug) : undefined
-})
+const slug = route.path.startsWith('/t/') ? route.path.split('/')[2] : undefined
+const tenant = SITES.find((s) => s.to.split('/')[2] === slug)
+// The not-found seam (docs/agents/tenant-layers.md §4): a Tenant that registers a
+// global `<Tenant>NotFound` component draws its own 404. `resolveDynamicComponent`
+// hands the name back unchanged, without a warning, when no such component exists.
+const pascal = slug?.replace(/(^|-)([a-z0-9])/g, (_match, _sep, letter: string) => letter.toUpperCase())
+const resolved = notFound.value && pascal ? resolveDynamicComponent(`${pascal}NotFound`) : null
+const TenantNotFound = typeof resolved === 'string' ? null : resolved
 useHead({
-  title: () => `${notFound.value ? 'Page not found' : 'Something went wrong'} · terrarium`,
+  title: TenantNotFound ? undefined : `${notFound.value ? 'Page not found' : 'Something went wrong'} · terrarium`,
   bodyAttrs: { style: 'margin: 0' },
 })
 </script>
 
 <template>
-  <main class="err">
+  <component :is="TenantNotFound" v-if="TenantNotFound" />
+  <main v-else class="err">
     <p class="code">{{ error.statusCode }}</p>
     <h1>{{ notFound ? 'This page doesn’t exist' : 'Something went wrong' }}</h1>
     <p class="note">

@@ -12,7 +12,7 @@
 // sweep above never reaches it and the Tenant tests it here (ADR-0016), in
 // the same `$fetch`-SSR-string style the other Tenant-specific checks use.
 import { describe, expect, it } from 'vitest'
-import { $fetch } from '@nuxt/test-utils/e2e'
+import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'
 import { expectHydrated, setupL2, withRendered } from '../../../../tests/support/e2e.ts'
 
 describe('atlas Tenant', async () => {
@@ -82,6 +82,32 @@ describe('atlas Tenant', async () => {
     expect(html).not.toContain('/t/atlas/plates')
     expect(html).not.toContain('/t/atlas/random')
   })
+
+  // Both dead-address shapes answer 404 in the guide's own voice: a known Biome
+  // with no such specimen (the entry page) and an unknown Biome (the Platform's
+  // error page rendering `AtlasNotFound`, docs/agents/tenant-layers.md §4). The
+  // plate is asserted in the rendered DOM, not the SSR string, and the smudge's
+  // computed fill proves the tint: the Canopy's leaf (theme.css, light) for a
+  // known Biome, plain ink for an unknown one — never the neutral `:root` accent.
+  for (const [route, smudge] of [
+    ['/t/atlas/canopy/nope', 'rgb(63, 107, 62)'],
+    ['/t/atlas/nope', 'rgb(42, 37, 29)'],
+    ['/t/atlas/nope/x', 'rgb(42, 37, 29)'],
+  ] as const) {
+    it(`404s ${route} with the empty-jar plate`, async () => {
+      expect((await fetch(route)).status).toBe(404)
+      const page = await createPage()
+      try {
+        await page.goto(url(route), { waitUntil: 'hydration' })
+        expect(await page.locator('h1').textContent()).toBe('Not catalogued')
+        expect(await page.locator('.atlas-plate svg').count()).toBe(1)
+        expect(await page.locator('.atlas-plate .plate-caption').textContent()).toContain('Locus ignotus')
+        expect(await page.locator('.atlas-plate .smudge').evaluate((el) => getComputedStyle(el).fill)).toBe(smudge)
+      } finally {
+        await page.close()
+      }
+    })
+  }
 
   it('names each wing\'s creatures on its directory card', async () => {
     await withRendered('/t/atlas', async (page) => {

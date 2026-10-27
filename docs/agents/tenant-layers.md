@@ -70,3 +70,11 @@ wrongly imply per-Tenant scoping.
 Before asserting anywhere that a route exists, check the layer's
 `layers/<tenant>/…/pages/` directory (ADR-0016 tenant-root routes), not
 Markdown/Vue prose: text search can miss or misreport a route.
+
+## 4. The not-found seam: a global `<Tenant>NotFound` component
+
+On a 404 under `/t/<tenant>/…`, `app/error.vue` renders the Tenant's globally
+registered `<Tenant>NotFound` component (PascalCase slug) in place of the
+generic page. Register it with the `.global.vue` suffix, as
+`layers/atlas/app/components/atlas/NotFound.global.vue` does; only a global
+component resolves by a name built at runtime.
