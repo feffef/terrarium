@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePJnRATi9QoJAjCxgq
 startedAt: 2026-10-27T13:14:38Z
-endedAt: 2026-10-27T13:27:54Z
+endedAt: 2026-10-27T13:34:03Z
 kind: autonomous
 goal: Scheduled prune trial of the Platform's agent instructions
-status: in-review
-outcome: "Two landed trials judged and deleted; environment-caveats.md reworded plainly; PR #2593 open"
-summary: "Scheduled /prune-trial run, agent-initiated; no human instruction beyond the stored prompt. Judged the two trials whose window had passed (pr-workflow rewrite, git-conventions Stop-hook section): no major or blocker Friction in 49 sessions since, so both were deleted. A search subagent (criterion 1) found only tiny or unprunable candidates, so I did a plain rewrite of docs/agents/environment-caveats.md (-1 net) as a new trial. A pinned Sonnet probe passed, code-review (Standards and Spec) found two small wording losses that I restored, gate:scoped was green, PR 2593 opened and subscribed."
+status: completed
+outcome: "Two landed trials judged and deleted; environment-caveats.md reworded plainly; PR #2593 merged"
+summary: "Scheduled /prune-trial run, agent-initiated; no human instruction beyond the stored prompt. Judged the two trials whose window had passed (pr-workflow rewrite, git-conventions Stop-hook section): no major or blocker Friction in 49 sessions since, so both were deleted. A search subagent (criterion 1) found only tiny or unprunable candidates, so I did a plain rewrite of docs/agents/environment-caveats.md (-1 net) as a new trial. A pinned Sonnet probe passed, code-review (Standards and Spec) found two small wording losses that I restored, gate:scoped was green, PR 2593 opened, went green and was merged by merge-pr.ts."
 prs:
   - "2593"
 docsRead:
@@ -67,15 +67,15 @@ frictions:
   - description: The criterion-1 search found no prunable failed-prose; every candidate was 3-10 lines, so the run fell back to a plain rewrite worth -1 line.
     solution: Treat repeated tiny-gain runs as the signal to retire or reshape the Routine (file an issue), not a Friction in this run.
     severity: minor
-durationSec: 796
+durationSec: 1165
 models:
-  claude-sonnet-5-5: 74
+  claude-sonnet-5-5: 93
 toolCounts:
-  Bash: 16
+  Bash: 22
   Read: 8
   mcp__github__search_issues: 2
   mcp__github__issue_read: 1
-  Skill: 4
+  Skill: 5
   Agent: 4
   Grep: 1
   Write: 1
@@ -83,6 +83,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 3
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - docs/agents/environment-caveats.md
   - .agents/prune-trials.yml
@@ -174,28 +176,28 @@ subagents:
     durationSec: 150
     toolCalls: 39
     modelCalls: 15
-    tokenShare: 21.2
+    tokenShare: 17.3
   - type: general-purpose
     task: Sonnet probe of rewritten caveats
     model: sonnet
     durationSec: 19
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 3.1
+    tokenShare: 2.5
   - type: general-purpose
     task: Standards review of prune
     model: sonnet
     durationSec: 41
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 8.4
+    tokenShare: 6.8
   - type: general-purpose
     task: Spec review of prune
     model: sonnet
     durationSec: 39
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 8.6
+    tokenShare: 7
 gitBranch: claude/practical-rubin-x06boa
 entrypoint: remote_trigger
 cliVersion: 2.1.311
