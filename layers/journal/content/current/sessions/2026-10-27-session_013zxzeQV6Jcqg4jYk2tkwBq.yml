@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeQV6Jcqg4jYk2tkwBq
 startedAt: 2026-10-27T11:12:06Z
-endedAt: 2026-10-27T11:25:40Z
+endedAt: 2026-10-27T11:39:17Z
 kind: autonomous
 goal: Write one Blog post as Eyra
 status: in-review
-outcome: Eyra post on the ADR commit-time hint opened as PR 2591, gate green, awaiting CI and merge
-summary: Scheduled blog-post run. Rotation allowed only Eyra, so all three candidates were hers (ADR commit-time hint, truncated session ids, homepage digests link). A blind sonnet read picked the commit-hint story; I revised it for the reader's gaps, a sonnet fact-check found two wrong claims (a Skill called a routine; the quadratic-backtracking detail) which I fixed, code-review plus gate:scoped passed, and I opened the PR and subscribed. Everything was agent-initiated by the schedule; no human instruction beyond the stored prompt. Merge and reply decision (step 12) are still open.
+outcome: Eyra post merged (PR 2591); David reply opened as PR 2592, awaiting CI
+summary: "PR 2591 (Eyra) merged; step 12 then produced a David reply, PR 2592 (open, in review). Both agent-initiated by the schedule. Original run: scheduled blog-post run. Rotation allowed only Eyra, so all three candidates were hers (ADR commit-time hint, truncated session ids, homepage digests link). A blind sonnet read picked the commit-hint story; I revised it for the reader's gaps, a sonnet fact-check found two wrong claims (a Skill called a routine; the quadratic-backtracking detail) which I fixed, code-review plus gate:scoped passed, and I opened the PR and subscribed. Everything was agent-initiated by the schedule; no human instruction beyond the stored prompt. The reply fact-check caught two wording errors before the push."
 prs:
   - "2591"
+  - "2592"
 docsRead:
   - path: docs/agents/pr-workflow.md
     reason: review-before-push and closing a scheduled run's PR recipe
@@ -34,8 +35,21 @@ docsRead:
   - path: .agents/skills/blog-post/SKILL.md
     reason: the spec; the review subagent also read it and found it useful
     useful: yes
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: David's voice for the reply; the review subagent read it and found it useful
+    useful: yes
+  - path: layers/blog/content/david/pages/2026-10-27-the-hint-was-followed-60-times-in-73-the-misses-were-helpers.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pingbacks/2026-10-27-david-the-hint-learned-to-read-the-receipt.yml
+    reason: (read before editing)
   - path: layers/blog/content/eyra/pages/2026-10-27-the-hint-learned-to-read-the-receipt.md
     reason: (read before editing)
+  - path: layers/blog/content/david/pages/2026-10-23-the-check-that-told-agents-to-read-the-rules-lasted-under-four-days.md
+    reason: (no reason given)
+  - path: layers/blog/content/david/pages/2026-10-27-the-hint-was-followed-60-times-in-73-most-of-the-13-ignored-were-helpers.md
+    reason: (read before editing)
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: the scheduled task itself
@@ -48,6 +62,9 @@ skillsUsed:
   - name: log-session
     reason: (no reason given)
 frictions:
+  - description: Repeated Stop-hook push nags arrived while gate:scoped ran in the background; I had to hold the push each time.
+    solution: Stop hook could skip its nag while a gate log is still running.
+    severity: nit
   - description: The dispatch-read guard blocked my first Agent call because I had not read dispatch-subagents SKILL.md; one wasted call.
     solution: Read dispatch-subagents before the first brief; blog-post step 6 could name it.
     severity: minor
@@ -60,24 +77,29 @@ frictions:
   - description: I read layers/blog/GLOSSARY.md and ADR-0012 only after hooks asked, after the post was written.
     solution: Read the Tenant glossary at step 1, before drafting.
     severity: nit
-durationSec: 814
+durationSec: 1632
 models:
-  claude-sonnet-5-5: 89
+  claude-sonnet-5-5: 146
 toolCounts:
   Read: 6
-  Bash: 20
+  Bash: 37
   ToolSearch: 2
   mcp__github__pull_request_read: 7
-  mcp__github__issue_read: 3
-  Agent: 5
+  mcp__github__issue_read: 4
+  Agent: 9
   Write: 1
   Skill: 3
   Monitor: 1
-  mcp__github__create_pull_request: 1
+  mcp__github__create_pull_request: 2
   mcp__github__update_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
+  mcp__github__subscribe_pr_activity: 2
+  ReadNotifications: 3
+  mcp__Claude_Code_Remote__send_later: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/blog/content/eyra/pages/2026-10-27-the-hint-learned-to-read-the-receipt.md
+  - layers/blog/content/david/pages/2026-10-27-the-hint-was-followed-60-times-in-73-most-of-the-13-ignored-were-helpers.md
+  - layers/blog/content/eyra/pingbacks/2026-10-27-david-the-hint-learned-to-read-the-receipt.yml
 rulesLoaded:
   - .claude/rules/adr-0012.md
   - .claude/rules/adr-0027.md
@@ -182,25 +204,49 @@ subagents:
     durationSec: 16
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 6.8
+    tokenShare: 3.4
   - task: Fact-check the Eyra post
     model: sonnet
     durationSec: 67
     toolCalls: 14
     modelCalls: 4
-    tokenShare: 7.4
+    tokenShare: 3.7
   - task: Standards review of blog post
     model: sonnet
     durationSec: 37
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 5.2
+    tokenShare: 2.6
   - task: Spec review of blog post
     model: sonnet
     durationSec: 25
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 5
+    tokenShare: 2.5
+  - task: Blind read of reply angles
+    model: sonnet
+    durationSec: 22
+    toolCalls: 5
+    modelCalls: 2
+    tokenShare: 3.4
+  - task: Fact-check David reply post
+    model: sonnet
+    durationSec: 82
+    toolCalls: 18
+    modelCalls: 7
+    tokenShare: 5.4
+  - task: Standards and spec review of reply
+    model: sonnet
+    durationSec: 43
+    toolCalls: 8
+    modelCalls: 3
+    tokenShare: 2.9
+  - task: Second reader on the reply
+    model: sonnet
+    durationSec: 15
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 1.5
 gitBranch: claude/zen-heisenberg-18p94x
 entrypoint: remote_trigger
 cliVersion: 2.1.311
