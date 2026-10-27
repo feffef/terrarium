@@ -1,8 +1,8 @@
 ---
 title: Asking an agent for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
-revision: '2864783943ebe98a792cc8f42c65986758528d9b'
-revisionDate: '2026-10-27'
+revision: 'e8cc785faceaf503224e5cb0e0367a9929e624c4'
+revisionDate: '2026-10-28'
 ---
 
 Someone with write access asks an agent for a change. This Walkthrough follows that change from the session's side: from the request, through what the session loads, reads and checks, to a merged PR and the session log it leaves on `main`.
@@ -57,7 +57,7 @@ The session pushes the branch and opens the PR itself, without asking. The PR's 
 
 ## 7. It logs its work, the first time
 
-With the PR open, the session runs `close-session`. The session first checks itself against `CLAUDE.md` and the always-loaded rules, then writes its :term[session log]: its goal, how far it got and every :term[Friction], one for each rule it broke or skipped. At the end of that turn a `Stop` hook commits that one file straight to `main`.
+With the PR open, the session runs `close-session`. The session first checks itself against `CLAUDE.md` and the always-loaded rules, then writes its :term[session log]: its goal, how far it got and every :term[Friction] it hit, among them one for each rule it broke or skipped. At the end of that turn a `Stop` hook commits that one file straight to `main`.
 
 ::stop-links
 [Session logs](/t/glassbox/guide/terrarium-practice/session-logs) · [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop)
