@@ -39,7 +39,7 @@ A hook commits the :term[session log] straight to `main`, without a PR. The Fric
 A :term[Routine] starts a session that runs the `frictions-to-fixes` Skill, or a Trusted user runs it by hand. It is a session like any other, following the Skill's steps.
 
 ::stop-links
-[Routines, scheduled tasks and /loop](/t/glassbox/drafts/claude-code/routines) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · :file[.agents/skills/frictions-to-fixes/SKILL.md]
+[Scheduled tasks](/t/glassbox/guide/claude-code/routines) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · :file[.agents/skills/frictions-to-fixes/SKILL.md]
 ::
 
 ## 4. A subagent reads the logs
@@ -97,7 +97,7 @@ In July 2026 a session waited about two hours on a PR's CI. It had called `Sched
 ## Where next
 
 - [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
-- [Routines, scheduled tasks and /loop](/t/glassbox/drafts/claude-code/routines)
+- [Scheduled tasks](/t/glassbox/guide/claude-code/routines)
 - [Claude Code Skills](/t/glassbox/guide/claude-code/skills)
 - [Asking an agent for a change](/t/glassbox/guide/walkthroughs/asking-for-a-change)
 - [Friction Ledger](/t/journal/current/frictions)
