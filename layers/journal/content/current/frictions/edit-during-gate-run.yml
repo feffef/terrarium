@@ -2,8 +2,8 @@ name: edit-during-gate-run
 summary: "The gate passed on a different tree than the one pushed, because files were edited during its run or committed after it."
 cause: "Agents start gate:scoped before the final head exists: they keep editing while it runs, so the e2e step builds the old tree then runs new tests, or they run it before code-review or commit, amend or fix wording after it and push without rerunning it. Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\", gate run before code-review, an amend or follow-up commit pushed after the gate."
 surface: safe
-status: open
-ref: ""
+status: accepted
+ref: "issue #2579 closed not planned on 2026-10-27: the owner accepts the cost. The #2486 abort makes a stale gate run fail rather than pass, and the pr-workflow.md Prune Trial weighs the prose; no lock-file guard."
 fixes:
   - pr: 2314
     date: "2026-10-20"
