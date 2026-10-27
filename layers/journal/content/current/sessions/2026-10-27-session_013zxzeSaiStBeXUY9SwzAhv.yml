@@ -1,0 +1,155 @@
+schemaVersion: 1
+session: session_013zxzeSaiStBeXUY9SwzAhv
+startedAt: 2026-10-27T18:52:16Z
+endedAt: 2026-10-27T19:05:48Z
+kind: interactive
+goal: Open the Friction Ledger on the last 7 days
+status: in-review
+outcome: "PR #2599 open: the ledger defaults to 7 days, 14 stays a choice"
+summary: "The owner invoked grill-with-docs to refine an idea logged by session_01C8G2W6ZfQN7WE4UNUi2GzA (\"Friction Ledger opens on 14 days; default to 7 days\"). Before asking, I measured the content: the idea's \"47 clusters\" was stale (130 clusters on 14 days today; 88 on 7 days), so 7 days cuts about a third, not most. One round of five questions settled it; the owner agreed with all recommendations: the goal is relevance not length, the \"collapse below top 10\" half stays out of scope, a separate LEDGER_DEFAULT_DAYS keeps the 14-day horizon for pruning and fix states, ?days=14 becomes explicit, and the intro separates retention from the default view. The owner then green-lit building it and opening a PR. Code-review found no hard findings; I applied its three judgement calls (default referenced inside LEDGER_WINDOWS, exact comment wording, test uses the constant). Full gate passed; a production build confirmed 88 rows / 8,245px by default vs 130 rows / 11,873px on 14 days."
+prs:
+  - "2599"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: "before commit: fetch, trailer check"
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-then-gate order before first push
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP for writes in cloud
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: check the rendered DOM, not SSR HTML; preview.ts start/stop
+    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: Standards subagent read it; about CSS, routing and overrides, none touched
+    useful: no
+  - path: GLOSSARY.md
+    reason: Friction Ledger entry says nothing about the window, so no glossary change; both subagents agreed
+    useful: partly
+skillsUsed:
+  - name: grill-with-docs
+    reason: owner invoked it to refine the logged idea
+  - name: grilling
+    reason: one round of five questions
+  - name: domain-modeling
+    reason: checked the Friction Ledger glossary entry; no term change
+  - name: code-review
+    reason: Standards and Spec review before first push
+  - name: dispatch-subagents
+    reason: before writing the two review briefs
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Typecheck failed on the new auto-imported constant until I ran nuxt prepare; I ran vue-tsc before regenerating the imports.
+    solution: Run nuxt prepare after adding an export to a layer's app/utils before typechecking.
+    severity: nit
+durationSec: 812
+models:
+  claude-opus-5-5: 82
+toolCounts:
+  Skill: 6
+  Grep: 1
+  Bash: 26
+  Read: 5
+  Agent: 2
+  ToolSearch: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/app/utils/ledger.ts
+  - layers/journal/tests/e2e/journal.spec.ts
+  - layers/journal/app/pages/t/journal/[space]/frictions.vue
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+docsReadBySubagents:
+  - GLOSSARY.md
+  - docs/agents/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review then gate:scoped before pushing; summary was enough, full ADR not needed
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session on PR open and keep the log off the branch; summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Owner approval came in-session; it made me open the PR at once and subscribe; summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Made the PR body start with the session header and checked the commit trailer; summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with domain-modeling; no term changed, so where terms live did not matter
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with domain-modeling; no ADR was written since the change is easy to reverse
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded with domain-modeling; no glossary term was added or changed
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded reading the frictions page; the change did not touch routing or Space resolution
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Confirmed the Friction Ledger is a derived Inventory; no need to open the ADR
+    useful: partly
+  - path: .claude/rules/adr-0016.md
+    reason: Loaded with the Journal pages; no root page was touched
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pointed me at the Journal glossary; I grepped it for ledger terms
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Auto-import note explained why nuxt prepare was needed and named the constant in Tenant words; subagent agreed
+    useful: yes
+  - path: .claude/rules/ui-verification.md
+    reason: Sent me to verifying-ui-changes, so I checked the built DOM and a screenshot, not SSR HTML
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: No instruction caused a problem and no trial covered touched text
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: No rule or instruction was added or moved
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Standards subagent checked its paths: nothing in the diff is Human-only"
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+    durationSec: 42
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 11.8
+  - type: general-purpose
+    task: Spec review of diff
+    durationSec: 38
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 12.1
+gitBranch: ccr-44f82fa5-9rtlva
+entrypoint: remote_mobile
+cliVersion: 2.1.311
+learnings:
+  - A logged idea's measurements go stale within a day on the Friction Ledger (47 clusters claimed, 130 actual); re-measure before deciding on a UI-size fix.
+landedBy: Stop
