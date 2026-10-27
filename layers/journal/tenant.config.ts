@@ -42,7 +42,12 @@ export const skillSchema = z
     observations: z.array(
       z.object({
         date: utcDate,
-        note: z.string(),
+        note: z
+          .string()
+          .refine(
+            (v) => !/session_01[0-9A-Za-z]{0,21}(?![0-9A-Za-z-])/.test(v),
+            'cites a truncated session id; quote the full 24-character id',
+          ),
       }),
     ),
   })
