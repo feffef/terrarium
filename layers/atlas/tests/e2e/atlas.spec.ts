@@ -90,6 +90,8 @@ describe('atlas Tenant', async () => {
         const count = Number.parseInt((await card.locator('.wing-count').textContent()) ?? '', 10)
         const names = (await card.locator('.wing-names').textContent())?.split(' · ') ?? []
         expect(names).toHaveLength(count)
+        expect(names.every((n) => n.trim() && !n.includes('catalogued'))).toBe(true)
+        expect(await card.locator('.wing-names a').count()).toBe(0)
       }
     })
   })

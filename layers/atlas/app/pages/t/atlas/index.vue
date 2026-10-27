@@ -25,7 +25,7 @@ const daySuffix = computed(() => (almanac.day.value === almanac.today ? '' : `?d
 
 const { data } = await useAsyncData('atlas-front', async () => {
   const stats: Record<string, number> = {}
-  const names: Record<string, string[]> = {}
+  const commonNames: Record<string, string[]> = {}
   // Only what the dial reads travels in the payload (ADR-0028): each creature's
   // phase spans, not its prose.
   const creatures: { to: string; label: string; common?: string; wing: string; phases: { span: PhenologyPhase['span']; quiet?: boolean }[] }[] = []
@@ -64,14 +64,14 @@ const { data } = await useAsyncData('atlas-front', async () => {
       recent.push({ date: o.date, note: o.note, name: s?.binomial, to: s && `/t/atlas/${b.slug}${s.path}` })
     }
     stats[b.slug] = docs.length
-    names[b.slug] = docs.map((s) => s.common).filter(Boolean)
+    commonNames[b.slug] = docs.map((s) => s.common).filter((c): c is string => Boolean(c))
   }
   recent.sort((a, b) => b.date.localeCompare(a.date))
-  return { stats, names, creatures, observations, recent: recent.slice(0, SIGHTINGS_SHOWN) }
+  return { stats, commonNames, creatures, observations, recent: recent.slice(0, SIGHTINGS_SHOWN) }
 })
 
 const stats = computed(() => data.value?.stats ?? {})
-const names = computed(() => data.value?.names ?? {})
+const commonNames = computed(() => data.value?.commonNames ?? {})
 const creatures = computed(() => data.value?.creatures ?? [])
 const observations = computed(() => data.value?.observations ?? [])
 // Who is astir on the needle's day: a non-quiet phase covers it. Turning the dial re-reads this.
@@ -125,7 +125,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
             <span class="swatch" :style="{ background: b.accent }" />
             <span class="swatch" :style="{ background: b.accent2 }" />
             <span class="wing-count">{{ stats[b.slug] ?? 0 }} catalogued</span>
-            <span v-if="names[b.slug]?.length" class="wing-names">{{ names[b.slug]!.join(' · ') }}</span>
+            <span v-if="commonNames[b.slug]?.length" class="wing-names">{{ commonNames[b.slug]!.join(' · ') }}</span>
           </span>
         </NuxtLink>
       </nav>
