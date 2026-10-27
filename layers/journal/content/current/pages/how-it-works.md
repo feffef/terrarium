@@ -139,8 +139,8 @@ logs a friction for any of it, so the reactive loop never learns of it. Three
 Routines go looking instead:
 
 - **`audit-docs`** re-reads every live document and Skill against the code it
-  claims to describe, hunting drift, duplication, contradiction, descriptions of
-  superseded state, and needlessly complicated wording.
+  claims to describe, hunting drift, duplication, contradiction, ambiguity and
+  misplaced text.
   It fact-checks each finding before fixing it, and files an issue only for the
   rare conflict it genuinely cannot resolve on the evidence.
 - **`audit-skills`** checks that the Platform's own Skills do their job: that
