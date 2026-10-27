@@ -68,7 +68,13 @@ export interface FileWrite {
  *  follow another word (`if git commit`, `xargs git commit`). */
 export function runsGitCommit(command: string): boolean {
   return commandWords(command).some((w) => {
-    for (let i = 0; i < w.length; i++) if (basename(w[i]!) === 'git' && w[(i = gitSubcommandAt(w, i))] === 'commit') return true
+    // Resume after each subcommand, not at the next word: a value option can
+    // itself be `git`, and rescanning those runs would be quadratic.
+    for (let i = 0; i < w.length; i++) {
+      if (basename(w[i]!) !== 'git') continue
+      i = gitSubcommandAt(w, i)
+      if (w[i] === 'commit') return true
+    }
     return false
   })
 }
