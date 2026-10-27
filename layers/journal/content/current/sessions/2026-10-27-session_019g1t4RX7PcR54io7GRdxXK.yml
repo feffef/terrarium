@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_019g1t4RX7PcR54io7GRdxXK
 startedAt: 2026-10-27T00:46:26Z
-endedAt: 2026-10-27T00:59:21Z
+endedAt: 2026-10-27T01:03:04Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: Inventory notes and Routine run costs in PR 2578; one issue filed and one comment added
-summary: "Scheduled audit-skills run (agent-initiated by the schedule; no human prompt). Gathered the 7-day scorecard, had one Sonnet subagent fetch usage for 8 unlisted Routine runs and 13 more check each Skill's behaviour. Verified the two findings worth escalating against the sessions' own logs: the first-push code-review skip now also seen in glassbox-update (comment on #2472) and two recurring clear-backlog step breaks (new issue #2577). Everything else became an Inventory observation; no grade or role changed. Closure checks were clean: both orphan candidates carry resolvedBy, orphanScan scanned 1687 merged PRs with 1530 tied to a session, and one human-prompted closure (session_01EjH3TbrydEY2sArBMYE5Gy) is already covered by earlier notes. Standards and Spec review caught truncated session ids and GitHub-visible counts in my notes, which I fixed before the push. PR #2578 is open and gated; it is Inventory-only so it may be merged once CI is green."
+status: completed
+outcome: Inventory notes and Routine run costs merged in PR 2578; one issue filed and one comment added
+summary: "Scheduled audit-skills run (agent-initiated by the schedule; no human prompt). Gathered the 7-day scorecard, had one Sonnet subagent fetch usage for 8 unlisted Routine runs and 13 more check each Skill's behaviour. Verified the two findings worth escalating against the sessions' own logs: the first-push code-review skip now also seen in glassbox-update (comment on #2472) and two recurring clear-backlog step breaks (new issue #2577). Everything else became an Inventory observation; no grade or role changed. Closure checks were clean: both orphan candidates carry resolvedBy, orphanScan scanned 1687 merged PRs with 1530 tied to a session, and one human-prompted closure (session_01EjH3TbrydEY2sArBMYE5Gy) is already covered by earlier notes. Standards and Spec review caught truncated session ids and GitHub-visible counts in my notes, which I fixed before the push. PR #2578 merged after a green gate; I merged it with merge-pr.ts."
 prs:
   - "2578"
 docsRead:
@@ -130,12 +130,12 @@ frictions:
   - description: First drafts of notes used truncated session ids and PR counts GitHub already shows; review caught both.
     solution: Quote full ids from the data file when writing observations; step 5 already says so.
     severity: nit
-durationSec: 775
+durationSec: 999
 models:
-  claude-sonnet-5-5: 115
+  claude-sonnet-5-5: 130
 toolCounts:
-  Bash: 29
-  Skill: 4
+  Bash: 32
+  Skill: 5
   Agent: 16
   mcp__github__search_issues: 2
   Read: 5
@@ -144,6 +144,9 @@ toolCounts:
   mcp__github__issue_write: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  PushNotification: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -264,101 +267,103 @@ subagents:
     durationSec: 23
     toolCalls: 12
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 2.2
   - task: Check audit-docs behaviour
     model: sonnet
     durationSec: 109
     toolCalls: 18
     modelCalls: 14
-    tokenShare: 5.9
+    tokenShare: 5.6
   - task: Check audit-skills behaviour
     model: sonnet
     durationSec: 120
     toolCalls: 19
     modelCalls: 12
-    tokenShare: 6.6
+    tokenShare: 6.2
   - task: Check blog-post behaviour
     model: sonnet
     durationSec: 51
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 3.9
+    tokenShare: 3.7
   - task: Check clear-backlog behaviour
     model: sonnet
     durationSec: 97
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 4.9
+    tokenShare: 4.6
   - task: Check close-session behaviour
     model: sonnet
     durationSec: 61
     toolCalls: 11
     modelCalls: 6
-    tokenShare: 3
+    tokenShare: 2.8
   - task: Check digest behaviour
     model: sonnet
     durationSec: 47
     toolCalls: 17
     modelCalls: 6
-    tokenShare: 3.7
+    tokenShare: 3.5
   - task: Check dispatch-subagents behaviour
     model: sonnet
     durationSec: 100
     toolCalls: 25
     modelCalls: 11
-    tokenShare: 7.2
+    tokenShare: 6.8
   - task: Check frictions-to-fixes behaviour
     model: sonnet
     durationSec: 95
     toolCalls: 23
     modelCalls: 12
-    tokenShare: 5.9
+    tokenShare: 5.5
   - task: Check glassbox-update behaviour
     model: sonnet
     durationSec: 97
     toolCalls: 21
     modelCalls: 15
-    tokenShare: 5.4
+    tokenShare: 5.1
   - task: Check inspect-session behaviour
     model: sonnet
     durationSec: 58
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 3.9
+    tokenShare: 3.7
   - task: Check log-session behaviour
     model: sonnet
     durationSec: 58
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 3.6
+    tokenShare: 3.4
   - task: Check prune-trial behaviour
     model: sonnet
     durationSec: 59
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 4
+    tokenShare: 3.7
   - task: Check visitor-loop behaviour
     model: sonnet
     durationSec: 58
     toolCalls: 14
     modelCalls: 8
-    tokenShare: 4.4
+    tokenShare: 4.2
   - task: Standards review of Inventory diff
     model: sonnet
     durationSec: 36
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.4
+    tokenShare: 2.3
   - task: Spec review of Inventory diff
     model: sonnet
     durationSec: 83
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 4.3
+    tokenShare: 4.1
 gitBranch: claude/upbeat-sagan-i5ycm3
 entrypoint: remote_trigger
 cliVersion: 2.1.311
 trigger: audit-skills
 learnings:
   - save-handback-style one-per-Skill subagent checks cost about 1.4M subagent tokens in total; most finished in under two minutes.
+ideas:
+  - Give audit-skills a script that appends an observation to a Skill Inventory entry and wraps it safely, so a run stops hand-wrapping YAML and the hyphen-split validation failure cannot recur
 landedBy: Stop
