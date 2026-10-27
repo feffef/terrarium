@@ -224,7 +224,7 @@ observations:
   - date: "2026-10-13"
     note: >-
       Self-check (audit-skills behaviour check): newest 10 of 12 usedIn
-      sessions checked. One freshly-audited session (session_01Xw7ZN8..,
+      sessions checked. One freshly-audited session (session_01Xw7ZN8ghC7PDemvu9cA9Lo,
       PRs #1809/#1810, 2026-10-12) ran every mandatory dispatch (step 6,
       step 9 fact-check, the full step-12 reader/fact-check/second-reader
       chain) as genuine subagent calls, matching live PR-body tallies; 2
