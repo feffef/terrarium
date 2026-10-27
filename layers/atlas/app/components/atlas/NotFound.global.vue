@@ -10,6 +10,12 @@ const segments = route.path.split('/').filter(Boolean) // ['t', 'atlas', <biome>
 const biome = BIOMES.find((b) => b.slug === segments[2])
 const rest = `/${segments.slice(biome ? 3 : 2).join('/')}`
 const back = biome ? { to: `/t/atlas/${biome.slug}`, label: `Back to ${biome.name}` } : { to: '/t/atlas', label: 'Back to the Atlas' }
+// `--sig-1` is fixed to the neutral accent on `:root` (theme.css), so the wing's
+// accent only reaches the plate when re-bound here; an unknown wing draws in ink.
+const tint = {
+  '--sig-1': 'var(--biome-accent)',
+  ...(biome ? {} : { '--biome-accent': 'var(--atlas-ink)' }),
+}
 
 useSeoMeta({ title: 'Not catalogued · The Atlas of the Terrarium' })
 
@@ -58,13 +64,13 @@ const illustration = `
   </g>
 </g>
 <!-- the smudge: the one tinted feature -->
-<path d="M196 120 q22 -10 36 4 q10 14 -2 28 q-16 12 -34 2 q-14 -12 0 -34 z" fill="var(--sig-1)" fill-opacity="0.16" stroke="var(--sig-1)" stroke-width="0.8" stroke-opacity="0.45" stroke-linecap="round" />
+<path class="smudge" d="M196 120 q22 -10 36 4 q10 14 -2 28 q-16 12 -34 2 q-14 -12 0 -34 z" fill="var(--sig-1)" fill-opacity="0.16" stroke="var(--sig-1)" stroke-width="0.8" stroke-opacity="0.45" stroke-linecap="round" />
 <path d="M204 128 q14 -4 22 6" fill="none" stroke="var(--sig-1)" stroke-width="0.7" stroke-opacity="0.5" stroke-linecap="round" />
 `
 </script>
 
 <template>
-  <main class="atlas" :class="biome && `atlas--${biome.slug}`">
+  <main class="atlas" :class="biome && `atlas--${biome.slug}`" :style="tint">
     <div class="atlas-page">
       <nav class="atlas-crumb" aria-label="Breadcrumb">
         <NuxtLink to="/">terrarium</NuxtLink><span class="sep">·</span><NuxtLink to="/t/atlas">the atlas</NuxtLink><span class="sep">·</span>
@@ -76,8 +82,10 @@ const illustration = `
 
       <div class="atlas-prose not-found">
         <h1>Not catalogued</h1>
-        <p v-if="biome">No specimen answers to <code>{{ rest }}</code> in {{ biome.name }}. Perhaps it was never here; perhaps it simply prefers to be elsewhere.</p>
-        <p v-else>No specimen answers to <code>{{ rest }}</code>, and no wing of the Atlas bears that name. Perhaps it was never here; perhaps it simply prefers to be elsewhere.</p>
+        <p>
+          No specimen answers to <code>{{ rest }}</code><template v-if="biome"> in {{ biome.name }}</template><template v-else>, and no wing of the Atlas bears that name</template>.
+          Perhaps it was never here; perhaps it simply prefers to be elsewhere.
+        </p>
         <p><NuxtLink :to="back.to">{{ back.label }}</NuxtLink></p>
       </div>
 
