@@ -73,7 +73,7 @@ A normal `git commit` takes what the session has staged, on whatever branch it i
 Before pushing, the lander diffs the new commit against `main` and refuses unless the log is the only file that changed. It pushes the commit to `refs/heads/main`, and if the push fails, say because another session's log landed first, it fetches and builds the commit again on the new `main`, a few times with growing waits. Each log has its own file, so two logs never conflict. The commit message ends in the session's trailer.
 
 ::stop-links
-[Provenance headers and commit trailers](/t/glassbox/drafts/git-github/provenance-headers)
+[Agent provenance](/t/glassbox/guide/git-github/provenance-headers)
 ::
 
 ## 8. The log is read, and the session may log again
@@ -89,5 +89,5 @@ The log shows on the Journal's dashboard. Each run of `pnpm validate:content`, a
 - [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
 - [Claude Code hooks](/t/glassbox/guide/claude-code/hooks)
 - [A schema that only grows](/t/glassbox/drafts/zod/schema-only-grows)
-- [Provenance headers and commit trailers](/t/glassbox/drafts/git-github/provenance-headers)
+- [Agent provenance](/t/glassbox/guide/git-github/provenance-headers)
 - [The Routines](/t/glassbox/drafts/walkthroughs/routines)
