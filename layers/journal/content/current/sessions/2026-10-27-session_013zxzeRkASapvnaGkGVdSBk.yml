@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRkASapvnaGkGVdSBk
 startedAt: 2026-10-27T17:48:35Z
-endedAt: 2026-10-27T19:11:46Z
+endedAt: 2026-10-27T19:17:38Z
 kind: interactive
 goal: Review and improve the Glass Box guide with several models
-status: in-review
-outcome: "PR #2598 merged (fixes, cross-links, 4 new Lessons, 3 promoted drafts); follow-up PR #2600 for the five weakest pages open"
-summary: "All human-instructed. First the user asked for a three-model (Sonnet, Fable, Opus) review of the Glass Box guide, compared for overlaps; I reported in chat. The user then asked for: a Sonnet agent to fix the three verified errors and add shared cross-links; four Opus agents writing new Lessons via glassbox-lesson (operating model, Vue, linting, pnpm+lockfile only); three Opus agents promoting drafts I picked by overlap rank (guards, provenance, routines); a Fable agent proposing fixes for the five weakest pages, then an Opus judge and a second Fable pass on those plans. The user flagged \"fail-closed\" and \"provenance\" as jargon and chose field names with matching slugs (Blocking hooks, Commit and PR attribution; I also renamed operating-model to human-in-the-loop for consistency). Page agents worked in worktrees without editing shared pages; they reported join edits, which the Sonnet agent applied after I cherry-picked all branches. Two code-review passes (the second a fresh one the user asked for) found a reintroduced \"new dependency\" error, repeated facts, counts in prose and \"so\" clauses; an Opus agent fixed both rounds. Gate green; PR #2598 opened. Per the user, the five-page improvements go in a follow-up PR; five Opus agents built it from Fable's revised plans; a code-review round and a review of its fixes ran, the gate passed, and PR #2600 is open. #2598 was merged by me via merge-pr.ts after a green CI gate."
+status: completed
+outcome: "PRs #2598 and #2600 merged: guide fixes, cross-links, 4 new Lessons, 3 promoted drafts, 5 weak pages reworked"
+summary: "All human-instructed. First the user asked for a three-model (Sonnet, Fable, Opus) review of the Glass Box guide, compared for overlaps; I reported in chat. The user then asked for: a Sonnet agent to fix the three verified errors and add shared cross-links; four Opus agents writing new Lessons via glassbox-lesson (operating model, Vue, linting, pnpm+lockfile only); three Opus agents promoting drafts I picked by overlap rank (guards, provenance, routines); a Fable agent proposing fixes for the five weakest pages, then an Opus judge and a second Fable pass on those plans. The user flagged \"fail-closed\" and \"provenance\" as jargon and chose field names with matching slugs (Blocking hooks, Commit and PR attribution; I also renamed operating-model to human-in-the-loop for consistency). Page agents worked in worktrees without editing shared pages; they reported join edits, which the Sonnet agent applied after I cherry-picked all branches. Two code-review passes (the second a fresh one the user asked for) found a reintroduced \"new dependency\" error, repeated facts, counts in prose and \"so\" clauses; an Opus agent fixed both rounds. Gate green; PR #2598 opened. Per the user, the five-page improvements go in a follow-up PR; five Opus agents built it from Fable's revised plans; a code-review round and a review of its fixes ran, the gate passed, and I merged PR #2600 the same way. All agent worktrees were verified landed and removed. #2598 was merged by me via merge-pr.ts after a green CI gate."
 prs:
   - "2598"
   - "2600"
@@ -259,13 +259,16 @@ frictions:
   - description: First push of the restarted branch failed with --force-with-lease stale info because the merged branch was deleted on the remote
     solution: Push a restarted branch plainly, as pr-workflow.md says for a branch restarted after its merge
     severity: nit
-durationSec: 4991
+  - description: check:worktrees failed on every agent worktree because their work landed as cherry-picks, so their HEADs are not ancestors of main; I had to verify each by commit subject before removing
+    solution: Merge agent branches into the integration branch instead of cherry-picking, or have check-worktrees excuse a HEAD whose patch-id is on main
+    severity: minor
+durationSec: 5343
 models:
-  claude-opus-5-5: 274
+  claude-opus-5-5: 305
 toolCounts:
-  Bash: 70
+  Bash: 81
   AskUserQuestion: 1
-  Skill: 7
+  Skill: 8
   Agent: 28
   Read: 4
   Write: 4
@@ -275,10 +278,10 @@ toolCounts:
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 3
-  ReadNotifications: 3
-  mcp__github__pull_request_read: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__unsubscribe_pr_activity: 2
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 3
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/10.routines.md
   - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
@@ -524,7 +527,7 @@ subagents:
     durationSec: 193
     toolCalls: 39
     modelCalls: 11
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: Glass Box review (Fable)
     model: fable
@@ -538,103 +541,103 @@ subagents:
     durationSec: 323
     toolCalls: 52
     modelCalls: 26
-    tokenShare: 2.9
+    tokenShare: 2.7
   - type: general-purpose
     task: Fix errors, add cross-links
     model: sonnet
     durationSec: 831
     toolCalls: 33
     modelCalls: 30
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: general-purpose
     task: "Lesson: agent operating model"
     model: opus
     durationSec: 507
     toolCalls: 77
     modelCalls: 50
-    tokenShare: 4
+    tokenShare: 3.8
   - type: general-purpose
     task: "Lesson: Vue fundamentals"
     model: opus
     durationSec: 572
     toolCalls: 82
     modelCalls: 66
-    tokenShare: 5.3
+    tokenShare: 5.1
   - type: general-purpose
     task: "Lesson: linting"
     model: opus
     durationSec: 541
     toolCalls: 77
     modelCalls: 56
-    tokenShare: 4.7
+    tokenShare: 4.5
   - type: general-purpose
     task: "Lesson: pnpm and lockfile"
     model: opus
     durationSec: 684
     toolCalls: 100
     modelCalls: 83
-    tokenShare: 7.2
+    tokenShare: 6.9
   - type: general-purpose
     task: "Promote draft: guards"
     model: opus
     durationSec: 438
     toolCalls: 59
     modelCalls: 45
-    tokenShare: 3.3
+    tokenShare: 3.1
   - type: general-purpose
     task: "Promote draft: provenance"
     model: opus
     durationSec: 476
     toolCalls: 66
     modelCalls: 52
-    tokenShare: 4
+    tokenShare: 3.9
   - type: general-purpose
     task: "Promote draft: routines"
     model: opus
     durationSec: 404
     toolCalls: 53
     modelCalls: 46
-    tokenShare: 3.8
+    tokenShare: 3.6
   - type: general-purpose
     task: Ideas for 5 weakest lessons
     model: fable
     durationSec: 498
     toolCalls: 40
     modelCalls: 12
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: general-purpose
     task: Judge Fable's improvement plans
     model: opus
     durationSec: 387
     toolCalls: 62
     modelCalls: 45
-    tokenShare: 4.2
+    tokenShare: 4
   - type: general-purpose
     task: Standards review of branch
     durationSec: 124
     toolCalls: 18
     modelCalls: 12
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: Spec review of branch
     durationSec: 127
     toolCalls: 24
     modelCalls: 20
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: Fix review findings
     model: opus
     durationSec: 728
     toolCalls: 70
     modelCalls: 54
-    tokenShare: 4.7
+    tokenShare: 4.5
   - type: general-purpose
     task: Revise improvement plans
     model: fable
     durationSec: 543
     toolCalls: 38
     modelCalls: 18
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: general-purpose
     task: Fresh standards review
     durationSec: 122
@@ -646,35 +649,35 @@ subagents:
     durationSec: 138
     toolCalls: 23
     modelCalls: 21
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: Improve MCP servers page
     model: opus
     durationSec: 264
     toolCalls: 35
     modelCalls: 26
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Improve adding-a-tenant page
     model: opus
     durationSec: 270
     toolCalls: 43
     modelCalls: 33
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: Improve Skills page
     model: opus
     durationSec: 313
     toolCalls: 48
     modelCalls: 36
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: general-purpose
     task: Improve change-goes-live page
     model: opus
     durationSec: 524
     toolCalls: 59
     modelCalls: 40
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: general-purpose
     task: Improve git-worktrees page
     model: opus
@@ -693,23 +696,25 @@ subagents:
     durationSec: 123
     toolCalls: 27
     modelCalls: 18
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: Standards review of fix commit
     durationSec: 43
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: general-purpose
     task: Spec review of fix commit
     durationSec: 43
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 0.8
+    tokenShare: 0.7
 gitBranch: ccr-7b08218f-nvevt2
 entrypoint: remote_mobile
 cliVersion: 2.1.311
 learnings:
   - Three models agreed on top and bottom tiers but each found a different factual error; the union of verified errors is the main value of running three
   - Parallel page agents should hand back join edits instead of editing shared pages; one later pass applies them without conflicts
+ideas:
+  - Teach scripts/git/check-worktrees.ts to excuse a worktree whose commits are on origin/main by patch-id (git cherry), so orchestrators that cherry-pick agent work don't hit a false FAIL and hand-verify every worktree
 landedBy: Stop
