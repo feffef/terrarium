@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePwzHSC4uh6dyhsHxg
 startedAt: 2026-10-27T16:48:10Z
-endedAt: 2026-10-27T17:18:31Z
+endedAt: 2026-10-27T17:21:28Z
 kind: autonomous
 goal: "Visitor-loop run on the Atlas: three blind visitors, fix consensus findings, build one feature"
-status: in-review
-outcome: Fix PR merged; feature PR (wing cards name their creatures) open and awaiting CI
-summary: Scheduled visitor-loop run, focus atlas (row 0). Built and served the site, sent sonnet, fable and opus visitors through /t/atlas, tallied consensus, and had an opus refiner check fit. Four consensus findings survived (field-log link affordance, "past the New Year" wording, dial caption naming Page Up/Down, roster wrap at 390px); the cropped-SVG-at-phone finding was dropped under a decisions.md ruling. All four fixed, DOM-measured before/after, reviewed with two code-review sub-agents, gate:scoped green, PR 2594 opened with a verdict comment. The fix PR merged. The chosen feature (wing cards name their creatures) was built, reviewed (two code-review sub-agents; type narrowing and test strength fixed), gate-green and opened as PR 2595. Everything was agent-initiated within the Skill's remit; the schedule was the only instruction.
+status: completed
+outcome: "Both PRs merged: four consensus Atlas fixes (2594) and wing cards naming their creatures (2595)"
+summary: Scheduled visitor-loop run, focus atlas (row 0). Built and served the site, sent sonnet, fable and opus visitors through /t/atlas, tallied consensus, and had an opus refiner check fit. Four consensus findings survived (field-log link affordance, "past the New Year" wording, dial caption naming Page Up/Down, roster wrap at 390px); the cropped-SVG-at-phone finding was dropped under a decisions.md ruling. All four fixed, DOM-measured before/after, reviewed with two code-review sub-agents, gate:scoped green, PR 2594 opened with a verdict comment. Both PRs merged on green CI (one label job re-run after a GitHub 504). The chosen feature (wing cards name their creatures) was built, reviewed (two code-review sub-agents; type narrowing and test strength fixed), gate-green and merged as PR 2595. Everything was agent-initiated within the Skill's remit; the schedule was the only instruction.
 prs:
   - "2594"
   - "2595"
@@ -66,20 +66,28 @@ frictions:
   - description: A foreground sleep chain to wait for the build was blocked, costing a retry.
     solution: Start builds with run_in_background and wait with an until-loop from the first call.
     severity: nit
-durationSec: 1821
+  - description: owner-corrections.ts listed seven candidates, all file-overlap reworks of unrelated Blog, Glass Box and Midden PRs; each still needed a tally line.
+    solution: Ignore a rework candidate whose overlap is only a glossary or a path outside the run's focus Tenant, unless it names the visitor-loop PR.
+    severity: nit
+  - description: PR 2595's label check failed on a GitHub 504 before any logic ran; diagnosing it meant slicing a 57KB one-line job log.
+    solution: Have the failure wake name the HTTP status, or let get_job_logs return only the last error line.
+    severity: nit
+durationSec: 1998
 models:
-  claude-sonnet-5-5: 152
+  claude-sonnet-5-5: 176
 toolCounts:
-  Bash: 48
+  Bash: 55
   Read: 5
   Agent: 11
   mcp__github__search_issues: 5
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 3
+  ReadNotifications: 6
   mcp__github__pull_request_read: 1
+  mcp__github__get_job_logs: 2
+  mcp__github__actions_run_trigger: 1
 filesEdited:
   - layers/atlas/app/pages/t/atlas/index.vue
   - layers/atlas/tests/e2e/atlas.spec.ts
@@ -180,52 +188,52 @@ subagents:
     durationSec: 92
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 3.9
+    tokenShare: 3.4
   - type: general-purpose
     task: Visitor (fable)
     model: fable
     durationSec: 274
     toolCalls: 36
     modelCalls: 13
-    tokenShare: 7.6
+    tokenShare: 6.6
   - type: general-purpose
     task: Visitor (opus)
     model: opus
     durationSec: 188
     toolCalls: 24
     modelCalls: 21
-    tokenShare: 7.9
+    tokenShare: 6.8
   - type: general-purpose
     task: Refiner (fit check)
     model: opus
     durationSec: 247
     toolCalls: 42
     modelCalls: 24
-    tokenShare: 12.3
+    tokenShare: 10.7
   - type: general-purpose
     task: "Review: standards axis"
     durationSec: 40
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 3.1
+    tokenShare: 2.7
   - type: general-purpose
     task: "Review: spec axis"
     durationSec: 33
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.8
+    tokenShare: 2.4
   - type: general-purpose
     task: "Review 2: standards axis"
     durationSec: 36
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.7
+    tokenShare: 2.4
   - type: general-purpose
     task: "Review 2: spec axis"
     durationSec: 27
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.3
+    tokenShare: 2
 gitBranch: claude/adoring-galileo-h7ae07
 entrypoint: remote_trigger
 cliVersion: 2.1.311
