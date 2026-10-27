@@ -1,66 +1,92 @@
 schemaVersion: 1
 session: session_013zxzeQTGBbhXQGepc3y2z8
 startedAt: 2026-10-27T09:10:33Z
-endedAt: 2026-10-27T09:40:56Z
+endedAt: 2026-10-27T09:46:16Z
 kind: interactive
 goal: Clear the issue backlog
-status: in-review
-outcome: "Triaged 7 issues; #2588 and #2589 merged, #2590 open"
-summary: "The owner invoked /clear-backlog (human-instructed). The default-mode sweep picked 6 needs-triage issues and the ready-for-agent #2472. clear-backlog-explore returned 2 build (#2577, #2581), 3 grill (#2579, #2580, #2582) and 2 blocked: #2472 waits on the judgeable but unjudged pr-workflow.md Prune Trial, and #2575 is date-gated to 2026-10-30. I verified the picks' claims against the source before grilling. The owner accepted all three picks: #2582 tightens the Journal schema (the owner's yes is the data-shapes approval), and #2579 and #2580 were closed not planned with their ledger entries marked accepted (PR #2588, a simple change I made by hand). Builds for #2577 + #2581 (one branch, sharing clear-backlog SKILL.md) and for #2582 run in clear-backlog-build. I narrowed #2577's brief so the push notification stays outside the no-tool-calls asking message."
+status: completed
+outcome: "7 issues triaged; #2577 #2581 #2582 built and merged, #2579 #2580 closed by owner, #2472 #2575 blocked"
+summary: "The owner invoked /clear-backlog (human-instructed) and later accepted all three grilling picks (human-instructed); everything else ran unattended. The sweep picked 6 needs-triage issues and ready-for-agent #2472. Explore returned 2 build, 3 grill, 2 blocked: #2472 waits on the judgeable but unjudged pr-workflow.md Prune Trial, and #2575 is date-gated to 2026-10-30. PR #2588 (agent, by hand): the ledger entries edit-during-gate-run and dispatch-subagents-skill-unread marked accepted after the owner closed #2579 and #2580. PR #2589 (build): one clear-backlog wait rule for every ask (no tool calls in the asking message, push notification first) and run-summary --verdicts merging several runs; no judgement calls left. PR #2590 (build plus my follow-up): the Journal schema rejects truncated session ids in Skill Inventory notes; I anchored the regex on session_01 after spotting that it rejected prose like session_id, which the workflow review missed. All three merged."
 prs:
   - "2588"
   - "2589"
   - "2590"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
-    reason: step 1 eligibility rules for the sweep set
+    reason: "triage #2577: The brief required it; gave the per-issue rules; triage #2579: The brief required it. It gave the bravery bound, closing rules and the post-filing history check.; triage #2580: Required by the brief; gave the brave-but-only-when-determinable line and the closing rules; triage #2581: Required by the brief. Gave the brave-within-determinability rule, the history check and the label/comment rules.; triage #2582: Brief required it. Gave the brave/determinability line and the closing rules."
     useful: yes
   - path: docs/agents/git-conventions.md
-    reason: fetch before trusting history; commit hygiene
-    useful: partly
-  - path: docs/agents/github-integration.md
-    reason: list-open-issues script and issue_write label-replace trap
+    reason: "build clear-backlog/wait-rule-and-multi-run-verdicts: CLAUDE.md requires it before the first git command; used for commit -F and checking the trailer; build journal/reject-truncated-session-ids: CLAUDE.md requires it before the first git command; the commit -F tip and trailer check were used."
     useful: yes
+  - path: docs/agents/github-integration.md
+    reason: "triage #2575: CLAUDE.md trigger: read before the first GitHub operation. A PostToolUse hint pointed to it after my issue_read calls. It confirmed issue_read was the right tool and that I needed no writes.; triage #2577: CLAUDE.md read-first trigger for GitHub operations; read late, after the first issue_read, which was correct anyway; triage #2579: CLAUDE.md trigger (first GitHub op, read late after a hook hint). It confirmed that label updates replace the whole set.; triage #2580: CLAUDE.md trigger before GitHub ops (read late, after the first issue_read); gave the label-replace and comment-tool rules; triage #2581: CLAUDE.md trigger before GitHub ops (read late, after the first issue_read). Confirmed that a label update replaces the whole set and that comments go through add_issue_comment.; triage #2582: Required before GitHub operations (read late, after the first issue_read). Confirmed that a label update replaces the set and that comments go through add_issue_comment."
+    useful: partly
   - path: docs/agents/triage-labels.md
-    reason: which labels the grilling answers imply
-    useful: partly
+    reason: "triage #2577: Read-first trigger before labelling; triage #2580: CLAUDE.md trigger before labelling; gave the label strings; triage #2581: CLAUDE.md trigger before labelling. Confirmed the label strings.; triage #2582: Required before labelling. Confirmed the label strings."
+    useful: yes
   - path: docs/agents/issue-tracker.md
-    reason: supersession and Prune Trial checks before building
-    useful: partly
+    reason: "triage #2577: Read-first trigger before labelling; its supersession and Prune Trial check applied; triage #2579: CLAUDE.md trigger for triage. Its Prune Trial supersession check mattered here."
+    useful: yes
   - path: docs/agents/pr-workflow.md
-    reason: simple-change bar let me self-review the ledger flip; gate before first push
+    reason: "orchestrator: simple-change bar for the ledger flip and follow-up; verdict then merge-pr"
     useful: yes
   - path: .agents/skills/dispatch-subagents/SKILL.md
-    reason: read because the guard blocked the explore Workflow call; its brief rules shaped the build briefs (size ceiling, ADRs)
+    reason: "orchestrator: read when the guard blocked the explore call; shaped the build briefs (size ceiling, ADRs)"
     useful: partly
-  - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/implement/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0002-manifest-driven-config-generation.md
-    reason: (no reason given)
-  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
-    reason: (no reason given)
-  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
-    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: "triage #2577: Checked for an open trial overlapping clear-backlog; only the §3 ready-to-push bullet is covered"
+    useful: yes
   - path: .agents/skills/clear-backlog/SKILL.md
-    reason: (read before editing)
+    reason: "triage #2577: The Skill this issue is about; primary source"
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: "Standards clear-backlog/wait-rule-and-multi-run-verdicts r1: Read because the task said to; supplied the Standards axis and the smell baseline.; Spec clear-backlog/wait-rule-and-multi-run-verdicts r1: The task asked me to apply its Spec axis. Its missing / scope creep / wrong checklist shaped the review.; Standards clear-backlog/wait-rule-and-multi-run-verdicts r2: The brief required it for the Standards axis and the smell baseline. The Duplicated Code smell produced the one finding worth fixing.; Spec clear-backlog/wait-rule-and-multi-run-verdicts r2: The task said to read it and apply its Spec axis; Standards clear-backlog/wait-rule-and-multi-run-verdicts r3: The task required it for the Standards axis and smell baseline.; Spec clear-backlog/wait-rule-and-multi-run-verdicts r3: The task told me to read it. Its Spec-axis brief (missing, scope creep, wrong) set the review's structure.; Standards journal/reject-truncated-session-ids r1: The task told me to read it. Its smell baseline and Standards brief set how I ran the review.; Spec journal/reject-truncated-session-ids r1: Task required it for the Spec axis brief (missing/scope creep/wrong implementation)"
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "build journal/reject-truncated-session-ids: Named in the task."
+    useful: yes
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: "triage #2581: Read for the Agent Brief template; I followed it in the comment."
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2577: The brief required it; gave the label state machine; triage #2579: The brief required it. It gave the label state machine and categories.; triage #2581: Required by the brief. Gave the redundancy check and the outcome states.; triage #2582: Brief required it. Gave the per-issue steps (redundancy check, verification)."
+    useful: yes
+  - path: .claude/skills/tdd/SKILL.md
+    reason: "build journal/reject-truncated-session-ids: Task told me to invoke it; red-then-green loop followed."
+    useful: yes
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: "gate journal/reject-truncated-session-ids: Loaded as project instructions at session start. It confirmed the git-command rule and that merge, push and close-session belong to the orchestrator."
+    useful: partly
+  - path: /home/user/terrarium/GLOSSARY-MAP.md
+    reason: "gate journal/reject-truncated-session-ids: Loaded as project instructions at session start. It was not needed for a gate run."
+    useful: no
+  - path: CLAUDE.md
+    reason: "Spec clear-backlog/wait-rule-and-multi-run-verdicts r2: Loaded at session start; its one-home-per-fact and keep-it-short rules framed the simplicity review; Standards clear-backlog/wait-rule-and-multi-run-verdicts r3: Loaded as project instructions; its one-home-per-fact and keep-it-short rules shaped both findings.; Standards journal/reject-truncated-session-ids r1: Loaded at session start. Its 'comments say WHY' and 'keep it short' conventions were the standards I checked the diff against."
+    useful: yes
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: "build journal/reject-truncated-session-ids: Hook asked for it after the manifest edit."
+    useful: partly
   - path: docs/adr/0005-skill-model.md
-    reason: (no reason given)
-  - path: docs/adr/0027-prune-trials.md
-    reason: (no reason given)
+    reason: "build clear-backlog/wait-rule-and-multi-run-verdicts: The post-edit hook asked me to read it; it confirmed the edit was already right; fix clear-backlog/wait-rule-and-multi-run-verdicts r1: The post-edit hook asked me to read it in full. The edit was already right.; fix clear-backlog/wait-rule-and-multi-run-verdicts r2: The PostToolUse hook required a full read after the edit. It confirmed the edit was already right."
+    useful: no
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: "build journal/reject-truncated-session-ids: Hook asked for it after the manifest edit."
+    useful: partly
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: "build journal/reject-truncated-session-ids: Hook asked for it after the blog-post.yml edit."
+    useful: partly
   - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: (no reason given)
+    reason: "triage #2577: Full ADR behind the ready-for-agent decision; triage #2579: Full ADR behind the governing rule. It defines judgment call and design doubt.; triage #2580: Full ADR behind the rule that governs grill vs build; several valid approaches means it goes to a person; triage #2581: Read in full to check what counts as a judgment call or design doubt; the repo settles this design."
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "triage #2472: Read in full because it governs the blocked verdict. It has the explicit line 'Before you build an issue, check that it doesn't overlap an open trial'.; triage #2577: Full ADR behind the trial-overlap and simplify-first constraint in the brief"
+    useful: yes
   - path: .agents/skills/clear-backlog/tests/unit/run-summary.spec.ts
     reason: (read before editing)
   - path: /home/user/terrarium/docs/agents/git-conventions.md
     reason: (no reason given)
   - path: .agents/skills/clear-backlog/scripts/run-summary.ts
     reason: (read before editing)
-  - path: .agents/skills/triage/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/triage/AGENT-BRIEF.md
-    reason: (no reason given)
   - path: .agents/skills/audit-skills/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/log-session/SKILL.md
@@ -83,14 +109,20 @@ frictions:
   - description: "The dispatch-read guard blocked the first clear-backlog-explore Workflow call until I read dispatch-subagents (the #2580 cost, now accepted)"
     solution: "Accepted by the owner in #2580; read dispatch-subagents at the start of a clear-backlog run"
     severity: nit
-durationSec: 1823
+  - description: "clear-backlog-build's Standards and Spec review passed a #2582 regex that rejected prose like session_id; I caught it reading the diff before the push"
+    solution: The build brief should ask for a negative test on look-alike text whenever a change adds a validation regex
+    severity: minor
+  - description: Ran run-summary --verdicts once per run, then redid it with main's freshly merged multi-path version, because separate blocks would overwrite each other by path
+    solution: "Fixed by #2589: pass every run's output in one call"
+    severity: nit
+durationSec: 2143
 models:
-  claude-opus-5-5: 146
+  claude-opus-5-5: 165
 toolCounts:
-  Bash: 41
+  Bash: 46
   Read: 7
   Workflow: 4
-  Skill: 3
+  Skill: 4
   ToolSearch: 3
   PushNotification: 1
   mcp__github__add_issue_comment: 6
@@ -98,7 +130,7 @@ toolCounts:
   mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 3
   Write: 1
-  ReadNotifications: 5
+  ReadNotifications: 7
   mcp__claude-code-remote__unsubscribe_pr_activity: 2
 filesEdited:
   - layers/journal/tests/unit/skill-schema.spec.ts
@@ -177,6 +209,67 @@ docsReadBySubagents:
   - .agents/skills/audit-skills/SKILL.md
   - .agents/skills/triage/AGENT-BRIEF.md
   - .agents/skills/log-session/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0002.md
+    reason: "build journal/reject-truncated-session-ids: Loaded when I read tenant.config.ts; confirmed editing only the manifest is correct."
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: "orchestrator: opened each PR as soon as its branch was pushed and subscribed; summary was enough; triage #2577: Loaded at session start; background on approval; build journal/reject-truncated-session-ids: Session-start rule; the orchestrator opens the PR."
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "orchestrator: loaded on reading tenant.config/blog-post; none of my PRs touched a Human-only path; triage #2579: Loaded when I read gate.ts. Its paths list showed that option B touches Human-only files.; triage #2580: Loaded on reading dispatch-read-guard.ts; confirmed the guard is Human-only; triage #2582: Loaded when I read tenant.config.ts. Its paths list shows layers/journal is not Human-only.; build journal/reject-truncated-session-ids: Loaded after the edits; its paths list showed neither touched file is Human-only."
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: "orchestrator: made me run gate:scoped before each first push and post a Reviewed verdict before merge-pr; summary was enough; build journal/reject-truncated-session-ids: Session-start rule; gate:scoped before the first push.; gate journal/reject-truncated-session-ids: Loaded at session start. It describes the gate, which was this task."
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: "triage #2577: Loaded when I read a Skill file; build clear-backlog/wait-rule-and-multi-run-verdicts: Loaded when I read clear-backlog files; confirmed the Skill script lives in its folder; Standards clear-backlog/wait-rule-and-multi-run-verdicts r1: Loaded when I read Skill files; confirmed the Skill code stays in its folder.; Standards clear-backlog/wait-rule-and-multi-run-verdicts r2: Loaded on reading Skill files. Skill code stays in its folder, and the change complies.; Spec clear-backlog/wait-rule-and-multi-run-verdicts r2: Loaded when I read Skill files; confirmed Skill code changes go through a gated PR, with nothing else to check; Standards clear-backlog/wait-rule-and-multi-run-verdicts r3: Loaded for the Skill files; confirmed the change stays within the Skill's folder and gated PR model.; Spec clear-backlog/wait-rule-and-multi-run-verdicts r3: Loaded for the Skill files. The diff stays inside the Skill folder, so the rule raised nothing."
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: "build journal/reject-truncated-session-ids: Loaded on reading the Journal manifest; no effect on this change."
+    useful: partly
+  - path: .claude/rules/adr-0009.md
+    reason: "orchestrator: kept the log off my branches and re-invoked close-session per PR; summary was enough; triage #2581: Loaded at session start. Gave context on the ruleVerdicts/docsRead log fields this fix feeds; no action needed.; build clear-backlog/wait-rule-and-multi-run-verdicts: Loaded at session start; told me not to log (the orchestrator does); Standards clear-backlog/wait-rule-and-multi-run-verdicts r1: Loaded at session start; the §4 close-session text it governs only changed in passing.; Standards clear-backlog/wait-rule-and-multi-run-verdicts r2: Loaded at session start. §4 touches the close-session log merge, and nothing here conflicts with it.; Spec clear-backlog/wait-rule-and-multi-run-verdicts r2: Loaded at session start; relevant because §4 tells the orchestrator how to fill close-session's verdict fields"
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: "triage #2582: Loaded when I read Skill Inventory content. Confirmed ids belong in observations, not role.; build journal/reject-truncated-session-ids: Loaded on blog-post.yml; confirms session ids belong in observations, matching the fix."
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: "orchestrator: every comment and PR body led with this session header; checked the commit trailer landed; triage #2577: Loaded at session start; gave the comment header; triage #2579: Loaded at session start. Header for the comment.; triage #2580: Loaded at session start; gave the comment header; triage #2581: Loaded at session start. Made me start the comment with the session header.; triage #2582: Loaded at session start. Gave the provenance header for the comment.; build journal/reject-truncated-session-ids: Session-start rule; the commit trailer is present."
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: "orchestrator: all issues were owner-authored, so no Public path applied; triage #2472: Loaded at session start. Confirmed that an OWNER author is Trusted.; triage #2577: Loaded with auto-triage; used to confirm the author is OWNER (Trusted); triage #2579: Loaded with the triage Skill. Used to check author trust (OWNER means Trusted).; triage #2580: Loaded with the Skills; the author is OWNER, so Trusted; triage #2581: Loaded with the triage Skill read. Confirmed the OWNER author is Trusted.; triage #2582: Loaded with the Skill reads. Confirmed the OWNER author is Trusted."
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: "orchestrator: let the explore run mark Trusted issues ready-for-agent and route judgment calls to the grilling; triage #2577: Loaded when I read auto-triage; set the ready-for-agent bar; triage #2579: Loaded when I read the auto-triage Skill. It defines judgment call versus ready-for-agent.; triage #2580: Loaded when I read the triage Skills; decides ready-for-human vs ready-for-agent; triage #2581: Loaded with the auto-triage Skill read. Decided ready-for-agent for an owner-authored issue whose design the repo settles. I read the full ADR to check the judgment-call criteria.; triage #2582: Loaded with the auto-triage Skill read. Sets when the sweep may mark ready-for-agent."
+    useful: yes
+  - path: .claude/rules/adr-0026.md
+    reason: "triage #2579: Loaded when I read gate.ts. Not needed, since no gate step changes."
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: "orchestrator: kept #2472 blocked on the open pr-workflow.md trial and the build brief out of the §3 trial text; triage #2472: Loaded at session start. It is the rule that blocks this build while the trial is open.; triage #2577: Loaded with auto-triage; led me to check for a Prune Trial overlap and to prefer simplifying over adding; triage #2579: Loaded with the triage Skill files. It flagged that prose under an open Prune Trial must not change, which ruled out a prose fix.; triage #2581: Loaded with the Skill reads. Prompted the prune-trials check, which found that clear-backlog section 3 is under trial, so the brief excludes it.; build clear-backlog/wait-rule-and-multi-run-verdicts: Loaded when I touched clear-backlog; led me to check prune-trials.yml territory against my edits; Standards clear-backlog/wait-rule-and-multi-run-verdicts r1: Loaded when I read Skill files; used to check that the diff leaves the open Prune Trial text alone.; Standards clear-backlog/wait-rule-and-multi-run-verdicts r2: Loaded on reading clear-backlog files. Used to confirm the Prune Trial territory was left alone and that the rule was rewritten in place, not added again.; Spec clear-backlog/wait-rule-and-multi-run-verdicts r2: Loaded when I read clear-backlog files; used to confirm the open Prune Trial text was not reworded; Standards clear-backlog/wait-rule-and-multi-run-verdicts r3: Loaded when I touched the clear-backlog files; used to check that the open Prune Trial text was not reworded.; Spec clear-backlog/wait-rule-and-multi-run-verdicts r3: Loaded when I read clear-backlog files. It made me check prune-trials.yml, which confirmed the diff avoids the §3 ready-to-push bullet and the build reviewPrompt."
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: "triage #2472: Loaded when I read docs/agents. Not relevant.; triage #2575: Loaded when I read the docs/agents doc. The issue cites it for rule paths changes. Not needed for this blocked check.; triage #2577: Loaded when I read the clear-backlog Skill or prune-trials; not relevant; triage #2579: Loaded when I read docs/agents. Not relevant here.; triage #2580: Loaded on reading the journal ledger; not relevant; triage #2581: Loaded on reading a docs/agents file. Did not apply to this triage.; triage #2582: Loaded when I read rules files. Not relevant here.; build clear-backlog/wait-rule-and-multi-run-verdicts: Loaded with docs reading; nothing to place; fix clear-backlog/wait-rule-and-multi-run-verdicts r1: Loaded when I read ADR files. Not relevant.; fix clear-backlog/wait-rule-and-multi-run-verdicts r2: Loaded when I read docs/agents/git-conventions.md. It did not apply.; build journal/reject-truncated-session-ids: Loaded during Skill use; irrelevant here."
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "triage #2472: Loaded when I read an ADR. Not relevant.; triage #2577: Loaded when I read ADR files; not relevant; triage #2579: Loaded when I read docs/adr/0022. Not relevant here.; triage #2580: Loaded on reading ADR-0022; not relevant; triage #2581: Loaded on reading an ADR. I edited no ADR, so it did not apply.; triage #2582: Loaded when I read the ADR and the inventory. Not relevant here.; build clear-backlog/wait-rule-and-multi-run-verdicts: Loaded when I read ADR files; no ADR was changed; fix clear-backlog/wait-rule-and-multi-run-verdicts r1: Loaded when I read ADR files. Not relevant.; fix clear-backlog/wait-rule-and-multi-run-verdicts r2: Loaded when I read ADR files. No ADR was changed.; build journal/reject-truncated-session-ids: Loaded late; irrelevant here."
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: "orchestrator: the #2582 schema tightening needed the owner yes, which the grilling recorded; triage #2582: The issue cited it, so I read it. It is the deciding fact: tightening a stored field's validation goes to a Trusted user.; build journal/reject-truncated-session-ids: Loaded on the schema edit; the brief's owner approval covers it.; Standards journal/reject-truncated-session-ids r1: I read it by hand because the diff touches layers/journal/tenant.config.ts. It confirmed that this tightening needs the owner approval the PR must cite."
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: "triage #2580: Loaded on reading the guard; pointed to guards.md for its roster entry"
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "build journal/reject-truncated-session-ids: Loaded on content reads; irrelevant."
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: "triage #2579: Loaded when I read Journal ledger files. Not needed.; triage #2580: Loaded on reading a journal ledger file; not needed for a guard question; triage #2581: Loaded because I read a Journal frictions ledger entry. No Tenant work, so it did not apply.; triage #2582: Loaded when I read journal content. Not needed for this narrow schema question.; build journal/reject-truncated-session-ids: Loaded on layers/journal reads; I did not need the Journal glossary for a schema refine."
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "build journal/reject-truncated-session-ids: Loaded on layers/ reads; not applicable to a manifest-only change."
+    useful: no
 subagents:
   - type: workflow-subagent
     task: gate journal/reject-truncated-session-ids
@@ -191,28 +284,28 @@ subagents:
     durationSec: 35
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: build journal/reject-truncated-session-ids
     model: claude-sonnet-5-5
     durationSec: 533
     toolCalls: 25
     modelCalls: 17
-    tokenShare: 7.8
+    tokenShare: 7.3
   - type: workflow-subagent
     task: Spec journal/reject-truncated-session-ids r1
     model: claude-opus-5-5
     durationSec: 31
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Standards clear-backlog/wait-rule-and-multi-run-verdicts r1
     model: claude-opus-5-5
     durationSec: 30
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.5
+    tokenShare: 2.3
   - type: workflow-subagent
     task: gate clear-backlog/wait-rule-and-multi-run-verdicts
     model: claude-opus-5-5
@@ -226,106 +319,108 @@ subagents:
     durationSec: 63
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: workflow-subagent
     task: Spec clear-backlog/wait-rule-and-multi-run-verdicts r2
     model: claude-opus-5-5
     durationSec: 51
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 2
+    tokenShare: 1.8
   - type: workflow-subagent
     task: fix clear-backlog/wait-rule-and-multi-run-verdicts r1
     model: claude-opus-5-5
     durationSec: 147
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 2.6
+    tokenShare: 2.4
   - type: workflow-subagent
     task: fix clear-backlog/wait-rule-and-multi-run-verdicts r2
     model: claude-opus-5-5
     durationSec: 188
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: workflow-subagent
     task: Spec clear-backlog/wait-rule-and-multi-run-verdicts r1
     model: claude-opus-5-5
     durationSec: 49
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.9
+    tokenShare: 1.7
   - type: workflow-subagent
     task: Standards clear-backlog/wait-rule-and-multi-run-verdicts r2
     model: claude-opus-5-5
     durationSec: 33
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: build clear-backlog/wait-rule-and-multi-run-verdicts
     model: claude-opus-5-5
     durationSec: 306
     toolCalls: 37
     modelCalls: 23
-    tokenShare: 7.5
+    tokenShare: 7
   - type: workflow-subagent
     task: Standards clear-backlog/wait-rule-and-multi-run-verdicts r3
     model: claude-opus-5-5
     durationSec: 44
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #2580"
     model: claude-opus-5-5
     durationSec: 81
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 3.2
+    tokenShare: 3
   - type: workflow-subagent
     task: "triage #2575"
     model: claude-opus-5-5
     durationSec: 25
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: "triage #2582"
     model: claude-opus-5-5
     durationSec: 119
     toolCalls: 22
     modelCalls: 14
-    tokenShare: 4.5
+    tokenShare: 4.2
   - type: workflow-subagent
     task: "triage #2472"
     model: claude-opus-5-5
     durationSec: 83
     toolCalls: 14
     modelCalls: 9
-    tokenShare: 3.3
+    tokenShare: 3.1
   - type: workflow-subagent
     task: "triage #2577"
     model: claude-opus-5-5
     durationSec: 90
     toolCalls: 20
     modelCalls: 10
-    tokenShare: 5.1
+    tokenShare: 4.8
   - type: workflow-subagent
     task: "triage #2581"
     model: claude-opus-5-5
     durationSec: 97
     toolCalls: 18
     modelCalls: 10
-    tokenShare: 3.7
+    tokenShare: 3.5
   - type: workflow-subagent
     task: "triage #2579"
     model: claude-opus-5-5
     durationSec: 102
     toolCalls: 20
     modelCalls: 11
-    tokenShare: 4
+    tokenShare: 3.8
 gitBranch: ccr-9a41791a-lsxmjl
 entrypoint: remote_mobile
 cliVersion: 2.1.311
+learnings:
+  - Every Journal session id under layers/journal/content starts with session_01 (1227 of 1227), so a session_01 prefix anchors an id check without catching prose
 landedBy: Stop
