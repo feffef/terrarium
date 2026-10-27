@@ -26,7 +26,7 @@ const record = computed(() => {
   <div>
     <header class="intro">
       <!-- eslint-disable-next-line vue/no-v-html -- schema-checked SVG (app/utils/svg.ts, issue #1363) -->
-      <svg viewBox="0 0 100 100" role="img" :aria-label="`Portrait of ${inventor.name}`" v-html="inventor.portrait" />
+      <svg class="tf-tokens" viewBox="0 0 100 100" role="img" :aria-label="`Portrait of ${inventor.name}`" v-html="inventor.portrait" />
       <p class="tf-label">Inventor · {{ record }}</p>
       <component :is="heading ?? 'h1'" class="tf-h1">{{ inventor.name }}</component>
       <p class="bio">{{ inventor.bio }}</p>
@@ -42,8 +42,10 @@ const record = computed(() => {
 <style scoped>
 .intro { display: grid; gap: 6px; justify-items: start; margin-bottom: 22px; }
 .intro > * { margin: 0; }
-/* Portraits are drawn for the light scheme; inverted they lose their faces. */
-svg { width: 96px; height: 96px; margin-bottom: 8px; border: var(--tf-hairline); border-radius: var(--tf-radius); background: var(--tf-surface); color-scheme: light; }
+/* Portraits are drawn for the light scheme; inverted they lose their faces.
+   Tokens resolve where they are declared, so .tf-tokens re-declares them here;
+   `.intro >` outranks theme.css's `:is(.tf-tokens, :root:has(> .tf-page))`. */
+.intro > svg { width: 96px; height: 96px; margin-bottom: 8px; border: var(--tf-hairline); border-radius: var(--tf-radius); background: var(--tf-surface); color-scheme: light; }
 .bio { max-width: 60ch; color: var(--tf-muted); }
 .intro a { font: 500 13px/1 var(--tf-mono); }
 .grid {

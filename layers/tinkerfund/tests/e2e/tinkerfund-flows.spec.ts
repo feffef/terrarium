@@ -64,6 +64,9 @@ describe('tinkerfund Tenant', async () => {
       await expect.poll(specimen).toEqual({ surface: 'rgb(255, 255, 255)', ink: 'rgb(17, 23, 27)' })
       await page.emulateMedia({ colorScheme: 'dark' })
       await expect.poll(specimen).toEqual({ surface: 'rgb(19, 25, 29)', ink: 'rgb(225, 231, 234)' })
+      // Inventor portraits keep their light colours in the dark theme.
+      await visit('/inventors/new-inventor')
+      expect(await page.locator('.intro > svg').evaluate((el) => getComputedStyle(el).backgroundColor)).toBe('rgb(255, 255, 255)')
 
       // The index table is wider than a phone; it must scroll inside its own frame.
       await visit('/gallery/index-table')
