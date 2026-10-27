@@ -1,11 +1,11 @@
 ---
 title: Adding a site
 description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
-revision: '2864783943ebe98a792cc8f42c65986758528d9b'
+revision: '8ba6ec6ef9f6de832ef40034efc2ce029ef68eb9'
 revisionDate: '2026-10-27'
 ---
 
-A new site joins Terrarium. This Walkthrough follows the work from the side of the agent that builds it: from the approval, through one new folder and the manifest inside it, to the site answering at its own address with the Gate checking it. [Marquee](/t/marquee/reel), a small movie-blog Tenant, is the example throughout. Outside that folder, it must change only two glossary files.
+A new site joins Terrarium. This Walkthrough follows the work from the side of the agent that builds it: from the approval, through one new folder and the manifest inside it, to the site answering at its own address with the Gate checking it. [Marquee](/t/marquee/reel), a small movie-blog Tenant, is the example throughout. Outside that folder, it must change only one file: `GLOSSARY-MAP.md`.
 
 ## 1. Someone approves it
 
@@ -17,7 +17,7 @@ A :term[Trusted] user approves the new :term[Tenant], for example by asking for 
 
 ## 2. A folder becomes a layer
 
-The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which can be as small as `defineNuxtConfig({})`. Nuxt registers every folder under `layers/` by itself, so the root config is left alone. From now on the folder is also read as a Tenant: the build stops if it holds no `tenant.config.ts`, or one whose name differs from the folder's.
+The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which can be as small as `defineNuxtConfig({})`. Nuxt registers every folder under `layers/` by itself, so the root config is left alone. A running dev server doesn't watch a brand-new layer folder, so it needs a restart; run `nuxt prepare` before `pnpm lint` so the new layer's types exist. From now on the folder is also read as a Tenant: the build stops if it holds no `tenant.config.ts`, or one whose name differs from the folder's.
 
 ::stop-links
 [Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · :file[layers/marquee/nuxt.config.ts]

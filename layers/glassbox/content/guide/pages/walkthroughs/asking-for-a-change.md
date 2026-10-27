@@ -36,7 +36,7 @@ The session gets its own copy of the repository. A `SessionStart` hook in `.clau
 The session edits on a feature branch, never on `main`, and may hand parts of the work to subagents, each in a git worktree of its own. Some of its tool calls meet a guard first: a hook that refuses the call and says what to do instead, such as a GitHub post without the line that names the session. Other hooks add a line of guidance after a call and never block it.
 
 ::stop-links
-[Subagents](/t/glassbox/guide/claude-code/subagents)
+[Subagents](/t/glassbox/guide/claude-code/subagents) · [Claude Code hooks](/t/glassbox/guide/claude-code/hooks) · [Git worktrees](/t/glassbox/guide/git-github/git-worktrees)
 ::
 
 ## 5. It checks its own work
