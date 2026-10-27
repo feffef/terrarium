@@ -82,4 +82,15 @@ describe('atlas Tenant', async () => {
     expect(html).not.toContain('/t/atlas/plates')
     expect(html).not.toContain('/t/atlas/random')
   })
+
+  it('names each wing\'s creatures on its directory card', async () => {
+    await withRendered('/t/atlas', async (page) => {
+      for (const wing of ['canopy', 'floor', 'pool']) {
+        const card = page.locator(`.directory a[href="/t/atlas/${wing}"]`)
+        const count = Number.parseInt((await card.locator('.wing-count').textContent()) ?? '', 10)
+        const names = (await card.locator('.wing-names').textContent())?.split(' · ') ?? []
+        expect(names).toHaveLength(count)
+      }
+    })
+  })
 })
