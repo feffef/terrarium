@@ -1,18 +1,19 @@
 ---
 title: Adding a site
 description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
-revision: '8ba6ec6ef9f6de832ef40034efc2ce029ef68eb9'
+revision: '2a0c0f0303b8594a11cb449394eec86e4bab1a3e'
 revisionDate: '2026-10-27'
+publishedAt: '2026-10-27T18:52:48Z'
 ---
 
-A new site joins Terrarium. This Walkthrough follows the work from the side of the agent that builds it: from the approval, through one new folder and the manifest inside it, to the site answering at its own address with the Gate checking it. [Marquee](/t/marquee/reel), a small movie-blog Tenant, is the example throughout. Outside that folder, it must change only one file: `GLOSSARY-MAP.md`.
+A new site joins Terrarium. This Walkthrough follows the work from the side of the agent that builds it: from the approval, through one new folder and the manifest inside it, to the site answering at its own address with the Gate checking it. [Marquee](/t/marquee/reel), a small movie-blog Tenant, is the example throughout. Outside that folder, it needs to change only one file: `GLOSSARY-MAP.md`.
 
 ## 1. Someone approves it
 
-A :term[Trusted] user approves the new :term[Tenant], for example by asking for it in a session or by labelling its issue `ready-for-agent`, before an agent starts on it. The agent then works on a feature branch, and the result lands as a PR like any other change.
+A :term[Trusted] user approves the new :term[Tenant] before an agent starts on it, by asking for it in a session or by labelling its issue `ready-for-agent`. One other route exists: while the owner runs the guest pipeline, a :term[Public] guest's confirmation on their own issue is the approval, and the owner merges the result. Either way the agent works on a feature branch, and the result lands as a PR like any other change.
 
 ::stop-links
-[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Author trust](/t/glassbox/guide/git-github/trust-tiers) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 2. A folder becomes a layer
@@ -49,10 +50,10 @@ The same expansion feeds :file[modules/routing.ts], which writes the routing map
 
 ## 6. It gets its own look
 
-For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in its layer. Their path has the Tenant's name where the catch-all has `[tenant]`, so they outrank it for its addresses and no others. Its components go in a folder named after it, so Nuxt gives them its name as a prefix, as in `MarqueePoster`. Its stylesheet, listed in its `nuxt.config.ts`, loads on every page of every Tenant, so it prefixes its CSS custom properties with a short tag of its own (`--mq-`) and scopes its rules under a class only its pages carry; its components read those properties with `var()`, so none of them repeats a colour.
+For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in its layer; their path has the Tenant's name where the catch-all has `[tenant]`, and they outrank it for its addresses and no others. Its components sit in a folder named after it, which gives them its name as a prefix, as in `MarqueePoster`. Its stylesheet, listed in its `nuxt.config.ts`, loads on every page of every Tenant, and it keeps its rules under a class only its pages carry and its custom properties under a short tag of its own (`--mq-`).
 
 ::stop-links
-[File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/marquee/app/assets/theme.css]
+[File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [Vue components and hydration](/t/glassbox/guide/nuxt-vue/vue-components) · :file[layers/marquee/app/assets/theme.css]
 ::
 
 ## 7. It gets its own words
@@ -65,7 +66,7 @@ It writes its own `GLOSSARY.md` for the words only it uses. Then it adds itself 
 
 ## 8. The tests find it by themselves
 
-No test config names the new Tenant. The smoke test reads its entry addresses from the manifests, so it loads each new Space's front page in a browser, and fails on a console error or a front page with no Document. What only this Tenant has, such as its root page's redirect, goes in its own e2e spec under `tests/e2e/` in its folder, which the e2e project's glob picks up. The :term[Gate] runs them all.
+No test config names the new Tenant. The smoke test reads its entry addresses from the manifests, loads each new Space's front page in a browser, and fails on a console error or a front page with no Document; it never visits a Tenant's root. What only this Tenant has, such as its root page's redirect, goes in its own e2e spec under `tests/e2e/` in its folder, which the e2e project's glob picks up. The :term[Gate] runs them all.
 
 ::stop-links
 [Testing](/t/glassbox/guide/verification/unit-and-e2e-tests) · [Merge gate](/t/glassbox/guide/verification/gate) · :file[layers/marquee/tests/e2e/marquee.spec.ts]
@@ -73,15 +74,20 @@ No test config names the new Tenant. The smoke test reads its entry addresses fr
 
 ## 9. Who else can see it
 
-Its pages appear in the Commons Search only if its `pages` Collection names the `page` :term[kind]{id="collection-kind"}, as Marquee's does. The Platform home page lists no new Tenant by itself: it is a hand-picked showcase, and a Tenant joins it when someone adds its tile to :file[app/pages/index.vue].
+Its pages appear in the Commons Search only if its `pages` Collection names the `page` :term[kind]{id="collection-kind"}, as Marquee's does, and on the Commons Timeline only those of them that carry a `publishedAt`. The Platform home page lists no new Tenant by itself: it is a hand-picked showcase, and a Tenant joins it when someone adds its tile to :file[app/pages/index.vue].
 
 ::stop-links
 [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · :file[layers/marquee/tenant.config.ts]
 ::
+
+## A real case
+
+On 17 July 2026 a Public user filed [issue #551](https://github.com/feffef/terrarium/issues/551) at 07:42 UTC, asking for a blog of the Marvel movies in story order with a Ghibli-style image per post. Five minutes later an agent running the guest pipeline asked four questions (which films, which order, how many to start with, and whether original illustrations would do) and labelled the issue `needs-info`. The guest answered at 08:11 and confirmed the agent's summary at 08:14, and the label flipped to `ready-for-agent`. [PR #552](https://github.com/feffef/terrarium/pull/552) opened at 08:41 with 18 files: everything under `layers/marquee/`, with no root page yet, a roster entry in each of the two root glossary files of the time, and two lines in the shared smoke spec that registered its browser tests; today the e2e project's glob finds a layer's own spec instead. The owner merged it at 08:49, as the guest pipeline requires, 67 minutes after the issue was filed.
 
 ## Where next
 
 - [Content collections](/t/glassbox/guide/nuxt-content/manifest-collections)
 - [Nuxt layers](/t/glassbox/guide/nuxt-vue/layers)
 - [File routing](/t/glassbox/guide/nuxt-vue/file-routing)
+- [Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)
