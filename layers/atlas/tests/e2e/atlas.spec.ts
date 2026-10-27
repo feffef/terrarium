@@ -12,7 +12,7 @@
 // sweep above never reaches it and the Tenant tests it here (ADR-0016), in
 // the same `$fetch`-SSR-string style the other Tenant-specific checks use.
 import { describe, expect, it } from 'vitest'
-import { $fetch } from '@nuxt/test-utils/e2e'
+import { $fetch, createPage, fetch, url } from '@nuxt/test-utils/e2e'
 import { expectHydrated, setupL2, withRendered } from '../../../../tests/support/e2e.ts'
 
 describe('atlas Tenant', async () => {
@@ -82,6 +82,25 @@ describe('atlas Tenant', async () => {
     expect(html).not.toContain('/t/atlas/plates')
     expect(html).not.toContain('/t/atlas/random')
   })
+
+  // Both dead-address shapes answer 404 in the guide's own voice: a known wing
+  // with no such specimen (the entry page) and an unknown wing (the Platform's
+  // error page rendering `AtlasNotFound`, docs/agents/tenant-layers.md §4). The
+  // plate is asserted in the rendered DOM, not the SSR string.
+  for (const route of ['/t/atlas/canopy/nope', '/t/atlas/nope', '/t/atlas/nope/x']) {
+    it(`404s ${route} with the empty-jar plate`, async () => {
+      expect((await fetch(route)).status).toBe(404)
+      const page = await createPage()
+      try {
+        await page.goto(url(route), { waitUntil: 'hydration' })
+        expect(await page.locator('h1').textContent()).toBe('Not catalogued')
+        expect(await page.locator('.atlas-plate svg').count()).toBe(1)
+        expect(await page.locator('.atlas-plate .plate-caption').textContent()).toContain('Locus ignotus')
+      } finally {
+        await page.close()
+      }
+    })
+  }
 
   it('names each wing\'s creatures on its directory card', async () => {
     await withRendered('/t/atlas', async (page) => {
