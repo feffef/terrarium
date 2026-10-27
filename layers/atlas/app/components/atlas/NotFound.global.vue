@@ -10,8 +10,8 @@ const segments = route.path.split('/').filter(Boolean) // ['t', 'atlas', <biome>
 const biome = BIOMES.find((b) => b.slug === segments[2])
 const rest = `/${segments.slice(biome ? 3 : 2).join('/')}`
 const back = biome ? { to: `/t/atlas/${biome.slug}`, label: `Back to ${biome.name}` } : { to: '/t/atlas', label: 'Back to the Atlas' }
-// `--sig-1` is fixed to the neutral accent on `:root` (theme.css), so the wing's
-// accent only reaches the plate when re-bound here; an unknown wing draws in ink.
+// `--sig-1` is fixed to the neutral accent on `:root` (theme.css), so the Biome's
+// accent only reaches the plate when re-bound here; an unknown Biome draws in ink.
 const tint = {
   '--sig-1': 'var(--biome-accent)',
   ...(biome ? {} : { '--biome-accent': 'var(--atlas-ink)' }),

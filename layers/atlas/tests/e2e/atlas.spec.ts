@@ -83,12 +83,12 @@ describe('atlas Tenant', async () => {
     expect(html).not.toContain('/t/atlas/random')
   })
 
-  // Both dead-address shapes answer 404 in the guide's own voice: a known wing
-  // with no such specimen (the entry page) and an unknown wing (the Platform's
+  // Both dead-address shapes answer 404 in the guide's own voice: a known Biome
+  // with no such specimen (the entry page) and an unknown Biome (the Platform's
   // error page rendering `AtlasNotFound`, docs/agents/tenant-layers.md §4). The
   // plate is asserted in the rendered DOM, not the SSR string, and the smudge's
   // computed fill proves the tint: the Canopy's leaf (theme.css, light) for a
-  // known wing, plain ink for an unknown one — never the neutral `:root` accent.
+  // known Biome, plain ink for an unknown one — never the neutral `:root` accent.
   for (const [route, smudge] of [
     ['/t/atlas/canopy/nope', 'rgb(63, 107, 62)'],
     ['/t/atlas/nope', 'rgb(42, 37, 29)'],
