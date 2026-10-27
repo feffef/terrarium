@@ -180,7 +180,7 @@ trials:
       change (CLAUDE.md and `close-session` still carry the rule).
   - problem: >
       `docs/agents/environment-caveats.md` plainly reworded (-1 net, from
-      `git diff --numstat`: 66 added, 67 deleted; words 943 to 940; this entry
+      `git diff --numstat`: 63 added, 64 deleted; words 943 to 938; this entry
       not counted): shorter sentences, plainer verbs, every caveat, recovery
       step and issue pointer kept. No problem cleared the bar this run: the
       search subagent covered the instruction corpus, guard headers and the

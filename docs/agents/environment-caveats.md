@@ -18,10 +18,10 @@ them as new. Incident detail lives in the cited issue.
 - **`github.com/user-attachments` (403), `content.nuxt.com` and `zod.dev` are
   also blocked.** Don't retry; ask the owner to paste the content into the
   issue or chat.
-- **`~/.ssh/commit_signing_key.pub` can be empty (0 bytes) here.** Then
+- **`~/.ssh/commit_signing_key.pub` can be unprovisioned (0 bytes) here** —
   `git commit -S`, and the Stop hook's `--reset-author` remedy for an
-  "Unverified" commit, can fail to sign without an error, even with the right
-  author email.
+  "Unverified" commit, can silently fail to sign even with a correct author
+  email.
 - **Session-only state can vanish across a resume, with no error:** a
   `/loop` or `CronCreate` job, a backgrounded `Agent` subagent, a scratchpad
   file. After a resume, check that each is still registered, alive or intact.
@@ -65,7 +65,7 @@ them as new. Incident detail lives in the cited issue.
   git twice. Run one git command per call and the rest from a script file, not
   inline. (issues #1180, #1499)
 - **A scheduled or autonomous session can find `mcp__github__*` unauthenticated
-  and no `gh` CLI.** Nothing in the repo fixes that. Push the branch as usual,
+  with no `gh` CLI fallback.** Nothing in the repo fixes that. Push the branch as usual,
   then say so in the session log's `outcome` and `summary` (for example
   "branch pushed, PR NOT opened — no GitHub write access this run") so it
   doesn't read as ordinary completion. (issue #982)
