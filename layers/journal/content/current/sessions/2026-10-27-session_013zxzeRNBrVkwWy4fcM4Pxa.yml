@@ -1,0 +1,306 @@
+schemaVersion: 1
+session: session_013zxzeRNBrVkwWy4fcM4Pxa
+startedAt: 2026-10-27T02:08:07Z
+endedAt: 2026-10-27T02:34:46Z
+kind: autonomous
+goal: "Scheduled sweep: turn recurring session Frictions into fixes"
+status: in-review
+outcome: "Ledger PR #2583 open; 3 regression issues and 1 fix issue filed; fix PR #2584 open"
+summary: "Scheduled frictions-to-fixes run (no human prompt; everything here is agent-initiated under the Skill's own allowance). A survey subagent ledgered about 40 window Frictions, recorded six merged fixes and opened three entries. I filed regression issues #2579 (edit-during-gate-run), #2580 (dispatch-subagents-skill-unread) and #2581 (workflow-output-result-key), choosing by severity since the fix and, among minor ties, by recurrence; I skipped local-gate-green-ci-red (owner's #2138 decision predates its only occurrence) and bash-rules-hint-failure-path (logged false alarm). A design subagent covered four picks: one became issue #2582 (data-shape tightening, left to a Trusted user), one a one-sentence clear-backlog §4 doc fix built by a Sonnet agent on claude/fix-clear-backlog-push-hint (rewrapped once after my review, then Standards and Spec review found nothing blocking), two were dropped with ledger notes. Ledger PR #2583 holds the survey and screen commits, gate green. Still open: merge both PRs, then the closing ledger PR (§8)."
+prs:
+  - "2583"
+  - "2584"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: CLAUDE.md trigger before git; confirmed commit -F rule
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: GitHub trigger; tool names and overflow rules
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push recipe and simple-change definition
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: filing an issue conventions
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: needs-triage label for non-triage Skills
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: Build agent read it after an edit hook; confirmed the edit was fine
+    useful: no
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: Build agent read it after an edit hook; unrelated
+    useful: no
+  - path: docs/adr/0027-prune-trials.md
+    reason: Build agent read it after an edit hook; trial check, no conflict
+    useful: partly
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: Standards reviewer checked the doc fix against its six lenses
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Design agent grepped it for the push-from-worktree rule
+    useful: partly
+  - path: .claude/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/.claude/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (read before editing)
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: /home/user/terrarium/.claude/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: observation-notes-truncated-ids.yml
+    reason: (no reason given)
+  - path: session-log-bash-write-indistinguishable.yml
+    reason: (no reason given)
+  - path: worktree-branch-not-designated.yml
+    reason: (no reason given)
+  - path: worktree-subagent-moves-branch.yml
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/github-integration.md
+    reason: (no reason given)
+skillsUsed:
+  - name: frictions-to-fixes
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: brief checklist before dispatching survey, design and build agents
+  - name: code-review
+    reason: pre-push review of the doc fix
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Stop hook asked to push the ledger commits three times while the gate was still running and the Skill says review and gate come first.
+    solution: The hook could skip its nag while a gate:scoped run or a Skill-ordered review is pending.
+    severity: nit
+  - description: A cd into the frictions directory in a compound Bash call moved the primary working directory; I had to use absolute paths until the next cd back.
+    solution: Use absolute paths in compound Bash calls, never cd.
+    severity: nit
+  - description: The Skill has no tie-break for the top-three regression issues when many entries share minor severity since the fix; I chose by recurrence myself.
+    solution: Say in frictions-to-fixes §2 to break ties by occurrences since the fix.
+    severity: minor
+  - description: Running code-review with two subagents on a 4-line doc change, after a rewrap round, cost about 120k subagent tokens to find nothing blocking.
+    solution: Let pr-workflow's simple-change test cover a one-sentence addition to a Skill that adds no new rule.
+    severity: minor
+  - description: Survey subagent reported the brief omits --out for --summary and --candidates, that --append is all-or-nothing on a duplicate session, and that §3 tracker paging is heavy for about 140 candidates.
+    solution: Add --out to the survey brief's summary step and an append mode that skips sessions an entry already holds.
+    severity: minor
+  - description: Design subagent found design-brief §3 gives no step for a design that changes no prose and does not say how much session-log reading is enough for a nit.
+    solution: State in design-brief §3 that a non-prose design skips the read count, and cap log reading for nits.
+    severity: nit
+durationSec: 1599
+models:
+  claude-sonnet-5-5: 97
+toolCounts:
+  Read: 8
+  Bash: 26
+  Skill: 4
+  Agent: 5
+  ToolSearch: 1
+  mcp__github__issue_write: 4
+  SendMessage: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
+filesEdited:
+  - .agents/skills/clear-backlog/SKILL.md
+  - layers/journal/content/current/frictions/auto-mode-self-modification-denials.yml
+  - layers/journal/content/current/frictions/bash-reads-not-read-tool.yml
+  - layers/journal/content/current/frictions/binding-docs-skipped.yml
+  - layers/journal/content/current/frictions/blocked-waiting.yml
+  - layers/journal/content/current/frictions/chat-progress-narration.yml
+  - layers/journal/content/current/frictions/ci-job-logs-unreachable.yml
+  - layers/journal/content/current/frictions/clear-backlog-deferred-issue-full-retriage.yml
+  - layers/journal/content/current/frictions/clear-backlog-explore-skipped.yml
+  - layers/journal/content/current/frictions/clear-backlog-grilling-owner-deferrals.yml
+  - layers/journal/content/current/frictions/clear-backlog-owner-reservation-unhandled.yml
+  - layers/journal/content/current/frictions/clear-backlog-review-before-pr.yml
+  - layers/journal/content/current/frictions/closure-not-invoked-at-pr-open.yml
+  - layers/journal/content/current/frictions/dispatch-subagents-skill-unread.yml
+  - layers/journal/content/current/frictions/double-background.yml
+  - layers/journal/content/current/frictions/e2e-poll-default-timeout.yml
+  - layers/journal/content/current/frictions/full-adr-read-skipped.yml
+  - layers/journal/content/current/frictions/github-search-overflow.yml
+  - layers/journal/content/current/frictions/late-read-first-docs.yml
+  - layers/journal/content/current/frictions/mechanism-claim-from-recall.yml
+  - layers/journal/content/current/frictions/merged-before-checked.yml
+  - layers/journal/content/current/frictions/misread-owner-instruction.yml
+  - layers/journal/content/current/frictions/observation-notes-truncated-ids.yml
+  - layers/journal/content/current/frictions/parallel-gates-exhaust-memory.yml
+  - layers/journal/content/current/frictions/pr-workflow-unread-before-push.yml
+  - layers/journal/content/current/frictions/relayed-subagent-claims.yml
+  - layers/journal/content/current/frictions/reviewer-line-ranges-off.yml
+  - layers/journal/content/current/frictions/session-log-bash-write-indistinguishable.yml
+  - layers/journal/content/current/frictions/session-start-glossary-skipped.yml
+  - layers/journal/content/current/frictions/shallow-clone-history.yml
+  - layers/journal/content/current/frictions/shell-read-detection.yml
+  - layers/journal/content/current/frictions/stop-hook-nag.yml
+  - layers/journal/content/current/frictions/subagent-brief-defects.yml
+  - layers/journal/content/current/frictions/survey-output-overflow.yml
+  - layers/journal/content/current/frictions/transform-untested-on-real-data.yml
+  - layers/journal/content/current/frictions/triage-docs-unread-before-labelling.yml
+  - layers/journal/content/current/frictions/worktree-branch-not-designated.yml
+  - layers/journal/content/current/frictions/worktree-subagent-moves-branch.yml
+  - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
+  - layers/journal/content/current/frictions/close-session-bypassed-by-hand-log.yml
+  - layers/journal/content/current/frictions/counts-not-tallied.yml
+  - layers/journal/content/current/frictions/designated-branch-clash.yml
+  - layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
+  - layers/journal/content/current/frictions/edit-during-gate-run.yml
+  - layers/journal/content/current/frictions/flaky-e2e-matcher-timeouts.yml
+  - layers/journal/content/current/frictions/followup-review-overcost.yml
+  - layers/journal/content/current/frictions/ledger-yaml-hand-edit-errors.yml
+  - layers/journal/content/current/frictions/list-events-transcript-overflow.yml
+  - layers/journal/content/current/frictions/prepush-gate-review-skipped.yml
+  - layers/journal/content/current/frictions/prune-trial-territory-unchecked.yml
+  - layers/journal/content/current/frictions/required-doc-read-truncated.yml
+  - layers/journal/content/current/frictions/survey-appends-duplicate-sessions.yml
+  - layers/journal/content/current/frictions/visual-work-published-unseen.yml
+  - layers/journal/content/current/frictions/workflow-edit-guard-revert-blocked.yml
+  - layers/journal/content/current/frictions/workflow-output-result-key.yml
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0022.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 22
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: true
+    by: subagent
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+docsReadBySubagents:
+  - .agents/skills/clear-backlog/SKILL.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Required gate and code-review before the first push; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed opening the PR and subscribing without asking; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main, not the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header on every issue and PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are gated Platform code, so the Skill edit rides a normal PR; the summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Pack Skills stay as installed; relevant when screening, did not need the ADR
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Prune Trial territories decided what to drop; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded mid-session by a hook; unrelated to this run
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: About the triage sweep; this run is not one, so it did not apply
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded when I read a journal ledger file; I worked on no Tenant
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded by a hook for a subagent; reported not relevant to the designs
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Design agent used its paths to answer the Human-only risk question
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded by a hook; unrelated to ledger and Skill work
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded by a hook for the design agent; not relevant
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded by a hook for the design agent; not relevant
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Design agent used it to decide the schema tightening needs a Trusted user, so I filed an issue
+    useful: yes
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded by a hook for a subagent; not relevant
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded by a hook for a subagent; not relevant
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Survey frictions ledger
+    durationSec: 806
+    toolCalls: 43
+    modelCalls: 34
+    tokenShare: 30.1
+  - type: general-purpose
+    task: Design friction fixes
+    durationSec: 175
+    toolCalls: 25
+    modelCalls: 14
+    tokenShare: 8.4
+  - type: general-purpose
+    task: Build clear-backlog doc fix
+    model: sonnet
+    durationSec: 228
+    toolCalls: 25
+    modelCalls: 17
+    tokenShare: 8.8
+  - type: general-purpose
+    task: Standards review of doc diff
+    durationSec: 28
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 4.4
+  - type: general-purpose
+    task: Spec review of doc diff
+    durationSec: 17
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 3.7
+gitBranch: claude/eager-ptolemy-1w7jfh
+entrypoint: remote_trigger
+cliVersion: 2.1.311
+trigger: frictions-to-fixes
+landedBy: Stop
