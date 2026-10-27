@@ -1,0 +1,101 @@
+schemaVersion: 1
+session: session_013zxzePnX2He1hvzhQj7LrJ
+startedAt: 2026-10-27T17:56:35Z
+endedAt: 2026-10-27T18:11:54Z
+kind: delegated
+goal: Keep Tinkerfund Inventor portraits in light colours in dark mode
+status: in-review
+outcome: "Fixed and e2e-pinned in PR #2596; the Oct 4 fix had never applied"
+summary: "Human-instructed: the user asked that Inventor portraits not invert in dark mode. A fix (f1b551f27, color-scheme: light on the SVG) was already on main, but a production-build screenshot showed it never applied: Lightning CSS lowers light-dark() into --lightningcss-* variables, so tokens resolve where declared (.tf-page), and theme.css's :is(.tf-tokens, :root:has(> .tf-page)) outranked the scoped svg rule. Fix: class tf-tokens on the portrait plus an .intro > svg selector; verified pixel-identical light vs dark. Agent-initiated: an e2e assert in the shell-theme flow (red on main, green here), since the earlier fix shipped without one."
+prs:
+  - "2596"
+docsRead:
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts shot --scheme and computed-style probing
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit hygiene; read after first fetch/log
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: simple-change self-read and gate-last order
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP for PR creation
+    useful: partly
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch and git log to judge whether f1b551f27 was on main before reading git-conventions.md, as CLAUDE.md requires.
+    solution: Read it at the first git command beyond status; a hook reminder fired only after the fact.
+    severity: nit
+  - description: Started gate:scoped before committing; the commit mid-run made it abort and cost a second ~5 minute run.
+    solution: "Follow pr-workflow order: commit, review, then gate last."
+    severity: minor
+  - description: Did not read layers/tinkerfund/GLOSSARY.md as the tenant-glossary rule asks before working on a Tenant.
+    solution: Read it at first Tenant touch; no term was misused here.
+    severity: nit
+  - description: f1b551f27 claimed a dark-mode fix that never rendered; no test or screenshot covered it, so the bug survived three weeks.
+    solution: Pin colour-scheme fixes with a computed-style e2e assert, as this PR does.
+    severity: moderate
+durationSec: 920
+models:
+  claude-opus-5-5: 93
+toolCounts:
+  Bash: 36
+  ToolSearch: 2
+  Read: 7
+  Edit: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/tinkerfund/tests/e2e/tinkerfund-flows.spec.ts
+  - layers/tinkerfund/app/components/tinkerfund/inventor/Profile.vue
+rulesLoaded:
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped before pushing; summary enough
+    useful: yes
+  - path: .claude/rules/ui-verification.md
+    reason: Pushed me to screenshot, which showed the existing fix was broken
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session at PR open, which I am doing; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Made me open the PR myself right after the push and subscribe; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Made me start the PR body with the session header line; summary enough
+    useful: yes
+  - path: .claude/rules/tenant-glossary.md
+    reason: Asked for the Tenant glossary read, which I skipped; no term was at stake
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Confirmed theme.css loads app-wide and is scoped by wrapper class; no new code shared
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: No instruction of ours caused this bug; loaded via a doc read
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; this CSS fix changed none
+    useful: no
+gitBranch: ccr-ac398c85-cpdci4
+entrypoint: remote_mobile
+cliVersion: 2.1.311
+learnings:
+  - Lightning CSS lowers light-dark() into --lightningcss-light/dark variables, so a --tf-* token resolves on the element that declares it; setting color-scheme on a descendant does not change it unless the tokens are re-declared there.
+landedBy: Stop
