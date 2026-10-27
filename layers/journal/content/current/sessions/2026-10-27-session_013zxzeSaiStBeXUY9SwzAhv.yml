@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSaiStBeXUY9SwzAhv
 startedAt: 2026-10-27T18:52:16Z
-endedAt: 2026-10-27T19:05:48Z
+endedAt: 2026-10-27T19:09:45Z
 kind: interactive
 goal: Open the Friction Ledger on the last 7 days
-status: in-review
-outcome: "PR #2599 open: the ledger defaults to 7 days, 14 stays a choice"
-summary: "The owner invoked grill-with-docs to refine an idea logged by session_01C8G2W6ZfQN7WE4UNUi2GzA (\"Friction Ledger opens on 14 days; default to 7 days\"). Before asking, I measured the content: the idea's \"47 clusters\" was stale (130 clusters on 14 days today; 88 on 7 days), so 7 days cuts about a third, not most. One round of five questions settled it; the owner agreed with all recommendations: the goal is relevance not length, the \"collapse below top 10\" half stays out of scope, a separate LEDGER_DEFAULT_DAYS keeps the 14-day horizon for pruning and fix states, ?days=14 becomes explicit, and the intro separates retention from the default view. The owner then green-lit building it and opening a PR. Code-review found no hard findings; I applied its three judgement calls (default referenced inside LEDGER_WINDOWS, exact comment wording, test uses the constant). Full gate passed; a production build confirmed 88 rows / 8,245px by default vs 130 rows / 11,873px on 14 days."
+status: completed
+outcome: "PR #2599 merged: the ledger defaults to 7 days, 14 stays a choice"
+summary: "The owner invoked grill-with-docs to refine an idea logged by session_01C8G2W6ZfQN7WE4UNUi2GzA (\"Friction Ledger opens on 14 days; default to 7 days\"). Before asking, I measured the content: the idea's \"47 clusters\" was stale (130 clusters on 14 days today; 88 on 7 days), so 7 days cuts about a third, not most. One round of five questions settled it; the owner agreed with all recommendations: the goal is relevance not length, the \"collapse below top 10\" half stays out of scope, a separate LEDGER_DEFAULT_DAYS keeps the 14-day horizon for pruning and fix states, ?days=14 becomes explicit, and the intro separates retention from the default view. The owner then green-lit building it and opening a PR. Code-review found no hard findings; I applied its three judgement calls (default referenced inside LEDGER_WINDOWS, exact comment wording, test uses the constant). Full gate passed; a production build confirmed 88 rows / 8,245px by default vs 130 rows / 11,873px on 14 days. CI green; I posted the verdict and merged it myself under ADR-0004."
 prs:
   - "2599"
 docsRead:
@@ -47,18 +47,24 @@ frictions:
   - description: Typecheck failed on the new auto-imported constant until I ran nuxt prepare; I ran vue-tsc before regenerating the imports.
     solution: Run nuxt prepare after adding an export to a layer's app/utils before typechecking.
     severity: nit
-durationSec: 812
+durationSec: 1050
 models:
-  claude-opus-5-5: 82
+  claude-opus-5-5: 104
 toolCounts:
-  Skill: 6
+  Skill: 7
   Grep: 1
-  Bash: 26
+  Bash: 31
   Read: 5
   Agent: 2
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/app/utils/ledger.ts
   - layers/journal/tests/e2e/journal.spec.ts
@@ -140,13 +146,13 @@ subagents:
     durationSec: 42
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 11.8
+    tokenShare: 9.4
   - type: general-purpose
     task: Spec review of diff
     durationSec: 38
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 12.1
+    tokenShare: 9.6
 gitBranch: ccr-44f82fa5-9rtlva
 entrypoint: remote_mobile
 cliVersion: 2.1.311
