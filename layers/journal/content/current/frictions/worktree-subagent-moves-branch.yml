@@ -5,9 +5,11 @@ cause: >-
   An impl agent in a worktree checks out or pushes the branch the primary checkout has checked out, so the primary tree shows phantom reverse changes.
 surface: safe
 status: open
+notes: |-
+  2026-10-27 design: guard or brief prose against git checkout in a read-only subagent dropped: the brief was already read-only, code-review is a pack Skill, a guard would touch Human-only hooks for a nit with nothing lost
 occurrences:
-  - session: session_01Dz52W6wWZWUgKwPtdxabzJ
-    date: "2026-10-12"
-    severity: nit
-    description: "A reviewer subagent ran git checkout --detach origin/main by mistake and switched back; no harm, but it touched the shared checkout."
-    solution: "Tell read-only reviewer briefs not to run any state-changing git command."
+  - session: session_01Y1i7HTUED6iQYzbSLBbu79
+    date: "2026-10-26"
+    severity: minor
+    description: "The code-review Standards subagent ran git checkout --detach despite a read-only brief; it switched back, nothing lost."
+    solution: "Brief read-only reviewers to use git show, never checkout."

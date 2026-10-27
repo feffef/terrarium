@@ -1,0 +1,22 @@
+name: observation-notes-truncated-ids
+surface: safe
+summary: Skill Inventory observation notes and similar written notes cited sessions by truncated ids that review had to expand.
+cause: "Notes written from subagent reports or from memory carry shortened session ids (and PR counts GitHub already shows) instead of the full id, so code-review catches them and the author swaps in full ids. Signals: 'truncated session ids', 'swapped in full ids', 'late look-back'."
+status: tracked
+ref: "issue #2582"
+occurrences:
+  - session: session_01TaUpbA3idjNZSgGpNjXj8S
+    date: "2026-10-26"
+    severity: nit
+    description: "Two notes used truncated session ids; code-review caught it and I swapped in full ids."
+    solution: "Say in step 5 that a note quotes a full id."
+  - session: session_019g1t4RX7PcR54io7GRdxXK
+    date: "2026-10-27"
+    severity: nit
+    description: "First drafts of notes used truncated session ids and PR counts GitHub already shows; review caught both."
+    solution: "Quote full ids from the data file when writing observations; step 5 already says so."
+  - session: session_01WKUyPyRBzirHHAhDr7Y8Ek
+    date: "2026-10-25"
+    severity: nit
+    description: "Late look-back: review-fix wording nits (same-day note references, truncated ids) were findable by re-reading my own notes before the first push."
+    solution: "Re-read each appended note once for full ids and unambiguous dates before committing."

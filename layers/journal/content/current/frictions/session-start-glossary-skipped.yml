@@ -11,21 +11,6 @@ fixes:
     date: "2026-10-23"
     summary: "CLAUDE.md now imports GLOSSARY-MAP.md and GLOSSARY.md with @, replacing the session-start read bullet."
 occurrences:
-  - session: session_01DtK8w6aJ3361uPK73VAxhi
-    date: "2026-10-12"
-    severity: minor
-    description: "Skipped reading CONTEXT.md in full at session start (only grepped headings), against CLAUDE.md's session-start rule."
-    solution: "Read CONTEXT-MAP.md and CONTEXT.md with Read before the first task step."
-  - session: session_01P1PVFxwyuuQJShzqfd55D3
-    date: "2026-10-12"
-    severity: nit
-    description: "Skipped reading CONTEXT-MAP.md and CONTEXT.md at session start, which CLAUDE.md requires; the deletion needed no glossary terms."
-    solution: "None needed for a one-file revert; the rule could exempt trivial content deletions."
-  - session: session_018KSwetqxttBFszkhTKZkF1
-    date: "2026-10-12"
-    severity: nit
-    description: "Skipped reading CONTEXT-MAP.md and CONTEXT.md at session start, as CLAUDE.md requires; went straight to dispatching the Explore agent."
-    solution: "Read them first; low impact here since the task was a Skill prose edit using no glossary-sensitive terms."
   - session: session_01HNLMJQDMabmJ9U54iWwtiH
     date: "2026-10-13"
     severity: nit

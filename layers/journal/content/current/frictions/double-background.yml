@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_01Dz52W6wWZWUgKwPtdxabzJ
-    date: "2026-10-12"
-    severity: nit
-    description: "A Bash call with run_in_background plus a trailing ampersand was denied by the double-background guard; a chained sleep was also blocked."
-    solution: "Use run_in_background alone and Monitor with an until-loop; the guard message said so."
   - session: session_01MZBQ3PanPQVwCutYuAmbUp
     date: "2026-10-13"
     severity: nit
@@ -106,3 +101,8 @@ occurrences:
     severity: nit
     description: "First background gate call stacked run_in_background with a trailing & and the double-background guard blocked it; resent as separate calls."
     solution: "None needed; the guard message was clear."
+  - session: session_01Cb8ETAZztznLYx6CC7MKyE
+    date: "2026-10-26"
+    severity: nit
+    description: "My first attempt to gate two branches in one background call with & was blocked by the double-background guard; I resent it as two calls."
+    solution: "Run one background Bash call per gate from the start."

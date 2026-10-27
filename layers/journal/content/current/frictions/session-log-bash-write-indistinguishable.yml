@@ -1,0 +1,13 @@
+name: session-log-bash-write-indistinguishable
+surface: safe
+summary: Session logs cannot tell a file written through Bash from one written with Edit or Write, so analyses of which edits a hook missed rest on inference.
+cause: "A session log's filesEdited unions transcript and commit files and records no tool per write, so classifying misses of a hook (adr-read-hint) needed tool-count inference and transcript reads, leaving some unresolved. Signals: 'filesEdited', 'Bash write from an Edit', 'unresolved misses'."
+status: open
+notes: |-
+  2026-10-27 design: log Bash writes separately from Edit/Write dropped: the owner dropped this on #2432 (proposal 7); #2570's adrHints now measures misses without a new field
+occurrences:
+  - session: session_01Vg1qDutnhKVav7JDNUdr8J
+    date: "2026-10-26"
+    severity: moderate
+    description: "Session logs can't tell a Bash write from an Edit/Write (filesEdited unions transcript and commit files), so classifying 30 misses needed tool-count inference plus two transcript reads, and 11 stay unresolved."
+    solution: "Owner to decide whether a derived field should split edit sources (data-shape question, proposal 7 on #2432)."

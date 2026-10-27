@@ -60,3 +60,8 @@ occurrences:
     severity: nit
     description: "First Journal draft said clear-backlog triages every open issue and merges the rest; both wrong per its SKILL.md. Caught by the spec review."
     solution: "Check a Skill's claims against its SKILL.md before describing it on the Journal."
+  - session: session_01LyextqGkDsnBpTuPyFxhSm
+    date: "2026-10-27"
+    severity: nit
+    description: "My draft had two factual errors (a follow-up issue called a session; a review-round count) that the fact-check subagent caught."
+    solution: "Check issue-versus-session wording against the gather output when drafting."

@@ -85,3 +85,8 @@ occurrences:
     severity: nit
     description: "Told the user three agents were still running when four were, a miscount from memory instead of the launch list."
     solution: "Count from the launch calls before stating a number."
+  - session: session_01Vg1qDutnhKVav7JDNUdr8J
+    date: "2026-10-26"
+    severity: nit
+    description: "Told the user '31 misses' in a progress note from an eyeballed list; the scripted count is 30. Broke CLAUDE.md's verify-before-you-state; caught before the report."
+    solution: "Print the count from the script before stating any number, even in an interim update."

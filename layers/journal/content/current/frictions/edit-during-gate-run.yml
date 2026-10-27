@@ -98,3 +98,8 @@ occurrences:
     severity: minor
     description: "Full gate ran on the first commit, then review fixes forced a second full gate run, doubling gate time."
     solution: "Run code-review before starting gate:scoped, since the review changes the head."
+  - session: session_01Vg1qDutnhKVav7JDNUdr8J
+    date: "2026-10-26"
+    severity: minor
+    description: "Edited the hook while the first pnpm gate:scoped ran, against pr-workflow.md's 'edit nothing until it ends'; that gate run was wasted."
+    solution: "Start the gate only after the last review round has reported."

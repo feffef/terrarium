@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-23 design: a general run-it-on-real-data rule dropped: the three transforms differ in kind, code-review caught two before push, and Verify before you state already covers the third.
 occurrences:
-  - session: session_01VGLAakRJNm67PuNHpgbEc7
-    date: "2026-10-12"
-    severity: moderate
-    description: "My first 'loaded' prefix regex was written without checking the real data; about 70 reasons read 'loaded at start;' and would have rendered as broken fragments."
-    solution: "Grep landed logs for the actual variants before writing a text transform; the spec reviewer caught it."
   - session: session_01LKNUYveJSHpf9NV8zN8K5b
     date: "2026-10-21"
     severity: nit
@@ -23,3 +18,8 @@ occurrences:
     severity: minor
     description: "Built absolute token fields before checking whether subagent transcripts' usage was trustworthy; the stream-start output_tokens forced two redesigns."
     solution: "Before deriving a number from transcripts, check it against an independent figure (the task-notification usage) first."
+  - session: session_01Vg1qDutnhKVav7JDNUdr8J
+    date: "2026-10-26"
+    severity: moderate
+    description: "Commit detection took three review rounds: two regex fixes still backtracked exponentially, then the tokenizer was quadratic on unquoted escapes, before an escape-aware tokenizer held."
+    solution: "For hook input parsing, start with a tokenizer whose alternatives start with distinct characters, and time adversarial runs before the first review."

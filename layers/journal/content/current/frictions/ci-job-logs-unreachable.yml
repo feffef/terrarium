@@ -10,11 +10,6 @@ fixes:
     date: "2026-10-23"
     summary: "github-integration.md now says to read a red check's failure annotations before its log, since the REST job-log download 403s in the cloud."
 occurrences:
-  - session: session_016iE4LmQUcg6ap5YMxJg4oC
-    date: "2026-10-12"
-    severity: moderate
-    description: "Misdiagnosed the warnings as a Vite chunk-size warning from a local build and truncated CI log, wasting a build, a question to the user and a revert."
-    solution: "Read the gate check-run annotations (lint warnings) first; the user's PrisePre typo and truncated log tail invited the guess."
   - session: session_01XJ9iR9EbRT2iV7afhytND8
     date: "2026-10-14"
     severity: minor

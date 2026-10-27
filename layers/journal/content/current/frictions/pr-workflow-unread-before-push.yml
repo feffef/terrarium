@@ -6,11 +6,6 @@ cause: >-
 surface: safe
 status: open
 occurrences:
-  - session: session_014uXxmT6359K4Z42a6We6Gh
-    date: "2026-10-12"
-    severity: minor
-    description: "Opened PR #1806 before reading docs/agents/pr-workflow.md, and made the first GitHub call before github-integration.md; a hook reminded me only afterwards."
-    solution: "Read both docs when the visitor-loop Skill reaches step 4, or have the Skill's step 4 name pr-workflow.md up front as it does for verifying-ui-changes."
   - session: session_01MwrXDH7XwMNUofgz3HvQ5N
     date: "2026-10-19"
     severity: minor

@@ -1,0 +1,16 @@
+name: followup-review-overcost
+surface: safe
+summary: pr-workflow's follow-up rule sent small or owner-directed follow-up commits through full code-review rounds that found nothing or only cosmetic slips.
+cause: "pr-workflow.md says a larger follow-up gets code-review on its own diff; sessions with a prose cut already probed, a 40-line review-fix commit or a 2-line one ran further two-agent review rounds costing 170k-370k subagent tokens for cosmetic findings. The opposite miss is prepush-gate-review-skipped. Signals: 'follow-up rule', 'further code-review rounds', 'subagent tokens to confirm nothing'."
+status: open
+occurrences:
+  - session: session_01Vg1qDutnhKVav7JDNUdr8J
+    date: "2026-10-26"
+    severity: minor
+    description: "pr-workflow's follow-up rule sent four review-fix commits through further reviews (about 370k subagent tokens). Each round did find a real bug, but most of the cost came from the regex path."
+    solution: "None proposed: pr-workflow.md is in an open Prune Trial, so the cost is logged here for its verdict."
+  - session: session_016edAfTmLE1szSBGNZTorPH
+    date: "2026-10-25"
+    severity: minor
+    description: "pr-workflow's follow-up rule sent a 30-line owner-directed prose cut, already probed on Sonnet, through a full two-agent code-review before merge: about 170k subagent tokens to confirm nothing."
+    solution: "None proposed: pr-workflow.md is in an open Prune Trial (its 'simple change' bar), so the cost is logged here for that trial's verdict."

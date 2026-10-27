@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-05"
     summary: "Moved the end-of-turn reminder caveat into the main project instructions so more sessions read it."
 occurrences:
-  - session: session_01QfaLuSd5cnBQPu8CCRrvkn
-    date: "2026-10-12"
-    severity: nit
-    description: "The Stop hook asked to commit and push twice while gate:scoped was still running, each time costing a reply to decline per ADR-0004."
-    solution: "Make the Stop hook skip its nag while a gate run is active."
-  - session: session_018KSwetqxttBFszkhTKZkF1
-    date: "2026-10-12"
-    severity: minor
-    description: "Stop hook repeatedly asks to push unreviewed local commits, contrary to the new review-before-push rule."
-    solution: "pr-workflow now says the rule holds even when the Stop hook asks; the hook could check for a pending review."
   - session: session_01Rn5xT34AdjnywsTJdUtaDm
     date: "2026-10-13"
     severity: nit
@@ -354,3 +344,18 @@ occurrences:
     severity: nit
     description: "Stop hook asked to commit and push three times while the fact-check and gate were running; ADR-0004 says review and gate first."
     solution: "Have the Stop hook skip its push nag while a background gate or subagent runs."
+  - session: session_01NHL7eNYVjV814TB7bS83kv
+    date: "2026-10-26"
+    severity: nit
+    description: "The Stop hook asked to push five times while the review, fact-check and gate were still running, each time needing a reply to hold the push."
+    solution: "Let the Stop hook stay quiet while a scheduled-run gate or subagent is in flight."
+  - session: session_01Y1i7HTUED6iQYzbSLBbu79
+    date: "2026-10-26"
+    severity: nit
+    description: "Stop hook asked to push three times while the probe and gate were pending; ADR-0004 says review and gate first."
+    solution: "Let the Stop hook skip its push nag while a background gate or agent runs (known, #2233)."
+  - session: session_01LyextqGkDsnBpTuPyFxhSm
+    date: "2026-10-27"
+    severity: nit
+    description: "The Stop hook asked to commit and push four times while the fact-check, reviews and gate were pending; ADR-0004 says review and gate first."
+    solution: "Make the Stop hook skip when a review or gate is pending."

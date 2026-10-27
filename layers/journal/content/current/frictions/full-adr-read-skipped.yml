@@ -12,12 +12,10 @@ fixes:
   - pr: 2431
     date: "2026-10-23"
     summary: "Retired the adr-check Skill and its CLAUDE.md trigger; a new PostToolUse hook (adr-read-hint.ts) now names, once per agent, each ADR an Edit or Write touches by its rule paths or by number and that the agent has not read in full."
+  - pr: 2572
+    date: "2026-10-26"
+    summary: "digest step 3 says to read ADR-0010 in full before saving the first Digest (partial)."
 occurrences:
-  - session: session_01QfaLuSd5cnBQPu8CCRrvkn
-    date: "2026-10-12"
-    severity: nit
-    description: "Did not read the full ADR-0003, ADR-0004 and ADR-0010 though their rules say to when the topic is touched; relied on the rule summaries."
-    solution: "Digest Skill could state that its own steps suffice and the ADR rules need no full read."
   - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
     date: "2026-10-14"
     severity: nit

@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-23 design: a doc line on asking for an explicit grant before auto-mode edits dropped: the classifier is the host's, none recurred in 9 days, the denial says what to do, and a line costs more than one round with the owner.
 occurrences:
-  - session: session_017NBxJhtBSd9AoCwTzsg6pM
-    date: "2026-10-12"
-    severity: minor
-    description: "The auto-mode classifier denied the .claude/settings.json edit (Self-Modification) before the owner approved it in chat."
-    solution: "List Human-only settings edits as an explicit approval question in the grilling up front."
   - session: session_01STVS35HcxNZp7dQ1pPnrhW
     date: "2026-10-13"
     severity: minor

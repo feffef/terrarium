@@ -24,3 +24,8 @@ occurrences:
     severity: minor
     description: "clear-backlog §4 says push each branch from its worktree, while the harness restricts pushes to the session branch. I pushed the worktree HEAD to the session branch instead of its own name."
     solution: "clear-backlog §4 could say what to do with a one-branch run in a cloud session that has a designated branch."
+  - session: session_01BgQzSd9CmFPiugdXAQh6HW
+    date: "2026-10-26"
+    severity: nit
+    description: "Worked on a local branch audit-docs/2026-10-26 and pushed it to the designated session branch rather than staying on it."
+    solution: "Rename the session branch instead of cutting a second one."

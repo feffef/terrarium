@@ -25,11 +25,6 @@ occurrences:
     severity: moderate
     description: "Chose 'last N days' = today minus N (N+1 dates) to match the prune horizon instead of the plain reading; the owner had to correct it after merge, costing a follow-up PR."
     solution: "When a boundary convention is ambiguous and the user prefers questions, ask before building or at least before merging, rather than flagging it afterwards."
-  - session: session_01DtK8w6aJ3361uPK73VAxhi
-    date: "2026-10-12"
-    severity: major
-    description: "Merged PR 1826 on a bare 'Yes' that answered two questions at once, while a further dry run was planned and the Skill was clearly unfinished; the user had to point it out."
-    solution: "Ask merge and other irreversible actions as their own question, and hold a merge while more validation runs are planned."
   - session: session_01VW5yg4NTMt1JBnXCcrhjw9
     date: "2026-10-25"
     severity: moderate

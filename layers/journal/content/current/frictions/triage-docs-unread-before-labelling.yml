@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-23"
     summary: "read-first-hint points to issue-tracker.md and triage-labels.md on an issue write."
 occurrences:
-  - session: session_015LwBgLjaCn36ayZedges6G
-    date: "2026-10-12"
-    severity: minor
-    description: "Labelled #1844 ready-for-agent without first reading docs/agents/issue-tracker.md and triage-labels.md, which CLAUDE.md requires before labelling"
-    solution: "A read-first hint on issue_write label changes, like the git/GitHub one, would have surfaced them"
   - session: session_01DqPT8JpBjhHPEubNDJuVuN
     date: "2026-10-13"
     severity: nit
@@ -61,3 +56,8 @@ occurrences:
     severity: nit
     description: "Read triage-labels.md and ADR-0015 only after the label write and the close-session.yml edit, when hooks prompted them."
     solution: "Read each doc in the same batch as the first matching write."
+  - session: session_019g1t4RX7PcR54io7GRdxXK
+    date: "2026-10-27"
+    severity: nit
+    description: "Filed the issue before reading triage-labels.md, which CLAUDE.md requires before filing; the label I used was right."
+    solution: "Read the listed docs when the trigger first applies, not after the hook asks."

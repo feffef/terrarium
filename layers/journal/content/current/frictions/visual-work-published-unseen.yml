@@ -4,8 +4,7 @@ summary: >-
 cause: >-
   Diagrams, illustrations and layouts ship after the agent's own screenshot check; the human first sees the result after it is published and judges it poor.
 surface: safe
-status: tracked
-ref: "issue #2558"
+status: open
 fixes:
   - pr: 1821
     date: "2026-10-12"
@@ -13,6 +12,9 @@ fixes:
   - pr: 2107
     date: "2026-10-16"
     summary: "The read-first hint now points to verifying-ui-changes.md when a session takes a screenshot."
+  - pr: 2563
+    date: "2026-10-26"
+    summary: "Glass Box pages are screenshotted only when layout, a feature or a diagram changed; glassbox-update points to EVERY-PAGE.md's Check."
 occurrences:
   - session: session_01E2zbWEQmuUrEhWvbzNpBba
     date: "2026-10-15"
