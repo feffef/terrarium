@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   CLAUDE.md's dispatch-subagents trigger is prose with no hint (read-first-hint.ts covers only git, GitHub and screenshots), and agents read it as not covering read-only git or a saved workflow (clear-backlog-build, explore) that dispatches for them. Signals: "without reading the dispatch-subagents Skill", "read-only git diff", "the workflow does the dispatch".
 surface: safe
-status: open
-ref: ""
+status: accepted
+ref: "issue #2580 closed not planned on 2026-10-27: the owner accepts the one-retry cost of the #2550 dispatch-read guard; saved workflows stay unexempted, since clear-backlog-build takes orchestrator-written briefs."
 fixes:
   - pr: 2448
     date: "2026-10-23"
