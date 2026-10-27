@@ -23,66 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      `docs/agents/pr-workflow.md` plainly reworded (-2 net: 118 lines to 116;
-      the pre-push review section's "simple change" bar is reworded, with one
-      added line (count, don't judge); the integration-PR, recipe steps 2-3, closing-keyword, "Who merges" and
-      "Closing a scheduled run's PR" prose shortened, every rule kept.
-      The Glass Box page's excerpt is pinned to its own `revision`, so it is
-      untouched. Chosen after the search
-      subagent covered the instruction corpus and the tracker: the pre-push
-      gate/review rule failed as prose repeatedly (#2311, #2354, #2397; #2397
-      read in full) and no guard holds it (#2397 left the guard question open;
-      ADR-0004's summary rule, untouched, still carries the rule). Runners-up:
-      Stop-hook inherited-commit advice (#2233, owner accepted the cost),
-      CLAUDE.md read-first triggers (#1754, partly held by read-first-hint.ts).
-      The mass here was small; no trial was judgeable this run (all five landed
-      under three days ago, per the window script).
-    territory:
-      paths:
-        - "docs/agents/pr-workflow.md (all of it)"
-      keywords:
-        - Review before the first push
-        - simple change
-    opened: 2026-10-22
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session skipped `code-review`
-      or `gate:scoped` before a first push, judged a non-simple change simple,
-      merged without a verdict, or mishandled a closing keyword, and the old
-      wording would have prevented it. NOT damage: the nit-level chaining or
-      Stop-hook slips #2397 already records, which this prune did not touch.
-  - problem: >
-      `git-conventions.md` "When the Stop hook flags unpushed or inherited
-      commits" reworded to the goal (-4 net: 15 lines to 11, from
-      `git diff --numstat`): the two rules kept (fix only commits this session
-      made, check `git log origin/main..HEAD`; push the branch when that list is
-      empty), the narration dropped. Chosen after the search subagent covered
-      the instruction corpus, guard headers and the tracker: the advice failed
-      as prose (#2233, read in full: four docs fixes did not stop the nag, then
-      the owner accepted the cost) and nothing in the repo holds it, since the
-      nag comes from a harness script (#2233's triage). Runners-up: "Verify
-      before you state" family (five homes, #2476, #2435; nothing holds it, so
-      the riskiest), CLAUDE.md read-first triggers (31 lines; partly held by
-      `read-first-hint.ts`), `close-session` restatements (one-liners that
-      carry step detail). Same run judged and deleted the audit-docs and
-      github-integration search-bullets trials (landed e07c4a65 and ad00ba7d):
-      59 sessions since e07c4a65, no major or blocker Friction traces to either
-      (the one major is a close-session slip, #2418).
-    territory:
-      paths:
-        - "docs/agents/git-conventions.md: the Stop-hook section"
-      keywords:
-        - inherited commits
-        - reset-author
-    opened: 2026-10-24
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session rebased or rewrote
-      public history (a commit outside `git log origin/main..HEAD`), or pushed
-      `main` or forced a push, to quiet the Stop hook, and the cut wording would
-      have prevented it. NOT damage: the nag itself, or a session declining it
-      (#2233 accepted that cost).
-  - problem: >
       "Verify before you state" family cut to one home (-4 net in the prune
       files, from `git diff --numstat`; this entry not counted): CLAUDE.md's
       bullet rewritten plainly (3 lines to 3; now names subagent reports and
@@ -238,3 +178,33 @@ trials:
       cut `log-session` wording would have prevented it. NOT damage: the
       answer-only or PR-open misses #2209 already records, which the cut did not
       change (CLAUDE.md and `close-session` still carry the rule).
+  - problem: >
+      `docs/agents/environment-caveats.md` plainly reworded (-1 net, from
+      `git diff --numstat`: 66 added, 67 deleted; words 943 to 940; this entry
+      not counted): shorter sentences, plainer verbs, every caveat, recovery
+      step and issue pointer kept. No problem cleared the bar this run: the
+      search subagent covered the instruction corpus, guard headers and the
+      tracker (53 "Regression" issues paged, cited ones read in full). Its
+      candidates were each 3-10 lines, already one goal-shaped line, or
+      unprunable (CLAUDE.md's dispatch trigger, ADR-0017's summary rule, the
+      dispatch-subagents foreground line, and CLAUDE.md's long-command line,
+      which no guard holds). Same run judged and deleted the pr-workflow
+      rewrite (landed 65ed0fe5) and the Stop-hook section trial (landed
+      94514199): 49 sessions since 65ed0fe5, no major or blocker Friction
+      traces to either; the pr-workflow ones are minor simple-change-bar
+      complaints, and regression #2472 predates the cut.
+    territory:
+      paths:
+        - "docs/agents/environment-caveats.md (all of it)"
+      keywords:
+        - permission stream closed
+        - stale TMPDIR
+        - workflow OAuth scope
+    opened: 2026-10-27
+    proven: false
+    check: >
+      Damage is a major or blocker Friction where a session misread an
+      environment caveat and the old wording would have prevented it: it added a
+      dead `permissions.allow` entry, retried a blocked host, stranded commits by
+      pushing a workflow edit, or lost work to a post-resume vanish. NOT damage: a
+      session simply hitting a caveat the file already names.
