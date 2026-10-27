@@ -25,7 +25,7 @@ Frontmatter holds `title`, `description`, `revision`, `revisionDate` and
 `publishedAt` only; the page draws `title` as its heading, so the body has no
 h1.
 `title` is the concept's general name, as its docs or the field call it, never
-Terrarium's own: about three words in sentence case, with no leading article,
+Terrarium's own: about three words (four at most) in sentence case, with no leading article,
 parentheses or code identifier unless that is the concept's name (*CLAUDE.md*),
 and the tool's name in front only when the bare word is ambiguous outside its
 Subject (*Claude Code hooks*). A Walkthrough's title names its story.

@@ -12,9 +12,10 @@ Read the page as two readers: a developer new to the tool, and one who knows
 the tool but not Terrarium.
 
 - **Title.** It passes EVERY-PAGE's title rule.
-- **Cut.** One concept, readable on its own (EVERY-PAGE's Stand alone), large
-  enough to stand alone, and the only home of each fact it teaches: a sibling
-  that teaches the same thing is an overlap on both pages.
+- **Cut.** One concept, enough of it to teach, readable on its own
+  (EVERY-PAGE's Stand alone) with each Terrarium word explained at first use,
+  and the only home of each fact it teaches: a sibling that teaches the same
+  thing is an overlap on both pages.
 - **Accuracy.** Every claim is true at the page's `revision`, every reason
   traces to the ADR or file it cites, and the lede holds for the edge cases
   the page itself names.
@@ -28,8 +29,8 @@ the tool but not Terrarium.
 ## Grades
 
 - **A**: meets the bar, even if another wording is imaginable.
-- **B**: one noticeable deficit.
-- **C**: several deficits, a failed cut, or a false claim.
+- **B**: a noticeable deficit.
+- **C**: several deficits, a failed cut, or a failed accuracy check.
 
 Each deficit names its criterion, quotes the page and says the fix. Anything
 short of a deficit goes under **Optional**; an Optional item never drives an
