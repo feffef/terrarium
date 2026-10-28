@@ -55,7 +55,7 @@ One subagent reads the logs and hands back a short ranked report. It reads every
 The subagent drops a Friction that a merged change already fixed, one that an open issue or PR already tracks (unless it has sat idle), one inside an instruction that a :term[Prune Trial] is testing, and one that only an edit to an outside pack Skill could fix. A Friction that came back after its fix merged is a regression: the run files an issue that names the fix that failed, and doesn't try the same fix again.
 
 ::stop-links
-[Prune Trials](/t/glassbox/drafts/terrarium-practice/prune-trials) · [The Skill pack](/t/glassbox/drafts/skill-pack/skill-pack) · :file[scripts/git/list-merges-since.ts]
+[Prune Trials](/t/glassbox/drafts/terrarium-practice/prune-trials) · [The Skill pack](/t/glassbox/guide/skill-pack/skill-packs) · :file[scripts/git/list-merges-since.ts]
 ::
 
 ## 6. The run picks what to fix
