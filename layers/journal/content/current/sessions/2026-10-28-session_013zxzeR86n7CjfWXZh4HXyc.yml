@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeR86n7CjfWXZh4HXyc
 startedAt: 2026-10-28T09:10:29Z
-endedAt: 2026-10-28T09:47:46Z
+endedAt: 2026-10-28T09:51:30Z
 kind: interactive
 goal: Cluster the Friction Ledger by harm, not by slip
-status: in-review
-outcome: "PR #2630 open: a new survey rule, a re-clustered ledger and two ledger script fixes"
-summary: "Human-instructed throughout. The Trusted user asked me to check the Friction Ledger for clusters that count a working fix's guard firing as a regression, and for cluster text that never generalised. I found examples of both (github-search-overflow, bare-cd-moves-session-cwd, survey-output-overflow) and asked how to proceed. The user chose to re-cluster existing data, use `ref`, rewrite text directly, and override the open Prune Trial on survey-brief.md. My first rule split on \"different friction\" while keeping same-slip cases, which both reviewers flagged as inconsistent. The user then set the rule: a Friction is its harm, so a fix-caught slip with a new harm (retry, false positive, no cost) gets its own entry. At the user's request I fanned out four read-only audit agents over the 134 entries, verified every proposed move against the stored texts myself, and asked about three judgement calls (apply all; split zero-cost shell reads; leave strays). About 60 occurrences moved through --move. 9 new entries exist, about 30 entries got rewritten text, and the occurrence count is unchanged at 951. The user then approved three more brief rules (match on harm, follow a cause's routing, rewrite a cause when recording a fix). ledger-set.ts gained in-place summary/cause/surface edits; --move's flow-style bug was found and fixed by me along the way."
+status: completed
+outcome: "PR #2630 merged: a new survey rule, a re-clustered ledger and two ledger script fixes"
+summary: "Human-instructed throughout. The Trusted user asked me to check the Friction Ledger for clusters that count a working fix's guard firing as a regression, and for cluster text that never generalised. I found examples of both (github-search-overflow, bare-cd-moves-session-cwd, survey-output-overflow) and asked how to proceed. The user chose to re-cluster existing data, use `ref`, rewrite text directly, and override the open Prune Trial on survey-brief.md. My first rule split on \"different friction\" while keeping same-slip cases, which both reviewers flagged as inconsistent. The user then set the rule: a Friction is its harm, so a fix-caught slip with a new harm (retry, false positive, no cost) gets its own entry. At the user's request I fanned out four read-only audit agents over the 134 entries, verified every proposed move against the stored texts myself, and asked about three judgement calls (apply all; split zero-cost shell reads; leave strays). About 60 occurrences moved through --move. 9 new entries exist, about 30 entries got rewritten text, and the occurrence count is unchanged at 951. The user then approved three more brief rules (match on harm, follow a cause's routing, rewrite a cause when recording a fix). After two review rounds and a green gate, I merged PR #2630 myself under ADR-0004 (no Human-only file). ledger-set.ts gained in-place summary/cause/surface edits; --move's flow-style bug was found and fixed by me along the way."
 prs:
   - "2630"
 docsRead:
@@ -205,21 +205,30 @@ frictions:
   - description: The Stop hook asked to push about eight times while reviews, audits and the gate were still running; each needed a reply.
     solution: Harness-side hook, already tracked as stop-hook-nag (accepted).
     severity: nit
-durationSec: 2237
+  - description: My first scan printed every post-fix occurrence across the ledger (102 KB), which overflowed to a file and needed a second, filtered grep.
+    solution: Filter by keyword in the first scan, or hand a full-ledger read to subagents from the start.
+    severity: nit
+durationSec: 2461
 models:
-  claude-opus-5-5: 232
+  claude-opus-5-5: 252
 toolCounts:
   Grep: 1
-  Bash: 76
+  Bash: 80
   Read: 4
-  Skill: 4
+  Skill: 5
   Agent: 8
   AskUserQuestion: 2
-  ToolSearch: 2
+  ToolSearch: 3
   SendMessage: 6
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - .agents/skills/frictions-to-fixes/survey-brief.md
@@ -375,49 +384,49 @@ subagents:
     durationSec: 61
     toolCalls: 12
     modelCalls: 7
-    tokenShare: 3.1
+    tokenShare: 2.8
   - type: general-purpose
     task: Spec review of ledger change
     durationSec: 77
     toolCalls: 10
     modelCalls: 10
-    tokenShare: 3.5
+    tokenShare: 3.1
   - type: general-purpose
     task: Ledger audit slice A
     durationSec: 241
     toolCalls: 45
     modelCalls: 15
-    tokenShare: 5.2
+    tokenShare: 4.7
   - type: general-purpose
     task: Ledger audit slice B
     durationSec: 307
     toolCalls: 16
     modelCalls: 15
-    tokenShare: 5.7
+    tokenShare: 5.2
   - type: general-purpose
     task: Ledger audit slice C
     durationSec: 230
     toolCalls: 42
     modelCalls: 13
-    tokenShare: 4.5
+    tokenShare: 4.1
   - type: general-purpose
     task: Ledger audit slice D
     durationSec: 229
     toolCalls: 20
     modelCalls: 19
-    tokenShare: 5.9
+    tokenShare: 5.4
   - type: general-purpose
     task: Standards review of follow-up
     durationSec: 156
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 6.2
+    tokenShare: 5.6
   - type: general-purpose
     task: Spec review of follow-up
     durationSec: 128
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 4.7
+    tokenShare: 4.3
 gitBranch: ccr-be1f560e-1g8bev
 entrypoint: remote_mobile
 cliVersion: 2.1.312
