@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePhRwXqYLtsycYUhqv
 startedAt: 2026-10-28T00:17:07Z
-endedAt: 2026-10-28T00:34:02Z
+endedAt: 2026-10-28T00:38:07Z
 kind: autonomous
 goal: Write the 2026-10-27 Journal Digest
-status: in-review
-outcome: "Digest PR #2606 open and green; retention sweep left out because it broke an e2e test"
-summary: "Scheduled digest run (agent-initiated by the schedule, no human prompts). Wrote the 2026-10-27 Digest from gather output, fact-checked it with a sonnet subagent (25 claims, no wrong ones, two wordings tightened). The archive sweep moved 1 Digest and 14 session logs to archived, and gate:scoped then failed twice on the /t/journal/archived smoke test (response body evicted from inspector cache). A baseline build of the parent commit passed, so the sweep caused it. I dropped the sweep, kept the Digest only, re-ran the gate green, pushed and opened PR #2606, saying the sweep needs a human to fix tests/support/e2e.ts (reads the response body after hydration). Open: the sweep stays blocked until that fix lands."
+status: partial
+outcome: "Digest merged in PR #2606; retention sweep left out because it breaks an e2e test"
+summary: "Scheduled digest run (agent-initiated by the schedule, no human prompts). Wrote the 2026-10-27 Digest from gather output, fact-checked it with a sonnet subagent (25 claims, no wrong ones, two wordings tightened). The archive sweep moved 1 Digest and 14 session logs to archived, and gate:scoped then failed twice on the /t/journal/archived smoke test (response body evicted from inspector cache). A baseline build of the parent commit passed, so the sweep caused it. I dropped the sweep, kept the Digest only, re-ran the gate green, pushed and opened PR #2606 (merged on green CI), saying the sweep needs a human to fix tests/support/e2e.ts (reads the response body after hydration). Open: the sweep stays blocked until that fix lands."
 prs:
   - "2606"
 docsRead:
@@ -46,17 +46,21 @@ frictions:
   - description: First attempt to run the gate in the background double-backgrounded and was blocked by the guard.
     solution: Use run_in_background alone with a plain foreground command.
     severity: nit
-durationSec: 1015
+durationSec: 1260
 models:
-  claude-sonnet-5-5: 71
+  claude-sonnet-5-5: 86
 toolCounts:
-  Bash: 26
+  Bash: 29
   Read: 4
   Skill: 3
   Agent: 1
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  PushNotification: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-27.md
 rulesLoaded:
@@ -116,7 +120,7 @@ subagents:
     durationSec: 103
     toolCalls: 32
     modelCalls: 9
-    tokenShare: 23.7
+    tokenShare: 19.8
 gitBranch: claude/compassionate-lovelace-3ygv4g
 entrypoint: remote_trigger
 cliVersion: 2.1.312
