@@ -26,13 +26,13 @@ call, and every check in the foreground. Run `pnpm install`, then
 page you edit to {BASE} (EVERY-PAGE's Pin, with {BASE} in place of
 `origin/main`).
 
-**Your files.** Edit only the pages your task names; a draft you promote is
-yours to move, and every link to it yours to repoint, in a commit of its own.
-Edit a diagram only to fix a deficit in it, then run
-`pnpm render:mermaid` and commit its SVGs; add no new diagram. Report every
-edit another file needs instead of making it, as `path | old text | new
-text`: link text after a retitle, a new Term, a Where next entry, a
-Walkthrough chip.
+**Your files.** Edit only the pages your task names. A draft you promote is
+yours to move, and in a commit of its own you repoint the links to it in every
+draft that has one; a links-only edit keeps that draft's pin. Edit a diagram
+only to fix a deficit in it, then run `pnpm render:mermaid` and commit its
+SVGs; add no new diagram. Report every edit another file needs instead of
+making it, as `path | old text | new text`: link text after a retitle, a new
+Term, a Where next entry, a Walkthrough chip.
 
 **Size.** If a fix needs about half the page or more rewritten, stop and
 report back instead. If a deficit is wrong, refuse it with proof.
