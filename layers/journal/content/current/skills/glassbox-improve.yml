@@ -4,8 +4,8 @@ importance: specialist
 gist: Raises the Glass Box guide one step by fixing its weakest page.
 role: >-
   Three raters grade every Glass Box guide page; the run fixes the weakest by
-  consensus and self-merges one PR. Meant to be manual (disable-model-invocation),
-  though its frontmatter does not parse.
+  consensus and self-merges one PR. Meant to be manual
+  (disable-model-invocation).
 observations:
   - date: "2026-10-28"
     note: >-

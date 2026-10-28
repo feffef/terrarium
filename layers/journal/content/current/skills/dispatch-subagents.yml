@@ -474,5 +474,4 @@ observations:
       session_013zxzeRkASapvnaGkGVdSBk: check:worktrees failed on ~15 agent
       worktrees whose work landed as cherry-picks (the earlier false-positive
       class), and two promotion agents edited each other's draft link (step 4
-      same-file miss). Idea: have check-worktrees excuse a HEAD whose patch-id
-      is on main. Grade/role unchanged (essential).
+      same-file miss). Grade/role unchanged (essential).

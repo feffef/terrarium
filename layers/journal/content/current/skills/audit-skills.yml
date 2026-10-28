@@ -649,7 +649,7 @@ observations:
   - date: "2026-10-28"
     note: >-
       Behaviour check of 9 runs, 7 Inventory PRs merged (#2578, #2555, #2530,
-      #2502, #2473, #2423, #2396). Verified new shape on #2472:
+      #2502, #2473, #2423, #2396). Unverified new shape, added to #2472:
       session_01WKUyPyRBzirHHAhDr7Y8Ek and session_019g1t4RX7PcR54io7GRdxXK
       read their own diff after non-simple review-fix commits. Unverified:
       session_01TaUpbA3idjNZSgGpNjXj8S left subagent counts unchecked (step
