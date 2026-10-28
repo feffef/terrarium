@@ -2,7 +2,7 @@ name: dispatch-subagents-skill-unread
 summary: >-
   Agents dispatched subagents or a workflow without first reading the dispatch-subagents Skill.
 cause: >-
-  CLAUDE.md's dispatch-subagents trigger is prose with no hint (read-first-hint.ts covers only git, GitHub and screenshots), and agents read it as not covering read-only git or a saved workflow (clear-backlog-build, explore) that dispatches for them. Signals: "without reading the dispatch-subagents Skill", "read-only git diff", "the workflow does the dispatch".
+  Agents dispatch before reading the dispatch-subagents Skill, reading CLAUDE.md's trigger as not covering read-only git or a saved workflow (clear-backlog-build, explore) that dispatches for them. Since #2550 a guard blocks the first Agent, Workflow or SendMessage call until the Skill is read, so a slip costs one retried call. Signals: 'dispatch-read guard blocked', 'without reading the dispatch-subagents Skill', 'the workflow does the dispatch'.
 surface: safe
 status: accepted
 ref: "issue #2580 closed not planned on 2026-10-27: the owner accepts the one-retry cost of the #2550 dispatch-read guard; saved workflows stay unexempted, since clear-backlog-build takes orchestrator-written briefs."

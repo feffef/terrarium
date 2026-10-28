@@ -66,7 +66,9 @@ Every edit goes through
    `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts --append <entry> <session> <index> [<entry> <session> <index> …]`
    copies each Friction's text from its log (a content test checks the
    copy) and appends it under its entry; it refuses a session the entry
-   already holds.
+   already holds. When an appended Friction goes beyond the entry's
+   `summary` or `cause`, rewrite them with `ledger-set.ts <entry> --summary
+   --cause` so they cover every occurrence.
 2. **Open a new entry** for a cause seen twice, or once at `moderate`,
    `major` or `blocker`. Its `summary` is one plain sentence a visitor can
    read; its `cause` names the root mechanism and the signals that identify
@@ -104,6 +106,11 @@ no `tracked` or `on-trial` entry points at something closed.
 ### Edge cases
 
 - A Friction sits in one cluster unless its text names two causes.
+- A Friction a fix produced (its guard denied, its hint fired, its script
+  refused) belongs to that fix's cluster only if it is the same friction.
+  If it costs something different (a retry instead of the original harm, a
+  false positive), it is a new cause: give it its own entry whose `ref`
+  names the original entry and the fix, never a regression of the original.
 - `--unledgered` drops per Friction, not per session: a session's other
   Frictions stay listed, so skip one already in the target cluster.
 - This run's own PRs are recorded by the main session. A PR an earlier run
@@ -115,8 +122,9 @@ no `tracked` or `on-trial` entry points at something closed.
   latest PR) or `still recurring`. A re-fix after a regression needs only
   its `fixes` entry. An `accepted` cluster (the owner accepts its cost) is
   never re-proposed.
-- `ref` holds the tracking issue or open PR, the trial's territory match or
-  what a fix left open, never a merged PR.
+- `ref` holds the tracking issue or open PR, the trial's territory match,
+  what a fix left open, or the entry and fix a new cause came from; never a
+  merged PR that fixes this entry (that goes in `fixes`).
 - Recurrence is an entry's occurrences within the horizon
   (`LEDGER_HORIZON_DAYS` in `layers/journal/app/utils/ledger.ts`), counting
   only sessions that started after its fix merged when it has one.

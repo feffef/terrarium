@@ -1,6 +1,6 @@
 name: bare-cd-moves-session-cwd
-summary: A plain cd in the main agent's shell moved its working directory for every later command, so relative paths and git commands ran in the wrong place.
-cause: "In the primary session the Bash tool keeps the working directory between calls, so a bare cd (into a worktree, the frictions folder, .agents/skills, node_modules) persists: later relative paths fail, git or merge-pr runs in the wrong checkout, and removing a worktree leaves the shell in a deleted directory. Signals: 'a cd into', 'moved the primary working directory', 'had to cd back', 'deleted directory'."
+summary: A cd in the main agent's shell, alone or inside a compound command, moved its working directory for every later call, so relative paths and git commands ran in the wrong place.
+cause: "In the primary session the Bash tool keeps the working directory between calls, so any cd (a bare one, or one chained inside a compound command) into a worktree, the frictions folder, .agents/skills or node_modules persists: later relative paths fail, git or merge-pr runs in the wrong checkout, removing a worktree leaves the shell in a deleted directory, and parallel Bash calls that cd race on the shared directory (a commit pushed to the wrong branch). Signals: 'a cd into', 'chained cd', 'moved the primary working directory', 'had to cd back', 'deleted directory', parallel calls landing in the wrong checkout."
 surface: safe
 status: open
 ref: "fix PR #2507 merged 2026-10-25"
