@@ -16,7 +16,8 @@ Then read each of these pages in full, as it is at {COMMIT}:
 {PAGES}
 
 Spot-check any claim that looks wrong against the file it cites
-(`git show {COMMIT}:<path>`). A false claim you confirm is a deficit.
+(`git show {COMMIT}:<path>`). A false claim you confirm is a deficit; quote the
+`path:line` that contradicts it.
 
 Report, in this order (only section 1 if told so below):
 
@@ -36,4 +37,6 @@ Report, in this order (only section 1 if told so below):
 {REPORT SCOPE: empty, or "Report section 1 only."}
 
 Then, for each rule and doc you loaded or read: its path, why it loaded or
-was read, and whether it was useful (yes, partly, no).
+was read, and whether it was useful (yes, partly, no). Return the whole report
+in your final message; any file you write, page dumps included, goes in
+{SCRATCH}.

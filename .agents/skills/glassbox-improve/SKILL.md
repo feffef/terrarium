@@ -43,13 +43,15 @@ run's scratch folder, and work only from those files.
 
 If a PR titled `glassbox-update:` is open, stop: invoke `close-session` as
 `blocked`, naming it, and run again once it lands. Otherwise, on the session's
-designated branch, start from a fresh `origin/main` and note that commit as
-**the base**.
+designated branch (with none, `glassbox-improve/<YYYY-MM-DD>-<HHMM>` in UTC: a
+day can hold two runs), start from a fresh `origin/main` and note that commit
+as **the base**.
 
 Write the **cooling-off pages** to the scratch folder: every page the last 2
 runs (or the only one) changed (their merges: `git log origin/main --merges
 --grep '^glassbox-improve: [0-9]'`; each one's pages: `git diff --name-only
---no-renames <merge>^1 <merge>`). Add every page
+--no-renames <merge>^1 <merge>`), each under its path at the base (`git diff
+-M --name-status <merge> <base>` lists a later rename). Add every page
 an open PR touches. Done when the list is written.
 
 ## 2. Rate
@@ -85,7 +87,8 @@ Merge the three reports into one tally file:
   the Remit's cap.
 - **Structural step.** Take the gap or re-cut that most raters raise, at
   least two, under the same filters; on a tie, a promotion beats a new
-  Lesson, which beats a re-cut. A gap a draft fills is filled by promoting
+  Lesson, which beats a re-cut, and within one kind the lowest sum of the
+  raters' importance ranks wins. A gap a draft fills is filled by promoting
   that draft. Read a candidate draft first: one that needs about half its
   lines changed or more is not promoted this run (an idea); take the next
   structural candidate. A gap that needs a new Subject is out of remit. A
@@ -135,15 +138,16 @@ branch.
 
 ## 7. Review
 
-Run `code-review` on the run branch against the base, with the tally file as
-the spec. Send each finding on a page to its writer with `SendMessage` and
+Run `code-review` on the run branch against the base, with the tally file and
+step 6's join edits as the spec. Send each finding on a page to its writer with `SendMessage` and
 merge its new commit; fix join findings yourself. Then dispatch three fresh
 raters (same models, same brief) on only the pages a writer raised, promoted,
 wrote or re-cut, with the run branch's tip as the commit and the line "Report
 section 1 only." Their deficits pass step 3's Deficits and Filters before they
 count. A page that keeps a consensus deficit gets one more fix round on it,
 then a last re-grade. Stop there: a page still below A stays as that round
-left it, and the PR body says why. Done when every `code-review` finding is
+left it, and the PR body says why; a false claim that round confirms is still
+fixed, before step 8's gate. Done when every `code-review` finding is
 fixed or refused with its reason in the PR body, and every re-graded page has
 its last grades.
 
