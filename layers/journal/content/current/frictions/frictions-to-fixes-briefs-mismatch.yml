@@ -75,3 +75,13 @@ occurrences:
     severity: nit
     description: "Design agent: survey-brief and design-brief leave audit-skills docReadCounts parsing unspecified (plain text before the JSON), and it never opened the human-merge paths file."
     solution: "Say to parse from the first brace, or give the script a --json flag."
+  - session: session_01CpD4piFGbFhvGG5KWdtsCG
+    date: "2026-10-26"
+    severity: nit
+    description: "Survey brief step 5 and the report left the --summary 'since' counts hard to tie to entries; I reran --summary myself to pick the top three regressions."
+    solution: "Ask the survey to report each regression's since-date severity and a verified count, as SKILL.md section 2 ranks by."
+  - session: session_013zxzeRNBrVkwWy4fcM4Pxa
+    date: "2026-10-27"
+    severity: minor
+    description: "Survey subagent reported the brief omits --out for --summary and --candidates, that --append is all-or-nothing on a duplicate session, and that §3 tracker paging is heavy for about 140 candidates."
+    solution: "Add --out to the survey brief's summary step and an append mode that skips sessions an entry already holds."

@@ -559,3 +559,53 @@ occurrences:
     severity: nit
     description: "Ran git status and the digest list before reading git-conventions.md, against CLAUDE.md's before-first-git-command trigger; read it right after."
     solution: "Read git-conventions.md first in the digest Skill's step 1."
+  - session: session_013zxzeSUpjg6SAiwnSEaefz
+    date: "2026-10-27"
+    severity: nit
+    description: "Ran git remote -v and git fetch before reading docs/agents/git-conventions.md, against CLAUDE.md; a hook flagged it. No harm."
+    solution: "Read git-conventions.md before any git command beyond status and diff, even read-only ones."
+  - session: session_013zxzePLLgArtn1cuyZAmNd
+    date: "2026-10-27"
+    severity: nit
+    description: "Read git-conventions.md only after my first git command, when a hook prompted, instead of before as CLAUDE.md requires."
+    solution: "Load the doc at session start for scheduled Skills that always run git."
+  - session: session_013zxzeQTGBbhXQGepc3y2z8
+    date: "2026-10-27"
+    severity: nit
+    description: "Ran git rev-parse --is-shallow-repository before reading git-conventions.md; the hook flagged it"
+    solution: "The command was harmless; clear-backlog §1's unshallow check could note it is exempt from the read-first trigger"
+  - session: session_013zxzeQV6Jcqg4jYk2tkwBq
+    date: "2026-10-27"
+    severity: nit
+    description: "I read layers/blog/GLOSSARY.md and ADR-0012 only after hooks asked, after the post was written."
+    solution: "Read the Tenant glossary at step 1, before drafting."
+  - session: session_013zxzeRkASapvnaGkGVdSBk
+    date: "2026-10-27"
+    severity: nit
+    description: "Ran git rev-parse HEAD before reading docs/agents/git-conventions.md, which CLAUDE.md asks for before git beyond status/diff"
+    solution: "Harmless read-only command; the hint fired after. Read the doc first or treat rev-parse as exempt like status"
+  - session: session_013zxzePnX2He1hvzhQj7LrJ
+    date: "2026-10-27"
+    severity: nit
+    description: "Ran git fetch and git log to judge whether f1b551f27 was on main before reading git-conventions.md, as CLAUDE.md requires."
+    solution: "Read it at the first git command beyond status; a hook reminder fired only after the fact."
+  - session: session_013zxzeSSnD8PnNngq431n1o
+    date: "2026-10-27"
+    severity: nit
+    description: "Ran git log on hook history to draw a conclusion before reading git-conventions.md, against CLAUDE.md read-first"
+    solution: "The read-first hint fired after the call; it worked as designed, no change needed"
+  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
+    date: "2026-10-27"
+    severity: nit
+    description: "Ran git fetch and git log before reading docs/agents/git-conventions.md; a hook flagged it after the call."
+    solution: "Read git-conventions.md before the first git command beyond status and diff, as CLAUDE.md says; harmless here since both were read-only."
+  - session: session_013zxzePhRwXqYLtsycYUhqv
+    date: "2026-10-28"
+    severity: nit
+    description: "Read git-conventions.md and github-integration.md only after the first git/GitHub operation, not before, as CLAUDE.md requires."
+    solution: "Read the triggered docs before the first git or GitHub command."
+  - session: session_013zxzeRpJV1qxKtqhnjBVTy
+    date: "2026-10-28"
+    severity: nit
+    description: "Read git-conventions.md and github-integration.md only after hooks fired post first git and GitHub calls, although CLAUDE.md requires them before."
+    solution: "Load both when the audit Skill is invoked so a scheduled run reads them up front."

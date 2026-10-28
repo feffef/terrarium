@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Session logs and Digests land on main without a gate (ADR-0009), and the retention sweep moves logs to archived, while e2e and unit tests read specific logs' text or current paths, so the sweep or one log turns the gate red for the Digest PR and others. Signals: a gate red after an archive sweep, a test reading content/current/sessions by path, an assertion on a log's wording.
 surface: safe
-status: open
-ref: "issue #2105 closed completed 2026-10-23: no test names a real content/current file, no guard will be added. PR #2394 closed issue #2398 (regression of #2108)."
+status: tracked
+ref: "issue #2105 reopened 2026-10-28 (5th occurrence): the retention sweep makes the archived page too large for the smoke test's body read (tests/support/e2e.ts); PR #2394 closed issue #2398 (regression of #2108)."
 fixes:
   - pr: 2108
     date: "2026-10-16"
@@ -29,3 +29,8 @@ occurrences:
     severity: moderate
     description: "Archive sweep moved a session log that a unit test reads by its current path, so the gate failed; the Skill's allowed diff cannot include the fix."
     solution: "Make the test not depend on a log that ages out (fixture copy), or have the sweep skip it."
+  - session: session_013zxzePhRwXqYLtsycYUhqv
+    date: "2026-10-28"
+    severity: moderate
+    description: "Archive sweep makes the archived-page e2e test fail deterministically (body evicted from inspector cache); cost two gate runs and a baseline build to diagnose."
+    solution: "Fix expectServerRendered in tests/support/e2e.ts to read the body before hydration, then run the sweep."

@@ -71,3 +71,8 @@ occurrences:
     severity: nit
     description: "A cd into a workflow worktree inside a compound Bash call moved the session's primary working directory to that worktree until the next call."
     solution: "Use git -C and absolute paths for worktree commands, as dispatch-subagents §3 says for subagents."
+  - session: session_013zxzeRNBrVkwWy4fcM4Pxa
+    date: "2026-10-27"
+    severity: nit
+    description: "A cd into the frictions directory in a compound Bash call moved the primary working directory; I had to use absolute paths until the next cd back."
+    solution: "Use absolute paths in compound Bash calls, never cd."

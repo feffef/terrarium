@@ -359,3 +359,18 @@ occurrences:
     severity: nit
     description: "The Stop hook asked to commit and push four times while the fact-check, reviews and gate were pending; ADR-0004 says review and gate first."
     solution: "Make the Stop hook skip when a review or gate is pending."
+  - session: session_013zxzeRNBrVkwWy4fcM4Pxa
+    date: "2026-10-27"
+    severity: nit
+    description: "Stop hook asked to push the ledger commits three times while the gate was still running and the Skill says review and gate come first."
+    solution: "The hook could skip its nag while a gate:scoped run or a Skill-ordered review is pending."
+  - session: session_013zxzeQV6Jcqg4jYk2tkwBq
+    date: "2026-10-27"
+    severity: nit
+    description: "Repeated Stop-hook push nags arrived while gate:scoped ran in the background; I had to hold the push each time."
+    solution: "Stop hook could skip its nag while a gate log is still running."
+  - session: session_013zxzePY9L4aufht9ct94ec
+    date: "2026-10-27"
+    severity: nit
+    description: "The Stop hook asked to push the impl branch while review fixes were still pending."
+    solution: "None needed; ADR-0004 says to ignore it until review is clean."

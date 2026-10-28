@@ -102,3 +102,13 @@ occurrences:
     severity: minor
     description: "Triage of #2544 reasoned the friction was likely a standalone e2e run; the events showed it was the gate's own fresh build, misread as stale."
     solution: "For a regression report, inspect the reporting session's events before proposing options."
+  - session: session_013zxzeSSnD8PnNngq431n1o
+    date: "2026-10-27"
+    severity: moderate
+    description: "My first grilling round stated commandWords was linear without measuring it; a Fable verifier found it quadratic and crash-prone"
+    solution: "Before claiming a performance property in a proposal, run a quick timing probe on adversarial input"
+  - session: session_013zxzeSUpjg6SAiwnSEaefz
+    date: "2026-10-27"
+    severity: minor
+    description: "My first #2577 comment said a cloud run needs the owner's permission for separate branches; the owner corrected that written repo instructions already grant it, so I edited the comment."
+    solution: "Treat a Skill's written step as the explicit permission the harness system prompt asks for."

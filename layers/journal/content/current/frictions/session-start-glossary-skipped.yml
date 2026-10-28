@@ -96,3 +96,8 @@ occurrences:
     severity: nit
     description: "Skipped the session-start GLOSSARY-MAP.md and GLOSSARY.md reads CLAUDE.md requires; no wrong term resulted that I know of."
     solution: "Read them in the first tool call even for a chat-only question."
+  - session: session_013zxzePnX2He1hvzhQj7LrJ
+    date: "2026-10-27"
+    severity: nit
+    description: "Did not read layers/tinkerfund/GLOSSARY.md as the tenant-glossary rule asks before working on a Tenant."
+    solution: "Read it at first Tenant touch; no term was misused here."

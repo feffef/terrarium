@@ -2,8 +2,11 @@ name: observation-notes-truncated-ids
 surface: safe
 summary: Skill Inventory observation notes and similar written notes cited sessions by truncated ids that review had to expand.
 cause: "Notes written from subagent reports or from memory carry shortened session ids (and PR counts GitHub already shows) instead of the full id, so code-review catches them and the author swaps in full ids. Signals: 'truncated session ids', 'swapped in full ids', 'late look-back'."
-status: tracked
-ref: "issue #2582"
+status: open
+fixes:
+  - pr: 2590
+    date: "2026-10-27"
+    summary: "The Skill Inventory schema now rejects an observation note that cites a truncated session id."
 occurrences:
   - session: session_01TaUpbA3idjNZSgGpNjXj8S
     date: "2026-10-26"

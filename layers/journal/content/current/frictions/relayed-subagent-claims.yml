@@ -128,3 +128,8 @@ occurrences:
     severity: nit
     description: "A Standards reviewer wrongly claimed the closureRefusal line anchor was off by one and a Spec reviewer wrongly said +33 -20 was one commit's numstat; both needed my own git and API checks."
     solution: "Brief reviewers to verify anchors with git show before calling them wrong."
+  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
+    date: "2026-10-27"
+    severity: minor
+    description: "Told the owner several quality rules were unwritten, taken from a subagent's report without checking; mechanism-not-motive and no-counts already existed. I corrected it a turn later. Breaks CLAUDE.md's verify-before-you-state."
+    solution: "Grep the writing docs for each rule a subagent calls unwritten before stating it."

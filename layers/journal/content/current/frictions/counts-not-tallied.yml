@@ -90,3 +90,13 @@ occurrences:
     severity: nit
     description: "Told the user '31 misses' in a progress note from an eyeballed list; the scripted count is 30. Broke CLAUDE.md's verify-before-you-state; caught before the report."
     solution: "Print the count from the script before stating any number, even in an interim update."
+  - session: session_013zxzeQV6Jcqg4jYk2tkwBq
+    date: "2026-10-27"
+    severity: minor
+    description: "I wrote an uncounted claim tally (54) into the PR body, then recounted the fact-check rows (49) and corrected it."
+    solution: "Count rows before writing the tally."
+  - session: session_013zxzePJnRATi9QoJAjCxgq
+    date: "2026-10-27"
+    severity: nit
+    description: "The ledger numbers (66/67) were stale after review-fix edits and had to be recomputed and re-committed."
+    solution: "Compute numstat and the ledger entry only after the review fixes land."

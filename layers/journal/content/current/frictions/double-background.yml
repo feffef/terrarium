@@ -106,3 +106,8 @@ occurrences:
     severity: nit
     description: "My first attempt to gate two branches in one background call with & was blocked by the double-background guard; I resent it as two calls."
     solution: "Run one background Bash call per gate from the start."
+  - session: session_013zxzePhRwXqYLtsycYUhqv
+    date: "2026-10-28"
+    severity: nit
+    description: "First attempt to run the gate in the background double-backgrounded and was blocked by the guard."
+    solution: "Use run_in_background alone with a plain foreground command."

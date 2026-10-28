@@ -53,3 +53,8 @@ occurrences:
     severity: nit
     description: "After PRs #2564-#2568 opened I re-authored the log with log-session directly instead of re-invoking close-session as the PR-open hook asked; the log stayed current, but the close-session checklist was skipped for those PRs."
     solution: "Re-invoke close-session on each PR-open hook hint, even when the log was just authored."
+  - session: session_013zxzePF1h9UuQNTHz2bNLb
+    date: "2026-10-27"
+    severity: nit
+    description: "Re-authored the log as completed straight through log-session after the merge; it refused until close-session ran, costing one extra call."
+    solution: "After a merge, invoke close-session first, as its re-invoke line says; I went by memory of the earlier flow."

@@ -85,3 +85,13 @@ occurrences:
     severity: nit
     description: "Called ScheduleWakeup to wait for the build; the loop-only guard blocked it because this was not a /loop session."
     solution: "Visitor-loop SKILL could say to end the turn on a backgrounded build instead of polling."
+  - session: session_013zxzePwzHSC4uh6dyhsHxg
+    date: "2026-10-27"
+    severity: nit
+    description: "A foreground sleep chain to wait for the build was blocked, costing a retry."
+    solution: "Start builds with run_in_background and wait with an until-loop from the first call."
+  - session: session_013zxzeRpJV1qxKtqhnjBVTy
+    date: "2026-10-28"
+    severity: nit
+    description: "ScheduleWakeup is blocked outside /loop, and I armed two monitors on the same gate log, wasting a call."
+    solution: "End the turn and wait for the background task notification once; do not arm duplicate monitors."

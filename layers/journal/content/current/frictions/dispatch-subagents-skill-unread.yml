@@ -107,3 +107,18 @@ occurrences:
     severity: minor
     description: "The dispatch-read guard blocked the first clear-backlog-explore Workflow call until I read dispatch-subagents, whose brief-writing steps don't apply to a saved workflow the Skill runs by name."
     solution: "Exempt named saved workflows (clear-backlog-explore/build) from the dispatch-read guard, since they brief their own agents."
+  - session: session_013zxzeQTGBbhXQGepc3y2z8
+    date: "2026-10-27"
+    severity: nit
+    description: "The dispatch-read guard blocked the first clear-backlog-explore Workflow call until I read dispatch-subagents (the #2580 cost, now accepted)"
+    solution: "Accepted by the owner in #2580; read dispatch-subagents at the start of a clear-backlog run"
+  - session: session_013zxzeQV6Jcqg4jYk2tkwBq
+    date: "2026-10-27"
+    severity: minor
+    description: "The dispatch-read guard blocked my first Agent call because I had not read dispatch-subagents SKILL.md; one wasted call."
+    solution: "Read dispatch-subagents before the first brief; blog-post step 6 could name it."
+  - session: session_013zxzePwzHSC4uh6dyhsHxg
+    date: "2026-10-27"
+    severity: nit
+    description: "Agent calls were blocked by the dispatch-read guard, so the three visitor dispatches had to be repeated unchanged after reading the Skill."
+    solution: "Have visitor-loop step 2 name dispatch-subagents as a read-first, or let the guard accept the Skill's own briefs."

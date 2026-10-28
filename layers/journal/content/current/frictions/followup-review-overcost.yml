@@ -14,3 +14,8 @@ occurrences:
     severity: minor
     description: "pr-workflow's follow-up rule sent a 30-line owner-directed prose cut, already probed on Sonnet, through a full two-agent code-review before merge: about 170k subagent tokens to confirm nothing."
     solution: "None proposed: pr-workflow.md is in an open Prune Trial (its 'simple change' bar), so the cost is logged here for that trial's verdict."
+  - session: session_013zxzeRNBrVkwWy4fcM4Pxa
+    date: "2026-10-27"
+    severity: minor
+    description: "Running code-review with two subagents on a 4-line doc change, after a rewrap round, cost about 120k subagent tokens to find nothing blocking."
+    solution: "Let pr-workflow's simple-change test cover a one-sentence addition to a Skill that adds no new rule."

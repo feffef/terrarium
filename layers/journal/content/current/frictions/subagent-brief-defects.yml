@@ -89,3 +89,8 @@ occurrences:
     severity: nit
     description: "Inspect-session brief used a single-string selector; search.ts wants tool and regex as separate args, so the subagent first got usage only."
     solution: "Show the selector split in the inspect-session brief template, e.g. tool Bash 'regex'."
+  - session: session_013zxzeRkASapvnaGkGVdSBk
+    date: "2026-10-27"
+    severity: minor
+    description: "Briefed Lesson titles without the 'field name, not ours' rule up front; two promoted pages kept project jargon titles until the user flagged it"
+    solution: "Quote EVERY-PAGE.md's title rule in briefs and check titles against the tool's own docs before integrating"

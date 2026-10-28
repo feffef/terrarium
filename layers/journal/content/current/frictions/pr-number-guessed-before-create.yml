@@ -39,3 +39,8 @@ occurrences:
     severity: nit
     description: "I guessed the new PR number when subscribing (2470) instead of reading create_pull_request's result (2468), and had to unsubscribe and resubscribe."
     solution: "Subscribe only after reading the PR number from the create result, not in the same parallel batch."
+  - session: session_013zxzeRkASapvnaGkGVdSBk
+    date: "2026-10-27"
+    severity: nit
+    description: "Subscribed to PR #2599 in the same call batch as creating the PR, guessing its number; the real PR was #2600, so one wrong subscribe had to be undone"
+    solution: "Subscribe only after create_pull_request returns the PR number"

@@ -1,0 +1,11 @@
+name: glassbox-improve-first-run-cost
+surface: safe
+summary: The first glassbox-improve run rated every page and draft, costing far more than the fixes it found.
+cause: "The first-run cooling-off fallback (14 days) makes every guide page and draft eligible, so each rater reads hundreds of sources for few fixes. Signals: 'cooling-off fallback', 'raters', ~300k-token raters, glassbox-improve."
+status: open
+occurrences:
+  - session: session_013zxzePtKmw2meUvnUBaNQh
+    date: "2026-10-27"
+    severity: moderate
+    description: "First-run cooling-off fallback (14 days) covered every guide page and draft, so three ~300k-token raters bought only two false-claim fixes"
+    solution: "Change glassbox-improve step 1 so a first run's fallback can't cool the whole guide (issue #2604)"

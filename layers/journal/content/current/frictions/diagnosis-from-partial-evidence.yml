@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "Labelled the ADR-0030 rewrite as PR #1909 from a merge-commit list without checking its diff; it was #1898, and #1909 only changed hash lines"
     solution: "Check a merge's diff with git show --stat before naming it as the cause of a cohort split"
+  - session: session_013zxzePnX2He1hvzhQj7LrJ
+    date: "2026-10-27"
+    severity: minor
+    description: "Guessed a first fix (tf-tokens class alone) and spent a production build on it before probing the portrait's computed styles."
+    solution: "Read computed color-scheme and token values with a Playwright probe before the first fix attempt."
