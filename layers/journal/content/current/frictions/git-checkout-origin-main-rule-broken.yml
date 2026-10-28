@@ -6,6 +6,8 @@ cause: >-
 surface: guard-or-hook
 status: open
 ref: "Prose exists (git-conventions.md, 2026-09-30); only a guard would add enforcement, and guards are Human-only."
+notes: |-
+  2026-10-28 design: a prose line dropped: git-conventions.md already says it (read about 111 times) and only a Human-only guard would add enforcement; 1 occurrence in 14 days, HEAD restored each time. dropped: costs more than the friction.
 occurrences:
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"

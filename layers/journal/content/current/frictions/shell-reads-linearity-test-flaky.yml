@@ -2,7 +2,7 @@ name: shell-reads-linearity-test-flaky
 surface: safe
 summary: A timing test in the shell tokenizer's unit spec fails under CI load on changes that never touch it, costing a re-run.
 cause: "tests/unit/shell-reads.spec.ts 'commandWords() on adversarial input' compares the 100k-input time to 3x the 50k time plus 2 ms (slack tightened from 20 ms in 273cf2b99), so a load spike on a shared CI runner fails the gate on an unrelated PR; a re-run passes. Signals: 'stays linear', 'shell-reads.spec.ts', 'timing', a gate red on a YAML-only or docs PR."
-status: open
+status: tracked
 occurrences:
   - session: session_013zxzeQ8EBq9v7NXqWmAFRF
     date: "2026-10-27"

@@ -3,6 +3,8 @@ surface: safe
 summary: Typecheck or the gate failed on a missing Nuxt-generated folder because nuxt prepare had not run.
 cause: "A fresh worktree (install with scripts skipped) or a newly added auto-imported symbol has no regenerated .nuxt types, so vue-tsc or the gate fails until nuxt prepare runs; agents start the check first. Signals: 'nuxt prepare', '.nuxt was missing', typecheck error on an auto-imported constant, install with scripts skipped."
 status: open
+notes: |-
+  2026-10-28 design: a doc line dropped: one occurrence was a raw vue-tsc run (pnpm typecheck prepares itself), the other an install with scripts skipped; gate.ts and package.json are Human-only and environment-caveats.md is in an open trial. dropped: one extra gate run each.
 occurrences:
   - session: session_013zxzeSaiStBeXUY9SwzAhv
     date: "2026-10-27"

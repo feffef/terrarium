@@ -5,6 +5,8 @@ cause: >-
   CLAUDE.md's "before you push a branch, or open ... a PR" trigger for docs/agents/pr-workflow.md has no hint (read-first-hint.ts covers only git conventions, GitHub and screenshots), so nothing points to it before a push or create_pull_request; a prototype/ branch that gets no PR feels exempt. Signals: a push or PR opened before pr-workflow.md is read.
 surface: safe
 status: open
+notes: |-
+  2026-10-28 design: dropped: the fix is a read-first hint entry in read-first-hint.ts (Human-only); the five slips of this and pr-workflow-read-in-part span 10-19 to 10-24 with none since, and the two have different causes.
 occurrences:
   - session: session_01MwrXDH7XwMNUofgz3HvQ5N
     date: "2026-10-19"
