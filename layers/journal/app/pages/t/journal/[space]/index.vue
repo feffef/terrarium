@@ -30,15 +30,11 @@ const { space, pagesKey, collections } = useSpace(tenant)
 // directly for the Space-toggle's list of sibling Spaces.
 const spaces = Object.keys(routingMap[tenant])
 
-// Every loaded session ships in the HTML, so an uncapped `archived` passed 10 MB:
-// past Chrome's response-body buffer, the smoke test could no longer read it.
-const SESSIONS_LOADED = 1000
-
 const { data } = await useAsyncData(route.path, async () => {
   const pages = await queryCollection(pagesKey).all()
   const skills = await queryCollection(collections.skills).all()
   // Newest-first, ordered in SQL rather than re-sorted client-side.
-  const sessions = await queryCollection(collections.sessions).order('endedAt', 'DESC').limit(SESSIONS_LOADED).all()
+  const sessions = await queryCollection(collections.sessions).order('endedAt', 'DESC').limit(JOURNAL_SESSIONS_LOADED).all()
   const sessionTotal = await queryCollection(collections.sessions).count()
   const ledgerSize = await queryCollection(collections.frictions).count()
   const routineCount = await queryCollection(collections.routines).count()
