@@ -1,8 +1,8 @@
 ---
 title: Reading across Tenants
 description: How a Blog post ends up as a result in the Commons Search, through a kind named in a manifest, a catalog built with the site and one read function.
-revision: 'e0edb8a5963064e5075b668c6512896a6e9fcd4d'
-revisionDate: '2026-10-25'
+revision: 'a5f8e8cdb2ec0841bc8d52dc4aae5c8dfdbe7cd6'
+revisionDate: '2026-10-28'
 ---
 
 Terrarium keeps each Tenant's content in tables of its own, yet the Commons Search lists pages from several Tenants at once. This Walkthrough follows a Blog post from the side of the code that reads it: from one field in the Blog's manifest, through a list built with the site, to a result in the search box. It ends where the reading stops, at the Collections that never opted in.
@@ -12,7 +12,7 @@ Terrarium keeps each Tenant's content in tables of its own, yet the Commons Sear
 The Blog's :term[manifest] gives its `pages` :term[Collection] one extra field, `kind: 'page'`. That field is the whole opt-in: a Collection with no `kind` stays off every list below. The :term[Collection kinds]{id="collection-kind"} and their contracts live in :file[shared/kinds.ts], and the manifest check refuses a kind that isn't there or one meant for the other Collection type.
 
 ::stop-links
-[Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · [Validating the manifest itself](/t/glassbox/drafts/zod/manifest-validation) · :file[layers/blog/tenant.config.ts]
+[Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · [Schema validation](/t/glassbox/guide/zod/schema-validation) · :file[layers/blog/tenant.config.ts]
 ::
 
 ## 2. The contract joins the schema
