@@ -20,7 +20,7 @@ The owner types `/wayfinder` with the idea; the Skill never starts on its own. T
 Every question that can be stated precisely becomes a decision ticket: a sub-issue of the map, labelled with its type, `research`, `prototype`, `grilling` or `task`. A second pass links which tickets block which, with GitHub's own issue dependencies. The session starts a research subagent on each research ticket and stops there: it resolves no other ticket.
 
 ::stop-links
-[Planning with the pack](/t/glassbox/drafts/skill-pack/planning-with-the-pack) · [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue)
+[Planning with the pack](/t/glassbox/drafts/skill-pack/planning-with-the-pack) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
 ::
 
 ## 3. One ticket per session
@@ -28,7 +28,7 @@ Every question that can be stated precisely becomes a decision ticket: a sub-iss
 A later session loads the map and takes the first open ticket that nothing blocks and nobody holds, and assigns it to claim it before any work. It resolves only that ticket, research tickets apart: an answer in a comment, the issue closed, and one line in the map's decisions. Questions the answer makes sharp become new tickets. The triage sweep may also label a ticket, beside its `wayfinder:` label: a research ticket can go to `ready-for-agent`, a grilling or prototype ticket goes to `ready-for-human`, and a task ticket either way.
 
 ::stop-links
-[Planning with the pack](/t/glassbox/drafts/skill-pack/planning-with-the-pack) · [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue)
+[Planning with the pack](/t/glassbox/drafts/skill-pack/planning-with-the-pack) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
 ::
 
 ## 4. Each type of ticket has its own Skill
@@ -44,7 +44,7 @@ A grilling ticket is a conversation with the owner, run with `grilling` and `dom
 When nothing is left to decide, the way is clear and the work is handed off. `to-spec` writes the decisions up as a spec, an ordinary issue here, and `to-tickets` breaks a spec into thin stories that each work end to end and can be checked alone. Each story is a sub-issue of the spec and starts with a `Part of` line naming it. The pack labels what it publishes `ready-for-agent`, which here is a :term[Trusted] user's approval to build, while a spec on hold carries no label and says so in its body.
 
 ::stop-links
-[Planning with the pack](/t/glassbox/drafts/skill-pack/planning-with-the-pack) · [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · :file[.agents/skills/to-spec/SKILL.md] · :file[.agents/skills/to-tickets/SKILL.md]
+[Planning with the pack](/t/glassbox/drafts/skill-pack/planning-with-the-pack) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue) · :file[.agents/skills/to-spec/SKILL.md] · :file[.agents/skills/to-tickets/SKILL.md]
 ::
 
 ## 6. The stories are built, one PR at a time
@@ -62,6 +62,6 @@ On 14 October 2026 a session charted a map with the owner, issue #1965, for a ne
 ## Where next
 
 - [Planning with the pack](/t/glassbox/drafts/skill-pack/planning-with-the-pack)
-- [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue)
+- [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
 - [The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop)
 - [A bug report becomes work](/t/glassbox/drafts/walkthroughs/a-bug-report-becomes-work)
