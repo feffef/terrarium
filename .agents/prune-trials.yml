@@ -23,79 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      "Verify before you state" family cut to one home (-4 net in the prune
-      files, from `git diff --numstat`; this entry not counted): CLAUDE.md's
-      bullet rewritten plainly (3 lines to 3; now names subagent reports and
-      says to count every item, never from memory or a summary). Restatements
-      dropped: `dispatch-subagents` §3's "A subagent's prose is candidate
-      material" bullet, `audit-skills`' "hearsay until you have verified it
-      (CLAUDE.md)" lead-in (its check-each-finding step kept), `clear-backlog`
-      §3's "past runs relayed subagent claims unchecked" aside, and the
-      `clear-backlog-build` Standards reviewer's uncited-count check (#2378).
-      Picked by the owner in the #2522 grilling (option 2: test whether the
-      prose does anything); the prose failed after #2336, #2378 and #2483, all
-      recurrences nit or minor (ledger `counts-not-tallied`). Kept as
-      step-specific nudges: `clear-backlog` §2's verify-each-pick line,
-      `auto-triage`'s per-issue verify brief, the `clear-backlog-explore`
-      sideFinding `source` field (#2435), `blog-post`'s citing-facts reference,
-      `visitor-loop` §3, `digest`'s fact-check tally, and
-      `github-integration.md`'s "A search result is not proof". No trial was
-      judgeable this run (earliest floor 2026-10-26T10:18Z, per the window
-      script).
-    territory:
-      paths:
-        - "CLAUDE.md: the Working conventions 'Verify before you state' bullet"
-        - ".agents/skills/dispatch-subagents/SKILL.md: §3 (Write the brief), its last bullets"
-        - ".agents/skills/audit-skills/SKILL.md: the paragraph after the subagent dispatch"
-        - ".agents/skills/clear-backlog/SKILL.md: §3's `ready-to-push` bullet"
-        - ".claude/workflows/clear-backlog-build.js: reviewPrompt's Standards axis text"
-      keywords:
-        - Verify before you state
-        - count is a fact
-        - candidate material
-        - hearsay
-    opened: 2026-10-25
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session stated an unchecked
-      count, id, cause or another agent's claim, that statement changed an
-      outcome (a wrong merge, a wrong issue state, a misled owner acting on
-      it), and the cut text would have prevented it. NOT damage: nit or minor
-      miscounts caught by the agent or a reviewer, which is the cost #2522
-      already records.
-  - problem: >
-      `github-integration.md` guard-held GitHub traps cut to the goal (-1 net,
-      from `git diff --numstat`: 11 added, 12 deleted; this entry not counted):
-      the angle-bracket section (3 lines to 2, guard kept as the home) and the
-      search / list-overflow bullets (11 lines to 10, merged into "Keep list and
-      search results small"; `fields` rule, 403 retry and the `owner`/`repo`
-      note kept). Chosen after the search subagent covered the instruction corpus,
-      guard headers and the tracker (about 15 issues read in full): both rules
-      failed as prose (#1860, #2210 for search `fields`; #779, #886 for angle
-      brackets) and wired guards hold them (`github-search-fields-guard.ts`,
-      `github-provenance-guard.ts`). Runners-up: `close-session` invocation
-      (6 issues; PR-open and merge half guarded, the 45-line SKILL is the larger
-      home, but the rule is the riskiest and in `read-first-hint` flux),
-      `data-shapes.md` (#2264; nothing holds it), "Question the premise"
-      (restored by #2535 the same day). No trial was judgeable this run
-      (earliest floor 2026-10-26T10:18Z, per the window script). The mass here
-      was small.
-    territory:
-      paths:
-        - "docs/agents/github-integration.md: the angle-bracket section and the 'Overflow and precision traps' first two bullets"
-      keywords:
-        - Bare angle brackets
-        - minimal_output
-        - Prefer a repo-scoped listing
-    opened: 2026-10-25
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session lost or corrupted
-      GitHub content (an issue or PR body stripped of `<...>` text, a context
-      overflow that ended the run) or hit a search ban, and the cut wording would
-      have prevented it. NOT damage: a guard denying a search or write and the
-      session fixing the call, or nit/minor slips #2210 already records.
-  - problem: >
       The three `frictions-to-fixes` agent briefs rewritten plainly at a
       Trusted user's request, in the SKILL.md's per-step shape (+452 −219
       lines across the three briefs, from `git diff --numstat`; words 2758 to
@@ -213,3 +140,33 @@ trials:
       dead `permissions.allow` entry, retried a blocked host, stranded commits by
       pushing a workflow edit, or lost work to a post-resume vanish. NOT damage: a
       session simply hitting a caveat the file already names.
+  - problem: >
+      Incident narration in the `loop-only-tool-guard.ts` and
+      `skill-inline-guard.ts` headers and one inline comment cut to the rule
+      plus the issue pointers (-12 net, from `git diff --numstat`: 9 added, 21
+      deleted; this entry not counted). Chosen after the search subagent covered
+      the instruction corpus, guard headers and the tracker (7 issues read in
+      full): both rules failed as prose (#814 after #241 and #425; #1018 after
+      #999) and wired PreToolUse guards hold them; their CLAUDE.md and doc homes
+      are already gone, so only these comments remained. Runners-up, each with
+      the same shape but more tangled: `github-provenance-guard.ts` (largest
+      mass, ADR-0017 tie), the two background guards (`dispatch-subagents`
+      trial territory), `dispatch-read-guard.ts` (CLAUDE.md line on trial
+      nearby). Code and deny messages are unchanged. The mass was small. Same
+      run judged and deleted the "Verify before you state" and
+      `github-integration.md` trials (landed 10f009ac and ce66e262): 48
+      sessions since, no major or blocker Friction, no regression issue.
+    territory:
+      paths:
+        - "scripts/hooks/loop-only-tool-guard.ts: header and the `exempt` comment"
+        - "scripts/hooks/skill-inline-guard.ts: header"
+      keywords:
+        - ScheduleWakeup
+        - Skill-inline guard
+    opened: 2026-10-28
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session misused
+      `ScheduleWakeup` outside `/loop` or called `Skill` on an inlined Skill
+      and the guard did not stop it because a comment was cut. NOT damage: a
+      guard denying the call and the session following its message.

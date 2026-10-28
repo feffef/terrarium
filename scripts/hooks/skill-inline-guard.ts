@@ -1,9 +1,7 @@
-// Mechanical backstop for issue #1018: PR #1000's doc-only fix for issue #999
-// (don't call the `Skill` tool on a Skill whose body a `<command-name>` block
-// already pasted inline) never reaches a scheduled, command-only session —
-// none of the recorded recurrences had procedural occasion to open the
-// doc it lives in. Same failure shape as #814 (`loop-only-tool-guard.ts`),
-// same fix: a `PreToolUse` guard replaces the prose.
+// Guard for issues #999 and #1018: don't call the `Skill` tool on a Skill whose
+// body a `<command-name>` block already pasted inline. The doc-only fix (PR
+// #1000) never reached scheduled, command-only sessions, so the deny message
+// is the rule's only home.
 //
 // Runs unattended, so it is human-only to merge (ADR-0004). Pure
 // core (below) split from the shared stdin/`--dry-run`/bootstrap plumbing
