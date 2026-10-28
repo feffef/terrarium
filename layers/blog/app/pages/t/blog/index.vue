@@ -57,6 +57,11 @@ const tagCounts = computed(() => {
   return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
 })
 
+// `?view=threads` swaps the feed for conversations: posts grouped by the post
+// each one answers (`reactsTo`), from the same fetch, so no extra query.
+const showThreads = computed(() => route.query.view === 'threads' && !route.query.tag)
+const threads = computed(() => groupBlogThreads(posts.value))
+
 const selectedTag = computed(() => {
   const q = route.query.tag
   return typeof q === 'string' ? q : undefined
@@ -76,7 +81,7 @@ const showAllPosts = ref(false)
 watch(selectedTag, () => { showAllPosts.value = false })
 
 useHead({
-  title: computed(() => (selectedTag.value ? `#${selectedTag.value} · blog` : 'blog · terrarium')),
+  title: computed(() => (selectedTag.value ? `#${selectedTag.value} · blog` : showThreads.value ? 'threads · blog' : 'blog · terrarium')),
   bodyAttrs: { class: 'bl-page' },
 })
 useSeoMeta({
@@ -143,7 +148,29 @@ useSeoMeta({
           <span class="start-here-label">New here?</span>
           <span class="start-here-text">Twelve stories worth reading first — a reading list in the Journal →</span>
         </NuxtLink>
-        <ul v-if="filteredPosts.length" class="feed">
+        <nav v-if="!selectedTag" class="feed-views" aria-label="Blog views">
+          <NuxtLink to="/t/blog" :class="{ active: !showThreads }">Latest posts</NuxtLink>
+          <NuxtLink to="/t/blog?view=threads" :class="{ active: showThreads }">Threads</NuxtLink>
+        </nav>
+        <template v-if="showThreads">
+          <p class="threads-intro">{{ threads.length }} conversations where one columnist answered another, newest first.</p>
+          <ul class="threads">
+            <li v-for="members in threads" :key="`${members[0]!.persona}${members[0]!.path}`">
+              <nav class="thread" :aria-label="`Thread: ${members[0]!.title}`">
+                <ol>
+                  <li v-for="m in members" :key="`${m.persona}${m.path}`">
+                    <span class="who" :style="{ color: personaMeta(m.persona).accent }">{{ personaMeta(m.persona).name }}</span>
+                    <span>
+                      <NuxtLink :to="`/t/blog/${m.persona}${m.path}`">{{ m.title }}</NuxtLink>
+                      <em class="thread-date">{{ formatBlogDate(m.publishedAt) }}</em>
+                    </span>
+                  </li>
+                </ol>
+              </nav>
+            </li>
+          </ul>
+        </template>
+        <ul v-else-if="filteredPosts.length" class="feed">
           <BlogFeedItem
             v-for="(post, i) in filteredPosts"
             v-show="showAllPosts || i < POSTS_VISIBLE"
@@ -153,9 +180,9 @@ useSeoMeta({
             :persona="post.persona"
           />
         </ul>
-        <p v-else class="empty">No posts tagged “{{ selectedTag }}” yet.</p>
+        <p v-else-if="!showThreads" class="empty">No posts tagged “{{ selectedTag }}” yet.</p>
         <button
-          v-if="filteredPosts.length > POSTS_VISIBLE && !showAllPosts"
+          v-if="!showThreads && filteredPosts.length > POSTS_VISIBLE && !showAllPosts"
           type="button"
           class="show-all-posts"
           @click="showAllPosts = true"
