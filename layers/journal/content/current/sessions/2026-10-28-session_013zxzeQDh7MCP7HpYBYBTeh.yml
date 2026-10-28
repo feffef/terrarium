@@ -1,0 +1,363 @@
+schemaVersion: 1
+session: session_013zxzeQDh7MCP7HpYBYBTeh
+startedAt: 2026-10-28T20:36:42Z
+endedAt: 2026-10-28T21:25:04Z
+kind: delegated
+goal: Raise the Glass Box guide one step (glassbox-improve run)
+status: in-review
+outcome: "PR 2650 open: one draft promoted to the guide, three false claims fixed; new Lesson ends at B"
+summary: "The user's single prompt was the /glassbox-improve Skill; every step after that was the Skill's own procedure, so all work was Skill-directed, none human-instructed or agent-invented beyond it. Three raters (sonnet, fable, opus) graded the 39 guide pages. No page kept a consensus deficit that a page-level edit could fix: the two consensus ones were a Vue components split (a re-cut that loses to a promotion) and a cooling-off page. The structural step was promoting the work-queue draft, which tied with the cloud-sessions draft on gap rank; I chose the lighter one because the rules give no tie-break. Three confirmed false claims (Attribution, Data fetching, Pull requests lede) were fixed by me. code-review plus two fix rounds and two re-grade rounds left the new Lesson at B on sibling overlap in its Why bullets; the Skill says stop there. gate:scoped passed on the final head, branch pushed, PR opened as 2650, issue 2651 filed for the unchecked four-word title rule."
+prs:
+  - "2650"
+docsRead:
+  - path: .claude/skills/glassbox-improve/rater-brief.md
+    reason: filled in for the three raters and the re-graders
+    useful: yes
+  - path: .claude/skills/glassbox-improve/researcher-brief.md
+    reason: template for the researcher brief
+    useful: yes
+  - path: .claude/skills/glassbox-improve/writer-brief.md
+    reason: template for the writer brief
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: title and Write rules, the Check, the pin steps
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: grades and how to raise a page
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: closed rulings; none applied this run
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson and Walkthrough shapes
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: CLAUDE.md trigger before first git command
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read before first GitHub op; the fields trap and label rules
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Closing a scheduled run's PR; review and gate order before the first push
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: before filing the issue
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: before filing the issue; needs-triage label
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: writer subagent read it for the promotion steps; I did not open it
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: writer and raters read it; I read lines 1-16 to confirm a rater's accuracy claim
+    useful: yes
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: read lines 50-64 to confirm the false claim on the Attribution page
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: "writer subagent: source for the label-is-approval Why bullet, useful per its reply"
+    useful: yes
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: "writer subagent: source for the Public-issues bullet, useful per its reply"
+    useful: yes
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: "writer subagent: source for the guest-exception bullet, useful per its reply"
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: subagents checked sweep claims and the Excerpt against it; they report it useful
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: subagents checked clear-backlog claims; useful per their replies
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: subagents checked the states and category rule; useful per their replies
+    useful: yes
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: writer checked the Agent Brief claim; useful per its reply
+    useful: yes
+  - path: .claude/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-lesson/QUALITY.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-lesson/DECISIONS.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/git-github/06.work-queue.md
+    reason: (read before editing)
+  - path: scripts/github/check-triage-drift.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/01.human-in-the-loop.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+    reason: (read before editing)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-improve
+    reason: the whole run
+  - name: dispatch-subagents
+    reason: briefs for 14 subagent dispatches; worktree isolation for the writer
+  - name: code-review
+    reason: run on the branch before the first push
+  - name: close-session
+    reason: this log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Called mcp__github__search_pull_requests before reading docs/agents/github-integration.md; a guard blocked it for missing fields.
+    solution: Read the GitHub doc before the first mcp__github__ call, as CLAUDE.md says. The guard caught it at no cost.
+    severity: nit
+  - description: The skill gives no tie-break for two gap drafts with equal rank sums; I picked work-queue by judgement and had to disclose that in the PR.
+    solution: Add a tie rule to glassbox-improve step 3, for example the draft needing fewer changes, or the lower Subject order.
+    severity: minor
+  - description: Chose the work-queue draft without checking its title against EVERY-PAGE's title rule; two raters then flagged five words, costing a retitle round and link-text edits on five pages.
+    solution: Have step 3 check a candidate draft's title against the rule before it is chosen, or add the word count to page-checks (issue 2651).
+    severity: minor
+  - description: My writer brief said to give sibling-owned reasons one sentence, but the Why bullets still repeated Human-in-the-loop; raters flagged it three times and the page ended at B after two fix rounds.
+    solution: Brief a promotion writer to diff each Why bullet against the Lessons its ADRs appear in before committing, naming those Lessons.
+    severity: moderate
+  - description: pnpm check:worktrees failed on the writer's merged worktree until I pushed the run branch, then passed; the skill does not say push first.
+    solution: Note in glassbox-improve step 8 that check:worktrees needs the run branch pushed when a writer worktree was merged.
+    severity: nit
+durationSec: 2902
+models:
+  claude-sonnet-5-5: 185
+toolCounts:
+  Read: 13
+  Skill: 4
+  Bash: 50
+  mcp__github__search_pull_requests: 1
+  mcp__github__list_pull_requests: 1
+  Agent: 14
+  Write: 2
+  Edit: 3
+  SendMessage: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__search_issues: 1
+  mcp__github__issue_write: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/git-github/05.attribution.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/drafts/pages/skill-pack/02.planning-with-the-pack.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/guide/pages/skill-pack/01.skill-packs.md
+  - layers/glassbox/content/drafts/pages/git-github/06.work-queue.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0020.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+docsReadBySubagents:
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - GLOSSARY.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me hold the push until the review and gate:scoped finished despite the Stop hook; the summary was enough, no full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself once pushed and subscribe; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on the PR and issue bodies and the commit trailers; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded when I read a skill file; no prune trial touched this run
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded with skill files; this run changed no Skill
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with the Glass Box glossary; no glossary change, root GLOSSARY not edited
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Reminder to read the Tenant glossary; I had already read layers/glassbox/GLOSSARY.md
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; none added
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with a doc read; about rule placement, not relevant to page edits
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I touched content paths; none are on the Human-only list so the PR can self-merge
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept counts, ids and when-it-runs claims out of the new page; writers and raters applied it
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded with Glass Box pages; no diagram touched
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded when I read an ADR; no ADR edited
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded when I read the issue tracker docs; confirmed the sweep scope a rater disputed, summary enough
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Rate guide pages (sonnet)
+    model: sonnet
+    durationSec: 845
+    toolCalls: 87
+    modelCalls: 59
+    tokenShare: 20.3
+  - type: general-purpose
+    task: Rate guide pages (fable)
+    model: fable
+    durationSec: 836
+    toolCalls: 91
+    modelCalls: 20
+    tokenShare: 9.3
+  - type: general-purpose
+    task: Rate guide pages (opus)
+    model: opus
+    durationSec: 580
+    toolCalls: 59
+    modelCalls: 57
+    tokenShare: 17.7
+  - type: general-purpose
+    task: Research work-queue promotion
+    model: sonnet
+    durationSec: 165
+    toolCalls: 17
+    modelCalls: 14
+    tokenShare: 2.4
+  - type: general-purpose
+    task: Promote work-queue Lesson
+    model: opus
+  - type: general-purpose
+    task: Promote work-queue draft
+    model: opus
+    durationSec: 1029
+    toolCalls: 89
+    modelCalls: 51
+    tokenShare: 9.6
+  - type: general-purpose
+    task: Review standards axis
+    model: sonnet
+    durationSec: 85
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 1.9
+  - type: general-purpose
+    task: Review spec axis
+    model: sonnet
+    durationSec: 29
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.3
+  - type: general-purpose
+    task: Re-grade work-queue (sonnet)
+    model: sonnet
+    durationSec: 50
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 1.4
+  - type: general-purpose
+    task: Re-grade work-queue (fable)
+    model: fable
+    durationSec: 205
+    toolCalls: 14
+    modelCalls: 13
+    tokenShare: 2.7
+  - type: general-purpose
+    task: Re-grade work-queue (opus)
+    model: opus
+    durationSec: 133
+    toolCalls: 20
+    modelCalls: 19
+    tokenShare: 2.6
+  - type: general-purpose
+    task: Last re-grade (sonnet)
+    model: sonnet
+    durationSec: 65
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 1.5
+  - type: general-purpose
+    task: Last re-grade (fable)
+    model: fable
+    durationSec: 172
+    toolCalls: 10
+    modelCalls: 10
+    tokenShare: 1.7
+  - type: general-purpose
+    task: Last re-grade (opus)
+    model: opus
+    durationSec: 160
+    toolCalls: 16
+    modelCalls: 13
+    tokenShare: 2.2
+gitBranch: ccr-7a94e864-8xq5u1
+entrypoint: remote_mobile
+cliVersion: 2.1.312
+ideas:
+  - "Make glassbox-improve rate Why bullets against sibling Lessons automatically: a small script that flags a bullet whose ADR id also appears in another guide Lesson's Why section, so overlap is caught before the raters."
+landedBy: Stop
