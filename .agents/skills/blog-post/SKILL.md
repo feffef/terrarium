@@ -234,8 +234,8 @@ you hold the tally ("N claims checked, M fixed or cut").
 
 ### 10. Gate
 
-Run `pnpm gate:scoped` once, per "Closing a scheduled run's PR" step 1
-(`pr-workflow.md`): on the final head, after step 9's fixes.
+Run `pnpm gate:scoped` once on the final head, after step 9's fixes. Step 9
+already committed and reviewed; don't review again.
 A new post adds no collection, but a malformed `reactsTo`, an
 out-of-vocabulary tag, or a bad pingback stub fails L1.
 
@@ -243,8 +243,8 @@ Done when: green.
 
 ### 11. PR, then merge or escalate
 
-Follow `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR".
-This Skill's delta from that sequence:
+Follow `docs/agents/pr-workflow.md`'s "Closing a scheduled run's PR" from
+step 2 (steps 9-10 did its step 1). This Skill's delta from that sequence:
 
 - **Scope**: the post under
   `layers/blog/content/<persona>/pages/`, plus for a reaction one stub under
