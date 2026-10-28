@@ -37,7 +37,8 @@ re-renders in `app/assets/mermaid/`, and lands one PR titled
 
 Save every subagent reply, a resumed one's too, with
 `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <file>` in this
-run's scratch folder, and work only from those files.
+run's scratch folder, and work only from those files. Check in the source
+every fact and wording you put in a brief.
 
 ## 1. Set up
 
@@ -126,8 +127,8 @@ invoke `close-session` as `completed` and stop.
 Merge each writer's branch into the run branch; never cherry-pick or squash,
 which orphans the writers' commits and fails `pnpm check:worktrees`. Then make
 the **join edits** the writers reported, on any page: link text after a
-retitle, new Terms (once each, per EVERY-PAGE's Terms), links to a moved
-draft, Walkthrough chips and Where next entries. Add a link only where its
+retitle, new Terms (once each, per EVERY-PAGE's Terms), Walkthrough chips
+and Where next entries. Add a link only where its
 list has room, replace only a link that broke or was retitled, and keep each
 list's order. Pin each page you edit yourself to the base. Done when
 EVERY-PAGE's Check passes on the run branch.
@@ -150,7 +151,9 @@ its last grades.
 
 Fetch `origin/main`. If it changed a page you edited, merge it into the run
 branch, keeping your page with its pin at the base. Then follow "Closing a
-scheduled run's PR" in `docs/agents/pr-workflow.md`. The PR body lists each
+scheduled run's PR" in `docs/agents/pr-workflow.md`; its `pnpm gate:scoped`
+is the run's only one, since EVERY-PAGE's Check covers every round before it.
+The PR body lists each
 change as `page | deficit | change`, then each page's grades before and after
 and the structural step with why it won. If anything outside the Remit is in
 the diff, leave the PR open for a human.
