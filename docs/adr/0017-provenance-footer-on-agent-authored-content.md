@@ -53,14 +53,16 @@ all work.
   tool's own footer for the last line, and agents drop it.
 - **Accept any shape that names the session.** Agents invented shapes that
   readers could not rely on.
-- **Let the guard add a missing header instead of blocking.** Nobody has
-  shown that a tool-call hook can rewrite the call it checks.
+- **Let the guard add a missing header instead of blocking.** A tool-call
+  hook can rewrite its call, but unlike a local commit, a GitHub post is
+  public and notifies people as it lands, so a rewrite that goes wrong can't
+  be fully taken back. A block costs one retry, and its deny message teaches
+  the format, which a silent fix would not.
 - **A check in the gate.** The gate sees the repo, not what was posted.
 
 ## When to revisit
 
 - A separate bot account becomes possible for every kind of session (#124).
-- A tool-call hook can rewrite its call, so the guard could add the header.
 
 ## Consequences
 
