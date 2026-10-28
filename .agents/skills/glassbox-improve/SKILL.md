@@ -46,10 +46,10 @@ If a PR titled `glassbox-update:` is open, stop: invoke `close-session` as
 designated branch, start from a fresh `origin/main` and note that commit as
 **the base**.
 
-Write the **cooling-off pages** to the scratch folder: every page that the
-last 2 runs changed, or the one run if only one exists (their merges:
-`git log origin/main --merges --grep '^glassbox-improve: [0-9]'`; each one's
-pages: `git diff --name-only --no-renames <merge>^1 <merge>`). Add every page
+Write the **cooling-off pages** to the scratch folder: every page the last 2
+runs (or the only one) changed (their merges: `git log origin/main --merges
+--grep '^glassbox-improve: [0-9]'`; each one's pages: `git diff --name-only
+--no-renames <merge>^1 <merge>`). Add every page
 an open PR touches. Done when the list is written.
 
 ## 2. Rate
