@@ -341,3 +341,10 @@ observations:
       without the step 5 'design: ... dropped:' note in the ledger; the
       --note flag from #2567 now exists, so recurrence is unlikely.
       Grade/role unchanged (routine).
+  - date: "2026-10-28"
+    note: >-
+      Behaviour check, 3 newest runs delivered (#2583 to #2585, #2559, #2547).
+      Unverified: session_01CpD4piFGbFhvGG5KWdtsCG dropped two designs with no
+      'dropped:' note (step 5.3); session_01S9UeKa9mCWdPVBjAezCSaL hand-edited
+      notes. The --note flag (#2567) fixed it and the 10-27 run used it.
+      Grade/role unchanged (routine).

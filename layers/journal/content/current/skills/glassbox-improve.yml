@@ -1,0 +1,17 @@
+name: glassbox-improve
+category: platform-operation
+importance: specialist
+gist: Raises the Glass Box guide one step by fixing its weakest page.
+role: >-
+  Three raters grade every Glass Box guide page; the run fixes the weakest by
+  consensus and self-merges one PR. Meant to be manual
+  (disable-model-invocation).
+observations:
+  - date: "2026-10-28"
+    note: >-
+      Coverage gap (audit-skills scorecard): used once this window,
+      session_013zxzePtKmw2meUvnUBaNQh, no prior entry. Graded specialist on
+      its structure, not session counts: essential only when the guide is being
+      improved. Its SKILL.md description has an unquoted colon, so the
+      frontmatter fails to parse and the scorecard shows modelInvoked true with
+      an empty description (#2608).

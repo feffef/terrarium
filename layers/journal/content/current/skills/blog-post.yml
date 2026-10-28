@@ -384,3 +384,11 @@ observations:
       after the fact-check without a re-check
       (session_01LEbdj6aqcGncPCZnNtS2ZX,
       session_01NHL7eNYVjV814TB7bS83kv), tracked in #2370; dispatch-subagents read after the blind-read brief. Grade/role unchanged.
+  - date: "2026-10-28"
+    note: >-
+      Behaviour check, 7 runs, all 13 PRs merged, no deletion. Verified repeat
+      of #2370 under #2512's text: session_013zxzeQV6Jcqg4jYk2tkwBq (PR #2591)
+      fact-checked (7baaf82b3), then code-review nits changed a factual
+      sentence (7ef693578) with no re-dispatch. Reopened #2370 with this.
+      session_01GKJysgAiGN7bmdFJcKvFoC did its own read for the review
+      (disclosed). Grade/role unchanged (routine).

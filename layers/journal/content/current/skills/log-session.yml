@@ -407,3 +407,11 @@ observations:
       minor: session_01Vg1qDutnhKVav7JDNUdr8J has no ruleVerdicts for
       adr-0010 and adr-0021 (third window in a row with a gap).
       Grade/role unchanged (essential).
+  - date: "2026-10-28"
+    note: >-
+      Behaviour check, 10 logs landed, no revert. Verified silent failure,
+      fourth window in a row: ruleVerdicts incomplete in
+      session_013zxzeRkASapvnaGkGVdSBk (8 rules),
+      session_013zxzePwzHSC4uh6dyhsHxg (2), session_013zxzeQ8EBq9v7NXqWmAFRF
+      (1); adr-0030 missing in 2 of 3. Filed #2607. Grade/role unchanged
+      (essential).

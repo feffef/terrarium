@@ -457,3 +457,11 @@ observations:
       Behaviour check, 7 runs, no revert. Minor repeats:
       issue search missed prior work (session_01CQhPd23d8eRP33TzyDha76,
       session_0195CYW3YBg2stBS6aGigmbp), caught by the refiner; out-of-remit ideas left without an issue. Grade/role unchanged.
+  - date: "2026-10-28"
+    note: >-
+      Behaviour check, 7 runs, all PRs merged, no revert. Repeat minor: the
+      dispatch-read guard blocked the first Agent call before
+      dispatch-subagents was read in session_01C8G2W6ZfQN7WE4UNUi2GzA and
+      session_013zxzePwzHSC4uh6dyhsHxg (a hook reminder in
+      session_01BZNS3KuWTBxqAHxTfx3uzp); all three propose naming it in step
+      2. Grade/role unchanged (routine).

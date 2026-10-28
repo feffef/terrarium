@@ -468,3 +468,10 @@ observations:
       session_01TaUpbA3idjNZSgGpNjXj8S); a trial on relayed-subagent-claims is open, so no issue. Dispatch-read guard still fires first
       (session_01NHL7eNYVjV814TB7bS83kv). Grade/role unchanged
       (essential).
+  - date: "2026-10-28"
+    note: >-
+      Behaviour check, 10 runs, no stranded work.
+      session_013zxzeRkASapvnaGkGVdSBk: check:worktrees failed on ~15 agent
+      worktrees whose work landed as cherry-picks (the earlier false-positive
+      class), and two promotion agents edited each other's draft link (step 4
+      same-file miss). Grade/role unchanged (essential).
