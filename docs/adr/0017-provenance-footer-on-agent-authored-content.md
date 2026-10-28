@@ -53,14 +53,15 @@ all work.
   tool's own footer for the last line, and agents drop it.
 - **Accept any shape that names the session.** Agents invented shapes that
   readers could not rely on.
-- **Let the guard add a missing header instead of blocking.** Nobody has
-  shown that a tool-call hook can rewrite the call it checks.
+- **Let the guard add a missing header instead of blocking.** A tool-call
+  hook can rewrite its call, but a rewrite that goes wrong posts in public and
+  can't be taken back, while a block costs one retry. And a silent fix teaches
+  nothing, so agents would never learn the format.
 - **A check in the gate.** The gate sees the repo, not what was posted.
 
 ## When to revisit
 
 - A separate bot account becomes possible for every kind of session (#124).
-- A tool-call hook can rewrite its call, so the guard could add the header.
 
 ## Consequences
 
