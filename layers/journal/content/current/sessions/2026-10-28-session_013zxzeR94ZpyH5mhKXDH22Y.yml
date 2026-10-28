@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeR94ZpyH5mhKXDH22Y
 startedAt: 2026-10-28T04:03:46Z
-endedAt: 2026-10-28T04:21:40Z
+endedAt: 2026-10-28T04:24:26Z
 kind: autonomous
 goal: Scheduled audit of the repo's live docs
 status: in-review
-outcome: Sweep PR 2616 open with two fixes; one ADR-0017 fix awaits a human-merge PR
-summary: Scheduled audit-docs run, no human prompt. Three reviewer agents (Freshness, Single-home, Coherence) produced a pool; Freshness found nothing, Single-home needed a resume to cover the unread docs, Coherence found a Skill description that fails strict YAML and an ADR-0017 line contradicting the provenance guard. One checker returned 2 CONFIRMED, 2 CONFIRMED-BUT, 2 WRONG. Applied the two safe fixes in the sweep PR (code-reviewed, gate green); the ADR-0017 rewrite is still to go in a separate escalation PR. Dropped a Single-home suggestion because the environment-caveats file is under an open prune trial.
+outcome: Sweep PR 2616 merged; ADR-0017 escalation PR 2617 open for a human merge
+summary: Scheduled audit-docs run, no human prompt. Three reviewer agents (Freshness, Single-home, Coherence) produced a pool; Freshness found nothing, Single-home needed a resume to cover the unread docs, Coherence found a Skill description that fails strict YAML and an ADR-0017 line contradicting the provenance guard. One checker returned 2 CONFIRMED, 2 CONFIRMED-BUT, 2 WRONG. Applied the two safe fixes in the sweep PR (code-reviewed, gate green) and merged it as 2616; the ADR-0017 rewrite went into escalation PR 2617 (reviewed, gate green), which waits for a human merge. Dropped a Single-home suggestion because the environment-caveats file is under an open prune trial.
 prs:
   - "2616"
+  - "2617"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: required before git; nothing new for a read-only audit
@@ -148,20 +149,23 @@ frictions:
   - description: Stop hook asked to push twice while the review and gate were still running, against the push-after-gate rule.
     solution: Stop hook could skip its nag when a gate run is in flight.
     severity: nit
-durationSec: 1074
+durationSec: 1240
 models:
-  claude-sonnet-5-5: 75
+  claude-sonnet-5-5: 99
 toolCounts:
-  Bash: 20
+  Bash: 27
   Read: 4
   Agent: 6
   SendMessage: 1
   Skill: 3
   Monitor: 1
-  mcp__github__create_pull_request: 1
+  mcp__github__create_pull_request: 2
   mcp__github__update_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 1
+  PushNotification: 1
 filesEdited:
   - .claude/rules/adr-0017.md
   - docs/adr/0017-provenance-footer-on-agent-authored-content.md
@@ -302,35 +306,37 @@ subagents:
     durationSec: 48
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 6.6
+    tokenShare: 5.6
   - type: general-purpose
     task: "Audit: Single-home reviewer"
     durationSec: 138
     toolCalls: 33
     modelCalls: 18
-    tokenShare: 16.6
+    tokenShare: 14.1
   - type: general-purpose
     task: "Audit: Coherence reviewer"
     durationSec: 326
     toolCalls: 48
     modelCalls: 40
-    tokenShare: 40.3
+    tokenShare: 34.3
   - type: general-purpose
     task: "Audit: fact-check findings"
     durationSec: 56
     toolCalls: 11
     modelCalls: 6
-    tokenShare: 3.9
+    tokenShare: 3.3
   - type: general-purpose
     task: Standards review of sweep diff
     durationSec: 17
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.4
   - type: general-purpose
     task: Standards+spec review of ADR edit
-    durationSec: 0
-    toolCalls: 0
+    durationSec: 23
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 3.3
 gitBranch: claude/festive-mayer-hn0jwc
 entrypoint: remote_trigger
 cliVersion: 2.1.312
