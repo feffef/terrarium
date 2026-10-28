@@ -1,0 +1,390 @@
+schemaVersion: 1
+session: session_013zxzeQRYzCbfkXYbHKwcPv
+startedAt: 2026-10-28T08:27:29Z
+endedAt: 2026-10-28T09:22:55Z
+kind: autonomous
+goal: Raise the Glass Box guide's weakest pages by rater consensus
+status: in-review
+outcome: "PR #2628: MCP servers raised B to A, Skill packs promoted to the guide"
+summary: "Third glassbox-improve run, started by a schedule (no human prompt); every change below is agent-initiated within the Skill's remit. Three raters graded all 38 guide pages at base b3ea5df: 36 A, 2 B. Only MCP servers kept a consensus deficit (an Excerpt that was a doc comment). The structural step promoted the Skill pack draft as Skill packs, the Subject's first guide Lesson, and moved the pack-pin facts off Claude Code Skills so each has one home. Many drafts tied at three raters; I broke the tie by the raters' importance rank sum, as the previous run did. Research found one false claim on MCP servers (the matcher drift has a unit test); the first re-grade raised a consensus overlap with Claude Code hooks; the last re-grade found a pre-existing false claim (list-tool overflow blamed on the cloud), fixed after I had already started the gate, so the gate ran twice. Fable's claimed false claim on Nuxt layers was a misreading: c12 skips a layer folder with no config file. code-review's three Skill packs findings were fixed; three were refused with reasons in the PR. Gate green; the PR waits on CI before the run merges it."
+prs:
+  - "2628"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; --no-renames for the cooling-off list
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: list_pull_requests with fields; write through MCP
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: "closing a scheduled run's PR: review, gate, push, verdict, merge-pr.ts"
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson shape and Excerpt rules for tallying and checking writers' work
+    useful: yes
+  - path: .claude/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: title, Pin, Check; settled publishedAt refusal
+    useful: yes
+  - path: .claude/skills/glassbox-lesson/QUALITY.md
+    reason: grades, re-cut by moving, promotion rules
+    useful: yes
+  - path: .claude/skills/glassbox-lesson/DECISIONS.md
+    reason: closed rulings; none collided with this run's deficits
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: worktree isolation, save-handback, resume with SendMessage, check:worktrees
+    useful: yes
+  - path: .claude/skills/glassbox-improve/rater-brief.md
+    reason: rater brief template; all subagents also reported it useful
+    useful: yes
+  - path: .claude/skills/glassbox-improve/researcher-brief.md
+    reason: researcher template; both researchers found contradicted claims
+    useful: yes
+  - path: .claude/skills/glassbox-improve/writer-brief.md
+    reason: writer template; writers followed it, reported join edits
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: title, Pin, Check; settled publishedAt refusal
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: grades, re-cut by moving, promotion rules
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: closed rulings; none collided with this run's deficits
+    useful: partly
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: rater brief template; all subagents also reported it useful
+    useful: yes
+  - path: .agents/skills/glassbox-improve/researcher-brief.md
+    reason: researcher template; both researchers found contradicted claims
+    useful: yes
+  - path: .agents/skills/glassbox-improve/writer-brief.md
+    reason: writer template; writers followed it, reported join edits
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: "Skill pack writer: the join step for a new guide Lesson"
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: "Skill pack writer: how to read the four preview shots"
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: "raters, researcher and writer: matcher scoping and onFailure block; confirmed MCP page claims"
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: "raters: confirmed the untrusted-workspace allow-list drop on MCP servers"
+    useful: yes
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: "raters: traced the provenance reasons; fable noted it changed after Attribution's pin"
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: "researcher and writer: the seeded-docs reason on Skill packs"
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: "researcher and writer: the pack-pin reasons and Consequences on Skill packs"
+    useful: yes
+  - path: .agents/skills/setup-matt-pocock-skills/SKILL.md
+    reason: "research: the setup Skill's real questions, correcting the draft"
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: "sonnet rater: showed pnpm-lockfile cites a loosely related ADR (single-rater)"
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: "fable rater: spot-check of manifest-collections reasons"
+    useful: partly
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: "fable rater: spot-check of the deploy Lesson"
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: "sonnet rater: confirmed use-async-data's payload claims"
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "sonnet rater: confirmed hooks' strongest-case citation"
+    useful: yes
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: "sonnet rater: spot-check of Layers"
+    useful: yes
+  - path: GLOSSARY.md
+    reason: "sonnet rater: checked whether Self-improvement loop is a Terrarium term (it is)"
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: "sonnet rater: spot-check of Routines' cadence claim"
+    useful: yes
+  - path: layers/glassbox/content/drafts/pages/skill-pack/01.skill-pack.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+    reason: (read before editing)
+skillsUsed:
+  - name: glassbox-improve
+    reason: the scheduled run itself
+  - name: dispatch-subagents
+    reason: every rater, researcher and writer brief
+  - name: code-review
+    reason: step 7 review of the run branch with the tally as spec
+  - name: close-session
+    reason: in-review log after opening the PR
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: A second glassbox-improve run on the same day hit the earlier run's branch name glassbox-improve/2026-10-28; I renamed mine with a -2 suffix.
+    solution: glassbox-improve step 1 or 8 could name the branch with a time or the session id, not just the date.
+    severity: nit
+  - description: Step 3 names no tie-break among many three-rater promotions (six drafts tied); I reused the previous run's importance rank sum, which the Skill never states.
+    solution: "glassbox-improve step 3 Structural step: state the tie-break inside one class (e.g. the raters' combined importance order)."
+    severity: minor
+  - description: "Cooling-off list from git diff --no-renames named pre-rename paths after #2627 moved pages into Verification; I mapped the renames by hand."
+    solution: Step 1 could follow later renames (git log --follow or diff -M against the base) when building the cooling-off list.
+    severity: nit
+  - description: The last re-grade surfaced a pre-existing false claim on MCP servers after I had started gate:scoped on the 'final' head; I stopped and reran the gate.
+    solution: Start gate:scoped only after the last re-grade's hand-backs are tallied, as step 8 already implies; I jumped ahead.
+    severity: minor
+  - description: Two raters wrote their page dumps (b2.txt, d1.txt …) to the shared scratchpad root with the same names, not the subfolder the brief named.
+    solution: rater-brief could say every file goes in its own subfolder, with the folder path repeated next to the report instructions.
+    severity: nit
+  - description: The Spec reviewer read the writer brief's 'report join edits instead of making them' and flagged my own step 6 join edits as scope creep.
+    solution: Give the Spec reviewer the Skill's step 6 join-edit rule with the briefs, so orchestrator join edits aren't read as a writer breaking its brief.
+    severity: nit
+durationSec: 3327
+models:
+  claude-opus-5-5: 222
+toolCounts:
+  Bash: 64
+  Read: 12
+  ToolSearch: 2
+  mcp__github__list_pull_requests: 2
+  Agent: 15
+  mcp__github__pull_request_read: 3
+  ScheduleWakeup: 1
+  Write: 3
+  Skill: 3
+  SendMessage: 3
+  TaskStop: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/skill-pack/01.skill-packs.md
+  - layers/glassbox/content/guide/pages/claude-code/03.skills.md
+  - layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+  - layers/glassbox/content/drafts/pages/skill-pack/02.planning-with-the-pack.md
+  - layers/glassbox/content/drafts/pages/skill-pack/03.engineering-loop.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/06.out-of-scope-records.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/routines.md
+  - layers/glassbox/content/drafts/pages/skill-pack/01.skill-pack.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - docs/agents/verifying-ui-changes.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - GLOSSARY.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/agents/environment-caveats.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before the first push and merge via merge-pr.ts; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open and again at merge; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR on first push and subscribe; the scheduled run stays inside its Skill's remit
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Session header on the PR body and the commit trailer check; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded on a doc read; no instruction of ours caused a problem worth cutting this run
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on a doc read; I changed no instruction or rule
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with the Glass Box glossary; no glossary term changed
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pointed at the Glass Box glossary, which the Skill already had me read
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: No glossary term was added or changed; the promotion needed no new Term
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading the Skill; I changed no Skill
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Writers and raters kept counts and ids out of page prose; confirmed the edits
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagram changed this run
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "Subagents: loaded on the skills-lock files; confirmed the pack-pin facts on Skill packs"
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Subagents: used to check Human-only claims on pages; the diff touches no Human-only path"
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: "Subagents: loaded on the guard file; no guard changed"
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "Skill pack writer: loaded on reading ADRs; nothing applied"
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: "Skill pack writer: loaded on reading docs; nothing applied"
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: "Skill pack writer: loaded on reading gate.ts; nothing applied"
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "Skill pack writer: loaded on subjects.ts; nothing applied"
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Glass Box rater (sonnet)
+    model: sonnet
+    durationSec: 704
+    toolCalls: 52
+    modelCalls: 49
+    tokenShare: 16.5
+  - type: general-purpose
+    task: Glass Box rater (fable)
+    model: fable
+    durationSec: 1225
+    toolCalls: 68
+    modelCalls: 22
+    tokenShare: 10.5
+  - type: general-purpose
+    task: Glass Box rater (opus)
+    model: opus
+    durationSec: 404
+    toolCalls: 34
+    modelCalls: 25
+    tokenShare: 7.5
+  - type: general-purpose
+    task: Research MCP servers fix
+    model: sonnet
+    durationSec: 71
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 1.7
+  - type: general-purpose
+    task: Research Skill pack promotion
+    model: sonnet
+    durationSec: 149
+    toolCalls: 18
+    modelCalls: 14
+    tokenShare: 2.9
+  - type: general-purpose
+    task: Write MCP servers fix
+    model: opus
+    durationSec: 1439
+    toolCalls: 51
+    modelCalls: 34
+    tokenShare: 5
+  - type: general-purpose
+    task: Write Skill pack promotion
+    model: opus
+    durationSec: 614
+    toolCalls: 57
+    modelCalls: 33
+    tokenShare: 5
+  - type: general-purpose
+    task: Standards review of run
+    model: opus
+    durationSec: 65
+    toolCalls: 12
+    modelCalls: 6
+    tokenShare: 1.8
+  - type: general-purpose
+    task: Spec review of run
+    model: opus
+    durationSec: 58
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.7
+  - type: general-purpose
+    task: Re-grade rater (sonnet)
+    model: sonnet
+    durationSec: 85
+    toolCalls: 10
+    modelCalls: 9
+    tokenShare: 1.8
+  - type: general-purpose
+    task: Re-grade rater (fable)
+    model: fable
+    durationSec: 421
+    toolCalls: 38
+    modelCalls: 9
+    tokenShare: 2.8
+  - type: general-purpose
+    task: Re-grade rater (opus)
+    model: opus
+    durationSec: 214
+    toolCalls: 24
+    modelCalls: 24
+    tokenShare: 3.5
+  - type: general-purpose
+    task: Last re-grade (sonnet)
+    model: sonnet
+    durationSec: 51
+    toolCalls: 8
+    modelCalls: 8
+    tokenShare: 1.6
+  - type: general-purpose
+    task: Last re-grade (fable)
+    model: fable
+    durationSec: 250
+    toolCalls: 29
+    modelCalls: 9
+    tokenShare: 1.8
+  - type: general-purpose
+    task: Last re-grade (opus)
+    model: opus
+    durationSec: 144
+    toolCalls: 15
+    modelCalls: 15
+    tokenShare: 2
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.312
+ideas:
+  - "Retitle candidate the raters didn't agree on: Self-improvement loop (sonnet: Terrarium's own glossary term; proposes Continuous improvement)."
+  - "Draft too far from the bar as is: claude-code/06.hints says read-first-hint fires on a first subagent dispatch, but that check is dispatch-read-guard; fix before promoting."
+  - "Next structural candidates with three raters: Cloud sessions, Issues as the work queue, Hints, and the Vue components and hydration split."
+landedBy: Stop
