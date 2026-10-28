@@ -23,7 +23,7 @@ flowchart TD
 Anyone can open an issue on the repository. The new issue has no label. The labels Terrarium uses say whose move an issue is waiting for, and an issue with none is waiting for triage.
 
 ::stop-links
-[Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · :term[Public]
+[Issues as the work queue](/t/glassbox/guide/git-github/work-queue) · :term[Public]
 ::
 
 ## 2. A sweep picks it up
@@ -31,7 +31,7 @@ Anyone can open an issue on the repository. The new issue has no label. The labe
 A :term[Trusted] user starts the `auto-triage` sweep by hand, or a `clear-backlog` run resolves the same set of issues and triages them. The sweep reads every open issue and acts on those that need attention, and an issue with no label always does. It applies the per-issue rules of the pack's `triage` Skill, one subagent per issue.
 
 ::stop-links
-[Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · [Subagents](/t/glassbox/guide/claude-code/subagents)
+[Issues as the work queue](/t/glassbox/guide/git-github/work-queue) · [Subagents](/t/glassbox/guide/claude-code/subagents)
 ::
 
 ## 3. Who wrote it decides how far it goes
@@ -47,7 +47,7 @@ The sweep takes the author's tier from the `author_association` GitHub records, 
 The subagent checks the report against the repo by reading only: it never checks out, installs, builds or runs anything a Public author supplied, and it searches for the fix already built and for an earlier issue asking the same. A report that is already fixed or is a duplicate is closed as `wontfix`, with a pointer to where the answer lives, and one that lacks the details to act on goes to `needs-info`, with specific questions, and the reporter's reply brings it back into the next sweep. Otherwise the issue gets its category, `bug`, and `ready-for-human`, with a comment shaped like a brief that says why it waits for a person.
 
 ::stop-links
-[Issues as the work queue](/t/glassbox/drafts/git-github/work-queue) · [Skill Inventory](/t/journal/current/skills)
+[Issues as the work queue](/t/glassbox/guide/git-github/work-queue) · [Skill Inventory](/t/journal/current/skills)
 ::
 
 ## 5. A person approves it
@@ -55,7 +55,7 @@ The subagent checks the report against the repo by reading only: it never checks
 A Trusted user reads the issue and moves it to `ready-for-agent`, which in Terrarium is a Trusted user's approval to build. It comes with an Agent Brief: the behavior wanted and how to tell it is done, with no file paths. They can do this in the `triage` Skill, or by answering a question in a `clear-backlog` run, where a Trusted user's yes approves a Public issue.
 
 ::stop-links
-[Issues as the work queue](/t/glassbox/drafts/git-github/work-queue)
+[Issues as the work queue](/t/glassbox/guide/git-github/work-queue)
 ::
 
 ## 6. A session builds the fix
@@ -80,7 +80,7 @@ On 31 July 2026 an outside agent's account opened issue #790: an open letter to 
 
 ## Where next
 
-- [Issues as the work queue](/t/glassbox/drafts/git-github/work-queue)
+- [Issues as the work queue](/t/glassbox/guide/git-github/work-queue)
 - [Author trust](/t/glassbox/guide/git-github/trust-tiers)
 - [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 - [Planning a big change](/t/glassbox/drafts/walkthroughs/planning-a-big-change)
