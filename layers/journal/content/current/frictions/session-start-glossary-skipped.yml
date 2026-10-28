@@ -2,7 +2,7 @@ name: session-start-glossary-skipped
 summary: >-
   Agents skipped or cut short the glossary read that CLAUDE.md asks for at the start of every session.
 cause: >-
-  CLAUDE.md's "at session start" read of GLOSSARY-MAP.md and GLOSSARY.md (formerly CONTEXT-MAP.md and CONTEXT.md) is prose with no SessionStart hook, so sessions with a narrow, scheduled, delegated or question-only task skip it or read only its head. Signals: "skipped the session-start read", "GLOSSARY-MAP", "CONTEXT.md only to line 60", "read only the head of GLOSSARY". A read cut short by a truncated cat belongs to required-doc-read-truncated.
+  Until PR #2448, CLAUDE.md's "at session start" read of GLOSSARY-MAP.md and GLOSSARY.md (formerly CONTEXT-MAP.md and CONTEXT.md) was prose with no hook, so sessions with a narrow, scheduled, delegated or question-only task skipped it or read only its head. Since #2448 CLAUDE.md @-imports both files, so they load at session start. A late read of a Tenant's own GLOSSARY.md belongs in governing-doc-read-after-draft; a truncated cat, in required-doc-read-truncated. Signals: "skipped the session-start read", "read only the head of GLOSSARY", in a session that started before 2026-10-23.
 surface: guard-or-hook
 status: open
 ref: "issue #2437 closed by PR #2448"
@@ -71,8 +71,3 @@ occurrences:
     severity: nit
     description: "Skipped the session-start GLOSSARY-MAP.md and GLOSSARY.md reads CLAUDE.md requires; no wrong term resulted that I know of."
     solution: "Read them in the first tool call even for a chat-only question."
-  - session: session_013zxzePnX2He1hvzhQj7LrJ
-    date: "2026-10-27"
-    severity: nit
-    description: "Did not read layers/tinkerfund/GLOSSARY.md as the tenant-glossary rule asks before working on a Tenant."
-    solution: "Read it at first Tenant touch; no term was misused here."

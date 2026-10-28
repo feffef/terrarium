@@ -1,0 +1,12 @@
+name: ledger-append-refuses-held-session
+surface: safe
+summary: The ledger append script refused a whole call because one session was already in the entry, so the survey had to retry without it.
+cause: "print-ledger-occurrence.ts --append writes through ledger-set.ts, which refuses a session the entry already holds or the call repeats (PR #2366's content test, PR #2567's named refusal); extract-frictions --unledgered still offers that session's other Frictions, so one call fails whole and is re-run. Signals: '--append fails whole', 'refuses a session already in an entry', 'no way to upgrade its severity'."
+status: open
+ref: "Comes from the fixes PR #2366 and #2567 for survey-appends-duplicate-sessions (a session written twice into one entry)."
+occurrences:
+  - session: session_01S9UeKa9mCWdPVBjAezCSaL
+    date: "2026-10-25"
+    severity: minor
+    description: "Survey agent: no script creates a ledger entry, print-ledger-occurrence --append fails whole on one duplicate session, and gh api --paginate on closed issues hits a proxy 403."
+    solution: "Add a ledger-set create flag, name the colliding pair in the append error, and note the pagination trap in github-integration.md."

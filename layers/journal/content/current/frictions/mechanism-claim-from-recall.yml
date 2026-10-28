@@ -102,3 +102,23 @@ occurrences:
     severity: minor
     description: "My first #2577 comment said a cloud run needs the owner's permission for separate branches; the owner corrected that written repo instructions already grant it, so I edited the comment."
     solution: "Treat a Skill's written step as the explicit permission the harness system prompt asks for."
+  - session: session_01Hw8mVJmgWejGc6YWi8ngnm
+    date: "2026-10-23"
+    severity: nit
+    description: "One concision reviewer claimed a guard enforces ToolSearch-before-call; the checker found the premise false, so the finding was dropped."
+    solution: "Tell reviewers to verify any claim about a mechanism before reporting a cut that depends on it."
+  - session: session_016edAfTmLE1szSBGNZTorPH
+    date: "2026-10-25"
+    severity: minor
+    description: "The Standards reviewer called the brief's 'gh pr view is blocked' drift after grepping docs/agents for 'blocked', missing github-integration.md's table that lists it as GraphQL-backed and blocked in the cloud; verifying cost a lookup."
+    solution: "A review brief that names github-integration.md among the standards sources whenever the diff cites a gh command; the brief now cites the doc itself."
+  - session: session_01NHL7eNYVjV814TB7bS83kv
+    date: "2026-10-26"
+    severity: nit
+    description: "A Standards reviewer wrongly claimed the closureRefusal line anchor was off by one and a Spec reviewer wrongly said +33 -20 was one commit's numstat; both needed my own git and API checks."
+    solution: "Brief reviewers to verify anchors with git show before calling them wrong."
+  - session: session_01E2zbWEQmuUrEhWvbzNpBba
+    date: "2026-10-15"
+    severity: minor
+    description: "The harvest's rater panel twice rated already-done or moot items highly (#96 stale gate, #70 guards that no longer exist); only my own code check caught it."
+    solution: "Brief raters to verify each premise in code before scoring."

@@ -2,7 +2,7 @@ name: triage-docs-unread-before-labelling
 summary: >-
   Agents labelled, closed or triaged issues without first reading the issue-tracker and triage-label docs.
 cause: >-
-  CLAUDE.md's trigger for docs/agents/issue-tracker.md and triage-labels.md is prose with no hint (read-first-hint.ts covers only git, GitHub and screenshots), and the clear-backlog and wayfinder Skills neither name the docs at their label step nor say whether their triage agents' reads cover the orchestrator. Signals: an issue_write label or close before either doc is read, "the triage agents did the labelling".
+  CLAUDE.md's trigger for docs/agents/issue-tracker.md and triage-labels.md is prose, and the clear-backlog and wayfinder Skills neither name the docs at their label step nor say whether their triage agents' reads cover the orchestrator. Since PR #2446 read-first-hint.ts points to both docs after the first issue write, so a late read the hint prompted belongs in late-read-first-docs; this entry keeps a label or close that was wrong or unchecked because the docs went unread. Signals: an issue_write label or close before either doc is read, with a wrong or unchecked label; "the triage agents did the labelling".
 surface: safe
 status: open
 ref: "issue #2439 closed by PR #2446"
@@ -46,13 +46,3 @@ occurrences:
     severity: minor
     description: "Read docs/agents/issue-tracker.md (Wayfinding operations) only at closure, after claiming, closing and editing issues; CLAUDE.md requires it before triaging issues."
     solution: "wayfinder Skill could name docs/agents/issue-tracker.md by path instead of 'the tracker doc', so the read happens at step 1."
-  - session: session_011Rbnf9T9YqNztEcWNXsHsF
-    date: "2026-10-25"
-    severity: nit
-    description: "Read triage-labels.md and ADR-0015 only after the label write and the close-session.yml edit, when hooks prompted them."
-    solution: "Read each doc in the same batch as the first matching write."
-  - session: session_019g1t4RX7PcR54io7GRdxXK
-    date: "2026-10-27"
-    severity: nit
-    description: "Filed the issue before reading triage-labels.md, which CLAUDE.md requires before filing; the label I used was right."
-    solution: "Read the listed docs when the trigger first applies, not after the hook asks."

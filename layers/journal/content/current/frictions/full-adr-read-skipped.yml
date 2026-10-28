@@ -2,7 +2,7 @@ name: full-adr-read-skipped
 summary: >-
   Agents relied on an ADR's short summary when its rule said to read the full ADR.
 cause: >-
-  Each ADR summary rule says to read the full ADR in some cases, and sessions whose task touched the topic used the summary (or pr-workflow.md) instead; most found the summary enough, so the read-in-full line reads as optional. Signals: "did not open the full ADR-000N", "their summaries said to read them", "relied on the rule summaries".
+  Each ADR summary rule says to read the full ADR in some cases, and sessions whose task touched the topic used the summary (or pr-workflow.md) instead; most found the summary enough, so the read-in-full line reads as optional. Since PR #2431 the adr-read hint names an unread governing ADR after an Edit or Write, so most slips now show as a full read after the first edit. Signals: "did not open the full ADR-000N", "their summaries said to read them", "relied on the rule summaries", "the post-write hook prompted the read", an ADR read only after the first edit.
 surface: safe
 status: open
 fixes:
@@ -106,3 +106,18 @@ occurrences:
     severity: nit
     description: "Wrote the Digest before reading ADR-0010 in full; the post-write hook prompted the read. The page was already right."
     solution: "Name ADR-0010 as a read-first in the digest Skill's step 3."
+  - session: session_013zxzePJnRATi9QoJAjCxgq
+    date: "2026-10-27"
+    severity: minor
+    description: "Hooks asked for three ADRs and two docs only after I had written the file, so those reads came late and changed nothing."
+    solution: "Read ADR-0027 before editing; the post-write hint for ADR-0029 and ADR-0017 was noise for a wording-only rewrite."
+  - session: session_013zxzeSSnD8PnNngq431n1o
+    date: "2026-10-27"
+    severity: nit
+    description: "Edited docs/agents/guards.md before reading ADR-0027 and ADR-0029, which the adr-read hint then demanded"
+    solution: "Hint worked as designed; the late read changed nothing"
+  - session: session_018wtKTCgkvJwgb3gS8o8JKA
+    date: "2026-10-14"
+    severity: minor
+    description: "Recommended file and ADR pointers without reading the full ADR-0005 or ADR-0029, only their summary rules, against the CLAUDE.md ADR-reading rule"
+    solution: "Read the binding ADRs in full before a recommendation round, even for planning tickets"

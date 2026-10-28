@@ -1,8 +1,8 @@
 name: ledger-yaml-hand-edit-errors
 summary: >-
-  Hand edits to the Journal's YAML data files (this ledger, prune trials, Skill Inventory) broke their format.
+  Hand or scripted edits to YAML data files (the Friction Ledger, prune trials, Skill Inventory, authored session logs, Tenant content) broke their format, or a missing helper flag forced a hand edit.
 cause: >-
-  Ledger, prune-trials and Skill Inventory YAML are patched by string replacement or hand-typed: unquoted dates, hashes or colons, a hyphen-split folded scalar, a replaced ref or a match inside a comment broke the file (gate or repair needed), or, with no helper that writes into a named entry, the survey scripts its own splitter to place print-ledger-occurrence.ts blocks. A session repeated in one entry belongs to survey-appends-duplicate-sessions.
+  YAML data is patched by string replacement, sed, a re-wrapping serializer or by hand: unquoted dates, hashes or colons, a hyphen-split folded scalar, a replaced ref, a match inside a comment, or a parse-and-restringify that rewraps every prose field broke the file or bloated the diff (gate cycle or repair needed). Where ledger-set.ts lacked a flag or no helper placed blocks under a named entry, the agent hand-edited or scripted its own splitter. A session repeated in one entry belongs to survey-appends-duplicate-sessions. Signals: validate-content-schema failure on a YAML file, 'split word', 'unquoted', 'no flag for', a several-thousand-line reformatting diff.
 surface: safe
 status: open
 fixes:
@@ -110,3 +110,8 @@ occurrences:
     severity: nit
     description: "textwrap split hyphenated words in appended observations, so validate:content failed on four files and I rejoined them by hand."
     solution: "Wrap with break_on_hyphens=False, or give audit-skills a script that appends observations."
+  - session: session_01GfmoxeLwrvC7CARuaBAXfB
+    date: "2026-10-18"
+    severity: minor
+    description: "First migration script re-serialized skill YAML, reformatting every long prose field, so I had to restore the files and redo the edit as a text cut."
+    solution: "Edit YAML as text or with parseDocument for a field removal; check git diff --stat right after any data migration."

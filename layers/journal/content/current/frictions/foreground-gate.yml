@@ -1,8 +1,8 @@
 name: foreground-gate
 summary: >-
-  Agents waited on the full three-minute check run instead of running it in the background.
+  Agents ran long commands (the gate, the full test suite) in the foreground or with a shell &, instead of with the background option.
 cause: >-
-  Sessions run pnpm gate:scoped (about 3 minutes) in the foreground although CLAUDE.md says to background commands over 2 minutes; only a guard would reach them.
+  Sessions run commands over 2 minutes (pnpm gate:scoped, the full vitest suite, chains of long commands) in the foreground with a long timeout, or background them with a shell & instead of run_in_background, although CLAUDE.md says to use run_in_background and a log; only a guard would reach them. Signals: a foreground gate or vitest run, a 600s timeout expiring, a shell-& gate start.
 surface: guard-or-hook
 status: accepted
 ref: "issue #2426 closed not planned on 2026-10-26: the owner accepts the cost. The backgrounding Prune Trial (verdict f89929a37) found no major or blocker damage over 53 sessions, so no guard gets built."

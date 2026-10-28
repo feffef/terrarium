@@ -73,3 +73,8 @@ occurrences:
     severity: minor
     description: "The Skill has no tie-break for the top-three regression issues when many entries share minor severity since the fix; I chose by recurrence myself."
     solution: "Say in frictions-to-fixes §2 to break ties by occurrences since the fix."
+  - session: session_019jfJv6yLmcLUAJiTTomyeu
+    date: "2026-10-25"
+    severity: nit
+    description: "Skill says to Read design-brief and impl-brief verbatim into each subagent prompt, yet passing the brief file path worked and was cheaper; the 'verbatim' wording is ambiguous."
+    solution: "State in the Skill whether handing the brief by path satisfies 'verbatim'."

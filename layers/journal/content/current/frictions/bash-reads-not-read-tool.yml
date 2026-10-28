@@ -2,7 +2,7 @@ name: bash-reads-not-read-tool
 summary: >-
   Agents read files through the shell instead of the file-reading tool, so the rules attached to those files never loaded.
 cause: >-
-  Sessions read governed files with cat, sed or chained Bash instead of the Read tool, so path rules did not load; PR #1775's Bash rules hint now loads them but sessions still break the CLAUDE.md rule; the harness auto-mode message that tells agents to prefer Bash also contributes (sessions 01V3bxJa, 01BLrfuH).
+  Sessions read governed files with cat, sed or chained Bash instead of the Read tool, so path rules can fail to load; PR #1775's Bash rules hint loads them for most shell reads. A read the hint covered (rules loaded anyway, no cost) belongs in shell-read-rules-hint-covered. The harness auto-mode message that tells agents to prefer Bash contributes (sessions 01V3bxJa, 01BLrfuH). Signals: a governed file read through cat, sed or head, 'rules may not have loaded', a rule absent after a shell read.
 surface: safe
 status: open
 ref: "issues #2145 (closed not planned 2026-10-23: superseded by the Read-tool trial verdict, PR #2324) and #2167 (closed: bash-rules-hint kept as is) are closed; no open issue or trial tracks it."
@@ -17,31 +17,11 @@ fixes:
     date: "2026-10-23"
     summary: "bash-rules-hint now loads rules for shell reads of bracketed Nuxt route paths."
 occurrences:
-  - session: session_01TFojzwXEByz1nbqt3wcKNL
-    date: "2026-10-14"
-    severity: nit
-    description: "Read .githooks/commit-msg with Bash cat instead of the Read tool (CLAUDE.md), which loaded an irrelevant adr-0004-human-merge.md reminder since I only inspected, never edited, that Human-only file."
-    solution: "Use the Read tool for any file read, even a quick one-off inspection."
   - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
     date: "2026-10-14"
     severity: nit
     description: "Used cat through Bash on several posts and a ledger file instead of the Read tool, against CLAUDE.md, so their rules may not have loaded."
     solution: "Use Read for repo files; a guard could flag cat on tracked files."
-  - session: session_01JYFKBPoDVHJanBhFhmw1kR
-    date: "2026-10-14"
-    severity: nit
-    description: "Read CONTEXT-MAP.md with cat via Bash although CLAUDE.md says to use the Read tool; nothing was edited, so no harm done"
-    solution: "Use Read for doc reads even when batching shell checks"
-  - session: session_01XJ9iR9EbRT2iV7afhytND8
-    date: "2026-10-14"
-    severity: nit
-    description: "Read CONTEXT.md, CONTEXT-MAP.md and docs via cat in Bash despite CLAUDE.md's Read-tool rule; no rule load mattered here"
-    solution: "Use the Read tool for repo docs at session start"
-  - session: session_01CJix3AqBpX5KrAENqNp1M7
-    date: "2026-10-14"
-    severity: nit
-    description: "Read rule frontmatter with Bash head/awk instead of the Read tool, against the CLAUDE.md Read-tool convention; it loaded no unrelated rules but was a skipped convention"
-    solution: "Read the rule files with the Read tool, or grep for paths only"
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"
     severity: minor
@@ -67,11 +47,6 @@ occurrences:
     severity: nit
     description: "Read many files with cat/sed in Bash instead of the Read tool (CLAUDE.md, ADR-0029)."
     solution: "Use Read for doc reads so rules load reliably."
-  - session: session_01VkVtDd4YKNa2KYRyRo8Uvy
-    date: "2026-10-14"
-    severity: nit
-    description: "Broke CLAUDE.md 'Read files with the Read tool': read glossaries, docs, ADRs and manifests with cat/sed in Bash. Rules still arrived via the hint hook, so no real cost."
-    solution: "Use Read for repo docs; Bash cat felt cheaper for batching several files at once."
   - session: session_01U6EF8qk4ANQLqE5KXmJgEY
     date: "2026-10-14"
     severity: nit
@@ -97,16 +72,6 @@ occurrences:
     severity: nit
     description: "Read glossary and docs with cat in Bash instead of the Read tool, against CLAUDE.md's Read-tool convention; rules for those files may not have loaded"
     solution: "Use Read for instruction docs; cat felt cheaper for batching four files"
-  - session: session_01Dcufz27EyPsKy6sYafpKRg
-    date: "2026-10-14"
-    severity: nit
-    description: "I read Midden's Gloss.vue with cat instead of the Read tool, against CLAUDE.md's Read-tool rule; the hook loaded its rule anyway"
-    solution: "Use Read for file reads, as CLAUDE.md says"
-  - session: session_01R8ZgGod9KTmxwvnDyB4PQY
-    date: "2026-10-14"
-    severity: nit
-    description: "Read scripts/bash-rules-hint.ts with sed via Bash instead of the Read tool, breaking the CLAUDE.md Read-tool convention; no rule was missed as a result."
-    solution: "Use the Read tool with offset/limit for partial reads."
   - session: session_01GG85r8HWMEdaMgKUaNUZH7
     date: "2026-10-14"
     severity: nit
@@ -127,21 +92,11 @@ occurrences:
     severity: minor
     description: "Read docs and rule-governed files with cat/sed through Bash instead of the Read tool, against CLAUDE.md's Read-tool convention."
     solution: "Use Read for instruction docs; Bash only for bulk JSON processing."
-  - session: session_012VTgtrUEy7cPVTN5sMriXj
-    date: "2026-10-15"
-    severity: nit
-    description: "Read Glass Box pages, skills and code with cat/sed/grep in Bash instead of the Read tool (CLAUDE.md Read-tool rule)."
-    solution: "The bash-rules hint loaded the rules anyway; no impact seen. Use Read for files I edit."
   - session: session_01LpcCJWRYb5grgQe3wBGEwb
     date: "2026-10-15"
     severity: nit
     description: "Read several files with cat/sed via Bash instead of the Read tool (GLOSSARY-MAP, prune-trials.yml, digest.ts excerpt)"
     solution: "Use Read for any doc or source read; Bash only for command output"
-  - session: session_01NqN7omu3o4kxoGeQzzSXhK
-    date: "2026-10-15"
-    severity: minor
-    description: "Broke CLAUDE.md 'Read files with the Read tool': read docs, the build workflow and the human-merge rule with cat/sed in Bash, so some rules loaded only via the hint hook"
-    solution: "Use Read for instruction docs even when batching; a Bash hint caught most of them"
   - session: session_011t1xXHxqwrfAjt83s9oTEP
     date: "2026-10-15"
     severity: minor
@@ -152,11 +107,6 @@ occurrences:
     severity: nit
     description: "Read files with cat/sed through Bash several times instead of the Read tool, contrary to CLAUDE.md."
     solution: "A guard on Bash cat of repo files would remind earlier."
-  - session: session_01C8c4U7TDuWnJwenPUWYxrP
-    date: "2026-10-15"
-    severity: nit
-    description: "Read .claude/rules/glassbox-content.md and a term file with cat instead of the Read tool, against CLAUDE.md."
-    solution: "Use Read for repo files; the rule loaded anyway through the hook."
   - session: session_013LwpcexAe7t3Qck4CKtj9Y
     date: "2026-10-15"
     severity: nit
@@ -167,11 +117,6 @@ occurrences:
     severity: nit
     description: "I read the human-merge rule and the ledger patch with cat via Bash instead of the Read tool, against CLAUDE.md."
     solution: "None needed beyond the existing rule; slip."
-  - session: session_017xginqTj2NjZ8XgrbRqvkm
-    date: "2026-10-16"
-    severity: nit
-    description: "Used Bash cat/sed to read a rule file and scripts instead of the Read tool, against the CLAUDE.md read-with-Read rule; the hook injected rules anyway."
-    solution: "Use Read for rule files and sources."
   - session: session_013Wjv51Wj4dYhJXpTgvxCN4
     date: "2026-10-16"
     severity: nit
@@ -182,11 +127,6 @@ occurrences:
     severity: nit
     description: "Broke CLAUDE.md 'Read files with the Read tool': read ADR-0022, guards.md and an issue body with cat/head in Bash"
     solution: "Use Read for repo docs; the rule-loading hint only partly covers shell reads"
-  - session: session_01NFv67izdzVGrFHb2EVwZJ2
-    date: "2026-10-16"
-    severity: nit
-    description: "Broke CLAUDE.md 'Read files with the Read tool, not cat': read nuxt.config.ts, entrypoint.sh, tinkerfund config and page-cache.spec.ts via cat in Bash"
-    solution: "Rules for those files still surfaced via the PostToolUse hook; reaching for Read first would have been cleaner"
   - session: session_01Fay2GiWTwxDKnnqS9DznHk
     date: "2026-10-16"
     severity: nit
@@ -222,11 +162,6 @@ occurrences:
     severity: nit
     description: "Read session-start docs and git-conventions via cat in one Bash call alongside a git fetch, against CLAUDE.md's Read-tool rule and read-before-git order."
     solution: "Read GLOSSARY files and git-conventions with the Read tool before any git command; keep doc reads out of command chains."
-  - session: session_015vXkKcdLwYRQqKKVJ8BLJJ
-    date: "2026-10-16"
-    severity: nit
-    description: "Read files with cat/sed/head through Bash instead of the Read tool (CLAUDE.md), including a head -300 that cut guards.md short"
-    solution: "Use Read for docs; bash-rules-hint loaded the rules anyway"
   - session: session_01XxPqcyjVxcgmHTidWtoF1g
     date: "2026-10-16"
     severity: nit
@@ -237,11 +172,6 @@ occurrences:
     severity: nit
     description: "Used cat and sed on repo files in a few places instead of the Read tool."
     solution: "Use Read for repo files; keep Bash for command output."
-  - session: session_01CzkKVxSTE7a4amfXnxrvF9
-    date: "2026-10-16"
-    severity: nit
-    description: "Read several files with cat/sed via Bash (glossaries, validate-adr-rules.ts excerpt, log-session SKILL.md lines) instead of the Read tool, against CLAUDE.md"
-    solution: "Use Read for repo docs; the Bash hint loaded the rules anyway"
   - session: session_01PaPpUz7irjArWFrkrYgRwH
     date: "2026-10-19"
     severity: nit

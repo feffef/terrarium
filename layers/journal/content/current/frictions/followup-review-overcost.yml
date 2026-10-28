@@ -1,7 +1,7 @@
 name: followup-review-overcost
 surface: safe
-summary: pr-workflow's follow-up rule sent small or owner-directed follow-up commits through full code-review rounds that found nothing or only cosmetic slips.
-cause: "pr-workflow.md says a larger follow-up gets code-review on its own diff; sessions with a prose cut already probed, a 40-line review-fix commit or a 2-line one ran further two-agent review rounds costing 170k-370k subagent tokens for cosmetic findings. The opposite miss is prepush-gate-review-skipped. Signals: 'follow-up rule', 'further code-review rounds', 'subagent tokens to confirm nothing'."
+summary: pr-workflow's review rules sent tiny first pushes and small follow-up commits through full two-agent code-review rounds whose cost far exceeded what they found.
+cause: "pr-workflow.md asks for code-review before a first push (PRs #1853, #1854) and on a larger follow-up; before PR #2321's simple-change bar a 1- to 6-line diff, and since then a prose cut already probed, a 40-line review-fix commit or a 2-line one, ran two-agent rounds costing 120k-370k subagent tokens for little or cosmetic findings. The opposite miss is prepush-gate-review-skipped. Signals: 'follow-up rule', 'further code-review rounds', 'two review agents for a N-line diff', 'subagent tokens'."
 status: open
 occurrences:
   - session: session_01Vg1qDutnhKVav7JDNUdr8J
@@ -19,3 +19,18 @@ occurrences:
     severity: minor
     description: "Running code-review with two subagents on a 4-line doc change, after a rewrap round, cost about 120k subagent tokens to find nothing blocking."
     solution: "Let pr-workflow's simple-change test cover a one-sentence addition to a Skill that adds no new rule."
+  - session: session_01AaqTUSRhRmRpBxM8E4QSPR
+    date: "2026-10-16"
+    severity: minor
+    description: "Two parallel review subagents plus a doc-heavy PR flow for a two-line template change cost far more than the change"
+    solution: "Let code-review run inline for diffs of a few lines"
+  - session: session_01LpcCJWRYb5grgQe3wBGEwb
+    date: "2026-10-15"
+    severity: nit
+    description: "code-review's two parallel review agents for a one-line --first-parent diff cost about 125k subagent tokens"
+    solution: "Let code-review scale down to one inline pass for a diff under ~5 lines (pack Skill: note it in its Inventory entry)"
+  - session: session_018sAirSgDY1Nv82JVogjcyR
+    date: "2026-10-16"
+    severity: minor
+    description: "The code-review Skill ran two Sonnet subagents on a 6-line doc diff, costing about 120k tokens for judgement-call-only findings."
+    solution: "Let the Skill run Standards alone for a doc-only diff under about 20 lines."

@@ -29,13 +29,13 @@ occurrences:
     severity: moderate
     description: "Asked the owner to pick a title style before reading EVERY-PAGE's title rule; the picked titles broke it and needed a second owner decision and retitle round."
     solution: "Read the Tenant's writing Skill (glassbox-lesson/EVERY-PAGE.md) before asking a design question it already settles; the Tenant glossary could point to it."
-  - session: session_013zxzePJnRATi9QoJAjCxgq
-    date: "2026-10-27"
-    severity: minor
-    description: "Hooks asked for three ADRs and two docs only after I had written the file, so those reads came late and changed nothing."
-    solution: "Read ADR-0027 before editing; the post-write hint for ADR-0029 and ADR-0017 was noise for a wording-only rewrite."
-  - session: session_013zxzeSSnD8PnNngq431n1o
+  - session: session_013zxzeQV6Jcqg4jYk2tkwBq
     date: "2026-10-27"
     severity: nit
-    description: "Edited docs/agents/guards.md before reading ADR-0027 and ADR-0029, which the adr-read hint then demanded"
-    solution: "Hint worked as designed; the late read changed nothing"
+    description: "I read layers/blog/GLOSSARY.md and ADR-0012 only after hooks asked, after the post was written."
+    solution: "Read the Tenant glossary at step 1, before drafting."
+  - session: session_013zxzePnX2He1hvzhQj7LrJ
+    date: "2026-10-27"
+    severity: nit
+    description: "Did not read layers/tinkerfund/GLOSSARY.md as the tenant-glossary rule asks before working on a Tenant."
+    solution: "Read it at first Tenant touch; no term was misused here."
