@@ -62,7 +62,7 @@ title when a page is written or promoted; a retitle keeps the URL.
   you cite, and re-read the docs section that every *What to watch for* and
   *Try it* line depends on. If the network blocks the fetch, read the page's
   source in the published docs package (e.g. `@nuxt/docs` from npm) or the
-  docs repo (for docs.github.com, a sparse clone of `github/docs`), confirm
+  docs repo (for docs.github.com, fetch `raw.githubusercontent.com/github/docs/...`), confirm
   the exact URL and title in web search results, and say so in the PR. Zod
   links go to v3.zod.dev.
 - **A second tool gets its own link** at its first mention, even though *The
