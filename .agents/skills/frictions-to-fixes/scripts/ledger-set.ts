@@ -1,6 +1,7 @@
 // Creates or edits one Friction Ledger entry so no agent hand-edits its YAML:
-// sets `summary`, `cause`, `surface`, `status` and `ref`, appends `notes` lines, appends or replaces `fixes`,
-// appends occurrence blocks as `print-ledger-occurrence.ts` prints them.
+// sets `summary`, `cause`, `surface`, `status` and `ref`, appends `notes` lines,
+// appends or replaces `fixes`, appends occurrence blocks as
+// `print-ledger-occurrence.ts` prints them.
 // Refuses a result the ledger schema rejects; the file's other content and
 // comments stay as written.
 //

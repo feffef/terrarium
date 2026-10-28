@@ -99,7 +99,8 @@ export const frictionClusterSchema = z
     // stored: the page derives it (`ledgerFixState` in `app/utils/ledger.ts`).
     status: z.enum(['open', 'tracked', 'on-trial', 'accepted']),
     // Agents' notes on the status, shown on the Ledger page: the tracking issue or open PR,
-    // the trial's territory match, what a fix left open. Merged PRs go in `fixes`.
+    // the trial's territory match, what a fix left open, or the entry and fix a new
+    // cause came from. Merged PRs that fix this entry go in `fixes`.
     ref: z.string().optional(),
     // Agents' dated notes for later runs, shown on the Ledger page: above all
     // a designed solution a run dropped and why, so the next run doesn't

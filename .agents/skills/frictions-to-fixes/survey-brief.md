@@ -67,8 +67,8 @@ Every edit goes through
    copies each Friction's text from its log (a content test checks the
    copy) and appends it under its entry; it refuses a session the entry
    already holds. When an appended Friction goes beyond the entry's
-   `summary` or `cause`, rewrite them with `ledger-set.ts <entry> --summary
-   --cause` so they cover every occurrence.
+   `summary` or `cause`, rewrite them with `ledger-set.ts <entry> --summary TEXT
+   --cause TEXT` so they cover every occurrence.
 2. **Open a new entry** for a cause seen twice, or once at `moderate`,
    `major` or `blocker`. Its `summary` is one plain sentence a visitor can
    read; its `cause` names the root mechanism and the signals that identify
@@ -94,7 +94,7 @@ Every edit goes through
 5. **Reset stale statuses.** A `tracked` or `on-trial` entry whose PR closed
    unmerged, or whose `ref` names no open issue, PR or trial in
    `.agents/prune-trials.yml`, goes back to `open`. One whose `ref` PR
-   merged goes to `open` too, and that PR's `fixes` `date` becomes its
+   (not the fix a new cause came from) merged goes to `open` too, and that PR's `fixes` `date` becomes its
    `merged_at` (the same call), since an escalated PR dated its own entry
    before it merged.
 
@@ -106,11 +106,12 @@ no `tracked` or `on-trial` entry points at something closed.
 ### Edge cases
 
 - A Friction sits in one cluster unless its text names two causes.
-- A Friction a fix produced (its guard denied, its hint fired, its script
-  refused) belongs to that fix's cluster only if it is the same friction.
-  If it costs something different (a retry instead of the original harm, a
-  false positive), it is a new cause: give it its own entry whose `ref`
-  names the original entry and the fix, never a regression of the original.
+- A Friction is its harm, not the slip behind it. When a fix's guard, hint
+  or refusal catches the slip and the harm is now different (a refused call
+  and a retry instead of the original harm, or a false positive), give it its
+  own entry whose `ref` names the original entry and the fix: it is not a
+  regression. Only the original harm recurring is. An original left empty
+  is deleted, so `ref` also says what the original covered.
 - `--unledgered` drops per Friction, not per session: a session's other
   Frictions stay listed, so skip one already in the target cluster.
 - This run's own PRs are recorded by the main session. A PR an earlier run
