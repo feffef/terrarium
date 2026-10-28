@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeQvE9RNYoZRiZEEKBG
 startedAt: 2026-10-28T02:08:02Z
-endedAt: 2026-10-28T02:25:51Z
+endedAt: 2026-10-28T02:35:02Z
 kind: autonomous
 goal: Scheduled run turning logged Frictions into fixes
-status: in-review
-outcome: Ledger PR and one doc-fix PR open and gate-green; three regression issues filed; closing ledger PR not yet done
-summary: "Scheduled frictions-to-fixes run, no human prompts. A survey subagent appended 58 window Frictions, opened four ledger entries and screened candidates. I filed regression issues #2610-#2612 (subagent-brief-defects, harness-proxy-blocks, worktree-guard-blocks-compound-bash), skipping the two higher-severity regressions the owner had already decided or that were a false alarm. Of the picks, one doc fix (claim-of-fix-not-rendered) was built by a Sonnet agent and opened as PR #2614; session-id-hand-typed was dropped (hook and guard already catch it); glassbox-improve-first-run-cost was already tracked by #2604. The ledger PR #2613 holds the survey and tracking updates. Everything was agent-initiated under the scheduled Skill; no human approval was involved. Still open: merge both PRs once CI is green, then the closing ledger PR recording the fix."
+status: completed
+outcome: Survey, three regression issues, one doc fix and the ledger updates all merged (PRs 2613, 2614, 2615)
+summary: "Scheduled frictions-to-fixes run, no human prompts. A survey subagent appended 58 window Frictions, opened four ledger entries and screened candidates. I filed regression issues #2610-#2612 (subagent-brief-defects, harness-proxy-blocks, worktree-guard-blocks-compound-bash), skipping the two higher-severity regressions the owner had already decided or that were a false alarm. Of the picks, one doc fix (claim-of-fix-not-rendered) was built by a Sonnet agent and opened as PR #2614; session-id-hand-typed was dropped (hook and guard already catch it); glassbox-improve-first-run-cost was already tracked by #2604. The ledger PR #2613 holds the survey and tracking updates. Everything was agent-initiated under the scheduled Skill; no human approval was involved. All three PRs merged; the closing ledger PR #2615 recorded #2614 as the fix."
 prs:
   - "2613"
   - "2614"
+  - "2615"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: required before git; trailer and commit -F rules
@@ -76,12 +77,18 @@ frictions:
   - description: Design agent found audit-skills docReadCounts keyed by mixed absolute, worktree and combined paths, so locating one doc needed substring matching.
     solution: Normalize docReadCounts keys to repo-relative paths.
     severity: nit
-durationSec: 1070
+  - description: Restarting the merged session branch for the closing ledger PR left the Stop hook counting five unpushed commits against the stale remote branch, nagging until the push.
+    solution: Have the Stop hook count against origin/main when the branch's PR is already merged.
+    severity: nit
+  - description: My closing PR body first carried a stray 'claude/..' typo; I fixed it with an update after opening.
+    solution: Re-read a PR body before creating the PR.
+    severity: nit
+durationSec: 1620
 models:
-  claude-sonnet-5-5: 93
+  claude-sonnet-5-5: 139
 toolCounts:
   Read: 9
-  Bash: 23
+  Bash: 34
   Agent: 3
   ToolSearch: 1
   mcp__github__search_issues: 3
@@ -89,12 +96,16 @@ toolCounts:
   mcp__github__issue_write: 3
   mcp__github__issue_read: 1
   Glob: 1
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 1
-  Skill: 2
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  mcp__github__add_issue_comment: 3
+  Skill: 3
+  ReadNotifications: 7
+  mcp__github__pull_request_read: 2
+  mcp__github__update_pull_request: 1
 filesEdited:
   - docs/agents/verifying-ui-changes.md
+  - layers/journal/content/current/frictions/claim-of-fix-not-rendered.yml
   - layers/journal/content/current/frictions/audit-docs-adr-decision-reversed.yml
   - layers/journal/content/current/frictions/audit-docs-contradiction-rule-missing.yml
   - layers/journal/content/current/frictions/audit-docs-escalation-second-branch.yml
@@ -104,7 +115,6 @@ filesEdited:
   - layers/journal/content/current/frictions/binding-docs-skipped.yml
   - layers/journal/content/current/frictions/build-workflow-gate-not-final.yml
   - layers/journal/content/current/frictions/chat-progress-narration.yml
-  - layers/journal/content/current/frictions/claim-of-fix-not-rendered.yml
   - layers/journal/content/current/frictions/clear-backlog-grilling-owner-deferrals.yml
   - layers/journal/content/current/frictions/clear-backlog-log-summary-line.yml
   - layers/journal/content/current/frictions/clear-backlog-zero-grill-skip.yml
@@ -191,6 +201,7 @@ rulesLoadedBySubagents:
   - .claude/rules/tenant-layers.md
   - .claude/rules/guards.md
 docsReadBySubagents:
+  - docs/agents/verifying-ui-changes.md
   - docs/adr/0027-prune-trials.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
@@ -253,20 +264,20 @@ subagents:
     durationSec: 465
     toolCalls: 38
     modelCalls: 33
-    tokenShare: 32.8
+    tokenShare: 22.6
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 87
     toolCalls: 14
     modelCalls: 8
-    tokenShare: 6.4
+    tokenShare: 4.4
   - type: general-purpose
     task: Implement doc fix on branch
     model: sonnet
     durationSec: 124
     toolCalls: 19
     modelCalls: 15
-    tokenShare: 8.6
+    tokenShare: 5.9
 gitBranch: claude/eager-ptolemy-cauq7t
 entrypoint: remote_trigger
 cliVersion: 2.1.312
