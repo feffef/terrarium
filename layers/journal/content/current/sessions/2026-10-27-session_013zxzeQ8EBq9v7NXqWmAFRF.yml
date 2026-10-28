@@ -1,16 +1,17 @@
 schemaVersion: 1
 session: session_013zxzeQ8EBq9v7NXqWmAFRF
 startedAt: 2026-10-27T19:18:26Z
-endedAt: 2026-10-28T05:55:04Z
+endedAt: 2026-10-28T06:00:29Z
 kind: interactive
 goal: Document the Glass Box quality bar and design a Skill to raise the guide unattended
-status: completed
-outcome: "PRs #2602, #2603 and #2618 merged; glassbox-improve ran once (#2605) and a second run started"
+status: in-review
+outcome: "PRs #2602, #2603 and #2618 merged; second run underway; PR #2619 open to file run findings as Frictions"
 summary: "Human-instructed throughout. The owner asked me to identify the past days' sessions that raised Glass Box quality, understand why each change was made (via inspect-session), then (1) document the quality bar in the repo and (2) design a Skill that rates every guide page, improves the weakest, may promote drafts, fill gaps or re-cut pages, and avoids churn, researched first and then settled with grill-with-docs. Six inspect-session subagents read the past sessions' events (one stopped early and was resumed), and on the owner's ask a Sonnet agent analysed the eight merged PRs' diffs, which showed heavy title churn. Three grilling rounds settled the bar's homes (EVERY-PAGE.md rules, a new QUALITY.md rubric, a DECISIONS.md of closed rulings, which I placed in glassbox-lesson/ so writers read it too), the grades, a two-of-three rater consensus, a 3-page plus 1-structural-step budget, churn guards, and a prose Skill (the owner picked it over my workflow-script recommendation). PR #2602 (the bar) passed code-review and the gate, and I merged it. The owner asked for a Fable review of the Skill design; it found a selection bug (the lowest rank picked the best pages), an uncompletable rater brief and a clash with glassbox-update. I put the four fixes that changed owner decisions to the owner in a fourth round, and the owner agreed. PR #2603 (the Skill) went through code-review on both axes and two follow-up reviews, which found real gaps (a refusing writer stalled the run, re-grade findings skipped the churn filters), all fixed; I merged it on green CI. At the owner's ask I then started the first run in a fresh session, session_013zxzePtKmw2meUvnUBaNQh, with /glassbox-improve; its outcome is that session's to log."
 prs:
   - "2602"
   - "2603"
   - "2618"
+  - "2619"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: fetch before trusting history; commit -F; three-dot diffs
@@ -83,17 +84,23 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/writing-for-agents/SKILL-MECHANICS.md
     reason: (no reason given)
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
   - path: .agents/skills/glassbox-improve/rater-brief.md
     reason: (read before editing)
   - path: .agents/skills/glassbox-improve/researcher-brief.md
     reason: (read before editing)
   - path: .agents/skills/glassbox-improve/writer-brief.md
     reason: (read before editing)
-  - path: .agents/skills/glassbox-improve/SKILL.md
-    reason: (read before editing)
   - path: .agents/skills/code-review/SKILL.md
     reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
   - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
     reason: (no reason given)
 skillsUsed:
   - name: inspect-session
@@ -137,27 +144,34 @@ frictions:
   - description: My 14-day cooling-off fallback for the first runs cooled all 37 guide pages and 30 drafts, so run 1 (~$21, three raters) could fix only two false claims; I had warned runs would be small but never counted what the window covered.
     solution: Before shipping a filter, run it once against main and count what it excludes.
     severity: moderate
-durationSec: 38199
+  - description: I designed the running out-of-remit issue without checking that the Friction Ledger already clusters run problems; run 1's finding landed in both, and the owner had to point it out.
+    solution: Before adding a place to record findings, check what the Ledger and session-log fields already capture.
+    severity: minor
+  - description: Ran gate:scoped on 93eb78120, then added two prose commits before the first push of PR 2619; pr-workflow asks for the gate last on the final head. Re-ran it.
+    solution: Run the gate only after the last review fix, never in parallel with the review.
+    severity: nit
+durationSec: 38523
 models:
-  claude-opus-5-5: 310
+  claude-opus-5-5: 344
   <synthetic>: 2
 toolCounts:
-  Bash: 87
+  Bash: 98
   Read: 9
   Skill: 10
-  Agent: 16
+  Agent: 18
   ToolSearch: 3
   SendMessage: 1
   Edit: 7
   Write: 11
-  mcp__github__create_pull_request: 3
-  mcp__claude-code-remote__subscribe_pr_activity: 3
-  mcp__github__add_issue_comment: 5
-  ReadNotifications: 8
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
+  mcp__github__add_issue_comment: 6
+  ReadNotifications: 9
   mcp__claude-code-remote__unsubscribe_pr_activity: 3
   mcp__claude-code-remote__create_session: 2
-  mcp__claude-code-remote__get_session: 1
+  mcp__claude-code-remote__get_session: 2
   mcp__github__issue_read: 2
+  mcp__claude-code-remote__send_later: 1
 filesEdited:
   - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - layers/glassbox/GLOSSARY.md
@@ -181,6 +195,7 @@ rulesLoaded:
   - .claude/rules/glassbox-content.md
   - .claude/rules/mermaid-lanes.md
   - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0010.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -214,9 +229,11 @@ docsReadBySubagents:
   - .agents/skills/dispatch-subagents/SKILL.md
   - .agents/skills/writing-for-agents/SKILL-MECHANICS.md
   - .agents/skills/code-review/SKILL.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
   - .agents/skills/glassbox-improve/rater-brief.md
   - .agents/skills/glassbox-improve/writer-brief.md
-  - .agents/skills/log-session/SKILL.md
   - .agents/skills/glassbox-improve/researcher-brief.md
   - .agents/skills/glassbox-walkthrough/SKILL.md
 ruleVerdicts:
@@ -277,31 +294,31 @@ subagents:
     durationSec: 414
     toolCalls: 70
     modelCalls: 69
-    tokenShare: 3.1
+    tokenShare: 3
   - task: Inspect session 015P9szA
     model: sonnet
     durationSec: 890
     toolCalls: 108
     modelCalls: 108
-    tokenShare: 5
+    tokenShare: 4.9
   - task: Inspect session 01BjA9rH
     model: sonnet
     durationSec: 797
     toolCalls: 140
     modelCalls: 139
-    tokenShare: 6.7
+    tokenShare: 6.4
   - task: Inspect session 015bAGZE
     model: sonnet
     durationSec: 1124
     toolCalls: 192
     modelCalls: 190
-    tokenShare: 10
+    tokenShare: 9.6
   - task: Inspect session 013zxzeR
     model: sonnet
     durationSec: 2261
     toolCalls: 404
     modelCalls: 403
-    tokenShare: 41.9
+    tokenShare: 40.2
   - task: Inspect session 01Hpd1KM
     model: sonnet
     durationSec: 208
@@ -313,14 +330,14 @@ subagents:
     durationSec: 129
     toolCalls: 33
     modelCalls: 14
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: general-purpose
     task: Standards review PR1
     model: sonnet
     durationSec: 90
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: general-purpose
     task: Spec review PR1
     model: sonnet
@@ -341,7 +358,7 @@ subagents:
     durationSec: 292
     toolCalls: 23
     modelCalls: 5
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: general-purpose
     task: Standards review PR2
     model: sonnet
@@ -362,7 +379,7 @@ subagents:
     durationSec: 115
     toolCalls: 11
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: general-purpose
     task: Review PR2 second follow-up
     model: sonnet
@@ -376,7 +393,21 @@ subagents:
     durationSec: 34
     toolCalls: 8
     modelCalls: 4
+    tokenShare: 0.4
+  - type: general-purpose
+    task: Review step 8 filing change
+    model: sonnet
+    durationSec: 41
+    toolCalls: 10
+    modelCalls: 4
     tokenShare: 0.5
+  - type: general-purpose
+    task: Review step 8 follow-up
+    model: sonnet
+    durationSec: 21
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.2
 gitBranch: ccr-85b703aa-6qxwhk
 entrypoint: remote_mobile
 cliVersion: 2.1.311
