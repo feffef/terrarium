@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeQmVnqMqDkRgFRWx5T
 startedAt: 2026-10-28T10:01:29Z
-endedAt: 2026-10-28T10:29:26Z
+endedAt: 2026-10-28T10:36:58Z
 kind: delegated
 goal: Turn recent session Frictions into fixes
 status: in-review
-outcome: "Ledger PR #2634 and one fix PR #2635 open; three regression issues filed; closing ledger PR still to come"
-summary: "Ran the frictions-to-fixes Skill on the owner's slash command; everything after the kickoff was agent-initiated within the Skill's remit, and no human prompt followed. A survey subagent appended 32 window Frictions, opened four ledger entries and recorded five merged fixes. I filed regression issues #2631, #2632 and #2633, deviating from the Skill's top-three rule: the two highest-severity regressions (local-gate-green-ci-red, bash-rules-hint-failure-path) were phantoms whose only occurrences predate their own closing verdicts, and a third is covered by open #2472. A design subagent took ten picks and recommended dispatching one (retry on the shell-reads linearity test) and dropping nine, including one fix that sat in the open survey-brief Prune Trial's territory (I caught that its report said otherwise). A Sonnet agent built the retry fix; I read its two-line diff and pushed it as #2635. The ledger gate failed once on that same flaky test and passed on one re-run. The user preference to ask questions first was not applied: the Skill is explicit and autonomous. Still open: wait for CI, merge both PRs, then the closing ledger PR (section 8)."
+outcome: "Ledger PR #2634 and fix PR #2635 merged; three regression issues filed; closing ledger PR #2636 open"
+summary: "Ran the frictions-to-fixes Skill on the owner's slash command; everything after the kickoff was agent-initiated within the Skill's remit, and no human prompt followed. A survey subagent appended 32 window Frictions, opened four ledger entries and recorded five merged fixes. I filed regression issues #2631, #2632 and #2633, deviating from the Skill's top-three rule: the two highest-severity regressions (local-gate-green-ci-red, bash-rules-hint-failure-path) were phantoms whose only occurrences predate their own closing verdicts, and a third is covered by open #2472. A design subagent took ten picks and recommended dispatching one (retry on the shell-reads linearity test) and dropping nine, including one fix that sat in the open survey-brief Prune Trial's territory (I caught that its report said otherwise). A Sonnet agent built the retry fix; I read its two-line diff and pushed it as #2635. The ledger gate failed once on that same flaky test and passed on one re-run. The user preference to ask questions first was not applied: the Skill is explicit and autonomous. #2634 and #2635 merged after green CI; the closing ledger PR #2636 records #2635 and waits for its merge."
 prs:
   - "2634"
   - "2635"
+  - "2636"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: git rules; read after my first beyond-status git command
@@ -89,23 +90,30 @@ frictions:
   - description: The Stop hook asked me five times to push while the required gate was still running, which would have pushed before it passed; I declined each time.
     solution: The Stop hook could skip its nag while a gate:scoped log is open or a gate run is in progress.
     severity: nit
-durationSec: 1676
+  - description: A force-with-lease push of the restarted session branch was denied by the auto-mode classifier. The remote branch had been deleted on merge, so a plain push worked; one wasted call.
+    solution: The restart-after-merge recipe in the system prompt should say to try a plain push first, since the remote branch is deleted on merge.
+    severity: nit
+durationSec: 2128
 models:
-  claude-sonnet-5-5: 113
+  claude-sonnet-5-5: 160
 toolCounts:
   Read: 8
   Skill: 3
-  Bash: 29
+  Bash: 42
   Agent: 3
   ToolSearch: 3
   mcp__github__list_issues: 2
   mcp__github__issue_write: 3
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  mcp__github__add_issue_comment: 3
   mcp__github__update_issue_comment: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
 filesEdited:
   - tests/unit/shell-reads.spec.ts
+  - layers/journal/content/current/frictions/shell-reads-linearity-test-flaky.yml
   - layers/journal/content/current/frictions/adr-read-after-edit.yml
   - layers/journal/content/current/frictions/followup-review-overcost.yml
   - layers/journal/content/current/frictions/git-checkout-origin-main-rule-broken.yml
@@ -118,7 +126,6 @@ filesEdited:
   - layers/journal/content/current/frictions/required-doc-read-truncated.yml
   - layers/journal/content/current/frictions/search-issues-misses-hits.yml
   - layers/journal/content/current/frictions/shell-read-rules-hint-covered.yml
-  - layers/journal/content/current/frictions/shell-reads-linearity-test-flaky.yml
   - layers/journal/content/current/frictions/survey-output-overflow.yml
   - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
   - layers/journal/content/current/frictions/counts-not-tallied.yml
@@ -239,20 +246,20 @@ subagents:
     durationSec: 497
     toolCalls: 31
     modelCalls: 27
-    tokenShare: 23.7
+    tokenShare: 18
   - type: general-purpose
     task: Design fixes for picked frictions
     durationSec: 373
     toolCalls: 35
     modelCalls: 34
-    tokenShare: 19.3
+    tokenShare: 14.7
   - type: general-purpose
     task: Build shell-reads flake fix
     model: sonnet
     durationSec: 355
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 4
+    tokenShare: 3
 gitBranch: ccr-6b1e3763-eii81p
 entrypoint: remote_mobile
 cliVersion: 2.1.312
