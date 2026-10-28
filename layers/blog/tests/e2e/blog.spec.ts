@@ -132,6 +132,13 @@ describe('blog Tenant', async () => {
     expect(quoted).not.toContain('prose--cap')
     const lettered = await $fetch<string>('/t/blog/david/2026-07-05-first-light')
     expect(lettered).toContain('prose--cap')
+    const opensOnLink = await $fetch<string>('/t/blog/david/2026-10-27-the-hint-was-followed-60-times-in-73-most-of-the-13-ignored-were-helpers')
+    expect(opensOnLink).not.toContain('prose--cap')
+  })
+
+  it('links a feed row\'s "in reply to" label to the parent post by its Persona name', async () => {
+    const html = await $fetch<string>('/t/blog')
+    expect(html).toContain('in reply to Eyra: <a href="/t/blog/eyra/2026-10-27-the-hint-learned-to-read-the-receipt"')
   })
 
   it('answers a missing post with links onward, not an engineering message', async () => {

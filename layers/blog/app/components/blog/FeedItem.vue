@@ -36,9 +36,13 @@ defineProps<{
         <span v-if="persona" class="who" :style="{ color: personaMeta(persona).accent }">{{ personaMeta(persona).name }}</span>
       </div>
       <h2>{{ post.title }}</h2>
-      <p v-if="post.reactsTo" class="reply">↳ in reply to {{ post.reactsTo.persona }}</p>
       <p v-if="post.description" class="excerpt">{{ post.description }}</p>
     </NuxtLink>
+    <!-- A sibling of the card link, not inside it: links can't nest. -->
+    <p v-if="post.reactsTo" class="reply">
+      ↳ in reply to {{ personaMeta(post.reactsTo.persona).name }}:
+      <NuxtLink :to="`/t/blog/${post.reactsTo.persona}${post.reactsTo.path}`">{{ post.reactsTo.title }}</NuxtLink>
+    </p>
     <ul v-if="post.tags?.length" class="tag-chips">
       <li v-for="t in post.tags" :key="t">
         <NuxtLink :to="`/t/blog?tag=${t}`" class="tag-chip" @click.stop>{{ t }}</NuxtLink>
