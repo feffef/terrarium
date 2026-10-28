@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeQxsePnJds2jEpgirL
 startedAt: 2026-10-28T06:34:25Z
-endedAt: 2026-10-28T06:50:19Z
+endedAt: 2026-10-28T06:52:40Z
 kind: interactive
 goal: Unblock the digest archive sweep that broke an e2e test
-status: in-review
-outcome: "PR 2620 open: Journal dashboard capped at 1000 sessions, e2e reads SSR HTML in Node"
+status: completed
+outcome: "PR 2620 merged green: Journal dashboard capped at 1000 sessions, e2e reads SSR HTML in Node"
 summary: "Human-instructed: the owner asked why daily digests couldn't archive older sessions and to fix the e2e test; after I laid out three options they chose \"test fix plus shrink the page, limit to 1000 sessions\" and added \"don't delete sessions, filter them\". The 2026-10-28 digest session log gave the cause; I reproduced it (sweep, build, smoke spec): /t/journal/archived was 10.4 MB with 1153 sessions, past Chrome's response-body buffer, so response.text() threw. Fix: the dashboard query loads the newest 1000 sessions and labels the filter; expectServerRendered refetches HTML in Node. Agent-initiated: an e2e test for the cap (so ADR-0004 lets an agent merge), leaving the sweep itself to the next digest run, and the review fixes (headline wording for any Space, one home for the label). Open: the tile and browse pages still count differently from the capped dashboard on archived; the archived page is 9.3 MB and still heavy."
 prs:
   - "2620"
@@ -47,23 +47,26 @@ frictions:
   - description: The archived dashboard silently outgrew Chrome's 10 MB body buffer; nothing warned until the digest run's gate failed twice.
     solution: The new cap and Node-side refetch; a page-size budget check in e2e could flag growth earlier.
     severity: minor
-durationSec: 954
+durationSec: 1095
 models:
-  claude-opus-5-5: 122
+  claude-opus-5-5: 141
 toolCounts:
   Grep: 1
-  Bash: 43
+  Bash: 48
   Read: 5
   Edit: 1
-  Skill: 4
+  Skill: 5
   ToolSearch: 2
   TaskStop: 1
   Agent: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
   mcp__claude-code-remote__send_later: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - tests/support/e2e.ts
   - layers/journal/app/pages/t/journal/[space]/index.vue
@@ -157,13 +160,13 @@ subagents:
     durationSec: 39
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 7.7
+    tokenShare: 6.5
   - type: general-purpose
     task: Spec review of diff
     durationSec: 41
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 9.4
+    tokenShare: 7.9
 gitBranch: ccr-d3656197-6t3k1j
 entrypoint: remote_mobile
 cliVersion: 2.1.312
