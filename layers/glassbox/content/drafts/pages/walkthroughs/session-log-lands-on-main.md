@@ -44,7 +44,7 @@ Nobody writes the rest of the log: `scripts/session/transcript-trace.ts` reads t
 The stitched entry must pass the session schema, and its file name is fixed: the date the session started, then its id. The lander compares the entry with the copy already on `main` at that path and does nothing if they match. It also checks the entry against `main`'s own copy of the schema, which the session's branch may have changed. An entry `main` would reject waits, and lands on the first turn that ends after the schema change merges.
 
 ::stop-links
-[A schema that only grows](/t/glassbox/drafts/zod/schema-only-grows)
+[A schema that only grows](/t/glassbox/drafts/verification/schema-only-grows)
 ::
 
 ## 6. One file goes straight to main
@@ -88,6 +88,6 @@ The log shows on the Journal's dashboard. Each run of `pnpm validate:content`, a
 
 - [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
 - [Claude Code hooks](/t/glassbox/guide/claude-code/hooks)
-- [A schema that only grows](/t/glassbox/drafts/zod/schema-only-grows)
+- [A schema that only grows](/t/glassbox/drafts/verification/schema-only-grows)
 - [Commit and PR attribution](/t/glassbox/guide/git-github/attribution)
 - [The Routines](/t/glassbox/drafts/walkthroughs/routines)

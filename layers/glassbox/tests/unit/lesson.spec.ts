@@ -23,7 +23,7 @@ describe('glassboxLessonSections', () => {
       h2('try-it-in-your-project', 'Try it in your project'),
       ['p', {}, 'Step.'],
       h2('where-next', 'Where next'),
-      ['ul', {}, ['li', {}, ['a', { href: '/t/glassbox/guide/zod/schemas' }, 'Schemas']], ['li', {}, ['a', { href: '/t/journal/current/how-it-works' }, 'How']]],
+      ['ul', {}, ['li', {}, ['a', { href: '/t/glassbox/guide/verification/schemas' }, 'Schemas']], ['li', {}, ['a', { href: '/t/journal/current/how-it-works' }, 'How']]],
     ], '/t/glassbox/guide')).toEqual([
       ['p', {}, 'Lede.'],
       ['p', { class: 'gb-skip' }, 'Know it? Skip to ', ['a', { href: '#in-terrarium' }, 'In Terrarium']],
@@ -43,7 +43,7 @@ describe('glassboxLessonSections', () => {
       ['div', { class: 'gb-try' }, h2('try-it-in-your-project', 'Try it in your project'), ['p', {}, 'Step.']],
       h2('where-next', 'Where next'),
       ['ul', { class: 'gb-next' },
-        ['li', {}, ['span', {}, 'Lesson'], ['a', { href: '/t/glassbox/guide/zod/schemas' }, 'Schemas']],
+        ['li', {}, ['span', {}, 'Lesson'], ['a', { href: '/t/glassbox/guide/verification/schemas' }, 'Schemas']],
         ['li', {}, ['span', {}, 'Journal'], ['a', { href: '/t/journal/current/how-it-works' }, 'How']],
       ],
     ])

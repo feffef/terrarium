@@ -29,7 +29,7 @@ The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which ca
 Beside it goes the :term[manifest], `tenant.config.ts`: the Tenant's name, its :term[Spaces]{id="space"}, and the :term[Collections]{id="collection"} that every Space holds, each of type `page` or `data`. Marquee's is about as small as one gets, with one Space, `reel`, and one Collection, `pages`, the only name that gets addresses. Before anything is built from it, `validateManifest()` checks it, and a misspelt key or a Collection the rules don't allow stops the build with a line that names the field.
 
 ::stop-links
-[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Schema validation](/t/glassbox/guide/zod/schema-validation) · :file[layers/marquee/tenant.config.ts]
+[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Schema validation](/t/glassbox/guide/verification/schema-validation) · :file[layers/marquee/tenant.config.ts]
 ::
 
 ## 4. Its content gets tables of its own

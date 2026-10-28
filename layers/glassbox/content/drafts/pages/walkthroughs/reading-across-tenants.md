@@ -12,7 +12,7 @@ Terrarium keeps each Tenant's content in tables of its own, yet the Commons Sear
 The Blog's :term[manifest] gives its `pages` :term[Collection] one extra field, `kind: 'page'`. That field is the whole opt-in: a Collection with no `kind` stays off every list below. The :term[Collection kinds]{id="collection-kind"} and their contracts live in :file[shared/kinds.ts], and the manifest check refuses a kind that isn't there or one meant for the other Collection type.
 
 ::stop-links
-[Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · [Schema validation](/t/glassbox/guide/zod/schema-validation) · :file[layers/blog/tenant.config.ts]
+[Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · [Schema validation](/t/glassbox/guide/verification/schema-validation) · :file[layers/blog/tenant.config.ts]
 ::
 
 ## 2. The contract joins the schema
