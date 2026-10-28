@@ -198,7 +198,7 @@ tool checked who opened a pull request and that a review verdict was posted, not
 which files it touched. On 10 October the merge tool began refusing any pull
 request that changes a listed path.
 
-> **A rule that deletes rules.** A mechanism added on 23 August,
+> **A rule that deletes rules.** A mechanism added on 23 August
 > answers exactly this. A **prune trial** cuts one topic's instructions back to
 > the goal behind them, then leaves the cut standing as an experiment: later
 > sessions' recorded frictions decide whether the removed prose was
