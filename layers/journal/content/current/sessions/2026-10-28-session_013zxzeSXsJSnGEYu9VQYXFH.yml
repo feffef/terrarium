@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSXsJSnGEYu9VQYXFH
 startedAt: 2026-10-28T13:23:53Z
-endedAt: 2026-10-28T13:34:41Z
+endedAt: 2026-10-28T15:15:02Z
 kind: autonomous
 goal: Scheduled prune-trial run on the Platform's instructions
-status: in-review
-outcome: "Two held trials judged and deleted; one new trial opened (PR #2641), awaiting a human merge"
-summary: "Scheduled /prune-trial run, no human prompts. Judged the two landed trials (Verify before you state, github-integration traps): 48 sessions since, no major or blocker Friction, no regression issue, so both entries were deleted. A search subagent covered the corpus, guard headers and tracker and found that failed prose rules now live only as incident narration in guard script comments; I cut the loop-only-tool-guard and skill-inline-guard headers to rule plus issue pointers (-12 net, comments only; mass was small). Sonnet probe pinned to the post-prune SHA answered correctly; code-review Standards and Spec clean; gate:scoped green. Opened PR #2641 (human merge, Human-only hook files), posted verdict, subscribed. All work was agent-initiated under the schedule's standing prompt."
+status: completed
+outcome: "Two held trials judged and deleted; one new trial opened; PR #2641 merged by a human"
+summary: "Scheduled /prune-trial run, no human prompts. Judged the two landed trials (Verify before you state, github-integration traps): 48 sessions since, no major or blocker Friction, no regression issue, so both entries were deleted. A search subagent covered the corpus, guard headers and tracker and found that failed prose rules now live only as incident narration in guard script comments; I cut the loop-only-tool-guard and skill-inline-guard headers to rule plus issue pointers (-12 net, comments only; mass was small). Sonnet probe pinned to the post-prune SHA answered correctly; code-review Standards and Spec clean; gate:scoped green. Opened PR #2641 (human merge, Human-only hook files), posted verdict, subscribed; a human merged it with green CI. All work was agent-initiated under the schedule's standing prompt."
 prs:
   - "2641"
 docsRead:
@@ -52,11 +52,11 @@ frictions:
   - description: "I wrote proven: true into the ledger entry before the Sonnet probe had run; the probe passed afterwards."
     solution: Draft the entry with the probe result only after it returns.
     severity: nit
-durationSec: 648
+durationSec: 6669
 models:
-  claude-sonnet-5-5: 78
+  claude-sonnet-5-5: 91
 toolCounts:
-  Bash: 19
+  Bash: 20
   Read: 6
   mcp__github__search_issues: 2
   Skill: 4
@@ -65,6 +65,7 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   PushNotification: 1
+  ReadNotifications: 4
 filesEdited:
   - .agents/prune-trials.yml
   - scripts/hooks/loop-only-tool-guard.ts
@@ -124,28 +125,28 @@ subagents:
     durationSec: 66
     toolCalls: 18
     modelCalls: 7
-    tokenShare: 14
+    tokenShare: 9.9
   - type: general-purpose
     task: Probe pruned guard headers
     model: sonnet
     durationSec: 17
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 3.8
+    tokenShare: 2.7
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 33
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 4.7
+    tokenShare: 3.4
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 29
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 5.5
+    tokenShare: 3.9
 gitBranch: claude/practical-rubin-tdvvhr
 entrypoint: remote_trigger
 cliVersion: 2.1.312
