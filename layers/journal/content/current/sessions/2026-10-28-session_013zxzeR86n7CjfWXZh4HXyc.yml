@@ -1,0 +1,428 @@
+schemaVersion: 1
+session: session_013zxzeR86n7CjfWXZh4HXyc
+startedAt: 2026-10-28T09:10:29Z
+endedAt: 2026-10-28T09:47:46Z
+kind: interactive
+goal: Cluster the Friction Ledger by harm, not by slip
+status: in-review
+outcome: "PR #2630 open: a new survey rule, a re-clustered ledger and two ledger script fixes"
+summary: "Human-instructed throughout. The Trusted user asked me to check the Friction Ledger for clusters that count a working fix's guard firing as a regression, and for cluster text that never generalised. I found examples of both (github-search-overflow, bare-cd-moves-session-cwd, survey-output-overflow) and asked how to proceed. The user chose to re-cluster existing data, use `ref`, rewrite text directly, and override the open Prune Trial on survey-brief.md. My first rule split on \"different friction\" while keeping same-slip cases, which both reviewers flagged as inconsistent. The user then set the rule: a Friction is its harm, so a fix-caught slip with a new harm (retry, false positive, no cost) gets its own entry. At the user's request I fanned out four read-only audit agents over the 134 entries, verified every proposed move against the stored texts myself, and asked about three judgement calls (apply all; split zero-cost shell reads; leave strays). About 60 occurrences moved through --move. 9 new entries exist, about 30 entries got rewritten text, and the occurrence count is unchanged at 951. The user then approved three more brief rules (match on harm, follow a cause's routing, rewrite a cause when recording a fix). ledger-set.ts gained in-place summary/cause/surface edits; --move's flow-style bug was found and fixed by me along the way."
+prs:
+  - "2630"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: three-dot diffs, -F commit messages, no chained push after a gate
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: "order: commit, code-review, gate last, then push and PR"
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP for writes, fields on list calls
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: other sessions must not reword a trial's area, so I asked the Trusted user before editing survey-brief.md
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: the survey rules I changed; its ref and step-5 lines needed matching edits
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: grepped for regression and cluster wording to see how the label is used; no change needed there
+    useful: partly
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: Standards reviewer read it for the brief prose; it reported it partly useful (wording clarity)
+    useful: partly
+  - path: layers/journal/tenant.config.ts
+    reason: (read before editing)
+  - path: adhoc-script-timestamp-mismatch.yml
+    reason: (no reason given)
+  - path: adr-check-output-oversized.yml
+    reason: (no reason given)
+  - path: adr-check-scope-in-skill-runs.yml
+    reason: (no reason given)
+  - path: ask-user-question-empty-reply.yml
+    reason: (no reason given)
+  - path: audit-run-data-not-recorded.yml
+    reason: (no reason given)
+  - path: audit-skills-output-overflow.yml
+    reason: (no reason given)
+  - path: auto-mode-self-modification-denials.yml
+    reason: (no reason given)
+  - path: bare-cd-moves-session-cwd.yml
+    reason: (no reason given)
+  - path: bash-reads-not-read-tool.yml
+    reason: (no reason given)
+  - path: bash-rules-hint-failure-path.yml
+    reason: (no reason given)
+  - path: binding-docs-skipped.yml
+    reason: (no reason given)
+  - path: blocked-waiting.yml
+    reason: (no reason given)
+  - path: blog-post-story-hunt-reads-pr-bodies.yml
+    reason: (no reason given)
+  - path: blog-reply-premises-unchecked.yml
+    reason: (no reason given)
+  - path: build-before-shape-settled.yml
+    reason: (no reason given)
+  - path: build-workflow-gate-not-final.yml
+    reason: (no reason given)
+  - path: chained-git-step-fails-silently.yml
+    reason: (no reason given)
+  - path: chat-progress-narration.yml
+    reason: (no reason given)
+  - path: ci-job-logs-unreachable.yml
+    reason: (no reason given)
+  - path: claim-of-fix-not-rendered.yml
+    reason: (no reason given)
+  - path: clear-backlog-build-picks-input.yml
+    reason: (no reason given)
+  - path: clear-backlog-build-preflight.yml
+    reason: (no reason given)
+  - path: clear-backlog-build-review-cap-fails.yml
+    reason: (no reason given)
+  - path: clear-backlog-explore-transitive-grouping.yml
+    reason: (no reason given)
+  - path: clear-backlog-sweep-scope.yml
+    reason: (no reason given)
+  - path: clear-backlog-sweep-took-wayfinder.yml
+    reason: (no reason given)
+  - path: close-session-bypassed-by-hand-log.yml
+    reason: (no reason given)
+  - path: close-session-step1-reprints-loaded-rules.yml
+    reason: (no reason given)
+  - path: closure-not-invoked-at-pr-open.yml
+    reason: (no reason given)
+  - path: closure-not-invoked-on-answers.yml
+    reason: (no reason given)
+  - path: counts-from-wrong-filter.yml
+    reason: (no reason given)
+  - path: counts-not-tallied.yml
+    reason: (no reason given)
+  - path: data-shape-built-before-asked.yml
+    reason: (no reason given)
+  - path: dependency-edge-body-guard.yml
+    reason: (no reason given)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: late-read-first-docs.yml
+    reason: (no reason given)
+  - path: ledger-yaml-hand-edit-errors.yml
+    reason: (no reason given)
+  - path: lesson-repeats-error-being-fixed.yml
+    reason: (no reason given)
+  - path: list-events-transcript-overflow.yml
+    reason: (no reason given)
+  - path: local-gate-green-ci-red.yml
+    reason: (no reason given)
+  - path: mechanism-claim-from-recall.yml
+    reason: (no reason given)
+  - path: misread-owner-instruction.yml
+    reason: (no reason given)
+  - path: moved-main-stale-base.yml
+    reason: (no reason given)
+  - path: observation-notes-truncated-ids.yml
+    reason: (no reason given)
+  - path: output-trim-drops-needed-line.yml
+    reason: (no reason given)
+  - path: owner-corrections-overlap-boilerplate.yml
+    reason: (no reason given)
+  - path: pack-skill-install-pitfalls.yml
+    reason: (no reason given)
+  - path: parallel-branches-same-lines-conflict.yml
+    reason: (no reason given)
+  - path: parallel-rewrite-agents-restate-facts.yml
+    reason: (no reason given)
+  - path: pr-number-guessed-before-create.yml
+    reason: (no reason given)
+  - path: pr-workflow-read-in-part.yml
+    reason: (no reason given)
+  - path: pr-workflow-unread-before-push.yml
+    reason: (no reason given)
+  - path: premise-not-questioned.yml
+    reason: (no reason given)
+  - path: prepush-gate-review-skipped.yml
+    reason: (no reason given)
+  - path: provenance-angle-bracket-deny.yml
+    reason: (no reason given)
+  - path: prune-moves-text-instead-of-cutting.yml
+    reason: (no reason given)
+  - path: prune-trial-target-unreachable.yml
+    reason: (no reason given)
+  - path: prune-trial-territory-unchecked.yml
+    reason: (no reason given)
+  - path: push-chained-to-gate-run.yml
+    reason: (no reason given)
+  - path: read-first-hint-repeats-in-subagents.yml
+    reason: (no reason given)
+  - path: relayed-subagent-claims.yml
+    reason: (no reason given)
+  - path: required-doc-read-truncated.yml
+    reason: (no reason given)
+  - path: restart-kills-background-work.yml
+    reason: (no reason given)
+  - path: reviewer-line-ranges-off.yml
+    reason: (no reason given)
+  - path: rewrite-pass-scope-drift.yml
+    reason: (no reason given)
+  - path: rule-loading-probe-confounded.yml
+    reason: (no reason given)
+  - path: scratchpad-script-cant-import-repo-deps.yml
+    reason: (no reason given)
+  - path: screenshot-review-runaway.yml
+    reason: (no reason given)
+  - path: scripted-text-replace-edits.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: two Standards+Spec rounds; both found real inconsistencies in the rule and the ledger
+  - name: dispatch-subagents
+    reason: before writing the review and audit briefs
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Started pnpm gate:scoped and then committed while it ran, so it aborted; pr-workflow says commit and review first, gate last.
+    solution: Commit and review before starting the gate, as pr-workflow.md orders it.
+    severity: minor
+  - description: "prune-friction-ledger.ts --move into an entry ledger-set --create had just written (occurrences: []) kept flow style, putting all ten blocks on one line."
+    solution: "Fixed in PR #2630: --move sets the target list to block style, with a test."
+    severity: minor
+  - description: ledger-set.ts could set summary and cause only on --create, so the rewrite-on-append rule had no tool; the script needed a change first.
+    solution: "Fixed in PR #2630: --summary, --cause and --surface now edit an existing entry."
+    severity: minor
+  - description: Ran my redescribe script twice; its first block rewrote relayed-subagent-claims' fixes with summaries I had retyped instead of copying, so I restored them from git.
+    solution: Copy fix summaries from the file programmatically, never retype them, and make one-shot scripts refuse a second run.
+    severity: minor
+  - description: My first split rule (split only a different friction, keep a fix-caught slip) let me split one cluster and keep two of the same shape; both reviewers flagged it and the user had to settle it.
+    solution: Ask the deciding question with a worked pair of examples before applying a rule to data.
+    severity: moderate
+  - description: The rubric change reached audit agent B after it finished, so it reported once under the old rule and ran again under the new one.
+    solution: Settle the rubric with the user before dispatching audit agents (dispatch-subagents §1).
+    severity: minor
+  - description: An audit agent quoted 'the hint loaded the rules anyway' from occurrences whose description lacks it; the text sat in their solution field, so I re-checked every quote.
+    solution: Have audit briefs name which field a quote comes from.
+    severity: nit
+  - description: The Stop hook asked to push about eight times while reviews, audits and the gate were still running; each needed a reply.
+    solution: Harness-side hook, already tracked as stop-hook-nag (accepted).
+    severity: nit
+durationSec: 2237
+models:
+  claude-opus-5-5: 232
+toolCounts:
+  Grep: 1
+  Bash: 76
+  Read: 4
+  Skill: 4
+  Agent: 8
+  AskUserQuestion: 2
+  ToolSearch: 2
+  SendMessage: 6
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - layers/journal/content/current/frictions/adr-read-after-edit.yml
+  - layers/journal/content/current/frictions/bash-reads-not-read-tool.yml
+  - layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
+  - layers/journal/content/current/frictions/full-adr-read-skipped.yml
+  - layers/journal/content/current/frictions/governing-doc-read-after-draft.yml
+  - layers/journal/content/current/frictions/mechanism-claim-from-recall.yml
+  - layers/journal/content/current/frictions/shell-read-rules-hint-covered.yml
+  - layers/journal/content/current/frictions/adr-check-scope-in-skill-runs.yml
+  - layers/journal/content/current/frictions/binding-docs-skipped.yml
+  - layers/journal/content/current/frictions/blocked-waiting.yml
+  - layers/journal/content/current/frictions/blog-reply-premises-unchecked.yml
+  - layers/journal/content/current/frictions/build-workflow-gate-not-final.yml
+  - layers/journal/content/current/frictions/clear-backlog-explore-transitive-grouping.yml
+  - layers/journal/content/current/frictions/close-session-bypassed-by-hand-log.yml
+  - layers/journal/content/current/frictions/counts-not-tallied.yml
+  - layers/journal/content/current/frictions/dispatch-read-guard-deny.yml
+  - layers/journal/content/current/frictions/dispatch-subagents-skill-unread.yml
+  - layers/journal/content/current/frictions/edit-during-gate-run.yml
+  - layers/journal/content/current/frictions/edit-leaves-contradicting-sibling.yml
+  - layers/journal/content/current/frictions/fabricated-subagent-handback.yml
+  - layers/journal/content/current/frictions/flaky-e2e-matcher-timeouts.yml
+  - layers/journal/content/current/frictions/followup-review-overcost.yml
+  - layers/journal/content/current/frictions/foreground-gate.yml
+  - layers/journal/content/current/frictions/frictions-to-fixes-briefs-mismatch.yml
+  - layers/journal/content/current/frictions/frictions-to-fixes-skill-gaps.yml
+  - layers/journal/content/current/frictions/git-test-output-noise.yml
+  - layers/journal/content/current/frictions/github-search-fields-guard-deny.yml
+  - layers/journal/content/current/frictions/inspect-session-paging-gaps.yml
+  - layers/journal/content/current/frictions/late-read-first-docs.yml
+  - layers/journal/content/current/frictions/ledger-append-refuses-held-session.yml
+  - layers/journal/content/current/frictions/ledger-yaml-hand-edit-errors.yml
+  - layers/journal/content/current/frictions/list-events-transcript-overflow.yml
+  - layers/journal/content/current/frictions/log-session-refuses-hand-closed-log.yml
+  - layers/journal/content/current/frictions/prepush-gate-review-skipped.yml
+  - layers/journal/content/current/frictions/relayed-subagent-claims.yml
+  - layers/journal/content/current/frictions/reviewer-line-ranges-off.yml
+  - layers/journal/content/current/frictions/reviewer-quotes-lose-line-breaks.yml
+  - layers/journal/content/current/frictions/scratchpad-script-cant-import-repo-deps.yml
+  - layers/journal/content/current/frictions/scripted-text-replace-edits.yml
+  - layers/journal/content/current/frictions/session-start-glossary-skipped.yml
+  - layers/journal/content/current/frictions/survey-appends-duplicate-sessions.yml
+  - layers/journal/content/current/frictions/triage-docs-unread-before-labelling.yml
+  - layers/journal/content/current/frictions/visual-work-published-unseen.yml
+  - layers/journal/content/current/frictions/workflow-output-result-key.yml
+  - layers/journal/content/current/frictions/worktree-branch-not-designated.yml
+  - layers/journal/content/current/frictions/worktree-guard-blocks-compound-bash.yml
+  - .agents/skills/frictions-to-fixes/scripts/ledger-set.ts
+  - layers/journal/tenant.config.ts
+  - .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts
+  - .agents/skills/frictions-to-fixes/tests/unit/prune-friction-ledger.spec.ts
+  - .agents/skills/frictions-to-fixes/tests/unit/ledger-set.spec.ts
+  - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
+  - layers/journal/content/current/frictions/github-search-overflow.yml
+  - layers/journal/content/current/frictions/survey-output-overflow.yml
+rulesLoaded:
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+rulesLoadedBySubagents:
+  - .claude/rules/glassbox-content.md
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before the first push and decline every Stop-hook push nag; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open and keep the log off the branch; summary enough, ADR not opened.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself once the branch was pushed and subscribe to it; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Made me start the PR body with the session header and check the commit trailer landed; summary enough.
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on a ledger directory read; this task drew no diagrams.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on Journal ledger reads; the Journal glossary confirmed the Friction Ledger terms but nothing Tenant-specific mattered.
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: Confirmed the ledger is a derived Inventory refreshed in place, so re-clustering it directly was in scope.
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on a glossary grep; no glossary term was added or changed.
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded on a glossary grep; no glossary term was added or changed.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed the frictions-to-fixes scripts and brief are Skill code changed through a gated PR.
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: About Skill Inventory grades; this PR touched no Inventory entry.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Flagged that survey-brief.md is in an open Prune Trial; I read the full ADR to see the rule, then asked the Trusted user before editing it.
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on reading tenant.config.ts; I changed only a schema comment, no manifest content.
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Made me ask the user before widening what ref holds instead of adding a new field; they chose ref.
+    useful: yes
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on reading tenant.config.ts; no MDC or Collection was involved.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on reading tenant.config.ts; no layer code changed.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded after reading an ADR; no ADR was changed.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded after reading docs/adr; I checked the paths list and found none of my changed files on it.
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded mid-session; no rule or CLAUDE.md placement question arose.
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded on reading read-first-hint.ts to verify a fix claim; no guard was changed.
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Only a review subagent loaded it on a grep hit; it reported it not useful, nothing Glass Box was touched.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of ledger change
+    durationSec: 61
+    toolCalls: 12
+    modelCalls: 7
+    tokenShare: 3.1
+  - type: general-purpose
+    task: Spec review of ledger change
+    durationSec: 77
+    toolCalls: 10
+    modelCalls: 10
+    tokenShare: 3.5
+  - type: general-purpose
+    task: Ledger audit slice A
+    durationSec: 241
+    toolCalls: 45
+    modelCalls: 15
+    tokenShare: 5.2
+  - type: general-purpose
+    task: Ledger audit slice B
+    durationSec: 307
+    toolCalls: 16
+    modelCalls: 15
+    tokenShare: 5.7
+  - type: general-purpose
+    task: Ledger audit slice C
+    durationSec: 230
+    toolCalls: 42
+    modelCalls: 13
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Ledger audit slice D
+    durationSec: 229
+    toolCalls: 20
+    modelCalls: 19
+    tokenShare: 5.9
+  - type: general-purpose
+    task: Standards review of follow-up
+    durationSec: 156
+    toolCalls: 13
+    modelCalls: 11
+    tokenShare: 6.2
+  - type: general-purpose
+    task: Spec review of follow-up
+    durationSec: 128
+    toolCalls: 10
+    modelCalls: 9
+    tokenShare: 4.7
+gitBranch: ccr-be1f560e-1g8bev
+entrypoint: remote_mobile
+cliVersion: 2.1.312
+learnings:
+  - prune-friction-ledger.ts --move deletes an emptied source entry with its fixes, so a full split drops the original's fix history; its ref has to carry what it covered.
+ideas:
+  - Add a ledger lint that flags an entry whose cause says 'no hint' or 'nothing hooks it' while its fixes list a PR that added one, so stale causes surface on every gate run instead of in a manual audit.
+landedBy: Stop
