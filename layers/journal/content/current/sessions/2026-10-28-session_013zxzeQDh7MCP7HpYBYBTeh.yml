@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeQDh7MCP7HpYBYBTeh
 startedAt: 2026-10-28T20:36:42Z
-endedAt: 2026-10-28T21:27:04Z
+endedAt: 2026-10-28T21:56:12Z
 kind: delegated
 goal: Raise the Glass Box guide one step (glassbox-improve run)
 status: completed
@@ -123,6 +123,10 @@ skillsUsed:
     reason: this log
   - name: log-session
     reason: (no reason given)
+  - name: writing-for-agents
+    reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
 frictions:
   - description: Called mcp__github__search_pull_requests before reading docs/agents/github-integration.md; a guard blocked it for missing fields.
     solution: Read the GitHub doc before the first mcp__github__ call, as CLAUDE.md says. The guard caught it at no cost.
@@ -139,13 +143,13 @@ frictions:
   - description: pnpm check:worktrees failed on the writer's merged worktree until I pushed the run branch, then passed; the skill does not say push first.
     solution: Note in glassbox-improve step 8 that check:worktrees needs the run branch pushed when a writer worktree was merged.
     severity: nit
-durationSec: 3022
+durationSec: 4770
 models:
-  claude-sonnet-5-5: 205
+  claude-sonnet-5-5: 218
 toolCounts:
   Read: 13
-  Skill: 5
-  Bash: 54
+  Skill: 6
+  Bash: 55
   mcp__github__search_pull_requests: 1
   mcp__github__list_pull_requests: 1
   Agent: 14
@@ -155,8 +159,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__search_issues: 1
-  mcp__github__issue_write: 1
-  ReadNotifications: 2
+  mcp__github__issue_write: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 2
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
@@ -271,28 +275,28 @@ subagents:
     durationSec: 845
     toolCalls: 87
     modelCalls: 59
-    tokenShare: 19.5
+    tokenShare: 19.1
   - type: general-purpose
     task: Rate guide pages (fable)
     model: fable
     durationSec: 836
     toolCalls: 91
     modelCalls: 20
-    tokenShare: 9
+    tokenShare: 8.8
   - type: general-purpose
     task: Rate guide pages (opus)
     model: opus
     durationSec: 580
     toolCalls: 59
     modelCalls: 57
-    tokenShare: 17.1
+    tokenShare: 16.6
   - type: general-purpose
     task: Research work-queue promotion
     model: sonnet
     durationSec: 165
     toolCalls: 17
     modelCalls: 14
-    tokenShare: 2.3
+    tokenShare: 2.2
   - type: general-purpose
     task: Promote work-queue Lesson
     model: opus
@@ -302,14 +306,14 @@ subagents:
     durationSec: 1029
     toolCalls: 89
     modelCalls: 51
-    tokenShare: 9.3
+    tokenShare: 9
   - type: general-purpose
     task: Review standards axis
     model: sonnet
     durationSec: 85
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: general-purpose
     task: Review spec axis
     model: sonnet
@@ -323,14 +327,14 @@ subagents:
     durationSec: 50
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: Re-grade work-queue (fable)
     model: fable
     durationSec: 205
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: general-purpose
     task: Re-grade work-queue (opus)
     model: opus
@@ -351,7 +355,7 @@ subagents:
     durationSec: 172
     toolCalls: 10
     modelCalls: 10
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: general-purpose
     task: Last re-grade (opus)
     model: opus
@@ -364,4 +368,5 @@ entrypoint: remote_mobile
 cliVersion: 2.1.312
 ideas:
   - "Make glassbox-improve rate Why bullets against sibling Lessons automatically: a small script that flags a bullet whose ADR id also appears in another guide Lesson's Why section, so overlap is caught before the raters."
+  - "Collecting issue 2652 holds the retro ideas: a page-check for Why bullets that repeat a sibling Lesson, glassbox-improve SKILL.md gaps (tie-break, draft title check, worktree note), rating only pages changed since a unanimous A, and trimming rules read-only subagents grade no"
 landedBy: Stop
