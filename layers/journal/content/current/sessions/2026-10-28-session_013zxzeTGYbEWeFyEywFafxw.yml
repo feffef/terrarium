@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeTGYbEWeFyEywFafxw
 startedAt: 2026-10-28T05:55:09Z
-endedAt: 2026-10-28T06:59:47Z
+endedAt: 2026-10-28T07:01:58Z
 kind: autonomous
 goal: Raise the Glass Box guide by rater consensus (glassbox-improve, 2026-10-28)
-status: in-review
-outcome: "PR #2621 raises three guide pages, promotes Schema validation into the Zod Subject and fixes seven false claims"
-summary: "A scheduled run of the glassbox-improve Skill, which a Routine started with no human prompt. All work is within that Skill's remit; nothing was agent-initiated beyond it. Three raters (sonnet, fable, opus) graded all 37 guide pages, and 33 were at A. Consensus put three pages up for raising. Commit and PR attribution (C) had a false claim that \"nobody has shown\" a hook can rewrite its call; the hooks docs document `updatedInput`. Claude Code hooks (B) had a design reason sitting in In Terrarium. Human-in-the-loop (B) repeated Author trust's merge refusals. Every rater raised the Zod manifest-validation draft as a gap, so it won the structural step: a promotion beats the two-rater Vue components split on a tie. It was promoted as Schema validation. Four sonnet researchers and four opus writers worked in worktrees. I merged their branches and made the join edits. code-review ran on two axes with the tally as the spec. Two rounds of fresh raters followed. The re-grades found consensus and false claims that review missed. Two of those false claims came from this run's own first-round fixes (one from wording I proposed). I fixed the last two myself after the final re-grade. Final grades: hooks A, Human-in-the-loop A, attribution B, Schema validation B; the false claims behind both Bs are fixed. Out-of-remit findings, chiefly ADR-0017's stale rejected alternative, went to #2604. pnpm gate:scoped is green on the final head. The PR awaits CI and merge."
+status: completed
+outcome: "Merged PR #2621: three guide pages raised, Schema validation promoted into the Zod Subject, seven false claims fixed"
+summary: "A scheduled run of the glassbox-improve Skill, which a Routine started with no human prompt. All work is within that Skill's remit; nothing was agent-initiated beyond it. Three raters (sonnet, fable, opus) graded all 37 guide pages, and 33 were at A. Consensus put three pages up for raising. Commit and PR attribution (C) had a false claim that \"nobody has shown\" a hook can rewrite its call; the hooks docs document `updatedInput`. Claude Code hooks (B) had a design reason sitting in In Terrarium. Human-in-the-loop (B) repeated Author trust's merge refusals. Every rater raised the Zod manifest-validation draft as a gap, so it won the structural step: a promotion beats the two-rater Vue components split on a tie. It was promoted as Schema validation. Four sonnet researchers and four opus writers worked in worktrees. I merged their branches and made the join edits. code-review ran on two axes with the tally as the spec. Two rounds of fresh raters followed. The re-grades found consensus and false claims that review missed. Two of those false claims came from this run's own first-round fixes (one from wording I proposed). I fixed the last two myself after the final re-grade. Final grades: hooks A, Human-in-the-loop A, attribution B, Schema validation B; the false claims behind both Bs are fixed. Out-of-remit findings, chiefly ADR-0017's stale rejected alternative, went to #2604. pnpm gate:scoped and CI were green on the final head; the PR merged through merge-pr.ts after my verdict comment."
 prs:
   - "2621"
 docsRead:
@@ -245,13 +245,16 @@ frictions:
   - description: A researcher left a stray empty x.txt in the shared scratchpad root
     solution: None needed beyond the existing per-agent subfolder rule; removed it
     severity: nit
-durationSec: 3878
+  - description: Ran pnpm gate:scoped three times (one early run before review fixes landed), each a few minutes of container time
+    solution: Run the gate once on the final head after the last re-grade; rely on the page spec and validate:content between rounds
+    severity: minor
+durationSec: 4009
 models:
-  claude-opus-5-5: 253
+  claude-opus-5-5: 277
 toolCounts:
-  Bash: 76
+  Bash: 82
   Read: 11
-  Skill: 4
+  Skill: 5
   ToolSearch: 3
   mcp__github__list_pull_requests: 1
   Agent: 19
@@ -260,8 +263,11 @@ toolCounts:
   Edit: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__send_later: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/git-github/05.attribution.md
   - layers/glassbox/content/guide/pages/zod/01.schema-validation.md
@@ -409,21 +415,21 @@ subagents:
     durationSec: 965
     toolCalls: 81
     modelCalls: 75
-    tokenShare: 17.2
+    tokenShare: 16.7
   - type: general-purpose
     task: Rate Glass Box pages (fable)
     model: fable
     durationSec: 1001
     toolCalls: 109
     modelCalls: 26
-    tokenShare: 8.2
+    tokenShare: 7.9
   - type: general-purpose
     task: Rate Glass Box pages (opus)
     model: opus
     durationSec: 665
     toolCalls: 54
     modelCalls: 47
-    tokenShare: 10.3
+    tokenShare: 9.9
   - type: general-purpose
     task: Research attribution fix
     model: sonnet
@@ -437,7 +443,7 @@ subagents:
     durationSec: 54
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: general-purpose
     task: Research Human-in-the-loop fix
     model: sonnet
@@ -451,14 +457,14 @@ subagents:
     durationSec: 221
     toolCalls: 31
     modelCalls: 18
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: Write attribution fixes
     model: opus
     durationSec: 1546
     toolCalls: 32
     modelCalls: 20
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: general-purpose
     task: Write hooks fix
     model: opus
@@ -472,47 +478,47 @@ subagents:
     durationSec: 1546
     toolCalls: 40
     modelCalls: 23
-    tokenShare: 3.1
+    tokenShare: 3
   - type: general-purpose
     task: Promote Zod draft to guide
     model: opus
     durationSec: 1411
     toolCalls: 91
     modelCalls: 59
-    tokenShare: 8.1
+    tokenShare: 7.8
   - type: general-purpose
     task: Standards review of run branch
     durationSec: 91
     toolCalls: 15
     modelCalls: 10
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Spec review of run branch
     durationSec: 106
     toolCalls: 17
     modelCalls: 16
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: Re-grade changed pages (sonnet)
     model: sonnet
     durationSec: 248
     toolCalls: 24
     modelCalls: 22
-    tokenShare: 3
+    tokenShare: 2.9
   - type: general-purpose
     task: Re-grade changed pages (fable)
     model: fable
     durationSec: 463
     toolCalls: 37
     modelCalls: 7
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: general-purpose
     task: Re-grade changed pages (opus)
     model: opus
     durationSec: 252
     toolCalls: 28
     modelCalls: 26
-    tokenShare: 3
+    tokenShare: 2.9
   - type: general-purpose
     task: Last re-grade (sonnet)
     model: sonnet
@@ -533,7 +539,7 @@ subagents:
     durationSec: 250
     toolCalls: 27
     modelCalls: 26
-    tokenShare: 2.9
+    tokenShare: 2.8
 gitBranch: HEAD
 entrypoint: remote
 cliVersion: 2.1.312
