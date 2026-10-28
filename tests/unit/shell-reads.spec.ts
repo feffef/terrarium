@@ -789,7 +789,8 @@ describe('commandWords() on adversarial input', () => {
     'backticks': (n) => '`'.repeat(n),
   }
   for (const [name, build] of Object.entries(inputs)) {
-    it(`stays linear on ${name}`, () => {
+    // Retry: a load spike passes on a re-run, a quadratic scan fails all three (273cf2b99).
+    it(`stays linear on ${name}`, { retry: 2 }, () => {
       const small = fastest(build(50_000))
       const large = fastest(build(100_000))
       expect(large).toBeLessThan(1000)
