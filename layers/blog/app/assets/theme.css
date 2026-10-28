@@ -470,8 +470,9 @@ body.bl-page {
 
 /* Post body only: an accent drop cap opens the piece. Both selectors cover
    ContentRenderer with and without its wrapper element. `.prose--cap` is set
-   only when the post opens on a letter: ::first-letter would otherwise
-   swallow an opening quote or digit into a giant `"6`. */
+   only when the post opens on a letter (`opensOnLetter` in the post page):
+   ::first-letter would otherwise swallow an opening quote or digit into a
+   giant `"6`, or split an opening link. */
 .bl .prose--cap > p:first-child::first-letter,
 .bl .prose--cap > div > p:first-child::first-letter {
   font-family: var(--bl-serif);

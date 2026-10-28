@@ -55,12 +55,15 @@ const { data: journalDay } = await useAsyncData(`${route.path}:journal-day`, asy
 })
 
 // The accent drop cap only suits a post whose first paragraph opens on plain
-// text that starts with a letter (theme.css): ::first-letter would otherwise
-// split an opening link or code span from its own first letter.
+// (or emphasised) text starting with a letter (theme.css): on a link or code
+// span, ::first-letter would split it from its own first letter.
 const opensOnLetter = computed(() => {
-  // Minimark node: [tag, props, ...children].
-  const first = post.value?.body?.value?.[0]
-  return Array.isArray(first) && first[0] === 'p' && typeof first[2] === 'string' && /^\p{L}/u.test(first[2].trimStart())
+  // Minimark node: [tag, props, ...children]; look through em/strong only.
+  let node: unknown = post.value?.body?.value?.[0]
+  if (!Array.isArray(node) || node[0] !== 'p') return false
+  node = node[2]
+  while (Array.isArray(node) && (node[0] === 'em' || node[0] === 'strong')) node = node[2]
+  return typeof node === 'string' && /^\p{L}/u.test(node.trimStart())
 })
 
 if (!post.value && !error.value) setResponseStatus(404)
