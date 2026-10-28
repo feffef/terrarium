@@ -38,7 +38,7 @@ Terrarium applies them without reading the source.
   holds the rest; each may be improved and moved to the guide. A guide page never links to a draft; a draft may link to
   the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
   orders Lessons inside a folder; Subject order and names come from
-  `glassboxSubjects` in `app/utils/subjects.ts`.
+  `glassboxSubjects` in `layers/glassbox/app/utils/subjects.ts`.
 - **Shown in progress.** The Platform homepage gives Glass Box its own band
   under the hero, labelled the newest experiment and work in progress, with
   both Spaces and a guide Lesson of the day; when it's finished, the label
@@ -52,7 +52,7 @@ A page about one concept. It opens with a short general summary that links the
 official docs, then shows how and why Terrarium uses the concept.
 
 Its body follows one contract, which the page frames like design 1b
-(`app/utils/lesson.ts`):
+(`layers/glassbox/app/utils/lesson.ts`):
 
 - a lede paragraph, then a skip line that links `[In Terrarium](#in-terrarium)`;
 - `## The concept`, whose last paragraph is `Full reference: [label](url)`
@@ -77,7 +77,7 @@ A page that follows one story across several Lessons and links to them instead
 of repeating them.
 
 Its body, in `walkthroughs/`, follows one contract, which the page draws like
-design 1b (`app/utils/walkthrough.ts`):
+design 1b (`layers/glassbox/app/utils/walkthrough.ts`):
 
 - a lede paragraph, then at most one diagram;
 - at least one numbered **stop**, each `## 1. Title`: 2–4 sentences of this
