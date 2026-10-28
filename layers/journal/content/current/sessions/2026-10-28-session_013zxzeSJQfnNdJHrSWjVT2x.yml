@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSJQfnNdJHrSWjVT2x
 startedAt: 2026-10-28T07:34:03Z
-endedAt: 2026-10-28T07:42:10Z
+endedAt: 2026-10-28T07:45:13Z
 kind: autonomous
 goal: Scheduled sync of the Glass Box guide with main
-status: in-review
-outcome: Guide re-pinned to ad9cea611; PR 2624 open with gate green
-summary: "Scheduled glassbox-update run (agent-initiated by the schedule, no human prompts). The script flagged 11 pages and no terms. I read the 174 commits since the oldest revision (diffs of every changed cited path) against each flagged page and the unflagged attribution page; no prose was stale, so the only edits are the pins and one Excerpt range shift in cross-tenant-reads. Page test, validate:content and gate:scoped passed; PR 2624 opened and subscribed. The change is a mechanical pin over 39 files, above the simple-change count, so I read the whole diff myself instead of running code-review and said so in the PR. Still open: CI result and merge."
+status: completed
+outcome: Guide re-pinned to ad9cea611; PR 2624 merged
+summary: Scheduled glassbox-update run (agent-initiated by the schedule, no human prompts). The script flagged 11 pages and no terms. I read the 174 commits since the oldest revision (diffs of every changed cited path) against each flagged page and the unflagged attribution page; no prose was stale, so the only edits are the pins and one Excerpt range shift in cross-tenant-reads. Page test, validate:content and gate:scoped passed; PR 2624 opened, subscribed and merged. The change is a mechanical pin over 39 files, above the simple-change count, so I read the whole diff myself instead of running code-review and said so in the PR. CI was green and I merged it with merge-pr.ts.
 prs:
   - "2624"
 docsRead:
@@ -45,16 +45,23 @@ frictions:
   - description: Combined run_in_background with a text-level & and was blocked by the double-background guard; also called Monitor before loading its schema.
     solution: None needed; the guards worked as designed.
     severity: nit
-durationSec: 487
+  - description: Appended pass-two log entries to the end of the YAML file, under the wrong key, so --author rejected it and I rewrote the file.
+    solution: log-session could say to insert new entries under their own key.
+    severity: nit
+durationSec: 670
 models:
-  claude-sonnet-5-5: 63
+  claude-sonnet-5-5: 82
 toolCounts:
   Read: 5
-  Bash: 24
+  Bash: 28
   Monitor: 1
   mcp__github__create_pull_request: 1
-  Skill: 2
+  Skill: 3
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
