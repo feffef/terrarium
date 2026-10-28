@@ -157,15 +157,17 @@ the diff, leave the PR open for a human.
 
 File the rest:
 
-- **Out-of-remit findings** (a new Subject, a change to the bar or the page
-  checks) go into the open issue titled
-  `glassbox-improve: out-of-remit findings`: one comment per run listing the
-  new ones. If that issue isn't open, open it labelled `needs-triage`, body
-  per `docs/agents/issue-tracker.md`.
+- **Problems the run hit** (a step that misfired, a rule in the bar or a page
+  check that got in the way) are Frictions in the session log; the Friction
+  Ledger clusters them across runs.
+- **New work** a rater proposes (a new Subject, a new page check) gets one
+  issue each, labelled `needs-triage`, body per
+  `docs/agents/issue-tracker.md`, unless an open issue already covers it.
 - **Ideas for the owner** go into the session log's `ideas`, one line each:
   proposed `DECISIONS.md` lines (an undo you refused, a rater split you
   settled), retitles the raters didn't agree on, and drafts too far from the
   bar to promote.
 
-Done when both are written and `pnpm check:worktrees` exits 0. Then invoke
+Done when each finding is in one of these and `pnpm check:worktrees` exits
+0. Then invoke
 `close-session`.
