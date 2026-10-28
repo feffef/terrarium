@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQRYzCbfkXYbHKwcPv
 startedAt: 2026-10-28T08:27:29Z
-endedAt: 2026-10-28T09:40:49Z
+endedAt: 2026-10-28T09:45:22Z
 kind: interactive
 goal: Raise the Glass Box guide's weakest pages, then fix what the run hit
-status: in-review
-outcome: "Run merged as PR #2628; retro fixes to the run and its page check in PR #2629"
-summary: "Third glassbox-improve run, started by a schedule (no human prompt); every change below is agent-initiated within the Skill's remit. Three raters graded all 38 guide pages at base b3ea5df: 36 A, 2 B. Only MCP servers kept a consensus deficit (an Excerpt that was a doc comment). The structural step promoted the Skill pack draft as Skill packs, the Subject's first guide Lesson, and moved the pack-pin facts off Claude Code Skills so each has one home. Many drafts tied at three raters; I broke the tie by the raters' importance rank sum, as the previous run did. Research found one false claim on MCP servers (the matcher drift has a unit test); the first re-grade raised a consensus overlap with Claude Code hooks; the last re-grade found a pre-existing false claim (list-tool overflow blamed on the cloud), fixed after I had already started the gate, so the gate ran twice. Fable's claimed false claim on Nuxt layers was a misreading: c12 skips a layer folder with no config file. code-review's three Skill packs findings were fixed; three were refused with reasons in the PR. Gate green locally and in CI; I posted the verdict and merged #2628 with merge-pr.ts. No issues were filed: no out-of-remit proposal came up that an open issue or the next run would not cover. Afterwards the owner ran /retro and then asked for one PR holding retro items 1-5 plus the small in-repo ones (human-instructed; the scope was confirmed with a question). PR #2629 adds a page check that fails an Excerpt ending on an open bracket (a bracket-balance version was dropped: it flagged eight A-graded pages), and edits the glassbox-improve Skill and rater brief: branch fallback name, rename-following cooling-off list, gap tie-break, last-round false claims fixed before the gate, join edits in the review spec, raters quoting their proof. Two code-review rounds shaped the wording."
+status: completed
+outcome: "Run merged as PR #2628; retro fixes to the run and its page check merged as PR #2629"
+summary: "Third glassbox-improve run, started by a schedule (no human prompt); every change below is agent-initiated within the Skill's remit. Three raters graded all 38 guide pages at base b3ea5df: 36 A, 2 B. Only MCP servers kept a consensus deficit (an Excerpt that was a doc comment). The structural step promoted the Skill pack draft as Skill packs, the Subject's first guide Lesson, and moved the pack-pin facts off Claude Code Skills so each has one home. Many drafts tied at three raters; I broke the tie by the raters' importance rank sum, as the previous run did. Research found one false claim on MCP servers (the matcher drift has a unit test); the first re-grade raised a consensus overlap with Claude Code hooks; the last re-grade found a pre-existing false claim (list-tool overflow blamed on the cloud), fixed after I had already started the gate, so the gate ran twice. Fable's claimed false claim on Nuxt layers was a misreading: c12 skips a layer folder with no config file. code-review's three Skill packs findings were fixed; three were refused with reasons in the PR. Gate green locally and in CI; I posted the verdict and merged #2628 with merge-pr.ts. No issues were filed: no out-of-remit proposal came up that an open issue or the next run would not cover. Afterwards the owner ran /retro and then asked for one PR holding retro items 1-5 plus the small in-repo ones (human-instructed; the scope was confirmed with a question). PR #2629 adds a page check that fails an Excerpt ending on an open bracket (a bracket-balance version was dropped: it flagged eight A-graded pages), and edits the glassbox-improve Skill and rater brief: branch fallback name, rename-following cooling-off list, gap tie-break, last-round false claims fixed before the gate, join edits in the review spec, raters quoting their proof. Two code-review rounds shaped the wording. CI's gate failed once on an unrelated wall-clock linearity test (shell-reads.spec.ts); one re-run was green and #2629 merged."
 prs:
   - "2628"
   - "2629"
@@ -167,11 +167,14 @@ frictions:
   - description: "Pushing the restarted branch with --force-with-lease was rejected as stale info: the merged PR had deleted the remote branch."
     solution: "The push hook named the cause (issue #1610); git remote prune origin, then a plain push, worked."
     severity: nit
-durationSec: 4401
+  - description: "CI gate on #2629 failed on the shell-reads 'stays linear' timing ratio (45.8 vs 43.2 ms), a test the diff never touches; one re-run passed."
+    solution: "tests/unit/shell-reads.spec.ts: the slack tightened in 273cf2b99 leaves a few ms of runner noise; widen the additive term or compare medians."
+    severity: minor
+durationSec: 4673
 models:
-  claude-opus-5-5: 356
+  claude-opus-5-5: 388
 toolCounts:
-  Bash: 101
+  Bash: 109
   Read: 18
   ToolSearch: 2
   mcp__github__list_pull_requests: 2
@@ -179,14 +182,14 @@ toolCounts:
   mcp__github__pull_request_read: 3
   ScheduleWakeup: 1
   Write: 3
-  Skill: 6
+  Skill: 7
   SendMessage: 3
   TaskStop: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 2
-  ReadNotifications: 3
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 3
+  ReadNotifications: 7
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
   AskUserQuestion: 1
   Edit: 11
 filesEdited:
@@ -319,112 +322,112 @@ subagents:
     durationSec: 704
     toolCalls: 52
     modelCalls: 49
-    tokenShare: 12.7
+    tokenShare: 11.9
   - type: general-purpose
     task: Glass Box rater (fable)
     model: fable
     durationSec: 1225
     toolCalls: 68
     modelCalls: 22
-    tokenShare: 8.1
+    tokenShare: 7.6
   - type: general-purpose
     task: Glass Box rater (opus)
     model: opus
     durationSec: 404
     toolCalls: 34
     modelCalls: 25
-    tokenShare: 5.8
+    tokenShare: 5.5
   - type: general-purpose
     task: Research MCP servers fix
     model: sonnet
     durationSec: 71
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: Research Skill pack promotion
     model: sonnet
     durationSec: 149
     toolCalls: 18
     modelCalls: 14
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: general-purpose
     task: Write MCP servers fix
     model: opus
     durationSec: 1439
     toolCalls: 51
     modelCalls: 34
-    tokenShare: 3.9
+    tokenShare: 3.6
   - type: general-purpose
     task: Write Skill pack promotion
     model: opus
     durationSec: 614
     toolCalls: 57
     modelCalls: 33
-    tokenShare: 3.8
+    tokenShare: 3.6
   - type: general-purpose
     task: Standards review of run
     model: opus
     durationSec: 65
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: Spec review of run
     model: opus
     durationSec: 58
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: Re-grade rater (sonnet)
     model: sonnet
     durationSec: 85
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: Re-grade rater (fable)
     model: fable
     durationSec: 421
     toolCalls: 38
     modelCalls: 9
-    tokenShare: 2.2
+    tokenShare: 2
   - type: general-purpose
     task: Re-grade rater (opus)
     model: opus
     durationSec: 214
     toolCalls: 24
     modelCalls: 24
-    tokenShare: 2.7
+    tokenShare: 2.5
   - type: general-purpose
     task: Last re-grade (sonnet)
     model: sonnet
     durationSec: 51
     toolCalls: 8
     modelCalls: 8
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: general-purpose
     task: Last re-grade (fable)
     model: fable
     durationSec: 250
     toolCalls: 29
     modelCalls: 9
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: Last re-grade (opus)
     model: opus
     durationSec: 144
     toolCalls: 15
     modelCalls: 15
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: Standards review of retro PR
     model: opus
     durationSec: 52
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: Spec review of retro PR
     model: opus
