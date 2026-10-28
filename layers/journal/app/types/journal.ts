@@ -59,7 +59,7 @@ export interface SessionCardView {
   // Rules that loaded, always-loaded ones (session start) first, then the main
   // session's, then subagents'; `followedUp` ⇒ the session then read the full ADR.
   // `reason`/`useful` are the agent's verdict, absent on logs older than it.
-  // `viaSubagent`/`unknown` as on `docsRead`.
+  // `viaSubagent` as on `docsRead`; `unknown`: no verdict, whoever loaded it (#2607).
   rules: ({ path: string; title?: string; alwaysLoaded: boolean; followedUp: boolean; viaSubagent: boolean; unknown: boolean } & Partial<Omit<RuleVerdict, 'path'>>)[]
   tools: { name: string; count: number }[]
 }
