@@ -34,10 +34,11 @@ const { data } = await useAsyncData(route.path, async () => {
   const pages = await queryCollection(pagesKey).all()
   const skills = await queryCollection(collections.skills).all()
   // Newest-first, ordered in SQL rather than re-sorted client-side.
-  const sessions = await queryCollection(collections.sessions).order('endedAt', 'DESC').all()
+  const sessions = await queryCollection(collections.sessions).order('endedAt', 'DESC').limit(JOURNAL_SESSIONS_LOADED).all()
+  const sessionTotal = await queryCollection(collections.sessions).count()
   const ledgerSize = await queryCollection(collections.frictions).count()
   const routineCount = await queryCollection(collections.routines).count()
-  return { pages, skills, sessions, ledgerSize, routineCount }
+  return { pages, skills, sessions, sessionTotal, ledgerSize, routineCount }
 })
 
 // `.all()` returns the full page Documents with their parsed body, so the root's
@@ -98,6 +99,10 @@ const { isOpen, toggle } = useAccordionDeepLink(() => route.path)
 // here instead of being silently erased by an `as unknown as` cast.
 const skills = computed<SkillDoc[]>(() => data.value?.skills ?? [])
 const sessions = computed<SessionDoc[]>(() => data.value?.sessions ?? [])
+const sessionTotal = computed(() => data.value?.sessionTotal ?? 0)
+const sessionsCappedLabel = computed(() =>
+  sessionTotal.value > sessions.value.length ? `newest ${sessions.value.length} of ${sessionTotal.value}` : '',
+)
 
 // ── Derived dashboard data — thin wrappers over the pure module ──
 // The wrapped functions (sessionCardViews, frictionTotals, …) are dashboard.ts
@@ -144,7 +149,10 @@ const kindSubtext = computed(() =>
     .map(([k, n]) => `${n} ${k}`)
     .join(' · '),
 )
-const tilesHeadline = computed(() => (space === 'archived' ? 'Counts from older logs, before the last week' : 'Counts from the last week of logs; Skills are as of today'))
+const tilesHeadline = computed(() => {
+  if (sessionsCappedLabel.value) return `Counts from the ${sessionsCappedLabel.value} logs`
+  return space === 'archived' ? 'Counts from older logs, before the last week' : 'Counts from the last week of logs; Skills are as of today'
+})
 
 const title = computed(() => rootDoc.value?.title ?? `The Journal — ${space}`)
 const lede = computed(() => rootDoc.value?.description ?? `The ${space} Space of the journal Tenant.`)
@@ -329,7 +337,10 @@ useSeoMeta({
     <section id="session-log" class="feed">
       <div class="section-head">
         <h2>Recent activity</h2>
-        <span class="count">session logs, newest first</span>
+        <span class="count">
+          <template v-if="sessionsCappedLabel">{{ sessionsCappedLabel }} session logs</template>
+          <template v-else>session logs, newest first</template>
+        </span>
       </div>
       <div v-if="sessionCards.length" class="cards">
         <!-- A deep-linked card stays visible even past the default cut. -->

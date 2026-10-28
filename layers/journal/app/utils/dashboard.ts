@@ -25,6 +25,10 @@ import type { Friction, Importance, SessionCardView, SessionDoc, Severity, Skill
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
 
+/** The dashboard loads only the newest this-many sessions: every loaded one
+ *  ships in the HTML, and uncapped, `archived` passed 10 MB. */
+export const JOURNAL_SESSIONS_LOADED = 1000
+
 // ── Formatting helpers ───────────────────────────────────
 // Module-private: too generically named to put in the global auto-import
 // namespace (every layer's utils share it).

@@ -13,10 +13,11 @@ import { describe, expect, it } from 'vitest'
 import { $fetch, fetch, url } from '@nuxt/test-utils/e2e'
 import type { Locator, Page } from 'playwright-core'
 import { expectCleanHydration, expectRedirect, setupL2, withRendered } from '../../../../tests/support/e2e.ts'
-import { DIGESTS_DIR, SESSIONS_DIR } from '../../../../scripts/session/journal-files.ts'
+import { ARCHIVED_SESSIONS_DIR, DIGESTS_DIR, SESSIONS_DIR } from '../../../../scripts/session/journal-files.ts'
 import { PIN_SETTLED_EVENT } from '../../app/utils/expandTransition.ts'
 import type { PinRecord } from '../../app/utils/expandTransition.ts'
 import { LEDGER_DEFAULT_DAYS } from '../../app/utils/ledger.ts'
+import { JOURNAL_SESSIONS_LOADED } from '../../app/utils/dashboard.ts'
 
 // Only a cloud `session_…` id gets a link; a local CLI's bare UUID has no claude.ai page.
 const SESSION_URL = /^https:\/\/claude\.ai\/code\/session_/
@@ -406,6 +407,14 @@ describe('journal Tenant', async () => {
   it('renders the archived Space dashboard without erroring', async () => {
     const html = await $fetch('/t/journal/archived')
     expect(html).toContain('Recent activity')
+  })
+
+  it('loads at most JOURNAL_SESSIONS_LOADED sessions and says when it filters', async () => {
+    const total = readdirSync(join(repoRoot, ARCHIVED_SESSIONS_DIR)).filter((f) => f.endsWith('.yml')).length
+    const html = await $fetch<string>('/t/journal/archived')
+    const shown = Math.min(total, JOURNAL_SESSIONS_LOADED)
+    expect(html.match(/<article [^>]*class="card[\s"]/g)?.length ?? 0).toBe(shown)
+    if (total > JOURNAL_SESSIONS_LOADED) expect(html).toContain(`newest ${shown} of ${total} session logs`)
   })
 
   // `how-it-works`'s ```mermaid render coverage now lives in the platform-wide

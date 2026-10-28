@@ -150,7 +150,8 @@ export async function expectHydrated(page: Page, route: string): Promise<void> {
 async function expectServerRendered(response: Response | null, route: string): Promise<void> {
   expect(response, `no navigation response for ${route}`).not.toBeNull()
   expect(response!.ok(), `${route} answered ${response!.status()}`).toBe(true)
-  const html = await response!.text()
+  // Refetched in Node: Chrome evicts a large body from its buffer, so `response.text()` can throw.
+  const html = await (await fetch(route)).text()
   expect(html).toMatch(/<h1[ >]/)
   // Match the 404 markup, not the phrase: a session log quoting the 404 page
   // renders into the Journal and tripped the plain substring (PR #1690).
