@@ -2,7 +2,7 @@ name: governing-doc-read-after-draft
 summary: >-
   A doc that governs a Tenant's content or glossary is read only after the agent drafted or added text it governs.
 cause: >-
-  A Tenant Skill's voice rule (midden-catalogue) or docs/agents/domain.md (the glossary-terms rule) governs new text, but the agent drafted or added the text first and a reviewer or the rule's late load found the miss. Signals: 'without first reading', 'plain-words voice rule', 'domain.md', a reviewer correcting wording or a term the doc already settles.
+  A doc that governs new text (a Tenant Skill's voice or title rule, the Tenant's own GLOSSARY.md or ADR, docs/agents/domain.md for a glossary term) is read after the agent drafted or added the text, or not at all, and a reviewer, a hint or the rule's late load finds the miss. Signals: 'without first reading', 'plain-words voice rule', 'domain.md', a Tenant GLOSSARY.md read after the draft, a reviewer correcting wording or a term the doc already settles.
 surface: safe
 status: open
 ref: "Issue #2505 closed by PR #2514."

@@ -1,8 +1,8 @@
 name: mechanism-claim-from-recall
 summary: >-
-  Agents described how a script, guard, rule or setting behaves from memory, or claimed "only", "every" or "nothing" without checking the whole set.
+  Agents or their reviewer helpers described how a script, guard, rule or the code behaves from memory, or claimed "only", "every" or "nothing" without checking the whole set.
 cause: >-
-  How a script, guard, rule, harness setting or data format behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set. A reviewer, the owner or a later check finds it false. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed".
+  How a script, guard, rule, harness setting, data format or the code's current state behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set; this includes a reviewer or rater subagent's own finding. A reviewer, the owner or a later check finds it false. A helper's claim the main agent passed on unchecked belongs in relayed-subagent-claims. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed"; a reviewer finding a check proved false.
 surface: safe
 status: accepted
 ref: "issue #2504 closed not planned on 2026-10-25: the owner accepts the cost. Three prose fixes (#2336, #2378, #2453) didn't hold; in the latest moderate case the false claims were caught before the push; a line per Skill would repeat CLAUDE.md's Verify before you state."

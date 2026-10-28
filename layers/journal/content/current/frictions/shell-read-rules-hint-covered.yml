@@ -45,11 +45,6 @@ occurrences:
     severity: nit
     description: "Read Glass Box pages, skills and code with cat/sed/grep in Bash instead of the Read tool (CLAUDE.md Read-tool rule)."
     solution: "The bash-rules hint loaded the rules anyway; no impact seen. Use Read for files I edit."
-  - session: session_01NqN7omu3o4kxoGeQzzSXhK
-    date: "2026-10-15"
-    severity: minor
-    description: "Broke CLAUDE.md 'Read files with the Read tool': read docs, the build workflow and the human-merge rule with cat/sed in Bash, so some rules loaded only via the hint hook"
-    solution: "Use Read for instruction docs even when batching; a Bash hint caught most of them"
   - session: session_01C8c4U7TDuWnJwenPUWYxrP
     date: "2026-10-15"
     severity: nit
@@ -70,8 +65,3 @@ occurrences:
     severity: nit
     description: "Read several files with cat/sed via Bash (glossaries, validate-adr-rules.ts excerpt, log-session SKILL.md lines) instead of the Read tool, against CLAUDE.md"
     solution: "Use Read for repo docs; the Bash hint loaded the rules anyway"
-  - session: session_015vXkKcdLwYRQqKKVJ8BLJJ
-    date: "2026-10-16"
-    severity: nit
-    description: "Read files with cat/sed/head through Bash instead of the Read tool (CLAUDE.md), including a head -300 that cut guards.md short"
-    solution: "Use Read for docs; bash-rules-hint loaded the rules anyway"

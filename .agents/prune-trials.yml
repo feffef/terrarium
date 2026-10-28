@@ -123,9 +123,10 @@ trials:
       `ledger-set.ts`'s `setEntry`), so no printed output is split across
       `ledger-set.ts` calls by hand; the step's rules are unchanged.
       Changed mid-trial at a Trusted user's request (2026-10-28): survey §2
-      gained the `summary`/`cause` rewrite on append, the edge case for a
-      Friction a fix produced, and the matching `ref` wording; a Friction
-      about those additions is not this trial's damage.
+      gained matching on the harm and on a cause's routing, the
+      `summary`/`cause` rewrite on append and on recording a fix, the edge
+      case for a Friction a fix produced, and the matching `ref` wording; a
+      Friction about those additions is not this trial's damage.
     territory:
       paths:
         - ".agents/skills/frictions-to-fixes/survey-brief.md (all of it)"
