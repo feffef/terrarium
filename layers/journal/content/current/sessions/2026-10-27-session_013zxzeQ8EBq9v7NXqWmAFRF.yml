@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeQ8EBq9v7NXqWmAFRF
 startedAt: 2026-10-27T19:18:26Z
-endedAt: 2026-10-28T06:00:29Z
+endedAt: 2026-10-28T07:34:11Z
 kind: interactive
 goal: Document the Glass Box quality bar and design a Skill to raise the guide unattended
-status: in-review
-outcome: "PRs #2602, #2603 and #2618 merged; second run underway; PR #2619 open to file run findings as Frictions"
+status: completed
+outcome: "PRs #2602, #2603, #2618 and #2619 merged; glassbox-improve ran twice (#2605, #2621)"
 summary: "Human-instructed throughout. The owner asked me to identify the past days' sessions that raised Glass Box quality, understand why each change was made (via inspect-session), then (1) document the quality bar in the repo and (2) design a Skill that rates every guide page, improves the weakest, may promote drafts, fill gaps or re-cut pages, and avoids churn, researched first and then settled with grill-with-docs. Six inspect-session subagents read the past sessions' events (one stopped early and was resumed), and on the owner's ask a Sonnet agent analysed the eight merged PRs' diffs, which showed heavy title churn. Three grilling rounds settled the bar's homes (EVERY-PAGE.md rules, a new QUALITY.md rubric, a DECISIONS.md of closed rulings, which I placed in glassbox-lesson/ so writers read it too), the grades, a two-of-three rater consensus, a 3-page plus 1-structural-step budget, churn guards, and a prose Skill (the owner picked it over my workflow-script recommendation). PR #2602 (the bar) passed code-review and the gate, and I merged it. The owner asked for a Fable review of the Skill design; it found a selection bug (the lowest rank picked the best pages), an uncompletable rater brief and a clash with glassbox-update. I put the four fixes that changed owner decisions to the owner in a fourth round, and the owner agreed. PR #2603 (the Skill) went through code-review on both axes and two follow-up reviews, which found real gaps (a refusing writer stalled the run, re-grade findings skipped the churn filters), all fixed; I merged it on green CI. At the owner's ask I then started the first run in a fresh session, session_013zxzePtKmw2meUvnUBaNQh, with /glassbox-improve; its outcome is that session's to log."
 prs:
   - "2602"
@@ -76,6 +76,10 @@ docsRead:
   - path: .agents/skills/glassbox-walkthrough/SKILL.md
     reason: the Standards reviewer checked it for contradictions; none found
     useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: (no reason given)
   - path: scripts/git/check-worktrees.ts
@@ -95,8 +99,6 @@ docsRead:
   - path: .agents/skills/glassbox-improve/writer-brief.md
     reason: (read before editing)
   - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
-  - path: docs/agents/issue-tracker.md
     reason: (no reason given)
   - path: .agents/skills/log-session/SKILL.md
     reason: (no reason given)
@@ -150,28 +152,35 @@ frictions:
   - description: Ran gate:scoped on 93eb78120, then added two prose commits before the first push of PR 2619; pr-workflow asks for the gate last on the final head. Re-ran it.
     solution: Run the gate only after the last review fix, never in parallel with the review.
     severity: nit
-durationSec: 38523
+  - description: "I wrote the glassbox-improve description with an unquoted ': ', which is invalid YAML; three reviews and the gate missed it, audit-skills caught it (#2608) and an audit-docs sweep quoted it."
+    solution: "Parse a new Skill's frontmatter with the repo's yaml package before committing; #2608 proposes a gate check."
+    severity: moderate
+durationSec: 44145
 models:
-  claude-opus-5-5: 344
+  claude-opus-5-5: 396
   <synthetic>: 2
 toolCounts:
-  Bash: 98
-  Read: 9
-  Skill: 10
+  Bash: 110
+  Read: 11
+  Skill: 11
   Agent: 18
-  ToolSearch: 3
+  ToolSearch: 4
   SendMessage: 1
   Edit: 7
   Write: 11
   mcp__github__create_pull_request: 4
   mcp__claude-code-remote__subscribe_pr_activity: 4
-  mcp__github__add_issue_comment: 6
-  ReadNotifications: 9
+  mcp__github__add_issue_comment: 7
+  ReadNotifications: 12
   mcp__claude-code-remote__unsubscribe_pr_activity: 3
   mcp__claude-code-remote__create_session: 2
-  mcp__claude-code-remote__get_session: 2
-  mcp__github__issue_read: 2
-  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__get_session: 3
+  mcp__github__issue_read: 4
+  mcp__claude-code-remote__send_later: 2
+  mcp__github__pull_request_read: 1
+  WebFetch: 1
+  mcp__github__issue_write: 2
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - layers/glassbox/GLOSSARY.md
@@ -196,6 +205,8 @@ rulesLoaded:
   - .claude/rules/mermaid-lanes.md
   - .claude/rules/adr-0015.md
   - .claude/rules/adr-0010.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0022.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -219,9 +230,6 @@ adrHints:
     via: path
     readAfter: true
     by: main
-rulesLoadedBySubagents:
-  - .claude/rules/tenant-layers.md
-  - .claude/rules/adr-0022.md
 docsReadBySubagents:
   - .agents/skills/glassbox-lesson/QUALITY.md
   - .agents/skills/glassbox-lesson/DECISIONS.md
@@ -229,7 +237,6 @@ docsReadBySubagents:
   - .agents/skills/dispatch-subagents/SKILL.md
   - .agents/skills/writing-for-agents/SKILL-MECHANICS.md
   - .agents/skills/code-review/SKILL.md
-  - docs/agents/issue-tracker.md
   - .agents/skills/log-session/SKILL.md
   - .agents/skills/frictions-to-fixes/survey-brief.md
   - .agents/skills/glassbox-improve/rater-brief.md
@@ -294,37 +301,37 @@ subagents:
     durationSec: 414
     toolCalls: 70
     modelCalls: 69
-    tokenShare: 3
+    tokenShare: 2.8
   - task: Inspect session 015P9szA
     model: sonnet
     durationSec: 890
     toolCalls: 108
     modelCalls: 108
-    tokenShare: 4.9
+    tokenShare: 4.6
   - task: Inspect session 01BjA9rH
     model: sonnet
     durationSec: 797
     toolCalls: 140
     modelCalls: 139
-    tokenShare: 6.4
+    tokenShare: 6.1
   - task: Inspect session 015bAGZE
     model: sonnet
     durationSec: 1124
     toolCalls: 192
     modelCalls: 190
-    tokenShare: 9.6
+    tokenShare: 9.1
   - task: Inspect session 013zxzeR
     model: sonnet
     durationSec: 2261
     toolCalls: 404
     modelCalls: 403
-    tokenShare: 40.2
+    tokenShare: 38.3
   - task: Inspect session 01Hpd1KM
     model: sonnet
     durationSec: 208
     toolCalls: 32
     modelCalls: 31
-    tokenShare: 1.1
+    tokenShare: 1
   - task: Analyse Glass Box PR diffs
     model: sonnet
     durationSec: 129
@@ -365,14 +372,14 @@ subagents:
     durationSec: 127
     toolCalls: 17
     modelCalls: 10
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: general-purpose
     task: Spec review PR2
     model: sonnet
     durationSec: 121
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: general-purpose
     task: Review PR2 follow-up fixes
     model: sonnet
