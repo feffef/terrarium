@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQDh7MCP7HpYBYBTeh
 startedAt: 2026-10-28T20:36:42Z
-endedAt: 2026-10-28T21:25:04Z
+endedAt: 2026-10-28T21:27:04Z
 kind: delegated
 goal: Raise the Glass Box guide one step (glassbox-improve run)
-status: in-review
-outcome: "PR 2650 open: one draft promoted to the guide, three false claims fixed; new Lesson ends at B"
-summary: "The user's single prompt was the /glassbox-improve Skill; every step after that was the Skill's own procedure, so all work was Skill-directed, none human-instructed or agent-invented beyond it. Three raters (sonnet, fable, opus) graded the 39 guide pages. No page kept a consensus deficit that a page-level edit could fix: the two consensus ones were a Vue components split (a re-cut that loses to a promotion) and a cooling-off page. The structural step was promoting the work-queue draft, which tied with the cloud-sessions draft on gap rank; I chose the lighter one because the rules give no tie-break. Three confirmed false claims (Attribution, Data fetching, Pull requests lede) were fixed by me. code-review plus two fix rounds and two re-grade rounds left the new Lesson at B on sibling overlap in its Why bullets; the Skill says stop there. gate:scoped passed on the final head, branch pushed, PR opened as 2650, issue 2651 filed for the unchecked four-word title rule."
+status: completed
+outcome: "PR 2650 merged: one draft promoted to the guide, three false claims fixed; new Lesson ends at B"
+summary: "The user's single prompt was the /glassbox-improve Skill; every step after that was the Skill's own procedure, so all work was Skill-directed, none human-instructed or agent-invented beyond it. Three raters (sonnet, fable, opus) graded the 39 guide pages. No page kept a consensus deficit that a page-level edit could fix: the two consensus ones were a Vue components split (a re-cut that loses to a promotion) and a cooling-off page. The structural step was promoting the work-queue draft, which tied with the cloud-sessions draft on gap rank; I chose the lighter one because the rules give no tie-break. Three confirmed false claims (Attribution, Data fetching, Pull requests lede) were fixed by me. code-review plus two fix rounds and two re-grade rounds left the new Lesson at B on sibling overlap in its Why bullets; the Skill says stop there. gate:scoped passed on the final head, branch pushed, PR 2650 opened, my verdict posted and merged with merge-pr.ts after CI went green; issue 2651 filed for the unchecked four-word title rule."
 prs:
   - "2650"
 docsRead:
@@ -139,13 +139,13 @@ frictions:
   - description: pnpm check:worktrees failed on the writer's merged worktree until I pushed the run branch, then passed; the skill does not say push first.
     solution: Note in glassbox-improve step 8 that check:worktrees needs the run branch pushed when a writer worktree was merged.
     severity: nit
-durationSec: 2902
+durationSec: 3022
 models:
-  claude-sonnet-5-5: 185
+  claude-sonnet-5-5: 205
 toolCounts:
   Read: 13
-  Skill: 4
-  Bash: 50
+  Skill: 5
+  Bash: 54
   mcp__github__search_pull_requests: 1
   mcp__github__list_pull_requests: 1
   Agent: 14
@@ -156,6 +156,10 @@ toolCounts:
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__search_issues: 1
   mcp__github__issue_write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/git-github/05.attribution.md
   - layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
@@ -267,28 +271,28 @@ subagents:
     durationSec: 845
     toolCalls: 87
     modelCalls: 59
-    tokenShare: 20.3
+    tokenShare: 19.5
   - type: general-purpose
     task: Rate guide pages (fable)
     model: fable
     durationSec: 836
     toolCalls: 91
     modelCalls: 20
-    tokenShare: 9.3
+    tokenShare: 9
   - type: general-purpose
     task: Rate guide pages (opus)
     model: opus
     durationSec: 580
     toolCalls: 59
     modelCalls: 57
-    tokenShare: 17.7
+    tokenShare: 17.1
   - type: general-purpose
     task: Research work-queue promotion
     model: sonnet
     durationSec: 165
     toolCalls: 17
     modelCalls: 14
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: general-purpose
     task: Promote work-queue Lesson
     model: opus
@@ -298,7 +302,7 @@ subagents:
     durationSec: 1029
     toolCalls: 89
     modelCalls: 51
-    tokenShare: 9.6
+    tokenShare: 9.3
   - type: general-purpose
     task: Review standards axis
     model: sonnet
@@ -312,7 +316,7 @@ subagents:
     durationSec: 29
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: Re-grade work-queue (sonnet)
     model: sonnet
@@ -326,21 +330,21 @@ subagents:
     durationSec: 205
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: general-purpose
     task: Re-grade work-queue (opus)
     model: opus
     durationSec: 133
     toolCalls: 20
     modelCalls: 19
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: general-purpose
     task: Last re-grade (sonnet)
     model: sonnet
     durationSec: 65
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Last re-grade (fable)
     model: fable
@@ -354,7 +358,7 @@ subagents:
     durationSec: 160
     toolCalls: 16
     modelCalls: 13
-    tokenShare: 2.2
+    tokenShare: 2.1
 gitBranch: ccr-7a94e864-8xq5u1
 entrypoint: remote_mobile
 cliVersion: 2.1.312
