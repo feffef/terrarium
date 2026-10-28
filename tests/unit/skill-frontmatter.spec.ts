@@ -1,5 +1,5 @@
-// A Skill whose frontmatter fails to parse is silently dropped by the harness
-// (#2608). The gate runs `pnpm test` for a Skill-only change, so check here.
+// No gate step parsed Skill frontmatter, so invalid YAML merged unnoticed (#2608).
+// The gate runs `pnpm test` for a Skill-only change, so check here.
 import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
