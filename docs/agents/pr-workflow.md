@@ -21,10 +21,10 @@ needs none, nor does a Skill whose own steps review the diff before the push
 **A simple change** gets your own read of its full diff instead of `code-review`.
 Count; don't judge by how plain it looks. It is simple when it is a typo,
 rewrap, broken link or path, or a rule's `adr:` hash or token-estimate restamp,
-or when it changes at most 10 lines in at most 2 files and adds, renames or moves no file. In
-every case
-it changes no code logic, hook, workflow script, Skill's or rule's
-frontmatter (bar that hash), and no meaning of a Skill, rule, ADR or agent doc.
+or when it changes at most 10 lines in at most 2 files. In every case it adds,
+renames or moves no file, changes no code logic, hook, workflow script, Skill's
+or rule's frontmatter (bar that hash), and no meaning of a Skill, rule, ADR or
+agent doc.
 The same test applies to a follow-up commit after a review; a larger follow-up
 gets `code-review` on its own diff, not the whole branch.
 
