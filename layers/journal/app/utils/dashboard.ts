@@ -263,7 +263,7 @@ export function sessionCardViews(
           alwaysLoaded,
           followedUp: !!s.rulesFollowedUp?.includes(path),
           viaSubagent,
-          unknown: viaSubagent && !v,
+          unknown: !v,
           reason: v?.reason,
           useful: v?.useful,
         }

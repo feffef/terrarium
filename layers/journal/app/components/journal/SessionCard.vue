@@ -161,7 +161,10 @@ const foldedFieldLabels = new Intl.ListFormat('en', { style: 'long', type: 'conj
                     <span v-if="r.title" :title="r.path">{{ r.title }}</span><code v-else>{{ r.path }}</code
                     ><span v-if="r.useful" class="useful" :data-useful="r.useful">useful: {{ r.useful }}</span
                     ><span v-if="r.alwaysLoaded" class="always">always loaded</span
-                    ><span v-if="r.viaSubagent" class="via">via subagent<template v-if="r.unknown"> · {{ NO_VERDICT }}</template></span
+                    ><span v-if="r.viaSubagent || r.unknown" class="via"
+                      ><template v-if="r.viaSubagent">via subagent</template
+                      ><template v-if="r.viaSubagent && r.unknown"> · </template
+                      ><template v-if="r.unknown">{{ NO_VERDICT }}</template></span
                     ><span v-if="r.followedUp" class="followed"> — full ADR read</span>
                   </div>
                   <div v-if="r.reason" class="entry-reason">{{ r.reason }}</div>
