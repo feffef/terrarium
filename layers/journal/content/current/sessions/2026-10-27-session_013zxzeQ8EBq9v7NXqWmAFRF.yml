@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeQ8EBq9v7NXqWmAFRF
 startedAt: 2026-10-27T19:18:26Z
-endedAt: 2026-10-27T23:21:00Z
+endedAt: 2026-10-28T05:53:45Z
 kind: interactive
 goal: Document the Glass Box quality bar and design a Skill to raise the guide unattended
-status: completed
-outcome: "PRs #2602 (quality bar) and #2603 (glassbox-improve Skill) merged; first run started in a new session"
+status: in-review
+outcome: "PRs #2602 and #2603 merged; first run landed #2605; PR #2618 open to fix its cooling-off fallback"
 summary: "Human-instructed throughout. The owner asked me to identify the past days' sessions that raised Glass Box quality, understand why each change was made (via inspect-session), then (1) document the quality bar in the repo and (2) design a Skill that rates every guide page, improves the weakest, may promote drafts, fill gaps or re-cut pages, and avoids churn, researched first and then settled with grill-with-docs. Six inspect-session subagents read the past sessions' events (one stopped early and was resumed), and on the owner's ask a Sonnet agent analysed the eight merged PRs' diffs, which showed heavy title churn. Three grilling rounds settled the bar's homes (EVERY-PAGE.md rules, a new QUALITY.md rubric, a DECISIONS.md of closed rulings, which I placed in glassbox-lesson/ so writers read it too), the grades, a two-of-three rater consensus, a 3-page plus 1-structural-step budget, churn guards, and a prose Skill (the owner picked it over my workflow-script recommendation). PR #2602 (the bar) passed code-review and the gate, and I merged it. The owner asked for a Fable review of the Skill design; it found a selection bug (the lowest rank picked the best pages), an uncompletable rater brief and a clash with glassbox-update. I put the four fixes that changed owner decisions to the owner in a fourth round, and the owner agreed. PR #2603 (the Skill) went through code-review on both axes and two follow-up reviews, which found real gaps (a refusing writer stalled the run, re-grade findings skipped the churn filters), all fixed; I merged it on green CI. At the owner's ask I then started the first run in a fresh session, session_013zxzePtKmw2meUvnUBaNQh, with /glassbox-improve; its outcome is that session's to log."
 prs:
   - "2602"
   - "2603"
+  - "2618"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: fetch before trusting history; commit -F; three-dot diffs
@@ -133,25 +134,30 @@ frictions:
   - description: The Skill took three review rounds after the Fable pass (Standards+Spec, then two follow-ups), each finding real gaps in how an unattended run ends (refusing writers, empty runs, dropped false claims).
     solution: For an unattended Skill, write each step's failure exits (refuse, empty, stall) before review, not after.
     severity: minor
-durationSec: 14554
+  - description: My 14-day cooling-off fallback for the first runs cooled all 37 guide pages and 30 drafts, so run 1 (~$21, three raters) could fix only two false claims; I had warned runs would be small but never counted what the window covered.
+    solution: Before shipping a filter, run it once against main and count what it excludes.
+    severity: moderate
+durationSec: 38119
 models:
-  claude-opus-5-5: 267
+  claude-opus-5-5: 297
   <synthetic>: 2
 toolCounts:
-  Bash: 76
+  Bash: 85
   Read: 9
   Skill: 9
-  Agent: 15
-  ToolSearch: 2
+  Agent: 16
+  ToolSearch: 3
   SendMessage: 1
   Edit: 7
   Write: 11
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 3
-  ReadNotifications: 5
+  mcp__github__create_pull_request: 3
+  mcp__claude-code-remote__subscribe_pr_activity: 3
+  mcp__github__add_issue_comment: 4
+  ReadNotifications: 6
   mcp__claude-code-remote__unsubscribe_pr_activity: 2
   mcp__claude-code-remote__create_session: 1
+  mcp__claude-code-remote__get_session: 1
+  mcp__github__issue_read: 2
 filesEdited:
   - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - layers/glassbox/GLOSSARY.md
@@ -271,37 +277,37 @@ subagents:
     durationSec: 414
     toolCalls: 70
     modelCalls: 69
-    tokenShare: 3.3
+    tokenShare: 3.1
   - task: Inspect session 015P9szA
     model: sonnet
     durationSec: 890
     toolCalls: 108
     modelCalls: 108
-    tokenShare: 5.5
+    tokenShare: 5.1
   - task: Inspect session 01BjA9rH
     model: sonnet
     durationSec: 797
     toolCalls: 140
     modelCalls: 139
-    tokenShare: 7.2
+    tokenShare: 6.8
   - task: Inspect session 015bAGZE
     model: sonnet
     durationSec: 1124
     toolCalls: 192
     modelCalls: 190
-    tokenShare: 10.8
+    tokenShare: 10.1
   - task: Inspect session 013zxzeR
     model: sonnet
     durationSec: 2261
     toolCalls: 404
     modelCalls: 403
-    tokenShare: 45.2
+    tokenShare: 42.5
   - task: Inspect session 01Hpd1KM
     model: sonnet
     durationSec: 208
     toolCalls: 32
     modelCalls: 31
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Analyse Glass Box PR diffs
     model: sonnet
     durationSec: 129
@@ -321,7 +327,7 @@ subagents:
     durationSec: 58
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: general-purpose
     task: Review PR1 follow-up fixes
     model: sonnet
@@ -342,7 +348,7 @@ subagents:
     durationSec: 127
     toolCalls: 17
     modelCalls: 10
-    tokenShare: 1
+    tokenShare: 0.9
   - type: general-purpose
     task: Spec review PR2
     model: sonnet
@@ -364,6 +370,13 @@ subagents:
     toolCalls: 7
     modelCalls: 3
     tokenShare: 0.2
+  - type: general-purpose
+    task: Review cooling-off fix
+    model: sonnet
+    durationSec: 34
+    toolCalls: 8
+    modelCalls: 4
+    tokenShare: 0.5
 gitBranch: ccr-85b703aa-6qxwhk
 entrypoint: remote_mobile
 cliVersion: 2.1.311
