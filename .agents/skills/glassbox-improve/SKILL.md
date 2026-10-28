@@ -169,6 +169,6 @@ File the rest:
   settled), retitles the raters didn't agree on, and drafts too far from the
   bar to promote.
 
-A deficit or step that missed the caps needs no record: the next run's raters
-find it again. Done when every Friction, issue and idea is written and
-`pnpm check:worktrees` exits 0. Then invoke `close-session`.
+A deficit or structural step that missed the caps needs no record: the next
+run's raters find it again. Done when every Friction, issue and idea is
+written and `pnpm check:worktrees` exits 0. Then invoke `close-session`.
