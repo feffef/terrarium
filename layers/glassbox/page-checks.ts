@@ -300,7 +300,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
     // Excerpt.vue counts runs from the gap lines, so none may be empty but the last.
     if (ref.runs && ref.excerpt !== undefined && excerptRuns(ref.excerpt).slice(0, -1).some((r) => !r.length)) problems.push(`the Excerpt of ${ref.path} opens with a gap or has two in a row`)
     // EVERY-PAGE.md, Excerpts teach: end on a whole statement.
-    const last = ref.excerpt?.split('\n').filter((l) => l.trim() && !glassboxExcerptGap.test(l)).at(-1)
+    const last = ref.excerpt === undefined ? undefined : excerptRuns(ref.excerpt).flat().filter((l) => l.trim()).at(-1)
     if (last && /[{[(]\s*$/.test(last)) problems.push(`the Excerpt of ${ref.path} ends on an open bracket: end it on a whole statement`)
   }
   for (const [, a, b] of prose.matchAll(/\blines=(?:"([^"]*)"|'([^']*)')/g)) {
