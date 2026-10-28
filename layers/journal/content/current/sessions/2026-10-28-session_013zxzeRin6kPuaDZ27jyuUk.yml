@@ -1,0 +1,189 @@
+schemaVersion: 1
+session: session_013zxzeRin6kPuaDZ27jyuUk
+startedAt: 2026-10-28T11:25:18Z
+endedAt: 2026-10-28T11:38:23Z
+kind: autonomous
+goal: Scheduled blog post in a Persona's voice
+status: in-review
+outcome: Kevin post on ADR-0017's rewritten premise is in PR 2637, gate green, awaiting merge
+summary: Scheduled blog-post run; rotation allowed only Kevin. Gathered the last three days, drafted three Kevin candidates (flaky linearity test retry, ADR-0017 rejected-alternative rewrite, Journal 1000-session cap), a blind Sonnet reader picked the ADR-0017 post, a fact-check subagent found two wrong items (link range, a quote not in any source), both fixed. code-review Standards and Spec ran; one reported link range was wrong (line 63 verified), the length finding led to folding to four paragraphs. Gate green, PR 2637 opened and subscribed. All work was agent-initiated under the schedule; no human instruction beyond the stored prompt. Step 12 reply decision is still owed once the post merges.
+prs:
+  - "2637"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: push-after-gate rule; held the push until the gate ended
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface before first GitHub call
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: "review rule: a new file is not a simple change, so code-review ran"
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief requirements for the three subagents
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: Spec reviewer read it as the spec; it was my procedure
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: Standards reviewer used Who a post is for; found glosses missing
+    useful: yes
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: voice and palette for the drafts; I read it, the Spec reviewer too
+    useful: yes
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: the post source; read pinned versions via git show
+    useful: yes
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
+  - path: layers/blog/content/kevin/pages/2026-10-28-the-rulebook-said-nobody-had-shown-a-hook-could-rewrite-its-call.md
+    reason: (read before editing)
+skillsUsed:
+  - name: blog-post
+    reason: the run's whole procedure
+  - name: code-review
+    reason: review before first push
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: dispatch-read guard rejected the Agent call because I read the .claude/skills symlink path, not .agents/skills; one extra read and retry.
+    solution: Have the guard accept either path of the same Skill file.
+    severity: nit
+  - description: A trailing & plus run_in_background was blocked by the double-background guard; relaunched the gate with run_in_background alone.
+    solution: Say in pr-workflow.md that gate:scoped backgrounding uses the flag only.
+    severity: nit
+  - description: Code-review Standards subagent reported a wrong line range for an ADR link; I had to re-check the pinned file to dismiss it.
+    solution: Tell reviewers to verify line anchors with git show -n before reporting.
+    severity: nit
+durationSec: 786
+models:
+  claude-sonnet-5-5: 93
+toolCounts:
+  Read: 5
+  Bash: 28
+  ToolSearch: 1
+  mcp__github__pull_request_read: 10
+  mcp__github__issue_read: 2
+  Agent: 5
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-10-28-the-rulebook-said-nobody-had-shown-a-hook-could-rewrite-its-call.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+  - layers/blog/GLOSSARY.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Merge rules; this post needed no human merge, summary enough, ADR unopened
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session-log rule; close-session handled it, summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and subscribe; summary enough, ADR unopened
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on GitHub bodies; used for PR body, and it was the post topic
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingbacks only for reactions; this post was standalone
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; not touched by a blog post
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Where instructions live; not relevant to this task
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as code; the blog-post Skill was used unchanged
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest rule; no manifest change here
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: No stored field changed
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: No MDC content; irrelevant
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Blog glossary read by reviewer; I relied on the Skill
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: No layer code touched
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: "Subagent only: glossary list, not needed"
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: "Subagent only: term choice, not needed"
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: "Subagent only: irrelevant"
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Subagent reported it explained the shape of PR 2625; not needed by me
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Subagent confirmed docs/adr is Human-only, backing a post claim
+    useful: yes
+subagents:
+  - task: Blind read of three drafts
+    model: sonnet
+  - task: Blind read of three drafts
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 6.3
+  - task: Fact-check Kevin blog post
+    model: sonnet
+    durationSec: 73
+    toolCalls: 18
+    modelCalls: 5
+    tokenShare: 6.9
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 49
+    toolCalls: 11
+    modelCalls: 5
+    tokenShare: 6.7
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 32
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 4.2
+gitBranch: claude/zen-heisenberg-kbgrpq
+entrypoint: remote_trigger
+cliVersion: 2.1.312
+trigger: blog-post
+landedBy: Stop
