@@ -3,6 +3,7 @@
 // Combines every Persona's posts into one reverse-chron feed, browsable by Tag
 // (layers/blog/GLOSSARY.md: Tag) via the `?tag=` query param — filtering is a
 // client-side computed over one fetch, so switching tags never re-queries.
+// `?view=threads` is the second view of the same fetch: reply conversations.
 //
 // Isolation-respecting and presentation-only (ADR-0016): it resolves each
 // Persona through the SAME shared, unit-tested `resolveSpaceRoute` the rest of
@@ -57,15 +58,15 @@ const tagCounts = computed(() => {
   return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
 })
 
-// `?view=threads` swaps the feed for conversations: posts grouped by the post
-// each one answers (`reactsTo`), from the same fetch, so no extra query.
-const showThreads = computed(() => route.query.view === 'threads' && !route.query.tag)
-const threads = computed(() => groupBlogThreads(posts.value))
-
 const selectedTag = computed(() => {
   const q = route.query.tag
   return typeof q === 'string' ? q : undefined
 })
+
+// `?view=threads` swaps the feed for conversations: posts grouped by the post
+// each one answers (`reactsTo`), from the same fetch, so no extra query.
+const showThreads = computed(() => route.query.view === 'threads' && !selectedTag.value)
+const threads = computed(() => groupBlogThreads(posts.value))
 
 const filteredPosts = computed(() =>
   selectedTag.value ? posts.value.filter((p) => p.tags?.includes(selectedTag.value!)) : posts.value,
@@ -149,24 +150,24 @@ useSeoMeta({
           <span class="start-here-text">Twelve stories worth reading first — a reading list in the Journal →</span>
         </NuxtLink>
         <nav v-if="!selectedTag" class="feed-views" aria-label="Blog views">
-          <NuxtLink to="/t/blog" :class="{ active: !showThreads }">Latest posts</NuxtLink>
-          <NuxtLink to="/t/blog?view=threads" :class="{ active: showThreads }">Threads</NuxtLink>
+          <NuxtLink to="/t/blog" :class="{ active: !showThreads }" :aria-current="showThreads ? undefined : 'page'">Latest posts</NuxtLink>
+          <NuxtLink to="/t/blog?view=threads" :class="{ active: showThreads }" :aria-current="showThreads ? 'page' : undefined">Threads</NuxtLink>
         </nav>
         <template v-if="showThreads">
-          <p class="threads-intro">{{ threads.length }} conversations where one columnist answered another, newest first.</p>
+          <p class="threads-intro">{{ threads.length }} {{ threads.length === 1 ? 'conversation' : 'conversations' }} where one columnist answered another, newest first.</p>
           <ul class="threads">
             <li v-for="members in threads" :key="`${members[0]!.persona}${members[0]!.path}`">
-              <nav class="thread" :aria-label="`Thread: ${members[0]!.title}`">
+              <div class="thread" role="group" :aria-label="`Thread: ${members[0]!.title}`">
                 <ol>
                   <li v-for="m in members" :key="`${m.persona}${m.path}`">
                     <span class="who" :style="{ color: personaMeta(m.persona).accent }">{{ personaMeta(m.persona).name }}</span>
                     <span>
                       <NuxtLink :to="`/t/blog/${m.persona}${m.path}`">{{ m.title }}</NuxtLink>
-                      <em class="thread-date">{{ formatBlogDate(m.publishedAt) }}</em>
+                      <time class="thread-date" :datetime="m.publishedAt">{{ formatBlogDate(m.publishedAt) }}</time>
                     </span>
                   </li>
                 </ol>
-              </nav>
+              </div>
             </li>
           </ul>
         </template>
@@ -180,7 +181,7 @@ useSeoMeta({
             :persona="post.persona"
           />
         </ul>
-        <p v-else-if="!showThreads" class="empty">No posts tagged “{{ selectedTag }}” yet.</p>
+        <p v-else class="empty">No posts tagged “{{ selectedTag }}” yet.</p>
         <button
           v-if="!showThreads && filteredPosts.length > POSTS_VISIBLE && !showAllPosts"
           type="button"
