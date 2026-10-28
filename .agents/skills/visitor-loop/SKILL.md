@@ -90,8 +90,7 @@ tally in your scratchpad:
   that is in the same family as one of its rulings,
   anything an open or closed issue/PR already covers (list, don't search: filter
   `pnpm exec tsx scripts/github/list-open-issues.ts` locally for open issues; for merged PRs use
-  `pnpm exec tsx scripts/git/list-recent-prs.ts` or `git log origin/main --grep`; record each
-  check in the tally — the match by number, or the filter and *no match*),
+  `git log origin/main --grep`; record each check in the tally — the match by number, or the filter and *no match*),
   and anything already logged as an idea in the last week
   (`pnpm exec tsx .agents/skills/visitor-loop/scripts/ideas.ts gather --days 7`).
 
