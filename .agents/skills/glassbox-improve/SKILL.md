@@ -1,6 +1,6 @@
 ---
 name: glassbox-improve
-description: Raise the Glass Box guide one step: three raters grade every guide page, the run fixes the weakest by consensus, and self-merges one PR.
+description: "Raise the Glass Box guide one step: three raters grade every guide page, the run fixes the weakest by consensus, and self-merges one PR."
 disable-model-invocation: true
 ---
 
