@@ -161,13 +161,13 @@ File the rest:
   check that got in the way) are Frictions in the session log; the Friction
   Ledger clusters them across runs.
 - **Proposals** outside the Remit that cost the run nothing (a new Subject,
-  a change to the bar or the page checks) get one issue each, labelled `needs-triage`, body per
-  `docs/agents/issue-tracker.md`, unless an open issue already covers it.
+  a change to the bar or the page checks) get one issue each, labelled
+  `needs-triage`, body per `docs/agents/issue-tracker.md`, unless an open
+  issue already covers it.
 - **Ideas for the owner** go into the session log's `ideas`, one line each:
   proposed `DECISIONS.md` lines (an undo you refused, a rater split you
   settled), retitles the raters didn't agree on, and drafts too far from the
   bar to promote.
 
 Done when each finding is in one of these and `pnpm check:worktrees` exits
-0. Then invoke
-`close-session`.
+0. Then invoke `close-session`.
