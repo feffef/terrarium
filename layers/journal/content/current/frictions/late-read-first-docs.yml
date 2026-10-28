@@ -14,26 +14,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_01Rn5xT34AdjnywsTJdUtaDm
-    date: "2026-10-13"
-    severity: nit
-    description: "Ran git fetch and git log in a batch before reading git-conventions.md was cleanly sequenced; first git command beyond status ran (digest.ts list) before the doc was read."
-    solution: "Read git-conventions.md at session start in scheduled Skills that always commit."
-  - session: session_01AA2LXTN4qUsCEPgYEmWW4C
-    date: "2026-10-13"
-    severity: minor
-    description: "Made one mcp__github__search_issues call before reading docs/agents/github-integration.md; the PostToolUse hook caught it immediately afterward."
-    solution: "Read github-integration.md proactively before the first GitHub-shaped tool call, not only after a hook names it."
-  - session: session_016gu9e44jjfAEFMo3CBxzUQ
-    date: "2026-10-13"
-    severity: nit
-    description: "I ran list-open-issues and gh api before reading github-integration.md, so the read-first hint fired after the fact."
-    solution: "Read the GitHub doc at session start whenever the Skill is clear-backlog, since it always touches GitHub."
-  - session: session_011xN2Zi67cjpCguuMiZbsJ6
-    date: "2026-10-13"
-    severity: nit
-    description: "Ran git log in a compound command before reading git-conventions.md, against CLAUDE.md's first-git-command trigger."
-    solution: "Read git-conventions.md at session start when the task is git-heavy."
   - session: session_01XJ9iR9EbRT2iV7afhytND8
     date: "2026-10-14"
     severity: nit

@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   The cloud agent proxy or its DNS refuses a host (github.com/user-attachments, content.nuxt.com, zod.dev, nitro.build, nuxt.com, the deployed site) with a 403 or connection failure and no in-session override; the fix is to list the host and its workaround in environment-caveats.md. Signals: proxy 403, curl 000, a DNS failure from WebFetch. Two auto-mode classifier denials with no shared fix also stay here (01CtktRk, 01TJH95q); CI job logs are ci-job-logs-unreachable, Self-Modification denials auto-mode-self-modification-denials.
 surface: outside
-status: open
-ref: "docs/agents/environment-caveats.md bullet listing blocked hosts, 2026-10-15"
+status: tracked
+ref: "#2611"
 fixes:
   - pr: 2030
     date: "2026-10-15"

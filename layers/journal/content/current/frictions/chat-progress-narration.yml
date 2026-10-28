@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-17"
     summary: "Dropped clear-backlog's rule that the chat holds only questions and the report, so no rule is left to break."
 occurrences:
-  - session: session_01STVS35HcxNZp7dQ1pPnrhW
-    date: "2026-10-13"
-    severity: nit
-    description: "Posted progress lines in chat although clear-backlog says the chat holds only questions and the report; harness nudges asked for status"
-    solution: "Reconcile the Skill's silent-chat rule with the harness's status nudges, or ignore the nudges"
-  - session: session_017XWy7odnhW5S5AEuekatR8
-    date: "2026-10-13"
-    severity: minor
-    description: "The owner asked for less progress-update spam mid-session; my early replies narrated subagent status."
-    solution: "Reply only with findings and questions while agents run."
   - session: session_01JygBaHorymh1xgVBsaTh3E
     date: "2026-10-17"
     severity: nit

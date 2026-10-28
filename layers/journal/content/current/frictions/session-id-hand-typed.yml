@@ -3,6 +3,8 @@ surface: guard-or-hook
 summary: Agents typed or guessed their own session id and got it wrong.
 cause: "A session id is copied from another session's PR body or guessed from a system reminder instead of read from the tool that reports it, so a commit trailer or post names the wrong session. Signals: 'another session's id', 'wrong by one letter', commit-msg hook correcting a trailer, get_session."
 status: open
+notes: |-
+  2026-10-28 design: a guard or prose line dropped: .githooks/commit-msg corrects a wrong trailer and github-provenance-guard.ts denies a wrong id on a post and hands back the right one, so a slip costs one retry, and a guard edit is Human-only.
 occurrences:
   - session: session_013zxzeQV6Jcqg4jYk2tkwBq
     date: "2026-10-27"

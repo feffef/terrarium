@@ -17,91 +17,11 @@ fixes:
     date: "2026-10-23"
     summary: "bash-rules-hint now loads rules for shell reads of bracketed Nuxt route paths."
 occurrences:
-  - session: session_01FJuuzCvFL2h6ueukNEqi1R
-    date: "2026-10-13"
-    severity: minor
-    description: "Read .agents/prune-trials.yml with cat/sed in one Bash call, against the Read-tool rule, so its trial rule never loaded"
-    solution: "Use the Read tool on trial files; a path-scoped rule could name the file"
-  - session: session_01STVS35HcxNZp7dQ1pPnrhW
-    date: "2026-10-13"
-    severity: minor
-    description: "Read rule-governed files with sed in Bash (clear-backlog SKILL.md lines, the human-merge rule) instead of the Read tool, against CLAUDE.md"
-    solution: "Use Read with offset/limit for partial reads"
-  - session: session_017XWy7odnhW5S5AEuekatR8
-    date: "2026-10-13"
-    severity: minor
-    description: "Read several files through cat, sed and chained greps instead of the Read tool, so their rules may not have loaded (CLAUDE.md, ADR-0029)."
-    solution: "Use Read for single files; keep Bash for searches."
-  - session: session_013FXrBeYrgCUvFvJjysR7yM
-    date: "2026-10-13"
-    severity: nit
-    description: "Spot-checked triage claims with one multi-file Bash sed/grep instead of Read, so the reads loaded no rules (CLAUDE.md, ADR-0029)."
-    solution: "Use Read with offset/limit for spot checks."
-  - session: session_01RDtAc5Vv37kkRH4yCtRDQB
-    date: "2026-10-13"
-    severity: minor
-    description: "Read and searched files with chained cat/sed/grep Bash commands instead of the Read tool, against CLAUDE.md's Read-tool rule, so path rules may not have loaded."
-    solution: "Use Read for file contents; the auto-mode harness text inviting Bash reads keeps pulling the other way (bash-reads-not-read-tool)."
-  - session: session_01DqPT8JpBjhHPEubNDJuVuN
-    date: "2026-10-13"
-    severity: nit
-    description: "I read the scripts/last-comment-authors.ts header with Bash head, not the Read tool, which breaks CLAUDE.md's Read-tool rule. It was a script, so no rule was missed, but it would have been invisible to the trace."
-    solution: "Use Read with a limit for a file header"
-  - session: session_01AnHXyvzXukt6izZTYs3YMr
-    date: "2026-10-13"
-    severity: minor
-    description: "Read many files with cat/sed/head/grep in Bash instead of the Read tool, against CLAUDE.md's Read-tool rule; rules for those files may not have loaded."
-    solution: "Use Read for any file whose content informs an edit; reserve Bash for locating text."
-  - session: session_01JW1NEbkjzCyx2myBjt9X8V
-    date: "2026-10-13"
-    severity: minor
-    description: "Read several docs via cat/sed in Bash (CONTEXT-MAP.md, issue-tracker.md, pr-workflow.md head, human-merge rule) despite CLAUDE.md's Read-tool rule"
-    solution: "Use the Read tool for every doc read; batch parallel Read calls instead of a chained cat"
-  - session: session_01QUhfMeVRZg7NX654bv5ZE5
-    date: "2026-10-13"
-    severity: minor
-    description: "Read several files with cat/sed/head in Bash (tenant.config.ts schema, human-merge rule, a spec file) instead of the Read tool, against CLAUDE.md's rule."
-    solution: "Use the Read tool with offset/limit for partial reads; the rule-loading guard only fires on Read."
-  - session: session_01WUDXJjhrM6uHf9Sjjvw2N9
-    date: "2026-10-13"
-    severity: nit
-    description: "Several chained or multi-file Bash greps and sed reads (e.g. on 0021 and audit-docs) loaded no rules, against CLAUDE.md's Read-tool rule"
-    solution: "Use Read with offset for quick line checks"
-  - session: session_01N2WiBqiw2rFsAqpy41VnhA
-    date: "2026-10-13"
-    severity: nit
-    description: "I read files through Bash sed, cat and head several times, against CLAUDE.md's rule to use the Read tool."
-    solution: "Use Read with offset and limit for slices of theme.css and the script."
-  - session: session_01PGvPc9bv3tGwoaLDDZsg6a
-    date: "2026-10-13"
-    severity: nit
-    description: "Read several files with cat/sed/grep in Bash (prune-trials.yml, Skill excerpts) despite CLAUDE.md's Read-tool rule."
-    solution: "Use Read with offset/limit for excerpts."
-  - session: session_01QvnVVurQdA4cvYSZToBvud
-    date: "2026-10-13"
-    severity: nit
-    description: "Read a few files with sed/cat in Bash (dependabot.yml, ADR rules, research lines) against CLAUDE.md's Read-tool rule; rules for those files could have been missed"
-    solution: "Use the Read tool with offset/limit even for a quick look"
-  - session: session_01EdZyfmrUBL5o3ePoaobtae
-    date: "2026-10-13"
-    severity: nit
-    description: "Read git-conventions.md in the same command that ran git fetch and log, so the read did not come first; also used cat, not Read."
-    solution: "Read the doc with the Read tool in its own call before any git command."
-  - session: session_01TW6hQ1C1Fm1aeaaoxQeHEp
-    date: "2026-10-13"
-    severity: nit
-    description: "Read rule files and docs with cat in Bash instead of the Read tool, against CLAUDE.md's Read-tool convention"
-    solution: "Use Read; the bash-rules-hint backstop loaded the rules anyway, so no impact this time"
   - session: session_01TFojzwXEByz1nbqt3wcKNL
     date: "2026-10-14"
     severity: nit
     description: "Read .githooks/commit-msg with Bash cat instead of the Read tool (CLAUDE.md), which loaded an irrelevant adr-0004-human-merge.md reminder since I only inspected, never edited, that Human-only file."
     solution: "Use the Read tool for any file read, even a quick one-off inspection."
-  - session: session_011xN2Zi67cjpCguuMiZbsJ6
-    date: "2026-10-13"
-    severity: minor
-    description: "Read several files with cat/sed in Bash instead of the Read tool, so their rules may not have loaded (CLAUDE.md Read-tool rule, ADR-0029)."
-    solution: "Use Read for any file whose rules matter; keep Bash for listing and counting."
   - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
     date: "2026-10-14"
     severity: nit

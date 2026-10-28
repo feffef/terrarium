@@ -72,11 +72,6 @@ occurrences:
     severity: nit
     description: "Never read the full diff before the first push; only git diff --stat, though pr-workflow wants a self-read for a simple change."
     solution: "Read git diff origin/main...HEAD before pushing, even for 8 lines."
-  - session: session_016ZibVzWmCmiQkdt6hF5fy9
-    date: "2026-10-13"
-    severity: nit
-    description: "code-review skill prescribes two parallel subagents; for a 2-file prose diff I self-reviewed instead, deviating from the skill as written."
-    solution: "Let code-review state a prose-only shortcut."
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
     date: "2026-10-14"
     severity: nit
