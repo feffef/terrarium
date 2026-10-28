@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeSxgYzYmeAuCzvJdhY
 startedAt: 2026-10-28T16:48:31Z
-endedAt: 2026-10-28T17:10:04Z
+endedAt: 2026-10-28T17:24:40Z
 kind: autonomous
 goal: "Visitor-loop run on the Blog: fix consensus findings, build one feature"
 status: in-review
-outcome: Fix PR 2648 open (reply label, drop cap); feature PR not started yet
-summary: "Scheduled visitor-loop run, focus blog (agent-initiated by the schedule; no human instruction). Served a production build, sent three blind visitors (sonnet, opus, fable), tallied. Consensus findings: the feed's reply label (lowercase slug, unlinked) and the drop cap. Most consensus complaints were dropped under decisions.md rulings (mobile panel order, footer, start-here, RSS) or the Blog glossary (inline jargon glosses). The refiner proposed a non-floated cap for fable's copy glitch (\"Ihave\"); I measured that float and initial-letter both cause it and kept the drop cap, fixing only the opening-link split. Fix PR 2648 opened after code-review and a green scoped gate. The feature (a threads view on /t/blog) is next. Note: the tally's shallow-clone git-log search gave a false \"no match\" for threads (the refiner found PR 2383)."
+outcome: Fix PR 2648 merged; feature PR 2649 (Threads view) open
+summary: "Scheduled visitor-loop run, focus blog (agent-initiated by the schedule; no human instruction). Served a production build, sent three blind visitors (sonnet, opus, fable), tallied. Consensus findings: the feed's reply label (lowercase slug, unlinked) and the drop cap. Most consensus complaints were dropped under decisions.md rulings (mobile panel order, footer, start-here, RSS) or the Blog glossary (inline jargon glosses). The refiner proposed a non-floated cap for fable's copy glitch (\"Ihave\"); I measured that float and initial-letter both cause it and kept the drop cap, fixing only the opening-link split. Fix PR 2648 merged after code-review and a green scoped gate. The feature, a Threads view at /t/blog?view=threads (asked for by all three visitors), is PR 2649 with its own review and a green gate; its review caught a11y issues (per-thread nav landmarks, aria-current). All of it was agent-initiated by the schedule. Note: the tally's shallow-clone git-log search gave a false \"no match\" for threads (the refiner found PR 2383)."
 prs:
   - "2648"
+  - "2649"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: required before first git command
@@ -51,6 +52,8 @@ docsRead:
     useful: yes
   - path: scripts/lib/chromium.ts
     reason: (no reason given)
+  - path: layers/blog/app/pages/t/blog/index.vue
+    reason: (read before editing)
 skillsUsed:
   - name: visitor-loop
     reason: the scheduled task
@@ -76,28 +79,33 @@ frictions:
   - description: Double-background guard blocked a Bash call that used both run_in_background and a trailing &.
     solution: None needed; guard worked as designed.
     severity: nit
-durationSec: 1292
+durationSec: 2168
 models:
-  claude-sonnet-5-5: 146
+  claude-sonnet-5-5: 217
 toolCounts:
-  Bash: 48
-  Read: 8
+  Bash: 69
+  Read: 10
   Monitor: 1
   ToolSearch: 2
-  Agent: 9
+  Agent: 11
   Write: 1
   TaskStop: 1
   Skill: 3
   Edit: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 1
+  ReadNotifications: 3
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/blog/app/components/blog/FeedItem.vue
+  - layers/blog/app/pages/t/blog/index.vue
   - layers/blog/app/assets/theme.css
-  - layers/blog/app/pages/t/blog/[space]/[...slug].vue
+  - layers/blog/app/utils/threads.ts
   - layers/blog/tests/e2e/blog.spec.ts
+  - layers/blog/tests/unit/threads.spec.ts
+  - layers/blog/app/pages/t/blog/[space]/[...slug].vue
 rulesLoaded:
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0005.md
@@ -112,14 +120,15 @@ rulesLoaded:
   - .claude/rules/adr-0012.md
   - .claude/rules/adr-0016.md
   - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0004-human-merge.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesLoadedBySubagents:
-  - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0030.md
+  - .claude/rules/mermaid-lanes.md
   - .claude/rules/adr-0002.md
   - .claude/rules/data-shapes.md
   - .claude/rules/mdc-when-to-use.md
@@ -195,6 +204,9 @@ ruleVerdicts:
   - path: .claude/rules/mdc-when-to-use.md
     reason: Loaded for a subagent; did not apply
     useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded for a reviewer subagent that read content; reported no
+    useful: no
 subagents:
   - task: Visitor sonnet
     model: sonnet
@@ -207,37 +219,49 @@ subagents:
     durationSec: 102
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 4.7
+    tokenShare: 3.2
   - task: Visitor fable
     model: fable
     durationSec: 303
     toolCalls: 37
     modelCalls: 16
-    tokenShare: 12
+    tokenShare: 8.2
   - task: Visitor opus
     model: opus
     durationSec: 222
     toolCalls: 27
     modelCalls: 24
-    tokenShare: 10.4
+    tokenShare: 7.1
   - task: Fit-check tally
     model: opus
     durationSec: 181
     toolCalls: 32
     modelCalls: 19
-    tokenShare: 10.3
+    tokenShare: 7
   - task: Standards review
     model: opus
     durationSec: 54
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2.9
+    tokenShare: 2
   - task: Spec review
     model: opus
     durationSec: 40
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 2.1
+    tokenShare: 1.4
+  - task: Standards review feature
+    model: opus
+    durationSec: 96
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 3.2
+  - task: Spec review feature
+    model: opus
+    durationSec: 57
+    toolCalls: 9
+    modelCalls: 7
+    tokenShare: 2.9
 gitBranch: claude/adoring-galileo-jd2x8f
 entrypoint: remote_trigger
 cliVersion: 2.1.312
@@ -245,4 +269,7 @@ trigger: visitor-loop
 ideas:
   - "Blog drop cap: render the cap as a real element so copied text keeps its space (Chromium copies 'Ihave' for any float or initial-letter cap)."
   - "Blog long feed: add month headings after Show all N posts (fable, sonnet); one-visitor complaint, needs a second."
+  - "Blog front door: add a one-line empty state and month headings to the Show all N posts list (fable, sonnet) so the 178-post archive has landmarks."
+  - Journal highlights page 'Twelve stories' stops at 29 Aug; refresh it or date it (opus, single).
+  - Blog tag-filter empty state shows two messages for one state; keep one (fable, single).
 landedBy: Stop
