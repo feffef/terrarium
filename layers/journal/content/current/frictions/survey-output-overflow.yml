@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   The reads behind frictions-to-fixes and similar Journal surveys (session-frictions, extract-frictions --compact at about 90-150 KB, the ledger directory, prune-friction-ledger.ts --summary, a dump of several Skill Inventory entries) overflow a tool result, so agents slice, truncate or re-query them and can miss lines. A bare audit-skills.ts run belongs in audit-skills-output-overflow. Signals: output persisted to a file, '| head truncated', a second narrower query, 'printed N KB'.
 surface: safe
-status: open
-ref: "issue #1917 closed 2026-10-14T02:23Z by PR #1918"
+status: tracked
+ref: "#2631"
 fixes:
   - pr: 1918
     date: "2026-10-14"
@@ -39,3 +39,13 @@ occurrences:
     severity: minor
     description: "Survey subagent reported: --summary | head truncated the two-cluster list, large outputs needed --out, and ledger-set refuses a session already in an entry with no way to upgrade its severity."
     solution: "Brief should say the two-cluster list is at the end of --summary, to use --out, and what to do when a new friction outranks the stored one."
+  - session: session_013zxzeQvE9RNYoZRiZEEKBG
+    date: "2026-10-28"
+    severity: minor
+    description: "Survey agent hit unlisted traps: --summary and --candidates print 34KB and 20KB to stdout, --append is all-or-nothing on a duplicate session, and closed issues came via gh api page=N."
+    solution: "Name --out for the summary scripts, say --append writes nothing on refusal, and name the cheap closed-issues recipe in survey-brief §1 and §3."
+  - session: session_013zxzeR86n7CjfWXZh4HXyc
+    date: "2026-10-28"
+    severity: nit
+    description: "My first scan printed every post-fix occurrence across the ledger (102 KB), which overflowed to a file and needed a second, filtered grep."
+    solution: "Filter by keyword in the first scan, or hand a full-ledger read to subagents from the start."

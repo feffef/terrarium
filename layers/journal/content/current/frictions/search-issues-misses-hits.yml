@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   mcp__github__search_issues matches fuzzily and can return zero results or miss a merged fix for plain queries; github-integration.md already warns that total_count 0 is not proof (issue #741) but sessions state "no match" from one search. Signals: "search returned no match", "returned zero results for plain queries", a refiner or later search finding the issue or PR.
 surface: safe
-status: open
+status: tracked
+ref: "#2632"
 fixes:
   - pr: 744
     date: "2026-07-30"

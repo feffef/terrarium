@@ -5,6 +5,8 @@ cause: >-
   docs/agents/pr-workflow.md puts a scheduled run's closing steps in one section of a long doc, so scheduled runs grep or read that section alone and miss adjacent steps (check-conflicting-issues.ts). Signals: "read only the 'Closing a scheduled run's PR' section", grep -A of pr-workflow.md.
 surface: safe
 status: open
+notes: |-
+  2026-10-28 design: dropped: a partial grep read, no repo change helps; none since 2026-10-21.
 occurrences:
   - session: session_011xvPjJVknZzx45v7NjhebT
     date: "2026-10-19"

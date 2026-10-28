@@ -4,6 +4,8 @@ summary: Agents read a governing ADR only after the hint that names it fired on 
 cause: "Since PR #2431, adr-read-hint.ts names an unread ADR whose rule governs a file after an Edit or Write (PR #2570: a git commit) to it, so a session that edits first reads the ADR afterwards; the page or edit was already right. Signals: 'the post-write hook prompted the read', 'read only after the first edit', 'the late read changed nothing', 'hint worked as designed'."
 status: open
 ref: "Comes from PR #2431, the fix for full-adr-read-skipped (acting on an ADR summary without the full ADR)."
+notes: |-
+  2026-10-28 design: another digest Skill line dropped: it already says to read ADR-0010 before the first Digest; the hint is the designed backstop and the late read changed nothing. dropped: a guard would be Human-only.
 occurrences:
   - session: session_015Nvs8t9mqbbyFbkR9Pb1nk
     date: "2026-10-24"

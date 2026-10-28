@@ -1,8 +1,8 @@
 name: journal-content-breaks-main
 summary: >-
-  A session log that aged out of the live week broke a test, turning every open change red.
+  A session log or archive sweep broke a test, turning every open change red, and the archived dashboard's size broke the smoke test.
 cause: >-
-  Session logs and Digests land on main without a gate (ADR-0009), and the retention sweep moves logs to archived, while e2e and unit tests read specific logs' text or current paths, so the sweep or one log turns the gate red for the Digest PR and others. Signals: a gate red after an archive sweep, a test reading content/current/sessions by path, an assertion on a log's wording.
+  Session logs and Digests land on main without a gate (ADR-0009), and the retention sweep moves logs to archived, while e2e and unit tests read specific logs' text or current paths, so the sweep or one log turns the gate red for the Digest PR and others. PR #2620 caps the dashboard at 1000 sessions and reads the smoke test's HTML in Node, which retires the archived page's size (10 MB) as a cause. Signals: a gate red after an archive sweep, a test reading content/current/sessions by path, an assertion on a log's wording, 'Request content was evicted from inspector cache'.
 surface: safe
 status: tracked
 ref: "issue #2105 reopened 2026-10-28 (5th occurrence): the retention sweep makes the archived page too large for the smoke test's body read (tests/support/e2e.ts); PR #2394 closed issue #2398 (regression of #2108)."
@@ -13,6 +13,9 @@ fixes:
   - pr: 2394
     date: "2026-10-22"
     summary: "A unit test that read a session log by its current path now reads the archived copy, so the retention sweep no longer turns the gate red."
+  - pr: 2620
+    date: "2026-10-28"
+    summary: "The Journal dashboard loads only the newest 1000 sessions and the smoke test fetches server HTML in Node, so the archived page no longer outgrows Chrome's response-body buffer."
 occurrences:
   - session: session_01F3a2MbH4xUH7J7Y1hLg2TX
     date: "2026-10-16"
@@ -34,3 +37,8 @@ occurrences:
     severity: moderate
     description: "Archive sweep makes the archived-page e2e test fail deterministically (body evicted from inspector cache); cost two gate runs and a baseline build to diagnose."
     solution: "Fix expectServerRendered in tests/support/e2e.ts to read the body before hydration, then run the sweep."
+  - session: session_013zxzeQxsePnJds2jEpgirL
+    date: "2026-10-28"
+    severity: minor
+    description: "The archived dashboard silently outgrew Chrome's 10 MB body buffer; nothing warned until the digest run's gate failed twice."
+    solution: "The new cap and Node-side refetch; a page-size budget check in e2e could flag growth earlier."

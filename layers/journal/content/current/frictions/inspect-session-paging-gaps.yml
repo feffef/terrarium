@@ -37,3 +37,8 @@ occurrences:
     severity: nit
     description: "Range-3 fetch agent saw two spilled pages get the same tool-results file name, one overwriting the other, and had to refetch."
     solution: "Fetch brief could say: after each call, copy the spill file into Out under a page-numbered name before the next call."
+  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
+    date: "2026-10-27"
+    severity: minor
+    description: "The inspect-session agent for the 97-minute multi-model session stopped after 34 of 184 pages, judging paging too slow, despite page limit 9999; it needed a resume."
+    solution: "inspect-session's full-read route (parallel range fetch) fits sessions over about 25 pages; I should have estimated the page count from duration and used it."

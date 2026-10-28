@@ -354,3 +354,18 @@ occurrences:
     severity: nit
     description: "The Stop hook asked to push the impl branch while review fixes were still pending."
     solution: "None needed; ADR-0004 says to ignore it until review is clean."
+  - session: session_013zxzeR94ZpyH5mhKXDH22Y
+    date: "2026-10-28"
+    severity: nit
+    description: "Stop hook asked to push twice while the review and gate were still running, against the push-after-gate rule."
+    solution: "Stop hook could skip its nag when a gate run is in flight."
+  - session: session_013zxzeQRYzCbfkXYbHKwcPv
+    date: "2026-10-28"
+    severity: nit
+    description: "The Stop hook asked me to push six times while raters, writers and the gate were still running; each turn I had to restate why not."
+    solution: "stop-hook-git-check could stay quiet while a dispatched agent or a backgrounded gate is still running in the session."
+  - session: session_013zxzeR86n7CjfWXZh4HXyc
+    date: "2026-10-28"
+    severity: nit
+    description: "The Stop hook asked to push about eight times while reviews, audits and the gate were still running; each needed a reply."
+    solution: "Harness-side hook, already tracked as stop-hook-nag (accepted)."

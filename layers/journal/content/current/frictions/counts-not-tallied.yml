@@ -85,3 +85,8 @@ occurrences:
     severity: nit
     description: "The ledger numbers (66/67) were stale after review-fix edits and had to be recomputed and re-committed."
     solution: "Compute numstat and the ledger entry only after the review fixes land."
+  - session: session_013zxzeR94ZpyH5mhKXDH22Y
+    date: "2026-10-28"
+    severity: nit
+    description: "First PR body miscounted fact-check verdicts; I caught it and corrected the body before CI."
+    solution: "Tally verdicts from the checker reply before writing the body."

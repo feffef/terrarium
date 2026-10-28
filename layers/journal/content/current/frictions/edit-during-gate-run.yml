@@ -1,6 +1,6 @@
 name: edit-during-gate-run
 summary: "The gate passed on a different tree than the one pushed, because files were edited during its run or committed after it."
-cause: "Agents start gate:scoped before the final head exists: they keep editing while it runs, so the e2e step builds the old tree then runs new tests, or they run it before code-review or commit, amend or fix wording after it and push without rerunning it; or the e2e step reuses an .output built before the last commit, so the final head is never exercised. Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\", gate run before code-review, an amend or follow-up commit pushed after the gate, \"reused an .output\", \"L2 reuse\"."
+cause: "Agents start gate:scoped before the final head exists: they keep editing while it runs, so the e2e step builds the old tree then runs new tests, or they run it before code-review or commit, amend or fix wording after it and push without rerunning it; or the e2e step reuses an .output built before the last commit, so the final head is never exercised. glassbox-improve now runs the gate once on the final head (PRs #2626, #2629). Signals: \"edited files while gate:scoped was building\", \"had to run a second time on the final head\", gate run before code-review, an amend or follow-up commit pushed after the gate, \"reused an .output\", \"L2 reuse\"."
 surface: safe
 status: accepted
 ref: "issue #2579 closed not planned on 2026-10-27: the owner accepts the cost. The #2486 abort makes a stale gate run fail rather than pass, and the pr-workflow.md Prune Trial weighs the prose; no lock-file guard."
@@ -17,6 +17,12 @@ fixes:
   - pr: 2549
     date: "2026-10-25"
     summary: "The e2e .output reuse line now names the latest source edit it compared against, so a fresh gate build is not read as stale."
+  - pr: 2626
+    date: "2026-10-28"
+    summary: "glassbox-improve runs gate:scoped once, on the final head; EVERY-PAGE's Check serves between rounds."
+  - pr: 2629
+    date: "2026-10-28"
+    summary: "glassbox-improve step 7 fixes a false claim from the last re-grade before step 8's gate, and Done counts it."
 occurrences:
   - session: session_01WynjtDHvk8MajTsgr59Ckt
     date: "2026-10-16"
@@ -108,3 +114,28 @@ occurrences:
     severity: minor
     description: "Started gate:scoped before committing; the commit mid-run made it abort and cost a second ~5 minute run."
     solution: "Follow pr-workflow order: commit, review, then gate last."
+  - session: session_013zxzeR86n7CjfWXZh4HXyc
+    date: "2026-10-28"
+    severity: minor
+    description: "Started pnpm gate:scoped and then committed while it ran, so it aborted; pr-workflow says commit and review first, gate last."
+    solution: "Commit and review before starting the gate, as pr-workflow.md orders it."
+  - session: session_013zxzeQRYzCbfkXYbHKwcPv
+    date: "2026-10-28"
+    severity: minor
+    description: "The last re-grade surfaced a pre-existing false claim on MCP servers after I had started gate:scoped on the 'final' head; I stopped and reran the gate."
+    solution: "Start gate:scoped only after the last re-grade's hand-backs are tallied, as step 8 already implies; I jumped ahead."
+  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
+    date: "2026-10-27"
+    severity: nit
+    description: "Ran gate:scoped on 93eb78120, then added two prose commits before the first push of PR 2619; pr-workflow asks for the gate last on the final head. Re-ran it."
+    solution: "Run the gate only after the last review fix, never in parallel with the review."
+  - session: session_013zxzeTGYbEWeFyEywFafxw
+    date: "2026-10-28"
+    severity: minor
+    description: "Ran pnpm gate:scoped three times (one early run before review fixes landed), each a few minutes of container time"
+    solution: "Run the gate once on the final head after the last re-grade; rely on the page spec and validate:content between rounds"
+  - session: session_013zxzeQxsePnJds2jEpgirL
+    date: "2026-10-28"
+    severity: minor
+    description: "Started gate:scoped before noticing ADR-0004 needs a test for observable behaviour; stopped it and reran after adding the cap test."
+    solution: "Check ADR-0004's untested-behaviour exception before the first gate run, when the change adds behaviour."

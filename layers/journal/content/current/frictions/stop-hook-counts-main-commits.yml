@@ -28,3 +28,8 @@ occurrences:
     severity: nit
     description: "After the PR merged, the branch was restarted from origin/main, and the Stop hook then flagged inherited main commits as unpushed three times while builders and the gate ran."
     solution: "The Stop hook could count only commits not on origin/main, as git-conventions.md already advises readers to check by hand."
+  - session: session_013zxzeQvE9RNYoZRiZEEKBG
+    date: "2026-10-28"
+    severity: nit
+    description: "Restarting the merged session branch for the closing ledger PR left the Stop hook counting five unpushed commits against the stale remote branch, nagging until the push."
+    solution: "Have the Stop hook count against origin/main when the branch's PR is already merged."

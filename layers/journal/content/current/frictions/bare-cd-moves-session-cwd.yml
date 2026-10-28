@@ -76,3 +76,8 @@ occurrences:
     severity: nit
     description: "A cd into the frictions directory in a compound Bash call moved the primary working directory; I had to use absolute paths until the next cd back."
     solution: "Use absolute paths in compound Bash calls, never cd."
+  - session: session_013zxzeQvE9RNYoZRiZEEKBG
+    date: "2026-10-28"
+    severity: nit
+    description: "Bare cd in compound Bash calls moved the primary working directory twice, so later calls needed absolute paths."
+    solution: "Use absolute paths and git -C instead of cd."

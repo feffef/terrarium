@@ -3,6 +3,8 @@ surface: safe
 summary: pr-workflow's review rules sent tiny first pushes and small follow-up commits through full two-agent code-review rounds whose cost far exceeded what they found.
 cause: "pr-workflow.md asks for code-review before a first push (PRs #1853, #1854) and on a larger follow-up; before PR #2321's simple-change bar a 1- to 6-line diff, and since then a prose cut already probed, a 40-line review-fix commit or a 2-line one, ran two-agent rounds costing 120k-370k subagent tokens for little or cosmetic findings. The opposite miss is prepush-gate-review-skipped. Signals: 'follow-up rule', 'further code-review rounds', 'two review agents for a N-line diff', 'subagent tokens'."
 status: open
+notes: |-
+  2026-10-28 design: a looser follow-up review bar dropped: three of six predate the simple-change bar, the others read pr-workflow.md and followed it, and ADR-0004 rejects skipping review for prose. dropped: a policy change for a human, not a fix.
 occurrences:
   - session: session_01Vg1qDutnhKVav7JDNUdr8J
     date: "2026-10-26"

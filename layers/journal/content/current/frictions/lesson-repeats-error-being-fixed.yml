@@ -3,6 +3,8 @@ surface: safe
 summary: A new Lesson page repeated the same error the batch of edits was fixing.
 cause: "A promotion or rewrite batch fixes a wrong claim in some pages while a freshly written page restates it, caught only in review. Signals: 'repeated the error the same batch was fixing', Lesson, review round."
 status: open
+notes: |-
+  2026-10-28 design: a dispatch-subagents brief bullet dropped: one occurrence, review caught it, and the line would sit in an open trial's territory.
 occurrences:
   - session: session_013zxzeRkASapvnaGkGVdSBk
     date: "2026-10-27"

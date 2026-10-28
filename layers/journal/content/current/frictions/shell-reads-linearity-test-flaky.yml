@@ -1,0 +1,21 @@
+name: shell-reads-linearity-test-flaky
+surface: safe
+summary: A timing test in the shell tokenizer's unit spec fails under CI load on changes that never touch it, costing a re-run.
+cause: "tests/unit/shell-reads.spec.ts 'commandWords() on adversarial input' compares the 100k-input time to 3x the 50k time plus 2 ms (slack tightened from 20 ms in 273cf2b99), so a load spike on a shared CI runner fails the gate on an unrelated PR; a re-run passes. Signals: 'stays linear', 'shell-reads.spec.ts', 'timing', a gate red on a YAML-only or docs PR."
+status: tracked
+occurrences:
+  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
+    date: "2026-10-27"
+    severity: minor
+    description: "CI gate on #2627 failed on tests/unit/shell-reads.spec.ts:796 (commandWords linearity: 94ms vs an 81ms limit), unrelated to the diff and green on one re-run; its slack was tightened the day before in 273cf2b99."
+    solution: "Base the linearity check on a ratio with more slack, or on operation counts instead of wall-clock time, so runner load can't fail it."
+  - session: session_013zxzeRpJV1qxKtqhnjBVTy
+    date: "2026-10-28"
+    severity: minor
+    description: "CI gate failed on a load-dependent timing assertion in tests/unit/shell-reads.spec.ts (7.27 vs 6.89 limit) on a YAML-only PR, costing a comment and a re-run."
+    solution: "Give the timing test a budget with headroom or measure relative to a baseline run in the same process."
+  - session: session_013zxzeQRYzCbfkXYbHKwcPv
+    date: "2026-10-28"
+    severity: minor
+    description: "CI gate on #2629 failed on the shell-reads 'stays linear' timing ratio (45.8 vs 43.2 ms), a test the diff never touches; one re-run passed."
+    solution: "tests/unit/shell-reads.spec.ts: the slack tightened in 273cf2b99 leaves a few ms of runner noise; widen the additive term or compare medians."
