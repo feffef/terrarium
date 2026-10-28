@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-19"
     summary: "extract-frictions --compact no longer prints each session's docsRead paths, about half its bytes."
 occurrences:
-  - session: session_01YKBUn5rG2GoAZevbZooXWj
-    date: "2026-10-13"
-    severity: minor
-    description: "The survey subagent's cat of the whole friction ledger directory overflowed the tool result (51 KB)."
-    solution: "survey-output-overflow ledger entry: give the ledger a compact summary script as session-frictions has."
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
     date: "2026-10-14"
     severity: minor

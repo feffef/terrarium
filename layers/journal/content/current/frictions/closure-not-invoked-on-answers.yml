@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-12"
     summary: "Added a CLAUDE.md rule to run close-session when a session only answers a question."
 occurrences:
-  - session: session_01EdZyfmrUBL5o3ePoaobtae
-    date: "2026-10-13"
-    severity: nit
-    description: "Deferred close-session until after the owner's follow-up instead of invoking it when the answer was given."
-    solution: "Invoke close-session with the answer; re-logging is cheap."
   - session: session_018pjaBqTXahmE3DFhAbkide
     date: "2026-10-16"
     severity: nit

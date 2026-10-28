@@ -29,3 +29,8 @@ occurrences:
     severity: minor
     description: "owner-corrections.ts printed 19 candidates for ten PRs, almost all routine bot content PRs; resolving them took several GitHub reads that the previous run had already done."
     solution: "Have the script skip PRs whose title matches a known routine prefix (glassbox-update, journal(digest), blog(...)) or whose author is a Routine session."
+  - session: session_013zxzePwzHSC4uh6dyhsHxg
+    date: "2026-10-27"
+    severity: nit
+    description: "owner-corrections.ts listed seven candidates, all file-overlap reworks of unrelated Blog, Glass Box and Midden PRs; each still needed a tally line."
+    solution: "Ignore a rework candidate whose overlap is only a glossary or a path outside the run's focus Tenant, unless it names the visitor-loop PR."

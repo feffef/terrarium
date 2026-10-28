@@ -76,3 +76,8 @@ occurrences:
     severity: minor
     description: "My verdict comment on PR #2540 named a Reviewed SHA I expanded from the short hash instead of copying it, so it was wrong; merge-pr.ts would have refused it and a wrong id sat in a public comment until I corrected it one call later."
     solution: "Copy the full SHA from git rev-parse in the same turn as the comment, never from a short hash; CLAUDE.md's verify-before-you-state covers this and I skipped it."
+  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
+    date: "2026-10-27"
+    severity: minor
+    description: "My first PR #2602 verdict named a head SHA whose tail I typed instead of copying (60eb3d8270c1 vs 60eb3d8275…); I posted a corrected verdict. Same mistake an earlier Glass Box session logged."
+    solution: "Copy the head SHA from git rev-parse HEAD into the verdict in the same step; never type a hash."

@@ -20,21 +20,6 @@ fixes:
     date: "2026-10-25"
     summary: "Cut the Verify-before-you-state family to one plain home in CLAUDE.md and dropped its restatements in four Skills and the build reviewer."
 occurrences:
-  - session: session_01AnHXyvzXukt6izZTYs3YMr
-    date: "2026-10-13"
-    severity: nit
-    description: "First PR body stated 49 CONFIRMED verdicts without summing the three checker reports; the true count was 45, corrected by an edit."
-    solution: "Sum counts from the saved checker files before writing them anywhere (CLAUDE.md Verify before you state)."
-  - session: session_01QvnVVurQdA4cvYSZToBvud
-    date: "2026-10-13"
-    severity: minor
-    description: "PR #1908 body first stated verdict counts 22/22/5 without tallying every checker item; corrected to 21/22/4 after counting"
-    solution: "Tally verdicts from the checker files before writing a count (CLAUDE.md: a count is a fact only after you read every item)"
-  - session: session_011xN2Zi67cjpCguuMiZbsJ6
-    date: "2026-10-13"
-    severity: minor
-    description: "Stated 6,600 old ADR lines in the PR body without counting; the real total was 3,768. Broke CLAUDE.md 'Verify before you state'."
-    solution: "Count before writing any number into a PR body."
   - session: session_01Mf4dUxuWB7WtkC5fVzByH6
     date: "2026-10-16"
     severity: minor
@@ -90,3 +75,13 @@ occurrences:
     severity: nit
     description: "Told the user '31 misses' in a progress note from an eyeballed list; the scripted count is 30. Broke CLAUDE.md's verify-before-you-state; caught before the report."
     solution: "Print the count from the script before stating any number, even in an interim update."
+  - session: session_013zxzeQV6Jcqg4jYk2tkwBq
+    date: "2026-10-27"
+    severity: minor
+    description: "I wrote an uncounted claim tally (54) into the PR body, then recounted the fact-check rows (49) and corrected it."
+    solution: "Count rows before writing the tally."
+  - session: session_013zxzePJnRATi9QoJAjCxgq
+    date: "2026-10-27"
+    severity: nit
+    description: "The ledger numbers (66/67) were stale after review-fix edits and had to be recomputed and re-committed."
+    solution: "Compute numstat and the ledger entry only after the review fixes land."

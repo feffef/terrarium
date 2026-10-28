@@ -41,3 +41,8 @@ occurrences:
     severity: minor
     description: "Skipped Skill step 5 (build and preview screenshots for pages whose teaching changed) to save time; the PR says so, but the visual check was not done."
     solution: "Either shoot the few changed-teaching pages or make the Skill say screenshots are optional for drafts."
+  - session: session_013zxzePY9L4aufht9ct94ec
+    date: "2026-10-27"
+    severity: minor
+    description: "I told the user I would self-merge once green before checking verifying-ui-changes, which requires a human's eye on an illustration from a brief; caught it before merging."
+    solution: "The ui-verification rule summary could state the human-eye requirement for illustrations, not only point to the doc."

@@ -11,31 +11,6 @@ fixes:
     date: "2026-10-23"
     summary: "CLAUDE.md now imports GLOSSARY-MAP.md and GLOSSARY.md with @, replacing the session-start read bullet."
 occurrences:
-  - session: session_01HNLMJQDMabmJ9U54iWwtiH
-    date: "2026-10-13"
-    severity: nit
-    description: "Skipped the session-start read of CONTEXT-MAP.md and CONTEXT.md that CLAUDE.md requires; no glossary terms were needed for this read-only probe."
-    solution: "Low impact here; a probe-type task could note that the glossary read is optional when no domain terms come up."
-  - session: session_017XWy7odnhW5S5AEuekatR8
-    date: "2026-10-13"
-    severity: minor
-    description: "Never read CONTEXT-MAP.md or CONTEXT.md at session start, as CLAUDE.md requires; the session added a glossary term through a subagent."
-    solution: "Read both in the first batch of calls; impact low because the subagent read domain.md and CONTEXT.md itself."
-  - session: session_01PGvPc9bv3tGwoaLDDZsg6a
-    date: "2026-10-13"
-    severity: minor
-    description: "Skipped CLAUDE.md's session-start read of CONTEXT-MAP.md and CONTEXT.md; relied on agents and grep for glossary terms like Floor and Proposal."
-    solution: "Read both at session start; a cheap step that would have settled the coined-term findings without a subagent."
-  - session: session_01EdZyfmrUBL5o3ePoaobtae
-    date: "2026-10-13"
-    severity: nit
-    description: "Skipped CLAUDE.md's session-start reads of CONTEXT-MAP.md and CONTEXT.md for a question-only session."
-    solution: "Read them at start; here no glossary term mattered, so no impact beyond the broken rule."
-  - session: session_01TW6hQ1C1Fm1aeaaoxQeHEp
-    date: "2026-10-13"
-    severity: nit
-    description: "Skipped reading CONTEXT.md at session start (read only CONTEXT-MAP.md), against CLAUDE.md's read-first list"
-    solution: "No glossary term was needed here, so no impact; a session-start hook printing a reminder would have caught it"
   - session: session_01675UWGBfCMALkurUr58cxM
     date: "2026-10-14"
     severity: minor
@@ -96,3 +71,8 @@ occurrences:
     severity: nit
     description: "Skipped the session-start GLOSSARY-MAP.md and GLOSSARY.md reads CLAUDE.md requires; no wrong term resulted that I know of."
     solution: "Read them in the first tool call even for a chat-only question."
+  - session: session_013zxzePnX2He1hvzhQj7LrJ
+    date: "2026-10-27"
+    severity: nit
+    description: "Did not read layers/tinkerfund/GLOSSARY.md as the tenant-glossary rule asks before working on a Tenant."
+    solution: "Read it at first Tenant touch; no term was misused here."

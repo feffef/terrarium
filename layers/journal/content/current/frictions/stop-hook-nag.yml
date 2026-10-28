@@ -14,26 +14,6 @@ fixes:
     date: "2026-10-05"
     summary: "Moved the end-of-turn reminder caveat into the main project instructions so more sessions read it."
 occurrences:
-  - session: session_01Rn5xT34AdjnywsTJdUtaDm
-    date: "2026-10-13"
-    severity: nit
-    description: "Stop hook asked to commit and push twice while the fact-check and gate were still pending."
-    solution: "Have the hook skip when a scheduled Skill has an unfinished gate."
-  - session: session_017XWy7odnhW5S5AEuekatR8
-    date: "2026-10-13"
-    severity: nit
-    description: "The Stop hook asked to push unreviewed commits five times while the gate and reviews were still running."
-    solution: "The Stop hook could recognise a running gate or pending review subagent and stay quiet."
-  - session: session_01RDtAc5Vv37kkRH4yCtRDQB
-    date: "2026-10-13"
-    severity: nit
-    description: "Stop hook asked three times to push before the gate and code review finished, against ADR-0004's push-after-gate rule."
-    solution: "Harness-side stop-hook-git-check.sh (stop-hook-nag cluster, issue #1653)."
-  - session: session_01N2WiBqiw2rFsAqpy41VnhA
-    date: "2026-10-13"
-    severity: minor
-    description: "The Stop hook repeatedly asked me to push before the code review finished, against ADR-0004's review-first rule; I held the push."
-    solution: "Make the Stop hook skip its push reminder while a review agent is running."
   - session: session_011JKK8rrCwea3xSmL4kw6si
     date: "2026-10-14"
     severity: nit
@@ -359,3 +339,18 @@ occurrences:
     severity: nit
     description: "The Stop hook asked to commit and push four times while the fact-check, reviews and gate were pending; ADR-0004 says review and gate first."
     solution: "Make the Stop hook skip when a review or gate is pending."
+  - session: session_013zxzeRNBrVkwWy4fcM4Pxa
+    date: "2026-10-27"
+    severity: nit
+    description: "Stop hook asked to push the ledger commits three times while the gate was still running and the Skill says review and gate come first."
+    solution: "The hook could skip its nag while a gate:scoped run or a Skill-ordered review is pending."
+  - session: session_013zxzeQV6Jcqg4jYk2tkwBq
+    date: "2026-10-27"
+    severity: nit
+    description: "Repeated Stop-hook push nags arrived while gate:scoped ran in the background; I had to hold the push each time."
+    solution: "Stop hook could skip its nag while a gate log is still running."
+  - session: session_013zxzePY9L4aufht9ct94ec
+    date: "2026-10-27"
+    severity: nit
+    description: "The Stop hook asked to push the impl branch while review fixes were still pending."
+    solution: "None needed; ADR-0004 says to ignore it until review is clean."

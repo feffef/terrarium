@@ -16,16 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "The sibling-collapse e2e waits for the digest body to render before measuring."
 occurrences:
-  - session: session_01JW1NEbkjzCyx2myBjt9X8V
-    date: "2026-10-13"
-    severity: minor
-    description: "CI gate failed once in the Journal accordion e2e test (journal.spec.ts:393) on a prose-only PR; passed locally on the merged state and on main"
-    solution: "Investigate flakiness of the session-card head toggle in CI (likely timing on the first card); needs a robust wait or retry in the test"
-  - session: session_01MZBQ3PanPQVwCutYuAmbUp
-    date: "2026-10-13"
-    severity: minor
-    description: "gate:scoped failed on an unrelated Journal accordion e2e test (matcher timeout) and passed on re-run; cost about three minutes."
-    solution: "Make that e2e test robust against slow hydration, or log it as a known flake."
   - session: session_01NoQubvnMfCpcq9nkicNsDq
     date: "2026-10-15"
     severity: minor

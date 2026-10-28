@@ -52,3 +52,18 @@ occurrences:
     severity: nit
     description: "Called search_issues without fields before reading github-integration.md; the guard blocked it, costing one retry."
     solution: "Read github-integration.md before the first GitHub call, as CLAUDE.md says."
+  - session: session_013zxzePJnRATi9QoJAjCxgq
+    date: "2026-10-27"
+    severity: nit
+    description: "Called search_issues without fields; the guard blocked it, wasting one call."
+    solution: "Pass fields on every search_issues call, as github-integration.md says."
+  - session: session_013zxzePwzHSC4uh6dyhsHxg
+    date: "2026-10-27"
+    severity: nit
+    description: "search_issues was blocked by the fields guard five times in one parallel batch because I omitted fields."
+    solution: "visitor-loop step 3 could say to use list-open-issues.ts plus git log --grep rather than search_issues."
+  - session: session_013zxzeRpJV1qxKtqhnjBVTy
+    date: "2026-10-28"
+    severity: nit
+    description: "search_issues was blocked for a missing fields array; a second call was needed after reading the doc."
+    solution: "Put the fields requirement in the audit-skills Skill text where it tells to search open issues."

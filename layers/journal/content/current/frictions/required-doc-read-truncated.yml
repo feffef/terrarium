@@ -66,3 +66,8 @@ occurrences:
     severity: minor
     description: "Read github-integration.md with cat | head -80 and dispatch-subagents SKILL.md with head -150, against CLAUDE.md's one-Read-call-per-doc rule; parts may have been cut."
     solution: "Read trigger docs with the Read tool, unlimited, at the first GitHub call; nothing I needed was in the cut part this time."
+  - session: session_013zxzeQ97mDYdTytqEL7wD6
+    date: "2026-10-27"
+    severity: nit
+    description: "Bundled the Lessons with cat; one output was persisted to a file and a later Read truncated, costing two extra reads"
+    solution: "Read large page sets in chunks under ~35k tokens per call from the start"

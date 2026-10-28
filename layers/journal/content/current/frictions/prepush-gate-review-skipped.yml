@@ -4,8 +4,9 @@ summary: >-
 cause: >-
   ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push. A gate:scoped run that did not test the final head belongs to edit-during-gate-run.
 surface: guard-or-hook
-status: on-trial
-ref: "Prune Trial opened 2026-10-22 by PR #2412 (territory: docs/agents/pr-workflow.md (all of it); keywords 'Review before the first push', 'simple change'). Earlier: issue #2311 closed by PR #2319, reversed by PR #2321. Left open: pr-workflow.md and ADR-0004 must still agree on the review skip. code-review is in skills-lock.json (ADR-0015): a note on the Skill itself belongs in its Skill Inventory entry (audit-skills)."
+status: open
+notes: |-
+  2026-10-28 survey: the PR #2412 Prune Trial is no longer in .agents/prune-trials.yml (judged and deleted by the 2026-10-27 prune run), so the entry is no longer on trial; issue #2472 (regression of #2407) is open.
 fixes:
   - pr: 1852
     date: "2026-10-12"
@@ -71,11 +72,6 @@ occurrences:
     severity: nit
     description: "Never read the full diff before the first push; only git diff --stat, though pr-workflow wants a self-read for a simple change."
     solution: "Read git diff origin/main...HEAD before pushing, even for 8 lines."
-  - session: session_016ZibVzWmCmiQkdt6hF5fy9
-    date: "2026-10-13"
-    severity: nit
-    description: "code-review skill prescribes two parallel subagents; for a 2-file prose diff I self-reviewed instead, deviating from the skill as written."
-    solution: "Let code-review state a prose-only shortcut."
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
     date: "2026-10-14"
     severity: nit
@@ -176,3 +172,13 @@ occurrences:
     severity: minor
     description: "Followed review fixes in 4 files with my own read instead of code-review, though a follow-up over 2 files is not simple by pr-workflow."
     solution: "Count files before choosing the self-read path; the fixes were the reviewers' own findings and the gate passed."
+  - session: session_013zxzePLLgArtn1cuyZAmNd
+    date: "2026-10-27"
+    severity: minor
+    description: "Ran code-review's skill load but skipped its subagents on a 31-file mechanical re-pin, which exceeds the written simple-change limit."
+    solution: "Let pr-workflow treat a pure revision re-pin plus a verified prose edit as simple, so scheduled runs need no judgement call."
+  - session: session_013zxzeRkASapvnaGkGVdSBk
+    date: "2026-10-27"
+    severity: minor
+    description: "Second-round review follow-up (11 files, 20 lines) got my own read, not code-review, though pr-workflow.md asks code-review for a follow-up over the simple-change size"
+    solution: "Run code-review on the follow-up diff, or have the fix agent stay within the simple-change limit"

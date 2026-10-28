@@ -68,3 +68,8 @@ occurrences:
     severity: nit
     description: "SKILL.md §2 says top three regressions by severity and count but not to skip trial, accepted, tracked or owner-closed ones first; I chose by judgement."
     solution: "State the skip rule in section 2 (filed as issue 2545)."
+  - session: session_013zxzeRNBrVkwWy4fcM4Pxa
+    date: "2026-10-27"
+    severity: minor
+    description: "The Skill has no tie-break for the top-three regression issues when many entries share minor severity since the fix; I chose by recurrence myself."
+    solution: "Say in frictions-to-fixes §2 to break ties by occurrences since the fix."

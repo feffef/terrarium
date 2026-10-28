@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-23 design: a doc line on asking for an explicit grant before auto-mode edits dropped: the classifier is the host's, none recurred in 9 days, the denial says what to do, and a line costs more than one round with the owner.
 occurrences:
-  - session: session_01STVS35HcxNZp7dQ1pPnrhW
-    date: "2026-10-13"
-    severity: minor
-    description: "Auto-mode classifier blocked both the build agent's and my edit/commit of .claude/settings.json as self-modification despite the owner's approval in the grilling; needed an extra AskUserQuestion round"
-    solution: "guards.md could say the settings.json edit needs an explicit permission grant from the owner before dispatch, so it is asked once, up front"
   - session: session_01CJix3AqBpX5KrAENqNp1M7
     date: "2026-10-14"
     severity: minor

@@ -16,31 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "adr-read-hint also points at the ADRs a Bash git commit touches."
 occurrences:
-  - session: session_01RDtAc5Vv37kkRH4yCtRDQB
-    date: "2026-10-13"
-    severity: nit
-    description: "Did not grep docs/adr for ADRs binding the new page before planning it, as CLAUDE.md asks; path-loaded rules covered it this time."
-    solution: "Run grep -l journal docs/adr/* before proposing a design."
-  - session: session_01JW1NEbkjzCyx2myBjt9X8V
-    date: "2026-10-13"
-    severity: nit
-    description: "Recommended a plan in chat without first grepping docs/adr for binding ADRs, as CLAUDE.md asks before recommending a change"
-    solution: "Run grep -l on the touched paths/terms before the first recommendation, even for prose-only changes"
-  - session: session_01QUhfMeVRZg7NX654bv5ZE5
-    date: "2026-10-13"
-    severity: minor
-    description: "CLAUDE.md says to read ADRs found by grep before recommending a change; I only grepped ADR-0003/0004/0009 for ledger lines and read none in full."
-    solution: "Low impact here (no ADR names the ledger lifecycle), but the grep hit list was the cue to open at least ADR-0009 and ADR-0015."
-  - session: session_01WUDXJjhrM6uHf9Sjjvw2N9
-    date: "2026-10-13"
-    severity: minor
-    description: "Recommended pilots and templates from subagent reports without reading the binding ADRs myself (CLAUDE.md: grep docs/adr and read before recommending)"
-    solution: "Read at least the ADRs I recommend as pilots before recommending; did read 0022 before sketching"
-  - session: session_01743kiGL2igSyAHJ77heWSV
-    date: "2026-10-13"
-    severity: moderate
-    description: "Stated publicly that ADR-0004 allows merging minor/patch bumps without reading the ADR; I took it from an issue 1889 comment"
-    solution: "Before recommending, grep and read the binding ADRs (CLAUDE.md); the claim held, but only verified after the merge"
   - session: session_01BdQnbVQmdfrD1PPyZTnL9w
     date: "2026-10-14"
     severity: minor

@@ -4,8 +4,9 @@ summary: >-
 cause: >-
   A diff a Skill or script produced and already checked (a Digest with archive moves, a fact-checked blog post, a Glass Box or pin-bump update, a verbatim pack install, Glass Box content reviewed by a subagent) is larger than pr-workflow.md's simple-change bar, and neither pr-workflow.md nor the Skill says whether the Skill's own checks count as the review, so the session skips code-review on its own judgement. Signals: 'prose-only digest diff', 'one-file prose post already fact-checked', 'pin-only', 'Digest pages and archive moves', 'verbatim upstream copy', a Skill step named as the review.
 surface: safe
-status: on-trial
-ref: "Prune Trial opened 2026-10-22 by PR #2412: the fix (pr-workflow.md saying whether a Skill's own checks count as the review) lands inside its territory 'docs/agents/pr-workflow.md (all of it)', keyword 'simple change'. midden-catalogue section 4 already names its own checks as the review."
+status: open
+notes: |-
+  2026-10-28 survey: the PR #2412 Prune Trial is no longer in .agents/prune-trials.yml (judged and deleted by the 2026-10-27 prune run), so the entry is no longer on trial; issue #2472 (regression of #2407) is open.
 fixes:
   - pr: 2319
     date: "2026-10-20"

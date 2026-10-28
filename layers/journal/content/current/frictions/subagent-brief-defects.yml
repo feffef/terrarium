@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Orchestrators write briefs from memory instead of copying from the source, and send them without re-reading: an unfilled {PAGES} placeholder, paths relative to a Skill folder or missing the Collection folder, a status value, ADR level or scope claim restated wrongly. The agent runs on the bad brief before anyone notices. Signals: "brief", "placeholder", "path did not exist", a value in a brief that differs from its source. A brief that relays another agent's unchecked claim belongs in relayed-subagent-claims; a missing CLAUDE.md brief line in subagent-brief-omits-verdict-ask.
 surface: safe
-status: open
-ref: "Its Prune Trial (PR #2324) is no longer in prune-trials.yml; no open trial, issue or PR tracks it. Regression issue #2312 closed by PR #2318."
+status: tracked
+ref: "#2610"
 fixes:
   - pr: 2150
     date: "2026-10-16"
@@ -89,3 +89,8 @@ occurrences:
     severity: nit
     description: "Inspect-session brief used a single-string selector; search.ts wants tool and regex as separate args, so the subagent first got usage only."
     solution: "Show the selector split in the inspect-session brief template, e.g. tool Bash 'regex'."
+  - session: session_013zxzeRkASapvnaGkGVdSBk
+    date: "2026-10-27"
+    severity: minor
+    description: "Briefed Lesson titles without the 'field name, not ours' rule up front; two promoted pages kept project jargon titles until the user flagged it"
+    solution: "Quote EVERY-PAGE.md's title rule in briefs and check titles against the tool's own docs before integrating"

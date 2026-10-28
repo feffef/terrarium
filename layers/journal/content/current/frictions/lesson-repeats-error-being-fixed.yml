@@ -1,0 +1,11 @@
+name: lesson-repeats-error-being-fixed
+surface: safe
+summary: A new Lesson page repeated the same error the batch of edits was fixing.
+cause: "A promotion or rewrite batch fixes a wrong claim in some pages while a freshly written page restates it, caught only in review. Signals: 'repeated the error the same batch was fixing', Lesson, review round."
+status: open
+occurrences:
+  - session: session_013zxzeRkASapvnaGkGVdSBk
+    date: "2026-10-27"
+    severity: moderate
+    description: "The new operating-model Lesson repeated the 'new dependency is unenforced' error the same batch was fixing; it took a review round to catch"
+    solution: "Put verified corrections from the triggering review into every parallel page agent's brief, not only the fixer's"

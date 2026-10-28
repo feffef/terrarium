@@ -15,3 +15,8 @@ occurrences:
     severity: minor
     description: "gh api job logs redirect to a blob host the proxy blocks; MCP get_job_logs tail only showed cleanup lines. Check-run annotations gave the cause"
     solution: "github-integration.md could name check-run annotations as the cheap way to get a gate failure's cause"
+  - session: session_013zxzePwzHSC4uh6dyhsHxg
+    date: "2026-10-27"
+    severity: nit
+    description: "PR 2595's label check failed on a GitHub 504 before any logic ran; diagnosing it meant slicing a 57KB one-line job log."
+    solution: "Have the failure wake name the HTTP status, or let get_job_logs return only the last error line."

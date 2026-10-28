@@ -8,11 +8,6 @@ status: open
 ref: "issue #2523 closed by PR #2532"
 fixes: [ { pr: 2532, date: "2026-10-25", summary: "clear-backlog-build runs a final gate agent on HEAD and marks a branch ready-to-push only when that agent reports a pass." } ]
 occurrences:
-  - session: session_016gu9e44jjfAEFMo3CBxzUQ
-    date: "2026-10-13"
-    severity: nit
-    description: "I pushed on the build workflow's report of a passing gate:scoped. I checked its commits and diff, but did not re-run the gate myself."
-    solution: "clear-backlog §3 could say whether the orchestrator should re-run gate:scoped or trust the workflow's gatePassed."
   - session: session_015dUGRadEQP1bvv6KytKLXT
     date: "2026-10-14"
     severity: minor

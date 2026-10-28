@@ -31,3 +31,8 @@ occurrences:
     severity: minor
     description: "main landed the empty-glob check in the old scripts/validate-adr-rules.ts while this branch had split it, giving a content conflict plus a spec whose new fixtures used the old flat layout."
     solution: "Land large file moves quickly, or announce them so parallel PRs target the new layout."
+  - session: session_013zxzeRkASapvnaGkGVdSBk
+    date: "2026-10-27"
+    severity: minor
+    description: "Two promotion agents each edited the other's draft link before moving it; cherry-picks conflicted on both moved drafts"
+    solution: "Tell promotion agents not to touch another promoted draft; repoint links in the join pass"
