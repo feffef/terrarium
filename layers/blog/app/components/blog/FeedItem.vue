@@ -8,8 +8,9 @@
 // `linkPrefix` carries the former explicitly rather than each caller
 // re-deriving the path, and `persona` stays optional so the Persona
 // landing's feed renders the same markup as the front door.
-// `formatBlogDate`/`personaMeta` arrive via the layer's utils/ auto-imports (.claude/rules/tenant-layers.md); feed styling itself lives in
-// the layer's global `theme.css` (`.bl .feed …`), not scoped here, so it
+// `formatBlogDate`/`personaMeta` arrive via the layer's utils/ auto-imports
+// (.claude/rules/tenant-layers.md); feed styling itself lives in the layer's
+// global `theme.css` (`.bl .feed …`), not scoped here, so it
 // keeps applying unchanged across this component boundary.
 interface BlogFeedPost {
   path: string
