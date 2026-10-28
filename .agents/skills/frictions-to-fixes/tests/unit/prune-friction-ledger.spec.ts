@@ -2,8 +2,9 @@ import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, describe, expect, it } from 'vitest'
-import { candidateLabels, horizonStart, lostOccurrences, moveInLedger, moveOccurrence, pruneEntry, pruneLedger, regressionCheck, sharedFrictions, summarizeLedger } from '../../scripts/prune-friction-ledger.ts'
+import { candidateLabels, horizonStart, ledgerReport, lostOccurrences, moveInLedger, moveOccurrence, pruneEntry, pruneLedger, regressionCheck, routeReport, sharedFrictions, summarizeLedger } from '../../scripts/prune-friction-ledger.ts'
 import { LEDGER_DIR } from '../../../../../scripts/session/extract-frictions.ts'
+import { OUTPUT_FILE_THRESHOLD } from '../../../../../scripts/lib/cli.ts'
 
 const entry = (...occ: [session: string, date: string][]) => `name: x
 # kept comment
@@ -185,6 +186,51 @@ describe('sharedFrictions()', () => {
     writeFileSync(join(dir, 'c.yml'), `name: c\n${occ('something else')}`)
     expect(sharedFrictions(cwd)).toEqual(['a, b: s1 "both guards denied"'])
     rmSync(cwd, { recursive: true, force: true })
+  })
+})
+
+describe('ledgerReport() and routeReport()', () => {
+  let cwd: string
+  afterEach(() => rmSync(cwd, { recursive: true, force: true }))
+  // Two entries share s1's friction; each has a fix merged the day s1 ran, with no merge time known.
+  const setup = (noteLength: number) => {
+    cwd = mkdtempSync(join(tmpdir(), 'ledger-'))
+    const dir = join(cwd, LEDGER_DIR)
+    mkdirSync(dir, { recursive: true })
+    for (const n of ['a', 'b']) {
+      writeFileSync(join(dir, `${n}.yml`), `name: ${n}\nstatus: open\nnotes: "${'n'.repeat(noteLength)}"\nfixes:\n  - pr: 1\n    date: "2026-10-05"\n    summary: s\noccurrences:\n  - session: s1\n    date: "2026-10-05"\n    severity: nit\n    description: "shared"\n`)
+    }
+  }
+  const report = () => ledgerReport('summary', '2026-10-06', cwd, regressionCheck(cwd, new Map()))
+  const trailer = '\nfrictions in two clusters (keep only when the text names both causes):\na, b: s1 "shared"\n'
+    + '\nmerge-day occurrences compared by date (check by hand):\n'
+    + 's1 on #1\'s merge day: compared by date (no merge commit for #1 on origin/main, no session log startedAt)\n'
+    + 's1 on #1\'s merge day: compared by date (no merge commit for #1 on origin/main, no session log startedAt)\n'
+
+  it('prints a report below the threshold to stdout as before', () => {
+    setup(1)
+    const r = report()
+    expect(r.text).toBe('a | fix landed | - | 1 in horizon | nit | 1 fix, latest #1 2026-10-05, since: none | note: n\n'
+      + 'b | fix landed | - | 1 in horizon | nit | 1 fix, latest #1 2026-10-05, since: none | note: n\n' + trailer)
+    expect(routeReport([], 'summary', r, join(cwd, 'out.txt'))).toBe(r.text)
+    expect(existsSync(join(cwd, 'out.txt'))).toBe(false)
+  })
+  it('writes a report over the threshold, trailing sections included, to a file and prints only a notice', () => {
+    setup(OUTPUT_FILE_THRESHOLD / 2)
+    const r = report()
+    const path = join(cwd, 'out.txt')
+    const bytes = Buffer.byteLength(r.text)
+    expect(bytes).toBeGreaterThan(OUTPUT_FILE_THRESHOLD)
+    expect(routeReport([], 'summary', r, path)).toBe(`prune-friction-ledger --summary: 2 entries, ${bytes} bytes, written to ${path}\n`)
+    expect(readFileSync(path, 'utf8')).toBe(r.text)
+    expect(r.text.endsWith(trailer)).toBe(true)
+  })
+  it('writes to --out whatever the size', () => {
+    setup(1)
+    const r = report()
+    const path = join(cwd, 'chosen.txt')
+    expect(routeReport(['--out', path], 'candidates', r, join(cwd, 'default.txt'))).toContain(`prune-friction-ledger --candidates: 2 entries, ${Buffer.byteLength(r.text)} bytes, written to ${path}`)
+    expect(readFileSync(path, 'utf8')).toBe(r.text)
   })
 })
 
