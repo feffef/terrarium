@@ -112,25 +112,26 @@ Dispatch one `opus` writer per selected page and one for the structural step,
 each with `isolation: 'worktree'` and [`writer-brief.md`](writer-brief.md)
 filled in: its task, its deficits (false claims on its pages included), its
 research file, the base, every false claim the run confirmed, and its own
-scratch subfolder. Fix a false claim on a page no writer holds, or whose
-writer dropped out, yourself in the run branch after step 6's merges. Done
-when every hand-back is saved and each writer either has a commit in its
-worktree that passes EVERY-PAGE's Check, or refused or stopped with its
-reason. Drop a refused or stopped item
-from the run, remove its worktree (`git worktree remove --force <path>`), and
-say why in the PR body. If no writer's commit and no false claim remain,
-invoke `close-session` as `completed` and stop.
+scratch subfolder. Propose in a brief or fix only facts and wording you have
+found in the source, an absence claim most of all. Fix a false claim on a page
+no writer holds, or whose writer dropped out, yourself in the run branch after
+step 6's merges. Done when every hand-back is saved and each writer either has
+a commit in its worktree that passes EVERY-PAGE's Check, or refused or stopped
+with its reason. Drop a refused or stopped item from the run, remove its
+worktree (`git worktree remove --force <path>`), and say why in the PR body.
+If no writer's commit and no false claim remain, invoke `close-session` as
+`completed` and stop.
 
 ## 6. Integrate
 
 Merge each writer's branch into the run branch; never cherry-pick or squash,
 which orphans the writers' commits and fails `pnpm check:worktrees`. Then make
 the **join edits** the writers reported, on any page: link text after a
-retitle, new Terms (once each, per EVERY-PAGE's Terms), links to a moved
-draft, Walkthrough chips and Where next entries. Add a link only where its
-list has room, replace only a link that broke or was retitled, and keep each
-list's order. Pin each page you edit yourself to the base. Done when
-EVERY-PAGE's Check passes on the run branch.
+retitle, new Terms (once each, per EVERY-PAGE's Terms), Walkthrough chips and
+Where next entries. Add a link only where its list has room, replace only a
+link that broke or was retitled, and keep each list's order. Pin each page you
+edit yourself to the base. Done when EVERY-PAGE's Check passes on the run
+branch.
 
 ## 7. Review
 
@@ -150,10 +151,12 @@ its last grades.
 
 Fetch `origin/main`. If it changed a page you edited, merge it into the run
 branch, keeping your page with its pin at the base. Then follow "Closing a
-scheduled run's PR" in `docs/agents/pr-workflow.md`. The PR body lists each
-change as `page | deficit | change`, then each page's grades before and after
-and the structural step with why it won. If anything outside the Remit is in
-the diff, leave the PR open for a human.
+scheduled run's PR" in `docs/agents/pr-workflow.md`; its `pnpm gate:scoped`
+on the final head is the run's only one, and EVERY-PAGE's Check is enough
+between rounds. The PR body lists each change as `page | deficit | change`,
+then each page's grades before and after and the structural step with why it
+won. If anything outside the Remit is in the diff, leave the PR open for a
+human.
 
 File the rest:
 

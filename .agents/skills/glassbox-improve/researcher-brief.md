@@ -9,7 +9,9 @@ the worked example.
 Work in the repository at commit {COMMIT}, read-only: modify no repository
 file and post nothing. Write any file you create in {SCRATCH}. Read the page
 (or draft) in full, then read the Terrarium files it cites or should cite
-(`git show {COMMIT}:<path>`) and the tool's package in `node_modules`.
+(`git show {COMMIT}:<path>`) and the tool's package in `node_modules`. Check
+an absence claim ("nothing does X") against every code location,
+`.agents/skills/*/scripts/` and `scripts/` included.
 
 Report:
 

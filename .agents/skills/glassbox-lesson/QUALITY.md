@@ -17,8 +17,9 @@ the tool but not Terrarium.
   and the only home of each fact it teaches: a sibling that teaches the same
   thing is an overlap on both pages.
 - **Accuracy.** Every claim is true at the page's `revision`, every reason
-  traces to the ADR or file it cites, and the lede holds for the edge cases
-  the page itself names.
+  traces to the ADR or file it cites (for an ADR, its Why, Rejected
+  alternatives and When to revisit all count), and the lede holds for the
+  edge cases the page itself names.
 - **Examples.** Every Excerpt and code fence teaches (EVERY-PAGE's Excerpts
   teach).
 - **Contract.** The page has its shape, and keeps EVERY-PAGE's Write rules and
