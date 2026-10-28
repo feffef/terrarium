@@ -100,7 +100,9 @@ const { isOpen, toggle } = useAccordionDeepLink(() => route.path)
 const skills = computed<SkillDoc[]>(() => data.value?.skills ?? [])
 const sessions = computed<SessionDoc[]>(() => data.value?.sessions ?? [])
 const sessionTotal = computed(() => data.value?.sessionTotal ?? 0)
-const sessionsCapped = computed(() => sessionTotal.value > sessions.value.length)
+const sessionsCappedLabel = computed(() =>
+  sessionTotal.value > sessions.value.length ? `newest ${sessions.value.length} of ${sessionTotal.value}` : '',
+)
 
 // ── Derived dashboard data — thin wrappers over the pure module ──
 // The wrapped functions (sessionCardViews, frictionTotals, …) are dashboard.ts
@@ -148,7 +150,7 @@ const kindSubtext = computed(() =>
     .join(' · '),
 )
 const tilesHeadline = computed(() => {
-  if (sessionsCapped.value) return `Counts from the newest ${sessions.value.length} of ${sessionTotal.value} older logs`
+  if (sessionsCappedLabel.value) return `Counts from the ${sessionsCappedLabel.value} logs`
   return space === 'archived' ? 'Counts from older logs, before the last week' : 'Counts from the last week of logs; Skills are as of today'
 })
 
@@ -336,7 +338,7 @@ useSeoMeta({
       <div class="section-head">
         <h2>Recent activity</h2>
         <span class="count">
-          <template v-if="sessionsCapped">newest {{ sessions.length }} of {{ sessionTotal }} session logs</template>
+          <template v-if="sessionsCappedLabel">{{ sessionsCappedLabel }} session logs</template>
           <template v-else>session logs, newest first</template>
         </span>
       </div>

@@ -25,9 +25,8 @@ import type { Friction, Importance, SessionCardView, SessionDoc, Severity, Skill
 import { REPO_URL } from '../../../../app/utils/repo'
 import { sessionUrl } from '#shared/session-url'
 
-/** The dashboard loads only the newest this-many sessions. Every loaded one ships
- *  in the HTML, so an uncapped `archived` passed 10 MB, beyond Chrome's
- *  response-body buffer, and the smoke test could no longer read it. */
+/** The dashboard loads only the newest this-many sessions: every loaded one
+ *  ships in the HTML, and uncapped, `archived` passed 10 MB. */
 export const JOURNAL_SESSIONS_LOADED = 1000
 
 // ── Formatting helpers ───────────────────────────────────
