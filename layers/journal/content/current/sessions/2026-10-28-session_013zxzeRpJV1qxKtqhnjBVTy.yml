@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRpJV1qxKtqhnjBVTy
 startedAt: 2026-10-28T00:46:19Z
-endedAt: 2026-10-28T01:00:55Z
+endedAt: 2026-10-28T01:04:55Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "Inventory PR #2609 open; 2 issues filed, 3 reopened or commented"
-summary: "Scheduled audit-skills run, fully agent-driven under the Skill's own steps (no human instruction beyond the schedule). Gathered the scorecard, had one Sonnet agent collect Routine run costs and 13 more run the per-Skill behaviour checks. Verified the claims worth escalating myself: the log-session ruleVerdicts gaps (compared rule lists in three logs), blog-post PR #2591's commit order, digest PR #2606 and the 8 Digests on main, and the glassbox-improve frontmatter parse failure. Filed #2607 and #2608, reopened #2370 and #2105 with new evidence, commented on #2472. Everything else became dated observations; no grade or role changed. Added a glassbox-improve Inventory entry. Landed one Inventory PR (#2609) after code-review (Standards clean, Spec trimmed one overclaim and moved an idea out), a reviewed follow-up and a green gate:scoped. Orphan scan ran (1711 PRs, 1554 with a session), both candidates already resolved. Open: the PR still needs merging once CI is green."
+status: completed
+outcome: "Inventory PR #2609 merged; 2 issues filed, 2 reopened, 1 commented"
+summary: "Scheduled audit-skills run, fully agent-driven under the Skill's own steps (no human instruction beyond the schedule). Gathered the scorecard, had one Sonnet agent collect Routine run costs and 13 more run the per-Skill behaviour checks. Verified the claims worth escalating myself: the log-session ruleVerdicts gaps (compared rule lists in three logs), blog-post PR #2591's commit order, digest PR #2606 and the 8 Digests on main, and the glassbox-improve frontmatter parse failure. Filed #2607 and #2608, reopened #2370 and #2105 with new evidence, commented on #2472. Everything else became dated observations; no grade or role changed. Added a glassbox-improve Inventory entry. Landed one Inventory PR (#2609) after code-review (Standards clean, Spec trimmed one overclaim and moved an idea out), a reviewed follow-up and a green gate:scoped. Orphan scan ran (1711 PRs, 1554 with a session), both candidates already resolved.  CI failed once on an unrelated timing assertion (tests/unit/shell-reads.spec.ts:796); I commented, re-ran the job once, it went green and I merged #2609 with merge-pr.ts after posting the verdict."
 prs:
   - "2609"
 docsRead:
@@ -93,26 +93,33 @@ frictions:
   - description: ScheduleWakeup is blocked outside /loop, and I armed two monitors on the same gate log, wasting a call.
     solution: End the turn and wait for the background task notification once; do not arm duplicate monitors.
     severity: nit
-durationSec: 875
+  - description: CI gate failed on a load-dependent timing assertion in tests/unit/shell-reads.spec.ts (7.27 vs 6.89 limit) on a YAML-only PR, costing a comment and a re-run.
+    solution: Give the timing test a budget with headroom or measure relative to a baseline run in the same process.
+    severity: minor
+durationSec: 1116
 models:
-  claude-sonnet-5-5: 151
+  claude-sonnet-5-5: 178
 toolCounts:
-  Bash: 44
+  Bash: 48
   Read: 5
-  Skill: 4
+  Skill: 5
   Agent: 17
   mcp__github__search_issues: 1
   mcp__github__list_issues: 1
   mcp__github__issue_read: 2
-  mcp__github__pull_request_read: 2
+  mcp__github__pull_request_read: 4
   mcp__Claude_Code_Remote__get_session: 1
-  mcp__github__add_issue_comment: 3
+  mcp__github__add_issue_comment: 5
   mcp__github__issue_write: 4
   Monitor: 2
   ScheduleWakeup: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   PushNotification: 1
+  ReadNotifications: 4
+  ToolSearch: 1
+  mcp__github__actions_run_trigger: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/skills/audit-skills.yml
   - layers/journal/content/current/skills/dispatch-subagents.yml
@@ -220,119 +227,119 @@ subagents:
     durationSec: 21
     toolCalls: 10
     modelCalls: 3
-    tokenShare: 2
+    tokenShare: 1.8
   - type: general-purpose
     task: Check audit-docs behaviour
     model: sonnet
     durationSec: 63
     toolCalls: 14
     modelCalls: 8
-    tokenShare: 4.2
+    tokenShare: 3.8
   - type: general-purpose
     task: Check audit-skills behaviour
     model: sonnet
     durationSec: 60
     toolCalls: 14
     modelCalls: 7
-    tokenShare: 3.8
+    tokenShare: 3.4
   - type: general-purpose
     task: Check blog-post behaviour
     model: sonnet
     durationSec: 89
     toolCalls: 23
     modelCalls: 11
-    tokenShare: 5.1
+    tokenShare: 4.6
   - type: general-purpose
     task: Check clear-backlog behaviour
     model: sonnet
     durationSec: 82
     toolCalls: 17
     modelCalls: 9
-    tokenShare: 4.3
+    tokenShare: 3.9
   - type: general-purpose
     task: Check close-session behaviour
     model: sonnet
     durationSec: 65
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 3.6
+    tokenShare: 3.2
   - type: general-purpose
     task: Check digest behaviour
     model: sonnet
     durationSec: 59
     toolCalls: 16
     modelCalls: 7
-    tokenShare: 3.6
+    tokenShare: 3.2
   - type: general-purpose
     task: Check dispatch-subagents behaviour
     model: sonnet
     durationSec: 74
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 4.3
+    tokenShare: 3.9
   - type: general-purpose
     task: Check frictions-to-fixes behaviour
     model: sonnet
     durationSec: 48
     toolCalls: 18
     modelCalls: 7
-    tokenShare: 3.7
+    tokenShare: 3.4
   - type: general-purpose
     task: Check glassbox-update behaviour
     model: sonnet
     durationSec: 52
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 3.4
+    tokenShare: 3
   - type: general-purpose
     task: Check inspect-session behaviour
     model: sonnet
     durationSec: 89
     toolCalls: 16
     modelCalls: 11
-    tokenShare: 4.9
+    tokenShare: 4.4
   - type: general-purpose
     task: Check log-session behaviour
     model: sonnet
     durationSec: 68
     toolCalls: 15
     modelCalls: 9
-    tokenShare: 4.3
+    tokenShare: 3.9
   - type: general-purpose
     task: Check prune-trial behaviour
     model: sonnet
     durationSec: 75
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 4.1
+    tokenShare: 3.7
   - type: general-purpose
     task: Check visitor-loop behaviour
     model: sonnet
     durationSec: 85
     toolCalls: 16
     modelCalls: 11
-    tokenShare: 4.8
+    tokenShare: 4.3
   - type: general-purpose
     task: Review standards of Inventory diff
     model: sonnet
     durationSec: 37
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 2.4
+    tokenShare: 2.2
   - type: general-purpose
     task: Review spec of Inventory diff
     model: sonnet
     durationSec: 37
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: general-purpose
     task: Review follow-up commit Standards
     model: sonnet
     durationSec: 16
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
 gitBranch: claude/upbeat-sagan-4q0bgy
 entrypoint: remote_trigger
 cliVersion: 2.1.312
