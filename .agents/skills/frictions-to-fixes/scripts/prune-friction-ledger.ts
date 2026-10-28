@@ -23,17 +23,20 @@
 //   Both modes count an occurrence on its latest fix's merge day as a
 //   regression when its session's `startedAt` is after the PR's merge commit on
 //   origin/main (issue #2333); lacking either time they compare dates, and say so.
+//   Either mode's output over OUTPUT_FILE_THRESHOLD goes to a tmpdir file, and
+//   stdout prints one line naming it; `--out PATH` always writes there.
 //   `--move <session> <from> <to>` moves that session's occurrence from entry
 //   `<from>` to `<to>` (file names, `.yml` optional) for a re-cluster (issue
 //   #2449). It refuses when `<to>` already holds the session, naming a
 //   duplicate or the two conflicting texts, and writes nothing unless every
 //   occurrence text survives; an emptied `<from>` is deleted.
 import { existsSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { isMap, isSeq, parse as parseYaml, parseDocument, type YAMLMap } from 'yaml'
 import { LEDGER_HORIZON_DAYS, ledgerFixState, ledgerWindowStart } from '../../../../layers/journal/app/utils/ledger.ts'
 import { LEDGER_DIR } from '../../../../scripts/session/extract-frictions.ts'
-import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { fail, flagValue, resolveOutputTarget, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { tryGit } from '../../../../scripts/lib/git.ts'
 
 /** The oldest occurrence date the horizon keeps. */
@@ -248,6 +251,27 @@ export function moveInLedger(session: string, from: string, to: string, cwd = ro
   return report
 }
 
+type ReportMode = 'summary' | 'candidates'
+
+/** The full `--summary` or `--candidates` output, trailing sections included. */
+export function ledgerReport(mode: ReportMode, today: string, cwd = root, check = regressionCheck(cwd)): { text: string; entries: number } {
+  const lines = mode === 'summary' ? summarizeLedger(today, cwd, check) : candidateLabels(today, cwd, check)
+  let text = `${lines.join('\n')}\n`
+  const shared = mode === 'summary' ? sharedFrictions(cwd) : []
+  if (shared.length) text += `\nfrictions in two clusters (keep only when the text names both causes):\n${shared.join('\n')}\n`
+  if (check.fallbacks.length) text += `\nmerge-day occurrences compared by date (check by hand):\n${check.fallbacks.join('\n')}\n`
+  return { text, entries: lines.length }
+}
+
+/** What stdout gets: the report itself, or a notice once it went to a file (issue #2631). */
+export function routeReport(argv: string[], mode: ReportMode, report: { text: string; entries: number }, defaultPath = join(tmpdir(), `prune-friction-ledger-${mode}.txt`)): string {
+  const bytes = Buffer.byteLength(report.text)
+  const target = resolveOutputTarget(argv, bytes, defaultPath)
+  if (!target) return report.text
+  writeFileSync(target, report.text)
+  return `prune-friction-ledger --${mode}: ${report.entries} entries, ${bytes} bytes, written to ${target}\n`
+}
+
 function main(): void {
   if (process.argv.includes('--move')) {
     const [session, from, to] = process.argv.slice(process.argv.indexOf('--move') + 1).map((a) => a.replace(/\.yml$/, ''))
@@ -262,18 +286,13 @@ function main(): void {
   const todayArg = process.argv.includes('--today') ? flagValue(process.argv, '--today') ?? '' : undefined
   const today = todayArg ?? new Date().toISOString().slice(0, 10)
   if (!/^\d{4}-\d{2}-\d{2}$/.test(today)) fail('--today must be YYYY-MM-DD')
-  const check = regressionCheck()
-  if (process.argv.includes('--candidates')) console.log(candidateLabels(today, root, check).join('\n'))
-  else if (process.argv.includes('--summary')) {
-    console.log(summarizeLedger(today, root, check).join('\n'))
-    const shared = sharedFrictions()
-    if (shared.length) console.log(`\nfrictions in two clusters (keep only when the text names both causes):\n${shared.join('\n')}`)
-  } else {
-    const report = pruneLedger(today)
-    console.log(report.length ? report.join('\n') : `prune-friction-ledger: nothing before ${horizonStart(today)}`)
+  const mode = process.argv.includes('--candidates') ? 'candidates' : process.argv.includes('--summary') ? 'summary' : undefined
+  if (mode) {
+    process.stdout.write(routeReport(process.argv, mode, ledgerReport(mode, today)))
     return
   }
-  if (check.fallbacks.length) console.log(`\nmerge-day occurrences compared by date (check by hand):\n${check.fallbacks.join('\n')}`)
+  const report = pruneLedger(today)
+  console.log(report.length ? report.join('\n') : `prune-friction-ledger: nothing before ${horizonStart(today)}`)
 }
 
 runIfMain(import.meta.url, main)
