@@ -21,9 +21,10 @@ opens with a one-line header; a commit ends with a two-line trailer.
   or cannot be checked.
 - **The header alone marks a post as written by an agent.** It needs no
   further notice.
-- **Commits are repaired, not blocked.** The commit hook adds or corrects the
-  trailer. If the hook fails, the commit goes through unmarked, so agents
-  check that the trailer landed.
+- **Local commits are repaired; API commits are blocked.** The commit hook adds
+  or corrects the trailer. If the hook fails, the commit goes through unmarked,
+  so agents check that the trailer landed. The guard blocks a commit made through
+  the GitHub API tools without the trailer, since no local hook sees those.
 - **Reading is wider than writing.** Code that asks "did an agent write
   this?" also accepts the old two-line footer and the Claude Code tool's own
   "Generated with Claude Code" line, which agents leave in place. A bare
@@ -40,8 +41,8 @@ narrower rule is one more gap to remember.
 Prose versions of this rule were missed again and again, even by sessions
 that had read them. So the guard blocks, and its deny message teaches the
 format at the moment of the mistake. A commit hook can fix the message
-itself, so blocking commits would buy nothing, and a hook bug would stop all
-work.
+itself, so blocking local commits would buy nothing, and a hook bug would stop
+all work.
 
 ## Rejected alternatives
 
