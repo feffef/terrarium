@@ -9,8 +9,8 @@ simplify that instruction before you add a new one (ADR-0027).
 
 ## Docs you must read first
 
-These are not optional. When a trigger applies, read the doc in full, one Read
-call per doc (a shell read can be cut short), before you act, once per session.
+These are not optional. When a trigger applies, read the doc before you act,
+once per session; read it whole if you can, since a rule can sit anywhere in it.
 
 - **ADRs arrive as rules.** Each ADR's summary is a rule in `.claude/rules/`:
   the cross-cutting ones load at session start, the rest when you read or edit
