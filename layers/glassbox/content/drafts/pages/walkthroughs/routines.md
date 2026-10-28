@@ -29,7 +29,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 `audit-skills` checks recent session logs for a Skill that ran but didn't deliver what its `SKILL.md` promises, and for one that should have run but didn't, with one subagent per Skill. It may change only :term[Skill Inventory] entries, with notes on what it found and a Skill's importance (moved only on evidence from sessions it cites), and the cost rows kept for each Routine's runs. A finding that did real damage or repeats an earlier one becomes an issue, unless it is about a pack Skill, and its changes leave in one PR, or none when nothing changed.
 
 ::stop-links
-[The Skill pack](/t/glassbox/drafts/skill-pack/skill-pack) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Skill Inventory](/t/journal/current/skills) · :file[.agents/skills/audit-skills/SKILL.md]
+[The Skill pack](/t/glassbox/guide/skill-pack/skill-packs) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Skill Inventory](/t/journal/current/skills) · :file[.agents/skills/audit-skills/SKILL.md]
 ::
 
 ## 4. prune-trial: a rule cut on trial
