@@ -1,7 +1,7 @@
 ---
 title: Asking an agent for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
-revision: 'e8cc785faceaf503224e5cb0e0367a9929e624c4'
+revision: 'ad9cea61188090fc6062574652f68385bc4b94d6'
 revisionDate: '2026-10-28'
 ---
 
