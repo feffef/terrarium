@@ -299,6 +299,9 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
     if (ref.lines && !ref.runs && gaps > 1) problems.push(`the Excerpt of ${ref.path} has ${gaps} gaps: give lines one range per run`)
     // Excerpt.vue counts runs from the gap lines, so none may be empty but the last.
     if (ref.runs && ref.excerpt !== undefined && excerptRuns(ref.excerpt).slice(0, -1).some((r) => !r.length)) problems.push(`the Excerpt of ${ref.path} opens with a gap or has two in a row`)
+    // EVERY-PAGE.md, Excerpts teach: end on a whole statement.
+    const last = ref.excerpt === undefined ? undefined : excerptRuns(ref.excerpt).flat().filter((l) => l.trim()).at(-1)
+    if (last && /[{[(]\s*$/.test(last)) problems.push(`the Excerpt of ${ref.path} ends on an open bracket: end it on a whole statement`)
   }
   for (const [, a, b] of prose.matchAll(/\blines=(?:"([^"]*)"|'([^']*)')/g)) {
     if (!parseLineRanges(a ?? b)) problems.push(`lines="${a ?? b}" is not one or more comma-separated ranges`)

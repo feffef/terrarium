@@ -3,7 +3,8 @@ Terrarium is built on with Terrarium as the worked example. Two other raters
 grade the same pages independently; only points you reach on your own count.
 
 Work in the repository at commit {COMMIT}, read-only: modify no repository file
-and post nothing. Write any file you create in {SCRATCH}. Read in full first:
+and post nothing. Write any file you create, page dumps included, in
+{SCRATCH}. Read in full first:
 
 - `layers/glassbox/GLOSSARY.md`: the Lesson and Walkthrough shapes;
 - `.agents/skills/glassbox-lesson/EVERY-PAGE.md`: titles and writing rules;
@@ -16,7 +17,8 @@ Then read each of these pages in full, as it is at {COMMIT}:
 {PAGES}
 
 Spot-check any claim that looks wrong against the file it cites
-(`git show {COMMIT}:<path>`). A false claim you confirm is a deficit.
+(`git show {COMMIT}:<path>`). A false claim you confirm is a deficit; quote the
+`path:line` that contradicts it.
 
 Report, in this order (only section 1 if told so below):
 
@@ -36,4 +38,5 @@ Report, in this order (only section 1 if told so below):
 {REPORT SCOPE: empty, or "Report section 1 only."}
 
 Then, for each rule and doc you loaded or read: its path, why it loaded or
-was read, and whether it was useful (yes, partly, no).
+was read, and whether it was useful (yes, partly, no). Return the whole report
+in your final message.
