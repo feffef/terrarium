@@ -367,8 +367,8 @@ describe('sessionCardViews', () => {
     })
     const [c] = sessionCardViews([s])
     expect(c!.rules).toEqual([
-      { path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false, viaSubagent: false, unknown: false },
-      { path: '.claude/rules/adr-0008.md', alwaysLoaded: false, followedUp: true, viaSubagent: false, unknown: false },
+      { path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false, viaSubagent: false, unknown: true },
+      { path: '.claude/rules/adr-0008.md', alwaysLoaded: false, followedUp: true, viaSubagent: false, unknown: true },
     ])
   })
 
@@ -417,9 +417,25 @@ describe('sessionCardViews', () => {
     })
     const [c] = sessionCardViews([s], { '.claude/rules/adr-0012.md': 'ADR-0012: Pingbacks' })
     expect(c!.rules).toEqual([
-      { path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false, viaSubagent: false, unknown: false, reason: undefined, useful: undefined },
+      { path: '.claude/rules/adr-0004.md', alwaysLoaded: false, followedUp: false, viaSubagent: false, unknown: true, reason: undefined, useful: undefined },
       { path: '.claude/rules/adr-0012.md', title: 'ADR-0012: Pingbacks', alwaysLoaded: false, followedUp: true, viaSubagent: true, unknown: false, reason: 'Triage #12 reported: named the pingback rule', useful: 'yes' },
       { path: '.claude/rules/adr-0021.md', alwaysLoaded: false, followedUp: false, viaSubagent: true, unknown: true, reason: undefined, useful: undefined },
+    ])
+  })
+
+  // Issue #2607: a main-session or always-loaded rule left without a verdict is
+  // unknown too, so the gap shows on the card.
+  it('marks every loaded rule with no verdict as unknown, main-session ones included', () => {
+    const s = session({
+      rulesGlobal: ['.claude/rules/adr-0003.md'],
+      rulesLoaded: ['.claude/rules/adr-0010.md', '.claude/rules/adr-0022.md'],
+      ruleVerdicts: [{ path: '.claude/rules/adr-0022.md', reason: 'r', useful: 'no' }],
+    })
+    const [c] = sessionCardViews([s])
+    expect(c!.rules.map((r) => [r.path, r.unknown])).toEqual([
+      ['.claude/rules/adr-0003.md', true],
+      ['.claude/rules/adr-0010.md', true],
+      ['.claude/rules/adr-0022.md', false],
     ])
   })
 
