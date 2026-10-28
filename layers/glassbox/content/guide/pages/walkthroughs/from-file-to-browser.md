@@ -1,7 +1,7 @@
 ---
 title: From file to browser
 description: How a Markdown file in a Tenant folder becomes a table, a dump, a rendered page and a payload the browser reuses.
-revision: 'e8cc785faceaf503224e5cb0e0367a9929e624c4'
+revision: 'ad9cea61188090fc6062574652f68385bc4b94d6'
 revisionDate: '2026-10-28'
 ---
 
