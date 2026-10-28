@@ -157,15 +157,18 @@ the diff, leave the PR open for a human.
 
 File the rest:
 
-- **Out-of-remit findings** (a new Subject, a change to the bar or the page
-  checks) go into the open issue titled
-  `glassbox-improve: out-of-remit findings`: one comment per run listing the
-  new ones. If that issue isn't open, open it labelled `needs-triage`, body
-  per `docs/agents/issue-tracker.md`.
+- **Problems the run hit** (a step that misfired, a rule in the bar or a page
+  check that got in the way) are Frictions in the session log, even when the
+  fix would change the bar; the Friction Ledger clusters them across runs.
+- **Proposals** outside the Remit that the run didn't hit (a new Subject, a
+  rater's change to the bar or the page checks): search open issues first,
+  and file one issue each, labelled `needs-triage`, body per
+  `docs/agents/issue-tracker.md`, only where none covers it.
 - **Ideas for the owner** go into the session log's `ideas`, one line each:
   proposed `DECISIONS.md` lines (an undo you refused, a rater split you
   settled), retitles the raters didn't agree on, and drafts too far from the
   bar to promote.
 
-Done when both are written and `pnpm check:worktrees` exits 0. Then invoke
-`close-session`.
+A deficit or structural step that missed the caps needs no record: the next
+run's raters find it again. Done when every Friction, issue and idea is
+written and `pnpm check:worktrees` exits 0. Then invoke `close-session`.
