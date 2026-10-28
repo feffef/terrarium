@@ -1,16 +1,18 @@
 schemaVersion: 1
 session: session_013zxzeTK9c2HVcabwCx3b18
 startedAt: 2026-10-28T11:20:30Z
-endedAt: 2026-10-28T11:49:22Z
-kind: delegated
+endedAt: 2026-10-28T13:52:46Z
+kind: interactive
 goal: Clear the issue backlog in one run
-status: blocked
-outcome: 3 PRs merged and 1 issue closed as done; 8 owner questions on 7 issues pending
-summary: "Human-instructed: the owner invoked /clear-backlog. Agent-initiated within that Skill: the sweep set (11 needs-triage plus ready-for-agent #2472; four ready-for-human issues skipped because an agent wrote the last comment; no open external PRs), the explore run (wf_2a05bbb8-011) and the build run (wf_82f752f1-150). Triage closed #2105 as done (fixed by PR #2620), held #2575 until its 2026-10-30 date gate, marked #2608 and #2631 ready-for-agent, and sent 7 issues to the grilling. I split the proposed #2370+#2472 group: #2472 is a one-sentence change the owner already decided on 10-26, while #2370 waits on a grill answer. Built and opened PR #2638 (#2472: renames and moves are never simple changes; I moved the rule into the bar's \"In every case\" clause by hand, closing a reviewer-flagged gap where a rename could pass as a path fix), PR #2639 (#2608: a unit spec parsing every SKILL.md's frontmatter) and PR #2640 (#2631: prune-friction-ledger sends large --summary and --candidates output to a file). All three merged via merge-pr.ts after green CI and verdict comments, closing #2472, #2608 and #2631; worktrees removed and check:worktrees passes. Blocked on the owner: 8 grilling questions (#2370, #2633, #2607, #2632, #2611, #2610, #2612, plus the glassbox restamp side finding on #2472) are unanswered, so their builds have not started."
+status: in-review
+outcome: 3 PRs merged; 7 grilled issues decided, 2 more PRs open and 4 branches building
+summary: "Human-instructed: the owner invoked /clear-backlog. Agent-initiated within that Skill: the sweep set (11 needs-triage plus ready-for-agent #2472; four ready-for-human issues skipped because an agent wrote the last comment; no open external PRs), the explore run (wf_2a05bbb8-011) and the build run (wf_82f752f1-150). Triage closed #2105 as done (fixed by PR #2620), held #2575 until its 2026-10-30 date gate, marked #2608 and #2631 ready-for-agent, and sent 7 issues to the grilling. I split the proposed #2370+#2472 group: #2472 is a one-sentence change the owner already decided on 10-26, while #2370 waits on a grill answer. Built and opened PR #2638 (#2472: renames and moves are never simple changes; I moved the rule into the bar's \"In every case\" clause by hand, closing a reviewer-flagged gap where a rename could pass as a path fix), PR #2639 (#2608: a unit spec parsing every SKILL.md's frontmatter) and PR #2640 (#2631: prune-friction-ledger sends large --summary and --candidates output to a file). All three merged via merge-pr.ts after green CI and verdict comments, closing #2472, #2608 and #2631; worktrees removed and check:worktrees passes. Owner then answered the grilling (human-instructed): 1b (#2370 one more prose fix), 6a (#2610 fix at each source), 9a (#2633 drop in-full as a CLAUDE.md requirement, still encourage it, mark the ledger entry accepted so partial reads stop being Frictions), 7b (#2612 document the guard forms once the environment-caveats Prune Trial is judged; labelled ready-for-agent with an on-hold note), and my picks for #2607, #2632 and #2611. Opened PR #2642 (#2370) and PR #2643 (#2610, two of four fixes; the ledger-grouping fix was already done by #2540 and the trimmed-id one had no committed source). Building #2633, #2607, #2632 and #2611 in run wf_c1142f45-ec7."
 prs:
   - "2638"
   - "2639"
   - "2640"
+  - "2642"
+  - "2643"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
     reason: "step 1 sweep-set rules and the human-last-comment test; subagents: triage #2105: The brief required it; gave the close rule (already-implemented means close as wontfix with a pointer); triage #2370: Required by the brief; the brave/escalate line and the obsolete-issue handling; triage #2607: The brief required it; supplied the per-issue triage rules; triage #2608: The brief told me to read it. It supplied the brave-within-determinability rule and the label and comment rules.; triage #2610: Required by the brief; gave the per-issue sweep rules; triage #2611: The brief required it; it set the per-issue rules and the comment-on-uncommented rule; triage #2612: The brief required it; per-issue sweep rules; triage #2631: The brief told me to read it; it sets the brave and determinability line and the comment and label rules; triage #2632: Brief said to read it; it gave the brave/determinability rule and the comment-on-uncommented rule; triage #2633: Required by the brief; brave/determinability and closing rules"
@@ -105,6 +107,9 @@ docsRead:
   - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
     reason: a triage subagent read it via shell for its issue; its reply gave no verdict for it
     useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: "saw it as the #2610 build diff, checking the repo-relative path fix"
+    useful: partly
   - path: layers/journal/content/current/frictions/subagent-brief-defects.yml
     reason: (no reason given)
   - path: layers/journal/content/current/frictions/worktree-guard-blocks-compound-bash.yml
@@ -112,11 +117,19 @@ docsRead:
   - path: layers/journal/content/current/frictions/harness-proxy-blocks.yml
     reason: (no reason given)
   - path: layers/journal/content/current/frictions/required-doc-read-truncated.yml
-    reason: (no reason given)
+    reason: (read before editing)
   - path: tests/unit/skill-frontmatter.spec.ts
     reason: (read before editing)
   - path: .agents/skills/frictions-to-fixes/tests/unit/prune-friction-ledger.spec.ts
     reason: (read before editing)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/journal/tests/unit/journal-dashboard.spec.ts
+    reason: (read before editing)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -139,28 +152,43 @@ frictions:
   - description: A stray bare cat redirect in a compound Bash command waited on stdin and hung the log-merge step past the 120s timeout.
     solution: Write helper scripts with the Write tool rather than shell heredocs in long compound commands.
     severity: minor
-durationSec: 1732
+  - description: The build workflow refused branch name fix/2611-docs-github-raw-fetch because it contains git (in github); one wasted launch.
+    solution: Make the branch-name guard match git as a word, not a substring, or say so in clear-backlog section 3.
+    severity: nit
+durationSec: 9136
 models:
-  claude-opus-5-5: 101
+  claude-opus-5-5: 168
 toolCounts:
-  Bash: 31
-  Read: 6
-  Workflow: 3
-  ToolSearch: 3
-  PushNotification: 1
-  mcp__github__create_pull_request: 3
-  mcp__claude-code-remote__subscribe_pr_activity: 3
+  Bash: 46
+  Read: 8
+  Workflow: 6
+  ToolSearch: 4
+  PushNotification: 3
+  mcp__github__create_pull_request: 5
+  mcp__claude-code-remote__subscribe_pr_activity: 5
   Skill: 2
   TaskStop: 1
   Write: 1
-  ReadNotifications: 1
-  mcp__github__add_issue_comment: 3
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 10
   mcp__claude-code-remote__unsubscribe_pr_activity: 3
+  mcp__github__issue_write: 7
 filesEdited:
   - .throwaway/orchestrator/merge.mjs
   - tests/unit/skill-frontmatter.spec.ts
   - .agents/skills/frictions-to-fixes/tests/unit/prune-friction-ledger.spec.ts
   - .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts
+  - .agents/skills/inspect-session/SKILL.md
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/app/components/journal/SessionCard.vue
+  - .throwaway/fix-2607/check.ts
+  - .agents/skills/visitor-loop/SKILL.md
+  - CLAUDE.md
+  - layers/journal/content/current/frictions/required-doc-read-truncated.yml
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/blog-post/SKILL.md
   - docs/agents/pr-workflow.md
 rulesLoaded:
   - .claude/rules/adr-0022.md
@@ -175,6 +203,9 @@ rulesLoaded:
   - .claude/rules/tenant-glossary.md
   - .claude/rules/tenant-layers.md
   - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/glossary-terms.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -187,6 +218,7 @@ rulesFollowedUp:
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0008.md
 adrHints:
   - adr: 27
     via: path
@@ -204,16 +236,26 @@ adrHints:
     via: path
     readAfter: true
     by: subagent
+  - adr: 8
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 28
+    via: path
+    readAfter: false
+    by: subagent
 rulesLoadedBySubagents:
-  - .claude/rules/adr-0030.md
   - .claude/rules/adr-0015.md
   - .claude/rules/adr-0010.md
   - .claude/rules/adr-0026.md
   - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
 docsReadBySubagents:
   - .agents/skills/triage/SKILL.md
-  - docs/agents/issue-tracker.md
-  - docs/agents/triage-labels.md
   - docs/adr/0022-autonomous-triage-sweep.md
   - .agents/skills/inspect-session/SKILL.md
   - docs/agents/environment-caveats.md
@@ -223,7 +265,6 @@ docsReadBySubagents:
   - .agents/skills/visitor-loop/refiner-brief.md
   - docs/adr/0003-agent-operating-model-and-governance.md
   - docs/adr/0027-prune-trials.md
-  - .agents/skills/blog-post/SKILL.md
   - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - .agents/skills/log-session/SKILL.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
@@ -231,6 +272,9 @@ docsReadBySubagents:
   - .agents/skills/implement/SKILL.md
   - docs/adr/0005-skill-model.md
   - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - layers/journal/GLOSSARY.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/agents/verifying-ui-changes.md
 ruleVerdicts:
   - path: .claude/rules/adr-0003.md
     reason: "orchestrator: Open the PR at once after push and subscribe; summary enough; subagents: triage #2370: Loaded at session start; confirmed the sweep builds nothing; triage #2607: Loaded at session start; confirmed triage builds nothing; triage #2608: Loaded at session start. It covers new-work approval.; triage #2610: Loaded at session start; general approval context; triage #2611: Loaded at session start; confirmed this run only labels; triage #2632: Loaded at session start; context on approval of new work (option 2 would be a new script); triage #2633: Loaded at session start; confirmed that a new guard counts as new work that needs approval"
@@ -295,6 +339,12 @@ ruleVerdicts:
   - path: .claude/rules/ui-verification.md
     reason: "orchestrator: Loaded on reading SessionCard.vue; no UI change; subagents: triage #2607: Loaded when I read SessionCard.vue; I made no UI change"
     useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded when I grepped GLOSSARY files; no glossary term was added or changed
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded on the same grep; no term changed
+    useful: no
 subagents:
   - type: workflow-subagent
     task: "triage #2472"
@@ -302,189 +352,357 @@ subagents:
     durationSec: 82
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 2.9
+    tokenShare: 1.7
   - type: workflow-subagent
     task: "triage #2610"
     model: claude-opus-5-5
     durationSec: 110
     toolCalls: 20
     modelCalls: 11
-    tokenShare: 3.6
+    tokenShare: 2.1
   - type: workflow-subagent
     task: "triage #2612"
     model: claude-opus-5-5
     durationSec: 99
     toolCalls: 21
     modelCalls: 11
-    tokenShare: 3.5
+    tokenShare: 2
   - type: workflow-subagent
     task: "triage #2631"
     model: claude-opus-5-5
     durationSec: 176
     toolCalls: 28
     modelCalls: 21
-    tokenShare: 6.3
+    tokenShare: 3.6
   - type: workflow-subagent
     task: "triage #2632"
     model: claude-opus-5-5
     durationSec: 149
     toolCalls: 24
     modelCalls: 16
-    tokenShare: 4.9
+    tokenShare: 2.8
   - type: workflow-subagent
     task: "triage #2105"
     model: claude-opus-5-5
     durationSec: 93
     toolCalls: 17
     modelCalls: 11
-    tokenShare: 3.5
+    tokenShare: 2
   - type: workflow-subagent
     task: "triage #2575"
     model: claude-opus-5-5
     durationSec: 24
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.2
+    tokenShare: 0.7
   - type: workflow-subagent
     task: "triage #2608"
     model: claude-opus-5-5
     durationSec: 151
     toolCalls: 24
     modelCalls: 17
-    tokenShare: 5
+    tokenShare: 2.9
   - type: workflow-subagent
     task: "triage #2370"
     model: claude-opus-5-5
     durationSec: 107
     toolCalls: 18
     modelCalls: 10
-    tokenShare: 3.5
+    tokenShare: 2
   - type: workflow-subagent
     task: "triage #2611"
     model: claude-opus-5-5
     durationSec: 81
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 2.7
+    tokenShare: 1.5
   - type: workflow-subagent
     task: "triage #2607"
     model: claude-opus-5-5
     durationSec: 175
     toolCalls: 30
     modelCalls: 20
-    tokenShare: 6.2
+    tokenShare: 3.5
   - type: workflow-subagent
     task: "triage #2633"
     model: claude-opus-5-5
     durationSec: 132
     toolCalls: 22
     modelCalls: 14
-    tokenShare: 5.4
+    tokenShare: 3.1
   - type: workflow-subagent
     task: Standards fix/2631-friction-ledger-output-file r1
     model: claude-opus-5-5
     durationSec: 37
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 0.7
   - type: workflow-subagent
     task: fix fix/2608-skill-frontmatter-spec r1
     model: claude-sonnet-5-5
     durationSec: 231
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 1.1
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec fix/2631-friction-ledger-output-file r1
     model: claude-opus-5-5
     durationSec: 50
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1.6
+    tokenShare: 0.9
   - type: workflow-subagent
     task: build fix/2472-renames-not-simple
     model: claude-sonnet-5-5
     durationSec: 129
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 3
+    tokenShare: 1.7
   - type: workflow-subagent
     task: Standards fix/2472-renames-not-simple r1
     model: claude-opus-5-5
     durationSec: 45
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 2.2
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards fix/2608-skill-frontmatter-spec r2
     model: claude-opus-5-5
     durationSec: 41
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.2
+    tokenShare: 0.7
   - type: workflow-subagent
     task: gate fix/2608-skill-frontmatter-spec
     model: claude-sonnet-5-5
     durationSec: 190
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.7
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Spec fix/2472-renames-not-simple r1
     model: claude-opus-5-5
     durationSec: 41
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Spec fix/2608-skill-frontmatter-spec r2
     model: claude-opus-5-5
     durationSec: 49
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1.7
+    tokenShare: 1
   - type: workflow-subagent
     task: gate fix/2631-friction-ledger-output-file
     model: claude-opus-5-5
     durationSec: 127
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.5
   - type: workflow-subagent
     task: gate fix/2472-renames-not-simple
     model: claude-sonnet-5-5
     durationSec: 52
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.7
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Standards fix/2608-skill-frontmatter-spec r1
     model: claude-opus-5-5
     durationSec: 66
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 0.7
   - type: workflow-subagent
     task: build fix/2631-friction-ledger-output-file
     model: claude-opus-5-5
     durationSec: 378
     toolCalls: 35
     modelCalls: 21
-    tokenShare: 6.4
+    tokenShare: 3.7
   - type: workflow-subagent
     task: Spec fix/2608-skill-frontmatter-spec r1
     model: claude-opus-5-5
     durationSec: 50
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1.5
+    tokenShare: 0.9
   - type: workflow-subagent
     task: build fix/2608-skill-frontmatter-spec
     model: claude-sonnet-5-5
     durationSec: 352
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 3.2
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: gate fix/2370-blog-post-single-review
+    model: claude-sonnet-5-5
+    durationSec: 62
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.4
+  - type: workflow-subagent
+    task: Standards fix/2370-blog-post-single-review r1
+    model: claude-opus-5-5
+    durationSec: 34
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: gate fix/2610-brief-defect-sources
+    model: claude-opus-5-5
+    durationSec: 361
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: Standards fix/2610-brief-defect-sources r1
+    model: claude-opus-5-5
+    durationSec: 56
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 1
+  - type: workflow-subagent
+    task: build fix/2370-blog-post-single-review
+    model: claude-sonnet-5-5
+    durationSec: 134
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 1.7
+  - type: workflow-subagent
+    task: Spec fix/2610-brief-defect-sources r1
+    model: claude-opus-5-5
+    durationSec: 75
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: build fix/2610-brief-defect-sources
+    model: claude-opus-5-5
+    durationSec: 624
+    toolCalls: 25
+    modelCalls: 22
+    tokenShare: 4.2
+  - type: workflow-subagent
+    task: Spec fix/2370-blog-post-single-review r1
+    model: claude-opus-5-5
+    durationSec: 37
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: gate fix/2611-docs-raw-fetch
+    model: claude-sonnet-5-5
+    durationSec: 65
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.4
+  - type: workflow-subagent
+    task: fix fix/2632-visitor-loop-list-not-search r1
+    model: claude-sonnet-5-5
+    durationSec: 93
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: build fix/2607-show-missing-verdicts
+    model: claude-opus-5-5
+    durationSec: 520
+    toolCalls: 42
+    modelCalls: 31
+    tokenShare: 4.2
+  - type: workflow-subagent
+    task: build fix/2632-visitor-loop-list-not-search
+    model: claude-sonnet-5-5
+    durationSec: 571
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 1.5
+  - type: workflow-subagent
+    task: Standards fix/2632-visitor-loop-list-not-search r1
+    model: claude-opus-5-5
+    durationSec: 24
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: Spec fix/2632-visitor-loop-list-not-search r2
+    model: claude-opus-5-5
+    durationSec: 41
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: Standards fix/2611-docs-raw-fetch r1
+    model: claude-opus-5-5
+    durationSec: 27
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: build fix/2633-required-docs-wording
+    model: claude-sonnet-5-5
+    durationSec: 749
+    toolCalls: 14
+    modelCalls: 11
+    tokenShare: 1.9
+  - type: workflow-subagent
+    task: Standards fix/2632-visitor-loop-list-not-search r2
+    model: claude-opus-5-5
+    durationSec: 31
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: build fix/2611-docs-raw-fetch
+    model: claude-sonnet-5-5
+    durationSec: 180
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: Spec fix/2633-required-docs-wording r1
+    model: claude-opus-5-5
+    durationSec: 77
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: Spec fix/2611-docs-raw-fetch r1
+    model: claude-opus-5-5
+    durationSec: 28
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: Standards fix/2633-required-docs-wording r1
+    model: claude-opus-5-5
+    durationSec: 38
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Spec fix/2632-visitor-loop-list-not-search r1
+    model: claude-opus-5-5
+    durationSec: 52
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: fix fix/2633-required-docs-wording r1
+    model: claude-sonnet-5-5
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.5
+  - type: workflow-subagent
+    task: gate fix/2632-visitor-loop-list-not-search
+    model: claude-sonnet-5-5
+    durationSec: 95
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.4
 gitBranch: ccr-c2b283ea-4e7e7y
 entrypoint: remote_mobile
 cliVersion: 2.1.312
