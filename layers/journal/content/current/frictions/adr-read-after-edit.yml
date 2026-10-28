@@ -1,0 +1,42 @@
+name: adr-read-after-edit
+surface: guard-or-hook
+summary: Agents read a governing ADR only after the hint that names it fired on their first edit, and the late read changed nothing.
+cause: "Since PR #2431, adr-read-hint.ts names an unread ADR whose rule governs a file after an Edit or Write (PR #2570: a git commit) to it, so a session that edits first reads the ADR afterwards; the page or edit was already right. Signals: 'the post-write hook prompted the read', 'read only after the first edit', 'the late read changed nothing', 'hint worked as designed'."
+status: open
+ref: "Comes from PR #2431, the fix for full-adr-read-skipped (acting on an ADR summary without the full ADR)."
+occurrences:
+  - session: session_015Nvs8t9mqbbyFbkR9Pb1nk
+    date: "2026-10-24"
+    severity: nit
+    description: "Wrote the Digest before reading ADR-0010 in full; the post-write hook prompted the read. The page was already right."
+    solution: "The digest Skill could name ADR-0010 as read-first, or the rule could load on reading the Skill."
+  - session: session_019nDDDS9GsXdTKWK44j18fT
+    date: "2026-10-24"
+    severity: nit
+    description: "Edited SKILL.md before reading ADR-0005, ADR-0015 and ADR-0027 in full; the hook asked for them after the edit, and they confirmed the edit."
+    solution: "Read the governing ADRs a Skill file loads before the first edit, not after."
+  - session: session_01FDWjoePShpq7fov1iKn4GB
+    date: "2026-10-25"
+    severity: nit
+    description: "Wrote the Digest before reading ADR-0010 in full; the post-write hook prompted the read. The page was already right."
+    solution: "Read the ADR before the Write, as the digest Skill's rule summary implies"
+  - session: session_013Hy2tG56JDVU7649kkyZCb
+    date: "2026-10-25"
+    severity: nit
+    description: "ADR-0027/0029 were read only after the first edit, when the post-edit hook prompted them, not before."
+    solution: "The hook caught it; read the governing ADRs before editing a doc."
+  - session: session_014yTcrjFw1Qa6ABqQoGpzYq
+    date: "2026-10-26"
+    severity: nit
+    description: "Wrote the Digest before reading ADR-0010 in full; the post-write hook prompted the read. The page was already right."
+    solution: "Name ADR-0010 as a read-first in the digest Skill's step 3."
+  - session: session_013zxzePJnRATi9QoJAjCxgq
+    date: "2026-10-27"
+    severity: minor
+    description: "Hooks asked for three ADRs and two docs only after I had written the file, so those reads came late and changed nothing."
+    solution: "Read ADR-0027 before editing; the post-write hint for ADR-0029 and ADR-0017 was noise for a wording-only rewrite."
+  - session: session_013zxzeSSnD8PnNngq431n1o
+    date: "2026-10-27"
+    severity: nit
+    description: "Edited docs/agents/guards.md before reading ADR-0027 and ADR-0029, which the adr-read hint then demanded"
+    solution: "Hint worked as designed; the late read changed nothing"

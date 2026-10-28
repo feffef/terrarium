@@ -1,8 +1,8 @@
 name: close-session-bypassed-by-hand-log
 summary: >-
-  An agent wrote its session log by hand instead of running the closing Skill, so the user had to ask for a proper close.
+  An agent wrote or updated its session log by hand instead of running the closing Skill, so the Skill's steps were skipped and the user could have to ask for a proper close.
 cause: >-
-  A session that has the close-session or log-session text in context (for example from editing it) authors the log directly instead of invoking the Skill, skipping its steps such as the rule re-read. Signals: HUMAN-PROMPTED-CLOSURE after a merge, 'authored the completed log directly', 'having edited a Skill is not having run it'.
+  A session that has the close-session or log-session text in context authors the log directly instead of invoking the Skill, skipping its steps such as the rule re-read. log-session refuses only a completed log after a merge (PR #2536), so a log written by hand at a PR open or a first merge still gets through; a refused completed log belongs in log-session-refuses-hand-closed-log. Signals: HUMAN-PROMPTED-CLOSURE, 'authored the log directly', 'updated the log with log-session directly', 'having edited a Skill is not having run it'.
 surface: safe
 status: open
 ref: "issue #2521 closed by PR #2536"
@@ -13,36 +13,6 @@ occurrences:
     severity: major
     description: "HUMAN-PROMPTED-CLOSURE: after PR #2418 merged I authored the completed log directly instead of invoking close-session (ADR-0009 rule), skipping step 1's rule re-read; the user had to ask for a proper close"
     solution: "Invoke the close-session Skill at every merge, even when its text is in context from editing it; having edited a Skill is not having run it"
-  - session: session_01JJcYmSGnRbUcVyvdPbkGs9
-    date: "2026-10-24"
-    severity: nit
-    description: "Ran log-session --author for the completed log before re-invoking close-session after the merge; the script warned and I corrected it."
-    solution: "After merge, invoke close-session first, then author the log."
-  - session: session_011Rbnf9T9YqNztEcWNXsHsF
-    date: "2026-10-25"
-    severity: nit
-    description: "Hand-authored the completed log before invoking close-session after the merge; log-session.ts warned and I invoked close-session next."
-    solution: "Invoke close-session first after a merge, then author."
-  - session: session_019jfJv6yLmcLUAJiTTomyeu
-    date: "2026-10-25"
-    severity: nit
-    description: "I hand-wrote the completed log with log-session --author after the merges, before invoking close-session; the warning fired and I invoked it afterwards."
-    solution: "After the last merge invoke close-session first; the Skill's closing section could say so for scheduled runs."
-  - session: session_01PGQQj6iUaMYCkphVjFEsBP
-    date: "2026-10-25"
-    severity: nit
-    description: "Set the log to completed by editing the scratch by hand right after the merge, before invoking close-session; the script warned against it."
-    solution: "After merging, invoke close-session first and let it drive the final log."
-  - session: session_017vrdmQQwC4obwbJS9G5Dyg
-    date: "2026-10-25"
-    severity: nit
-    description: "Hand-authored the completed log with log-session --author after the merges, before re-invoking close-session; the warning fired. The same slip I had just filed as regression issue 2521."
-    solution: "After the last merge invoke close-session first, as the Skill says; the ledger run's closing step could name it."
-  - session: session_01WKUyPyRBzirHHAhDr7Y8Ek
-    date: "2026-10-25"
-    severity: nit
-    description: "Hand-authored the completed log with log-session --author right after the merge, before invoking close-session; the script warned and I then invoked it."
-    solution: "Have the merge-pr.ts output remind the caller to invoke close-session, matching the existing warning in log-session."
   - session: session_01PdrNTJLJJMKBGGZfsAhL6w
     date: "2026-10-25"
     severity: nit
@@ -53,8 +23,3 @@ occurrences:
     severity: nit
     description: "After PRs #2564-#2568 opened I re-authored the log with log-session directly instead of re-invoking close-session as the PR-open hook asked; the log stayed current, but the close-session checklist was skipped for those PRs."
     solution: "Re-invoke close-session on each PR-open hook hint, even when the log was just authored."
-  - session: session_013zxzePF1h9UuQNTHz2bNLb
-    date: "2026-10-27"
-    severity: nit
-    description: "Re-authored the log as completed straight through log-session after the merge; it refused until close-session ran, costing one extra call."
-    solution: "After a merge, invoke close-session first, as its re-invoke line says; I went by memory of the earlier flow."

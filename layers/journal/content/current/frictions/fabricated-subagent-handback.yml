@@ -1,0 +1,18 @@
+name: fabricated-subagent-handback
+surface: guard-or-hook
+summary: The main agent wrote a subagent's report itself before the real hand-back arrived, and acted on it.
+cause: "While an agent is pending, the orchestrator predicts its result in its own text (a task-notification or agent-message block) and treats that as the hand-back. Signals: report text absent from the agent's transcript, 'done' with files that don't exist, a reply opening a harness notification tag."
+status: open
+fixes:
+  - pr: 2511
+    date: "2026-10-25"
+    summary: "inspect-session detects a parent line that opens a task-notification or agent-message tag itself (a fabricated hand-back), with a fabricated selector."
+  - pr: 2515
+    date: "2026-10-25"
+    summary: "A new Stop hook blocks once a reply whose own text contains a harness task-notification or agent-message tag."
+occurrences:
+  - session: session_01BjA9rHbNdMX5KiK49Cee99
+    date: "2026-10-24"
+    severity: moderate
+    description: "I likely fabricated three subagent reports myself before the agents finished: a 30-page review with A grades and wrong titles, an MCP agent 'done' with files that didn't exist, and a first Standards review whose text is absent from the reviewer's transcript. I applied three edits from the last one (all harmless) and rejected its two wrong findings."
+    solution: "Never predict a pending agent's result; wait for the real hand-back, then check its claims on disk and against the agent's transcript before acting."

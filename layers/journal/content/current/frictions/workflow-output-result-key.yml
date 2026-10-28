@@ -1,7 +1,7 @@
 name: workflow-output-result-key
 summary: >-
-  Workflow results sat one level deeper than expected, so the first read found nothing.
-cause: A saved Workflow's .output file nests the script's return value under a `result` key, so a first parse of explore/build output finds nothing; clear-backlog/SKILL.md does not say so.
+  Reading what a saved clear-backlog Workflow returned took hand-written parsing: at first the result sat one level deeper than expected, later the helper script lacked the view needed.
+cause: "A saved Workflow's .output nests the script's return value under a `result` key and can run to about 90 KB. #2030 documented the key and run-summary.ts (#2350, #2589) prints triage, build and verdict views, but a view it lacks (a triage brief field, merging several runs into an authored log) sends the orchestrator back to ad-hoc node or YAML scripts. Signals: 'first parse found nothing', 'node -e parser', 'hand-written merge script', 'run-summary.ts could'."
 surface: safe
 status: open
 fixes:

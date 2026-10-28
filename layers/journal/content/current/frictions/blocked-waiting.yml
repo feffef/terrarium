@@ -1,8 +1,8 @@
 name: blocked-waiting
 summary: >-
-  Agents had no allowed way to wait for a long check to finish, so they kept polling.
+  Agents tried to wait for a running check or helper by sleeping, polling or scheduling a wake-up instead of ending the turn, and guards blocked the calls or the loops wasted turns.
 cause: >-
-  Waiting on a backgrounded gate, build or CI needs a sleep the guards deny, so sessions poll with no-op calls or shell backgrounding.
+  Waiting on a backgrounded gate, build, CI run or subagent needs no tool (the completion notification wakes the session), but sessions reach for a foreground sleep (denied), ScheduleWakeup (denied outside /loop), no-op polling calls, a pgrep loop that times out, or a Monitor until-loop that matches the wrong marker or is armed twice. Signals: 'sleep was blocked', 'ScheduleWakeup', 'loop-only guard', 'Monitor until-loop', 'polled', '600s timeout'. A run_in_background call plus a trailing & is double-background.
 surface: guard-or-hook
 status: open
 ref: "issue #1499 closed 2026-10-12 by PR #1825, but #1499 is the worktree-isolation guard, not waiting; nothing tracks this cause"

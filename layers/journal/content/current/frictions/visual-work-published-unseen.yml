@@ -1,8 +1,8 @@
 name: visual-work-published-unseen
 summary: >-
-  Diagrams and layouts went live before a human looked at them, and the human found them poor.
+  Diagrams, illustrations and layouts shipped, or nearly did, without the visual check they needed: the Skill's screenshot step, or a human's look before publishing.
 cause: >-
-  Diagrams, illustrations and layouts ship after the agent's own screenshot check; the human first sees the result after it is published and judges it poor.
+  Visual work ships after at most the agent's own screenshot check, or with that check skipped or not yet back, and the human first sees it once published. Signals: 'screenshot step skipped', 'pushed before the screenshot-review agent returned', a self-merged illustration, unreadable at 390px, the owner judging a published visual poor.
 surface: safe
 status: open
 fixes:

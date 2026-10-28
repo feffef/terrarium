@@ -25,3 +25,8 @@ occurrences:
     severity: nit
     description: "The build workflow could not check out the session branch (held by the main checkout), so it committed on a worktree branch and I had to push HEAD to the session branch by hand."
     solution: "clear-backlog-build could push via HEAD:<name> by design, or the Skill could say the session branch name is always held by the main checkout."
+  - session: session_01VfbgTTxASAKYdiziaLGuXM
+    date: "2026-10-25"
+    severity: minor
+    description: "Re-running a build branch with its worktree did not reuse that worktree: the isolation hook refused git there, so the agent reset its own new worktree branch onto the old tip."
+    solution: "clear-backlog-build: when a worktree is passed, run in it or document that a re-run gets a fresh worktree to fast-forward; the orchestrator pushed HEAD:branch."

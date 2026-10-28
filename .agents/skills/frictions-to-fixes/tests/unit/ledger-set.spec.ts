@@ -60,6 +60,11 @@ describe('setEntry()', () => {
     const withRef = entry.replace('status: open\n', 'status: open\nref: "#1 open"\n')
     expect(setEntry(withRef, { ref: '' })).toBe(entry)
   })
+  it('replaces summary and cause in place, keeping each one\'s style', () => {
+    expect(setEntry(entry, { fields: { summary: 'New.', cause: 'New cause.' } })).toBe(
+      entry.replace('summary: A summary.', 'summary: New.').replace('  A cause.', '  New cause.'),
+    )
+  })
   it('refuses a result the ledger schema rejects, naming the field', () => {
     expect(() => setEntry(entry, { status: 'done' })).toThrow('status')
     const dup = occurrenceBlock({ session: 'a', startedAt: '2026-10-05T01:00:00Z', frictions: [{ severity: 'nit', description: 'e', solution: 't' }] }, 0)
@@ -78,9 +83,11 @@ describe('parseArgs()', () => {
     expect(parseArgs(['x', '--note', 'a', '--note', 'b', '--clear-ref']).changes).toEqual({ notes: ['a', 'b'], ref: '' })
     expect(parseArgs(['y', '--create', '--summary', 'S', '--cause', 'C', '--surface', 'safe']).changes).toEqual({ create: { summary: 'S', cause: 'C', surface: 'safe' } })
   })
-  it('refuses a ref clear combined with a --ref, and a create field without --create', () => {
+  it('reads a text field without --create as an edit', () => {
+    expect(parseArgs(['x', '--summary', 'S']).changes).toEqual({ fields: { summary: 'S' } })
+  })
+  it('refuses a ref clear combined with a --ref', () => {
     expect(() => parseArgs(['x', '--ref', 'r', '--clear-ref'])).toThrow('ref given twice')
-    expect(() => parseArgs(['x', '--summary', 'S'])).toThrow('--summary needs --create')
   })
   it('refuses --replace-fixes without a --fix, which would empty the list', () => {
     expect(() => setEntry(entry, parseArgs(['x', '--replace-fixes']).changes)).toThrow('--replace-fixes needs at least one --fix')

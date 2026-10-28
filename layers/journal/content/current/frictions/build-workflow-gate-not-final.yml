@@ -1,8 +1,8 @@
 name: build-workflow-gate-not-final
 summary: >-
-  The backlog build workflow reported a passing check that had not run on the branch's final commit.
+  The backlog build workflow trusted a helper agent's word on the gate instead of a gate run on the branch's final commit, so it reported a pass that had not run or failed a branch that was green.
 cause: >-
-  clear-backlog-build returns gatePassed from a gate:scoped run that may predate its last review-fix round, and clear-backlog section 3 does not say whether the orchestrator re-runs the gate before pushing. Signals: 'reported gatePassed while saying it had not rerun the gate', pushing on the workflow's gatePassed.
+  clear-backlog-build returns gatePassed from a gate:scoped run that may predate its last review-fix round, or a fix round's own report, and clear-backlog section 3 does not say whether the orchestrator re-runs the gate before pushing. Signals: 'reported gatePassed while saying it had not rerun the gate', pushing on the workflow's gatePassed, 'returned as failed though the fix round was done'.
 surface: safe
 status: open
 ref: "issue #2523 closed by PR #2532"

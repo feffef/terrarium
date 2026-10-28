@@ -1,8 +1,8 @@
 name: clear-backlog-explore-transitive-grouping
 summary: >-
-  The backlog Skill's explore step put unrelated issues on one branch because it chained them through other issues' shared files.
+  The backlog Skill's explore step put issues on one branch on file overlaps that did not mean they should share a branch.
 cause: >-
-  .claude/workflows/clear-backlog-explore.js unions issues by any shared file or relatedTo link with union-find, so the connected component can hold issues that share no file with each other. Signals: "chained", "grouping bundled", regroup by hand.
+  The clear-backlog explore grouping (clear-backlog-explore.js, run-summary.ts) puts issues on one branch that should not share one: before PR #2158 by union-find chaining through other issues' files; since, by a direct overlap on a file one result lists only as background, or by grouping a build-ready issue with one sent to grilling. Signals: 'chained', 'grouping bundled', 'listed ... only as background', a ready build held up by a grill issue, regroup by hand.
 surface: safe
 status: open
 ref: "Issue #2147 closed by PR #2158 (merged 2026-10-16); no test exercises the grouping."

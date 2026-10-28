@@ -1,0 +1,42 @@
+name: log-session-refuses-hand-closed-log
+surface: safe
+summary: After a merge, agents wrote the completed session log by hand, so the logging script warned or refused and they had to run the closing Skill and try again.
+cause: "log-session --author warns (PR #2452) and, since PR #2536, refuses a completed log after a merge with no close-session call, so a session that authors the log first loses a call and then invokes close-session. Signals: 'the script warned', 'warning fired', 'refused until close-session ran', 'one extra call'."
+status: open
+ref: "Comes from the fixes PR #2452 and #2536 for close-session-bypassed-by-hand-log (a log closed by hand, skipping close-session, so the user had to ask for a proper close)."
+occurrences:
+  - session: session_01JJcYmSGnRbUcVyvdPbkGs9
+    date: "2026-10-24"
+    severity: nit
+    description: "Ran log-session --author for the completed log before re-invoking close-session after the merge; the script warned and I corrected it."
+    solution: "After merge, invoke close-session first, then author the log."
+  - session: session_011Rbnf9T9YqNztEcWNXsHsF
+    date: "2026-10-25"
+    severity: nit
+    description: "Hand-authored the completed log before invoking close-session after the merge; log-session.ts warned and I invoked close-session next."
+    solution: "Invoke close-session first after a merge, then author."
+  - session: session_019jfJv6yLmcLUAJiTTomyeu
+    date: "2026-10-25"
+    severity: nit
+    description: "I hand-wrote the completed log with log-session --author after the merges, before invoking close-session; the warning fired and I invoked it afterwards."
+    solution: "After the last merge invoke close-session first; the Skill's closing section could say so for scheduled runs."
+  - session: session_01PGQQj6iUaMYCkphVjFEsBP
+    date: "2026-10-25"
+    severity: nit
+    description: "Set the log to completed by editing the scratch by hand right after the merge, before invoking close-session; the script warned against it."
+    solution: "After merging, invoke close-session first and let it drive the final log."
+  - session: session_017vrdmQQwC4obwbJS9G5Dyg
+    date: "2026-10-25"
+    severity: nit
+    description: "Hand-authored the completed log with log-session --author after the merges, before re-invoking close-session; the warning fired. The same slip I had just filed as regression issue 2521."
+    solution: "After the last merge invoke close-session first, as the Skill says; the ledger run's closing step could name it."
+  - session: session_01WKUyPyRBzirHHAhDr7Y8Ek
+    date: "2026-10-25"
+    severity: nit
+    description: "Hand-authored the completed log with log-session --author right after the merge, before invoking close-session; the script warned and I then invoked it."
+    solution: "Have the merge-pr.ts output remind the caller to invoke close-session, matching the existing warning in log-session."
+  - session: session_013zxzePF1h9UuQNTHz2bNLb
+    date: "2026-10-27"
+    severity: nit
+    description: "Re-authored the log as completed straight through log-session after the merge; it refused until close-session ran, costing one extra call."
+    solution: "After a merge, invoke close-session first, as its re-invoke line says; I went by memory of the earlier flow."

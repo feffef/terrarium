@@ -1,6 +1,6 @@
 name: git-test-output-noise
 summary: Test and gate output printed alarming git messages that were harmless, making it hard to confirm success.
-cause: "Gate and test runs print 'fatal: expected acknowledgments' / no-such-ref push-negotiation lines from git fixtures; the logs look like failures."
+cause: "Gate and test runs print git stderr from fixtures that run git in temp folders ('fatal: expected acknowledgments', no-such-ref push-negotiation lines, 'fatal: not a git repository'); the logs look like failures. Signals: any of those lines in a gate or vitest log."
 surface: safe
 status: open
 ref: Two nits; drop at the next horizon prune unless it recurs.

@@ -1,21 +1,9 @@
-name: github-search-overflow
-summary: >-
-  GitHub searches returned so much text that they flooded the agent's working memory.
-cause: >-
-  mcp__github__search_issues and search_pull_requests return full bodies unless `fields` omits them, so a broad or early query floods context. The guard now denies a search without `fields`. Signals: a search_issues or search_pull_requests result of many full bodies, a guard deny for a missing `fields`.
+name: github-search-fields-guard-deny
+summary: Agents called GitHub search without limiting the returned fields, so a guard refused the call and they had to retry.
+cause: "github-search-fields-guard.ts denies mcp__github__search_issues or search_pull_requests without `fields`; agents omit it, mostly before reading github-integration.md, and resend. Signals: a guard deny for a missing `fields`, 'blocked by the fields guard', a retried search."
 surface: guard-or-hook
 status: on-trial
-ref: "Prune Trial opened 2026-10-25 by PR #2538 (territory: github-integration.md angle-bracket section and the first two 'Overflow and precision traps' bullets; keywords 'Bare angle brackets', 'minimal_output', 'Prefer a repo-scoped listing'). Earlier: PR #2375 trial judged by PR #2493; issue #1860; PR #1869."
-fixes:
-  - pr: 1869
-    date: "2026-10-13"
-    summary: "Added a guard that blocks GitHub search calls that do not limit which fields come back."
-  - pr: 2375
-    date: "2026-10-21"
-    summary: "Tightened the search bullets in github-integration.md to the goal (-4 lines), leaving the fields rule to the search guard's deny message (a Prune Trial)."
-  - pr: 2538
-    date: "2026-10-25"
-    summary: "Cut the angle-bracket and search/list-overflow traps in github-integration.md to the goal, keeping the fields rule."
+ref: "Comes from PR #1869's fix for search results flooding context (the former github-search-overflow cluster). In the Prune Trial opened 2026-10-25 by PR #2538 (territory: github-integration.md's first two 'Overflow and precision traps' bullets), whose check counts a guard deny the session fixes as no damage."
 occurrences:
   - session: session_016Nsq9SWL64V4RqDJPQYodp
     date: "2026-10-19"
@@ -67,3 +55,18 @@ occurrences:
     severity: nit
     description: "search_issues was blocked for a missing fields array; a second call was needed after reading the doc."
     solution: "Put the fields requirement in the audit-skills Skill text where it tells to search open issues."
+  - session: session_01NoQubvnMfCpcq9nkicNsDq
+    date: "2026-10-15"
+    severity: nit
+    description: "Called search_pull_requests without fields before reading github-integration.md, breaking CLAUDE.md's read-first rule; the guard denied it and cost one retry."
+    solution: "None needed; the guard did its job. The read-first line was simply skipped."
+  - session: session_01RfmdPFPhtKo6h6GFwxLeRb
+    date: "2026-10-16"
+    severity: nit
+    description: "My first search_issues call omitted fields and the guard denied it; I read github-integration.md only afterwards, though CLAUDE.md says read it before any GitHub operation."
+    solution: "Read the doc first; the guard message was enough to recover."
+  - session: session_01CXxyUmwkN3Rx5DTSK2s391
+    date: "2026-10-17"
+    severity: nit
+    description: "First batch of six search_issues calls was blocked for lacking the fields argument, wasting a round trip; github-integration.md was read only after that."
+    solution: "Read github-integration.md before the first GitHub call; the Skill's step 3 could name the fields requirement."

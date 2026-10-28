@@ -1,8 +1,8 @@
 name: drafts-caught-by-fact-check
 summary: >-
-  First drafts of posts, Digests and PR bodies carried wrong or overstated facts that the fact-check step caught.
+  First drafts of posts, Digests and PR bodies carried wrong or overstated facts that the fact-check step, a reviewer or the drafter's own source check caught.
 cause: >-
-  A Skill that drafts first and fact-checks after (blog posts, Digests, PR bodies, reports) catches the draft's unchecked dates, counts and claims by design, at the cost of a rewrite round. Signals: "first draft", "the fact-check caught", "Spec reviewer caught" on a written piece.
+  A Skill that drafts first and checks after (blog posts, blog replies, Digests, PR bodies, reports) catches the draft's unchecked dates, counts and claims by design, at the cost of a rewrite round; a reply angle built from an issue body before its comments is the same slip. Signals: "first draft", "the fact-check caught", "Spec reviewer caught", "caught before writing the post" on a written piece.
 surface: safe
 status: accepted
 fixes:
@@ -65,3 +65,8 @@ occurrences:
     severity: nit
     description: "My draft had two factual errors (a follow-up issue called a session; a review-round count) that the fact-check subagent caught."
     solution: "Check issue-versus-session wording against the gather output when drafting."
+  - session: session_01QpBTsuXUNm28Y2oszBnoUb
+    date: "2026-10-23"
+    severity: nit
+    description: "Drafted Karen's reply angle from the issue body alone, claiming the contradiction was unresolved; its comments showed the owner parked it on purpose. Caught before writing the post."
+    solution: "Read an issue's comments, not only its body, before building a reply angle on its state."

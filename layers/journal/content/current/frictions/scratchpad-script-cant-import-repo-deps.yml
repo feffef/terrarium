@@ -1,7 +1,7 @@
 name: scratchpad-script-cant-import-repo-deps
 summary: >-
-  A quick throwaway script could not use the project's libraries, and no doc says how.
-cause: A throwaway tsx script in the scratchpad resolves modules from its own directory, so `import 'yaml'` fails; no doc says to set NODE_PATH or import by absolute path.
+  A quick throwaway script outside the repo could not use the project's libraries or top-level await.
+cause: "A throwaway tsx script outside the repo resolves modules from its own directory, so `import 'yaml'` or playwright-core fails, and a .ts file there runs as CommonJS, so top-level await fails; .throwaway/ (PR #2273) resolves the repo's node_modules, and .mts runs as ESM. Signals: 'cannot find module', 'scratchpad .ts is CJS', 'top-level await', renamed to .mts."
 surface: safe
 status: open
 ref: "issue #2266 closed by PR #2273"

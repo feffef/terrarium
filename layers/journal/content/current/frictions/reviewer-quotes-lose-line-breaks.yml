@@ -1,15 +1,10 @@
-name: reviewer-line-ranges-off
-summary: >-
-  Doc reviewers cited slightly wrong line numbers, so a second pass had to correct them.
-cause: >-
-  audit-docs reviewer subagents cite finding line ranges that are off by one or cover partial sentences, so the checkers must correct them in a second pass.
+name: reviewer-quotes-lose-line-breaks
 surface: safe
+summary: Doc reviewers' quoted sentences did not match the file's line breaks, so exact-text edits failed and had to be redone.
+cause: "Since PR #1821, audit-docs and other doc reviewer subagents quote the sentence instead of citing lines, but they flatten or rewrap multi-line text, so an Edit or scripted replace on the quote fails and a checker must re-find the real text. Signals: 'flat sentences', 'differed in line wrapping', 'exact-string edits failed'."
 status: open
-ref: "PR #1957 (merged 2026-10-14T18:12Z), after commit a4802cf0c; regression flagged in issue #2024"
+ref: "Comes from PR #1821, the fix for the former reviewer-line-ranges-off cluster (reviewers citing wrong line numbers)."
 fixes:
-  - pr: 1821
-    date: "2026-10-12"
-    summary: "Doc-audit reviewers now quote the exact sentence instead of citing a line range."
   - pr: 1957
     date: "2026-10-14"
     summary: "Doc-audit reviewers now keep line breaks when quoting a sentence, so exact-text edits no longer fail."

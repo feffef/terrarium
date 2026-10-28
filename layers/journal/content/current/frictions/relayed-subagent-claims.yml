@@ -16,18 +16,7 @@ fixes:
   - pr: 2485
     date: "2026-10-24"
     summary: "Made each triage side finding in clear-backlog-explore carry a required source (file:line, SHA, URL or 'unverified' plus what would verify it)."
-  - pr: 2511
-    date: "2026-10-25"
-    summary: "inspect-session detects a parent line that opens a task-notification or agent-message tag itself (a fabricated hand-back), with a fabricated selector."
-  - pr: 2515
-    date: "2026-10-25"
-    summary: "A new Stop hook blocks once a reply whose own text contains a harness task-notification or agent-message tag."
 occurrences:
-  - session: session_01E2zbWEQmuUrEhWvbzNpBba
-    date: "2026-10-15"
-    severity: minor
-    description: "The harvest's rater panel twice rated already-done or moot items highly (#96 stale gate, #70 guards that no longer exist); only my own code check caught it."
-    solution: "Brief raters to verify each premise in code before scoring."
   - session: session_013RCsUF234qAGu3CJr3v2on
     date: "2026-10-16"
     severity: minor
@@ -83,26 +72,11 @@ occurrences:
     severity: minor
     description: "Relayed the Fable agent's derived-log-field option without checking that the authored relevantAdrs field already existed; the owner asked and I found it then."
     solution: "Grep shared/schemas/session.ts for a field before relaying a proposal that adds one."
-  - session: session_01Hw8mVJmgWejGc6YWi8ngnm
-    date: "2026-10-23"
-    severity: nit
-    description: "One concision reviewer claimed a guard enforces ToolSearch-before-call; the checker found the premise false, so the finding was dropped."
-    solution: "Tell reviewers to verify any claim about a mechanism before reporting a cut that depends on it."
-  - session: session_01BjA9rHbNdMX5KiK49Cee99
-    date: "2026-10-24"
-    severity: moderate
-    description: "I likely fabricated three subagent reports myself before the agents finished: a 30-page review with A grades and wrong titles, an MCP agent 'done' with files that didn't exist, and a first Standards review whose text is absent from the reviewer's transcript. I applied three edits from the last one (all harmless) and rejected its two wrong findings."
-    solution: "Never predict a pending agent's result; wait for the real hand-back, then check its claims on disk and against the agent's transcript before acting."
   - session: session_01XUmLg8WmTPPmqqnjHA59oX
     date: "2026-10-24"
     severity: minor
     description: "Ledger first said a #1712 was 'read by the subagent' and that #2233 showed the inherited-commits advice failed; Spec review caught both overstatements."
     solution: "Cite only what I read this run and check each issue is about the rule being pruned before naming it as its failure."
-  - session: session_016edAfTmLE1szSBGNZTorPH
-    date: "2026-10-25"
-    severity: minor
-    description: "The Standards reviewer called the brief's 'gh pr view is blocked' drift after grepping docs/agents for 'blocked', missing github-integration.md's table that lists it as GraphQL-backed and blocked in the cloud; verifying cost a lookup."
-    solution: "A review brief that names github-integration.md among the standards sources whenever the diff cites a gh command; the brief now cites the doc itself."
   - session: session_01S9UeKa9mCWdPVBjAezCSaL
     date: "2026-10-25"
     severity: minor
@@ -123,11 +97,6 @@ occurrences:
     severity: nit
     description: "The triage agent for #2558 said a ledger occurrence was allowed by the rule; I could not verify that cheaply and flagged it as unverified in the grilling."
     solution: "Have triage cite the exact rule line and session log line for an 'allowed by rule' claim."
-  - session: session_01NHL7eNYVjV814TB7bS83kv
-    date: "2026-10-26"
-    severity: nit
-    description: "A Standards reviewer wrongly claimed the closureRefusal line anchor was off by one and a Spec reviewer wrongly said +33 -20 was one commit's numstat; both needed my own git and API checks."
-    solution: "Brief reviewers to verify anchors with git show before calling them wrong."
   - session: session_013zxzeQ8EBq9v7NXqWmAFRF
     date: "2026-10-27"
     severity: minor

@@ -2,10 +2,9 @@ name: dispatch-subagents-skill-unread
 summary: >-
   Agents dispatched subagents or a workflow without first reading the dispatch-subagents Skill.
 cause: >-
-  CLAUDE.md's dispatch-subagents trigger is prose with no hint (read-first-hint.ts covers only git, GitHub and screenshots), and agents read it as not covering read-only git or a saved workflow (clear-backlog-build, explore) that dispatches for them. Signals: "without reading the dispatch-subagents Skill", "read-only git diff", "the workflow does the dispatch".
+  Agents dispatch before reading the dispatch-subagents Skill, reading CLAUDE.md's trigger as not covering read-only git or a saved workflow (clear-backlog-build, explore) that dispatches for them, so a brief goes out without its rules; the #2484 hint fires only after the call. Since #2550 a guard refuses the dispatch instead; those refusals are dispatch-read-guard-deny. Signals: 'without reading the dispatch-subagents Skill', 'read-only git diff', 'the workflow does the dispatch', a hint after the dispatch.
 surface: safe
-status: accepted
-ref: "issue #2580 closed not planned on 2026-10-27: the owner accepts the one-retry cost of the #2550 dispatch-read guard; saved workflows stay unexempted, since clear-backlog-build takes orchestrator-written briefs."
+status: open
 fixes:
   - pr: 2448
     date: "2026-10-23"
@@ -77,38 +76,3 @@ occurrences:
     severity: nit
     description: "Read the dispatch-subagents Skill only after the first Workflow call (CLAUDE.md trigger: before writing a subagent brief); the hint caught it, no harm."
     solution: "Owner chose a deny guard for this (#2543), being built in this run."
-  - session: session_01Cb8ETAZztznLYx6CC7MKyE
-    date: "2026-10-26"
-    severity: nit
-    description: "Workflow call for clear-backlog-explore was blocked by the dispatch-read guard because I had not read dispatch-subagents first (CLAUDE.md trigger)."
-    solution: "clear-backlog SKILL.md §1 could say to read dispatch-subagents before the first Workflow call, or the guard could exempt saved workflows that brief their own agents."
-  - session: session_01NHL7eNYVjV814TB7bS83kv
-    date: "2026-10-26"
-    severity: nit
-    description: "Wrote the blind-reader brief and called Agent before reading dispatch-subagents, so the dispatch-read guard denied the call, though CLAUDE.md says read it before writing a brief."
-    solution: "Read dispatch-subagents at the first sign of a subagent step; the guard caught it at the cost of one retry."
-  - session: session_01C8G2W6ZfQN7WE4UNUi2GzA
-    date: "2026-10-26"
-    severity: minor
-    description: "Dispatched the three visitor agents before reading dispatch-subagents SKILL.md; the dispatch-read guard blocked all three calls, costing a round trip."
-    solution: "Read the Skill before writing any subagent brief; visitor-loop step 2 could name it."
-  - session: session_01AEph4xtY5Zhm8GkQLqacrX
-    date: "2026-10-26"
-    severity: minor
-    description: "The dispatch-read guard blocked the first clear-backlog-explore Workflow call until I read dispatch-subagents, whose brief-writing steps don't apply to a saved workflow the Skill runs by name."
-    solution: "Exempt named saved workflows (clear-backlog-explore/build) from the dispatch-read guard, since they brief their own agents."
-  - session: session_013zxzeQTGBbhXQGepc3y2z8
-    date: "2026-10-27"
-    severity: nit
-    description: "The dispatch-read guard blocked the first clear-backlog-explore Workflow call until I read dispatch-subagents (the #2580 cost, now accepted)"
-    solution: "Accepted by the owner in #2580; read dispatch-subagents at the start of a clear-backlog run"
-  - session: session_013zxzeQV6Jcqg4jYk2tkwBq
-    date: "2026-10-27"
-    severity: minor
-    description: "The dispatch-read guard blocked my first Agent call because I had not read dispatch-subagents SKILL.md; one wasted call."
-    solution: "Read dispatch-subagents before the first brief; blog-post step 6 could name it."
-  - session: session_013zxzePwzHSC4uh6dyhsHxg
-    date: "2026-10-27"
-    severity: nit
-    description: "Agent calls were blocked by the dispatch-read guard, so the three visitor dispatches had to be repeated unchanged after reading the Skill."
-    solution: "Have visitor-loop step 2 name dispatch-subagents as a read-first, or let the guard accept the Skill's own briefs."

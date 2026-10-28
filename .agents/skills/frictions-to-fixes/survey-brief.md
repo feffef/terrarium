@@ -61,12 +61,16 @@ Every edit goes through
 ### Instructions
 
 1. **Append each window Friction that matches an entry**, whatever its
-   severity. A session counts once per entry, at its highest severity. One
+   severity. Match on the harm, not the slip behind it; when an entry's
+   `cause` routes a Friction elsewhere, append it there. A session counts once
+   per entry, at its highest severity. One
    call files them all:
    `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts --append <entry> <session> <index> [<entry> <session> <index> …]`
    copies each Friction's text from its log (a content test checks the
    copy) and appends it under its entry; it refuses a session the entry
-   already holds.
+   already holds. When an appended Friction goes beyond the entry's
+   `summary` or `cause`, rewrite them with `ledger-set.ts <entry> --summary TEXT
+   --cause TEXT` so they cover every occurrence.
 2. **Open a new entry** for a cause seen twice, or once at `moderate`,
    `major` or `blocker`. Its `summary` is one plain sentence a visitor can
    read; its `cause` names the root mechanism and the signals that identify
@@ -88,13 +92,14 @@ Every edit goes through
    PR and `gh api repos/feffef/terrarium/pulls/<N>` gives its body and
    `merged_at` (`gh pr view` is GraphQL-backed, which the cloud blocks:
    `docs/agents/github-integration.md`); read the body, since a batched doc
-   PR's title names no cluster.
+   PR's title names no cluster. Then rewrite the entry's `cause` to say
+   what the fix changed, so no line it made stale survives.
 5. **Reset stale statuses.** A `tracked` or `on-trial` entry whose PR closed
    unmerged, or whose `ref` names no open issue, PR or trial in
    `.agents/prune-trials.yml`, goes back to `open`. One whose `ref` PR
-   merged goes to `open` too, and that PR's `fixes` `date` becomes its
-   `merged_at` (the same call), since an escalated PR dated its own entry
-   before it merged.
+   merged (not the fix a new cause came from) goes to `open` too, and that
+   PR's `fixes` `date` becomes its `merged_at` (the same call), since an
+   escalated PR dated its own entry before it merged.
 
 ### Done when
 
@@ -104,6 +109,11 @@ no `tracked` or `on-trial` entry points at something closed.
 ### Edge cases
 
 - A Friction sits in one cluster unless its text names two causes.
+- When a fix's guard, hint or refusal catches the slip and the harm is now
+  different (a refused call and a retry, a false positive, no cost), give it
+  its own entry whose `ref` names the original entry and the fix: it is not
+  a regression; only the original harm recurring is. An original left empty
+  is deleted, so `ref` also says what the original covered.
 - `--unledgered` drops per Friction, not per session: a session's other
   Frictions stay listed, so skip one already in the target cluster.
 - This run's own PRs are recorded by the main session. A PR an earlier run
@@ -115,8 +125,9 @@ no `tracked` or `on-trial` entry points at something closed.
   latest PR) or `still recurring`. A re-fix after a regression needs only
   its `fixes` entry. An `accepted` cluster (the owner accepts its cost) is
   never re-proposed.
-- `ref` holds the tracking issue or open PR, the trial's territory match or
-  what a fix left open, never a merged PR.
+- `ref` holds the tracking issue or open PR, the trial's territory match,
+  what a fix left open, or the entry and fix a new cause came from; never a
+  merged PR that fixes this entry (that goes in `fixes`).
 - Recurrence is an entry's occurrences within the horizon
   (`LEDGER_HORIZON_DAYS` in `layers/journal/app/utils/ledger.ts`), counting
   only sessions that started after its fix merged when it has one.

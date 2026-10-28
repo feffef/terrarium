@@ -196,6 +196,10 @@ describe('moveOccurrence()', () => {
     const moved = moveOccurrence('s1', file('a', block('s1', 'one'), block('s2', 'two')), file('b', block('s3', 'three')))
     expect(moved).toEqual({ from: file('a', block('s2', 'two')), to: file('b', block('s3', 'three'), block('s1', 'one')) })
   })
+  it('writes a block list into an entry ledger-set.ts just created with `occurrences: []`', () => {
+    const moved = moveOccurrence('s1', file('a', block('s1', 'one'), block('s2', 'two')), 'name: b\n# kept comment\nstatus: open\noccurrences: []\n')
+    expect(moved.to).toBe(file('b', block('s1', 'one')))
+  })
   it('refuses when the target already holds the same friction from that session', () => {
     expect(() => moveOccurrence('s1', file('a', block('s1', 'one')), file('b', block('s1', 'one'))))
       .toThrow('duplicate session: the target already holds s1 with the same text')

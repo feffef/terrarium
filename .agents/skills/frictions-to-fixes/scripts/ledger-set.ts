@@ -1,18 +1,20 @@
 // Creates or edits one Friction Ledger entry so no agent hand-edits its YAML:
-// sets `status` and `ref`, appends `notes` lines, appends or replaces `fixes`,
-// appends occurrence blocks as `print-ledger-occurrence.ts` prints them.
+// sets `summary`, `cause`, `surface`, `status` and `ref`, appends `notes` lines,
+// appends or replaces `fixes`, appends occurrence blocks as
+// `print-ledger-occurrence.ts` prints them.
 // Refuses a result the ledger schema rejects; the file's other content and
 // comments stay as written.
 //
 // Usage:
 //   tsx .agents/skills/frictions-to-fixes/scripts/ledger-set.ts <entry>
-//     [--create --summary TEXT --cause TEXT --surface S]
+//     [--create] [--summary TEXT] [--cause TEXT] [--surface S]
 //     [--status open|tracked|on-trial|accepted] [--ref TEXT | --clear-ref]
 //     [--note TEXT]... [--fix <pr> <YYYY-MM-DD> <summary>]... [--replace-fixes]
 //     [--occurrences <file>|-]
 //   `<entry>` is the file name without `.yml`. `--create` writes a new entry
 //   (status `open` unless `--status` says otherwise) and refuses an existing
-//   one. `--clear-ref` (or `--ref ''`) removes `ref`. Each `--note` appends one
+//   one; without it, `--summary`, `--cause` and `--surface` replace the stored
+//   text. `--clear-ref` (or `--ref ''`) removes `ref`. Each `--note` appends one
 //   line to `notes`, newest last. `--fix` appends, oldest first;
 //   with `--replace-fixes` (needs at least one `--fix`) the given fixes
 //   replace the stored ones. `-` reads the occurrence blocks from stdin, e.g.
@@ -35,9 +37,13 @@ export interface LedgerChanges {
   notes?: string[]
   /** Occurrence blocks as `print-ledger-occurrence.ts` prints them. */
   occurrences?: string
+  /** Replaces these fields on an existing entry. */
+  fields?: EntryFields
   /** Writes a new entry instead of editing one; the schema refuses a missing field. */
-  create?: { summary?: string; cause?: string; surface?: string }
+  create?: EntryFields
 }
+
+export interface EntryFields { summary?: string; cause?: string; surface?: string }
 
 const FIELD_ORDER = Object.keys(frictionClusterSchema.shape)
 
@@ -66,6 +72,12 @@ function fixNode(doc: Document, fix: Fix) {
 /** The entry's new text; throws when the result fails the ledger schema. */
 export function setEntry(text: string, changes: LedgerChanges): string {
   const doc = parseDocument(text)
+  for (const [key, value] of Object.entries(changes.fields ?? {})) {
+    const node = new Scalar(value)
+    const old = doc.get(key, true)
+    if (isScalar(old)) node.type = old.type
+    put(doc, key, node)
+  }
   if (changes.status !== undefined) put(doc, 'status', changes.status)
   if (changes.ref === '') doc.delete('ref')
   else if (changes.ref !== undefined) put(doc, 'ref', changes.ref)
@@ -98,9 +110,9 @@ export function writeEntry(dir: string, entry: string, changes: LedgerChanges): 
 
 export function parseArgs(argv: string[]): { entry: string; changes: LedgerChanges } {
   const [entry, ...rest] = argv
-  if (!entry || entry.startsWith('--')) throw new Error('usage: ledger-set.ts <entry> [--create --summary TEXT --cause TEXT --surface S] [--status S] [--ref TEXT|--clear-ref] [--note TEXT]... [--fix <pr> <date> <summary>]... [--replace-fixes] [--occurrences <file>|-]')
+  if (!entry || entry.startsWith('--')) throw new Error('usage: ledger-set.ts <entry> [--create] [--summary TEXT] [--cause TEXT] [--surface S] [--status S] [--ref TEXT|--clear-ref] [--note TEXT]... [--fix <pr> <date> <summary>]... [--replace-fixes] [--occurrences <file>|-]')
   const changes: LedgerChanges = {}
-  const fields: NonNullable<LedgerChanges['create']> = {}
+  const fields: EntryFields = {}
   let create = false
   const setRef = (ref: string) => {
     if (changes.ref !== undefined) throw new Error('ref given twice (--ref, --clear-ref)')
@@ -130,7 +142,7 @@ export function parseArgs(argv: string[]): { entry: string; changes: LedgerChang
     } else throw new Error(`unknown flag ${flag}`)
   }
   if (create) changes.create = fields
-  else if (Object.keys(fields).length) throw new Error(`--${Object.keys(fields)[0]} needs --create`)
+  else if (Object.keys(fields).length) changes.fields = fields
   return { entry, changes }
 }
 

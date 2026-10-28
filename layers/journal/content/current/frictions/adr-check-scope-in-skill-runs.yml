@@ -76,3 +76,13 @@ occurrences:
     severity: minor
     description: "Decided which fixes to drop or file without invoking adr-check, though CLAUDE.md asks for it before any recommendation; the frictions-to-fixes Skill has no step for it."
     solution: "Add an adr-check step to the Skill's §5, or drop the CLAUDE.md trigger for scheduled sweeps."
+  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
+    date: "2026-10-21"
+    severity: nit
+    description: "Survey and design subagents each skipped or read late the CLAUDE.md-required reads; the design agent also skipped adr-check and cited stale paths from the ledger."
+    solution: "Brief templates could list the required reads first, and ledger entries should cite current paths."
+  - session: session_01Hw8mVJmgWejGc6YWi8ngnm
+    date: "2026-10-23"
+    severity: nit
+    description: "Skipped the adr-check Skill and the full ADR-0030 read before editing two ADRs; the edits were only pointer fixes, so no impact."
+    solution: "Say in CLAUDE.md or audit-docs that a pointer-only ADR fix needs neither."

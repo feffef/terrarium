@@ -2,7 +2,7 @@ name: list-events-transcript-overflow
 summary: >-
   Reading another session's transcript with list_events floods or stalls the agent when that session holds many screenshots.
 cause: >-
-  The claude-code-remote list_events tool returns every event including base64 images, so a screenshot-heavy session is about 14 MB per page and paging it is slow; github-integration.md calls it token-heavy but gives no safe recipe. Signals: list_events, get_session, 'MB per page', a subagent skipping a long transcript.
+  The claude-code-remote list_events tool returns every event including base64 images (about 14 MB per page for a screenshot-heavy session) into context, so reading another session's transcript raw, or printing saved pages or fields unbounded, floods context or is too slow to page; github-integration.md and the inspect-session Skill hold the recipe. Gaps in that recipe belong in inspect-session-paging-gaps. Signals: list_events, get_session, 'MB per page', pages printed inline, a subagent skipping a long transcript.
 surface: safe
 status: open
 fixes:
@@ -18,12 +18,6 @@ fixes:
   - pr: 2307
     date: "2026-10-19"
     summary: "inspect-session takes bare page names, does a partial read for short sessions and has a replies selector."
-  - pr: 2463
-    date: "2026-10-23"
-    summary: "inspect-session says the tool-results spill cut-off is likely counted in tokens, so no character count predicts it."
-  - pr: 2566
-    date: "2026-10-26"
-    summary: "inspect-session briefs save every fetched list_events page under Out with a unique name."
 occurrences:
   - session: session_01GVmwHZQthucdGcVwe3HAUL
     date: "2026-10-17"
@@ -50,28 +44,3 @@ occurrences:
     severity: minor
     description: "An ad-hoc python analysis of saved list_events pages printed a whole hand-back body, about 20k characters, into the main context"
     solution: "Truncate every printed field from the first run; the new Flatten plus grep -oE now does this by default"
-  - session: session_01MwrXDH7XwMNUofgz3HvQ5N
-    date: "2026-10-19"
-    severity: minor
-    description: "A Haiku chain link reported a deterministic cursor loop; it was one wrong page from the server, which cost a verification round."
-    solution: "The transcript Skill should check each first_id is new and retry once; fetchers should report, not diagnose."
-  - session: session_01PWZU3TqUdSp6uD1KaoQXit
-    date: "2026-10-23"
-    severity: minor
-    description: "Two inspect-session partial reads hit their page limit before the session start (about a minute of events per page), needing resumes; 019CbZiW never reached it after 20 pages."
-    solution: "inspect-session could estimate pages from get_session duration and say so, or offer a start-first cursor walk for questions about a session's opening."
-  - session: session_01VW5yg4NTMt1JBnXCcrhjw9
-    date: "2026-10-25"
-    severity: minor
-    description: "The 10-24 partial read hit its 25-page limit before reaching Agent D's hand-back; it answered from the checker's re-listing"
-    solution: "For an audit run, page limit ~40, or search for the reviewer dispatch first"
-  - session: session_019nDDDS9GsXdTKWK44j18fT
-    date: "2026-10-24"
-    severity: nit
-    description: "The first inspection subagent left the oldest inline page unsaved, so its coverage never reached the session start (that page held no relevant events)."
-    solution: "The inspect-session brief could say that an inline first page must still be written to Out before Flatten runs."
-  - session: session_01Ru6jnZ4cFTdf41ZWLonsTv
-    date: "2026-10-24"
-    severity: nit
-    description: "Range-3 fetch agent saw two spilled pages get the same tool-results file name, one overwriting the other, and had to refetch."
-    solution: "Fetch brief could say: after each call, copy the spill file into Out under a page-numbered name before the next call."

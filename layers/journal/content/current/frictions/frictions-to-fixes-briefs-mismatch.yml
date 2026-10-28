@@ -65,11 +65,6 @@ occurrences:
     severity: nit
     description: "The design brief's docsReadViaShell caveat (logs older than 2026-10-10) is stale: the 14-day ledger horizon no longer reaches such logs, so every design agent reads a dead branch."
     solution: "Cut the sentence; proposed to the owner among five cuts, awaiting their answer."
-  - session: session_019jfJv6yLmcLUAJiTTomyeu
-    date: "2026-10-25"
-    severity: nit
-    description: "Skill says to Read design-brief and impl-brief verbatim into each subagent prompt, yet passing the brief file path worked and was cheaper; the 'verbatim' wording is ambiguous."
-    solution: "State in the Skill whether handing the brief by path satisfies 'verbatim'."
   - session: session_01S9UeKa9mCWdPVBjAezCSaL
     date: "2026-10-25"
     severity: nit

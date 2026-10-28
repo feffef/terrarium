@@ -2,7 +2,7 @@ name: survey-appends-duplicate-sessions
 summary: >-
   The friction survey added the same session to a ledger entry twice, which failed validation or lost an occurrence.
 cause: >-
-  extract-frictions --unledgered keeps a session's other frictions after one is ledgered, and nothing at append time refuses a session already in the target entry, so the survey's patch lists a session twice in one entry; validation fails and a hand repair can drop a distinct description. Signals: "listed sessions twice", "duplicates appended to N clusters", "a session is listed twice" from the content test.
+  extract-frictions --unledgered keeps a session's other Frictions after one is ledgered. Before PRs #2366 and #2567 nothing refused a repeated session, so the survey's patch listed a session twice in one entry: validation failed and a hand repair could drop a distinct description. The content test and print-ledger-occurrence --append now refuse it; a refused append belongs in ledger-append-refuses-held-session. Signals: duplicates written to an entry, "listed sessions twice", "a session is listed twice" from the content test after the patch was written.
 surface: safe
 status: open
 fixes:
@@ -34,8 +34,3 @@ occurrences:
     severity: minor
     description: "Survey subagent hit extract-frictions --unledgered keeping a session's other frictions, so it appended duplicates to 7 clusters and caught them only with its own uniqueness check."
     solution: "Make print-ledger-occurrence.ts refuse a session already in the target cluster."
-  - session: session_01S9UeKa9mCWdPVBjAezCSaL
-    date: "2026-10-25"
-    severity: minor
-    description: "Survey agent: no script creates a ledger entry, print-ledger-occurrence --append fails whole on one duplicate session, and gh api --paginate on closed issues hits a proxy 403."
-    solution: "Add a ledger-set create flag, name the colliding pair in the append error, and note the pagination trap in github-integration.md."

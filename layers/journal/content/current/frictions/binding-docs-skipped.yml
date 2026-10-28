@@ -2,7 +2,7 @@ name: binding-docs-skipped
 summary: >-
   Agents gave a recommendation or planned a change without first checking which ADRs bind it.
 cause: >-
-  CLAUDE.md asks for the ADR check (the grep of docs/adr, since PR #2284 the adr-check Skill) before any plan or recommendation, an opinion in chat included, but it is prose and nothing hooks it, so the agent answers first and checks late or never. Signals: "recommended ... before grepping docs/adr", "without running adr-check", "the owner had to ask whether any ADRs were read", a grilling round or chat opinion given before the ADR read. A Skill-scripted decision skipping it belongs to adr-check-scope-in-skill-runs; a full ADR left unread after its summary rule loaded, to full-adr-read-skipped; the session-start glossary read, to session-start-glossary-skipped.
+  Before PR #2431, CLAUDE.md asked for an ADR check (a grep of docs/adr, then the adr-check Skill) before any plan or recommendation, a chat opinion included; it was prose and agents answered first. Since #2431 the trigger is gone, and adr-read-hint.ts names an unread ADR only when an Edit, Write or (PR #2570) git commit touches its paths, so a recommendation given in chat still meets no check. Signals: "recommended ... before grepping docs/adr", "without running adr-check", the owner asking whether any ADRs were read, an adr-read hint firing after the plan was given. A Skill-scripted decision belongs to adr-check-scope-in-skill-runs; a summary-only read, to full-adr-read-skipped; the glossary read, to session-start-glossary-skipped.
 surface: guard-or-hook
 status: open
 fixes:
@@ -26,11 +26,6 @@ occurrences:
     severity: nit
     description: "Skipped CLAUDE.md's 'grep -l ADRs before recommending'; I read ADR-0006/0016 directly and ADR-0028 only when the owner asked about endpoints."
     solution: "Run the grep for Space/navigation terms before the first grilling round."
-  - session: session_018wtKTCgkvJwgb3gS8o8JKA
-    date: "2026-10-14"
-    severity: minor
-    description: "Recommended file and ADR pointers without reading the full ADR-0005 or ADR-0029, only their summary rules, against the CLAUDE.md ADR-reading rule"
-    solution: "Read the binding ADRs in full before a recommendation round, even for planning tickets"
   - session: session_01BpePUUjkw8MVBXM2oiDnsj
     date: "2026-10-14"
     severity: minor
@@ -151,11 +146,6 @@ occurrences:
     severity: minor
     description: "In the #2264 grilling I framed the choice as hook vs explore-brief line and missed that a path-scoped rule (ADR-0029) fits; the owner had to point it out"
     solution: "Before offering a mechanism, check ADR-0029 for whether a path-scoped rule fits"
-  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
-    date: "2026-10-21"
-    severity: nit
-    description: "Survey and design subagents each skipped or read late the CLAUDE.md-required reads; the design agent also skipped adr-check and cited stale paths from the ledger."
-    solution: "Brief templates could list the required reads first, and ledger entries should cite current paths."
   - session: session_01XfQgmS9ArvbD9WSoPgkKfM
     date: "2026-10-21"
     severity: minor
@@ -171,8 +161,3 @@ occurrences:
     severity: minor
     description: "Gave an impact verdict and fix proposals in my first report before running adr-check, which CLAUDE.md requires before any recommendation; ran it only for the later hint proposal."
     solution: "Retire the chat-recommendation trigger with adr-check as planned on #2286, or run it at the first evaluative reply."
-  - session: session_01Hw8mVJmgWejGc6YWi8ngnm
-    date: "2026-10-23"
-    severity: nit
-    description: "Skipped the adr-check Skill and the full ADR-0030 read before editing two ADRs; the edits were only pointer fixes, so no impact."
-    solution: "Say in CLAUDE.md or audit-docs that a pointer-only ADR fix needs neither."
