@@ -217,7 +217,8 @@ body.bl-page {
 }
 .bl .feed .post-link:hover h2 { color: var(--bl-accent); }
 .bl .feed .excerpt { margin: 0; color: var(--bl-muted); font-size: 0.96rem; }
-.bl .feed .reply { font-family: var(--bl-mono); font-size: 0.72rem; color: var(--bl-accent); margin: 0 0 0.2rem; }
+.bl .feed .reply { font-family: var(--bl-mono); font-size: 0.72rem; color: var(--bl-muted); margin: -0.5rem 0 0.6rem; }
+.bl .feed .reply a { color: var(--bl-accent); }
 .bl .empty { color: var(--bl-faint); font-style: italic; font-family: var(--bl-serif); }
 .bl .show-all-posts {
   display: block;
@@ -469,8 +470,9 @@ body.bl-page {
 
 /* Post body only: an accent drop cap opens the piece. Both selectors cover
    ContentRenderer with and without its wrapper element. `.prose--cap` is set
-   only when the post opens on a letter: ::first-letter would otherwise
-   swallow an opening quote or digit into a giant `"6`. */
+   only when the post opens on a letter (`opensOnLetter` in the post page):
+   ::first-letter would otherwise swallow an opening quote or digit into a
+   giant `"6`, or split an opening link. */
 .bl .prose--cap > p:first-child::first-letter,
 .bl .prose--cap > div > p:first-child::first-letter {
   font-family: var(--bl-serif);
