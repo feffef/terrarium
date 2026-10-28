@@ -57,10 +57,12 @@ cite it.
   Pass `page.evaluate(...)` its body as a **string**: `tsx`/esbuild's
   `keepNames` injects a `__name` helper that exists only in Node, so a
   function reference throws `__name is not defined` in the page.
-- **A screenshot can't be trusted to rule out a subtle/scoped CSS change:**
-  downscaled or compressed PNGs can mask a style that actually applied. Before
-  concluding a scoped style is missing, read the element's *computed* style
-  with `scripts/ui/eval-in-page.ts` (above).
+- **A screenshot can't confirm a colour, tint or scheme fix, nor rule out a
+  subtle/scoped CSS change:** downscaled or compressed PNGs can mask a style
+  that applied, and a grey can pass for a tint. Before you report such a fix as
+  working (or accept a subagent's "green"), or conclude a style is missing,
+  read the element's *computed* colour with `scripts/ui/eval-in-page.ts`
+  (above); pin it with an e2e assert.
 - **A diagram, illustration or layout from a brief needs the human's eye first.**
   Agree the reader and the question it answers, and show a rough draft for a
   quick reaction before you polish and publish. Passing gates is necessary, not
