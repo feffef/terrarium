@@ -1,0 +1,172 @@
+schemaVersion: 1
+session: session_013zxzeQxsePnJds2jEpgirL
+startedAt: 2026-10-28T06:34:25Z
+endedAt: 2026-10-28T06:50:19Z
+kind: interactive
+goal: Unblock the digest archive sweep that broke an e2e test
+status: in-review
+outcome: "PR 2620 open: Journal dashboard capped at 1000 sessions, e2e reads SSR HTML in Node"
+summary: "Human-instructed: the owner asked why daily digests couldn't archive older sessions and to fix the e2e test; after I laid out three options they chose \"test fix plus shrink the page, limit to 1000 sessions\" and added \"don't delete sessions, filter them\". The 2026-10-28 digest session log gave the cause; I reproduced it (sweep, build, smoke spec): /t/journal/archived was 10.4 MB with 1153 sessions, past Chrome's response-body buffer, so response.text() threw. Fix: the dashboard query loads the newest 1000 sessions and labels the filter; expectServerRendered refetches HTML in Node. Agent-initiated: an e2e test for the cap (so ADR-0004 lets an agent merge), leaving the sweep itself to the next digest run, and the review fixes (headline wording for any Space, one home for the label). Open: the tile and browse pages still count differently from the capped dashboard on archived; the archived page is 9.3 MB and still heavy."
+prs:
+  - "2620"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch and merge-base before diff; commit hygiene
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: simple-change limit meant full code-review; verdict comment and merge recipe
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: check rendered DOM via preview.ts shot, not grepped HTML
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP for writes, get_check_runs for polling
+    useful: partly
+  - path: .agents/skills/digest/SKILL.md
+    reason: showed the sweep command and that the sweep rides each digest run
+    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: "Standards subagent: CSS, overrides and routing didn't apply"
+    useful: no
+skillsUsed:
+  - name: code-review
+    reason: two-axis review; found the Space-agnostic headline bug and duplicated label
+  - name: dispatch-subagents
+    reason: required before writing the review briefs
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read git-conventions.md after the first git log command, not before as CLAUDE.md requires.
+    solution: Read the triggered doc before the first git command beyond status and diff.
+    severity: nit
+  - description: Started gate:scoped before noticing ADR-0004 needs a test for observable behaviour; stopped it and reran after adding the cap test.
+    solution: Check ADR-0004's untested-behaviour exception before the first gate run, when the change adds behaviour.
+    severity: minor
+  - description: The archived dashboard silently outgrew Chrome's 10 MB body buffer; nothing warned until the digest run's gate failed twice.
+    solution: The new cap and Node-side refetch; a page-size budget check in e2e could flag growth earlier.
+    severity: minor
+durationSec: 954
+models:
+  claude-opus-5-5: 122
+toolCounts:
+  Grep: 1
+  Bash: 43
+  Read: 5
+  Edit: 1
+  Skill: 4
+  ToolSearch: 2
+  TaskStop: 1
+  Agent: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
+filesEdited:
+  - tests/support/e2e.ts
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/tests/e2e/journal.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+docsReadBySubagents:
+  - docs/agents/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me add an e2e test for the cap so an agent may merge, and run gate plus code-review first; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open and keep the log off the branch; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: PR opened on first push; the owner's explicit choice was the approval for the UI cap
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line on the PR body and comment, commit trailer checked
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Its paths confirmed none of my four files is Human-only
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading the digest Skill; I changed no Skill
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Confirmed moving Digests to archived is fine; I left the sweep to the next digest run
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: No open trial covered text I changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement didn't come up; no rule edited
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: No ADR edited
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on the Journal; no new terms needed for a query cap
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: The page already resolves through useSpace; the cap doesn't touch routing
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Session logs are the source of truth, which backed filtering over deleting (spec subagent agreed)
+    useful: partly
+  - path: .claude/rules/adr-0016.md
+    reason: About Tenant root pages; this was a Space landing
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Auto-import naming made me call the export JOURNAL_SESSIONS_LOADED; Standards subagent checked it too
+    useful: yes
+  - path: .claude/rules/ui-verification.md
+    reason: Sent me to verifying-ui-changes.md, so I checked the rendered page with a screenshot
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: "Spec subagent: loaded with tenant.config.ts, not useful"
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: "Spec subagent: no data shape changed, not useful"
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "Spec subagent: no MDC involved, not useful"
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of diff
+    durationSec: 39
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 7.7
+  - type: general-purpose
+    task: Spec review of diff
+    durationSec: 41
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 9.4
+gitBranch: ccr-d3656197-6t3k1j
+entrypoint: remote_mobile
+cliVersion: 2.1.312
+learnings:
+  - Chrome DevTools keeps about 10 MB of a response body, so Playwright response.text() throws "evicted from inspector cache" on larger pages.
+landedBy: Stop
