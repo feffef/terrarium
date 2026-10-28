@@ -214,6 +214,7 @@ export function moveOccurrence(session: string, fromText: string, toText: string
     throw new Error(`text conflict: the target already holds ${session} (one per entry)\n  moving: "${text(src, i)}"\n  target: "${text(dst, held)}"`)
   }
   dst.items.push(src.items.splice(i, 1)[0]!)
+  dst.flow = false
   return { from: src.items.length ? from.toString({ lineWidth: 0 }) : null, to: to.toString({ lineWidth: 0 }) }
 }
 

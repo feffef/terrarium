@@ -4,4 +4,54 @@ cause: "github-search-fields-guard.ts denies mcp__github__search_issues or searc
 surface: guard-or-hook
 status: on-trial
 ref: "Comes from PR #1869's fix for search results flooding context (the former github-search-overflow cluster). In the Prune Trial opened 2026-10-25 by PR #2538 (territory: github-integration.md's first two 'Overflow and precision traps' bullets), whose check counts a guard deny the session fixes as no damage."
-occurrences: [ { session: session_016Nsq9SWL64V4RqDJPQYodp, date: "2026-10-19", severity: nit, description: "Called search_issues without fields and the guard denied it; one wasted call.", solution: "Mention the fields requirement in the prune-trial Skill's tracker step." }, { session: session_01Wd2WvrPmFRYHAZmf7DYnrG, date: "2026-10-23", severity: nit, description: "Called mcp__github__search_issues without `fields`; the guard blocked it, and the required GitHub doc was read only afterwards.", solution: "Read docs/agents/github-integration.md before the first GitHub call, as CLAUDE.md says." }, { session: session_013SbWSgqz4tjVcTMz9vF1mu, date: "2026-10-24", severity: nit, description: "Called search_issues without `fields`, blocked by the GitHub search-fields guard (#1860); retried immediately with fields", solution: "Pass `fields` on every search_issues/search_pull_requests call from the start, per github-integration.md's own warning" }, { session: session_01BZNS3KuWTBxqAHxTfx3uzp, date: "2026-10-25", severity: nit, description: "Called search_issues without the required fields array before reading github-integration.md, which CLAUDE.md says to read before any GitHub operation; a guard blocked it.", solution: "Read the doc first; the guard message was enough to recover." }, { session: session_01Y1i7HTUED6iQYzbSLBbu79, date: "2026-10-26", severity: nit, description: "Called search_issues without fields; the search-fields guard blocked it and I had to read github-integration.md first.", solution: "Read github-integration.md before the first GitHub call, as CLAUDE.md says." }, { session: session_01C8G2W6ZfQN7WE4UNUi2GzA, date: "2026-10-26", severity: nit, description: "First mcp__github__search_issues call omitted the fields array and was blocked; I read github-integration.md only afterwards.", solution: "Read the doc before the first GitHub operation." }, { session: session_019g1t4RX7PcR54io7GRdxXK, date: "2026-10-27", severity: nit, description: "Called search_issues without fields before reading github-integration.md; the guard blocked it, costing one retry.", solution: "Read github-integration.md before the first GitHub call, as CLAUDE.md says." }, { session: session_013zxzePJnRATi9QoJAjCxgq, date: "2026-10-27", severity: nit, description: "Called search_issues without fields; the guard blocked it, wasting one call.", solution: "Pass fields on every search_issues call, as github-integration.md says." }, { session: session_013zxzePwzHSC4uh6dyhsHxg, date: "2026-10-27", severity: nit, description: "search_issues was blocked by the fields guard five times in one parallel batch because I omitted fields.", solution: "visitor-loop step 3 could say to use list-open-issues.ts plus git log --grep rather than search_issues." }, { session: session_013zxzeRpJV1qxKtqhnjBVTy, date: "2026-10-28", severity: nit, description: "search_issues was blocked for a missing fields array; a second call was needed after reading the doc.", solution: "Put the fields requirement in the audit-skills Skill text where it tells to search open issues." } ]
+occurrences:
+  - session: session_016Nsq9SWL64V4RqDJPQYodp
+    date: "2026-10-19"
+    severity: nit
+    description: "Called search_issues without fields and the guard denied it; one wasted call."
+    solution: "Mention the fields requirement in the prune-trial Skill's tracker step."
+  - session: session_01Wd2WvrPmFRYHAZmf7DYnrG
+    date: "2026-10-23"
+    severity: nit
+    description: "Called mcp__github__search_issues without `fields`; the guard blocked it, and the required GitHub doc was read only afterwards."
+    solution: "Read docs/agents/github-integration.md before the first GitHub call, as CLAUDE.md says."
+  - session: session_013SbWSgqz4tjVcTMz9vF1mu
+    date: "2026-10-24"
+    severity: nit
+    description: "Called search_issues without `fields`, blocked by the GitHub search-fields guard (#1860); retried immediately with fields"
+    solution: "Pass `fields` on every search_issues/search_pull_requests call from the start, per github-integration.md's own warning"
+  - session: session_01BZNS3KuWTBxqAHxTfx3uzp
+    date: "2026-10-25"
+    severity: nit
+    description: "Called search_issues without the required fields array before reading github-integration.md, which CLAUDE.md says to read before any GitHub operation; a guard blocked it."
+    solution: "Read the doc first; the guard message was enough to recover."
+  - session: session_01Y1i7HTUED6iQYzbSLBbu79
+    date: "2026-10-26"
+    severity: nit
+    description: "Called search_issues without fields; the search-fields guard blocked it and I had to read github-integration.md first."
+    solution: "Read github-integration.md before the first GitHub call, as CLAUDE.md says."
+  - session: session_01C8G2W6ZfQN7WE4UNUi2GzA
+    date: "2026-10-26"
+    severity: nit
+    description: "First mcp__github__search_issues call omitted the fields array and was blocked; I read github-integration.md only afterwards."
+    solution: "Read the doc before the first GitHub operation."
+  - session: session_019g1t4RX7PcR54io7GRdxXK
+    date: "2026-10-27"
+    severity: nit
+    description: "Called search_issues without fields before reading github-integration.md; the guard blocked it, costing one retry."
+    solution: "Read github-integration.md before the first GitHub call, as CLAUDE.md says."
+  - session: session_013zxzePJnRATi9QoJAjCxgq
+    date: "2026-10-27"
+    severity: nit
+    description: "Called search_issues without fields; the guard blocked it, wasting one call."
+    solution: "Pass fields on every search_issues call, as github-integration.md says."
+  - session: session_013zxzePwzHSC4uh6dyhsHxg
+    date: "2026-10-27"
+    severity: nit
+    description: "search_issues was blocked by the fields guard five times in one parallel batch because I omitted fields."
+    solution: "visitor-loop step 3 could say to use list-open-issues.ts plus git log --grep rather than search_issues."
+  - session: session_013zxzeRpJV1qxKtqhnjBVTy
+    date: "2026-10-28"
+    severity: nit
+    description: "search_issues was blocked for a missing fields array; a second call was needed after reading the doc."
+    solution: "Put the fields requirement in the audit-skills Skill text where it tells to search open issues."
