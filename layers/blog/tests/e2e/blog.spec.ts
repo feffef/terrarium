@@ -127,6 +127,14 @@ describe('blog Tenant', async () => {
     expect(thread(alone)).toBe('')
   })
 
+  it('lists reply conversations on the front door under ?view=threads, not the feed', async () => {
+    const html = await $fetch<string>('/t/blog?view=threads')
+    expect(html).toContain('conversations where one columnist answered another')
+    expect(html).toContain('href="/t/blog/eyra/2026-10-27-the-hint-learned-to-read-the-receipt"')
+    expect(html).not.toContain('class="feed"')
+    expect(await $fetch<string>('/t/blog')).not.toContain('class="threads"')
+  })
+
   it('gives the drop cap only to a post that opens on a letter', async () => {
     const quoted = await $fetch<string>('/t/blog/karen/2026-10-07-the-diagrams-were-already-stale-the-gate-hadnt-noticed-either')
     expect(quoted).not.toContain('prose--cap')
