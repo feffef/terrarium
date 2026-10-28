@@ -167,3 +167,8 @@ occurrences:
     severity: minor
     description: "Second-round review follow-up (11 files, 20 lines) got my own read, not code-review, though pr-workflow.md asks code-review for a follow-up over the simple-change size"
     solution: "Run code-review on the follow-up diff, or have the fix agent stay within the simple-change limit"
+  - session: session_013zxzeSJQfnNdJHrSWjVT2x
+    date: "2026-10-28"
+    severity: minor
+    description: "Skipped code-review before first push: change exceeds the simple-change count (39 files) though purely mechanical pins; read the diff myself instead."
+    solution: "Let pr-workflow's simple-change bar name glassbox-update's pure re-pin so scheduled runs need no judgement call."

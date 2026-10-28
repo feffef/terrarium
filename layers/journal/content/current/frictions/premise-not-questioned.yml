@@ -37,3 +37,8 @@ occurrences:
     severity: minor
     description: "Picked the by-season browser feature without reading the Midden's git history; the refiner then found the owner had removed the same legend, costing a round trip."
     solution: "Before choosing a feature, grep git log and decisions for the thing the idea would rebuild; the Skill could tell step 3 to check `git log -S` on the area."
+  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
+    date: "2026-10-27"
+    severity: minor
+    description: "I designed the running out-of-remit issue without checking that the Friction Ledger already clusters run problems; run 1's finding landed in both, and the owner had to point it out."
+    solution: "Before adding a place to record findings, check what the Ledger and session-log fields already capture."

@@ -1,0 +1,16 @@
+name: nuxt-prepare-skipped
+surface: safe
+summary: Typecheck or the gate failed on a missing Nuxt-generated folder because nuxt prepare had not run.
+cause: "A fresh worktree (install with scripts skipped) or a newly added auto-imported symbol has no regenerated .nuxt types, so vue-tsc or the gate fails until nuxt prepare runs; agents start the check first. Signals: 'nuxt prepare', '.nuxt was missing', typecheck error on an auto-imported constant, install with scripts skipped."
+status: open
+occurrences:
+  - session: session_013zxzeSaiStBeXUY9SwzAhv
+    date: "2026-10-27"
+    severity: nit
+    description: "Typecheck failed on the new auto-imported constant until I ran nuxt prepare; I ran vue-tsc before regenerating the imports."
+    solution: "Run nuxt prepare after adding an export to a layer's app/utils before typechecking."
+  - session: session_013zxzeR94ZpyH5mhKXDH22Y
+    date: "2026-10-28"
+    severity: minor
+    description: "Gate failed in the fresh worktree because I installed with scripts skipped, so .nuxt was missing; cost one extra gate run."
+    solution: "Say in the worktree notes that gate:scoped needs nuxt prepare after install."

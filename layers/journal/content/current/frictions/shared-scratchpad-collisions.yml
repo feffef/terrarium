@@ -31,3 +31,13 @@ occurrences:
     severity: nit
     description: "One transcript subagent reported another overwrote a shared scratchpad file (fl.sh), polluting its page list until it moved to its own folder."
     solution: "inspect-session briefs already set Out per session; also tell subagents to keep all helper scripts inside Out."
+  - session: session_013zxzeTGYbEWeFyEywFafxw
+    date: "2026-10-28"
+    severity: nit
+    description: "A researcher left a stray empty x.txt in the shared scratchpad root"
+    solution: "None needed beyond the existing per-agent subfolder rule; removed it"
+  - session: session_013zxzeQRYzCbfkXYbHKwcPv
+    date: "2026-10-28"
+    severity: nit
+    description: "Two raters wrote their page dumps (b2.txt, d1.txt …) to the shared scratchpad root with the same names, not the subfolder the brief named."
+    solution: "rater-brief could say every file goes in its own subfolder, with the folder path repeated next to the report instructions."

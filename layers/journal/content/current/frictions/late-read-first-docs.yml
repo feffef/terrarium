@@ -579,3 +579,23 @@ occurrences:
     severity: nit
     description: "Filed the issue before reading triage-labels.md, which CLAUDE.md requires before filing; the label I used was right."
     solution: "Read the listed docs when the trigger first applies, not after the hook asks."
+  - session: session_013zxzeQvE9RNYoZRiZEEKBG
+    date: "2026-10-28"
+    severity: nit
+    description: "Ran git branch --show-current alongside git status before reading git-conventions.md; the hook flagged the late read."
+    solution: "Read git-conventions.md before any git command beyond a bare status."
+  - session: session_013zxzeR94ZpyH5mhKXDH22Y
+    date: "2026-10-28"
+    severity: nit
+    description: "Ran git fetch in the same batch as reading git-conventions.md, so the required read came after the first git command."
+    solution: "Read required docs in their own call before any git command."
+  - session: session_013zxzeTGYbEWeFyEywFafxw
+    date: "2026-10-28"
+    severity: nit
+    description: "Ran git fetch in the same parallel batch as reading git-conventions.md, so the read wasn't strictly first"
+    solution: "Read the CLAUDE.md trigger doc in its own call before any non-status git command"
+  - session: session_013zxzeQxsePnJds2jEpgirL
+    date: "2026-10-28"
+    severity: nit
+    description: "Read git-conventions.md after the first git log command, not before as CLAUDE.md requires."
+    solution: "Read the triggered doc before the first git command beyond status and diff."

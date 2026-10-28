@@ -2,7 +2,7 @@ name: mechanism-claim-from-recall
 summary: >-
   Agents or their reviewer helpers described how a script, guard, rule or the code behaves from memory, or claimed "only", "every" or "nothing" without checking the whole set.
 cause: >-
-  How a script, guard, rule, harness setting, data format or the code's current state behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set; this includes a reviewer or rater subagent's own finding. A reviewer, the owner or a later check finds it false. A helper's claim the main agent passed on unchecked belongs in relayed-subagent-claims. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed"; a reviewer finding a check proved false.
+  How a script, guard, rule, harness setting, data format or the code's current state behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set; this includes a reviewer or rater subagent's own finding. A reviewer, the owner or a later check finds it false. glassbox-improve's lead now proposes only facts found in the source (PR #2626). A helper's claim the main agent passed on unchecked belongs in relayed-subagent-claims. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed"; a reviewer finding a check proved false.
 surface: safe
 status: accepted
 ref: "issue #2504 closed not planned on 2026-10-25: the owner accepts the cost. Three prose fixes (#2336, #2378, #2453) didn't hold; in the latest moderate case the false claims were caught before the push; a line per Skill would repeat CLAUDE.md's Verify before you state."
@@ -16,6 +16,9 @@ fixes:
   - pr: 2453
     date: "2026-10-23"
     summary: "blog-post takes rule-location claims from the loaded rule file, not only the ADR, and re-checks edits made after the report."
+  - pr: 2626
+    date: "2026-10-28"
+    summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
   - session: session_01Qp5NojwQhExSmToPJtnQNV
     date: "2026-10-14"
@@ -122,3 +125,18 @@ occurrences:
     severity: minor
     description: "The harvest's rater panel twice rated already-done or moot items highly (#96 stale gate, #70 guards that no longer exist); only my own code check caught it."
     solution: "Brief raters to verify each premise in code before scoring."
+  - session: session_013zxzeTGYbEWeFyEywFafxw
+    date: "2026-10-28"
+    severity: moderate
+    description: "My fix brief to the HITL writer proposed 'None looks for the approval label before a build', which was false (guest-build's poll-guest-tickets.ts)"
+    solution: "A researcher brief for an absence claim names every code location, including .agents/skills/*/scripts/, and I propose no wording I haven't grepped"
+  - session: session_013zxzeR86n7CjfWXZh4HXyc
+    date: "2026-10-28"
+    severity: nit
+    description: "An audit agent quoted 'the hint loaded the rules anyway' from occurrences whose description lacks it; the text sat in their solution field, so I re-checked every quote."
+    solution: "Have audit briefs name which field a quote comes from."
+  - session: session_013zxzeQRYzCbfkXYbHKwcPv
+    date: "2026-10-28"
+    severity: minor
+    description: "Checking fable's Nuxt layers false claim took five reads through @nuxt/kit and c12 dist code before it proved a misreading."
+    solution: "None needed; a false claim needs a source check. The learning below saves the next run the walk."

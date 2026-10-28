@@ -1,0 +1,12 @@
+name: skill-frontmatter-invalid-yaml
+surface: safe
+summary: A Skill's frontmatter with invalid YAML passed three reviews and the gate, and only audit-skills caught it.
+cause: "A SKILL.md description with an unquoted ': ' is invalid YAML; no gate step or reviewer parses Skill frontmatter, so the flag it carries (disable-model-invocation) may be silently ignored. Signals: 'invalid YAML', 'unquoted', SKILL.md frontmatter, description."
+status: tracked
+ref: "#2608"
+occurrences:
+  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
+    date: "2026-10-27"
+    severity: moderate
+    description: "I wrote the glassbox-improve description with an unquoted ': ', which is invalid YAML; three reviews and the gate missed it, audit-skills caught it (#2608) and an audit-docs sweep quoted it."
+    solution: "Parse a new Skill's frontmatter with the repo's yaml package before committing; #2608 proposes a gate check."

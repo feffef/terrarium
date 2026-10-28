@@ -94,3 +94,8 @@ occurrences:
     severity: minor
     description: "Briefed Lesson titles without the 'field name, not ours' rule up front; two promoted pages kept project jargon titles until the user flagged it"
     solution: "Quote EVERY-PAGE.md's title rule in briefs and check titles against the tool's own docs before integrating"
+  - session: session_013zxzePtKmw2meUvnUBaNQh
+    date: "2026-10-27"
+    severity: nit
+    description: "Standards reviewer flagged missing screenshots I had already taken, because its follow-up brief didn't say so"
+    solution: "Name the checks already done, with their outputs, in a follow-up review brief"

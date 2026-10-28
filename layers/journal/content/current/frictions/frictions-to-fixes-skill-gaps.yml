@@ -78,3 +78,8 @@ occurrences:
     severity: nit
     description: "Skill says to Read design-brief and impl-brief verbatim into each subagent prompt, yet passing the brief file path worked and was cheaper; the 'verbatim' wording is ambiguous."
     solution: "State in the Skill whether handing the brief by path satisfies 'verbatim'."
+  - session: session_013zxzeQvE9RNYoZRiZEEKBG
+    date: "2026-10-28"
+    severity: minor
+    description: "Skill says file regression issues for the top three by severity, but the top two were an owner-decided entry and a stale-session false alarm; I had to deviate and pick by recurrence."
+    solution: "Say in §2 to skip entries whose issue the owner closed not planned or whose fix is recorded as holding, and how to break minor-severity ties."

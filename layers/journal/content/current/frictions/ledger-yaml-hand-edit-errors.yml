@@ -2,7 +2,7 @@ name: ledger-yaml-hand-edit-errors
 summary: >-
   Hand or scripted edits to YAML data files (the Friction Ledger, prune trials, Skill Inventory, authored session logs, Tenant content) broke their format, or a missing helper flag forced a hand edit.
 cause: >-
-  YAML data is patched by string replacement, sed, a re-wrapping serializer or by hand: unquoted dates, hashes or colons, a hyphen-split folded scalar, a replaced ref, a match inside a comment, or a parse-and-restringify that rewraps every prose field broke the file or bloated the diff (gate cycle or repair needed). Where ledger-set.ts lacked a flag or no helper placed blocks under a named entry, the agent hand-edited or scripted its own splitter. A session repeated in one entry belongs to survey-appends-duplicate-sessions. Signals: validate-content-schema failure on a YAML file, 'split word', 'unquoted', 'no flag for', a several-thousand-line reformatting diff.
+  YAML data is patched by string replacement, sed, a re-wrapping serializer or by hand: unquoted dates, hashes or colons, a hyphen-split folded scalar, a replaced ref, a match inside a comment, or a parse-and-restringify that rewraps every prose field broke the file or bloated the diff (gate cycle or repair needed). Where a helper lacked a flag or no helper placed blocks under a named entry, the agent hand-edited or scripted its own splitter; since PR #2630 ledger-set.ts sets summary, cause and surface on an existing entry and --move writes block style. A session repeated in one entry belongs to survey-appends-duplicate-sessions. Signals: validate-content-schema failure on a YAML file, 'split word', 'unquoted', 'no flag for', a several-thousand-line reformatting diff.
 surface: safe
 status: open
 fixes:
@@ -24,6 +24,9 @@ fixes:
   - pr: 2567
     date: "2026-10-26"
     summary: "ledger-set.ts gained --note, --clear-ref and --create so entries need no hand edits."
+  - pr: 2630
+    date: "2026-10-28"
+    summary: "ledger-set.ts sets summary, cause and surface on an existing entry; prune-friction-ledger.ts --move writes block style into an entry created with empty occurrences."
 occurrences:
   - session: session_0147UencKKZS3WLHvsbgywp7
     date: "2026-10-15"
@@ -115,3 +118,13 @@ occurrences:
     severity: minor
     description: "First migration script re-serialized skill YAML, reformatting every long prose field, so I had to restore the files and redo the edit as a text cut."
     solution: "Edit YAML as text or with parseDocument for a field removal; check git diff --stat right after any data migration."
+  - session: session_013zxzeR86n7CjfWXZh4HXyc
+    date: "2026-10-28"
+    severity: minor
+    description: "ledger-set.ts could set summary and cause only on --create, so the rewrite-on-append rule had no tool; the script needed a change first."
+    solution: "Fixed in PR #2630: --summary, --cause and --surface now edit an existing entry."
+  - session: session_013zxzeSJQfnNdJHrSWjVT2x
+    date: "2026-10-28"
+    severity: nit
+    description: "Appended pass-two log entries to the end of the YAML file, under the wrong key, so --author rejected it and I rewrote the file."
+    solution: "log-session could say to insert new entries under their own key."
