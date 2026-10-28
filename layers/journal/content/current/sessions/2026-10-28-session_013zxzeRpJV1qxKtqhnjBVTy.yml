@@ -1,0 +1,343 @@
+schemaVersion: 1
+session: session_013zxzeRpJV1qxKtqhnjBVTy
+startedAt: 2026-10-28T00:46:19Z
+endedAt: 2026-10-28T01:00:55Z
+kind: autonomous
+goal: Weekly check of the Platform's own Skills
+status: in-review
+outcome: "Inventory PR #2609 open; 2 issues filed, 3 reopened or commented"
+summary: "Scheduled audit-skills run, fully agent-driven under the Skill's own steps (no human instruction beyond the schedule). Gathered the scorecard, had one Sonnet agent collect Routine run costs and 13 more run the per-Skill behaviour checks. Verified the claims worth escalating myself: the log-session ruleVerdicts gaps (compared rule lists in three logs), blog-post PR #2591's commit order, digest PR #2606 and the 8 Digests on main, and the glassbox-improve frontmatter parse failure. Filed #2607 and #2608, reopened #2370 and #2105 with new evidence, commented on #2472. Everything else became dated observations; no grade or role changed. Added a glassbox-improve Inventory entry. Landed one Inventory PR (#2609) after code-review (Standards clean, Spec trimmed one overclaim and moved an idea out), a reviewed follow-up and a green gate:scoped. Orphan scan ran (1711 PRs, 1554 with a session), both candidates already resolved. Open: the PR still needs merging once CI is green."
+prs:
+  - "2609"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: hook demanded it after my first git command; fetch-first matched what I did
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read after my first GitHub call; the search fields guard and list-over-search advice were relevant
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: needed before filing issues; filing conventions
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: hook after filing; needs-triage was right
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: scheduled-run PR closing steps and the simple-change count
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: read by its behaviour-check subagent as the spec to grade against; it reported it useful
+    useful: yes
+  - path: .agents/skills/audit-skills/brief.md
+    reason: the brief I handed each behaviour-check subagent; read to build the briefs
+    useful: yes
+  - path: .claude/skills/audit-skills/brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-skills
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: read before writing the 14 read-only briefs
+  - name: code-review
+    reason: first-push review of the 21-file Inventory diff
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: authors this log
+frictions:
+  - description: Read git-conventions.md and github-integration.md only after hooks fired post first git and GitHub calls, although CLAUDE.md requires them before.
+    solution: Load both when the audit Skill is invoked so a scheduled run reads them up front.
+    severity: nit
+  - description: search_issues was blocked for a missing fields array; a second call was needed after reading the doc.
+    solution: Put the fields requirement in the audit-skills Skill text where it tells to search open issues.
+    severity: nit
+  - description: Guessed this session's id from the system reminder and got it wrong by one letter; caught only by calling get_session before any post used it.
+    solution: The Skill should say to copy the id from get_session or the commit template, not retype it.
+    severity: minor
+  - description: ScheduleWakeup is blocked outside /loop, and I armed two monitors on the same gate log, wasting a call.
+    solution: End the turn and wait for the background task notification once; do not arm duplicate monitors.
+    severity: nit
+durationSec: 875
+models:
+  claude-sonnet-5-5: 151
+toolCounts:
+  Bash: 44
+  Read: 5
+  Skill: 4
+  Agent: 17
+  mcp__github__search_issues: 1
+  mcp__github__list_issues: 1
+  mcp__github__issue_read: 2
+  mcp__github__pull_request_read: 2
+  mcp__Claude_Code_Remote__get_session: 1
+  mcp__github__add_issue_comment: 3
+  mcp__github__issue_write: 4
+  Monitor: 2
+  ScheduleWakeup: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  PushNotification: 1
+filesEdited:
+  - layers/journal/content/current/skills/audit-skills.yml
+  - layers/journal/content/current/skills/dispatch-subagents.yml
+  - layers/journal/content/current/skills/glassbox-improve.yml
+  - layers/journal/content/current/routines/audit-docs.yml
+  - layers/journal/content/current/routines/audit-skills.yml
+  - layers/journal/content/current/routines/blog-post.yml
+  - layers/journal/content/current/routines/digest.yml
+  - layers/journal/content/current/routines/frictions-to-fixes.yml
+  - layers/journal/content/current/routines/glassbox-update.yml
+  - layers/journal/content/current/routines/prune-trial.yml
+  - layers/journal/content/current/routines/visitor-loop.yml
+  - layers/journal/content/current/skills/audit-docs.yml
+  - layers/journal/content/current/skills/blog-post.yml
+  - layers/journal/content/current/skills/clear-backlog.yml
+  - layers/journal/content/current/skills/digest.yml
+  - layers/journal/content/current/skills/frictions-to-fixes.yml
+  - layers/journal/content/current/skills/glassbox-update.yml
+  - layers/journal/content/current/skills/inspect-session.yml
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/prune-trial.yml
+  - layers/journal/content/current/skills/visitor-loop.yml
+rulesLoaded:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0015.md
+    reason: Inventory-only scope and role-without-ids rule applied; the summary was enough, I did not open the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to review before the first push and count a simple follow-up; I ran code-review and did not open the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR without asking and limit a scheduled run to its Skill; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Said to invoke close-session on PR open and keep logs out of the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Session header on every GitHub write and the commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded mid-session; no prune trial text was touched
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill locations; I only edited Inventory entries, never a Skill
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; not relevant to an Inventory edit
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded by a hook after reading Journal files; I touched no Tenant content, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded by a hook when I read the triage labels doc; I filed needs-triage issues and ran no sweep.
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: Only the digest check subagent loaded it; it said it framed the sweep finding.
+    useful: partly
+  - path: .claude/rules/adr-0012.md
+    reason: Only the blog-post subagent loaded it; it said it confirmed the pingback scope.
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by subagents; clear-backlog and prune-trial reports said it explained which merges needed a human.
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Only the audit-docs subagent loaded it, a pointer only; it reported no use.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Only the prune-trial subagent loaded it; it reported no use.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Collect routine run usage
+    model: sonnet
+    durationSec: 21
+    toolCalls: 10
+    modelCalls: 3
+    tokenShare: 2
+  - type: general-purpose
+    task: Check audit-docs behaviour
+    model: sonnet
+    durationSec: 63
+    toolCalls: 14
+    modelCalls: 8
+    tokenShare: 4.2
+  - type: general-purpose
+    task: Check audit-skills behaviour
+    model: sonnet
+    durationSec: 60
+    toolCalls: 14
+    modelCalls: 7
+    tokenShare: 3.8
+  - type: general-purpose
+    task: Check blog-post behaviour
+    model: sonnet
+    durationSec: 89
+    toolCalls: 23
+    modelCalls: 11
+    tokenShare: 5.1
+  - type: general-purpose
+    task: Check clear-backlog behaviour
+    model: sonnet
+    durationSec: 82
+    toolCalls: 17
+    modelCalls: 9
+    tokenShare: 4.3
+  - type: general-purpose
+    task: Check close-session behaviour
+    model: sonnet
+    durationSec: 65
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 3.6
+  - type: general-purpose
+    task: Check digest behaviour
+    model: sonnet
+    durationSec: 59
+    toolCalls: 16
+    modelCalls: 7
+    tokenShare: 3.6
+  - type: general-purpose
+    task: Check dispatch-subagents behaviour
+    model: sonnet
+    durationSec: 74
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 4.3
+  - type: general-purpose
+    task: Check frictions-to-fixes behaviour
+    model: sonnet
+    durationSec: 48
+    toolCalls: 18
+    modelCalls: 7
+    tokenShare: 3.7
+  - type: general-purpose
+    task: Check glassbox-update behaviour
+    model: sonnet
+    durationSec: 52
+    toolCalls: 13
+    modelCalls: 7
+    tokenShare: 3.4
+  - type: general-purpose
+    task: Check inspect-session behaviour
+    model: sonnet
+    durationSec: 89
+    toolCalls: 16
+    modelCalls: 11
+    tokenShare: 4.9
+  - type: general-purpose
+    task: Check log-session behaviour
+    model: sonnet
+    durationSec: 68
+    toolCalls: 15
+    modelCalls: 9
+    tokenShare: 4.3
+  - type: general-purpose
+    task: Check prune-trial behaviour
+    model: sonnet
+    durationSec: 75
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 4.1
+  - type: general-purpose
+    task: Check visitor-loop behaviour
+    model: sonnet
+    durationSec: 85
+    toolCalls: 16
+    modelCalls: 11
+    tokenShare: 4.8
+  - type: general-purpose
+    task: Review standards of Inventory diff
+    model: sonnet
+    durationSec: 37
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 2.4
+  - type: general-purpose
+    task: Review spec of Inventory diff
+    model: sonnet
+    durationSec: 37
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 2.3
+  - type: general-purpose
+    task: Review follow-up commit Standards
+    model: sonnet
+    durationSec: 16
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 0.9
+gitBranch: claude/upbeat-sagan-4q0bgy
+entrypoint: remote_trigger
+cliVersion: 2.1.312
+trigger: audit-skills
+ideas:
+  - Add a gate step that parses every Skill's SKILL.md frontmatter, so an unquoted colon (as in glassbox-improve) cannot merge and silently drop disable-model-invocation.
+  - Make check-worktrees excuse an agent worktree whose patch-id is on main, so cherry-pick integration (Glass Box guide runs) stops tripping dispatch-subagents step 5.
+landedBy: Stop
