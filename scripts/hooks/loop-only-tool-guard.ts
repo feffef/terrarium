@@ -1,15 +1,7 @@
-// Mechanical backstop for issue #814: `ScheduleWakeup` is valid only inside a
-// `/loop` session, and two doc-only fixes (#241, #425) failed to stop plain
-// scheduled and interactive sessions reaching for it anyway. Both wrote the
-// rule into `docs/agents/github-integration.md`, which none of the affected
-// sessions had reason to open. This guard is the fix, and its deny message is
-// the rule's only home.
-//
-// Why a call outside `/loop` is not inert: a fired wakeup delivers a spurious
-// turn that can re-run the session's whole prompt. Two of the recorded misuses
-// had real consequences rather than a harmless no-op — an unwanted "autonomous
-// loop tick" that had to be diagnosed and stopped, and a wakeup that would have
-// re-sent `/audit-docs` mid-PR-review had it not been cancelled (#814).
+// Guard for issue #814 (the misuse history lives there): `ScheduleWakeup` is
+// valid only inside a `/loop` session; elsewhere a fired wakeup delivers a
+// spurious turn that can re-run the session's whole prompt. Doc-only fixes
+// (#241, #425) failed, so the deny message is the rule's only home.
 //
 // Pure core (`detectSessionMode`, `checkLoopOnlyToolCall`) is kept separate from
 // the shared stdin/`--dry-run`/bootstrap plumbing (`hook-io.ts`, issue #1080);
@@ -69,9 +61,7 @@ export const LOOP_ONLY_TOOLS: readonly LoopOnlyTool[] = [
       'Waiting on a backgrounded Bash command → end the turn. The harness delivers a task notification when it exits.',
       'Polling non-webhook-delivered external state (CI/gate completion) → `mcp__Claude_Code_Remote__send_later` to schedule your own check-in (#241).',
     ],
-    // Cancelling is the one call that can only ever REMOVE a pending wakeup, and
-    // denying it would strand a spurious one with no way to stop it — the exact
-    // situation several logged sessions had to dig themselves out of (#814).
+    // A cancel only removes a pending wakeup; denying it would strand a spurious one.
     exempt: (input) => input.stop === true,
     exemptNote: 'Cancelling an already-scheduled wakeup (`stop: true`) is allowed in any mode.',
   },
