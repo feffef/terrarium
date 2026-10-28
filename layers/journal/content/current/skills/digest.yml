@@ -313,3 +313,12 @@ observations:
       instance session_014yTcrjFw1Qa6ABqQoGpzYq (PR #2552), added to #2472
       with the earlier ones. Unchecked: PR bodies (GraphQL 403).
       Grade/role unchanged (routine).
+  - date: "2026-10-28"
+    note: >-
+      Behaviour check, 7 runs, all PRs merged. Verified:
+      session_013zxzePhRwXqYLtsycYUhqv (PR #2606) dropped the retention sweep
+      because it broke the smoke test 'hydrates /t/journal/archived';
+      origin/main holds 8 Digests, budget 7. Fifth sweep side-effect case;
+      reopened #2105. First-push code-review skips on sweep diffs continue on
+      #2472 (session_0174aaydYCKDuWSrJkkTD1dM,
+      session_014yTcrjFw1Qa6ABqQoGpzYq). Grade/role unchanged (routine).

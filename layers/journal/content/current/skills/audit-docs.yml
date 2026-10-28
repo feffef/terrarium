@@ -401,3 +401,10 @@ observations:
       not cover it. Repeat of conflicts named but untracked
       (session_012XnetQuxWoyaVFYw1BqMoy). Grade/role unchanged
       (routine).
+  - date: "2026-10-28"
+    note: >-
+      Behaviour check, 7 runs, 10 PRs merged, no revert. Minor repeat:
+      session_01BgQzSd9CmFPiugdXAQh6HW (PR #2560) named the
+      github-integration.md line 10 vs guard conflict in its summary but
+      logged no Friction (ADR-0027); the conflict is still live. Same shape as
+      session_012XnetQuxWoyaVFYw1BqMoy. Grade/role unchanged (routine).

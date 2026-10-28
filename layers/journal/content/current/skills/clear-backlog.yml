@@ -161,3 +161,12 @@ observations:
       with tool calls (session_01PYyNMqrrDLZdXEej11LMzs). Filed as
       #2577. Unverified: no log mentions check:worktrees. Grade/role
       unchanged (specialist).
+  - date: "2026-10-28"
+    note: >-
+      Behaviour check, 10 runs, all PRs merged. Unverified: whether
+      check:worktrees (section 4 Done) runs, since logs do not record
+      commands; session_01PdrNTJLJJMKBGGZfsAhL6w hand-fixed a ready-to-push
+      branch without re-running gate:scoped, and
+      session_01Cb8ETAZztznLYx6CC7MKyE re-invoked no close-session after
+      merges. #2589 and #2590 fixed earlier frictions. Grade/role unchanged
+      (specialist).

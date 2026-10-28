@@ -87,3 +87,10 @@ observations:
       unfixed: partial reads hit the page limit before the session start
       (session_01PWZU3TqUdSp6uD1KaoQXit, session_019nDDDS9GsXdTKWK44j18fT, session_01VW5yg4NTMt1JBnXCcrhjw9).
       Grade/role unchanged.
+  - date: "2026-10-28"
+    note: >-
+      Behaviour check, 10 runs delivered, no revert. Watch item (n=1): in
+      session_013zxzeQ8EBq9v7NXqWmAFRF an inspector subagent stopped after 34
+      of 184 pages despite page limit 9999 and needed a resume. Partial reads
+      hit the page limit before session start in 3 runs (known). Grade/role
+      unchanged (specialist).

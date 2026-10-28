@@ -446,3 +446,11 @@ observations:
       match numstat. Minor: a code-review Standards subagent ran git
       checkout --detach despite a read-only brief
       (session_01Y1i7HTUED6iQYzbSLBbu79). Grade/role unchanged.
+  - date: "2026-10-28"
+    note: >-
+      Behaviour check, 9 runs, PRs merged, no revert. Last three of four runs
+      cut only 1 to 2 lines (#2443, #2538, #2593), the reshape signal their
+      frictions name; the retire trigger has not fired. Unverified: 9231b5215
+      (#2539) is titled prune-trial yet +452/-219. Old line-delta mismatches
+      (#2412, #2447) predate the numstat clause. Grade/role unchanged
+      (routine).

@@ -87,3 +87,11 @@ observations:
       screenshot skips (a third, session_01R6bzvTEBJCmagf7BbWfBqG) were
       probably fixed by the 10-26 threshold edit; the 10-26 run shot two
       pages. Grade/role unchanged (specialist).
+  - date: "2026-10-28"
+    note: >-
+      Behaviour check, 8 runs delivered, no revert. Repeat of #2472: 6 of 8
+      skipped first-push code-review on 24 to 32-file pin restamps (e.g.
+      session_01A7PwrNRBtY9LTX6HrttXWW). Screenshot skips
+      (session_01G2d5G6TrdoTQYQr7S2Eu7o, session_01PGQQj6iUaMYCkphVjFEsBP)
+      closed by 53c0e059b. Unverified nit: --write does not shift lines ranges
+      on pages with an edited range. Grade/role unchanged (specialist).
