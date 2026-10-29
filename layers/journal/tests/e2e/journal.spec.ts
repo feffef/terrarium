@@ -455,6 +455,21 @@ describe('journal Tenant', async () => {
     })
   })
 
+  it('filters the Recent activity cards by session kind', async () => {
+    await withRendered('/t/journal/current', async (page) => {
+      const shown = () => page.locator('.feed .card:visible').count()
+      expect(await shown()).toBeLessThanOrEqual(10)
+      const chips = page.locator('.kind-chip')
+      expect(await chips.count()).toBeGreaterThan(2)
+      await page.getByRole('button', { name: /^autonomous \d+$/ }).click()
+      expect(await page.locator('.kind-chip[aria-pressed="true"]').textContent()).toMatch(/^\s*autonomous/)
+      const n = Number((await page.locator('.kind-chip[aria-pressed="true"]').textContent())!.match(/\d+/)![0])
+      expect(await shown()).toBe(Math.min(10, n))
+      await page.getByRole('button', { name: /^All \d+$/ }).click()
+      expect(await page.locator('.kind-chip[aria-pressed="true"]').textContent()).toMatch(/^\s*All/)
+    })
+  })
+
   // The regression guard for issue #768's actual mechanism. What looked like
   // "an oversized log's card never renders its detail" was the accordion
   // test's real click landing on content: a click aims at its target's

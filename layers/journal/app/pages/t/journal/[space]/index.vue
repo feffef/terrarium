@@ -120,6 +120,26 @@ const sessionCards = computed(() => sessionCardViews(sessions.value, ruleTitleMa
 // text is still there to find, only visually collapsed by default.
 const SESSIONS_VISIBLE = 10
 const showAllSessions = ref(false)
+// Client-only filter by who prompted the session (visitor-loop, 2026-10-29): no URL
+// state and no storage, so the cached server payload (ADR-0028) is unchanged.
+const kindFilter = ref<keyof ReturnType<typeof kindCounts> | null>(null)
+const kindByKey = computed(() => new Map(sessions.value.map((s) => [s.session, s.kind])))
+const kindChips = computed(() =>
+  Object.entries(sessionKindCounts.value).filter(([, n]) => n) as [keyof ReturnType<typeof kindCounts>, number][],
+)
+// The cut and the "Show all N" count apply to the filtered list; an open card stays visible.
+const sessionView = computed(() => {
+  const visible = new Set<string>()
+  let matches = 0
+  for (const c of sessionCards.value) {
+    if (!kindFilter.value || kindByKey.value.get(c.key) === kindFilter.value) {
+      if (showAllSessions.value || matches < SESSIONS_VISIBLE) visible.add(c.key)
+      matches++
+    }
+    if (isOpen(sessionAnchor(c.key))) visible.add(c.key)
+  }
+  return { visible, matches }
+})
 // Same `v-show` reasoning: on a phone seven open-ended digest rows pushed the session log off-screen.
 const DIGESTS_VISIBLE = 3
 const showAllDigests = ref(false)
@@ -342,11 +362,26 @@ useSeoMeta({
           <template v-else>session logs, newest first</template>
         </span>
       </div>
+      <div v-if="kindChips.length > 1" class="kind-filter" role="group" aria-label="Filter sessions by who prompted them">
+        <button type="button" class="kind-chip" :aria-pressed="!kindFilter" @click="kindFilter = null">
+          All {{ sessions.length }}
+        </button>
+        <button
+          v-for="[k, n] in kindChips"
+          :key="k"
+          type="button"
+          class="kind-chip"
+          :aria-pressed="kindFilter === k"
+          @click="kindFilter = k"
+        >
+          {{ k }} {{ n }}
+        </button>
+      </div>
       <div v-if="sessionCards.length" class="cards">
         <!-- A deep-linked card stays visible even past the default cut. -->
         <JournalSessionCard
-          v-for="(c, i) in sessionCards"
-          v-show="showAllSessions || i < SESSIONS_VISIBLE || isOpen(sessionAnchor(c.key))"
+          v-for="c in sessionCards"
+          v-show="sessionView.visible.has(c.key)"
           :key="c.key"
           :card="c"
           :anchor="sessionAnchor(c.key)"
@@ -356,12 +391,12 @@ useSeoMeta({
       </div>
       <p v-else class="empty">No sessions logged in this Space yet.</p>
       <button
-        v-if="sessionCards.length > SESSIONS_VISIBLE && !showAllSessions"
+        v-if="sessionView.matches > SESSIONS_VISIBLE && !showAllSessions"
         type="button"
         class="show-all-sessions"
         @click="showAllSessions = true"
       >
-        Show all {{ sessionCards.length }} sessions
+        Show all {{ sessionView.matches }} {{ kindFilter ?? '' }} sessions
       </button>
     </section>
 
@@ -590,6 +625,20 @@ h1 {
 
 .cards { display: flex; flex-direction: column; gap: 0.85rem; min-width: 0; }
 .empty { color: var(--jd-faint); font-size: 0.9rem; margin: 0; }
+
+.kind-filter { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0 0 0.8rem; }
+.kind-chip {
+  padding: 0.3rem 0.7rem;
+  font-family: var(--jd-mono);
+  font-size: 0.74rem;
+  color: var(--jd-muted);
+  background: var(--jd-surface-2);
+  border: 1px solid var(--jd-line);
+  border-radius: 999px;
+  cursor: pointer;
+}
+.kind-chip:hover { color: var(--jd-ink); border-color: var(--jd-accent); }
+.kind-chip[aria-pressed='true'] { color: var(--jd-ink); border-color: var(--jd-accent); background: var(--jd-surface); }
 
 .show-all-sessions {
   display: block;
