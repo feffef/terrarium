@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
 surface: safe
-status: open
-ref: "Prune Trial opened 2026-10-25 by PR #2537 was judged and deleted by the 2026-10-28 prune run (PR #2641): no major or blocker Friction in 48 sessions. Issue #2556 closed as superseded by it."
+status: tracked
+ref: "Issue #2657: after the PR #2537 cut, the share of sessions with this Friction rose from 12 of 187 (10-15 to 10-24) to 8 of 68 (10-25 to 10-29), so on 2026-10-29 the owner chose to restore dispatch-subagents' re-check line instead of accepting the cost. Prune Trial opened 2026-10-25 by PR #2537 was judged and deleted by the 2026-10-28 prune run (PR #2641): no major or blocker Friction in 48 sessions. Issue #2556 closed as superseded by it."
 fixes:
   - pr: 2336
     date: "2026-10-20"
@@ -16,6 +16,9 @@ fixes:
   - pr: 2485
     date: "2026-10-24"
     summary: "Made each triage side finding in clear-backlog-explore carry a required source (file:line, SHA, URL or 'unverified' plus what would verify it)."
+  - pr: 2670
+    date: "2026-10-29"
+    summary: "dispatch-subagents again tells the dispatcher to re-check a subagent's factual or attribution claims against their cited source before they ship."
 occurrences:
   - session: session_013RCsUF234qAGu3CJr3v2on
     date: "2026-10-16"
