@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePQM2TjRCTtcKaV61o
 startedAt: 2026-10-29T13:39:01Z
-endedAt: 2026-10-29T13:50:04Z
+endedAt: 2026-10-29T13:54:14Z
 kind: autonomous
 goal: Scheduled prune of agent instructions
-status: in-review
-outcome: "PR #2681 opened: two trials judged and deleted, dispatch-subagents brief rules trimmed, new trial opened"
-summary: "Scheduled prune-trial run, no human involved. Judged the frictions-to-fixes briefs trial and the log-session When-to-invoke trial (both judgeable): only nit and minor Frictions since, rates within one or two sessions, so both hold and were deleted. A search subagent picked dispatch-subagents section 3 (failed as prose on #2312 and #2610, no guard checks brief contents). My first cut dropped four rules and the ledger overstated that every rule was kept; the Sonnet probe passed but code-review's Spec axis caught the drops, so I restored them and shortened the entry. Gate green on the final head, PR #2681 opened. Still open: CI, a verdict comment with Reviewed sha, merge via merge-pr.ts."
+status: completed
+outcome: "PR #2681 merged: two trials judged and deleted, dispatch-subagents brief rules trimmed, new trial opened"
+summary: "Scheduled prune-trial run, no human involved. Judged the frictions-to-fixes briefs trial and the log-session When-to-invoke trial (both judgeable): only nit and minor Frictions since, rates within one or two sessions, so both hold and were deleted. A search subagent picked dispatch-subagents section 3 (failed as prose on #2312 and #2610, no guard checks brief contents). My first cut dropped four rules and the ledger overstated that every rule was kept; the Sonnet probe passed but code-review's Spec axis caught the drops, so I restored them and shortened the entry. Gate green on the final head, PR #2681 opened. PR #2681 merged via merge-pr.ts after a verdict comment and green CI."
 prs:
   - "2681"
 docsRead:
@@ -57,18 +57,23 @@ frictions:
   - description: Ran the window script and other git commands before reading git-conventions.md; a hook flagged it afterwards.
     solution: Read git-conventions.md first, as CLAUDE.md says.
     severity: nit
-durationSec: 663
+  - description: Stop hook asked twice to push while the gate was still running; waiting cost two idle turns but kept ADR-0004 intact.
+    solution: None needed; the hook cannot see a pending gate.
+    severity: nit
+durationSec: 913
 models:
-  claude-sonnet-5-5: 79
+  claude-sonnet-5-5: 92
 toolCounts:
-  Bash: 22
+  Bash: 24
   Read: 6
   Agent: 4
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
 filesEdited:
   - .agents/prune-trials.yml
   - .agents/skills/dispatch-subagents/SKILL.md
@@ -147,28 +152,28 @@ subagents:
     durationSec: 100
     toolCalls: 22
     modelCalls: 9
-    tokenShare: 15.7
+    tokenShare: 13.6
   - type: general-purpose
     task: Probe trimmed dispatch brief rules
     model: sonnet
     durationSec: 24
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 2.9
+    tokenShare: 2.5
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 46
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 9.1
+    tokenShare: 7.9
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 42
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 8.5
+    tokenShare: 7.4
 gitBranch: claude/practical-rubin-nnkw2o
 entrypoint: remote_trigger
 cliVersion: 2.1.312
