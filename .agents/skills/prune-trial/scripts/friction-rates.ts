@@ -4,10 +4,11 @@
 //
 // Both windows count only what the ledger can see. Before: the ledger horizon's
 // start (older occurrences are pruned) to the landing. After: the landing to the
-// start of the last `frictions-to-fixes` survey that reached `main`, counting
-// sessions that ended before it; a later session isn't surveyed yet and would
-// read as a miss. Other PRs touch the ledger too, so the last ledger commit
-// alone doesn't date a survey.
+// start of the newest `frictions-to-fixes` survey whose ledger PR has merged,
+// counting sessions that ended before it; a later session isn't surveyed yet
+// and would read as a miss. Other PRs touch the ledger too, and a survey logs
+// itself before its PR merges, so neither the last ledger commit nor the last
+// survey log alone dates the cutoff.
 //
 // Usage:
 //   tsx .agents/skills/prune-trial/scripts/friction-rates.ts <landed-ISO> <entry>...
@@ -16,18 +17,17 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml } from 'yaml'
-import { isExternalSession } from '../../../../shared/schemas/session.ts'
 import { LEDGER_HORIZON_DAYS, ledgerWindowStart } from '../../../../layers/journal/app/utils/ledger.ts'
-import { LEDGER_DIR } from '../../../../scripts/session/extract-frictions.ts'
-import { readSessionLogs } from '../../../../scripts/session/journal-files.ts'
+import { LEDGER_DIR, readSessions } from '../../../../scripts/session/extract-frictions.ts'
 import { fetchOriginMain, git } from '../../../../scripts/lib/git.ts'
 import { fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 
 export interface RateSession {
-  session: string
+  id: string
   startedAt: string
   endedAt: string
-  trigger?: string
+  trigger: string
+  prs: string[]
 }
 
 export interface Windows {
@@ -41,13 +41,11 @@ export interface Rate {
   sessions: number
 }
 
-/** The start of the newest survey run whose ledger commit has reached `main`:
- *  a run logs itself before its ledger PR merges (frictions-to-fixes §5). */
-export function surveyCutoff(sessions: RateSession[], lastLedgerCommit: number): number | null {
+/** The start of the newest survey run one of whose PRs merged a ledger change. */
+export function surveyCutoff(sessions: RateSession[], ledgerPrs: Set<string>): number | null {
   const starts = sessions
-    .filter((s) => s.trigger === 'frictions-to-fixes')
+    .filter((s) => s.trigger === 'frictions-to-fixes' && s.prs.some((pr) => ledgerPrs.has(pr)))
     .map((s) => Date.parse(s.startedAt))
-    .filter((t) => t < lastLedgerCommit)
   return starts.length ? Math.max(...starts) : null
 }
 
@@ -59,7 +57,7 @@ export function rates(sessions: RateSession[], hitIds: Set<string>, w: Windows):
   const after = sessions.filter(
     (s) => Date.parse(s.startedAt) >= w.landed && Date.parse(s.endedAt || s.startedAt) < w.surveyCutoff,
   )
-  const rate = (set: RateSession[]): Rate => ({ hits: set.filter((s) => hitIds.has(s.session)).length, sessions: set.length })
+  const rate = (set: RateSession[]): Rate => ({ hits: set.filter((s) => hitIds.has(s.id)).length, sessions: set.length })
   return { before: rate(before), after: rate(after) }
 }
 
@@ -67,18 +65,19 @@ function format(r: Rate): string {
   return `${r.hits}/${r.sessions} (${r.sessions ? ((100 * r.hits) / r.sessions).toFixed(1) : '-'}%)`
 }
 
+/** PR numbers of the merges on `main` that changed the ledger. */
+function ledgerPrs(): Set<string> {
+  const subjects = git(['log', 'origin/main', '--first-parent', '--format=%s', '--', LEDGER_DIR], root)
+  return new Set([...subjects.matchAll(/#(\d+)/g)].map((m) => m[1]!))
+}
+
 function main(): void {
   const [landedArg, ...entries] = process.argv.slice(2)
   const landed = Date.parse(landedArg ?? '')
   if (Number.isNaN(landed) || entries.length === 0) fail('usage: friction-rates.ts <landed-ISO> <entry>...')
   fetchOriginMain(root)
-  const sessions: RateSession[] = readSessionLogs(root, { archived: true })
-    .filter(({ data }) => !isExternalSession(data))
-    .map(({ data }) => data as unknown as RateSession)
-  const lastLedgerCommit = Date.parse(
-    git(['log', 'origin/main', '--first-parent', '-1', '--format=%cI', '--', LEDGER_DIR], root).trim(),
-  )
-  const cutoff = surveyCutoff(sessions, lastLedgerCommit)
+  const sessions = readSessions(root)
+  const cutoff = surveyCutoff(sessions, ledgerPrs())
   if (cutoff === null || cutoff <= landed) {
     console.log('No frictions-to-fixes survey has reached main since the trial landed: no rates yet.')
     return

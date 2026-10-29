@@ -1,27 +1,31 @@
 import { describe, expect, it } from 'vitest'
 import { rates, surveyCutoff, type RateSession } from '../../scripts/friction-rates.ts'
 
-const s = (session: string, startedAt: string, endedAt = startedAt, trigger?: string): RateSession => ({
-  session,
+const s = (id: string, startedAt: string, endedAt = startedAt, trigger = '', prs: string[] = []): RateSession => ({
+  id,
   startedAt,
   endedAt,
   trigger,
+  prs,
 })
 
 describe('surveyCutoff', () => {
-  it('takes the newest survey run that started before the last ledger commit', () => {
-    const sessions = [
-      s('a', '2026-10-27T02:08:00Z', '2026-10-27T02:40:00Z', 'frictions-to-fixes'),
-      s('b', '2026-10-28T02:08:00Z', '2026-10-28T02:40:00Z', 'frictions-to-fixes'),
-      s('c', '2026-10-28T03:00:00Z', '2026-10-28T03:10:00Z', 'digest'),
-    ]
-    expect(surveyCutoff(sessions, Date.parse('2026-10-28T05:00:00Z'))).toBe(Date.parse('2026-10-28T02:08:00Z'))
-    // b's ledger PR hasn't merged yet: fall back to a.
-    expect(surveyCutoff(sessions, Date.parse('2026-10-28T01:00:00Z'))).toBe(Date.parse('2026-10-27T02:08:00Z'))
+  const sessions = [
+    s('a', '2026-10-27T02:08:00Z', '2026-10-27T02:40:00Z', 'frictions-to-fixes', ['10', '11']),
+    s('b', '2026-10-28T02:08:00Z', '2026-10-28T02:40:00Z', 'frictions-to-fixes', ['20']),
+    s('c', '2026-10-28T03:00:00Z', '2026-10-28T03:10:00Z', 'digest', ['30']),
+  ]
+
+  it('takes the newest survey run whose ledger PR merged', () => {
+    expect(surveyCutoff(sessions, new Set(['11', '20', '30']))).toBe(Date.parse('2026-10-28T02:08:00Z'))
   })
 
-  it('is null when no survey ran', () => {
-    expect(surveyCutoff([s('a', '2026-10-28T02:08:00Z')], Date.now())).toBeNull()
+  it('skips a survey whose ledger PR has not merged, whatever else touched the ledger', () => {
+    expect(surveyCutoff(sessions, new Set(['11', '30']))).toBe(Date.parse('2026-10-27T02:08:00Z'))
+  })
+
+  it('is null when no survey reached main', () => {
+    expect(surveyCutoff(sessions, new Set(['30']))).toBeNull()
   })
 })
 
