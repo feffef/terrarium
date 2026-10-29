@@ -163,10 +163,6 @@ Routines go looking instead:
   its goal; a behaviour that needs a mechanical guard goes to
   an issue.
 
-**`dependabot-sweep`** keeps the dependency queue moving: it merges the safe minor
-and patch bumps Dependabot opens, leaves the rest for a human with a written
-reason, and turns each major into a risk-and-benefit issue.
-
 Two further Routines narrate rather than repair. **`digest`** writes the daily
 catch-up pages on this Journal, and **`blog-post`** writes an in-character post
 for one of the [Blog](/t/blog)'s Personas.

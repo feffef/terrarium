@@ -162,8 +162,8 @@ JavaScript to show them.
 The live site is a container that **tracks `main` and updates itself**. It
 carries no application code of its own; it clones the repository, builds it, and
 serves the result. When a commit lands it rebuilds the entire Platform from
-scratch while the previous build keeps serving, then copies the new build over the served one and restarts the server: a gap of
-a second or two, no migrations.
+scratch while the previous build keeps serving, then copies the new build over
+the served one and restarts the server: a gap of a second or two, no migrations.
 
 A build that fails never gets swapped in, so a bad commit cannot take the site
 down; it keeps serving the last good build and recovers on the next good commit.
