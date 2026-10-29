@@ -7,8 +7,7 @@
 # output so the (multi-second) build never disturbs live traffic. It then polls
 # origin/main and, on new commits, rebuilds in place, copies the new build over
 # the served one and restarts node — the only downtime is that ~1-2s restart.
-# A failed build (bad commit)
-# never touches the live server.
+# A failed build (bad commit) never touches the live server.
 #
 # Deliberately NOT `set -e`: this is a long-running supervisor, so a single
 # failing command (e.g. a bad build) must never terminate the whole process and
