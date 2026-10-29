@@ -30,7 +30,7 @@ parentheses or code identifier unless that is the concept's name
 (*CLAUDE.md*), and the tool's name in front only when the bare word is
 ambiguous outside its Subject (*Claude Code hooks*). A Walkthrough's title names its story.
 `description` is one sentence a visitor reads before clicking. Each stays within
-its cap in `lengths` in `layers/glassbox/page-checks.ts`. The slug follows the
+its cap in `lengths` in `layers/glassbox/page-checks.ts`, which also checks a Lesson title's word count. The slug follows the
 title when a page is written or promoted; a retitle keeps the URL.
 
 ## Write

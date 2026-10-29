@@ -254,14 +254,17 @@ function nextProblems(prose: string): string[] {
 
 // The landing shows each `title` as a card row and its `description` as the teaser under it (EVERY-PAGE.md, Pin).
 const lengths = { lesson: { title: 28, description: 120 }, walkthrough: { title: 36, description: 140 } }
+const lessonTitleWords = 4
 
 function lengthProblems(route: string, frontmatter: Record<string, unknown>): string[] {
   const limit = glassboxSubjectOf(route) ? lengths.lesson : glassboxWalkthroughOf(route) ? lengths.walkthrough : undefined
   if (!limit) return []
-  return (['title', 'description'] as const).flatMap((field) => {
+  const words = String(frontmatter.title ?? '').split(/\s+/).filter(Boolean).length
+  const wordProblems = glassboxSubjectOf(route) && words > lessonTitleWords ? [`title "${frontmatter.title}" is ${words} words, more than ${lessonTitleWords}`] : []
+  return [...wordProblems, ...(['title', 'description'] as const).flatMap((field) => {
     const text = String(frontmatter[field] ?? '')
     return text.length > limit[field] ? [`${field} "${text}" is ${text.length} chars, more than ${limit[field]}`] : []
-  })
+  })]
 }
 
 /** `file` is relative to its Space's `pages/`. */

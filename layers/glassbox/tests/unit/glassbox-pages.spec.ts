@@ -221,6 +221,14 @@ describe('glassboxPageProblems on fixture pages', () => {
     expect(problemsOf(file, long, 'drafts').join('\n')).not.toContain('chars, more than')
   })
 
+  it('fails a guide Lesson title of more than four words, not in drafts or on a Walkthrough', () => {
+    const titled = (page: string, title: string) => page.replace('title: T', `title: ${title}`)
+    expect(problemsOf('nuxt-content/01.collections.md', titled(lesson, 'One two three four'))).toEqual([])
+    expect(problemsOf('nuxt-content/01.collections.md', titled(lesson, 'One two three four five'))).toEqual(['title "One two three four five" is 5 words, more than 4'])
+    expect(problemsOf('nuxt-content/01.collections.md', titled(lesson, 'One two three four five'), 'drafts')).toEqual([])
+    expect(problemsOf('walkthroughs/from-file-to-browser.md', titled(walkthrough, 'One two three four five'))).toEqual([])
+  })
+
   it('fails guide link text that is not its target\'s title, unless it starts lowercase, and passes it in drafts', () => {
     const stale = lesson.replace('[The Gate](', '[The Old Gate](')
     expect(problemsOf('nuxt-content/01.collections.md', stale)).toEqual(['link text "The Old Gate" is not the title "The Gate" of /t/glassbox/guide/terrarium-practice/gate'])
