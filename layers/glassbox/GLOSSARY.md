@@ -136,4 +136,5 @@ turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
 - **`.agents/skills/glassbox-update/SKILL.md`** — how the guide pages are
   brought up to date with `main`.
 - **`.agents/skills/glassbox-improve/SKILL.md`** — how a run raises the
-  guide's weakest pages by rater consensus.
+  guide toward its best pages by rater consensus; its `grades.yml` holds each
+  page's grades.

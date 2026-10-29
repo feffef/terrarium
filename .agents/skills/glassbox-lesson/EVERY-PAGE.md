@@ -29,9 +29,11 @@ Terrarium's own: at most four words in sentence case, with no leading article,
 parentheses or code identifier unless that is the concept's name
 (*CLAUDE.md*), and the tool's name in front only when the bare word is
 ambiguous outside its Subject (*Claude Code hooks*). A Walkthrough's title names its story.
-`description` is one sentence a visitor reads before clicking. Each stays within
-its cap in `lengths` in `layers/glassbox/page-checks.ts`, which also checks a Lesson title's word count. The slug follows the
-title when a page is written or promoted; a retitle keeps the URL.
+`description` is one sentence a visitor reads before clicking; quote it when it
+holds a colon, or YAML misreads it. Each stays within its cap in `lengths` in
+`layers/glassbox/page-checks.ts`, which also checks a Lesson title's word count
+and each Why bullet's length (`ownWords`). The slug follows the title when a
+page is written or promoted; a retitle keeps the URL.
 
 ## Write
 
@@ -62,9 +64,10 @@ title when a page is written or promoted; a retitle keeps the URL.
   you cite, and re-read the docs section that every *What to watch for* and
   *Try it* line depends on. If the network blocks the fetch, read the page's
   source in the published docs package (e.g. `@nuxt/docs` from npm) or the
-  docs repo (for docs.github.com, fetch `raw.githubusercontent.com/github/docs/...`), confirm
-  the exact URL and title in web search results, and say so in the PR. Zod
-  links go to v3.zod.dev.
+  docs repo on `raw.githubusercontent.com` (docs.github.com: `github/docs/...`;
+  vuejs.org: `vuejs/docs/main/src/...`; nuxt.com: `nuxt/nuxt/main/docs/...`),
+  confirm the exact URL and title in web search results, and say so in the
+  PR. Zod links go to v3.zod.dev.
 - **A second tool gets its own link** at its first mention, even though *The
   concept* ends on one Full reference.
 - **Don't repeat a sibling page.** Check a Lesson's *Why it's built this way*
