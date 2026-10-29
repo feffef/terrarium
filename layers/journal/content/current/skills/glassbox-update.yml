@@ -95,3 +95,14 @@ observations:
       (session_01G2d5G6TrdoTQYQr7S2Eu7o, session_01PGQQj6iUaMYCkphVjFEsBP)
       closed by 53c0e059b. Unverified nit: --write does not shift lines ranges
       on pages with an edited range. Grade/role unchanged (specialist).
+  - date: "2026-10-29"
+    note: >-
+      Behaviour check, 8 runs delivered, no revert. Verified repeat:
+      first-push code-review skipped on 24 to 39-file mechanical
+      re-pins in session_013zxzeSJQfnNdJHrSWjVT2x,
+      session_013zxzePLLgArtn1cuyZAmNd,
+      session_01A7PwrNRBtY9LTX6HrttXWW and
+      session_01URZoDXk9zQsY2HDhUruLd4 (#2472). Unverified: --write
+      does not shift lines ranges on pages with an edited range
+      (session_01A7PwrNRBtY9LTX6HrttXWW). Grade/role unchanged
+      (specialist).

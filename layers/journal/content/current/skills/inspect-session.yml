@@ -94,3 +94,12 @@ observations:
       of 184 pages despite page limit 9999 and needed a resume. Partial reads
       hit the page limit before session start in 3 runs (known). Grade/role
       unchanged (specialist).
+  - date: "2026-10-29"
+    note: >-
+      Behaviour check, 8 runs delivered, no revert, no missed
+      invocation. Verified repeat, now the fourth window: partial
+      reads stop at the page limit before the session start
+      (session_01PWZU3TqUdSp6uD1KaoQXit,
+      session_01VW5yg4NTMt1JBnXCcrhjw9,
+      session_013zxzeQ8EBq9v7NXqWmAFRF); filed #2655. Grade/role
+      unchanged (specialist).

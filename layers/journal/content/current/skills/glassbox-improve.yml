@@ -15,3 +15,12 @@ observations:
       improved. Its SKILL.md description has an unquoted colon, so the
       frontmatter fails to parse and the scorecard shows modelInvoked true with
       an empty description (#2608).
+  - date: "2026-10-29"
+    note: >-
+      Behaviour check, 4 runs delivered, no revert. Unverified, from
+      logs only: a gap-tie the rule did not settle
+      (session_013zxzeQDh7MCP7HpYBYBTeh); step 3 does not check a
+      draft title against EVERY-PAGE before promotion, costing a
+      retitle round (#2651); check:worktrees fails on a merged writer
+      worktree until the run branch is pushed. Grade/role unchanged
+      (specialist).
