@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeSgD6cuF2mawqY6jWM
 startedAt: 2026-10-29T06:17:13Z
-endedAt: 2026-10-29T07:04:58Z
+endedAt: 2026-10-29T07:10:39Z
 kind: interactive
 goal: Clear the issue backlog (clear-backlog run)
-status: in-review
-outcome: "Merged #2665, #2666, #2668; owner merged #2667, #2669; #2670 open; #2654 parked behind a prune trial"
+status: completed
+outcome: "9 issues triaged; 6 PRs merged (#2665-#2670); #2654, #2575, #2612 wait on prune trials or a date"
 summary: "The owner invoked clear-backlog (human-instructed) and answered grillings (1d 2a 3a 4a 5a; then 6a; then 7b). Explore triaged 9 issues: #2651 and #2655 to build, #2652/#2654/#2657/#2658/#2659 to grill, #2575 and #2612 blocked (revisit date 2026-10-30; open Prune Trial on environment-caveats.md). For #2654 I changed the triage pick to (d); the build then found an open Prune Trial keeps exactly that log-session text, so on the owner's 6a it waits for the trial verdict (judgeable 2026-10-29T12:54Z). Per the owner's split of #2652 I filed #2663 and #2664 and, agent-initiated, built them in this run. Merged by me: #2665 (#2651), #2666 (#2655; I fixed the page estimate by hand after the review cap), #2668 (#2663). Merged by the owner (Human-only): #2667 (#2658), #2669 (#2664; one EADDRINUSE e2e startup flake re-run). The owner asked whether the recurring frictions were a regression from the PR #2537 prune; I measured per-session rates from the ledger and session logs: relayed-subagent-claims roughly doubled, counts-not-tallied is unclear. On 7b, PR #2670 accepts counts-not-tallied and restores dispatch-subagents' re-check line, tracking relayed-subagent-claims instead of accepting it."
 prs:
   - "2665"
@@ -16,69 +16,105 @@ prs:
   - "2670"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
-    reason: Step 1 eligibility rules for the sweep set
+    reason: "Step 1 eligibility rules for the sweep set Subagents: triage #2612: The brief told me to read it. Gave the per-issue sweep rules and the blocked-ticket skip.; triage #2651: The brief required it; set the brave/determinability bar and the comment rules; triage #2652: Brief required it; gave eligibility, wayfinder overlay, comment rule; triage #2654: ..."
     useful: yes
   - path: docs/agents/git-conventions.md
-    reason: Fetch-before-trust and commit hygiene; confirmed my calls
+    reason: "Fetch-before-trust and commit hygiene; confirmed my calls Subagents: triage #2657: Required before git log. Reminded me to fetch origin/main and read files from it.; fix ledger-accept-relayed-counts r1: A hook asked for it after my first git command (a late read); I read it and the commit followed its rules (-F file, trailer check)."
     useful: partly
   - path: docs/agents/github-integration.md
-    reason: MCP vs gh api in cloud; label replace trap
+    reason: "MCP vs gh api in cloud; label replace trap Subagents: triage #2612: The CLAUDE.md trigger before a GitHub operation, read late after a hook hint. Confirmed issue_read was the right call.; triage #2651: A hook asked for it before GitHub ops; confirmed that a label update replaces the set and that comments go through add_issue_comment; triage #2654: C..."
     useful: yes
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: Read for the guard; workflows brief themselves, so little applied
     useful: partly
   - path: docs/agents/triage-labels.md
-    reason: Label strings for the answers I recorded
+    reason: "Label strings for the answers I recorded Subagents: triage #2651: Required before labelling; confirmed the label strings; triage #2654: Label strings before relabelling; triage #2658: CLAUDE.md trigger before labelling"
     useful: partly
   - path: docs/agents/issue-tracker.md
-    reason: "Filing rules for #2663 and #2664 (verified vs assumed)"
+    reason: "Filing rules for #2663 and #2664 (verified vs assumed) Subagents: triage #2657: Required before triage. Gave the supersession and Prune Trial overlap check."
     useful: yes
   - path: docs/agents/pr-workflow.md
     reason: Push, verdict and merge-pr recipe
     useful: yes
-  - path: .agents/skills/inspect-session/SKILL.md
-    reason: (read before editing)
-  - path: .agents/skills/triage/SKILL.md
-    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: "Spec glassbox-improve-tie-break r1: The brief said to check it for an open trial on this Skill; there is none"
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: "triage #2654: The issue's subject; checked what §4 says"
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: "triage #2654: To see what skipping it loses"
+    useful: yes
   - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
+    reason: "Standards glassbox-lesson-title-word-cap r1: Task said to read it for the Standards axis and the smell baseline.; Spec glassbox-lesson-title-word-cap r1: The task said to apply its Spec axis; I used the Spec brief (missing, scope creep, wrong) directly; Standards inspect-session-page-estimate r1: Task required it for the Standards axis and smell baseline; Duplicated Code / one-home framing found the main issue; Standards inspect-session-page-estimate r2: The task said to read it for the Standards axis and smell baseline. It framed the review.; Spec inspect-session-page-estimate r2: The task told me to read it for the Spec axis. It defines the missing / scope-creep / wrong-implementation checks I applied.; Standards inspect-session-page-estimate r3: The task required it for the Standards axis and the smell baseline.; Spec inspect-session-page-estimate r3: The task told me to read it to apply the Spec axis; its brief (missing, scope creep, wrong) shaped the review.; Spec ledger-accept-relayed-counts r1: The task said to read it. I applied its Spec axis brief: missing, scope creep, wrong.; Spec ledger-accept-relayed-counts r2: The brief told me to read it. Its Spec axis gave the frame for the review: missing parts, scope creep, wrong implementation.; Spec ledger-accept-relayed-counts r3: The brief told me to read it and apply its Spec axis.; Spec tenant-glossary-comments r1: Read as the task required, for the Spec axis brief (missing, scope creep, wrong).; Standards glassbox-improve-tie-break r1: The task told me to read it for the Standards axis and the smell baseline; I applied it, though the baseline barely applies to prose; Spec glassbox-improve-tie-break r1: The task said to apply its Spec axis; Standards glassbox-improve-tie-break r2: The task told me to read it; its smell baseline and Standards brief shaped the review.; Spec glassbox-improve-tie-break r2: The task told me to read it and apply the Spec axis. Its (a)/(b)/(c) structure framed the review.; Standards read-first-hint-readonly-subcommands r1: Named by the task. I used its Standards axis and smell baseline.; Spec read-first-hint-readonly-subcommands r1: The task told me to read it. Its Spec axis brief (missing parts, scope creep, wrong implementation) set the structure of this review."
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "triage #2657: Read for how regression issues are meant to be handled. Its rule that a failed fix needs human eyes backed the grill outcome.; triage #2658: Read to see how regression issues are meant to be handled. §2 says a regression needs human eyes.; triage #2659: Grepped to see how regression issues are meant to be handled. It says 'a change that already failed once needs human eyes', which decided the grill outcome."
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: "triage #2651: Primary source for the four-word title rule and its scope (Lesson, not Walkthrough); Standards glassbox-lesson-title-word-cap r1: Read its title section to check the doc edit against the brief and look for a duplicated number.; Spec glassbox-lesson-title-word-cap r1: Read to check done criterion (4) and that the number is not stated a second time"
+    useful: yes
   - path: .agents/skills/implement/SKILL.md
-    reason: (no reason given)
+    reason: "build read-first-hint-readonly-subcommands: The task named it."
+    useful: yes
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: "triage #2655: The subject of the issue; checked the claims against it."
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: "triage #2654: Found its 'call directly to update' wording, the likely root cause"
+    useful: yes
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: "triage #2651: Format for the brief I posted"
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2651: The brief required it; per-issue rules and the redundancy check; triage #2654: Required by the brief; label roles and outcomes; triage #2655: The brief told me to read it; per-issue rules.; triage #2658: The brief required it. Set the labels and the outcome shape."
+    useful: yes
+  - path: .claude/skills/tdd/SKILL.md
+    reason: "build glassbox-lesson-title-word-cap: The task told me to invoke it. Its seam-confirmation step does not fit an autonomous run, so I used the existing public seam, glassboxPageProblems."
+    useful: partly
+  - path: .claude/worktrees/wf_f51f682d-597-3/.agents/skills/code-review/SKILL.md
+    reason: "Standards tenant-glossary-comments r1: The task told me to read it for the Standards axis and its code-smell checklist. The smells don't apply to a one-sentence change."
+    useful: partly
+  - path: CLAUDE.md
+    reason: "Standards glassbox-lesson-title-word-cap r1: Project instructions loaded at session start. 'One home per fact', 'Keep it short' and the comment rule were the standards I applied.; Standards ledger-accept-relayed-counts r1: Loaded at session start. 'Verify before you state' and 'One home per fact' supplied the main finding.; Standards tenant-glossary-comments r1: Loaded at session start. Its 'fewest words that stay exact' and 'one home per fact' rules were the yardstick for this review. Subagents: build inspect-session-page-estimate: Loaded at session start; gave the build rules and the one-home-per-fact guidance.; Standards inspect-session-page-estimate r1: Loaded at session start; 'Keep it short' and 'One home per fact' were the main standards applied; Spec inspect-session-page-estimate ..."
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "build read-first-hint-readonly-subcommands: A post-edit hint asked for it."
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: "fix inspect-session-page-estimate r2: A hook after the edit asked me to read it. It showed the edit was already right."
+    useful: no
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: "triage #2654: Read the relevant parts (lines 10-30 and 62-75) on when a session logs and the PR-open hint"
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "triage #2651: The full ADR behind the ready-for-agent decision; triage #2654: Full ADR behind the triage label decision; triage #2655: The full ADR behind the rule that governs a ready-for-agent recommendation.; triage #2657: Read for its definition of a judgment call. Confirmed ready-for-human.; triage #2658: Read in full because it governs the ready-for-human recommendation; triage #2659: The full ADR behind the ready-for-human decision. It defines a judgment call."
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "Standards ledger-accept-relayed-counts r2: I read the verdict section to check what 'judged and deleted' means for a trial. That check settled the main finding."
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: "build read-first-hint-readonly-subcommands: A post-edit hint asked for it after I edited CLAUDE.md."
+    useful: partly
+  - path: layers/journal/content/current/frictions/inspect-session-paging-gaps.yml
+    reason: "Standards inspect-session-page-estimate r3: Read to check the fixes-field schema and the page-span facts. Its data exposed the page-estimate error."
+    useful: yes
+  - path: scripts/git/check-worktrees.ts
+    reason: "Spec glassbox-improve-tie-break r1: Read to check the done-line claim, including EXCUSALS and unpushedCount; Standards glassbox-improve-tie-break r2: Read to check the done-line claim and EXCUSALS."
+    useful: yes
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: "Checked the tie-break and done-line claims before filing #2663"
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: "Subagents (PR 2666 and 2670 Standards reviews): co-location and pruning rules; no violations"
+    useful: yes
   - path: /home/user/terrarium/.claude/worktrees/wf_f51f682d-597-4/.agents/skills/code-review/SKILL.md
     reason: (no reason given)
   - path: /home/user/terrarium/.claude/worktrees/wf_f51f682d-597-2/.agents/skills/code-review/SKILL.md
     reason: (no reason given)
   - path: /home/user/terrarium/.agents/skills/code-review/SKILL.md
     reason: (no reason given)
-  - path: docs/adr/0004-objective-safety-gate.md
-    reason: (no reason given)
-  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
-    reason: (no reason given)
   - path: /home/user/terrarium/.claude/worktrees/wf_f51f682d-597-5/.agents/skills/code-review/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/log-session/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/glassbox-improve/SKILL.md
-    reason: (read before editing)
-  - path: .agents/skills/writing-for-agents/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: (no reason given)
-  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
-    reason: (read before editing)
-  - path: .agents/skills/triage/AGENT-BRIEF.md
-    reason: (no reason given)
-  - path: .agents/skills/clear-backlog/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/close-session/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
-    reason: (no reason given)
-  - path: docs/adr/0005-skill-model.md
-    reason: (no reason given)
-  - path: docs/adr/0027-prune-trials.md
     reason: (no reason given)
 skillsUsed:
   - name: grilling
@@ -112,22 +148,28 @@ frictions:
   - description: The Q2/Q3 picks to accept two Friction clusters rested on 'every recurrence is minor' without a per-session rate; the owner's question exposed a doubled rate for one
     solution: Triage briefs for regression issues should compare per-session rates before and after the fix, not severities alone
     severity: moderate
-durationSec: 2865
+  - description: "After PRs #2667-#2670 opened I updated the log by calling log-session directly instead of re-invoking close-session (CLAUDE.md), the very pattern #2654 is about"
+    solution: "Re-invoke close-session at each PR open; #2654's cut, once its trial is judged, removes the text that invites the direct call"
+    severity: minor
+  - description: My merged-verdict log YAML was rejected because PyYAML wrote yes/no as booleans; one retry
+    solution: Dump verdict fields quoted when generating the authored YAML
+    severity: nit
+durationSec: 3206
 models:
-  claude-opus-5-5: 263
+  claude-opus-5-5: 298
 toolCounts:
-  Bash: 81
+  Bash: 92
   Workflow: 5
-  Skill: 4
+  Skill: 5
   ToolSearch: 6
   PushNotification: 3
-  mcp__github__add_issue_comment: 12
-  mcp__github__issue_write: 6
+  mcp__github__add_issue_comment: 14
+  mcp__github__issue_write: 7
   mcp__github__create_pull_request: 6
   mcp__claude-code-remote__subscribe_pr_activity: 6
-  ReadNotifications: 13
-  mcp__claude-code-remote__unsubscribe_pr_activity: 2
-  Agent: 2
+  ReadNotifications: 15
+  mcp__claude-code-remote__unsubscribe_pr_activity: 3
+  Agent: 4
   mcp__github__get_job_logs: 2
   mcp__github__actions_run_trigger: 1
   mcp__github__update_pull_request: 1
@@ -214,40 +256,67 @@ docsReadBySubagents:
   - docs/adr/0029-instructions-load-with-the-files-they-govern.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
-    reason: "Set gate:scoped before first push and which PRs (#2658, #2664) wait for a human merge; summary was enough"
+    reason: "Set gate:scoped before first push and which PRs (#2658, #2664) wait for a human merge; summary was enough Subagents: build glassbox-lesson-title-word-cap: Loaded at session start. It confirmed the gate:scoped step and that no Human-only file is touched.; gate glassbox-lesson-title-word-cap: Loaded at session start; it covers the gate and says to run gate:scoped before the first push.; fix inspect-session-page-e..."
     useful: yes
   - path: .claude/rules/adr-0004-human-merge.md
-    reason: Its paths list told me .claude/rules and scripts/hooks are Human-only, shaping two grilling options
+    reason: "Its paths list told me .claude/rules and scripts/hooks are Human-only, shaping two grilling options Subagents: triage #2651: Loaded when I read it to check the Human-only paths; glassbox files are not in that list; build tenant-glossary-comments: Loaded on touching the Human-only rule file; confirms a human merge.; build read-first-hint-readonly-subcommands: Loaded when I touched scripts/hooks/read-first-..."
     useful: yes
   - path: .claude/rules/adr-0003.md
-    reason: Confirmed opening the PR without asking and subscribing; summary was enough
+    reason: "Confirmed opening the PR without asking and subscribing; summary was enough Subagents: triage #2651: Loaded at session start; gave background on approval; triage #2652: Always-loaded; confirms nothing is built without approval; triage #2655: Loaded at session start; ready-for-agent stands in for the approval to build.; Spec ledger-accept-relayed-counts r2: Loaded at session start. ..."
     useful: partly
   - path: .claude/rules/adr-0009.md
-    reason: Close-session at PR open; summary was enough
+    reason: "Close-session at PR open; summary was enough Subagents: triage #2654: Loaded at session start; governs the session-log rule this issue is about"
     useful: partly
   - path: .claude/rules/adr-0017.md
-    reason: Every GitHub body I wrote starts with the session header
+    reason: "Every GitHub body I wrote starts with the session header Subagents: triage #2651: Loaded at session start; required the provenance header on the comment; triage #2652: Always-loaded; governed the comment header; triage #2654: Loaded at session start; provenance header on the comment; triage #2655: Loaded at session start; the comment header.; triage #2657: Loaded..."
     useful: yes
   - path: .claude/rules/adr-0022.md
-    reason: Bounded what the sweep may label ready-for-agent; summary was enough
+    reason: "Bounded what the sweep may label ready-for-agent; summary was enough Subagents: triage #2651: Loaded with the triage skills; governs whether the sweep may set ready-for-agent; triage #2652: Loaded on reading auto-triage; confirmed ready-for-human stays and no build; triage #2654: Loaded with the auto-triage Skill; sets which outcomes triage may give; triage #2655: Loaded wit..."
     useful: partly
   - path: .claude/rules/adr-0020.md
-    reason: All issues were Trusted-authored, so it changed nothing
+    reason: "All issues were Trusted-authored, so it changed nothing Subagents: triage #2651: Loaded with the skills; the author is OWNER, so Trusted; triage #2655: Loaded with the Skill read; the trust tier (author is OWNER, so Trusted)."
     useful: no
   - path: .claude/rules/adr-0027.md
-    reason: "Backed picking cut-before-add options in the grilling and the open-trial blocker on #2612"
+    reason: "Backed picking cut-before-add options in the grilling and the open-trial blocker on #2612 Subagents: triage #2612: Loaded when I read the skills. Sets the hold: no rewording text an open trial covers.; triage #2654: Loaded with the triage Skills; grounds the pick to cut before enforcing; triage #2655: Loaded with the Skill read; prompted the prune-trial check.; triage #2657: Loaded at session st..."
     useful: partly
   - path: .claude/rules/adr-0005.md
-    reason: Loaded on Skill reads; nothing about Skill placement was at stake
+    reason: "Loaded on Skill reads; nothing about Skill placement was at stake Subagents: triage #2655: Loaded on the Skills read; the change goes through a gated PR.; build inspect-session-page-estimate: Loaded when I touched a Skill; confirms Skill changes go through a gated PR.; Standards inspect-session-page-estimate r1: Loaded on reading the Skill; confirms Skill edits go through..."
     useful: no
   - path: .claude/rules/adr-0029.md
-    reason: Loaded on a Bash read; no rule placement was decided by me
+    reason: "Loaded on a Bash read; no rule placement was decided by me Subagents: triage #2658: Loaded on reading the ledger entry and docs. Its line that a rule can't order a step before the read that loads it explains the nits."
     useful: no
   - path: .claude/rules/adr-0030.md
-    reason: Loaded on reading the human-merge list; no ADR edited
+    reason: "Loaded on reading the human-merge list; no ADR edited Subagents: triage #2654: Loaded on reading ADR-0009; relevant only if the ADR is rewritten"
     useful: no
   - path: .claude/rules/guards.md
-    reason: Loaded with scripts/hooks reads; I needed no guard detail
+    reason: "Loaded with scripts/hooks reads; I needed no guard detail Subagents: build read-first-hint-readonly-subcommands: Loaded when I read the hook file."
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: "triage #2657: Loaded on reading ledger.ts. Not relevant.; triage #2659: Loaded when I grepped the Journal ledger util. Not relevant."
+    useful: no
+  - path: .claude/rules/adr-0010.md
+    reason: "build log-session-single-entry: Loaded by a hook after a grep that touched the digest Skill; not relevant"
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: "build log-session-single-entry: Loaded by the same hook; not relevant"
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "triage #2657: Loaded on reading the frictions-to-fixes skill. Not relevant.; triage #2658: Loaded on reading the frictions-to-fixes Skill; not relevant; triage #2659: Loaded when I read Skill files. Not relevant.; build log-session-single-entry: Loaded by the same hook; not relevant"
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: "triage #2658: Loaded on reading a layers/ file. It is the subject of the issue.; build tenant-glossary-comments: The file I edited; loaded when reading it."
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: "triage #2657: Loaded on reading ledger.ts. Not relevant.; triage #2659: Loaded when I grepped the Journal layer. Not relevant."
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded when I read the Journal manifest for the ledger status enum; no manifest change, so it did not apply
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded with the Journal manifest; I changed values only, no stored field shape
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with the Journal manifest read; no MDC or Collection decision was made
     useful: no
 subagents:
   - type: general-purpose
@@ -256,77 +325,91 @@ subagents:
     durationSec: 30
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: Spec review PR 2666 follow-up
     model: sonnet
     durationSec: 32
     toolCalls: 5
     modelCalls: 3
+    tokenShare: 1.2
+  - type: general-purpose
+    task: Standards review PR 2670 follow-up
+    model: sonnet
+    durationSec: 29
+    toolCalls: 5
+    modelCalls: 5
     tokenShare: 1.3
+  - type: general-purpose
+    task: Spec review PR 2670 follow-up
+    model: sonnet
+    durationSec: 26
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 1.1
   - type: workflow-subagent
     task: "triage #2575"
     model: claude-opus-5-5
     durationSec: 23
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: "triage #2657"
     model: claude-opus-5-5
     durationSec: 140
     toolCalls: 20
     modelCalls: 15
-    tokenShare: 2.6
+    tokenShare: 2.3
   - type: workflow-subagent
     task: "triage #2612"
     model: claude-opus-5-5
     durationSec: 49
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1.1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: "triage #2652"
     model: claude-opus-5-5
     durationSec: 63
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 1.3
+    tokenShare: 1.1
   - type: workflow-subagent
     task: "triage #2658"
     model: claude-opus-5-5
     durationSec: 101
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 1.8
+    tokenShare: 1.6
   - type: workflow-subagent
     task: "triage #2651"
     model: claude-opus-5-5
     durationSec: 115
     toolCalls: 18
     modelCalls: 14
-    tokenShare: 2.1
+    tokenShare: 1.9
   - type: workflow-subagent
     task: "triage #2659"
     model: claude-opus-5-5
     durationSec: 86
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 2.1
+    tokenShare: 1.9
   - type: workflow-subagent
     task: "triage #2655"
     model: claude-opus-5-5
     durationSec: 134
     toolCalls: 21
     modelCalls: 17
-    tokenShare: 2.5
+    tokenShare: 2.2
   - type: workflow-subagent
     task: "triage #2654"
     model: claude-opus-5-5
     durationSec: 147
     toolCalls: 19
     modelCalls: 15
-    tokenShare: 2.3
+    tokenShare: 2
   - type: workflow-subagent
     task: Standards inspect-session-page-estimate r3
     model: claude-opus-5-5
@@ -340,14 +423,14 @@ subagents:
     durationSec: 36
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec inspect-session-page-estimate r2
     model: claude-opus-5-5
     durationSec: 48
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Standards inspect-session-page-estimate r2
     model: claude-opus-5-5
@@ -361,14 +444,14 @@ subagents:
     durationSec: 39
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: fix inspect-session-page-estimate r1
     model: claude-sonnet-5-5
     durationSec: 69
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: gate glassbox-lesson-title-word-cap
     model: claude-sonnet-5-5
@@ -382,42 +465,42 @@ subagents:
     durationSec: 64
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Spec glassbox-lesson-title-word-cap r1
     model: claude-opus-5-5
     durationSec: 44
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Spec inspect-session-page-estimate r3
     model: claude-opus-5-5
     durationSec: 47
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: build glassbox-lesson-title-word-cap
     model: claude-sonnet-5-5
     durationSec: 316
     toolCalls: 14
     modelCalls: 12
-    tokenShare: 2.3
+    tokenShare: 2
   - type: workflow-subagent
     task: fix inspect-session-page-estimate r2
     model: claude-sonnet-5-5
     durationSec: 52
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: build inspect-session-page-estimate
     model: claude-sonnet-5-5
     durationSec: 110
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: gate read-first-hint-readonly-subcommands
     model: claude-sonnet-5-5
@@ -431,42 +514,42 @@ subagents:
     durationSec: 30
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec ledger-accept-relayed-counts r1
     model: claude-opus-5-5
     durationSec: 40
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Standards ledger-accept-relayed-counts r1
     model: claude-opus-5-5
     durationSec: 54
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Spec ledger-accept-relayed-counts r3
     model: claude-opus-5-5
     durationSec: 50
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: build tenant-glossary-comments
     model: claude-sonnet-5-5
     durationSec: 144
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: fix ledger-accept-relayed-counts r1
     model: claude-sonnet-5-5
     durationSec: 276
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: gate glassbox-improve-tie-break
     model: claude-sonnet-5-5
@@ -480,84 +563,84 @@ subagents:
     durationSec: 152
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Spec glassbox-improve-tie-break r2
     model: claude-opus-5-5
     durationSec: 33
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Spec ledger-accept-relayed-counts r2
     model: claude-opus-5-5
     durationSec: 40
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards tenant-glossary-comments r1
     model: claude-opus-5-5
     durationSec: 35
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec glassbox-improve-tie-break r1
     model: claude-opus-5-5
     durationSec: 47
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: fix ledger-accept-relayed-counts r2
     model: claude-sonnet-5-5
     durationSec: 216
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build log-session-single-entry
     model: claude-sonnet-5-5
     durationSec: 35
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Standards glassbox-improve-tie-break r2
     model: claude-opus-5-5
     durationSec: 31
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build read-first-hint-readonly-subcommands
     model: claude-sonnet-5-5
     durationSec: 468
     toolCalls: 21
     modelCalls: 13
-    tokenShare: 2
+    tokenShare: 1.8
   - type: workflow-subagent
     task: Standards ledger-accept-relayed-counts r2
     model: claude-opus-5-5
     durationSec: 59
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Standards ledger-accept-relayed-counts r3
     model: claude-opus-5-5
     durationSec: 33
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Standards read-first-hint-readonly-subcommands r1
     model: claude-opus-5-5
     durationSec: 27
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: gate tenant-glossary-comments
     model: claude-sonnet-5-5
@@ -571,14 +654,14 @@ subagents:
     durationSec: 466
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 2.2
+    tokenShare: 2
   - type: workflow-subagent
     task: Spec tenant-glossary-comments r1
     model: claude-opus-5-5
     durationSec: 44
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Spec read-first-hint-readonly-subcommands r1
     model: claude-opus-5-5
@@ -592,8 +675,12 @@ subagents:
     durationSec: 71
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
 gitBranch: ccr-09b0fc2f-dtewaa
 entrypoint: remote_mobile
 cliVersion: 2.1.312
+learnings:
+  - "A Prune Trial check that counts only major or blocker Frictions cannot see a rise in minor ones: relayed-subagent-claims roughly doubled per session after PR #2537 while its trial was judged clean"
+ideas:
+  - Have find-trial-window.ts (or the prune-trial verdict step) report each covered Friction cluster's per-session rate before and after the trial opened, so a kept cut that doubles minor slips is flagged before the verdict rather than found by an owner's question
 landedBy: Stop
