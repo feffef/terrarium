@@ -120,12 +120,12 @@ const sessionCards = computed(() => sessionCardViews(sessions.value, ruleTitleMa
 // text is still there to find, only visually collapsed by default.
 const SESSIONS_VISIBLE = 10
 const showAllSessions = ref(false)
-// Client-only filter by who prompted the session (visitor-loop, 2026-10-29): no URL
-// state and no storage, so the cached server payload (ADR-0028) is unchanged.
-const kindFilter = ref<keyof ReturnType<typeof kindCounts> | null>(null)
+// Client-only, with no URL state or storage, so the cached server payload (ADR-0028) is unchanged.
+type SessionKind = keyof ReturnType<typeof kindCounts>
+const kindFilter = ref<SessionKind | null>(null)
 const kindByKey = computed(() => new Map(sessions.value.map((s) => [s.session, s.kind])))
 const kindChips = computed(() =>
-  Object.entries(sessionKindCounts.value).filter(([, n]) => n) as [keyof ReturnType<typeof kindCounts>, number][],
+  Object.entries(sessionKindCounts.value).filter(([, n]) => n) as [SessionKind, number][],
 )
 // The cut and the "Show all N" count apply to the filtered list; an open card stays visible.
 const sessionView = computed(() => {
@@ -396,7 +396,7 @@ useSeoMeta({
         class="show-all-sessions"
         @click="showAllSessions = true"
       >
-        Show all {{ sessionView.matches }} {{ kindFilter ?? '' }} sessions
+        Show all {{ sessionView.matches }}{{ kindFilter ? ` ${kindFilter}` : '' }} sessions
       </button>
     </section>
 
