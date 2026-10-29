@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeQhtk66yyXVbQRdWeb
 startedAt: 2026-10-29T04:03:46Z
-endedAt: 2026-10-29T04:14:29Z
+endedAt: 2026-10-29T04:15:08Z
 kind: autonomous
 goal: "Scheduled docs audit: fix stale or muddled docs"
-status: in-review
-outcome: Sweep PR 2662 open with 3 fixes, gate green, verdict posted; merge pending CI
+status: completed
+outcome: Sweep PR 2662 merged with 3 doc fixes; gate and CI green
 summary: "Scheduled audit-docs run (no human prompted anything; all work followed the Skill's stored prompt). Dispatched three read-only reviewers (Freshness, Single-home, Coherence), saved their replies to a pool, then one checker re-derived all 9 findings: 0 CONFIRMED, 4 CONFIRMED-BUT, 5 WRONG. Applied three fixes (visitor-loop \"search\" wording after the list-don't-search change, a restated merge-pr refusal in pr-workflow, pack Skills vs triage-labels) and left out the merge-pr wait wording because the fix was longer than the original. Dropped findings were mostly in an open prune trial or went against an issue-chosen placement. code-review found no blockers; one wording nit applied. Gate green, PR 2662 opened, verdict posted. No escalation PR, no issue filed."
 prs:
   - "2662"
@@ -130,13 +130,13 @@ frictions:
   - description: Edit hooks asked for ADR reads after I had already edited three governed files; reading them afterwards showed the edits were fine.
     solution: Nothing to change; the hook worked as designed and the late read cost one cat.
     severity: nit
-durationSec: 643
+durationSec: 682
 models:
-  claude-sonnet-5-5: 66
+  claude-sonnet-5-5: 75
 toolCounts:
   Read: 3
-  Skill: 4
-  Bash: 16
+  Skill: 5
+  Bash: 19
   Agent: 6
   Edit: 6
   Monitor: 1
@@ -144,6 +144,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/visitor-loop/SKILL.md
   - docs/agents/pr-workflow.md
@@ -300,37 +302,37 @@ subagents:
     durationSec: 92
     toolCalls: 20
     modelCalls: 18
-    tokenShare: 11.7
+    tokenShare: 11.1
   - type: general-purpose
     task: "Audit docs: Single-home"
     durationSec: 219
     toolCalls: 33
     modelCalls: 28
-    tokenShare: 22.8
+    tokenShare: 21.7
   - type: general-purpose
     task: "Audit docs: Coherence"
     durationSec: 206
     toolCalls: 31
     modelCalls: 25
-    tokenShare: 19.1
+    tokenShare: 18.2
   - type: general-purpose
     task: Fact-check audit findings
     durationSec: 154
     toolCalls: 33
     modelCalls: 27
-    tokenShare: 15.2
+    tokenShare: 14.5
   - type: general-purpose
     task: Review standards axis
     durationSec: 28
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: general-purpose
     task: Review spec axis
     durationSec: 23
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2.7
+    tokenShare: 2.6
 gitBranch: claude/festive-mayer-7fuvm4
 entrypoint: remote_trigger
 cliVersion: 2.1.312
