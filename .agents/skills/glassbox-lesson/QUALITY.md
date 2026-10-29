@@ -29,17 +29,26 @@ the tool but not Terrarium.
 
 ## Grades
 
-- **A**: meets the bar, even if another wording is imaginable.
-- **B**: a noticeable deficit.
-- **C**: several deficits, a failed cut, or a failed accuracy check.
+- **A**: best in class. At most 10 guide Lessons and 1 Walkthrough hold it,
+  elected by `glassbox-improve` among the pages it rates; no rater or writer
+  awards it.
+- **B**: meets the bar, even if another wording is imaginable.
+- **C**: a noticeable deficit.
+- **D**: several deficits, a failed cut, or a failed accuracy check.
 
-Each deficit names its criterion, quotes the page and says the fix. Anything
-short of a deficit goes under **Optional**; an Optional item never drives an
-edit.
+In a PR from before `glassbox-improve`'s `grades.yml` existed, A meant today's
+B, B today's C and C today's D.
+
+Each deficit names its criterion, quotes the page and says the fix. A B page
+may have **gaps to A**: a section where an A page does the same job better,
+named with that page and what to take from it. A gap never lowers a grade.
+Anything short of a deficit or gap goes under **Optional**; an Optional item
+never drives an edit.
 
 ## Raising a page
 
-- **Fix the named deficits and keep the rest.** An A section stays as it is.
+- **Fix the named deficits and gaps, and keep the rest.** A section nobody
+  faulted stays as it is.
 - **Research before a rewrite.** Gather the facts and Excerpt candidates from
   the Terrarium source and `node_modules` first.
 - **Retitle only a title that fails the rule.** A better title being
@@ -49,7 +58,7 @@ edit.
 - **Re-cut by moving, not rewriting.** For two concepts on one page, or one
   concept across two, move each fact to its one home and link to it from the
   other page.
-- **Promote a draft** by raising it to A, then moving it into the guide's
+- **Promote a draft** by raising it to B, then moving it into the guide's
   Subject folder and dropping its links to drafts (GLOSSARY.md, Two Spaces).
 - **Share every correction.** A wrong fact a review finds goes into the brief
   of every agent writing in the same run.

@@ -1,0 +1,549 @@
+run: 2026-10-29
+pages:
+  claude-code/01.claude-md:
+    hash: 6ed58edef34b5f7b6d2b8d29f892ee2baa79fa29
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  claude-code/02.path-scoped-rules:
+    hash: 69e9d7e1cbcc2b1315e96d286def5a21bd523b82
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: C
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  claude-code/03.skills:
+    hash: 52083f9b777d2ac6db249a7b8a9736a189f824a8
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  claude-code/04.hooks:
+    hash: fe7da6176f7ef9094dac89d57e66f8982d87f3e8
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  claude-code/05.blocking-hooks:
+    hash: 29ad3ace72bf9e5c387dbb0ed0aa5ee996666f52
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  claude-code/07.subagents:
+    hash: 576b4716a53f3376c797dd946fae75ba8c0f3437
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  claude-code/08.mcp-servers:
+    hash: f4d03ea62a9dde23670c4e8bae63f97f60e36771
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  claude-code/10.routines:
+    hash: 3cf326ff0c7535b841bec6df799b165caec24191
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: C
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  claude-code/11.cloud-sessions:
+    hash: 73b1dc1ed2fed3cd88b8336b7552770fe9e653c4
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  deploy/01.self-updating-container:
+    hash: 9dc6b5a394dd63ae4179e54d3355ffdac6c922dd
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  deploy/02.pnpm-lockfile:
+    hash: d70f1ad185bd3d3aa3572abcb10b7feabbbec2b0
+    grade: C
+    grades:
+      sonnet:
+        grade: C
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: C
+        run: 2026-10-29
+  git-github/01.every-change-a-pr:
+    hash: 8d6fa5a9ab02338cc20979edcb2613567487fec1
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  git-github/02.git-worktrees:
+    hash: b401ad5adfe9911b89c1175b707f55ae54332776
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  git-github/04.trust-tiers:
+    hash: 2886ccdefd0a85a0a44dafcfb7cb428b613cbda9
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  git-github/05.attribution:
+    hash: df9a4c9321a08935e6ae6bf107f0e047a2c9a129
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  git-github/06.work-queue:
+    hash: 15916e27f91ec6bb0a0d52590013ad4f9cb017b6
+    grade: C
+    grades:
+      sonnet:
+        grade: C
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: C
+        run: 2026-10-29
+  nuxt-content/01.manifest-collections:
+    hash: d34312e49c2117f44296fc497aa3b597ec95e6e0
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  nuxt-content/02.multi-tenant-isolation:
+    hash: 6c41b2404a7a60ae34f0ebfd5a9804f5624ed7a3
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  nuxt-content/03.content-database:
+    hash: 3042d0165278c8d72f400fb79d1bedd5b6da3b04
+    grade: B
+    grades:
+      sonnet:
+        grade: C
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  nuxt-vue/01.layers:
+    hash: 440245f06c79973a5a6833a34b922d761a5b3fa1
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  nuxt-vue/02.file-routing:
+    hash: 96162fe4c1feda748c6b661c34188e95be2880e0
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  nuxt-vue/05.vue-components:
+    hash: 409922dffcadf85147a299b62aa354f20f1550d6
+    grade: C
+    grades:
+      sonnet:
+        grade: C
+        run: 2026-10-29
+      fable:
+        grade: C
+        run: 2026-10-29
+      opus:
+        grade: C
+        run: 2026-10-29
+  nuxt-vue/06.use-async-data:
+    hash: 730bbe55c909b1d980651d3ccbcee399601f7325
+    grade: B
+    grades:
+      sonnet:
+        grade: C
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  nuxt-vue/08.hydration:
+    hash: 099d9b880a105d7d6912519b9921edff09717942
+    grade: C
+    grades:
+      sonnet:
+        grade: C
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: C
+        run: 2026-10-29
+  nuxt-vue/09.nitro:
+    hash: 5e1343b75050772bcd4650955a8d76ae98fbe85b
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  skill-pack/01.skill-packs:
+    hash: 6c2efca0bcbcee3b8e915baf0bf7a959d56dc3fd
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  terrarium-practice/01.human-in-the-loop:
+    hash: 518a92cfa358d588d8000ba28a81671fc77fc3e0
+    grade: B
+    grades:
+      sonnet:
+        grade: C
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  terrarium-practice/02.adrs:
+    hash: 556379967085d953b52dd13315c6dff3a744fd35
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  terrarium-practice/04.session-logs:
+    hash: 740e16d6a4b5828a6d2f5098a79c4ae24d1fa940
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  terrarium-practice/07.human-only-list:
+    hash: 64e8ae42f6126c7001467cdf24430db20378a6f1
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: C
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  terrarium-practice/08.cross-tenant-reads:
+    hash: 43c14090ea7e7ab1c0505ad535647750362956d9
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  terrarium-practice/09.self-improvement-loop:
+    hash: 827712cce812d158aca618d86493920bc01fe165
+    grade: B
+    grades:
+      sonnet:
+        grade: C
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  verification/01.gate:
+    hash: 6ffaff9c1b6de30bdc6cd7855a6994ffb4430479
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: C
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  verification/02.type-checking:
+    hash: ea36059d5f07a068a2d88b2f8e7f4a04e3186f26
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  verification/03.content-validation:
+    hash: d8ce5c3e8f0977e10f9627c5811d9a3f9807efa2
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  verification/04.unit-and-e2e-tests:
+    hash: 931c290c26ec7f43123a2ce1172d298f090044cf
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  verification/05.linting:
+    hash: 0984b4759dabc43e61d937673235c952e4d9f290
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  verification/06.schema-validation:
+    hash: a6f455f6d99cad64cc81e0ed00f9c54283386dea
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  walkthroughs/a-change-goes-live:
+    hash: 82238450e1c66642b950b367766feca7feb3ad2f
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  walkthroughs/adding-a-tenant:
+    hash: 108f588533f03f3fa0f9e6bc998ac604302b7225
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  walkthroughs/asking-for-a-change:
+    hash: 3369e08d8ea12b6fd43d5b4fb2224a7b9a83b760
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+  walkthroughs/from-file-to-browser:
+    hash: 872cf51651c684deca04db544dabf8a88d4f50e3
+    grade: B
+    grades:
+      sonnet:
+        grade: B
+        run: 2026-10-29
+      fable:
+        grade: B
+        run: 2026-10-29
+      opus:
+        grade: B
+        run: 2026-10-29
+candidates: []

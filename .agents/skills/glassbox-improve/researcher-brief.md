@@ -1,13 +1,12 @@
-You research the facts for one fix to a Glass Box page. Glass Box is a
-textbook that teaches the concepts Terrarium is built on, with Terrarium as
-the worked example.
+You research the facts for one structural step on the Glass Box guide.
+Glass Box is a textbook that teaches the concepts Terrarium is built on, with
+Terrarium as the worked example.
 
-**Task**: {TASK: the page, draft or gap, and what the fix will do}.
-
-**Deficits to fix**: {DEFICITS}
+**Task**: {TASK: the draft to promote, the gap to fill or the pages to
+re-cut, and what the step will do}.
 
 Work in the repository at commit {COMMIT}, read-only: modify no repository
-file and post nothing. Write any file you create in {SCRATCH}. Read the page
+file and post nothing. Write any file you create in {SCRATCH}. Read the pages
 (or draft) in full, then read the Terrarium files it cites or should cite
 (`git show {COMMIT}:<path>`) and the tool's package in `node_modules`. Check
 an absence claim ("nothing does X") against every code location,
