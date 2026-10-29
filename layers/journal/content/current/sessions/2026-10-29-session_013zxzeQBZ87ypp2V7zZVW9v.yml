@@ -1,0 +1,219 @@
+schemaVersion: 1
+session: session_013zxzeQBZ87ypp2V7zZVW9v
+startedAt: 2026-10-29T08:24:50Z
+endedAt: 2026-10-29T08:44:52Z
+kind: interactive
+goal: Prune-trial verdicts that flag moderate damage and rising Friction rates
+status: in-review
+outcome: "PR #2673 open: SKILL.md, friction-rates.ts, ADR-0027 and its rule; waits for a human merge"
+summary: "The owner asked me to read issue #2672 and propose a change to the prune-trial Skill. I asked four questions first. The owner chose: a branch and PR after a subagent's design review; Friction Ledger entries picked at verdict time; no fixed threshold (the script shows rates and the session judges); scope covers the SKILL.md, a rates script, and ADR-0027 with its summary rule. All of that was human-instructed. The details below were my calls or came from the subagents' reviews. The design review found that my first window design was wrong. Its after-window ended at the last ledger commit, but non-survey PRs also edit the ledger, so unsurveyed sessions would have counted as misses. Its equal-length before-window was noisy and could reach past the 14-day ledger horizon. Both windows now count only what the ledger can see. The review also flagged that §3's hook issue would double up with the new issue. code-review then found that a non-survey ledger merge could still move the cutoff past a survey whose PR hadn't merged. The cutoff now comes from the newest survey whose own PR merged a ledger change. Rerunning the script on the #2537 trial gives relayed-subagent-claims 11/182 (6.0%) before and 8/52 (15.4%) after, so it would have flagged the verdict #2641 passed. The gate is green. The PR waits for a human merge because it changes Human-only ADR files."
+prs:
+  - "2673"
+docsRead:
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: the section 1 verdict rules being changed
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: verdict bullet and Consequences to reword
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before the first GitHub op; issue_read and PR tools
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: required before commits; heredoc message via -F, origin/main scoping
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review then gate before first push; human-merge note
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: hint after writing the script; confirmed scripts live in the Skill folder
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: hint after write; summary rule decides nothing new
+    useful: partly
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: kept numbers and commands out of the ADR, added the See line
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: "design reviewer: survey cadence and log-before-merge order behind the cutoff fix"
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: "design reviewer: trigger field and on-trial reset"
+    useful: partly
+  - path: docs/adr/TEMPLATE.md
+    reason: "design reviewer: ADR shape check"
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: "design reviewer: Filing an issue has no duplicate check, so SKILL.md says comment on the open issue"
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: "standards reviewer: flagged the duplicated moderate bullet"
+    useful: yes
+  - path: GLOSSARY.md
+    reason: "standards reviewer: term check, diff uses glossary terms"
+    useful: partly
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief for the design-review subagent
+  - name: code-review
+    reason: Standards and Spec review before first push
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Wrote friction-rates.ts reading an `id` field from session logs from recall; the field is `session`, so the first run counted 0 hits
+    solution: Check a data file's field names (head one log) before coding against it; running the script caught it
+    severity: minor
+  - description: My first window design ended at the last ledger commit, unaware that non-survey PRs edit the ledger too; the design-review subagent caught it before build
+    solution: Before using a commit as a proxy for an event, list the commits that touch the path and check what else makes them
+    severity: minor
+durationSec: 1202
+models:
+  claude-opus-5-5: 106
+toolCounts:
+  Bash: 35
+  ToolSearch: 2
+  mcp__github__issue_read: 2
+  AskUserQuestion: 1
+  Skill: 4
+  Write: 6
+  Agent: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/prune-trial/scripts/friction-rates.ts
+  - .agents/skills/prune-trial/tests/unit/friction-rates.spec.ts
+  - .agents/skills/prune-trial/SKILL.md
+  - scripts/session/extract-frictions.ts
+  - .claude/rules/adr-0027.md
+  - docs/adr/0027-prune-trials.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0025.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0030.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+  - adr: 30
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - docs/adr/TEMPLATE.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - GLOSSARY.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before the first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Owner approval in-session let me build; told me to open the PR and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body header line and commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Rule under change; I opened the full ADR to edit its verdict text and checked no open trial covers prune-trial SKILL.md
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Confirmed the summary rule may only restate the ADR's new verdict; opened the ADR on the write hint
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Script lives in the Skill folder, already right; opened the ADR on the write hint only
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Kept commands and numbers out of the ADR and added the script under See; opened the ADR for the See rule
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Flagged the ADR files as Human-only so the PR says it waits for a human merge
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on a GLOSSARY grep; no glossary change in this task
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded on a GLOSSARY grep; no term added
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded on reading frictions-to-fixes scripts; no pack Skill or Inventory touched
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded reading the journal manifest for the ledger schema; no manifest edit
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded with the journal manifest; confirmed the ledger is derived, not needed to act
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded with the journal manifest; no stored field changed (owner chose no new trial field)
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with the journal manifest; no MDC content involved
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded with the journal manifest; no Tenant content written
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded with the journal manifest; no layer code changed
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded on a git log over the ledger dir; no cross-Tenant read involved
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Design review for #2672"
+    durationSec: 268
+    toolCalls: 20
+    modelCalls: 19
+    tokenShare: 20.7
+  - type: general-purpose
+    task: "Standards review of #2672 diff"
+    durationSec: 50
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 8.5
+  - type: general-purpose
+    task: "Spec review of #2672 diff"
+    durationSec: 59
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 8
+gitBranch: ccr-387e50f2-pgljvr
+entrypoint: remote_mobile
+cliVersion: 2.1.312
+learnings:
+  - The Friction Ledger is edited by many non-survey PRs (fixes, re-clusters), so its last commit does not date the last survey; a survey's own PR (in its session log's prs) does
+landedBy: Stop
