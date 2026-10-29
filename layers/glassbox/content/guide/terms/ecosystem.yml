@@ -1,0 +1,2 @@
+term: Ecosystem
+definition: A package manager whose files Dependabot reads for updates, such as npm with package.json, or GitHub Actions with its workflow and action.yml files. A dependabot.yml entry names one ecosystem and the folders to search; one ecosystem can have several entries.
