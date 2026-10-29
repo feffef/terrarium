@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml, stringify } from 'yaml'
-import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { extractFlag, extractSwitch, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { frontmatterBlock, splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { git, tryGit } from '../../../../scripts/lib/git.ts'
 
@@ -309,10 +309,11 @@ const pageList = (value: string | undefined) => (value ?? '').split(',').filter(
 
 runIfMain(import.meta.url, () => {
   const [command, ...args] = process.argv.slice(2)
-  const flags: Record<string, string | undefined> = {}
-  let argv = args
-  for (const flag of ['--base', '--selected', '--gap-edit', '--read-by-all']) ({ value: flags[flag], rest: argv } = extractFlag(argv, flag))
-  const base = flags['--base']
+  const { value: base, rest: a1 } = extractFlag(args, '--base')
+  const { value: selectedFlag, rest: a2 } = extractFlag(a1, '--selected')
+  const { value: gapEditFlag, rest: a3 } = extractFlag(a2, '--gap-edit')
+  const { value: readByAllFlag, rest: a4 } = extractFlag(a3, '--read-by-all')
+  const { on: write, rest: files } = extractSwitch(a4, '--write')
   if (!base) fail('--base <sha> is required')
   const sha = git(['rev-parse', `${base}^{commit}`], root).trim()
   const record = readRecord(tryGit(['show', `${sha}:${recordPath}`], root).out || undefined)
@@ -331,7 +332,6 @@ runIfMain(import.meta.url, () => {
     return
   }
   if (command !== 'tally') fail(`unknown command ${command}; use plan or tally`)
-  const files = argv.filter((a) => a !== '--write')
   if (files.length !== models.length) fail(`give the ${models.length} raters' saved hand-backs`)
   const reports = files.map((f) => {
     try {
@@ -342,12 +342,12 @@ runIfMain(import.meta.url, () => {
   })
   const problems = reports.flatMap((r) => reportProblems(r, plan))
   if (problems.length) fail(`the reports don't match the plan:\n${problems.join('\n')}`)
-  const selected = pageList(flags['--selected'])
+  const selected = pageList(selectedFlag)
   const result = tally(record, plan, reports, selected)
   console.log(result.markdown)
-  if (!argv.includes('--write')) return
+  if (!write) return
   const run = new Date().toISOString().slice(0, 10)
-  const next = nextRecord(record, result, { run, hashes, gapEdit: pageList(flags['--gap-edit']), readByAll: pageList(flags['--read-by-all']) })
+  const next = nextRecord(record, result, { run, hashes, gapEdit: pageList(gapEditFlag), readByAll: pageList(readByAllFlag) })
   writeFileSync(join(root, recordPath), stringify(next, { lineWidth: 0 }))
   console.error(`wrote ${recordPath}`)
 })

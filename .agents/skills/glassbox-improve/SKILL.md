@@ -84,14 +84,14 @@ raises ranked. Then:
   `git log -p origin/main -- <page>`. A dropped undo becomes a proposed
   `DECISIONS.md` line.
 - **Churn.** A page whose `gapEdit` in `grades.yml` is one of the last 2 runs
-  takes no gap edit; note each consensus gap dropped this way for step 6's
+  takes no gap edit; note each consensus gap dropped this way for step 7's
   `--read-by-all`. Deficits are always fixed.
 - **Select** every page with a consensus deficit or a consensus gap (both
   raters citing an A page), every page two raters grade below B (its writer
   fixes the deficits it confirms), and every structural step two raters raise,
   plus each `candidates` entry in `grades.yml`. Two steps that touch one page:
   the one more raters raise, then the older entry, goes first; the other
-  waits (step 6). A draft that needs about half its lines
+  waits (step 7). A draft that needs about half its lines
   changed is not promoted (an idea). A selected page a structural step touches
   belongs to that step's writer.
 
@@ -151,7 +151,7 @@ page this run edited counts as changed and all three read it next run. In
 `grades.yml`'s `candidates`, remove each step this run took and add each step
 that waited, with its pages, a one-line gist and today's date (or its old
 date). Done when every finding is fixed or refused with its reason, and
-`grades.yml` is committed.
+`grades.yml` is committed (with no edits, only the latter).
 
 ## 8. Land and file
 
