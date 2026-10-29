@@ -1,0 +1,833 @@
+schemaVersion: 1
+session: session_013zxzeQUV6c2tzkFzv3WgiY
+startedAt: 2026-10-29T21:34:47Z
+endedAt: 2026-10-29T22:34:37Z
+kind: autonomous
+goal: "Glass Box guide improvement run: rate every page, raise the weakest, promote ready drafts"
+status: in-review
+outcome: PR 2689 open with 7 pages raised, 10 drafts promoted, 1 new Lesson and a re-cut; gate green, awaiting CI
+summary: "Autonomous glassbox-improve run (a harness notification invoked the Skill; no human prompt followed, so every decision below was agent-made under the Skill's remit). Three raters on three models graded all 43 guide pages at the base commit; the tally elected an A set of 11 and selected 7 pages by consensus (lockfile, work queue, human-in-the-loop, Vue components, Cloud sessions, Scheduled tasks, attribution). Fourteen researchers checked the structural steps raised by two or more raters; 10 draft promotions, a new Claude Code permissions Lesson (re-cut from Cloud sessions) and a work queue / human-in-the-loop re-cut went ahead, while prune-trials and schema-only-grows were held back as ideas because about half their lines needed rewriting. Sixteen opus writers in worktrees did the edits; I merged their branches, repointed draft links, wrote the grades record, and ran two code-review rounds (first with a Standards and four Spec reviewers, which found a false claim in out-of-scope-records, weakened or unsupported Why bullets and leftover motive clauses; a second on the fix diff, which found five smaller points I fixed myself). One real false claim was found by a researcher and confirmed by running unimport (a name declared inside a function does not suppress an auto-import; only a top-level one does). Gate green, branch pushed, PR 2689 opened and subscribed; merge waits for CI and my verdict comment. Decisions that were mine: which consensus items to keep or drop, treating single-citing-A-page gaps as not consensus, declining promotion at about half a draft, and not making guide join edits for the three promoted Lessons that have no inbound guide link."
+prs:
+  - "2689"
+docsRead:
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: title, Write, Pin and Check rules every brief rests on
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: grades and how to raise a page
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: closed rulings; none matched an item this run
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson and Walkthrough shapes, Excerpt and Term rules
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: hook-prompted before the first git command; confirmed the -F commit and no-chaining advice
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: overflow traps and the fields guard; I read it after the guard blocked my first search
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before the first push and the scheduled-run closing steps
+    useful: yes
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: The rater brief I filled in for three raters
+    useful: yes
+  - path: .agents/skills/glassbox-improve/researcher-brief.md
+    reason: The researcher brief I filled in for 14 researchers
+    useful: yes
+  - path: .agents/skills/glassbox-improve/writer-brief.md
+    reason: The writer brief I filled in for 16 writers; its link-repointing rule conflicted with my join step
+    useful: partly
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: GLOSSARY.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: layers/atlas/GLOSSARY.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/tdd/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/diagnosing-bugs/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/prototype/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/research/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/prototype/UI.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/prototype/LOGIC.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/domain-modeling/GLOSSARY-FORMAT.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/triage/OUT-OF-SCOPE.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: Read by a research or writer subagent as a cited source for page claims; its reply called it useful
+    useful: yes
+  - path: .claude/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-lesson/QUALITY.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-lesson/DECISIONS.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/verification/07.timestamps-stored-as-strings.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/drafts/pages/terrarium-practice/03.glossaries.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/skill-pack/03.engineering-skills.md
+    reason: (read before editing)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/deploy/02.pnpm-lockfile.md
+    reason: (read before editing)
+  - path: .claude/skills/glassbox-improve/researcher-brief.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/git-github/07.dependabot-grouping.md
+    reason: (read before editing)
+  - path: .github/dependabot.yml
+    reason: (no reason given)
+  - path: scripts/github/merge-pr.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/07.dependabot-grouping.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/drafts/pages/git-github/03.thin-ci-workflow.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/verification/01.gate.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/11.cloud-sessions.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/05.blocking-hooks.md
+    reason: (no reason given)
+  - path: .claude/settings.json
+    reason: (no reason given)
+  - path: .out-of-scope/pre-approved-settings-edits.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-vue/03.virtual-imports.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/01.human-in-the-loop.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/10.routines.md
+    reason: (read before editing)
+  - path: layers/glassbox/page-checks.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/05.attribution.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/claude-code/06.hints.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/06.hook-added-context.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-vue/07.theming-wrapper-class.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/skill-pack/01.skill-packs.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/06.out-of-scope-records.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/drafts/pages/nuxt-vue/04.auto-imports.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/04.auto-imports.md
+    reason: (read before editing)
+skillsUsed:
+  - name: glassbox-improve
+    reason: "the run's own Skill: plan, rate, tally, research, write, integrate, review, land"
+  - name: dispatch-subagents
+    reason: briefs, worktree isolation, hand-back saving, stranding check
+  - name: code-review
+    reason: two rounds on the run branch before the first push
+  - name: close-session
+    reason: first log after opening the PR
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Skill briefs and my prompts named .claude/skills paths that are links absent from the commit tree, so researchers' git show of the brief and glassbox-lesson docs failed and each retried via .agents.
+    solution: Have glassbox-improve's briefs and SKILL.md name .agents/skills paths only, since agents read the base commit with git show.
+    severity: minor
+  - description: writer-brief.md tells a writer to repoint links in other drafts in its own commit, while my shared rules (from step 6) said the lead does it; every writer reported the conflict and the layer test stayed red per branch.
+    solution: "Pick one home: let writers repoint drafts in a links-only commit, or say in the brief that the lead does, and have the Check tolerate it."
+    severity: minor
+  - description: "The Skill's remit takes every structural step two raters raise: 10 promotions, a new Lesson and a re-cut meant about 35 subagents against the Skill's under-10 workflow size guidance, and large token cost."
+    solution: Cap structural steps per run (for example the three best by rank sum) or state in glassbox-improve that the guideline does not apply.
+    severity: moderate
+  - description: create_pull_request only accepts the body inline, so the 46KB PR body the Skill requires had to be read and pasted back through the model, about 25k tokens, after also trimming the tally output.
+    solution: Add a body-file option to a PR script, and let grades.ts tally emit a compact PR section (changed grades, items truncated) instead of its 37KB output.
+    severity: minor
+  - description: My first GitHub call (search_pull_requests without fields) was blocked by the fields guard because I had not yet read docs/agents/github-integration.md as CLAUDE.md requires before any GitHub operation.
+    solution: Read the doc before the first mcp__github__ call; the guard message itself pointed to it.
+    severity: nit
+  - description: The Stop hook asked me to push seven times while review and the gate were still pending; ADR-0004 already says to wait, but each reminder cost a turn of explanation.
+    solution: Have the Stop hook skip the reminder while a branch has no push yet and a scheduled Skill's review steps are running, or point to the ADR-0004 clause.
+    severity: nit
+  - description: I stated in a status line that the hints and auto-imports writers had no findings; the hints writer had been sent findings. Caught and corrected in my next message.
+    solution: "Check the sent-message list before summarising who got findings (CLAUDE.md: verify before you state)."
+    severity: nit
+durationSec: 3590
+models:
+  claude-sonnet-5-5: 266
+toolCounts:
+  Bash: 85
+  mcp__github__search_pull_requests: 1
+  Read: 13
+  mcp__github__list_pull_requests: 1
+  Skill: 5
+  Agent: 40
+  Write: 3
+  ToolSearch: 2
+  SendMessage: 16
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
+  - layers/glassbox/content/guide/pages/verification/07.timestamps-stored-as-strings.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/03.ubiquitous-language.md
+  - layers/glassbox/content/guide/terms/biome.yml
+  - layers/glassbox/content/guide/pages/skill-pack/03.engineering-skills.md
+  - layers/glassbox/content/guide/pages/deploy/02.pnpm-lockfile.md
+  - layers/glassbox/content/guide/pages/git-github/07.dependabot-grouping.md
+  - layers/glassbox/content/guide/pages/git-github/03.composite-actions.md
+  - layers/glassbox/content/guide/pages/claude-code/12.permissions.md
+  - layers/glassbox/content/guide/pages/claude-code/11.cloud-sessions.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/03.virtual-modules.md
+  - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.human-in-the-loop.md
+  - layers/glassbox/content/guide/pages/git-github/05.attribution.md
+  - layers/glassbox/content/guide/pages/claude-code/06.hook-added-context.md
+  - layers/glassbox/content/guide/pages/claude-code/10.routines.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/07.css-custom-properties.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/06.out-of-scope-records.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/04.auto-imports.md
+  - .agents/skills/glassbox-improve/grades.yml
+  - layers/glassbox/content/drafts/pages/skill-pack/02.planning-with-the-pack.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/routines.md
+  - layers/glassbox/content/guide/terms/ecosystem.yml
+  - layers/glassbox/content/drafts/pages/nuxt-content/04.query-collection-patterns.md
+  - layers/glassbox/content/drafts/pages/verification/02.schema-only-grows.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-newcomers-first-hour.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/drafts/pages/nuxt-vue/03.virtual-imports.md
+  - layers/glassbox/content/drafts/pages/skill-pack/03.engineering-loop.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/03.glossaries.md
+  - layers/glassbox/content/drafts/pages/claude-code/06.hints.md
+  - layers/glassbox/content/drafts/pages/nuxt-vue/04.auto-imports.md
+  - layers/glassbox/content/drafts/pages/git-github/07.dependabot-grouping.md
+  - layers/glassbox/content/drafts/pages/nuxt-vue/07.theming-wrapper-class.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/06.out-of-scope-records.md
+  - layers/glassbox/content/drafts/pages/git-github/03.thin-ci-workflow.md
+  - layers/glassbox/content/drafts/pages/verification/01.timestamps-as-strings.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0022.md
+rulesLoadedBySubagents:
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0022.md
+docsReadBySubagents:
+  - docs/agents/triage-labels.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - GLOSSARY.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - docs/agents/domain.md
+  - layers/atlas/GLOSSARY.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/agents/guards.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/adr/0004-objective-safety-gate.md
+  - layers/blog/GLOSSARY.md
+  - .agents/skills/implement/SKILL.md
+  - docs/agents/tenant-layers.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/tdd/SKILL.md
+  - .agents/skills/diagnosing-bugs/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/prototype/SKILL.md
+  - .agents/skills/research/SKILL.md
+  - .agents/skills/wayfinder/SKILL.md
+  - .agents/skills/prototype/UI.md
+  - .agents/skills/prototype/LOGIC.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0005-skill-model.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0007-derived-files-built-not-committed.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/domain-modeling/GLOSSARY-FORMAT.md
+  - GLOSSARY-MAP.md
+  - .agents/skills/triage/OUT-OF-SCOPE.md
+  - .agents/skills/guest-intake/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run the review and gate:scoped before the first push even when the Stop hook asks; summary was enough, I did not open the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and subscribe as soon as a commit is pushed; summary was enough, no new work built outside the Skill's remit
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes straight to main, never in the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on the PR body and the commit trailer check; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded when I read Skill files; no trial covered text I touched, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where rules live; nothing in this run touched rules, so it did not apply
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept counts, ids and growing lists out of promoted prose; reviewers cited it for volatile counts; summary was enough
+    useful: yes
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pointed to the Glass Box glossary I read for page shapes
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagram changed, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as Platform code; this run changed no Skill, so it did not apply; summary was enough
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement rule loaded when I read the Glass Box glossary; no glossary term added by me, summary was enough
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Domain doc pointer for glossary terms; I added only Glass Box Term files, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: ADR history rule loaded on ADR reads; I edited no ADR, so it did not apply
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded for a subagent reading the files it governs; its reply used it as a source
+    useful: yes
+  - path: .claude/rules/ui-verification.md
+    reason: Loaded by path for a subagent reading files it governs; its reply said it did not apply to a read-only task
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded for a subagent reading the files it governs; its reply used it as a source
+    useful: yes
+  - path: .claude/rules/adr-0024.md
+    reason: Loaded for a subagent reading the files it governs; its reply used it as a source
+    useful: yes
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded by path for a subagent reading files it governs; its reply said it did not apply to a read-only task
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded for a subagent reading the files it governs; its reply used it as a source
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded by path for a subagent reading files it governs; its reply said it did not apply to a read-only task
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: Loaded by path for a subagent reading files it governs; its reply said it did not apply to a read-only task
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded by path for a subagent reading files it governs; its reply said it did not apply to a read-only task
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: Loaded by path for a subagent reading files it governs; its reply said it did not apply to a read-only task
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded for a subagent reading the files it governs; its reply used it as a source
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Loaded for a subagent reading the files it governs; its reply used it as a source
+    useful: yes
+  - path: .claude/rules/adr-0007.md
+    reason: Loaded for a subagent reading the files it governs; its reply used it as a source
+    useful: yes
+  - path: .claude/rules/adr-0014.md
+    reason: Loaded for a subagent reading the files it governs; its reply used it as a source
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded by path for a subagent reading files it governs; its reply said it did not apply to a read-only task
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Loaded by path for a subagent reading files it governs; its reply said it did not apply to a read-only task
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Loaded by path for a subagent reading files it governs; its reply said it did not apply to a read-only task
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded by path for a subagent reading files it governs; its reply said it did not apply to a read-only task
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded by path for a subagent reading files it governs; its reply said it did not apply to a read-only task
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded for a subagent reading the files it governs; its reply used it as a source
+    useful: yes
+subagents:
+  - type: general-purpose
+    task: Rater sonnet
+    model: sonnet
+    durationSec: 385
+    toolCalls: 33
+    modelCalls: 32
+    tokenShare: 3.6
+  - type: general-purpose
+    task: Rater fable
+    model: fable
+    durationSec: 802
+    toolCalls: 81
+    modelCalls: 16
+    tokenShare: 2.9
+  - type: general-purpose
+    task: Rater opus
+    model: opus
+    durationSec: 349
+    toolCalls: 56
+    modelCalls: 26
+    tokenShare: 3.1
+  - type: general-purpose
+    task: Research hints promotion
+    model: sonnet
+    durationSec: 170
+    toolCalls: 16
+    modelCalls: 10
+    tokenShare: 1
+  - type: general-purpose
+    task: Research thin CI promotion
+    model: sonnet
+    durationSec: 86
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 0.6
+  - type: general-purpose
+    task: Research auto-imports promotion
+    model: sonnet
+    durationSec: 202
+    toolCalls: 24
+    modelCalls: 23
+    tokenShare: 1.5
+  - type: general-purpose
+    task: Research virtual imports promotion
+    model: sonnet
+    durationSec: 163
+    toolCalls: 16
+    modelCalls: 15
+    tokenShare: 1.1
+  - type: general-purpose
+    task: Research engineering loop promotion
+    model: sonnet
+    durationSec: 136
+    toolCalls: 16
+    modelCalls: 15
+    tokenShare: 1.2
+  - type: general-purpose
+    task: Research prune trials promotion
+    model: sonnet
+    durationSec: 128
+    toolCalls: 10
+    modelCalls: 9
+    tokenShare: 0.8
+  - type: general-purpose
+    task: Research glossaries promotion
+    model: sonnet
+    durationSec: 103
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 0.7
+  - type: general-purpose
+    task: Research timestamps promotion
+    model: sonnet
+    durationSec: 111
+    toolCalls: 16
+    modelCalls: 11
+    tokenShare: 0.8
+  - type: general-purpose
+    task: Research dependabot promotion
+    model: sonnet
+    durationSec: 123
+    toolCalls: 12
+    modelCalls: 10
+    tokenShare: 0.8
+  - type: general-purpose
+    task: Research theming promotion
+    model: sonnet
+    durationSec: 148
+    toolCalls: 17
+    modelCalls: 13
+    tokenShare: 0.9
+  - type: general-purpose
+    task: Research schema-only-grows promotion
+    model: sonnet
+    durationSec: 109
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 0.7
+  - type: general-purpose
+    task: Research out-of-scope promotion
+    model: sonnet
+    durationSec: 101
+    toolCalls: 10
+    modelCalls: 7
+    tokenShare: 0.7
+  - type: general-purpose
+    task: Research permissions Lesson re-cut
+    model: sonnet
+    durationSec: 127
+    toolCalls: 13
+    modelCalls: 10
+    tokenShare: 0.9
+  - type: general-purpose
+    task: Research work-queue and HITL re-cut
+    model: sonnet
+    durationSec: 125
+    toolCalls: 11
+    modelCalls: 8
+    tokenShare: 0.8
+  - type: general-purpose
+    task: "Writer: hints Lesson"
+    model: opus
+    durationSec: 1163
+    toolCalls: 42
+    modelCalls: 30
+    tokenShare: 2.4
+  - type: general-purpose
+    task: "Writer: thin CI Lesson"
+    model: opus
+    durationSec: 1175
+    toolCalls: 56
+    modelCalls: 33
+    tokenShare: 2.4
+  - type: general-purpose
+    task: "Writer: auto-imports Lesson"
+    model: opus
+    durationSec: 336
+    toolCalls: 42
+    modelCalls: 27
+    tokenShare: 1.7
+  - type: general-purpose
+    task: "Writer: virtual imports Lesson"
+    model: opus
+    durationSec: 1148
+    toolCalls: 57
+    modelCalls: 43
+    tokenShare: 3
+  - type: general-purpose
+    task: "Writer: engineering loop Lesson"
+    model: opus
+    durationSec: 1185
+    toolCalls: 48
+    modelCalls: 33
+    tokenShare: 2.4
+  - type: general-purpose
+    task: "Writer: glossaries Lesson"
+    model: opus
+    durationSec: 1191
+    toolCalls: 46
+    modelCalls: 25
+    tokenShare: 1.9
+  - type: general-purpose
+    task: "Writer: timestamps Lesson"
+    model: opus
+    durationSec: 1110
+    toolCalls: 24
+    modelCalls: 20
+    tokenShare: 1.5
+  - type: general-purpose
+    task: "Writer: dependabot Lesson"
+    model: opus
+    durationSec: 1183
+    toolCalls: 46
+    modelCalls: 30
+    tokenShare: 2.2
+  - type: general-purpose
+    task: "Writer: theming Lesson"
+    model: opus
+    durationSec: 1196
+    toolCalls: 48
+    modelCalls: 32
+    tokenShare: 2.4
+  - type: general-purpose
+    task: "Writer: out-of-scope Lesson"
+    model: opus
+    durationSec: 1173
+    toolCalls: 39
+    modelCalls: 28
+    tokenShare: 2.2
+  - type: general-purpose
+    task: "Writer: permissions Lesson re-cut"
+    model: opus
+    durationSec: 1179
+    toolCalls: 79
+    modelCalls: 50
+    tokenShare: 4.3
+  - type: general-purpose
+    task: "Writer: work queue and HITL re-cut"
+    model: opus
+    durationSec: 1209
+    toolCalls: 82
+    modelCalls: 41
+    tokenShare: 3.7
+  - type: general-purpose
+    task: "Writer: routines raise"
+    model: opus
+    durationSec: 1150
+    toolCalls: 39
+    modelCalls: 26
+    tokenShare: 2.1
+  - type: general-purpose
+    task: "Writer: pnpm lockfile raise"
+    model: opus
+    durationSec: 1153
+    toolCalls: 43
+    modelCalls: 28
+    tokenShare: 1.8
+  - type: general-purpose
+    task: "Writer: attribution raise"
+    model: opus
+    durationSec: 1121
+    toolCalls: 25
+    modelCalls: 17
+    tokenShare: 1.3
+  - type: general-purpose
+    task: "Writer: Vue components raise"
+    model: opus
+    durationSec: 1165
+    toolCalls: 56
+    modelCalls: 35
+    tokenShare: 2.7
+  - type: general-purpose
+    task: Review Standards axis
+    model: sonnet
+    durationSec: 239
+    toolCalls: 20
+    modelCalls: 19
+    tokenShare: 1.8
+  - type: general-purpose
+    task: "Review Spec: claude-code pages"
+    model: opus
+    durationSec: 256
+    toolCalls: 29
+    modelCalls: 28
+    tokenShare: 2.2
+  - type: general-purpose
+    task: "Review Spec: git-github and deploy"
+    model: opus
+    durationSec: 239
+    toolCalls: 28
+    modelCalls: 26
+    tokenShare: 1.7
+  - type: general-purpose
+    task: "Review Spec: nuxt-vue and verification"
+    model: opus
+    durationSec: 283
+    toolCalls: 33
+    modelCalls: 31
+    tokenShare: 2.2
+  - type: general-purpose
+    task: "Review Spec: skill-pack and practice"
+    model: opus
+    durationSec: 261
+    toolCalls: 31
+    modelCalls: 30
+    tokenShare: 2
+  - type: general-purpose
+    task: Fix-round Standards review
+    model: sonnet
+    durationSec: 94
+    toolCalls: 10
+    modelCalls: 9
+    tokenShare: 0.8
+  - type: general-purpose
+    task: Fix-round Spec review
+    model: opus
+    durationSec: 264
+    toolCalls: 24
+    modelCalls: 23
+    tokenShare: 1.9
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.312
+learnings:
+  - unimport 7.0.2 only suppresses an auto-import for a top-level declaration of the name; a declaration inside a function or a parameter does not
+  - A subagent's worktree branch keeps its base commit, so a resumed writer's fix commit merges cleanly into a run branch that moved on, except where both touched the same line
+ideas:
+  - "Hand-promote or re-run the two held-back drafts: prune-trials (stale verdict paragraph after the rate comparison landed, comment-only Excerpt, title that fails the rule, overlap with Self-improvement loop) and schema-only-grows (about half its lines)"
+  - "Proposed DECISIONS line: a gap counts as consensus only when both raters cite an A page (the tally should print the exemplar's grade so this is checkable, not judged by hand)"
+  - Add guide links to the three promoted Lessons that have no inbound guide link (Engineering skills, Ubiquitous language, Out-of-scope records), from Pull requests, Asking for a change, Adding a site stop 7 and Cloud sessions, once next run's raters confirm where they fit
+  - "Make glassbox-improve cheaper: have grades.ts also print the per-writer brief fill-ins (task, items, research path) and the PR body skeleton, so the lead stops hand-assembling 16 briefs and a 46KB PR description"
+landedBy: Stop
