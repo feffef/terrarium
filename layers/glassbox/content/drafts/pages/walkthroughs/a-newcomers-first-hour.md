@@ -36,7 +36,7 @@ An explainer page that sets `onramp` ends in a footer: "Start here", its place i
 Some sites here record the real build and some are fiction, and a newcomer can't tell which from the outside. One tour page sorts them into the sites that are about the real build, each in its own way, and the practice grounds and demos that claim nothing about it. The repository keeps the same distinction in its glossary map, which says how each Tenant relates to reality.
 
 ::stop-links
-[Several glossaries](/t/glassbox/drafts/terrarium-practice/glossaries) · [What's Real, What's Invented](/t/journal/current/real-and-invented)
+[Ubiquitous language](/t/glassbox/guide/terrarium-practice/ubiquitous-language) · [What's Real, What's Invented](/t/journal/current/real-and-invented)
 ::
 
 ## 5. In the repository, CLAUDE.md comes first
@@ -52,7 +52,7 @@ The tour links the repository's issues and pull requests, and from there the new
 `CLAUDE.md` pulls two glossaries into every session: the glossary map, which points to a Tenant's own glossary, and the Platform glossary, with words such as Tenant, Space and Friction. A newcomer who reads them learns the words the docs, the code and the agents all use. The decisions behind the words are ADRs, one decision each, and each ADR's summary reaches agents as a rule.
 
 ::stop-links
-[Several glossaries](/t/glassbox/drafts/terrarium-practice/glossaries) · [Decision records](/t/glassbox/guide/terrarium-practice/adrs)
+[Ubiquitous language](/t/glassbox/guide/terrarium-practice/ubiquitous-language) · [Decision records](/t/glassbox/guide/terrarium-practice/adrs)
 ::
 
 ## A real case
@@ -62,7 +62,7 @@ On 28 September 2026 a `visitor-loop` run sent three first-time-visitor agents, 
 ## Where next
 
 - [CLAUDE.md](/t/glassbox/guide/claude-code/claude-md)
-- [Several glossaries](/t/glassbox/drafts/terrarium-practice/glossaries)
+- [Ubiquitous language](/t/glassbox/guide/terrarium-practice/ubiquitous-language)
 - [queryCollection patterns](/t/glassbox/drafts/nuxt-content/query-collection-patterns)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)
 - [What's Real, What's Invented](/t/journal/current/real-and-invented)

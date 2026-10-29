@@ -63,7 +63,7 @@ A Trusted user reads the issue and moves it to `ready-for-agent`, which in Terra
 A Trusted user starts a session to build it, often the same `clear-backlog` run. The explore pass before it has already closed work that is done. The session builds on its own branch in its own worktree, test first, reviews the change on both of `code-review`'s axes, runs the :term[Gate] and opens a PR.
 
 ::stop-links
-[The engineering loop](/t/glassbox/drafts/skill-pack/engineering-loop) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/verification/gate) · :file[.agents/skills/clear-backlog/SKILL.md]
+[Engineering Skills](/t/glassbox/guide/skill-pack/engineering-skills) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/verification/gate) · :file[.agents/skills/clear-backlog/SKILL.md]
 ::
 
 ## 7. A person merges it, and the issue closes

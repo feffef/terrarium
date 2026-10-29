@@ -28,7 +28,7 @@ When `expand()` builds the Blog's collections, it adds the `page` contract's fie
 `catalogFrom()` walks the same expansion and lists every Collection that named a kind, grouped by kind. :file[modules/catalog.ts] writes that list into the `#catalog` module each time Nuxt starts or builds. So the :term[Catalog] holds one entry for each Blog Space's `pages`, beside the other Tenants' opted-in Collections, and no one keeps that list by hand.
 
 ::stop-links
-[A module that generates virtual # imports](/t/glassbox/drafts/nuxt-vue/virtual-imports) · [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads)
+[Virtual modules](/t/glassbox/guide/nuxt-vue/virtual-modules) · [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads)
 ::
 
 ## 4. The Search asks for every page
@@ -59,6 +59,6 @@ The Commons's own `pages` name no kind, so its Search never lists itself. A Coll
 
 - [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads)
 - [queryCollection patterns](/t/glassbox/drafts/nuxt-content/query-collection-patterns)
-- [A module that generates virtual # imports](/t/glassbox/drafts/nuxt-vue/virtual-imports)
+- [Virtual modules](/t/glassbox/guide/nuxt-vue/virtual-modules)
 - [Adding a site](/t/glassbox/guide/walkthroughs/adding-a-tenant)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)
