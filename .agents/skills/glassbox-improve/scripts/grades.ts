@@ -9,7 +9,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml, stringify } from 'yaml'
-import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { frontmatterBlock, splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { git, tryGit } from '../../../../scripts/lib/git.ts'
 
@@ -70,7 +70,7 @@ export interface Plan {
 
 const isWalkthrough = (page: string) => page.startsWith('walkthroughs/')
 const aPages = (record: GradeRecord) => Object.entries(record.pages).filter(([, p]) => p.grade === 'A').map(([page]) => page).sort()
-const seated = (e: Election) => [...e.lessons, ...(e.walkthrough ? [e.walkthrough] : [])]
+const electedPages = (e: Election) => [...e.lessons, ...(e.walkthrough ? [e.walkthrough] : [])]
 
 /** What a page teaches: the file without the lines `glassbox-update` moves daily
  *  (the pin and the Excerpt ranges), so a re-pin doesn't count as a change. */
@@ -205,11 +205,11 @@ export interface Raise {
 export function structural(reports: Report[]): Raise[] {
   const raises = new Map<string, Raise>()
   const add = (key: string, rater: Model, item: string, rank?: number) => {
-    const r = raises.get(key) ?? { key, raters: [], items: [] }
-    if (!r.raters.includes(rater)) r.raters.push(rater)
-    if (rank !== undefined) r.rankSum = (r.rankSum ?? 0) + rank
-    r.items.push(`${rater}: ${item}`)
-    raises.set(key, r)
+    const raise = raises.get(key) ?? { key, raters: [], items: [] }
+    if (!raise.raters.includes(rater)) raise.raters.push(rater)
+    if (rank !== undefined) raise.rankSum = (raise.rankSum ?? 0) + rank
+    raise.items.push(`${rater}: ${item}`)
+    raises.set(key, raise)
   }
   for (const r of reports) {
     for (const m of r.missingLessons ?? []) add(m.draft ? `promote ${m.draft}` : `new Lesson: ${m.concept}`, r.rater, `${m.concept} (${m.subject})`, m.rank)
@@ -222,7 +222,7 @@ function markdown(record: GradeRecord, plan: Plan, reports: Report[], grades: Ta
   const out: string[] = []
   const before = (page: string) => models.map((m) => record.pages[page]?.grades[m]?.grade ?? '–').join('/')
   const now = (page: string) => models.map((m) => grades[page]?.[m] ?? '–').join('/')
-  out.push('## A set', '', `Before: ${aPages(record).join(', ') || 'none'}`, '', `After: ${seated(election).join(', ') || 'none'}`, '')
+  out.push('## A set', '', `Before: ${aPages(record).join(', ') || 'none'}`, '', `After: ${electedPages(election).join(', ') || 'none'}`, '')
   for (const r of reports) out.push(`- ${r.rater} top 10: ${r.top10.join(', ') || 'none'}; best Walkthrough: ${r.bestWalkthrough ?? 'none'}`)
   out.push('', '<details><summary>Grades (sonnet/fable/opus)</summary>', '', 'page | read by | before | this run', '--- | --- | --- | ---')
   for (const page of Object.keys(grades).sort()) {
@@ -246,7 +246,7 @@ function markdown(record: GradeRecord, plan: Plan, reports: Report[], grades: Ta
   out.push('', '</details>', '', `Read by all three next run (lone reader raised something): ${triggered.join(', ') || 'none'}`, '')
   out.push('<details><summary>Structural raises, most raters first</summary>', '', 'step | raters | rank sum | items', '--- | --- | --- | ---')
   for (const s of structural(reports)) out.push([s.key, s.raters.join(', '), String(s.rankSum ?? '–'), s.items.join('; ')].map(cell).join(' | '))
-  for (const c of record.candidates) out.push(`waiting since ${c.since}: ${c.kind} | | | ${cell(`${c.pages.join(' + ')}: ${c.gist}`)}`)
+  for (const c of record.candidates) out.push(`${cell(`waiting since ${c.since}: ${c.kind}`)} | | | ${cell(`${c.pages.join(' + ')}: ${c.gist}`)}`)
   out.push('', '</details>')
   return out.join('\n')
 }
@@ -262,7 +262,7 @@ export interface WriteOptions {
  *  only this run's flags, since every flagged page was read by all three. */
 export function nextRecord(record: GradeRecord, result: Tally, opts: WriteOptions): GradeRecord {
   const pages: GradeRecord['pages'] = {}
-  const elected = new Set(seated(result.election))
+  const elected = new Set(electedPages(result.election))
   for (const page of Object.keys(opts.hashes).sort()) {
     const old = record.pages[page]
     const read = result.grades[page] ?? {}
@@ -305,20 +305,22 @@ export function readRecord(text: string | undefined): GradeRecord {
   return { run: parsed?.run, pages: parsed?.pages ?? {}, candidates: parsed?.candidates ?? [] }
 }
 
-const pageList = (argv: string[], flag: string) => (flagValue(argv, flag) ?? '').split(',').filter(Boolean)
-const valuedFlags = ['--base', '--selected', '--gap-edit', '--read-by-all']
+const pageList = (value: string | undefined) => (value ?? '').split(',').filter(Boolean)
 
 runIfMain(import.meta.url, () => {
-  const [command, ...argv] = process.argv.slice(2)
-  const base = flagValue(argv, '--base')
+  const [command, ...args] = process.argv.slice(2)
+  const flags: Record<string, string | undefined> = {}
+  let argv = args
+  for (const flag of ['--base', '--selected', '--gap-edit', '--read-by-all']) ({ value: flags[flag], rest: argv } = extractFlag(argv, flag))
+  const base = flags['--base']
   if (!base) fail('--base <sha> is required')
   const sha = git(['rev-parse', `${base}^{commit}`], root).trim()
   const record = readRecord(tryGit(['show', `${sha}:${recordPath}`], root).out || undefined)
   const hashes = Object.fromEntries(spacePages(sha, 'guide').map(([page, text]) => [page, pageHash(text)]))
   const plan: Plan = { base: sha, ...planPages(record, hashes) }
   if (command === 'plan') {
-    const a = new Set(aPages(record))
-    const paths = (ps: string[]) => ps.map((p) => `- ${pagesDir('guide')}/${p}.md${a.has(p) ? ' (A)' : ''}`)
+    const held = new Set(aPages(record))
+    const paths = (ps: string[]) => ps.map((p) => `- ${pagesDir('guide')}/${p}.md${held.has(p) ? ' (A)' : ''}`)
     console.log([
       `# Plan at ${sha}`, '',
       '## Read by all three', '', ...paths(plan.allThree), '',
@@ -329,7 +331,7 @@ runIfMain(import.meta.url, () => {
     return
   }
   if (command !== 'tally') fail(`unknown command ${command}; use plan or tally`)
-  const files = argv.filter((a, i) => !a.startsWith('--') && !valuedFlags.includes(argv[i - 1] ?? ''))
+  const files = argv.filter((a) => a !== '--write')
   if (files.length !== models.length) fail(`give the ${models.length} raters' saved hand-backs`)
   const reports = files.map((f) => {
     try {
@@ -340,12 +342,12 @@ runIfMain(import.meta.url, () => {
   })
   const problems = reports.flatMap((r) => reportProblems(r, plan))
   if (problems.length) fail(`the reports don't match the plan:\n${problems.join('\n')}`)
-  const selected = pageList(argv, '--selected')
+  const selected = pageList(flags['--selected'])
   const result = tally(record, plan, reports, selected)
   console.log(result.markdown)
   if (!argv.includes('--write')) return
   const run = new Date().toISOString().slice(0, 10)
-  const next = nextRecord(record, result, { run, hashes, gapEdit: pageList(argv, '--gap-edit'), readByAll: pageList(argv, '--read-by-all') })
+  const next = nextRecord(record, result, { run, hashes, gapEdit: pageList(flags['--gap-edit']), readByAll: pageList(flags['--read-by-all']) })
   writeFileSync(join(root, recordPath), stringify(next, { lineWidth: 0 }))
   console.error(`wrote ${recordPath}`)
 })

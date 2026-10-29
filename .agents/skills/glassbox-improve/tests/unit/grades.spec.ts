@@ -111,6 +111,11 @@ describe('reports', () => {
     expect(r.rater).toBe('fable')
   })
 
+  it('rejects a Lesson named as the best Walkthrough', () => {
+    const r: Report = { rater: 'fable', pages: [{ page: 'l/01', grade: 'B' }, { page: 'walkthroughs/w', grade: 'B' }], top10: [], bestWalkthrough: 'l/01' }
+    expect(reportProblems(r, plan)).toEqual(['fable: bestWalkthrough l/01 is not a Walkthrough it graded B'])
+  })
+
   it('names a missing page, an A grade, and a top 10 entry it did not grade B', () => {
     const r: Report = { rater: 'sonnet', pages: [{ page: 'l/01', grade: 'C' }, { page: 'walkthroughs/w', grade: 'A' as never }], top10: ['l/01'] }
     expect(reportProblems(r, plan)).toEqual([
@@ -135,8 +140,8 @@ describe('tally and nextRecord', () => {
   })
 
   it('writes this run\'s grades, the election and the flags', () => {
-    const t = tally(record, plan, reports)
-    const next = nextRecord(record, t, { run: '2026-10-30', hashes: { 'l/01': 'x', 'l/02': 'y', 'l/03': 'z' }, gapEdit: ['l/03'], readByAll: [] })
+    const result = tally(record, plan, reports)
+    const next = nextRecord(record, result, { run: '2026-10-30', hashes: { 'l/01': 'x', 'l/02': 'y', 'l/03': 'z' }, gapEdit: ['l/03'], readByAll: [] })
     expect(next.pages['l/01']).toMatchObject({ hash: 'x', grade: 'A', grades: { opus: { grade: 'C', run: '2026-10-30' } } })
     expect(next.pages['l/01']!.readByAll).toBeUndefined()
     expect(next.pages['l/02']).toMatchObject({ grade: 'C', readByAll: true })

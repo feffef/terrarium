@@ -99,7 +99,7 @@ Run the tally again with `--selected <pages>` (comma-separated), since a
 selected page can't hold A, and save its output: the PR body's tally. Done
 when every item is kept or dropped with its reason and the selection says why
 each step beat the next. If nothing is selected and no false claim is
-confirmed, go to step 6's record and then step 8.
+confirmed, write the record (step 7) and go to step 8.
 
 ## 4. Research
 
@@ -131,14 +131,8 @@ the **join edits** the writers reported, on any page: link text after a
 retitle, new Terms (once each, per EVERY-PAGE's Terms), Walkthrough chips and
 Where next entries. Add a link only where its list has room, replace only a
 link that broke or was retitled, and keep each list's order. Pin each page you
-edit yourself to the base.
-
-Then write the record: the step-3 tally command with `--write --selected
-<pages> --gap-edit <pages a gap edit changed> --read-by-all <pages whose
-consensus gap the churn rule dropped>`. In `grades.yml`'s `candidates`,
-remove each step this run took and add each step that waited, with its pages,
-a one-line gist and today's date (or its old date). Done when EVERY-PAGE's
-Check passes on the run branch and `grades.yml` is committed.
+edit yourself to the base. Done when EVERY-PAGE's Check passes on the run
+branch.
 
 ## 7. Review
 
@@ -148,8 +142,16 @@ spec and this added to it: for each changed claim, show the cited file at the
 base (`git show <base>:<path>`) and quote the `path:line` that backs it, never
 accepting a claim on assertion; and no section the tally didn't fault got
 worse. Send each finding on a page to its writer with `SendMessage` and merge
-its new commit; fix join findings yourself. One fix round. Done when every
-finding is fixed or refused with its reason in the PR body.
+its new commit; fix join findings yourself. One fix round.
+
+Then write the record: the step-3 tally command with `--write --selected
+<pages> --gap-edit <pages a gap edit changed> --read-by-all <pages whose
+consensus gap the churn rule dropped>`. It keeps the base's hashes, so every
+page this run edited counts as changed and all three read it next run. In
+`grades.yml`'s `candidates`, remove each step this run took and add each step
+that waited, with its pages, a one-line gist and today's date (or its old
+date). Done when every finding is fixed or refused with its reason, and
+`grades.yml` is committed.
 
 ## 8. Land and file
 
@@ -158,10 +160,11 @@ branch, keeping your page with its pin at the base. Then follow "Closing a
 scheduled run's PR" in `docs/agents/pr-workflow.md`; its `pnpm gate:scoped`
 on the final head is the run's only one. The PR body holds every intermediate
 result, so nobody has to read this session's events: each change as
-`page | item | change`, then the tally output (grades before and this run's,
-the A set before and after, each rater's top 10, every item kept or dropped
-with its reason) and each structural step with why it won or waits. If
-anything outside the Remit is in the diff, leave the PR open for a human.
+`page | item | change`; step 3's saved tally output (grades before and this
+run's, the A set before and after, each rater's top 10, every item raised),
+with your reason beside each item you kept or dropped; each structural step
+with why it won or waits; and the review findings with what became of each.
+If anything outside the Remit is in the diff, leave the PR open for a human.
 
 File the rest:
 
