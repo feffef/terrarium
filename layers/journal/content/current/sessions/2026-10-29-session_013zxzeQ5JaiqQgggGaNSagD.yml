@@ -1,0 +1,493 @@
+schemaVersion: 1
+session: session_013zxzeQ5JaiqQgggGaNSagD
+startedAt: 2026-10-29T08:37:37Z
+endedAt: 2026-10-29T09:26:40Z
+kind: delegated
+goal: Raise the weakest Glass Box guide pages by rater consensus
+status: completed
+outcome: "PR 2674 merged: Zod refinements retitled and cut, Cloud sessions promoted to the guide"
+summary: "The user started the run with /glassbox-improve; every later choice was the Skill's own procedure, none a separate human ask. Three raters (sonnet, fable, opus) graded all 40 guide pages: 38 were A by the middle grade, two were B (vue-components, schema-validation). Only schema-validation had a consensus deficit a page edit could fix (title, and a dense paragraph), so it was the one raised page. The structural step went to promoting the Cloud sessions draft: every rater named both the vue-components split and several promotions, a promotion beats a re-cut on a tie, and Cloud sessions had the lowest summed place in the Gaps lists. Researchers confirmed four overstated claims in the draft; writers fixed them. code-review found a probe date in prose, which I dropped, plus findings I refused with proof (a docs anchor that exists, pin bumps the Pin rule requires). Three re-grade rounds on Cloud sessions followed: two rounds each produced a consensus deficit (a count in prose, an overbroad lede), and the last opus round confirmed a false watch item against the cloud docs, which I fixed. Final grades A, with opus holding one B. The scoped gate passed on the final head, the PR opened, CI went green and I merged it with merge-pr.ts. Open: vue-components still needs a split into Vue components and Hydration; virtual imports and hints are the next promotion candidates."
+prs:
+  - "2674"
+docsRead:
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: title, Pin and Mechanism-not-motive rules drove every edit and the Check
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: grades and the no-undo rule decided what to keep
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: checked no kept deficit was already settled; none was
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson shape, Excerpt and Term rules
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read before my first non-read-only git command; commit via -F and trailer check
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before the first GitHub call; confirmed MCP tools for listing and creating the PR
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before first push, gate last, closing a scheduled run's PR
+    useful: yes
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: template for the three raters and the re-grade raters; filled from it
+    useful: yes
+  - path: .agents/skills/glassbox-improve/researcher-brief.md
+    reason: template for the two researchers; worked as written
+    useful: yes
+  - path: .agents/skills/glassbox-improve/writer-brief.md
+    reason: template for the two writers; lacked the page-check caps the promotion tripped on
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: the cloud writer read it for Lesson shape; it reported it partly useful
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: main source for the Cloud sessions claims; researcher and writer both found it essential
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: source for the hooks-fire probe and unattended-edit rule on the Cloud sessions page
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: writer read it for a Why bullet, then dropped the bullet since a sibling owns it
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: writer verified quotes then dropped the bullet; the sibling Human-only Lesson owns that reason
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: opus rater read it to trace a Why citation on the hooks page
+    useful: yes
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: opus rater traced the ADRs Lesson's citation to it
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: raters traced the use-async-data Why bullets to it
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: sonnet rater checked the subagents Lesson against it
+    useful: yes
+  - path: docs/adr/0019-content-load-error-recovery.md
+    reason: sonnet rater traced content-database Why bullets to it
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: sonnet rater checked the work-queue Lesson against it
+    useful: yes
+  - path: GLOSSARY.md
+    reason: sonnet rater checked term entries (Self-improvement loop, Session log) for title claims
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: sonnet rater checked the Scheduled tasks Lesson against it
+    useful: partly
+  - path: .claude/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-lesson/QUALITY.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-lesson/DECISIONS.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/06.schema-validation.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/11.cloud-sessions.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/drafts/pages/claude-code/11.cloud-sessions.md
+    reason: (read before editing)
+  - path: .out-of-scope/pre-approved-settings-edits.md
+    reason: (no reason given)
+  - path: .claude/settings.json
+    reason: (no reason given)
+  - path: scripts/hooks/workflow-edit-guard.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/05.blocking-hooks.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/10.routines.md
+    reason: (no reason given)
+  - path: layers/glassbox/app/utils/subjects.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/deploy/02.pnpm-lockfile.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/05.attribution.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/skill-pack/01.skill-packs.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/01.human-in-the-loop.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/01.gate.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/02.type-checking.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/03.content-validation.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/verification/04.unit-and-e2e-tests.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/05.linting.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/claude-code/06.hints.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/claude-code/08.workflow-scripts.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/git-github/03.thin-ci-workflow.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/drafts/pages/nuxt-vue/03.virtual-imports.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-content/05.mdc-components.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-content/07.mermaid-svg.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/terrarium-practice/03.glossaries.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/terrarium-practice/05.prune-trials.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-vue/04.auto-imports.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-vue/07.theming-wrapper-class.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-content/04.query-collection-patterns.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/skill-pack/02.planning-with-the-pack.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/verification/03.invariants-as-tests.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/verification/02.schema-only-grows.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/drafts/pages/verification/01.timestamps-as-strings.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/drafts/pages/git-github/07.dependabot-grouping.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/nuxt-content/06.prose-overrides.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/terrarium-practice/06.out-of-scope-records.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/skill-pack/03.engineering-loop.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-improve
+    reason: the run's whole procedure, invoked by the user
+  - name: dispatch-subagents
+    reason: briefs, worktree isolation, handback saving, check:worktrees
+  - name: code-review
+    reason: step 7 review of the run branch against the base
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: First gate launch used run_in_background plus a text-level ampersand; the double-background guard blocked it and nothing ran.
+    solution: CLAUDE.md's background advice could say pass run_in_background alone with a plain foreground command.
+    severity: nit
+  - description: The Stop hook asked me to push nine times while ADR-0004 required code-review and gate first; each ask cost a turn of explanation.
+    solution: Have the Stop hook skip its push request while a Skill's review or gate steps are still running, or say the ADR-0004 order in its text.
+    severity: minor
+  - description: "Re-grade rounds churn: each round a rater found a new deficit in Cloud sessions (a count, a lede, then a false watch item), costing three rounds of three raters."
+    solution: glassbox-improve could fix a deficit list per page from the first re-grade and treat only new false claims after that, since a fresh opus rater finds something every time.
+    severity: moderate
+  - description: "The promoted draft failed the page spec on first run: description over 120 characters, bullets over 65 words, and link text not equal to a title, found only by running the tests."
+    solution: The writer brief could list the caps (description 120, bullet 65 words, link text equals title) so a promotion fixes them before the Check.
+    severity: minor
+  - description: "Cooling-off step: git diff -M --name-status over the whole tree between merge and base printed about 60 unrelated Journal rename and delete lines before I found the one glassbox deletion."
+    solution: Scope that command to layers/glassbox/content in the Skill's cooling-off step.
+    severity: nit
+  - description: "Subagents broke brief lines or hook-requested reads: the sonnet rater used cd with git, and several never read git-conventions.md after the hook asked, because their calls were read-only."
+    solution: The hook's wording could say read-only show, diff and ls-tree calls need no read, so agents stop reporting it as a miss.
+    severity: nit
+durationSec: 2943
+models:
+  claude-sonnet-5-5: 164
+toolCounts:
+  Read: 9
+  Skill: 5
+  Bash: 46
+  mcp__github__list_pull_requests: 1
+  Agent: 15
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/verification/06.schema-validation.md
+  - layers/glassbox/content/guide/pages/claude-code/11.cloud-sessions.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/routines.md
+  - layers/glassbox/content/drafts/pages/git-github/03.thin-ci-workflow.md
+  - layers/glassbox/content/drafts/pages/verification/01.timestamps-as-strings.md
+  - layers/glassbox/content/drafts/pages/verification/02.schema-only-grows.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+  - layers/glassbox/content/guide/pages/verification/03.content-validation.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/drafts/pages/claude-code/11.cloud-sessions.md
+rulesLoaded:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0004.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/adr/0019-content-load-error-recovery.md
+  - .agents/skills/auto-triage/SKILL.md
+  - GLOSSARY.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0004-objective-safety-gate.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Set the order code-review, gate, then push even when the Stop hook asked; the summary was enough, I did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session and keep logs out of the PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR and subscribe once a commit was pushed; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header as PR body line one and the commit trailer, which I checked; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: About glossaries; the Glass Box glossary load did not change anything I did
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pointed me to the Glass Box glossary, which the skill already required reading
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; I added none
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; the run touched no trial text, so no effect
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill placement; I changed no Skill, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About rule placement; nothing in this run depended on it
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Caught the probe date and the counts in the Cloud sessions prose; summary was enough
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: About diagram lanes; no diagram changed, and it loaded on every page read
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading settings and expand files; no Human-only file was in the diff
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Pointed to docs/agents/guards.md, which the cloud writer read; I did not need it myself
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: Subagent-only load on a glossary read; no verdict reported, nothing relevant to this run
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded for the cloud writer on ADR reads; it reported it partly useful for citations
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded for raters reading layers; partly useful for the Layers page excerpt per fable
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded for raters on deploy and content pages; fable called it partly useful
+    useful: partly
+  - path: .claude/rules/adr-0011.md
+    reason: Loaded for raters on deploy pages; partly useful per fable
+    useful: partly
+  - path: .claude/rules/adr-0018.md
+    reason: Loaded when subagents read expand.ts; no effect on edits
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded when subagents read manifest and expand; the schema writer did not need it
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Rater (sonnet) grades guide
+    model: sonnet
+    durationSec: 722
+    toolCalls: 66
+    modelCalls: 54
+    tokenShare: 19.4
+  - type: general-purpose
+    task: Rater (fable) grades guide
+    model: fable
+    durationSec: 636
+    toolCalls: 80
+    modelCalls: 16
+    tokenShare: 7.8
+  - type: general-purpose
+    task: Rater (opus) grades guide
+    model: opus
+    durationSec: 434
+    toolCalls: 42
+    modelCalls: 36
+    tokenShare: 12.5
+  - type: general-purpose
+    task: Research schema-validation raise
+    model: sonnet
+    durationSec: 96
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 1.4
+  - type: general-purpose
+    task: Research cloud-sessions promotion
+    model: sonnet
+    durationSec: 218
+    toolCalls: 22
+    modelCalls: 16
+    tokenShare: 2.8
+  - type: general-purpose
+    task: "Writer: raise schema-validation"
+    model: opus
+    durationSec: 148
+    toolCalls: 26
+    modelCalls: 14
+    tokenShare: 2.4
+  - type: general-purpose
+    task: "Writer: promote cloud-sessions"
+    model: opus
+    durationSec: 422
+    toolCalls: 65
+    modelCalls: 39
+    tokenShare: 7.4
+  - type: general-purpose
+    task: "Code review: Standards axis"
+    durationSec: 86
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.7
+  - type: general-purpose
+    task: "Code review: Spec axis"
+    durationSec: 56
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.3
+  - type: general-purpose
+    task: Re-grade rater (sonnet)
+    model: sonnet
+    durationSec: 152
+    toolCalls: 15
+    modelCalls: 14
+    tokenShare: 2.4
+  - type: general-purpose
+    task: Re-grade rater (fable)
+    model: fable
+    durationSec: 266
+    toolCalls: 31
+    modelCalls: 11
+    tokenShare: 3.8
+  - type: general-purpose
+    task: Re-grade rater (opus)
+    model: opus
+    durationSec: 208
+    toolCalls: 17
+    modelCalls: 15
+    tokenShare: 3.5
+  - type: general-purpose
+    task: Last re-grade (sonnet)
+    model: sonnet
+    durationSec: 76
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 1.2
+  - type: general-purpose
+    task: Last re-grade (fable)
+    model: fable
+    durationSec: 198
+    toolCalls: 23
+    modelCalls: 13
+    tokenShare: 2.3
+  - type: general-purpose
+    task: Last re-grade (opus)
+    model: opus
+    durationSec: 150
+    toolCalls: 12
+    modelCalls: 11
+    tokenShare: 2
+gitBranch: ccr-2208cc62-2j8qzf
+entrypoint: remote_mobile
+cliVersion: 2.1.312
+learnings:
+  - "Claude Code cloud docs: a session with several repositories reads none of a repository's committed hooks or permission rules, and organization server-managed settings do reach a cloud session"
+ideas:
+  - "Split nuxt-vue/05.vue-components into Vue components and Hydration: all three raters graded it B for two concepts, but a re-cut loses the tie to promotions, so it keeps waiting. A rule that lets a unanimous B outrank a promotion once would clear it."
+  - "Promote drafts nuxt-vue/03.virtual-imports and claude-code/06.hints next: virtual imports ranked first for two raters and hints third or fourth for all; both need retitling to four words or fewer."
+  - Make glassbox-improve's last re-grade a single-rater check on the fixed deficits only, instead of three full raters, to stop the churn seen on Cloud sessions.
+landedBy: Stop

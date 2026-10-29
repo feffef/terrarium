@@ -45,12 +45,13 @@ The repository holds three kinds of things.
   things are the way they are.
 - **Skills.** Step-by-step playbooks, each for one kind of task, such as
   "triage an issue" or "write the daily digest". Most come from an outside
-  pack and are kept unchanged; the rest are Terrarium's own. Seven of them
+  pack and are kept unchanged; the rest are Terrarium's own. Eight of them
   run as routines.
 - **Guards & hooks.** Programs that run automatically around agent actions.
   - **Guards** check some actions before they run. When one stops an
     action, its message explains the rule and says what to do instead.
-  - **Hooks** prepare a session when it starts and commit its log.
+  - **Hooks** prepare a session when it starts and commit its log; hints add
+    a pointer to a doc beside a call that needs one.
 - **Helper scripts.** Small programs the skills and hooks call: to read the
   session logs and skill inventory, run the checks, write a session log,
   merge a pull request or build a preview.
@@ -64,7 +65,7 @@ components and content structure, with tests and the deploy setup alongside.
 
 Everything the website displays, as Markdown and YAML files. The content is
 split three ways:
-- **Tenants:** seven separate sites, each with its own purpose, content
+- **Tenants:** eight separate sites, each with its own purpose, content
   structure and design.
 - **Spaces:** each tenant splits its content into one or more spaces.
 - **Collections:** each space holds one or more collections, one per type of
@@ -74,21 +75,23 @@ Example, the **Journal** tenant:
 
 | Space | Collections |
 |---|---|
-| `current` (the explainer pages and skill inventory, plus the logs and digests of the newest 7 dates that have any) | `pages` (explainer pages and daily digests), `sessions` (session logs), `skills` (the skill inventory) |
-| `archived` (older logs and digests, and retired skills) | the same three collections |
+| `current` (the explainer pages, the skill inventory, the friction ledger and routine run costs, plus the logs and digests of the newest 7 dates that have any) | `pages` (explainer pages and daily digests), `sessions` (session logs), `skills` (the skill inventory), `frictions` (the friction ledger), `routines` (what each routine run cost) |
+| `archived` (older logs and digests) | `pages`, `sessions` |
 
-The seven tenants fall into two groups:
+The eight tenants fall into two groups:
 - **Records of the real build:**
   - **Journal:** session logs, digests, the skill inventory.
   - **Blog:** four fictional writers retelling real events.
   - **Midden:** a museum of discarded work.
+  - **Glass Box:** a textbook of the concepts Terrarium is built on, pinned
+    to dated commits.
   - **Commons:** search and a timeline across the other tenants.
 - **Invented practice grounds and demos:**
   - **Atlas:** a fictional field guide.
   - **Tinkerfund:** a make-believe crowdfunding shop.
   - **Marquee:** a movie blog, built on a visitor's request.
 
-### Two kinds of site content that agents also read
+### Three kinds of site content that agents also read
 
 - **Session logs.** One per agent session. Each has two halves:
   - **Written by the agent:** what it set out to do, how far it got, every
@@ -98,8 +101,10 @@ The seven tenants fall into two groups:
     the tools and files it used.
 - **The skill inventory.** One entry per skill: its role and how much it
   matters.
+- **The friction ledger.** One entry per root cause behind frictions: the
+  frictions it explains and the fixes merged for it.
 
-Both are ordinary site content that the Journal shows to visitors. Helper
+All are ordinary site content that the Journal shows to visitors. Helper
 scripts also read them as data, and the routines act on it. Digests and blog
 posts are written for visitors; the only agent that reads them back is
 `blog-post`, which reads recent posts so it doesn't repeat itself.
@@ -123,18 +128,18 @@ The pieces:
      it at once.
    - Vue then takes over in the browser (*hydration*), so later clicks don't
      reload the page.
-2. **Hovering, then clicking to a tenant's page** (anything under `/t/`).
-   When the pointer rests on a link, the browser fetches that page's code
-   and its **`_payload.json`**: just its data, prepared by the server. On the
-   click, Vue builds the page in the browser. The server keeps each `/t/`
-   page and its `_payload.json` for 60 seconds, so visitors in that minute
-   get the same copy.
-3. **Clicking to a page the server doesn't keep:** the home page and
-   Tinkerfund's search. These pages have no `_payload.json`, so their
-   queries run in the browser itself. Nuxt Content loads a browser copy of
-   the database (SQLite in WebAssembly), fetching each collection's data
-   from the server, and queries it there. If a `_payload.json` ever fails to
-   load, the page falls back to this browser copy as well.
+2. **Hovering, then clicking to a page the server keeps** (the home page and
+   anything under `/t/`). When the pointer rests on a link, the browser
+   fetches that page's code and its **`_payload.json`**: just its data,
+   prepared by the server. On the click, Vue builds the page in the browser.
+   The server keeps each such page and its `_payload.json` for 60 seconds, so
+   visitors in that minute get the same copy.
+3. **Clicking to a page the server doesn't keep:** Tinkerfund's search. It
+   has no `_payload.json`, so its queries run in the browser itself. Nuxt
+   Content loads a browser copy of the database (SQLite in WebAssembly),
+   fetching each collection's data from the server, and queries it there.
+   If a `_payload.json` ever fails to load, the page falls back to this
+   browser copy as well.
 
 The content database is never edited while the site runs. After each
 deploy, the server fills each collection's table from the build's output
@@ -183,14 +188,14 @@ Agents work under the owner's GitHub account. `main` requires a pull request
 with green CI, but that account can bypass the rule; the bypass is how
 session logs land directly. So GitHub shows the owner as the author of
 everything. To tell agent from human, every issue, pull request and comment
-an agent writes opens with a 🤖 line naming the model and linking to its
-session.
+an agent writes opens with a 🤖 line linking to its session.
 
 ## How work enters: issues
 
 Issues are the shared to-do list. Visitors, the maintainer, sessions and
-routines all file them. A new issue has no label; triage adds one, and the
-label says whose move it is:
+routines all file them. A visitor's new issue has no label; sessions and
+routines file theirs as `needs-triage`. Only the triage skills set
+`ready-for-agent` and `ready-for-human`. The label says whose move it is:
 - `needs-triage`: the maintainer still has to decide.
 - `needs-info`: waiting for the reporter to answer a question.
 - `ready-for-agent`: approved for an agent to build.
@@ -210,18 +215,19 @@ pieces of work are first split into a plan and a set of smaller issues
 > work → session log with frictions → routines and the maintainer act →
 > better guidance → fewer frictions next time
 
-Seven **routines** run on timers set up in claude.ai, about once a day.
+Eight **routines** run on timers set up in claude.ai, about once a day.
 Each routine is one skill:
 
 | Routine | What it does |
 |---|---|
-| `frictions-to-fixes` | The heart of the loop: turns recent frictions into fixes. |
+| `frictions-to-fixes` | The heart of the loop: files recent frictions in the friction ledger and turns them into fixes. |
 | `audit-docs` | Reviews the docs and the repo's own skills from six angles, such as drift, duplication and contradictions, and fixes what a fact-check confirms. |
-| `audit-skills` | Checks whether each skill fires when it should and delivers what it promises, and keeps the skill inventory up to date. |
-| `prune-trial` | Cuts a rule down to its goal. A later run reads the next three days' frictions and keeps the cut or restores one line. |
+| `audit-skills` | Checks whether each skill fires when it should and delivers what it promises, keeps the skill inventory up to date and records what each routine run cost. |
+| `prune-trial` | Cuts a rule down to its goal. A later run, three days after the cut landed, reads the frictions since and keeps the cut, restores one line, or files an issue when the damage is moderate or a friction clearly became more common. |
 | `visitor-loop` | Lets three fresh visitor agents, each on a different AI model, use a preview of the site. Then it fixes what at least two of them hit and builds one feature they suggested. |
 | `digest` | Writes up each finished day for the Journal and moves older entries to the archive. |
-| `blog-post` | A blog persona tells the day's most interesting story, which would otherwise stay buried in logs and digests. |
+| `blog-post` | A blog persona tells the best recent story, which would otherwise stay buried in logs and digests. |
+| `glassbox-update` | Brings every Glass Box guide page up to date with `main`: re-checks the pages whose code moved and re-pins them. |
 
 Each routine may merge its own work when CI is green and the change stays
 within its approved scope. Claude Code's own permission check can still stop
@@ -278,13 +284,13 @@ light up. Only the `journal` chip opens one level further.
 |---|---|---|
 | people | maintainer (`maintainer`) | – |
 | people | visitor (`visitor`) | – |
-| Claude | routines (`routines`) | the seven routines, each its own node: `frictions-to-fixes`, `audit-docs`, `audit-skills`, `prune-trial`, `visitor-loop`, `digest`, `blog-post` |
+| Claude | routines (`routines`) | the eight routines, each its own node: `frictions-to-fixes`, `audit-docs`, `audit-skills`, `prune-trial`, `visitor-loop`, `digest`, `blog-post`, `glassbox-update` |
 | Claude | sessions (`sessions`) | cloud (`cloud`), local (`local`): the sessions a person starts |
 | Claude | helper agents (`helper-agents`) | – |
 | GitHub | repository (`repository`) | a frame around the next three rows |
 | GitHub | guidance (`guidance`) | rules & reference (`rules`), skills (`skills`), guards & hooks (`guards`), helper scripts (`scripts`) |
 | GitHub | code (`code`) | – |
-| GitHub | content (`content`) | the seven tenant chips: `journal`, `blog`, `midden`, `commons`, `atlas`, `tinkerfund`, `marquee` |
+| GitHub | content (`content`) | the eight tenant chips: `journal`, `blog`, `midden`, `glassbox`, `commons`, `atlas`, `tinkerfund`, `marquee` |
 | GitHub, inside `journal` | – | digests & pages (`journal-pages`), session logs (`logs`), skill inventory (`inventory`). `logs` and `inventory` carry the badge "also read by agents". |
 | GitHub | issues (`issues`) | – |
 | GitHub | pull requests (`prs`) | – |
@@ -304,6 +310,9 @@ Notes:
   many and what they do.
 - **Issue labels are not nodes.** A story shows the label as a tag on
   `issues`.
+- **The friction ledger and the routine run costs are not nodes.** They are
+  Journal collections, like `logs` and `inventory`. They appear only in step
+  text and the routine tables.
 - **Some words in stories are not nodes.** They appear only in step text:
   the timer, `main`, a reviewer or fact-checker, the preview, a persona, Vue,
   Nuxt Content and SQLite. Where one of them matters, it is a close-up part.
@@ -480,8 +489,8 @@ kind.
 1. `visitor` opens a page in `browser`.
 2. `browser` sends the request to `caddy`.
 3. `caddy` passes it to `container`. Look inside: `container`.
-4. The server checks what it keeps (parts: page store). A `/t/` page from
-   the last 60 seconds goes back as it is.
+4. The server checks what it keeps (parts: page store). The home page or a
+   `/t/` page from the last 60 seconds goes back as it is.
 5. Otherwise Nuxt Content asks SQLite (parts: Nuxt Content, SQLite). The
    first time a collection is asked for after a deploy, SQLite loads it from
    its dump.
@@ -495,13 +504,12 @@ kind.
 9. The visitor clicks. *Decision.*
 
 Branches at step 9:
-- **a tenant page** (usual): `browser` builds the page from the
-  `_payload.json` the server prepared (parts: `_payload.json`). No query runs
-  in the browser.
-- **the home page or Tinkerfund's search:** the server doesn't keep these, so
-  they have no `_payload.json`. Their queries run in the browser database,
-  which fetches each collection's dump from `container` (parts: browser
-  database).
+- **a page the server keeps** (usual; the home page or a tenant page):
+  `browser` builds the page from the `_payload.json` the server prepared
+  (parts: `_payload.json`). No query runs in the browser.
+- **Tinkerfund's search:** the server doesn't keep it, so it has no
+  `_payload.json`. Its queries run in the browser database, which fetches each
+  collection's dump from `container` (parts: browser database).
 
 If a `_payload.json` fails to load, the page falls back to the browser
 database; if that fails too, a dialog offers a reload (step 9's text).
@@ -528,8 +536,8 @@ Object card: the change, from request to merged commit.
    hook commits that one file straight to `main`. Look inside: a session
    log.
 8. **CI.** `ci` runs the same checks. *Decision.* Look inside: the checks.
-9. **Merge.** `maintainer` reviews, then merges or tells the session to
-   merge. *Decision.*
+9. **Merge.** The session posts its verdict, naming the head commit, and
+   merges with the merge script (via `scripts`). *Decision.*
 10. **Log, final.** The session updates its log in `logs` (accent), and the
     hook commits it again.
 
@@ -537,8 +545,10 @@ Branches:
 - at step 8: **green** (usual): CI posts a short comment that wakes the
   session. **Red:** CI tells the session, which fixes the work and pushes →
   rejoins at step 8.
-- at step 9: **merged** (usual). **Changes asked:** the session fixes the
-  work and pushes → rejoins at step 8.
+- at step 9: **merged** (usual). **Needs a human merge:** the change is one
+  of the few a human must merge, so the script refuses and `maintainer`
+  merges → step 10. **Changes asked:** a reviewer wants changes, so the
+  session fixes the work and pushes → rejoins at step 8.
 
 ### 3. A friction becomes a fix — ▶ `frictions-to-fixes`
 
@@ -549,9 +559,9 @@ next session's log.
 1. **Start.** `frictions-to-fixes` starts on its timer, or when the
    maintainer runs it by hand. It is a session like any other.
 2. **Survey.** It sends a helper to `helper-agents`.
-3. **Read.** The helper reads the last three days of `logs` through a script
-   (via `scripts`). It notes every friction and which docs each session
-   opened.
+3. **Read.** The helper reads the `logs` from shortly before the last ledger
+   update through a script (via `scripts`). It files every friction in the
+   friction ledger and notes which docs each session opened.
 4. **Screen.** The helper checks `issues`. It drops frictions that are
    already fixed on `main`, already tracked in an issue or pull request,
    inside a rule that `prune-trial` is testing, or only fixable in an
@@ -642,10 +652,11 @@ Close-up: `issues`.
 1. `audit-docs` starts on its timer.
 2. It reads `rules` and `skills`, and the last two days of changes (uses).
 3. Three reviewers in `helper-agents` look from six angles.
-4. Fact-checkers in `helper-agents` keep only confirmed findings. Edits to a
-   decision record, CI or the code that keeps tenants apart go into a second
-   pull request for the maintainer. Two sources that disagree, with nothing
-   to settle it, become an issue.
+4. Fact-checkers in `helper-agents` keep only confirmed findings. Fixes to
+   a file only the maintainer may merge, every decision record included, go
+   into a second pull request for the maintainer, as does a journal page
+   move that changes its address. Two sources that disagree, with nothing to
+   settle it, become an issue.
 5. It fixes `rules` and `skills` in one pull request in `prs`.
 6. `ci` runs the checks. `audit-docs` may merge itself.
 7. The next session reads the corrected docs (thick).
@@ -657,7 +668,8 @@ Close-up: `issues`.
    script (via `scripts`).
 3. One checker per skill in `helper-agents` compares what each run promised
    with what landed. A serious or repeated failure also becomes an issue.
-4. It updates `inventory` entries. It never edits a skill's text.
+4. It updates `inventory` entries and records what each routine run cost. It
+   never edits a skill's text.
 5. It opens a pull request in `prs`; if nothing changed, there is none.
 6. `ci` runs the checks. `audit-skills` may merge itself.
 
@@ -679,15 +691,16 @@ story follows one trial across two runs.
 6. `ci` runs the checks. `prune-trial` may merge itself.
 7. *Three days later.* A later run reads the frictions in `logs` since the
    cut (via `scripts`). If a serious friction traces to the cut, one line is
-   restored.
+   restored. If the damage is moderate, or a friction clearly became more
+   common, it files an issue for the maintainer instead.
 8. The next session reads the shorter rule (thick).
 
 Close-up: `prune-trial`.
 
 ### 9. Fresh eyes on the site — `visitor-loop`
 
-1. `visitor-loop` starts on its timer and picks today's focus: one tenant,
-   the home page, or phone width.
+1. `visitor-loop` starts on its timer and picks today's focus: one tenant or
+   the home page.
 2. It builds a preview of the site.
 3. Three visitor agents in `helper-agents`, each on a different AI model,
    use the preview without any other context.
@@ -714,7 +727,7 @@ Close-up: `visitor-loop`.
 7. `ci` runs the checks. `digest` may merge itself. If anything else rode
    in, such as a test fix, the pull request waits for the maintainer.
 
-### 11. The day's best story — `blog-post`
+### 11. The best recent story — `blog-post`
 
 1. `blog-post` starts on its timer and picks whose turn it is.
 2. It reads recent changes, `logs` and the newest posts of all four writers
@@ -726,6 +739,19 @@ Close-up: `visitor-loop`.
 5. `ci` runs the checks. `blog-post` may merge itself.
 6. A fresh reader judges whether another writer should reply. Usually not;
    if so, the reply takes the same path.
+
+### 12. The Glass Box kept current — `glassbox-update`
+
+1. `glassbox-update` starts on its timer.
+2. A script lists the guide pages in `glassbox` whose cited code moved, and
+   pins the rest to the newest `main` commit (via `scripts`).
+3. It re-checks each flagged page against that commit, diagrams included, and
+   rewrites what disagrees. The page is always the one at fault, never the
+   code.
+4. It opens a pull request in `prs`; if nothing changed, there is none.
+5. `ci` runs the checks. `glassbox-update` may merge itself. If anything
+   outside the Glass Box pages and their diagrams rode in, the pull request
+   waits for the maintainer.
 
 ## Close-ups
 
@@ -749,7 +775,7 @@ it.
 | Part | What it shows |
 |---|---|
 | quick checks | always run: lint, types, content validation and a few integrity checks |
-| slow checks | tests, the build and a browser smoke test; skipped only for inert changes (docs outside the tenants) |
+| slow checks | tests, the build and a browser smoke test; skipped for inert changes (docs outside the tenants), and a change to skill files skips only the build and the browser test |
 | same rule twice | the local run and CI ask one script which checks to skip, so they can't disagree |
 | wake-up comment | on green, CI posts a short comment so the waiting session wakes; red reaches it without one |
 | on `main` | every push to `main`, session logs included, runs all checks |
@@ -781,8 +807,7 @@ it.
 
 | Part | What it does |
 |---|---|
-| survey (a helper agent) | gathers three days of frictions with a script |
-| screen (same helper) | drops what is fixed, tracked, on trial, or in an outside skill |
+| survey & screen (a helper agent) | files the frictions from shortly before the last ledger update in the friction ledger with a script, and drops what is fixed, tracked, on trial, or in an outside skill |
 | pick | up to ten; files an issue for up to three fixes that came back |
 | design (a helper agent) | reads the picked frictions' full logs, designs each fix and rates its risk |
 | file | opens issues for up to three fixes it won't send on, plus each one only the maintainer may merge |
@@ -796,17 +821,17 @@ it.
 | Part | What it shows |
 |---|---|
 | judge | a later run reads the frictions since each open trial's cut |
-| verdict | keep the cut, restore one line, or propose a guard |
+| verdict | keep the cut; restore one line and propose a guard after serious damage; file an issue when the damage is moderate or a friction clearly became more common |
 | pick | one rule whose prose failed, or that costs the most to read |
 | cut | down to its goal; the trial records its files |
 | probe | a smaller model answers real questions from the cut text |
-| three days | sessions work without the cut text and log their frictions |
+| three days | sessions work without the cut text and log their frictions; the judging run waits this long after the cut lands |
 
 **`visitor-loop`** (story 9)
 
 | Part | What it shows |
 |---|---|
-| focus | today's tenant, the home page, or phone width |
+| focus | today's tenant or the home page |
 | preview | a production build of the site |
 | three visitors | each on a different AI model, with no other context |
 | tally | a problem counts when two of three hit it |
@@ -823,7 +848,7 @@ it.
 | packages | installed again only when the lockfile changed |
 | build | Nuxt bundles the code; Nuxt Content packs each collection into a dump |
 | served copy | the last build that succeeded; the server runs only from here |
-| server | page store (each `/t/` page and its `_payload.json` for 60 seconds; never the home page or Tinkerfund's search), renderer (Vue builds HTML), Nuxt Content, SQLite (starts empty after each deploy; never edited by visitors) |
+| server | page store (the home page and each `/t/` page, with its `_payload.json`, for 60 seconds; never Tinkerfund's search), renderer (Vue builds HTML), Nuxt Content, SQLite (starts empty after each deploy; never edited by visitors) |
 
 **`browser`** (story 1)
 
@@ -888,13 +913,14 @@ merges comes from ADR-0004; what each routine may change, from its `SKILL.md`
 
 | Routine | Reads | Writes | Limits (its `SKILL.md`) |
 |---|---|---|---|
-| `frictions-to-fixes` | the last three days of session logs, `issues`, `prs`, the history of `main`, the open trials | fixes in `rules`, `skills`, `scripts` or `code`, via helpers' pull requests; issues | its own review passed and the fix is low risk; never guards, hooks or maintainer-only files |
-| `audit-docs` | the docs, our own skills, the Journal's explainer pages, the last two days of changes, how often each doc is opened, the open trials | fixes to docs and skills; rarely an issue | the fixes touch current docs and our own skills; decision records, CI and the code that keeps tenants apart go in a second pull request |
-| `audit-skills` | seven days of session logs, the inventory, our skills' text, git history, GitHub | inventory entries; issues for serious or repeated failures | only inventory entries change, and every grade change cites at least two sessions |
-| `prune-trial` | the open trials, frictions since each cut, the issue tracker, all agent guidance | one cut per run, its trial entry, restored lines, issues that propose a guard | the change is prose that can be undone; a rewritten decision record still decides the same |
+| `frictions-to-fixes` | the session logs from shortly before the last ledger update, the friction ledger, `issues`, `prs`, the history of `main`, the open trials | the friction ledger; fixes in `rules`, `skills`, `scripts` or `code`, via helpers' pull requests; issues | its own review passed and the fix is low risk; never guards, hooks or maintainer-only files |
+| `audit-docs` | the docs, our own skills, the Journal's explainer pages, the last two days of changes, the open trials | fixes to docs and skills; rarely an issue | the fixes touch current docs and our own skills; any change to a file only the maintainer may merge (every decision record included), or a journal page move that changes its address, goes in a second pull request |
+| `audit-skills` | seven days of session logs, the inventory, our skills' text, git history, GitHub | inventory entries; what each routine run cost; issues for serious or repeated failures | only inventory entries and routine run costs change, and every grade change cites at least two sessions |
+| `prune-trial` | the open trials, frictions since each cut, how often the friction ledger's entries recurred, the issue tracker, all agent guidance | one cut per run, its trial entry, restored lines, issues that propose a guard or report moderate damage | the change is prose that can be undone; a decision record changes only in a trial the maintainer started |
 | `visitor-loop` | a preview of the site, the visitors' reports, the maintainer's past corrections, its `decisions.md`, a week of logged ideas | one fix and one feature pull request, `decisions.md`, issues | the changes stay inside existing tenants, or app files a routine may merge |
 | `digest` | each finished day's merged pull requests, commits and session logs | one digest per day; moves older logs and digests to `archived` | the change is digests and the move |
-| `blog-post` | whose turn it is, three days of commits and logs, every writer's newest posts | one post; for a reply, also a short backlink note | the change is that post and at most one note, and every claim survived the fact-check |
+| `blog-post` | whose turn it is, three days of commits and logs (wider if too quiet), every writer's newest posts | one post; for a reply, also a short backlink note | the change is that post and at most one note, and every claim survived the fact-check |
+| `glassbox-update` | the Glass Box guide pages, the history of `main`, the code the pages cite | the pages that fell behind, and their diagrams | only Glass Box pages and their diagrams change |
 
 "Works with" lines in the routine panels (no lines on the map):
 - `prune-trial` → `audit-docs`, `frictions-to-fixes`: while a trial is
@@ -954,4 +980,4 @@ How the platform behaves is defined only by:
 - the code: the Nuxt application, CI (`.github/`) and deploy (`deploy/`).
 
 What actually happened is recorded in the session logs and git history.
-Check claims against those. Last checked against `main` on 2026-10-08.
+Check claims against those. Last checked against `main` on 2026-10-29.

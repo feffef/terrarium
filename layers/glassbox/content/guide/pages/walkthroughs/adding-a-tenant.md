@@ -1,7 +1,7 @@
 ---
 title: Adding a site
 description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
-revision: 'f9b1151f13c991564a15214dc99edfd56c8c68fb'
+revision: '9d7d80f94db60aa6cac1b462699ae33d66b574dc'
 revisionDate: '2026-10-29'
 publishedAt: '2026-10-27T18:52:48Z'
 ---
@@ -29,7 +29,7 @@ The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which ca
 Beside it goes the :term[manifest], `tenant.config.ts`: the Tenant's name, its :term[Spaces]{id="space"}, and the :term[Collections]{id="collection"} that every Space holds, each of type `page` or `data`. Marquee's is about as small as one gets, with one Space, `reel`, and one Collection, `pages`, the only name that gets addresses. Before anything is built from it, `validateManifest()` checks it, and a misspelt key or a Collection the rules don't allow stops the build with a line that names the field.
 
 ::stop-links
-[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Schema validation](/t/glassbox/guide/verification/schema-validation) · :file[layers/marquee/tenant.config.ts]
+[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Zod refinements](/t/glassbox/guide/verification/schema-validation) · :file[layers/marquee/tenant.config.ts]
 ::
 
 ## 4. Its content gets tables of its own

@@ -27,7 +27,7 @@ Four rounds, 2026-10-08 to 2026-10-09:
    [built it](https://claude.ai/artifact/E9spdeUp54KzsmXZjSJZ8L). Too
    ambitious to finish for now.
 
-Details per version are below. Side findings:
+Details per version are below. Side findings, all since fixed:
 [#1701](https://github.com/feffef/terrarium/issues/1701),
 [#1702](https://github.com/feffef/terrarium/issues/1702),
 [#1703](https://github.com/feffef/terrarium/issues/1703).
