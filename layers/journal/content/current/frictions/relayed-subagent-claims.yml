@@ -16,6 +16,9 @@ fixes:
   - pr: 2485
     date: "2026-10-24"
     summary: "Made each triage side finding in clear-backlog-explore carry a required source (file:line, SHA, URL or 'unverified' plus what would verify it)."
+  - pr: 2670
+    date: "2026-10-29"
+    summary: "dispatch-subagents again tells the dispatcher to re-check a subagent's factual or attribution claims against their cited source before they ship."
 occurrences:
   - session: session_013RCsUF234qAGu3CJr3v2on
     date: "2026-10-16"
