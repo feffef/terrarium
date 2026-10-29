@@ -1,7 +1,7 @@
 ---
 title: Glass Box guide
 description: Each Lesson explains one tool or practice in general terms, then shows how and why Terrarium uses it, with the real files.
-revision: 'a9f85bc2e0f69a2e07f9a22a2780aa048c8d59ca'
+revision: 'f9b1151f13c991564a15214dc99edfd56c8c68fb'
 revisionDate: '2026-10-29'
 ---
 
