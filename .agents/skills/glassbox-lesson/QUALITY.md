@@ -30,8 +30,8 @@ the tool but not Terrarium.
 ## Grades
 
 - **A**: best in class. At most 10 guide Lessons and 1 Walkthrough hold it,
-  elected by `glassbox-improve` among the pages it rates; no rater or writer
-  awards it.
+  elected from the raters' top lists by `glassbox-improve`
+  (`elect` in its `scripts/grades.ts`); no rater or writer awards it.
 - **B**: meets the bar, even if another wording is imaginable.
 - **C**: a noticeable deficit.
 - **D**: several deficits, a failed cut, or a failed accuracy check.

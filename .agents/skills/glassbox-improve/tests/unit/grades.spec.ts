@@ -1,7 +1,7 @@
 // The pure core of grades.ts: the page hash, the plan's reader split, the A
 // election, report checks and the next grades.yml. The git shell runs in the Skill.
 import { describe, expect, it } from 'vitest'
-import { elect, middle, nextRecord, pageHash, parseReport, planPages, reportProblems, tally, type GradeRecord, type Plan, type Report } from '../../scripts/grades.ts'
+import { elect, middle, structural, nextRecord, pageHash, parseReport, planPages, reportProblems, tally, type GradeRecord, type Plan, type Report } from '../../scripts/grades.ts'
 
 const page = '---\ntitle: Hooks\nrevision: abc\nrevisionDate: 2026-10-01\n---\nBody\n::excerpt{path="a.ts" lines="3-5"}\n'
 
@@ -13,6 +13,9 @@ const report = (rater: Report['rater'], top10: string[], extra: Partial<Report> 
 })
 
 describe('pageHash', () => {
+  it('keeps a body line that only looks like a pin', () => {
+    expect(pageHash(page.replace('Body', 'revision: x'))).not.toBe(pageHash(page.replace('Body', '')))
+  })
   it('ignores a re-pin and a moved Excerpt range', () => {
     const repinned = page.replace('revision: abc', 'revision: def').replace('lines="3-5"', 'lines="4-6"')
     expect(pageHash(repinned)).toBe(pageHash(page))
@@ -133,10 +136,26 @@ describe('tally and nextRecord', () => {
 
   it('writes this run\'s grades, the election and the flags', () => {
     const t = tally(record, plan, reports)
-    const next = nextRecord(record, t, plan, { run: '2026-10-30', hashes: { 'l/01': 'x', 'l/02': 'y', 'l/03': 'z' }, selected: [], gapEdit: ['l/03'], readByAll: [] })
+    const next = nextRecord(record, t, { run: '2026-10-30', hashes: { 'l/01': 'x', 'l/02': 'y', 'l/03': 'z' }, gapEdit: ['l/03'], readByAll: [] })
     expect(next.pages['l/01']).toMatchObject({ hash: 'x', grade: 'A', grades: { opus: { grade: 'C', run: '2026-10-30' } } })
     expect(next.pages['l/01']!.readByAll).toBeUndefined()
     expect(next.pages['l/02']).toMatchObject({ grade: 'C', readByAll: true })
     expect(next.pages['l/03']).toMatchObject({ grade: 'B', gapEdit: '2026-10-30' })
+  })
+})
+
+describe('structural', () => {
+  it('groups raises by draft and pages, most raters first', () => {
+    const r = (rater: Report['rater'], extra: Partial<Report>) => report(rater, [], extra)
+    const raises = structural([
+      r('sonnet', { missingLessons: [{ concept: 'Hints', subject: 'claude-code', draft: 'claude-code/06.hints', rank: 2 }], recuts: [{ pages: ['b', 'a'], move: 'm' }] }),
+      r('fable', { missingLessons: [{ concept: 'Hint hooks', subject: 'claude-code', draft: 'claude-code/06.hints', rank: 1 }] }),
+      r('opus', { recuts: [{ pages: ['a', 'b'], move: 'n' }], missingLessons: [{ concept: 'Guests', subject: 'git-github', rank: 1 }] }),
+    ])
+    expect(raises.map((x) => [x.key, x.raters.length, x.rankSum])).toEqual([
+      ['promote claude-code/06.hints', 2, 3],
+      ['re-cut a + b', 2, undefined],
+      ['new Lesson: Guests', 1, 1],
+    ])
   })
 })

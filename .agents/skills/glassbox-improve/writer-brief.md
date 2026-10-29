@@ -20,13 +20,11 @@ source yourself"}. Take facts and Excerpts from the source, never from memory.
 Read in full first: `layers/glassbox/GLOSSARY.md`, and
 `.agents/skills/glassbox-lesson/EVERY-PAGE.md`, `QUALITY.md` and
 `DECISIONS.md`. For a new Lesson, follow
-`.agents/skills/glassbox-lesson/SKILL.md` as well. The Check enforces the caps
-in `layers/glassbox/page-checks.ts`: `lengths` (title and description),
-`lessonTitleWords` and `ownWords` (each Why bullet's words); meet them before
-you run it. Before you add or edit a Why bullet, read the Why section of every
-Lesson that cites the same ADR (`git grep -l ADR-NNNN
-layers/glassbox/content/guide`): a reason another Lesson owns gets one sentence
-and a link.
+`.agents/skills/glassbox-lesson/SKILL.md` as well. Meet EVERY-PAGE's length
+caps as you write, not first in the Check. Before you add or edit a Why
+bullet, read the Why section of every Lesson that cites the same ADR
+(`git grep -l ADR-NNNN layers/glassbox/content/guide`): a reason another
+Lesson owns gets one sentence and a link.
 
 **Your worktree.** Run git as `git -C <worktree> …`, one git command per Bash
 call, and every check in the foreground. Run `pnpm install`, then

@@ -66,8 +66,8 @@ page is written or promoted; a retitle keeps the URL.
   source in the published docs package (e.g. `@nuxt/docs` from npm) or the
   docs repo on `raw.githubusercontent.com` (docs.github.com: `github/docs/...`;
   vuejs.org: `vuejs/docs/main/src/...`; nuxt.com: `nuxt/nuxt/main/docs/...`),
-  confirm the exact URL and title in web search results, and say so in the PR. Zod
-  links go to v3.zod.dev.
+  confirm the exact URL and title in web search results, and say so in the
+  PR. Zod links go to v3.zod.dev.
 - **A second tool gets its own link** at its first mention, even though *The
   concept* ends on one Full reference.
 - **Don't repeat a sibling page.** Check a Lesson's *Why it's built this way*

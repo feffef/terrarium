@@ -54,19 +54,20 @@ claim. Done when both are saved.
 ## 2. Rate
 
 Dispatch three raters **in one message**, one per model (`sonnet`, `fable`,
-`opus`), each with [`rater-brief.md`](rater-brief.md) filled in: the base, the
-plan's all-three pages and that model's lone pages, the plan's catalog, and a
-scratch subfolder per rater. Done when all three hand-backs are saved and
-`grades.ts tally` accepts them; on a parse error, fix only the line it names in
-the saved hand-back. Resume a stalled rater once with `SendMessage`; if it
-still returns nothing, dispatch a fresh one on the same model and log a
-Friction.
+`opus`), each with [`rater-brief.md`](rater-brief.md) filled in: the model,
+the base, the plan's all-three pages and that model's lone pages, the plan's
+catalog, and a scratch subfolder per rater. Done when all three hand-backs are
+saved and `grades.ts tally` accepts them; on a parse error, fix only the line
+it names in the saved hand-back. Resume a stalled rater once with
+`SendMessage`; if it still returns nothing, dispatch a fresh one on the same
+model and log a Friction.
 
 ## 3. Tally
 
-Run `grades.ts tally --base <base> <sonnet> <fable> <opus>` and save its
-output: the grades, the election, every item each rater raised, the lone pages
-that go to all three next run, and the structural raises. Then:
+Run `grades.ts tally --base <base> <sonnet> <fable> <opus>`: it prints the
+grades, the election, every item each rater raised (grouped by page and
+criterion), the lone pages that go to all three next run, and the structural
+raises ranked. Then:
 
 - **Cluster** each page's reports of one deficit or gap, however worded. An
   item two raters raise is **consensus**; check each against the page and drop
@@ -83,22 +84,22 @@ that go to all three next run, and the structural raises. Then:
   `git log -p origin/main -- <page>`. A dropped undo becomes a proposed
   `DECISIONS.md` line.
 - **Churn.** A page whose `gapEdit` in `grades.yml` is one of the last 2 runs
-  takes no gap edit; pass it to `--read-by-all`. Deficits are always fixed.
+  takes no gap edit; note each consensus gap dropped this way for step 6's
+  `--read-by-all`. Deficits are always fixed.
 - **Select** every page with a consensus deficit or a consensus gap (both
   raters citing an A page), every page two raters grade below B (its writer
   fixes the deficits it confirms), and every structural step two raters raise,
   plus each `candidates` entry in `grades.yml`. Two steps that touch one page:
-  the one more raters raise, then the older entry, goes first; record the
-  other in `candidates` by hand. A draft that needs about half its lines
+  the one more raters raise, then the older entry, goes first; the other
+  waits (step 6). A draft that needs about half its lines
   changed is not promoted (an idea). A selected page a structural step touches
   belongs to that step's writer.
 
-Then run the tally again with `--write --selected <pages> --gap-edit <pages>
---read-by-all <pages>` (comma-separated): a selected page can't hold A, and
-the file records this run's grades and flags. Remove the `candidates` entries
-this run takes. Done when every item is kept or dropped with its reason and
-the selection says why each step beat the next. If nothing is selected and no
-false claim is confirmed, go to step 8.
+Run the tally again with `--selected <pages>` (comma-separated), since a
+selected page can't hold A, and save its output: the PR body's tally. Done
+when every item is kept or dropped with its reason and the selection says why
+each step beat the next. If nothing is selected and no false claim is
+confirmed, go to step 6's record and then step 8.
 
 ## 4. Research
 
@@ -130,8 +131,14 @@ the **join edits** the writers reported, on any page: link text after a
 retitle, new Terms (once each, per EVERY-PAGE's Terms), Walkthrough chips and
 Where next entries. Add a link only where its list has room, replace only a
 link that broke or was retitled, and keep each list's order. Pin each page you
-edit yourself to the base. Done when EVERY-PAGE's Check passes on the run
-branch.
+edit yourself to the base.
+
+Then write the record: the step-3 tally command with `--write --selected
+<pages> --gap-edit <pages a gap edit changed> --read-by-all <pages whose
+consensus gap the churn rule dropped>`. In `grades.yml`'s `candidates`,
+remove each step this run took and add each step that waited, with its pages,
+a one-line gist and today's date (or its old date). Done when EVERY-PAGE's
+Check passes on the run branch and `grades.yml` is committed.
 
 ## 7. Review
 

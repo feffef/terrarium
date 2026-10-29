@@ -1,7 +1,7 @@
 run: 2026-10-29
 pages:
   claude-code/01.claude-md:
-    hash: 6ed58edef34b5f7b6d2b8d29f892ee2baa79fa29
+    hash: 8afd902059f120d4dd6995c9b964c092fbe8ced0
     grade: B
     grades:
       sonnet:
@@ -14,7 +14,7 @@ pages:
         grade: B
         run: 2026-10-29
   claude-code/02.path-scoped-rules:
-    hash: 69e9d7e1cbcc2b1315e96d286def5a21bd523b82
+    hash: 456ad036cbb3c04916db93bb93b7099c38152ad9
     grade: B
     grades:
       sonnet:
@@ -27,7 +27,7 @@ pages:
         grade: B
         run: 2026-10-29
   claude-code/03.skills:
-    hash: 52083f9b777d2ac6db249a7b8a9736a189f824a8
+    hash: ed33905869aa273bd4fdf5c84cb553f3253de076
     grade: B
     grades:
       sonnet:
@@ -40,7 +40,7 @@ pages:
         grade: B
         run: 2026-10-29
   claude-code/04.hooks:
-    hash: fe7da6176f7ef9094dac89d57e66f8982d87f3e8
+    hash: 4d4dde8ecf4012e18a3a75340aef1ae5d0ded6f3
     grade: B
     grades:
       sonnet:
@@ -53,7 +53,7 @@ pages:
         grade: B
         run: 2026-10-29
   claude-code/05.blocking-hooks:
-    hash: 29ad3ace72bf9e5c387dbb0ed0aa5ee996666f52
+    hash: 18116a4eee1af50eb541c0365a3534c5eb8642d4
     grade: B
     grades:
       sonnet:
@@ -66,7 +66,7 @@ pages:
         grade: B
         run: 2026-10-29
   claude-code/07.subagents:
-    hash: 576b4716a53f3376c797dd946fae75ba8c0f3437
+    hash: 400cd3c97858a91314c0233b32ca1ee3823ea7d9
     grade: B
     grades:
       sonnet:
@@ -79,7 +79,7 @@ pages:
         grade: B
         run: 2026-10-29
   claude-code/08.mcp-servers:
-    hash: f4d03ea62a9dde23670c4e8bae63f97f60e36771
+    hash: 1c97822800b94d5bf65c33a11a48ca1451cf5482
     grade: B
     grades:
       sonnet:
@@ -92,7 +92,7 @@ pages:
         grade: B
         run: 2026-10-29
   claude-code/10.routines:
-    hash: 3cf326ff0c7535b841bec6df799b165caec24191
+    hash: d8ce2080957b6806907920c2edeacd0c39a44a40
     grade: B
     grades:
       sonnet:
@@ -105,7 +105,7 @@ pages:
         grade: B
         run: 2026-10-29
   claude-code/11.cloud-sessions:
-    hash: 73b1dc1ed2fed3cd88b8336b7552770fe9e653c4
+    hash: 161a39c0258d5c3bd084ba3d128930ad1406ecb5
     grade: B
     grades:
       sonnet:
@@ -118,7 +118,7 @@ pages:
         grade: B
         run: 2026-10-29
   deploy/01.self-updating-container:
-    hash: 9dc6b5a394dd63ae4179e54d3355ffdac6c922dd
+    hash: 7276e91de7910481f9772d4813a7fdc00fdf7464
     grade: B
     grades:
       sonnet:
@@ -131,7 +131,7 @@ pages:
         grade: B
         run: 2026-10-29
   deploy/02.pnpm-lockfile:
-    hash: d70f1ad185bd3d3aa3572abcb10b7feabbbec2b0
+    hash: d892ed8a06829c62c9cefefa3b8b8de3f807e176
     grade: C
     grades:
       sonnet:
@@ -144,7 +144,7 @@ pages:
         grade: C
         run: 2026-10-29
   git-github/01.every-change-a-pr:
-    hash: 8d6fa5a9ab02338cc20979edcb2613567487fec1
+    hash: 1932755a2dfd8e49584ac69b7db2ca194665b3d3
     grade: B
     grades:
       sonnet:
@@ -157,7 +157,7 @@ pages:
         grade: B
         run: 2026-10-29
   git-github/02.git-worktrees:
-    hash: b401ad5adfe9911b89c1175b707f55ae54332776
+    hash: c5e41cd5985a26780c7ff80d778adad0ed98b750
     grade: B
     grades:
       sonnet:
@@ -170,7 +170,7 @@ pages:
         grade: B
         run: 2026-10-29
   git-github/04.trust-tiers:
-    hash: 2886ccdefd0a85a0a44dafcfb7cb428b613cbda9
+    hash: cac30d75849ed148483cde6fe28deaa7e6a753d5
     grade: B
     grades:
       sonnet:
@@ -183,7 +183,7 @@ pages:
         grade: B
         run: 2026-10-29
   git-github/05.attribution:
-    hash: df9a4c9321a08935e6ae6bf107f0e047a2c9a129
+    hash: d2e41e44628ab7b37b4c5e15cdd63f09f223a111
     grade: B
     grades:
       sonnet:
@@ -196,7 +196,7 @@ pages:
         grade: B
         run: 2026-10-29
   git-github/06.work-queue:
-    hash: 15916e27f91ec6bb0a0d52590013ad4f9cb017b6
+    hash: 2eef4734f7c980778c482a851f5df5e89cff564b
     grade: C
     grades:
       sonnet:
@@ -209,7 +209,7 @@ pages:
         grade: C
         run: 2026-10-29
   nuxt-content/01.manifest-collections:
-    hash: d34312e49c2117f44296fc497aa3b597ec95e6e0
+    hash: a847d0b04440079555f363530e5fbe84efdffaad
     grade: B
     grades:
       sonnet:
@@ -222,7 +222,7 @@ pages:
         grade: B
         run: 2026-10-29
   nuxt-content/02.multi-tenant-isolation:
-    hash: 6c41b2404a7a60ae34f0ebfd5a9804f5624ed7a3
+    hash: 3214f77e69387eef6e08cd71fe1374aef801bb8e
     grade: B
     grades:
       sonnet:
@@ -235,7 +235,7 @@ pages:
         grade: B
         run: 2026-10-29
   nuxt-content/03.content-database:
-    hash: 3042d0165278c8d72f400fb79d1bedd5b6da3b04
+    hash: 97947fae98f59759de0a30c0556786d93bd297db
     grade: B
     grades:
       sonnet:
@@ -248,7 +248,7 @@ pages:
         grade: B
         run: 2026-10-29
   nuxt-vue/01.layers:
-    hash: 440245f06c79973a5a6833a34b922d761a5b3fa1
+    hash: e2f72b04c9296191789ecc93ea674836f82dbb8d
     grade: B
     grades:
       sonnet:
@@ -261,7 +261,7 @@ pages:
         grade: B
         run: 2026-10-29
   nuxt-vue/02.file-routing:
-    hash: 96162fe4c1feda748c6b661c34188e95be2880e0
+    hash: b9af678dcc130d2ab25189dde3869a8e45bff32c
     grade: B
     grades:
       sonnet:
@@ -274,7 +274,7 @@ pages:
         grade: B
         run: 2026-10-29
   nuxt-vue/05.vue-components:
-    hash: 409922dffcadf85147a299b62aa354f20f1550d6
+    hash: 7b9dbe8078c6d5f33d041662a2602c883b8f2b6f
     grade: C
     grades:
       sonnet:
@@ -287,7 +287,7 @@ pages:
         grade: C
         run: 2026-10-29
   nuxt-vue/06.use-async-data:
-    hash: 730bbe55c909b1d980651d3ccbcee399601f7325
+    hash: 9906ad99cdce37087b2e6d62b8c98f98d386d55d
     grade: B
     grades:
       sonnet:
@@ -300,7 +300,7 @@ pages:
         grade: B
         run: 2026-10-29
   nuxt-vue/08.hydration:
-    hash: 099d9b880a105d7d6912519b9921edff09717942
+    hash: 64f2e82dbd9ee07d5333e83922c9b743970969ed
     grade: C
     grades:
       sonnet:
@@ -313,7 +313,7 @@ pages:
         grade: C
         run: 2026-10-29
   nuxt-vue/09.nitro:
-    hash: 5e1343b75050772bcd4650955a8d76ae98fbe85b
+    hash: 3d08c05c6472bc9248c8e1bd0b64b834cda2c9c2
     grade: B
     grades:
       sonnet:
@@ -326,7 +326,7 @@ pages:
         grade: B
         run: 2026-10-29
   skill-pack/01.skill-packs:
-    hash: 6c2efca0bcbcee3b8e915baf0bf7a959d56dc3fd
+    hash: 8bf2948c19dd23ca862e40ba475d7f6c9b8d299e
     grade: B
     grades:
       sonnet:
@@ -339,7 +339,7 @@ pages:
         grade: B
         run: 2026-10-29
   terrarium-practice/01.human-in-the-loop:
-    hash: 518a92cfa358d588d8000ba28a81671fc77fc3e0
+    hash: 9dd3e11a8248ab80a8454b2fd129b271c824757d
     grade: B
     grades:
       sonnet:
@@ -352,7 +352,7 @@ pages:
         grade: B
         run: 2026-10-29
   terrarium-practice/02.adrs:
-    hash: 556379967085d953b52dd13315c6dff3a744fd35
+    hash: 77070fb38c24d704f4d0fc6fcd69a5702ab1e8f3
     grade: B
     grades:
       sonnet:
@@ -365,7 +365,7 @@ pages:
         grade: B
         run: 2026-10-29
   terrarium-practice/04.session-logs:
-    hash: 740e16d6a4b5828a6d2f5098a79c4ae24d1fa940
+    hash: cf5ef5bd27761f61dae56d8faf3ba82cf141a8af
     grade: B
     grades:
       sonnet:
@@ -378,7 +378,7 @@ pages:
         grade: B
         run: 2026-10-29
   terrarium-practice/07.human-only-list:
-    hash: 64e8ae42f6126c7001467cdf24430db20378a6f1
+    hash: 7b05c0deffbfe378d7860f832235e90bc7935814
     grade: B
     grades:
       sonnet:
@@ -391,7 +391,7 @@ pages:
         grade: B
         run: 2026-10-29
   terrarium-practice/08.cross-tenant-reads:
-    hash: 43c14090ea7e7ab1c0505ad535647750362956d9
+    hash: 324a5bfd29e4287c494c3757c987a7df201c7f55
     grade: B
     grades:
       sonnet:
@@ -404,7 +404,7 @@ pages:
         grade: B
         run: 2026-10-29
   terrarium-practice/09.self-improvement-loop:
-    hash: 827712cce812d158aca618d86493920bc01fe165
+    hash: 305139b51bc16267ab0fcf0b4a78c8a4ba157414
     grade: B
     grades:
       sonnet:
@@ -417,7 +417,7 @@ pages:
         grade: B
         run: 2026-10-29
   verification/01.gate:
-    hash: 6ffaff9c1b6de30bdc6cd7855a6994ffb4430479
+    hash: 35448ee5e8e439cb19c0f037f730b7e22b1ca03b
     grade: B
     grades:
       sonnet:
@@ -430,7 +430,7 @@ pages:
         grade: B
         run: 2026-10-29
   verification/02.type-checking:
-    hash: ea36059d5f07a068a2d88b2f8e7f4a04e3186f26
+    hash: de2cff717bee1add50a7f246c9aaf4e2a798054d
     grade: B
     grades:
       sonnet:
@@ -443,7 +443,7 @@ pages:
         grade: B
         run: 2026-10-29
   verification/03.content-validation:
-    hash: d8ce5c3e8f0977e10f9627c5811d9a3f9807efa2
+    hash: ee7322b9ed0893d67beed61d15555efd59a512f0
     grade: B
     grades:
       sonnet:
@@ -456,7 +456,7 @@ pages:
         grade: B
         run: 2026-10-29
   verification/04.unit-and-e2e-tests:
-    hash: 931c290c26ec7f43123a2ce1172d298f090044cf
+    hash: 7160332d9a6e7d6df93ad92bd1efbdfe6119a889
     grade: B
     grades:
       sonnet:
@@ -469,7 +469,7 @@ pages:
         grade: B
         run: 2026-10-29
   verification/05.linting:
-    hash: 0984b4759dabc43e61d937673235c952e4d9f290
+    hash: ffe08ad3fb8d0c0da98d3b00959156972df9928b
     grade: B
     grades:
       sonnet:
@@ -482,7 +482,7 @@ pages:
         grade: B
         run: 2026-10-29
   verification/06.schema-validation:
-    hash: a6f455f6d99cad64cc81e0ed00f9c54283386dea
+    hash: b4558f92fe6b55655133763cf6dfacf7969e7d55
     grade: B
     grades:
       sonnet:
@@ -495,7 +495,7 @@ pages:
         grade: B
         run: 2026-10-29
   walkthroughs/a-change-goes-live:
-    hash: 82238450e1c66642b950b367766feca7feb3ad2f
+    hash: 59b55ab53a0d838638f45a4c3710296a6818d080
     grade: B
     grades:
       sonnet:
@@ -508,7 +508,7 @@ pages:
         grade: B
         run: 2026-10-29
   walkthroughs/adding-a-tenant:
-    hash: 108f588533f03f3fa0f9e6bc998ac604302b7225
+    hash: ce481555fa55d818d75a4a170034cc03198d30ac
     grade: B
     grades:
       sonnet:
@@ -521,7 +521,7 @@ pages:
         grade: B
         run: 2026-10-29
   walkthroughs/asking-for-a-change:
-    hash: 3369e08d8ea12b6fd43d5b4fb2224a7b9a83b760
+    hash: 2b2ed09242c979869fdfb748da8c5d2f13de3b4f
     grade: B
     grades:
       sonnet:
@@ -534,7 +534,7 @@ pages:
         grade: B
         run: 2026-10-29
   walkthroughs/from-file-to-browser:
-    hash: 872cf51651c684deca04db544dabf8a88d4f50e3
+    hash: a44dc4c67422ebb1574d80a9eb2c2b8d4f6ed5c8
     grade: B
     grades:
       sonnet:

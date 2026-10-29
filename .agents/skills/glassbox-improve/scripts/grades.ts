@@ -10,7 +10,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml, stringify } from 'yaml'
 import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
-import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
+import { frontmatterBlock, splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { git, tryGit } from '../../../../scripts/lib/git.ts'
 
 export const models = ['sonnet', 'fable', 'opus'] as const
@@ -69,16 +69,16 @@ export interface Plan {
 }
 
 const isWalkthrough = (page: string) => page.startsWith('walkthroughs/')
+const aPages = (record: GradeRecord) => Object.entries(record.pages).filter(([, p]) => p.grade === 'A').map(([page]) => page).sort()
+const seated = (e: Election) => [...e.lessons, ...(e.walkthrough ? [e.walkthrough] : [])]
 
 /** What a page teaches: the file without the lines `glassbox-update` moves daily
  *  (the pin and the Excerpt ranges), so a re-pin doesn't count as a change. */
 export function pageHash(text: string): string {
-  const stable = text
-    .split('\n')
-    .filter((l) => !/^(revision|revisionDate|publishedAt):/.test(l))
-    .join('\n')
-    .replace(/\s*lines="[^"]*"/g, '')
-  return createHash('sha1').update(stable).digest('hex')
+  const block = frontmatterBlock(text)
+  const frontmatter = (block?.yaml ?? '').split('\n').filter((l) => !/^(revision|revisionDate|publishedAt):/.test(l))
+  const body = text.slice(block?.length ?? 0).replace(/\s*lines="[^"]*"/g, '')
+  return createHash('sha1').update([...frontmatter, body].join('\n')).digest('hex')
 }
 
 export function planPages(record: GradeRecord, hashes: Record<string, string>): Omit<Plan, 'base'> {
@@ -112,28 +112,28 @@ export interface Election {
   sums: Record<string, number>
 }
 
-/** QUALITY.md's election, among the Lessons and Walkthroughs all three read. */
+/** The A election, among the pages all three read; this is its one home (QUALITY.md, Grades, points here). */
 export function elect(reports: Report[], incumbents: string[], selected: string[], pool: string[]): Election {
   const rankOf = (r: Report, page: string) => (r.top10.includes(page) ? r.top10.indexOf(page) + 1 : outsideTop)
   const lessons = pool.filter((p) => !isWalkthrough(p) && !selected.includes(p))
   const sums = Object.fromEntries(lessons.map((p) => [p, reports.reduce((s, r) => s + rankOf(r, p), 0)]))
   const backed = (p: string) => reports.filter((r) => r.top10.includes(p)).length >= 2
-  const seated = incumbents.filter((p) => lessons.includes(p) && backed(p))
+  const seats = incumbents.filter((p) => lessons.includes(p) && backed(p))
   const challengers = lessons
-    .filter((p) => !seated.includes(p) && backed(p))
+    .filter((p) => !seats.includes(p) && backed(p))
     .sort((a, b) => sums[a]! - sums[b]! || a.localeCompare(b))
   for (const c of challengers) {
-    if (seated.length < lessonSeats) {
-      seated.push(c)
+    if (seats.length < lessonSeats) {
+      seats.push(c)
       continue
     }
-    const worst = [...seated].sort((a, b) => sums[b]! - sums[a]! || b.localeCompare(a))[0]!
-    if (sums[c]! < sums[worst]!) seated.splice(seated.indexOf(worst), 1, c)
+    const worst = [...seats].sort((a, b) => sums[b]! - sums[a]! || b.localeCompare(a))[0]!
+    if (sums[c]! < sums[worst]!) seats.splice(seats.indexOf(worst), 1, c)
   }
   const named = reports.map((r) => r.bestWalkthrough).filter((w): w is string => !!w && !selected.includes(w))
   const agreed = named.find((w) => named.filter((x) => x === w).length >= 2)
   const held = incumbents.find((p) => isWalkthrough(p) && pool.includes(p) && !selected.includes(p))
-  return { lessons: seated.sort(), walkthrough: agreed ?? held, sums }
+  return { lessons: seats.sort(), walkthrough: agreed ?? held, sums }
 }
 
 /** Checks a report against the plan; returns its problems. */
@@ -153,7 +153,7 @@ export function reportProblems(report: Report, plan: Plan): string[] {
     else if (graded.get(page)?.grade !== 'B') problems.push(`${report.rater}: top10 lists ${page}, which it did not grade B`)
   }
   const w = report.bestWalkthrough
-  if (w && (!plan.allThree.includes(w) || graded.get(w)?.grade !== 'B')) problems.push(`${report.rater}: bestWalkthrough ${w} is not a Walkthrough it graded B`)
+  if (w && (!isWalkthrough(w) || !plan.allThree.includes(w) || graded.get(w)?.grade !== 'B')) problems.push(`${report.rater}: bestWalkthrough ${w} is not a Walkthrough it graded B`)
   return problems
 }
 
@@ -180,8 +180,7 @@ export interface Tally {
 export function tally(record: GradeRecord, plan: Plan, reports: Report[], selected: string[] = []): Tally {
   const grades: Tally['grades'] = {}
   for (const r of reports) for (const p of r.pages) (grades[p.page] ??= {})[r.rater] = p.grade
-  const incumbents = Object.entries(record.pages).filter(([, p]) => p.grade === 'A').map(([page]) => page)
-  const election = elect(reports, incumbents, selected, plan.allThree)
+  const election = elect(reports, aPages(record), selected, plan.allThree)
   const loneReader = new Map(models.flatMap((m) => plan.lone[m].map((p) => [p, m] as const)))
   const triggered = reports.flatMap((r) =>
     r.pages
@@ -194,13 +193,36 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], select
 
 const cell = (s: string) => s.replace(/\|/g, '\\|').replace(/\n/g, ' ')
 
+export interface Raise {
+  key: string
+  raters: Model[]
+  rankSum?: number
+  items: string[]
+}
+
+/** Missing Lessons grouped by the draft that fills them (else by concept) and
+ *  re-cuts by their pages; most raters first, then the lowest summed rank. */
+export function structural(reports: Report[]): Raise[] {
+  const raises = new Map<string, Raise>()
+  const add = (key: string, rater: Model, item: string, rank?: number) => {
+    const r = raises.get(key) ?? { key, raters: [], items: [] }
+    if (!r.raters.includes(rater)) r.raters.push(rater)
+    if (rank !== undefined) r.rankSum = (r.rankSum ?? 0) + rank
+    r.items.push(`${rater}: ${item}`)
+    raises.set(key, r)
+  }
+  for (const r of reports) {
+    for (const m of r.missingLessons ?? []) add(m.draft ? `promote ${m.draft}` : `new Lesson: ${m.concept}`, r.rater, `${m.concept} (${m.subject})`, m.rank)
+    for (const c of r.recuts ?? []) add(`re-cut ${[...c.pages].sort().join(' + ')}`, r.rater, c.move)
+  }
+  return [...raises.values()].sort((a, b) => b.raters.length - a.raters.length || (a.rankSum ?? Infinity) - (b.rankSum ?? Infinity) || a.key.localeCompare(b.key))
+}
+
 function markdown(record: GradeRecord, plan: Plan, reports: Report[], grades: Tally['grades'], election: Election, triggered: string[]): string {
   const out: string[] = []
   const before = (page: string) => models.map((m) => record.pages[page]?.grades[m]?.grade ?? '–').join('/')
   const now = (page: string) => models.map((m) => grades[page]?.[m] ?? '–').join('/')
-  const aBefore = Object.entries(record.pages).filter(([, p]) => p.grade === 'A').map(([page]) => page).sort()
-  const aAfter = [...election.lessons, ...(election.walkthrough ? [election.walkthrough] : [])]
-  out.push('## A set', '', `Before: ${aBefore.join(', ') || 'none'}`, '', `After: ${aAfter.join(', ') || 'none'}`, '')
+  out.push('## A set', '', `Before: ${aPages(record).join(', ') || 'none'}`, '', `After: ${seated(election).join(', ') || 'none'}`, '')
   for (const r of reports) out.push(`- ${r.rater} top 10: ${r.top10.join(', ') || 'none'}; best Walkthrough: ${r.bestWalkthrough ?? 'none'}`)
   out.push('', '<details><summary>Grades (sonnet/fable/opus)</summary>', '', 'page | read by | before | this run', '--- | --- | --- | ---')
   for (const page of Object.keys(grades).sort()) {
@@ -208,25 +230,23 @@ function markdown(record: GradeRecord, plan: Plan, reports: Report[], grades: Ta
     out.push(`${page} | ${by} | ${before(page)} | ${now(page)}`)
   }
   out.push('', '</details>', '', '<details><summary>Every item each rater raised</summary>', '')
-  out.push('page | rater | kind | item', '--- | --- | --- | ---')
-  for (const page of Object.keys(grades).sort()) {
-    for (const r of reports) {
-      const p = r.pages.find((x) => x.page === page)
-      if (!p) continue
-      for (const d of p.deficits ?? []) out.push(`${page} | ${r.rater} | deficit: ${d.criterion} | ${cell(`"${d.quote}" → ${d.fix}`)}`)
-      for (const g of p.gaps ?? []) out.push(`${page} | ${r.rater} | gap: ${g.section} | ${cell(`${g.exemplar}: ${g.take}`)}`)
-      for (const f of p.falseClaims ?? []) out.push(`${page} | ${r.rater} | false claim | ${cell(`"${f.quote}" (${f.source})`)}`)
-      for (const o of p.optional ?? []) out.push(`${page} | ${r.rater} | optional | ${cell(o)}`)
-      if (p.aWorthy) out.push(`${page} | ${r.rater} | A-worthy | `)
+  // Rows sort by page, then kind (criterion or section), so a cluster's reports sit together.
+  const rows: [string, string, string, string][] = []
+  for (const r of reports) {
+    for (const p of r.pages) {
+      for (const d of p.deficits ?? []) rows.push([p.page, `deficit: ${d.criterion}`, r.rater, `"${d.quote}" → ${d.fix}`])
+      for (const g of p.gaps ?? []) rows.push([p.page, `gap: ${g.section}`, r.rater, `${g.exemplar}: ${g.take}`])
+      for (const f of p.falseClaims ?? []) rows.push([p.page, 'false claim', r.rater, `"${f.quote}" (${f.source})`])
+      for (const o of p.optional ?? []) rows.push([p.page, 'optional', r.rater, o])
+      if (p.aWorthy) rows.push([p.page, 'A-worthy', r.rater, ''])
     }
   }
+  rows.sort((a, b) => a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]))
+  out.push('page | kind | rater | item', '--- | --- | --- | ---', ...rows.map((row) => row.map(cell).join(' | ')))
   out.push('', '</details>', '', `Read by all three next run (lone reader raised something): ${triggered.join(', ') || 'none'}`, '')
-  out.push('<details><summary>Missing Lessons and re-cuts</summary>', '', 'rater | kind | item', '--- | --- | ---')
-  for (const r of reports) {
-    for (const m of r.missingLessons ?? []) out.push(`${r.rater} | missing Lesson #${m.rank} | ${cell(`${m.concept} (${m.subject}; draft: ${m.draft ?? 'none'})`)}`)
-    for (const c of r.recuts ?? []) out.push(`${r.rater} | re-cut | ${cell(`${c.pages.join(' + ')}: ${c.move}`)}`)
-  }
-  for (const c of record.candidates) out.push(`waiting since ${c.since} | ${c.kind} | ${cell(`${c.pages.join(' + ')}: ${c.gist}`)}`)
+  out.push('<details><summary>Structural raises, most raters first</summary>', '', 'step | raters | rank sum | items', '--- | --- | --- | ---')
+  for (const s of structural(reports)) out.push([s.key, s.raters.join(', '), String(s.rankSum ?? '–'), s.items.join('; ')].map(cell).join(' | '))
+  for (const c of record.candidates) out.push(`waiting since ${c.since}: ${c.kind} | | | ${cell(`${c.pages.join(' + ')}: ${c.gist}`)}`)
   out.push('', '</details>')
   return out.join('\n')
 }
@@ -234,55 +254,50 @@ function markdown(record: GradeRecord, plan: Plan, reports: Report[], grades: Ta
 export interface WriteOptions {
   run: string
   hashes: Record<string, string>
-  selected: string[]
   gapEdit: string[]
   readByAll: string[]
 }
 
-export function nextRecord(record: GradeRecord, t: Tally, plan: Plan, o: WriteOptions): GradeRecord {
+/** The next `grades.yml`: this run's grades over the old ones. `readByAll` holds
+ *  only this run's flags, since every flagged page was read by all three. */
+export function nextRecord(record: GradeRecord, result: Tally, opts: WriteOptions): GradeRecord {
   const pages: GradeRecord['pages'] = {}
-  const a = new Set([...t.election.lessons, ...(t.election.walkthrough ? [t.election.walkthrough] : [])])
-  for (const page of Object.keys(o.hashes).sort()) {
+  const elected = new Set(seated(result.election))
+  for (const page of Object.keys(opts.hashes).sort()) {
     const old = record.pages[page]
-    const read = t.grades[page] ?? {}
+    const read = result.grades[page] ?? {}
     const grades = { ...old?.grades }
-    for (const m of models) if (read[m]) grades[m] = { grade: read[m]!, run: o.run }
+    for (const m of models) if (read[m]) grades[m] = { grade: read[m]!, run: opts.run }
     const thisRun = models.map((m) => read[m]).filter((g): g is Grade => !!g)
-    const entry: PageRecord = { hash: o.hashes[page]!, grades }
-    const grade = a.has(page) ? 'A' : thisRun.length ? middle(thisRun) : old?.grade
+    const entry: PageRecord = { hash: opts.hashes[page]!, grades }
+    const grade = elected.has(page) ? 'A' : thisRun.length ? middle(thisRun) : old?.grade
     if (grade) entry.grade = grade
-    if (t.triggered.includes(page) || o.readByAll.includes(page)) entry.readByAll = true
-    else if (!plan.allThree.includes(page) && old?.readByAll) entry.readByAll = true
-    const gapEdit = o.gapEdit.includes(page) ? o.run : old?.gapEdit
+    if (result.triggered.includes(page) || opts.readByAll.includes(page)) entry.readByAll = true
+    const gapEdit = opts.gapEdit.includes(page) ? opts.run : old?.gapEdit
     if (gapEdit) entry.gapEdit = gapEdit
     pages[page] = entry
   }
-  return { run: o.run, pages, candidates: record.candidates }
+  return { run: opts.run, pages, candidates: record.candidates }
 }
 
 // The shell: git at the base, the record in the working tree.
 
-function guidePages(base: string): Record<string, string> {
-  const dir = pagesDir('guide')
-  const files = git(['ls-tree', '-r', '--name-only', base, dir], root).split('\n')
-  return Object.fromEntries(
-    files
-      .filter((f) => f.endsWith('.md') && !f.endsWith('/index.md'))
-      .map((f) => [f.slice(dir.length + 1, -3), git(['show', `${base}:${f}`], root)]),
-  )
+/** Each page of a Space at the base, by name, with its text. */
+function spacePages(base: string, space: string): [string, string][] {
+  const dir = pagesDir(space)
+  return tryGit(['ls-tree', '-r', '--name-only', base, dir], root)
+    .out.split('\n')
+    .filter((f) => f.endsWith('.md') && !f.endsWith('/index.md'))
+    .map((f) => [f.slice(dir.length + 1, -3), git(['show', `${base}:${f}`], root)])
 }
 
 function catalog(base: string): string[] {
-  const lines: string[] = []
-  for (const space of ['guide', 'drafts']) {
-    const dir = pagesDir(space)
-    const listed = tryGit(['ls-tree', '-r', '--name-only', base, dir], root).out.split('\n')
-    for (const f of listed.filter((x) => x.endsWith('.md') && !x.endsWith('/index.md'))) {
-      const { frontmatter } = splitFrontmatter(git(['show', `${base}:${f}`], root))
-      lines.push(`- ${space}/${f.slice(dir.length + 1, -3)}: ${frontmatter.title} — ${frontmatter.description}`)
-    }
-  }
-  return lines
+  return ['guide', 'drafts'].flatMap((space) =>
+    spacePages(base, space).map(([page, text]) => {
+      const { frontmatter } = splitFrontmatter(text)
+      return `- ${space}/${page}: ${frontmatter.title} — ${frontmatter.description}`
+    }),
+  )
 }
 
 export function readRecord(text: string | undefined): GradeRecord {
@@ -290,7 +305,8 @@ export function readRecord(text: string | undefined): GradeRecord {
   return { run: parsed?.run, pages: parsed?.pages ?? {}, candidates: parsed?.candidates ?? [] }
 }
 
-const list = (argv: string[], flag: string) => (flagValue(argv, flag) ?? '').split(',').filter(Boolean)
+const pageList = (argv: string[], flag: string) => (flagValue(argv, flag) ?? '').split(',').filter(Boolean)
+const valuedFlags = ['--base', '--selected', '--gap-edit', '--read-by-all']
 
 runIfMain(import.meta.url, () => {
   const [command, ...argv] = process.argv.slice(2)
@@ -298,22 +314,22 @@ runIfMain(import.meta.url, () => {
   if (!base) fail('--base <sha> is required')
   const sha = git(['rev-parse', `${base}^{commit}`], root).trim()
   const record = readRecord(tryGit(['show', `${sha}:${recordPath}`], root).out || undefined)
-  const texts = guidePages(sha)
-  const hashes = Object.fromEntries(Object.entries(texts).map(([p, t]) => [p, pageHash(t)]))
+  const hashes = Object.fromEntries(spacePages(sha, 'guide').map(([page, text]) => [page, pageHash(text)]))
   const plan: Plan = { base: sha, ...planPages(record, hashes) }
   if (command === 'plan') {
-    const pageList = (ps: string[]) => ps.map((p) => `- ${pagesDir('guide')}/${p}.md`)
+    const a = new Set(aPages(record))
+    const paths = (ps: string[]) => ps.map((p) => `- ${pagesDir('guide')}/${p}.md${a.has(p) ? ' (A)' : ''}`)
     console.log([
       `# Plan at ${sha}`, '',
-      '## Read by all three', '', ...pageList(plan.allThree), '',
-      ...models.flatMap((m) => [`## Read by ${m} alone`, '', ...pageList(plan.lone[m]), '']),
+      '## Read by all three', '', ...paths(plan.allThree), '',
+      ...models.flatMap((m) => [`## Read by ${m} alone`, '', ...paths(plan.lone[m]), '']),
       `## Entries for pages gone at the base: ${plan.stale.join(', ') || 'none'}`, '',
       '## Every page and draft (path: title — description)', '', ...catalog(sha),
     ].join('\n'))
     return
   }
   if (command !== 'tally') fail(`unknown command ${command}; use plan or tally`)
-  const files = argv.filter((a, i) => !a.startsWith('--') && !argv[i - 1]?.startsWith('--'))
+  const files = argv.filter((a, i) => !a.startsWith('--') && !valuedFlags.includes(argv[i - 1] ?? ''))
   if (files.length !== models.length) fail(`give the ${models.length} raters' saved hand-backs`)
   const reports = files.map((f) => {
     try {
@@ -324,12 +340,12 @@ runIfMain(import.meta.url, () => {
   })
   const problems = reports.flatMap((r) => reportProblems(r, plan))
   if (problems.length) fail(`the reports don't match the plan:\n${problems.join('\n')}`)
-  const selected = list(argv, '--selected')
-  const t = tally(record, plan, reports, selected)
-  console.log(t.markdown)
+  const selected = pageList(argv, '--selected')
+  const result = tally(record, plan, reports, selected)
+  console.log(result.markdown)
   if (!argv.includes('--write')) return
   const run = new Date().toISOString().slice(0, 10)
-  const next = nextRecord(record, t, plan, { run, hashes, selected, gapEdit: list(argv, '--gap-edit'), readByAll: list(argv, '--read-by-all') })
+  const next = nextRecord(record, result, { run, hashes, gapEdit: pageList(argv, '--gap-edit'), readByAll: pageList(argv, '--read-by-all') })
   writeFileSync(join(root, recordPath), stringify(next, { lineWidth: 0 }))
   console.error(`wrote ${recordPath}`)
 })
