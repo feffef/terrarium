@@ -5,7 +5,7 @@ cause: >-
   A number (verdict counts, line totals, items in a list, running agents) is written from an estimate, memory or a report not yet final, in a GitHub body, a chat reply, a subagent brief or a notification, instead of being tallied from every item. Signals: "about N", a corrected count, "without counting", "without tallying", "from memory". Counts a script or filter got wrong are in counts-from-wrong-filter.
 surface: safe
 status: accepted
-ref: "Issue #2659 closed not planned on 2026-10-29: the owner accepts the cost. There were 4 minor or nit recurrences since 2026-10-25, each self-caught. Prune Trial opened 2026-10-25 by PR #2537 was judged and deleted by the 2026-10-28 prune run (PR #2641): no major or blocker Friction in 48 sessions. Issue #2522 closed by PR #2537."
+ref: "Issue #2659 closed not planned on 2026-10-29: the owner accepts the cost. 4 minor or nit recurrences since 2026-10-25, each self-caught. Prune Trial opened 2026-10-25 by PR #2537 was judged and deleted by the 2026-10-28 prune run (PR #2641): no major or blocker Friction in 48 sessions. Issue #2522 closed by PR #2537."
 fixes:
   - pr: 2336
     date: "2026-10-20"
