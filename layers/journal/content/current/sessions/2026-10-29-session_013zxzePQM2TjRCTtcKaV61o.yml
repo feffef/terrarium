@@ -1,0 +1,176 @@
+schemaVersion: 1
+session: session_013zxzePQM2TjRCTtcKaV61o
+startedAt: 2026-10-29T13:39:01Z
+endedAt: 2026-10-29T13:50:04Z
+kind: autonomous
+goal: Scheduled prune of agent instructions
+status: in-review
+outcome: "PR #2681 opened: two trials judged and deleted, dispatch-subagents brief rules trimmed, new trial opened"
+summary: "Scheduled prune-trial run, no human involved. Judged the frictions-to-fixes briefs trial and the log-session When-to-invoke trial (both judgeable): only nit and minor Frictions since, rates within one or two sessions, so both hold and were deleted. A search subagent picked dispatch-subagents section 3 (failed as prose on #2312 and #2610, no guard checks brief contents). My first cut dropped four rules and the ledger overstated that every rule was kept; the Sonnet probe passed but code-review's Spec axis caught the drops, so I restored them and shortened the entry. Gate green on the final head, PR #2681 opened. Still open: CI, a verdict comment with Reviewed sha, merge via merge-pr.ts."
+prs:
+  - "2681"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before git commands; read after the first fetch via the window script
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-then-gate order before first push
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before the PR open
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief rules for subagents; also the prune target
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: trial scope and verdict rules; confirmed the edit
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: hook asked; confirmed Skill edit is fine
+    useful: partly
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: scripts/hooks/dispatch-read-guard.ts
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the scheduled task itself
+  - name: code-review
+    reason: pre-push review; Spec axis found dropped rules
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Started the gate in the background before code-review, then edited after review, so the first gate run was wasted.
+    solution: Run the review first and the gate last on the final head, as pr-workflow.md says.
+    severity: minor
+  - description: First prune dropped four rules and the ledger claimed every rule was kept; code-review caught it before the push.
+    solution: List every rule in the section before trimming and check each against the new text.
+    severity: nit
+  - description: Ran the window script and other git commands before reading git-conventions.md; a hook flagged it afterwards.
+    solution: Read git-conventions.md first, as CLAUDE.md says.
+    severity: nit
+durationSec: 663
+models:
+  claude-sonnet-5-5: 79
+toolCounts:
+  Bash: 22
+  Read: 6
+  Agent: 4
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - .agents/skills/dispatch-subagents/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0022.md
+docsReadBySubagents:
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/close-session/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0027.md
+    reason: Trial rules for territory and verdicts; summary plus the full ADR read after the hook asked
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Made me hold the push for gate and review despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR without asking; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Provenance header and trailer on the PR and commits; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main by hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skill edits go through a gated PR; read the full ADR after a hook asked, nothing new
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: About where rules live; not relevant to this prune
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR rewrites; no ADR touched
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: No Human-only file touched
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded by a journal read; no Tenant work
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Find failed prose rule to prune
+    model: sonnet
+    durationSec: 100
+    toolCalls: 22
+    modelCalls: 9
+    tokenShare: 15.7
+  - type: general-purpose
+    task: Probe trimmed dispatch brief rules
+    model: sonnet
+    durationSec: 24
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 2.9
+  - type: general-purpose
+    task: Standards review of prune diff
+    model: sonnet
+    durationSec: 46
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 9.1
+  - type: general-purpose
+    task: Spec review of prune diff
+    model: sonnet
+    durationSec: 42
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 8.5
+gitBranch: claude/practical-rubin-nnkw2o
+entrypoint: remote_trigger
+cliVersion: 2.1.312
+trigger: prune-trial
+landedBy: Stop
