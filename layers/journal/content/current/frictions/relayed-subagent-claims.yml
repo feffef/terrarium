@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
 surface: safe
-status: open
-ref: "Prune Trial opened 2026-10-25 by PR #2537 was judged and deleted by the 2026-10-28 prune run (PR #2641): no major or blocker Friction in 48 sessions. Issue #2556 closed as superseded by it."
+status: accepted
+ref: "Issue #2657 closed not planned on 2026-10-29: the owner accepts the cost. Every recurrence since the Prune Trial opened by PR #2537 (judged and kept by PR #2641, no major or blocker Friction in 48 sessions) was minor or nit and caught; three wording fixes did not hold. Issue #2556 closed as superseded by it."
 fixes:
   - pr: 2336
     date: "2026-10-20"
