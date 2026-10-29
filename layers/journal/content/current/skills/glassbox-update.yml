@@ -98,8 +98,8 @@ observations:
   - date: "2026-10-29"
     note: >-
       Behaviour check, 8 runs delivered, no revert. Verified repeat:
-      first-push code-review skipped on 24 to 39-file mechanical re-
-      pins in session_013zxzeSJQfnNdJHrSWjVT2x,
+      first-push code-review skipped on 24 to 39-file mechanical
+      re-pins in session_013zxzeSJQfnNdJHrSWjVT2x,
       session_013zxzePLLgArtn1cuyZAmNd,
       session_01A7PwrNRBtY9LTX6HrttXWW and
       session_01URZoDXk9zQsY2HDhUruLd4 (#2472). Unverified: --write
