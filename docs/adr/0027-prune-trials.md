@@ -24,7 +24,9 @@ hit and leave the cut alone until it is judged.
 - **The verdict.** A trial is judged only after its window has passed since
   the cut landed on `main`. A `major` or `blocker` Friction caused by the cut
   puts back one line stating the goal, never the old text. Anything less, and
-  the cut stays. If the landing can't be found, the trial is not judged:
+  the cut stays; but `moderate` damage, or a clear rise in how often sessions
+  hit a Friction the cut covers, files an issue so a person decides whether to
+  restore anything. If the landing can't be found, the trial is not judged:
   missing evidence never counts as a pass.
 - **Every other session,** while a trial is open: don't restore or reword text
   in its area. Log the problem as a Friction and work around it. Repointing a
@@ -65,11 +67,14 @@ verdict.
 ## Consequences
 
 - A session that fails without noticing logs no Friction, so a trial can miss
-  damage. Each trial's own check and a probe on a weaker model narrow that
-  gap. A later trial putting a line back is a normal outcome.
+  damage. Each trial's own check, a probe on a weaker model and a comparison
+  of Friction rates narrow that gap. Severity alone misses a cut that makes a
+  small mistake more common, and small samples make the rate a judgement. A
+  later trial putting a line back is a normal outcome.
 
 ## See
 
 - `.agents/skills/prune-trial/SKILL.md`: choosing, cutting, probing and judging.
 - `.agents/prune-trials.yml`: the open trials and their areas.
 - `.agents/skills/prune-trial/scripts/find-trial-window.ts`: the window and when a cut landed.
+- `.agents/skills/prune-trial/scripts/friction-rates.ts`: how often sessions hit a Friction before and after a cut.
