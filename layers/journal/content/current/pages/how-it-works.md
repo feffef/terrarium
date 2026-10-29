@@ -180,6 +180,11 @@ One more keeps a sibling site honest. **`glassbox-update`** checks each
 [Glass Box](/t/glassbox) guide page against what has changed on `main`, fixes the
 page (never the code) and re-pins it.
 
+And one waits for a pull request instead of a timer. **`dependabot-sweep`**
+starts when Dependabot opens one: it merges the safe minor and patch bumps,
+leaves the rest for a human with a written reason, and turns each major into
+an issue that weighs what it would buy against what it risks.
+
 ```mermaid
 graph TB
   Prompt(["Human prompt"]) --> Session["Claude Code session"]
