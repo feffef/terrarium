@@ -13,6 +13,9 @@ fixes:
   - pr: 2514
     date: "2026-10-25"
     summary: "Added a What lives where section to the Glass Box glossary that points to the Skills holding its writing rules."
+  - pr: 2667
+    date: "2026-10-29"
+    summary: "The tenant-glossary rule says a Tenant's terms apply to everything written under its layer, code comments included."
 occurrences:
   - session: session_01CMjFaMZxZgD7oTzNXmWwzv
     date: "2026-10-23"
