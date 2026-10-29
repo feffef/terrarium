@@ -23,93 +23,39 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      The three `frictions-to-fixes` agent briefs rewritten plainly at a
-      Trusted user's request, in the SKILL.md's per-step shape (+452 −219
-      lines across the three briefs, from `git diff --numstat`; words 2758 to
-      3133, the growth being headings and done-when sections): an opening
-      paragraph naming the role, its inputs and what it may change, then each
-      step as a goal paragraph, numbered instructions, a done-when section and
-      an edge-case list, then the report. Every rule kept: survey-only and
-      design-only limits, occurrences through print-ledger-occurrence.ts and
-      ledger-set.ts, the new-entry bar, the fixes and status rules, the
-      screen order (not ours, on trial, tracker and main), the four labels,
-      the ranking rules, the six report parts; the doc-read and read-count
-      checks, the off-limits surfaces and the risk questions; the gate floor
-      and the no-merge rule. Fixed in the same pass: design-brief's dangling
-      opening after `{PICKS}` and its session-log path, the pointer to
-      `audit-docs` "house rules" (no such section; now "What you may edit"
-      and the six lenses), and the survey's candidate set (every entry
-      `--candidates` lists, not only those that gained occurrences). SKILL.md
-      changes two lines: what "verbatim" means for a brief handed by path, and
-      the same `audit-docs` pointer. Cut at the owner's request: the stale
-      `docsReadViaShell` caveat (its logs are past the horizon), a schema
-      check `ledger-set.ts` already enforces, and the `foldSubagentTrace`
-      incident example behind the mechanism-bug rule. Survey §2 step 1 is
-      the one command `print-ledger-occurrence.ts --append <entry> <session>
-      <index>…`, which files each block under its entry itself (through
-      `ledger-set.ts`'s `setEntry`), so no printed output is split across
-      `ledger-set.ts` calls by hand; the step's rules are unchanged.
-      Changed mid-trial at a Trusted user's request (2026-10-28): survey §2
-      gained matching on the harm and on a cause's routing, the
-      `summary`/`cause` rewrite on append and on recording a fix, the edge
-      case for a Friction a fix produced, and the matching `ref` wording; a
-      Friction about those additions is not this trial's damage.
+      `dispatch-subagents` §3 "Write the brief" trimmed (-7 net, from `git
+      diff --numstat`: 39 added, 46 deleted; this entry not counted): the
+      justification clauses, the restated guard behaviour (what the background
+      guards deny) and doubled sentences dropped; every brief rule kept in one
+      goal-shaped line, the three sub-headings kept so inbound "Scope and
+      trust" pointers resolve. Chosen after the search subagent covered the
+      instruction corpus, guard headers and the tracker: the brief-writing
+      rules failed as prose (#2312, then #2610, which says the earlier fixes
+      #2150, #2318 and #2324 did not retire the cause); no guard checks brief
+      contents. Runner-up: `pr-workflow.md` "Review before the first push"
+      (#2472, #2474). Same run judged and deleted the `frictions-to-fixes`
+      briefs trial (landed 7231f728) and the `log-session` "When to invoke"
+      trial (landed 147e2bf4): 59 and 38 sessions since, no major or blocker
+      Friction traces to either; the closure misses since are the answer-only
+      and PR-open ones the check excludes. Rates after vs before: closure
+      entries 0/38 against 2/196 and 3/196, `close-session-bypassed-by-hand-log`
+      1/38 against 3/196; `frictions-to-fixes-briefs-mismatch` 3/50 against
+      9/184 and `frictions-to-fixes-skill-gaps` 4/50 against 10/184, one or
+      two sessions of difference, not a clear rise.
     territory:
       paths:
-        - ".agents/skills/frictions-to-fixes/survey-brief.md (all of it)"
-        - ".agents/skills/frictions-to-fixes/design-brief.md (all of it)"
-        - ".agents/skills/frictions-to-fixes/impl-brief.md (all of it)"
+        - ".agents/skills/dispatch-subagents/SKILL.md: §3 'Write the brief'"
       keywords:
-        - survey-brief
-        - design-brief
-        - impl-brief
-    opened: 2026-10-25
-    check: >
-      Damage is a major or blocker Friction in a frictions-to-fixes run, logged
-      by the main session or one of its agents, that the old brief text would
-      have prevented: a survey agent that hand-edits ledger YAML, retypes an
-      occurrence, files an issue or pushes, or labels a fixed cause
-      never-fixed; a design agent that skips the doc-read or read-count check
-      or designs onto an off-limits surface; an impl agent that merges, pushes
-      or substitutes a bare tsc for the gate. NOT damage: a Friction about
-      SKILL.md or a script (neither is in this trial), or a brief gap the old
-      text had too.
-  - problem: >
-      `log-session` "When to invoke" cut to the goal (-8 net, from
-      `git diff --numstat`: 11 added, 19 deleted; this entry not counted): the
-      restatements of when to close (the "closure point" paragraph, the
-      Session-closure definition) dropped; the pointer to `close-session`, the
-      update-only use and all five `status` values kept. Chosen after the
-      search subagent covered the instruction corpus, guard headers and the
-      tracker: the close-session rule failed as prose repeatedly (#2209, read
-      in full by the subagent, after #1801, #1821, #1868) and only a hint holds
-      the PR-open half; nothing holds the answer-only half. So the cut is only
-      restatements: CLAUDE.md, `close-session`, the step-specific invocations in
-      other Skills, `read-first-hint.ts` and `pr-workflow.md` (on trial) are
-      untouched. Runners-up: the dispatch-subagents read-first trigger (#2543;
-      a wired guard holds it, but the prose left is one line the guard's deny
-      message quotes), the worktree and SHA bullets of `dispatch-subagents`
-      (#1420, #1944; already one goal-shaped line each, nothing holds them).
-      Same run judged and deleted the long-command backgrounding trial (landed
-      a738a6a8) and the workflow-write ban trial (landed b93f2d0c), both
-      judgeable per the window script: 53 and 51 sessions since, no major or
-      blocker Friction traces to either (the one moderate, overlapping backgrounded
-      gate runs after an early "completed" notice, 9Cee99, is not a lost-to-600s case), and no
-      regression issue.
-    territory:
-      paths:
-        - ".agents/skills/log-session/SKILL.md: the 'When to invoke' section"
-      keywords:
-        - closure point
-        - Session closure
-    opened: 2026-10-26
+        - dispatch-subagents §3
+    opened: 2026-10-29
     proven: true
     check: >
-      Damage is a major or blocker Friction where a session opened a PR or ended
-      work without invoking `close-session`, or logged a wrong `status`, and the
-      cut `log-session` wording would have prevented it. NOT damage: the
-      answer-only or PR-open misses #2209 already records, which the cut did not
-      change (CLAUDE.md and `close-session` still carry the rule).
+      Damage is a major or blocker Friction where a subagent brief lacked
+      something the cut text said (a pinned SHA, `git -C`, the foreground-check
+      marker, the size ceiling, no `merge-pr.ts` call, the agent-count and
+      gate-slot limits) and the agent went wrong
+      for it: stale checkout, stranded or unreviewed work, a merge by an impl
+      agent. NOT damage: a brief gap the old text had too.
   - problem: >
       `docs/agents/environment-caveats.md` plainly reworded (-1 net, from
       `git diff --numstat`: 63 added, 64 deleted; words 943 to 938; this entry
