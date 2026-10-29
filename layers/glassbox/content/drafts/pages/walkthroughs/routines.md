@@ -13,7 +13,7 @@ Some of Terrarium's work happens without anyone asking. A :term[Routine] starts 
 A Routine, set up in a claude.ai account and kept out of the repo, starts a cloud session on a fresh clone, and the session runs the Skill's slash command, such as `/digest`. Each of the Skills below turns model invocation off, so no session starts one on its own. From there the session follows the Skill's `SKILL.md`, which also says what the run's PR may change.
 
 ::stop-links
-[Scheduled tasks](/t/glassbox/guide/claude-code/routines) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Cloud sessions, settings and permissions](/t/glassbox/drafts/claude-code/cloud-sessions)
+[Scheduled tasks](/t/glassbox/guide/claude-code/routines) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Cloud sessions](/t/glassbox/guide/claude-code/cloud-sessions)
 ::
 
 ## 2. audit-docs: the docs checked against the code
