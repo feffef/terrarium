@@ -72,9 +72,9 @@ re-review each story or repeat its findings.
 
 Use a closing keyword (`Closes`/`Fixes`/`Resolves #N`) only for an issue the PR
 completes; GitHub matches it loosely, so a quoted or negated mention closes too
-(#2104). Otherwise write "relates to #N". `merge-pr.ts` refuses a keyword naming
-an open `ready-for-human` issue and closes any named issue GitHub left open; on
-any other merge path, check each with `issue_read`.
+(#2104). Otherwise write "relates to #N". `merge-pr.ts` closes any named issue
+GitHub left open (it also refuses a keyword naming an open `ready-for-human` issue: step 5); on any other merge
+path, check each with `issue_read`.
 
 Before pushing a follow-up to an existing PR branch, check with
 `pull_request_read` that it isn't already merged, or the push silently recreates

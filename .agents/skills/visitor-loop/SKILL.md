@@ -96,7 +96,7 @@ tally in your scratchpad:
 
 Done when `pnpm exec tsx .agents/skills/visitor-loop/scripts/owner-corrections.ts --check <tally-file>`
 passes; every feature idea and every *fix* or *out of remit* finding has its
-search result; every
+duplicate-check result; every
 reported finding is in the tally, marked consensus or single; every consensus
 finding is marked *fix*, *dropped (why)*, or *out of remit*; and exactly one
 feature is chosen, with a line on why it beat the others.
@@ -137,10 +137,10 @@ Only after step 5's PR has merged or been escalated, branch from the fresh
 `claude/visitor-loop-feature-<YYYY-MM-DD>`. Then build the refined feature —
 smallest version that a visitor would notice, in the site's existing voice and
 design. Tests where the Tenant already has them.
-Its body states the feature's search result and names any related issue, with a
+Its body states the feature's duplicate-check result and names any related issue, with a
 closing keyword only per `docs/agents/pr-workflow.md`. Review and land it the
 same way as step 5, with the refined idea as the spec. Done when the feature is
-visible on the rendered page, the PR body has that search line, the last review has no
+visible on the rendered page, the PR body has that duplicate-check line, the last review has no
 important finding left unfixed, and the PR is merged or escalated.
 
 ## 7. File the rest, then close
