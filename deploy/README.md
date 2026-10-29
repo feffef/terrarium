@@ -9,9 +9,10 @@ The image (`deploy/Dockerfile`) is a thin **runner + builder** — Node 22 + git
 pnpm, no app source baked in. On start, `deploy/entrypoint.sh` clones `main` into
 a persistent volume, builds it, and serves a **decoupled copy** of the build
 output. It then polls `origin/main`; on a new commit it rebuilds *while the old
-server keeps serving* and swaps atomically — the only downtime is a ~1–2s node
-restart. A **failed build never swaps**, so a bad commit can't take the site
-down; it self-heals on the next good commit.
+server keeps serving*, then copies the new build over the served one and
+restarts node — the only downtime is that ~1–2s restart. A **failed build
+never swaps**, so a bad commit can't take the site down; it self-heals on the
+next good commit.
 
 ```
 /app/repo    git checkout of main (pull + build happen here)

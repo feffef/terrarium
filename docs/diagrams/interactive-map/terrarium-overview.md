@@ -45,7 +45,7 @@ The repository holds three kinds of things.
   things are the way they are.
 - **Skills.** Step-by-step playbooks, each for one kind of task, such as
   "triage an issue" or "write the daily digest". Most come from an outside
-  pack and are kept unchanged; the rest are Terrarium's own. Eight of them
+  pack and are kept unchanged; the rest are Terrarium's own. Nine of them
   run as routines.
 - **Guards & hooks.** Programs that run automatically around agent actions.
   - **Guards** check some actions before they run. When one stops an
@@ -215,8 +215,9 @@ pieces of work are first split into a plan and a set of smaller issues
 > work → session log with frictions → routines and the maintainer act →
 > better guidance → fewer frictions next time
 
-Eight **routines** run on timers set up in claude.ai, about once a day.
-Each routine is one skill:
+Nine **routines** are set up in claude.ai. Eight run on timers, about once a
+day; `dependabot-sweep` starts when Dependabot opens a pull request. Each
+routine is one skill:
 
 | Routine | What it does |
 |---|---|
@@ -228,6 +229,7 @@ Each routine is one skill:
 | `digest` | Writes up each finished day for the Journal and moves older entries to the archive. |
 | `blog-post` | A blog persona tells the best recent story, which would otherwise stay buried in logs and digests. |
 | `glassbox-update` | Brings every Glass Box guide page up to date with `main`: re-checks the pages whose code moved and re-pins them. |
+| `dependabot-sweep` | Reviews Dependabot's pull requests: merges the safe minor and patch bumps, leaves the rest for the maintainer with a reason, and turns each major into an issue. |
 
 Each routine may merge its own work when CI is green and the change stays
 within its approved scope. Claude Code's own permission check can still stop
@@ -284,7 +286,7 @@ light up. Only the `journal` chip opens one level further.
 |---|---|---|
 | people | maintainer (`maintainer`) | – |
 | people | visitor (`visitor`) | – |
-| Claude | routines (`routines`) | the eight routines, each its own node: `frictions-to-fixes`, `audit-docs`, `audit-skills`, `prune-trial`, `visitor-loop`, `digest`, `blog-post`, `glassbox-update` |
+| Claude | routines (`routines`) | eight routines, each its own node (`dependabot-sweep` is left out, see "Leave out"): `frictions-to-fixes`, `audit-docs`, `audit-skills`, `prune-trial`, `visitor-loop`, `digest`, `blog-post`, `glassbox-update` |
 | Claude | sessions (`sessions`) | cloud (`cloud`), local (`local`): the sessions a person starts |
 | Claude | helper agents (`helper-agents`) | – |
 | GitHub | repository (`repository`) | a frame around the next three rows |
@@ -921,6 +923,7 @@ merges comes from ADR-0004; what each routine may change, from its `SKILL.md`
 | `digest` | each finished day's merged pull requests, commits and session logs | one digest per day; moves older logs and digests to `archived` | the change is digests and the move |
 | `blog-post` | whose turn it is, three days of commits and logs (wider if too quiet), every writer's newest posts | one post; for a reply, also a short backlink note | the change is that post and at most one note, and every claim survived the fact-check |
 | `glassbox-update` | the Glass Box guide pages, the history of `main`, the code the pages cite | the pages that fell behind, and their diagrams | only Glass Box pages and their diagrams change |
+| `dependabot-sweep` | the open Dependabot pull requests, their checks and release notes | verdicts and merges of safe bumps; an issue per major | it opens no branch and edits no file; a major, an Actions bump or anything unsafe waits for the maintainer |
 
 "Works with" lines in the routine panels (no lines on the map):
 - `prune-trial` → `audit-docs`, `frictions-to-fixes`: while a trial is
@@ -938,7 +941,7 @@ merges comes from ADR-0004; what each routine may change, from its `SKILL.md`
      expanded; `why` entries are matched to `docs/adr/`);
   2. a step names a node id or close-up part that doesn't exist;
   3. two nodes list exactly the same path in `files`;
-  4. a routine has no story;
+  4. a routine on the map has no story;
   5. a role or about line contains a pull request or issue number.
 
 ## Leave out
@@ -953,7 +956,8 @@ merges comes from ADR-0004; what each routine may change, from its `SKILL.md`
   reads across tenants. At most one sentence, on the Commons chip.
 - Skills that serve one tenant (e.g. `atlas-specimen`), and rare ways of
   working: handoffs, `/loop` sessions, the guest demo.
-- Housekeeping such as Dependabot and pull-request labels.
+- Housekeeping such as Dependabot, with its routine `dependabot-sweep`, and
+  pull-request labels.
 
 ## Still open
 

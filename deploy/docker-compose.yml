@@ -7,7 +7,7 @@
 #       deploy/docker-compose.yml   # run `docker compose` from here
 #
 # The `terrarium` container is a thin runner+builder: it clones `main` into the
-# `terrarium_app` volume and self-updates (poll → build → atomic swap), so a push
+# `terrarium_app` volume and self-updates (poll → build → copy → restart), so a push
 # to `main` never rebuilds this image. It is reached ONLY via the shared Caddy
 # over the external `web` network — no host port is published (avoids the
 # already-used 3000/3001 host ports).

@@ -141,7 +141,9 @@ locally and in CI; CI's run decides the merge. Its steps form two tiers,
 The **Gate** tier that always runs, whatever changed.
 
 ### Heavy
-The costly **Gate** tier, skipped when every changed path is **Inert**.
+The costly **Gate** tier, skipped when every changed path is **Inert**; a
+change of only **Inert** paths and Skill files skips just its build and
+browser tests.
 
 ### Full gate
 **Floor** plus **Heavy**.

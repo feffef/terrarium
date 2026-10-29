@@ -5,9 +5,9 @@
 # The image is a thin runner+builder; all state lives in the /app volume. This
 # script clones `main`, builds it, and serves a DECOUPLED COPY of the build
 # output so the (multi-second) build never disturbs live traffic. It then polls
-# origin/main and, on new commits, rebuilds in place and atomically swaps —
-# the only downtime is the ~1-2s node restart. A failed build (bad commit)
-# never touches the live server.
+# origin/main and, on new commits, rebuilds in place, copies the new build over
+# the served one and restarts node — the only downtime is that ~1-2s restart.
+# A failed build (bad commit) never touches the live server.
 #
 # Deliberately NOT `set -e`: this is a long-running supervisor, so a single
 # failing command (e.g. a bad build) must never terminate the whole process and
