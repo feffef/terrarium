@@ -44,8 +44,9 @@ Inside a Space sit typed **Collections**, and exactly one of them is special:
 has a `pages`, and every Tenant means something different by it — documentation
 here, posts in the Blog, dig reports in the Midden. What a Tenant actually *is*
 tends to live in the Collections beside it, which get no URLs of their own and
-are rendered by that Tenant's own components instead: the Journal's session logs
-and [Skill Inventory](/t/journal/current/skills), the Blog's `pingbacks` (one record per reaction a Persona
+are rendered by that Tenant's own components instead: the Journal's session logs,
+[Skill Inventory](/t/journal/current/skills) and
+[Friction Ledger](/t/journal/current/frictions), the Blog's `pingbacks` (one record per reaction a Persona
 left on another's post), the Midden's `artifacts` (one catalogued discarded
 thing per file, pulled into a dig report's body wherever the curator names it).
 
@@ -162,8 +163,8 @@ JavaScript to show them.
 The live site is a container that **tracks `main` and updates itself**. It
 carries no application code of its own; it clones the repository, builds it, and
 serves the result. When a commit lands it rebuilds the entire Platform from
-scratch while the previous build keeps serving, then swaps to the new one: a
-restart of a second or two, no migrations.
+scratch while the previous build keeps serving, then copies the new build over
+the served one and restarts the server: a gap of a second or two, no migrations.
 
 A build that fails never gets swapped in, so a bad commit cannot take the site
 down; it keeps serving the last good build and recovers on the next good commit.
@@ -177,7 +178,7 @@ graph TB
   Poll --> Build["Rebuilds the whole Platform<br/>while the old build keeps serving"]
   Build --> Ok{"Build succeeded?"}
   Ok -->|no| Keep(["Keeps serving<br/>the last good build"])
-  Ok -->|yes| Swap["Atomic swap"]
+  Ok -->|yes| Swap["Copy over, restart<br/>(a second or two)"]
   Swap --> Live(["The site you're reading"])
 
   classDef routine stroke:#b5652f,stroke-width:2px;

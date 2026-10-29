@@ -33,8 +33,9 @@ library of **[Skills](/t/journal/current/skills)**, which are reusable instructi
 does repeatedly — plus [Matt Pocock's engineering
 skills](https://github.com/mattpocock/skills). It plans, writes the code and
 content, checks its own work against the **safety gate** (the lint, type-check,
-test, content-validation and build sequence that CI will run anyway), has the
-branch reviewed, and opens a pull request.
+test, content-validation, build and end-to-end sequence, with a few integrity
+checks, that CI will run anyway), has the branch reviewed, and opens a pull
+request.
 
 At **Session closure** the session writes a **session log**: what it set out to do,
 what actually shipped, and every **friction** it hit — dead ends, wasted
@@ -89,10 +90,13 @@ A green gate is not sufficient either. What the change *touches* decides who
 gets to land it. This project reserves a set of surfaces for human review: the
 modules that expand each Tenant's manifest into content collections and routes,
 the isolation logic that keeps one Space from ever reading another's data, CI
-itself, and the governance documents that define all of the above. A pull
-request touching any of them escalates to a person, as does one that adds a
-dependency, changes behaviour the tests can't reach, or comes from outside the
-repo's collaborators.
+itself, the hooks that police the agents, and the governance documents that
+define all of the above. A pull request touching any of them escalates to a
+person, as does one that adds a dependency or moves one to a new major version,
+changes behaviour the tests can't reach, adds logic that decides which Tenant's
+data a request can reach, or comes from outside the repo's collaborators. The one
+standing exception: a minor or patch bump that Dependabot opens, which an agent
+may merge.
 Ordinary feature work is merged by the session that wrote it, once the gate is green and it touches none of the above.
 
 A handful of scheduled Skills are each limited up front to a narrow kind of
@@ -125,8 +129,11 @@ There are several because the project can rot in several ways, and not all of
 them announce themselves.
 
 **`frictions-to-fixes`** is the reactive one, and the loop most people mean when
-they ask whether the project improves itself. It reads the recent session logs
-and screens out frictions that have already been fixed. A simple fix is
+they ask whether the project improves itself. It reads the recent session logs,
+files each friction under its root cause in the
+[Friction Ledger](/t/journal/current/frictions), so a cause that keeps coming
+back is counted over weeks, and screens out frictions that have already been
+fixed. A simple fix is
 dispatched straight to a pull request; only a fix it cannot land itself, such as one needing a human merge or a human design choice, gets filed as an issue first. Either way it reviews the
 resulting pull requests and merges them — escalating anything genuinely risky
 to a human. By construction it only ever sees problems an agent noticed and
@@ -152,11 +159,13 @@ Routines go looking instead:
 - **`prune-trial`** attacks the opposite failure. Rules accumulate around every
   incident and are almost never removed, so agents end up reading more and
   following less. Each run cuts one problem's instructions back to the goal
-  behind them and leaves the cut standing as a **trial**: later sessions'
+  behind them (or rewrites one Skill or doc in plainer words) and leaves the
+  result standing as a **trial**: later sessions'
   frictions decide whether the pruned prose was load-bearing. That evidence, not
   anyone's opinion, decides whether the cut stays or gets back one line stating
-  its goal; a behaviour that needs a mechanical guard goes to
-  an issue.
+  its goal. Moderate damage, or a friction that clearly became more common
+  since the cut, keeps the cut and goes to an issue for a person, as does a
+  behaviour that needs a mechanical guard.
 
 Two further Routines narrate rather than repair. **`digest`** writes the daily
 catch-up pages on this Journal, and **`blog-post`** writes an in-character post
