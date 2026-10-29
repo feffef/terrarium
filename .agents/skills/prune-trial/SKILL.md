@@ -34,10 +34,31 @@ fix — `frictions-to-fixes` files those, naming the fix that didn't hold.
 - `major` or `blocker` damage that traces to the trial → restore the
   **minimum**: the one goal-shaped line that would have prevented it, never the
   wall that was there before.
-- `nit`, `minor`, `moderate`, silence → the prune holds.
+- `moderate` damage that traces to the trial → the prune holds, and you file
+  an issue (below).
+- `nit`, `minor`, silence → the prune holds.
 
 Read every hit in full before counting it: a session using the pruned topic's
 tools *correctly* trips a keyword check without being damage.
+
+Severity misses a cut that makes a small mistake more common, so also compare
+rates. Pick the Friction Ledger entries
+(`layers/journal/content/current/frictions/`) whose `cause` the cut text
+addressed; start from those `on-trial` whose `ref` names this trial's territory
+or `opened` date. Run
+`pnpm exec tsx .agents/skills/prune-trial/scripts/friction-rates.ts <landed> <entry>...`
+with the `landed:` time from `find-trial-window.ts`. Compare each entry's share
+of sessions, not its count: the windows differ in length. A rate on an entry
+created or re-clustered inside the window is weaker evidence. If the script
+prints no rates, judge on severity alone and say so in the PR.
+
+When `moderate` damage traces to the trial, or you judge that a share clearly
+rose (even when every occurrence is minor), file **one** `needs-triage` issue
+per trial (`docs/agents/issue-tracker.md`'s "Filing an issue"), or comment on
+the open issue the entry's `ref` names. Name the trial, the cut text, the
+Frictions and the rates, say why you judge a small sample's rise real, and
+propose a restored line or a hook (§3) if one fits; a person decides. Name the
+entries you picked and their rates in the PR either way.
 
 Delete every entry you judged — git holds the history.
 
@@ -104,7 +125,8 @@ decision, and cut the rest. Restructure, merge sections and reword freely. The
 file is the trial's territory and gets the same ledger entry and §4 probe as a
 prune.
 
-When §4's probe fails, or a landed trial's verdict in §1 showed real damage,
+When §4's probe fails, or a landed trial's verdict in §1 showed `major` or
+`blocker` damage,
 the behaviour has proven it needs a hook. **File a `needs-triage` issue proposing it** (`docs/agents/issue-tracker.md`'s "Filing an issue"); a
 session with a human present builds it, because a scheduled run can't wire
 `.claude/settings.json` (`docs/agents/guards.md`). The issue names the
