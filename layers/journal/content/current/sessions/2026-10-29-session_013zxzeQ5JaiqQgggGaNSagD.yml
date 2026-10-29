@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQ5JaiqQgggGaNSagD
 startedAt: 2026-10-29T08:37:37Z
-endedAt: 2026-10-29T09:24:06Z
+endedAt: 2026-10-29T09:26:40Z
 kind: delegated
 goal: Raise the weakest Glass Box guide pages by rater consensus
-status: in-review
-outcome: "PR 2674 open: Zod refinements retitled and cut, Cloud sessions promoted to the guide"
-summary: "The user started the run with /glassbox-improve; every later choice was the Skill's own procedure, none a separate human ask. Three raters (sonnet, fable, opus) graded all 40 guide pages: 38 were A by the middle grade, two were B (vue-components, schema-validation). Only schema-validation had a consensus deficit a page edit could fix (title, and a dense paragraph), so it was the one raised page. The structural step went to promoting the Cloud sessions draft: every rater named both the vue-components split and several promotions, a promotion beats a re-cut on a tie, and Cloud sessions had the lowest summed place in the Gaps lists. Researchers confirmed four overstated claims in the draft; writers fixed them. code-review found a probe date in prose, which I dropped, plus findings I refused with proof (a docs anchor that exists, pin bumps the Pin rule requires). Three re-grade rounds on Cloud sessions followed: two rounds each produced a consensus deficit (a count in prose, an overbroad lede), and the last opus round confirmed a false watch item against the cloud docs, which I fixed. Final grades A, with opus holding one B. The scoped gate passed on the final head, then the branch was pushed and the PR opened. Open: vue-components still needs a split into Vue components and Hydration; virtual imports and hints are the next promotion candidates."
+status: completed
+outcome: "PR 2674 merged: Zod refinements retitled and cut, Cloud sessions promoted to the guide"
+summary: "The user started the run with /glassbox-improve; every later choice was the Skill's own procedure, none a separate human ask. Three raters (sonnet, fable, opus) graded all 40 guide pages: 38 were A by the middle grade, two were B (vue-components, schema-validation). Only schema-validation had a consensus deficit a page edit could fix (title, and a dense paragraph), so it was the one raised page. The structural step went to promoting the Cloud sessions draft: every rater named both the vue-components split and several promotions, a promotion beats a re-cut on a tie, and Cloud sessions had the lowest summed place in the Gaps lists. Researchers confirmed four overstated claims in the draft; writers fixed them. code-review found a probe date in prose, which I dropped, plus findings I refused with proof (a docs anchor that exists, pin bumps the Pin rule requires). Three re-grade rounds on Cloud sessions followed: two rounds each produced a consensus deficit (a count in prose, an overbroad lede), and the last opus round confirmed a false watch item against the cloud docs, which I fixed. Final grades A, with opus holding one B. The scoped gate passed on the final head, the PR opened, CI went green and I merged it with merge-pr.ts. Open: vue-components still needs a split into Vue components and Hydration; virtual imports and hints are the next promotion candidates."
 prs:
   - "2674"
 docsRead:
@@ -245,18 +245,21 @@ frictions:
   - description: "Subagents broke brief lines or hook-requested reads: the sonnet rater used cd with git, and several never read git-conventions.md after the hook asked, because their calls were read-only."
     solution: The hook's wording could say read-only show, diff and ls-tree calls need no read, so agents stop reporting it as a miss.
     severity: nit
-durationSec: 2789
+durationSec: 2943
 models:
-  claude-sonnet-5-5: 148
+  claude-sonnet-5-5: 164
 toolCounts:
   Read: 9
-  Skill: 4
-  Bash: 43
+  Skill: 5
+  Bash: 46
   mcp__github__list_pull_requests: 1
   Agent: 15
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/verification/06.schema-validation.md
   - layers/glassbox/content/guide/pages/claude-code/11.cloud-sessions.md
@@ -381,21 +384,21 @@ subagents:
     durationSec: 722
     toolCalls: 66
     modelCalls: 54
-    tokenShare: 20.1
+    tokenShare: 19.4
   - type: general-purpose
     task: Rater (fable) grades guide
     model: fable
     durationSec: 636
     toolCalls: 80
     modelCalls: 16
-    tokenShare: 8.1
+    tokenShare: 7.8
   - type: general-purpose
     task: Rater (opus) grades guide
     model: opus
     durationSec: 434
     toolCalls: 42
     modelCalls: 36
-    tokenShare: 13
+    tokenShare: 12.5
   - type: general-purpose
     task: Research schema-validation raise
     model: sonnet
@@ -409,21 +412,21 @@ subagents:
     durationSec: 218
     toolCalls: 22
     modelCalls: 16
-    tokenShare: 2.9
+    tokenShare: 2.8
   - type: general-purpose
     task: "Writer: raise schema-validation"
     model: opus
     durationSec: 148
     toolCalls: 26
     modelCalls: 14
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: general-purpose
     task: "Writer: promote cloud-sessions"
     model: opus
     durationSec: 422
     toolCalls: 65
     modelCalls: 39
-    tokenShare: 7.6
+    tokenShare: 7.4
   - type: general-purpose
     task: "Code review: Standards axis"
     durationSec: 86
@@ -442,21 +445,21 @@ subagents:
     durationSec: 152
     toolCalls: 15
     modelCalls: 14
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: general-purpose
     task: Re-grade rater (fable)
     model: fable
     durationSec: 266
     toolCalls: 31
     modelCalls: 11
-    tokenShare: 4
+    tokenShare: 3.8
   - type: general-purpose
     task: Re-grade rater (opus)
     model: opus
     durationSec: 208
     toolCalls: 17
     modelCalls: 15
-    tokenShare: 3.7
+    tokenShare: 3.5
   - type: general-purpose
     task: Last re-grade (sonnet)
     model: sonnet
@@ -470,14 +473,14 @@ subagents:
     durationSec: 198
     toolCalls: 23
     modelCalls: 13
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: general-purpose
     task: Last re-grade (opus)
     model: opus
     durationSec: 150
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 2.1
+    tokenShare: 2
 gitBranch: ccr-2208cc62-2j8qzf
 entrypoint: remote_mobile
 cliVersion: 2.1.312
