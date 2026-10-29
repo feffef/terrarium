@@ -1,0 +1,2 @@
+term: Ecosystem
+definition: A package manager and the files it reads, such as npm with package.json or GitHub Actions with its workflow files. Dependabot configures each one as its own entry.
