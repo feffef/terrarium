@@ -53,7 +53,7 @@ The same expansion feeds :file[modules/routing.ts], which writes the routing map
 For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in its layer; their path has the Tenant's name where the catch-all has `[tenant]`, and they outrank it for its addresses and no others. Its components sit in a folder named after it, which gives them its name as a prefix, as in `MarqueePoster`. Its stylesheet, listed in its `nuxt.config.ts`, loads on every page of every Tenant, and it keeps its rules under a class only its pages carry and its custom properties under a short tag of its own (`--mq-`).
 
 ::stop-links
-[File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [Vue components and hydration](/t/glassbox/guide/nuxt-vue/vue-components) · :file[layers/marquee/app/assets/theme.css]
+[File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [Vue components](/t/glassbox/guide/nuxt-vue/vue-components) · :file[layers/marquee/app/assets/theme.css]
 ::
 
 ## 7. It gets its own words
