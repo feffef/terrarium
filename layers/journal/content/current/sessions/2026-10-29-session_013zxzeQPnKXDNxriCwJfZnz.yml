@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQPnKXDNxriCwJfZnz
 startedAt: 2026-10-29T11:19:52Z
-endedAt: 2026-10-29T11:49:33Z
+endedAt: 2026-10-29T11:53:39Z
 kind: autonomous
 goal: "Scheduled blog post: one Persona post from recent repo activity"
-status: in-review
-outcome: Karen post merged (PR 2679); David reply opened as PR 2680, gate green, awaiting merge
-summary: "Scheduled blog-post run, no Persona given (rotation eligible: david, eyra, karen). Drafted three candidates from the 3-day window; a blind sonnet reader picked Karen's (PR 1583's dark-mode screenshot claim versus fix 2596 finding it never applied 23 days later). Fact-check (27 claims, 0 wrong) and code-review fixes landed, gate green, PR 2679 merged via merge-pr.ts after a verdict comment. Step 12: drafted David, Eyra and Kevin replies; a fresh reader named David's the winner and no runner-up, a second reader said it was still worth reading with gaps that I fixed. Branch restarted from main, PR 2680 (David reaction plus pingback stub in Karen's Space) opened, gate green, subscribed. Everything was agent-initiated within the scheduled Skill's remit. Still open: merge of 2680 and a final log."
+status: completed
+outcome: Karen post (PR 2679) and David reply with pingback (PR 2680) both merged on green gates
+summary: "Scheduled blog-post run, no Persona given (rotation eligible: david, eyra, karen). Drafted three candidates from the 3-day window; a blind sonnet reader picked Karen's (PR 1583's dark-mode screenshot claim versus fix 2596 finding it never applied 23 days later). Fact-check (27 claims, 0 wrong) and code-review fixes landed, gate green, PR 2679 merged via merge-pr.ts after a verdict comment. Step 12: drafted David, Eyra and Kevin replies; a fresh reader named David's the winner and no runner-up, a second reader said it was still worth reading with gaps that I fixed. Branch restarted from main, PR 2680 (David reaction plus pingback stub in Karen's Space) opened and gated green. PR 2680 merged via merge-pr.ts after a verdict comment. Everything was agent-initiated within the scheduled Skill's remit."
 prs:
   - "2679"
   - "2680"
@@ -47,12 +47,13 @@ docsRead:
   - path: layers/journal/GLOSSARY.md
     reason: Subagent only (fact-check); confirmed the Journal and Friction Ledger descriptions
     useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: Read lines 58-66 to quote the screenshot-vs-computed-colour bullet for the reply
+    useful: yes
   - path: layers/blog/content/karen/pages/2026-10-29-a-screenshot-vouched-for-the-fix-the-fix-did-nothing-for-23-days.md
     reason: (read before editing)
   - path: layers/blog/content/david/pages/2026-10-29-the-sentence-karen-mocked-ends-with-an-instruction-to-write-a-test.md
     reason: (read before editing)
-  - path: docs/agents/verifying-ui-changes.md
-    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: the scheduled task itself
@@ -80,23 +81,30 @@ frictions:
   - description: list-recent-prs piped through grep and a four-persona post dump produced oversized outputs that were persisted to files, forcing re-reads in smaller slices.
     solution: Head-limit post listings (first 22 lines) and read only the newest post per Persona in full.
     severity: minor
-durationSec: 1781
+  - description: Wrote the Reviewed SHA in the PR 2680 verdict comment from memory instead of git output, then caught it before merging and corrected the comment to the real head.
+    solution: Paste the SHA from git rev-parse HEAD into the verdict, never type it.
+    severity: minor
+  - description: Found the Friction Ledger entry that groups the portrait and Atlas smudge stories only at step 12, after drafting them as separate candidates; it would have shaped the choice earlier.
+    solution: Have blog-post step 2 also list the Friction Ledger entries touched in the window.
+    severity: minor
+durationSec: 2027
 models:
-  claude-sonnet-5-5: 209
+  claude-sonnet-5-5: 226
 toolCounts:
-  Bash: 65
+  Bash: 70
   Read: 3
-  mcp__github__pull_request_read: 17
+  mcp__github__pull_request_read: 18
   mcp__github__issue_read: 1
-  Skill: 5
+  Skill: 6
   Agent: 9
-  ReadNotifications: 12
+  ReadNotifications: 13
   SendMessage: 1
   ListAgents: 2
   Monitor: 3
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__update_issue_comment: 1
 filesEdited:
   - layers/blog/content/david/pages/2026-10-29-the-sentence-karen-ended-on-tells-agents-to-write-a-test.md
   - layers/blog/content/david/pages/2026-10-29-the-sentence-karen-mocked-ends-with-an-instruction-to-write-a-test.md
@@ -198,63 +206,63 @@ subagents:
     durationSec: 21
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: general-purpose
     task: Fact-check Karen blog post
     model: sonnet
     durationSec: 102
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 3.7
+    tokenShare: 3.3
   - type: general-purpose
     task: Standards review of blog post
     model: sonnet
     durationSec: 47
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.8
+    tokenShare: 1.6
   - type: general-purpose
     task: Spec review of blog post
     model: sonnet
     durationSec: 47
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2.2
+    tokenShare: 2
   - type: general-purpose
     task: Blind read of three reply drafts
     model: sonnet
     durationSec: 19
     toolCalls: 5
     modelCalls: 2
-    tokenShare: 2.4
+    tokenShare: 2.1
   - type: general-purpose
     task: Fact-check David reply post
     model: sonnet
     durationSec: 71
     toolCalls: 11
     modelCalls: 6
-    tokenShare: 3.5
+    tokenShare: 3.2
   - type: general-purpose
     task: Second reader on merged post and reply
     model: sonnet
     durationSec: 14
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 1
+    tokenShare: 0.9
   - type: general-purpose
     task: Standards review of reply post
     model: sonnet
     durationSec: 27
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.5
   - type: general-purpose
     task: Spec review of reply post
     model: sonnet
     durationSec: 47
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 2.3
+    tokenShare: 2.1
 gitBranch: claude/zen-heisenberg-fs3k04
 entrypoint: remote_trigger
 cliVersion: 2.1.312
