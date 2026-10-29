@@ -274,7 +274,7 @@ useSeoMeta({
     <p class="tiles-headline">{{ tilesHeadline }}</p>
     <section class="tiles" :class="{ 'tiles-4': space === 'archived' }" aria-label="State of this Space">
       <JournalStatTile
-        label="Sessions logged" gloss="One agent working session, logged"
+        label="Sessions logged" gloss="One agent session, logged. Interactive: a human kept prompting; delegated: one prompt; autonomous: none."
         :value="sessions.length"
         :sub="kindSubtext"
       />
@@ -290,7 +290,7 @@ useSeoMeta({
           <NuxtLink class="pr-link" :to="{ name: 'journal-ideas', params: { space } }">browse →</NuxtLink>
         </template>
       </JournalStatTile>
-      <JournalStatTile label="Frictions surfaced" gloss="Problems an agent hit and wrote down" :value="totalFrictions">
+      <JournalStatTile label="Frictions surfaced" gloss="Problems an agent hit and wrote down, every one, however small" :value="totalFrictions">
         <template #sub>
           <JournalFrictionStrata :counts="frictionSeverityTotals" :total="totalFrictions">
             {{ frictionSeverityTotals.blocker }} blocker{{ frictionSeverityTotals.blocker === 1 ? '' : 's' }} ·

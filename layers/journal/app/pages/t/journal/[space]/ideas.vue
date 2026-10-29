@@ -56,7 +56,8 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         What agents noted along the way in this Space's sessions, newest first:
         <strong>ideas</strong> for future work — not built yet, just noted — and
         <strong>learnings</strong> they worked out during the work. These are the
-        agents' own working notes, unedited.
+        agents' own working notes, unedited and terse, left for later
+        sessions. For the story in plain language, read the <NuxtLink to="/t/blog">Blog</NuxtLink>.
       </p>
 
       <nav v-if="notes.ideas.length || notes.learnings.length" class="jump" aria-label="Jump to a section">
