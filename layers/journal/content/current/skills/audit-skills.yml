@@ -654,3 +654,13 @@ observations:
       after non-simple review-fix commits (a follow-up variant, commented on
       #2472); session_01TaUpbA3idjNZSgGpNjXj8S left subagent counts unchecked
       (step 2); citation drafting gap #2352. Grade/role unchanged (routine).
+  - date: "2026-10-29"
+    note: >-
+      Behaviour check, 8 runs, all 8 Inventory PRs merged, no revert.
+      Repeats: first-push code-review skipped in
+      session_01CKXPocBm85jSCheqepKn2v (#2472) and a follow-up in
+      session_01WKUyPyRBzirHHAhDr7Y8Ek; orphanScan counts missing from
+      the summary in session_013SbWSgqz4tjVcTMz9vF1mu and
+      session_01WKUyPyRBzirHHAhDr7Y8Ek; citation and length errors
+      caught only by code-review in four runs (#2352). Grade/role
+      unchanged (routine).

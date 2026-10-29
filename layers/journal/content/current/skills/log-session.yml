@@ -415,3 +415,10 @@ observations:
       session_013zxzePwzHSC4uh6dyhsHxg (2), session_013zxzeQ8EBq9v7NXqWmAFRF
       (1); adr-0030 missing in 2 of 3. Filed #2607. Grade/role unchanged
       (essential).
+  - date: "2026-10-29"
+    note: >-
+      Behaviour check, 10 runs, 22 PRs merged, no revert. Verified:
+      ruleVerdicts short in session_013zxzeQDh7MCP7HpYBYBTeh (15 of
+      22; 7 loaded only by subagents), the other nine complete. #2607
+      was closed by #2645 before that log landed, so the gap persists;
+      no new issue. Grade/role unchanged (essential).

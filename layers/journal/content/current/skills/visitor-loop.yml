@@ -465,3 +465,11 @@ observations:
       session_013zxzePwzHSC4uh6dyhsHxg (a hook reminder in
       session_01BZNS3KuWTBxqAHxTfx3uzp); all three propose naming it in step
       2. Grade/role unchanged (routine).
+  - date: "2026-10-29"
+    note: >-
+      Behaviour check, 7 runs, all 13 PRs merged, no revert.
+      Unverified: session_013zxzeSxgYzYmeAuCzvJdhY (10-28) said the
+      git log --grep tally ran on a shallow clone and missed merged PR
+      2383 (PR 2649 merged anyway); the Skill never says to unshallow.
+      Repeat, minor: dispatch-subagents read after the dispatch-read
+      guard blocked in three runs. Grade/role unchanged (routine).

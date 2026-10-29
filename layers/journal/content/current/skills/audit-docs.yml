@@ -408,3 +408,12 @@ observations:
       github-integration.md line 10 vs guard conflict in its summary but
       logged no Friction (ADR-0027); the conflict is still live. Same shape as
       session_012XnetQuxWoyaVFYw1BqMoy. Grade/role unchanged (routine).
+  - date: "2026-10-29"
+    note: >-
+      Behaviour check, 7 runs, all 12 PRs merged, no revert. Verified
+      repeat: session_01BgQzSd9CmFPiugdXAQh6HW left a live github-
+      integration.md vs guard conflict unfiled because the text is
+      under a trial and logged no Friction; the doc still says a
+      single backtick is not enough. Commented on #2553. The step 1.3
+      trial note (757e501c3) held in the 10-27 and 10-28 runs.
+      Grade/role unchanged (routine).

@@ -170,3 +170,14 @@ observations:
       session_01Cb8ETAZztznLYx6CC7MKyE re-invoked no close-session after
       merges. #2589 and #2590 fixed earlier frictions. Grade/role unchanged
       (specialist).
+  - date: "2026-10-29"
+    note: >-
+      Behaviour check, 10 runs, 48 PRs merged, no revert. Verified
+      repeat: section 4 close-session re-invoke skipped in
+      session_01Cb8ETAZztznLYx6CC7MKyE,
+      session_01PdrNTJLJJMKBGGZfsAhL6w and
+      session_013zxzeTK9c2HVcabwCx3b18; filed #2654. Hand edit after a
+      failed review pushed without re-gating in those last two and
+      session_013QKXoGLaEHEJanyw5TrPqj (spec gap, CI still gated each
+      merge). check:worktrees still absent from the 10 logs
+      (unverified). Grade/role unchanged (specialist).

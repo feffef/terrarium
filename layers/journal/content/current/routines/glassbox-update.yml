@@ -96,3 +96,11 @@ runs:
     cacheReadTokens: 3312558
     cacheWriteTokens: 90063
     costUsd: 0.8002038
+  - session: session_013zxzeSJQfnNdJHrSWjVT2x
+    startedAt: 2026-10-28T07:34:03Z
+    durationSeconds: 670
+    inputTokens: 100
+    outputTokens: 14459
+    cacheReadTokens: 5029778
+    cacheWriteTokens: 112514
+    costUsd: 1.0978238

@@ -392,3 +392,12 @@ observations:
       sentence (7ef693578) with no re-dispatch. Reopened #2370 with this.
       session_01GKJysgAiGN7bmdFJcKvFoC did its own read for the review
       (disclosed). Grade/role unchanged (routine).
+  - date: "2026-10-29"
+    note: >-
+      Behaviour check, 7 runs, all 13 PRs merged. Verified repeat of
+      #2370: session_013zxzeRin6kPuaDZ27jyuUk (PR #2637) edited the
+      post in 8b582f4fc after the fact-check with no re-dispatch; the
+      PR body tally omits it. Runs ran under bd33631; fix 0526bbb
+      (10-28 13:53) postdates all of them, so it is untested. Not
+      commented, as #2370 already carries this shape. Grade/role
+      unchanged (routine).
