@@ -11,6 +11,9 @@ fixes:
   - pr: 2566
     date: "2026-10-26"
     summary: "inspect-session briefs save every fetched list_events page under Out with a unique name."
+  - pr: 2666
+    date: "2026-10-29"
+    summary: "inspect-session estimates the pages from the session's duration before choosing a read, and a partial read never stops because paging is slow."
 occurrences:
   - session: session_01MwrXDH7XwMNUofgz3HvQ5N
     date: "2026-10-19"
