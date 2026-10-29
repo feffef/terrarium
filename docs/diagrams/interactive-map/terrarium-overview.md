@@ -50,8 +50,8 @@ The repository holds three kinds of things.
 - **Guards & hooks.** Programs that run automatically around agent actions.
   - **Guards** check some actions before they run. When one stops an
     action, its message explains the rule and says what to do instead.
-  - **Hooks** prepare a session when it starts, point it to a doc when it
-    needs one, and commit its log.
+  - **Hooks** prepare a session when it starts and commit its log; hints add
+    a pointer to a doc beside a call that needs one.
 - **Helper scripts.** Small programs the skills and hooks call: to read the
   session logs and skill inventory, run the checks, write a session log,
   merge a pull request or build a preview.
@@ -135,9 +135,9 @@ The pieces:
    The server keeps each such page and its `_payload.json` for 60 seconds, so
    visitors in that minute get the same copy.
 3. **Clicking to a page the server doesn't keep:** Tinkerfund's search. It
-   has no `_payload.json`, so its queries run in the browser itself. Nuxt Content loads a browser copy of
-   the database (SQLite in WebAssembly), fetching each collection's data
-   from the server, and queries it there. If a `_payload.json` ever fails to
+   has no `_payload.json`, so its queries run in the browser itself. Nuxt
+   Content loads a browser copy of the database (SQLite in WebAssembly),
+   fetching each collection's data from the server, and queries it there. If a `_payload.json` ever fails to
    load, the page falls back to this browser copy as well.
 
 The content database is never edited while the site runs. After each
@@ -193,7 +193,7 @@ an agent writes opens with a 🤖 line linking to its session.
 
 Issues are the shared to-do list. Visitors, the maintainer, sessions and
 routines all file them. A visitor's new issue has no label; sessions and
-routines file theirs as `needs-triage`. Only triage sets `ready-for-agent`
+routines file theirs as `needs-triage`. Only the triage skills set `ready-for-agent`
 and `ready-for-human`. The label says whose move it is:
 - `needs-triage`: the maintainer still has to decide.
 - `needs-info`: waiting for the reporter to answer a question.
@@ -558,8 +558,8 @@ next session's log.
 1. **Start.** `frictions-to-fixes` starts on its timer, or when the
    maintainer runs it by hand. It is a session like any other.
 2. **Survey.** It sends a helper to `helper-agents`.
-3. **Read.** The helper reads the `logs` since the last ledger update
-   through a script (via `scripts`). It files every friction in the friction
+3. **Read.** The helper reads the `logs` from shortly before the last ledger
+   update through a script (via `scripts`). It files every friction in the friction
    ledger and notes which docs each session opened.
 4. **Screen.** The helper checks `issues`. It drops frictions that are
    already fixed on `main`, already tracked in an issue or pull request,
@@ -653,8 +653,9 @@ Close-up: `issues`.
 3. Three reviewers in `helper-agents` look from six angles.
 4. Fact-checkers in `helper-agents` keep only confirmed findings. Fixes to
    a file only the maintainer may merge, every decision record included, go
-   into a second pull request for the maintainer. Two sources that disagree, with nothing
-   to settle it, become an issue.
+   into a second pull request for the maintainer, as does a journal page
+   move that changes its address. Two sources that disagree, with nothing to
+   settle it, become an issue.
 5. It fixes `rules` and `skills` in one pull request in `prs`.
 6. `ci` runs the checks. `audit-docs` may merge itself.
 7. The next session reads the corrected docs (thick).
@@ -805,7 +806,7 @@ it.
 
 | Part | What it does |
 |---|---|
-| survey & screen (a helper agent) | files the frictions since the last ledger update in the friction ledger with a script, and drops what is fixed, tracked, on trial, or in an outside skill |
+| survey & screen (a helper agent) | files the frictions from shortly before the last ledger update in the friction ledger with a script, and drops what is fixed, tracked, on trial, or in an outside skill |
 | pick | up to ten; files an issue for up to three fixes that came back |
 | design (a helper agent) | reads the picked frictions' full logs, designs each fix and rates its risk |
 | file | opens issues for up to three fixes it won't send on, plus each one only the maintainer may merge |
@@ -911,8 +912,8 @@ merges comes from ADR-0004; what each routine may change, from its `SKILL.md`
 
 | Routine | Reads | Writes | Limits (its `SKILL.md`) |
 |---|---|---|---|
-| `frictions-to-fixes` | the session logs since the last ledger update, the friction ledger, `issues`, `prs`, the history of `main`, the open trials | the friction ledger; fixes in `rules`, `skills`, `scripts` or `code`, via helpers' pull requests; issues | its own review passed and the fix is low risk; never guards, hooks or maintainer-only files |
-| `audit-docs` | the docs, our own skills, the Journal's explainer pages, the last two days of changes, the open trials | fixes to docs and skills; rarely an issue | the fixes touch current docs and our own skills; any change to a file only the maintainer may merge, every decision record included, goes in a second pull request |
+| `frictions-to-fixes` | the session logs from shortly before the last ledger update, the friction ledger, `issues`, `prs`, the history of `main`, the open trials | the friction ledger; fixes in `rules`, `skills`, `scripts` or `code`, via helpers' pull requests; issues | its own review passed and the fix is low risk; never guards, hooks or maintainer-only files |
+| `audit-docs` | the docs, our own skills, the Journal's explainer pages, the last two days of changes, the open trials | fixes to docs and skills; rarely an issue | the fixes touch current docs and our own skills; any change to a file only the maintainer may merge (every decision record included), or a journal page move that changes its address, goes in a second pull request |
 | `audit-skills` | seven days of session logs, the inventory, our skills' text, git history, GitHub | inventory entries; what each routine run cost; issues for serious or repeated failures | only inventory entries and routine run costs change, and every grade change cites at least two sessions |
 | `prune-trial` | the open trials, frictions since each cut, how often the friction ledger's entries recurred, the issue tracker, all agent guidance | one cut per run, its trial entry, restored lines, issues that propose a guard or report moderate damage | the change is prose that can be undone; a decision record changes only in a trial the maintainer started |
 | `visitor-loop` | a preview of the site, the visitors' reports, the maintainer's past corrections, its `decisions.md`, a week of logged ideas | one fix and one feature pull request, `decisions.md`, issues | the changes stay inside existing tenants, or app files a routine may merge |
