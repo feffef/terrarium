@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeRoWcNj4VhbkkjybNG
 startedAt: 2026-10-29T18:12:50Z
-endedAt: 2026-10-29T19:00:00Z
+endedAt: 2026-10-29T19:56:01Z
 kind: delegated
 goal: Weekly rater-consensus improvement run on the Glass Box guide
-status: completed
-outcome: Promoted the Workflow scripts Lesson and fixed three false claims; PR 2684 merged
-summary: "Ran the glassbox-improve Skill, started by one human kickoff (/glassbox-improve); every step after it was the Skill's own procedure, so nothing was a fresh human instruction or green-light beyond that. Three raters (sonnet, fable, opus) graded all 41 guide pages at base d08dde31. Nearly all pages were A. The only consensus deficit (Work queue's Why bullets restating sibling Lessons) sat on a cooling-off page, so no page was raised. The structural step was a promotion: all three raters listed the Workflow scripts draft as a gap, it tied with Virtual imports on the sum of places, and its title already passed, so it needed fewer changes. A researcher and an opus writer promoted it as guide page 09. Single-rater false claims were checked in the source: Routines' \"No file lists the Routines\", the pnpm page's ADR-0026 cite for the frozen install, and Type checking's unsupported \"planted in a layer config\" anecdote. All three were confirmed and fixed by me with pins moved to the base. code-review found five issues on the new page (counts in prose, an unwrapped Term, two sentences no source states, two motive clauses); the writer fixed them. A fresh re-grade gave A, B and C; only the confirmed lint-test claim was acted on. I corrected that one myself. The gate passed on the final head, the branch was pushed and PR 2684 opened, I posted my verdict, CI went green and merge-pr.ts merged it."
+status: in-review
+outcome: Workflow scripts promoted (PR 2684 merged); Vue components and Hydration split and raised (PR 2685 open)
+summary: "Ran the glassbox-improve Skill, started by one human kickoff (/glassbox-improve); later the owner also directly asked, in two separate messages, to split the Vue components and hydration Lesson into two Lessons and then to run the whole rating and improvement process on those two Lessons only. Everything else was the Skill's own procedure. Run 1 (merged as PR 2684): three raters (sonnet, fable, opus) graded all 41 guide pages at base d08dde31; nearly all were A, the one consensus deficit sat on a cooling-off page, so no page was raised. The structural step promoted the Workflow scripts draft, since all three raters listed it and its title already passed. Three single-rater false claims were confirmed in the source and fixed by me (Routines, the pnpm page's ADR-0026 cite, a Type checking anecdote). Run 2 (PR 2685, open): I split the page myself by moving text; code-review found small gaps that I fixed; the process then ran on the two pages with rater, researcher and opus writer subagents, two fix rounds and a last re-grade, ending A and A by the middle grade. A single fable rater found that Vue 3.5.44 patches a bound attribute in hydration, contradicting the page. I confirmed it in the pinned runtime and fixed it. Single-rater points (Nuxt docs link, ADR-0028 citation) were left as Optional. Still open: the verdict comment, CI and the merge of PR 2685."
 prs:
   - "2684"
+  - "2685"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: read before the first git command; fetch-before-trust and trailer check applied
@@ -58,6 +59,9 @@ docsRead:
   - path: GLOSSARY.md
     reason: sonnet rater read it to check the Self-improvement loop title against the term
     useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: raters read it to check the Why bullets of the Hydration and Data fetching pages; one found its citation indirect
+    useful: yes
   - path: .claude/skills/glassbox-lesson/EVERY-PAGE.md
     reason: (no reason given)
   - path: .claude/skills/glassbox-lesson/QUALITY.md
@@ -70,10 +74,16 @@ docsRead:
     reason: (no reason given)
   - path: .claude/skills/glassbox-improve/writer-brief.md
     reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/08.hydration.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
+    reason: (read before editing)
   - path: layers/glassbox/content/drafts/pages/claude-code/08.workflow-scripts.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/claude-code/09.workflow-scripts.md
     reason: (read before editing)
+  - path: layers/glassbox/page-checks.ts
+    reason: (no reason given)
 skillsUsed:
   - name: glassbox-improve
     reason: the run itself
@@ -104,25 +114,41 @@ frictions:
   - description: Draft-promotion candidates all had pointer-only Why sections and stale pins, so any promotion costs a writer round whichever draft wins.
     solution: Raise this as a recurring cost in the ideas list; consider a standing pass that rewrites draft Why sections as reason bullets.
     severity: nit
-durationSec: 2831
+  - description: Rater and writer subagents cost several full rounds (three raters twice, two researchers, two writers twice) for two small pages, and the last round still found a different single-rater point.
+    solution: Cap the process to one re-grade round for a two-page run, or let the last re-grade be one rater on the pages that changed.
+    severity: minor
+  - description: vuejs.org and nuxt.com were blocked, so each official-docs URL needed a fallback to raw.githubusercontent.com source and could not be fetched live.
+    solution: Name raw.githubusercontent.com docs sources in EVERY-PAGE's blocked-network fallback so every writer and rater starts there.
+    severity: nit
+  - description: The improve Skill assumes a base on origin/main, but this run's base was an unpushed local commit; raters read it by SHA, which worked but the Skill does not describe it.
+    solution: State in glassbox-improve that an explicit base commit, local or not, is allowed for a scoped run.
+    severity: nit
+durationSec: 6191
 models:
-  claude-sonnet-5-5: 155
+  claude-sonnet-5-5: 337
 toolCounts:
-  Bash: 42
+  Bash: 91
   Read: 10
   Skill: 5
-  mcp__github__list_pull_requests: 1
-  Agent: 10
+  mcp__github__list_pull_requests: 2
+  Agent: 26
   Write: 1
-  ToolSearch: 2
-  SendMessage: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
-  ReadNotifications: 2
+  ToolSearch: 3
+  SendMessage: 3
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 3
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  WebFetch: 1
 filesEdited:
+  - layers/glassbox/content/guide/pages/nuxt-vue/08.hydration.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
   - layers/glassbox/content/guide/pages/claude-code/09.workflow-scripts.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
   - layers/glassbox/content/guide/pages/claude-code/10.routines.md
   - layers/glassbox/content/guide/pages/deploy/02.pnpm-lockfile.md
   - layers/glassbox/content/guide/pages/verification/02.type-checking.md
@@ -139,6 +165,9 @@ rulesLoaded:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/glassbox-content.md
   - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -147,13 +176,14 @@ rulesGlobal:
 rulesFollowedUp:
   - .claude/rules/adr-0005.md
 rulesLoadedBySubagents:
-  - .claude/rules/adr-0030.md
   - .claude/rules/adr-0022.md
-  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
 docsReadBySubagents:
+  - docs/adr/0028-navigation-reads-server-payloads.md
   - docs/adr/0005-skill-model.md
   - .agents/skills/clear-backlog/SKILL.md
-  - .agents/skills/glassbox-lesson/SKILL.md
   - docs/agents/guards.md
   - .agents/skills/auto-triage/SKILL.md
   - docs/adr/0011-poc-self-updating-deploy-container.md
@@ -208,6 +238,18 @@ ruleVerdicts:
   - path: .claude/rules/tenant-layers.md
     reason: A subagent loaded it while reading layer pages; it reported it did not change its grading
     useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: About the Journal as logbook; loaded when I read a layer file and did not change my content work
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: A subagent loaded it while reading the layers; it reported it did not apply to grading
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: A subagent loaded it while reading layer files; it reported it did not apply to grading
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: A subagent loaded it and reported it pointed at the full ADR it needed to check the Hydration Why bullets
+    useful: yes
 subagents:
   - type: general-purpose
     task: Rater (sonnet) grades guide
@@ -215,68 +257,177 @@ subagents:
     durationSec: 1203
     toolCalls: 82
     modelCalls: 81
-    tokenShare: 34.5
+    tokenShare: 17.8
   - type: general-purpose
     task: Rater (fable) grades guide
     model: fable
     durationSec: 842
     toolCalls: 21
     modelCalls: 21
-    tokenShare: 8.4
+    tokenShare: 4.3
   - type: general-purpose
     task: Rater (opus) grades guide
     model: opus
     durationSec: 454
     toolCalls: 38
     modelCalls: 35
-    tokenShare: 14
+    tokenShare: 7.2
   - type: general-purpose
     task: Research workflow-scripts promotion
     model: sonnet
     durationSec: 105
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 1.5
+    tokenShare: 0.8
   - type: general-purpose
     task: Writer promotes workflow scripts
     model: opus
     durationSec: 479
     toolCalls: 54
     modelCalls: 35
-    tokenShare: 6.2
+    tokenShare: 3.2
   - type: general-purpose
     task: Review standards axis
     durationSec: 66
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.6
+    tokenShare: 0.8
   - type: general-purpose
     task: Review spec axis
     durationSec: 50
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.7
+    tokenShare: 0.9
   - type: general-purpose
     task: Re-grade (sonnet)
     model: sonnet
     durationSec: 76
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 0.7
   - type: general-purpose
     task: Re-grade (fable)
     model: fable
     durationSec: 191
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 2.2
+    tokenShare: 1.1
   - type: general-purpose
     task: Re-grade (opus)
     model: opus
     durationSec: 107
     toolCalls: 11
     modelCalls: 11
-    tokenShare: 2
+    tokenShare: 1
+  - type: general-purpose
+    task: "Review split: standards"
+    durationSec: 65
+    toolCalls: 13
+    modelCalls: 7
+    tokenShare: 1
+  - type: general-purpose
+    task: "Review split: spec"
+    durationSec: 37
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.7
+  - type: general-purpose
+    task: Rate Vue lessons (sonnet)
+    model: sonnet
+    durationSec: 56
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.5
+  - type: general-purpose
+    task: Rate Vue lessons (fable)
+    model: fable
+    durationSec: 373
+    toolCalls: 17
+    modelCalls: 17
+    tokenShare: 1.7
+  - type: general-purpose
+    task: Rate Vue lessons (opus)
+    model: opus
+    durationSec: 153
+    toolCalls: 10
+    modelCalls: 10
+    tokenShare: 1.2
+  - type: general-purpose
+    task: Research Vue components fix
+    model: sonnet
+    durationSec: 58
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 0.7
+  - type: general-purpose
+    task: Research Hydration fix
+    model: sonnet
+    durationSec: 126
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 1.1
+  - type: general-purpose
+    task: Writer raises Vue components
+    model: opus
+    durationSec: 1504
+    toolCalls: 41
+    modelCalls: 22
+    tokenShare: 2.4
+  - type: general-purpose
+    task: Writer raises Hydration
+    model: opus
+    durationSec: 1519
+    toolCalls: 49
+    modelCalls: 29
+    tokenShare: 2.9
+  - type: general-purpose
+    task: Review improvement delta
+    durationSec: 48
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 0.5
+  - type: general-purpose
+    task: Re-grade Vue lessons (sonnet)
+    model: sonnet
+    durationSec: 72
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.5
+  - type: general-purpose
+    task: Re-grade Vue lessons (fable)
+    model: fable
+    durationSec: 1178
+    toolCalls: 29
+    modelCalls: 27
+    tokenShare: 3.9
+  - type: general-purpose
+    task: Re-grade Vue lessons (opus)
+    model: opus
+    durationSec: 175
+    toolCalls: 15
+    modelCalls: 14
+    tokenShare: 1.2
+  - type: general-purpose
+    task: Final grade Vue lessons (sonnet)
+    model: sonnet
+    durationSec: 116
+    toolCalls: 13
+    modelCalls: 12
+    tokenShare: 1.3
+  - type: general-purpose
+    task: Final grade Vue lessons (fable)
+    model: fable
+    durationSec: 387
+    toolCalls: 32
+    modelCalls: 14
+    tokenShare: 1.5
+  - type: general-purpose
+    task: Final grade Vue lessons (opus)
+    model: opus
+    durationSec: 208
+    toolCalls: 18
+    modelCalls: 17
+    tokenShare: 1.5
 gitBranch: ccr-ae0f29e4-muc704
 entrypoint: remote_mobile
 cliVersion: 2.1.312
