@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeT84bc5MXpkCAApyxA
 startedAt: 2026-10-29T09:09:10Z
-endedAt: 2026-10-29T10:00:26Z
+endedAt: 2026-10-29T10:05:52Z
 kind: interactive
 goal: Find and fix stale facts across Terrarium's overview docs
-status: in-review
-outcome: "Brief (PR #2675) and Journal pages (PR #2676) merged; Glass Box (PR #2677) and owner follow-ups (PR #2678) in review; ADRs clean"
-summary: "Human-instructed throughout. The owner first asked me to read the interactive-map diagram brief, all 30 ADRs, the Journal's five start-here pages and every Glass Box guide Lesson. Then they asked me to find stale docs, contradictions and gaps in them and fix them with Sonnet subagents, using git history, PRs and issues. Before dispatching I asked four questions. The owner chose: fix and open PRs, all four document groups, code plus ADRs on main as ground truth, one PR per group. I dispatched four Sonnet agents. The ADR agent found nothing wrong. The brief agent's fixes merged as PR #2675, and the Journal agent's, plus my own review fixes, merged as PR #2676. The Glass Box agent's push was denied by the classifier. I asked the owner, who approved my pushing it, and opened PR #2677. A concurrent glassbox-improve run had re-pinned four of the same pages, so I merged main and took its newer pins. The owner also answered three open questions. `dependabot-sweep` is a Routine that starts when Dependabot opens a PR; its trigger never fired because of a wrong username, which the owner explained. They also told me to fix the root Heavy glossary entry and the \"atomically swaps\" wording. I made those edits myself after a Standards and Spec review; the review also found the same wording in deploy/docker-compose.yml. They are PR #2678."
+status: completed
+outcome: "Four PRs merged (#2675 brief, #2676 Journal pages, #2677 Glass Box, #2678 owner follow-ups); ADRs needed no change"
+summary: "Human-instructed throughout. The owner first asked me to read the interactive-map diagram brief, all 30 ADRs, the Journal's five start-here pages and every Glass Box guide Lesson. Then they asked me to find stale docs, contradictions and gaps in them and fix them with Sonnet subagents, using git history, PRs and issues. Before dispatching I asked four questions. The owner chose: fix and open PRs, all four document groups, code plus ADRs on main as ground truth, one PR per group. I dispatched four Sonnet agents in separate worktrees, each with candidate findings to confirm or refute. The ADR agent found every path, identifier and claim in the 30 ADRs true, so there was no PR. The brief agent confirmed the candidates and found the now-cached home page (PR #2675). The Journal agent fixed the deploy step, the gate list and the merge reservations; I added the Friction Ledger and the prune-trial issue outcome after review (PR #2676). The Glass Box agent re-pinned all guide pages and fixed the prune-trial verdict, the Heavy term and the survey window. Its push was denied by the classifier, so I asked the owner, who approved my pushing it. A concurrent glassbox-improve run had re-pinned four of the same pages, so I merged main and took its pins (PR #2677). The owner then answered three open questions. `dependabot-sweep` is a Routine that starts on a Dependabot PR; its trigger never fired because of a wrong username. The owner also asked me to fix the root Heavy glossary entry and the \"atomically swaps\" wording. I made those edits myself, and review found the same wording in docker-compose.yml (PR #2678). Every PR got a Standards and Spec review and a green gate, and I merged each one."
 prs:
   - "2675"
   - "2676"
@@ -31,130 +31,190 @@ docsRead:
   - path: .agents/skills/glassbox-update/SKILL.md
     reason: the update rules the Glass Box agent must follow
     useful: yes
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0013-content-config-built-from-manifests.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0019-content-load-error-recovery.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: read in full at the owner's request for an overview; then ground truth for the ADR agent, which confirmed every path and claim
+    useful: yes
+  - path: docs/adr/TEMPLATE.md
+    reason: the ADR agent checked the ADR shape against it; nothing needed changing
+    useful: partly
+  - path: docs/diagrams/interactive-map/README.md
+    reason: the brief's index and history; the brief agent marked its side findings as fixed
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: "read before changing the root Heavy entry (glossary-terms rule): the ### Term layout and the rule of two"
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: the agents checked the Lessons' guard and fail-open claims against this roster
+    useful: yes
+  - path: docs/agents/guest-contributions.md
+    reason: the ADR agent checked ADR-0009 and ADR-0020 pointers to it
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: checked the triage and spec-on-hold claims in the brief and Lessons
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: ground truth for who sets ready-for-agent; it fixed the brief's label sentence
+    useful: yes
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: the ADR agent confirmed an ADR See pointer resolves
+    useful: partly
+  - path: docs/research/making-repo-public.md
+    reason: the ADR agent confirmed an ADR See pointer resolves
+    useful: partly
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: the ADR agent confirmed an ADR See pointer resolves
+    useful: partly
+  - path: GLOSSARY.md
+    reason: "the platform terms; its Heavy entry was stale and fixed in PR #2678"
+    useful: yes
+  - path: layers/journal/GLOSSARY.md
+    reason: read before editing the Journal pages; it confirmed the Friction Ledger is an Inventory
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: the Glass Box agent checked term sources; no change needed
+    useful: partly
+  - path: layers/midden/GLOSSARY.md
+    reason: the Journal agent checked the stores wording; compatible
+    useful: partly
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: ground truth for what each Routine does; it settled the brief's and the Journal's Routine descriptions
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: ground truth for what each Routine does; it settled the brief's and the Journal's Routine descriptions
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: ground truth for what each Routine does; it settled the brief's and the Journal's Routine descriptions
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: ground truth for what each Routine does; it settled the brief's and the Journal's Routine descriptions
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: ground truth for what each Routine does; it settled the brief's and the Journal's Routine descriptions
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: ground truth for what each Routine does; it settled the brief's and the Journal's Routine descriptions
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: ground truth for what each Routine does; it settled the brief's and the Journal's Routine descriptions
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: ground truth for what each Routine does; it settled the brief's and the Journal's Routine descriptions
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: ground truth for what each Routine does; it settled the brief's and the Journal's Routine descriptions
+    useful: yes
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: ground truth for what each Routine does; it settled the brief's and the Journal's Routine descriptions
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: it confirmed the ledger-based survey window
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: it showed the per-doc open counts live here, not in audit-docs
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin and Write rules the Glass Box agent and its reviewer followed
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: the brief checklist for all four agents and the reviewers
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: closure steps for each PR-open log
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: the log format; the ADR agent also checked ADR-0003's provenance claim against it
+    useful: yes
   - path: layers/journal/content/current/pages/how-it-works.md
     reason: (read before editing)
   - path: layers/journal/content/current/pages/architecture.md
     reason: (read before editing)
-  - path: GLOSSARY.md
-    reason: (read before editing)
-  - path: docs/diagrams/interactive-map/README.md
-    reason: (read before editing)
-  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
-    reason: (no reason given)
-  - path: docs/adr/0001-single-container-baked-multitenancy.md
-    reason: (no reason given)
-  - path: docs/adr/0002-manifest-driven-config-generation.md
-    reason: (no reason given)
-  - path: docs/adr/0003-agent-operating-model-and-governance.md
-    reason: (no reason given)
-  - path: docs/adr/0004-objective-safety-gate.md
-    reason: (no reason given)
-  - path: docs/adr/0005-skill-model.md
-    reason: (no reason given)
-  - path: docs/adr/0006-runtime-routing-path-prefix.md
-    reason: (no reason given)
-  - path: docs/adr/0007-derived-files-built-not-committed.md
-    reason: (no reason given)
-  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
-    reason: (no reason given)
-  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
-    reason: (no reason given)
-  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
-    reason: (no reason given)
-  - path: docs/adr/0011-poc-self-updating-deploy-container.md
-    reason: (no reason given)
-  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
-    reason: (no reason given)
-  - path: docs/adr/0013-content-config-built-from-manifests.md
-    reason: (no reason given)
-  - path: docs/adr/0014-build-time-virtual-routing-module.md
-    reason: (no reason given)
-  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
-    reason: (no reason given)
-  - path: docs/adr/0016-tenant-root-layer-routes.md
-    reason: (no reason given)
-  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
-    reason: (no reason given)
-  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
-    reason: (no reason given)
-  - path: docs/adr/0019-content-load-error-recovery.md
-    reason: (no reason given)
-  - path: docs/adr/0020-requester-trust-tiers.md
-    reason: (no reason given)
-  - path: docs/adr/0021-multi-context-domain-docs.md
-    reason: (no reason given)
-  - path: .agents/skills/visitor-loop/SKILL.md
-    reason: (no reason given)
-  - path: layers/journal/GLOSSARY.md
-    reason: (no reason given)
-  - path: docs/agents/domain.md
-    reason: (no reason given)
-  - path: .agents/skills/dependabot-sweep/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/audit-skills/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/prune-trial/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/clear-backlog/SKILL.md
-    reason: (no reason given)
-  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
-    reason: (no reason given)
-  - path: layers/midden/GLOSSARY.md
-    reason: (no reason given)
-  - path: docs/agents/triage-labels.md
-    reason: (no reason given)
-  - path: .agents/skills/audit-docs/SKILL.md
-    reason: (no reason given)
-  - path: docs/agents/issue-tracker.md
-    reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/survey-brief.md
-    reason: (no reason given)
-  - path: .agents/skills/digest/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/design-brief.md
-    reason: (no reason given)
-  - path: docs/adr/0027-prune-trials.md
-    reason: (no reason given)
-  - path: docs/adr/0028-navigation-reads-server-payloads.md
-    reason: (no reason given)
-  - path: .agents/skills/blog-post/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/auto-triage/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: (no reason given)
-  - path: docs/agents/guards.md
-    reason: (no reason given)
-  - path: docs/adr/0023-guest-driven-demo-pipeline.md
-    reason: (no reason given)
-  - path: layers/blog/GLOSSARY.md
-    reason: (no reason given)
-  - path: .agents/skills/dispatch-subagents/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/close-session/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
-    reason: (no reason given)
-  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
-    reason: (no reason given)
-  - path: docs/adr/TEMPLATE.md
-    reason: (no reason given)
-  - path: docs/research/nuxt-content-review-grounding.md
-    reason: (no reason given)
-  - path: docs/research/making-repo-public.md
-    reason: (no reason given)
-  - path: docs/adr/0024-build-time-mermaid-prerender.md
-    reason: (no reason given)
-  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
-    reason: (no reason given)
-  - path: docs/adr/0026-gate-workflow-thin-shell.md
-    reason: (no reason given)
-  - path: .agents/skills/log-session/SKILL.md
-    reason: (no reason given)
-  - path: docs/agents/guest-contributions.md
-    reason: (no reason given)
 skillsUsed:
   - name: dispatch-subagents
     reason: "brief checklist: worktree isolation, pinned SHA, unpushed hand-back"
@@ -198,27 +258,30 @@ frictions:
   - description: Editing files while a background gate:scoped ran would have aborted it, so I stopped the gate and re-ran it once on the final tree
     solution: Collect all review fixes before starting the gate, as pr-workflow.md's 'edit nothing until it ends' implies
     severity: nit
-durationSec: 3077
+  - description: Reading 305 KB of Glass Box pages and 105 KB of ADRs whole cost about 150k tokens of context before any fixing started
+    solution: For a consistency pass, read the brief and the page indexes in full, then let per-group subagents read their own sources
+    severity: minor
+durationSec: 3402
 models:
-  claude-opus-5-5: 305
+  claude-opus-5-5: 343
 toolCounts:
-  Bash: 72
+  Bash: 80
   Read: 20
   AskUserQuestion: 1
-  Skill: 4
+  Skill: 5
   Agent: 11
   ToolSearch: 4
   SendMessage: 3
   Edit: 21
   mcp__github__create_pull_request: 4
   mcp__claude-code-remote__subscribe_pr_activity: 4
-  Write: 4
-  mcp__github__pull_request_read: 5
-  mcp__github__add_issue_comment: 2
-  mcp__claude-code-remote__unsubscribe_pr_activity: 2
-  ReadNotifications: 5
-  mcp__claude-code-remote__send_later: 1
-  mcp__claude-code-remote__delete_trigger: 1
+  Write: 5
+  mcp__github__pull_request_read: 6
+  mcp__github__add_issue_comment: 4
+  mcp__claude-code-remote__unsubscribe_pr_activity: 4
+  ReadNotifications: 9
+  mcp__claude-code-remote__send_later: 2
+  mcp__claude-code-remote__delete_trigger: 2
   mcp__claude-code-remote__list_triggers: 1
   TaskStop: 1
   mcp__github__list_pull_requests: 1
@@ -379,6 +442,127 @@ docsReadBySubagents:
   - docs/adr/0026-gate-workflow-thin-shell.md
   - .agents/skills/log-session/SKILL.md
   - docs/agents/guest-contributions.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: gate:scoped and code-review before each first push, and agent merge on green; the summary was enough and I opened the full ADR to read it as asked
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "the Human-only paths: each PR touched none, so I merged all four; it also confirmed the hooks claim"
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: open each PR without asking and follow it to merge; I did so for all four
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: close-session at each PR open and at the end; I logged four times
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: the header on every PR body and comment, and the commit trailer I checked each time
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: confirmed no open trial covered the brief text I re-wrapped; I had read the full ADR earlier
+    useful: partly
+  - path: .claude/rules/adr-0028.md
+    reason: confirmed the home page is cached, which the brief contradicted
+    useful: yes
+  - path: .claude/rules/adr-0011.md
+    reason: confirmed the switch-on-success claim behind the deploy wording fix
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: confirmed audit-skills also writes Routine costs, a gap in the brief
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: the definitions-only rule for the Heavy entry; the entry kept its skip conditions as before
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: confirmed ADR summary rules load at session start vs on read, a Lesson claim
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: no ADR needed a rewrite, so the template rule had nothing to apply to
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills and Routines split; it framed dependabot-sweep as a Routine with its trigger outside the repo
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: the Journal holds Inventories, which backed adding the Friction Ledger to the pages
+    useful: partly
+  - path: .claude/rules/adr-0010.md
+    reason: loaded on reading the archive script; it confirmed only digests and sessions move
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: loaded on deploy and manifest reads; nothing it states changed
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: loaded on reading the Journal manifest; not needed beyond the Collection list
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0007.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0012.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0013.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0014.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0016.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0018.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0019.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0020.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0023.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0024.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0025.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/adr-0026.md
+    reason: loaded by the ADR agent and the Glass Box agent while checking pointers; each summary matched its ADR
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: the Glass Box agent kept changing facts out of page prose under it
+    useful: yes
+  - path: .claude/rules/glossary-terms.md
+    reason: sent me to domain.md before the Heavy edit
+    useful: yes
+  - path: .claude/rules/tenant-glossary.md
+    reason: made me read the Journal glossary before editing its pages
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: loaded on the Journal diagram edit; the diagram used classDef already
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: loaded on reading the Journal manifest; layer traps did not apply to content edits
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: loaded on reading the manifest; no stored field changed
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: loaded on reading the manifest; no MDC change
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: loaded by reads of the hooks folder; the roster was reached through guards.md directly
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: loaded on reading the home page; no UI changed
+    useful: no
 subagents:
   - type: general-purpose
     task: Fix stale diagram brief
@@ -386,28 +570,28 @@ subagents:
     durationSec: 827
     toolCalls: 78
     modelCalls: 70
-    tokenShare: 9.8
+    tokenShare: 9
   - type: general-purpose
     task: Fix stale Journal onramp pages
     model: sonnet
     durationSec: 1078
     toolCalls: 86
     modelCalls: 78
-    tokenShare: 9.5
+    tokenShare: 8.7
   - type: general-purpose
     task: Fix stale Glass Box guide pages
     model: sonnet
     durationSec: 1160
     toolCalls: 103
     modelCalls: 95
-    tokenShare: 16.2
+    tokenShare: 14.8
   - type: general-purpose
     task: Check ADRs for stale facts
     model: sonnet
     durationSec: 492
     toolCalls: 68
     modelCalls: 65
-    tokenShare: 7.9
+    tokenShare: 7.2
   - type: general-purpose
     task: Standards review of brief diff
     model: sonnet
@@ -421,7 +605,7 @@ subagents:
     durationSec: 105
     toolCalls: 15
     modelCalls: 12
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: general-purpose
     task: Spec+standards review Glass Box diff
     model: sonnet
