@@ -1,15 +1,18 @@
 schemaVersion: 1
 session: session_013zxzeSgD6cuF2mawqY6jWM
 startedAt: 2026-10-29T06:17:13Z
-endedAt: 2026-10-29T06:33:52Z
+endedAt: 2026-10-29T06:52:00Z
 kind: interactive
 goal: Clear the issue backlog (clear-backlog run)
 status: in-review
-outcome: "9 issues triaged, owner grilled on 5; 7 branches building or opened, PRs #2665 and #2666 open"
-summary: "The owner invoked clear-backlog (human-instructed) and answered one grilling round (1d 2a 3a 4a 5a). Explore triaged 9 issues: #2651 and #2655 to build, #2652/#2654/#2657/#2658/#2659 to grill, #2575 and #2612 blocked (revisit date 2026-10-30; open Prune Trial on environment-caveats.md). For #2654 I changed the triage pick to (d), cutting log-session's direct-call invitation instead of loosening CLAUDE.md and the ADR-0009 rule; the owner took it. Per the owner's split of #2652 I filed #2663 and #2664 and, agent-initiated, added them to this run's build though they were not in the explore set. #2651's branch opened as PR #2665. #2655's branch hit the review cap with one open finding (page estimate off by about 2x); I fixed it by hand, added its ledger fixes row, and opened PR #2666. Five more branches (#2654, #2657+#2659, #2658, #2663, #2664) are building."
+outcome: "PRs #2665 and #2666 merged; #2667-#2669 open (two wait for a human merge); #2654 waits on the owner over a prune trial"
+summary: "The owner invoked clear-backlog (human-instructed) and answered one grilling round (1d 2a 3a 4a 5a). Explore triaged 9 issues: #2651 and #2655 to build, #2652/#2654/#2657/#2658/#2659 to grill, #2575 and #2612 blocked (revisit date 2026-10-30; open Prune Trial on environment-caveats.md). For #2654 I changed the triage pick to (d), cutting log-session's direct-call invitation instead of loosening CLAUDE.md and the ADR-0009 rule; the owner took it. Per the owner's split of #2652 I filed #2663 and #2664 and, agent-initiated, added them to this run's build though they were not in the explore set. #2651's branch opened as PR #2665. #2655's branch hit the review cap with one open finding (page estimate off by about 2x); I fixed it by hand, added its ledger fixes row, and opened PR #2666. I merged #2665 and #2666. The second build gave #2667 (#2658, Human-only), #2668 (#2663) and #2669 (#2664, Human-only), all opened. The ledger branch (#2657 and #2659) hit the review cap on a dangling 'since', which I fixed by hand. #2654 stopped: an open Prune Trial keeps the log-session 'When to invoke' text that pick (d) deletes; it is judgeable from 2026-10-29T12:54Z, so I asked the owner whether to wait."
 prs:
   - "2665"
   - "2666"
+  - "2667"
+  - "2668"
+  - "2669"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
     reason: Step 1 eligibility rules for the sweep set
@@ -32,6 +35,8 @@ docsRead:
   - path: docs/agents/pr-workflow.md
     reason: Push, verdict and merge-pr recipe
     useful: yes
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (read before editing)
   - path: .agents/skills/triage/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/code-review/SKILL.md
@@ -40,16 +45,22 @@ docsRead:
     reason: (no reason given)
   - path: /home/user/terrarium/.claude/worktrees/wf_f51f682d-597-4/.agents/skills/code-review/SKILL.md
     reason: (no reason given)
+  - path: /home/user/terrarium/.claude/worktrees/wf_f51f682d-597-2/.agents/skills/code-review/SKILL.md
+    reason: (no reason given)
   - path: /home/user/terrarium/.agents/skills/code-review/SKILL.md
     reason: (no reason given)
   - path: docs/adr/0004-objective-safety-gate.md
     reason: (no reason given)
   - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
     reason: (no reason given)
+  - path: /home/user/terrarium/.claude/worktrees/wf_f51f682d-597-5/.agents/skills/code-review/SKILL.md
+    reason: (no reason given)
   - path: .agents/skills/log-session/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/glassbox-improve/SKILL.md
     reason: (read before editing)
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: (no reason given)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
     reason: (no reason given)
   - path: docs/adr/0022-autonomous-triage-sweep.md
@@ -58,8 +69,6 @@ docsRead:
     reason: (read before editing)
   - path: .agents/skills/triage/AGENT-BRIEF.md
     reason: (no reason given)
-  - path: .agents/skills/inspect-session/SKILL.md
-    reason: (read before editing)
   - path: .agents/skills/clear-backlog/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/close-session/SKILL.md
@@ -77,6 +86,8 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
   - name: clear-backlog
     reason: (invoked as a slash command)
   - name: tdd
@@ -91,26 +102,35 @@ frictions:
   - description: "The dispatch-read guard denied the first clear-backlog-explore call until I read dispatch-subagents; one retry (accepted cost, #2580)"
     solution: None; owner accepted this cost
     severity: nit
-durationSec: 999
+  - description: "I chose pick (d) for #2654 without checking .agents/prune-trials.yml; an open trial keeps exactly that text, so the owner must be asked again"
+    solution: Before proposing a pick that edits an instruction, check prune-trials.yml territory (issue-tracker.md supersession check)
+    severity: minor
+durationSec: 2087
 models:
-  claude-opus-5-5: 103
+  claude-opus-5-5: 164
 toolCounts:
-  Bash: 33
+  Bash: 52
   Workflow: 5
-  Skill: 3
+  Skill: 4
   ToolSearch: 3
-  PushNotification: 1
-  mcp__github__add_issue_comment: 5
+  PushNotification: 2
+  mcp__github__add_issue_comment: 7
   mcp__github__issue_write: 6
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__github__create_pull_request: 5
+  mcp__claude-code-remote__subscribe_pr_activity: 5
+  ReadNotifications: 5
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
+  Agent: 2
 filesEdited:
   - .agents/skills/inspect-session/SKILL.md
   - tests/unit/read-first-hint.spec.ts
   - scripts/hooks/read-first-hint.ts
   - CLAUDE.md
-  - layers/journal/content/current/frictions/inspect-session-paging-gaps.yml
+  - layers/journal/content/current/frictions/governing-doc-read-after-draft.yml
+  - layers/journal/content/current/frictions/counts-not-tallied.yml
+  - layers/journal/content/current/frictions/relayed-subagent-claims.yml
   - .agents/skills/glassbox-improve/SKILL.md
+  - layers/journal/content/current/frictions/inspect-session-paging-gaps.yml
   - .claude/rules/tenant-glossary.md
   - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - layers/glassbox/page-checks.ts
@@ -162,12 +182,13 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0010.md
   - .claude/rules/adr-0012.md
 docsReadBySubagents:
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL.md
   - .agents/skills/triage/SKILL.md
   - .agents/skills/frictions-to-fixes/SKILL.md
   - docs/adr/0022-autonomous-triage-sweep.md
   - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - .agents/skills/triage/AGENT-BRIEF.md
-  - .agents/skills/inspect-session/SKILL.md
   - .agents/skills/clear-backlog/SKILL.md
   - .agents/skills/close-session/SKILL.md
   - docs/adr/0009-session-logs-commit-directly-to-main.md
@@ -215,236 +236,348 @@ ruleVerdicts:
     reason: Loaded with scripts/hooks reads; I needed no guard detail
     useful: no
 subagents:
+  - type: general-purpose
+    task: Standards review PR 2666 follow-up
+    model: sonnet
+    durationSec: 30
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 1.7
+  - type: general-purpose
+    task: Spec review PR 2666 follow-up
+    model: sonnet
+    durationSec: 32
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 1.7
   - type: workflow-subagent
     task: "triage #2575"
     model: claude-opus-5-5
     durationSec: 23
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.2
+    tokenShare: 0.8
   - type: workflow-subagent
     task: "triage #2657"
     model: claude-opus-5-5
     durationSec: 140
     toolCalls: 20
     modelCalls: 15
-    tokenShare: 5.1
+    tokenShare: 3.3
   - type: workflow-subagent
     task: "triage #2612"
     model: claude-opus-5-5
     durationSec: 49
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 2.1
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #2652"
     model: claude-opus-5-5
     durationSec: 63
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 2.5
+    tokenShare: 1.7
   - type: workflow-subagent
     task: "triage #2658"
     model: claude-opus-5-5
     durationSec: 101
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 3.6
+    tokenShare: 2.4
   - type: workflow-subagent
     task: "triage #2651"
     model: claude-opus-5-5
     durationSec: 115
     toolCalls: 18
     modelCalls: 14
-    tokenShare: 4.2
+    tokenShare: 2.8
   - type: workflow-subagent
     task: "triage #2659"
     model: claude-opus-5-5
     durationSec: 86
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 4.2
+    tokenShare: 2.8
   - type: workflow-subagent
     task: "triage #2655"
     model: claude-opus-5-5
     durationSec: 134
     toolCalls: 21
     modelCalls: 17
-    tokenShare: 4.9
+    tokenShare: 3.3
   - type: workflow-subagent
     task: "triage #2654"
     model: claude-opus-5-5
     durationSec: 147
     toolCalls: 19
     modelCalls: 15
-    tokenShare: 4.5
+    tokenShare: 2.9
   - type: workflow-subagent
     task: Standards inspect-session-page-estimate r3
     model: claude-opus-5-5
     durationSec: 52
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 1
   - type: workflow-subagent
     task: Standards glassbox-lesson-title-word-cap r1
     model: claude-opus-5-5
     durationSec: 36
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.2
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Spec inspect-session-page-estimate r2
     model: claude-opus-5-5
     durationSec: 48
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1.5
+    tokenShare: 1
   - type: workflow-subagent
     task: Standards inspect-session-page-estimate r2
     model: claude-opus-5-5
     durationSec: 47
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.4
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Standards inspect-session-page-estimate r1
     model: claude-opus-5-5
     durationSec: 39
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 2.6
+    tokenShare: 1.7
   - type: workflow-subagent
     task: fix inspect-session-page-estimate r1
     model: claude-sonnet-5-5
     durationSec: 69
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 1.6
+    tokenShare: 1.1
   - type: workflow-subagent
     task: gate glassbox-lesson-title-word-cap
     model: claude-sonnet-5-5
     durationSec: 188
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.8
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec inspect-session-page-estimate r1
     model: claude-opus-5-5
     durationSec: 64
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1.9
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Spec glassbox-lesson-title-word-cap r1
     model: claude-opus-5-5
     durationSec: 44
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 1.9
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Spec inspect-session-page-estimate r3
     model: claude-opus-5-5
     durationSec: 47
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.7
+    tokenShare: 1.1
   - type: workflow-subagent
     task: build glassbox-lesson-title-word-cap
     model: claude-sonnet-5-5
     durationSec: 316
     toolCalls: 14
     modelCalls: 12
-    tokenShare: 4.5
+    tokenShare: 3
   - type: workflow-subagent
     task: fix inspect-session-page-estimate r2
     model: claude-sonnet-5-5
     durationSec: 52
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.6
+    tokenShare: 1.1
   - type: workflow-subagent
     task: build inspect-session-page-estimate
     model: claude-sonnet-5-5
     durationSec: 110
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 3.2
+    tokenShare: 2.1
+  - type: workflow-subagent
+    task: gate read-first-hint-readonly-subcommands
+    model: claude-sonnet-5-5
+    durationSec: 233
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Standards glassbox-improve-tie-break r1
     model: claude-opus-5-5
     durationSec: 30
     toolCalls: 4
     modelCalls: 3
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: Spec ledger-accept-relayed-counts r1
+    model: claude-opus-5-5
+    durationSec: 40
+    toolCalls: 8
+    modelCalls: 5
     tokenShare: 1.1
+  - type: workflow-subagent
+    task: Standards ledger-accept-relayed-counts r1
+    model: claude-opus-5-5
+    durationSec: 54
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: Spec ledger-accept-relayed-counts r3
+    model: claude-opus-5-5
+    durationSec: 50
+    toolCalls: 9
+    modelCalls: 5
+    tokenShare: 1.2
   - type: workflow-subagent
     task: build tenant-glossary-comments
     model: claude-sonnet-5-5
     durationSec: 144
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 1.8
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: fix ledger-accept-relayed-counts r1
+    model: claude-sonnet-5-5
+    durationSec: 276
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: gate glassbox-improve-tie-break
+    model: claude-sonnet-5-5
+    durationSec: 94
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build glassbox-improve-tie-break
     model: claude-sonnet-5-5
     durationSec: 152
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 2.2
+    tokenShare: 1.4
+  - type: workflow-subagent
+    task: Spec glassbox-improve-tie-break r2
+    model: claude-opus-5-5
+    durationSec: 33
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 1
+  - type: workflow-subagent
+    task: Spec ledger-accept-relayed-counts r2
+    model: claude-opus-5-5
+    durationSec: 40
+    toolCalls: 7
+    modelCalls: 3
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Standards tenant-glossary-comments r1
     model: claude-opus-5-5
     durationSec: 35
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.3
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Spec glassbox-improve-tie-break r1
     model: claude-opus-5-5
     durationSec: 47
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 1.7
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: fix ledger-accept-relayed-counts r2
+    model: claude-sonnet-5-5
+    durationSec: 216
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 0.9
   - type: workflow-subagent
     task: build log-session-single-entry
     model: claude-sonnet-5-5
     durationSec: 35
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.7
+    tokenShare: 1.1
+  - type: workflow-subagent
+    task: Standards glassbox-improve-tie-break r2
+    model: claude-opus-5-5
+    durationSec: 31
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.9
   - type: workflow-subagent
     task: build read-first-hint-readonly-subcommands
     model: claude-sonnet-5-5
-    durationSec: 73
-    toolCalls: 18
-    modelCalls: 10
-    tokenShare: 2.5
+    durationSec: 468
+    toolCalls: 21
+    modelCalls: 13
+    tokenShare: 2.7
+  - type: workflow-subagent
+    task: Standards ledger-accept-relayed-counts r2
+    model: claude-opus-5-5
+    durationSec: 59
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: Standards ledger-accept-relayed-counts r3
+    model: claude-opus-5-5
+    durationSec: 33
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.8
+  - type: workflow-subagent
+    task: Standards read-first-hint-readonly-subcommands r1
+    model: claude-opus-5-5
+    durationSec: 27
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.8
   - type: workflow-subagent
     task: gate tenant-glossary-comments
     model: claude-sonnet-5-5
-    durationSec: 4
-    toolCalls: 2
-    modelCalls: 1
-    tokenShare: 0.6
+    durationSec: 59
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.5
   - type: workflow-subagent
     task: build ledger-accept-relayed-counts
     model: claude-sonnet-5-5
-    durationSec: 52
-    toolCalls: 8
-    modelCalls: 7
-    tokenShare: 2.2
+    durationSec: 466
+    toolCalls: 14
+    modelCalls: 13
+    tokenShare: 2.9
   - type: workflow-subagent
     task: Spec tenant-glossary-comments r1
     model: claude-opus-5-5
     durationSec: 44
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 1.8
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: Spec read-first-hint-readonly-subcommands r1
+    model: claude-opus-5-5
+    durationSec: 36
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 1
   - type: workflow-subagent
     task: fix glassbox-improve-tie-break r1
     model: claude-sonnet-5-5
-    durationSec: 11
-    toolCalls: 2
-    modelCalls: 2
+    durationSec: 71
+    toolCalls: 4
+    modelCalls: 4
     tokenShare: 0.9
 gitBranch: ccr-09b0fc2f-dtewaa
 entrypoint: remote_mobile
