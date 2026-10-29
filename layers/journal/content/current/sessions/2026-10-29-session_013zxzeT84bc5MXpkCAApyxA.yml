@@ -1,15 +1,17 @@
 schemaVersion: 1
 session: session_013zxzeT84bc5MXpkCAApyxA
 startedAt: 2026-10-29T09:09:10Z
-endedAt: 2026-10-29T09:45:10Z
+endedAt: 2026-10-29T10:00:26Z
 kind: interactive
 goal: Find and fix stale facts across Terrarium's overview docs
-status: blocked
-outcome: "Brief (PR #2675) and Journal pages (PR #2676) merged; ADRs clean; Glass Box branch waits on the owner to approve its push"
-summary: "Human-instructed throughout. The owner first asked me to read the interactive-map diagram brief, all 30 ADRs, the Journal's five start-here pages and every Glass Box guide Lesson. Then they asked me to find stale docs, contradictions and gaps in them and fix them with Sonnet subagents, using git history, PRs and issues. Before dispatching I asked four questions. The owner chose: fix and open PRs, all four document groups, code plus ADRs on main as ground truth, one PR per group. I dispatched four Sonnet impl agents in separate worktrees, each with candidate findings to confirm or refute. The ADR agent found nothing wrong, so there is no PR. The brief agent confirmed the candidates and found the now-cached home page; I merged it as PR #2675. The Journal agent fixed the deploy step, the gate list and the merge reservations. It also added `dependabot-sweep` as a Routine without evidence, which I had removed. After review I added the Friction Ledger and the prune-trial issue outcome myself, and merged it as PR #2676. The Glass Box agent re-pinned every guide page and fixed the prune-trial verdict, the Heavy term and the survey window. Its push was denied by the auto-mode classifier. I left the branch unpushed and asked the owner whether I may push it, so the session is blocked on that answer. Also open for the owner: whether `dependabot-sweep` really has a Routine; root GLOSSARY.md's Heavy entry understating the Skill-file skip; and the \"atomically swaps\" comment in `deploy/entrypoint.sh`."
+status: in-review
+outcome: "Brief (PR #2675) and Journal pages (PR #2676) merged; Glass Box (PR #2677) and owner follow-ups (PR #2678) in review; ADRs clean"
+summary: "Human-instructed throughout. The owner first asked me to read the interactive-map diagram brief, all 30 ADRs, the Journal's five start-here pages and every Glass Box guide Lesson. Then they asked me to find stale docs, contradictions and gaps in them and fix them with Sonnet subagents, using git history, PRs and issues. Before dispatching I asked four questions. The owner chose: fix and open PRs, all four document groups, code plus ADRs on main as ground truth, one PR per group. I dispatched four Sonnet agents. The ADR agent found nothing wrong. The brief agent's fixes merged as PR #2675, and the Journal agent's, plus my own review fixes, merged as PR #2676. The Glass Box agent's push was denied by the classifier. I asked the owner, who approved my pushing it, and opened PR #2677. A concurrent glassbox-improve run had re-pinned four of the same pages, so I merged main and took its newer pins. The owner also answered three open questions. `dependabot-sweep` is a Routine that starts when Dependabot opens a PR; its trigger never fired because of a wrong username, which the owner explained. They also told me to fix the root Heavy glossary entry and the \"atomically swaps\" wording. I made those edits myself after a Standards and Spec review; the review also found the same wording in deploy/docker-compose.yml. They are PR #2678."
 prs:
   - "2675"
   - "2676"
+  - "2677"
+  - "2678"
 docsRead:
   - path: docs/diagrams/interactive-map/terrarium-overview.md
     reason: the brief under review; source of most candidate findings
@@ -34,7 +36,7 @@ docsRead:
   - path: layers/journal/content/current/pages/architecture.md
     reason: (read before editing)
   - path: GLOSSARY.md
-    reason: (no reason given)
+    reason: (read before editing)
   - path: docs/diagrams/interactive-map/README.md
     reason: (read before editing)
   - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
@@ -84,6 +86,8 @@ docsRead:
   - path: .agents/skills/visitor-loop/SKILL.md
     reason: (no reason given)
   - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
     reason: (no reason given)
   - path: .agents/skills/dependabot-sweep/SKILL.md
     reason: (no reason given)
@@ -185,31 +189,47 @@ frictions:
   - description: "Agents disagreed on whether dependabot-sweep is a Routine: the Journal agent added it from its SKILL.md alone, the other two left it out for lack of evidence"
     solution: Give every agent in a parallel batch the same ruling on a shared fact; settle it before dispatch (dispatch-subagents §1)
     severity: minor
-durationSec: 2161
+  - description: "PR #2677 got no CI checks because the branch conflicted with main. A glassbox-improve run had re-pinned four of the same pages while the branch sat unpushed."
+    solution: Before opening a PR from a branch that waited a while, run git merge-tree against origin/main; GitHub runs no pull_request workflow on an unmergeable PR
+    severity: minor
+  - description: The Stop hook asked three times to push before the gate and review had finished; pr-workflow.md says to ignore it, but each prompt cost a turn
+    solution: Have the Stop hook stay quiet while a gate:scoped run is in flight for that branch
+    severity: nit
+  - description: Editing files while a background gate:scoped ran would have aborted it, so I stopped the gate and re-ran it once on the final tree
+    solution: Collect all review fixes before starting the gate, as pr-workflow.md's 'edit nothing until it ends' implies
+    severity: nit
+durationSec: 3077
 models:
-  claude-opus-5-5: 207
+  claude-opus-5-5: 305
 toolCounts:
-  Bash: 46
+  Bash: 72
   Read: 20
   AskUserQuestion: 1
   Skill: 4
-  Agent: 9
-  ToolSearch: 2
+  Agent: 11
+  ToolSearch: 4
   SendMessage: 3
-  Edit: 7
-  mcp__github__create_pull_request: 2
-  mcp__claude-code-remote__subscribe_pr_activity: 2
-  Write: 3
-  mcp__github__pull_request_read: 1
+  Edit: 21
+  mcp__github__create_pull_request: 4
+  mcp__claude-code-remote__subscribe_pr_activity: 4
+  Write: 4
+  mcp__github__pull_request_read: 5
   mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__unsubscribe_pr_activity: 2
-  ReadNotifications: 3
+  ReadNotifications: 5
   mcp__claude-code-remote__send_later: 1
   mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__list_triggers: 1
+  TaskStop: 1
+  mcp__github__list_pull_requests: 1
 filesEdited:
   - docs/diagrams/interactive-map/terrarium-overview.md
   - layers/journal/content/current/pages/how-it-works.md
   - layers/journal/content/current/pages/architecture.md
+  - GLOSSARY.md
+  - deploy/entrypoint.sh
+  - deploy/README.md
+  - deploy/docker-compose.yml
   - .throwaway/sub-adr/paths.sh
   - .throwaway/sub-adr/idents.sh
   - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
@@ -324,7 +344,6 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0019.md
   - .claude/rules/adr-0016.md
 docsReadBySubagents:
-  - .agents/skills/dependabot-sweep/SKILL.md
   - .agents/skills/frictions-to-fixes/SKILL.md
   - .agents/skills/audit-skills/SKILL.md
   - .agents/skills/prune-trial/SKILL.md
@@ -367,68 +386,83 @@ subagents:
     durationSec: 827
     toolCalls: 78
     modelCalls: 70
-    tokenShare: 12.3
+    tokenShare: 9.8
   - type: general-purpose
     task: Fix stale Journal onramp pages
     model: sonnet
     durationSec: 1078
     toolCalls: 86
     modelCalls: 78
-    tokenShare: 11.9
+    tokenShare: 9.5
   - type: general-purpose
     task: Fix stale Glass Box guide pages
     model: sonnet
     durationSec: 1160
     toolCalls: 103
     modelCalls: 95
-    tokenShare: 20.3
+    tokenShare: 16.2
   - type: general-purpose
     task: Check ADRs for stale facts
     model: sonnet
     durationSec: 492
     toolCalls: 68
     modelCalls: 65
-    tokenShare: 9.9
+    tokenShare: 7.9
   - type: general-purpose
     task: Standards review of brief diff
     model: sonnet
     durationSec: 37
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: general-purpose
     task: Spec review of brief diff
     model: sonnet
     durationSec: 105
     toolCalls: 15
     modelCalls: 12
-    tokenShare: 1.5
+    tokenShare: 1.2
   - type: general-purpose
     task: Spec+standards review Glass Box diff
     model: sonnet
     durationSec: 51
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 0.8
+    tokenShare: 0.6
   - type: general-purpose
     task: Standards review Journal diff
     model: sonnet
     durationSec: 28
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 0.4
+    tokenShare: 0.3
   - type: general-purpose
     task: Spec review Journal diff
     model: sonnet
     durationSec: 66
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 1
+    tokenShare: 0.8
+  - type: general-purpose
+    task: Standards+spec review follow-up diff
+    model: sonnet
+    durationSec: 17
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.6
+  - type: general-purpose
+    task: Spec review follow-up diff
+    model: sonnet
+    durationSec: 36
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 0.8
 gitBranch: ccr-f500120a-62k5z2
 entrypoint: remote_mobile
 cliVersion: 2.1.312
 learnings:
   - The Glass Box guide pages, pinned 2026-10-29, were the freshest of the five doc sets; the diagram brief (last checked 2026-10-08) had drifted most
+  - GitHub runs no pull_request workflow on a PR with a merge conflict, so a conflicted PR shows zero check runs rather than a red one
 ideas:
   - Add a gate check that each Skill whose SKILL.md says 'A Routine runs this Skill' has a file in layers/journal/content/current/routines/, or is graded routine in the Skill Inventory, so a claimed Routine with no recorded run is flagged
 landedBy: Stop
