@@ -90,12 +90,12 @@ Merge the three reports into one tally file:
   least two, under the same filters; on a tie, a promotion beats a new
   Lesson, which beats a re-cut; between two gaps, the lower sum of their
   places in the raters' Gaps lists wins, then the one whose draft needs fewer
-  changes (no draft: the one more raters list first). A gap a draft fills is filled by
-  promoting that draft. Read a candidate draft first: one that needs about
-  half its lines changed or more is not promoted this run (an idea); take the
-  next structural candidate. A gap that needs a new Subject is out of remit. A
-  selected page the step touches leaves the page selection; the step's
-  writer owns it.
+  changes (no draft: the one more raters list first). A gap a draft fills is
+  filled by promoting that draft. Read a candidate draft first: one that needs
+  about half its lines changed or more is not promoted this run (an idea);
+  take the next structural candidate. A gap that needs a new Subject is out of
+  remit. A selected page the step touches leaves the page selection; the
+  step's writer owns it.
 
 Done when every page has its three grades, every consensus deficit is kept or
 dropped with its reason, and the selection says why each item beat the next.
@@ -182,4 +182,5 @@ File the rest:
 A deficit or structural step that missed the caps needs no record: the next
 run's raters find it again. Done when every Friction, issue and idea is
 written and `pnpm check:worktrees` exits 0, which it does only once the run
-branch is pushed (writer worktrees' commits count as unpushed until then). Then invoke `close-session`.
+branch is pushed (writer worktrees' commits count as unpushed until then).
+Then invoke `close-session`.
