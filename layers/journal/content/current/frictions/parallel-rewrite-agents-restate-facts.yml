@@ -2,7 +2,7 @@ name: parallel-rewrite-agents-restate-facts
 summary: >-
   New text, or a proposed field or rule, repeated a fact that already has a home, and a reviewer or the owner had to catch it.
 cause: >-
-  Agents add a sentence, rejected alternative or excerpt that restates a fact kept elsewhere (CLAUDE.md "One home per fact"): ADR rewrite agents, a build adding two ADR-0003 sentences, a lesson draft repeating ADR-0028 and an excerpt, a proposed frontmatter field or path-scoped rule whose content a doc already holds; the build reviewers passed some of it. Signals: "duplicated", "one home", "already covered", the owner asking about overlap.
+  Agents add a sentence, rejected alternative or excerpt that restates a fact kept elsewhere (CLAUDE.md "One home per fact"): ADR rewrite agents, a build adding two ADR-0003 sentences, a lesson draft repeating ADR-0028 and an excerpt, a proposed frontmatter field or path-scoped rule whose content a doc already holds, a writer whose Why bullets repeated a concept a sibling page owns despite a brief asking for one sentence; the build reviewers passed some of it. Signals: "duplicated", "one home", "already covered", "repeated", the owner or raters asking about overlap.
 surface: safe
 status: open
 notes: |-
@@ -33,3 +33,8 @@ occurrences:
     severity: minor
     description: "First recommendation proposed a new path-scoped rule before checking that issue-tracker.md's Filing an issue already covered most of it; the owner had to ask about overlap."
     solution: "Grep the existing homes of a fact before proposing a new doc (CLAUDE.md one home per fact)."
+  - session: session_013zxzeQDh7MCP7HpYBYBTeh
+    date: "2026-10-28"
+    severity: moderate
+    description: "My writer brief said to give sibling-owned reasons one sentence, but the Why bullets still repeated Human-in-the-loop; raters flagged it three times and the page ended at B after two fix rounds."
+    solution: "Brief a promotion writer to diff each Why bullet against the Lessons its ADRs appear in before committing, naming those Lessons."

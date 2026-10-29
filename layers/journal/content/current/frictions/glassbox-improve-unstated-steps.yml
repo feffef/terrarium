@@ -1,0 +1,16 @@
+name: glassbox-improve-unstated-steps
+surface: safe
+summary: The glassbox-improve Skill leaves a step's rule unstated, so a run improvises and has to disclose the choice.
+cause: "SKILL.md names no rule where a run needs one: no tie-break among many tied three-rater promotions or two gap drafts with equal rank sums (the run reuses the previous run's importance rank sum or picks by judgement), no word on a second same-day run's branch name or on pushing the run branch before check:worktrees. Signals: 'no tie-break', 'the Skill never states', 'equal rank sums', 'tied', a choice the run discloses in its PR."
+status: open
+occurrences:
+  - session: session_013zxzeQRYzCbfkXYbHKwcPv
+    date: "2026-10-28"
+    severity: minor
+    description: "Step 3 names no tie-break among many three-rater promotions (six drafts tied); I reused the previous run's importance rank sum, which the Skill never states."
+    solution: "glassbox-improve step 3 Structural step: state the tie-break inside one class (e.g. the raters' combined importance order)."
+  - session: session_013zxzeQDh7MCP7HpYBYBTeh
+    date: "2026-10-28"
+    severity: minor
+    description: "The skill gives no tie-break for two gap drafts with equal rank sums; I picked work-queue by judgement and had to disclose that in the PR."
+    solution: "Add a tie rule to glassbox-improve step 3, for example the draft needing fewer changes, or the lower Subject order."

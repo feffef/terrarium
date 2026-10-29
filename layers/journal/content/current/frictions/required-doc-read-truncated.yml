@@ -10,6 +10,9 @@ fixes:
   - pr: 2448
     date: "2026-10-23"
     summary: "CLAUDE.md's read-first intro says one Read call per doc, since a shell read can be cut short."
+  - pr: 2644
+    date: "2026-10-28"
+    summary: "CLAUDE.md says to read a required doc whole if you can, no longer in one Read call: partial reads are encouraged against, not required."
 occurrences:
   - session: session_01T4UbBvJmjSunCwb3cUN68Q
     date: "2026-10-22"

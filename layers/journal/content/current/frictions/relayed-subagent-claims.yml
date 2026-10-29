@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
 surface: safe
-status: on-trial
-ref: "Prune Trial opened 2026-10-25 by PR #2537 (territory: CLAUDE.md 'Verify before you state' bullet, dispatch-subagents §3 last bullets, audit-skills subagent paragraph, clear-backlog §3 ready-to-push bullet, clear-backlog-build.js reviewPrompt Standards text; keywords 'Verify before you state', 'count is a fact', 'candidate material', 'hearsay'). Issue #2556 closed as superseded by it."
+status: open
+ref: "Prune Trial opened 2026-10-25 by PR #2537 was judged and deleted by the 2026-10-28 prune run (PR #2641): no major or blocker Friction in 48 sessions. Issue #2556 closed as superseded by it."
 fixes:
   - pr: 2336
     date: "2026-10-20"
@@ -102,3 +102,18 @@ occurrences:
     severity: minor
     description: "Told the owner several quality rules were unwritten, taken from a subagent's report without checking; mechanism-not-motive and no-counts already existed. I corrected it a turn later. Breaks CLAUDE.md's verify-before-you-state."
     solution: "Grep the writing docs for each rule a subagent calls unwritten before stating it."
+  - session: session_013zxzeQmVnqMqDkRgFRWx5T
+    date: "2026-10-28"
+    severity: minor
+    description: "My verdict comment on #2634 said the subagents' claims were checked, including issue and PR numbers; I had checked only the commit and some entry statuses. An overclaim, corrected with an edit."
+    solution: "Verdict lines should list exactly what was checked and nothing broader."
+  - session: session_013zxzeRejGhGCyE3SttX9AL
+    date: "2026-10-29"
+    severity: nit
+    description: "First draft cited PR 2626 for a description-syntax fix; the fact-check found it was PR 2616, because I took the attribution from session text without checking the diff."
+    solution: "Check each PR number against its diff while drafting."
+  - session: session_013zxzePtHJNqS19fEy1yRGv
+    date: "2026-10-29"
+    severity: minor
+    description: "Escalated findings mostly rest on subagent reports I spot-checked rather than re-derived; only the audit-docs guard conflict was verified from source."
+    solution: "The Skill could say how many findings to re-verify per issue filed."

@@ -369,3 +369,18 @@ occurrences:
     severity: nit
     description: "The Stop hook asked to push about eight times while reviews, audits and the gate were still running; each needed a reply."
     solution: "Harness-side hook, already tracked as stop-hook-nag (accepted)."
+  - session: session_013zxzeQmVnqMqDkRgFRWx5T
+    date: "2026-10-28"
+    severity: nit
+    description: "The Stop hook asked me five times to push while the required gate was still running, which would have pushed before it passed; I declined each time."
+    solution: "The Stop hook could skip its nag while a gate:scoped log is open or a gate run is in progress."
+  - session: session_013zxzeSXsJSnGEYu9VQYXFH
+    date: "2026-10-28"
+    severity: nit
+    description: "The Stop hook demanded a push five times while review and gate were still running, which ADR-0004 puts before the first push."
+    solution: "Stop hook could skip the nag while a background gate is running."
+  - session: session_013zxzeSxgYzYmeAuCzvJdhY
+    date: "2026-10-28"
+    severity: nit
+    description: "Stop hook repeatedly asked to push uncommitted/unreviewed work, conflicting with ADR-0004's review-then-gate-then-push order."
+    solution: "Hook could skip the nag while a scheduled run is mid-review."

@@ -23,3 +23,8 @@ occurrences:
     severity: minor
     description: "CI gate on #2629 failed on the shell-reads 'stays linear' timing ratio (45.8 vs 43.2 ms), a test the diff never touches; one re-run passed."
     solution: "tests/unit/shell-reads.spec.ts: the slack tightened in 273cf2b99 leaves a few ms of runner noise; widen the additive term or compare medians."
+  - session: session_013zxzeQmVnqMqDkRgFRWx5T
+    date: "2026-10-28"
+    severity: minor
+    description: "pnpm gate:scoped failed on the shell-reads linearity timing test (8.76 vs 5.53 ms) on a ledger-only diff, costing a full second gate run of about two minutes."
+    solution: "PR #2635 adds retry to that test."

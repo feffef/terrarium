@@ -2,7 +2,7 @@ name: gate-overlap-clobbers-build
 summary: >-
   A backgrounded check run reported done early with a cut-off log, so the agent started more runs that overlapped and overwrote each other's build.
 cause: >-
-  A background gate:scoped task's completion notice arrives early with a truncated log; the agent starts another run while the first is alive, and the overlapping runs clobber .nuxt and the build lock. Nothing stops a second gate run while one is alive. Signals: 'overlapped', 'clobbered .nuxt', 'build lock', an early 'completed' notice for a gate.
+  A second gate:scoped run starts while the first is alive, and the overlapping runs clobber .nuxt, the build lock and a shared log: after a background task's completion notice arrives early with a truncated log, or after a chained command whose first step failed silently. Nothing stops a second gate run while one is alive. Signals: 'overlapped', 'clobbered .nuxt', 'build lock', an early 'completed' notice for a gate, a false EXIT 1 from two runs sharing a log.
 surface: guard-or-hook
 status: open
 notes: |-
@@ -13,3 +13,8 @@ occurrences:
     severity: moderate
     description: "I started gate:scoped in the background, got an early 'completed' notice with a truncated log, and started two more runs that overlapped and clobbered .nuxt and the build lock."
     solution: "Before rerunning a gate, check with ps that no gate.ts or nuxt process is alive; run it in the foreground with a 600s timeout when it fits."
+  - session: session_013zxzePtHJNqS19fEy1yRGv
+    date: "2026-10-29"
+    severity: minor
+    description: "Chained validate, commit and gate with && after a grep that matched nothing, then started a second gate while the first still ran; both shared a log and build, giving a false EXIT 1."
+    solution: "Run the gate alone with its own log file; never chain it after a grep. A pushed-gate note about shared builds in the dispatch docs would help."

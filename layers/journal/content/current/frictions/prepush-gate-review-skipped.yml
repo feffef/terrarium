@@ -2,11 +2,12 @@ name: prepush-gate-review-skipped
 summary: >-
   Agents skipped the required code review before a branch's first push, or gave a change their own read when it was not simple.
 cause: >-
-  ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push. A gate:scoped run that did not test the final head belongs to edit-during-gate-run.
+  ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files, adding, renaming or moving no file since PR #2638) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push. A gate:scoped run that did not test the final head belongs to edit-during-gate-run.
 surface: guard-or-hook
 status: open
 notes: |-
   2026-10-28 survey: the PR #2412 Prune Trial is no longer in .agents/prune-trials.yml (judged and deleted by the 2026-10-27 prune run), so the entry is no longer on trial; issue #2472 (regression of #2407) is open.
+  2026-10-29 survey: issue #2472 closed by PR #2638 (merged 2026-10-28), which recorded as a fix here.
 fixes:
   - pr: 1852
     date: "2026-10-12"
@@ -26,6 +27,9 @@ fixes:
   - pr: 2412
     date: "2026-10-22"
     summary: "pr-workflow.md reworded plainly (-3 net) with one line added (count, don't judge a simple change), and a Prune Trial opened."
+  - pr: 2638
+    date: "2026-10-28"
+    summary: "pr-workflow.md's simple-change bar now says a simple change adds, renames or moves no file, so a rename sweep gets code-review before its first push."
 occurrences:
   - session: session_011t1xXHxqwrfAjt83s9oTEP
     date: "2026-10-15"
@@ -172,3 +176,8 @@ occurrences:
     severity: minor
     description: "Skipped code-review before first push: change exceeds the simple-change count (39 files) though purely mechanical pins; read the diff myself instead."
     solution: "Let pr-workflow's simple-change bar name glassbox-update's pure re-pin so scheduled runs need no judgement call."
+  - session: session_013zxzeSxgYzYmeAuCzvJdhY
+    date: "2026-10-28"
+    severity: minor
+    description: "Skipped code-review on both follow-up commits (over 10 lines and 2 files) and read the diffs myself, against pr-workflow's larger-follow-up rule; the reviews were clean on their first rounds."
+    solution: "Count lines and files before judging a follow-up simple; run code-review on its own diff."

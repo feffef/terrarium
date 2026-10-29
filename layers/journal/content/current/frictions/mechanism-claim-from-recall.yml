@@ -140,3 +140,8 @@ occurrences:
     severity: minor
     description: "Checking fable's Nuxt layers false claim took five reads through @nuxt/kit and c12 dist code before it proved a misreading."
     solution: "None needed; a false claim needs a source check. The learning below saves the next run the walk."
+  - session: session_013zxzeTK9c2HVcabwCx3b18
+    date: "2026-10-28"
+    severity: minor
+    description: "I assumed a missing ruleVerdicts field meant a log predated the field and wrote an exemption on that; the writer omits it for any zero-verdict session, which the Spec review caught before push."
+    solution: "Check how a field is written (transcript-trace.ts) before reading its absence as a log-age marker."

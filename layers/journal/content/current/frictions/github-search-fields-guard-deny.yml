@@ -2,8 +2,8 @@ name: github-search-fields-guard-deny
 summary: Agents called GitHub search without limiting the returned fields, so a guard refused the call and they had to retry.
 cause: "github-search-fields-guard.ts denies mcp__github__search_issues or search_pull_requests without `fields`; agents omit it, mostly before reading github-integration.md, and resend. Signals: a guard deny for a missing `fields`, 'blocked by the fields guard', a retried search."
 surface: guard-or-hook
-status: on-trial
-ref: "Comes from PR #1869's fix for search results flooding context (the former github-search-overflow cluster). In the Prune Trial opened 2026-10-25 by PR #2538 (territory: github-integration.md's first two 'Overflow and precision traps' bullets), whose check counts a guard deny the session fixes as no damage."
+status: open
+ref: "Comes from PR #1869's fix for search results flooding context (the former github-search-overflow cluster). Its Prune Trial (PR #2538) was judged and deleted by the 2026-10-28 prune run (PR #2641)."
 occurrences:
   - session: session_016Nsq9SWL64V4RqDJPQYodp
     date: "2026-10-19"
@@ -70,3 +70,13 @@ occurrences:
     severity: nit
     description: "First batch of six search_issues calls was blocked for lacking the fields argument, wasting a round trip; github-integration.md was read only after that."
     solution: "Read github-integration.md before the first GitHub call; the Skill's step 3 could name the fields requirement."
+  - session: session_013zxzeSXsJSnGEYu9VQYXFH
+    date: "2026-10-28"
+    severity: nit
+    description: "First search_issues call omitted fields and the guard denied it, because I had not yet read github-integration.md."
+    solution: "Read the GitHub doc before the first mcp__github__ call, as CLAUDE.md says."
+  - session: session_013zxzeQDh7MCP7HpYBYBTeh
+    date: "2026-10-28"
+    severity: nit
+    description: "Called mcp__github__search_pull_requests before reading docs/agents/github-integration.md; a guard blocked it for missing fields."
+    solution: "Read the GitHub doc before the first mcp__github__ call, as CLAUDE.md says. The guard caught it at no cost."

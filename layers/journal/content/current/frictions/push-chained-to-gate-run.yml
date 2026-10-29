@@ -2,7 +2,7 @@ name: push-chained-to-gate-run
 summary: >-
   Agents put a push or commit in the same command as a check run, so a failed check could still be pushed.
 cause: >-
-  git-conventions.md forbids a push or other state-changing git later in the same Bash command as a gate or test run, and says to read the exit status in its own step; sessions chain git commit, --amend or git push with gate:scoped or with reading the gate log, so a red gate reaches CI. Signals: GATE_EXIT or EXIT=1 printed by the command that pushed, 'in the same command as git commit --amend', 'chained'.
+  git-conventions.md forbids a push or other state-changing git later in the same Bash command as a gate or test run, and says to read the exit status in its own step; sessions chain git commit, --amend or git push with gate:scoped or with reading the gate log, or read the exit code of a backgrounded command that ends in tail as the gate's own, so a red gate reaches CI or reads as green. Signals: GATE_EXIT or EXIT=1 printed by the command that pushed, 'in the same command as git commit --amend', 'chained', the exit code of tail taken for the gate's.
 surface: guard-or-hook
 status: open
 ref: "Issue #2397 (regression of #2359) closed by PR #2407. Issue #2354 closed by PR #2359, a doc rule with no guard."
@@ -44,3 +44,8 @@ occurrences:
     severity: nit
     description: "Chained git commit and gate:scoped in one backgrounded command, which git-conventions warns against; no push followed, so no harm."
     solution: "Run the commit and the gate as separate calls."
+  - session: session_013zxzePhRwXqYLtsycYUhqv
+    date: "2026-10-28"
+    severity: nit
+    description: "Mistook the exit code of a backgrounded gate command (ending in tail) for the gate's own exit; nearly read a failed gate as passing."
+    solution: "Write the gate's exit status to the log on its own line, as the later runs did."

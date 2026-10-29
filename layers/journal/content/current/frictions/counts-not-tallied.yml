@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   A number (verdict counts, line totals, items in a list, running agents) is written from an estimate, memory or a report not yet final, in a GitHub body, a chat reply, a subagent brief or a notification, instead of being tallied from every item. Signals: "about N", a corrected count, "without counting", "without tallying", "from memory". Counts a script or filter got wrong are in counts-from-wrong-filter.
 surface: safe
-status: on-trial
-ref: "Prune Trial opened 2026-10-25 by PR #2537 (territory: CLAUDE.md 'Verify before you state' bullet, dispatch-subagents §3 last bullets, audit-skills subagent paragraph, clear-backlog §3 ready-to-push bullet, clear-backlog-build.js reviewPrompt Standards text; keywords 'Verify before you state', 'count is a fact', 'candidate material', 'hearsay'). Issue #2522 closed by PR #2537."
+status: open
+ref: "Prune Trial opened 2026-10-25 by PR #2537 was judged and deleted by the 2026-10-28 prune run (PR #2641): no major or blocker Friction in 48 sessions. Issue #2522 closed by PR #2537."
 fixes:
   - pr: 2336
     date: "2026-10-20"

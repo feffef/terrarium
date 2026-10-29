@@ -599,3 +599,23 @@ occurrences:
     severity: nit
     description: "Read git-conventions.md after the first git log command, not before as CLAUDE.md requires."
     solution: "Read the triggered doc before the first git command beyond status and diff."
+  - session: session_013zxzeQmVnqMqDkRgFRWx5T
+    date: "2026-10-28"
+    severity: nit
+    description: "Ran git rev-parse and branch --show-current before reading git-conventions.md; a PostToolUse hook reminded me. No harm, the doc did not change my calls."
+    solution: "Fine as is; the hint worked. Reading the doc first costs nothing but is not needed for read-only rev-parse."
+  - session: session_013zxzeSXsJSnGEYu9VQYXFH
+    date: "2026-10-28"
+    severity: nit
+    description: "Ran git log and a fetch-bearing script before reading git-conventions.md; a hook reminded me afterwards."
+    solution: "Read the doc when the task starts with git; the hook already catches it."
+  - session: session_013zxzeRejGhGCyE3SttX9AL
+    date: "2026-10-29"
+    severity: minor
+    description: "Read git-conventions.md and the dispatch-subagents Skill only after hooks blocked my first git command and first Agent call, not before as CLAUDE.md says."
+    solution: "Read the triggered docs before the first git command or subagent brief."
+  - session: session_013zxzePtHJNqS19fEy1yRGv
+    date: "2026-10-29"
+    severity: nit
+    description: "Called search_issues and ran git fetch/log before reading github-integration.md and git-conventions.md, which CLAUDE.md requires first; hooks reminded me afterwards."
+    solution: "Read both docs at the first GitHub or git step of a scheduled audit."

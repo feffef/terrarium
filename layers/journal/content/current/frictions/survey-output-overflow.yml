@@ -2,10 +2,9 @@ name: survey-output-overflow
 summary: >-
   The data the self-improvement Skills read about past sessions was too large to read in one go.
 cause: >-
-  The reads behind frictions-to-fixes and similar Journal surveys (session-frictions, extract-frictions --compact at about 90-150 KB, the ledger directory, prune-friction-ledger.ts --summary, a dump of several Skill Inventory entries) overflow a tool result, so agents slice, truncate or re-query them and can miss lines. A bare audit-skills.ts run belongs in audit-skills-output-overflow. Signals: output persisted to a file, '| head truncated', a second narrower query, 'printed N KB'.
+  The reads behind frictions-to-fixes and similar Journal surveys (session-frictions, extract-frictions --compact at about 90-150 KB, the ledger directory, a dump of several Skill Inventory entries) overflow a tool result, so agents slice, truncate or re-query them and can miss lines. Since PR #2640 prune-friction-ledger.ts --summary and --candidates send large output to a file and print a notice. A bare audit-skills.ts run belongs in audit-skills-output-overflow. Signals: output persisted to a file, '| head truncated', a second narrower query, 'printed N KB'.
 surface: safe
-status: tracked
-ref: "#2631"
+status: open
 fixes:
   - pr: 1918
     date: "2026-10-14"
@@ -13,6 +12,9 @@ fixes:
   - pr: 2281
     date: "2026-10-19"
     summary: "extract-frictions --compact no longer prints each session's docsRead paths, about half its bytes."
+  - pr: 2640
+    date: "2026-10-28"
+    summary: "prune-friction-ledger --summary and --candidates write output over a size threshold to a file under TMPDIR and print one notice line; --out PATH always writes to that path."
 occurrences:
   - session: session_01ERZa4fUGxpF81MeLhZMkSB
     date: "2026-10-14"

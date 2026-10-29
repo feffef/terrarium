@@ -7,6 +7,7 @@ surface: safe
 status: open
 notes: |-
   2026-10-28 survey: the PR #2412 Prune Trial is no longer in .agents/prune-trials.yml (judged and deleted by the 2026-10-27 prune run), so the entry is no longer on trial; issue #2472 (regression of #2407) is open.
+  2026-10-29 survey: PR #2512 and #2642 (blog-post review and fact-check order) recorded as fixes for the blog-post half; the Digest, Glass Box and pin-bump halves have no fix.
 fixes:
   - pr: 2319
     date: "2026-10-20"
@@ -14,6 +15,12 @@ fixes:
   - pr: 2321
     date: "2026-10-20"
     summary: "ADR-0004 now reviews Skills and docs like code; only a simple change (typo, rewrap, link, restamp, or at most 10 lines in 2 files) gets the author's own read."
+  - pr: 2512
+    date: "2026-10-25"
+    summary: "blog-post step 9 commits and reviews per pr-workflow.md before the fact-check, so the checker reads the final text."
+  - pr: 2642
+    date: "2026-10-28"
+    summary: "blog-post steps 10-11 no longer send the run into a second review after the fact-check; step 10 just runs the gate."
 occurrences:
   - session: session_01GG85r8HWMEdaMgKUaNUZH7
     date: "2026-10-14"
