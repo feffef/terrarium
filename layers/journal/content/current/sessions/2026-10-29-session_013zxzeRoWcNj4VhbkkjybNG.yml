@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRoWcNj4VhbkkjybNG
 startedAt: 2026-10-29T18:12:50Z
-endedAt: 2026-10-29T19:56:01Z
+endedAt: 2026-10-29T19:59:15Z
 kind: delegated
 goal: Weekly rater-consensus improvement run on the Glass Box guide
-status: in-review
-outcome: Workflow scripts promoted (PR 2684 merged); Vue components and Hydration split and raised (PR 2685 open)
-summary: "Ran the glassbox-improve Skill, started by one human kickoff (/glassbox-improve); later the owner also directly asked, in two separate messages, to split the Vue components and hydration Lesson into two Lessons and then to run the whole rating and improvement process on those two Lessons only. Everything else was the Skill's own procedure. Run 1 (merged as PR 2684): three raters (sonnet, fable, opus) graded all 41 guide pages at base d08dde31; nearly all were A, the one consensus deficit sat on a cooling-off page, so no page was raised. The structural step promoted the Workflow scripts draft, since all three raters listed it and its title already passed. Three single-rater false claims were confirmed in the source and fixed by me (Routines, the pnpm page's ADR-0026 cite, a Type checking anecdote). Run 2 (PR 2685, open): I split the page myself by moving text; code-review found small gaps that I fixed; the process then ran on the two pages with rater, researcher and opus writer subagents, two fix rounds and a last re-grade, ending A and A by the middle grade. A single fable rater found that Vue 3.5.44 patches a bound attribute in hydration, contradicting the page. I confirmed it in the pinned runtime and fixed it. Single-rater points (Nuxt docs link, ADR-0028 citation) were left as Optional. Still open: the verdict comment, CI and the merge of PR 2685."
+status: completed
+outcome: Workflow scripts promoted (PR 2684 merged); Vue components and Hydration split and raised (PR 2685 merged)
+summary: "Ran the glassbox-improve Skill, started by one human kickoff (/glassbox-improve); later the owner also directly asked, in two separate messages, to split the Vue components and hydration Lesson into two Lessons and then to run the whole rating and improvement process on those two Lessons only. Everything else was the Skill's own procedure. Run 1 (merged as PR 2684): three raters (sonnet, fable, opus) graded all 41 guide pages at base d08dde31; nearly all were A, the one consensus deficit sat on a cooling-off page, so no page was raised. The structural step promoted the Workflow scripts draft, since all three raters listed it and its title already passed. Three single-rater false claims were confirmed in the source and fixed by me (Routines, the pnpm page's ADR-0026 cite, a Type checking anecdote). Run 2 (PR 2685, open): I split the page myself by moving text; code-review found small gaps that I fixed; the process then ran on the two pages with rater, researcher and opus writer subagents, two fix rounds and a last re-grade, ending A and A by the middle grade. A single fable rater found that Vue 3.5.44 patches a bound attribute in hydration, contradicting the page. I confirmed it in the pinned runtime and fixed it. Single-rater points (Nuxt docs link, ADR-0028 citation) were left as Optional. I posted my verdict, CI went green and merge-pr.ts merged PR 2685."
 prs:
   - "2684"
   - "2685"
@@ -123,13 +123,13 @@ frictions:
   - description: The improve Skill assumes a base on origin/main, but this run's base was an unpushed local commit; raters read it by SHA, which worked but the Skill does not describe it.
     solution: State in glassbox-improve that an explicit base commit, local or not, is allowed for a scoped run.
     severity: nit
-durationSec: 6191
+durationSec: 6386
 models:
-  claude-sonnet-5-5: 337
+  claude-sonnet-5-5: 347
 toolCounts:
-  Bash: 91
+  Bash: 93
   Read: 10
-  Skill: 5
+  Skill: 6
   mcp__github__list_pull_requests: 2
   Agent: 26
   Write: 1
@@ -138,8 +138,8 @@ toolCounts:
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 2
-  ReadNotifications: 3
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  ReadNotifications: 5
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
   WebFetch: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/nuxt-vue/08.hydration.md
@@ -257,21 +257,21 @@ subagents:
     durationSec: 1203
     toolCalls: 82
     modelCalls: 81
-    tokenShare: 17.8
+    tokenShare: 17.4
   - type: general-purpose
     task: Rater (fable) grades guide
     model: fable
     durationSec: 842
     toolCalls: 21
     modelCalls: 21
-    tokenShare: 4.3
+    tokenShare: 4.2
   - type: general-purpose
     task: Rater (opus) grades guide
     model: opus
     durationSec: 454
     toolCalls: 38
     modelCalls: 35
-    tokenShare: 7.2
+    tokenShare: 7.1
   - type: general-purpose
     task: Research workflow-scripts promotion
     model: sonnet
@@ -285,7 +285,7 @@ subagents:
     durationSec: 479
     toolCalls: 54
     modelCalls: 35
-    tokenShare: 3.2
+    tokenShare: 3.1
   - type: general-purpose
     task: Review standards axis
     durationSec: 66
@@ -372,14 +372,14 @@ subagents:
     durationSec: 1504
     toolCalls: 41
     modelCalls: 22
-    tokenShare: 2.4
+    tokenShare: 2.3
   - type: general-purpose
     task: Writer raises Hydration
     model: opus
     durationSec: 1519
     toolCalls: 49
     modelCalls: 29
-    tokenShare: 2.9
+    tokenShare: 2.8
   - type: general-purpose
     task: Review improvement delta
     durationSec: 48
@@ -392,14 +392,14 @@ subagents:
     durationSec: 72
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: general-purpose
     task: Re-grade Vue lessons (fable)
     model: fable
     durationSec: 1178
     toolCalls: 29
     modelCalls: 27
-    tokenShare: 3.9
+    tokenShare: 3.8
   - type: general-purpose
     task: Re-grade Vue lessons (opus)
     model: opus
@@ -413,7 +413,7 @@ subagents:
     durationSec: 116
     toolCalls: 13
     modelCalls: 12
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: Final grade Vue lessons (fable)
     model: fable
