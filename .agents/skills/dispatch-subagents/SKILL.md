@@ -56,17 +56,20 @@ every line that applies.
   marker as the done signal and resume with `SendMessage`, pasting the log's
   real tail.
 - Launch at most (20 − running) agents; every Agent call runs async, so wait
-  for its notification.
-- Run at most 2 full gates at once in one container; rerun an exit-137 run
-  alone before diagnosing.
+  for its notification. After a user interrupt, check agents are alive before
+  you report them as running.
+- Run at most 2 full gates at once in one container (`pnpm gate:scoped` waits
+  for a slot; plain `pnpm gate` does not); rerun an exit-137 run alone before
+  diagnosing.
 - A screenshot agent shoots once `pnpm build` succeeds, reads at most about 12
-  images, and stops and reports at the first image "request limit" error.
+  images (more pages, more agents), and stops and reports at the first image
+  "request limit" error, not retry.
 
 **Scope and trust**
 - Impl agents never call `merge-pr.ts`, whatever the brief says. They hand back
   a committed, green branch, unpushed. You run `/code-review` on its worktree
   (`pr-workflow.md`, "Review before the first push"), resume the agent for
-  every fix, and review again; it pushes once a review is clean, and you open
+  every fix, later ones included, and review again; it pushes once a review is clean, and you open
   and land the PR.
 - Keep a subagent's final reply with
   `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`, never by
@@ -82,7 +85,7 @@ every line that applies.
 - Paste in what you already hold (counts, fetched sources, a named file) so the
   agent doesn't re-derive it.
 - For a review, give the path of a draft file to `Read`; never paste its
-  content.
+  content. Scope a blind reviewer to named paths rather than banning `Read`.
 - Before dispatching, re-read the brief: every `{…}` filled, every path
   repo-relative and existing, every value copied from its source.
 - A subagent's prose is candidate material: re-check any factual or attribution

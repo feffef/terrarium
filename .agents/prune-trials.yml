@@ -23,42 +23,37 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      `dispatch-subagents` §3 "Write the brief" trimmed (-10 net, from `git
-      diff --numstat`: 37 added, 47 deleted; this entry not counted): the
+      `dispatch-subagents` §3 "Write the brief" trimmed (-7 net, from `git
+      diff --numstat`: 39 added, 46 deleted; this entry not counted): the
       justification clauses, the restated guard behaviour (what the background
-      guards deny, the user-interrupt check) and doubled sentences dropped;
-      every brief rule, the three sub-headings and the 20-agent and 2-gate
-      limits kept, so the inbound "Scope and trust" pointers still resolve.
-      Chosen after the search subagent covered the instruction corpus, guard
-      headers and the tracker: the brief-writing rules failed as prose (#2312,
-      then #2610, which says the earlier fixes #2150, #2318 and #2324 did not
-      retire the cause); no guard checks brief contents, so the brief-content
-      lines stay. Runners-up: `pr-workflow.md` "Review before the first push"
-      (#2472, #2474; about 24 lines, the gate abort already holds the
-      no-edits-during-gate line), "Verify before you state" (about 8 lines,
-      nothing holds it). Same run judged and deleted the `frictions-to-fixes`
+      guards deny) and doubled sentences dropped; every brief rule kept in one
+      goal-shaped line, the three sub-headings kept so inbound "Scope and
+      trust" pointers resolve. Chosen after the search subagent covered the
+      instruction corpus, guard headers and the tracker: the brief-writing
+      rules failed as prose (#2312, then #2610, which says the earlier fixes
+      #2150, #2318 and #2324 did not retire the cause); no guard checks brief
+      contents. Runner-up: `pr-workflow.md` "Review before the first push"
+      (#2472, #2474). Same run judged and deleted the `frictions-to-fixes`
       briefs trial (landed 7231f728) and the `log-session` "When to invoke"
       trial (landed 147e2bf4): 59 and 38 sessions since, no major or blocker
       Friction traces to either; the closure misses since are the answer-only
       and PR-open ones the check excludes. Rates after vs before: closure
       entries 0/38 against 2/196 and 3/196, `close-session-bypassed-by-hand-log`
-      1/38 (2.6%) against 3/196 (1.5%); `frictions-to-fixes-briefs-mismatch`
-      3/50 (6.0%) against 9/184 (4.9%) and `frictions-to-fixes-skill-gaps` 4/50
-      (8.0%) against 10/184 (5.4%), one or two sessions of difference, not a
-      clear rise.
+      1/38 against 3/196; `frictions-to-fixes-briefs-mismatch` 3/50 against
+      9/184 and `frictions-to-fixes-skill-gaps` 4/50 against 10/184, one or
+      two sessions of difference, not a clear rise.
     territory:
       paths:
         - ".agents/skills/dispatch-subagents/SKILL.md: §3 'Write the brief'"
       keywords:
-        - Write the brief
-        - Scope and trust
-        - Stranding
+        - dispatch-subagents §3
     opened: 2026-10-29
     proven: true
     check: >
       Damage is a major or blocker Friction where a subagent brief lacked
       something the cut text said (a pinned SHA, `git -C`, the foreground-check
-      marker, the size ceiling, no `merge-pr.ts` call) and the agent went wrong
+      marker, the size ceiling, no `merge-pr.ts` call, the agent-count and
+      gate-slot limits) and the agent went wrong
       for it: stale checkout, stranded or unreviewed work, a merge by an impl
       agent. NOT damage: a brief gap the old text had too.
   - problem: >
