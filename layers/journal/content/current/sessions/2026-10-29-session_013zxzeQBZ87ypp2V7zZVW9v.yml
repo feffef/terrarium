@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQBZ87ypp2V7zZVW9v
 startedAt: 2026-10-29T08:24:50Z
-endedAt: 2026-10-29T08:44:52Z
+endedAt: 2026-10-29T08:50:14Z
 kind: interactive
 goal: Prune-trial verdicts that flag moderate damage and rising Friction rates
-status: in-review
-outcome: "PR #2673 open: SKILL.md, friction-rates.ts, ADR-0027 and its rule; waits for a human merge"
-summary: "The owner asked me to read issue #2672 and propose a change to the prune-trial Skill. I asked four questions first. The owner chose: a branch and PR after a subagent's design review; Friction Ledger entries picked at verdict time; no fixed threshold (the script shows rates and the session judges); scope covers the SKILL.md, a rates script, and ADR-0027 with its summary rule. All of that was human-instructed. The details below were my calls or came from the subagents' reviews. The design review found that my first window design was wrong. Its after-window ended at the last ledger commit, but non-survey PRs also edit the ledger, so unsurveyed sessions would have counted as misses. Its equal-length before-window was noisy and could reach past the 14-day ledger horizon. Both windows now count only what the ledger can see. The review also flagged that §3's hook issue would double up with the new issue. code-review then found that a non-survey ledger merge could still move the cutoff past a survey whose PR hadn't merged. The cutoff now comes from the newest survey whose own PR merged a ledger change. Rerunning the script on the #2537 trial gives relayed-subagent-claims 11/182 (6.0%) before and 8/52 (15.4%) after, so it would have flagged the verdict #2641 passed. The gate is green. The PR waits for a human merge because it changes Human-only ADR files."
+status: completed
+outcome: "PR #2673 merged by the owner: prune-trial verdicts now file an issue for moderate damage or a rising Friction rate"
+summary: "The owner asked me to read issue #2672 and propose a change to the prune-trial Skill. I asked four questions first. The owner chose: a branch and PR after a subagent's design review; Friction Ledger entries picked at verdict time; no fixed threshold (the script shows rates and the session judges); scope covers the SKILL.md, a rates script, and ADR-0027 with its summary rule. All of that was human-instructed. The details below were my calls or came from the subagents' reviews. The design review found that my first window design was wrong. Its after-window ended at the last ledger commit, but non-survey PRs also edit the ledger, so unsurveyed sessions would have counted as misses. Its equal-length before-window was noisy and could reach past the 14-day ledger horizon. Both windows now count only what the ledger can see. The review also flagged that §3's hook issue would double up with the new issue. code-review then found that a non-survey ledger merge could still move the cutoff past a survey whose PR hadn't merged. The cutoff now comes from the newest survey whose own PR merged a ledger change. Rerunning the script on the #2537 trial gives relayed-subagent-claims 11/182 (6.0%) before and 8/52 (15.4%) after, so it would have flagged the verdict #2641 passed. The gate was green; the owner merged it, as required for Human-only ADR files."
 prs:
   - "2673"
 docsRead:
@@ -68,19 +68,24 @@ frictions:
   - description: My first window design ended at the last ledger commit, unaware that non-survey PRs edit the ledger too; the design-review subagent caught it before build
     solution: Before using a commit as a proxy for an event, list the commits that touch the path and check what else makes them
     severity: minor
-durationSec: 1202
+durationSec: 1523
 models:
-  claude-opus-5-5: 106
+  claude-opus-5-5: 131
 toolCounts:
-  Bash: 35
-  ToolSearch: 2
-  mcp__github__issue_read: 2
+  Bash: 38
+  ToolSearch: 3
+  mcp__github__issue_read: 3
   AskUserQuestion: 1
   Skill: 4
   Write: 6
   Agent: 3
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/prune-trial/scripts/friction-rates.ts
   - .agents/skills/prune-trial/tests/unit/friction-rates.spec.ts
@@ -198,19 +203,19 @@ subagents:
     durationSec: 268
     toolCalls: 20
     modelCalls: 19
-    tokenShare: 20.7
+    tokenShare: 17.1
   - type: general-purpose
     task: "Standards review of #2672 diff"
     durationSec: 50
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 8.5
+    tokenShare: 7
   - type: general-purpose
     task: "Spec review of #2672 diff"
     durationSec: 59
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 8
+    tokenShare: 6.6
 gitBranch: ccr-387e50f2-pgljvr
 entrypoint: remote_mobile
 cliVersion: 2.1.312
