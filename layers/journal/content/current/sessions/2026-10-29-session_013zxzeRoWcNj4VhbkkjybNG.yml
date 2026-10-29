@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRoWcNj4VhbkkjybNG
 startedAt: 2026-10-29T18:12:50Z
-endedAt: 2026-10-29T18:57:06Z
+endedAt: 2026-10-29T19:00:00Z
 kind: delegated
 goal: Weekly rater-consensus improvement run on the Glass Box guide
-status: in-review
-outcome: Promoted the Workflow scripts Lesson and fixed three false claims; PR open, gate green
-summary: "Ran the glassbox-improve Skill, started by one human kickoff (/glassbox-improve); every step after it was the Skill's own procedure, so nothing was a fresh human instruction or green-light beyond that. Three raters (sonnet, fable, opus) graded all 41 guide pages at base d08dde31. Nearly all pages were A. The only consensus deficit (Work queue's Why bullets restating sibling Lessons) sat on a cooling-off page, so no page was raised. The structural step was a promotion: all three raters listed the Workflow scripts draft as a gap, it tied with Virtual imports on the sum of places, and its title already passed, so it needed fewer changes. A researcher and an opus writer promoted it as guide page 09. Single-rater false claims were checked in the source: Routines' \"No file lists the Routines\", the pnpm page's ADR-0026 cite for the frozen install, and Type checking's unsupported \"planted in a layer config\" anecdote. All three were confirmed and fixed by me with pins moved to the base. code-review found five issues on the new page (counts in prose, an unwrapped Term, two sentences no source states, two motive clauses); the writer fixed them. A fresh re-grade gave A, B and C; only the confirmed lint-test claim was acted on. I corrected that one myself. The gate passed on the final head, the branch was pushed and PR 2684 opened. Still open; the CI verdict comment and merge."
+status: completed
+outcome: Promoted the Workflow scripts Lesson and fixed three false claims; PR 2684 merged
+summary: "Ran the glassbox-improve Skill, started by one human kickoff (/glassbox-improve); every step after it was the Skill's own procedure, so nothing was a fresh human instruction or green-light beyond that. Three raters (sonnet, fable, opus) graded all 41 guide pages at base d08dde31. Nearly all pages were A. The only consensus deficit (Work queue's Why bullets restating sibling Lessons) sat on a cooling-off page, so no page was raised. The structural step was a promotion: all three raters listed the Workflow scripts draft as a gap, it tied with Virtual imports on the sum of places, and its title already passed, so it needed fewer changes. A researcher and an opus writer promoted it as guide page 09. Single-rater false claims were checked in the source: Routines' \"No file lists the Routines\", the pnpm page's ADR-0026 cite for the frozen install, and Type checking's unsupported \"planted in a layer config\" anecdote. All three were confirmed and fixed by me with pins moved to the base. code-review found five issues on the new page (counts in prose, an unwrapped Term, two sentences no source states, two motive clauses); the writer fixed them. A fresh re-grade gave A, B and C; only the confirmed lint-test claim was acted on. I corrected that one myself. The gate passed on the final head, the branch was pushed and PR 2684 opened, I posted my verdict, CI went green and merge-pr.ts merged it."
 prs:
   - "2684"
 docsRead:
@@ -104,13 +104,13 @@ frictions:
   - description: Draft-promotion candidates all had pointer-only Why sections and stale pins, so any promotion costs a writer round whichever draft wins.
     solution: Raise this as a recurring cost in the ideas list; consider a standing pass that rewrites draft Why sections as reason bullets.
     severity: nit
-durationSec: 2656
+durationSec: 2831
 models:
-  claude-sonnet-5-5: 142
+  claude-sonnet-5-5: 155
 toolCounts:
-  Bash: 39
+  Bash: 42
   Read: 10
-  Skill: 4
+  Skill: 5
   mcp__github__list_pull_requests: 1
   Agent: 10
   Write: 1
@@ -119,6 +119,8 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__add_issue_comment: 1
+  ReadNotifications: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/09.workflow-scripts.md
   - layers/glassbox/content/guide/pages/claude-code/10.routines.md
@@ -213,35 +215,35 @@ subagents:
     durationSec: 1203
     toolCalls: 82
     modelCalls: 81
-    tokenShare: 35.6
+    tokenShare: 34.5
   - type: general-purpose
     task: Rater (fable) grades guide
     model: fable
     durationSec: 842
     toolCalls: 21
     modelCalls: 21
-    tokenShare: 8.7
+    tokenShare: 8.4
   - type: general-purpose
     task: Rater (opus) grades guide
     model: opus
     durationSec: 454
     toolCalls: 38
     modelCalls: 35
-    tokenShare: 14.4
+    tokenShare: 14
   - type: general-purpose
     task: Research workflow-scripts promotion
     model: sonnet
     durationSec: 105
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: Writer promotes workflow scripts
     model: opus
     durationSec: 479
     toolCalls: 54
     modelCalls: 35
-    tokenShare: 6.3
+    tokenShare: 6.2
   - type: general-purpose
     task: Review standards axis
     durationSec: 66
@@ -253,7 +255,7 @@ subagents:
     durationSec: 50
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: general-purpose
     task: Re-grade (sonnet)
     model: sonnet
@@ -267,14 +269,14 @@ subagents:
     durationSec: 191
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 2.3
+    tokenShare: 2.2
   - type: general-purpose
     task: Re-grade (opus)
     model: opus
     durationSec: 107
     toolCalls: 11
     modelCalls: 11
-    tokenShare: 2.1
+    tokenShare: 2
 gitBranch: ccr-ae0f29e4-muc704
 entrypoint: remote_mobile
 cliVersion: 2.1.312
