@@ -1,0 +1,175 @@
+schemaVersion: 1
+session: session_013zxzeTDLMF5mxnvWB4oyWE
+startedAt: 2026-10-29T07:33:40Z
+endedAt: 2026-10-29T07:49:28Z
+kind: autonomous
+goal: Weekly sync of Glass Box guide pages to main
+status: in-review
+outcome: "PR #2671 re-pins 15 pages to a9f85bc with three content edits; gate green, awaiting CI."
+summary: "Scheduled glassbox-update run (agent-run; no human instruction beyond the schedule). The script flagged 15 pages and no terms. I pinned all to a9f85bc, read the commits since each page's revision, and edited three pages: the CLAUDE.md git trigger excerpt, the triage-labels excerpt in Human-in-the-loop, and a clause on the four-word Lesson title check in Testing. The rest only needed shifted line ranges and a re-pin. Page test, validate:content and gate:scoped passed; I read the diff myself instead of spawning review agents because it touches content only. PR #2671 opened and subscribed."
+prs:
+  - "2671"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command; nothing changed my route
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: scheduled-run closing steps and review rules
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before GitHub op; PR created via MCP
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: page shapes and excerpt rules
+    useful: yes
+  - path: .claude/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin and Check steps
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-update
+    reason: the scheduled task itself
+  - name: code-review
+    reason: required before first push; used as an inline self-read of a content-only diff
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch in the same batch as reading git-conventions.md instead of reading it first, as CLAUDE.md requires.
+    solution: Read the doc in a separate earlier call before any git command.
+    severity: nit
+  - description: Guessed the content path without the pages/ subfolder; the first cat failed and cost one extra call.
+    solution: The glassbox-update skill could name layers/glassbox/content/guide/pages/.
+    severity: nit
+durationSec: 949
+models:
+  claude-sonnet-5-5: 60
+toolCounts:
+  Bash: 28
+  Skill: 3
+  Monitor: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+  - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/claude-code/03.skills.md
+  - layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+  - layers/glassbox/content/guide/pages/claude-code/05.blocking-hooks.md
+  - layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+  - layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+  - layers/glassbox/content/guide/pages/claude-code/10.routines.md
+  - layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+  - layers/glassbox/content/guide/pages/deploy/02.pnpm-lockfile.md
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+  - layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+  - layers/glassbox/content/guide/pages/git-github/05.attribution.md
+  - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/guide/pages/index.md
+  - layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+  - layers/glassbox/content/guide/pages/nuxt-content/03.content-database.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/06.use-async-data.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/09.nitro.md
+  - layers/glassbox/content/guide/pages/skill-pack/01.skill-packs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.human-in-the-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+  - layers/glassbox/content/guide/pages/verification/01.gate.md
+  - layers/glassbox/content/guide/pages/verification/02.type-checking.md
+  - layers/glassbox/content/guide/pages/verification/03.content-validation.md
+  - layers/glassbox/content/guide/pages/verification/04.unit-and-e2e-tests.md
+  - layers/glassbox/content/guide/pages/verification/05.linting.md
+  - layers/glassbox/content/guide/pages/verification/06.schema-validation.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Required gate:scoped and review before first push; summary was enough, did not open the ADR.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Reminded me to open the PR and subscribe; scheduled run stayed within the skill scope; ADR unopened.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session and keep logs out of the branch; ADR unopened.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; ADR unopened.
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill placement; this run edited only Glass Box content.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement; no glossary change here.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; I only read their diff as source material.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement; not relevant to a content re-pin.
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: No glossary term was added.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Prompted reading the Glass Box glossary, which the skill already required.
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: Triage sweep; only appeared via a read of triage-labels.md.
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Routing; appeared via the Blog index diff, not applicable.
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Pingbacks; loaded by the Blog page, not applicable.
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Tenant root pages; loaded by the Blog index diff, not applicable.
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Catalog reads; loaded by a diff read, not applicable.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Layer config; I changed none.
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: No UI change; only prose and excerpts.
+    useful: no
+gitBranch: claude/ecstatic-euler-pstfp6
+entrypoint: remote_trigger
+cliVersion: 2.1.312
+trigger: glassbox-update
+landedBy: Stop
