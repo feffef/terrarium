@@ -1,0 +1,338 @@
+schemaVersion: 1
+session: session_013zxzeQhtk66yyXVbQRdWeb
+startedAt: 2026-10-29T04:03:46Z
+endedAt: 2026-10-29T04:14:29Z
+kind: autonomous
+goal: "Scheduled docs audit: fix stale or muddled docs"
+status: in-review
+outcome: Sweep PR 2662 open with 3 fixes, gate green, verdict posted; merge pending CI
+summary: "Scheduled audit-docs run (no human prompted anything; all work followed the Skill's stored prompt). Dispatched three read-only reviewers (Freshness, Single-home, Coherence), saved their replies to a pool, then one checker re-derived all 9 findings: 0 CONFIRMED, 4 CONFIRMED-BUT, 5 WRONG. Applied three fixes (visitor-loop \"search\" wording after the list-don't-search change, a restated merge-pr refusal in pr-workflow, pack Skills vs triage-labels) and left out the merge-pr wait wording because the fix was longer than the original. Dropped findings were mostly in an open prune trial or went against an issue-chosen placement. code-review found no blockers; one wording nit applied. Gate green, PR 2662 opened, verdict posted. No escalation PR, no issue filed."
+prs:
+  - "2662"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read before first git command; fetch-first and commit -F rules followed
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: scheduled-run closing steps, simple-change threshold (3 files so code-review), verdict format
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before first GitHub op; nothing new needed for PR create
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: hook-requested after visitor-loop edit; confirmed wording edit is fine
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: hook-requested; confirmed trial areas untouched
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: hook-requested; no relevance to the edit
+    useful: no
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: hook-requested after triage-labels edit; consistent
+    useful: partly
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: hook-requested for visitor-loop; unrelated
+    useful: no
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: subagents used it as the spec; reported useful
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (read before editing)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/commons/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: (no reason given)
+  - path: docs/diagrams/interactive-map/README.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: .agents/skills/research/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Edit hooks asked for ADR reads after I had already edited three governed files; reading them afterwards showed the edits were fine.
+    solution: Nothing to change; the hook worked as designed and the late read cost one cat.
+    severity: nit
+durationSec: 643
+models:
+  claude-sonnet-5-5: 66
+toolCounts:
+  Read: 3
+  Skill: 4
+  Bash: 16
+  Agent: 6
+  Edit: 6
+  Monitor: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/pr-workflow.md
+  - docs/agents/triage-labels.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 28
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+  - adr: 22
+    via: path
+    readAfter: true
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+docsReadBySubagents:
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - docs/agents/domain.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/proposals/README.md
+  - GLOSSARY.md
+  - layers/journal/GLOSSARY.md
+  - layers/commons/GLOSSARY.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - docs/research/content-client-queries-without-wasm.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/making-repo-public.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/research/public-readiness-review.md
+  - docs/research/shell-reads-by-output-matching.md
+  - docs/diagrams/interactive-map/README.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - layers/midden/GLOSSARY.md
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - .agents/skills/research/SKILL.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Required review and gate before push, simple-change test; summary enough, did not open ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to run close-session; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: PR opened at once and subscribed; scheduled run limited to Skill scope; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR and comment headers and commit trailer; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on visitor-loop edit; no Skill structure change, did not open ADR
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Pack Skills uneditable drove the triage-labels fix; subagent confirmed
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement; no glossary edited
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Open trials excluded text from findings; checker dropped one finding on it
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Orphan-addition lens for docs/agents; no new docs found
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: ADR rewrite lens; no new ADR in 48h
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded on triage-labels edit; confirmed approval path unchanged
+    useful: partly
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded on visitor-loop edit; unrelated to navigation
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by reading docs/adr; no Human-only file touched
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Audit docs: Freshness"
+    durationSec: 92
+    toolCalls: 20
+    modelCalls: 18
+    tokenShare: 11.7
+  - type: general-purpose
+    task: "Audit docs: Single-home"
+    durationSec: 219
+    toolCalls: 33
+    modelCalls: 28
+    tokenShare: 22.8
+  - type: general-purpose
+    task: "Audit docs: Coherence"
+    durationSec: 206
+    toolCalls: 31
+    modelCalls: 25
+    tokenShare: 19.1
+  - type: general-purpose
+    task: Fact-check audit findings
+    durationSec: 154
+    toolCalls: 33
+    modelCalls: 27
+    tokenShare: 15.2
+  - type: general-purpose
+    task: Review standards axis
+    durationSec: 28
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 2.7
+  - type: general-purpose
+    task: Review spec axis
+    durationSec: 23
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 2.7
+gitBranch: claude/festive-mayer-7fuvm4
+entrypoint: remote_trigger
+cliVersion: 2.1.312
+trigger: audit-docs
+landedBy: Stop
