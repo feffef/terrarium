@@ -137,8 +137,9 @@ The pieces:
 3. **Clicking to a page the server doesn't keep:** Tinkerfund's search. It
    has no `_payload.json`, so its queries run in the browser itself. Nuxt
    Content loads a browser copy of the database (SQLite in WebAssembly),
-   fetching each collection's data from the server, and queries it there. If a `_payload.json` ever fails to
-   load, the page falls back to this browser copy as well.
+   fetching each collection's data from the server, and queries it there.
+   If a `_payload.json` ever fails to load, the page falls back to this
+   browser copy as well.
 
 The content database is never edited while the site runs. After each
 deploy, the server fills each collection's table from the build's output
@@ -193,8 +194,8 @@ an agent writes opens with a 🤖 line linking to its session.
 
 Issues are the shared to-do list. Visitors, the maintainer, sessions and
 routines all file them. A visitor's new issue has no label; sessions and
-routines file theirs as `needs-triage`. Only the triage skills set `ready-for-agent`
-and `ready-for-human`. The label says whose move it is:
+routines file theirs as `needs-triage`. Only the triage skills set
+`ready-for-agent` and `ready-for-human`. The label says whose move it is:
 - `needs-triage`: the maintainer still has to decide.
 - `needs-info`: waiting for the reporter to answer a question.
 - `ready-for-agent`: approved for an agent to build.
@@ -559,8 +560,8 @@ next session's log.
    maintainer runs it by hand. It is a session like any other.
 2. **Survey.** It sends a helper to `helper-agents`.
 3. **Read.** The helper reads the `logs` from shortly before the last ledger
-   update through a script (via `scripts`). It files every friction in the friction
-   ledger and notes which docs each session opened.
+   update through a script (via `scripts`). It files every friction in the
+   friction ledger and notes which docs each session opened.
 4. **Screen.** The helper checks `issues`. It drops frictions that are
    already fixed on `main`, already tracked in an issue or pull request,
    inside a rule that `prune-trial` is testing, or only fixable in an
