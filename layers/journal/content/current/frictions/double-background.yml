@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
-    date: "2026-10-14"
-    severity: nit
-    description: "A Bash call with run_in_background plus a trailing ampersand was blocked by the double-background guard, so its edits did not run either."
-    solution: "Keep edits and the backgrounded command in separate calls."
   - session: session_019e468BFBTvDPXZuGzLMAL7
     date: "2026-10-15"
     severity: nit
@@ -111,3 +106,18 @@ occurrences:
     severity: nit
     description: "Combined run_in_background with a text-level & and was blocked by the double-background guard; also called Monitor before loading its schema."
     solution: "None needed; the guards worked as designed."
+  - session: session_013zxzeQmVnqMqDkRgFRWx5T
+    date: "2026-10-28"
+    severity: nit
+    description: "Sent a gate command as run_in_background with a trailing &; the double-background guard rejected it, one wasted call before I re-sent it plainly."
+    solution: "None; the guard worked. Using the plain background form from the start avoids it."
+  - session: session_013zxzeRin6kPuaDZ27jyuUk
+    date: "2026-10-28"
+    severity: nit
+    description: "A trailing & plus run_in_background was blocked by the double-background guard; relaunched the gate with run_in_background alone."
+    solution: "Say in pr-workflow.md that gate:scoped backgrounding uses the flag only."
+  - session: session_013zxzeSxgYzYmeAuCzvJdhY
+    date: "2026-10-28"
+    severity: nit
+    description: "Double-background guard blocked a Bash call that used both run_in_background and a trailing &."
+    solution: "None needed; guard worked as designed."

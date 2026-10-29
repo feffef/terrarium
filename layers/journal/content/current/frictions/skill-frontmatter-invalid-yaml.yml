@@ -1,9 +1,12 @@
 name: skill-frontmatter-invalid-yaml
 surface: safe
 summary: A Skill's frontmatter with invalid YAML passed three reviews and the gate, and only audit-skills caught it.
-cause: "A SKILL.md description with an unquoted ': ' is invalid YAML; no gate step or reviewer parses Skill frontmatter, so the flag it carries (disable-model-invocation) may be silently ignored. Signals: 'invalid YAML', 'unquoted', SKILL.md frontmatter, description."
-status: tracked
-ref: "#2608"
+cause: "A SKILL.md description with an unquoted ': ' is invalid YAML, so the flag it carries (disable-model-invocation) may be silently ignored. Since PR #2639 a unit spec in pnpm test parses every Skill's frontmatter and names the failing file. Signals: 'invalid YAML', 'unquoted', SKILL.md frontmatter, description."
+status: open
+fixes:
+  - pr: 2639
+    date: "2026-10-28"
+    summary: "tests/unit/skill-frontmatter.spec.ts parses every Skill's SKILL.md frontmatter in pnpm test: valid YAML, name matches the folder, non-empty description."
 occurrences:
   - session: session_013zxzeQ8EBq9v7NXqWmAFRF
     date: "2026-10-27"

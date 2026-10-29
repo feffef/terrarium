@@ -14,26 +14,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_01XJ9iR9EbRT2iV7afhytND8
-    date: "2026-10-14"
-    severity: nit
-    description: "Ran git status/log in the same Bash call that first printed git-conventions.md, so the doc was read after, not before, the first git log"
-    solution: "Read git-conventions.md in its own call before any git command beyond status/diff"
-  - session: session_01RAEu4CBfQptjCtKnJpUw8q
-    date: "2026-10-14"
-    severity: nit
-    description: "Ran git fetch and merge-base before reading git-conventions.md, and a GitHub search before github-integration.md; the search was also denied for missing fields."
-    solution: "Read the trigger docs first; the search guard message was clear."
-  - session: session_01JkzKjuQD4wH34MjxMjKHaX
-    date: "2026-10-14"
-    severity: minor
-    description: "Made my first GitHub calls before reading github-integration.md (CLAUDE.md read-first); get_sub_issues overflowed exactly as that doc warns."
-    solution: "Read the doc before the first mcp__github__ call; a guard or hint at the first GitHub call would catch it earlier than the PostToolUse reminder."
-  - session: session_01RBVYHX1FsYogHEgzgyRV6P
-    date: "2026-10-14"
-    severity: nit
-    description: "Took screenshots of the design without first reading docs/agents/verifying-ui-changes.md as CLAUDE.md requires"
-    solution: "The trigger reads as being about our own UI changes; it could say whether it also covers external mockups"
   - session: session_01GLWVkt3R3EnHJj5XpQEJQt
     date: "2026-10-15"
     severity: nit
@@ -64,11 +44,6 @@ occurrences:
     severity: minor
     description: "Ran git log and git fetch before reading docs/agents/git-conventions.md, and an MCP GitHub call before github-integration.md, against CLAUDE.md read-first triggers; hooks reminded me afterwards."
     solution: "Read both docs right after the session-start glossaries on any scheduled run that will use git and GitHub."
-  - session: session_01U6EF8qk4ANQLqE5KXmJgEY
-    date: "2026-10-14"
-    severity: nit
-    description: "Ran git fetch and git log before reading docs/agents/git-conventions.md, against CLAUDE.md's first-git-command trigger; the hook flagged it."
-    solution: "Read git-conventions.md before the first fetch; the hook's reminder came after the call."
   - session: session_01P7kLLJwHBgCaeVSUjhbScg
     date: "2026-10-15"
     severity: nit
@@ -599,3 +574,23 @@ occurrences:
     severity: nit
     description: "Read git-conventions.md after the first git log command, not before as CLAUDE.md requires."
     solution: "Read the triggered doc before the first git command beyond status and diff."
+  - session: session_013zxzeQmVnqMqDkRgFRWx5T
+    date: "2026-10-28"
+    severity: nit
+    description: "Ran git rev-parse and branch --show-current before reading git-conventions.md; a PostToolUse hook reminded me. No harm, the doc did not change my calls."
+    solution: "Fine as is; the hint worked. Reading the doc first costs nothing but is not needed for read-only rev-parse."
+  - session: session_013zxzeSXsJSnGEYu9VQYXFH
+    date: "2026-10-28"
+    severity: nit
+    description: "Ran git log and a fetch-bearing script before reading git-conventions.md; a hook reminded me afterwards."
+    solution: "Read the doc when the task starts with git; the hook already catches it."
+  - session: session_013zxzeRejGhGCyE3SttX9AL
+    date: "2026-10-29"
+    severity: minor
+    description: "Read git-conventions.md and the dispatch-subagents Skill only after hooks blocked my first git command and first Agent call, not before as CLAUDE.md says."
+    solution: "Read the triggered docs before the first git command or subagent brief."
+  - session: session_013zxzePtHJNqS19fEy1yRGv
+    date: "2026-10-29"
+    severity: nit
+    description: "Called search_issues and ran git fetch/log before reading github-integration.md and git-conventions.md, which CLAUDE.md requires first; hooks reminded me afterwards."
+    solution: "Read both docs at the first GitHub or git step of a scheduled audit."

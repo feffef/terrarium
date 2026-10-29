@@ -39,3 +39,13 @@ occurrences:
     severity: nit
     description: "Did not read layers/tinkerfund/GLOSSARY.md as the tenant-glossary rule asks before working on a Tenant."
     solution: "Read it at first Tenant touch; no term was misused here."
+  - session: session_013zxzePY9L4aufht9ct94ec
+    date: "2026-10-27"
+    severity: minor
+    description: "The impl agent and its follow-up wrote 'wing' for Biome in code comments despite the tenant-glossary rule loading; caught only by the second review."
+    solution: "Brief impl agents to use the Tenant's glossary terms in comments, not only page copy."
+  - session: session_013zxzeQDh7MCP7HpYBYBTeh
+    date: "2026-10-28"
+    severity: minor
+    description: "Chose the work-queue draft without checking its title against EVERY-PAGE's title rule; two raters then flagged five words, costing a retitle round and link-text edits on five pages."
+    solution: "Have step 3 check a candidate draft's title against the rule before it is chosen, or add the word count to page-checks (issue 2651)."

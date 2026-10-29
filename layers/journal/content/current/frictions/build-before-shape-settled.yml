@@ -8,11 +8,6 @@ fixes:
     date: "2026-10-17"
     summary: "dispatch-subagents section 1 now names owner-visible shape, data shape, length and ownership as choices to settle first, and CLAUDE.md says to ask before building what the Trusted user will see."
 occurrences:
-  - session: session_015dUGRadEQP1bvv6KytKLXT
-    date: "2026-10-14"
-    severity: moderate
-    description: "I briefed the 1947 build with a separate subagent-verdict list and card section without asking the owner how it should look; it shipped and needed a redesign PR (1964)"
-    solution: "When a change alters what a person sees, put the layout to the owner as a grilling question before building"
   - session: session_01Fay2GiWTwxDKnnqS9DznHk
     date: "2026-10-16"
     severity: moderate

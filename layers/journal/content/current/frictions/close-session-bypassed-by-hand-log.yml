@@ -23,3 +23,8 @@ occurrences:
     severity: nit
     description: "After PRs #2564-#2568 opened I re-authored the log with log-session directly instead of re-invoking close-session as the PR-open hook asked; the log stayed current, but the close-session checklist was skipped for those PRs."
     solution: "Re-invoke close-session on each PR-open hook hint, even when the log was just authored."
+  - session: session_013zxzeTK9c2HVcabwCx3b18
+    date: "2026-10-28"
+    severity: nit
+    description: "After opening PRs 2642-2647 I re-authored the log with log-session directly instead of invoking close-session, against the CLAUDE.md rule to invoke close-session before a PR-opening turn ends."
+    solution: "Follow the PR-open hook literally and invoke close-session, which then calls log-session."

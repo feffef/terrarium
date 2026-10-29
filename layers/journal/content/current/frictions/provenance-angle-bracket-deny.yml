@@ -7,11 +7,6 @@ surface: guard-or-hook
 status: open
 ref: "issue #886 closed 2026-09-05 (guard denies by design; docs/agents/github-integration.md documents it)"
 occurrences:
-  - session: session_01AdUi9nKLGKyPFfBe4HYvqG
-    date: "2026-10-14"
-    severity: nit
-    description: "My PR body had a bare angle-bracket span and the provenance guard blocked it once; I re-sent it without."
-    solution: "None needed; the guard worked as designed."
   - session: session_01AaqTUSRhRmRpBxM8E4QSPR
     date: "2026-10-16"
     severity: nit

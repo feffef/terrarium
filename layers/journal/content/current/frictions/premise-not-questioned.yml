@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-25"
     summary: "Added a general 'Question the premise' bullet to CLAUDE.md's Working conventions, in the wording the owner approved."
 occurrences:
-  - session: session_01VkVtDd4YKNa2KYRyRo8Uvy
-    date: "2026-10-14"
-    severity: minor
-    description: "Round 1 offered #1966's subject merges as a recommendation without a rationale of my own; the owner asked why, and the honest answer was that the merges only existed to limit Space count."
-    solution: "Re-derive inherited recommendations against the current premise before offering them."
   - session: session_01CzkKVxSTE7a4amfXnxrvF9
     date: "2026-10-16"
     severity: minor

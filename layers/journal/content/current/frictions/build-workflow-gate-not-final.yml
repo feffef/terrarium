@@ -8,11 +8,6 @@ status: open
 ref: "issue #2523 closed by PR #2532"
 fixes: [ { pr: 2532, date: "2026-10-25", summary: "clear-backlog-build runs a final gate agent on HEAD and marks a branch ready-to-push only when that agent reports a pass." } ]
 occurrences:
-  - session: session_015dUGRadEQP1bvv6KytKLXT
-    date: "2026-10-14"
-    severity: minor
-    description: "The 1940 build agent reported gatePassed while saying it had not rerun the gate after its last round, and it could not do a live hook check in-session"
-    solution: "Have clear-backlog-build re-run gate:scoped on the final commit before it returns ready-to-push"
   - session: session_013QKXoGLaEHEJanyw5TrPqj
     date: "2026-10-25"
     severity: minor

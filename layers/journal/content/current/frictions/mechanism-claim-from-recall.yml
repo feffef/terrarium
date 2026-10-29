@@ -20,11 +20,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
-  - session: session_01Qp5NojwQhExSmToPJtnQNV
-    date: "2026-10-14"
-    severity: minor
-    description: "A closed decision ticket (#1971) chose MDC syntax `:source` without checking it against MDC; source is an HTML tag so the component would never render. Caught here only by chance"
-    solution: "Decision tickets that pick an MDC component name should check it against MDC's html-tags-list and the global component namespace"
   - session: session_0166zWrnaKYByq5Z2Qj5nXRM
     date: "2026-10-16"
     severity: minor
@@ -35,11 +30,6 @@ occurrences:
     severity: minor
     description: "First draft of the deny message paraphrased the owner-approved sentence and added an unverified 'you are notified' claim, false for subagents; code-review caught both."
     solution: "Paste approved wording verbatim and add nothing the owner did not approve."
-  - session: session_01675UWGBfCMALkurUr58cxM
-    date: "2026-10-14"
-    severity: moderate
-    description: "I told the user only domain-modeling changed after diffing one skill; nine other pack skills also carried the rename, costing two extra decision rounds."
-    solution: "Grep the whole skills diff for renamed terms before reporting scope."
   - session: session_01WynjtDHvk8MajTsgr59Ckt
     date: "2026-10-16"
     severity: minor
@@ -140,3 +130,8 @@ occurrences:
     severity: minor
     description: "Checking fable's Nuxt layers false claim took five reads through @nuxt/kit and c12 dist code before it proved a misreading."
     solution: "None needed; a false claim needs a source check. The learning below saves the next run the walk."
+  - session: session_013zxzeTK9c2HVcabwCx3b18
+    date: "2026-10-28"
+    severity: minor
+    description: "I assumed a missing ruleVerdicts field meant a log predated the field and wrote an exemption on that; the writer omits it for any zero-verdict session, which the Spec review caught before push."
+    solution: "Check how a field is written (transcript-trace.ts) before reading its absence as a log-age marker."

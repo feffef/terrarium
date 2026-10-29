@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-23"
     summary: "Cut long-command backgrounding to one home: CLAUDE.md's Self-verification bullet tightened and blog-post §10's restatement dropped."
 occurrences:
-  - session: session_01AdUi9nKLGKyPFfBe4HYvqG
-    date: "2026-10-14"
-    severity: nit
-    description: "I chained preview stop with several long commands in one call; it exceeded the 2-minute limit and was moved to the background."
-    solution: "Run stop alone; the tool output of stop is tiny and fast."
   - session: session_01TANViXz17btvY9rH87SHcB
     date: "2026-10-18"
     severity: moderate

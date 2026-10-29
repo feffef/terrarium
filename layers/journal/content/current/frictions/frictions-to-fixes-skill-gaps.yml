@@ -83,3 +83,8 @@ occurrences:
     severity: minor
     description: "Skill says file regression issues for the top three by severity, but the top two were an owner-decided entry and a stale-session false alarm; I had to deviate and pick by recurrence."
     solution: "Say in §2 to skip entries whose issue the owner closed not planned or whose fix is recorded as holding, and how to break minor-severity ties."
+  - session: session_013zxzeQmVnqMqDkRgFRWx5T
+    date: "2026-10-28"
+    severity: minor
+    description: "The Skill's top-three regression rule picked two phantom regressions (occurrences dated before their own closing verdicts) and a family already covered by open #2472; I deviated and took the next eligible entries."
+    solution: "Have the survey exclude entries whose post-fix occurrences predate the closing issue, or whose family has an open regression issue, before ranking."

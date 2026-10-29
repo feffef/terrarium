@@ -2,14 +2,16 @@ name: search-issues-misses-hits
 summary: >-
   A GitHub issue search returned nothing for something that exists, so a "no match" claim rested on weak evidence.
 cause: >-
-  mcp__github__search_issues matches fuzzily and can return zero results or miss a merged fix for plain queries; github-integration.md already warns that total_count 0 is not proof (issue #741) but sessions state "no match" from one search. Signals: "search returned no match", "returned zero results for plain queries", a refiner or later search finding the issue or PR.
+  mcp__github__search_issues matches fuzzily and can return zero results or miss a merged fix for plain queries; github-integration.md already warns that total_count 0 is not proof (issue #741) but sessions state 'no match' from one search. PR #2646 moved visitor-loop to list-and-filter, and its git log origin/main --grep check on a shallow clone then also said no match for an existing merged PR. Signals: 'search returned no match', 'returned zero results for plain queries', a refiner or later search finding the issue or PR.
 surface: safe
-status: tracked
-ref: "#2632"
+status: open
 fixes:
   - pr: 744
     date: "2026-07-30"
     summary: "github-integration.md warns that a search's total_count 0 is not proof of absence and to cross-check with a narrow list scan."
+  - pr: 2646
+    date: "2026-10-28"
+    summary: "visitor-loop section 3 lists open issues with list-open-issues.ts and checks merged PRs with git log origin/main --grep instead of searching; github-integration.md unchanged."
 occurrences:
   - session: session_01CQhPd23d8eRP33TzyDha76
     date: "2026-10-21"
@@ -21,3 +23,8 @@ occurrences:
     severity: minor
     description: "GitHub search_issues returned zero results for plain queries like Friction Ledger, while the refiner's searches found 166; so my no-match search lines were weak evidence."
     solution: "Document in github-integration.md which search tool and query form is reliable for the visitor-loop search step."
+  - session: session_013zxzeSxgYzYmeAuCzvJdhY
+    date: "2026-10-28"
+    severity: minor
+    description: "The tally's `git log origin/main --grep` search ran on a shallow clone and said no match for threads; a merged PR (2383) already existed. Only the refiner's GitHub search caught it."
+    solution: "visitor-loop step 3 should use GitHub search for merged PRs, or unshallow first."

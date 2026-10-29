@@ -15,16 +15,6 @@ fixes:
     date: "2026-10-17"
     summary: "The blind-reader briefs in the blog, visitor-loop, digest, audit-skills and midden Skills now end with the rule and doc verdict request."
 occurrences:
-  - session: session_01BdQnbVQmdfrD1PPyZTnL9w
-    date: "2026-10-14"
-    severity: nit
-    description: "My three subagent briefs didn't ask for rule and doc verdicts, so 49 subagent-only reads have no verdict in this log."
-    solution: "Read the dispatch-subagents Skill before dispatching any subagent, not only git-touching ones, and add its verdict request to each brief."
-  - session: session_01GG85r8HWMEdaMgKUaNUZH7
-    date: "2026-10-14"
-    severity: minor
-    description: "Did not collect rule and doc verdicts from the roughly 40 subagents; their rules show as unknown in this log"
-    solution: "Ask each writer for verdicts in its hand-back template so no extra round trip is needed"
   - session: session_01E2zbWEQmuUrEhWvbzNpBba
     date: "2026-10-15"
     severity: nit

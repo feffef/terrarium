@@ -7,41 +7,6 @@ ref: "Comes from PR #1775, the fix for bash-reads-not-read-tool (rules never loa
 notes: |-
   2026-10-28 design: dropped: all 12 nits predate the 2026-10-16 cut of CLAUDE.md's Read-tool instruction (a6cdc3561); none since.
 occurrences:
-  - session: session_01TFojzwXEByz1nbqt3wcKNL
-    date: "2026-10-14"
-    severity: nit
-    description: "Read .githooks/commit-msg with Bash cat instead of the Read tool (CLAUDE.md), which loaded an irrelevant adr-0004-human-merge.md reminder since I only inspected, never edited, that Human-only file."
-    solution: "Use the Read tool for any file read, even a quick one-off inspection."
-  - session: session_01JYFKBPoDVHJanBhFhmw1kR
-    date: "2026-10-14"
-    severity: nit
-    description: "Read CONTEXT-MAP.md with cat via Bash although CLAUDE.md says to use the Read tool; nothing was edited, so no harm done"
-    solution: "Use Read for doc reads even when batching shell checks"
-  - session: session_01XJ9iR9EbRT2iV7afhytND8
-    date: "2026-10-14"
-    severity: nit
-    description: "Read CONTEXT.md, CONTEXT-MAP.md and docs via cat in Bash despite CLAUDE.md's Read-tool rule; no rule load mattered here"
-    solution: "Use the Read tool for repo docs at session start"
-  - session: session_01CJix3AqBpX5KrAENqNp1M7
-    date: "2026-10-14"
-    severity: nit
-    description: "Read rule frontmatter with Bash head/awk instead of the Read tool, against the CLAUDE.md Read-tool convention; it loaded no unrelated rules but was a skipped convention"
-    solution: "Read the rule files with the Read tool, or grep for paths only"
-  - session: session_01VkVtDd4YKNa2KYRyRo8Uvy
-    date: "2026-10-14"
-    severity: nit
-    description: "Broke CLAUDE.md 'Read files with the Read tool': read glossaries, docs, ADRs and manifests with cat/sed in Bash. Rules still arrived via the hint hook, so no real cost."
-    solution: "Use Read for repo docs; Bash cat felt cheaper for batching several files at once."
-  - session: session_01Dcufz27EyPsKy6sYafpKRg
-    date: "2026-10-14"
-    severity: nit
-    description: "I read Midden's Gloss.vue with cat instead of the Read tool, against CLAUDE.md's Read-tool rule; the hook loaded its rule anyway"
-    solution: "Use Read for file reads, as CLAUDE.md says"
-  - session: session_01R8ZgGod9KTmxwvnDyB4PQY
-    date: "2026-10-14"
-    severity: nit
-    description: "Read scripts/bash-rules-hint.ts with sed via Bash instead of the Read tool, breaking the CLAUDE.md Read-tool convention; no rule was missed as a result."
-    solution: "Use the Read tool with offset/limit for partial reads."
   - session: session_012VTgtrUEy7cPVTN5sMriXj
     date: "2026-10-15"
     severity: nit

@@ -5,11 +5,6 @@ surface: safe
 status: open
 ref: Two nits; drop at the next horizon prune unless it recurs.
 occurrences:
-  - session: session_01RAEu4CBfQptjCtKnJpUw8q
-    date: "2026-10-14"
-    severity: nit
-    description: "Gate ran as a long background job while review agents ran; its log held many push-negotiation warnings that made it hard to confirm success quickly."
-    solution: "Check the exit= line only."
   - session: session_019ZQjo7wiuxrS9KLEG2GiTU
     date: "2026-10-15"
     severity: nit

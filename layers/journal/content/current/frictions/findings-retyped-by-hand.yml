@@ -26,11 +26,6 @@ fixes:
     date: "2026-10-25"
     summary: "audit-docs saves each reviewer reply to its own file in a pool folder, since save-handback.ts overwrites its output file."
 occurrences:
-  - session: session_01G6m9SbDppX4TE87Mp3m5Dk
-    date: "2026-10-14"
-    severity: minor
-    description: "Subagent hand-backs arrive only as a SubagentHandback tool call, so saving each reply verbatim (step 3) needed a JSONL extraction script"
-    solution: "audit-docs step 3 could name how to save a hand-back verbatim, or the harness could expose the hand-back text as a file"
   - session: session_011HBcCLzMW7CshmqnHLnegb
     date: "2026-10-15"
     severity: minor

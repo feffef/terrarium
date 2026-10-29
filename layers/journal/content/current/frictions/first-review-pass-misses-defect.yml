@@ -1,0 +1,18 @@
+name: first-review-pass-misses-defect
+surface: safe
+summary: A build's first Standards and Spec review let a defect through that the session or a later review found.
+cause: "The Standards and Spec review of a clear-backlog-build branch passes a defect (a regex that rejects ordinary prose; a real gap in a rule's coverage flagged only as a judgement call) and the main session finds it reading the diff, or a later review round does. Signals: 'review passed', 'I caught it reading the diff', 'flagged as a mere judgement call', a fix round after the build reported ready."
+status: open
+notes: |-
+  2026-10-29 design: one line in clear-backlog-build's review brief for a gap against a 'never' clause dropped: two unrelated minors, both caught by the main session before the push; revisit if a defect reaches CI
+occurrences:
+  - session: session_013zxzeQTGBbhXQGepc3y2z8
+    date: "2026-10-27"
+    severity: minor
+    description: "clear-backlog-build's Standards and Spec review passed a #2582 regex that rejected prose like session_id; I caught it reading the diff before the push"
+    solution: "The build brief should ask for a negative test on look-alike text whenever a change adds a validation regex"
+  - session: session_013zxzeTK9c2HVcabwCx3b18
+    date: "2026-10-28"
+    severity: minor
+    description: "The build reviewer flagged as a mere judgement call a real gap where the #2472 rule covered only one clause of the bar, which I fixed by hand."
+    solution: "The build workflow's review should treat a gap against the brief's 'never' wording as a finding, not a judgement call."

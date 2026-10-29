@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   Session logs and Digests land on main without a gate (ADR-0009), and the retention sweep moves logs to archived, while e2e and unit tests read specific logs' text or current paths, so the sweep or one log turns the gate red for the Digest PR and others. PR #2620 caps the dashboard at 1000 sessions and reads the smoke test's HTML in Node, which retires the archived page's size (10 MB) as a cause. Signals: a gate red after an archive sweep, a test reading content/current/sessions by path, an assertion on a log's wording, 'Request content was evicted from inspector cache'.
 surface: safe
-status: tracked
-ref: "issue #2105 reopened 2026-10-28 (5th occurrence): the retention sweep makes the archived page too large for the smoke test's body read (tests/support/e2e.ts); PR #2394 closed issue #2398 (regression of #2108)."
+status: open
+ref: "issue #2105 closed 2026-10-28 with label wontfix and no PR; PR #2620 (merged 2026-10-28) capped the archived dashboard at 1000 sessions."
 fixes:
   - pr: 2108
     date: "2026-10-16"

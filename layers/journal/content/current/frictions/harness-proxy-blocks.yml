@@ -2,10 +2,9 @@ name: harness-proxy-blocks
 summary: >-
   The hosting environment's network proxy blocked sites and downloads the work needed, with no way to override it in the session.
 cause: >-
-  The cloud agent proxy or its DNS refuses a host (github.com/user-attachments, content.nuxt.com, zod.dev, nitro.build, nuxt.com, the deployed site) with a 403 or connection failure and no in-session override; the fix is to list the host and its workaround in environment-caveats.md. Signals: proxy 403, curl 000, a DNS failure from WebFetch. Two auto-mode classifier denials with no shared fix also stay here (01CtktRk, 01TJH95q); CI job logs are ci-job-logs-unreachable, Self-Modification denials auto-mode-self-modification-denials.
+  The cloud agent proxy or its DNS refuses a host (github.com/user-attachments, content.nuxt.com, zod.dev, nitro.build, nuxt.com, docs.github.com, the deployed site) with a 403 or connection failure and no in-session override; the fix is to list the host and its workaround in environment-caveats.md, and since PR #2647 the Glass Box page guide fetches blocked GitHub docs from raw.githubusercontent.com. Signals: proxy 403, curl 000, a DNS failure from WebFetch. Auto-mode classifier denials (a deleted pushed branch, a review subagent's script, a force-with-lease push) with no shared fix also stay here; CI job logs are ci-job-logs-unreachable, Self-Modification denials auto-mode-self-modification-denials.
 surface: outside
-status: tracked
-ref: "#2611"
+status: open
 fixes:
   - pr: 2030
     date: "2026-10-15"
@@ -13,22 +12,10 @@ fixes:
   - pr: 2119
     date: "2026-10-16"
     summary: "verifying-ui-changes.md now says the deployed site is blocked in cloud sessions (plus a preview.ts review verb)."
+  - pr: 2647
+    date: "2026-10-28"
+    summary: "Glass Box EVERY-PAGE.md falls back to fetching raw.githubusercontent.com/github/docs when docs.github.com is blocked, instead of sparse-cloning github/docs."
 occurrences:
-  - session: session_01JkzKjuQD4wH34MjxMjKHaX
-    date: "2026-10-14"
-    severity: minor
-    description: "The proxy blocked content.nuxt.com and zod.dev, so two official-docs links in the drafts stay unverified."
-    solution: "Allow those doc hosts in the environment network policy, or verify links in a session that can reach them."
-  - session: session_01RBVYHX1FsYogHEgzgyRV6P
-    date: "2026-10-14"
-    severity: minor
-    description: "github.com/user-attachments downloads return 403 from the agent proxy, so the owner's attached design files were unreachable"
-    solution: "Add a caveat to docs/agents/environment-caveats.md: ask the owner to upload attachments into the session instead"
-  - session: session_01Dcufz27EyPsKy6sYafpKRg
-    date: "2026-10-14"
-    severity: minor
-    description: "Glass Box tickets keep citing user-attachments design files that the proxy blocks; this session could not check design 1b details itself"
-    solution: "Commit design exports to a branch, or have the owner upload them, when a design pass resolves"
   - session: session_01KVh6e6JUAssZvPRbuN5YDr
     date: "2026-10-15"
     severity: minor
@@ -59,3 +46,8 @@ occurrences:
     severity: minor
     description: "docs.github.com returns 403 through the proxy and github/docs is out of repo scope, so verifying the Full reference URL took a web search detour"
     solution: "EVERY-PAGE.md could name web search as the fallback for docs.github.com URLs"
+  - session: session_013zxzeQmVnqMqDkRgFRWx5T
+    date: "2026-10-28"
+    severity: nit
+    description: "A force-with-lease push of the restarted session branch was denied by the auto-mode classifier. The remote branch had been deleted on merge, so a plain push worked; one wasted call."
+    solution: "The restart-after-merge recipe in the system prompt should say to try a plain push first, since the remote branch is deleted on merge."

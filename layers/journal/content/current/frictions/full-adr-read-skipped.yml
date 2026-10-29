@@ -16,16 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "digest step 3 says to read ADR-0010 in full before saving the first Digest (partial)."
 occurrences:
-  - session: session_01Dfw9sJon2e4UsaVoiCLhSJ
-    date: "2026-10-14"
-    severity: nit
-    description: "Did not read the full ADR-0004 doc though its rule says to when it touches the task; read only pr-workflow and an excerpt."
-    solution: "Rule could say which step the full read changes."
-  - session: session_01R8ZgGod9KTmxwvnDyB4PQY
-    date: "2026-10-14"
-    severity: nit
-    description: "Did not open the full ADR-0004 although its summary applied (human-merge PR); the summary and pr-workflow.md were enough, but the rule says to read it."
-    solution: "Read the full ADR whenever a summary rule applies, as it says."
   - session: session_011HBcCLzMW7CshmqnHLnegb
     date: "2026-10-15"
     severity: nit
@@ -81,8 +71,3 @@ occurrences:
     severity: nit
     description: "ADR hooks asked to read ADR-0027 and ADR-0029 in full after an edit; I relied on the rule summaries and did not open them."
     solution: "Summaries sufficed for a comment-only prune; none needed."
-  - session: session_018wtKTCgkvJwgb3gS8o8JKA
-    date: "2026-10-14"
-    severity: minor
-    description: "Recommended file and ADR pointers without reading the full ADR-0005 or ADR-0029, only their summary rules, against the CLAUDE.md ADR-reading rule"
-    solution: "Read the binding ADRs in full before a recommendation round, even for planning tickets"

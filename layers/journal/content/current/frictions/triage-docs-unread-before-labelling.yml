@@ -11,21 +11,6 @@ fixes:
     date: "2026-10-23"
     summary: "read-first-hint points to issue-tracker.md and triage-labels.md on an issue write."
 occurrences:
-  - session: session_01JYFKBPoDVHJanBhFhmw1kR
-    date: "2026-10-14"
-    severity: minor
-    description: "Did not read docs/agents/issue-tracker.md or triage-labels.md myself; the triage subagents did the labelling, but #1905 stays needs-triage while blocked and I did not check that label"
-    solution: "The explore workflow could say which label a blocked issue should carry"
-  - session: session_015dUGRadEQP1bvv6KytKLXT
-    date: "2026-10-14"
-    severity: nit
-    description: "I didn't read docs/agents/issue-tracker.md and triage-labels.md in full before triage, which CLAUDE.md requires; the triage agents did the labelling, but the orchestrator still decided set membership"
-    solution: "clear-backlog section 1 could name those two docs as orchestrator reads, or say explicitly that only the triage agents need them"
-  - session: session_01ATdHzhyNozsTLHHtJGbLsa
-    date: "2026-10-14"
-    severity: minor
-    description: "Labelled and closed issues (1954, 1955, 1959, 1967, 1968) without reading issue-tracker.md and triage-labels.md first, as CLAUDE.md requires."
-    solution: "Read them before the first label write; the clear-backlog Skill could name them at §2."
   - session: session_012NmfdSNbbPD9T5LPAwmdYG
     date: "2026-10-15"
     severity: minor

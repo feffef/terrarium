@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-05"
     summary: "Moved the end-of-turn reminder caveat into the main project instructions so more sessions read it."
 occurrences:
-  - session: session_011JKK8rrCwea3xSmL4kw6si
-    date: "2026-10-14"
-    severity: nit
-    description: "The Stop hook repeatedly asked me to push or commit a subagent worktree's scratch log and unpushed commit while the branch was still under review."
-    solution: "Let the hook skip linked worktrees that hold a branch under review."
-  - session: session_01675UWGBfCMALkurUr58cxM
-    date: "2026-10-14"
-    severity: minor
-    description: "Stop hook asked four times to commit and push while a conflict decision and review were pending; ADR-0004 and pr-workflow require review before the first push."
-    solution: "Let the hook defer when a stop-and-report question or code-review is pending."
   - session: session_01NoQubvnMfCpcq9nkicNsDq
     date: "2026-10-15"
     severity: nit
@@ -369,3 +359,18 @@ occurrences:
     severity: nit
     description: "The Stop hook asked to push about eight times while reviews, audits and the gate were still running; each needed a reply."
     solution: "Harness-side hook, already tracked as stop-hook-nag (accepted)."
+  - session: session_013zxzeQmVnqMqDkRgFRWx5T
+    date: "2026-10-28"
+    severity: nit
+    description: "The Stop hook asked me five times to push while the required gate was still running, which would have pushed before it passed; I declined each time."
+    solution: "The Stop hook could skip its nag while a gate:scoped log is open or a gate run is in progress."
+  - session: session_013zxzeSXsJSnGEYu9VQYXFH
+    date: "2026-10-28"
+    severity: nit
+    description: "The Stop hook demanded a push five times while review and gate were still running, which ADR-0004 puts before the first push."
+    solution: "Stop hook could skip the nag while a background gate is running."
+  - session: session_013zxzeSxgYzYmeAuCzvJdhY
+    date: "2026-10-28"
+    severity: nit
+    description: "Stop hook repeatedly asked to push uncommitted/unreviewed work, conflicting with ADR-0004's review-then-gate-then-push order."
+    solution: "Hook could skip the nag while a scheduled run is mid-review."

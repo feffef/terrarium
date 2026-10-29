@@ -40,3 +40,23 @@ occurrences:
     severity: nit
     description: "Agent calls were blocked by the dispatch-read guard, so the three visitor dispatches had to be repeated unchanged after reading the Skill."
     solution: "Have visitor-loop step 2 name dispatch-subagents as a read-first, or let the guard accept the Skill's own briefs."
+  - session: session_013zxzeTK9c2HVcabwCx3b18
+    date: "2026-10-28"
+    severity: minor
+    description: "The first Workflow call was blocked by the dispatch-read guard because I had not read dispatch-subagents first, although a saved workflow writes its own briefs."
+    solution: "Exempt a named saved-workflow run from the dispatch-read guard, or make clear-backlog say to read dispatch-subagents before section 1."
+  - session: session_013zxzeRin6kPuaDZ27jyuUk
+    date: "2026-10-28"
+    severity: nit
+    description: "dispatch-read guard rejected the Agent call because I read the .claude/skills symlink path, not .agents/skills; one extra read and retry."
+    solution: "Have the guard accept either path of the same Skill file."
+  - session: session_013zxzeSxgYzYmeAuCzvJdhY
+    date: "2026-10-28"
+    severity: nit
+    description: "Dispatched the three visitors before reading dispatch-subagents; the dispatch-read guard blocked all three calls and they were resent unchanged."
+    solution: "CLAUDE.md names the trigger; visitor-loop step 2 could say to read dispatch-subagents first."
+  - session: session_013zxzeRejGhGCyE3SttX9AL
+    date: "2026-10-29"
+    severity: minor
+    description: "Read git-conventions.md and the dispatch-subagents Skill only after hooks blocked my first git command and first Agent call, not before as CLAUDE.md says."
+    solution: "Read the triggered docs before the first git command or subagent brief."
