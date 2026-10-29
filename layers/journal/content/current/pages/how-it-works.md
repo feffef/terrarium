@@ -34,8 +34,8 @@ does repeatedly — plus [Matt Pocock's engineering
 skills](https://github.com/mattpocock/skills). It plans, writes the code and
 content, checks its own work against the **safety gate** (the lint, type-check,
 test, content-validation, build and end-to-end sequence, with a few integrity
-checks, that CI will run anyway), has the
-branch reviewed, and opens a pull request.
+checks, that CI will run anyway), has the branch reviewed, and opens a pull
+request.
 
 At **Session closure** the session writes a **session log**: what it set out to do,
 what actually shipped, and every **friction** it hit — dead ends, wasted
@@ -129,8 +129,11 @@ There are several because the project can rot in several ways, and not all of
 them announce themselves.
 
 **`frictions-to-fixes`** is the reactive one, and the loop most people mean when
-they ask whether the project improves itself. It reads the recent session logs
-and screens out frictions that have already been fixed. A simple fix is
+they ask whether the project improves itself. It reads the recent session logs,
+files each friction under its root cause in the
+[Friction Ledger](/t/journal/current/frictions), so a cause that keeps coming
+back is counted over weeks, and screens out frictions that have already been
+fixed. A simple fix is
 dispatched straight to a pull request; only a fix it cannot land itself, such as one needing a human merge or a human design choice, gets filed as an issue first. Either way it reviews the
 resulting pull requests and merges them — escalating anything genuinely risky
 to a human. By construction it only ever sees problems an agent noticed and
@@ -160,8 +163,9 @@ Routines go looking instead:
   result standing as a **trial**: later sessions'
   frictions decide whether the pruned prose was load-bearing. That evidence, not
   anyone's opinion, decides whether the cut stays or gets back one line stating
-  its goal; a behaviour that needs a mechanical guard goes to
-  an issue.
+  its goal. Moderate damage, or a friction that clearly became more common
+  since the cut, keeps the cut and goes to an issue for a person, as does a
+  behaviour that needs a mechanical guard.
 
 Two further Routines narrate rather than repair. **`digest`** writes the daily
 catch-up pages on this Journal, and **`blog-post`** writes an in-character post

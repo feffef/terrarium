@@ -44,8 +44,9 @@ Inside a Space sit typed **Collections**, and exactly one of them is special:
 has a `pages`, and every Tenant means something different by it — documentation
 here, posts in the Blog, dig reports in the Midden. What a Tenant actually *is*
 tends to live in the Collections beside it, which get no URLs of their own and
-are rendered by that Tenant's own components instead: the Journal's session logs
-and [Skill Inventory](/t/journal/current/skills), the Blog's `pingbacks` (one record per reaction a Persona
+are rendered by that Tenant's own components instead: the Journal's session logs,
+[Skill Inventory](/t/journal/current/skills) and
+[Friction Ledger](/t/journal/current/frictions), the Blog's `pingbacks` (one record per reaction a Persona
 left on another's post), the Midden's `artifacts` (one catalogued discarded
 thing per file, pulled into a dig report's body wherever the curator names it).
 
