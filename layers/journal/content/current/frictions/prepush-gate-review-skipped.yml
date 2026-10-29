@@ -76,16 +76,6 @@ occurrences:
     severity: nit
     description: "Never read the full diff before the first push; only git diff --stat, though pr-workflow wants a self-read for a simple change."
     solution: "Read git diff origin/main...HEAD before pushing, even for 8 lines."
-  - session: session_01ERZa4fUGxpF81MeLhZMkSB
-    date: "2026-10-14"
-    severity: nit
-    description: "Skipped the code-review Skill on the two small PRs (poll config, docs) and reviewed inline, though pr-workflow says run it before the first push."
-    solution: "Either run it for tiny diffs or let pr-workflow state a size skip."
-  - session: session_01AdUi9nKLGKyPFfBe4HYvqG
-    date: "2026-10-14"
-    severity: nit
-    description: "The code-review Skill says to spawn two parallel sub-agents; I reviewed the four-file diff inline instead, a deviation from the Skill."
-    solution: "Let the Skill say when a tiny diff may be reviewed inline."
   - session: session_01RnZJ7VrgWpgzfJUCEdif77
     date: "2026-10-16"
     severity: nit
@@ -121,11 +111,6 @@ occurrences:
     severity: nit
     description: "Ran code-review inline rather than the Skill's two subagents because the diff was comments only; the Skill has no size threshold."
     solution: "Let code-review say when a comments-only diff may skip the subagents."
-  - session: session_01TFojzwXEByz1nbqt3wcKNL
-    date: "2026-10-14"
-    severity: moderate
-    description: "Ran /code-review only after the first push instead of before it (ADR-0004); it caught 5 citation-rule violations that needed a second push to fix."
-    solution: "Run code-review on the committed diff before the first push, even for a content-only Inventory change, as ADR-0004 literally requires."
   - session: session_01CMjFaMZxZgD7oTzNXmWwzv
     date: "2026-10-23"
     severity: minor

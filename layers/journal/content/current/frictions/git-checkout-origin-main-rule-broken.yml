@@ -9,21 +9,6 @@ ref: "Prose exists (git-conventions.md, 2026-09-30); only a guard would add enfo
 notes: |-
   2026-10-28 design: a prose line dropped: git-conventions.md already says it (read about 111 times) and only a Human-only guard would add enforcement; 1 occurrence in 14 days, HEAD restored each time. dropped: costs more than the friction.
 occurrences:
-  - session: session_015dUGRadEQP1bvv6KytKLXT
-    date: "2026-10-14"
-    severity: nit
-    description: "I ran git checkout origin/main -- with no path, which detached HEAD in the main checkout, against git-conventions; I restored the branch right away"
-    solution: "Read files from main with git show origin/main:path, as git-conventions says"
-  - session: session_01G6m9SbDppX4TE87Mp3m5Dk
-    date: "2026-10-14"
-    severity: nit
-    description: "Restored those logs with 'git checkout origin/main -- <path>', which git-conventions.md says never to use (it stages); staging was intended but the rule was broken"
-    solution: "Use git restore --source=origin/main --staged --worktree, or follow the doc"
-  - session: session_01U6EF8qk4ANQLqE5KXmJgEY
-    date: "2026-10-14"
-    severity: moderate
-    description: "Tried 'git checkout origin/main -- .' plus 'git stash' to read files from main; the classifier blocked it. git-conventions.md forbids it, and it could have overwritten the tree."
-    solution: "Use git show or git grep on origin/main to read main's files, as git-conventions.md says."
   - session: session_012Yzae3uty5Jj8ZPug9zpjr
     date: "2026-10-23"
     severity: minor

@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A second gate:scoped run starts while the first is alive, and the overlapping runs clobber .nuxt, the build lock and a shared log: after a background task's completion notice arrives early with a truncated log, or after a chained command whose first step failed silently. Nothing stops a second gate run while one is alive. Signals: 'overlapped', 'clobbered .nuxt', 'build lock', an early 'completed' notice for a gate, a false EXIT 1 from two runs sharing a log.
 surface: guard-or-hook
-status: open
+status: tracked
+ref: "issue #2660"
 notes: |-
   2026-10-25 design: a per-checkout lock in scripts/gate/gate.ts (Human-only) that refuses a second run dropped: one occurrence, and the cause was relaunching on an early completed notice instead of checking ps; revisit on a second occurrence.
 occurrences:

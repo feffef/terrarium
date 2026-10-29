@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-23"
     summary: "CLAUDE.md now imports GLOSSARY-MAP.md and GLOSSARY.md with @, replacing the session-start read bullet."
 occurrences:
-  - session: session_01675UWGBfCMALkurUr58cxM
-    date: "2026-10-14"
-    severity: minor
-    description: "Never read CONTEXT-MAP.md and CONTEXT.md at session start, though CLAUDE.md requires it; the task was about those very files being renamed."
-    solution: "Read them first; a session-start read list in a hook output would make the skip visible."
   - session: session_01P7kLLJwHBgCaeVSUjhbScg
     date: "2026-10-15"
     severity: moderate

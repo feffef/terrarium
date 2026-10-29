@@ -3,6 +3,8 @@ surface: safe
 summary: A session refused a reviewer's finding on its own judgement, then every later rater raised it again and a fix round was needed.
 cause: "The orchestrator of a graded run (glassbox-improve) dismisses a Standards finding without asking the owner or checking the cited rule; each re-rater then raises the same point, so the fix round the dismissal saved is spent anyway. Signals: 'I refused a Standards finding', 'all three re-raters raised it', 'costing a fix round'."
 status: open
+notes: |-
+  2026-10-29 design: judge a refused finding against Rejected alternatives dropped: one judgement call; re-raters' consensus is already the backstop (glassbox-improve step 3); revisit on a second occurrence
 occurrences:
   - session: session_013zxzeTGYbEWeFyEywFafxw
     date: "2026-10-28"

@@ -21,21 +21,6 @@ fixes:
 notes: |-
   2026-10-23 re-cluster: 01Fay2Gi (a check grepping failure-only output), 013RCsUF (dated content not excluded), 011RZgGT (explore triage schema lacks the ADR-0004 exception), 011xvPjJ (audit-skills ids, PR 2318), 01XWMuHG (auth research boundary), 01WxHaU2 (workflow agent asked to dispatch), 0135hcUf and 01VH74k3 (frictions-to-fixes Skill briefs) each need their own fix; left here as single low-severity strays.
 occurrences:
-  - session: session_011JKK8rrCwea3xSmL4kw6si
-    date: "2026-10-14"
-    severity: nit
-    description: "My brief gave the doc agent a wrong fixedOn and ref for reviewer-line-ranges-off, against the survey patch; code-review caught it before the push."
-    solution: "Point the brief at the patch for every status field instead of restating values from memory."
-  - session: session_01G6m9SbDppX4TE87Mp3m5Dk
-    date: "2026-10-14"
-    severity: nit
-    description: "Reviewer briefs named sibling paths relative to the Skill folder; agents reported the repo-root path didn't exist"
-    solution: "Write full repo-relative paths in briefs"
-  - session: session_01Dcufz27EyPsKy6sYafpKRg
-    date: "2026-10-14"
-    severity: nit
-    description: "The brief gave the content path without the Collection folder (content/guide/<subject>), which would have put the stories' files in the wrong place"
-    solution: "Fixed in the stories; spec writers should derive paths from shared/expand.ts"
   - session: session_01C8c4U7TDuWnJwenPUWYxrP
     date: "2026-10-15"
     severity: minor

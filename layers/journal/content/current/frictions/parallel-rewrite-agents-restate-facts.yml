@@ -23,11 +23,6 @@ occurrences:
     severity: minor
     description: "First commit wrote the publishedAt rule twice (EVERY-PAGE.md and the Glass Box glossary) and left EVERY-PAGE.md saying frontmatter holds four fields only"
     solution: "Search the edited doc for statements the new rule contradicts before committing; code-review caught both"
-  - session: session_018wtKTCgkvJwgb3gS8o8JKA
-    date: "2026-10-14"
-    severity: minor
-    description: "Proposed files/docs frontmatter that duplicated the body; the owner had to question it before I saw the one-home violation"
-    solution: "Check every proposed field against one-home-per-fact before recommending it"
   - session: session_01FNv8z61n7roCRsM4AYVtf6
     date: "2026-10-21"
     severity: minor

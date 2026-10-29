@@ -9,11 +9,6 @@ fixes:
     date: "2026-10-18"
     summary: "owner-corrections.ts --check now credits every issue or URL named on one dismissal line, so one tally line can dismiss several candidates."
 occurrences:
-  - session: session_01AdUi9nKLGKyPFfBe4HYvqG
-    date: "2026-10-14"
-    severity: minor
-    description: "Owner-corrections printed 19 file-overlap reworks unrelated to the Blog; each needed its own tally line, which was boilerplate."
-    solution: "Have the script drop reworks whose overlap is only agent-infra files."
   - session: session_019e468BFBTvDPXZuGzLMAL7
     date: "2026-10-15"
     severity: minor

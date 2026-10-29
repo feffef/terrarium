@@ -9,11 +9,6 @@ notes: |-
   2026-10-20 design: a repo doc granting pushes to other branches dropped: the harness pins one pushable branch and a repo doc cannot grant that; issue-tracker.md already says to flag it upfront and ask.
 fixes: []
 occurrences:
-  - session: session_01ERZa4fUGxpF81MeLhZMkSB
-    date: "2026-10-14"
-    severity: minor
-    description: "Impl agent proposed a Skill sentence authorising a second pushed branch against the harness rule; auto mode flagged its report as instruction poisoning."
-    solution: "Keep authority changes human-decided; the designated-branch conflict needs an owner decision."
   - session: 1c810a28-81d4-417d-ac20-af374c985683
     date: "2026-10-16"
     severity: nit

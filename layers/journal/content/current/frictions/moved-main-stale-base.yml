@@ -10,11 +10,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md says to diff with three dots and squash with reset --soft onto the merge-base, not onto a moved origin/main."
 occurrences:
-  - session: session_01G6m9SbDppX4TE87Mp3m5Dk
-    date: "2026-10-14"
-    severity: minor
-    description: "git reset --soft origin/main to squash, after origin/main had gained two session logs, made my commit delete them; caught in the name-status check before push"
-    solution: "Squash with reset --soft onto the merge-base, or rebase first; git-conventions could note it"
   - session: session_01NqN7omu3o4kxoGeQzzSXhK
     date: "2026-10-15"
     severity: nit

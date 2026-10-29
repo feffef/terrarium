@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "Replaced union-find grouping with a greedy pass: an issue joins a group only if it directly overlaps every member."
 occurrences:
-  - session: session_015dUGRadEQP1bvv6KytKLXT
-    date: "2026-10-14"
-    severity: minor
-    description: "The explore run's grouping chained six unrelated issues into one branch through transitive shared files, so I had to regroup by hand"
-    solution: "Group only on direct file overlap in clear-backlog-explore, not on the transitive closure"
   - session: session_01VPNHf6qDdJPXX23GghKs74
     date: "2026-10-16"
     severity: nit

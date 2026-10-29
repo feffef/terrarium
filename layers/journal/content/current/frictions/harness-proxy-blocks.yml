@@ -16,21 +16,6 @@ fixes:
     date: "2026-10-28"
     summary: "Glass Box EVERY-PAGE.md falls back to fetching raw.githubusercontent.com/github/docs when docs.github.com is blocked, instead of sparse-cloning github/docs."
 occurrences:
-  - session: session_01JkzKjuQD4wH34MjxMjKHaX
-    date: "2026-10-14"
-    severity: minor
-    description: "The proxy blocked content.nuxt.com and zod.dev, so two official-docs links in the drafts stay unverified."
-    solution: "Allow those doc hosts in the environment network policy, or verify links in a session that can reach them."
-  - session: session_01RBVYHX1FsYogHEgzgyRV6P
-    date: "2026-10-14"
-    severity: minor
-    description: "github.com/user-attachments downloads return 403 from the agent proxy, so the owner's attached design files were unreachable"
-    solution: "Add a caveat to docs/agents/environment-caveats.md: ask the owner to upload attachments into the session instead"
-  - session: session_01Dcufz27EyPsKy6sYafpKRg
-    date: "2026-10-14"
-    severity: minor
-    description: "Glass Box tickets keep citing user-attachments design files that the proxy blocks; this session could not check design 1b details itself"
-    solution: "Commit design exports to a branch, or have the owner upload them, when a design pass resolves"
   - session: session_01KVh6e6JUAssZvPRbuN5YDr
     date: "2026-10-15"
     severity: minor

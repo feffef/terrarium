@@ -6,6 +6,8 @@ cause: >-
 surface: safe
 status: open
 ref: "The hint fired and both sessions recovered in one retry; cost is one rejected push."
+notes: |-
+  2026-10-29 design: more prose on plain pushes dropped: pr-workflow.md already says it and the harness instruction wins; cost is one rejected push
 fixes:
   - pr: 1735
     date: "2026-10-10"

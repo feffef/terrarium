@@ -16,11 +16,6 @@ fixes:
     date: "2026-10-28"
     summary: "prune-friction-ledger --summary and --candidates write output over a size threshold to a file under TMPDIR and print one notice line; --out PATH always writes to that path."
 occurrences:
-  - session: session_01ERZa4fUGxpF81MeLhZMkSB
-    date: "2026-10-14"
-    severity: minor
-    description: "Survey subagent's compact output and ledger dir still overflowed reads (73 KB, 2004 lines), the already-known survey-output-overflow cause."
-    solution: "PR 1918 (compact one-line sessions, ledger --summary)."
   - session: session_01RfmdPFPhtKo6h6GFwxLeRb
     date: "2026-10-16"
     severity: minor

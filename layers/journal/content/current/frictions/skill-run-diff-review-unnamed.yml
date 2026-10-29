@@ -22,11 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "blog-post steps 10-11 no longer send the run into a second review after the fact-check; step 10 just runs the gate."
 occurrences:
-  - session: session_01GG85r8HWMEdaMgKUaNUZH7
-    date: "2026-10-14"
-    severity: minor
-    description: "Content PRs got a content review by subagent instead of the code-review Skill before their first push"
-    solution: "Have pr-workflow name content review as the review for content-only Glass Box PRs, or run code-review too"
   - session: session_01XTdRbnDg1n2j2ZqjTrwCLi
     date: "2026-10-19"
     severity: minor
@@ -37,16 +32,6 @@ occurrences:
     severity: minor
     description: "Skipped the code-review Skill before the first push on a 20-file diff (mostly renames), substituting my own read and the fact-check subagent."
     solution: "The pr-workflow simple-change bar says nothing about pure archive moves; state whether rename-only sweeps count, or have the digest Skill name its review step."
-  - session: session_01AvdPELZeDaDwyikp4dxVZG
-    date: "2026-10-14"
-    severity: nit
-    description: "Invoked the code-review Skill but did not run its two parallel subagents; self-reviewed a prose-only diff instead, deviating from the Skill."
-    solution: "Let pr-workflow state that content-only digest diffs may skip the two-axis review."
-  - session: session_01RJh5bK46AQRRtwagmz8GjU
-    date: "2026-10-14"
-    severity: minor
-    description: "I invoked code-review but skipped its two sub-agents for a one-file prose diff, against ADR-0004's before-first-push rule; the post had already had a blind read and fact-check."
-    solution: "Let pr-workflow name a skip for blog-post runs, whose own steps already review the diff, as it does for midden-catalogue."
   - session: session_01672sKdk3qVR8DfkAWvR5Qz
     date: "2026-10-15"
     severity: nit

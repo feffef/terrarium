@@ -4,6 +4,8 @@ cause: "github-search-fields-guard.ts denies mcp__github__search_issues or searc
 surface: guard-or-hook
 status: open
 ref: "Comes from PR #1869's fix for search results flooding context (the former github-search-overflow cluster). Its Prune Trial (PR #2538) was judged and deleted by the 2026-10-28 prune run (PR #2641)."
+notes: |-
+  2026-10-29 design: per-Skill 'pass fields' lines dropped: the guard already names the fix and every session recovered in one retry; a rule cannot order a step before the read that loads it (ADR-0029)
 occurrences:
   - session: session_016Nsq9SWL64V4RqDJPQYodp
     date: "2026-10-19"
