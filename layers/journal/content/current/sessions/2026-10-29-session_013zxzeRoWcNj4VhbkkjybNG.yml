@@ -1,0 +1,286 @@
+schemaVersion: 1
+session: session_013zxzeRoWcNj4VhbkkjybNG
+startedAt: 2026-10-29T18:12:50Z
+endedAt: 2026-10-29T18:57:06Z
+kind: delegated
+goal: Weekly rater-consensus improvement run on the Glass Box guide
+status: in-review
+outcome: Promoted the Workflow scripts Lesson and fixed three false claims; PR open, gate green
+summary: "Ran the glassbox-improve Skill, started by one human kickoff (/glassbox-improve); every step after it was the Skill's own procedure, so nothing was a fresh human instruction or green-light beyond that. Three raters (sonnet, fable, opus) graded all 41 guide pages at base d08dde31. Nearly all pages were A. The only consensus deficit (Work queue's Why bullets restating sibling Lessons) sat on a cooling-off page, so no page was raised. The structural step was a promotion: all three raters listed the Workflow scripts draft as a gap, it tied with Virtual imports on the sum of places, and its title already passed, so it needed fewer changes. A researcher and an opus writer promoted it as guide page 09. Single-rater false claims were checked in the source: Routines' \"No file lists the Routines\", the pnpm page's ADR-0026 cite for the frozen install, and Type checking's unsupported \"planted in a layer config\" anecdote. All three were confirmed and fixed by me with pins moved to the base. code-review found five issues on the new page (counts in prose, an unwrapped Term, two sentences no source states, two motive clauses); the writer fixed them. A fresh re-grade gave A, B and C; only the confirmed lint-test claim was acted on. I corrected that one myself. The gate passed on the final head, the branch was pushed and PR 2684 opened. Still open; the CI verdict comment and merge."
+prs:
+  - "2684"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read before the first git command; fetch-before-trust and trailer check applied
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-first-push and closing a scheduled run's PR steps
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before the first GitHub operation; PR creation needed nothing from it
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin, Check and Write rules used for the promotion and the false-claim fixes
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: grade bar, promotion and filters used in the tally
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: none of the closed rulings applied to this run's candidates
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson shape and Why-bullet format for the briefs
+    useful: yes
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: checked whether Nuxt's type check covers layer configs; it does, which disproved the planted-error anecdote
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: writer reported it gave the promotion and join-edit rules
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: researcher and writer reported it as the source of the Why bullets; I trusted their reading
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: researcher and writer reported it as the source for the script-cannot-ask and restart facts
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: opus rater reported it as the source for hook page claims
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: opus rater reported it when checking Work queue claims
+    useful: yes
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: sonnet rater read it to check the self-updating container page
+    useful: yes
+  - path: .agents/skills/setup-matt-pocock-skills/SKILL.md
+    reason: sonnet rater read it to check the Skill pack page
+    useful: yes
+  - path: GLOSSARY.md
+    reason: sonnet rater read it to check the Self-improvement loop title against the term
+    useful: yes
+  - path: .claude/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-lesson/QUALITY.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-lesson/DECISIONS.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-improve/rater-brief.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-improve/researcher-brief.md
+    reason: (no reason given)
+  - path: .claude/skills/glassbox-improve/writer-brief.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/claude-code/08.workflow-scripts.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/09.workflow-scripts.md
+    reason: (read before editing)
+skillsUsed:
+  - name: glassbox-improve
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: brief checklist for raters, researcher, writer and reviewers
+  - name: code-review
+    reason: Standards and Spec review of the run branch before the first push
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Stop hook asked to push about eight times while ADR-0004 required code-review and gate:scoped first; each reply had to restate why I was holding.
+    solution: Make the Stop hook skip its push nag while a background gate or review subagent is running in the session.
+    severity: nit
+  - description: I put the researcher's claim that the docs do not say the script cannot ask the user into the writer brief unchecked; the docs table does say it.
+    solution: Verify a researcher's contradicted claim against its source before it becomes a deficit in a brief; the writer caught it by fetching the docs.
+    severity: minor
+  - description: Three rater briefs each needed the full 41-page list and 26-draft list pasted in by hand, a very large prompt typed three times.
+    solution: Let the rater brief take a command that lists pages and drafts at the base, or a scratch file path, instead of pasted lists.
+    severity: minor
+  - description: Tally rule is unclear when two raters list a point as Optional and one as a deficit; the SKILL says drop Optional but not whether that counts as independent raising.
+    solution: State in step 3 whether independent Optional reports of the same point count towards consensus, or add a DECISIONS line.
+    severity: minor
+  - description: Picking the structural step meant summing gap places across three differently numbered prose lists by hand, and a rater's single entry could cover two drafts.
+    solution: Ask raters for Gaps as a table of draft path and rank, so the sum is mechanical.
+    severity: minor
+  - description: Draft-promotion candidates all had pointer-only Why sections and stale pins, so any promotion costs a writer round whichever draft wins.
+    solution: Raise this as a recurring cost in the ideas list; consider a standing pass that rewrites draft Why sections as reason bullets.
+    severity: nit
+durationSec: 2656
+models:
+  claude-sonnet-5-5: 142
+toolCounts:
+  Bash: 39
+  Read: 10
+  Skill: 4
+  mcp__github__list_pull_requests: 1
+  Agent: 10
+  Write: 1
+  ToolSearch: 2
+  SendMessage: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/claude-code/09.workflow-scripts.md
+  - layers/glassbox/content/guide/pages/claude-code/10.routines.md
+  - layers/glassbox/content/guide/pages/deploy/02.pnpm-lockfile.md
+  - layers/glassbox/content/guide/pages/verification/02.type-checking.md
+  - layers/glassbox/content/guide/pages/verification/05.linting.md
+  - layers/glassbox/content/drafts/pages/skill-pack/03.engineering-loop.md
+  - layers/glassbox/content/drafts/pages/claude-code/08.workflow-scripts.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0005.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/tenant-layers.md
+docsReadBySubagents:
+  - docs/adr/0005-skill-model.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - docs/agents/guards.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - GLOSSARY.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me hold the push for code-review and gate:scoped despite the Stop hook; the summary was enough, I skipped the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to invoke close-session and keep logs out of the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR at once after the push and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the PR body header and commit trailer, which I checked landed; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; loaded when I read a Skill doc and did not apply to a content run
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; did not apply to a content run
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed workflow scripts live in .claude/workflows and the Gate counts them as Skill code; I read the ADR text through the researcher
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: About glossaries; loaded when I read the Glass Box glossary and did not change my work
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Told me to read the Glass Box glossary before working on its layer, which I did
+    useful: yes
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; I added none
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read files on its list; no Human-only file was edited, so the PR needs no human merge
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: Banned counts and ids in page prose; code-review caught the writer breaking it, and the rater briefs applied it
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: About Mermaid diagrams; this run touched none
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: A subagent loaded it; it reported it did not apply to its read-only work
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: A subagent loaded it while checking triage pages; it reported it confirmed the sweep claims
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: A subagent loaded it while reading layer pages; it reported it did not change its grading
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Rater (sonnet) grades guide
+    model: sonnet
+    durationSec: 1203
+    toolCalls: 82
+    modelCalls: 81
+    tokenShare: 35.6
+  - type: general-purpose
+    task: Rater (fable) grades guide
+    model: fable
+    durationSec: 842
+    toolCalls: 21
+    modelCalls: 21
+    tokenShare: 8.7
+  - type: general-purpose
+    task: Rater (opus) grades guide
+    model: opus
+    durationSec: 454
+    toolCalls: 38
+    modelCalls: 35
+    tokenShare: 14.4
+  - type: general-purpose
+    task: Research workflow-scripts promotion
+    model: sonnet
+    durationSec: 105
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 1.6
+  - type: general-purpose
+    task: Writer promotes workflow scripts
+    model: opus
+    durationSec: 479
+    toolCalls: 54
+    modelCalls: 35
+    tokenShare: 6.3
+  - type: general-purpose
+    task: Review standards axis
+    durationSec: 66
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 1.6
+  - type: general-purpose
+    task: Review spec axis
+    durationSec: 50
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 1.8
+  - type: general-purpose
+    task: Re-grade (sonnet)
+    model: sonnet
+    durationSec: 76
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 1.4
+  - type: general-purpose
+    task: Re-grade (fable)
+    model: fable
+    durationSec: 191
+    toolCalls: 9
+    modelCalls: 9
+    tokenShare: 2.3
+  - type: general-purpose
+    task: Re-grade (opus)
+    model: opus
+    durationSec: 107
+    toolCalls: 11
+    modelCalls: 11
+    tokenShare: 2.1
+gitBranch: ccr-ae0f29e4-muc704
+entrypoint: remote_mobile
+cliVersion: 2.1.312
+ideas:
+  - "Pre-shape the draft Lessons: a standing pass that rewrites each draft's one-line Why pointer into reason bullets and fixes failing titles, so a later glassbox-improve promotion is a pin and a link check, not a writer round."
+  - Rater Gaps as a table (draft path, rank, reason) so the structural-step tie-break in glassbox-improve step 3 becomes a script that sums ranks instead of hand counting prose.
+  - "Retitle candidates the raters did not agree on: Workflow scripts (opus: Claude Code workflows or Dynamic workflows, fable and sonnet say it passes) and Self-improvement loop (sonnet only: Process retrospectives)."
+  - "Next run should find Work queue again: its Why bullets restate Human-in-the-loop and Author trust (sonnet and opus), once it leaves the cooling-off list."
+landedBy: Stop
