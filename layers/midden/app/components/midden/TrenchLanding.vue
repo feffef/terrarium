@@ -192,7 +192,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
                 <span class="midden-latest__title">{{ f.title }}</span>
                 <span class="tech midden-latest__meta">{{ f.grade }} · in {{ f.report }} · assessed {{ f.assessed }}</span>
               </NuxtLink>
-              <p class="midden-latest__hook"><MiddenGlossedText :text="f.hook" /></p>
+              <p v-if="f.hook" class="midden-latest__hook"><MiddenGlossedText :text="f.hook" /></p>
             </li>
           </ul>
         </template>
@@ -350,9 +350,9 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
 
 .midden-landing__latest-head { margin-top: 2.4rem; }
 .midden-latest { list-style: none; margin: 0; padding: 0; }
-.midden-latest__item { border-top: 1px solid var(--midden-rule); padding: 0.9rem 0 1rem; }
+.midden-latest__item { border-top: 1px solid var(--midden-rule); padding-bottom: 1rem; }
 .midden-latest__item:last-child { border-bottom: 1px solid var(--midden-rule); }
-.midden-latest__link { display: block; color: inherit; }
+.midden-latest__link { display: block; padding-top: 0.9rem; color: inherit; }
 .midden-latest__hook { margin: 0.4rem 0 0; color: var(--midden-muted); }
 .midden-latest__title { display: block; font-size: 1.08rem; color: var(--midden-accent); }
 .midden-latest__meta { display: block; margin-top: 0.25rem; color: var(--midden-faint); }
