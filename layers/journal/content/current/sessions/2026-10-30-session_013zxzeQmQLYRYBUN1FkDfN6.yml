@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQmQLYRYBUN1FkDfN6
 startedAt: 2026-10-30T13:17:39Z
-endedAt: 2026-10-30T13:31:39Z
+endedAt: 2026-10-30T13:46:41Z
 kind: autonomous
 goal: Scheduled prune trial of the Platform's agent instructions
-status: in-review
-outcome: "One trial judged and deleted; blog-post fact-check text reworded as a new trial; PR #2716 open"
-summary: "Scheduled /prune-trial run, agent-initiated; no human instruction beyond the stored prompt. Only the environment-caveats reword was judgeable. I judged it as holding: no major or blocker Friction traces to it. harness-proxy-blocks rose from 4/177 to 4/41 of sessions, but the reword changed none of the blocked-host lines and the hits are Glass Box fetches of other hosts, already tracked in #2695, so I filed nothing. A Sonnet search subagent ranked failed-prose candidates; I picked blog-post step 9 and its claim-rule bullet (repeated regressions #1168 and #2425, now backed by merge-pr's factCheckedBlobRefusal). The cut is small (-3 net) because the text was already tight; I kept every rule and cut one rationale clause. A pinned-SHA Sonnet probe answered a realistic fact-check situation correctly. Standards and Spec reviews found no blocker; I took their ledger-wording fixes, ran the gate green, pushed and opened PR #2716. Still open: CI and the self-merge."
+status: completed
+outcome: "One trial judged and deleted; blog-post fact-check text reworded as a new trial; PR #2716 merged"
+summary: "Scheduled /prune-trial run, agent-initiated; no human instruction beyond the stored prompt. Only the environment-caveats reword was judgeable. I judged it as holding: no major or blocker Friction traces to it. harness-proxy-blocks rose from 4/177 to 4/41 of sessions, but the reword changed none of the blocked-host lines and the hits are Glass Box fetches of other hosts, already tracked in #2695, so I filed nothing. A Sonnet search subagent ranked failed-prose candidates; I picked blog-post step 9 and its claim-rule bullet (repeated regressions #1168 and #2425, now backed by merge-pr's factCheckedBlobRefusal). The cut is small (-3 net) because the text was already tight; I kept every rule and cut one rationale clause. A pinned-SHA Sonnet probe answered a realistic fact-check situation correctly. Standards and Spec reviews found no blocker; I took their ledger-wording fixes, ran the gate green, pushed, opened PR #2716, posted my verdict after CI went green and merged it with merge-pr.ts."
 prs:
   - "2716"
 docsRead:
@@ -65,18 +65,22 @@ frictions:
   - description: Dispatch-read guard denied my first Agent call until I read dispatch-subagents; I knew the rule but had not opened it yet.
     solution: None needed; the guard worked as designed.
     severity: nit
-durationSec: 840
+durationSec: 1742
 models:
-  claude-sonnet-5-5: 73
+  claude-sonnet-5-5: 94
 toolCounts:
-  Bash: 21
+  Bash: 25
   Read: 4
   Agent: 5
   mcp__github__issue_read: 2
-  Skill: 3
+  Skill: 5
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - .agents/skills/blog-post/SKILL.md
@@ -175,28 +179,28 @@ subagents:
     durationSec: 102
     toolCalls: 18
     modelCalls: 11
-    tokenShare: 15.3
+    tokenShare: 12
   - type: general-purpose
     task: Probe blog-post step 9 prune
     model: sonnet
     durationSec: 25
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 3.8
+    tokenShare: 3
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 27
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 4.5
+    tokenShare: 3.5
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 39
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 5.5
+    tokenShare: 4.3
 gitBranch: claude/practical-rubin-skozp2
 entrypoint: remote_trigger
 cliVersion: 2.1.314
