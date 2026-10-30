@@ -1,7 +1,8 @@
 // The pure core of grades.ts: the page hash, the plan's reader split, the A
-// election, report checks and the next grades.yml. The git shell runs in the Skill.
+// election, report checks, the next grades.yml and the drafts report. The git shell runs in the Skill.
 import { describe, expect, it } from 'vitest'
-import { elect, middle, structural, nextRecord, pageHash, parseReport, planPages, reportProblems, tally, type GradeRecord, type Plan, type Report } from '../../scripts/grades.ts'
+import type { GlassboxGit } from '../../../../../layers/glassbox/page-checks.ts'
+import { draftsReport, elect, middle, structural, nextRecord, pageHash, parseReport, planPages, reportProblems, tally, type GradeRecord, type Plan, type Report } from '../../scripts/grades.ts'
 
 const page = '---\ntitle: Hooks\nrevision: abc\nrevisionDate: 2026-10-01\n---\nBody\n::excerpt{path="a.ts" lines="3-5"}\n'
 
@@ -162,5 +163,86 @@ describe('structural', () => {
       ['re-cut a + b', 2, undefined],
       ['new Lesson: Guests', 1, 1],
     ])
+  })
+})
+
+describe('draftsReport', () => {
+  const old = 'a'.repeat(40)
+  const base = 'b'.repeat(40)
+  const expand = 'export function catalogFrom(cols) {\n  return cols\n}\n'
+  const files: Record<string, Record<string, string>> = { [old]: { 'shared/expand.ts': expand }, [base]: { 'shared/expand.ts': `// moved\n${expand}` } }
+  const commits: Record<string, { date: string; onMain: boolean }> = {
+    [old]: { date: '2026-10-01T09:00:00+00:00', onMain: true },
+    [base]: { date: '2026-10-29T09:00:00+00:00', onMain: true },
+  }
+  const fakeGit: GlassboxGit = { commit: (r) => commits[r], read: (r, path) => files[r]?.[path] }
+  const draft = (title: string, pin: string, lines: string, next: string) => `---
+title: ${title}
+description: D
+revision: '${pin}'
+revisionDate: '${commits[pin]!.date.slice(0, 10)}'
+${pin === base ? 'publishedAt: 2026-10-29\n' : ''}---
+Collections come from one manifest.
+
+## The concept
+
+A Collection is one type of content.
+
+Full reference: [Nuxt Content docs](https://content.nuxt.com/docs/collections/define)
+
+## In Terrarium
+
+::excerpt{path="shared/expand.ts" lines="${lines}"}
+\`\`\`ts
+export function catalogFrom(cols) {
+  return cols
+}
+\`\`\`
+::
+
+### Why it's built this way
+
+- **One expansion step.** One expansion step turns a manifest into Collections, so a Tenant never writes them by hand.
+
+### What to watch for
+
+Watch the manifest.
+
+## Try it in your project
+
+Write one manifest.
+
+## Where next
+
+- ${next}
+`
+  const input = {
+    base,
+    guide: { 'index.md': '---\ntitle: Home\n---\n', 'terrarium-practice/01.gate.md': '---\ntitle: The Gate\n---\n' },
+    drafts: {
+      'index.md': '---\ntitle: Drafts\n---\n',
+      // Over the title cap, links another draft, no publishedAt, and its Excerpt moved by the base.
+      'nuxt-content/04.query.md': draft('Patterns for querying collections', old, '1-3', '[Schemas](/t/glassbox/drafts/verification/schema)'),
+      'verification/02.schema.md': draft('Schemas', base, '2-4', '[The Gate](/t/glassbox/guide/terrarium-practice/gate)'),
+    },
+    terms: [],
+    journal: [],
+  }
+
+  it('lists every draft with its blockers as a guide page pinned to the base, a clean one too', () => {
+    expect(draftsReport(input, fakeGit)).toBe(`# Drafts at ${base}, each checked as a guide page pinned to the base
+
+## nuxt-content/04.query.md (39 lines)
+
+- revision aaaaaaa (2026-10-01) is older than the base
+- title "Patterns for querying collections" is 33 chars, more than 28
+- the Excerpt of shared/expand.ts is not in the file at revision
+- guide page links outside the guide: /t/glassbox/drafts/verification/schema
+- no publishedAt
+
+## verification/02.schema.md (40 lines)
+
+- no problems
+`)
   })
 })

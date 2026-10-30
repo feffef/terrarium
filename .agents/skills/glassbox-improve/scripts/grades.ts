@@ -1,9 +1,10 @@
 // The mechanical half of the glassbox-improve Skill: which pages each rater
-// reads, the tally of their reports, the A election, and `grades.yml`.
-// Usage:
+// reads, the tally of their reports, the A election, `grades.yml`, and each
+// draft's promotion blockers. Usage:
 //   pnpm exec tsx .agents/skills/glassbox-improve/scripts/grades.ts plan --base <sha>
 //   pnpm exec tsx .agents/skills/glassbox-improve/scripts/grades.ts tally --base <sha> <sonnet> <fable> <opus>
 //     [--write --selected a,b --gap-edit a,b --read-by-all a,b]
+//   pnpm exec tsx .agents/skills/glassbox-improve/scripts/grades.ts drafts --base <sha>
 // A page is named by its path under `layers/glassbox/content/guide/pages`, without `.md`.
 import { createHash } from 'node:crypto'
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -12,6 +13,7 @@ import { parse as parseYaml, stringify } from 'yaml'
 import { extractFlag, extractSwitch, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { frontmatterBlock, splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { git, tryGit } from '../../../../scripts/lib/git.ts'
+import { glassboxCites, glassboxJournalRoutes, glassboxPageProblems, glassboxSitePath, repoGit, type GlassboxGit, type GlassboxSite } from '../../../../layers/glassbox/page-checks.ts'
 
 export const models = ['sonnet', 'fable', 'opus'] as const
 export type Model = (typeof models)[number]
@@ -280,15 +282,59 @@ export function nextRecord(record: GradeRecord, result: Tally, opts: WriteOption
   return { run: opts.run, pages, candidates: record.candidates }
 }
 
+export interface DraftsInput {
+  base: string
+  /** Each Space's sources by file under its `pages/`, `index.md` included. */
+  guide: Record<string, string>
+  drafts: Record<string, string>
+  terms: string[]
+  journal: string[]
+}
+
+/** Each draft's promotion blockers: the page checks run as if it sat in the guide, pinned to the base. */
+export function draftsReport({ base, guide, drafts, terms, journal }: DraftsInput, repo: GlassboxGit): string {
+  const baseDate = repo.commit(base)?.date ?? ''
+  const titles = (sources: Record<string, string>, space: string) =>
+    Object.fromEntries(Object.entries(sources).map(([file, text]) => [glassboxSitePath(space, file), String(splitFrontmatter(text).frontmatter.title)]))
+  const out = [`# Drafts at ${base}, each checked as a guide page pinned to the base`]
+  for (const [file, source] of Object.entries(drafts).filter(([f]) => f !== 'index.md')) {
+    const { frontmatter } = splitFrontmatter(source)
+    const block = frontmatterBlock(source)?.length ?? 0
+    const pinned = source.slice(0, block).replace(/^revision:.*$/m, `revision: '${base}'`).replace(/^revisionDate:.*$/m, `revisionDate: '${baseDate.slice(0, 10)}'`) + source.slice(block)
+    const asGuide = { ...guide, [file]: pinned }
+    const site: GlassboxSite = {
+      pages: [...Object.keys(asGuide).map((f) => glassboxSitePath('guide', f)), ...Object.keys(drafts).map((f) => glassboxSitePath('drafts', f))],
+      journal,
+      terms,
+      cites: { ...glassboxCites(drafts, 'drafts'), ...glassboxCites(asGuide, 'guide') },
+      titles: { ...titles(drafts, 'drafts'), ...titles(asGuide, 'guide') },
+    }
+    const revision = String(frontmatter.revision)
+    const pinDate = repo.commit(revision)?.date ?? ''
+    const problems = [
+      ...(!pinDate || Date.parse(pinDate) < Date.parse(baseDate) ? [`revision ${revision.slice(0, 7)} (${pinDate.slice(0, 10) || 'unknown'}) is older than the base`] : []),
+      ...glassboxPageProblems(file, pinned, site, repo, 'guide'),
+      ...(frontmatter.publishedAt ? [] : ['no publishedAt']),
+    ]
+    out.push('', `## ${file} (${source.replace(/\n$/, '').split('\n').length} lines)`, '', ...(problems.length ? problems : ['no problems']).map((p) => `- ${p.replace(/\s*\n\s*/g, ' ').trim()}`))
+  }
+  return `${out.join('\n')}\n`
+}
+
 // The shell: git at the base, the record in the working tree.
+
+/** Each file of a Space's pages at the base, by path under `pages/`, with its text. */
+function spaceFiles(base: string, space: string): Record<string, string> {
+  const dir = pagesDir(space)
+  const files = tryGit(['ls-tree', '-r', '--name-only', base, dir], root).out.split('\n').filter((f) => f.endsWith('.md'))
+  return Object.fromEntries(files.map((f) => [f.slice(dir.length + 1), git(['show', `${base}:${f}`], root)]))
+}
 
 /** Each page of a Space at the base, by name, with its text. */
 function spacePages(base: string, space: string): [string, string][] {
-  const dir = pagesDir(space)
-  return tryGit(['ls-tree', '-r', '--name-only', base, dir], root)
-    .out.split('\n')
-    .filter((f) => f.endsWith('.md') && !f.endsWith('/index.md'))
-    .map((f) => [f.slice(dir.length + 1, -3), git(['show', `${base}:${f}`], root)])
+  return Object.entries(spaceFiles(base, space))
+    .filter(([f]) => f !== 'index.md' && !f.endsWith('/index.md'))
+    .map(([f, text]) => [f.slice(0, -3), text])
 }
 
 function catalog(base: string): string[] {
@@ -316,6 +362,12 @@ runIfMain(import.meta.url, () => {
   const { on: write, rest: files } = extractSwitch(a4, '--write')
   if (!base) fail('--base <sha> is required')
   const sha = git(['rev-parse', `${base}^{commit}`], root).trim()
+  if (command === 'drafts') {
+    const termsDir = 'layers/glassbox/content/guide/terms/'
+    const terms = tryGit(['ls-tree', '-r', '--name-only', sha, termsDir], root).out.split('\n').filter((f) => f.endsWith('.yml')).map((f) => f.slice(termsDir.length, -4))
+    console.log(draftsReport({ base: sha, guide: spaceFiles(sha, 'guide'), drafts: spaceFiles(sha, 'drafts'), terms, journal: glassboxJournalRoutes() }, repoGit))
+    return
+  }
   const record = readRecord(tryGit(['show', `${sha}:${recordPath}`], root).out || undefined)
   const hashes = Object.fromEntries(spacePages(sha, 'guide').map(([page, text]) => [page, pageHash(text)]))
   const plan: Plan = { base: sha, ...planPages(record, hashes) }
@@ -331,7 +383,7 @@ runIfMain(import.meta.url, () => {
     ].join('\n'))
     return
   }
-  if (command !== 'tally') fail(`unknown command ${command}; use plan or tally`)
+  if (command !== 'tally') fail(`unknown command ${command}; use plan, tally or drafts`)
   if (files.length !== models.length) fail(`give the ${models.length} raters' saved hand-backs`)
   const reports = files.map((f) => {
     try {
