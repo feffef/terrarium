@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeT9k3tYULehBpNwFpj
 startedAt: 2026-10-30T00:46:06Z
-endedAt: 2026-10-30T00:59:11Z
+endedAt: 2026-10-30T01:02:43Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: Scorecard audited by 14 checkers; Inventory notes and run costs in PR 2692; one issue filed, one reopened
-summary: "Scheduled audit-skills run, no human instruction beyond the schedule; every step was the Skill's own. I gathered the 7-day scorecard, had one Sonnet subagent fetch usage for 8 Routine runs, and dispatched 14 read-only Sonnet checkers, one per Skill. Most reported clean or known repeats. I verified against GitHub two that cleared the bar: PR 2661's \"fix #2660\" closed the filed-only Human-only issue 2660 unfixed (filed #2691), and PR 2680 changed a blog post after the fact-check, the first run under the latest fix (commented and reopened #2370). Other findings stayed observations: glassbox-update's pin-restamp skips all predate the #2638 fix, and log-session's ruleVerdicts gap shrank after #2645. Closure signals: orphanScan scanned 1772 merged PRs, 2 orphan candidates both already resolved (#736, #1063), no human-prompted or rescued closures. Subagent reports contained errors (wrong session ids, a claim that #2105 was reopened) that check-states and my own reads caught before they landed. PR 2692 appends 12 Skill observations and 8 Routine run rows; code-review (Standards and Spec) found no hard issue and two id gaps I fixed; gate:scoped green. Counts such as prune-trial's 6 of 9 rest on a checker's tally I did not re-derive."
+status: completed
+outcome: Scorecard audited by 14 checkers; Inventory notes and run costs merged in PR 2692; one issue filed, one reopened
+summary: "Scheduled audit-skills run, no human instruction beyond the schedule; every step was the Skill's own. I gathered the 7-day scorecard, had one Sonnet subagent fetch usage for 8 Routine runs, and dispatched 14 read-only Sonnet checkers, one per Skill. Most reported clean or known repeats. I verified against GitHub two that cleared the bar: PR 2661's \"fix #2660\" closed the filed-only Human-only issue 2660 unfixed (filed #2691), and PR 2680 changed a blog post after the fact-check, the first run under the latest fix (commented and reopened #2370). Other findings stayed observations: glassbox-update's pin-restamp skips all predate the #2638 fix, and log-session's ruleVerdicts gap shrank after #2645. Closure signals: orphanScan scanned 1772 merged PRs, 2 orphan candidates both already resolved (#736, #1063), no human-prompted or rescued closures. Subagent reports contained errors (wrong session ids, a claim that #2105 was reopened) that check-states and my own reads caught before they landed. PR 2692 appends 12 Skill observations and 8 Routine run rows; code-review (Standards and Spec) found no hard issue and two id gaps I fixed; gate:scoped green. Counts such as prune-trial's 6 of 9 rest on a checker's tally I did not re-derive. I posted my verdict and landed PR 2692 with merge-pr.ts after CI went green (merge commit 9b3539521)."
 prs:
   - "2692"
 docsRead:
@@ -94,23 +94,24 @@ frictions:
   - description: Checker findings such as prune-trial's 6 of 9 and inspect-session's 98-page read went into Inventory notes from the checker's tally, not re-derived by me.
     solution: Label such counts unverified in the note, or spot-check one session per Skill.
     severity: minor
-durationSec: 785
+durationSec: 997
 models:
-  claude-sonnet-5-5: 129
+  claude-sonnet-5-5: 146
 toolCounts:
-  Bash: 33
+  Bash: 37
   Read: 2
   Agent: 17
   ToolSearch: 1
   mcp__github__issue_read: 6
-  mcp__github__pull_request_read: 3
+  mcp__github__pull_request_read: 4
   mcp__Claude_Code_Remote__get_session: 1
   mcp__github__issue_write: 2
-  mcp__github__add_issue_comment: 1
-  Skill: 3
+  mcp__github__add_issue_comment: 2
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   PushNotification: 1
+  ReadNotifications: 2
 filesEdited:
   - layers/journal/content/current/skills/audit-docs.yml
   - layers/journal/content/current/skills/audit-skills.yml
@@ -216,103 +217,103 @@ subagents:
     durationSec: 15
     toolCalls: 9
     modelCalls: 2
-    tokenShare: 2.1
+    tokenShare: 2
   - task: "Audit behaviour: audit-docs"
     model: sonnet
     durationSec: 73
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 4.7
+    tokenShare: 4.4
   - task: "Audit behaviour: audit-skills"
     model: sonnet
     durationSec: 89
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 4.6
+    tokenShare: 4.3
   - task: "Audit behaviour: blog-post"
     model: sonnet
     durationSec: 74
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 4
+    tokenShare: 3.7
   - task: "Audit behaviour: clear-backlog"
     model: sonnet
     durationSec: 48
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 3
+    tokenShare: 2.8
   - task: "Audit behaviour: close-session"
     model: sonnet
     durationSec: 63
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 4
+    tokenShare: 3.7
   - task: "Audit behaviour: digest"
     model: sonnet
     durationSec: 56
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 3.6
+    tokenShare: 3.3
   - task: "Audit behaviour: dispatch-subagents"
     model: sonnet
     durationSec: 89
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 5
+    tokenShare: 4.6
   - task: "Audit behaviour: frictions-to-fixes"
     model: sonnet
     durationSec: 69
     toolCalls: 17
     modelCalls: 8
-    tokenShare: 4.6
+    tokenShare: 4.3
   - task: "Audit behaviour: glassbox-improve"
     model: sonnet
     durationSec: 57
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 3.1
+    tokenShare: 2.9
   - task: "Audit behaviour: glassbox-update"
     model: sonnet
     durationSec: 35
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 2.6
+    tokenShare: 2.4
   - task: "Audit behaviour: inspect-session"
     model: sonnet
     durationSec: 80
     toolCalls: 13
     modelCalls: 7
-    tokenShare: 4.8
+    tokenShare: 4.5
   - task: "Audit behaviour: log-session"
     model: sonnet
     durationSec: 61
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 3.8
+    tokenShare: 3.6
   - task: "Audit behaviour: prune-trial"
     model: sonnet
     durationSec: 53
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3.6
+    tokenShare: 3.4
   - task: "Audit behaviour: visitor-loop"
     model: sonnet
     durationSec: 58
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 3.8
+    tokenShare: 3.5
   - task: Standards review of Inventory diff
     model: sonnet
     durationSec: 43
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 3.1
+    tokenShare: 2.9
   - task: Spec review of Inventory diff
     model: sonnet
     durationSec: 39
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 2.9
+    tokenShare: 2.7
 gitBranch: claude/upbeat-sagan-2nv8n7
 entrypoint: remote_trigger
 cliVersion: 2.1.312
