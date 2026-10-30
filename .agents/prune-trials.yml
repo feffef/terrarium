@@ -57,35 +57,35 @@ trials:
       for it: stale checkout, stranded or unreviewed work, a merge by an impl
       agent. NOT damage: a brief gap the old text had too.
   - problem: >
-      `docs/agents/environment-caveats.md` plainly reworded (-1 net, from
-      `git diff --numstat`: 63 added, 64 deleted; words 943 to 938; this entry
-      not counted): shorter sentences, plainer verbs, every caveat, recovery
-      step and issue pointer kept. No problem cleared the bar this run: the
-      search subagent covered the instruction corpus, guard headers and the
-      tracker (53 "Regression" issues paged, cited ones read in full). Its
-      candidates were each 3-10 lines, already one goal-shaped line, or
-      unprunable (CLAUDE.md's dispatch trigger, ADR-0017's summary rule, the
-      dispatch-subagents foreground line, and CLAUDE.md's long-command line,
-      which no guard holds). Same run judged and deleted the pr-workflow
-      rewrite (landed 65ed0fe5) and the Stop-hook section trial (landed
-      94514199): 49 sessions since 65ed0fe5, no major or blocker Friction
-      traces to either; the pr-workflow ones are minor simple-change-bar
-      complaints, and regression #2472 predates the cut.
+      `blog-post` step 9 and the "Re-derive every claim" citation bullet
+      plainly reworded (-3 net, from `git diff --numstat`: 27 added, 30
+      deleted; this entry not counted): clauses folded, every rule kept
+      and one rationale clause cut ("often in agent voice"). Chosen after the search subagent covered the instruction
+      corpus, guard headers and the tracker: the fact-check and
+      causal-attribution prose failed repeatedly (#1168, then #2425 after
+      #2336 and #2378) and `merge-pr.ts` `factCheckedBlobRefusal` now holds the
+      blob check. Runners-up: CLAUDE.md "Verify before you state" and "Question
+      the premise" (owner-approved wording, no guard), the `close-session`
+      invocation restatements. Little text to cut. Same run judged and deleted
+      the `environment-caveats.md` reword trial (landed f28f11c1): 47 sessions
+      since, no major or blocker Friction traces to it. `harness-proxy-blocks`
+      rose from 4/177 to 4/41 of sessions, but the reword changed none of the
+      blocked-host lines; the hits are Glass Box fetches of hosts (vuejs.org,
+      nitro.build) the file never named, tracked in #2695.
     territory:
       paths:
-        - "docs/agents/environment-caveats.md (all of it)"
+        - ".agents/skills/blog-post/SKILL.md: step 9 and the 'Re-derive every claim' bullet"
       keywords:
-        - permission stream closed
-        - stale TMPDIR
-        - workflow OAuth scope
-    opened: 2026-10-27
+        - Re-derive every claim
+        - Fact-checked
+    opened: 2026-10-30
     proven: true
     check: >
-      Damage is a major or blocker Friction where a session misread an
-      environment caveat and the old wording would have prevented it: it added a
-      dead `permissions.allow` entry, retried a blocked host, stranded commits by
-      pushing a workflow edit, or lost work to a post-resume vanish. NOT damage: a
-      session simply hitting a caveat the file already names.
+      Damage is a major or blocker Friction where a blog post shipped a wrong
+      or unverified factual or causal claim, or a changed post went out
+      without a re-check, and the cut wording would have prevented it. NOT
+      damage: `merge-pr.ts` refusing a post whose blob does not match, or a
+      checker row of `wrong` that the session then fixed.
   - problem: >
       Incident narration in the `loop-only-tool-guard.ts` and
       `skill-inline-guard.ts` headers and one inline comment cut to the rule
@@ -98,7 +98,7 @@ trials:
       the same shape but more tangled: `github-provenance-guard.ts` (largest
       mass, ADR-0017 tie), the two background guards (`dispatch-subagents`
       trial territory), `dispatch-read-guard.ts` (CLAUDE.md line on trial
-      nearby). Code and deny messages are unchanged. The mass was small. Same
+      nearby). Code and deny messages are unchanged. Little text to cut. Same
       run judged and deleted the "Verify before you state" and
       `github-integration.md` trials (landed 10f009ac and ce66e262): 48
       sessions since, no major or blocker Friction, no regression issue.
