@@ -1,0 +1,179 @@
+schemaVersion: 1
+session: session_013zxzeSZEedzkmmCqWvKDjC
+startedAt: 2026-10-30T11:09:44Z
+endedAt: 2026-10-30T11:22:58Z
+kind: autonomous
+goal: "Scheduled blog post: Eyra on the fact-check fingerprint"
+status: in-review
+outcome: "PR #2715 opened with one Eyra post, gate green, awaiting CI and merge"
+summary: "Scheduled blog-post run (agent-initiated by the schedule, no human prompts). Rotation allowed only Eyra. Gathered the last three days of PRs and issue #2370's comment history, drafted three candidates (fingerprint check on blog posts, the Glass Box \"because\" check, the pgrep self-match wait loop), and a blind sonnet read picked the fingerprint post as the heaviest event. Revised for glosses, code-review (Standards + Spec) found no hard violations, a fact-checker returned 29 rows with three fixes (unattended, nine days, bottom of description), re-checked twice, gate green, pushed and opened PR 2715. Still open - CI, then self-merge via merge-pr.ts (it touches no Human-only file, but the PR must carry the Fact-checked blob line) and the step 12 reply decision."
+prs:
+  - "2715"
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Guard demanded it before the first Agent call; confirmed read-only blind reviewers need no worktree
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: Read before first git beyond read-only; fetch-first advice applied
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Review-before-push and scheduled-run closing steps drove the order of review, gate, push
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Read after the first GitHub call; MCP-in-cloud table confirmed my calls
+    useful: partly
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: Read by me and the Standards subagent; palette shaped the postcard image
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: Subagent read it for the reader audience and gloss rule; I took the rule from the Skill hook
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: The task prompt carried it; subagents used its reference sections to review and fact-check
+    useful: yes
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: Fact-checker used it to ground the audit gloss
+    useful: yes
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: The dispatch-read guard blocked my first blind-read Agent call because I had not read the dispatch-subagents Skill, which CLAUDE.md requires before writing a brief.
+    solution: Read dispatch-subagents at the point of the first brief, or have the blog-post Skill's step 6 name it as a pre-read.
+    severity: minor
+  - description: Ran several GitHub reads before reading docs/agents/github-integration.md, which CLAUDE.md requires first; a hook reminded me afterwards.
+    solution: Read the doc at the first GitHub step of a scheduled run.
+    severity: nit
+  - description: The Stop hook asked to push five times while the review, fact-check and gate were pending, repeating text that cost turns and risked an early push.
+    solution: Let the Stop hook stay quiet when a blog-post run's gate has not yet run.
+    severity: nit
+durationSec: 794
+models:
+  claude-sonnet-5-5: 94
+toolCounts:
+  Bash: 26
+  mcp__github__pull_request_read: 4
+  mcp__github__issue_read: 3
+  Agent: 5
+  Read: 1
+  Skill: 3
+  ReadNotifications: 1
+  ToolSearch: 1
+  SendMessage: 2
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-10-30-four-rewordings-later-the-post-got-a-fingerprint.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run code-review and gate:scoped before the first push despite the Stop hook; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes straight to main via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe to the PR at once; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header and commit trailer on every GitHub body and commit; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback rule; the post was standalone so no stub was needed
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; the blog-post Skill was not under a trial, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule-placement guidance; I changed no rules, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on tenant.config.ts read; I only read blogTags, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when I read the dispatch Skill; I changed no Skill, so it did not apply
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded with tenant.config.ts; no stored field changed, so it did not apply
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with tenant.config.ts; I used no MDC component, so it did not apply
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on reading the blog layer; I read the Blog glossary via the Skill, so it was met
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on reading the blog layer; I wrote only Markdown, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on a glossary read; I added no terms, so it did not apply
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded on a glossary read; I added no terms, so it did not apply
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on reading merge-pr.ts; no diagram was involved, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: A subagent loaded it; it reported nothing relevant to a blog fact-check
+    useful: no
+subagents:
+  - task: Blind read of three candidates
+    model: sonnet
+  - task: Blind read of three candidates
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 5.5
+  - task: Standards review of blog post
+    model: sonnet
+    durationSec: 28
+    toolCalls: 10
+    modelCalls: 4
+    tokenShare: 6.8
+  - task: Spec review of blog post
+    model: sonnet
+    durationSec: 36
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 7.3
+  - task: Fact-check Eyra blog post
+    model: sonnet
+    durationSec: 137
+    toolCalls: 19
+    modelCalls: 12
+    tokenShare: 11.5
+gitBranch: claude/zen-heisenberg-c1z91y
+entrypoint: remote_trigger
+cliVersion: 2.1.314
+trigger: blog-post
+landedBy: Stop
