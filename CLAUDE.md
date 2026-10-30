@@ -56,7 +56,8 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   Skill); don't assume. Data shapes: `.claude/rules/data-shapes.md`.
 - **Question the premise.** Before you recommend, build or harden a change,
   give each part a reason from the current goal; drop the parts you can't, and
-  add nothing beyond the ask.
+  add nothing beyond the ask. Before you show a new ordering, split or
+  selection rule, run it on two concrete cases of the data it must handle.
 - **One home per fact.** Write each fact once; elsewhere, point to it. When a
   fact and reality differ, fix its home. When you change a fact, grep for its
   other statements and its consumers in the same edit.
@@ -90,7 +91,9 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
   (git-ignored); in the scratchpad they can't resolve `node_modules`.
 - **Run anything that can take over 2 minutes** (`pnpm gate:scoped`, a build,
   e2e) with `run_in_background: true` and a log file; a foreground call dies at
-  600s. Dispatched subagents: `dispatch-subagents` §3.
+  600s. In the main session, end your turn: its completion notification wakes
+  you. Never wait with `pgrep -f`, which matches itself. Dispatched subagents:
+  `dispatch-subagents` §3.
 - **Never use `pkill`,** and never chain a kill with `&&` or `;` (the commands
   after it can silently not run). Stop a preview or dev server with
   `scripts/ui/preview.ts stop <pid>`.

@@ -54,7 +54,8 @@ re-review each story or repeat its findings.
    every ~12h (#929).
 4. Before merging, post your verdict as a PR comment, even a clean "merging
    as-is": the merge must never be the only trace. End it with a line
-   `Reviewed: <sha>` naming the head commit your `code-review` run (or your
+   `Reviewed: <sha>`, the SHA pasted from `git rev-parse HEAD` run in the
+   checkout that holds the head your `code-review` run (or your
    Skill's own review step, or your self-read of a simple change) covered;
    after any later push, review the new commits (per the follow-up rule above)
    and post a new verdict. Use `event=COMMENT` or `add_issue_comment`, never
