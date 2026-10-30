@@ -44,7 +44,7 @@ export const DIG_SEASONS: DigSeason[] = [
     label: 'the Routing Excavation',
     start: '2026-07-04',
     end: '2026-07-09',
-    note: 'The first week: the early scaffolding and the generated routing machinery, dug out once routing became build-time.',
+    note: 'The earliest scaffolding and the generated routing machinery, dug out once routing became build-time.',
   },
   {
     // A thin ash layer of deliberate throwaways: do-not-merge spikes, closed
@@ -54,7 +54,7 @@ export const DIG_SEASONS: DigSeason[] = [
     label: 'the Spike Ashfall',
     start: '2026-07-10',
     end: '2026-07-11',
-    note: 'Two days of deliberate throwaways: spikes, exploratory pull requests closed unmerged, and an early job taxonomy.',
+    note: 'Deliberate throwaways: do-not-merge spikes, closed exploratory pull requests and an early job taxonomy.',
   },
   {
     // The Atlas's phenology content-model recut for the second time — the
@@ -118,7 +118,7 @@ export const DIG_SEASONS: DigSeason[] = [
     label: 'the Kiln Wasters',
     start: '2026-09-05',
     end: '2026-10-04',
-    note: 'Things made and spoiled without ever being used: guards, scripts and upgrades closed before they landed.',
+    note: 'Things made and spoiled without ever being used, most of which never reached main: guards, scripts, culled Campaigns and an upgrade closed with every check green.',
   },
   {
     // The open cut. It opens on three guards taken down in two days, each
