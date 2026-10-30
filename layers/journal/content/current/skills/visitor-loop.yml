@@ -473,3 +473,10 @@ observations:
       2383 (PR 2649 merged anyway); the Skill never says to unshallow.
       Repeat, minor: dispatch-subagents read after the dispatch-read
       guard blocked in three runs. Grade/role unchanged (routine).
+  - date: "2026-10-30"
+    note: >-
+      Behaviour check, 7 runs delivered, none reverted. Unverified, minor: the
+      merged-PR duplicate check missed #2383 in session_013zxzeSxgYzYmeAuCzvJdhY
+      because its title lacks the keyword; the refiner caught the overlap.
+      Dispatch-read guard blocked the first Agent call in four of seven runs
+      (cost only). Grade/role unchanged (routine).

@@ -401,3 +401,10 @@ observations:
       (10-28 13:53) postdates all of them, so it is untested. Not
       commented, as #2370 already carries this shape. Grade/role
       unchanged (routine).
+  - date: "2026-10-30"
+    note: >-
+      Behaviour check, 7 runs, all PRs merged. Verified repeat of #2370 under
+      #2642's text: session_013zxzeQPnKXDNxriCwJfZnz (PR #2680) changed the post
+      in f01120b78 and 2c686826b after the fact-check commit 64d988939; which
+      agent made them is unverified. Reopened #2370 with this. Grade/role
+      unchanged (routine).

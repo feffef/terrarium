@@ -422,3 +422,10 @@ observations:
       22; 7 loaded only by subagents), the other nine complete. #2607
       was closed by #2645 before that log landed, so the gap persists;
       no new issue. Grade/role unchanged (essential).
+  - date: "2026-10-30"
+    note: >-
+      Behaviour check, 10 runs, all logs landed, no revert. Verified:
+      ruleVerdicts short in session_013zxzePQM2TjRCTtcKaV61o (7 of 17 loaded
+      rules without a verdict), the other nine complete, down from three of ten
+      on 10-28. #2645 (no verdict provided display) is the fix; no new issue.
+      Grade/role unchanged (essential).

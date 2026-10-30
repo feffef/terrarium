@@ -348,3 +348,10 @@ observations:
       'dropped:' note (step 5.3); session_01S9UeKa9mCWdPVBjAezCSaL hand-edited
       notes. The --note flag (#2567) fixed it and the 10-27 run used it.
       Grade/role unchanged (routine).
+  - date: "2026-10-30"
+    note: >-
+      Behaviour check, 10 runs delivered, no revert. Verified silent failure:
+      session_013zxzeRnPtjPsVQM71SzX63 wrote 'fix #2660' in PR #2661, which
+      closed the filed-only Human-only issue #2660 unfixed; filed #2691. Known,
+      disclosed: every run since 10-24 skips two top-three regression entries
+      (owner-declined). Grade/role unchanged (routine).

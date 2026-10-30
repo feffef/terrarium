@@ -181,3 +181,11 @@ observations:
       session_013QKXoGLaEHEJanyw5TrPqj (spec gap, CI still gated each
       merge). check:worktrees still absent from the 10 logs
       (unverified). Grade/role unchanged (specialist).
+  - date: "2026-10-30"
+    note: >-
+      Behaviour check, 10 runs, no revert. Verified repeat of #2654:
+      close-session re-invoke skipped in session_013zxzeSgD6cuF2mawqY6jWM and
+      session_013zxzeTK9c2HVcabwCx3b18 (on hold behind a prune trial; no
+      comment). Hand edit pushed without re-gating in both (spec gap, CI gated
+      each merge). check:worktrees still absent from the logs (unverified).
+      Grade/role unchanged (specialist).

@@ -417,3 +417,10 @@ observations:
       single backtick is not enough. Commented on #2553. The step 1.3
       trial note (757e501c3) held in the 10-27 and 10-28 runs.
       Grade/role unchanged (routine).
+  - date: "2026-10-30"
+    note: >-
+      Behaviour check, 7 runs delivered, none reverted. Verified minor repeat:
+      session_01BgQzSd9CmFPiugdXAQh6HW left a conflict in trial text
+      (github-integration.md single-backtick line) with no Friction logged. The
+      one-checker pool fix holds since 10-27. Unverified: one reviewer covered
+      only part of the docs on 10-28. Grade/role unchanged (routine).

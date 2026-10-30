@@ -103,3 +103,10 @@ observations:
       session_01VW5yg4NTMt1JBnXCcrhjw9,
       session_013zxzeQ8EBq9v7NXqWmAFRF); filed #2655. Grade/role
       unchanged (specialist).
+  - date: "2026-10-30"
+    note: >-
+      Behaviour check, 8 runs delivered, none reverted, 100 non-users ruled out.
+      Page-limit gap (#2655) fixed by #2666 on 10-29, untested since.
+      Unverified, n=1: session_013zxzeQn5ksJrQasTk95LKb hit an Invalid cursor
+      past a 40-minute gap and read one session in 98 sequential pages; the
+      Skill has no fallback for that cursor. Grade/role unchanged (specialist).

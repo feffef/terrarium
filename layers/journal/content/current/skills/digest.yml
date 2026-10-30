@@ -322,3 +322,11 @@ observations:
       reopened #2105. First-push code-review skips on sweep diffs continue on
       #2472 (session_0174aaydYCKDuWSrJkkTD1dM,
       session_014yTcrjFw1Qa6ABqQoGpzYq). Grade/role unchanged (routine).
+  - date: "2026-10-30"
+    note: >-
+      Behaviour check, 7 runs delivered, none reverted. Unverified:
+      session_013zxzePhRwXqYLtsycYUhqv (10-28, PR #2606) has no code-review or
+      self-read in its log, though step 6 promises review before push. Disclosed
+      gap: that run dropped the retention sweep after a failed smoke test.
+      The 757e501c ADR-0010 line works: no late-read friction since.
+      Grade/role unchanged (routine).

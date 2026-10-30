@@ -664,3 +664,10 @@ observations:
       session_01WKUyPyRBzirHHAhDr7Y8Ek; citation and length errors
       caught only by code-review in four runs (#2352). Grade/role
       unchanged (routine).
+  - date: "2026-10-30"
+    note: >-
+      Behaviour check, 8 runs delivered, all Inventory PRs merged. Verified
+      repeat: follow-up code-review skipped in session_01WKUyPyRBzirHHAhDr7Y8Ek
+      and session_019g1t4RX7PcR54io7GRdxXK (4 files each; #2638 only covers
+      added or moved files). Citation drafting gap (#2352) persists; step 3
+      results missing from two summaries. Grade/role unchanged (routine).
