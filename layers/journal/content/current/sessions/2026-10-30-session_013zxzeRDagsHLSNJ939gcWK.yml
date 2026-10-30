@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRDagsHLSNJ939gcWK
 startedAt: 2026-10-30T06:19:35Z
-endedAt: 2026-10-30T07:03:09Z
+endedAt: 2026-10-30T07:12:36Z
 kind: interactive
 goal: Clear the issue backlog
-status: in-review
-outcome: 16 issues triaged; 2707, 2709, 2710 merged; 2708 and 2712 wait for a human merge; 2711 awaits an owner call
-summary: "The owner invoked clear-backlog (human-instructed) and later answered \"accept all\" to the 8-question grilling, which approved every pick. The sweep took 14 needs-triage issues plus 2 ready-for-agent rechecks; the 4 ready-for-human issues were skipped because an agent wrote their last comment. Triage built 6 issues on 3 branches (PRs 2707, 2708, 2709). It found 2612 still blocked by the environment-caveats Prune Trial. On the owner's answers I relabelled 2691, 2370, 2693, 2700 and 2701 as ready-for-agent, reopened 2660, closed 2694 and 2706, and parked 2695 behind the dispatch-subagents Prune Trial. A second build is now running for 2370+2691 (merge-pr.ts) and 2701. Agent-initiated: I split the proposed glassbox group, so 2702-2705 were built first and 2693+2700 wait for that branch to land, because they edit the same files. My own count could not reproduce the triage agent's 2701 numbers (they depend on whether subsections count), so I flagged that pick as partly verified. PR 2708 touches Human-only scripts/hooks and waits for a human merge."
+status: completed
+outcome: 16 issues triaged; 12 built and closed via 6 merged PRs; 2 closed, 2 parked behind Prune Trials
+summary: "The owner invoked clear-backlog (human-instructed). They answered \"accept all\" to the 8-question grilling and \"a\" to one follow-up (Q9: in glassbox-improve's step cap, waiting candidates go ahead of this run's ranked steps). The sweep took 14 needs-triage issues and 2 ready-for-agent rechecks. It skipped 4 ready-for-human issues, because an agent had written their last comment. Merged: 2707 (log-session --pending, close-session as the only entry point; 2654, 2687), 2708 (read-first hint skips git grep/ls-files; 2686; human-merged), 2709 (glassbox-improve drafts report, writer Terms, deleted-fact homes; 2702-2705), 2710 (Glass Box fails \"because\" in In Terrarium, warns on \"so\" and long Excerpts; 2701), 2711 (glassbox-improve caps structural steps at 3, fills rater briefs, saves hand-backs in pairs; 2693, 2700), and 2712 (merge-pr refuses closing keywords on unready issues and blog posts the fact-checker didn't read; 2370, 2691; human-merged). On the owner's answers I closed 2694 and 2706, reopened 2660, and parked 2695. 2612 stays blocked by the environment-caveats Prune Trial. Agent-initiated choices: I split the proposed glassbox group and built 2693+2700 after 2709 landed, because they edit the same files. I hand-fixed the one finding left after 2712's review cap (the checker now hashes the post before reading it). I held 2711 for the owner, because its queue order went beyond the owner's \"top 3 by rank\" pick. Left open: the judgement calls listed in each PR body, the owner's upstream report of the Stop-hook nag (2706), and ADR-0004's Consequences, which don't yet list the new merge-pr refusals."
 prs:
   - "2707"
   - "2708"
@@ -36,59 +36,105 @@ docsRead:
   - path: docs/agents/pr-workflow.md
     reason: review-before-push and landing recipe
     useful: yes
+  - path: .agents/prune-trials.yml
+    reason: "triage #2704: Checked whether an open trial covers dispatch-subagents §3; it does; build log-session-entry-and-pending-report: Read to check for an open trial on log-session text (ADR-0027). None was open.; build glassbox-improve-briefs-and-drafts-report: Brief required the check; no trial covers glassbox-improve; Standards glassbox-improve-briefs-and-drafts-report r1: Read to confirm no open trial covers glassbox-improve. Only dispatch-subagents §3 is in trial territory, and the diff leaves it untouched.; build merge-pr-closing-keyword-and-blog-checked-blob: The brief required checking it; no open trial covers the edited text; Standards merge-pr-closing-keyword-and-blog-checked-blob r1: The brief said to check it before reviewing the prose cuts; it confirmed no open trial overlaps the diff.; Spec merge-pr-closing-keyword-and-blog-checked-blob r1: Read to confirm that no open trial covers the blog-post, pr-workflow.md or merge-pr.ts text this diff changes; build glassbox-improve-step-cap-and-handback-pairs: The brief told me to check it before editing covered text; no trial covers this text."
+    useful: yes
   - path: .agents/skills/blog-post/SKILL.md
-    reason: (read before editing)
-  - path: .agents/skills/triage/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/implement/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/glassbox-improve/SKILL.md
-    reason: (read before editing)
+    reason: "build merge-pr-closing-keyword-and-blog-checked-blob: I edited steps 9 and 11; Spec merge-pr-closing-keyword-and-blog-checked-blob r2: I read steps 9-11 to check the prose changes and the cuts against the spec."
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: "triage #2693: Checked when to set state labels in this run. Answers set the label later, so I kept needs-triage."
+    useful: yes
   - path: .agents/skills/code-review/SKILL.md
-    reason: (no reason given)
+    reason: "Standards log-session-entry-and-pending-report r1: Read because the task said to; it supplied the Standards axis and the smell baseline I applied.; Spec log-session-entry-and-pending-report r1: The task said to read it and apply the Spec axis. It set the frame: missing items, scope creep and wrong implementations.; Spec read-first-hint-skip-grep-ls-files r1: The task said to read it and apply its Spec axis; it gave the three Spec checks: missing, scope creep and wrong implementation.; Standards glassbox-improve-briefs-and-drafts-report r1: The task said to apply its Standards axis and smell baseline. It drove the Duplicated Code check.; Spec glassbox-improve-briefs-and-drafts-report r1: The task said to apply its Spec axis. Gave the three spec checks: missing, scope creep, wrong implementation.; Standards merge-pr-closing-keyword-and-blog-checked-blob r1: The task told me to read it; it gave the Standards axis and the smell baseline I applied.; Spec merge-pr-closing-keyword-and-blog-checked-blob r1: The task told me to read it; its Spec-axis brief (missing requirements, scope creep, wrong implementation) set the review's structure; Standards merge-pr-closing-keyword-and-blog-checked-blob r2: Read because the task said to apply its Standards axis and smell baseline. The baseline is what the Mysterious Name and Duplicated Code findings come from.; Spec merge-pr-closing-keyword-and-blog-checked-blob r2: The task named it for the Spec axis. It framed the missing / scope-creep / wrong structure.; Standards merge-pr-closing-keyword-and-blog-checked-blob r3: The task named it; it supplied the Standards axis and the smell baseline.; Spec merge-pr-closing-keyword-and-blog-checked-blob r3: The task told me to read it. Its Spec axis brief (missing, scope creep, wrong) set the review's structure.; Standards glassbox-in-terrarium-motive-check r1: The task asked for its Standards axis and smell baseline; Spec glassbox-in-terrarium-motive-check r1: The task told me to read it for the Spec axis. Its three-part Spec brief (missing, scope creep, wrong) framed the review.; Standards glassbox-in-terrarium-motive-check r2: The task told me to read it for the Standards axis and the smell baseline. The baseline shaped the simplicity findings.; Spec glassbox-in-terrarium-motive-check r2: The task asked me to read it and apply its Spec axis. Its spec-review brief (missing parts, scope creep, wrong implementation) framed this review.; Standards glassbox-improve-step-cap-and-handback-pairs r1: The task told me to read it; its smell baseline (Duplicated Code, Middle Man) framed every finding.; Spec glassbox-improve-step-cap-and-handback-pairs r1: The task told me to read it and apply its Spec axis; it gave the missing, scope-creep and wrong-implementation frame"
+    useful: yes
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: "Spec glassbox-improve-step-cap-and-handback-pairs r1: The template that `raterBrief` fills; I read it to check that every placeholder (MODEL, COMMIT, SCRATCH, ALL THREE, LONE, CATALOG) is covered"
+    useful: yes
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: "triage #2693: Primary source for the claim (Remit, steps 3-5).; triage #2700: Primary source for the issue's claims; step 8's PR-body requirement decided proposal 1; triage #2704: The file the issue governs; read step 7; triage #2705: The Skill the issue changes; steps 3 and 4 and the researcher's role"
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: "triage #2701: Primary source for the rules the issue cites (partial grep); build glassbox-improve-briefs-and-drafts-report: Read its Terms rule to point the writer brief at it; Spec glassbox-improve-briefs-and-drafts-report r1: Read the Terms section to check that #2703's pointer covers the check of the integration branch and open PRs. It does.; build glassbox-in-terrarium-motive-check: The brief required it. It decided the section scope and where warnings get surfaced.; Standards glassbox-in-terrarium-motive-check r1: Read to check the Mechanism, not motive rule, the scope of What to watch for, and the edited Check section; Spec glassbox-in-terrarium-motive-check r1: Read the 'Mechanism, not motive', 'Excerpts teach' and Check sections to judge the scope decision and the new instruction. They decided the 'What to watch for' question.; Spec glassbox-in-terrarium-motive-check r2: Read its 'Mechanism, not motive' rule (by grep) to check the scope of In Terrarium and the decision to leave out What to watch for."
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "build log-session-entry-and-pending-report: The brief told me to follow it: tdd, then typecheck and tests, then commit.; build glassbox-improve-briefs-and-drafts-report: Brief said to follow it; build merge-pr-closing-keyword-and-blog-checked-blob: The brief told me to follow it; build glassbox-in-terrarium-motive-check: The brief required it. It is generic.; build glassbox-improve-step-cap-and-handback-pairs: The brief told me to follow it."
+    useful: partly
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: "triage #2694: the file the issue is about; I checked its gap and cursor coverage"
+    useful: yes
+  - path: .agents/skills/log-session/SKILL.md
+    reason: "triage #2687: The issue's subject. It confirmed the 'expect a second pass' line in step 3.; build log-session-entry-and-pending-report: The file I edited for both issues."
+    useful: yes
+  - path: .agents/skills/tdd/SKILL.md
+    reason: "build log-session-entry-and-pending-report: Invoked as the brief told me. I worked red then green at the pendingMain seam, which the brief had already agreed.; build merge-pr-closing-keyword-and-blog-checked-blob: Invoked per the brief; I kept red-before-green with vertical slices"
+    useful: yes
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: "triage #2703: Read for the format of the posted brief.; triage #2705: The format for the ready-for-agent comment"
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2686: The brief told me to read it. It gave the label states and the brief outcome.; triage #2687: The brief told me to read it. It gave the per-issue steps: verify the claim, then write an agent brief.; triage #2695: Brief required it; gave labels and checks; triage #2700: Required by the brief; gave the per-issue steps and labels; triage #2701: The brief required it; source of the verify-the-claim step that showed the assumption was false; triage #2703: The brief said to read it. It gave the per-issue steps and the outcome mapping.; triage #2704: Required by the brief; label states and outcomes; triage #2705: The brief said to read it; it gave the per-issue steps (redundancy check, apply the outcome); triage #2706: The brief required it; it gave the per-issue steps and the redundancy check"
+    useful: yes
+  - path: .claude/skills/tdd (SKILL.md)
+    reason: "build glassbox-improve-step-cap-and-handback-pairs: The brief told me to invoke it. I followed red then green, choosing the seams myself because no user was there to confirm them."
+    useful: yes
+  - path: .claude/skills/tdd/SKILL.md
+    reason: "build glassbox-improve-briefs-and-drafts-report: Invoked per brief; red-green loop, test at one seam"
+    useful: yes
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: "Standards merge-pr-closing-keyword-and-blog-checked-blob r2: Loaded at session start. Its 'one home per fact', 'question the premise' and code-comment rules were the standards I checked the prose cuts and comments against.; Standards glassbox-in-terrarium-motive-check r1: Loaded at session start; gave the 'keep it short', 'one home per fact' and comments-say-why standards I reviewed against"
+    useful: yes
+  - path: /home/user/terrarium/GLOSSARY-MAP.md
+    reason: "Standards merge-pr-closing-keyword-and-blog-checked-blob r2: Loaded at session start. It helped only to confirm that Glass Box is pinned to dated commits."
+    useful: partly
+  - path: CLAUDE.md
+    reason: "Standards read-first-hint-skip-grep-ls-files r1: Loaded at session start; its one-home-per-fact rule drove the grep for other copies of the list; useful.; build glassbox-improve-briefs-and-drafts-report: Loaded at session start; scratchpad, throwaway and one-home-per-fact rules; Standards glassbox-improve-briefs-and-drafts-report r1: Loaded at session start. Its 'Keep it short', 'one home per fact' and 'add nothing beyond the ask' were the standards I applied.; Standards merge-pr-closing-keyword-and-blog-checked-blob r1: Project instructions loaded at start; its One home per fact, keep-it-short and code-comment rules drove the findings.; Standards merge-pr-closing-keyword-and-blog-checked-blob r3: Project instructions loaded at start; I used 'One home per fact' and 'Keep it short' as standards."
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: "triage #2705: Grepped its new-work definition to check that a Skill feature needs approval, which the sweep gives"
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "build merge-pr-closing-keyword-and-blog-checked-blob: A hook pointed to it after I edited merge-pr.ts; it confirmed the edit fits; fix merge-pr-closing-keyword-and-blog-checked-blob r1: A PostToolUse hook asked me to read it after I edited merge-pr.ts. A rename and a re-wrap change no behaviour. Its Consequences section omits the new refusals; I noted that in decisions."
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: "build glassbox-improve-step-cap-and-handback-pairs: A PostToolUse hook asked me to read it after I edited SKILL.md; it confirmed the edit was in scope."
+    useful: partly
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: "build merge-pr-closing-keyword-and-blog-checked-blob: A hook pointed to it after the Skill edit; I did not read it in full because pingbacks were untouched; fix merge-pr-closing-keyword-and-blog-checked-blob r1: A PostToolUse hook asked me to read it after I edited blog-post SKILL.md. It covers Pingbacks, which are unrelated to this edit."
+    useful: no
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: "triage #2700: Read its Consequences to judge proposal 4's --body-file script"
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "triage #2370: The full ADR behind the triage outcome; triage #2686: The full ADR behind the ready-for-agent decision. It confirmed that a Trusted issue with a settled design may be labelled ready-for-agent.; triage #2687: Full ADR behind the rule. It confirmed that naming choices are no reason to escalate.; triage #2691: Read its judgment-call section to justify ready-for-human; triage #2693: Full ADR behind the recommendation. Its 'several valid approaches' clause decided grill.; triage #2694: the full ADR behind the governing rule; it defines judgment call and design doubt; triage #2695: Full ADR behind the escalation decision; triage #2700: Read for its definition of a judgment call and design doubt; that decided grill; triage #2702: full ADR behind the rule that governs the label recommendation; triage #2703: The full ADR behind the ready-for-agent decision. It confirmed that a Trusted-authored issue with a settled design may be labelled ready-for-agent.; triage #2704: Full ADR behind the ready-for-agent decision; triage #2705: The full ADR behind the ready-for-agent decision on an owner-authored issue; triage #2706: The full ADR behind the governing rule; it confirms that closing as out of scope is a judgment call, so ready-for-human"
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "triage #2370: The full ADR whose Why backs the pick of a mechanical check; triage #2695: Read the open-trial section to confirm the fix is blocked; build merge-pr-closing-keyword-and-blog-checked-blob: A hook pointed to it after I edited pr-workflow.md; it supported cutting prose that a mechanical check replaces"
+    useful: yes
   - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
-    reason: (no reason given)
+    reason: "build read-first-hint-skip-grep-ls-files: The hint after my CLAUDE.md edit asked me to read it. The edit already fit it."
+    useful: partly
+  - path: GLOSSARY-MAP.md
+    reason: "Standards merge-pr-closing-keyword-and-blog-checked-blob r1: Loaded at start; it says Glass Box is pinned to dated commits, which settled whether the stale excerpt is a problem.; Spec merge-pr-closing-keyword-and-blog-checked-blob r3: Loaded at session start. It helped me read the Glass Box pinning context."
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: "Standards merge-pr-closing-keyword-and-blog-checked-blob r3: Read lines 26-40 to check whether the Glass Box pages quoting the old readyForHumanRefusal are stale or pinned. They are pinned, so not a finding."
+    useful: yes
   - path: .agents/skills/glassbox-improve/tests/unit/grades.spec.ts
     reason: (read before editing)
   - path: /home/user/terrarium/docs/agents/git-conventions.md
     reason: (no reason given)
-  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
-    reason: (read before editing)
   - path: layers/glassbox/page-checks.ts
     reason: (read before editing)
   - path: /home/user/terrarium/docs/agents/github-integration.md
     reason: (no reason given)
-  - path: docs/adr/0004-objective-safety-gate.md
-    reason: (no reason given)
   - path: scripts/github/merge-pr.ts
-    reason: (read before editing)
-  - path: .agents/skills/log-session/SKILL.md
     reason: (read before editing)
   - path: .agents/skills/glassbox-improve/writer-brief.md
     reason: (read before editing)
-  - path: docs/adr/0022-autonomous-triage-sweep.md
-    reason: (no reason given)
-  - path: .agents/skills/triage/AGENT-BRIEF.md
-    reason: (no reason given)
   - path: .agents/skills/glassbox-improve/researcher-brief.md
     reason: (read before editing)
-  - path: layers/glassbox/GLOSSARY.md
-    reason: (no reason given)
-  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
-    reason: (no reason given)
-  - path: .agents/skills/clear-backlog/SKILL.md
-    reason: (no reason given)
-  - path: .agents/skills/inspect-session/SKILL.md
-    reason: (no reason given)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0027-prune-trials.md
-    reason: (no reason given)
-  - path: .agents/skills/glassbox-improve/rater-brief.md
-    reason: (no reason given)
-  - path: docs/adr/0005-skill-model.md
-    reason: (no reason given)
-  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
     reason: (no reason given)
 skillsUsed:
   - name: grilling
@@ -108,23 +154,30 @@ frictions:
   - description: "The triage agent's #2701 counts (19 pages, 1 because) could not be reproduced without knowing its section scope; three greps spent"
     solution: Have the explore schema's question cite the exact command behind each count
     severity: minor
-durationSec: 2613
+  - description: Worktrees pushed with git push origin HEAD:branch had no upstream, so check:worktrees reported them unpushed until I set upstreams by hand
+    solution: clear-backlog §4 could push with git push -u origin HEAD:branch, or check:worktrees could compare against origin/branch when no upstream is set
+    severity: minor
+  - description: The build workflow left the main checkout detached HEAD; check:worktrees reported it and I re-checked out the session branch
+    solution: clear-backlog-build should restore the main checkout's branch after it detaches
+    severity: nit
+durationSec: 3180
 models:
-  claude-opus-5-5: 182
+  claude-opus-5-5: 216
 toolCounts:
-  Bash: 49
+  Bash: 57
   Workflow: 5
   Read: 2
   ToolSearch: 3
-  Skill: 3
+  Skill: 4
   PushNotification: 1
-  mcp__github__add_issue_comment: 13
+  mcp__github__add_issue_comment: 15
   mcp__github__issue_write: 8
   mcp__github__create_pull_request: 6
   mcp__claude-code-remote__subscribe_pr_activity: 6
-  ReadNotifications: 9
+  ReadNotifications: 16
   mcp__claude-code-remote__send_later: 1
   Edit: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - .agents/skills/blog-post/SKILL.md
   - .agents/skills/glassbox-improve/SKILL.md
@@ -265,6 +318,42 @@ ruleVerdicts:
   - path: .claude/rules/adr-0029.md
     reason: Loaded on reading git-conventions; about where rules live, not this task
     useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "triage #2370: Loaded when I read the ADR files; I used its paths to confirm merge-pr.ts is Human-only; triage #2686: Loaded when I read scripts/hooks/read-first-hint.ts. It confirmed the file is Human-only.; triage #2687: Loaded when I read its paths. It confirmed scripts/session and the log-session Skill are not Human-only.; triage #2691: Loaded when I read merge-pr.ts; its paths confirm merge-pr.ts is Human-only; triage #2700: Loaded on reading the scripts/hooks guard; showed scripts/hooks/** is Human-only, which matters for option (c); triage #2701: Loaded when I grepped it to see whether glassbox paths are Human-only; they are not; triage #2703: Loaded when I read it. I used it to confirm the target files are not Human-only.; triage #2704: Loaded when I read it to check Human-only paths; .agents/skills is not on the list; build read-first-hint-skip-grep-ls-files: It loaded when I touched scripts/hooks/read-first-hint.ts. It confirmed the file is Human-only."
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: "build merge-pr-closing-keyword-and-blog-checked-blob: Loaded on the blog-post Skill read; pingbacks were untouched"
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: "build glassbox-in-terrarium-motive-check: Loaded when I read vitest.config.ts. Not needed."
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: "triage #2691: Loaded when I read the frictions-to-fixes skill; not relevant; build glassbox-improve-step-cap-and-handback-pairs: Loaded when I read Skill files; glassbox-improve is not a pack Skill, so it did not apply."
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: "triage #2705: Loaded when I read the glassbox GLOSSARY.md; build glassbox-in-terrarium-motive-check: Loaded when I read the glossary. Not needed.; build glassbox-improve-step-cap-and-handback-pairs: Loaded on a file read; it is about glossaries and did not apply."
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "triage #2370: Loaded on reading the ADRs; not relevant; triage #2686: Loaded when I read the ADR. Not relevant.; triage #2687: Loaded when my command read prune-trials.yml; no ADR is changed here.; triage #2691: Loaded when I read the ADR; not relevant; triage #2693: Loaded on reading the rules dir. Not relevant.; triage #2694: loaded when I read ADR-0022; not relevant; triage #2695: Loaded when reading an ADR; not relevant; triage #2700: Loaded when reading ADR files; not relevant; triage #2701: Loaded by a bash read of the human-merge rule; not relevant; triage #2702: loaded on reading an ADR; no ADR change here; triage #2703: Loaded on reading files under the ADR paths. Not relevant.; triage #2704: Loaded when I read the human-merge rule; doesn't apply; triage #2705: Loaded when I read ADR files; not relevant; triage #2706: Loaded when I read ADR-0022; not relevant; build log-session-entry-and-pending-report: Loaded because I read ADR files. I edited no ADR, so it didn't apply.; build read-first-hint-skip-grep-ls-files: It loaded mid-session. Not relevant, because I changed no ADR.; build glassbox-improve-briefs-and-drafts-report: Loaded when I read ADRs; no ADR changed; build merge-pr-closing-keyword-and-blog-checked-blob: Loaded on reading ADR-0004; no ADR changed; build glassbox-in-terrarium-motive-check: Loaded when I read ADR-0004. Not needed.; build glassbox-improve-step-cap-and-handback-pairs: Loaded on a file read; no ADR changed."
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: "triage #2686: Loaded when I read the Glass Box page. It turned up the side finding."
+    useful: yes
+  - path: .claude/rules/glossary-terms.md
+    reason: "triage #2705: Loaded when I read the glassbox GLOSSARY.md; I edited no term; build glassbox-in-terrarium-motive-check: Loaded when I read the glossary. No term changed."
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "triage #2686: Loaded when I read the hook. A pointer only.; triage #2700: Loaded on reading the provenance guard; not needed; triage #2706: Loaded with the settings read; not relevant; build read-first-hint-skip-grep-ls-files: It loaded when I touched the hook file. I did not need docs/agents/guards.md for this change."
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: "triage #2686: Loaded with the Glass Box read. Not relevant.; build glassbox-in-terrarium-motive-check: Loaded when I edited a Glass Box page. It has no diagram."
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: "triage #2705: Loaded when I read layers/glassbox; I read the glossary's Two Spaces entry"
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: "triage #2701: Loaded on reading layers/glassbox files; not relevant to a page-check change; build glassbox-improve-briefs-and-drafts-report: Loaded on reading the layer test; not relevant to a Skill script; build glassbox-in-terrarium-motive-check: Loaded when I read the layer. Not needed."
+    useful: no
 subagents:
   - type: workflow-subagent
     task: "triage #2703"
@@ -272,42 +361,42 @@ subagents:
     durationSec: 93
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: "triage #2705"
     model: claude-opus-5-5
     durationSec: 127
     toolCalls: 23
     modelCalls: 18
-    tokenShare: 2.6
+    tokenShare: 2.5
   - type: workflow-subagent
     task: "triage #2700"
     model: claude-opus-5-5
     durationSec: 99
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: "triage #2701"
     model: claude-opus-5-5
     durationSec: 83
     toolCalls: 15
     modelCalls: 11
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: "triage #2693"
     model: claude-opus-5-5
     durationSec: 92
     toolCalls: 20
     modelCalls: 14
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: "triage #2694"
     model: claude-opus-5-5
     durationSec: 85
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: "triage #2612"
     model: claude-opus-5-5
@@ -321,35 +410,35 @@ subagents:
     durationSec: 93
     toolCalls: 20
     modelCalls: 15
-    tokenShare: 1.9
+    tokenShare: 1.8
   - type: workflow-subagent
     task: "triage #2695"
     model: claude-opus-5-5
     durationSec: 110
     toolCalls: 21
     modelCalls: 17
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: workflow-subagent
     task: "triage #2706"
     model: claude-opus-5-5
     durationSec: 81
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 2.2
+    tokenShare: 2
   - type: workflow-subagent
     task: "triage #2704"
     model: claude-opus-5-5
     durationSec: 82
     toolCalls: 15
     modelCalls: 11
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #2702"
     model: claude-opus-5-5
     durationSec: 70
     toolCalls: 17
     modelCalls: 10
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: "triage #2654"
     model: claude-opus-5-5
@@ -363,28 +452,28 @@ subagents:
     durationSec: 66
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: "triage #2370"
     model: claude-opus-5-5
     durationSec: 95
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 1.9
+    tokenShare: 1.7
   - type: workflow-subagent
     task: "triage #2687"
     model: claude-opus-5-5
     durationSec: 81
     toolCalls: 15
     modelCalls: 11
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: build glassbox-improve-step-cap-and-handback-pairs
     model: claude-opus-5-5
     durationSec: 653
     toolCalls: 46
     modelCalls: 28
-    tokenShare: 4.9
+    tokenShare: 4.6
   - type: workflow-subagent
     task: gate glassbox-improve-step-cap-and-handback-pairs
     model: claude-opus-5-5
@@ -412,28 +501,28 @@ subagents:
     durationSec: 43
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Spec read-first-hint-skip-grep-ls-files r1
     model: claude-opus-5-5
     durationSec: 32
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build log-session-entry-and-pending-report
     model: claude-opus-5-5
     durationSec: 475
     toolCalls: 25
     modelCalls: 19
-    tokenShare: 3.8
+    tokenShare: 3.5
   - type: workflow-subagent
     task: Spec glassbox-improve-briefs-and-drafts-report r1
     model: claude-opus-5-5
     durationSec: 95
     toolCalls: 14
     modelCalls: 9
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: gate read-first-hint-skip-grep-ls-files
     model: claude-sonnet-5-5
@@ -447,7 +536,7 @@ subagents:
     durationSec: 384
     toolCalls: 22
     modelCalls: 15
-    tokenShare: 2
+    tokenShare: 1.8
   - type: workflow-subagent
     task: gate log-session-entry-and-pending-report
     model: claude-opus-5-5
@@ -461,7 +550,7 @@ subagents:
     durationSec: 19
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Standards glassbox-improve-briefs-and-drafts-report r1
     model: claude-opus-5-5
@@ -489,7 +578,7 @@ subagents:
     durationSec: 645
     toolCalls: 57
     modelCalls: 37
-    tokenShare: 6.1
+    tokenShare: 5.7
   - type: workflow-subagent
     task: Spec glassbox-in-terrarium-motive-check r2
     model: claude-opus-5-5
@@ -503,7 +592,7 @@ subagents:
     durationSec: 79
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: gate glassbox-in-terrarium-motive-check
     model: claude-opus-5-5
@@ -517,35 +606,35 @@ subagents:
     durationSec: 777
     toolCalls: 54
     modelCalls: 40
-    tokenShare: 6.9
+    tokenShare: 6.4
   - type: workflow-subagent
     task: Spec merge-pr-closing-keyword-and-blog-checked-blob r3
     model: claude-opus-5-5
     durationSec: 85
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: fix merge-pr-closing-keyword-and-blog-checked-blob r2
     model: claude-opus-5-5
     durationSec: 312
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Standards glassbox-in-terrarium-motive-check r1
     model: claude-opus-5-5
     durationSec: 78
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: fix glassbox-in-terrarium-motive-check r1
     model: claude-opus-5-5
     durationSec: 385
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Spec glassbox-in-terrarium-motive-check r1
     model: claude-opus-5-5
@@ -566,42 +655,42 @@ subagents:
     durationSec: 79
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Standards glassbox-in-terrarium-motive-check r2
     model: claude-opus-5-5
     durationSec: 47
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: fix merge-pr-closing-keyword-and-blog-checked-blob r1
     model: claude-opus-5-5
     durationSec: 309
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards merge-pr-closing-keyword-and-blog-checked-blob r2
     model: claude-opus-5-5
     durationSec: 48
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: build merge-pr-closing-keyword-and-blog-checked-blob
     model: claude-opus-5-5
     durationSec: 714
     toolCalls: 51
     modelCalls: 29
-    tokenShare: 5.6
+    tokenShare: 5.3
   - type: workflow-subagent
     task: Standards merge-pr-closing-keyword-and-blog-checked-blob r3
     model: claude-opus-5-5
     durationSec: 46
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 0.8
+    tokenShare: 0.7
 gitBranch: ccr-057aaeba-at3r1x
 entrypoint: remote_mobile
 cliVersion: 2.1.314
