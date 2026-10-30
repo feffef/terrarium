@@ -1,0 +1,204 @@
+schemaVersion: 1
+session: session_013zxzeQmQLYRYBUN1FkDfN6
+startedAt: 2026-10-30T13:17:39Z
+endedAt: 2026-10-30T13:31:39Z
+kind: autonomous
+goal: Scheduled prune trial of the Platform's agent instructions
+status: in-review
+outcome: "One trial judged and deleted; blog-post fact-check text reworded as a new trial; PR #2716 open"
+summary: "Scheduled /prune-trial run, agent-initiated; no human instruction beyond the stored prompt. Only the environment-caveats reword was judgeable. I judged it as holding: no major or blocker Friction traces to it. harness-proxy-blocks rose from 4/177 to 4/41 of sessions, but the reword changed none of the blocked-host lines and the hits are Glass Box fetches of other hosts, already tracked in #2695, so I filed nothing. A Sonnet search subagent ranked failed-prose candidates; I picked blog-post step 9 and its claim-rule bullet (repeated regressions #1168 and #2425, now backed by merge-pr's factCheckedBlobRefusal). The cut is small (-3 net) because the text was already tight; I kept every rule and cut one rationale clause. A pinned-SHA Sonnet probe answered a realistic fact-check situation correctly. Standards and Spec reviews found no blocker; I took their ledger-wording fixes, ran the gate green, pushed and opened PR #2716. Still open: CI and the self-merge."
+prs:
+  - "2716"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command; no part changed what I did
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: required before first GitHub operation; confirmed MCP write path
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and scheduled-run closing steps drove the order
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: guard demanded it before the first Agent call; gave the brief checklist
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the pruned text
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: checked what the reword touched via the diff only
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: hook demanded it after my edit; confirmed the verdict rules
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: hook demanded it after my Skill edit; not relevant to a reword
+    useful: no
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: Standards reviewer read it as the standard; it reported no violation
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: Spec reviewer read it as the spec; no gaps found
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: candidate-search subagent read it to map guards to the closure Friction; useful
+    useful: yes
+  - path: .agents/skills/close-session/SKILL.md
+    reason: candidate-search subagent read it for the closure candidate; useful
+    useful: yes
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Stop hook asked to push four times while the probe, reviews and gate were pending; ADR-0004 says to ignore it, so each was a wasted turn.
+    solution: Have the Stop hook stay quiet on a branch whose gate and review have not yet run.
+    severity: nit
+  - description: Post-edit hook asked me to read ADR-0027, 0005 and 0012 only after I had already committed the prune; none changed it.
+    solution: Load the ADR rules for prune-trials.yml and Skills at session start of a prune-trial run.
+    severity: nit
+  - description: Dispatch-read guard denied my first Agent call until I read dispatch-subagents; I knew the rule but had not opened it yet.
+    solution: None needed; the guard worked as designed.
+    severity: nit
+durationSec: 840
+models:
+  claude-sonnet-5-5: 73
+toolCounts:
+  Bash: 21
+  Read: 4
+  Agent: 5
+  mcp__github__issue_read: 2
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - .agents/skills/blog-post/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 17
+    via: text
+    readAfter: false
+    by: main
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 12
+    via: path
+    readAfter: false
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me review and gate before the first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR unasked and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Defined territory and the trial verdict; I opened the full ADR once the hook asked
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; this run moved none, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About rewriting ADRs; I touched no ADR, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skill location rule; loaded by a read of prune-trials.yml, not relevant to a reword
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded by reading a Journal frictions file; I worked on no Tenant
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback rule loaded by the blog-post Skill edit; the reword touched no pingback
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary layout rule loaded by a Bash read; I changed no glossary
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Glossary term rule; I added no term
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read the PR doc path; neither changed file is Human-only
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Candidate-search subagent loaded it; it only pointed to docs/agents/guards.md
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Find failed-prose prune candidate
+    model: sonnet
+  - type: general-purpose
+    task: Find failed-prose prune candidate
+    model: sonnet
+    durationSec: 102
+    toolCalls: 18
+    modelCalls: 11
+    tokenShare: 15.3
+  - type: general-purpose
+    task: Probe blog-post step 9 prune
+    model: sonnet
+    durationSec: 25
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 3.8
+  - type: general-purpose
+    task: Standards review of prune diff
+    model: sonnet
+    durationSec: 27
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Spec review of prune diff
+    model: sonnet
+    durationSec: 39
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 5.5
+gitBranch: claude/practical-rubin-skozp2
+entrypoint: remote_trigger
+cliVersion: 2.1.314
+trigger: prune-trial
+landedBy: Stop
