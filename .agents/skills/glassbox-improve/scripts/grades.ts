@@ -1,13 +1,13 @@
 // The mechanical half of the glassbox-improve Skill: which pages each rater
 // reads, the tally of their reports, the A election, `grades.yml`, and each
 // draft's promotion blockers. Usage:
-//   pnpm exec tsx .agents/skills/glassbox-improve/scripts/grades.ts plan --base <sha>
+//   pnpm exec tsx .agents/skills/glassbox-improve/scripts/grades.ts plan --base <sha> [--briefs <scratch>]
 //   pnpm exec tsx .agents/skills/glassbox-improve/scripts/grades.ts tally --base <sha> <sonnet> <fable> <opus>
 //     [--write --selected a,b --gap-edit a,b --read-by-all a,b]
 //   pnpm exec tsx .agents/skills/glassbox-improve/scripts/grades.ts drafts --base <sha>
 // A page is named by its path under `layers/glassbox/content/guide/pages`, without `.md`.
 import { createHash } from 'node:crypto'
-import { readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { parse as parseYaml, stringify } from 'yaml'
 import { extractFlag, extractSwitch, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
@@ -19,6 +19,8 @@ export const models = ['sonnet', 'fable', 'opus'] as const
 export type Model = (typeof models)[number]
 export type Grade = 'A' | 'B' | 'C' | 'D'
 
+// #2693: the run's cost grows with each structural step's researcher and writer.
+export const stepsPerRun = 3
 // QUALITY.md, Grades.
 const lessonSeats = 10
 const outsideTop = lessonSeats + 1
@@ -220,6 +222,14 @@ export function structural(reports: Report[]): Raise[] {
   return [...raises.values()].sort((a, b) => b.raters.length - a.raters.length || (a.rankSum ?? Infinity) - (b.rankSum ?? Infinity) || a.key.localeCompare(b.key))
 }
 
+/** This run's structural steps: waiting candidates oldest first, so none starves, then
+ *  this run's two-rater raises by rank; the first `stepsPerRun` are taken, the rest wait. */
+export function stepQueue(raises: Raise[], candidates: Candidate[]): { take: string[]; wait: string[] } {
+  const waiting = [...candidates].sort((a, b) => a.since.localeCompare(b.since)).map((c) => c.kind)
+  const queue = [...new Set([...waiting, ...raises.filter((r) => r.raters.length >= 2).map((r) => r.key)])]
+  return { take: queue.slice(0, stepsPerRun), wait: queue.slice(stepsPerRun) }
+}
+
 function markdown(record: GradeRecord, plan: Plan, reports: Report[], grades: Tally['grades'], election: Election, triggered: string[]): string {
   const out: string[] = []
   const before = (page: string) => models.map((m) => record.pages[page]?.grades[m]?.grade ?? '–').join('/')
@@ -249,7 +259,8 @@ function markdown(record: GradeRecord, plan: Plan, reports: Report[], grades: Ta
   out.push('<details><summary>Structural raises, most raters first</summary>', '', 'step | raters | rank sum | items', '--- | --- | --- | ---')
   for (const s of structural(reports)) out.push([s.key, s.raters.join(', '), String(s.rankSum ?? '–'), s.items.join('; ')].map(cell).join(' | '))
   for (const c of record.candidates) out.push(`${cell(`waiting since ${c.since}: ${c.kind}`)} | | | ${cell(`${c.pages.join(' + ')}: ${c.gist}`)}`)
-  out.push('', '</details>')
+  const queue = stepQueue(structural(reports), record.candidates)
+  out.push('', '</details>', '', `Structural steps this run: ${queue.take.join(', ') || 'none'}`, '', `Wait in candidates: ${queue.wait.join(', ') || 'none'}`)
   return out.join('\n')
 }
 
@@ -321,6 +332,22 @@ export function draftsReport({ base, guide, drafts, terms, journal }: DraftsInpu
   return `${out.join('\n')}\n`
 }
 
+const pagePaths = (pages: string[], held: string[]) => pages.map((p) => `- ${pagesDir('guide')}/${p}.md${held.includes(p) ? ' (A)' : ''}`)
+
+/** rater-brief.md filled in for one model. */
+export function raterBrief(template: string, plan: Plan, model: Model, fill: { held: string[]; catalog: string[]; scratch: string }): string {
+  const list = (lines: string[]) => lines.join('\n') || 'none'
+  const values: Record<string, string> = {
+    MODEL: model,
+    COMMIT: plan.base,
+    SCRATCH: fill.scratch,
+    'ALL THREE': list(pagePaths(plan.allThree, fill.held)),
+    LONE: list(pagePaths(plan.lone[model], fill.held)),
+    CATALOG: list(fill.catalog),
+  }
+  return template.replace(/\{(MODEL|COMMIT|SCRATCH|ALL THREE|LONE|CATALOG)\}/g, (_, key: string) => values[key]!)
+}
+
 // The shell: git at the base, the record in the working tree.
 
 /** Each file of a Space's pages at the base, by path under `pages/`, with its text. */
@@ -359,7 +386,8 @@ runIfMain(import.meta.url, () => {
   const { value: selectedFlag, rest: a2 } = extractFlag(a1, '--selected')
   const { value: gapEditFlag, rest: a3 } = extractFlag(a2, '--gap-edit')
   const { value: readByAllFlag, rest: a4 } = extractFlag(a3, '--read-by-all')
-  const { on: write, rest: files } = extractSwitch(a4, '--write')
+  const { value: briefs, rest: a5 } = extractFlag(a4, '--briefs')
+  const { on: write, rest: files } = extractSwitch(a5, '--write')
   if (!base) fail('--base <sha> is required')
   const sha = git(['rev-parse', `${base}^{commit}`], root).trim()
   if (command === 'drafts') {
@@ -372,14 +400,23 @@ runIfMain(import.meta.url, () => {
   const hashes = Object.fromEntries(spacePages(sha, 'guide').map(([page, text]) => [page, pageHash(text)]))
   const plan: Plan = { base: sha, ...planPages(record, hashes) }
   if (command === 'plan') {
-    const held = new Set(aPages(record))
-    const paths = (ps: string[]) => ps.map((p) => `- ${pagesDir('guide')}/${p}.md${held.has(p) ? ' (A)' : ''}`)
+    const held = aPages(record)
+    const paths = (ps: string[]) => pagePaths(ps, held)
+    const pageCatalog = catalog(sha)
+    if (briefs) {
+      const template = readFileSync(join(root, '.agents/skills/glassbox-improve/rater-brief.md'), 'utf8')
+      for (const m of models) {
+        const scratch = join(briefs, m)
+        mkdirSync(scratch, { recursive: true })
+        writeFileSync(join(briefs, `rater-brief-${m}.md`), raterBrief(template, plan, m, { held, catalog: pageCatalog, scratch }))
+      }
+    }
     console.log([
       `# Plan at ${sha}`, '',
       '## Read by all three', '', ...paths(plan.allThree), '',
       ...models.flatMap((m) => [`## Read by ${m} alone`, '', ...paths(plan.lone[m]), '']),
       `## Entries for pages gone at the base: ${plan.stale.join(', ') || 'none'}`, '',
-      '## Every page and draft (path: title — description)', '', ...catalog(sha),
+      '## Every page and draft (path: title — description)', '', ...pageCatalog,
     ].join('\n'))
     return
   }

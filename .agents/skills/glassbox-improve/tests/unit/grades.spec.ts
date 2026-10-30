@@ -2,7 +2,7 @@
 // election, report checks, the next grades.yml and the drafts report. The git shell runs in the Skill.
 import { describe, expect, it } from 'vitest'
 import type { GlassboxGit } from '../../../../../layers/glassbox/page-checks.ts'
-import { draftsReport, elect, middle, structural, nextRecord, pageHash, parseReport, planPages, reportProblems, tally, type GradeRecord, type Plan, type Report } from '../../scripts/grades.ts'
+import { draftsReport, elect, middle, raterBrief, stepQueue, structural, nextRecord, pageHash, parseReport, planPages, reportProblems, tally, type GradeRecord, type Plan, type Report } from '../../scripts/grades.ts'
 
 const page = '---\ntitle: Hooks\nrevision: abc\nrevisionDate: 2026-10-01\n---\nBody\n::excerpt{path="a.ts" lines="3-5"}\n'
 
@@ -163,6 +163,27 @@ describe('structural', () => {
       ['re-cut a + b', 2, undefined],
       ['new Lesson: Guests', 1, 1],
     ])
+  })
+})
+
+describe('stepQueue', () => {
+  const raise = (key: string, raters: Report['rater'][]) => ({ key, raters, items: [] })
+  it('takes three steps: waiting candidates oldest first, then two-rater raises by rank', () => {
+    const queue = stepQueue(
+      [raise('promote d/1', ['sonnet', 'fable', 'opus']), raise('promote d/2', ['sonnet', 'fable']), raise('promote d/3', ['sonnet', 'opus']), raise('new Lesson: X', ['opus'])],
+      [{ kind: 're-cut a + b', pages: ['a', 'b'], gist: 'g', since: '2026-10-20' }, { kind: 'promote d/2', pages: ['d/2'], gist: 'g', since: '2026-10-25' }, { kind: 'promote d/9', pages: ['d/9'], gist: 'g', since: '2026-10-01' }],
+    )
+    expect(queue).toEqual({ take: ['promote d/9', 're-cut a + b', 'promote d/2'], wait: ['promote d/1', 'promote d/3'] })
+  })
+})
+
+describe('raterBrief', () => {
+  it('fills every placeholder for one model', () => {
+    const template = 'rater {MODEL} at {COMMIT} in {SCRATCH}\n{ALL THREE}\n{LONE}\n{CATALOG}\nrater: {MODEL}'
+    const plan: Plan = { base: 'b1', allThree: ['l/01'], lone: { sonnet: ['l/02'], fable: [], opus: ['l/03'] }, stale: [] }
+    expect(raterBrief(template, plan, 'fable', { held: ['l/01'], catalog: ['- guide/l/01: T — D'], scratch: '/s/fable' })).toBe(
+      'rater fable at b1 in /s/fable\n- layers/glassbox/content/guide/pages/l/01.md (A)\nnone\n- guide/l/01: T — D\nrater: fable',
+    )
   })
 })
 

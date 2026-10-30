@@ -1,4 +1,4 @@
-// Usage: save-handback.ts <agent-id> <out>
+// Usage: save-handback.ts <agent-id> <out> [<agent-id> <out> ...]
 // Writes a subagent's final assistant message to <out> byte for byte, so a
 // hand-back is never retyped (#2196). Run it from the session that dispatched
 // the subagent.
@@ -29,10 +29,25 @@ export function saveHandback(parentTranscript: string, agentId: string, out: str
   writeFileSync(out, text)
 }
 
+/** Saves each `<agent-id> <out>` pair; returns one message per pair that failed. */
+export function saveHandbacks(parentTranscript: string, pairs: string[]): string[] {
+  if (!pairs.length || pairs.length % 2) throw new Error('give <agent-id> <out> pairs')
+  const failures: string[] = []
+  for (let i = 0; i < pairs.length; i += 2) {
+    try {
+      saveHandback(parentTranscript, pairs[i]!, pairs[i + 1]!)
+    } catch (err) {
+      failures.push((err as Error).message)
+    }
+  }
+  return failures
+}
+
 runIfMain(import.meta.url, () => {
-  const [agentId, out] = process.argv.slice(2)
-  if (!agentId || !out) fail('usage: save-handback.ts <agent-id> <out>')
+  const pairs = process.argv.slice(2)
+  if (!pairs.length || pairs.length % 2) fail('usage: save-handback.ts <agent-id> <out> [<agent-id> <out> ...]')
   const parent = findLatestTranscript(process.cwd(), process.env.HOME)
   if (!parent) fail('no session transcript found for this directory')
-  saveHandback(parent, agentId, out)
+  const failures = saveHandbacks(parent, pairs)
+  if (failures.length) fail(failures.join('\n'))
 })
