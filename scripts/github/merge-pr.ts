@@ -22,7 +22,8 @@
 //   a PR whose closing keywords name an open issue not labelled
 //   `ready-for-agent` (#2104, #2691), a PR adding a blog post whose blob is not
 //   the one its `Fact-checked:` line names (#2370), or unless this session's
-//   verdict, naming the head in a `Reviewed:` line, is on the PR (#1276, #1844). A Dependabot PR skips the Public-author,
+//   verdict, naming the head in a `Reviewed:` line, is on the PR (#1276, #1844).
+//   A Dependabot PR skips the Public-author,
 //   guest-pipeline and Human-only refusals only when `dependabotBumpRefusal`
 //   finds a plain minor/patch bump (#1889); a fork still refuses.
 //   Then polls the PR's head-commit check runs every `interval-ms` (default 15s)
