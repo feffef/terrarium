@@ -76,7 +76,7 @@ describe('middenRemovedInProvenance', () => {
 
 describe('middenSeasonSpan', () => {
   it('prints a closed season as a range and the open one as "from"', () => {
-    expect(middenSeasonSpan({ slug: 'a', label: 'A', start: '2026-09-05', end: '2026-10-04' })).toBe('5 Sep 2026 – 4 Oct 2026')
-    expect(middenSeasonSpan({ slug: 'b', label: 'B', start: '2026-10-05', end: null })).toBe('from 5 Oct 2026')
+    expect(middenSeasonSpan({ slug: 'a', label: 'A', note: 'n.', start: '2026-09-05', end: '2026-10-04' })).toBe('5 Sep 2026 – 4 Oct 2026')
+    expect(middenSeasonSpan({ slug: 'b', label: 'B', note: 'n.', start: '2026-10-05', end: null })).toBe('from 5 Oct 2026')
   })
 })
