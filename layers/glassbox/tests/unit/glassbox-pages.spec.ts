@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
 import glassbox from '../../tenant.config.ts'
-import { glassboxCites, glassboxJournalRoutes, glassboxPageProblems, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
+import { glassboxCites, glassboxJournalRoutes, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
 const expandTs = [
@@ -253,6 +253,30 @@ describe('glassboxPageProblems on fixture pages', () => {
   it('skips the git checks where the clone lacks the revision, and still checks the rest', () => {
     const shallow = lesson.replaceAll(rev, 'c'.repeat(40)).replace('See ADR-0004', 'See ADR-0099').replace('terrarium-practice/gate', 'nowhere')
     expect(problemsOf('nuxt-content/01.collections.md', shallow)).toEqual(['link /t/glassbox/guide/nowhere resolves to no page'])
+  })
+})
+
+describe('In Terrarium motive and long Excerpts', () => {
+  const file = 'nuxt-content/01.collections.md'
+  const because = lesson.replace(', one per :file[layers/].', ', one per :file[layers/], because each Tenant is a layer.')
+
+  it('fails a "because" clause in a guide Lesson\'s In Terrarium, and passes one in Why, What to watch for or a draft', () => {
+    expect(problemsOf(file, because)).toEqual(['In Terrarium gives a motive ("because"); move it to Why it\'s built this way: Built in :file[shared/expand.ts]{lines="3-7"}, one per :file[layers/], because each Tenant is a layer.'])
+    expect(problemsOf(file, lesson.replace('keeps mistakes off', 'because it keeps mistakes off'))).toEqual([])
+    expect(problemsOf(file, lesson.replace('See ADR-0004', 'Because of ADR-0004, see it'))).toEqual([])
+    expect(problemsOf(file, because, 'drafts')).toEqual([])
+  })
+
+  it('warns on a "so" clause in In Terrarium, not in code or Why', () => {
+    expect(glassboxPageWarnings(lesson)).toEqual([])
+    expect(glassboxPageWarnings(lesson.replace(', one per', ', so one per'))).toEqual(['In Terrarium may give a motive ("so"); check it states mechanism: Built in :file[shared/expand.ts]{lines="3-7"}, so one per :file[layers/].'])
+    expect(glassboxPageWarnings(lesson.replace('keeps mistakes off', 'so it keeps mistakes off').replace('  return out', '  return out // so'))).toEqual([])
+  })
+
+  it('warns on an Excerpt over 15 rendered lines, a gap counting as one', () => {
+    const long = (n: number) => lesson.replace('  // …\n', '  // …\n'.repeat(n - 3))
+    expect(glassboxPageWarnings(long(15))).toEqual([])
+    expect(glassboxPageWarnings(long(16))).toEqual(['the Excerpt of shared/expand.ts renders 16 lines, more than 15: cut it to the code that makes the decision'])
   })
 })
 

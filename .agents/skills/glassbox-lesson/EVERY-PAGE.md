@@ -99,7 +99,9 @@ side by side, shorter labels) or drop it.
 `git fetch origin main` first: the layer test skips its git checks when the
 clone lacks `revision`. Then run
 `pnpm exec vitest run layers/glassbox/tests/unit/glassbox-pages.spec.ts` and
-`pnpm validate:content`. After `pnpm build`, for a page whose layout, feature
+`pnpm validate:content`. `pnpm exec tsx layers/glassbox/page-checks.ts` prints
+warnings that never fail, a "so" clause in *In Terrarium* or an Excerpt over
+15 lines: fix each on your page, or keep it if it states mechanism. After `pnpm build`, for a page whose layout, feature
 or diagram changed, shoot it with `scripts/ui/preview.ts review <route>
 <out-dir>` and look at all four shots (`docs/agents/verifying-ui-changes.md`).
 Retake them after the last content edit. Done when both are green and, for a
