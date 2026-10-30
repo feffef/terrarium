@@ -57,6 +57,14 @@ describe('midden Tenant', async () => {
     expect(html.match(/<a[^>]*aria-current="true"[^>]*>cost more than it caught/)?.[0]).toContain('href="/t/midden/trench"')
   })
 
+  it('labels the cause chips and defines the dig seasons', async () => {
+    const trench = (await $fetch('/t/midden/trench')) as string
+    expect(trench).toContain('number of sites')
+    expect(trench).toContain('id="seasons"')
+    expect(trench).toContain('the Kiln Wasters')
+    expect((await $fetch('/t/midden/trench/stood-down')) as string).toContain('href="/t/midden/trench#seasons"')
+  })
+
   // The front door's count must match the trench's actual list (the Space
   // index document is not a dig report).
   it('counts the dig reports on the front door correctly', async () => {
