@@ -106,3 +106,10 @@ observations:
       does not shift lines ranges on pages with an edited range
       (session_01A7PwrNRBtY9LTX6HrttXWW). Grade/role unchanged
       (specialist).
+  - date: "2026-10-30"
+    note: >-
+      Behaviour check, 8 runs delivered, no revert. Pin-restamp review skips
+      (#2472, closed by #2638 on 10-28) all predate the fix; the one run after
+      it, session_013zxzeTDLMF5mxnvWB4oyWE, ran code-review, so the fix holds so
+      far. Unverified: --write does not shift lines ranges on edited pages
+      (session_01A7PwrNRBtY9LTX6HrttXWW). Grade/role unchanged (specialist).

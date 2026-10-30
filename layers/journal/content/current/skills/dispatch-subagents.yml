@@ -475,3 +475,10 @@ observations:
       worktrees whose work landed as cherry-picks (the earlier false-positive
       class), and two promotion agents edited each other's draft link (step 4
       same-file miss). Grade/role unchanged (essential).
+  - date: "2026-10-30"
+    note: >-
+      Behaviour check, 10 runs, 40 non-users ruled out. Unverified, n=1:
+      session_013zxzeT84bc5MXpkCAApyxA told the Journal agent to push before
+      code-review, against the unpushed hand-back rule; the Glass Box agent's
+      push was then denied, and the owner approved it. No stranded worktrees.
+      Grade/role unchanged (essential).

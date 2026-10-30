@@ -454,3 +454,10 @@ observations:
       (#2539) is titled prune-trial yet +452/-219. Old line-delta mismatches
       (#2412, #2447) predate the numstat clause. Grade/role unchanged
       (routine).
+  - date: "2026-10-30"
+    note: >-
+      Behaviour check, 9 runs delivered, none reverted. Verified minor, repeat:
+      code-review caught a wrong ledger count or overstated claim before push in
+      6 of 9 runs (e.g. session_013zxzePQM2TjRCTtcKaV61o, 'ledger claimed every
+      rule was kept'); no wrong figure landed. Watch: cuts keep shrinking (-1 to
+      -19 lines per run). Grade/role unchanged (routine).
