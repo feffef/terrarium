@@ -19,6 +19,8 @@ export interface DigSeason {
   start: string
   /** YYYY-MM-DD, inclusive, or `null` for the open-ended "Current Midden" season (always the last entry). */
   end: string | null
+  /** One plain sentence on what this season mostly discarded, for the trench's seasons key. */
+  note: string
 }
 
 /** Every dig season, oldest-first. Exactly one entry has `end: null` (the
@@ -42,6 +44,7 @@ export const DIG_SEASONS: DigSeason[] = [
     label: 'the Routing Excavation',
     start: '2026-07-04',
     end: '2026-07-09',
+    note: 'The earliest scaffolding and the generated routing machinery, dug out once routing became build-time.',
   },
   {
     // A thin ash layer of deliberate throwaways: do-not-merge spikes, closed
@@ -51,6 +54,7 @@ export const DIG_SEASONS: DigSeason[] = [
     label: 'the Spike Ashfall',
     start: '2026-07-10',
     end: '2026-07-11',
+    note: 'Deliberate throwaways: do-not-merge spikes, closed exploratory pull requests and an early job taxonomy.',
   },
   {
     // The Atlas's phenology content-model recut for the second time — the
@@ -60,6 +64,7 @@ export const DIG_SEASONS: DigSeason[] = [
     label: 'the Almanac Recut',
     start: '2026-07-12',
     end: '2026-07-13',
+    note: "The Atlas's content model recut a second time, with unused dependencies swept out alongside.",
   },
   {
     // Named and closed by the second survey (issue #1043). This is the season
@@ -73,6 +78,7 @@ export const DIG_SEASONS: DigSeason[] = [
     label: 'the Plainer Cut',
     start: '2026-07-14',
     end: '2026-07-24',
+    note: 'Simpler presentations won over fancier ones: reading aids, a root listing and a client patch were dropped.',
   },
   {
     // A trial pit is dug to find out whether a site is worth excavating, and
@@ -85,6 +91,7 @@ export const DIG_SEASONS: DigSeason[] = [
     label: 'the Trial Pits',
     start: '2026-07-25',
     end: '2026-08-12',
+    note: 'Work built to be compared and thrown away, such as three rival root-index designs and a recommendation dropped in one word.',
   },
   {
     // Closed and named when the third survey's finds (issue #1468) were
@@ -97,6 +104,7 @@ export const DIG_SEASONS: DigSeason[] = [
     label: 'the Wire Cut',
     start: '2026-08-13',
     end: '2026-09-04',
+    note: 'Opens with the one Tenant that read data at runtime being cut out on its thirtieth day.',
   },
   {
     // Closed and named when the fifth survey's finds (issue #1739) were
@@ -110,6 +118,7 @@ export const DIG_SEASONS: DigSeason[] = [
     label: 'the Kiln Wasters',
     start: '2026-09-05',
     end: '2026-10-04',
+    note: 'Things made and spoiled without ever being used, most of which never reached main: guards, scripts, culled Campaigns and an upgrade closed with every check green.',
   },
   {
     // The open cut. It opens on three guards taken down in two days, each
@@ -119,6 +128,7 @@ export const DIG_SEASONS: DigSeason[] = [
     label: 'the Current Midden',
     start: '2026-10-05',
     end: null,
+    note: 'The open season: guards removed for costing more than they caught, and two bot upgrades the owner turned away.',
   },
 ]
 

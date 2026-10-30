@@ -60,7 +60,7 @@ const stampStyle = computed(() => {
     >{{ conditionMeta(artifact.condition).label }}</span>
 
     <header class="midden-find__head">
-      <p v-if="season" class="midden-find__season">{{ season.label }} <span class="midden-find__span">· {{ middenSeasonSpan(season) }}</span></p>
+      <p v-if="season" class="midden-find__season"><NuxtLink to="/t/midden/trench#seasons" class="midden-find__season-link">{{ season.label }}</NuxtLink> <span class="midden-find__span">· {{ middenSeasonSpan(season) }}</span></p>
 
       <h3 class="mono midden-find__title"><MiddenTicks :text="artifact.title" /></h3>
 
@@ -137,6 +137,7 @@ const stampStyle = computed(() => {
   padding-right: 9.5rem;
 }
 
+.midden-find__season-link { color: inherit; text-decoration: underline dotted; text-underline-offset: 0.18em; }
 .midden-find__season {
   margin: 0;
   font-family: var(--midden-mono);

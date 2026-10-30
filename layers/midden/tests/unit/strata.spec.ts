@@ -77,3 +77,9 @@ describe('middenReportOrder', () => {
     expect(middenReportOrder(pages, finds).map((p) => p.path)).toEqual(['/b', '/a', '/c', '/empty'])
   })
 })
+
+describe('DIG_SEASONS notes', () => {
+  it('gives every season a one-sentence note for the trench seasons key', () => {
+    for (const s of DIG_SEASONS) expect(s.note.trim().endsWith('.')).toBe(true)
+  })
+})
