@@ -1,8 +1,9 @@
 // Checks a Glass Box page against the code at its `revision`, for the layer
 // test and the glassbox-update Skill (issue #1994). A stale page passes; only a
 // page wrong about what it cites fails.
-import { globSync, readdirSync } from 'node:fs'
+import { globSync, readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
+import { runIfMain } from '../../scripts/lib/cli.ts'
 import { splitFrontmatter } from '../../scripts/lib/frontmatter.ts'
 import { tryGit } from '../../scripts/lib/git.ts'
 import { parseDocument } from '../../scripts/gate/validate-content-schema.ts'
@@ -213,7 +214,18 @@ const subsections: string[] = [glassboxLessonIds.why, glassboxLessonIds.watch]
 const adrCite = /ADR-(\d{4}) \(:file\[docs\/adr\/(\d{4})-[^\]\s]+\.md\]\)/g
 const ownWords = { min: 12, max: 65 }
 
-function lessonProblems(file: string, prose: string, space: string): string[] {
+// EVERY-PAGE.md, Mechanism, not motive: In Terrarium's own lines, before its two h3 subsections.
+// Matches outside code but quotes the raw line; readBody keeps one prose line per body line.
+function motiveLines(body: string, word: string) {
+  const lines = readBody(body).prose.split('\n')
+  const raw = body.split(/\r?\n/)
+  const at = lines.findIndex((l) => /^## /.test(l) && glassboxTermId(l.slice(3)) === glassboxLessonIds.inTerrarium)
+  const end = lines.findIndex((l, i) => i > at && (/^## /.test(l) || (/^### /.test(l) && subsections.includes(glassboxTermId(l.slice(4))))))
+  if (at < 0) return []
+  return lines.flatMap((l, i) => i > at && (end < 0 || i < end) && new RegExp(`\\b${word}\\b`, 'i').test(l) ? [raw[i]!.trim()] : [])
+}
+
+function lessonProblems(file: string, body: string, prose: string, space: string): string[] {
   const headings = [...prose.matchAll(/^(#{2,3}) (.+)$/gm)].map((m) => ({ level: m[1]!.length, id: glassboxTermId(m[2]!) }))
   const problems: string[] = []
   let last = -1
@@ -237,6 +249,7 @@ function lessonProblems(file: string, prose: string, space: string): string[] {
     const words = rest.replace(/:file\[[^\]]*\]/g, '').split(/\s+/).filter((w) => /\w/.test(w)).length
     if (words < ownWords.min || words > ownWords.max) problems.push(`Why it's built this way item has ${words} words of its own, not ${ownWords.min}-${ownWords.max}: ${p}`)
   }
+  if (space === 'guide') for (const l of motiveLines(body, 'because')) problems.push(`In Terrarium gives a motive ("because"); move it to Why it's built this way: ${l}`)
   const fullReference = new RegExp(`^${glassboxLessonLabels.fullReference}:?\\s*\\[[^\\]]+\\]\\(https://`, 'm')
   if (!file.startsWith('terrarium-practice/') && !fullReference.test(prose)) problems.push('Lesson has no "Full reference" https link')
   return problems
@@ -275,7 +288,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   const problems = placeProblems(file)
   const route = `/${contentRoute(file)}`
   problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route), site.cites))
-  if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, prose, space))
+  if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, body, prose, space))
   if (glassboxSubjectOf(route) || glassboxWalkthroughOf(route)) problems.push(...nextProblems(prose))
   // Drafts are set aside (GLOSSARY.md, Two Spaces); a page moved to the guide meets its caps.
   if (space === 'guide') problems.push(...lengthProblems(route, frontmatter))
@@ -313,6 +326,28 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   for (const [link] of prose.matchAll(/github\.com\/feffef\/terrarium\/(?:blob|tree)\/\S*/g)) problems.push(`hand-written link ${link}: use :file`)
   return problems
 }
+
+// A reviewer's call, so these warn and never fail (#2701).
+const excerptMaxLines = 15
+
+/** What a reviewer should look at on a page: a "so" clause in In Terrarium, and long Excerpts. */
+export function glassboxPageWarnings(source: string): string[] {
+  const { body } = splitFrontmatter(source)
+  const warnings = motiveLines(body, 'so').map((l) => `In Terrarium may give a motive ("so"); check it states mechanism: ${l}`)
+  for (const ref of glassboxPageRefs(body).files) {
+    const n = ref.excerpt?.split('\n').length ?? 0
+    if (n > excerptMaxLines) warnings.push(`the Excerpt of ${ref.path} renders ${n} lines, more than ${excerptMaxLines}: cut it to the code that makes the decision`)
+  }
+  return warnings
+}
+
+// Usage: pnpm exec tsx layers/glassbox/page-checks.ts — prints every page's warnings.
+runIfMain(import.meta.url, () => {
+  const content = join(root, 'layers/glassbox/content')
+  for (const file of globSync('*/pages/**/*.md', { cwd: content }).sort()) {
+    for (const warning of glassboxPageWarnings(readFileSync(join(content, file), 'utf8'))) console.log(`${file}: ${warning}`)
+  }
+})
 
 /** Every entry in the `terms` Collection, by id. */
 export function glassboxTerms(projectRoot = root): Record<string, { source?: string }> {
