@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { afterEach, expect, it } from 'vitest'
-import { saveHandback } from '../../scripts/session/save-handback.ts'
+import { saveHandback, saveHandbacks } from '../../scripts/session/save-handback.ts'
 
 const dirs: string[] = []
 afterEach(() => dirs.splice(0).forEach((d) => rmSync(d, { recursive: true, force: true })))
@@ -74,4 +74,23 @@ it('saves the message of a final SubagentHandback tool call, byte for byte', () 
   const out = join(dir, 'out.md')
   saveHandback(join(dir, 'parent.jsonl'), 'hb1', out)
   expect(readFileSync(out, 'utf8')).toBe(reply)
+})
+
+// #2700: one call saves every hand-back of a dispatch round.
+it('saves each pair and reports each failure', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'handback-'))
+  dirs.push(dir)
+  const sub = join(dir, 'parent', 'subagents')
+  mkdirSync(sub, { recursive: true })
+  writeFileSync(join(sub, 'agent-a1.jsonl'), rec([{ type: 'text', text: 'one' }]))
+  writeFileSync(join(sub, 'agent-a2.jsonl'), rec([{ type: 'text', text: 'two' }]))
+  const parent = join(dir, 'parent.jsonl')
+  const failures = saveHandbacks(parent, ['a1', join(dir, '1.md'), 'gone', join(dir, 'x.md'), 'a2', join(dir, '2.md')])
+  expect(failures).toEqual([expect.stringMatching(/gone/)])
+  expect(readFileSync(join(dir, '1.md'), 'utf8')).toBe('one')
+  expect(readFileSync(join(dir, '2.md'), 'utf8')).toBe('two')
+})
+
+it('refuses an odd number of arguments', () => {
+  expect(() => saveHandbacks('p.jsonl', ['a1', 'out', 'a2'])).toThrow(/pairs/)
 })

@@ -24,7 +24,7 @@ follow the `.claude/skills/<name>` link, so write every Skill path in a brief
 as `.agents/skills/...`.
 
 `scripts/grades.ts` does the counting: `plan` splits the pages among the
-raters, `tally` merges their reports and runs the election, `tally --write`
+raters and, with `--briefs <folder>`, writes each rater's filled brief, `tally` merges their reports and runs the election, `tally --write`
 writes [`grades.yml`](grades.yml), the one home of each page's grades, and
 `drafts` lists each draft's promotion blockers. Run it
 with `pnpm exec tsx`; its header gives the flags.
@@ -34,16 +34,16 @@ with `pnpm exec tsx`; its header gives the flags.
 The run changes only `layers/glassbox/content/`, the diagram SVGs it
 re-renders in `app/assets/mermaid/` and `grades.yml`, and lands one PR titled
 `glassbox-improve: <YYYY-MM-DD>`, even when only `grades.yml` changed. It raises
-every page the tally selects and takes every structural step two raters raise
-(promote a draft, write a Lesson for a gap, or re-cut pages inside the existing
+every page the tally selects and takes at most 3 structural steps (promote a
+draft, write a Lesson for a gap, or re-cut pages inside the existing
 Subjects), and fixes every confirmed false claim with the smallest correction.
 Out of remit: a new Subject or diagram, moving a page to another Subject, and
 any change to this Skill, the `glassbox-lesson` docs or the page checks; step
 8 files them.
 
 Save every subagent reply, a resumed one's too, with
-`pnpm exec tsx scripts/session/save-handback.ts <agent-id> <file>` in this
-run's scratch folder, and work only from those files.
+`pnpm exec tsx scripts/session/save-handback.ts <agent-id> <file> [<agent-id> <file> ...]`
+in this run's scratch folder, one call per round, and work only from those files.
 
 ## 1. Set up
 
@@ -51,16 +51,17 @@ If a PR titled `glassbox-update:` or `glassbox-improve:` is open, stop: invoke
 `close-session` as `blocked`, naming it. Otherwise, on the session's designated
 branch (with none, `glassbox-improve/<YYYY-MM-DD>-<HHMM>` in UTC), start from a
 fresh `origin/main` and note that commit as **the base**. Save
-`grades.ts plan --base <base>` to the scratch folder, and list the guide pages
+`grades.ts plan --base <base> --briefs <scratch folder>` to the scratch folder, and list the guide pages
 any other open PR touches: the run edits those only to fix a confirmed false
 claim. Done when both are saved.
 
 ## 2. Rate
 
 Dispatch three raters **in one message**, one per model (`sonnet`, `fable`,
-`opus`), each with [`rater-brief.md`](rater-brief.md) filled in: the model,
-the base, the plan's all-three pages and that model's lone pages, the plan's
-catalog, and a scratch subfolder per rater. Done when all three hand-backs are
+`opus`), each told to follow its `rater-brief-<model>.md`, which step 1's
+`plan` filled from [`rater-brief.md`](rater-brief.md) with the model, the base,
+the all-three pages, that model's lone pages, the catalog and the rater's
+scratch subfolder. Done when all three hand-backs are
 saved and `grades.ts tally` accepts them; on a parse error, fix only the line
 it names in the saved hand-back. Resume a stalled rater once with
 `SendMessage`; if it still returns nothing, dispatch a fresh one on the same
@@ -70,8 +71,8 @@ model and log a Friction.
 
 Run `grades.ts tally --base <base> <sonnet> <fable> <opus>`: it prints the
 grades, the election, every item each rater raised (grouped by page and
-criterion), the lone pages that go to all three next run, and the structural
-raises ranked. Then:
+criterion), the lone pages that go to all three next run, the structural
+raises ranked, and the steps this run takes and those that wait. Then:
 
 - **Cluster** each page's reports of one deficit or gap, however worded. An
   item two raters raise is **consensus**; check each against the page and drop
@@ -92,10 +93,11 @@ raises ranked. Then:
   `--read-by-all`. Deficits are always fixed.
 - **Select** every page with a consensus deficit or a consensus gap (both
   raters citing an A page), every page two raters grade below B (its writer
-  fixes the deficits it confirms), and every structural step two raters raise,
-  plus each `candidates` entry in `grades.yml`. Two steps that touch one page:
-  the one more raters raise, then the older entry, goes first; the other
-  waits (step 7). A draft that needs about half its lines
+  fixes the deficits it confirms), and the structural steps the tally lists
+  for this run: the first 3 of its queue (`grades.yml` `candidates` oldest
+  first, then this run's two-rater raises by rank). A step you drop gives its
+  place to the next in the queue; the rest wait (step 7), as does the later of
+  two steps that touch one page. A draft that needs about half its lines
   changed is not promoted (an idea). A selected page a structural step touches
   belongs to that step's writer.
 
@@ -158,8 +160,8 @@ Then write the record: the step-3 tally command with `--write --selected
 consensus gap the churn rule dropped>`. It keeps the base's hashes, so every
 page this run edited counts as changed and all three read it next run. In
 `grades.yml`'s `candidates`, remove each step this run took and add each step
-that waited, with its pages, a one-line gist and today's date (or its old
-date). Done when every finding is fixed or refused with its reason, and
+that waited, with the tally's name for it as `kind`, its pages, a one-line
+gist and today's date (or its old date). Done when every finding is fixed or refused with its reason, and
 `grades.yml` is committed (with no edits, only the latter).
 
 ## 8. Land and file
