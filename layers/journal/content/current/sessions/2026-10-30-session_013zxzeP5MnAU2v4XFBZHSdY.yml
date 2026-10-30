@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeP5MnAU2v4XFBZHSdY
 startedAt: 2026-10-30T16:58:21Z
-endedAt: 2026-10-30T17:25:19Z
+endedAt: 2026-10-30T17:37:25Z
 kind: autonomous
 goal: "Visitor-loop run on the Midden: three blind visitors, consensus fixes"
 status: in-review
-outcome: "Fix PR #2717 open (chip label, dig seasons key, wording); feature PR and out-of-remit issue not yet done"
-summary: 'Scheduled visitor-loop run, focus midden (row 3). Everything was agent-initiated from the stored schedule prompt; no human instruction. Built and served the site, sent sonnet/fable/opus visitors, tallied consensus, ran the refiner. Fixed three consensus findings (unlabelled cause-chip counts, undefined season names, "quarter" wording) in PR 2717; dropped two (phone diagram labels are deliberate; footer links are ruled by decisions.md), and one is out of remit (Artifact provenance links only PR 1636 of two). code-review caught season notes that overclaimed their source comments; reworded. First gate failed on a typecheck in find.spec.ts fixtures needing the new note field; fixed. Added an e2e test so the change is gate-observable. Still open: CI and merge of 2717, the feature PR (one-line hook under each Latest find, refined: glossed first sentence, 8-word floor), and the issue for the out-of-remit finding.'
+outcome: Fix PR 2717 merged; feature PR 2718 open (Latest finds hook); issue 2719 filed for the out-of-remit finding
+summary: Scheduled visitor-loop run, focus midden (row 3). Everything was agent-initiated from the stored schedule prompt; no human instruction. Built and served the site, sent sonnet/fable/opus visitors, tallied consensus, ran the refiner. Fixed three consensus findings (unlabelled cause-chip counts, undefined season names, "quarter" wording) in PR 2717; dropped two (phone diagram labels are deliberate; footer links are ruled by decisions.md), and one is out of remit (Artifact provenance links only PR 1636 of two). code-review caught season notes that overclaimed their source comments; reworded. First gate failed on a typecheck in find.spec.ts fixtures needing the new note field; fixed. Added an e2e test so the change is gate-observable. 2717 passed CI and merged. The feature (glossed one-line hook under each Latest find, 8-word floor) is PR 2718, awaiting CI; code-review found a lost link padding and an empty-hook case, both fixed. Issue 2719 holds the out-of-remit finding.
 prs:
   - "2717"
+  - "2718"
 docsRead:
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: Hook demanded it before dispatching visitors; read-only agents so little applied
@@ -52,6 +53,9 @@ docsRead:
   - path: docs/agents/tenant-layers.md
     reason: Standards review read it; nothing applied
     useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: "Filing an issue guidance: verified facts vs assumptions"
+    useful: yes
   - path: scripts/lib/chromium.ts
     reason: (no reason given)
   - path: layers/midden/app/utils/strata.ts
@@ -92,22 +96,31 @@ frictions:
   - description: Ran a read-only git log/diff in a refiner subagent without git-conventions; also I forgot the read-before-first-git rule was satisfied only via a cat in a combined command.
     solution: Brief refiner to read docs/agents/git-conventions.md.
     severity: nit
-durationSec: 1618
+  - description: Filed issue 2719 before reading docs/agents/triage-labels.md as CLAUDE.md requires; a hook reminded me after.
+    solution: Read triage-labels.md together with issue-tracker.md when the Skill says to file an issue.
+    severity: nit
+durationSec: 2344
 models:
-  claude-sonnet-5-5: 97
+  claude-sonnet-5-5: 148
 toolCounts:
-  Bash: 37
-  Agent: 9
+  Bash: 53
+  Agent: 10
   Read: 1
   Skill: 3
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  mcp__github__issue_write: 1
 filesEdited:
+  - layers/midden/app/components/midden/TrenchLanding.vue
+  - layers/midden/app/utils/find.ts
   - layers/midden/tests/e2e/midden.spec.ts
   - layers/midden/tests/unit/find.spec.ts
   - layers/midden/app/utils/strata.ts
   - layers/midden/app/components/content/MiddenArtifact.vue
-  - layers/midden/app/components/midden/TrenchLanding.vue
   - layers/midden/tests/unit/strata.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0028.md
@@ -219,37 +232,43 @@ subagents:
     durationSec: 99
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 5.3
+    tokenShare: 3.9
   - task: Visitor fable
     model: fable
     durationSec: 342
     toolCalls: 46
     modelCalls: 18
-    tokenShare: 12.4
+    tokenShare: 9.2
   - task: Visitor opus
     model: opus
     durationSec: 177
     toolCalls: 26
     modelCalls: 20
-    tokenShare: 11.5
+    tokenShare: 8.6
   - task: Refiner fit check
     model: opus
     durationSec: 222
     toolCalls: 46
     modelCalls: 26
-    tokenShare: 19.9
+    tokenShare: 14.8
   - task: Standards review
     model: sonnet
     durationSec: 29
     toolCalls: 9
     modelCalls: 3
-    tokenShare: 4.1
+    tokenShare: 3
   - task: Spec review
     model: sonnet
     durationSec: 36
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 3.6
+    tokenShare: 2.7
+  - task: Review feature diff
+    model: sonnet
+    durationSec: 33
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 2.8
 gitBranch: claude/adoring-galileo-qpltle
 entrypoint: remote_trigger
 cliVersion: 2.1.314
@@ -257,4 +276,5 @@ trigger: visitor-loop
 ideas:
   - "Midden Latest finds: show a glossed one-line hook from each catalogNote (sentence rule with 8-word floor) so a landing visitor sees stakes; planned as the feature PR."
   - "Midden: render #N references in a catalogNote as links at display time, fixing missing PR links like #1637 on tried-and-left-alone without editing records."
+  - "Midden: render #N references in a catalogNote as links at display time, fixing missing PR links like #1637 on tried-and-left-alone without editing records (issue 2719)."
 landedBy: Stop
