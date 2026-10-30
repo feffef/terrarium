@@ -11,6 +11,7 @@ import { describe, expect, it, vi } from 'vitest'
 import {
   failingCheckNames,
   dependabotBumpRefusal,
+  factCheckedBlobRefusal,
   humanMergeRefusal,
   mergeRequestFields,
   GUEST_PIPELINE_LABEL,
@@ -207,24 +208,53 @@ describe('parseClosingKeywordIssues()', () => {
   })
 })
 
-describe('readyForHumanRefusal() (#2104)', () => {
-  it('refuses when a closing reference names an open ready-for-human issue', () => {
+describe('readyForHumanRefusal() (#2104, #2691)', () => {
+  it('refuses open ready-for-human and unlabelled issues, naming the reword', () => {
     const refusal = readyForHumanRefusal([
       { number: 7, state: 'open', labels: ['ready-for-agent'] },
       { number: 1819, state: 'open', labels: ['ready-for-human'] },
+      { number: 2660, state: 'open', labels: ['needs-triage'] },
+      { number: 2661, state: 'open', labels: [] },
     ])
-    expect(refusal).toContain('#1819')
     expect(refusal).toContain('relates to #1819')
+    expect(refusal).toContain('relates to #2660')
+    expect(refusal).toContain('relates to #2661')
     expect(refusal).not.toContain('#7')
   })
 
-  it('allows a closed ready-for-human issue and open issues without the label', () => {
+  it('allows an open ready-for-agent issue and ignores closed issues', () => {
     expect(
       readyForHumanRefusal([
         { number: 1819, state: 'closed', labels: ['ready-for-human'] },
-        { number: 7, state: 'open', labels: ['ready-for-agent'] },
+        { number: 2660, state: 'closed', labels: [] },
+        { number: 7, state: 'open', labels: ['ready-for-agent', 'bug'] },
       ]),
     ).toBeNull()
+  })
+})
+
+describe('factCheckedBlobRefusal() (#2370)', () => {
+  const post = 'layers/blog/content/karen/pages/2026-10-30-receipts.md'
+  const blob = 'a'.repeat(40)
+  const added = (sha: string) => [{ filename: post, status: 'added', sha }]
+
+  it('allows a blog-post PR whose post blob matches its Fact-checked line', () => {
+    expect(factCheckedBlobRefusal(`Tally: 12 claims.\nFact-checked: \`${blob}\`\n`, added(blob))).toBeNull()
+  })
+
+  it('refuses a blog-post PR whose post changed after the fact-check', () => {
+    const refusal = factCheckedBlobRefusal(`Fact-checked: ${blob}`, added('b'.repeat(40)))
+    expect(refusal).toContain(post)
+    expect(refusal).toContain(blob)
+  })
+
+  it('refuses a blog-post PR with no Fact-checked line', () => {
+    expect(factCheckedBlobRefusal('Tally: 12 claims.', added(blob))).toContain('Fact-checked:')
+  })
+
+  it('leaves PRs that add no blog post alone, including edits to an existing post', () => {
+    expect(factCheckedBlobRefusal('', [{ filename: 'scripts/x.ts', status: 'added', sha: blob }])).toBeNull()
+    expect(factCheckedBlobRefusal('', [{ filename: post, status: 'modified', sha: blob }])).toBeNull()
   })
 })
 

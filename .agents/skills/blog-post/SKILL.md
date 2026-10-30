@@ -214,6 +214,8 @@ from those rows, it lists each `#number` not linked per the citation reference
 and each project term (the Gate, ADR, a script name; not the Persona's own
 coinages) used before a plain-words gloss (`layers/blog/GLOSSARY.md`, "Who a
 post is for"). Add each missing link or gloss; these stay out of the tally.
+Its last line is `Fact-checked: <blob>`, from `git hash-object <post path>` on
+the text it read.
 
 Fix or cut every `wrong` claim; don't argue the verdict. An `unverifiable`
 row is cut (cutting means deleting the claim, not softening it; if it is the
@@ -222,15 +224,13 @@ yourself and name that source in the PR body — an in-character aside about
 the Persona's own life is not a factual claim and may stay. A causal/agency claim the PR's review thread or
 timeline can't settle is cut; if you keep it anyway, the PR may not
 self-merge (step 11). Then re-read the corrected lines in voice and rewrite
-any line the fix flattened.
-
-This step is mandatory; past runs skipped it silently (issue #1479). The tally
-in the PR body is its evidence.
+any line the fix flattened. If anything changed the post, re-dispatch the
+checker on the changed lines; its `Fact-checked:` line replaces the old one.
 
 Done when: every row the checker returned is `ok`, fixed, cut, or
-source-read by you, nothing but those fixes (and their in-voice rewrites,
-re-checked) changed the post after the report, the fixes are committed, and
-you hold the tally ("N claims checked, M fixed or cut").
+source-read by you, the fixes are committed, `git hash-object <post path>`
+equals the last `Fact-checked:` blob, and you hold the tally ("N claims
+checked, M fixed or cut").
 
 ### 10. Gate
 
@@ -258,7 +258,9 @@ step 2 (steps 9-10 did its step 1). This Skill's delta from that sequence:
   candidates' topics (and Personas, when they varied) and the reviewer's
   one-line reason; the rotation state from step 1 (`last`, `starved`, and an
   override note if the given Persona was ineligible); the story window from
-  step 2 if it was widened past three days; the fact-check tally.
+  step 2 if it was widened past three days; the fact-check tally; and step 9's
+  last `Fact-checked: <blob>` on a line of its own. `merge-pr.ts` refuses the
+  merge when the post on the head is another blob.
 
 Done when: merged with a green gate, or open and honestly awaiting a human. An
 escalated PR ends the run here — go to step 13.

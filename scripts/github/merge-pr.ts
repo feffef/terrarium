@@ -19,8 +19,9 @@
 // Usage:  tsx scripts/github/merge-pr.ts <pr-number> [--merge-method merge|squash|rebase] [--interval-ms N] [--timeout-ms N]
 //   Refuses up front for a fork or Public-authored PR, a PR labelled
 //   `guest-pipeline` (ADR-0023), a PR that changes a Human-only path (ADR-0004),
-//   a PR whose closing keywords name an open `ready-for-human` issue (#2104),
-//   or unless this session's verdict, naming the head in a `Reviewed:` line, is
+//   a PR whose closing keywords name an open issue not labelled
+//   `ready-for-agent` (#2104, #2691), a PR adding a blog post whose blob is not
+//   the one its `Fact-checked:` line names (#2370), or unless this session's verdict, naming the head in a `Reviewed:` line, is
 //   on the PR (#1276, #1844). A Dependabot PR skips the Public-author,
 //   guest-pipeline and Human-only refusals only when `dependabotBumpRefusal`
 //   finds a plain minor/patch bump (#1889); a fork still refuses.
@@ -93,9 +94,9 @@ export interface MergeResult {
   pr: number
   /** Refused before polling: `untrusted-origin` — see `prOriginRefusal`;
    *  `human-merge` — see `humanMergeRefusal` and `dependabotBumpRefusal`;
-   *  `closes-ready-for-human` — see `readyForHumanRefusal`; `no-verdict` — see
-   *  `verdictRefusal`. */
-  verdict: ChecksVerdict | 'untrusted-origin' | 'human-merge' | 'closes-ready-for-human' | 'no-verdict'
+   *  `closes-unready-issue` — see `readyForHumanRefusal`; `unchecked-post` — see
+   *  `factCheckedBlobRefusal`; `no-verdict` — see `verdictRefusal`. */
+  verdict: ChecksVerdict | 'untrusted-origin' | 'human-merge' | 'closes-unready-issue' | 'unchecked-post' | 'no-verdict'
   merged: boolean
   mergeCommitSha?: string
   message: string
@@ -226,6 +227,9 @@ export interface PrFile {
   previousFilename?: string
   /** Absent when GitHub omits a large diff. */
   patch?: string
+  status?: string
+  /** The file's blob SHA on the PR head. */
+  sha?: string
 }
 
 /** Every path the PR touches, a rename's old path included, so moving a file
@@ -280,6 +284,25 @@ export function dependabotBumpRefusal(meta: PrMeta, files: PrFile[], owner: stri
     : null
 }
 
+/** The PR-body line naming the post blob the blog-post fact-checker read. */
+const FACT_CHECKED_LINE_RE = /^Fact-checked: `?([0-9a-f]{40})`?\s*$/gim
+
+/** Why a PR that adds a blog post must not self-merge, or null: the post on
+ *  the head must be the blob the fact-checker read, named in a `Fact-checked:`
+ *  line, because unchecked later edits shipped under four prose fixes (#2370). */
+export function factCheckedBlobRefusal(body: string, files: PrFile[]): string | null {
+  const checked = [...body.matchAll(FACT_CHECKED_LINE_RE)].map((m) => m[1]!.toLowerCase())
+  const unchecked = files.filter(
+    (f) => f.status === 'added' && matchesGlob(f.filename, 'layers/blog/content/*/pages/*.md') && !checked.includes(f.sha ?? ''),
+  )
+  if (unchecked.length === 0) return null
+  return (
+    `refused: ${unchecked.map((f) => `${f.filename} (blob ${f.sha})`).join(', ')} is not the post the fact-checker read` +
+    ` (${checked.length ? `Fact-checked: ${checked.join(', ')}` : 'no `Fact-checked: <blob>` line in the PR body'}).` +
+    ` Re-dispatch the checker on the current post (blog-post step 9), put the blob it returns on the line, and re-run.`
+  )
+}
+
 // ── Closing-keyword reconciliation (pure, issue #983) ────────────────────────
 
 /** GitHub's documented closing keywords: `close(s|d)`, `fix(es|ed)`,
@@ -312,13 +335,14 @@ export interface IssueFacts {
   labels: string[]
 }
 
-/** Why merging would auto-close an open `ready-for-human` issue, or null:
- *  PR #2030 closed #1819 that way (#2104). */
+/** Why merging would auto-close an open issue not labelled `ready-for-agent`,
+ *  or null: PR #2030 closed #1819 that way (#2104), and a ledger PR's quoted
+ *  "fix #2660" closed an issue it only filed (#2691). */
 export function readyForHumanRefusal(issues: IssueFacts[]): string | null {
-  const hits = issues.filter((i) => i.state === 'open' && i.labels.includes('ready-for-human')).map((i) => i.number)
+  const hits = issues.filter((i) => i.state === 'open' && !i.labels.includes('ready-for-agent')).map((i) => i.number)
   if (hits.length === 0) return null
   return (
-    `refused: the PR body's closing keywords would close open ready-for-human issue(s) ` +
+    `refused: the PR body's closing keywords would close open issue(s) not labelled ready-for-agent: ` +
     `${hits.map((n) => `#${n}`).join(', ')}. Reword each to ${hits.map((n) => `"relates to #${n}"`).join(', ')} and re-run.`
   )
 }
@@ -397,13 +421,15 @@ function closeIssue(a: Access, issueNumber: number): void {
   requestJson(a, 'PATCH', `issues/${issueNumber}`, { state: 'closed', state_reason: 'completed' })
 }
 
-type RawPrFile = { filename: string; previous_filename?: string; patch?: string }
+type RawPrFile = { filename: string; previous_filename?: string; patch?: string; status: string; sha: string }
 
 function readPrFiles(a: Access, prNumber: number): PrFile[] {
   return listAll<RawPrFile>(a, `pulls/${prNumber}/files`).map((i) => ({
     filename: i.filename,
     previousFilename: i.previous_filename,
     patch: i.patch,
+    status: i.status,
+    sha: i.sha,
   }))
 }
 
@@ -509,7 +535,11 @@ export async function mergePrWhenGreen(
     parseClosingKeywordIssues(meta.body).map((n) => readIssue(access, n)),
   )
   if (closesReadyForHuman !== null) {
-    return { pr: prNumber, verdict: 'closes-ready-for-human', merged: false, message: closesReadyForHuman }
+    return { pr: prNumber, verdict: 'closes-unready-issue', merged: false, message: closesReadyForHuman }
+  }
+  const uncheckedPost = factCheckedBlobRefusal(meta.body, files)
+  if (uncheckedPost !== null) {
+    return { pr: prNumber, verdict: 'unchecked-post', merged: false, message: uncheckedPost }
   }
 
   const sessionId = resolveGroundTruthFromTranscript(findTranscriptContents(process.env) ?? '')

@@ -65,7 +65,8 @@ re-review each story or repeat its findings.
 5. Land through `scripts/github/merge-pr.ts <pr-number>`, the only merge path; never
    call `enable_pr_auto_merge`. The script refuses what it can see (ADR-0004, ADR-0020, ADR-0023): a
    Human-only path, a fork or Public author, the `guest-pipeline` label, closing
-   keywords on an open `ready-for-human` issue, and a PR without your step-4
+   keywords on an open issue not labelled `ready-for-agent`, a new blog post the
+   fact-checker didn't read (`blog-post` step 9), and a PR without your step-4
    verdict naming its head (why: #1276). Check the other ADR-0004 exceptions (untested
    behaviour, Tenant-reach logic, a PR built from a Public request) yourself first.
 6. Escalate a PR that needs a human merge or is out of scope instead of merging
@@ -74,8 +75,7 @@ re-review each story or repeat its findings.
 Use a closing keyword (`Closes`/`Fixes`/`Resolves #N`) only for an issue the PR
 completes; GitHub matches it loosely, so a quoted or negated mention closes too
 (#2104). Otherwise write "relates to #N". `merge-pr.ts` closes any named issue
-GitHub left open (it also refuses a keyword naming an open `ready-for-human` issue: step 5); on any other merge
-path, check each with `issue_read`.
+GitHub left open; on any other merge path, check each with `issue_read`.
 
 Before pushing a follow-up to an existing PR branch, check with
 `pull_request_read` that it isn't already merged, or the push silently recreates
