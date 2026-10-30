@@ -20,6 +20,8 @@
 //   tsx scripts/session/log-session.ts --author <authored.yml>
 //       validate the interpretive fields and write the scratch (the
 //       model-invocable path; does NOT commit — the hooks do).
+//   tsx scripts/session/log-session.ts --pending
+//       print the rules and docs still awaiting a verdict; writes nothing.
 //   tsx scripts/session/log-session.ts --land [--dry-run] [--transcript <p>] [--scratch <p>]
 //       the hook path: stitch the scratch with the trace and land it.
 //   tsx scripts/session/log-session.ts <path-to-entry.yml> [--dry-run] [--remote <name>]
@@ -863,15 +865,7 @@ export function authorMain(
   }
   const result = validateAuthored(parsed)
   if (!result.ok) fail(`authored scratch is invalid:\n${result.errors}`)
-  // Re-authoring merges with this session's earlier pass (issue #688); a corrupt
-  // or partial scratch counts as absent, never blocking re-authoring.
-  let existing: AuthoredScratch | undefined
-  try {
-    existing = JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
-  } catch {
-    existing = undefined
-  }
-  const merged = mergeAuthored(existing, result.data)
+  const merged = mergeAuthored(readScratch(scratchAbs), result.data)
   const ctx = loadAuthorContext(cwd)
   const misNotRead = (merged.docsRead ?? []).flatMap((d) => {
     const source = d.reason === NOT_READ_REASON && ctx?.sources.get(canonicalizeInstructionPath(d.path))
@@ -918,6 +912,26 @@ export function authorMain(
     console.log('  Re-confirm it, or send a changed verdict: verdicts may change over a session.')
   }
   reportUnexplainedReads(ctx, merged)
+}
+
+/** Re-authoring merges with this session's earlier pass (issue #688); a corrupt
+ *  or partial scratch counts as absent, never blocking re-authoring. */
+function readScratch(scratchAbs: string): AuthoredScratch | undefined {
+  try {
+    return JSON.parse(readFileSync(scratchAbs, 'utf8')) as AuthoredScratch
+  } catch {
+    return undefined
+  }
+}
+
+/** `--pending`: the reads report alone, before the first `--author` pass (#2687). Writes nothing. */
+export function pendingMain(opts: { cwd?: string; scratchAbs?: string } = {}): void {
+  let open = false
+  reportUnexplainedReads(loadAuthorContext(opts.cwd ?? process.cwd()), readScratch(opts.scratchAbs ?? join(root, SCRATCH_FILE)), (line) => {
+    open = true
+    console.log(line)
+  })
+  if (!open) console.log('log-session: no rule or doc awaits a verdict.')
 }
 
 /** Earlier 'no' rule verdicts the merge kept though the incoming pass left them out (#1943). */
@@ -1033,6 +1047,10 @@ function landMain(argv: string[]): void {
 
 function main(): void {
   const argv = process.argv.slice(2)
+  if (argv.includes('--pending')) {
+    pendingMain()
+    return
+  }
   if (argv.includes('--author')) {
     authorMain(argv)
     return

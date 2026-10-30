@@ -1,6 +1,6 @@
 ---
 name: log-session
-description: Create **or update** this session's log entry — the authored half (goal, outcome, summary, and every friction); the mechanical trace (timings, models, tools, files read/edited, subagents) is derived automatically. Writes an authored scratch; a committed hook stitches it with the trace and commits it to the Journal, live. Usually invoked *by* `close-session` at closure, but callable directly to amend an already-written log.
+description: Create **or update** this session's log entry — the authored half (goal, outcome, summary, and every friction); the mechanical trace (timings, models, tools, files read/edited, subagents) is derived automatically. Writes an authored scratch; a committed hook stitches it with the trace and commits it to the Journal, live. Usually invoked *by* `close-session` at closure.
 ---
 
 Record one honest **session log** for this Claude session. You write only the
@@ -16,8 +16,7 @@ teardown. `SessionEnd` is only a fallback for a session `Stop` never fired for
 ## When to invoke
 
 **At closure, invoke `close-session`, not this Skill**; it judges closure and
-calls this one. Invoke `log-session` directly only to **update** a log you
-already authored (a new friction, a changed outcome).
+calls this one.
 
 **`status`:** `in-review` — PR open, not merged (never `completed` then);
 `completed` — the work landed, or the session needed no PR; `partial` — some but not all of the goal landed,
@@ -30,7 +29,7 @@ describes what happened.
 Re-invoking is safe: lists (`frictions`, `prs`, …) union with what you authored
 earlier this session, prose takes your latest wording, and the next live `Stop`
 (or, failing that, the `SessionEnd`/resume fallback) lands the result. If more
-work happens after closure, **invoke again**.
+work happens after closure, **invoke `close-session` again**.
 
 **"Latest wording" means replace, not append.** On a re-invoke, write `summary`, `goal` and `outcome` whole and current, never a short delta or placeholder: `summary: "just fixed the CI flake"` becomes the **entire summary**.
 
@@ -141,7 +140,14 @@ field from ground truth whenever it can (issue #387), so it is only a fallback.
 
 ## 2. Write the scratch
 
-Hand the authored YAML to the helper:
+First print what still needs a verdict, and answer every item (step 3) in the
+YAML before your first pass:
+
+```
+pnpm exec tsx scripts/session/log-session.ts --pending
+```
+
+Then hand the authored YAML to the helper:
 
 ```
 pnpm exec tsx scripts/session/log-session.ts --author <path-to-authored.yml>
@@ -153,7 +159,7 @@ your "this session is done" signal.
 
 ## 3. Answer the reads report
 
-`--author` lists every instruction doc you read (Read tool or a Bash command's
+`--pending`, and again `--author` as a check, list every instruction doc you read (Read tool or a Bash command's
 output) that has no reason and `useful` verdict yet, with the evidence for each.
 Answer each with a `docsRead` entry: a
 one-line reason and a `useful` verdict, or the reason `(not read)` when no
@@ -168,8 +174,7 @@ has no verdict yet, a reminder, not a block: unanswered, it shows as "no verdict
 provided".
 
 It also lists every rule that loaded in this session with no `ruleVerdicts` entry,
-including the always-loaded ones (no `paths`; they load at session start). You can't see this
-list before your first `--author` pass, so expect a second pass. Answer each with a `useful` verdict
+including the always-loaded ones (no `paths`; they load at session start). Answer each with a `useful` verdict
 and a one-sentence `reason` (about 20 words) that says why: for `yes` or
 `partly`, what in the rule changed or confirmed something you did; for `no`,
 why it didn't apply to this task, or what it got wrong. For a `yes` or `partly`
