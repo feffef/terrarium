@@ -215,14 +215,17 @@ const adrCite = /ADR-(\d{4}) \(:file\[docs\/adr\/(\d{4})-[^\]\s]+\.md\]\)/g
 const ownWords = { min: 12, max: 65 }
 
 // EVERY-PAGE.md, Mechanism, not motive: In Terrarium's own lines, before its two h3 subsections.
-function motiveLines(prose: string, word: string) {
-  const lines = prose.split('\n')
+// Matches outside code but quotes the raw line; readBody keeps one prose line per body line.
+function motiveLines(body: string, word: string) {
+  const lines = readBody(body).prose.split('\n')
+  const raw = body.split(/\r?\n/)
   const at = lines.findIndex((l) => /^## /.test(l) && glassboxTermId(l.slice(3)) === glassboxLessonIds.inTerrarium)
   const end = lines.findIndex((l, i) => i > at && (/^## /.test(l) || (/^### /.test(l) && subsections.includes(glassboxTermId(l.slice(4))))))
-  return at < 0 ? [] : lines.slice(at + 1, end < 0 ? undefined : end).filter((l) => new RegExp(`\\b${word}\\b`, 'i').test(l)).map((l) => l.trim())
+  if (at < 0) return []
+  return lines.flatMap((l, i) => i > at && (end < 0 || i < end) && new RegExp(`\\b${word}\\b`, 'i').test(l) ? [raw[i]!.trim()] : [])
 }
 
-function lessonProblems(file: string, prose: string, space: string): string[] {
+function lessonProblems(file: string, body: string, prose: string, space: string): string[] {
   const headings = [...prose.matchAll(/^(#{2,3}) (.+)$/gm)].map((m) => ({ level: m[1]!.length, id: glassboxTermId(m[2]!) }))
   const problems: string[] = []
   let last = -1
@@ -246,7 +249,7 @@ function lessonProblems(file: string, prose: string, space: string): string[] {
     const words = rest.replace(/:file\[[^\]]*\]/g, '').split(/\s+/).filter((w) => /\w/.test(w)).length
     if (words < ownWords.min || words > ownWords.max) problems.push(`Why it's built this way item has ${words} words of its own, not ${ownWords.min}-${ownWords.max}: ${p}`)
   }
-  if (space === 'guide') for (const l of motiveLines(prose, 'because')) problems.push(`In Terrarium gives a motive ("because"); move it to Why it's built this way: ${l}`)
+  if (space === 'guide') for (const l of motiveLines(body, 'because')) problems.push(`In Terrarium gives a motive ("because"); move it to Why it's built this way: ${l}`)
   const fullReference = new RegExp(`^${glassboxLessonLabels.fullReference}:?\\s*\\[[^\\]]+\\]\\(https://`, 'm')
   if (!file.startsWith('terrarium-practice/') && !fullReference.test(prose)) problems.push('Lesson has no "Full reference" https link')
   return problems
@@ -285,7 +288,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   const problems = placeProblems(file)
   const route = `/${contentRoute(file)}`
   problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route), site.cites))
-  if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, prose, space))
+  if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, body, prose, space))
   if (glassboxSubjectOf(route) || glassboxWalkthroughOf(route)) problems.push(...nextProblems(prose))
   // Drafts are set aside (GLOSSARY.md, Two Spaces); a page moved to the guide meets its caps.
   if (space === 'guide') problems.push(...lengthProblems(route, frontmatter))
@@ -330,7 +333,7 @@ const excerptMaxLines = 15
 /** What a reviewer should look at on a page: a "so" clause in In Terrarium, and long Excerpts. */
 export function glassboxPageWarnings(source: string): string[] {
   const { body } = splitFrontmatter(source)
-  const warnings = motiveLines(readBody(body).prose, 'so').map((l) => `In Terrarium may give a motive ("so"); check it states mechanism: ${l}`)
+  const warnings = motiveLines(body, 'so').map((l) => `In Terrarium may give a motive ("so"); check it states mechanism: ${l}`)
   for (const ref of glassboxPageRefs(body).files) {
     const n = ref.excerpt?.split('\n').length ?? 0
     if (n > excerptMaxLines) warnings.push(`the Excerpt of ${ref.path} renders ${n} lines, more than ${excerptMaxLines}: cut it to the code that makes the decision`)

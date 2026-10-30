@@ -258,10 +258,10 @@ describe('glassboxPageProblems on fixture pages', () => {
 
 describe('In Terrarium motive and long Excerpts', () => {
   const file = 'nuxt-content/01.collections.md'
-  const because = lesson.replace(', one per :file[layers/].', ', one per :file[layers/], because each Tenant is a layer.')
+  const because = lesson.replace(', one per :file[layers/].', ', one per :file[layers/], because each Tenant is a `layer`.')
 
   it('fails a "because" clause in a guide Lesson\'s In Terrarium, and passes one in Why, What to watch for or a draft', () => {
-    expect(problemsOf(file, because)).toEqual(['In Terrarium gives a motive ("because"); move it to Why it\'s built this way: Built in :file[shared/expand.ts]{lines="3-7"}, one per :file[layers/], because each Tenant is a layer.'])
+    expect(problemsOf(file, because)).toEqual(['In Terrarium gives a motive ("because"); move it to Why it\'s built this way: Built in :file[shared/expand.ts]{lines="3-7"}, one per :file[layers/], because each Tenant is a `layer`.'])
     expect(problemsOf(file, lesson.replace('keeps mistakes off', 'because it keeps mistakes off'))).toEqual([])
     expect(problemsOf(file, lesson.replace('See ADR-0004', 'Because of ADR-0004, see it'))).toEqual([])
     expect(problemsOf(file, because, 'drafts')).toEqual([])
@@ -269,7 +269,8 @@ describe('In Terrarium motive and long Excerpts', () => {
 
   it('warns on a "so" clause in In Terrarium, not in code or Why', () => {
     expect(glassboxPageWarnings(lesson)).toEqual([])
-    expect(glassboxPageWarnings(lesson.replace(', one per', ', so one per'))).toEqual(['In Terrarium may give a motive ("so"); check it states mechanism: Built in :file[shared/expand.ts]{lines="3-7"}, so one per :file[layers/].'])
+    expect(glassboxPageWarnings(lesson.replace(', one per', ', so `expand` runs one per'))).toEqual(['In Terrarium may give a motive ("so"); check it states mechanism: Built in :file[shared/expand.ts]{lines="3-7"}, so `expand` runs one per :file[layers/].'])
+    expect(glassboxPageWarnings(lesson.replace(', one per', ', `so` one per'))).toEqual([])
     expect(glassboxPageWarnings(lesson.replace('keeps mistakes off', 'so it keeps mistakes off').replace('  return out', '  return out // so'))).toEqual([])
   })
 
