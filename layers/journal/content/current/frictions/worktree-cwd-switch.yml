@@ -8,11 +8,6 @@ fixes:
     date: "2026-10-17"
     summary: "log-session worktree refusal now says to cd back when the directory only drifted into an agent worktree."
 occurrences:
-  - session: session_01GLWVkt3R3EnHJj5XpQEJQt
-    date: "2026-10-15"
-    severity: nit
-    description: "log-session and close-session refuse from a linked worktree; after the impl agent's worktree became my cwd I had to cd back to the main checkout."
-    solution: "Say in dispatch-subagents §5 to cd back before close-session."
   - session: session_018sAirSgDY1Nv82JVogjcyR
     date: "2026-10-16"
     severity: minor

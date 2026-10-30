@@ -25,16 +25,6 @@ occurrences:
     severity: minor
     description: "First extraction left a dangling §5 reference and made impl-brief's doc and ledger sections apply to every code agent; review caught both"
     solution: "When moving text out of a Skill, grep the Skill for every § it referenced and check each section's audience before writing"
-  - session: session_011t1xXHxqwrfAjt83s9oTEP
-    date: "2026-10-15"
-    severity: nit
-    description: "Inserting a step into a numbered Skill forced renumbering and six cross-reference edits; two were nearly missed."
-    solution: "Name steps by heading instead of number in visitor-loop so inserts don't ripple."
-  - session: session_01NqN7omu3o4kxoGeQzzSXhK
-    date: "2026-10-15"
-    severity: minor
-    description: "Build agents' decisions contradicted themselves: 2071 said the 22.13 claim was both verified and unverified; 2069 said expand-transition was left excluded, then kept re-included"
-    solution: "Have the fix agent rewrite decisions whole each round instead of appending, so stale lines drop out"
   - session: session_01BePy3Sj8TRHv7YGtPqnpfB
     date: "2026-10-17"
     severity: minor

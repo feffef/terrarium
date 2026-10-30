@@ -2,8 +2,8 @@ name: inspect-session-paging-gaps
 surface: safe
 summary: The inspect-session Skill's paging recipe stopped short of the events it was sent for, or lost pages, so reads needed resumes or refetches.
 cause: "inspect-session's partial read (page cap, newest-first walk) and full-read fetchers (cursor ranges, spill files) hit the page limit before the target events, mistake a bad server page for a cursor loop, leave an inline page unsaved, or overwrite same-named spill files. Signals: 'hit its page limit', 'never reached the session start', 'cursor loop', 'same tool-results file name', 'inline page unsaved'."
-status: open
-ref: "Comes from the fixes PR #2304, #2305 and #2307 for list-events-transcript-overflow (a raw transcript read flooding context)."
+status: tracked
+ref: "issue #2694"
 fixes:
   - pr: 2463
     date: "2026-10-23"

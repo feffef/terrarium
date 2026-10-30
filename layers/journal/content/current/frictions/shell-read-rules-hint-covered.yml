@@ -7,16 +7,6 @@ ref: "Comes from PR #1775, the fix for bash-reads-not-read-tool (rules never loa
 notes: |-
   2026-10-28 design: dropped: all 12 nits predate the 2026-10-16 cut of CLAUDE.md's Read-tool instruction (a6cdc3561); none since.
 occurrences:
-  - session: session_012VTgtrUEy7cPVTN5sMriXj
-    date: "2026-10-15"
-    severity: nit
-    description: "Read Glass Box pages, skills and code with cat/sed/grep in Bash instead of the Read tool (CLAUDE.md Read-tool rule)."
-    solution: "The bash-rules hint loaded the rules anyway; no impact seen. Use Read for files I edit."
-  - session: session_01C8c4U7TDuWnJwenPUWYxrP
-    date: "2026-10-15"
-    severity: nit
-    description: "Read .claude/rules/glassbox-content.md and a term file with cat instead of the Read tool, against CLAUDE.md."
-    solution: "Use Read for repo files; the rule loaded anyway through the hook."
   - session: session_017xginqTj2NjZ8XgrbRqvkm
     date: "2026-10-16"
     severity: nit

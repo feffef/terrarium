@@ -57,11 +57,6 @@ occurrences:
     severity: nit
     description: "search_issues was blocked for a missing fields array; a second call was needed after reading the doc."
     solution: "Put the fields requirement in the audit-skills Skill text where it tells to search open issues."
-  - session: session_01NoQubvnMfCpcq9nkicNsDq
-    date: "2026-10-15"
-    severity: nit
-    description: "Called search_pull_requests without fields before reading github-integration.md, breaking CLAUDE.md's read-first rule; the guard denied it and cost one retry."
-    solution: "None needed; the guard did its job. The read-first line was simply skipped."
   - session: session_01RfmdPFPhtKo6h6GFwxLeRb
     date: "2026-10-16"
     severity: nit

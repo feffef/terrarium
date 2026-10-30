@@ -16,11 +16,6 @@ fixes:
     date: "2026-10-25"
     summary: "A guard blocks the first subagent dispatch until the dispatch-subagents Skill is read."
 occurrences:
-  - session: session_012NmfdSNbbPD9T5LPAwmdYG
-    date: "2026-10-15"
-    severity: nit
-    description: "Started the clear-backlog-build workflow (worktrees, git) without invoking dispatch-subagents first, as CLAUDE.md's trigger requires."
-    solution: "clear-backlog §3 could say whether its workflow satisfies the dispatch-subagents trigger."
   - session: 1c810a28-81d4-417d-ac20-af374c985683
     date: "2026-10-16"
     severity: nit

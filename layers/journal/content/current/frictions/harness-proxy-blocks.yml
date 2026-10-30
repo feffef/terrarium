@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   The cloud agent proxy or its DNS refuses a host (github.com/user-attachments, content.nuxt.com, zod.dev, nitro.build, nuxt.com, docs.github.com, the deployed site) with a 403 or connection failure and no in-session override; the fix is to list the host and its workaround in environment-caveats.md, and since PR #2647 the Glass Box page guide fetches blocked GitHub docs from raw.githubusercontent.com. Signals: proxy 403, curl 000, a DNS failure from WebFetch. Auto-mode classifier denials (a deleted pushed branch, a review subagent's script, a force-with-lease push) with no shared fix also stay here; CI job logs are ci-job-logs-unreachable, Self-Modification denials auto-mode-self-modification-denials.
 surface: outside
-status: open
+status: tracked
+ref: "issue #2695"
 fixes:
   - pr: 2030
     date: "2026-10-15"
@@ -16,11 +17,6 @@ fixes:
     date: "2026-10-28"
     summary: "Glass Box EVERY-PAGE.md falls back to fetching raw.githubusercontent.com/github/docs when docs.github.com is blocked, instead of sparse-cloning github/docs."
 occurrences:
-  - session: session_01KVh6e6JUAssZvPRbuN5YDr
-    date: "2026-10-15"
-    severity: minor
-    description: "Dispatched the first subagent for the public URL before reading verifying-ui-changes.md and before checking network reach, so it failed with a 403 and cost a round trip."
-    solution: "Run curl on the target URL before briefing a screenshot agent."
   - session: session_01NFv67izdzVGrFHb2EVwZJ2
     date: "2026-10-16"
     severity: minor

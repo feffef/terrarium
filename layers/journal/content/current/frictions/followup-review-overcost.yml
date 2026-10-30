@@ -26,11 +26,6 @@ occurrences:
     severity: minor
     description: "Two parallel review subagents plus a doc-heavy PR flow for a two-line template change cost far more than the change"
     solution: "Let code-review run inline for diffs of a few lines"
-  - session: session_01LpcCJWRYb5grgQe3wBGEwb
-    date: "2026-10-15"
-    severity: nit
-    description: "code-review's two parallel review agents for a one-line --first-parent diff cost about 125k subagent tokens"
-    solution: "Let code-review scale down to one inline pass for a diff under ~5 lines (pack Skill: note it in its Inventory entry)"
   - session: session_018sAirSgDY1Nv82JVogjcyR
     date: "2026-10-16"
     severity: minor

@@ -18,11 +18,6 @@ fixes:
     date: "2026-10-28"
     summary: "The Journal session card marks every loaded rule without a verdict as 'no verdict provided', whoever loaded it, so omitted verdicts show."
 occurrences:
-  - session: session_01E2zbWEQmuUrEhWvbzNpBba
-    date: "2026-10-15"
-    severity: nit
-    description: "Two of the three deep-research briefs omitted the rule/doc verdict request CLAUDE.md requires of every subagent brief."
-    solution: "Append the verdict line to every brief, including Skill-templated ones."
   - session: session_01Mf4dUxuWB7WtkC5fVzByH6
     date: "2026-10-16"
     severity: nit

@@ -31,11 +31,6 @@ fixes:
     date: "2026-10-28"
     summary: "pr-workflow.md's simple-change bar now says a simple change adds, renames or moves no file, so a rename sweep gets code-review before its first push."
 occurrences:
-  - session: session_011t1xXHxqwrfAjt83s9oTEP
-    date: "2026-10-15"
-    severity: minor
-    description: "Pushed follow-up branch for PR #2088 before running gate:scoped and code-review, which ADR-0004 asks for before a first push."
-    solution: "Treat a branch restarted after merge as a first push; run gate:scoped before git push. It passed afterwards."
   - session: session_01VPNHf6qDdJPXX23GghKs74
     date: "2026-10-16"
     severity: nit

@@ -9,11 +9,6 @@ fixes:
     date: "2026-10-18"
     summary: "owner-corrections.ts --check now credits every issue or URL named on one dismissal line, so one tally line can dismiss several candidates."
 occurrences:
-  - session: session_019e468BFBTvDPXZuGzLMAL7
-    date: "2026-10-15"
-    severity: minor
-    description: "owner-corrections.ts returned 26 file-overlap candidates; the check needs one tally line each, costing a long boilerplate list in the PR body."
-    solution: "Let --check accept one grouped line for pure file-overlap candidates with no review or comment."
   - session: session_01RKUs8JUM5uASMfiE3hvXRA
     date: "2026-10-16"
     severity: minor

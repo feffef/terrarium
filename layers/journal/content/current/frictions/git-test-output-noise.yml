@@ -5,11 +5,6 @@ surface: safe
 status: open
 ref: Two nits; drop at the next horizon prune unless it recurs.
 occurrences:
-  - session: session_019ZQjo7wiuxrS9KLEG2GiTU
-    date: "2026-10-15"
-    severity: nit
-    description: "Test runs print noisy 'fatal: expected acknowledgments' and 'no-such-ref' git lines that look like failures."
-    solution: "Silence or document these fixture-git messages in the test support."
   - session: session_01MeatWCLdQDV2rWVNHumqX7
     date: "2026-10-19"
     severity: minor

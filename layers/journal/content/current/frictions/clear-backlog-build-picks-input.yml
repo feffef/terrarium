@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-22"
     summary: "Each clear-backlog workflow brief now says the relayed user reply answers the orchestrator's questions for the whole run and is not the agent's own decision."
 occurrences:
-  - session: session_012NmfdSNbbPD9T5LPAwmdYG
-    date: "2026-10-15"
-    severity: minor
-    description: "The #1844 build agent saw every owner pick and treated pick 2a's no-verdict wording request as binding on its own merge-pr.ts messages."
-    solution: "clear-backlog-build should pass each branch only its own picks, not the whole relayed owner reply."
   - session: session_01JygBaHorymh1xgVBsaTh3E
     date: "2026-10-17"
     severity: minor

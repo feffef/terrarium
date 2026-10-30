@@ -64,11 +64,6 @@ occurrences:
     severity: minor
     description: "Edited files while the first gate:scoped run was in flight, so it had to be re-run on the final head (pr-workflow: edit nothing until it ends)."
     solution: "Apply review fixes before starting the gate, then wait."
-  - session: session_01NqN7omu3o4kxoGeQzzSXhK
-    date: "2026-10-15"
-    severity: minor
-    description: "Committed small wording fixes on the 2029 and 2071 worktrees after their gate ran and pushed without rerunning gate:scoped (validate-adr-rules only); the nuxt.config.ts edit is a comment in a code file"
-    solution: "Run pnpm validate:content or gate:scoped for any non-doc follow-up, even a comment"
   - session: session_01BTtvaFQckiQwtGZsasWPJH
     date: "2026-10-19"
     severity: nit

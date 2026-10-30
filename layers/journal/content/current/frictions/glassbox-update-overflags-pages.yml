@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-17"
     summary: "A cited directory now flags a page only when its listing changes between the page's pinned revision and main."
 occurrences:
-  - session: session_01C8c4U7TDuWnJwenPUWYxrP
-    date: "2026-10-15"
-    severity: minor
-    description: "The glassbox-update script flags pages by directory-level paths such as .claude/rules/, so most flagged pages needed no edit and 17 pages took a four-agent sweep."
-    solution: "Have the script report changed files the page's prose or Excerpt names, not whole directories."
   - session: session_015Bv9LjWV7VZhFbpkfKcPqW
     date: "2026-10-16"
     severity: nit

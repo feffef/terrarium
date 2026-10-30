@@ -9,11 +9,6 @@ notes: |-
   2026-10-23 design: a rule or guard on checking body values dropped: each of the four slips was fixed at once, Verify before you state already covers checking a value against its source, and none involves verdict SHAs or merge-pr.ts (the note copied from verdict-comment-hand-typed at the split did not apply).
 fixes: []
 occurrences:
-  - session: session_012VTgtrUEy7cPVTN5sMriXj
-    date: "2026-10-15"
-    severity: nit
-    description: "Filed #2076 with a guessed spec path (tests/e2e/ instead of layers/tinkerfund/tests/e2e/) before checking it; corrected the body right after."
-    solution: "Verify a path with git ls-files before it goes into an issue body (CLAUDE.md Verify before you state)."
   - session: session_01TJH95qkztCQJ8PF6G6pvqs
     date: "2026-10-18"
     severity: minor

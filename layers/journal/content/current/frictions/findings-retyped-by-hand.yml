@@ -26,11 +26,6 @@ fixes:
     date: "2026-10-25"
     summary: "audit-docs saves each reviewer reply to its own file in a pool folder, since save-handback.ts overwrites its output file."
 occurrences:
-  - session: session_011HBcCLzMW7CshmqnHLnegb
-    date: "2026-10-15"
-    severity: minor
-    description: "Subagent reports arrived as messages, not files, so 'save verbatim, never retype' was met only by having agents write their own reply files."
-    solution: "audit-docs step 3 could say agents write their reply to a named scratchpad file."
   - session: session_01DNheR1Cpt9b6vFsmGdzvxq
     date: "2026-10-16"
     severity: minor

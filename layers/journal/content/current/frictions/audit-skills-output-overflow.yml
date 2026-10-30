@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The survey instructions now say to save the large skill-audit output to a file and read only one part."
 occurrences:
-  - session: session_01LpcCJWRYb5grgQe3wBGEwb
-    date: "2026-10-15"
-    severity: minor
-    description: "Survey subagent: audit-skills.ts output plus a broad grep printed 56 KB and was persisted to a file; it re-ran with narrow extraction"
-    solution: "audit-skills.ts could offer a --doc-read-counts-only flag"
   - session: session_01RnZJ7VrgWpgzfJUCEdif77
     date: "2026-10-16"
     severity: nit

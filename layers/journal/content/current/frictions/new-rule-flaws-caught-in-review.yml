@@ -2,7 +2,7 @@ name: new-rule-flaws-caught-in-review
 surface: safe
 summary: A rule or selection step drafted for a Skill or the ledger had a logic flaw that only later reviewers caught, costing extra rounds.
 cause: "The author drafts a new ordering, splitting or selection rule without trying it on the cases it must handle (a ranking direction, two clusters of the same shape); reviewers or the owner find the flaw after the draft. Signals: 'first draft', 'reviewers flagged', 'would have raised the best pages', 'the user had to settle it'."
-status: open
+status: tracked
 occurrences:
   - session: session_013zxzeQ8EBq9v7NXqWmAFRF
     date: "2026-10-27"
