@@ -5,6 +5,10 @@ Terrarium as the worked example.
 **Task**: {TASK: the draft to promote, the gap to fill or the pages to
 re-cut, and what the step will do}.
 
+**Draft report** (the mechanical blockers to promotion, from `grades.ts
+drafts`): {DRAFT REPORT, or "none"}. Start from it, and spend your effort on
+the claims and on how much of the page needs rewriting.
+
 Work in the repository at commit {COMMIT}, read-only: modify no repository
 file and post nothing. Write any file you create in {SCRATCH}. Read the pages
 (or draft) in full, then read the Terrarium files it cites or should cite

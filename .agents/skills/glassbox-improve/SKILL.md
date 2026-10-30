@@ -18,11 +18,15 @@ Read first: `layers/glassbox/GLOSSARY.md` (page shapes),
 [`../glassbox-lesson/QUALITY.md`](../glassbox-lesson/QUALITY.md) (the grades,
 and how to raise a page),
 [`../glassbox-lesson/DECISIONS.md`](../glassbox-lesson/DECISIONS.md) (closed
-rulings) and `dispatch-subagents` (every brief below follows it).
+rulings) and `dispatch-subagents` (every brief below follows it). Subagents
+read committed files at the base with `git show <base>:<path>`, which can't
+follow the `.claude/skills/<name>` link, so write every Skill path in a brief
+as `.agents/skills/...`.
 
 `scripts/grades.ts` does the counting: `plan` splits the pages among the
-raters, `tally` merges their reports and runs the election, and `tally --write`
-writes [`grades.yml`](grades.yml), the one home of each page's grades. Run it
+raters, `tally` merges their reports and runs the election, `tally --write`
+writes [`grades.yml`](grades.yml), the one home of each page's grades, and
+`drafts` lists each draft's promotion blockers. Run it
 with `pnpm exec tsx`; its header gives the flags.
 
 ## Remit
@@ -104,8 +108,9 @@ confirmed, write the record (step 7) and go to step 8.
 ## 4. Research
 
 For each structural step, dispatch one read-only `sonnet` researcher with
-[`researcher-brief.md`](researcher-brief.md) filled in: its task, the base and
-its own scratch subfolder. Done when every hand-back is saved and every claim
+[`researcher-brief.md`](researcher-brief.md) filled in: its task, the base,
+its draft's section of `grades.ts drafts --base <base>` (saved once to the
+scratch folder) and its own scratch subfolder. Done when every hand-back is saved and every claim
 it says the source contradicts is confirmed as a false claim or dropped with
 its reason.
 
@@ -128,8 +133,10 @@ Drop a refused or stopped item, remove its worktree
 Merge each writer's branch into the run branch; never cherry-pick or squash,
 which orphans the writers' commits and fails `pnpm check:worktrees`. Then make
 the **join edits** the writers reported, on any page: link text after a
-retitle, new Terms (once each, per EVERY-PAGE's Terms), Walkthrough chips and
-Where next entries. Add a link only where its list has room, replace only a
+retitle, Walkthrough chips and Where next entries. Writers add their own Terms
+and repoint links to a draft they promote (`writer-brief.md`, Your files), so
+don't forbid a writer to edit other drafts; when two writers' branches add the
+same Term id, keep one file. Add a link only where its list has room, replace only a
 link that broke or was retitled, and keep each list's order. Pin each page you
 edit yourself to the base. Done when EVERY-PAGE's Check passes on the run
 branch.
@@ -140,7 +147,9 @@ There is no re-grade: the next run's three raters read every changed page.
 Run `code-review` on the run branch against the base, with the tally as the
 spec and this added to it: for each changed claim, show the cited file at the
 base (`git show <base>:<path>`) and quote the `path:line` that backs it, never
-accepting a claim on assertion; and no section the tally didn't fault got
+accepting a claim on assertion; for each sentence an edit deletes from a page,
+name the page and line that now states it (a fact with no home is a finding,
+unless the tally asked to drop it); and no section the tally didn't fault got
 worse. Send each finding on a page to its writer with `SendMessage` and merge
 its new commit; fix join findings yourself. One fix round.
 
