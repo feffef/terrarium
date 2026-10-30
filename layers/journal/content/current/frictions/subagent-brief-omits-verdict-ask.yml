@@ -1,6 +1,6 @@
 name: subagent-brief-omits-verdict-ask
 summary: Briefs for helper agents left out the lines CLAUDE.md asks every brief to carry (rule and doc verdicts, a scratchpad subfolder per agent), so verdicts went missing and output landed elsewhere.
-cause: "CLAUDE.md asks every subagent brief for a rule/doc verdict in the final reply (PR #2060) and for a scratchpad subfolder named for the agent; nothing puts those lines into a brief, so orchestrators omit them from hand-written, one-off and Skill-templated briefs alike. Signals: 'briefs didn't ask for rule and doc verdicts', 'no verdict provided', output written outside a per-agent scratchpad subfolder."
+cause: "CLAUDE.md asks every subagent brief for a rule/doc verdict in the final reply (PR #2060) and for a scratchpad subfolder named for the agent; nothing puts those lines into a brief, so orchestrators omit them from hand-written, one-off and Skill-templated briefs alike. Since PR #2645 the Journal marks every loaded rule without a verdict as 'no verdict provided', so the omission shows but is not prevented. Signals: 'briefs didn't ask for rule and doc verdicts', 'no verdict provided', output written outside a per-agent scratchpad subfolder."
 surface: safe
 status: open
 ref: "Owner kept the request (issue #2115 closed not-planned 2026-10-16); 01E2zbWE (nit, after the fix) shows it still gets omitted."
@@ -14,12 +14,10 @@ fixes:
   - pr: 2206
     date: "2026-10-17"
     summary: "The blind-reader briefs in the blog, visitor-loop, digest, audit-skills and midden Skills now end with the rule and doc verdict request."
+  - pr: 2645
+    date: "2026-10-28"
+    summary: "The Journal session card marks every loaded rule without a verdict as 'no verdict provided', whoever loaded it, so omitted verdicts show."
 occurrences:
-  - session: session_01E2zbWEQmuUrEhWvbzNpBba
-    date: "2026-10-15"
-    severity: nit
-    description: "Two of the three deep-research briefs omitted the rule/doc verdict request CLAUDE.md requires of every subagent brief."
-    solution: "Append the verdict line to every brief, including Skill-templated ones."
   - session: session_01Mf4dUxuWB7WtkC5fVzByH6
     date: "2026-10-16"
     severity: nit

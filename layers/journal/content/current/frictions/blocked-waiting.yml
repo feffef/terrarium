@@ -4,17 +4,12 @@ summary: >-
 cause: >-
   Waiting on a backgrounded gate, build, CI run or subagent needs no tool (the completion notification wakes the session), but sessions reach for a foreground sleep (denied), ScheduleWakeup (denied outside /loop), no-op polling calls, a pgrep loop that times out, or a Monitor until-loop that matches the wrong marker or is armed twice. Signals: 'sleep was blocked', 'ScheduleWakeup', 'loop-only guard', 'Monitor until-loop', 'polled', '600s timeout'. A run_in_background call plus a trailing & is double-background.
 surface: guard-or-hook
-status: open
+status: tracked
 ref: "issue #1499 closed 2026-10-12 by PR #1825, but #1499 is the worktree-isolation guard, not waiting; nothing tracks this cause"
 notes: |-
   2026-10-20 design: a CLAUDE.md clause (end your turn; the notification wakes you) dropped: the guard denials already name the alternative, each occurrence costs a call or two, and the clause would cost words in every session.
   2026-10-25 design: no change: the five later occurrences are all nits that cost one denied call each and recovered by the denial's own message, no guard changed since 10-20, ScheduleWakeup is a harness tool we cannot hide, and the CLAUDE.md clause would still cost words in every session.
 occurrences:
-  - session: session_01P7kLLJwHBgCaeVSUjhbScg
-    date: "2026-10-15"
-    severity: minor
-    description: "Polled a long-running background gate with many no-op Bash echo calls instead of simply waiting for its own completion notification, wasting turns"
-    solution: "After starting a run_in_background command, stop calling tools and let the completion notification arrive rather than polling"
   - session: session_01Sr3uwZro23NY3Z4sk5ojsM
     date: "2026-10-18"
     severity: nit
@@ -95,3 +90,13 @@ occurrences:
     severity: nit
     description: "ScheduleWakeup is blocked outside /loop, and I armed two monitors on the same gate log, wasting a call."
     solution: "End the turn and wait for the background task notification once; do not arm duplicate monitors."
+  - session: session_013zxzePtHJNqS19fEy1yRGv
+    date: "2026-10-29"
+    severity: nit
+    description: "A Monitor whose until-loop used pgrep -f gate matched its own command line and would never end."
+    solution: "Wait on the gate's background-task notification instead of polling for process names."
+  - session: session_013zxzeQZ6Qwu5TMAKNcgDtH
+    date: "2026-10-29"
+    severity: minor
+    description: "Waited with a pgrep -f loop that matched itself and hung ten minutes; also two other wait loops timed out and had to be stopped."
+    solution: "Use the harness background-completion notification instead of polling loops."

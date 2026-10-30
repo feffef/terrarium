@@ -57,11 +57,6 @@ occurrences:
     severity: nit
     description: "search_issues was blocked for a missing fields array; a second call was needed after reading the doc."
     solution: "Put the fields requirement in the audit-skills Skill text where it tells to search open issues."
-  - session: session_01NoQubvnMfCpcq9nkicNsDq
-    date: "2026-10-15"
-    severity: nit
-    description: "Called search_pull_requests without fields before reading github-integration.md, breaking CLAUDE.md's read-first rule; the guard denied it and cost one retry."
-    solution: "None needed; the guard did its job. The read-first line was simply skipped."
   - session: session_01RfmdPFPhtKo6h6GFwxLeRb
     date: "2026-10-16"
     severity: nit
@@ -82,3 +77,8 @@ occurrences:
     severity: nit
     description: "Called mcp__github__search_pull_requests before reading docs/agents/github-integration.md; a guard blocked it for missing fields."
     solution: "Read the GitHub doc before the first mcp__github__ call, as CLAUDE.md says. The guard caught it at no cost."
+  - session: session_013zxzeQUV6c2tzkFzv3WgiY
+    date: "2026-10-29"
+    severity: nit
+    description: "My first GitHub call (search_pull_requests without fields) was blocked by the fields guard because I had not yet read docs/agents/github-integration.md as CLAUDE.md requires before any GitHub operation."
+    solution: "Read the doc before the first mcp__github__ call; the guard message itself pointed to it."

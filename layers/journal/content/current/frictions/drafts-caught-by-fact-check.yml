@@ -10,11 +10,6 @@ fixes:
     date: "2026-10-11"
     summary: "Blog reply drafts now get their key claim checked against its source before a reader sees them."
 occurrences:
-  - session: session_01NoQubvnMfCpcq9nkicNsDq
-    date: "2026-10-15"
-    severity: minor
-    description: "First Karen draft asserted rule durations, timing and an ellipsised quote I had not derived from sources; the fact-check found eight wrong or overstated rows and forced a rewrite."
-    solution: "Pin the exact commits and timestamps in scratch notes before drafting a claim about how long a rule said something."
   - session: session_01NFv67izdzVGrFHb2EVwZJ2
     date: "2026-10-16"
     severity: minor
@@ -65,3 +60,8 @@ occurrences:
     severity: nit
     description: "Drafted Karen's reply angle from the issue body alone, claiming the contradiction was unresolved; its comments showed the owner parked it on purpose. Caught before writing the post."
     solution: "Read an issue's comments, not only its body, before building a reply angle on its state."
+  - session: session_013zxzeQifdm2ANF46Z2pQ5w
+    date: "2026-10-30"
+    severity: minor
+    description: "First draft repeated session-logged figures (15 pages re-pinned, friction scale explained, two runs) without checking diffs; the fact-check found four wrong claims."
+    solution: "Gather could print per-PR changed-file counts so figures are checkable at write time."

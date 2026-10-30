@@ -12,3 +12,8 @@ occurrences:
     severity: minor
     description: "Survey agent: no script creates a ledger entry, print-ledger-occurrence --append fails whole on one duplicate session, and gh api --paginate on closed issues hits a proxy 403."
     solution: "Add a ledger-set create flag, name the colliding pair in the append error, and note the pagination trap in github-integration.md."
+  - session: session_013zxzeRnPtjPsVQM71SzX63
+    date: "2026-10-29"
+    severity: minor
+    description: "Survey subagent: print-ledger-occurrence --append aborts the whole call on one held session, forcing grep pre-checks; gh api --paginate failed through the proxy."
+    solution: "Let --append skip held sessions and report them; note the proxy pagination workaround in github-integration.md."

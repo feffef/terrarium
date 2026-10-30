@@ -1,0 +1,26 @@
+name: glassbox-improve-run-cost
+summary: A glassbox-improve run spent many rater, researcher and writer agents and review rounds on a few small page changes.
+cause: "glassbox-improve v1 re-graded after each round (a rater found a new deficit each round, three rounds of three raters), took every structural step two raters raised (10 promotions, a new Lesson and a re-cut meant about 35 subagents, against the Skill's under-10 workflow guidance) and had the lead paste page and draft lists into each rater brief by hand. PR #2688 (v2) dropped re-grade rounds, ranks structural raises and has raters read one plan; the first-run cooling-off cost is glassbox-improve-first-run-cost. Signals: 'rounds', 'raters twice', 'about 35 subagents', 'token cost', 'under-10 guidance'."
+surface: safe
+status: tracked
+ref: "issue #2693"
+fixes:
+  - pr: 2688
+    date: "2026-10-29"
+    summary: "glassbox-improve v2 drops re-grade rounds and the page cap, splits pages among the three raters with a script and reports every intermediate result in the PR body."
+occurrences:
+  - session: session_013zxzeQ5JaiqQgggGaNSagD
+    date: "2026-10-29"
+    severity: moderate
+    description: "Re-grade rounds churn: each round a rater found a new deficit in Cloud sessions (a count, a lede, then a false watch item), costing three rounds of three raters."
+    solution: "glassbox-improve could fix a deficit list per page from the first re-grade and treat only new false claims after that, since a fresh opus rater finds something every time."
+  - session: session_013zxzeRoWcNj4VhbkkjybNG
+    date: "2026-10-29"
+    severity: minor
+    description: "Rater and writer subagents cost several full rounds (three raters twice, two researchers, two writers twice) for two small pages, and the last round still found a different single-rater point."
+    solution: "Cap the process to one re-grade round for a two-page run, or let the last re-grade be one rater on the pages that changed."
+  - session: session_013zxzeQUV6c2tzkFzv3WgiY
+    date: "2026-10-29"
+    severity: moderate
+    description: "The Skill's remit takes every structural step two raters raise: 10 promotions, a new Lesson and a re-cut meant about 35 subagents against the Skill's under-10 workflow size guidance, and large token cost."
+    solution: "Cap structural steps per run (for example the three best by rank sum) or state in glassbox-improve that the guideline does not apply."

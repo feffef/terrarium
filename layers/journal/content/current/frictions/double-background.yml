@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_019e468BFBTvDPXZuGzLMAL7
-    date: "2026-10-15"
-    severity: nit
-    description: "Combined run_in_background with a trailing & and the double-background guard rejected the whole command."
-    solution: "None needed; the guard worked as designed."
   - session: session_01N9bwDKW51kMS6WJvK2nfSU
     date: "2026-10-16"
     severity: nit
@@ -121,3 +116,13 @@ occurrences:
     severity: nit
     description: "Double-background guard blocked a Bash call that used both run_in_background and a trailing &."
     solution: "None needed; guard worked as designed."
+  - session: session_013zxzeQ5JaiqQgggGaNSagD
+    date: "2026-10-29"
+    severity: nit
+    description: "First gate launch used run_in_background plus a text-level ampersand; the double-background guard blocked it and nothing ran."
+    solution: "CLAUDE.md's background advice could say pass run_in_background alone with a plain foreground command."
+  - session: session_013zxzeQPnKXDNxriCwJfZnz
+    date: "2026-10-29"
+    severity: nit
+    description: "I started a gate run with a text-level background plus run_in_background, which the double-background guard rejected; the retry cost one call."
+    solution: "Use run_in_background alone for long commands, as CLAUDE.md says."

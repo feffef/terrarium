@@ -32,21 +32,11 @@ occurrences:
     severity: minor
     description: "Skipped the code-review Skill before the first push on a 20-file diff (mostly renames), substituting my own read and the fact-check subagent."
     solution: "The pr-workflow simple-change bar says nothing about pure archive moves; state whether rename-only sweeps count, or have the digest Skill name its review step."
-  - session: session_01672sKdk3qVR8DfkAWvR5Qz
-    date: "2026-10-15"
-    severity: nit
-    description: "Skipped the full two-agent code-review Skill for a content-only diff and checked paths by hand, a deviation from pr-workflow."
-    solution: "Let pr-workflow name a lighter review for diffs holding only Digest pages and archive moves."
   - session: session_01F3a2MbH4xUH7J7Y1hLg2TX
     date: "2026-10-16"
     severity: nit
     description: "Skipped the full two-agent code-review Skill for a diff of only Digest and archive moves; checked paths by hand."
     solution: "State in pr-workflow that content-only scheduled diffs may skip it."
-  - session: session_01Lwanyry6GWtqHYoMAgGGLa
-    date: "2026-10-15"
-    severity: nit
-    description: "Skipped the code-review Skill before the first push, which ADR-0004 says to run even for a Stop-hook push; I judged it pointless on a verbatim upstream copy."
-    solution: "Let pr-workflow.md name verbatim pack installs as a skip case, so agents need not decide alone."
   - session: session_01N9bwDKW51kMS6WJvK2nfSU
     date: "2026-10-16"
     severity: nit

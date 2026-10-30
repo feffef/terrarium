@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   The cloud agent proxy or its DNS refuses a host (github.com/user-attachments, content.nuxt.com, zod.dev, nitro.build, nuxt.com, docs.github.com, the deployed site) with a 403 or connection failure and no in-session override; the fix is to list the host and its workaround in environment-caveats.md, and since PR #2647 the Glass Box page guide fetches blocked GitHub docs from raw.githubusercontent.com. Signals: proxy 403, curl 000, a DNS failure from WebFetch. Auto-mode classifier denials (a deleted pushed branch, a review subagent's script, a force-with-lease push) with no shared fix also stay here; CI job logs are ci-job-logs-unreachable, Self-Modification denials auto-mode-self-modification-denials.
 surface: outside
-status: open
+status: tracked
+ref: "issue #2695"
 fixes:
   - pr: 2030
     date: "2026-10-15"
@@ -16,11 +17,6 @@ fixes:
     date: "2026-10-28"
     summary: "Glass Box EVERY-PAGE.md falls back to fetching raw.githubusercontent.com/github/docs when docs.github.com is blocked, instead of sparse-cloning github/docs."
 occurrences:
-  - session: session_01KVh6e6JUAssZvPRbuN5YDr
-    date: "2026-10-15"
-    severity: minor
-    description: "Dispatched the first subagent for the public URL before reading verifying-ui-changes.md and before checking network reach, so it failed with a 403 and cost a round trip."
-    solution: "Run curl on the target URL before briefing a screenshot agent."
   - session: session_01NFv67izdzVGrFHb2EVwZJ2
     date: "2026-10-16"
     severity: minor
@@ -51,3 +47,18 @@ occurrences:
     severity: nit
     description: "A force-with-lease push of the restarted session branch was denied by the auto-mode classifier. The remote branch had been deleted on merge, so a plain push worked; one wasted call."
     solution: "The restart-after-merge recipe in the system prompt should say to try a plain push first, since the remote branch is deleted on merge."
+  - session: session_013zxzeT84bc5MXpkCAApyxA
+    date: "2026-10-29"
+    severity: moderate
+    description: "The auto-mode classifier denied the Glass Box subagent's git push with no reason, after the brief and Journal agents had pushed the same way; the branch is stranded until the owner answers"
+    solution: "Have the orchestrator, not the subagent, push reviewed branches, so one permission context covers every push"
+  - session: session_013zxzeRoWcNj4VhbkkjybNG
+    date: "2026-10-29"
+    severity: nit
+    description: "vuejs.org and nuxt.com were blocked, so each official-docs URL needed a fallback to raw.githubusercontent.com source and could not be fetched live."
+    solution: "Name raw.githubusercontent.com docs sources in EVERY-PAGE's blocked-network fallback so every writer and rater starts there."
+  - session: session_013zxzeRnPtjPsVQM71SzX63
+    date: "2026-10-29"
+    severity: minor
+    description: "Survey subagent: print-ledger-occurrence --append aborts the whole call on one held session, forcing grep pre-checks; gh api --paginate failed through the proxy."
+    solution: "Let --append skip held sessions and report them; note the proxy pagination workaround in github-integration.md."

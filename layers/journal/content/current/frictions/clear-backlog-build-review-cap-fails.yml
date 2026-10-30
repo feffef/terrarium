@@ -8,16 +8,6 @@ fixes:
     date: "2026-10-16"
     summary: "clear-backlog §3 now says what to do when a branch fails at the review cap with open findings."
 occurrences:
-  - session: session_012NmfdSNbbPD9T5LPAwmdYG
-    date: "2026-10-15"
-    severity: nit
-    description: "The #2011+#2028 branch came back 'failed' at the 3-round review cap with two small worthFixing findings, so the orchestrator had to fix them by hand."
-    solution: "Fine as is; the cap worked. Optionally give the fixer one more round when only doc-wording findings remain."
-  - session: session_01NqN7omu3o4kxoGeQzzSXhK
-    date: "2026-10-15"
-    severity: minor
-    description: "clear-backlog-build returned status failed for the 2069/2076 branch only because review hit its 3-round cap, though every remaining finding was a judgement call (worthFixing false)"
-    solution: "Have the workflow return ready-to-push when the final round's findings are all worthFixing false"
   - session: session_01BTtvaFQckiQwtGZsasWPJH
     date: "2026-10-19"
     severity: nit

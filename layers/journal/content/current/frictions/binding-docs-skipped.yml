@@ -16,16 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "adr-read-hint also points at the ADRs a Bash git commit touches."
 occurrences:
-  - session: session_012VTgtrUEy7cPVTN5sMriXj
-    date: "2026-10-15"
-    severity: minor
-    description: "Skipped reading the full ADRs the loaded rule summaries said to read, and CLAUDE.md's grep-and-read step before recommending the drafts Space; read them only after the owner asked."
-    solution: "Reading all eight added one small fact (ADR-0003 approver in log). Evidence for a prune trial on the 'must read the full ADR' line, or make the summaries say which detail needs the full read."
-  - session: session_01LpcCJWRYb5grgQe3wBGEwb
-    date: "2026-10-15"
-    severity: minor
-    description: "Recommended accepting late reads and a hint wording change before running grep -l on docs/adr, against CLAUDE.md's opinion-in-chat rule; grep afterwards found only ADR-0029 listing the hint, no conflict"
-    solution: "Run the ADR grep before answering any 'should we' question; the rule is in CLAUDE.md but easy to skip mid-run"
   - session: session_01AaqTUSRhRmRpBxM8E4QSPR
     date: "2026-10-16"
     severity: minor

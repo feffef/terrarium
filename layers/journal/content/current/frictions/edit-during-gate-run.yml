@@ -64,11 +64,6 @@ occurrences:
     severity: minor
     description: "Edited files while the first gate:scoped run was in flight, so it had to be re-run on the final head (pr-workflow: edit nothing until it ends)."
     solution: "Apply review fixes before starting the gate, then wait."
-  - session: session_01NqN7omu3o4kxoGeQzzSXhK
-    date: "2026-10-15"
-    severity: minor
-    description: "Committed small wording fixes on the 2029 and 2071 worktrees after their gate ran and pushed without rerunning gate:scoped (validate-adr-rules only); the nuxt.config.ts edit is a comment in a code file"
-    solution: "Run pnpm validate:content or gate:scoped for any non-doc follow-up, even a comment"
   - session: session_01BTtvaFQckiQwtGZsasWPJH
     date: "2026-10-19"
     severity: nit
@@ -139,3 +134,18 @@ occurrences:
     severity: minor
     description: "Started gate:scoped before noticing ADR-0004 needs a test for observable behaviour; stopped it and reran after adding the cap test."
     solution: "Check ADR-0004's untested-behaviour exception before the first gate run, when the change adds behaviour."
+  - session: session_013zxzeSxgYzYmeAuCzvJdhY
+    date: "2026-10-28"
+    severity: nit
+    description: "Started gate:scoped before code-review, against pr-workflow order (review, then gate last); stopped it and reran, wasting a few minutes."
+    solution: "visitor-loop step 5 says commit, review, then push; add that the gate runs after review."
+  - session: session_013zxzePQM2TjRCTtcKaV61o
+    date: "2026-10-29"
+    severity: minor
+    description: "Started the gate in the background before code-review, then edited after review, so the first gate run was wasted."
+    solution: "Run the review first and the gate last on the final head, as pr-workflow.md says."
+  - session: session_013zxzeT84bc5MXpkCAApyxA
+    date: "2026-10-29"
+    severity: nit
+    description: "Editing files while a background gate:scoped ran would have aborted it, so I stopped the gate and re-ran it once on the final tree"
+    solution: "Collect all review fixes before starting the gate, as pr-workflow.md's 'edit nothing until it ends' implies"

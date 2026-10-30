@@ -6,6 +6,7 @@ status: open
 ref: "Comes from PR #2431, the fix for full-adr-read-skipped (acting on an ADR summary without the full ADR)."
 notes: |-
   2026-10-28 design: another digest Skill line dropped: it already says to read ADR-0010 before the first Digest; the hint is the designed backstop and the late read changed nothing. dropped: a guard would be Human-only.
+  2026-10-30 design: change the hint or its rules' paths (issue #2575's candidates) dropped: all Human-only files; 85 of 86 late reads changed nothing, 0 'no' verdicts, so the cost is one call
 occurrences:
   - session: session_015Nvs8t9mqbbyFbkR9Pb1nk
     date: "2026-10-24"
@@ -42,3 +43,13 @@ occurrences:
     severity: nit
     description: "Edited docs/agents/guards.md before reading ADR-0027 and ADR-0029, which the adr-read hint then demanded"
     solution: "Hint worked as designed; the late read changed nothing"
+  - session: session_013zxzeQhtk66yyXVbQRdWeb
+    date: "2026-10-29"
+    severity: nit
+    description: "Edit hooks asked for ADR reads after I had already edited three governed files; reading them afterwards showed the edits were fine."
+    solution: "Nothing to change; the hook worked as designed and the late read cost one cat."
+  - session: session_013zxzeQPnKXDNxriCwJfZnz
+    date: "2026-10-29"
+    severity: nit
+    description: "A hook said to read ADR-0012 in full after I committed the post; I did not open it, since a standalone post has no pingback."
+    solution: "Scope that hook to posts carrying reactsTo, so a standalone post is not told to read the ADR."

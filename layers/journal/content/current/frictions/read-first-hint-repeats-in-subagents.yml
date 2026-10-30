@@ -2,7 +2,7 @@ name: read-first-hint-repeats-in-subagents
 summary: >-
   The hint that points to a required doc fires again in subagents that were told to read nothing else, or had already read it.
 cause: >-
-  read-first-hint.ts (PostToolUse) points to git-conventions.md or github-integration.md on a matching call in every session, including dispatched subagents whose brief limits what they read, and repeats on each call even after the doc was read. Signals: 'hint repeated on every call', 'hint to read git-conventions.md after a detached checkout', a subagent explaining why it ignored the hint.
+  read-first-hint.ts (PostToolUse) points to git-conventions.md or github-integration.md on a matching call in every session, including dispatched subagents whose brief limits what they read, and repeats on each call even after the doc was read; since PR #2669 it no longer fires for read-only git show, ls-tree and cat-file, though log, blame and other git calls still hint. Signals: 'hint repeated on every call', 'hint to read git-conventions.md after a detached checkout', a subagent explaining why it ignored the hint, a subagent skipping the doc because its calls were read-only.
 surface: guard-or-hook
 status: open
 ref: ""
@@ -10,6 +10,9 @@ fixes:
   - pr: 2550
     date: "2026-10-25"
     summary: "read-first-hint and bash-rules-hint now find workflow agents' nested transcripts, so they stop repeating on every call."
+  - pr: 2669
+    date: "2026-10-29"
+    summary: "The git-conventions read-first hint now skips read-only git show, ls-tree and cat-file, and CLAUDE.md names the skipped subcommands."
 occurrences:
   - { session: session_012Yzae3uty5Jj8ZPug9zpjr, date: "2026-10-23", severity: minor, description: "read-first-hint repeated github-integration.md and git-conventions.md pointers on every call in five workflow subagents, even after they had read the doc", solution: "Check subagent transcript resolution and Bash-read detection in read-first-hint.ts (raised as Q13)" }
   - { session: session_016edAfTmLE1szSBGNZTorPH, date: "2026-10-25", severity: nit, description: "Each of three read-only Sonnet probes got a PostToolUse hint to read git-conventions.md after its single detached checkout, which clashed with the brief's rule to read nothing but the briefs; each spent words explaining why it ignored it.", solution: "Let a probe brief name git-conventions.md as pre-read by the orchestrator, or have the hint skip a detached checkout of a pinned SHA." }
@@ -18,3 +21,8 @@ occurrences:
     severity: nit
     description: "Sonnet reviewer skipped git-conventions.md after its git hint fired; reviewers also re-derived the same ~30 file checks three times"
     solution: "For multi-model comparisons, accept the duplicated verification as the cost of independence"
+  - session: session_013zxzeQ5JaiqQgggGaNSagD
+    date: "2026-10-29"
+    severity: nit
+    description: "Subagents broke brief lines or hook-requested reads: the sonnet rater used cd with git, and several never read git-conventions.md after the hook asked, because their calls were read-only."
+    solution: "The hook's wording could say read-only show, diff and ls-tree calls need no read, so agents stop reporting it as a miss."

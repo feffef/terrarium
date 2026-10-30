@@ -13,11 +13,6 @@ occurrences:
     severity: moderate
     description: "A container restart killed both background build workflows; I learned it only when the owner asked whether they were running"
     solution: "clear-backlog could tell the orchestrator to check journal mtimes after any session resume before claiming runs are live"
-  - session: session_013LwpcexAe7t3Qck4CKtj9Y
-    date: "2026-10-15"
-    severity: minor
-    description: "Worker restart killed the first gate run (exit 137) and cost a rerun."
-    solution: "Start the gate with run_in_background from the start so a restart does not abort it."
   - session: session_01MwrXDH7XwMNUofgz3HvQ5N
     date: "2026-10-19"
     severity: nit
@@ -28,3 +23,8 @@ occurrences:
     severity: nit
     description: "The container restarted while the second build ran; the result survived only because the workflow had finished and its output file was intact."
     solution: "None needed this time; clear-backlog already says to check the run journal mtime after a restart."
+  - session: session_013zxzeQn5ksJrQasTk95LKb
+    date: "2026-10-29"
+    severity: nit
+    description: "The worker process restarted mid code-review; state survived but the review dispatch had to be redone."
+    solution: "None needed beyond committing before long steps, which held."

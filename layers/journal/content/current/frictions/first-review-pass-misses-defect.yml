@@ -16,3 +16,8 @@ occurrences:
     severity: minor
     description: "The build reviewer flagged as a mere judgement call a real gap where the #2472 rule covered only one clause of the bar, which I fixed by hand."
     solution: "The build workflow's review should treat a gap against the brief's 'never' wording as a finding, not a judgement call."
+  - session: session_013zxzeTGYbEWeFyEywFafxw
+    date: "2026-10-28"
+    severity: minor
+    description: "A first-round Zod fix ('type and schema overlap on one rule') was false and passed code-review; only the last re-grade caught it"
+    solution: "Have the review's Spec agent re-check every sentence a fix round rewrote against its source, not only the targeted deficit"

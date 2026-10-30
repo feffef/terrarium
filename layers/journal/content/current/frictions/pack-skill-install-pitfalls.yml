@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-21 design: a pack-install doc dropped: installs are rare, and validate-skills-lock.ts already explains the hash pin and prints the --write fix.
 occurrences:
-  - session: session_01Lwanyry6GWtqHYoMAgGGLa
-    date: "2026-10-15"
-    severity: minor
-    description: "The skills CLI installed retro under .claude/skills instead of .agents/skills with a link, so I had to move it and recreate the symlink by hand."
-    solution: "Document the CLI install-then-move step in a Skill or docs/agents note, or wrap it in a script."
   - session: session_01Q4KbJ3FxhATe3QXaMbo1AM
     date: "2026-10-16"
     severity: minor

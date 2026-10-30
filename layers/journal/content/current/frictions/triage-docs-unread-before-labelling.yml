@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-23"
     summary: "read-first-hint points to issue-tracker.md and triage-labels.md on an issue write."
 occurrences:
-  - session: session_012NmfdSNbbPD9T5LPAwmdYG
-    date: "2026-10-15"
-    severity: minor
-    description: "Labelled and closed issues without first reading docs/agents/triage-labels.md and all of issue-tracker.md, as CLAUDE.md's trigger requires; read only its Specs section."
-    solution: "clear-backlog §2 could name the two docs at the point where it says to set labels."
   - session: session_015vXkKcdLwYRQqKKVJ8BLJJ
     date: "2026-10-16"
     severity: minor

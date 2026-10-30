@@ -1,8 +1,12 @@
 name: glassbox-improve-unstated-steps
 surface: safe
-summary: The glassbox-improve Skill leaves a step's rule unstated, so a run improvises and has to disclose the choice.
-cause: "SKILL.md names no rule where a run needs one: no tie-break among many tied three-rater promotions or two gap drafts with equal rank sums (the run reuses the previous run's importance rank sum or picks by judgement), no word on a second same-day run's branch name or on pushing the run branch before check:worktrees. Signals: 'no tie-break', 'the Skill never states', 'equal rank sums', 'tied', a choice the run discloses in its PR."
+summary: The glassbox-improve Skill leaves a step's rule or command unstated or in conflict with its briefs, so a run improvises and has to disclose the choice.
+cause: "SKILL.md and its briefs name no rule where a run needs one: no tie-break among tied three-rater promotions or two gap drafts with equal rank sums (the run reuses the previous run's importance rank sum or picks by judgement; PR #2668 added one for equal gap rank sums), no word on a second same-day run's branch name, on pushing the run branch before check:worktrees (PR #2668 now says it), on how the tally counts a point one rater lists as Optional, on a run based on an unpushed commit, or on whether a writer or the lead repoints links in other drafts (writer-brief.md and the lead's rules disagree, leaving the layer test red per branch). The cooling-off step's git diff names pre-rename paths or prints about 60 unrelated Journal lines. Signals: 'no tie-break', 'the Skill never states', 'equal rank sums', 'tied', 'conflict', a choice the run discloses in its PR."
 status: open
+fixes:
+  - pr: 2668
+    date: "2026-10-29"
+    summary: "glassbox-improve step 3 gets a tie-break for equal gap rank sums (fewer draft changes, else more raters first) and the Done line says check:worktrees exits 0 only once the run branch is pushed."
 occurrences:
   - session: session_013zxzeQRYzCbfkXYbHKwcPv
     date: "2026-10-28"
@@ -14,3 +18,23 @@ occurrences:
     severity: minor
     description: "The skill gives no tie-break for two gap drafts with equal rank sums; I picked work-queue by judgement and had to disclose that in the PR."
     solution: "Add a tie rule to glassbox-improve step 3, for example the draft needing fewer changes, or the lower Subject order."
+  - session: session_013zxzeTGYbEWeFyEywFafxw
+    date: "2026-10-28"
+    severity: minor
+    description: "The promotion writer's worktree page test was red by design because the join edits lived only on the run branch"
+    solution: "Let the promotion writer commit the link repoints to drafts that point at its moved page, as part of its own move"
+  - session: session_013zxzeQUV6c2tzkFzv3WgiY
+    date: "2026-10-29"
+    severity: minor
+    description: "writer-brief.md tells a writer to repoint links in other drafts in its own commit, while my shared rules (from step 6) said the lead does it; every writer reported the conflict and the layer test stayed red per branch."
+    solution: "Pick one home: let writers repoint drafts in a links-only commit, or say in the brief that the lead does, and have the Check tolerate it."
+  - session: session_013zxzeRoWcNj4VhbkkjybNG
+    date: "2026-10-29"
+    severity: minor
+    description: "Tally rule is unclear when two raters list a point as Optional and one as a deficit; the SKILL says drop Optional but not whether that counts as independent raising."
+    solution: "State in step 3 whether independent Optional reports of the same point count towards consensus, or add a DECISIONS line."
+  - session: session_013zxzeQ5JaiqQgggGaNSagD
+    date: "2026-10-29"
+    severity: nit
+    description: "Cooling-off step: git diff -M --name-status over the whole tree between merge and base printed about 60 unrelated Journal rename and delete lines before I found the one glassbox deletion."
+    solution: "Scope that command to layers/glassbox/content in the Skill's cooling-off step."

@@ -13,16 +13,6 @@ fixes:
     date: "2026-10-16"
     summary: "git-conventions.md now says to push a branch whose only unpushed commits are main's, ending the per-turn Stop hook nag."
 occurrences:
-  - session: session_013LwpcexAe7t3Qck4CKtj9Y
-    date: "2026-10-15"
-    severity: nit
-    description: "Stop hook asked to push the branch five times when only commits fast-forwarded from main were unpushed, since the branch had no upstream."
-    solution: "Make the hook compare against origin/main when the branch has no upstream."
-  - session: session_01KVh6e6JUAssZvPRbuN5YDr
-    date: "2026-10-15"
-    severity: nit
-    description: "Stop hook asked to push 7 commits that were only inherited from origin/main after my fast-forward, which cost an explanation turn."
-    solution: "The hook should compare against origin/main, not the remote branch."
   - session: session_019nDDDS9GsXdTKWK44j18fT
     date: "2026-10-24"
     severity: nit

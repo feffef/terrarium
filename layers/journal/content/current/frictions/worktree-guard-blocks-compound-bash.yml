@@ -9,11 +9,6 @@ fixes:
     date: "2026-10-12"
     summary: The dispatch Skill and environment-caveats now list what the worktree guard wrongly blocks and say one git command per call.
 occurrences:
-  - session: session_01LpcCJWRYb5grgQe3wBGEwb
-    date: "2026-10-15"
-    severity: nit
-    description: "Digest impl agent: the worktree guard refused several compound Bash commands (loops, variables, heredocs piped to node), forcing plain calls and a helper script"
-    solution: "The dispatch brief could say up front to write helper scripts with Write instead of compound Bash"
   - session: session_01XUuxhnMc7t2zXaH9ebtxKZ
     date: "2026-10-16"
     severity: nit

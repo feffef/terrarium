@@ -11,26 +11,6 @@ fixes:
     date: "2026-10-23"
     summary: "CLAUDE.md now imports GLOSSARY-MAP.md and GLOSSARY.md with @, replacing the session-start read bullet."
 occurrences:
-  - session: session_01P7kLLJwHBgCaeVSUjhbScg
-    date: "2026-10-15"
-    severity: moderate
-    description: "Did not read GLOSSARY-MAP.md then GLOSSARY.md in full at session start, against CLAUDE.md's \"at session start\" rule, before acting on the scheduled prompt"
-    solution: "Read both at the very start of every session before acting, even when the scheduled prompt already carries extensive inline context"
-  - session: session_011t1xXHxqwrfAjt83s9oTEP
-    date: "2026-10-15"
-    severity: minor
-    description: "Read only the head of GLOSSARY-MAP.md and skipped GLOSSARY.md at session start, which CLAUDE.md requires."
-    solution: "Read both in full at the first turn; a Glass Box or Skill term misuse could have slipped in."
-  - session: session_01E2zbWEQmuUrEhWvbzNpBba
-    date: "2026-10-15"
-    severity: minor
-    description: "Skipped reading GLOSSARY-MAP.md and GLOSSARY.md at session start, as CLAUDE.md requires; the task started as a delegation so it felt optional."
-    solution: "Read them before the first dispatch; a SessionStart reminder naming them would have caught it."
-  - session: session_01KVh6e6JUAssZvPRbuN5YDr
-    date: "2026-10-15"
-    severity: nit
-    description: "Skipped the CLAUDE.md session-start read of GLOSSARY-MAP.md and GLOSSARY.md; the task needed no glossary terms, so impact was low."
-    solution: "Scope that trigger to sessions that name concepts or edit files."
   - session: 5ba40529-d06b-4b13-a44a-a01292148909
     date: "2026-10-16"
     severity: nit

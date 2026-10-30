@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-20 design: no separate fix designed: rides on PR #2336's CLAUDE.md "One home per fact" grep sentence plus review; not recurred since 2026-10-16.
 occurrences:
-  - session: session_01NqN7omu3o4kxoGeQzzSXhK
-    date: "2026-10-15"
-    severity: minor
-    description: "Owner review on #2085 flagged two ADR-0003 additions (a rejected alternative and a summary sentence) as repetition the build reviewers had passed"
-    solution: "Have the clear-backlog-build Standards reviewer check new ADR text against Scope and summary for repetition"
   - session: session_01NFv67izdzVGrFHb2EVwZJ2
     date: "2026-10-16"
     severity: minor

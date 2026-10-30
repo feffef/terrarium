@@ -16,16 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "Glass Box pages are screenshotted only when layout, a feature or a diagram changed; glassbox-update points to EVERY-PAGE.md's Check."
 occurrences:
-  - session: session_01E2zbWEQmuUrEhWvbzNpBba
-    date: "2026-10-15"
-    severity: moderate
-    description: "First diagram version was committed unreadable at 390px and factually wrong about one shared database; I checked only a 1000px screenshot and skipped docs/agents/verifying-ui-changes.md before screenshotting."
-    solution: "Read verifying-ui-changes.md and EVERY-PAGE.md's diagram bar before drawing, and screenshot at 390px."
-  - session: session_013LwpcexAe7t3Qck4CKtj9Y
-    date: "2026-10-15"
-    severity: minor
-    description: "My first feature, a landing diagram, was dropped late because owner decisions in old issues rejected it, and I rewrote the flowchart twice for the 390px width."
-    solution: "Have visitor-loop step 3 grep the design resolutions on the focus Tenant before choosing a feature."
   - session: session_01CtktRkpbF4wQ3TTQVYUqLz
     date: "2026-10-17"
     severity: minor
