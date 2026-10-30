@@ -4,12 +4,15 @@ summary: >-
 cause: >-
   The Reviewed SHA in a PR verdict comment is typed from memory, a short hash, the workflow's commit list or a CI comment's merge ref instead of copied from git rev-parse HEAD, so merge-pr.ts refuses it or the session corrects it. Signals: 'typed the Reviewed SHA from memory', 'made-up full commit SHA', 'mistyped short SHA', merge-pr refusing the verdict's SHA.
 surface: safe
-status: tracked
+status: open
 notes: |-
   2026-10-21 design: a pr-workflow line or a guard on hand-typed SHAs and paths dropped: all 8 sessions read pr-workflow.md and slipped anyway, merge-pr.ts already refuses a wrong Reviewed SHA and prints the line, and a guard is a Human-only edit for a nit-level cost.
   2026-10-23 design: a merge-pr.ts flag or hand-typed-value guard dropped again: merge-pr.ts already refuses a wrong Reviewed SHA and prints the exact line, so a slip costs one edit, and a guard is a Human-only edit.
   2026-10-25 design: no change: the mechanism is unchanged since 10-21 (merge-pr.ts still refuses the SHA and prints the line, pr-workflow.md was only pruned), a guard or merge-pr.ts flag stays a Human-only edit already rejected twice, and the prose half (the verify-before-you-state bullet) is in an open Prune Trial's territory (ADR-0027).
-fixes: []
+fixes:
+  - pr: 2697
+    date: "2026-10-30"
+    summary: "pr-workflow step 4: paste the Reviewed SHA from git rev-parse HEAD run in the reviewed head's checkout"
 occurrences:
   - session: session_01Sc82qSCs4NVP3igf9SaGXM
     date: "2026-10-17"
