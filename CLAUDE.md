@@ -17,8 +17,9 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   a file they govern or run a Skill they name. When a summary says so, read the
   full ADR before you act.
 - **Before your first git command** beyond the read-only `status`, `diff`,
-  `show`, `ls-tree` and `cat-file` (commit, fetch, pull, rebase, amend, reset,
-  or `log`/`blame` to draw a conclusion): `docs/agents/git-conventions.md`.
+  `show`, `ls-tree`, `cat-file`, `grep` and `ls-files` (commit, fetch, pull,
+  rebase, amend, reset, or `log`/`blame` to draw a conclusion):
+  `docs/agents/git-conventions.md`.
 - **Before your first GitHub operation** (`mcp__github__*` tool or `gh`):
   `docs/agents/github-integration.md`.
 - **Before you push a branch, or open, update or merge a PR:**

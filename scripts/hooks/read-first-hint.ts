@@ -47,7 +47,7 @@ export const READ_FIRST: ReadFirst[] = [
     doc: 'docs/agents/git-conventions.md',
     source: 'CLAUDE.md',
     trigger: 'Before your first git command',
-    matches: (_t, segs) => runs(segs, 'git', (w) => !['status', 'diff', 'show', 'ls-tree', 'cat-file', undefined].includes(w[gitSubcommandAt(w)])),
+    matches: (_t, segs) => runs(segs, 'git', (w) => !['status', 'diff', 'show', 'ls-tree', 'cat-file', 'grep', 'ls-files', undefined].includes(w[gitSubcommandAt(w)])),
   },
   {
     doc: 'docs/agents/github-integration.md',
