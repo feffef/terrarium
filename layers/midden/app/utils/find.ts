@@ -67,3 +67,13 @@ export function middenProvenanceLine(p: MiddenProvenance, removedIn?: string): s
 export function middenSeasonSpan(season: DigSeason): string {
   return season.end ? `${formatMiddenDate(season.start)} – ${formatMiddenDate(season.end)}` : `from ${formatMiddenDate(season.start)}`
 }
+
+/** The opening of a catalogNote as a one-line hook: its first sentence, plus the
+ *  next when that is under 8 words. A sentence ends at `.`, `!` or `?` followed by
+ *  whitespace or the end, so "#1636" and "0.x" do not cut it. */
+export function middenHook(note: string): string {
+  const sentences = note.replace(/\s+/g, ' ').trim().match(/.+?(?:[.!?](?=\s|$)|$)/g) ?? []
+  let hook = (sentences[0] ?? '').trim()
+  if (hook.split(' ').length < 8 && sentences[1]) hook = `${hook} ${sentences[1].trim()}`
+  return hook
+}
