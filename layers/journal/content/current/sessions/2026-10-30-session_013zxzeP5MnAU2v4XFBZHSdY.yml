@@ -1,0 +1,260 @@
+schemaVersion: 1
+session: session_013zxzeP5MnAU2v4XFBZHSdY
+startedAt: 2026-10-30T16:58:21Z
+endedAt: 2026-10-30T17:25:19Z
+kind: autonomous
+goal: "Visitor-loop run on the Midden: three blind visitors, consensus fixes"
+status: in-review
+outcome: "Fix PR #2717 open (chip label, dig seasons key, wording); feature PR and out-of-remit issue not yet done"
+summary: 'Scheduled visitor-loop run, focus midden (row 3). Everything was agent-initiated from the stored schedule prompt; no human instruction. Built and served the site, sent sonnet/fable/opus visitors, tallied consensus, ran the refiner. Fixed three consensus findings (unlabelled cause-chip counts, undefined season names, "quarter" wording) in PR 2717; dropped two (phone diagram labels are deliberate; footer links are ruled by decisions.md), and one is out of remit (Artifact provenance links only PR 1636 of two). code-review caught season notes that overclaimed their source comments; reworded. First gate failed on a typecheck in find.spec.ts fixtures needing the new note field; fixed. Added an e2e test so the change is gate-observable. Still open: CI and merge of 2717, the feature PR (one-line hook under each Latest find, refined: glossed first sentence, 8-word floor), and the issue for the out-of-remit finding.'
+prs:
+  - "2717"
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Hook demanded it before dispatching visitors; read-only agents so little applied
+    useful: partly
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: Rulings used to drop the footer finding; refiner also read it
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Read by the refiner before GitHub reads; I wrote the PR via MCP
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: eval-in-page recipe for DOM evidence
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: Commit via -F file, trailer check, no push during gate
+    useful: yes
+  - path: .agents/skills/visitor-loop/visitor-brief.md
+    reason: Brief given verbatim to visitors
+    useful: yes
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: Brief given verbatim to the refiner
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Review-before-push and landing recipe
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: "Subagent read: remit; refiner said yes"
+    useful: yes
+  - path: layers/midden/GLOSSARY.md
+    reason: Subagents read it for terms; the refiner and standards review found it yes
+    useful: yes
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: "Refiner read: who writes seasons and notes"
+    useful: yes
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: "Refiner and standards review: payload limits for the feature"
+    useful: yes
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: Refiner read; no conflict
+    useful: partly
+  - path: docs/agents/tenant-layers.md
+    reason: Standards review read it; nothing applied
+    useful: partly
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: layers/midden/app/utils/strata.ts
+    reason: (read before editing)
+  - path: layers/midden/app/components/midden/TrenchLanding.vue
+    reason: (read before editing)
+  - path: layers/midden/app/pages/t/midden/index.vue
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/StoresLanding.vue
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/SectionColumn.vue
+    reason: (no reason given)
+  - path: layers/midden/app/utils/gloss.ts
+    reason: (no reason given)
+  - path: layers/midden/app/components/midden/Gloss.vue
+    reason: (no reason given)
+skillsUsed:
+  - name: visitor-loop
+    reason: the scheduled task itself
+  - name: code-review
+    reason: pre-push review with the tally as spec
+  - name: dispatch-subagents
+    reason: guard required reading before dispatch
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Agent dispatch was blocked by the dispatch-read guard because I had not read dispatch-subagents yet; one wasted call set and a retry.
+    solution: The visitor-loop Skill could name dispatch-subagents so it is read before step 2.
+    severity: nit
+  - description: Adding a required DigSeason field broke a typecheck in find.spec.ts that I did not grep for; first gate run failed after about 10 minutes.
+    solution: Grep consumers of a changed type before the gate, as CLAUDE.md says for facts.
+    severity: minor
+  - description: Season notes I wrote overclaimed their source comments (derived durations, 'unmerged'); caught only by code-review.
+    solution: Write notes by quoting the source comment first.
+    severity: minor
+  - description: Ran a read-only git log/diff in a refiner subagent without git-conventions; also I forgot the read-before-first-git rule was satisfied only via a cat in a combined command.
+    solution: Brief refiner to read docs/agents/git-conventions.md.
+    severity: nit
+durationSec: 1618
+models:
+  claude-sonnet-5-5: 97
+toolCounts:
+  Bash: 37
+  Agent: 9
+  Read: 1
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/midden/tests/e2e/midden.spec.ts
+  - layers/midden/tests/unit/find.spec.ts
+  - layers/midden/app/utils/strata.ts
+  - layers/midden/app/components/content/MiddenArtifact.vue
+  - layers/midden/app/components/midden/TrenchLanding.vue
+  - layers/midden/tests/unit/strata.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/mdc-when-to-use.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0016.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - .agents/skills/visitor-loop/SKILL.md
+  - layers/midden/GLOSSARY.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/agents/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Review and gate before first push; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main via close-session; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself and stay in remit; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body header and commit trailer; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Payload constraint for the planned feature; refiner opened the ADR
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when reading the Skill; unrelated to this task
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded when reading the Skill; unrelated
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded when reading the Skill; unrelated
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded on Midden Space components; no routing change made
+    useful: partly
+  - path: .claude/rules/adr-0016.md
+    reason: Tenant root page edit in TrenchLanding; no conflict
+    useful: partly
+  - path: .claude/rules/tenant-glossary.md
+    reason: Used Midden terms for the new copy
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Confirmed layer edits stay inside the Tenant
+    useful: partly
+  - path: .claude/rules/ui-verification.md
+    reason: Pushed me to prove changes in the rendered DOM
+    useful: yes
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on Midden components; not relevant
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Subagent loaded; not relevant
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Subagent loaded; no Human-only file touched
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: Subagent loaded; not relevant
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Subagent loaded on glossary read; not relevant
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Subagent loaded on glossary read; partly useful to it
+    useful: partly
+  - path: .claude/rules/adr-0025.md
+    reason: Subagent loaded; not relevant
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Subagent loaded; not relevant
+    useful: no
+subagents:
+  - task: Visitor sonnet
+    model: sonnet
+  - task: Visitor fable
+    model: fable
+  - task: Visitor opus
+    model: opus
+  - task: Visitor sonnet
+    model: sonnet
+    durationSec: 99
+    toolCalls: 11
+    modelCalls: 8
+    tokenShare: 5.3
+  - task: Visitor fable
+    model: fable
+    durationSec: 342
+    toolCalls: 46
+    modelCalls: 18
+    tokenShare: 12.4
+  - task: Visitor opus
+    model: opus
+    durationSec: 177
+    toolCalls: 26
+    modelCalls: 20
+    tokenShare: 11.5
+  - task: Refiner fit check
+    model: opus
+    durationSec: 222
+    toolCalls: 46
+    modelCalls: 26
+    tokenShare: 19.9
+  - task: Standards review
+    model: sonnet
+    durationSec: 29
+    toolCalls: 9
+    modelCalls: 3
+    tokenShare: 4.1
+  - task: Spec review
+    model: sonnet
+    durationSec: 36
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 3.6
+gitBranch: claude/adoring-galileo-qpltle
+entrypoint: remote_trigger
+cliVersion: 2.1.314
+trigger: visitor-loop
+ideas:
+  - "Midden Latest finds: show a glossed one-line hook from each catalogNote (sentence rule with 8-word floor) so a landing visitor sees stakes; planned as the feature PR."
+  - "Midden: render #N references in a catalogNote as links at display time, fixing missing PR links like #1637 on tried-and-left-alone without editing records."
+landedBy: Stop
