@@ -259,8 +259,7 @@ step 2 (steps 9-10 did its step 1). This Skill's delta from that sequence:
   one-line reason; the rotation state from step 1 (`last`, `starved`, and an
   override note if the given Persona was ineligible); the story window from
   step 2 if it was widened past three days; the fact-check tally; and step 9's
-  last `Fact-checked: <blob>` on a line of its own. `merge-pr.ts` refuses the
-  merge when the post on the head is another blob.
+  last `Fact-checked: <blob>` on a line of its own.
 
 Done when: merged with a green gate, or open and honestly awaiting a human. An
 escalated PR ends the run here — go to step 13.

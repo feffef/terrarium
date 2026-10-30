@@ -21,8 +21,8 @@
 //   `guest-pipeline` (ADR-0023), a PR that changes a Human-only path (ADR-0004),
 //   a PR whose closing keywords name an open issue not labelled
 //   `ready-for-agent` (#2104, #2691), a PR adding a blog post whose blob is not
-//   the one its `Fact-checked:` line names (#2370), or unless this session's verdict, naming the head in a `Reviewed:` line, is
-//   on the PR (#1276, #1844). A Dependabot PR skips the Public-author,
+//   the one its `Fact-checked:` line names (#2370), or unless this session's
+//   verdict, naming the head in a `Reviewed:` line, is on the PR (#1276, #1844). A Dependabot PR skips the Public-author,
 //   guest-pipeline and Human-only refusals only when `dependabotBumpRefusal`
 //   finds a plain minor/patch bump (#1889); a fork still refuses.
 //   Then polls the PR's head-commit check runs every `interval-ms` (default 15s)
@@ -531,11 +531,11 @@ export async function mergePrWhenGreen(
     }
   }
 
-  const closesReadyForHuman = readyForHumanRefusal(
+  const closesUnready = readyForHumanRefusal(
     parseClosingKeywordIssues(meta.body).map((n) => readIssue(access, n)),
   )
-  if (closesReadyForHuman !== null) {
-    return { pr: prNumber, verdict: 'closes-unready-issue', merged: false, message: closesReadyForHuman }
+  if (closesUnready !== null) {
+    return { pr: prNumber, verdict: 'closes-unready-issue', merged: false, message: closesUnready }
   }
   const uncheckedPost = factCheckedBlobRefusal(meta.body, files)
   if (uncheckedPost !== null) {
