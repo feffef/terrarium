@@ -53,8 +53,9 @@ re-review each story or repeat its findings.
    `mcp__Claude_Code_Remote__send_later` check-ins at about 2h, then 6h, then
    every ~12h (#929).
 4. Before merging, post your verdict as a PR comment, even a clean "merging
-   as-is": the merge must never be the only trace. End it with a line
-   `Reviewed: <sha>` naming the head commit your `code-review` run (or your
+   as-is": the merge must never be the only trace. End it with the pasted
+   output of `echo "Reviewed: $(git rev-parse HEAD)"` (the full 40-character
+   SHA, never typed), naming the head commit your `code-review` run (or your
    Skill's own review step, or your self-read of a simple change) covered;
    after any later push, review the new commits (per the follow-up rule above)
    and post a new verdict. Use `event=COMMENT` or `add_issue_comment`, never
