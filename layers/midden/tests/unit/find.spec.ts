@@ -4,7 +4,7 @@
 // line on a narrow column, and the provenance link already carries the full path.
 // Also pins the removal fold and the season dates.
 import { describe, expect, it } from 'vitest'
-import { formatMiddenDate, middenProvenanceLine, middenRemovedInProvenance, middenSeasonSpan } from '../../app/utils/find.ts'
+import { formatMiddenDate, middenHook, middenProvenanceLine, middenRemovedInProvenance, middenSeasonSpan } from '../../app/utils/find.ts'
 
 describe('middenProvenanceLine', () => {
   it('shows a file provenance as its file name alone, not its path', () => {
@@ -78,5 +78,18 @@ describe('middenSeasonSpan', () => {
   it('prints a closed season as a range and the open one as "from"', () => {
     expect(middenSeasonSpan({ slug: 'a', label: 'A', note: 'n.', start: '2026-09-05', end: '2026-10-04' })).toBe('5 Sep 2026 – 4 Oct 2026')
     expect(middenSeasonSpan({ slug: 'b', label: 'B', note: 'n.', start: '2026-10-05', end: null })).toBe('from 5 Oct 2026')
+  })
+})
+
+describe('middenHook', () => {
+  it('takes the first sentence, not cutting at "#1636" or "0.x"', () => {
+    expect(middenHook('A bot opened pull requests #1636 and #1637 on a 0.x pin, and both were closed. Later text.')).toBe(
+      'A bot opened pull requests #1636 and #1637 on a 0.x pin, and both were closed.',
+    )
+  })
+  it('adds the next sentence when the first is under 8 words', () => {
+    expect(middenHook('Seven files and one live wire. The wire read data at runtime and was cut.')).toBe(
+      'Seven files and one live wire. The wire read data at runtime and was cut.',
+    )
   })
 })

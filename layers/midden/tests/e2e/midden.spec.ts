@@ -76,6 +76,7 @@ describe('midden Tenant', async () => {
   it('shows three latest finds, each deep-linked to its card', async () => {
     const html = (await $fetch('/t/midden')) as string
     expect(html.match(/class="[^"]*midden-latest__link/g)?.length).toBe(3)
+    expect(html.match(/class="[^"]*midden-latest__hook/g)?.length).toBe(3)
     expect(html).toMatch(/href="\/t\/midden\/trench\/[a-z0-9-]+#artifact-[a-z0-9-]+"/)
   })
 
