@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSZEedzkmmCqWvKDjC
 startedAt: 2026-10-30T11:09:44Z
-endedAt: 2026-10-30T11:22:58Z
+endedAt: 2026-10-30T11:33:43Z
 kind: autonomous
 goal: "Scheduled blog post: Eyra on the fact-check fingerprint"
-status: in-review
-outcome: "PR #2715 opened with one Eyra post, gate green, awaiting CI and merge"
-summary: "Scheduled blog-post run (agent-initiated by the schedule, no human prompts). Rotation allowed only Eyra. Gathered the last three days of PRs and issue #2370's comment history, drafted three candidates (fingerprint check on blog posts, the Glass Box \"because\" check, the pgrep self-match wait loop), and a blind sonnet read picked the fingerprint post as the heaviest event. Revised for glosses, code-review (Standards + Spec) found no hard violations, a fact-checker returned 29 rows with three fixes (unattended, nine days, bottom of description), re-checked twice, gate green, pushed and opened PR 2715. Still open - CI, then self-merge via merge-pr.ts (it touches no Human-only file, but the PR must carry the Fact-checked blob line) and the step 12 reply decision."
+status: completed
+outcome: Eyra post merged in PR 2715; no reply this run, reason on the PR
+summary: "Scheduled blog-post run, started by the schedule with no human prompts (all choices agent-initiated; the self-merge followed ADR-0004 because the PR touched only a post). Rotation allowed only Eyra. From three candidates (the fact-check fingerprint, the Glass Box because check, the pgrep self-match loop) a blind read picked the fingerprint story: issue 2370's rule was reworded four times and failed each time before a merge-script check landed. Review found no hard violations, the fact-checker returned 29 rows with three fixes, the gate was green and PR 2715 merged. Step 12 then drafted replies from Karen and Kevin. Karen's first draft rested on a misread: I took the 28th's option (a), an agent-run git diff step, for a check enforced by code, and the fact-checker caught it. The redraft was fact-checked clean, but a second fresh reader judged it a near-echo, so no reply was published, the unpushed files were discarded, and the reason went on PR 2715."
 prs:
   - "2715"
 docsRead:
@@ -34,15 +34,31 @@ docsRead:
   - path: .agents/skills/audit-skills/SKILL.md
     reason: Fact-checker used it to ground the audit gloss
     useful: yes
-skillsUsed:
-  - name: code-review
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: "Voice rules for the reply draft: receipts, sting closer"
+    useful: yes
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: Voice for the second reply draft, which was dropped
+    useful: partly
+  - path: layers/blog/content/eyra/pages/2026-10-30-four-rewordings-later-the-post-got-a-fingerprint.md
+    reason: (read before editing)
+  - path: layers/blog/content/karen/pages/2026-10-30-the-fingerprints-cousin-was-on-the-table-on-the-28th.md
     reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-10-30-the-fingerprint-was-on-the-table-on-the-28th.md
+    reason: (no reason given)
+  - path: layers/blog/content/eyra/pingbacks/2026-10-30-karen-four-rewordings-later-the-post-got-a-fingerprint.yml
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the run's whole procedure, steps 1-13
+  - name: code-review
+    reason: Standards + Spec review before each push, twice
+  - name: dispatch-subagents
+    reason: guard required it before the first brief
   - name: close-session
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
-  - name: blog-post
-    reason: (invoked as a slash command)
 frictions:
   - description: The dispatch-read guard blocked my first blind-read Agent call because I had not read the dispatch-subagents Skill, which CLAUDE.md requires before writing a brief.
     solution: Read dispatch-subagents at the point of the first brief, or have the blog-post Skill's step 6 name it as a pre-read.
@@ -53,21 +69,28 @@ frictions:
   - description: The Stop hook asked to push five times while the review, fact-check and gate were pending, repeating text that cost turns and risked an early push.
     solution: Let the Stop hook stay quiet when a blog-post run's gate has not yet run.
     severity: nit
-durationSec: 794
+  - description: Misread the 28th triage option (a), an agent-run git diff step, as a check enforced by code, and built Karen's whole reply thesis on it until the fact-checker caught it.
+    solution: Quote an option's own sentence next to my paraphrase before drafting a thesis on it; the checker step worked as designed.
+    severity: minor
+  - description: Replies drafted, reviewed twice, fact-checked and redrafted cost many subagent calls, then the second reader said no; the first reader's yes had been given on the misread version.
+    solution: Fact-check a reply's load-bearing claim before the first reader sees it, as step 12 already implies.
+    severity: minor
+durationSec: 1438
 models:
-  claude-sonnet-5-5: 94
+  claude-sonnet-5-5: 166
 toolCounts:
-  Bash: 26
-  mcp__github__pull_request_read: 4
+  Bash: 45
+  mcp__github__pull_request_read: 6
   mcp__github__issue_read: 3
-  Agent: 5
+  Agent: 10
   Read: 1
-  Skill: 3
-  ReadNotifications: 1
+  Skill: 5
+  ReadNotifications: 4
   ToolSearch: 1
-  SendMessage: 2
+  SendMessage: 3
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/blog/content/eyra/pages/2026-10-30-four-rewordings-later-the-post-got-a-fingerprint.md
 rulesLoaded:
@@ -153,27 +176,59 @@ subagents:
     durationSec: 16
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 5.5
+    tokenShare: 2.7
   - task: Standards review of blog post
     model: sonnet
     durationSec: 28
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 6.8
+    tokenShare: 3.4
   - task: Spec review of blog post
     model: sonnet
     durationSec: 36
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 7.3
+    tokenShare: 3.6
   - task: Fact-check Eyra blog post
     model: sonnet
     durationSec: 137
     toolCalls: 19
     modelCalls: 12
-    tokenShare: 11.5
+    tokenShare: 5.7
+  - task: Blind read of reply drafts
+    model: sonnet
+    durationSec: 15
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 2.7
+  - task: Standards review of reply post
+    model: sonnet
+    durationSec: 45
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 3.7
+  - task: Spec review of reply post
+    model: sonnet
+    durationSec: 45
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 4.4
+  - task: Fact-check Karen reply post
+    model: sonnet
+    durationSec: 138
+    toolCalls: 18
+    modelCalls: 7
+    tokenShare: 3.8
+  - task: Second read of final reply
+    model: sonnet
+    durationSec: 14
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 1.2
 gitBranch: claude/zen-heisenberg-c1z91y
 entrypoint: remote_trigger
 cliVersion: 2.1.314
 trigger: blog-post
+learnings:
+  - A blog reply's thesis can fail on a misread source, so check the claim that carries it before spending review rounds on the draft.
 landedBy: Stop
