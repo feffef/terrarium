@@ -111,4 +111,4 @@ Used by `/wayfinder`. The **map** is one issue; its **children** are tickets.
 - **Frontier query**: list the map's open children (`gh issue list --state open`, scoped to its sub-issues / task list). Drop any with an open blocker (`blocked_by > 0`, or an open issue in the `Blocked by` line) or an assignee. First in map order wins.
 - **Claim**: `gh issue edit <n> --add-assignee @me`, the session's first write.
 - **Resolve**: `gh issue comment <n> --body "<answer>"`, then `gh issue close <n>`, then append a context pointer (gist + link) to the map's Decisions-so-far.
-- **Rewriting a map or spec body wholesale**: replace the copied ADR-0017 header line; see "Write traps" in [`github-integration.md`](./github-integration.md).
+- **Rewriting a map or spec body wholesale**: replace the copied header with this session's (ADR-0017).

@@ -53,9 +53,6 @@ like this:
   the raw review API) mid-triage. Agent calls run under the human owner's
   connection (ADR-0017), so you can't tell your leftover from the maintainer's own
   unsubmitted draft, and deleting the wrong one erases the draft for good.
-- **Rewriting a map or spec body wholesale** copies the old session's header,
-  which the provenance guard rejects as stale: replace it with this session's
-  (ADR-0017).
 
 ## Overflow and precision traps
 

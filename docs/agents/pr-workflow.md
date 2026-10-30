@@ -107,11 +107,10 @@ outside that scope rides in.
 2. Push with retry and open **one gated PR** scoped to the Skill's own diff
    (more only if its SKILL.md says so).
 3. Subscribe on open and land via this doc's recipe once green.
-4. **Before the turn that opens the PR ends, invoke `close-session`** — your first log (`in-review`).
+4. Invoke `close-session` before the turn that opens the PR ends (CLAUDE.md).
 5. If the gate is red for a reason that isn't yours, or anything outside the
    Skill's own scope rode into the diff, leave the PR open and escalate to a
    human instead of merging: a scheduled run merges only what its SKILL.md
    allows (ADR-0003).
 
-Once the PR is merged or honestly left open, re-invoke `close-session` to update
-that log (the ADR-0009 rule, `.claude/rules/adr-0009.md`).
+Once the PR is merged or honestly left open, re-invoke `close-session` (ADR-0009).
