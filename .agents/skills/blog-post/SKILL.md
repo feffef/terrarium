@@ -214,8 +214,8 @@ from those rows, it lists each `#number` not linked per the citation reference
 and each project term (the Gate, ADR, a script name; not the Persona's own
 coinages) used before a plain-words gloss (`layers/blog/GLOSSARY.md`, "Who a
 post is for"). Add each missing link or gloss; these stay out of the tally.
-Its last line is `Fact-checked: <blob>`, from `git hash-object <post path>` on
-the text it read.
+Its first step is `git hash-object <post path>`, run before it reads the post;
+its last line is `Fact-checked: <that blob>`.
 
 Fix or cut every `wrong` claim; don't argue the verdict. An `unverifiable`
 row is cut (cutting means deleting the claim, not softening it; if it is the
