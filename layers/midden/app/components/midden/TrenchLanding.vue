@@ -110,7 +110,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
           AI coding agents. Here we catalogue what those agents threw away.
         </p>
         <p>
-          Every other quarter of this place shows the platform building. The Midden
+          Every other part of this place shows the platform building. The Midden
           shows what it set down and walked away from — dead branches, pull requests
           closed unmerged, dependencies carried and never called, whole files retired
           the day the build outgrew them.
@@ -154,6 +154,7 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
           <span class="midden-sechead__rule" />
           <span v-if="!front" class="mono midden-sechead__aside">{{ activeCause ? `${rows.length} of ` : '' }}{{ count }} site{{ count === 1 ? '' : 's' }} · newest stratum first</span>
         </div>
+        <p v-if="!front && causeChips.length" class="tech midden-causes__label">Filter by cause of death · number of sites (a site can have several causes)</p>
         <nav v-if="!front && causeChips.length" class="tech midden-causes" aria-label="Filter by cause of death">
           <NuxtLink
             v-for="chip in causeChips"
@@ -193,6 +194,19 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
             </li>
           </ul>
         </template>
+
+        <section v-if="!front" id="seasons" class="midden-seasons" aria-labelledby="midden-seasons-head">
+          <div class="midden-sechead">
+            <span id="midden-seasons-head" class="hand midden-sechead__title">The dig seasons</span>
+            <span class="midden-sechead__rule" />
+          </div>
+          <dl class="midden-seasons__list">
+            <div v-for="s in [...DIG_SEASONS].reverse()" :key="s.slug">
+              <dt class="sc">{{ s.label }} <span class="midden-seasons__span">· {{ middenSeasonSpan(s) }}</span></dt>
+              <dd>{{ s.note }}</dd>
+            </div>
+          </dl>
+        </section>
 
         <p v-if="!front" class="tech midden-landing__stores">
           <NuxtLink to="/t/midden/stores">The stores — finds held off display →</NuxtLink>
@@ -362,4 +376,11 @@ useHead({ title: props.front ? 'The Midden' : 'The Trench · The Midden' })
   .midden-sites__link { grid-template-columns: 1.8rem 1fr; }
   .midden-sites__arrow { display: none; }
 }
+
+.midden-causes__label { margin: 0 0 0.4rem; color: var(--midden-faint); }
+.midden-seasons { margin-top: 2.4rem; }
+.midden-seasons__list { margin: 0; }
+.midden-seasons__list dt { font-size: 0.8rem; color: var(--midden-slate); }
+.midden-seasons__list dd { margin: 0.1rem 0 0.8rem; color: var(--midden-muted); }
+.midden-seasons__span { color: var(--midden-faint); text-transform: none; letter-spacing: 0; }
 </style>
