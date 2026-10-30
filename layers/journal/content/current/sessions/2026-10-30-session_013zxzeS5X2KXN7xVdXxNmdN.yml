@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeS5X2KXN7xVdXxNmdN
 startedAt: 2026-10-30T04:03:54Z
-endedAt: 2026-10-30T04:12:17Z
+endedAt: 2026-10-30T04:13:13Z
 kind: autonomous
 goal: Scheduled audit of the Platform's docs for drift and duplication
-status: in-review
-outcome: "Sweep PR #2699 open with 3 doc trims, gate green; awaiting CI and merge"
-summary: "Scheduled audit-docs run (schedule-started, no human prompts). Dispatched three read-only reviewers (Freshness, Single-home, Coherence); they returned 4 findings, Freshness none. One checker confirmed two with corrections and rejected two (an environment-caveats trim inside an open prune trial's territory, and a gh pr view cloud caveat that duplicated github-integration.md). Applied the two confirmed fixes across pr-workflow, github-integration and issue-tracker (3 lines added, 7 removed), reviewed with code-review, gate:scoped green, PR #2699 opened and subscribed. No ADR or Human-only path touched, so no escalation PR and no issue filed. Reviewers admitted thin coverage of Skills, journal pages and glossaries. All work was Skill-directed by the schedule; nothing agent-initiated beyond it."
+status: completed
+outcome: "Sweep PR #2699 merged: 3 doc trims, gate green, no escalation"
+summary: "Scheduled audit-docs run (schedule-started, no human prompts). Dispatched three read-only reviewers (Freshness, Single-home, Coherence); they returned 4 findings, Freshness none. One checker confirmed two with corrections and rejected two (an environment-caveats trim inside an open prune trial's territory, and a gh pr view cloud caveat that duplicated github-integration.md). Applied the two confirmed fixes across pr-workflow, github-integration and issue-tracker (3 lines added, 7 removed), reviewed with code-review, gate:scoped green, PR #2699 opened, verdict posted, merged on green via merge-pr. No ADR or Human-only path touched, so no escalation PR and no issue filed. Reviewers admitted thin coverage of Skills, journal pages and glossaries. All work was Skill-directed by the schedule; nothing agent-initiated beyond it."
 prs:
   - "2699"
 docsRead:
@@ -91,17 +91,20 @@ frictions:
   - description: Reviewers reported thin coverage (Skills, journal pages, glossaries unread) because three agents cannot read the whole repo.
     solution: Split reviewers by directory as well as lens, or rotate the covered directories across runs.
     severity: minor
-durationSec: 502
+durationSec: 558
 models:
-  claude-sonnet-5-5: 70
+  claude-sonnet-5-5: 83
 toolCounts:
   Read: 4
-  Bash: 21
-  Skill: 4
+  Bash: 25
+  Skill: 5
   Agent: 6
   Edit: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - docs/agents/pr-workflow.md
   - docs/agents/github-integration.md
@@ -228,37 +231,37 @@ subagents:
     durationSec: 116
     toolCalls: 25
     modelCalls: 24
-    tokenShare: 19.5
+    tokenShare: 17.9
   - type: general-purpose
     task: "Audit docs: Single-home"
     durationSec: 37
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 8.2
+    tokenShare: 7.6
   - type: general-purpose
     task: "Audit docs: Coherence"
     durationSec: 110
     toolCalls: 17
     modelCalls: 15
-    tokenShare: 15.8
+    tokenShare: 14.5
   - type: general-purpose
     task: Fact-check audit findings
     durationSec: 73
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 6.3
+    tokenShare: 5.8
   - type: general-purpose
     task: "Review: Standards axis"
     durationSec: 18
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 5.6
+    tokenShare: 5.2
   - type: general-purpose
     task: "Review: Spec axis"
     durationSec: 27
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 5.7
+    tokenShare: 5.3
 gitBranch: claude/festive-mayer-mrccr5
 entrypoint: remote_trigger
 cliVersion: 2.1.314
