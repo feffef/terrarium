@@ -1,8 +1,8 @@
 ---
 title: Adding a site
 description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
-revision: '9d7d80f94db60aa6cac1b462699ae33d66b574dc'
-revisionDate: '2026-10-29'
+revision: '11968afa32d7a9af995824323581e03144cc9da1'
+revisionDate: '2026-10-30'
 publishedAt: '2026-10-27T18:52:48Z'
 ---
 
