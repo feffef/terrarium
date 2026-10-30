@@ -28,3 +28,8 @@ occurrences:
     severity: nit
     description: "After opening PRs 2642-2647 I re-authored the log with log-session directly instead of invoking close-session, against the CLAUDE.md rule to invoke close-session before a PR-opening turn ends."
     solution: "Follow the PR-open hook literally and invoke close-session, which then calls log-session."
+  - session: session_013zxzeSgD6cuF2mawqY6jWM
+    date: "2026-10-29"
+    severity: minor
+    description: "After PRs #2667-#2670 opened I updated the log by calling log-session directly instead of re-invoking close-session (CLAUDE.md), the very pattern #2654 is about"
+    solution: "Re-invoke close-session at each PR open; #2654's cut, once its trial is judged, removes the text that invites the direct call"

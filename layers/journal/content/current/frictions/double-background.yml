@@ -121,3 +121,13 @@ occurrences:
     severity: nit
     description: "Double-background guard blocked a Bash call that used both run_in_background and a trailing &."
     solution: "None needed; guard worked as designed."
+  - session: session_013zxzeQ5JaiqQgggGaNSagD
+    date: "2026-10-29"
+    severity: nit
+    description: "First gate launch used run_in_background plus a text-level ampersand; the double-background guard blocked it and nothing ran."
+    solution: "CLAUDE.md's background advice could say pass run_in_background alone with a plain foreground command."
+  - session: session_013zxzeQPnKXDNxriCwJfZnz
+    date: "2026-10-29"
+    severity: nit
+    description: "I started a gate run with a text-level background plus run_in_background, which the double-background guard rejected; the retry cost one call."
+    solution: "Use run_in_background alone for long commands, as CLAUDE.md says."

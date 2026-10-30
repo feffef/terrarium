@@ -1,0 +1,17 @@
+name: clear-backlog-build-branch-name-refused
+summary: clear-backlog-build refuses a planned branch name that contains git, so a run lost one launch and renamed the branch.
+cause: "Since PR #2377 the clear-backlog-build workflow refuses a planned branch name containing git (including inside github or a word like read-first-hint-readonly-git) before any agent runs, because the worktree guard counts it as a second git command. The refusal replaced the original harm (a build agent committing under another name, worktree-guard-false-positive); the new cost is one wasted launch and a rename, as the planner names branches without checking. Signals: 'refused branch name', 'contains git', 'one wasted launch'."
+surface: safe
+status: open
+ref: "Comes from worktree-guard-false-positive and PR #2377, whose refusal now catches the slip; the original harm (commit under another branch name) is not recurring."
+occurrences:
+  - session: session_013zxzeTK9c2HVcabwCx3b18
+    date: "2026-10-28"
+    severity: nit
+    description: "The build workflow refused branch name fix/2611-docs-github-raw-fetch because it contains git (in github); one wasted launch."
+    solution: "Make the branch-name guard match git as a word, not a substring, or say so in clear-backlog section 3."
+  - session: session_013zxzeSgD6cuF2mawqY6jWM
+    date: "2026-10-29"
+    severity: nit
+    description: "clear-backlog-build refused the branch name read-first-hint-readonly-git because it contains 'git'; one wasted launch"
+    solution: "State the branch-name rule in clear-backlog §3 where names are chosen, or have run-summary's grouping propose names"

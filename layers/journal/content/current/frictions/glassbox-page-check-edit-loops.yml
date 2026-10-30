@@ -23,3 +23,8 @@ occurrences:
     severity: minor
     description: "Found only after announcing the plan that moving the gate Lesson out of terrarium-practice/ breaks the Full reference exemption in page-checks.ts"
     solution: "grep page-checks.ts for folder-specific rules before proposing a Glass Box folder move"
+  - session: session_013zxzeQ5JaiqQgggGaNSagD
+    date: "2026-10-29"
+    severity: minor
+    description: "The promoted draft failed the page spec on first run: description over 120 characters, bullets over 65 words, and link text not equal to a title, found only by running the tests."
+    solution: "The writer brief could list the caps (description 120, bullet 65 words, link text equals title) so a promotion fixes them before the Check."

@@ -28,3 +28,8 @@ occurrences:
     severity: nit
     description: "The container restarted while the second build ran; the result survived only because the workflow had finished and its output file was intact."
     solution: "None needed this time; clear-backlog already says to check the run journal mtime after a restart."
+  - session: session_013zxzeQn5ksJrQasTk95LKb
+    date: "2026-10-29"
+    severity: nit
+    description: "The worker process restarted mid code-review; state survived but the review dispatch had to be redone."
+    solution: "None needed beyond committing before long steps, which held."

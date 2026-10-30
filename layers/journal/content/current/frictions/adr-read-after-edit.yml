@@ -42,3 +42,13 @@ occurrences:
     severity: nit
     description: "Edited docs/agents/guards.md before reading ADR-0027 and ADR-0029, which the adr-read hint then demanded"
     solution: "Hint worked as designed; the late read changed nothing"
+  - session: session_013zxzeQhtk66yyXVbQRdWeb
+    date: "2026-10-29"
+    severity: nit
+    description: "Edit hooks asked for ADR reads after I had already edited three governed files; reading them afterwards showed the edits were fine."
+    solution: "Nothing to change; the hook worked as designed and the late read cost one cat."
+  - session: session_013zxzeQPnKXDNxriCwJfZnz
+    date: "2026-10-29"
+    severity: nit
+    description: "A hook said to read ADR-0012 in full after I committed the post; I did not open it, since a standalone post has no pingback."
+    solution: "Scope that hook to posts carrying reactsTo, so a standalone post is not told to read the ADR."

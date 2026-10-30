@@ -65,3 +65,8 @@ occurrences:
     severity: nit
     description: "Drafted Karen's reply angle from the issue body alone, claiming the contradiction was unresolved; its comments showed the owner parked it on purpose. Caught before writing the post."
     solution: "Read an issue's comments, not only its body, before building a reply angle on its state."
+  - session: session_013zxzeQifdm2ANF46Z2pQ5w
+    date: "2026-10-30"
+    severity: minor
+    description: "First draft repeated session-logged figures (15 pages re-pinned, friction scale explained, two runs) without checking diffs; the fact-check found four wrong claims."
+    solution: "Gather could print per-PR changed-file counts so figures are checkable at write time."

@@ -45,3 +45,8 @@ occurrences:
     severity: minor
     description: "The inspect-session agent for the 97-minute multi-model session stopped after 34 of 184 pages, judging paging too slow, despite page limit 9999; it needed a resume."
     solution: "inspect-session's full-read route (parallel range fetch) fits sessions over about 25 pages; I should have estimated the page count from duration and used it."
+  - session: session_013zxzeQn5ksJrQasTk95LKb
+    date: "2026-10-29"
+    severity: moderate
+    description: "inspect-session could not recover #2650's first-round raters: list_events skipped 40 minutes and rejected the cursor past the gap as Invalid."
+    solution: "Have run PR bodies carry every rater grade (now in glassbox-improve v2) so events are never the only record."

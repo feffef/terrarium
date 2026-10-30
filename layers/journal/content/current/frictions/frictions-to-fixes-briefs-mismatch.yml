@@ -4,8 +4,9 @@ summary: >-
 cause: >-
   survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, search guidance that contradicts github-integration.md, no named way to find merged PRs missing from the ledger, an impossible "read every full log" ask, no owner/repo slug. Signals: a survey or design subagent reporting the brief "says ... but", a glob matching nothing, work done by hand that the brief should have pointed to.
 surface: safe
-status: on-trial
-ref: "Prune Trial opened 2026-10-25 by PR #2539 (territory: survey-brief.md, design-brief.md and impl-brief.md, all of each; keywords 'survey-brief', 'design-brief', 'impl-brief')."
+status: open
+notes: |-
+  2026-10-30 survey: the Prune Trial of PR #2539 was judged and deleted by PR #2681; status reset to open.
 fixes:
   - pr: 2347
     date: "2026-10-20"
@@ -80,3 +81,8 @@ occurrences:
     severity: minor
     description: "Survey subagent reported the brief omits --out for --summary and --candidates, that --append is all-or-nothing on a duplicate session, and that §3 tracker paging is heavy for about 140 candidates."
     solution: "Add --out to the survey brief's summary step and an append mode that skips sessions an entry already holds."
+  - session: session_013zxzeRnPtjPsVQM71SzX63
+    date: "2026-10-29"
+    severity: nit
+    description: "Design subagent had no short path for nit picks where the right design is no change; sections 1 to 5 apply in full, and audit-skills output was 505 KB."
+    solution: "Let the design brief say a pick may stop at section 2 with no change when its cause is a read-past rule, and print docReadCounts alone."

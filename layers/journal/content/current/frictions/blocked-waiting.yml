@@ -95,3 +95,13 @@ occurrences:
     severity: nit
     description: "ScheduleWakeup is blocked outside /loop, and I armed two monitors on the same gate log, wasting a call."
     solution: "End the turn and wait for the background task notification once; do not arm duplicate monitors."
+  - session: session_013zxzePtHJNqS19fEy1yRGv
+    date: "2026-10-29"
+    severity: nit
+    description: "A Monitor whose until-loop used pgrep -f gate matched its own command line and would never end."
+    solution: "Wait on the gate's background-task notification instead of polling for process names."
+  - session: session_013zxzeQZ6Qwu5TMAKNcgDtH
+    date: "2026-10-29"
+    severity: minor
+    description: "Waited with a pgrep -f loop that matched itself and hung ten minutes; also two other wait loops timed out and had to be stopped."
+    solution: "Use the harness background-completion notification instead of polling loops."

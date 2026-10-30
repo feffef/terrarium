@@ -135,3 +135,18 @@ occurrences:
     severity: minor
     description: "I assumed a missing ruleVerdicts field meant a log predated the field and wrote an exemption on that; the writer omits it for any zero-verdict session, which the Spec review caught before push."
     solution: "Check how a field is written (transcript-trace.ts) before reading its absence as a log-age marker."
+  - session: session_013zxzeSgD6cuF2mawqY6jWM
+    date: "2026-10-29"
+    severity: minor
+    description: "Told the owner the 'hearsay' line was cut from dispatch-subagents; it was cut from audit-skills, and dispatch-subagents lost a different line. Caught before building"
+    solution: "Quote a cut line only from the diff, with its path, before naming it in a question"
+  - session: session_013zxzeQBZ87ypp2V7zZVW9v
+    date: "2026-10-29"
+    severity: minor
+    description: "Wrote friction-rates.ts reading an `id` field from session logs from recall; the field is `session`, so the first run counted 0 hits"
+    solution: "Check a data file's field names (head one log) before coding against it; running the script caught it"
+  - session: session_013zxzeQUV6c2tzkFzv3WgiY
+    date: "2026-10-29"
+    severity: nit
+    description: "I stated in a status line that the hints and auto-imports writers had no findings; the hints writer had been sent findings. Caught and corrected in my next message."
+    solution: "Check the sent-message list before summarising who got findings (CLAUDE.md: verify before you state)."

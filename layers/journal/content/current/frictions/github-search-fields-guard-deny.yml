@@ -82,3 +82,8 @@ occurrences:
     severity: nit
     description: "Called mcp__github__search_pull_requests before reading docs/agents/github-integration.md; a guard blocked it for missing fields."
     solution: "Read the GitHub doc before the first mcp__github__ call, as CLAUDE.md says. The guard caught it at no cost."
+  - session: session_013zxzeQUV6c2tzkFzv3WgiY
+    date: "2026-10-29"
+    severity: nit
+    description: "My first GitHub call (search_pull_requests without fields) was blocked by the fields guard because I had not yet read docs/agents/github-integration.md as CLAUDE.md requires before any GitHub operation."
+    solution: "Read the doc before the first mcp__github__ call; the guard message itself pointed to it."

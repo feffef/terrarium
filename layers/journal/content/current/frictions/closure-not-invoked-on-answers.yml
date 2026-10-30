@@ -26,3 +26,8 @@ occurrences:
     severity: nit
     description: "Answered the first two research questions without invoking close-session, which CLAUDE.md asks for when a session only answers a question."
     solution: "Invoke close-session after a question-only turn; logging self-heals so early logging is free."
+  - session: session_013zxzeT84bc5MXpkCAApyxA
+    date: "2026-10-29"
+    severity: minor
+    description: "The first two turns only answered a question (reading docs), and I did not invoke close-session at the end of them as CLAUDE.md asks"
+    solution: "Treat a pure read-and-summarize turn as session closure and invoke close-session; re-invoking later is safe"

@@ -81,3 +81,8 @@ occurrences:
     severity: minor
     description: "My first PR #2602 verdict named a head SHA whose tail I typed instead of copying (60eb3d8270c1 vs 60eb3d8275…); I posted a corrected verdict. Same mistake an earlier Glass Box session logged."
     solution: "Copy the head SHA from git rev-parse HEAD into the verdict in the same step; never type a hash."
+  - session: session_013zxzeQPnKXDNxriCwJfZnz
+    date: "2026-10-29"
+    severity: minor
+    description: "Wrote the Reviewed SHA in the PR 2680 verdict comment from memory instead of git output, then caught it before merging and corrected the comment to the real head."
+    solution: "Paste the SHA from git rev-parse HEAD into the verdict, never type it."

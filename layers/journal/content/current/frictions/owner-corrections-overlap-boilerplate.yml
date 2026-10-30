@@ -29,3 +29,8 @@ occurrences:
     severity: nit
     description: "owner-corrections.ts listed seven candidates, all file-overlap reworks of unrelated Blog, Glass Box and Midden PRs; each still needed a tally line."
     solution: "Ignore a rework candidate whose overlap is only a glossary or a path outside the run's focus Tenant, unless it names the visitor-loop PR."
+  - session: session_013zxzeQZ6Qwu5TMAKNcgDtH
+    date: "2026-10-29"
+    severity: nit
+    description: "owner-corrections lists 16 candidates, nearly all file-overlap noise, each needing a named tally line; costly to resolve."
+    solution: "Filter overlap candidates to PRs touching the focus Tenant's layer."

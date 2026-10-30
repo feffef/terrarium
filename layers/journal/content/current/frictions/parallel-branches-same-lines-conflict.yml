@@ -26,3 +26,8 @@ occurrences:
     severity: minor
     description: "Two promotion agents each edited the other's draft link before moving it; cherry-picks conflicted on both moved drafts"
     solution: "Tell promotion agents not to touch another promoted draft; repoint links in the join pass"
+  - session: session_013zxzeT84bc5MXpkCAApyxA
+    date: "2026-10-29"
+    severity: minor
+    description: "PR #2677 got no CI checks because the branch conflicted with main. A glassbox-improve run had re-pinned four of the same pages while the branch sat unpushed."
+    solution: "Before opening a PR from a branch that waited a while, run git merge-tree against origin/main; GitHub runs no pull_request workflow on an unmergeable PR"

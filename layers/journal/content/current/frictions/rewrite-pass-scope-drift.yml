@@ -28,3 +28,8 @@ occurrences:
     severity: minor
     description: "My first shortened descriptions dropped each page's point; the Spec review caught it and I redid three of four, costing an extra build cycle."
     solution: "Keep the distinctive clause and cut elsewhere; check against the page body before committing."
+  - session: session_013zxzePQM2TjRCTtcKaV61o
+    date: "2026-10-29"
+    severity: nit
+    description: "First prune dropped four rules and the ledger claimed every rule was kept; code-review caught it before the push."
+    solution: "List every rule in the section before trimming and check each against the new text."

@@ -60,3 +60,23 @@ occurrences:
     severity: minor
     description: "Read git-conventions.md and the dispatch-subagents Skill only after hooks blocked my first git command and first Agent call, not before as CLAUDE.md says."
     solution: "Read the triggered docs before the first git command or subagent brief."
+  - session: session_013zxzeRnPtjPsVQM71SzX63
+    date: "2026-10-29"
+    severity: nit
+    description: "Called the Agent tool before reading dispatch-subagents SKILL.md; the dispatch-read guard blocked the call, costing one retry."
+    solution: "Read the Skill when the frictions-to-fixes Skill first says to dispatch, or have the Skill name the read at its start."
+  - session: session_013zxzeSgD6cuF2mawqY6jWM
+    date: "2026-10-29"
+    severity: nit
+    description: "The dispatch-read guard denied the first clear-backlog-explore call until I read dispatch-subagents; one retry (accepted cost, #2580)"
+    solution: "None; owner accepted this cost"
+  - session: session_013zxzeQZ6Qwu5TMAKNcgDtH
+    date: "2026-10-29"
+    severity: minor
+    description: "Dispatch-read guard blocked all three visitor Agent calls until I read dispatch-subagents SKILL.md, though the briefs were verbatim from visitor-loop."
+    solution: "visitor-loop's step 2 could name dispatch-subagents as a pre-read, or the guard could skip a Skill's verbatim briefs."
+  - session: session_013zxzeQifdm2ANF46Z2pQ5w
+    date: "2026-10-30"
+    severity: nit
+    description: "First Agent call was blocked by the dispatch-read guard because I had not read dispatch-subagents first; one retry."
+    solution: "Read dispatch-subagents right after the digest Skill says to spawn a fact-check agent."

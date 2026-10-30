@@ -374,3 +374,38 @@ occurrences:
     severity: nit
     description: "Stop hook repeatedly asked to push uncommitted/unreviewed work, conflicting with ADR-0004's review-then-gate-then-push order."
     solution: "Hook could skip the nag while a scheduled run is mid-review."
+  - session: session_013zxzeQ5JaiqQgggGaNSagD
+    date: "2026-10-29"
+    severity: minor
+    description: "The Stop hook asked me to push nine times while ADR-0004 required code-review and gate first; each ask cost a turn of explanation."
+    solution: "Have the Stop hook skip its push request while a Skill's review or gate steps are still running, or say the ADR-0004 order in its text."
+  - session: session_013zxzeT84bc5MXpkCAApyxA
+    date: "2026-10-29"
+    severity: nit
+    description: "The Stop hook asked three times to push before the gate and review had finished; pr-workflow.md says to ignore it, but each prompt cost a turn"
+    solution: "Have the Stop hook stay quiet while a gate:scoped run is in flight for that branch"
+  - session: session_013zxzePQM2TjRCTtcKaV61o
+    date: "2026-10-29"
+    severity: nit
+    description: "Stop hook asked twice to push while the gate was still running; waiting cost two idle turns but kept ADR-0004 intact."
+    solution: "None needed; the hook cannot see a pending gate."
+  - session: session_013zxzeRoWcNj4VhbkkjybNG
+    date: "2026-10-29"
+    severity: nit
+    description: "Stop hook asked to push about eight times while ADR-0004 required code-review and gate:scoped first; each reply had to restate why I was holding."
+    solution: "Make the Stop hook skip its push nag while a background gate or review subagent is running in the session."
+  - session: session_013zxzeQn5ksJrQasTk95LKb
+    date: "2026-10-29"
+    severity: nit
+    description: "Stop hook asked to push while gate:scoped was running, against ADR-0004's order."
+    solution: "User-scope hook; skip the push request while a gate run is pending."
+  - session: session_013zxzeQUV6c2tzkFzv3WgiY
+    date: "2026-10-29"
+    severity: nit
+    description: "The Stop hook asked me to push seven times while review and the gate were still pending; ADR-0004 already says to wait, but each reminder cost a turn of explanation."
+    solution: "Have the Stop hook skip the reminder while a branch has no push yet and a scheduled Skill's review steps are running, or point to the ADR-0004 clause."
+  - session: session_013zxzeQifdm2ANF46Z2pQ5w
+    date: "2026-10-30"
+    severity: nit
+    description: "The Stop hook asked to push five times while the fact-check, review and gate were pending, each costing a turn."
+    solution: "Have the hook stay quiet while a background agent or gate is running."

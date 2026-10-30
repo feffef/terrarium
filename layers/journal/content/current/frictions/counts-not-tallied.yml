@@ -90,3 +90,8 @@ occurrences:
     severity: nit
     description: "First PR body miscounted fact-check verdicts; I caught it and corrected the body before CI."
     solution: "Tally verdicts from the checker reply before writing the body."
+  - session: session_013zxzeSgD6cuF2mawqY6jWM
+    date: "2026-10-29"
+    severity: moderate
+    description: "The Q2/Q3 picks to accept two Friction clusters rested on 'every recurrence is minor' without a per-session rate; the owner's question exposed a doubled rate for one"
+    solution: "Triage briefs for regression issues should compare per-session rates before and after the fix, not severities alone"

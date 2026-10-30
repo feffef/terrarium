@@ -166,3 +166,8 @@ occurrences:
     severity: minor
     description: "Skipped code-review on both follow-up commits (over 10 lines and 2 files) and read the diffs myself, against pr-workflow's larger-follow-up rule; the reviews were clean on their first rounds."
     solution: "Count lines and files before judging a follow-up simple; run code-review on its own diff."
+  - session: session_013zxzeT84bc5MXpkCAApyxA
+    date: "2026-10-29"
+    severity: minor
+    description: "I told the Journal agent to push its branch before running code-review on it, breaking ADR-0004's review-before-first-push rule; the review ran after the push, before the PR"
+    solution: "Always run code-review on a subagent's branch before telling it to push, as the dispatch-subagents Skill's Scope-and-trust section says"

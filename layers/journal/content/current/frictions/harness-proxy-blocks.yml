@@ -51,3 +51,18 @@ occurrences:
     severity: nit
     description: "A force-with-lease push of the restarted session branch was denied by the auto-mode classifier. The remote branch had been deleted on merge, so a plain push worked; one wasted call."
     solution: "The restart-after-merge recipe in the system prompt should say to try a plain push first, since the remote branch is deleted on merge."
+  - session: session_013zxzeT84bc5MXpkCAApyxA
+    date: "2026-10-29"
+    severity: moderate
+    description: "The auto-mode classifier denied the Glass Box subagent's git push with no reason, after the brief and Journal agents had pushed the same way; the branch is stranded until the owner answers"
+    solution: "Have the orchestrator, not the subagent, push reviewed branches, so one permission context covers every push"
+  - session: session_013zxzeRoWcNj4VhbkkjybNG
+    date: "2026-10-29"
+    severity: nit
+    description: "vuejs.org and nuxt.com were blocked, so each official-docs URL needed a fallback to raw.githubusercontent.com source and could not be fetched live."
+    solution: "Name raw.githubusercontent.com docs sources in EVERY-PAGE's blocked-network fallback so every writer and rater starts there."
+  - session: session_013zxzeRnPtjPsVQM71SzX63
+    date: "2026-10-29"
+    severity: minor
+    description: "Survey subagent: print-ledger-occurrence --append aborts the whole call on one held session, forcing grep pre-checks; gh api --paginate failed through the proxy."
+    solution: "Let --append skip held sessions and report them; note the proxy pagination workaround in github-integration.md."

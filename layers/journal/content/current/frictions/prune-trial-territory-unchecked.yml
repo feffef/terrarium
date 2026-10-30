@@ -26,3 +26,8 @@ occurrences:
     severity: minor
     description: "Reviewers were not told about open Prune Trials, so 3 of 5 rejected findings targeted text ADR-0027 bars changing."
     solution: "Add one line to the audit-docs reviewer instructions: skip text covered by .agents/prune-trials.yml."
+  - session: session_013zxzeSgD6cuF2mawqY6jWM
+    date: "2026-10-29"
+    severity: minor
+    description: "I chose pick (d) for #2654 without checking .agents/prune-trials.yml; an open trial keeps exactly that text, so the owner must be asked again"
+    solution: "Before proposing a pick that edits an instruction, check prune-trials.yml territory (issue-tracker.md supersession check)"

@@ -13,3 +13,8 @@ occurrences:
     severity: moderate
     description: "The inspect-session full read cost about 190k Haiku tokens and three subagents for an 11-page session, and needed a hand fix of the fetchers' abbreviated page paths before Flatten could merge."
     solution: "Filed as #2306: bare file names in flatten.ts, and a partial read with no page limit for short sessions."
+  - session: session_013zxzeQn5ksJrQasTk95LKb
+    date: "2026-10-29"
+    severity: moderate
+    description: "Recovering five sessions' rater hand-backs cost about 1.1M subagent tokens; one session needed 98 event pages sequentially."
+    solution: "Same fix: intermediate results in the PR body; inspect-session full-read mode for long sessions."

@@ -88,3 +88,8 @@ occurrences:
     severity: minor
     description: "The Skill's top-three regression rule picked two phantom regressions (occurrences dated before their own closing verdicts) and a family already covered by open #2472; I deviated and took the next eligible entries."
     solution: "Have the survey exclude entries whose post-fix occurrences predate the closing issue, or whose family has an open regression issue, before ranking."
+  - session: session_013zxzeRnPtjPsVQM71SzX63
+    date: "2026-10-29"
+    severity: minor
+    description: "The Skill's top-three regression rule ranks by severity, which picked two phantom regressions (an owner-declined case and a stale-session false alarm); I skipped them by judgement."
+    solution: "Have the survey exclude regressions whose ref says closed not planned or false alarm before ranking the top three."
