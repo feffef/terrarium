@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeQifdm2ANF46Z2pQ5w
 startedAt: 2026-10-30T00:16:14Z
-endedAt: 2026-10-30T00:24:38Z
+endedAt: 2026-10-30T00:28:12Z
 kind: autonomous
 goal: Write the 2026-10-29 Journal Digest
-status: in-review
-outcome: "PR #2690 opened with the Digest and archive sweep; gate green, awaiting CI and merge"
+status: completed
+outcome: "PR #2690 merged: the 2026-10-29 Digest and the archive sweep"
 summary: "Scheduled digest run, agent-initiated by the schedule with no human prompt. One closed day (2026-10-29) was missing. Gathered the day, wrote the Digest, had a read-only subagent fact-check it (23 claims, 4 wrong, all fixed after I confirmed two against the diffs), ran the archive sweep, reviewed with a standards subagent, ran gate:scoped green, pushed and opened PR #2690. Main lesson: session logs' own figures (pages re-pinned, what a PR explained) were wrong against the diffs."
 prs:
   - "2690"
@@ -25,10 +25,11 @@ docsRead:
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: read only because the guard blocked my first Agent call
     useful: partly
+  - path: .agents/skills/digest/SKILL.md
+    reason: the run; the standards subagent also used it as the review standard
+    useful: yes
   - path: layers/journal/content/current/pages/digests/2026-10-29.md
     reason: (read before editing)
-  - path: .agents/skills/digest/SKILL.md
-    reason: (no reason given)
   - path: .agents/skills/prune-trial/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/glassbox-improve/SKILL.md
@@ -52,17 +53,21 @@ frictions:
   - description: The Stop hook asked to push five times while the fact-check, review and gate were pending, each costing a turn.
     solution: Have the hook stay quiet while a background agent or gate is running.
     severity: nit
-durationSec: 504
+durationSec: 718
 models:
-  claude-sonnet-5-5: 47
+  claude-sonnet-5-5: 67
 toolCounts:
-  Bash: 11
+  Bash: 15
   Read: 6
   Agent: 3
-  Skill: 3
+  Skill: 5
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-29.md
   - layers/journal/content/archived/pages/digests/2026-10-22.md
@@ -134,6 +139,15 @@ ruleVerdicts:
   - path: .claude/rules/adr-0004-human-merge.md
     reason: No Human-only file touched
     useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded only for a fact-check subagent reading Tenant files; did not apply to a Digest
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded only for a subagent reading a page; no diagram involved
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded for a subagent reading a blog post; no pingback in scope
+    useful: no
 subagents:
   - task: Fact-check digest
     model: sonnet
@@ -142,13 +156,13 @@ subagents:
     durationSec: 108
     toolCalls: 24
     modelCalls: 14
-    tokenShare: 29.9
+    tokenShare: 22.9
   - task: Standards review
     model: sonnet
     durationSec: 20
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 6.6
+    tokenShare: 5.1
 gitBranch: claude/compassionate-lovelace-426as8
 entrypoint: remote_trigger
 cliVersion: 2.1.312
