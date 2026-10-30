@@ -37,6 +37,8 @@ describe('triggeredDocs()', () => {
       ['git --no-pager -c a=b show HEAD', []],
       ['git ls-tree -r HEAD', []],
       ['git cat-file -p HEAD:a', []],
+      ['git grep foo', []],
+      ['git -C /x ls-files', []],
       ['cd x && git fetch origin main', [GIT]],
       ['git status | cat; git commit -F m', [GIT]],
       ['ls\ngit push', [GIT]],
