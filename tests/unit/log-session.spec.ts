@@ -16,6 +16,7 @@ import {
   land,
   loadAuthorContext,
   mergeAuthored,
+  pendingMain,
   reportUnexplainedReads,
   validateAuthored,
 } from '../../scripts/session/log-session.ts'
@@ -419,6 +420,48 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     expect(out).toContain('…and 4 more')
     // One rule line per rendered near-miss (each also echoes its command).
     expect(out.match(/not a reader command/g)?.length).toBe(5)
+  })
+
+  // Issue #2687: the report before the first --author pass, writing nothing.
+  describe('pendingMain()', () => {
+    const withRules = () => {
+      const fixture = store(['git status'])
+      const dir = join(fixture.home, '.claude', 'projects', fixture.root.replace(/[/.]/g, '-'))
+      const rules = ['adr-0012', 'adr-0013'].map((r) => ({ type: 'attachment', attachment: { type: 'nested_memory', path: join(fixture.root, `.claude/rules/${r}.md`) } }))
+      writeFileSync(join(dir, 'session.jsonl'), [readFileSync(join(dir, 'session.jsonl'), 'utf8'), ...rules.map((r) => JSON.stringify(r))].join('\n'))
+      return fixture
+    }
+    const pending = (fixture: { home: string; root: string }, scratchAbs = join(fixture.root, 'scratch.json')) => {
+      const logs: string[] = []
+      vi.spyOn(console, 'log').mockImplementation((l: string) => void logs.push(l))
+      vi.stubEnv('HOME', fixture.home)
+      try {
+        pendingMain({ cwd: fixture.root, scratchAbs })
+      } finally {
+        vi.unstubAllEnvs()
+        vi.restoreAllMocks()
+      }
+      return { out: logs.join('\n'), scratchWritten: existsSync(scratchAbs) }
+    }
+
+    it('prints the open rules with no scratch, and writes no file', () => {
+      const res = pending(withRules())
+      expect(res.out).toContain('2 rule(s) loaded with no verdict yet:\n    .claude/rules/adr-0012.md\n    .claude/rules/adr-0013.md')
+      expect(res.scratchWritten).toBe(false)
+    })
+
+    it('leaves out the rules the scratch already rates', () => {
+      const fixture = withRules()
+      const scratchAbs = join(fixture.root, 'scratch.json')
+      writeFileSync(scratchAbs, JSON.stringify({ ruleVerdicts: [{ path: '.claude/rules/adr-0012.md', reason: 'r', useful: 'no' }] }))
+      const { out } = pending(fixture, scratchAbs)
+      expect(out).toContain('1 rule(s) loaded with no verdict yet:\n    .claude/rules/adr-0013.md')
+      expect(out).not.toContain('adr-0012')
+    })
+
+    it('says so in one line when nothing is open', () => {
+      expect(pending(store(['git status'])).out).toBe('log-session: no rule or doc awaits a verdict.')
+    })
   })
 
   describe('authorMain()', () => {
