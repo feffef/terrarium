@@ -205,27 +205,26 @@ Commit the post (and stub), then review it per `pr-workflow.md`'s "Review
 before the first push".
 
 Spawn a fresh read-only subagent (`model: "sonnet"`, repo and GitHub read
-access). Give it the saved post's path (and stub) and the "Re-derive every
-claim" rule from the citation reference. It lists every factual claim —
-title, description, and pingback blurb included, every causal/agency sentence
-above all — checks each against its primary source, and returns one row per
-claim: claim · source checked · verdict `ok` / `wrong` / `unverifiable`. Apart
-from those rows, it lists each `#number` not linked per the citation reference
-and each project term (the Gate, ADR, a script name; not the Persona's own
-coinages) used before a plain-words gloss (`layers/blog/GLOSSARY.md`, "Who a
-post is for"). Add each missing link or gloss; these stay out of the tally.
-Its first step is `git hash-object <post path>`, run before it reads the post;
-its last line is `Fact-checked: <that blob>`.
+access). Give it the post's path (and stub) and the "Re-derive every claim"
+rule from the citation reference. Its first step is `git hash-object <post
+path>`, before it reads the post; its last line is `Fact-checked: <that blob>`.
+It returns one row per factual claim (title, description and pingback blurb
+included, causal/agency sentences above all): claim · source checked · verdict
+`ok` / `wrong` / `unverifiable`. Apart from those rows, it lists each `#number`
+not linked per the citation reference and each project term (the Gate, ADR, a
+script name; not the Persona's own coinages) used before a plain-words gloss
+(`layers/blog/GLOSSARY.md`, "Who a post is for"). Add each missing link or
+gloss; these stay out of the tally.
 
-Fix or cut every `wrong` claim; don't argue the verdict. An `unverifiable`
-row is cut (cutting means deleting the claim, not softening it; if it is the
-post's thesis, redraft or drop the post), or you read its primary source
-yourself and name that source in the PR body — an in-character aside about
-the Persona's own life is not a factual claim and may stay. A causal/agency claim the PR's review thread or
-timeline can't settle is cut; if you keep it anyway, the PR may not
-self-merge (step 11). Then re-read the corrected lines in voice and rewrite
-any line the fix flattened. If anything changed the post, re-dispatch the
-checker on the changed lines; its `Fact-checked:` line replaces the old one.
+Fix or cut every `wrong` claim; don't argue the verdict. Cut every
+`unverifiable` one (delete it, don't soften it; if it is the post's thesis,
+redraft or drop the post), unless you read its primary source yourself and name
+it in the PR body. An in-character aside about the Persona's own life is not a
+factual claim. A causal/agency claim the PR's review thread or timeline can't
+settle is cut; keeping it bars self-merge (step 11). Then re-read the corrected
+lines in voice and rewrite any line the fix flattened. If anything changed the
+post, re-dispatch the checker on the changed lines; its `Fact-checked:` line
+replaces the old one.
 
 Done when: every row the checker returned is `ok`, fixed, cut, or
 source-read by you, the fixes are committed, `git hash-object <post path>`
@@ -372,12 +371,10 @@ every fact so readers can go look:
   the same shape `reactsTo` and pingbacks render. A slug can be renamed (c13b90b), so
   `ls` the target before shipping the link.
 - **Re-derive every claim from its primary source before it ships, whoever
-  composed it.** Links, counts, dates and weekdays, relative times, SHAs,
-  authors, quotes, causal claims: recompute from `git`, the GitHub API, or the
-  file on disk, never from memory, and reconcile counts that share a
-  paragraph. For "who decided" / "the session reasoned" / "on its own", the
-  authority is the PR's own review comments and timeline — not a commit
-  message (often in agent voice whoever directed the change) or a session
-  log's summary line. For where a rule lives or what agents read, it is the
-  loaded `.claude/rules/` file, not only the ADR. Step 9's fact-check holds
-  this rule.
+  composed it:** links, counts, dates and weekdays, relative times, SHAs,
+  authors, quotes, causal claims. Use `git`, the GitHub API or the file on disk,
+  never memory, and reconcile counts that share a paragraph. For "who decided" /
+  "the session reasoned" / "on its own", the authority is the PR's own review
+  comments and timeline, not a commit message or a session log's summary line.
+  For where a rule lives or what agents read, it is the loaded
+  `.claude/rules/` file, not only the ADR. Step 9's checker holds this rule.
