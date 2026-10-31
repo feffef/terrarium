@@ -584,3 +584,18 @@ occurrences:
     severity: nit
     description: "Ran git log with --grep on origin/main to read a merge time before reading git-conventions.md, which the hook then asked for; the read changed nothing."
     solution: "None needed; the hook's own text says a late read is no Friction when the call was right."
+  - session: session_013zxzePnfDGz3F3p9spej9f
+    date: "2026-10-30"
+    severity: nit
+    description: "Chained git status, git log and the git-conventions read in one call, so the first git commands ran before the required doc was read."
+    solution: "Read the doc in its own call before any git command."
+  - session: session_013zxzeSZEedzkmmCqWvKDjC
+    date: "2026-10-30"
+    severity: nit
+    description: "Ran several GitHub reads before reading docs/agents/github-integration.md, which CLAUDE.md requires first; a hook reminded me afterwards."
+    solution: "Read the doc at the first GitHub step of a scheduled run."
+  - session: session_013zxzeP5MnAU2v4XFBZHSdY
+    date: "2026-10-30"
+    severity: nit
+    description: "Ran a read-only git log/diff in a refiner subagent without git-conventions; also I forgot the read-before-first-git rule was satisfied only via a cat in a combined command."
+    solution: "Brief refiner to read docs/agents/git-conventions.md."

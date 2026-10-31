@@ -28,3 +28,8 @@ occurrences:
     severity: minor
     description: "The promoted draft failed the page spec on first run: description over 120 characters, bullets over 65 words, and link text not equal to a title, found only by running the tests."
     solution: "The writer brief could list the caps (description 120, bullet 65 words, link text equals title) so a promotion fixes them before the Check."
+  - session: session_013zxzeRYnqNveUu5w9oJd9q
+    date: "2026-10-30"
+    severity: nit
+    description: "My new sentence about the because check itself contained the word and failed the page test, costing one rerun."
+    solution: "Run the glassbox page test after each prose edit."

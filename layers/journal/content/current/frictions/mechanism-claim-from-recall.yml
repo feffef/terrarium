@@ -145,3 +145,18 @@ occurrences:
     severity: nit
     description: "I stated in a status line that the hints and auto-imports writers had no findings; the hints writer had been sent findings. Caught and corrected in my next message."
     solution: "Check the sent-message list before summarising who got findings (CLAUDE.md: verify before you state)."
+  - session: session_013zxzeRYnqNveUu5w9oJd9q
+    date: "2026-10-30"
+    severity: minor
+    description: "I first wrote that the new page-checks rule fails on any motive, from memory of the diff; the standards reviewer caught it (only because fails, so warns)."
+    solution: "Read the problems vs warnings split in page-checks.ts before describing it."
+  - session: session_013zxzeP5MnAU2v4XFBZHSdY
+    date: "2026-10-30"
+    severity: minor
+    description: "Season notes I wrote overclaimed their source comments (derived durations, 'unmerged'); caught only by code-review."
+    solution: "Write notes by quoting the source comment first."
+  - session: session_013zxzeSZEedzkmmCqWvKDjC
+    date: "2026-10-30"
+    severity: minor
+    description: "Misread the 28th triage option (a), an agent-run git diff step, as a check enforced by code, and built Karen's whole reply thesis on it until the fact-checker caught it."
+    solution: "Quote an option's own sentence next to my paraphrase before drafting a thesis on it; the checker step worked as designed."

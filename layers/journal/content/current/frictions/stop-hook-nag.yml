@@ -399,3 +399,23 @@ occurrences:
     severity: nit
     description: "The Stop hook asked to push five times while the fact-check, review and gate were pending, each costing a turn."
     solution: "Have the hook stay quiet while a background agent or gate is running."
+  - session: session_013zxzeSZEedzkmmCqWvKDjC
+    date: "2026-10-30"
+    severity: nit
+    description: "The Stop hook asked to push five times while the review, fact-check and gate were pending, repeating text that cost turns and risked an early push."
+    solution: "Let the Stop hook stay quiet when a blog-post run's gate has not yet run."
+  - session: session_013zxzeQmQLYRYBUN1FkDfN6
+    date: "2026-10-30"
+    severity: nit
+    description: "Stop hook asked to push four times while the probe, reviews and gate were pending; ADR-0004 says to ignore it, so each was a wasted turn."
+    solution: "Have the Stop hook stay quiet on a branch whose gate and review have not yet run."
+  - session: session_013zxzeSRDhsoSRs2a2bGVgW
+    date: "2026-10-31"
+    severity: nit
+    description: "The Stop hook asked to push five times while the fact-check, review and gate were pending, each costing a turn."
+    solution: "The hook should stay quiet while a branch has a pending ADR-0004 review."
+  - session: session_013zxzeScPetuchKVyaP1PDZ
+    date: "2026-10-31"
+    severity: nit
+    description: "Stop hook asked for a push three times while review and gate were still pending."
+    solution: "Have the Stop hook skip the nag while a review or background gate is running."

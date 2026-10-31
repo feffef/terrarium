@@ -86,3 +86,8 @@ occurrences:
     severity: nit
     description: "Design subagent had no short path for nit picks where the right design is no change; sections 1 to 5 apply in full, and audit-skills output was 505 KB."
     solution: "Let the design brief say a pick may stop at section 2 with no change when its cause is a read-past rule, and print docReadCounts alone."
+  - session: session_013zxzePnfDGz3F3p9spej9f
+    date: "2026-10-30"
+    severity: nit
+    description: "survey-brief says to pass --out, but gives no scratchpad path; the survey agent used an unset TMPDIR and wrote a stray file at the filesystem root."
+    solution: "Tell the survey agent to pass --out under its scratch directory."

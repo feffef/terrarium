@@ -53,3 +53,18 @@ occurrences:
     severity: nit
     description: "A hook said to read ADR-0012 in full after I committed the post; I did not open it, since a standalone post has no pingback."
     solution: "Scope that hook to posts carrying reactsTo, so a standalone post is not told to read the ADR."
+  - session: session_013zxzeS5X2KXN7xVdXxNmdN
+    date: "2026-10-30"
+    severity: nit
+    description: "Edited docs covered by ADR-0029, 0009 and 0017 without reading those ADRs in full, though the post-edit hook asked; only read ADR-0027."
+    solution: "The summary rules were enough for pointer-only edits; the hook could skip ADRs the edit merely cites."
+  - session: session_013zxzeQmQLYRYBUN1FkDfN6
+    date: "2026-10-30"
+    severity: nit
+    description: "Post-edit hook asked me to read ADR-0027, 0005 and 0012 only after I had already committed the prune; none changed it."
+    solution: "Load the ADR rules for prune-trials.yml and Skills at session start of a prune-trial run."
+  - session: session_013zxzeScPetuchKVyaP1PDZ
+    date: "2026-10-31"
+    severity: nit
+    description: "The ADR-0015 full-read hint fired after my commit, not before the Inventory edits it governs."
+    solution: "Load the hint on first read of the Inventory files, as the rule says for the files it governs."

@@ -136,3 +136,18 @@ occurrences:
     severity: minor
     description: "The design repeated two retro claims I hadn't verified (hints draft wrong; frontmatter gate missing); both proved stale during implementation."
     solution: "Verify each idea's claim against main before putting it in a design, not after."
+  - session: session_013zxzeRDagsHLSNJ939gcWK
+    date: "2026-10-30"
+    severity: minor
+    description: "The triage agent's #2701 counts (19 pages, 1 because) could not be reproduced without knowing its section scope; three greps spent"
+    solution: "Have the explore schema's question cite the exact command behind each count"
+  - session: session_013zxzeScPetuchKVyaP1PDZ
+    date: "2026-10-31"
+    severity: minor
+    description: "Subagent reports carried loose claims (a commit credited with a change it only merged; 1.1M tokens attributed to one session) that I had to fix after review."
+    solution: "Brief checkers to quote the source line for every number and commit they cite."
+  - session: session_013zxzeSRDhsoSRs2a2bGVgW
+    date: "2026-10-31"
+    severity: minor
+    description: "First draft repeated session-logged claims (unchecked boxes on blog posts, a blog post resting on a misread, \"blind visitors\") without checking diffs; fact-check and review found four wrong or jargon claims."
+    solution: "Make digest.ts gather print each PR's touched files and have the brief say session outcomes are candidates, not facts."

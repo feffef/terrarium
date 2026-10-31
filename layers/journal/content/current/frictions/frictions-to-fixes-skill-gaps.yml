@@ -93,3 +93,8 @@ occurrences:
     severity: minor
     description: "The Skill's top-three regression rule ranks by severity, which picked two phantom regressions (an owner-declined case and a stale-session false alarm); I skipped them by judgement."
     solution: "Have the survey exclude regressions whose ref says closed not planned or false alarm before ranking the top three."
+  - session: session_013zxzePnfDGz3F3p9spej9f
+    date: "2026-10-30"
+    severity: minor
+    description: "frictions-to-fixes step 2 ranks regressions by highest severity since the fix, which put local-gate-green-ci-red first although the owner closed that issue not planned; the Skill has no rule for it."
+    solution: "Skip an entry whose ref records an owner decision not to fix, and list it in the PR description."

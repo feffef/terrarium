@@ -1,13 +1,15 @@
 name: glassbox-improve-run-cost
 summary: A glassbox-improve run spent many rater, researcher and writer agents and review rounds on a few small page changes.
-cause: "glassbox-improve v1 re-graded after each round (a rater found a new deficit each round, three rounds of three raters), took every structural step two raters raised (10 promotions, a new Lesson and a re-cut meant about 35 subagents, against the Skill's under-10 workflow guidance) and had the lead paste page and draft lists into each rater brief by hand. PR #2688 (v2) dropped re-grade rounds, ranks structural raises and has raters read one plan; the first-run cooling-off cost is glassbox-improve-first-run-cost. Signals: 'rounds', 'raters twice', 'about 35 subagents', 'token cost', 'under-10 guidance'."
+cause: "glassbox-improve v1 re-graded after each round, took every structural step two raters raised (about 35 subagents) and had the lead paste page and draft lists into each rater brief by hand. PR #2688 (v2) dropped re-grade rounds and ranks structural raises; PR #2711 caps a run at 3 structural steps, fills rater briefs from the tally and saves hand-backs in pairs. The first-run cooling-off cost is glassbox-improve-first-run-cost. Signals: 'rounds', 'raters twice', 'about 35 subagents', 'token cost', 'under-10 guidance', 'brief pasted by hand'."
 surface: safe
-status: tracked
-ref: "issue #2693"
+status: open
 fixes:
   - pr: 2688
     date: "2026-10-29"
     summary: "glassbox-improve v2 drops re-grade rounds and the page cap, splits pages among the three raters with a script and reports every intermediate result in the PR body."
+  - pr: 2711
+    date: "2026-10-30"
+    summary: "Caps each run at 3 structural steps by queue (waiting candidates first), fills rater briefs from the tally, and saves subagent hand-backs in pairs."
 occurrences:
   - session: session_013zxzeQ5JaiqQgggGaNSagD
     date: "2026-10-29"

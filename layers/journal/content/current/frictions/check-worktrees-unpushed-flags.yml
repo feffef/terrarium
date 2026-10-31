@@ -1,0 +1,16 @@
+name: check-worktrees-unpushed-flags
+summary: check:worktrees reported a worktree or checkout as unpushed or detached after a push or build that the Skill had not told the session to follow up.
+cause: "A worktree pushed with 'git push origin HEAD:branch' has no upstream, or the main checkout was left on a detached HEAD by a build workflow; check:worktrees fails until the session pushes the run branch or sets upstreams by hand. Signals: 'pnpm check:worktrees failed', 'reported them unpushed', 'no upstream', 'detached HEAD'."
+surface: safe
+status: open
+occurrences:
+  - session: session_013zxzeQDh7MCP7HpYBYBTeh
+    date: "2026-10-28"
+    severity: nit
+    description: "pnpm check:worktrees failed on the writer's merged worktree until I pushed the run branch, then passed; the skill does not say push first."
+    solution: "Note in glassbox-improve step 8 that check:worktrees needs the run branch pushed when a writer worktree was merged."
+  - session: session_013zxzeRDagsHLSNJ939gcWK
+    date: "2026-10-30"
+    severity: minor
+    description: "Worktrees pushed with git push origin HEAD:branch had no upstream, so check:worktrees reported them unpushed until I set upstreams by hand"
+    solution: "clear-backlog §4 could push with git push -u origin HEAD:branch, or check:worktrees could compare against origin/branch when no upstream is set"

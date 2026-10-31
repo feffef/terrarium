@@ -1,0 +1,16 @@
+name: reviewer-coverage-thin
+summary: A reviewer subagent could not read all the docs or pages it was given, so its coverage was thin and cost a resume or went unread.
+cause: "A reviewer or audit subagent is handed more files than it can read (the whole docs set, Skills, journal pages, glossaries); it reports partial coverage or has to be resumed, doubling its cost. Signals: 'covered only a fraction', 'reviewers reported thin coverage', 'had to be resumed', 'unread'."
+surface: safe
+status: open
+occurrences:
+  - session: session_013zxzeR94ZpyH5mhKXDH22Y
+    date: "2026-10-28"
+    severity: minor
+    description: "Single-home reviewer covered only a fraction of the docs and had to be resumed, doubling its cost."
+    solution: "Brief reviewers with an explicit file list and ask for coverage in the reply."
+  - session: session_013zxzeS5X2KXN7xVdXxNmdN
+    date: "2026-10-30"
+    severity: minor
+    description: "Reviewers reported thin coverage (Skills, journal pages, glossaries unread) because three agents cannot read the whole repo."
+    solution: "Split reviewers by directory as well as lens, or rotate the covered directories across runs."
