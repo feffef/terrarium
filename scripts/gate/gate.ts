@@ -9,7 +9,7 @@
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { appendFileSync, linkSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { constants, tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { flagValue, root, runIfMain } from '../lib/cli.ts'
 import { fetchOriginMain, git, isShallowRepository, unshallow } from '../lib/git.ts'
@@ -248,6 +248,27 @@ export function acquireHeavySlot(dir = SLOT_DIR, slots = HEAVY_SLOTS, pollMs = 2
   }
 }
 
+// ── Run lock (#2660) ────────────────────────────────────────────────────────
+// Two runs in one checkout race on its build output and on each other's tree
+// snapshots. The lock sits in the git dir, so each worktree has its own.
+export function runLockHolder(holder: number | null, alive: (pid: number) => boolean): number | null {
+  return holder !== null && alive(holder) ? holder : null
+}
+
+function takeRunLock(path = join(git(['rev-parse', '--absolute-git-dir'], root).trim(), 'terrarium-gate.pid')): void {
+  const holder = runLockHolder(readHolder(path), isAlive)
+  if (holder !== null) {
+    console.error(`gate:scoped: gate already running (pid ${holder}) in this checkout`)
+    process.exit(1)
+  }
+  writeFileSync(path, String(process.pid))
+  process.on('exit', () => {
+    if (readHolder(path) === process.pid) rmSync(path, { force: true })
+  })
+  // A signal skips 'exit' handlers unless it is turned into an exit.
+  for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP'] as const) process.once(sig, () => process.exit(128 + constants.signals[sig]))
+}
+
 // ── Stale-tree warning (#2434) ──────────────────────────────────────────────
 // A pass only vouches for the tree it started on; edits or commits made while
 // it ran (a parallel session, a rebase) leave it vouching for nothing.
@@ -315,6 +336,7 @@ function main(): void {
   const args = process.argv.slice(2)
   if (args.includes('--decide')) return decide(args)
   const dry = args.includes('--dry')
+  if (!dry) takeRunLock()
   if (!dry) ensureFreshDeps()
   const scope = decideScope(changedPaths(root, dry))
   const steps = planSteps(scope)
