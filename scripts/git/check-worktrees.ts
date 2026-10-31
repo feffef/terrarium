@@ -10,8 +10,8 @@
 // Usage:  tsx scripts/git/check-worktrees.ts
 //   Exits non-zero iff any LINKED (non-primary) worktree has uncommitted
 //   changes (staged, unstaged, or untracked — any `git status --porcelain`
-//   output) or unpushed commits (commits on its HEAD absent from its upstream;
-//   for a branch with no upstream, commits on no remote-tracking ref). The primary worktree's own in-progress edits are reported
+//   output) or unpushed commits (commits on its HEAD on no remote-tracking
+//   ref). The primary worktree's own in-progress edits are reported
 //   for visibility but never fail the sweep — the orchestrator manages its own
 //   tree directly. Same for a linked worktree whose HEAD is already merged
 //   into `origin/main` (issue #1169): its work has already landed, so a
@@ -51,8 +51,7 @@ export interface WorktreeState {
    *  or untracked files all count — a bare worktree has no working tree to be
    *  dirty, so this is always `false` for one). */
   dirty: boolean
-  /** Commits reachable from this worktree's HEAD absent from its remote — via
-   *  its upstream when one is configured, else absent from every
+  /** Commits reachable from this worktree's HEAD absent from every
    *  remote-tracking ref. `null` when undeterminable (e.g. no
    *  `origin/main` to compare against) — treated as "can't say," not a pass. */
   unpushedCount: number | null
@@ -186,17 +185,11 @@ function isDirty(path: string): boolean {
   return git(['status', '--porcelain'], path).trim().length > 0
 }
 
-/** Commits on this worktree's HEAD not yet on its remote. Prefers the
- *  branch's configured upstream (`@{upstream}`); with none, counts commits on
- *  no remote-tracking ref, so a local-only branch or detached HEAD already
- *  contained in a pushed branch is rescued. `null` when there is no
- *  `origin/main` to compare against. */
+/** Commits on this worktree's HEAD on no remote-tracking ref. The configured
+ *  upstream is ignored: `git worktree add -b feat <path> origin/main` sets it
+ *  to `origin/main`, so counting against it flags a commit pushed to
+ *  `origin/feat`. `null` when there is no `origin/main` to compare against. */
 export function unpushedCount(path: string): number | null {
-  const upstream = tryGit(['rev-parse', '--abbrev-ref', '@{upstream}'], path)
-  if (upstream.ok) {
-    const count = tryGit(['rev-list', '--count', `${upstream.out.trim()}..HEAD`], path)
-    return count.ok ? Number.parseInt(count.out, 10) : null
-  }
   if (!tryGit(['merge-base', 'origin/main', 'HEAD'], path).ok) return null
   const count = tryGit(['rev-list', '--count', 'HEAD', '--not', '--remotes'], path)
   return count.ok ? Number.parseInt(count.out, 10) : null
