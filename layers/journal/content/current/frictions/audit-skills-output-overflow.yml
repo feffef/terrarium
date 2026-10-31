@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The survey instructions now say to save the large skill-audit output to a file and read only one part."
 occurrences:
-  - session: session_01RnZJ7VrgWpgzfJUCEdif77
-    date: "2026-10-16"
-    severity: nit
-    description: "audit-skills.ts printed about 478 KB when run bare by the survey subagent, which had to redirect it to a file."
-    solution: "PR 2109 notes the redirect in frictions-to-fixes section 4."
   - session: session_013zxzeRnPtjPsVQM71SzX63
     date: "2026-10-29"
     severity: nit

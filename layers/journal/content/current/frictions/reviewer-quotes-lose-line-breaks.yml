@@ -14,3 +14,8 @@ occurrences:
     severity: nit
     description: "A reviewer's quote of blog-post differed in line wrapping from the file, so the scripted edit failed once and needed a re-view."
     solution: "Tell reviewers to copy quotes from the file with line breaks verbatim, or have checkers return grep-verified text."
+  - session: session_013zxzeRin6kPuaDZ27jyuUk
+    date: "2026-10-28"
+    severity: nit
+    description: "git log -S with a quoted ADR sentence found nothing because the source wraps that sentence across two lines; extra searches before I used a shorter phrase."
+    solution: "Note in git-conventions that -S needs a single-line phrase for wrapped Markdown."

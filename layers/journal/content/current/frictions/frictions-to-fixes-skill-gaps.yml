@@ -2,8 +2,8 @@ name: frictions-to-fixes-skill-gaps
 summary: "The frictions-to-fixes SKILL.md leaves recurring situations unspecified, so the run asks the owner or improvises."
 cause: "SKILL.md (not the survey or design briefs or the scripts) does not say how many regressions get issues, what to do when one already has an open issue, how to rank by severity, that a skipped cluster needs a recorded reason, how a ledger ref names a PR that does not exist yet, or that the owner's start approves the run's picks; the user is asked or the run improvises. Brief defects belong to frictions-to-fixes-briefs-mismatch, --summary date counting to ledger-summary-same-day-counting, repeated sessions to survey-appends-duplicate-sessions. Signals: \"the Skill says ... but not what to do\", \"had to ask the user how many\"."
 surface: safe
-status: open
-ref: ""
+status: tracked
+ref: "issue #2724"
 fixes:
   - pr: 2149
     date: "2026-10-16"
@@ -18,26 +18,6 @@ fixes:
     date: "2026-10-25"
     summary: "SKILL.md §2 ranks regressions in one sentence: only still-recurring entries not accepted, on-trial or tracked, by highest severity since the latest fix."
 occurrences:
-  - session: session_01Mf4dUxuWB7WtkC5fVzByH6
-    date: "2026-10-16"
-    severity: minor
-    description: "The Skill says every regression gets an issue; 13 clusters regressed, so I had to ask the user how many to file."
-    solution: "Cap regression issues per run (now PR 2149)."
-  - session: session_018sAirSgDY1Nv82JVogjcyR
-    date: "2026-10-16"
-    severity: minor
-    description: "The Skill says the top three regressions get distinct issues but not what to do when each already has an open issue from an earlier run; I judged it covered and filed none."
-    solution: "State in section 2 that a regression with an open issue needs none."
-  - session: session_01XUuxhnMc7t2zXaH9ebtxKZ
-    date: "2026-10-16"
-    severity: nit
-    description: "Ledger refs for the three tracked entries could not name this run's PR, because it did not exist when the ledger was edited."
-    solution: "Let a ledger ref hold a branch name now, and have the next run record the PR number in fixes, as the Skill already says."
-  - session: session_018pjaBqTXahmE3DFhAbkide
-    date: "2026-10-16"
-    severity: minor
-    description: "frictions-to-fixes runs left an 11-occurrence cluster open with no recorded reason, so the owner had to ask why."
-    solution: "Have the ledger PR description name each high-occurrence open cluster it skipped and why."
   - session: session_014tr6vJyNXmekdFQtYrEVWT
     date: "2026-10-21"
     severity: nit
@@ -93,3 +73,8 @@ occurrences:
     severity: minor
     description: "The Skill's top-three regression rule ranks by severity, which picked two phantom regressions (an owner-declined case and a stale-session false alarm); I skipped them by judgement."
     solution: "Have the survey exclude regressions whose ref says closed not planned or false alarm before ranking the top three."
+  - session: session_013zxzePnfDGz3F3p9spej9f
+    date: "2026-10-30"
+    severity: minor
+    description: "frictions-to-fixes step 2 ranks regressions by highest severity since the fix, which put local-gate-green-ci-red first although the owner closed that issue not planned; the Skill has no rule for it."
+    solution: "Skip an entry whose ref records an owner decision not to fix, and list it in the PR description."

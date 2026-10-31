@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-21"
     summary: "Added list-recent-prs.ts --since, listing every PR merged in the window by number, title and merge time, and blog-post step 2 names it so a run reads only the bodies of the stories it picks."
 occurrences:
-  - session: session_01N9bwDKW51kMS6WJvK2nfSU
-    date: "2026-10-16"
-    severity: minor
-    description: "search_pull_requests asking for body returned about eight full PR bodies (visitor-loop tallies), flooding context before I read the overflow advice."
-    solution: "Use scripts/recent-prs.ts or list_pull_requests with fields that omit body for the last blog PRs, as the blog-post step could say."
   - session: session_01RZ2pN3CEsoJyKxUWC2RFW5
     date: "2026-10-20"
     severity: minor

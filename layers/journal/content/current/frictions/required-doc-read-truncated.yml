@@ -39,16 +39,6 @@ occurrences:
     severity: nit
     description: "Read docs/agents/github-integration.md with head -80 instead of in full, against CLAUDE.md's read-first-in-full rule, before the first GitHub write."
     solution: "Read the trigger docs whole; a short doc costs little."
-  - session: session_0166zWrnaKYByq5Z2Qj5nXRM
-    date: "2026-10-16"
-    severity: nit
-    description: "Read GLOSSARY.md, docs and skills with cat/head in Bash, not the Read tool as CLAUDE.md asks; GLOSSARY.md was read only partly"
-    solution: "Use the Read tool for instruction docs; the auto-mode note that permits cat overrides it in practice"
-  - session: session_015vXkKcdLwYRQqKKVJ8BLJJ
-    date: "2026-10-16"
-    severity: nit
-    description: "Read files with cat/sed/head through Bash instead of the Read tool (CLAUDE.md), including a head -300 that cut guards.md short"
-    solution: "Use Read for docs; bash-rules-hint loaded the rules anyway"
   - session: session_0148agurVWH8QQeSkGCDm23e
     date: "2026-10-18"
     severity: nit

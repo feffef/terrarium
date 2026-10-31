@@ -16,26 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "digest step 3 says to read ADR-0010 in full before saving the first Digest (partial)."
 occurrences:
-  - session: session_017xginqTj2NjZ8XgrbRqvkm
-    date: "2026-10-16"
-    severity: nit
-    description: "Edited ADR-0009 text after reading only its rejected-alternatives section, not the full ADR the summary rule asks for; a checker did read it in full."
-    solution: "Read the whole ADR before editing it."
-  - session: session_01Fay2GiWTwxDKnnqS9DznHk
-    date: "2026-10-16"
-    severity: nit
-    description: "Did not open the full ADRs whose summary rules loaded (0004, 0005, 0021, 0029, 0030) though each says to when relevant."
-    solution: "The summaries sufficed for this content task; the rule wording could say which tasks need the full ADR."
-  - session: session_01XxPqcyjVxcgmHTidWtoF1g
-    date: "2026-10-16"
-    severity: minor
-    description: "Skipped reading the full ADRs behind the 0003, 0004, 0009, 0017 and 0027 rule summaries; relied on summaries and pr-workflow.md."
-    solution: "None needed; the summaries were enough, no harm came of it."
-  - session: session_018sAirSgDY1Nv82JVogjcyR
-    date: "2026-10-16"
-    severity: nit
-    description: "I did not open ADR-0004's full text before pushing, although its rule says to; I relied on pr-workflow.md, which carries the same steps."
-    solution: "Let the ADR-0004 summary rule say pr-workflow.md suffices for pushing."
   - session: session_011hiFhM9A2Sbn4mGYbdtAhJ
     date: "2026-10-23"
     severity: nit

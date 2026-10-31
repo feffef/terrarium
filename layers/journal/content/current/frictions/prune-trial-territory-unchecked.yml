@@ -31,3 +31,13 @@ occurrences:
     severity: minor
     description: "I chose pick (d) for #2654 without checking .agents/prune-trials.yml; an open trial keeps exactly that text, so the owner must be asked again"
     solution: "Before proposing a pick that edits an instruction, check prune-trials.yml territory (issue-tracker.md supersession check)"
+  - session: session_013zxzeQmVnqMqDkRgFRWx5T
+    date: "2026-10-28"
+    severity: minor
+    description: "The design subagent reported that survey-brief.md is not under an open Prune Trial; prune-trials.yml lists it as territory. I caught it by grepping before dispatching, so no harm."
+    solution: "The design brief should tell the agent to quote the matching territory path for every doc it would change, as the survey brief does."
+  - session: session_013zxzeS5X2KXN7xVdXxNmdN
+    date: "2026-10-30"
+    severity: minor
+    description: "Did not check .agents/prune-trials.yml territory before dispatching reviewers; the checker had to catch the environment-caveats finding as trial-covered."
+    solution: "Tell the audit-docs reviewers the trial territory paths directly, not just 'skip text covered by an open trial'."

@@ -14,51 +14,6 @@ fixes:
     date: "2026-10-05"
     summary: "Moved the end-of-turn reminder caveat into the main project instructions so more sessions read it."
 occurrences:
-  - session: session_01RnZJ7VrgWpgzfJUCEdif77
-    date: "2026-10-16"
-    severity: nit
-    description: "Stop hook asked to push three times while branches awaited review; each time I had to hold per ADR-0004, costing turns."
-    solution: "Harness-side hook, already tracked as stop-hook-nag."
-  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
-    date: "2026-10-16"
-    severity: nit
-    description: "The Stop hook asked to push a half-built branch; I committed locally and held the push for the gate and review, as ADR-0004 says."
-    solution: "Let the hook skip a branch whose gate has not run, or say so in its message."
-  - session: session_01N9bwDKW51kMS6WJvK2nfSU
-    date: "2026-10-16"
-    severity: nit
-    description: "The Stop hook asked me to push before the gate had finished; I held the push as ADR-0004 says."
-    solution: "Let the hook skip a branch whose gate has not run, or say so in its message."
-  - session: session_01Mf4dUxuWB7WtkC5fVzByH6
-    date: "2026-10-16"
-    severity: nit
-    description: "The Stop hook asked to push unpushed commits twice before the ADR-0004 gate and code-review were done."
-    solution: "None needed; the rule said to wait, and I did."
-  - session: session_01XxPqcyjVxcgmHTidWtoF1g
-    date: "2026-10-16"
-    severity: nit
-    description: "Stop hook asked me to commit and push while the gate and code-review were still pending; ADR-0004 says finish them first."
-    solution: "Let the Stop hook skip the nag while a background gate is running."
-  - session: session_01CzkKVxSTE7a4amfXnxrvF9
-    date: "2026-10-16"
-    severity: nit
-    description: "The Stop hook asked to push four times while gate:scoped and code-review were still running; each needed a reply"
-    solution: "Let the hook stay quiet while a background gate or review runs"
-  - session: session_0186ZdoCGUVDeZj95qNZAjiv
-    date: "2026-10-16"
-    severity: nit
-    description: "Stop hook asked to commit and push four times while subagents were mid-rewrite, conflicting with ADR-0004 gate and review before first push."
-    solution: "Have the hook skip when background subagents are running."
-  - session: session_017KwEjDERgWLRvZYsewWp4Q
-    date: "2026-10-16"
-    severity: nit
-    description: "The Stop hook asked to push my own ungated doc commit while the user had asked me to wait."
-    solution: "Known harness-side stop-hook-nag; held the push until gate and review passed."
-  - session: session_018sAirSgDY1Nv82JVogjcyR
-    date: "2026-10-16"
-    severity: nit
-    description: "The Stop hook asked me to push the unpushed survey commit before the gate and review ADR-0004 requires; I declined."
-    solution: "Have the hook skip the nag while a frictions-to-fixes ledger branch awaits its gate."
   - session: session_01CtktRkpbF4wQ3TTQVYUqLz
     date: "2026-10-17"
     severity: minor
@@ -399,3 +354,23 @@ occurrences:
     severity: nit
     description: "The Stop hook asked to push five times while the fact-check, review and gate were pending, each costing a turn."
     solution: "Have the hook stay quiet while a background agent or gate is running."
+  - session: session_013zxzeSZEedzkmmCqWvKDjC
+    date: "2026-10-30"
+    severity: nit
+    description: "The Stop hook asked to push five times while the review, fact-check and gate were pending, repeating text that cost turns and risked an early push."
+    solution: "Let the Stop hook stay quiet when a blog-post run's gate has not yet run."
+  - session: session_013zxzeQmQLYRYBUN1FkDfN6
+    date: "2026-10-30"
+    severity: nit
+    description: "Stop hook asked to push four times while the probe, reviews and gate were pending; ADR-0004 says to ignore it, so each was a wasted turn."
+    solution: "Have the Stop hook stay quiet on a branch whose gate and review have not yet run."
+  - session: session_013zxzeSRDhsoSRs2a2bGVgW
+    date: "2026-10-31"
+    severity: nit
+    description: "The Stop hook asked to push five times while the fact-check, review and gate were pending, each costing a turn."
+    solution: "The hook should stay quiet while a branch has a pending ADR-0004 review."
+  - session: session_013zxzeScPetuchKVyaP1PDZ
+    date: "2026-10-31"
+    severity: nit
+    description: "Stop hook asked for a push three times while review and gate were still pending."
+    solution: "Have the Stop hook skip the nag while a review or background gate is running."

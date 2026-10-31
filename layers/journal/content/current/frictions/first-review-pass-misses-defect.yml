@@ -21,3 +21,8 @@ occurrences:
     severity: minor
     description: "A first-round Zod fix ('type and schema overlap on one rule') was false and passed code-review; only the last re-grade caught it"
     solution: "Have the review's Spec agent re-check every sentence a fix round rewrote against its source, not only the targeted deficit"
+  - session: session_013zxzeQ8EBq9v7NXqWmAFRF
+    date: "2026-10-27"
+    severity: minor
+    description: "The Skill took three review rounds after the Fable pass (Standards+Spec, then two follow-ups), each finding real gaps in how an unattended run ends (refusing writers, empty runs, dropped false claims)."
+    solution: "For an unattended Skill, write each step's failure exits (refuse, empty, stall) before review, not after."

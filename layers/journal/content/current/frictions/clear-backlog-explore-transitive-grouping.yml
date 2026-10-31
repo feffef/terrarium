@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "Replaced union-find grouping with a greedy pass: an issue joins a group only if it directly overlaps every member."
 occurrences:
-  - session: session_01VPNHf6qDdJPXX23GghKs74
-    date: "2026-10-16"
-    severity: nit
-    description: "Explore's proposed grouping bundled #2112/#2113 with the Glass Box issues though they share no file with them"
-    solution: "Have the explore grouping union only issues that share a file, not chain through unrelated shared files"
   - session: session_013QKXoGLaEHEJanyw5TrPqj
     date: "2026-10-25"
     severity: minor

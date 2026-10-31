@@ -8,11 +8,6 @@ fixes:
     date: "2026-10-17"
     summary: "log-session worktree refusal now says to cd back when the directory only drifted into an agent worktree."
 occurrences:
-  - session: session_018sAirSgDY1Nv82JVogjcyR
-    date: "2026-10-16"
-    severity: minor
-    description: "The primary working directory switched to the impl agent's worktree and back mid-run, while log-session refuses to author from a linked worktree; I had to track where each command ran."
-    solution: "Have dispatch-subagents tell the orchestrator to use absolute paths and re-check pwd after a worktree agent returns."
   - session: session_01E3XmTJcpKMZstW7MHL2eks
     date: "2026-10-23"
     severity: nit

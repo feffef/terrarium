@@ -25,3 +25,8 @@ occurrences:
     severity: nit
     description: "A git commit passed both -m and -F and failed, so the closing PR's gate ran on the uncommitted tree; the tree was identical to the commit, but it cost a check."
     solution: "Commit before starting the gate, and check the commit landed before the gate step."
+  - session: session_013zxzeSRDhsoSRs2a2bGVgW
+    date: "2026-10-31"
+    severity: nit
+    description: "A chained Python edit failed on an assertion but the following git add and commit still ran, committing the unedited Digest; I amended afterward."
+    solution: "Never put a commit after a step that can fail in the same call; check exit status first, as git-conventions already says."

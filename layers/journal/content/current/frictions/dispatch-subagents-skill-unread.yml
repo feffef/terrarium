@@ -16,11 +16,6 @@ fixes:
     date: "2026-10-25"
     summary: "A guard blocks the first subagent dispatch until the dispatch-subagents Skill is read."
 occurrences:
-  - session: 1c810a28-81d4-417d-ac20-af374c985683
-    date: "2026-10-16"
-    severity: nit
-    description: "Dispatched two review subagents that ran read-only git diff in a worktree without loading dispatch-subagents first"
-    solution: "Load dispatch-subagents whenever a brief names a worktree, even for read-only git"
   - session: session_01Pc15CVrLGyHXgoygsRHLbB
     date: "2026-10-19"
     severity: nit

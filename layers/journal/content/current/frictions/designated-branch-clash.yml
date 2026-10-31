@@ -9,11 +9,6 @@ notes: |-
   2026-10-20 design: a repo doc granting pushes to other branches dropped: the harness pins one pushable branch and a repo doc cannot grant that; issue-tracker.md already says to flag it upfront and ask.
 fixes: []
 occurrences:
-  - session: 1c810a28-81d4-417d-ac20-af374c985683
-    date: "2026-10-16"
-    severity: nit
-    description: "Cut a new branch in a worktree instead of staying on the session's start branch claude/2174-local-workflow-edits"
-    solution: "Justified: the user asked for a worktree and the start branch was unrelated work; CLAUDE.md could name the worktree case"
   - session: session_013QKXoGLaEHEJanyw5TrPqj
     date: "2026-10-25"
     severity: minor

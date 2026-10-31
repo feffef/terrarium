@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-25"
     summary: "Added a general 'Question the premise' bullet to CLAUDE.md's Working conventions, in the wording the owner approved."
 occurrences:
-  - session: session_01CzkKVxSTE7a4amfXnxrvF9
-    date: "2026-10-16"
-    severity: minor
-    description: "Added two CLAUDE.md lines for the 0020/0027 split that the owner had not asked for; the owner interrupted and I reverted them"
-    solution: "When a split implies a CLAUDE.md change, ask before editing CLAUDE.md, since it loads in every session"
   - session: session_012f7o6FcYxq1MWxvsdgKS6m
     date: "2026-10-20"
     severity: moderate

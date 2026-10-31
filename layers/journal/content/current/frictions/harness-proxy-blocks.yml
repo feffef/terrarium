@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-28"
     summary: "Glass Box EVERY-PAGE.md falls back to fetching raw.githubusercontent.com/github/docs when docs.github.com is blocked, instead of sparse-cloning github/docs."
 occurrences:
-  - session: session_01NFv67izdzVGrFHb2EVwZJ2
-    date: "2026-10-16"
-    severity: minor
-    description: "nitro.build, v2.nitro.build and nuxt.com were unreachable (DNS fail via WebFetch, curl 000), so docs URLs could not be fetched directly"
-    solution: "EVERY-PAGE.md's fallback worked: sparse clone of nitrojs/nitro v2 docs, npm pack @nuxt/docs, web search for exact URLs"
   - session: session_01CtktRkpbF4wQ3TTQVYUqLz
     date: "2026-10-17"
     severity: nit

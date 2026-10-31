@@ -2,11 +2,16 @@ name: close-session-bypassed-by-hand-log
 summary: >-
   An agent wrote or updated its session log by hand instead of running the closing Skill, so the Skill's steps were skipped and the user could have to ask for a proper close.
 cause: >-
-  A session that has the close-session or log-session text in context authors the log directly instead of invoking the Skill, skipping its steps such as the rule re-read. log-session refuses only a completed log after a merge (PR #2536), so a log written by hand at a PR open or a first merge still gets through; a refused completed log belongs in log-session-refuses-hand-closed-log. Signals: HUMAN-PROMPTED-CLOSURE, 'authored the log directly', 'updated the log with log-session directly', 'having edited a Skill is not having run it'.
+  A session that has the close-session or log-session text in context authors the log directly instead of invoking the Skill, skipping its steps such as the rule re-read. log-session refuses only a completed log after a merge (PR #2536); since PR #2707 its text no longer invites a direct call and log-session.ts --pending lists awaiting verdicts. A log written by hand at a PR open or a first merge can still get through; a refused completed log belongs in log-session-refuses-hand-closed-log. Signals: HUMAN-PROMPTED-CLOSURE, 'authored the log directly', 'updated the log with log-session directly', 'having edited a Skill is not having run it'.
 surface: safe
 status: open
 ref: "issue #2521 closed by PR #2536"
-fixes: [ { pr: 2452, date: "2026-10-23", summary: "log-session --author now warns when a completed log follows a merge with no close-session call." }, { pr: 2536, date: "2026-10-25", summary: "log-session --author now refuses a completed log after a merge with no close-session call, and writes no scratch." } ]
+fixes:
+  - { pr: 2452, date: "2026-10-23", summary: "log-session --author now warns when a completed log follows a merge with no close-session call." }
+  - { pr: 2536, date: "2026-10-25", summary: "log-session --author now refuses a completed log after a merge with no close-session call, and writes no scratch." }
+  - pr: 2707
+    date: "2026-10-30"
+    summary: "Removes log-session's invitation to be called directly (close-session is the sole entry) and adds log-session.ts --pending, which reports rules and docs awaiting a verdict before the first --author pass."
 occurrences:
   - session: session_01EjH3TbrydEY2sArBMYE5Gy
     date: "2026-10-22"

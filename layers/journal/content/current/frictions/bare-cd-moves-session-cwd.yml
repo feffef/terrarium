@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-25"
     summary: "dispatch-subagents §3 and clear-backlog-build.js now say run git as git -C <worktree-root>, never cd: the Bash tool keeps its cwd and parallel calls share it."
 occurrences:
-  - session: session_01CzkKVxSTE7a4amfXnxrvF9
-    date: "2026-10-16"
-    severity: nit
-    description: "cd'd into the probe's worktree to check it, which moved the session's working directory there; removing the worktree then left the shell in a deleted directory"
-    solution: "Inspect a subagent worktree with git -C <path>, never cd, as dispatch-subagents section 5 hints"
   - session: session_01J4ze3DvsZhXeP78iyRnbSd
     date: "2026-10-17"
     severity: nit

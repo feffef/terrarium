@@ -20,11 +20,6 @@ fixes:
     date: "2026-10-25"
     summary: "Cut the Verify-before-you-state family to one plain home in CLAUDE.md and dropped its restatements in four Skills and the build reviewer."
 occurrences:
-  - session: session_01Mf4dUxuWB7WtkC5fVzByH6
-    date: "2026-10-16"
-    severity: minor
-    description: "Quoted survey regression counts (28, 20, 10) in three issues before the ledger patch was applied; the schema-deduped counts were 26, 19, 6, so issues needed correction comments."
-    solution: "File regression issues after the ledger edit is applied, or have the Skill say to quote counts from --summary run on the patched ledger."
   - session: session_016zEtXv32CmX793LgZvt7Hm
     date: "2026-10-20"
     severity: nit

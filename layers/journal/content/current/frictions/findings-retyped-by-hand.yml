@@ -26,16 +26,6 @@ fixes:
     date: "2026-10-25"
     summary: "audit-docs saves each reviewer reply to its own file in a pool folder, since save-handback.ts overwrites its output file."
 occurrences:
-  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
-    date: "2026-10-16"
-    severity: minor
-    description: "Subagents could not write result files, so I retyped three large JSON hand-backs into scratch files to merge them; slow and error-prone."
-    solution: "Have a brief ask for the result in a fixed schema and let a script ingest a subagent's final message, or allow subagents scratch writes."
-  - session: session_01XxPqcyjVxcgmHTidWtoF1g
-    date: "2026-10-16"
-    severity: moderate
-    description: "audit-docs says pool findings by copying files, but subagents cannot Write report files; two reviewers first claimed files they never wrote."
-    solution: "State in audit-docs that reviewers and checkers return findings as text and the pool is built from their replies."
   - session: session_01PHx8z77pGDJT7vmfA7P6Sw
     date: "2026-10-17"
     severity: minor

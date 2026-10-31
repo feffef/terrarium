@@ -19,11 +19,6 @@ fixes:
     date: "2026-10-26"
     summary: "print-ledger-occurrence --append now names every session already in the entry or repeated in the call."
 occurrences:
-  - session: session_01Mf4dUxuWB7WtkC5fVzByH6
-    date: "2026-10-16"
-    severity: moderate
-    description: "The survey subagent's ledger patch listed sessions twice in clusters, failing validate-content; the impl agent dropped 23 occurrences and one distinct description was lost."
-    solution: "Have the survey brief require the patch to pass validate:content, merging repeat sessions into one occurrence."
   - session: session_01J4ze3DvsZhXeP78iyRnbSd
     date: "2026-10-17"
     severity: minor

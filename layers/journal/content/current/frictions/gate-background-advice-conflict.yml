@@ -25,3 +25,8 @@ occurrences:
     severity: minor
     description: "CLAUDE.md says run gate:scoped in the background with a log, while dispatch-subagents says run it in the foreground because a guard denies backgrounding; I used background for my own gate and it worked."
     solution: "Make the two agree: say which applies to the primary session and which to subagents."
+  - session: session_013zxzePnfDGz3F3p9spej9f
+    date: "2026-10-30"
+    severity: minor
+    description: "impl-brief step 2 and CLAUDE.md say to run the gate in the background, but the subagent hook blocks that for dispatched agents; the agent ran it foreground."
+    solution: "Say in impl-brief step 2 that a dispatched agent runs the gate in the foreground."

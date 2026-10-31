@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-10"
     summary: "Added a hint that explains a push rejected as stale info after its PR merged."
 occurrences:
-  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
-    date: "2026-10-16"
-    severity: nit
-    description: "git push --force-with-lease was rejected as stale info after the earlier PR merged and its remote branch was deleted."
-    solution: "pr-workflow.md says to push plainly on a restarted branch; point the restart recipe at git remote prune first."
   - session: session_01XTdRbnDg1n2j2ZqjTrwCLi
     date: "2026-10-19"
     severity: nit

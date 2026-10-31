@@ -9,11 +9,6 @@ fixes: []
 notes: |-
   2026-10-23 design: a subscribe-after-create sentence or guard dropped: the only home is ADR-0003 (Human-only, an ADR summary cannot add to its ADR) or a guard that cannot tell a guess from a real number, and a wrong guess costs one resubscribe.
 occurrences:
-  - session: session_013RCsUF234qAGu3CJr3v2on
-    date: "2026-10-16"
-    severity: nit
-    description: "Subscribed to PR #2188 by guessing the next number before create_pull_request returned #2189; had to unsubscribe and resubscribe."
-    solution: "Read the PR number from the create result before subscribing; never predict ids."
   - session: session_01CtktRkpbF4wQ3TTQVYUqLz
     date: "2026-10-17"
     severity: nit

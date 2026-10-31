@@ -9,11 +9,6 @@ fixes:
     date: "2026-10-18"
     summary: "owner-corrections.ts --check now credits every issue or URL named on one dismissal line, so one tally line can dismiss several candidates."
 occurrences:
-  - session: session_01RKUs8JUM5uASMfiE3hvXRA
-    date: "2026-10-16"
-    severity: minor
-    description: "owner-corrections.ts listed 16 candidates; 13 came from file overlap with unrelated Journal Friction Ledger PRs, and each needed its own tally line."
-    solution: "Skip overlap candidates whose title and body never name a visitor-loop PR."
   - session: session_0195CYW3YBg2stBS6aGigmbp
     date: "2026-10-22"
     severity: minor

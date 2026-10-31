@@ -16,11 +16,6 @@ fixes:
     date: "2026-10-28"
     summary: "prune-friction-ledger --summary and --candidates write output over a size threshold to a file under TMPDIR and print one notice line; --out PATH always writes to that path."
 occurrences:
-  - session: session_01RfmdPFPhtKo6h6GFwxLeRb
-    date: "2026-10-16"
-    severity: minor
-    description: "session-frictions output was a 670KB JSON file; finding blog-post hits needed an ad-hoc node filter script."
-    solution: "Give the helper a --grep option for keywords."
   - session: session_0135hcUf12mVM8dEZfDRAkUb
     date: "2026-10-18"
     severity: nit

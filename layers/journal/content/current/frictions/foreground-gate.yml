@@ -32,3 +32,8 @@ occurrences:
     severity: minor
     description: "Broke CLAUDE.md's Self-verification rule: started one gate:scoped with shell & instead of run_in_background, and ran the next in the foreground with a 600s timeout"
     solution: "Start every gate:scoped with run_in_background true and output redirected to a file, as CLAUDE.md says"
+  - session: session_013zxzeP5MnAU2v4XFBZHSdY
+    date: "2026-10-30"
+    severity: minor
+    description: "Foreground merge-pr.ts hit the 600s tool limit while polling a slow CI gate; I had to relaunch it in the background."
+    solution: "Run merge-pr.ts with run_in_background from the start, as CLAUDE.md says for long commands."

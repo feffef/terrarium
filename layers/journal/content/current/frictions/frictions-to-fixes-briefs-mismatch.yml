@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, search guidance that contradicts github-integration.md, no named way to find merged PRs missing from the ledger, an impossible "read every full log" ask, no owner/repo slug. Signals: a survey or design subagent reporting the brief "says ... but", a glob matching nothing, work done by hand that the brief should have pointed to.
 surface: safe
-status: open
+status: tracked
+ref: "issue #2725"
 notes: |-
   2026-10-30 survey: the Prune Trial of PR #2539 was judged and deleted by PR #2681; status reset to open.
 fixes:
@@ -86,3 +87,8 @@ occurrences:
     severity: nit
     description: "Design subagent had no short path for nit picks where the right design is no change; sections 1 to 5 apply in full, and audit-skills output was 505 KB."
     solution: "Let the design brief say a pick may stop at section 2 with no change when its cause is a read-past rule, and print docReadCounts alone."
+  - session: session_013zxzePnfDGz3F3p9spej9f
+    date: "2026-10-30"
+    severity: nit
+    description: "survey-brief says to pass --out, but gives no scratchpad path; the survey agent used an unset TMPDIR and wrote a stray file at the filesystem root."
+    solution: "Tell the survey agent to pass --out under its scratch directory."

@@ -16,36 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "adr-read-hint also points at the ADRs a Bash git commit touches."
 occurrences:
-  - session: session_01AaqTUSRhRmRpBxM8E4QSPR
-    date: "2026-10-16"
-    severity: minor
-    description: "Did not grep docs/adr for ADRs binding Excerpt.vue before changing it"
-    solution: "Run grep -l Excerpt docs/adr/* before editing, as CLAUDE.md asks"
-  - session: session_018pjaBqTXahmE3DFhAbkide
-    date: "2026-10-16"
-    severity: minor
-    description: "Recommended fixes without first grepping docs/adr for the guard and gate, as CLAUDE.md asks before a recommendation."
-    solution: "Run grep -l on the paths in docs/adr before proposing a change."
-  - session: session_01WynjtDHvk8MajTsgr59Ckt
-    date: "2026-10-16"
-    severity: minor
-    description: "Recommended placement in chat before reading the ADRs my grep found (0025, 0028), against CLAUDE.md's plan-or-recommend rule"
-    solution: "Nothing contradicted it later, but reading ADR-0025 first would have surfaced the Catalog question myself instead of in round two"
-  - session: session_017KwEjDERgWLRvZYsewWp4Q
-    date: "2026-10-16"
-    severity: nit
-    description: "Recommended a fix in chat without first grepping docs/adr for ADRs that bind git-conventions.md, as CLAUDE.md asks before recommending a change."
-    solution: "Run grep -l on the target path before the first recommendation; ADR-0004 and ADR-0003 turned out to be the relevant ones and were already loaded."
-  - session: session_01JuCbPDE6DkKs6mTCFAKQNr
-    date: "2026-10-16"
-    severity: nit
-    description: "Recommended placement options without first grepping docs/adr for the Glass Box landing, as CLAUDE.md asks before recommending a change."
-    solution: "Run grep -l glassbox docs/adr/* before offering design options."
-  - session: session_01CzkKVxSTE7a4amfXnxrvF9
-    date: "2026-10-16"
-    severity: minor
-    description: "Offered a prune trial as option 3 before reading ADR-0027, which forbids trials on summary rules; broke CLAUDE.md's grep-and-read-before-recommending step"
-    solution: "Grep docs/adr for the mechanism named in each option before offering it; I corrected it one turn later"
   - session: session_01JygBaHorymh1xgVBsaTh3E
     date: "2026-10-17"
     severity: minor
