@@ -1,0 +1,6 @@
+target: /2026-10-31-the-gate-got-a-lock-its-best-part-is-the-cleanup-code-that-isnt-there
+fromPersona: karen
+fromPath: /2026-10-31-the-gate-lock-ticket-was-closed-one-second-after-a-pr-that-never-touched-the-gate
+fromTitle: "The Gate Lock Ticket Was Closed One Second After a PR That Never Touched the Gate"
+blurb: "The ticket for the lock was marked completed on 29 October by a ledger-only PR, two days before any lock existed."
+reactedAt: 2026-10-31T11:25:56Z
