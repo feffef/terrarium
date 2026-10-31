@@ -14,23 +14,21 @@ branch's first push: check that no PR exists for it, commit, run the
 [`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on the
 committed diff against `origin/main` in the checkout that holds it, fix the
 findings, then run `pnpm gate:scoped` last on the final head and edit nothing
-until it ends, even when the Stop hook asks you to push. A session-log commit
-needs none, nor does a Skill whose own steps review the diff before the push
+until it ends, even when the Stop hook asks you to push. Exempt: a session-log
+commit, and a Skill whose own steps review the diff before the push
 (`midden-catalogue` §4).
 
-**A simple change** gets your own read of its full diff instead of `code-review`.
-Count; don't judge by how plain it looks. It is simple when it is a typo,
-rewrap, broken link or path, or a rule's `adr:` hash or token-estimate restamp,
-or when it changes at most 10 lines in at most 2 files. In every case it adds,
-renames or moves no file, changes no code logic, hook, workflow script, Skill's
-or rule's frontmatter (bar that hash), and no meaning of a Skill, rule, ADR or
-agent doc.
-The same test applies to a follow-up commit after a review; a larger follow-up
-gets `code-review` on its own diff, not the whole branch.
+**A simple change** gets your own read of its full diff instead. Count; don't
+judge by how plain it looks. Simple means a typo, rewrap, broken link or path,
+an `adr:` hash or token-estimate restamp, or at most 10 lines in at most 2
+files; and in every case no file added, renamed or moved, and no change to code
+logic, hooks, workflow scripts, Skill or rule frontmatter (bar that hash), or
+the meaning of a Skill, rule, ADR or agent doc. A follow-up commit after a
+review takes the same test; a larger one gets `code-review` on its own diff.
 
 A later push that changes only prose or docs may skip `gate:scoped` and rely on
-CI's gate; run it first for any other change. If `gate:scoped` passed but CI
-failed, check for base drift, then log a `major` Friction.
+CI's gate; run it first for any other change. If `gate:scoped` passed but CI failed, check for base drift, then log
+a `major` Friction.
 
 ## Assembling several stories into one integration PR
 
@@ -41,8 +39,8 @@ re-review each story or repeat its findings.
 
 ## The recipe
 
-1. Run `pnpm gate:scoped` and wait (skip rule: "Review before the first push").
-   A red gate never merges.
+1. Run `pnpm gate:scoped` and wait, unless the push rules above let you skip
+   it. A red gate never merges.
 2. Run `pnpm exec tsx scripts/github/check-conflicting-issues.ts --pr <number>`.
    It is advisory: a hit means read that issue (#798), not that there is a
    conflict.
@@ -55,12 +53,10 @@ re-review each story or repeat its findings.
 4. Before merging, post your verdict as a PR comment, even a clean "merging
    as-is": the merge must never be the only trace. End it with a line
    `Reviewed: <sha>`, the SHA pasted from `git rev-parse HEAD` in the
-   checkout that holds the head that your `code-review` run (or your
-   Skill's own review step, or your self-read of a simple change) covered;
-   after any later push, review the new commits (per the follow-up rule above)
-   and post a new verdict. Use `event=COMMENT` or `add_issue_comment`, never
-   an APPROVE review: it fails on our own PRs, and on a fork PR it would fake
-   the human merge authority
+   checkout that holds the head your review covered; after any later push,
+   review the new commits and post a new verdict. Use `event=COMMENT` or
+   `add_issue_comment`, never an APPROVE review: on a fork PR it would fake the
+   human merge authority
    [`guest-contributions.md`](./guest-contributions.md) reserves.
 5. Land through `scripts/github/merge-pr.ts <pr-number>`, the only merge path; never
    call `enable_pr_auto_merge`. The script refuses what it can see (ADR-0004, ADR-0020, ADR-0023): a
@@ -102,8 +98,8 @@ many per run) close with these steps once their work is staged. Each SKILL.md
 adds only its delta: what its diff is limited to, and what to do when something
 outside that scope rides in.
 
-1. Commit, review ("Review before the first push"), then run `pnpm gate:scoped`
-   on the final head. Done when it's green.
+1. Commit, then follow "Review before the first push". Done when
+   `pnpm gate:scoped` is green on the final head.
 2. Push with retry and open **one gated PR** scoped to the Skill's own diff
    (more only if its SKILL.md says so).
 3. Subscribe on open and land via this doc's recipe once green.
