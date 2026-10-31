@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeScPetuchKVyaP1PDZ
 startedAt: 2026-10-31T00:46:04Z
-endedAt: 2026-10-31T00:58:46Z
+endedAt: 2026-10-31T01:02:23Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: Inventory notes and Routine costs in PR 2722 (awaiting CI); one issue filed
-summary: "Scheduled audit-skills run (7-day window), fully agent-initiated by the schedule; no human instruction. One subagent fetched Routine run usage and 14 Sonnet subagents checked each Skill. Closure signals cleared: both orphan candidates carry resolvedBy, orphanScan scanned 1790 merged PRs (1633 with a session), no human-prompted or rescued closures. Verified one repeated silent failure (dispatch-subagents step 5 check:worktrees absent from three session logs, also noted on 10-26) and filed it as #2721. Other findings (#2472 and #2370 recurrences, inspect-session cursor gap, unverified items) went into observations on 11 Skill entries; no grade or role changed. Two subagent claims were loosely worded and I reworded them after the Standards and Spec review. Gate green; PR 2722 opened and subscribed."
+status: completed
+outcome: Inventory notes and Routine costs merged in PR 2722; issue 2721 filed
+summary: "Scheduled audit-skills run (7-day window), fully agent-initiated by the schedule; no human instruction. One subagent fetched Routine run usage and 14 Sonnet subagents checked each Skill. Closure signals cleared: both orphan candidates carry resolvedBy, orphanScan scanned 1790 merged PRs (1633 with a session), no human-prompted or rescued closures. Verified one repeated silent failure (dispatch-subagents step 5 check:worktrees absent from three session logs, also noted on 10-26) and filed it as #2721. Other findings (#2472 and #2370 recurrences, inspect-session cursor gap, unverified items) went into observations on 11 Skill entries; no grade or role changed. Two subagent claims were loosely worded and I reworded them after the Standards and Spec review. Gate green; PR 2722 merged after green CI."
 prs:
   - "2722"
 docsRead:
@@ -80,18 +80,21 @@ frictions:
   - description: The ADR-0015 full-read hint fired after my commit, not before the Inventory edits it governs.
     solution: Load the hint on first read of the Inventory files, as the rule says for the files it governs.
     severity: nit
-durationSec: 761
+durationSec: 979
 models:
-  claude-sonnet-5-5: 86
+  claude-sonnet-5-5: 99
 toolCounts:
-  Bash: 20
+  Bash: 23
   Agent: 17
   ToolSearch: 1
   mcp__github__search_issues: 1
   mcp__github__issue_write: 1
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -189,103 +192,103 @@ subagents:
     durationSec: 24
     toolCalls: 10
     modelCalls: 3
-    tokenShare: 2.7
+    tokenShare: 2.5
   - task: Check audit-docs
     model: sonnet
     durationSec: 64
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 4.7
+    tokenShare: 4.4
   - task: Check audit-skills
     model: sonnet
     durationSec: 94
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 5.5
+    tokenShare: 5.2
   - task: Check blog-post
     model: sonnet
     durationSec: 96
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 6.4
+    tokenShare: 6
   - task: Check clear-backlog
     model: sonnet
     durationSec: 207
     toolCalls: 15
     modelCalls: 13
-    tokenShare: 5.4
+    tokenShare: 5.1
   - task: Check close-session
     model: sonnet
     durationSec: 71
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 4.8
+    tokenShare: 4.5
   - task: Check digest
     model: sonnet
     durationSec: 62
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 4.8
+    tokenShare: 4.6
   - task: Check dispatch-subagents
     model: sonnet
     durationSec: 61
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 4.8
+    tokenShare: 4.6
   - task: Check frictions-to-fixes
     model: sonnet
     durationSec: 70
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 4.2
+    tokenShare: 3.9
   - task: Check glassbox-improve
     model: sonnet
     durationSec: 52
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 3.4
+    tokenShare: 3.2
   - task: Check glassbox-update
     model: sonnet
     durationSec: 47
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 4
+    tokenShare: 3.7
   - task: Check inspect-session
     model: sonnet
     durationSec: 71
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 5.3
+    tokenShare: 5
   - task: Check log-session
     model: sonnet
     durationSec: 55
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 4
+    tokenShare: 3.7
   - task: Check prune-trial
     model: sonnet
     durationSec: 71
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 5.4
+    tokenShare: 5.1
   - task: Check visitor-loop
     model: sonnet
     durationSec: 57
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 4.4
+    tokenShare: 4.1
   - task: Standards review of inventory diff
     model: sonnet
     durationSec: 43
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Spec review of inventory diff
     model: sonnet
     durationSec: 44
     toolCalls: 5
     modelCalls: 6
-    tokenShare: 2
+    tokenShare: 1.9
 gitBranch: claude/upbeat-sagan-77o0l4
 entrypoint: remote_trigger
 cliVersion: 2.1.314
