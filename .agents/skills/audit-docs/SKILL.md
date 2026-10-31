@@ -1,6 +1,6 @@
 ---
 name: audit-docs
-description: Audit every live doc and Skill for drift, duplication, contradiction, ambiguity, mis-location, and recently-added surfaces missing the reference they deserve — fact-check each finding, fix the safe ones, and file an issue (never ask) only for a factual conflict no primary source settles. Opens one self-merging gated PR, plus one human-reviewed PR for any escalated fix.
+description: Audit a rotating part of the live docs and Skills each run for drift, duplication, contradiction, ambiguity, mis-location, and recently-added surfaces missing the reference they deserve — fact-check each finding, fix the safe ones, and file an issue (never ask) only for a factual conflict no primary source settles. Opens one self-merging gated PR, plus one human-reviewed PR for any escalated fix.
 disable-model-invocation: true
 ---
 
@@ -47,6 +47,11 @@ lenses.
 ### Instructions
 
 1. Fetch `origin/main` (`docs/agents/git-conventions.md`).
+   Read the summaries of the last two audit-docs session logs
+   (`grep -l '^trigger: audit-docs'` in
+   `layers/journal/content/current/sessions/`). Tell Agents B and C to skip
+   the areas their `Covered:` line names, unless a file in one changed since
+   that run (`git log --since=<its date>`).
 2. Dispatch three read-only reviewer agents in parallel, one per pair of
    lenses below.
 3. Tell every agent the finding format: the file plus the exact sentence,
@@ -54,8 +59,10 @@ lenses.
    (reviewers get them wrong). A finding outside its own lenses is still
    reported, named by its lens, and joins the pool like any other. Tell them
    to skip text an open trial in `.agents/prune-trials.yml` covers (ADR-0027).
+   Tell each to end its reply with the Live files it did not read.
 4. Save each agent's reply verbatim into the pool, a new scratchpad folder:
    `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <pool>/<agent-id>.md`.
+   Never resume a reviewer to finish; the next run covers what it skipped.
 
 **Agent A, Freshness.** Start from `git log --since="48 hours ago"
 origin/main` and its diff.
@@ -197,6 +204,8 @@ human.
    changes its route. Subscribe to it and follow it until it merges or
    closes.
 3. Log the session (ADR-0009). Its summary gives the verdict counts
-   (CONFIRMED / CONFIRMED-BUT / WRONG).
+   (CONFIRMED / CONFIRMED-BUT / WRONG) and ends with the areas Agents B and
+   C read in full, e.g. `Covered: docs/agents/*, GLOSSARY.md, Skills a-f`,
+   even on a no-PR run.
 
 Done when the sweep PR has merged green, or is open and honestly escalated.
