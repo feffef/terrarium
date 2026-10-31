@@ -5,7 +5,7 @@ const shown = computed(() => props.parts ?? middenGlossParts(props.text, new Set
 
 <template>
   <template v-for="(part, i) in shown" :key="i">
-    <MiddenTicks v-if="typeof part === 'string'" :text="part" />
+    <MiddenTicks v-if="typeof part === 'string'" :text="part" links />
     <MiddenGloss v-else :term="part.key">{{ part.text }}</MiddenGloss>
   </template>
 </template>

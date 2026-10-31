@@ -1,6 +1,7 @@
 // The Midden's reader glosses for Platform jargon (issue #1463): presentation
 // only, applied at render time so authored Sites and Artifacts stay untouched.
 // Nuxt-free so the first-use matching is unit-testable.
+import { middenIssueRefParts } from './issue-ref'
 
 const GLOSSARY = [
   { key: 'platform', pattern: /\bPlatform\b/, gloss: 'the site itself, and the machinery every wing of it stands on' },
@@ -52,9 +53,13 @@ type MinimarkNode = string | [string, Record<string, unknown>, ...MinimarkNode[]
 export function middenGlossBody(nodes: MinimarkNode[], notes: Record<string, string>) {
   const seen = new Set<MiddenGlossKey>()
   const glossedNotes: Record<string, MiddenGlossPart[]> = {}
-  const walk = (node: MinimarkNode): MinimarkNode[] => {
+  const gloss = (text: string): MinimarkNode[] =>
+    middenGlossParts(text, seen).map((p) => (typeof p === 'string' ? p : ['midden-gloss', { term: p.key }, p.text]))
+  const walk = (node: MinimarkNode, inCode = false): MinimarkNode[] => {
     if (typeof node === 'string') {
-      return middenGlossParts(node, seen).map((p) => (typeof p === 'string' ? p : ['midden-gloss', { term: p.key }, p.text]))
+      if (inCode) return gloss(node)
+      return middenIssueRefParts(node).flatMap((r): MinimarkNode[] =>
+        typeof r === 'string' ? gloss(r) : [['a', { href: r.href, target: '_blank', rel: 'noopener noreferrer' }, r.ref]])
     }
     const [tag, props, ...children] = node
     if (tag === 'midden-artifact') {
@@ -63,7 +68,7 @@ export function middenGlossBody(nodes: MinimarkNode[], notes: Record<string, str
       return [node]
     }
     if (tag === 'a' || tag === 'pre') return [node]
-    return [[tag, props, ...children.flatMap(walk)]]
+    return [[tag, props, ...children.flatMap((c) => walk(c, inCode || tag === 'code'))]]
   }
-  return { nodes: nodes.flatMap(walk), notes: glossedNotes }
+  return { nodes: nodes.flatMap((n) => walk(n)), notes: glossedNotes }
 }
