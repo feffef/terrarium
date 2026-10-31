@@ -1,8 +1,8 @@
 ---
 title: A change goes live
 description: How a commit on main reaches visitors, through one container that notices it, builds it beside the live site and swaps only a good build.
-revision: '11968afa32d7a9af995824323581e03144cc9da1'
-revisionDate: '2026-10-30'
+revision: '4f6d8b5f98adbf1ed852a6b2dae128542440e532'
+revisionDate: '2026-10-31'
 publishedAt: '2026-10-27T18:52:18Z'
 ---
 
