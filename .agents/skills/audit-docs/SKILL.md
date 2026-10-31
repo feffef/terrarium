@@ -1,6 +1,6 @@
 ---
 name: audit-docs
-description: Audit every live doc and Skill for drift, duplication, contradiction, ambiguity, mis-location, and recently-added surfaces missing the reference they deserve — fact-check each finding, fix the safe ones, and file an issue (never ask) only for a factual conflict no primary source settles. Opens one self-merging gated PR, plus one human-reviewed PR for any escalated fix.
+description: Audit a rotating part of the live docs and Skills each run for drift, duplication, contradiction, ambiguity, mis-location, and recently-added surfaces missing the reference they deserve — fact-check each finding, fix the safe ones, and file an issue (never ask) only for a factual conflict no primary source settles. Opens one self-merging gated PR, plus one human-reviewed PR for any escalated fix.
 disable-model-invocation: true
 ---
 
@@ -47,10 +47,16 @@ lenses.
 ### Instructions
 
 1. Fetch `origin/main` (`docs/agents/git-conventions.md`).
+   Read the summaries of the last two audit-docs session logs
+   (`layers/journal/content/current/sessions/`; `grep -l audit-docs` finds
+   them). Each ends `Covered: <areas>`. Tell Agents B and C to skip those
+   areas unless a file in one changed since that run (`git log --since=<its
+   date>`). Agent A is unchanged.
 2. Dispatch three read-only reviewer agents in parallel, one per pair of
    lenses below.
 3. Tell every agent the finding format: the file plus the exact sentence,
-   quoted whole with its line breaks, plus replacement text. No line ranges
+   quoted whole with its line breaks, plus replacement text. End the reply with
+   the Live files it did not read; never resume a reviewer to finish. No line ranges
    (reviewers get them wrong). A finding outside its own lenses is still
    reported, named by its lens, and joins the pool like any other. Tell them
    to skip text an open trial in `.agents/prune-trials.yml` covers (ADR-0027).
@@ -197,6 +203,7 @@ human.
    changes its route. Subscribe to it and follow it until it merges or
    closes.
 3. Log the session (ADR-0009). Its summary gives the verdict counts
-   (CONFIRMED / CONFIRMED-BUT / WRONG).
+   (CONFIRMED / CONFIRMED-BUT / WRONG) and ends `Covered: <areas>`, e.g.
+   `Covered: docs/agents/*, GLOSSARY.md, Skills a-f`, even on a no-PR run.
 
 Done when the sweep PR has merged green, or is open and honestly escalated.
