@@ -592,6 +592,7 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
         read: () => ({
           result: { findings, failures: findings.filter((f) => !f.isPrimary && (f.uncommitted || f.unpushed) && !f.excusedBy) },
           current: '/r',
+          atMainTip: [],
         }),
         remove: (paths) => (removed.push(...paths), paths),
       })
@@ -809,6 +810,10 @@ describe('mergedWorktreesToRemove() — cleanup at close (#2721)', () => {
       finding({ path: '/r/wt/unmerged', unpushed: true }),
       finding({ path: '/r/wt/content-pushed', uncommitted: true, contentPushed: true, excusedBy: 'content-pushed' }),
     ]
-    expect(mergedWorktreesToRemove(findings, '/r/wt/current')).toEqual(['/r/wt/clean-merged'])
+    expect(mergedWorktreesToRemove(findings, '/r/wt/current', [])).toEqual(['/r/wt/clean-merged'])
+  })
+  it('keeps a worktree whose HEAD is the origin/main tip: a build agent may have just added it', () => {
+    const findings = [finding({ path: '/r/wt/fresh', mergedToMain: true }), finding({ path: '/r/wt/done', mergedToMain: true })]
+    expect(mergedWorktreesToRemove(findings, '/r', ['/r/wt/fresh'])).toEqual(['/r/wt/done'])
   })
 })

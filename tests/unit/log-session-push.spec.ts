@@ -160,7 +160,7 @@ describe('pushWithRetry() / buildLogCommit() — against a throwaway bare remote
     let subagentAuthoredPath: string
     let orchestratorAuthoredPath: string
     // The worktree sweep (#2721) would remove this fixture's merged worktree; it has its own tests.
-    const noSweep: WorktreeSeam = { read: () => ({ result: { findings: [], failures: [] }, current: '' }), remove: () => [] }
+    const noSweep: WorktreeSeam = { read: () => ({ result: { findings: [], failures: [] }, current: '', atMainTip: [] }), remove: () => [] }
 
     function authoredYaml(session: string, goal: string): string {
       return `session: ${session}\ngoal: ${goal}\nstatus: completed\noutcome: ok\nsummary: s\nfrictions: []\n`

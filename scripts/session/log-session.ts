@@ -36,7 +36,7 @@ import { z } from 'zod'
 import { ruleVerdict, usefulVerdict } from '../../shared/schemas/session.ts'
 import { sessionUrl } from '../../shared/session-url.ts'
 import { fetchOriginMain, git, SESSION_TRAILER, tryGit } from '../lib/git.ts'
-import { runSweep, type Finding, type SweepResult } from '../git/check-worktrees.ts'
+import { parseWorktreeList, runSweep, type Finding, type SweepResult } from '../git/check-worktrees.ts'
 import { FALLBACK_MODEL, provenanceFooter } from './commit-trailer.ts'
 import { findTruncatedScalars, SESSIONS_DIR, truncationError, validateEntry, type SessionEntry } from './journal-files.ts'
 import {
@@ -523,13 +523,20 @@ export function closureRefusal(status: string, trace: Pick<MechanicalTrace, 'mer
 
 /** The git side of the worktree sweep at close (#2721): a seam, so tests touch no real worktree. */
 export interface WorktreeSeam {
-  read: (cwd: string) => { result: SweepResult; current: string }
+  /** `atMainTip`: linked worktrees whose HEAD is the `origin/main` tip itself. */
+  read: (cwd: string) => { result: SweepResult; current: string; atMainTip: string[] }
   /** Removes each path it can and returns those it removed. */
   remove: (paths: string[], cwd: string) => string[]
 }
 
 const gitWorktrees: WorktreeSeam = {
-  read: (cwd) => ({ result: runSweep(cwd), current: resolve(git(['rev-parse', '--show-toplevel'], cwd).trim()) }),
+  read: (cwd) => {
+    const tip = git(['rev-parse', 'origin/main'], cwd).trim()
+    const atMainTip = parseWorktreeList(git(['worktree', 'list', '--porcelain'], cwd).trim())
+      .filter((w) => w.head === tip)
+      .map((w) => w.path)
+    return { result: runSweep(cwd), current: resolve(git(['rev-parse', '--show-toplevel'], cwd).trim()), atMainTip }
+  },
   remove: (paths, cwd) => {
     // No --force: git then refuses a worktree that turned dirty or locked since the read.
     const removed = paths.filter((p) => tryGit(['worktree', 'remove', p], cwd).ok)
@@ -539,10 +546,11 @@ const gitWorktrees: WorktreeSeam = {
 }
 
 /** Clean linked worktrees whose HEAD is already in `origin/main`, except the one this
- *  session runs in. A dirty one may be a build mid-run or work kept on purpose. */
-export function mergedWorktreesToRemove(findings: Finding[], current: string): string[] {
+ *  session runs in. A dirty one may be a build mid-run or work kept on purpose; one at
+ *  the `origin/main` tip may be a build agent's just-added worktree. */
+export function mergedWorktreesToRemove(findings: Finding[], current: string, atMainTip: string[]): string[] {
   return findings
-    .filter((f) => !f.isPrimary && f.mergedToMain && !f.uncommitted && f.path !== current)
+    .filter((f) => !f.isPrimary && f.mergedToMain && !f.uncommitted && f.path !== current && !atMainTip.includes(f.path))
     .map((f) => f.path)
 }
 
@@ -557,7 +565,7 @@ function sweepWorktreesAtClose(merged: AuthoredScratch, cwd: string, seam: Workt
     console.error(`log-session: worktree sweep skipped, could not read git state: ${err instanceof Error ? err.message : err}`)
     return
   }
-  const doomed = mergedWorktreesToRemove(swept.result.findings, swept.current)
+  const doomed = mergedWorktreesToRemove(swept.result.findings, swept.current, swept.atMainTip)
   for (const p of doomed.length ? seam.remove(doomed, cwd) : []) console.log(`  removed merged worktree ${p}`)
   const paths = swept.result.failures.map((f) => f.path).sort()
   if (!paths.length) return
