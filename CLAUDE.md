@@ -37,7 +37,8 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   it loaded or read, to give each count, id or attribution with its source
   (command or file:line) or mark it unverified, and to write every file it
   creates, scripts included, in a scratchpad subfolder named for itself
-  (subagents share one scratchpad); a script that imports repo packages goes in `.throwaway/<its name>/` instead.
+  (subagents share one scratchpad); a script that imports repo packages
+  goes in `.throwaway/<its name>/` instead.
 - **Before you debug a tool, push, network or permission error** that your
   diff doesn't explain: `docs/agents/environment-caveats.md`.
 
