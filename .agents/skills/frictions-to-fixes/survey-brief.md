@@ -24,14 +24,12 @@ you, without opening more logs than needed.
    schema in `layers/journal/tenant.config.ts`) holds one entry per cluster
    of Frictions with a common cause, with its `status`, `surface` and every
    `occurrence` so far. Survey it with
-   `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts --summary`:
+   `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts --summary --out {SCRATCH_DIR}/summary.txt`:
    one line per entry with its state, fixes and newest note, ending with the
-   Frictions two clusters share. Open an entry file only for its evidence.
+   Frictions two clusters share. Read the file. Open an entry file only for its evidence.
 2. **The window's session logs:** run
-   `pnpm exec tsx scripts/session/extract-frictions.ts --compact --unledgered`.
-   It prints where the window starts. Large output goes to
-   `/tmp/extract-frictions-output.json` and stdout gets only a notice: read
-   the file, or pass `--out PATH`; don't parse stdout. `--unledgered` drops
+   `pnpm exec tsx scripts/session/extract-frictions.ts --compact --unledgered --out {SCRATCH_DIR}/frictions.json`.
+   It prints where the window starts. Read the file; don't parse stdout. `--unledgered` drops
    each Friction the ledger already carries verbatim, and a session with
    none left; `--compact` keeps `subagents` and each Friction's `index` and
    drops prose and `docsRead`. Re-read a full log via its `file` only when a
@@ -67,8 +65,9 @@ Every edit goes through
    call files them all:
    `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts --append <entry> <session> <index> [<entry> <session> <index> …]`
    copies each Friction's text from its log (a content test checks the
-   copy) and appends it under its entry; it refuses a session the entry
-   already holds. When an appended Friction goes beyond the entry's
+   copy) and appends it under its entry; it writes all or nothing:
+   one session the entry already holds makes the call write nothing, and the
+   error names that session. Drop those triples and rerun the rest in one call. When an appended Friction goes beyond the entry's
    `summary` or `cause`, rewrite them with `ledger-set.ts <entry> --summary TEXT
    --cause TEXT` so they cover every occurrence.
 2. **Open a new entry** for a cause seen twice, or once at `moderate`,
@@ -155,8 +154,9 @@ resolution.
    matching `territory` path or keyword verbatim; with no quotable match the
    candidate is not on trial, so carry on.
 3. **Check the rest against the tracker and, where cheap, `main`** (a
-   solution isn't ripe if `main` already has it). `--candidates` labels each
-   entry from the ledger alone; confirm each label:
+   solution isn't ripe if `main` already has it). `prune-friction-ledger.ts --candidates --out {SCRATCH_DIR}/candidates.txt`
+   labels each entry from the ledger alone, so read its four labels as
+   provisional (shown with a `?` or a parenthetical) and confirm each:
    - `pnpm exec tsx scripts/git/list-merges-since.ts <Friction session's startedAt>`
      lists every `origin/main` commit after that instant (UTC, newest first,
      `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a
