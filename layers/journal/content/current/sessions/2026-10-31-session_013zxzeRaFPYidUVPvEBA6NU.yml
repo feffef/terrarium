@@ -1,0 +1,195 @@
+schemaVersion: 1
+session: session_013zxzeRaFPYidUVPvEBA6NU
+startedAt: 2026-10-31T11:09:29Z
+endedAt: 2026-10-31T11:21:17Z
+kind: autonomous
+goal: "Scheduled blog post: one Persona post grounded in recent repo activity"
+status: in-review
+outcome: "Kevin post on the gate run lock opened as PR #2741, gate green, awaiting CI to self-merge"
+summary: "Scheduled /blog-post run, no human prompts; everything was agent-initiated within the Skill's scope. Rotation allowed david, karen, kevin. I drafted three candidates (Kevin on the gate run lock in PR 2737, Karen on the git-branch-name check removed in 2740, David on the worktree sweep in 2739), a blind sonnet read picked Kevin's, I revised it for the gaps it named, a second sonnet fact-checked it (all claims ok; I fixed an overstatement, a link range and an unglossed term, and re-checked the changed lines), a Standards and Spec review found no hard violations, gate:scoped passed, and I pushed and opened PR 2741. Open: CI, self-merge, then the step 12 reply decision."
+prs:
+  - "2741"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read before first git write; nothing changed my route
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read before first GitHub op; MCP-only writes confirmed
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and closing a scheduled run's PR recipe
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: guard demanded it before my first subagent brief; confirmed scoped-reader and verdict-ask rules
+    useful: yes
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: voice palette; a review subagent also read it and found it useful
+    useful: yes
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: voice for candidate draft that lost
+    useful: partly
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: voice for candidate draft that lost
+    useful: partly
+  - path: layers/blog/GLOSSARY.md
+    reason: only a subagent read it; it reported it useful for the who-a-post-is-for rule
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: only the spec subagent read it as the spec; it reported useful
+    useful: yes
+  - path: layers/blog/tenant.config.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the scheduled task
+  - name: code-review
+    reason: pre-push review of the new post
+  - name: dispatch-subagents
+    reason: briefing three readers and checkers
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The dispatch-read guard blocked my first Agent call until I read dispatch-subagents SKILL.md; I had read the git, GitHub and PR docs but not that Skill before briefing.
+    solution: Name dispatch-subagents in the blog-post Skill's step 6 so it is read before the first brief.
+    severity: minor
+  - description: A commit message heredoc carried a placeholder Claude-Session id; the commit-msg hook replaced it, but I should have used the id from the attribution reminder.
+    solution: Copy the trailer from the system reminder verbatim.
+    severity: nit
+  - description: One grep chained after a cd left the shell cwd in layers/blog/content for a command, so relative paths broke until I used absolute paths again.
+    solution: Use absolute paths and git -C instead of cd.
+    severity: nit
+durationSec: 708
+models:
+  claude-sonnet-5-5: 90
+toolCounts:
+  Bash: 27
+  Read: 4
+  mcp__github__pull_request_read: 9
+  mcp__github__issue_read: 3
+  Agent: 6
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-10-31-the-gate-got-a-lock-its-best-part-is-the-cleanup-code-that-isnt-there.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+docsReadBySubagents:
+  - layers/blog/GLOSSARY.md
+  - .agents/skills/blog-post/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to gate before the first push despite the Stop hook; summary was enough, skipped the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main; summary was enough for close-session
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and subscribe at once; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the agent header in the PR body; summary was enough, trailer check done
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: About pingbacks; this was a standalone post so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; did not apply to a blog post
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; did not apply
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skills as code; I changed no Skill so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading gate.ts; I did not change it, so no human merge was needed
+    useful: partly
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded when I read gate.ts for the post; I changed no gate step, did not apply
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on reading tenant.config.ts; a post needs no manifest edit
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded with tenant.config.ts; I added no stored field
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with tenant.config.ts; no MDC or collection involved
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Reminded me to read the Blog glossary terms; a subagent read it for me
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded with tenant.config.ts; nothing about layers changed
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Only a subagent loaded it; no verdict reported
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Only a subagent loaded it; no verdict reported
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Blind read of three drafts
+    model: sonnet
+  - type: general-purpose
+    task: Blind read of three drafts
+    model: sonnet
+    durationSec: 18
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 6.8
+  - type: general-purpose
+    task: Standards review of blog post
+    model: sonnet
+    durationSec: 38
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 6
+  - type: general-purpose
+    task: Spec review of blog post
+    model: sonnet
+    durationSec: 45
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 6.3
+  - type: general-purpose
+    task: Fact-check blog post claims
+    model: sonnet
+    durationSec: 65
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 4.6
+  - type: general-purpose
+    task: Re-check changed blog lines
+    model: sonnet
+    durationSec: 25
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 3.5
+gitBranch: claude/zen-heisenberg-lzjv6z
+entrypoint: remote_trigger
+cliVersion: 2.1.316
+trigger: blog-post
+landedBy: Stop
