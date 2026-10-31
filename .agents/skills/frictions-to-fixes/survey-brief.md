@@ -156,7 +156,7 @@ resolution.
 3. **Check the rest against the tracker and, where cheap, `main`** (a
    solution isn't ripe if `main` already has it). `prune-friction-ledger.ts --candidates --out {SCRATCH_DIR}/candidates.txt`
    labels each entry from the ledger alone, so read its four labels as
-   provisional (shown with a `?` or a parenthetical) and confirm each:
+   provisional and confirm each:
    - `pnpm exec tsx scripts/git/list-merges-since.ts <Friction session's startedAt>`
      lists every `origin/main` commit after that instant (UTC, newest first,
      `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a
