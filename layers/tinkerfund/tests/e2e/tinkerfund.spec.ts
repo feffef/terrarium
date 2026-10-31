@@ -237,7 +237,9 @@ describe('tinkerfund Tenant', async () => {
       expect(ending).toContain('Jet Lag Rehearsal Lamp')
       expect(ending).not.toContain('Counterclockwise Mug')
       const popular = html.slice(at[4], at[5])
-      expect(popular).toMatch(/TF-0001[\s\S]*TF-0006[\s\S]*TF-0003[\s\S]*TF-0004/)
+      expect(popular.match(/class="wide"[^>]*>TF-\d+/g)).toHaveLength(10)
+      expect(popular).toMatch(/TF-0001/)
+      expect(popular).toMatch(/Show all \d+ Campaigns/)
       expect(popular).not.toContain('TF-0005')
     })
 

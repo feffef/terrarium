@@ -9,6 +9,7 @@ const [{ shop, zoneName, status, error, loaded, zone, view, change, promotions }
 const shippingRows = computed(() => tinkerfundShippingRows(view.value.groups, zoneName(zone.value), money))
 const recommended = computed(() => tinkerfundCartRecommendations(cards.value, view.value.groups.map((g) => g.campaign)))
 const nudge = computed(() => tinkerfundBundleNudge(promotions.value, view.value, clock.value.now, tinkerfundLive(cards.value)))
+const earned = computed(() => tinkerfundBundleEarned(promotions.value, view.value, clock.value.now))
 const blocked = computed(() => view.value.groups.some((g) => g.lines.some((l) => l.unavailable)))
 
 useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
@@ -50,6 +51,7 @@ useSeoMeta(tinkerfundSeo({ kind: 'private', space, title: 'Your Cart' }))
           <p v-if="nudge" class="nudge">
             {{ nudge.text }}<template v-if="nudge.listed">: <NuxtLink :to="link('/deals')">see the Campaigns in this Deal</NuxtLink></template>
           </p>
+          <p v-else-if="earned" class="earned">{{ earned }}</p>
           <p class="note">Discounts and codes apply at checkout. You’re only charged if a Campaign is funded.</p>
           <p v-if="blocked" class="blocked">Remove what is no longer available to check out.</p>
           <NuxtLink v-else class="tf-btn primary" :to="link('/checkout')">Checkout</NuxtLink>
@@ -75,6 +77,6 @@ h1 { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: baseline; }
 select { padding: 8px 10px; border: 1px solid var(--tf-muted); border-radius: var(--tf-radius); background: var(--tf-surface); color: var(--tf-ink); font: inherit; }
 .sums { margin-top: 4px; }
 .note { margin: 0; color: var(--tf-muted); font-size: 14px; }
-.nudge { margin: 0; padding: 8px 12px; border-radius: var(--tf-radius); background: var(--tf-accent-soft); font-size: 14px; }
+.nudge, .earned { margin: 0; padding: 8px 12px; border-radius: var(--tf-radius); background: var(--tf-accent-soft); font-size: 14px; }
 .blocked { margin: 0; color: var(--tf-bad); font-size: 14px; }
 </style>

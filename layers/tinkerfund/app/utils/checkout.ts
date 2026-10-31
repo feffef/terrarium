@@ -78,6 +78,14 @@ export function tinkerfundBundleNudge(promotions: TinkerfundPromotionTerms[], vi
   return { text: `Add a Reward from ${tinkerfundCount(best.needed, 'more Campaign')} to save ${best.promotion.discount.percent}%`, listed: !!best.promotion.bundle!.campaigns }
 }
 
+/** The Cart's note once a bundle is met: the nudge ends there, and the discount first shows at checkout (issue #1389). */
+export function tinkerfundBundleEarned(promotions: TinkerfundPromotionTerms[], view: Pick<TinkerfundCartView, 'groups'>, now: number) {
+  const percents = tinkerfundBundles(promotions, view, now)
+    .filter((b) => !b.needed && 'percent' in b.promotion.discount)
+    .map((b) => (b.promotion.discount as { percent: number }).percent)
+  return percents.length ? `Bundle discount earned: ${Math.max(...percents)}% off each, applied at checkout` : undefined
+}
+
 /** A Pledge's bundle discount, while it has goods to take it off: it keeps the terms it earned (D11, issue #1389). */
 export function tinkerfundBundleNote(pledge: TinkerfundPledge, promotions: TinkerfundPromotionTerms[]): string | undefined {
   if (pledge.cancelled !== undefined || (!pledge.lines.length && !pledge.addons.length)) return undefined

@@ -464,6 +464,7 @@ describe('tinkerfund Tenant', async () => {
       // The Lamp's Pledge already pays for domestic shipping, so only the Stapler adds any.
       await expect.poll(() => page.locator('.summary').textContent()).toMatch(/Subtotal\s*€86\s*Shipping to Domestic\s*€4\s*Estimated total\s*€90/)
       expect(await page.locator('.summary .nudge').count()).toBe(0)
+      expect(await page.locator('.summary .earned').textContent()).toContain('Bundle discount earned')
       await page.getByLabel('Estimate shipping to').selectOption('europe')
       await expect.poll(() => page.locator('.group', { hasText: 'Last-Minute Lamp' }).textContent())
         .toContain('Your Pledge already holds One lamp, which doesn’t ship to Europe')

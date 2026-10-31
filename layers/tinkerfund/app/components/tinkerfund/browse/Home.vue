@@ -69,7 +69,7 @@ const money = useTinkerfundMoney()
     </section>
 
     <section v-if="home.popular.length" aria-labelledby="tf-popular">
-      <TinkerfundBrowseIndexTable :cards="home.popular" :categories="categories" :clock="clock">
+      <TinkerfundBrowseIndexTable :cards="home.popular" :categories="categories" :clock="clock" :limit="10">
         <h2 id="tf-popular">Popular now</h2>
       </TinkerfundBrowseIndexTable>
     </section>
