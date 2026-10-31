@@ -177,7 +177,7 @@ describe('same-day occurrences and --candidates', () => {
     setup({ 'x.yml': fixed(['old', '2026-10-06']) })
     const check = regressionCheck(cwd, merges)
     expect(candidateLabels('2026-10-30', cwd, check)).toEqual(['x | drop (fixed by #1, none since) | - | 0 in horizon | -'])
-    expect(summarizeLedger('2026-10-30', cwd, check)[0]).toContain('since: none')
+    expect(summarizeLedger('2026-10-30', cwd, check)).toEqual(['x | fix landed | - | 0 in horizon | - | 1 fix, latest #1 2026-10-05, since: none'])
   })
 })
 

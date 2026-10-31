@@ -159,7 +159,7 @@ export function summarizeLedger(today: string, cwd = root, check = regressionChe
   return entries.map(([f, e]) => {
     const { occ, max, last, since, sinceMax } = describeEntry(e, start, check)
     const fixes = last ? `${e.fixes!.length} ${e.fixes!.length === 1 ? 'fix' : 'fixes'}, latest #${last.pr} ${last.date}, since: ${sinceMax}` : 'no fixes'
-    const derived = ledgerFixState(e.status, e.fixes ?? [], (e.occurrences ?? []).map((o) => String(o.date)), asOf)
+    const derived = ledgerFixState(e.status, e.fixes ?? [], occ.map((o) => String(o.date)), asOf)
     const state = derived ? (since ? `still recurring (${since} since #${last!.pr})` : derived.state) : e.status
     const note = String(e.notes ?? '').trim().split('\n').at(-1)
     const cols = [e.name ?? f, state, e.ref ?? '-', `${occ.length} in horizon`, max, fixes]
