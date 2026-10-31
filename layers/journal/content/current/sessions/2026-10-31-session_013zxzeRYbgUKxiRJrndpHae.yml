@@ -1,0 +1,238 @@
+schemaVersion: 1
+session: session_013zxzeRYbgUKxiRJrndpHae
+startedAt: 2026-10-31T04:03:27Z
+endedAt: 2026-10-31T04:10:33Z
+kind: autonomous
+goal: "Scheduled docs audit: sweep 2026-10-31"
+status: completed
+outcome: "Two small doc fixes merged in PR #2730"
+summary: "Scheduled audit-docs run, fully agent-initiated by the schedule. Three read-only reviewers (Freshness, Single-home, Coherence) covered the last 48h of origin/main and found two low-value issues (a Skill-file gate-skip rule restated in the GLOSSARY.md Heavy entry; a garbled clause in pr-workflow.md step 4). One checker rated both CONFIRMED-BUT and corrected both replacements (0 CONFIRMED / 2 CONFIRMED-BUT / 0 WRONG). Applied them as one sweep commit; a simple change, so my own diff read replaced code-review; gate:scoped green; PR #2730 opened and subscribed. No ADR or Human-only file touched, so no escalation PR and no issue filed. Merge landed green via merge-pr.ts."
+prs:
+  - "2730"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch and read-only-git rules; read after my first fetch
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR recipe and simple-change rule
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool surface; read after creating the PR
+    useful: partly
+  - path: docs/agents/domain.md
+    reason: glossary-terms rule asked for it before a glossary edit
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief-writing rules before dispatching reviewers
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (read before editing)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: docs/diagrams/interactive-map/terrarium-overview.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: brief rules
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch origin main before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first non-read-only git command.
+    solution: Read the doc first; the fetch itself was harmless.
+    severity: nit
+  - description: Created the PR before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation.
+    solution: Read it before the first mcp__github call.
+    severity: nit
+  - description: First gate run used a text-level & plus run_in_background; the double-background guard blocked it and I resent the command.
+    solution: Pass run_in_background alone.
+    severity: nit
+  - description: The Freshness reviewer left the checkout detached at origin/main, so I had to switch back to the session branch.
+    solution: Tell read-only reviewers not to change the checkout.
+    severity: minor
+durationSec: 426
+models:
+  claude-sonnet-5-5: 60
+toolCounts:
+  Bash: 24
+  Agent: 4
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  Skill: 3
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - GLOSSARY.md
+  - docs/agents/pr-workflow.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/glossary-terms.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+rulesLoadedBySubagents:
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+docsReadBySubagents:
+  - .agents/skills/prune-trial/SKILL.md
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/glassbox-improve/SKILL.md
+  - GLOSSARY.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/triage-labels.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/guards.md
+  - docs/agents/mdc-when-to-use.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - docs/diagrams/interactive-map/terrarium-overview.md
+  - .agents/skills/close-session/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped before pushing and self-read a simple diff; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and subscribe at once; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to log at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header and trailer for the PR body and commit; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Skip text under open prune trials; briefed reviewers accordingly
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary holds definitions only, which backed the Heavy fix
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed neither edited file is Human-only
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are code; no Skill was edited
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Pack Skills untouched; not relevant
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Orphan-doc test given to the Freshness reviewer
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: No ADR rewritten
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Made me read domain.md before the glossary edit
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by a reviewer reading a diagram; not relevant
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded by a reviewer; not relevant
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Loaded by a reviewer; not relevant
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded by a reviewer; not relevant
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded by a reviewer; not relevant
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Loaded by a reviewer; not relevant
+    useful: no
+  - path: .claude/rules/adr-0023.md
+    reason: Loaded by a reviewer; not relevant
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded by a reviewer; confirmed deploy framing only
+    useful: partly
+  - path: .claude/rules/adr-0011.md
+    reason: Loaded by a reviewer; confirmed deploy framing only
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: "Audit docs: Freshness"
+    durationSec: 111
+    toolCalls: 22
+    modelCalls: 21
+    tokenShare: 23.9
+  - type: general-purpose
+    task: "Audit docs: Single-home"
+    durationSec: 67
+    toolCalls: 12
+    modelCalls: 10
+    tokenShare: 14.8
+  - type: general-purpose
+    task: "Audit docs: Coherence"
+    durationSec: 86
+    toolCalls: 17
+    modelCalls: 15
+    tokenShare: 16.3
+  - type: general-purpose
+    task: Fact-check audit findings
+    durationSec: 66
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 5.9
+gitBranch: claude/festive-mayer-8uikk0
+entrypoint: remote_trigger
+cliVersion: 2.1.314
+trigger: audit-docs
+landedBy: Stop
