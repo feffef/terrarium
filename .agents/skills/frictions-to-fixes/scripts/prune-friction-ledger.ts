@@ -142,7 +142,7 @@ function describeEntry(e: Entry, start: string, check: RegressionCheck) {
   const occ = (e.occurrences ?? []).filter((o) => String(o.date) >= start)
   const max = maxSeverity(occ) ?? '-'
   const last = [...(e.fixes ?? [])].sort((a, b) => a.date.localeCompare(b.date)).at(-1)
-  const after = last ? (e.occurrences ?? []).filter((o) => check.after(o, last)) : []
+  const after = last ? occ.filter((o) => check.after(o, last)) : []
   const sinceMax = maxSeverity(after) ?? 'none'
   return { occ, max, last, since: after.length, sinceMax }
 }
@@ -159,7 +159,7 @@ export function summarizeLedger(today: string, cwd = root, check = regressionChe
   return entries.map(([f, e]) => {
     const { occ, max, last, since, sinceMax } = describeEntry(e, start, check)
     const fixes = last ? `${e.fixes!.length} ${e.fixes!.length === 1 ? 'fix' : 'fixes'}, latest #${last.pr} ${last.date}, since: ${sinceMax}` : 'no fixes'
-    const derived = ledgerFixState(e.status, e.fixes ?? [], (e.occurrences ?? []).map((o) => String(o.date)), asOf)
+    const derived = ledgerFixState(e.status, e.fixes ?? [], occ.map((o) => String(o.date)), asOf)
     const state = derived ? (since ? `still recurring (${since} since #${last!.pr})` : derived.state) : e.status
     const note = String(e.notes ?? '').trim().split('\n').at(-1)
     const cols = [e.name ?? f, state, e.ref ?? '-', `${occ.length} in horizon`, max, fixes]
