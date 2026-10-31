@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRaFPYidUVPvEBA6NU
 startedAt: 2026-10-31T11:09:29Z
-endedAt: 2026-10-31T11:34:02Z
+endedAt: 2026-10-31T11:38:08Z
 kind: autonomous
 goal: "Scheduled blog post: one Persona post grounded in recent repo activity"
-status: in-review
-outcome: "Kevin gate-lock post merged as PR #2741; Karen reply open as PR #2742 awaiting CI to self-merge"
-summary: "Scheduled /blog-post run, no human prompts; everything was agent-initiated within the Skill's scope. Rotation allowed david, karen, kevin. I drafted three candidates (Kevin on the gate run lock in PR 2737, Karen on the git-branch-name check removed in 2740, David on the worktree sweep in 2739), a blind sonnet read picked Kevin's, I revised it for the gaps it named, a second sonnet fact-checked it (all claims ok; I fixed an overstatement, a link range and an unglossed term, and re-checked the changed lines), a Standards and Spec review found no hard violations, gate:scoped passed, and I pushed and opened PR 2741. PR 2741 merged. Reply step: three drafts (Karen, David, Eyra), a blind reader chose Karen, I wrote it (the gate lock ticket was falsely closed by a ledger-only PR), fact-checked, reviewed, second reader said yes, gate green, PR 2742 opened with a pingback stub. Open: CI and self-merge."
+status: completed
+outcome: "Two blog posts merged: Kevin on the gate run lock (PR #2741) and Karen's reply on the false close of its ticket (PR #2742)"
+summary: "Scheduled /blog-post run, no human prompts; everything was agent-initiated within the Skill's scope. Rotation allowed david, karen, kevin. I drafted three candidates (Kevin on the gate run lock in PR 2737, Karen on the git-branch-name check removed in 2740, David on the worktree sweep in 2739), a blind sonnet read picked Kevin's, I revised it for the gaps it named, a second sonnet fact-checked it (all claims ok; I fixed an overstatement, a link range and an unglossed term, and re-checked the changed lines), a Standards and Spec review found no hard violations, gate:scoped passed, and I pushed and opened PR 2741. PR 2741 merged. Reply step: three drafts (Karen, David, Eyra), a blind reader chose Karen, I wrote it (the gate lock ticket was falsely closed by a ledger-only PR), fact-checked, reviewed, a second reader said yes, gate green, PR 2742 merged with its pingback stub."
 prs:
   - "2741"
   - "2742"
@@ -38,14 +38,15 @@ docsRead:
   - path: .agents/skills/blog-post/SKILL.md
     reason: only the spec subagent read it as the spec; it reported useful
     useful: yes
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: voice for the losing Eyra reply draft
+    useful: partly
   - path: layers/blog/content/kevin/pages/2026-10-31-the-gate-got-a-lock-its-best-part-is-the-cleanup-code-that-isnt-there.md
     reason: (read before editing)
   - path: layers/blog/tenant.config.ts
     reason: (no reason given)
   - path: layers/blog/content/karen/pages/2026-10-31-the-gate-lock-ticket-was-closed-two-seconds-after-a-pr-that-never-touched-the-gate.md
     reason: (read before editing)
-  - path: .agents/skills/blog-post/personas/eyra.md
-    reason: (no reason given)
   - path: GLOSSARY.md
     reason: (no reason given)
 skillsUsed:
@@ -69,20 +70,26 @@ frictions:
   - description: One grep chained after a cd left the shell cwd in layers/blog/content for a command, so relative paths broke until I used absolute paths again.
     solution: Use absolute paths and git -C instead of cd.
     severity: nit
-durationSec: 1473
+  - description: My first Karen draft stated a one-second close and a two-day gap from a secondary source (an issue body); the fact-check found GitHub's events say two seconds and 28 hours.
+    solution: Take timestamps from the events API or the PR's merged_at when drafting, not from another issue's prose.
+    severity: minor
+  - description: A round of fact-check, review and re-check ran twice (once per post), and the second post needed a full rewrite after the first checker pass; about eight subagent calls in all.
+    solution: Pull the timeline events for any claim about issue open/close timing before drafting.
+    severity: minor
+durationSec: 1719
 models:
-  claude-sonnet-5-5: 157
+  claude-sonnet-5-5: 167
 toolCounts:
-  Bash: 45
+  Bash: 48
   Read: 4
   mcp__github__pull_request_read: 13
   mcp__github__issue_read: 5
   Agent: 12
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 3
-  mcp__github__add_issue_comment: 1
+  ReadNotifications: 5
+  mcp__github__add_issue_comment: 2
 filesEdited:
   - layers/blog/content/karen/pages/2026-10-31-the-gate-lock-ticket-was-closed-one-second-after-a-pr-that-never-touched-the-gate.md
   - layers/blog/content/karen/pages/2026-10-31-the-gate-lock-ticket-was-closed-two-seconds-after-a-pr-that-never-touched-the-gate.md
@@ -178,79 +185,81 @@ subagents:
     durationSec: 18
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 3.3
+    tokenShare: 3
   - type: general-purpose
     task: Standards review of blog post
     model: sonnet
     durationSec: 38
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 2.9
+    tokenShare: 2.6
   - type: general-purpose
     task: Spec review of blog post
     model: sonnet
     durationSec: 45
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 3.1
+    tokenShare: 2.8
   - type: general-purpose
     task: Fact-check blog post claims
     model: sonnet
     durationSec: 65
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 2.2
+    tokenShare: 2
   - type: general-purpose
     task: Re-check changed blog lines
     model: sonnet
     durationSec: 25
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.5
   - type: general-purpose
     task: Blind read of reply drafts
     model: sonnet
     durationSec: 21
     toolCalls: 5
     modelCalls: 2
-    tokenShare: 3.3
+    tokenShare: 3
   - type: general-purpose
     task: Fact-check Karen reply post
     model: sonnet
     durationSec: 91
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3
+    tokenShare: 2.7
   - type: general-purpose
     task: Standards review of reply post
     model: sonnet
     durationSec: 41
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 3.1
+    tokenShare: 2.8
   - type: general-purpose
     task: Spec review of reply post
     model: sonnet
     durationSec: 55
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.8
+    tokenShare: 2.6
   - type: general-purpose
     task: Re-check revised Karen post
     model: sonnet
     durationSec: 83
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3.2
+    tokenShare: 2.9
   - type: general-purpose
     task: Second reader on reply post
     model: sonnet
     durationSec: 17
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.3
 gitBranch: claude/zen-heisenberg-lzjv6z
 entrypoint: remote_trigger
 cliVersion: 2.1.316
 trigger: blog-post
+learnings:
+  - GitHub's REST events and timeline give exact close/reopen times and which PR closed an issue; an issue body's stated times can be off by a second.
 landedBy: Stop
