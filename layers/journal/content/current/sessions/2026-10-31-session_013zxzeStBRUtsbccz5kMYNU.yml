@@ -1,0 +1,356 @@
+schemaVersion: 1
+session: session_013zxzeStBRUtsbccz5kMYNU
+startedAt: 2026-10-31T08:35:24Z
+endedAt: 2026-10-31T08:48:47Z
+kind: interactive
+goal: Clear the issue backlog
+status: in-review
+outcome: "Two PRs open (#2732 and #2733); six issues wait on the owner's grilling answers"
+summary: "Human-instructed: the owner invoked /clear-backlog. Agent-initiated within that Skill: the sweep set (7 needs-triage issues plus ready-for-agent #2612; five ready-for-human issues skipped because an agent commented last; no external PRs), one explore run, one build run, the triage labels and comments the triage agents posted, and both PRs. #2612 (owner pick 1b from the 2026-10-28 grilling, which I checked in that session's log) probed the container worktree guard: only $VAR expansion in a git command was refused, so the doc's list of triggers was replaced (PR #2732). I cut an unverified \"may vary by run\" cause by hand. A judgement call stays open: clear-backlog-build.js still refuses branch names containing \"git\". #2725 (PR #2733) points the frictions-to-fixes briefs' output at {SCRATCH_DIR}. Its review hit the three-round cap with one open finding (two §3.3 calls had no target), which I fixed by hand. I split #2725 from #2724 despite their shared file, because #2725's brief leaves §5 to #2724. Six grill questions (#2724, #2723, #2721, #2660, #2719, #2726) were sent to the owner and are unanswered."
+prs:
+  - "2732"
+  - "2733"
+docsRead:
+  - path: docs/agents/environment-caveats.md
+    reason: Build agent's fix target; the worktree-guard bullet
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: Fetch before trusting history; commit trailer check
+    useful: partly
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: Step 1 sweep set and the human-last-comment test
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: gh api works for REST reads in the cloud; MCP for writes
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: External-PR listing recipe
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Guard demanded it before the workflow call; nothing changed the call
+    useful: no
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: "Verified #2724's §5 reset claim and fixed #2725's open finding"
+    useful: yes
+  - path: .agents/skills/grilling/SKILL.md
+    reason: Question format for the grilling round
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Simple follow-up rule and verdict-before-merge step
+    useful: yes
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (read before editing)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: clear-backlog
+    reason: (invoked as a slash command)
+frictions:
+  - description: Workflow call blocked by the dispatch-read guard; I had not read dispatch-subagents before launching clear-backlog-explore, though nothing in it changed the call
+    solution: clear-backlog could name the dispatch-subagents read before §1's workflow call, or the guard could exempt saved workflows that brief their own agents
+    severity: nit
+  - description: Double-background guard blocked a combined two-gate Bash call using & plus run_in_background; resent as two calls
+    solution: Run one background gate per call, as the guard says
+    severity: nit
+  - description: "clear-backlog-build hit its 3-round review cap on a prose-only #2725 branch, leaving one finding to fix by hand"
+    solution: Brief scope lines should match the done-when line; the brief named only some §3.3 calls while done-when covered all
+    severity: minor
+durationSec: 803
+models:
+  claude-opus-5-5: 79
+toolCounts:
+  Bash: 29
+  Workflow: 3
+  ToolSearch: 2
+  PushNotification: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  Skill: 2
+filesEdited:
+  - docs/agents/environment-caveats.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 15
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 29
+    via: path
+    readAfter: false
+    by: subagent
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - layers/midden/GLOSSARY.md
+  - docs/agents/triage-labels.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me rerun gate:scoped after my hand fixes before the first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: This log goes to main, not the PR branches; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Opened PRs at once after push despite the harness default; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on both PR bodies and checked the commit trailer landed
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: "Confirmed triage may stamp ready-for-agent on Trusted issues like #2725"
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded with Skill reads; no Skill placement question arose
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: All issues were OWNER-authored, so Trusted; no Public handling needed
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: "Checked prune-trials.yml no longer covers environment-caveats.md before building #2612"
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading docs/agents; no rule placement work
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded when verifying the Midden remains regex; no manifest edit
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Confirmed gate.ts is Human-only for #2660's question"
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded on editing a Skill brief; frictions-to-fixes is not a pack Skill
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded with gate.ts; no gate step change
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded via the human-merge paths read; no ADR edit
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: "Shaped #2724 option b and #2719 option c as stored-shape questions for the owner"
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with Midden config; no MDC choice
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded with Midden config; no Tenant writing this session
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded with Midden config; no layer code changed
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: fix fix/2725-frictions-briefs-output-paths r1
+    model: claude-sonnet-5-5
+    durationSec: 48
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 1.7
+  - type: workflow-subagent
+    task: gate fix/2612-worktree-guard-accepted-forms
+    model: claude-sonnet-5-5
+    durationSec: 44
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: build fix/2725-frictions-briefs-output-paths
+    model: claude-sonnet-5-5
+    durationSec: 127
+    toolCalls: 14
+    modelCalls: 13
+    tokenShare: 5.9
+  - type: workflow-subagent
+    task: Spec fix/2612-worktree-guard-accepted-forms r1
+    model: claude-opus-5-5
+    durationSec: 43
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 2.1
+  - type: workflow-subagent
+    task: build fix/2612-worktree-guard-accepted-forms
+    model: claude-sonnet-5-5
+    durationSec: 136
+    toolCalls: 29
+    modelCalls: 14
+    tokenShare: 5.6
+  - type: workflow-subagent
+    task: Standards fix/2725-frictions-briefs-output-paths r2
+    model: claude-opus-5-5
+    durationSec: 44
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 2.1
+  - type: workflow-subagent
+    task: fix fix/2725-frictions-briefs-output-paths r2
+    model: claude-sonnet-5-5
+    durationSec: 49
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 1.7
+  - type: workflow-subagent
+    task: Standards fix/2725-frictions-briefs-output-paths r3
+    model: claude-opus-5-5
+    durationSec: 37
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: Spec fix/2725-frictions-briefs-output-paths r2
+    model: claude-opus-5-5
+    durationSec: 42
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 2.2
+  - type: workflow-subagent
+    task: Standards fix/2612-worktree-guard-accepted-forms r1
+    model: claude-opus-5-5
+    durationSec: 41
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: Spec fix/2725-frictions-briefs-output-paths r3
+    model: claude-opus-5-5
+    durationSec: 42
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 2.2
+  - type: workflow-subagent
+    task: Spec fix/2725-frictions-briefs-output-paths r1
+    model: claude-opus-5-5
+    durationSec: 60
+    toolCalls: 10
+    modelCalls: 7
+    tokenShare: 2.9
+  - type: workflow-subagent
+    task: Standards fix/2725-frictions-briefs-output-paths r1
+    model: claude-opus-5-5
+    durationSec: 56
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 4.2
+  - type: workflow-subagent
+    task: "triage #2719"
+    model: claude-opus-5-5
+    durationSec: 91
+    toolCalls: 16
+    modelCalls: 11
+    tokenShare: 4.4
+  - type: workflow-subagent
+    task: "triage #2723"
+    model: claude-opus-5-5
+    durationSec: 89
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 3.9
+  - type: workflow-subagent
+    task: "triage #2721"
+    model: claude-opus-5-5
+    durationSec: 117
+    toolCalls: 17
+    modelCalls: 13
+    tokenShare: 5.4
+  - type: workflow-subagent
+    task: "triage #2726"
+    model: claude-opus-5-5
+    durationSec: 94
+    toolCalls: 17
+    modelCalls: 13
+    tokenShare: 6.8
+  - type: workflow-subagent
+    task: "triage #2724"
+    model: claude-opus-5-5
+    durationSec: 121
+    toolCalls: 17
+    modelCalls: 12
+    tokenShare: 5.6
+  - type: workflow-subagent
+    task: "triage #2612"
+    model: claude-opus-5-5
+    durationSec: 108
+    toolCalls: 16
+    modelCalls: 12
+    tokenShare: 5
+  - type: workflow-subagent
+    task: "triage #2660"
+    model: claude-opus-5-5
+    durationSec: 87
+    toolCalls: 17
+    modelCalls: 12
+    tokenShare: 4.8
+  - type: workflow-subagent
+    task: "triage #2725"
+    model: claude-opus-5-5
+    durationSec: 145
+    toolCalls: 21
+    modelCalls: 16
+    tokenShare: 6.8
+gitBranch: ccr-1d8e968a-4kuht9
+entrypoint: remote_mobile
+cliVersion: 2.1.316
+landedBy: Stop
