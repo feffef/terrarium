@@ -531,16 +531,19 @@ export interface WorktreeSeam {
 const gitWorktrees: WorktreeSeam = {
   read: (cwd) => ({ result: runSweep(cwd), current: resolve(git(['rev-parse', '--show-toplevel'], cwd).trim()) }),
   remove: (paths, cwd) => {
-    // A locked worktree (a running agent's) needs a second --force, so it survives.
-    const removed = paths.filter((p) => tryGit(['worktree', 'remove', '--force', p], cwd).ok)
+    // No --force: git then refuses a worktree that turned dirty or locked since the read.
+    const removed = paths.filter((p) => tryGit(['worktree', 'remove', p], cwd).ok)
     tryGit(['worktree', 'prune'], cwd)
     return removed
   },
 }
 
-/** Linked worktrees whose HEAD is already in `origin/main`, except the one this session runs in. */
+/** Clean linked worktrees whose HEAD is already in `origin/main`, except the one this
+ *  session runs in. A dirty one may be a build mid-run or work kept on purpose. */
 export function mergedWorktreesToRemove(findings: Finding[], current: string): string[] {
-  return findings.filter((f) => !f.isPrimary && f.mergedToMain && f.path !== current).map((f) => f.path)
+  return findings
+    .filter((f) => !f.isPrimary && f.mergedToMain && !f.uncommitted && f.path !== current)
+    .map((f) => f.path)
 }
 
 /** #2721: remove merged worktrees, then refuse a completed or partial log while a

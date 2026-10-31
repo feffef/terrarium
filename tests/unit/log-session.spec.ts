@@ -627,7 +627,7 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
 
       it('removes merged worktrees even when it refuses, and says so', () => {
         const removed: string[] = []
-        const merged = finding({ path: '/r/.claude/worktrees/done', uncommitted: true, mergedToMain: true, excusedBy: 'merged-to-main' })
+        const merged = finding({ path: '/r/.claude/worktrees/done', mergedToMain: true })
         const res = author(store(['ls']), { worktrees: seam([merged, stranded], removed) })
         expect(res.exited).toBe(true)
         expect(removed).toEqual(['/r/.claude/worktrees/done'])
@@ -800,7 +800,7 @@ function finding(over: Partial<Finding>): Finding {
 }
 
 describe('mergedWorktreesToRemove() — cleanup at close (#2721)', () => {
-  it('selects linked worktrees whose HEAD is merged, clean or excused, and nothing else', () => {
+  it('selects clean linked worktrees whose HEAD is merged, never one with uncommitted work', () => {
     const findings = [
       finding({ path: '/r', isPrimary: true, mergedToMain: true }),
       finding({ path: '/r/wt/current', mergedToMain: true }),
@@ -809,6 +809,6 @@ describe('mergedWorktreesToRemove() — cleanup at close (#2721)', () => {
       finding({ path: '/r/wt/unmerged', unpushed: true }),
       finding({ path: '/r/wt/content-pushed', uncommitted: true, contentPushed: true, excusedBy: 'content-pushed' }),
     ]
-    expect(mergedWorktreesToRemove(findings, '/r/wt/current')).toEqual(['/r/wt/clean-merged', '/r/wt/dirty-merged'])
+    expect(mergedWorktreesToRemove(findings, '/r/wt/current')).toEqual(['/r/wt/clean-merged'])
   })
 })

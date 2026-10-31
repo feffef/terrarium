@@ -101,7 +101,7 @@ adjacent regions conflict silently (issue #603).
 ## 5. Verify nothing is stranded
 
 Before you finish, push every reviewed branch and remove the worktree of any
-branch you dropped. `log-session --author` enforces this and removes worktrees
+branch you dropped. `log-session --author` enforces this and removes clean worktrees
 already merged (`EXCUSALS` in `scripts/git/check-worktrees.ts` lists the exceptions).
 
 If you `cd`'d into a subagent's worktree, `cd` back (or use absolute paths) and
