@@ -95,7 +95,8 @@ Every edit goes through
    what the fix changed, so no line it made stale survives.
 5. **Reset stale statuses.** A `tracked` or `on-trial` entry whose PR closed
    unmerged, or whose `ref` names no open issue, PR or trial in
-   `.agents/prune-trials.yml`, goes back to `open`. One whose `ref` PR
+   `.agents/prune-trials.yml`, goes back to `open`, unless its issue closed
+   as not planned: then `accepted`, with the close and its reason in `notes`. One whose `ref` PR
    merged (not the fix a new cause came from) goes to `open` too, and that
    PR's `fixes` `date` becomes its `merged_at` (the same call), since an
    escalated PR dated its own entry before it merged.

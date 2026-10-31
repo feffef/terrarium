@@ -94,7 +94,7 @@ describe('summarizeLedger()', () => {
   it('derives still recurring with the count, likely fixed after a quiet spell, and fix landed before it', () => {
     const dir = setup()
     writeFileSync(join(dir, 'pad.yml'), entry(['a', '2026-10-20']))
-    writeFileSync(join(dir, 'recurring.yml'), withFixes(fixes([1, '2026-10-02']), ['a', '2026-10-01'], ['b', '2026-10-05'], ['c', '2026-10-06']))
+    writeFileSync(join(dir, 'recurring.yml'), withFixes(fixes([1, '2026-10-02']), ['a', '2026-10-01'], ['b', '2026-10-07'], ['c', '2026-10-08']))
     writeFileSync(join(dir, 'refixed.yml'), withFixes(fixes([1, '2026-10-02'], [2, '2026-10-06']), ['a', '2026-10-01'], ['b', '2026-10-05']))
     writeFileSync(join(dir, 'sameday.yml'), withFixes(fixes([1, '2026-10-05']), ['a', '2026-10-01'], ['b', '2026-10-05']))
     writeFileSync(join(dir, 'young.yml'), withFixes(fixes([1, '2026-10-19']), ['a', '2026-10-01']))
@@ -172,6 +172,12 @@ describe('same-day occurrences and --candidates', () => {
       'x | drop (accepted) | nit | 1 in horizon | -',
       'x | regression of #1 (1 since) | nit | 1 in horizon | issue #8 (closed)',
     ])
+  })
+  it('counts only in-horizon occurrences since the fix', () => {
+    setup({ 'x.yml': fixed(['old', '2026-10-06']) })
+    const check = regressionCheck(cwd, merges)
+    expect(candidateLabels('2026-10-30', cwd, check)).toEqual(['x | drop (fixed by #1, none since) | - | 0 in horizon | -'])
+    expect(summarizeLedger('2026-10-30', cwd, check)[0]).toContain('since: none')
   })
 })
 

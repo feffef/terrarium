@@ -142,7 +142,7 @@ function describeEntry(e: Entry, start: string, check: RegressionCheck) {
   const occ = (e.occurrences ?? []).filter((o) => String(o.date) >= start)
   const max = maxSeverity(occ) ?? '-'
   const last = [...(e.fixes ?? [])].sort((a, b) => a.date.localeCompare(b.date)).at(-1)
-  const after = last ? (e.occurrences ?? []).filter((o) => check.after(o, last)) : []
+  const after = last ? occ.filter((o) => check.after(o, last)) : []
   const sinceMax = maxSeverity(after) ?? 'none'
   return { occ, max, last, since: after.length, sinceMax }
 }
