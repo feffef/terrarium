@@ -21,13 +21,3 @@ occurrences:
     severity: minor
     description: "Running code-review with two subagents on a 4-line doc change, after a rewrap round, cost about 120k subagent tokens to find nothing blocking."
     solution: "Let pr-workflow's simple-change test cover a one-sentence addition to a Skill that adds no new rule."
-  - session: session_01AaqTUSRhRmRpBxM8E4QSPR
-    date: "2026-10-16"
-    severity: minor
-    description: "Two parallel review subagents plus a doc-heavy PR flow for a two-line template change cost far more than the change"
-    solution: "Let code-review run inline for diffs of a few lines"
-  - session: session_018sAirSgDY1Nv82JVogjcyR
-    date: "2026-10-16"
-    severity: minor
-    description: "The code-review Skill ran two Sonnet subagents on a 6-line doc diff, costing about 120k tokens for judgement-call-only findings."
-    solution: "Let the Skill run Standards alone for a doc-only diff under about 20 lines."

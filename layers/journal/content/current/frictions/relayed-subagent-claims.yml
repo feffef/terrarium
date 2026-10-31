@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
 surface: safe
-status: open
+status: tracked
+ref: "issue #2723"
 notes: |-
   2026-10-30 survey: issue #2657 closed by PR #2670 (recorded in fixes); status reset to open.
 fixes:
@@ -21,16 +22,6 @@ fixes:
     date: "2026-10-29"
     summary: "dispatch-subagents again tells the dispatcher to re-check a subagent's factual or attribution claims against their cited source before they ship."
 occurrences:
-  - session: session_013RCsUF234qAGu3CJr3v2on
-    date: "2026-10-16"
-    severity: minor
-    description: "Posted the subagent's file count (67) in issue #2183 without checking; ls showed 68, so the issue needed a correction. Broke 'Verify before you state'."
-    solution: "Recount any number a subagent reports before it goes into an issue."
-  - session: session_015vXkKcdLwYRQqKKVJ8BLJJ
-    date: "2026-10-16"
-    severity: minor
-    description: "Grilling Q1 relayed the triage agent's pick (no schema change) without checking how the system would know a cause was accepted; the owner caught it"
-    solution: "Before relaying a pick, check that it can be carried out with the data that exists; picks that rely on free-text conventions are a warning sign"
   - session: session_01GVmwHZQthucdGcVwe3HAUL
     date: "2026-10-17"
     severity: nit

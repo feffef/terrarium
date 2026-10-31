@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-21"
     summary: "clear-backlog-build now refuses a planned branch name containing \"git\" before any agent runs, replacing the prose warning in its build brief."
 occurrences:
-  - session: session_01VPNHf6qDdJPXX23GghKs74
-    date: "2026-10-16"
-    severity: minor
-    description: "The worktree guard refused any git command containing 'git' twice, so the build agent for branch git-conventions-stop-hook-note committed on a temp branch"
-    solution: "Fix the worktree guard's match so a branch name containing 'git' is not read as a second git command"
-  - session: session_018sAirSgDY1Nv82JVogjcyR
-    date: "2026-10-16"
-    severity: minor
-    description: "The harness refused the impl agent's git commands when the word git appeared twice (a branch or file name), so it renamed its branch and logs."
-    solution: "Note the guard's trigger in dispatch-subagents section 3 beside the one-git-command-per-call line."
   - session: session_01QsVUJGmHhhoAn8T6ewjnLP
     date: "2026-10-21"
     severity: minor

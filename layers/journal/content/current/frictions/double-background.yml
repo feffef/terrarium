@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_01N9bwDKW51kMS6WJvK2nfSU
-    date: "2026-10-16"
-    severity: nit
-    description: "A Bash call with run_in_background plus a trailing & was blocked by the double-background guard, and a sleep-then-tail wait was blocked, costing two retries."
-    solution: "Use run_in_background alone and a Monitor until-loop from the start."
   - session: session_01Wo87Rt4Jm7quTeLgizu4QK
     date: "2026-10-19"
     severity: nit

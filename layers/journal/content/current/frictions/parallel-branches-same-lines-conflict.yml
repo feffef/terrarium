@@ -6,21 +6,6 @@ status: open
 notes: |-
   2026-10-21 design: a rule on parallel branches dropped: the five occurrences have different causes, one is already fixed by a cap in the contract, and the cost is one merge step.
 occurrences:
-  - session: e34491a0-8237-4285-88b7-1a0b73cd29e7
-    date: "2026-10-16"
-    severity: nit
-    description: "After #2179 merged, PR #2177 conflicted on an adjacent guards.md roster row another PR had reworded"
-    solution: "Expected with a shared table; merging main into the branch resolved it in one step"
-  - session: session_01JuCbPDE6DkKs6mTCFAKQNr
-    date: "2026-10-16"
-    severity: minor
-    description: "Main restructured the same landing while the PR was open, causing a merge conflict the owner had to point out."
-    solution: "Fetch origin main and check for recent edits to the files right before pushing or asking to merge."
-  - session: session_013RCsUF234qAGu3CJr3v2on
-    date: "2026-10-16"
-    severity: minor
-    description: "main landed the empty-glob check in the old scripts/validate-adr-rules.ts while this branch had split it, giving a content conflict plus a spec whose new fixtures used the old flat layout."
-    solution: "Land large file moves quickly, or announce them so parallel PRs target the new layout."
   - session: session_013zxzeRkASapvnaGkGVdSBk
     date: "2026-10-27"
     severity: minor

@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-17"
     summary: "A cited directory now flags a page only when its listing changes between the page's pinned revision and main."
 occurrences:
-  - session: session_015Bv9LjWV7VZhFbpkfKcPqW
-    date: "2026-10-16"
-    severity: nit
-    description: "glassbox-update script pins pages that have changed paths but no edited range, so flagged pages look done before they are reviewed."
-    solution: "Report flagged pages after --write too, or pin only after review."
   - session: session_01Aji3mgX1G7kuK9Bs4mEHX6
     date: "2026-10-23"
     severity: minor

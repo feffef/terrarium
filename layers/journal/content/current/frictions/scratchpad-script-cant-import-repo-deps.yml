@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-19"
     summary: "Added a git-ignored .throwaway/ folder whose scripts resolve the repo's node_modules, with a CLAUDE.md line pointing to it."
 occurrences:
-  - session: session_01RKUs8JUM5uASMfiE3hvXRA
-    date: "2026-10-16"
-    severity: minor
-    description: "First Playwright script failed twice: scratchpad .ts is CJS under tsx, and playwright-core would not resolve from outside the repo."
-    solution: "The Skill could point at scripts/probe.ts first, or the doc could say scratchpad scripts need .mts plus absolute imports."
   - session: session_01CXxyUmwkN3Rx5DTSK2s391
     date: "2026-10-17"
     severity: nit

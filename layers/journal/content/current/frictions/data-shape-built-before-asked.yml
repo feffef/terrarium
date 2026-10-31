@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-19"
     summary: "Added a path-scoped rule to settle a stored field's shape with a Trusted user before building it."
 occurrences:
-  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
-    date: "2026-10-16"
-    severity: nit
-    description: "The first backfill plan used an index, the user then preferred full text; the index commits and schema were built and thrown away within one PR."
-    solution: "When a data-shape choice is cheap to ask about, ask it before building; I only answered with a size comparison afterwards."
   - session: session_014PZ7z8L13nqP7rPdCgZRcM
     date: "2026-10-17"
     severity: moderate

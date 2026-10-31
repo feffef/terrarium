@@ -10,11 +10,6 @@ fixes:
     date: "2026-10-27"
     summary: "clear-backlog §4 now names git push origin HEAD:<branch> for a build whose branch the main checkout holds."
 occurrences:
-  - session: session_01DNheR1Cpt9b6vFsmGdzvxq
-    date: "2026-10-16"
-    severity: minor
-    description: "The Fable agent's worktree branch name differed from the branch I may push to, so I had to wait for a PR to merge and cherry-pick its commits onto my branch; the Stop hook kept asking to push the other branch."
-    solution: "Tell worktree-isolated impl agents in the brief to name their branch after the session's designated branch, or let the Stop hook skip unreviewed worktree branches."
   - session: session_01AEph4xtY5Zhm8GkQLqacrX
     date: "2026-10-26"
     severity: nit

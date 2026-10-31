@@ -24,16 +24,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve step 7 fixes a false claim from the last re-grade before step 8's gate, and Done counts it."
 occurrences:
-  - session: session_01WynjtDHvk8MajTsgr59Ckt
-    date: "2026-10-16"
-    severity: minor
-    description: "Edited files while gate:scoped was building, so its e2e ran a new test against an old build and failed"
-    solution: "Don't edit the tree during a gate run; commit fixes after it ends, then re-run"
-  - session: session_01JuCbPDE6DkKs6mTCFAKQNr
-    date: "2026-10-16"
-    severity: minor
-    description: "Started pnpm gate:scoped in the background, then edited files during it, so it had to run a second time on the final head."
-    solution: "Finish review fixes before starting the gate, or start it only after the last commit."
   - session: session_011G3PKUqDog2WRSuqypmuJX
     date: "2026-10-20"
     severity: minor

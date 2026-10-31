@@ -9,16 +9,6 @@ fixes:
     date: "2026-10-12"
     summary: The dispatch Skill and environment-caveats now list what the worktree guard wrongly blocks and say one git command per call.
 occurrences:
-  - session: session_01XUuxhnMc7t2zXaH9ebtxKZ
-    date: "2026-10-16"
-    severity: nit
-    description: "The impl agent's Bash commands hit the worktree guard on compound commands and a pipe, the same behaviour fix 1 addresses."
-    solution: "The new clause in the build workflow brief; the guard itself is outside the repo."
-  - session: session_013RCsUF234qAGu3CJr3v2on
-    date: "2026-10-16"
-    severity: minor
-    description: "Impl agents repeatedly hit the worktree shell guard on compound commands, heredocs and variable expansion, and worked around it with helper scripts; one ran a stale helper left in the shared scratchpad."
-    solution: "Briefs tell agents to name scratch helpers uniquely; consider documenting the guard's triggers where dispatch-subagents points."
   - session: session_019jfJv6yLmcLUAJiTTomyeu
     date: "2026-10-25"
     severity: nit

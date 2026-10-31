@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-23"
     summary: "CLAUDE.md now imports GLOSSARY-MAP.md and GLOSSARY.md with @, replacing the session-start read bullet."
 occurrences:
-  - session: 5ba40529-d06b-4b13-a44a-a01292148909
-    date: "2026-10-16"
-    severity: nit
-    description: "Skipped reading GLOSSARY-MAP.md and GLOSSARY.md at session start, as CLAUDE.md requires"
-    solution: "Low impact here since nothing was written; the glossary read could be enforced by a SessionStart hint"
   - session: session_01GVmwHZQthucdGcVwe3HAUL
     date: "2026-10-17"
     severity: nit
