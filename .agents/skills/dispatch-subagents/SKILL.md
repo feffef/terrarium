@@ -100,11 +100,9 @@ adjacent regions conflict silently (issue #603).
 
 ## 5. Verify nothing is stranded
 
-Before you finish, push every reviewed branch, remove the worktree of any branch
-you dropped, and run **`pnpm check:worktrees`**. It reads git's own worktree
-list, so it catches a subagent that died without returning, and exits non-zero
-for any linked worktree left uncommitted or unpushed (`EXCUSALS` in the script
-lists the exceptions). Done when it exits 0.
+Before you finish, push every reviewed branch and remove the worktree of any
+branch you dropped. `log-session --author` enforces this and removes worktrees
+already merged (`EXCUSALS` in `scripts/git/check-worktrees.ts` lists the exceptions).
 
 If you `cd`'d into a subagent's worktree, `cd` back (or use absolute paths) and
 re-check `git status` at the root: a closure Stop-hook flag may belong to that

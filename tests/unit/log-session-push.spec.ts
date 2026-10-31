@@ -11,7 +11,7 @@ import { existsSync, mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { authorMain, buildLogCommit, isLinkedWorktree, pushWithRetry } from '../../scripts/session/log-session.ts'
+import { authorMain, buildLogCommit, isLinkedWorktree, pushWithRetry, type WorktreeSeam } from '../../scripts/session/log-session.ts'
 import { SESSIONS_DIR } from '../../scripts/session/journal-files.ts'
 
 /** git in a given repo, with a deterministic identity so commits are reproducible. */
@@ -159,6 +159,8 @@ describe('pushWithRetry() / buildLogCommit() — against a throwaway bare remote
     let orchestratorScratch: string
     let subagentAuthoredPath: string
     let orchestratorAuthoredPath: string
+    // The worktree sweep (#2721) would remove this fixture's merged worktree; it has its own tests.
+    const noSweep: WorktreeSeam = { read: () => ({ result: { findings: [], failures: [] }, current: '' }), remove: () => [] }
 
     function authoredYaml(session: string, goal: string): string {
       return `session: ${session}\ngoal: ${goal}\nstatus: completed\noutcome: ok\nsummary: s\nfrictions: []\n`
@@ -189,7 +191,7 @@ describe('pushWithRetry() / buildLogCommit() — against a throwaway bare remote
       writeFileSync(subagentAuthoredPath, authoredYaml('session_shared', 'subagent attempt'))
 
       expect(() =>
-        authorMain([subagentAuthoredPath], { cwd: worktreePath, scratchAbs: orchestratorScratch }),
+        authorMain([subagentAuthoredPath], { cwd: worktreePath, scratchAbs: orchestratorScratch, worktrees: noSweep }),
       ).toThrow('EXIT')
       expect(process.exit).toHaveBeenCalledWith(1)
       expect(
@@ -202,7 +204,7 @@ describe('pushWithRetry() / buildLogCommit() — against a throwaway bare remote
       writeFileSync(subagentAuthoredPath, authoredYaml('session_shared', 'deliberate single-session worktree'))
 
       expect(() =>
-        authorMain([subagentAuthoredPath, '--allow-worktree'], { cwd: worktreePath, scratchAbs: orchestratorScratch }),
+        authorMain([subagentAuthoredPath, '--allow-worktree'], { cwd: worktreePath, scratchAbs: orchestratorScratch, worktrees: noSweep }),
       ).not.toThrow()
       expect(existsSync(orchestratorScratch)).toBe(true)
     })
@@ -210,7 +212,7 @@ describe('pushWithRetry() / buildLogCommit() — against a throwaway bare remote
     it('the parallel-write scenario: a worktree-isolated subagent cannot clobber the orchestrator\'s own scratch', () => {
       // The orchestrator authors first, from the main checkout.
       writeFileSync(orchestratorAuthoredPath, authoredYaml('session_shared', 'orchestrator survey + review + merge'))
-      authorMain([orchestratorAuthoredPath], { cwd: work, scratchAbs: orchestratorScratch })
+      authorMain([orchestratorAuthoredPath], { cwd: work, scratchAbs: orchestratorScratch, worktrees: noSweep })
       expect(existsSync(orchestratorScratch)).toBe(true)
       const afterOrchestrator = readFileSync(orchestratorScratch, 'utf8')
       expect(JSON.parse(afterOrchestrator).goal).toBe('orchestrator survey + review + merge')
@@ -220,7 +222,7 @@ describe('pushWithRetry() / buildLogCommit() — against a throwaway bare remote
       // overwriting the orchestrator's own scratch content.
       writeFileSync(subagentAuthoredPath, authoredYaml('session_shared', 'subagent implements one PR'))
       expect(() =>
-        authorMain([subagentAuthoredPath], { cwd: worktreePath, scratchAbs: orchestratorScratch }),
+        authorMain([subagentAuthoredPath], { cwd: worktreePath, scratchAbs: orchestratorScratch, worktrees: noSweep }),
       ).toThrow('EXIT')
 
       // The orchestrator's own scratch survives byte-for-byte.
@@ -230,7 +232,7 @@ describe('pushWithRetry() / buildLogCommit() — against a throwaway bare remote
     it('authors normally from the main/primary checkout, with no flag needed', () => {
       writeFileSync(orchestratorAuthoredPath, authoredYaml('session_main', 'ordinary orchestrator run'))
       expect(() =>
-        authorMain([orchestratorAuthoredPath], { cwd: work, scratchAbs: orchestratorScratch }),
+        authorMain([orchestratorAuthoredPath], { cwd: work, scratchAbs: orchestratorScratch, worktrees: noSweep }),
       ).not.toThrow()
       expect(existsSync(orchestratorScratch)).toBe(true)
     })

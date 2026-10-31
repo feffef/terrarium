@@ -36,6 +36,7 @@ import { z } from 'zod'
 import { ruleVerdict, usefulVerdict } from '../../shared/schemas/session.ts'
 import { sessionUrl } from '../../shared/session-url.ts'
 import { fetchOriginMain, git, SESSION_TRAILER, tryGit } from '../lib/git.ts'
+import { runSweep, type Finding, type SweepResult } from '../git/check-worktrees.ts'
 import { FALLBACK_MODEL, provenanceFooter } from './commit-trailer.ts'
 import { findTruncatedScalars, SESSIONS_DIR, truncationError, validateEntry, type SessionEntry } from './journal-files.ts'
 import {
@@ -520,6 +521,57 @@ export function closureRefusal(status: string, trace: Pick<MechanicalTrace, 'mer
   return 'refusing a completed log: a PR merged and close-session has not run since. Invoke the close-session Skill first, then author again.'
 }
 
+/** The git side of the worktree sweep at close (#2721): a seam, so tests touch no real worktree. */
+export interface WorktreeSeam {
+  read: (cwd: string) => { result: SweepResult; current: string }
+  /** Removes each path it can and returns those it removed. */
+  remove: (paths: string[], cwd: string) => string[]
+}
+
+const gitWorktrees: WorktreeSeam = {
+  read: (cwd) => ({ result: runSweep(cwd), current: resolve(git(['rev-parse', '--show-toplevel'], cwd).trim()) }),
+  remove: (paths, cwd) => {
+    // A locked worktree (a running agent's) needs a second --force, so it survives.
+    const removed = paths.filter((p) => tryGit(['worktree', 'remove', '--force', p], cwd).ok)
+    tryGit(['worktree', 'prune'], cwd)
+    return removed
+  },
+}
+
+/** Linked worktrees whose HEAD is already in `origin/main`, except the one this session runs in. */
+export function mergedWorktreesToRemove(findings: Finding[], current: string): string[] {
+  return findings.filter((f) => !f.isPrimary && f.mergedToMain && f.path !== current).map((f) => f.path)
+}
+
+/** #2721: remove merged worktrees, then refuse a completed or partial log while a
+ *  linked worktree holds unrescued work; other statuses may leave work unpushed
+ *  on purpose, so they get a Friction instead. */
+function sweepWorktreesAtClose(merged: AuthoredScratch, cwd: string, seam: WorktreeSeam): void {
+  let swept: ReturnType<WorktreeSeam['read']>
+  try {
+    swept = seam.read(cwd)
+  } catch (err) {
+    console.error(`log-session: worktree sweep skipped, could not read git state: ${err instanceof Error ? err.message : err}`)
+    return
+  }
+  const doomed = mergedWorktreesToRemove(swept.result.findings, swept.current)
+  for (const p of doomed.length ? seam.remove(doomed, cwd) : []) console.log(`  removed merged worktree ${p}`)
+  const paths = swept.result.failures.map((f) => f.path).sort()
+  if (!paths.length) return
+  if (merged.status === 'completed' || merged.status === 'partial') {
+    fail(
+      `refusing a ${merged.status} log: linked worktree(s) hold uncommitted or unpushed work:\n` +
+        `${paths.map((p) => `  ${p}`).join('\n')}\nFor each, push it, or remove it if its work is meant to be dropped; then author again.`,
+    )
+  }
+  const friction = {
+    description: `Linked worktree(s) left with uncommitted or unpushed work at close: ${paths.join(', ')}`,
+    solution: 'Push each, or remove it if its work is meant to be dropped.',
+    severity: 'minor' as const,
+  }
+  if (!merged.frictions.some((f) => frictionKey(f) === frictionKey(friction))) merged.frictions.push(friction)
+}
+
 /** The marker every dropped-scratch placeholder log's sole friction carries —
  *  greppable, and distinguishes this synthetic entry from a real one. */
 export const DROPPED_SCRATCH_FRICTION = 'issue #449 Gap 3: authored scratch dropped before landing'
@@ -831,7 +883,7 @@ function fetchedMainSchemaErrors(entry: unknown, remote: string): string | null 
  *  refusal + `--allow-worktree` escape hatch), not just the underlying primitive. */
 export function authorMain(
   argv: string[],
-  opts: { cwd?: string; scratchAbs?: string; mainSchemaFn?: LandOpts['mainSchemaFn'] } = {},
+  opts: { cwd?: string; scratchAbs?: string; mainSchemaFn?: LandOpts['mainSchemaFn']; worktrees?: WorktreeSeam } = {},
 ): void {
   const cwd = opts.cwd ?? process.cwd()
   const scratchAbs = opts.scratchAbs ?? join(root, SCRATCH_FILE)
@@ -888,6 +940,7 @@ export function authorMain(
   }
   const closure = ctx && closureRefusal(merged.status, ctx.trace)
   if (closure) fail(closure)
+  sweepWorktreesAtClose(merged, cwd, opts.worktrees ?? gitWorktrees)
   const keptNo = droppedNoVerdicts(merged, result.data)
   // Its existence is the wrap-up signal the landing path gates on.
   mkdirSync(dirname(scratchAbs), { recursive: true })
