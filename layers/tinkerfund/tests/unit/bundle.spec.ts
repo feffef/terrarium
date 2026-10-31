@@ -7,7 +7,7 @@ import { tinkerfundCampaignDeals } from '../../app/utils/campaign.ts'
 import type { TinkerfundPromotionTerms } from '../../app/utils/campaign.ts'
 import { resolveTinkerfundCart } from '../../app/utils/cart.ts'
 import type { TinkerfundDraft, TinkerfundPledge } from '../../app/utils/cart.ts'
-import { quoteTinkerfundCheckout, tinkerfundBundleNote, tinkerfundBundleNudge } from '../../app/utils/checkout.ts'
+import { quoteTinkerfundCheckout, tinkerfundBundleEarned, tinkerfundBundleNote, tinkerfundBundleNudge } from '../../app/utils/checkout.ts'
 import { catalog, HOUR, NOW, pledge, promotion, shop } from './support.ts'
 
 const any2 = promotion({ title: 'Any two', discount: { percent: 10 }, bundle: { min: 2 } })
@@ -80,6 +80,12 @@ describe('where a bundle shows', () => {
     expect(nudge([lamp, mug])).toBeUndefined()
     expect(nudge([mug], [pair])).toBeUndefined()
     expect(nudge([lamp], [{ ...any2, start: '+1d' }])).toBeUndefined()
+  })
+
+  it('says the discount is coming once the bundle is met, and not before', () => {
+    const earned = (cart: TinkerfundDraft[]) => tinkerfundBundleEarned([any2], quote(cart, [any2]).view, NOW)
+    expect(earned([lamp, mug])).toBe('Bundle discount earned: 10% off each, applied at checkout')
+    expect(earned([lamp])).toBeUndefined()
   })
 })
 

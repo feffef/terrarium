@@ -1,10 +1,18 @@
 <script setup lang="ts">
-const props = defineProps<{ cards: TinkerfundCard[]; categories: { slug: string; name: string }[]; clock: TinkerfundClock }>()
+const props = defineProps<{ cards: TinkerfundCard[]; categories: { slug: string; name: string }[]; clock: TinkerfundClock; limit?: number }>()
 const { link } = useTinkerfundSpace()
 const locale = useTinkerfundLocale()
 const money = useTinkerfundMoney()
 const category = ref<string>()
-const rows = computed(() => props.cards.filter((c) => !category.value || c.category === category.value))
+const matching = computed(() => props.cards.filter((c) => !category.value || c.category === category.value))
+const showAll = ref(false)
+const region = ref<HTMLElement>()
+async function expand() {
+  showAll.value = true
+  await nextTick()
+  region.value?.focus() // the button leaves the page; keep keyboard focus on the table
+}
+const rows = computed(() => (showAll.value || !props.limit ? matching.value : matching.value.slice(0, props.limit)))
 const label = useId()
 </script>
 
@@ -25,7 +33,7 @@ const label = useId()
         </button>
       </div>
     </div>
-    <div class="scroll tf-panel" role="region" :aria-labelledby="label" tabindex="0">
+    <div ref="region" class="scroll tf-panel" role="region" :aria-labelledby="label" tabindex="0">
       <table>
         <caption :id="label" class="tf-sr">Campaign index, most Backers first</caption>
         <thead>
@@ -61,6 +69,9 @@ const label = useId()
         </tbody>
       </table>
     </div>
+    <button v-if="limit && !showAll && matching.length > limit" type="button" class="more" @click="expand">
+      Show all {{ matching.length }} Campaigns
+    </button>
   </div>
 </template>
 
@@ -104,4 +115,5 @@ tbody tr:hover { background: var(--tf-accent-soft); }
   th, td { padding: 10px 6px; }
   thead th { letter-spacing: 0; }
 }
+.more { margin-top: 12px; padding: 8px 14px; border: var(--tf-hairline); border-radius: var(--tf-radius); background: var(--tf-surface); color: var(--tf-ink); font: 500 12px/1 var(--tf-mono); letter-spacing: 0.05em; text-transform: uppercase; cursor: pointer; }
 </style>
