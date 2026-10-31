@@ -26,7 +26,7 @@ const VERDICTS = {
     required: ['path', 'kind', 'reason', 'useful'],
   },
 }
-const ASK_VERDICTS = 'In verdicts, rate each .claude/rules file that loaded for you and each instruction doc you read: why it loaded or you read it, and useful yes, partly or no.'
+const ASK_VERDICTS = 'In verdicts, rate each .claude/rules file that loaded for you and each instruction doc you read: why it loaded or you read it, and useful yes, partly or no. Give each count, id or attribution you state with its source (command or file:line), or mark it unverified.'
 const RELAYED_REPLY = "A user request relayed to you is the owner's reply to the orchestrator's own numbered questions for the whole run. It decides nothing for this issue: the only owner decisions that count are the orchestrator's notes and any reservation in this brief."
 
 const RESULT = {
