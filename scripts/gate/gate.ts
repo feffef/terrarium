@@ -9,7 +9,7 @@
 import { spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { appendFileSync, linkSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
-import { constants, tmpdir } from 'node:os'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { flagValue, root, runIfMain } from '../lib/cli.ts'
 import { fetchOriginMain, git, isShallowRepository, unshallow } from '../lib/git.ts'
@@ -262,11 +262,11 @@ function takeRunLock(path = join(git(['rev-parse', '--absolute-git-dir'], root).
     process.exit(1)
   }
   writeFileSync(path, String(process.pid))
+  // No signal handler: main() is synchronous, so one would defer the signal
+  // past every step. A killed run's dead pid is taken over by the next run.
   process.on('exit', () => {
     if (readHolder(path) === process.pid) rmSync(path, { force: true })
   })
-  // A signal skips 'exit' handlers unless it is turned into an exit.
-  for (const sig of ['SIGINT', 'SIGTERM', 'SIGHUP'] as const) process.once(sig, () => process.exit(128 + constants.signals[sig]))
 }
 
 // ── Stale-tree warning (#2434) ──────────────────────────────────────────────
