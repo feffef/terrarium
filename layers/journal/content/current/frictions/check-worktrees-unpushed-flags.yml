@@ -2,8 +2,11 @@ name: check-worktrees-unpushed-flags
 summary: check:worktrees reported a worktree or checkout as unpushed or detached after a push or build that the Skill had not told the session to follow up.
 cause: "A worktree pushed with 'git push origin HEAD:branch' has no upstream, or the main checkout was left on a detached HEAD by a build workflow; check:worktrees fails until the session pushes the run branch or sets upstreams by hand. Signals: 'pnpm check:worktrees failed', 'reported them unpushed', 'no upstream', 'detached HEAD'."
 surface: safe
-status: tracked
-ref: "dispatched 2026-10-31: drop the upstream branch of unpushedCount in check-worktrees.ts"
+status: open
+fixes:
+  - pr: 2728
+    date: "2026-10-31"
+    summary: "check:worktrees counts commits on no remote-tracking ref, ignoring the branch's upstream, so a worktree branched from origin/main and pushed to its own branch no longer reads as unpushed."
 occurrences:
   - session: session_013zxzeQDh7MCP7HpYBYBTeh
     date: "2026-10-28"
