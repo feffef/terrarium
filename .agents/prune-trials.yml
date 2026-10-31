@@ -116,3 +116,33 @@ trials:
       `ScheduleWakeup` outside `/loop` or called `Skill` on an inlined Skill
       and the guard did not stop it because a comment was cut. NOT damage: a
       guard denying the call and the session following its message.
+  - problem: >
+      `pr-workflow.md` "Review before the first push" and its three restatements
+      (recipe steps 1 and 4, "Closing a scheduled run's PR" step 1) plainly
+      reworded (-4 net, from `git diff --numstat`: 19 added, 23 deleted; this
+      entry not counted): exemption and simple-change lists folded into
+      one-sentence rules, "not the whole branch", "fails on our own PRs" and the
+      duplicated review-kinds list in step 4 cut; every rule kept. Chosen after
+      the search subagent covered the instruction corpus, guard headers and the
+      tracker: the review-before-push rule failed as prose and was narrowed three
+      times (#2311 after #1852 and #1853; #2397 after #2359; #2472, whose text
+      says "a prose rule with no guard"), and no hook checks it. Runners-up:
+      `git-conventions.md` "Don't chain git" (#2397), CLAUDE.md "Verify before
+      you state" (#2341, already cut back once). Pointers in `dispatch-subagents`
+      (open trial territory), `frictions-to-fixes`, `clear-backlog` and
+      `blog-post` untouched. Little text to cut. No open trial was judgeable
+      this run (`find-trial-window.ts`: all three before their floor).
+    territory:
+      paths:
+        - "docs/agents/pr-workflow.md: 'Review before the first push', recipe steps 1 and 4, 'Closing a scheduled run's PR' step 1"
+      keywords:
+        - simple change
+        - Review before the first push
+    opened: 2026-10-31
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a first push skipped
+      `code-review`, or a non-simple diff got a self-read, or a stale verdict
+      SHA was posted, and the cut wording would have prevented it. NOT damage:
+      the same skip the old text allowed (#2472-style miscounts), or `merge-pr.ts`
+      refusing a verdict whose SHA does not match.
