@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeStBRUtsbccz5kMYNU
 startedAt: 2026-10-31T08:35:24Z
-endedAt: 2026-10-31T08:48:47Z
+endedAt: 2026-10-31T08:50:09Z
 kind: interactive
 goal: Clear the issue backlog
-status: in-review
-outcome: "Two PRs open (#2732 and #2733); six issues wait on the owner's grilling answers"
-summary: "Human-instructed: the owner invoked /clear-backlog. Agent-initiated within that Skill: the sweep set (7 needs-triage issues plus ready-for-agent #2612; five ready-for-human issues skipped because an agent commented last; no external PRs), one explore run, one build run, the triage labels and comments the triage agents posted, and both PRs. #2612 (owner pick 1b from the 2026-10-28 grilling, which I checked in that session's log) probed the container worktree guard: only $VAR expansion in a git command was refused, so the doc's list of triggers was replaced (PR #2732). I cut an unverified \"may vary by run\" cause by hand. A judgement call stays open: clear-backlog-build.js still refuses branch names containing \"git\". #2725 (PR #2733) points the frictions-to-fixes briefs' output at {SCRATCH_DIR}. Its review hit the three-round cap with one open finding (two §3.3 calls had no target), which I fixed by hand. I split #2725 from #2724 despite their shared file, because #2725's brief leaves §5 to #2724. Six grill questions (#2724, #2723, #2721, #2660, #2719, #2726) were sent to the owner and are unanswered."
+status: blocked
+outcome: "#2612 and #2725 merged (PRs #2732 and #2733); six issues wait on the owner's grilling answers"
+summary: "Human-instructed: the owner invoked /clear-backlog. Agent-initiated within that Skill: the sweep set (7 needs-triage issues plus ready-for-agent #2612; five ready-for-human issues skipped because an agent commented last; no external PRs), one explore run, one build run, the triage labels and comments the triage agents posted, and both PRs. #2612 (owner pick 1b from the 2026-10-28 grilling, which I checked in that session's log) probed the container worktree guard: only $VAR expansion in a git command was refused, so the doc's list of triggers was replaced (PR #2732). I cut an unverified \"may vary by run\" cause by hand. A judgement call stays open: clear-backlog-build.js still refuses branch names containing \"git\". #2725 (PR #2733) points the frictions-to-fixes briefs' output at {SCRATCH_DIR}. Its review hit the three-round cap with one open finding (two §3.3 calls had no target), which I fixed by hand. I split #2725 from #2724 despite their shared file, because #2725's brief leaves §5 to #2724. Six grill questions (#2724, #2723, #2721, #2660, #2719, #2726) were sent to the owner and are unanswered. Both PRs merged on green CI via merge-pr.ts after a posted verdict; check:worktrees passed."
 prs:
   - "2732"
   - "2733"
@@ -77,17 +77,20 @@ frictions:
   - description: "clear-backlog-build hit its 3-round review cap on a prose-only #2725 branch, leaving one finding to fix by hand"
     solution: Brief scope lines should match the done-when line; the brief named only some §3.3 calls while done-when covered all
     severity: minor
-durationSec: 803
+durationSec: 884
 models:
-  claude-opus-5-5: 79
+  claude-opus-5-5: 95
 toolCounts:
-  Bash: 29
+  Bash: 34
   Workflow: 3
   ToolSearch: 2
   PushNotification: 1
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
   Skill: 2
+  ReadNotifications: 1
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
 filesEdited:
   - docs/agents/environment-caveats.md
   - .agents/skills/frictions-to-fixes/survey-brief.md
@@ -209,42 +212,42 @@ subagents:
     durationSec: 48
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 1.7
+    tokenShare: 1.6
   - type: workflow-subagent
     task: gate fix/2612-worktree-guard-accepted-forms
     model: claude-sonnet-5-5
     durationSec: 44
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: build fix/2725-frictions-briefs-output-paths
     model: claude-sonnet-5-5
     durationSec: 127
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 5.9
+    tokenShare: 5.6
   - type: workflow-subagent
     task: Spec fix/2612-worktree-guard-accepted-forms r1
     model: claude-opus-5-5
     durationSec: 43
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 2.1
+    tokenShare: 2
   - type: workflow-subagent
     task: build fix/2612-worktree-guard-accepted-forms
     model: claude-sonnet-5-5
     durationSec: 136
     toolCalls: 29
     modelCalls: 14
-    tokenShare: 5.6
+    tokenShare: 5.3
   - type: workflow-subagent
     task: Standards fix/2725-frictions-briefs-output-paths r2
     model: claude-opus-5-5
     durationSec: 44
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 2.1
+    tokenShare: 2
   - type: workflow-subagent
     task: fix fix/2725-frictions-briefs-output-paths r2
     model: claude-sonnet-5-5
@@ -258,98 +261,98 @@ subagents:
     durationSec: 37
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: Spec fix/2725-frictions-briefs-output-paths r2
     model: claude-opus-5-5
     durationSec: 42
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: workflow-subagent
     task: Standards fix/2612-worktree-guard-accepted-forms r1
     model: claude-opus-5-5
     durationSec: 41
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: workflow-subagent
     task: Spec fix/2725-frictions-briefs-output-paths r3
     model: claude-opus-5-5
     durationSec: 42
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 2.2
+    tokenShare: 2
   - type: workflow-subagent
     task: Spec fix/2725-frictions-briefs-output-paths r1
     model: claude-opus-5-5
     durationSec: 60
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 2.9
+    tokenShare: 2.7
   - type: workflow-subagent
     task: Standards fix/2725-frictions-briefs-output-paths r1
     model: claude-opus-5-5
     durationSec: 56
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 4.2
+    tokenShare: 4
   - type: workflow-subagent
     task: "triage #2719"
     model: claude-opus-5-5
     durationSec: 91
     toolCalls: 16
     modelCalls: 11
-    tokenShare: 4.4
+    tokenShare: 4.2
   - type: workflow-subagent
     task: "triage #2723"
     model: claude-opus-5-5
     durationSec: 89
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 3.9
+    tokenShare: 3.7
   - type: workflow-subagent
     task: "triage #2721"
     model: claude-opus-5-5
     durationSec: 117
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 5.4
+    tokenShare: 5.1
   - type: workflow-subagent
     task: "triage #2726"
     model: claude-opus-5-5
     durationSec: 94
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 6.8
+    tokenShare: 6.5
   - type: workflow-subagent
     task: "triage #2724"
     model: claude-opus-5-5
     durationSec: 121
     toolCalls: 17
     modelCalls: 12
-    tokenShare: 5.6
+    tokenShare: 5.3
   - type: workflow-subagent
     task: "triage #2612"
     model: claude-opus-5-5
     durationSec: 108
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 5
+    tokenShare: 4.8
   - type: workflow-subagent
     task: "triage #2660"
     model: claude-opus-5-5
     durationSec: 87
     toolCalls: 17
     modelCalls: 12
-    tokenShare: 4.8
+    tokenShare: 4.5
   - type: workflow-subagent
     task: "triage #2725"
     model: claude-opus-5-5
     durationSec: 145
     toolCalls: 21
     modelCalls: 16
-    tokenShare: 6.8
+    tokenShare: 6.5
 gitBranch: ccr-1d8e968a-4kuht9
 entrypoint: remote_mobile
 cliVersion: 2.1.316
