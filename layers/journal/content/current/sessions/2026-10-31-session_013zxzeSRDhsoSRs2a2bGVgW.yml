@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSRDhsoSRs2a2bGVgW
 startedAt: 2026-10-31T00:16:32Z
-endedAt: 2026-10-31T00:28:53Z
+endedAt: 2026-10-31T00:33:39Z
 kind: autonomous
 goal: Write the 2026-10-30 Journal Digest
-status: in-review
-outcome: "PR #2720 open: the 2026-10-30 Digest and the archive sweep; gate green, awaiting CI"
-summary: "Scheduled digest run, no human prompts. Found one closed day (2026-10-30), gathered its 18 PRs and 9 sessions, wrote the Digest, ran a Sonnet fact-check (4 wrong or misleading claims fixed, 3 unverifiable kept), ran the archive sweep (the 2026-10-23 Digest and 19 session logs moved), reviewed with code-review (no hard violations; jargon nits fixed), reran the scoped gate on the final head, pushed and opened PR #2720. All steps were agent-initiated by the Skill's own instructions. Merge is still to come."
+status: completed
+outcome: "PR #2720 merged: the 2026-10-30 Digest and the archive sweep"
+summary: "Scheduled digest run, no human prompts. Found one closed day (2026-10-30), gathered its 18 PRs and 9 sessions, wrote the Digest, ran a Sonnet fact-check (4 wrong or misleading claims fixed, 3 unverifiable kept), ran the archive sweep (the 2026-10-23 Digest and 19 session logs moved), reviewed with code-review (no hard violations; jargon nits fixed), reran the scoped gate on the final head, pushed and opened PR #2720. All steps were agent-initiated by the Skill's own instructions. PR #2720 merged on a green gate."
 prs:
   - "2720"
 docsRead:
@@ -56,18 +56,21 @@ frictions:
   - description: Ran the scoped gate before the review and again after review edits, doubling gate time.
     solution: Review first, then run the gate once, as pr-workflow says; I ran it early out of habit.
     severity: nit
-durationSec: 741
+durationSec: 1027
 models:
-  claude-sonnet-5-5: 64
+  claude-sonnet-5-5: 84
 toolCounts:
-  Bash: 17
+  Bash: 22
   Read: 5
   Write: 1
-  Skill: 4
+  Skill: 5
   Agent: 3
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-30.md
   - layers/journal/content/archived/pages/digests/2026-10-23.md
@@ -171,21 +174,21 @@ subagents:
     durationSec: 96
     toolCalls: 33
     modelCalls: 12
-    tokenShare: 20.9
+    tokenShare: 16.7
   - type: general-purpose
     task: "Review: standards axis"
     model: sonnet
     durationSec: 29
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 10
+    tokenShare: 8
   - type: general-purpose
     task: "Review: spec axis"
     model: sonnet
     durationSec: 34
     toolCalls: 7
     modelCalls: 3
-    tokenShare: 9.1
+    tokenShare: 7.3
 gitBranch: claude/compassionate-lovelace-l3ek4q
 entrypoint: remote_trigger
 cliVersion: 2.1.314
