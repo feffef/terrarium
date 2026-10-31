@@ -18,8 +18,11 @@ import {
   mergeAuthored,
   pendingMain,
   reportUnexplainedReads,
+  mergedWorktreesToRemove,
   validateAuthored,
+  type WorktreeSeam,
 } from '../../scripts/session/log-session.ts'
+import type { Finding } from '../../scripts/git/check-worktrees.ts'
 import { extractTrace } from '../../scripts/session/transcript-trace.ts'
 import { findTruncatedScalars, validateEntry } from '../../scripts/session/journal-files.ts'
 import type { AuthoredScratch } from '../../scripts/session/transcript-trace.ts'
@@ -469,8 +472,9 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
     // `exit` throws so a refusal is catchable; `log` lines are what the agent sees.
     function author(
       fixture: { home: string; root: string },
-      { mainSchemaFn = () => null, notRead = [], scratchAbs = join(fixture.root, 'scratch.json'), extra = '', status = 'completed' }: {
+      { mainSchemaFn = () => null, notRead = [], scratchAbs = join(fixture.root, 'scratch.json'), extra = '', status = 'completed', worktrees }: {
         mainSchemaFn?: (entry: unknown) => string | null
+        worktrees?: WorktreeSeam
         notRead?: string[]
         scratchAbs?: string
         extra?: string
@@ -490,7 +494,7 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
       vi.stubEnv('HOME', fixture.home)
       let exited = false
       try {
-        authorMain([yml], { cwd: fixture.root, scratchAbs, mainSchemaFn })
+        authorMain([yml], { cwd: fixture.root, scratchAbs, mainSchemaFn, worktrees })
       } catch (err) {
         if ((err as Error).message !== 'EXIT') throw err
         exited = true
@@ -579,6 +583,69 @@ describe('reportUnexplainedReads (the author-time reasons prompt)', () => {
       const changed = author(fixture, { scratchAbs, extra: verdict('.claude/rules/adr-0012.md', 'yes') })
       expect(changed.logs.join('\n')).not.toContain("'no' verdict")
       expect(JSON.parse(readFileSync(scratchAbs, 'utf8')).ruleVerdicts[0].useful).toBe('yes')
+    })
+
+    // Issue #2721: the worktree sweep at close, behind a seam so no real worktree is touched.
+    describe('worktree sweep', () => {
+      const stranded = finding({ path: '/r/.claude/worktrees/wt-a', uncommitted: true })
+      const seam = (findings: Finding[], removed: string[] = []): WorktreeSeam => ({
+        read: () => ({
+          result: { findings, failures: findings.filter((f) => !f.isPrimary && (f.uncommitted || f.unpushed) && !f.excusedBy) },
+          current: '/r',
+          atMainTip: [],
+        }),
+        remove: (paths) => (removed.push(...paths), paths),
+      })
+
+      it('refuses a completed log while a linked worktree holds unrescued work, naming its path', () => {
+        const res = author(store(['ls']), { worktrees: seam([stranded]) })
+        expect(res).toMatchObject({ exited: true, scratchWritten: false })
+        expect(res.errors).toContain('/r/.claude/worktrees/wt-a')
+        expect(res.errors).toMatch(/push it, or remove it/)
+      })
+
+      it('records one minor Friction, not a refusal, on abandoned, however often it re-runs', () => {
+        const fixture = store(['ls'])
+        const scratchAbs = join(fixture.root, 'scratch.json')
+        const opts = { status: 'abandoned', scratchAbs, worktrees: seam([stranded]) }
+        expect(author(fixture, opts)).toMatchObject({ exited: false, scratchWritten: true })
+        author(fixture, opts)
+        const frictions = JSON.parse(readFileSync(scratchAbs, 'utf8')).frictions
+        expect(frictions).toHaveLength(1)
+        expect(frictions[0]).toMatchObject({ severity: 'minor' })
+        expect(frictions[0].description).toContain('/r/.claude/worktrees/wt-a')
+      })
+
+      it('passes cleanly and removes nothing when every linked worktree is clean and unmerged', () => {
+        const removed: string[] = []
+        const fixture = store(['ls'])
+        const scratchAbs = join(fixture.root, 'scratch.json')
+        const worktrees = seam([finding({ path: '/r', isPrimary: true }), finding({})], removed)
+        expect(author(fixture, { scratchAbs, worktrees })).toMatchObject({ exited: false, scratchWritten: true })
+        expect(removed).toEqual([])
+        expect(JSON.parse(readFileSync(scratchAbs, 'utf8')).frictions).toEqual([])
+      })
+
+      it('removes merged worktrees even when it refuses, and says so', () => {
+        const removed: string[] = []
+        const merged = finding({ path: '/r/.claude/worktrees/done', mergedToMain: true })
+        const res = author(store(['ls']), { worktrees: seam([merged, stranded], removed) })
+        expect(res.exited).toBe(true)
+        expect(removed).toEqual(['/r/.claude/worktrees/done'])
+        expect(res.logs.join('\n')).toContain('/r/.claude/worktrees/done')
+      })
+
+      it('warns and still writes the scratch when git state cannot be read', () => {
+        const unreadable: WorktreeSeam = {
+          read: () => {
+            throw new Error('not a repo')
+          },
+          remove: () => [],
+        }
+        const res = author(store(['ls']), { worktrees: unreadable })
+        expect(res).toMatchObject({ exited: false, scratchWritten: true })
+        expect(res.errors).toContain('worktree sweep skipped')
+      })
     })
 
     const tmpDirs: string[] = []
@@ -716,5 +783,37 @@ describe('closureRefusal() — a completed log hand-written after a merge (#2424
   })
   it('is silent for a non-completed status', () => {
     expect(refuse('blocked', merge)).toBeUndefined()
+  })
+})
+
+function finding(over: Partial<Finding>): Finding {
+  const base: Finding = {
+    path: '/r/.claude/worktrees/wt',
+    branch: 'b',
+    isPrimary: false,
+    uncommitted: false,
+    unpushed: false,
+    mergedToMain: false,
+    contentPushed: false,
+    excusedBy: null,
+  }
+  return { ...base, ...over }
+}
+
+describe('mergedWorktreesToRemove() — cleanup at close (#2721)', () => {
+  it('selects clean linked worktrees whose HEAD is merged, never one with uncommitted work', () => {
+    const findings = [
+      finding({ path: '/r', isPrimary: true, mergedToMain: true }),
+      finding({ path: '/r/wt/current', mergedToMain: true }),
+      finding({ path: '/r/wt/clean-merged', mergedToMain: true }),
+      finding({ path: '/r/wt/dirty-merged', uncommitted: true, mergedToMain: true, excusedBy: 'merged-to-main' }),
+      finding({ path: '/r/wt/unmerged', unpushed: true }),
+      finding({ path: '/r/wt/content-pushed', uncommitted: true, contentPushed: true, excusedBy: 'content-pushed' }),
+    ]
+    expect(mergedWorktreesToRemove(findings, '/r/wt/current', [])).toEqual(['/r/wt/clean-merged'])
+  })
+  it('keeps a worktree whose HEAD is the origin/main tip: a build agent may have just added it', () => {
+    const findings = [finding({ path: '/r/wt/fresh', mergedToMain: true }), finding({ path: '/r/wt/done', mergedToMain: true })]
+    expect(mergedWorktreesToRemove(findings, '/r', ['/r/wt/fresh'])).toEqual(['/r/wt/done'])
   })
 })
