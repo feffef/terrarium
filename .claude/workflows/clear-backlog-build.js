@@ -14,10 +14,6 @@ if (!args || !args.session) throw new Error('args.session (this session id, sess
 const HEADER = `🤖 [Claude](https://claude.ai/code/${args.session})`
 const MAX_ROUNDS = 3
 
-// The worktree guard refuses every command that names a branch containing "git".
-const guarded = (args.branches || []).filter(b => /git/i.test(b.name)).map(b => b.name)
-if (guarded.length) throw new Error(`Branch name contains "git": ${guarded.join(', ')}. Orchestrator: rename it (clear-backlog §3 name) and run again.`)
-
 const VERDICTS = {
   type: 'array',
   description: 'your verdict on each .claude/rules file that loaded for you and each instruction doc you read',

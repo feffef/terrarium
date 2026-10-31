@@ -1,8 +1,10 @@
 name: worktree-guard-false-positive
 summary: The container's worktree safety check refused git commands on a branch whose name contains "git", so helper agents committed under another branch name.
-cause: "The container-level worktree-isolation guard refuses a command that names git twice, and counts a branch or file name containing 'git' (git-conventions-stop-hook-note, git-conventions-foreground-gate-chain) as the second; the build agent then commits on a temp or renamed branch. Signals: 'worktree guard refused', 'containing git twice', a planned branch name with 'git' in it. Compound-command refusals belong in worktree-guard-blocks-compound-bash."
+cause: "On 2026-10-21 the container-level worktree-isolation guard refused a command that named git twice and counted a branch or file name containing 'git' as the second, so a build agent committed on a renamed branch. The 2026-10-31 probe (#2612) found both accepted. Signals: 'worktree guard refused', 'containing git twice'. Compound-command refusals belong in worktree-guard-blocks-compound-bash."
 surface: outside
 status: open
+notes: |-
+  2026-10-31 survey: the probe for #2612 (PR #2732) found the guard accepts 'git' in a branch name and git named twice, so clear-backlog-build no longer refuses such names; a new occurrence means the guard changed back.
 fixes:
   - pr: 1825
     date: "2026-10-12"
