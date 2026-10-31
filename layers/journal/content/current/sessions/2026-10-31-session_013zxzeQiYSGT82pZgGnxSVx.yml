@@ -1,0 +1,176 @@
+schemaVersion: 1
+session: session_013zxzeQiYSGT82pZgGnxSVx
+startedAt: 2026-10-31T13:12:02Z
+endedAt: 2026-10-31T13:21:53Z
+kind: autonomous
+goal: Scheduled prune trial of agent instructions
+status: in-review
+outcome: "Trimmed pr-workflow review-before-push prose; PR #2743 open, no open trial was judgeable"
+summary: 'Scheduled prune-trial run (agent-initiated, no human prompt). None of the three open trials had reached its judging floor. A search subagent ranked the review-before-push rule in pr-workflow.md first (narrowed three times, no guard). I plainly reworded it and three restatements (-4 net), wrote the ledger entry, and a Sonnet probe pinned to the commit answered six cases correctly. Standards and Spec reviewers both flagged the dropped "run it first for any other change"; I restored it, amended, ran gate:scoped green and pushed. PR #2743 opened and subscribed; its first body wrongly said a human must merge, corrected after checking the human-merge paths.'
+prs:
+  - "2743"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command; nothing new needed
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: the pruned doc; its review-before-push steps drove the run
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: hook asked after edit; confirmed edit was within scope
+    useful: yes
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: hook asked after edit; not relevant to the reword
+    useful: no
+  - path: docs/agents/github-integration.md
+    reason: required before first GitHub op; tool mapping only
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: subagent grepped it for issue refs; roster not failed prose
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: subagent grepped it; states facts, not rules
+    useful: no
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: briefing rules; subagent saw lines 71 and 92 only
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: spec reviewer read it as the spec
+    useful: yes
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: PR body first claimed pr-workflow.md was a Human-only path without checking the rule's paths; my earlier grep printed nothing and I misread it.
+    solution: Read the paths list before stating a merge requirement; corrected the PR body.
+    severity: minor
+  - description: Read ADR-0027 and ADR-0029 only after the post-edit hint fired; the edit was already right.
+    solution: Read governing ADRs before editing the file; no harm done.
+    severity: nit
+durationSec: 591
+models:
+  claude-sonnet-5-5: 59
+toolCounts:
+  Bash: 13
+  Read: 6
+  Skill: 4
+  Agent: 4
+  Edit: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__update_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - docs/agents/pr-workflow.md
+  - .agents/prune-trials.yml
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+adrHints:
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0005.md
+docsReadBySubagents:
+  - docs/agents/guards.md
+  - docs/agents/environment-caveats.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to review and gate before first push; summary enough, full ADR not opened
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main; confirmed keeping the log out of the branch
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR unasked and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Defined trial scope and territory; also read the full ADR after a hook asked
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; no decision here depended on it
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR rewrites; I edited no ADR
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on edit; I first misread it as covering pr-workflow.md, then checked its paths
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded for a subagent only; no verdict reported
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded for a subagent only; no verdict reported
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded for a subagent only; no verdict reported
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded for a subagent only; no verdict reported
+    useful: no
+subagents:
+  - type: Explore
+    task: Find failed prose rule
+    model: sonnet
+    durationSec: 70
+    toolCalls: 20
+    modelCalls: 10
+    tokenShare: 12.7
+  - type: general-purpose
+    task: Probe pruned pr-workflow
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 7.3
+  - type: general-purpose
+    task: Standards review of prune
+    model: sonnet
+    durationSec: 23
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 6.4
+  - type: general-purpose
+    task: Spec review of prune
+    model: sonnet
+    durationSec: 35
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 7
+gitBranch: claude/practical-rubin-i48iwd
+entrypoint: remote_trigger
+cliVersion: 2.1.316
+trigger: prune-trial
+landedBy: Stop
