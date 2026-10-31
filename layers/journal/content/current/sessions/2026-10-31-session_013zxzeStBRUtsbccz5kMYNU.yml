@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeStBRUtsbccz5kMYNU
 startedAt: 2026-10-31T08:35:24Z
-endedAt: 2026-10-31T10:09:12Z
+endedAt: 2026-10-31T10:13:24Z
 kind: interactive
 goal: Clear the issue backlog
 status: in-review
-outcome: "Six issues merged (PRs #2732-#2736, #2738); #2660 (PR #2737) waits for a human merge; #2721 in review (PR #2739)"
-summary: "Human-instructed: the owner invoked /clear-backlog. Agent-initiated within that Skill: the sweep set (7 needs-triage issues plus ready-for-agent #2612; five ready-for-human issues skipped because an agent commented last; no external PRs), one explore run, one build run, the triage labels and comments the triage agents posted, and both PRs. #2612 (owner pick 1b from the 2026-10-28 grilling, which I checked in that session's log) probed the container worktree guard: only $VAR expansion in a git command was refused, so the doc's list of triggers was replaced (PR #2732). I cut an unverified \"may vary by run\" cause by hand. A judgement call stays open: clear-backlog-build.js still refuses branch names containing \"git\". #2725 (PR #2733) points the frictions-to-fixes briefs' output at {SCRATCH_DIR}. Its review hit the three-round cap with one open finding (two §3.3 calls had no target), which I fixed by hand. I split #2725 from #2724 despite their shared file, because #2725's brief leaves §5 to #2724. Six grill questions (#2724, #2723, #2721, #2660, #2719, #2726) were sent to the owner and are unanswered. Both PRs merged on green CI via merge-pr.ts after a posted verdict; check:worktrees passed. Owner then answered Q6 with their own design (each audit-docs run records coverage and the next reads the last two), refined by follow-up Q8a (the session log is the record); built and merged as PR #2734, where I fixed the capped review's open findings by hand. #2721 flipped 7a, 7b, then back toward 7a with 'we don't need the worktrees after merge'; I stopped two builds and asked Q9 instead of guessing. The owner answered 9b (refuse only completed/partial; abandoned may be unpushed on purpose; remove merged worktrees) and accepted my picks for Q1, Q2, Q4 and Q5. One build run produced PRs #2735 (#2724), #2736 (#2723, rule in CLAUDE.md since dispatch-subagents §3 is on trial), #2737 (#2660, Human-only gate.ts, waits for a human merge) and #2738 (#2719); #2735, #2736 and #2738 merged on green CI. #2721's build became PR #2739 (log-session --author sweeps worktrees; the cleanup keeps dirty merged worktrees, narrower than the brief, per the owner's warning)."
+outcome: "Seven backlog issues merged (PRs #2732-#2736, #2738, #2739); #2660 (PR #2737) waits for a human merge"
+summary: "Human-instructed: the owner invoked /clear-backlog. Agent-initiated within that Skill: the sweep set (7 needs-triage issues plus ready-for-agent #2612; five ready-for-human issues skipped because an agent commented last; no external PRs), one explore run, one build run, the triage labels and comments the triage agents posted, and both PRs. #2612 (owner pick 1b from the 2026-10-28 grilling, which I checked in that session's log) probed the container worktree guard: only $VAR expansion in a git command was refused, so the doc's list of triggers was replaced (PR #2732). I cut an unverified \"may vary by run\" cause by hand. A judgement call stays open: clear-backlog-build.js still refuses branch names containing \"git\". #2725 (PR #2733) points the frictions-to-fixes briefs' output at {SCRATCH_DIR}. Its review hit the three-round cap with one open finding (two §3.3 calls had no target), which I fixed by hand. I split #2725 from #2724 despite their shared file, because #2725's brief leaves §5 to #2724. Six grill questions (#2724, #2723, #2721, #2660, #2719, #2726) were sent to the owner and are unanswered. Both PRs merged on green CI via merge-pr.ts after a posted verdict; check:worktrees passed. Owner then answered Q6 with their own design (each audit-docs run records coverage and the next reads the last two), refined by follow-up Q8a (the session log is the record); built and merged as PR #2734, where I fixed the capped review's open findings by hand. #2721 flipped 7a, 7b, then back toward 7a with 'we don't need the worktrees after merge'; I stopped two builds and asked Q9 instead of guessing. The owner answered 9b (refuse only completed/partial; abandoned may be unpushed on purpose; remove merged worktrees) and accepted my picks for Q1, Q2, Q4 and Q5. One build run produced PRs #2735 (#2724), #2736 (#2723, rule in CLAUDE.md since dispatch-subagents §3 is on trial), #2737 (#2660, Human-only gate.ts, waits for a human merge) and #2738 (#2719); #2735, #2736 and #2738 merged on green CI. #2721's build became PR #2739 (log-session --author sweeps worktrees at close: refuses completed/partial with stranded work, records a Friction otherwise, removes clean merged worktrees; narrower than the brief, per the owner's warning) and merged. Per branch: #2732 records the worktree guard's accepted/refused forms (open call: clear-backlog-build.js still refuses 'git' branch names); #2733 sends frictions-to-fixes brief output to {SCRATCH_DIR}; #2734 rotates audit-docs coverage via a Covered: line in session logs; #2735 counts ledger since: in-horizon and sends not-planned closes to accepted; #2736 asks every subagent for a source per count, id or attribution; #2738 links #N in Midden curator prose; #2737 (#2660) adds a per-checkout gate run lock without a signal handler and waits for the owner. check:worktrees passes."
 prs:
   - "2732"
   - "2733"
@@ -18,25 +18,25 @@ prs:
   - "2739"
 docsRead:
   - path: docs/agents/environment-caveats.md
-    reason: Build agent's fix target; the worktree-guard bullet
+    reason: "orchestrator: Build agent's fix target; the worktree-guard bullet; subagents: triage #2612: Grepped the worktree-guard bullet as the primary source for the fix target"
     useful: yes
   - path: docs/agents/git-conventions.md
-    reason: Fetch before trusting history; commit trailer check
+    reason: "orchestrator: Fetch before trusting history; commit trailer check; subagents: triage #2660: CLAUDE.md trigger before using git log to draw a conclusion; led me to fetch origin/main before checking gate.ts history"
     useful: partly
   - path: .agents/skills/auto-triage/SKILL.md
-    reason: Step 1 sweep set and the human-last-comment test
+    reason: "orchestrator: Step 1 sweep set and the human-last-comment test; subagents: triage #2612: The brief required it; brave-within-determinability and comment rules; triage #2660: Brief required it; set the brave/determinability line and the one-comment and label-replace rules; triage #2719: The brief required it. Supplied the brave/determinability line and the comment rules.; triage #2721: The brief required it. Gave the brave/determinability line, the wayfinder overlay and the no-comments rule.; triage #2723: Required by the brief. Gave the brave-within-determinability and comment rules.; triage #2724: The brief required it for the per-issue rules.; triage #2725: The task required it: per-issue sweep rules, brave within determinability.; triage #2726: Brief said to read it for the per-issue sweep rules"
     useful: yes
   - path: docs/agents/github-integration.md
-    reason: gh api works for REST reads in the cloud; MCP for writes
+    reason: "orchestrator: gh api works for REST reads in the cloud; MCP for writes; subagents: triage #2612: CLAUDE.md trigger before GitHub ops (read the first 80 lines, after my first issue_read); comment via add_issue_comment; triage #2660: CLAUDE.md trigger before GitHub ops (hook reminded me after the first read); confirmed the label set is replaced and comments go through add_issue_comment; triage #2719: CLAUDE.md requires it before a GitHub operation. Confirmed that a label update replaces the set and that comments go through add_issue_comment.; triage #2721: Required before GitHub ops; I read it right after the first call. Confirmed that a label update replaces the set and that comments go through add_issue_comment.; triage #2723: CLAUDE.md trigger before GitHub ops. Its point that a label update replaces the set was the one I needed.; triage #2724: A hook required it before GitHub operations; it confirmed that a label update replaces the whole set and that comments go through add_issue_comment.; triage #2725: CLAUDE.md trigger before GitHub ops; it confirmed label updates replace the set.; triage #2726: CLAUDE.md trigger before the first GitHub operation (read after the first issue_read; the call was already right); Spec fix/2660-gate-single-run-lock r3: A hook prompted me after my first GitHub call (issue_read); it confirmed issue_read was the right tool."
     useful: yes
   - path: docs/agents/issue-tracker.md
-    reason: External-PR listing recipe
+    reason: "orchestrator: External-PR listing recipe; subagents: triage #2725: CLAUDE.md trigger before labelling; I skimmed only its headings and Blocking line, and nothing changed the outcome.; triage #2726: CLAUDE.md trigger before labelling (read parts of it; finished after the write, which it shows was already right)"
     useful: partly
   - path: .agents/skills/dispatch-subagents/SKILL.md
-    reason: Guard demanded it before the workflow call; nothing changed the call
+    reason: "orchestrator: Guard demanded it before the workflow call; nothing changed the call; subagents: triage #2721: The issue's subject. Read to confirm the wording of §5.; build fix/2721-worktree-sweep-at-close: Edited §5, as the brief asked.; Standards fix/2721-worktree-sweep-at-close r1: Read to check the §5 edit and §3's worktree and impl-agent flow, which led to the hazard finding."
     useful: no
   - path: .agents/skills/frictions-to-fixes/survey-brief.md
-    reason: "Verified #2724's §5 reset claim and fixed #2725's open finding"
+    reason: "orchestrator: Verified #2724's §5 reset claim and fixed #2725's open finding; subagents: triage #2725: Primary source for the issue's claims."
     useful: yes
   - path: .agents/skills/grilling/SKILL.md
     reason: Question format for the grilling round
@@ -44,41 +44,87 @@ docsRead:
   - path: docs/agents/pr-workflow.md
     reason: Simple follow-up rule and verdict-before-merge step
     useful: yes
-  - path: .agents/skills/implement/SKILL.md
-    reason: (no reason given)
+  - path: .agents/prune-trials.yml
+    reason: "Spec fix/2723-subagent-claim-sources r1: Read to confirm which text the open trial covers: dispatch-subagents §3 (line 47), and none of the CLAUDE.md bullet.; Spec fix/2721-worktree-sweep-at-close r1: Grepped to confirm the dispatch-subagents §3 trial is open"
+    useful: yes
   - path: .agents/skills/audit-docs/SKILL.md
-    reason: (read before editing)
-  - path: /home/user/terrarium/docs/agents/git-conventions.md
-    reason: (no reason given)
+    reason: "triage #2726: The file the issue is about; used to check its claims"
+    useful: yes
   - path: .agents/skills/code-review/SKILL.md
+    reason: "Spec fix/2612-worktree-guard-accepted-forms r1: Read because the task said to apply its Spec axis; its Spec brief (missing, beyond the ask, wrong) shaped this review; Spec fix/2725-frictions-briefs-output-paths r2: The task said to read it and apply its Spec axis; Spec fix/2725-frictions-briefs-output-paths r3: The task told me to read it; it supplied the three Spec-axis questions (missing, scope creep, wrong); Spec fix/2726-audit-docs-rotating-coverage r1: The task said to read it for the Spec axis. Its scope-creep, missing and wrong checks shaped the review.; Spec fix/2726-audit-docs-rotating-coverage r2: The task told me to read it for the Spec axis brief (missing, scope creep, wrong implementation).; Spec fix/2726-audit-docs-rotating-coverage r3: The task told me to read it for the Spec axis. It gave the missing / scope-creep / wrong framing.; Standards fix/2724-ledger-not-planned-accepted r1: The task required it; it supplied the Standards axis and the smell baseline.; Spec fix/2724-ledger-not-planned-accepted r1: The task told me to read it and apply its Spec axis. It gave the categories: missing or partial, scope creep, implemented wrongly.; Standards fix/2724-ledger-not-planned-accepted r2: The task said to apply its Standards axis and smell baseline.; Spec fix/2724-ledger-not-planned-accepted r2: The task told me to read it so I could apply the Spec axis. Its missing / scope-creep / wrong framing shaped the review.; Standards fix/2724-ledger-not-planned-accepted r3: The task told me to read it for the Standards axis and its smell baseline. I found no baseline smells in this diff.; Spec fix/2724-ledger-not-planned-accepted r3: The task told me to read it so I could apply the Spec axis. Its Spec brief (missing, scope creep, wrong) set the structure of this review.; Standards fix/2723-subagent-claim-sources r1: The task told me to read it; it supplied the Standards axis and the smell baseline.; Spec fix/2723-subagent-claim-sources r1: The task told me to read it. Its Spec axis framing (missing, scope creep, wrong) and its smell baseline shaped the findings.; Standards fix/2723-subagent-claim-sources r2: The task said to read it; it gave the Standards axis and the smell baseline.; Spec fix/2723-subagent-claim-sources r2: The task told me to read it. Its Spec axis (missing, scope creep, wrong) set the shape of the review.; Standards fix/2660-gate-single-run-lock r1: The task told me to read it for the Standards axis and the smell baseline.; Spec fix/2660-gate-single-run-lock r1: The task told me to read it for the Spec axis. It framed the missing, scope-creep and wrong-implementation checks.; Spec fix/2660-gate-single-run-lock r2: The task told me to read it and apply its Spec axis. It gave the three-part shape: missing, scope creep, wrong.; Standards fix/2660-gate-single-run-lock r3: Read because the task said to apply its Standards axis. Its smell baseline gave the Duplicated Code and Speculative Generality findings.; Standards fix/2719-midden-link-hash-refs r1: The task told me to read it; its Standards axis and smell baseline framed this review; Standards fix/2721-worktree-sweep-at-close r1: The task told me to read it for the Standards axis and the smell baseline. I used the baseline (Duplicated Code).; Spec fix/2721-worktree-sweep-at-close r1: The task said to read it and apply its Spec axis; Standards fix/2721-worktree-sweep-at-close r2: Read because the task said to: it defines the Standards axis and the smell baseline I applied.; Spec fix/2721-worktree-sweep-at-close r2: The task said to read it and apply its Spec axis.; Spec fix/2721-worktree-sweep-at-close r3: The task told me to read it; it gave the Spec axis questions: missing, scope creep, wrong."
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: "triage #2725: Primary source for the audit-skills output and no-change claims."
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "build fix/2612-worktree-guard-accepted-forms: Task said to follow it"
+    useful: yes
+  - path: .agents/skills/tdd (Skill)
+    reason: "build fix/2724-ledger-not-planned-accepted: The brief told me to invoke it; it shaped the red-then-green order"
+    useful: yes
+  - path: .agents/skills/tdd/SKILL.md
+    reason: "build fix/2719-midden-link-hash-refs: Invoked per task; red-green loop"
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: "triage #2719: The brief required it. Supplied the redundancy check and the outcome states.; triage #2721: The brief required it. Gave the label roles and the step that verifies claims.; triage #2723: Required by the brief. Gave the state roles and the claim-verification step.; triage #2724: The brief required it for the state machine.; triage #2725: The task required it: the state roles and the outcome to apply.; triage #2726: Brief said to read it for the state machine and comment rules"
+    useful: yes
+  - path: /home/user/terrarium/.agents/skills/code-review/SKILL.md
+    reason: "Standards fix/2721-worktree-sweep-at-close r3: The task told me to read it. It gave me the Standards axis and the smell baseline I applied."
+    useful: yes
+  - path: /home/user/terrarium/.claude/worktrees/wf_dc447454-fc3-3/.agents/skills/code-review/SKILL.md
+    reason: "Standards fix/2660-gate-single-run-lock r2: The task asked me to read it. Its smell baseline gave the Speculative Generality and Duplicated Code checks."
+    useful: yes
+  - path: /home/user/terrarium/.claude/worktrees/wf_dc447454-fc3-3/docs/agents/git-conventions.md
+    reason: "Standards fix/2660-gate-single-run-lock r2: A hook asked me to read it after `git log`. It confirmed the three-dot diff against origin/main was the right call. The diff is 2 files, so a stale origin/main did not inflate it."
+    useful: partly
+  - path: /home/user/terrarium/CLAUDE.md
+    reason: "Standards fix/2660-gate-single-run-lock r2: Loaded at session start. Its 'comments say WHY', 'one home per fact' and 'verify before you state' rules are what I checked the diff and the build decisions against."
+    useful: yes
+  - path: CLAUDE.md
+    reason: "Standards fix/2612-worktree-guard-accepted-forms r1: Loaded at start; its One home per fact and Verify before you state rules produced the main findings.; gate fix/2612-worktree-guard-accepted-forms: Project instructions loaded at session start; they set the git -C and gate-run conventions.; build fix/2725-frictions-briefs-output-paths: Project instructions loaded at session start.; Standards fix/2725-frictions-briefs-output-paths r1: Loaded as project instructions. 'Keep it short' and 'Verify before you state' are the source of findings 1 and 2.; Standards fix/2725-frictions-briefs-output-paths r2: Auto-loaded. Its \"Keep it short\" and \"one home per fact\" conventions were the main standards I applied to this prose diff.; Standards fix/2725-frictions-briefs-output-paths r3: Loaded at session start. 'Keep it short' was the main standard I applied.; build fix/2726-audit-docs-rotating-coverage: Project instructions loaded at start. They gave the git, worktree and keep-it-short rules.; Standards fix/2726-audit-docs-rotating-coverage r1: Loaded automatically. Its 'Keep it short' and 'Verify before you state' rules drove the simplicity findings and the grep check.; Standards fix/2726-audit-docs-rotating-coverage r2: Auto-loaded; 'Keep it short' and 'One home per fact' drove the findings.; Standards fix/2724-ledger-not-planned-accepted r1: Loaded as project instructions; its rules on short writing, one home per fact and questioning the premise framed the simplicity review.; Standards fix/2723-subagent-claim-sources r1: Project instructions; the target of the change and the source of the 'Keep it short' and 'One home per fact' standards I checked the diff against.; Spec fix/2723-subagent-claim-sources r1: Loaded as project instructions, and it is the file the diff changes. 'Keep it short' and the hard-wrapped bullet style were the review criteria.; Standards fix/2723-subagent-claim-sources r2: Loaded at session start, and it is the file under review; 'Keep it short' and 'One home per fact' were the standards I applied.; Standards fix/2660-gate-single-run-lock r1: Loaded at session start; its 'least code' and 'comments say WHY' rules set the simplicity lens.; Spec fix/2660-gate-single-run-lock r1: Loaded at session start. It set the scratchpad-subfolder rule and the verify-before-stating rule, which I followed by reproducing the signal behaviour instead of asserting it.; Standards fix/2660-gate-single-run-lock r3: Auto-loaded. Its keep-it-short and WHY-not-WHAT comment rules were the main standards I checked against.; Standards fix/2721-worktree-sweep-at-close r2: Auto-loaded. Its 'one home per fact', 'comments say WHY' and 'keep it short' rules were the main standards I checked against."
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: "build fix/2660-gate-single-run-lock: The edit hook asked me to read it after editing gate.ts. It confirmed the human-merge requirement and nothing more.; fix fix/2660-gate-single-run-lock r1: A hook asked for it because ADR-0004 governs gate.ts. It confirmed the human merge and nothing more."
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: "build fix/2721-worktree-sweep-at-close: A hook required it after the Skill edit; nothing in it changed the edit."
+    useful: no
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "triage #2660: Governs the ready-for-human vs ready-for-agent choice; 'several valid approaches' points to grill; triage #2721: Read in full because it governs the outcome. It confirmed that several valid approaches plus an unverifiable claim means ready-for-human.; triage #2723: Read in full for what counts as a judgement call or real design doubt.; triage #2724: Read for the definitions of judgment call and design doubt behind the grill.; triage #2725: Read for its definition of a judgment call, to settle build vs grill and to carve out the closed-not-planned policy.; triage #2726: Full ADR behind the ready-for-human vs ready-for-agent call"
+    useful: yes
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: "build fix/2660-gate-single-run-lock: The edit hook asked me to read it. It confirmed that adding no step leaves parity alone.; fix fix/2660-gate-single-run-lock r1: A hook asked for it because ADR-0026 governs gate.ts. No step changed, so parity is unaffected."
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: "build fix/2721-worktree-sweep-at-close: A hook required it after the Skill edit; it confirmed §5 is outside the trial's area."
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: "triage #2721: Required for labelling. Confirmed the label strings.; triage #2725: CLAUDE.md trigger before labelling; it confirmed the label strings.; triage #2726: CLAUDE.md trigger before labelling"
+    useful: yes
+  - path: docs/agents/triage-labels.md, docs/agents/issue-tracker.md
+    reason: "triage #2724: A hook required both after the label write (read late); they confirmed the label strings I used."
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: "build fix/2719-midden-link-hash-refs: ui-verification rule; led to the preview and eval-in-page DOM check"
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: "Spec fix/2660-gate-single-run-lock r1: Loaded at session start. It lists the Tenant glossaries, none of which touch the gate."
+    useful: no
+  - path: layers/midden/GLOSSARY.md
+    reason: "triage #2719: The tenant-glossary rule, and I needed the remains and curator terms. It pointed me to the schema and to who may write curatorial fields.; build fix/2719-midden-link-hash-refs: Brief and tenant-glossary rule"
+    useful: yes
+  - path: scripts/git/check-worktrees.ts
+    reason: "Spec fix/2721-worktree-sweep-at-close r1: Read to check what Finding, mergedToMain and the merged-to-main excusal mean; this is how I found that dirty merged worktrees get force-removed"
+    useful: yes
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
     reason: (no reason given)
   - path: layers/midden/app/components/midden/StoresLanding.vue
     reason: (read before editing)
-  - path: .agents/skills/triage/SKILL.md
-    reason: (no reason given)
-  - path: docs/agents/triage-labels.md
-    reason: (no reason given)
-  - path: .agents/skills/frictions-to-fixes/design-brief.md
-    reason: (read before editing)
   - path: .agents/skills/frictions-to-fixes/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0004-objective-safety-gate.md
-    reason: (no reason given)
-  - path: docs/adr/0026-gate-workflow-thin-shell.md
-    reason: (no reason given)
-  - path: layers/midden/GLOSSARY.md
-    reason: (no reason given)
-  - path: docs/agents/verifying-ui-changes.md
-    reason: (no reason given)
-  - path: docs/adr/0022-autonomous-triage-sweep.md
     reason: (no reason given)
   - path: .agents/skills/close-session/SKILL.md
     reason: (no reason given)
   - path: .agents/skills/glassbox-improve/SKILL.md
-    reason: (no reason given)
-  - path: docs/adr/0005-skill-model.md
-    reason: (no reason given)
-  - path: docs/adr/0027-prune-trials.md
     reason: (no reason given)
 skillsUsed:
   - name: close-session
@@ -102,19 +148,22 @@ frictions:
   - description: "Started #2721's build on an ambiguous 'Agree' and later flip-flopped on Q7 answers, stopping two build runs mid-flight"
     solution: When an answer changes a pick under build, confirm the full option before relaunching; ask the clarifying question first, per the owner's stated preference
     severity: minor
-durationSec: 5627
+  - description: "Posted two PR verdicts with a wrong Reviewed SHA (a short SHA on #2734, the non-head commit on #2737) and had to edit them"
+    solution: Paste the Reviewed SHA from git rev-parse HEAD in the worktree, as pr-workflow step 4 says, instead of from a commit list
+    severity: nit
+durationSec: 5879
 models:
-  claude-opus-5-5: 245
+  claude-opus-5-5: 262
 toolCounts:
-  Bash: 68
+  Bash: 74
   Workflow: 8
   ToolSearch: 5
   PushNotification: 2
   mcp__github__create_pull_request: 8
   mcp__claude-code-remote__subscribe_pr_activity: 8
   Skill: 2
-  ReadNotifications: 12
-  mcp__github__add_issue_comment: 15
+  ReadNotifications: 14
+  mcp__github__add_issue_comment: 16
   mcp__claude-code-remote__unsubscribe_pr_activity: 2
   mcp__github__issue_write: 6
   TaskStop: 2
@@ -226,59 +275,77 @@ docsReadBySubagents:
   - docs/adr/0027-prune-trials.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
-    reason: Made me rerun gate:scoped after my hand fixes before the first push; summary was enough
+    reason: "orchestrator: Made me rerun gate:scoped after my hand fixes before the first push; summary was enough; subagents: triage #2660: Loaded at session start; gate.ts needs a human merge; gate fix/2612-worktree-guard-accepted-forms: Loaded at session start; it covers the gate:scoped requirement.; fix fix/2725-frictions-briefs-output-paths r1: Loaded at session start. Required the gate:scoped run, which I did.; build fix/2726-audit-docs-rotating-coverage: Loaded at session start. It requires gate:scoped before the first push.; gate fix/2724-ledger-not-planned-accepted: Loaded at session start; it requires the gate before the first push.; fix fix/2723-subagent-claim-sources r1: Loaded at session start. It gave the gate:scoped requirement.; Spec fix/2660-gate-single-run-lock r2: Loaded at session start. It confirms gate.ts is Human-only, so a human must merge this PR, and it sets the review expectations.; fix fix/2660-gate-single-run-lock r2: Loaded at session start. It confirmed gate.ts is Human-only and that the gate must pass.; Spec fix/2660-gate-single-run-lock r3: Loaded at session start; confirms gate.ts is Human-only, so a human merges the PR, and that the change adds no dependency.; gate fix/2660-gate-single-run-lock: Loaded at session start. It confirmed that gate:scoped is the required check and that gate.ts needs a human merge.; gate fix/2719-midden-link-hash-refs: Loaded at session start; it requires pnpm gate:scoped before the first push, which is this task.; build fix/2721-worktree-sweep-at-close: Loaded at session start; it confirmed the gate before push and that scripts/session is not Human-only.; Standards fix/2660-gate-single-run-lock r2: Loaded at session start. It confirms gate.ts is Human-only and needs a human merge, and that a change adding no gate step leaves the parity test alone."
     useful: yes
   - path: .claude/rules/adr-0009.md
-    reason: This log goes to main, not the PR branches; summary was enough
+    reason: "orchestrator: This log goes to main, not the PR branches; summary was enough; subagents: Standards fix/2726-audit-docs-rotating-coverage r3: Loaded at session start; relevant because the diff changes what the session log summary must say.; Spec fix/2726-audit-docs-rotating-coverage r3: Loaded at session start. It confirms the session log is the right place for the Covered record.; Standards fix/2660-gate-single-run-lock r2: Loaded at session start (session logs). Not relevant to a read-only review."
     useful: yes
   - path: .claude/rules/adr-0003.md
-    reason: Opened PRs at once after push despite the harness default; summary was enough
+    reason: "orchestrator: Opened PRs at once after push despite the harness default; summary was enough; subagents: triage #2719: Loaded at session start. Confirmed that new work needs a Trusted user's approval.; triage #2726: Loaded at session start; context for what counts as approval; Standards fix/2660-gate-single-run-lock r2: Loaded at session start (PR and approval model). Not relevant to a read-only review."
     useful: yes
   - path: .claude/rules/adr-0017.md
-    reason: Header on both PR bodies and checked the commit trailer landed
+    reason: "orchestrator: Header on both PR bodies and checked the commit trailer landed; subagents: triage #2612: Loaded at session start; provenance header on my comment; triage #2660: Loaded at session start; provenance header on the comment; triage #2719: Loaded at session start. Required the provenance header on my comment.; triage #2721: Loaded at session start. Set the comment's header line.; triage #2723: Loaded at session start. It requires the provenance header on the comment.; triage #2726: Loaded at session start; required the provenance header on the comment; build fix/2725-frictions-briefs-output-paths: Loaded at session start. It covers the commit trailer, which I checked landed.; fix fix/2721-worktree-sweep-at-close r2: Loaded at session start. I checked that the commit trailer landed.; Standards fix/2660-gate-single-run-lock r2: Loaded at session start (provenance headers). This review writes nothing, so it did not apply."
     useful: yes
   - path: .claude/rules/adr-0022.md
-    reason: "Confirmed triage may stamp ready-for-agent on Trusted issues like #2725"
+    reason: "orchestrator: Confirmed triage may stamp ready-for-agent on Trusted issues like #2725; subagents: triage #2612: Loaded with auto-triage; a Trusted issue with a settled design may stay ready-for-agent; triage #2660: Loaded when I read the auto-triage Skill; triage #2719: Loaded when I read the auto-triage Skill. Set judgment calls to go to ready-for-human.; triage #2721: Loaded with the auto-triage Skill read. It set the line between ready-for-agent and ready-for-human: several valid approaches means real design doubt.; triage #2723: Loaded at session start. It set the line between ready-for-agent and ready-for-human for the sweep.; triage #2724: Loaded when I read the auto-triage Skill; it decides ready-for-agent vs ready-for-human.; triage #2725: Loaded on reading the auto-triage Skill; it sets what the sweep may label ready-for-agent. I read the full ADR as well.; triage #2726: Loaded with the auto-triage Skill; it governs the labelling"
     useful: yes
   - path: .claude/rules/adr-0005.md
-    reason: Loaded with Skill reads; no Skill placement question arose
+    reason: "orchestrator: Loaded with Skill reads; no Skill placement question arose; subagents: triage #2725: Loaded on reading Skill files; it confirms Skill briefs change through a normal PR.; build fix/2725-frictions-briefs-output-paths: Loaded when I read the Skill briefs.; Standards fix/2725-frictions-briefs-output-paths r2: Loaded when I read files under .agents/skills. It confirms Skills are gated Platform code, but it has no standard specific to this prose.; build fix/2726-audit-docs-rotating-coverage: Loaded when I edited a Skill. It confirmed the Skill is changed through a gated PR.; fix fix/2726-audit-docs-rotating-coverage r2: Loaded on editing a Skill file; Standards fix/2724-ledger-not-planned-accepted r1: Loaded when I read Skill files; confirms Skills are code reviewed like any code. No finding came from it.; Standards fix/2724-ledger-not-planned-accepted r3: Loaded when I read the skill files. It confirms Skill code is ordinary gated code; it didn't bear on the findings.; build fix/2723-subagent-claim-sources: Loaded when the workflow scripts were grepped; governs workflow scripts; Standards fix/2723-subagent-claim-sources r1: Loaded when I read a Skill file; it confirms the workflow scripts are Skill code, which is why the duplicated clause in them is in scope.; Standards fix/2723-subagent-claim-sources r2: Loaded when I read the code-review Skill; confirmed that workflow scripts are their Skill's code, so they should agree with CLAUDE.md.; Spec fix/2723-subagent-claim-sources r2: Loaded when I read the code-review Skill. It confirms that workflow scripts are Skill code, but did not change the review.; build fix/2721-worktree-sweep-at-close: Loaded with the Skill edit; Skills change through a gated PR, which is already the plan.; Standards fix/2660-gate-single-run-lock r2: Loaded when I read the code-review Skill. Not relevant to this diff."
     useful: no
   - path: .claude/rules/adr-0020.md
-    reason: All issues were OWNER-authored, so Trusted; no Public handling needed
+    reason: "orchestrator: All issues were OWNER-authored, so Trusted; no Public handling needed; subagents: triage #2612: Loaded with author-trust.ts; the author is OWNER, so Trusted; triage #2724: Loaded with the triage Skills; I used it with author-trust.ts to rate the author (OWNER, so Trusted).; triage #2726: Loaded with the triage Skills; used for the trust tier check (OWNER is Trusted)"
     useful: partly
   - path: .claude/rules/adr-0027.md
-    reason: "Checked prune-trials.yml no longer covers environment-caveats.md before building #2612"
+    reason: "orchestrator: Checked prune-trials.yml no longer covers environment-caveats.md before building #2612; subagents: triage #2612: Loaded with the Skill reads; made me check whether the trial hold was lifted and keep the dispatch §3 line out of scope; triage #2721: Loaded with the dispatch-subagents read. It shaped option (a): cut the prose that keeps failing rather than add more. I checked prune-trials.yml: the open trial covers only §3, not §5.; triage #2724: Loaded with the Skills; it is why I checked prune-trials.yml (no trial covers frictions-to-fixes).; triage #2725: Loaded with the Skill reads; it sent me to check prune-trials territory before recommending edits.; build fix/2612-worktree-guard-accepted-forms: Loaded on editing environment-caveats.md; checked no open trial covers the bullet; Standards fix/2612-worktree-guard-accepted-forms r1: Loaded on reading the code-review Skill; it backs the brief's cut-before-add requirement and the hands-off rule for Prune Trial text.; Spec fix/2612-worktree-guard-accepted-forms r1: Loaded when I read the code-review Skill; let me check the brief's cut-before-add rule and its Prune Trial limit; Standards fix/2725-frictions-briefs-output-paths r1: Loaded when I read a Skill file. It led me to check .agents/prune-trials.yml, which showed that no open trial covers these briefs.; Standards fix/2725-frictions-briefs-output-paths r2: Loaded when I read the frictions-to-fixes files. It led me to check prune-trials.yml for overlapping territory (none), and its keep-it-short goal informed the §2.1 finding.; Spec fix/2725-frictions-briefs-output-paths r2: Loaded when I read a skill file; it prompted my check of prune-trials.yml, which shows these briefs are not in an open trial; Spec fix/2725-frictions-briefs-output-paths r3: Loaded on reading the skill files; it prompted me to check prune-trials.yml, which shows no open trial on these briefs; build fix/2726-audit-docs-rotating-coverage: Loaded at session start. It sent me to check .agents/prune-trials.yml for open trials on the text I changed.; Standards fix/2726-audit-docs-rotating-coverage r1: Loaded when I read the code-review Skill and the audit-docs files. I used it to check that prune-trials.yml covers none of the changed text.; Spec fix/2726-audit-docs-rotating-coverage r1: Loaded on reading the audit-docs Skill. The brief asks whether a prune trial covers the changed text.; Standards fix/2726-audit-docs-rotating-coverage r2: Loaded when I read Skill files; the brief asks for a prune-trials check. I grepped .agents/prune-trials.yml: no audit-docs entry.; Spec fix/2726-audit-docs-rotating-coverage r2: Loaded when I read a Skill; it backs the brief's prune-trials check, which I confirmed (no audit-docs entry).; Spec fix/2726-audit-docs-rotating-coverage r3: Loaded when I read the Skill. It was the basis for checking prune-trials.yml coverage, which the brief requires.; build fix/2724-ledger-not-planned-accepted: Loaded on reading Skill files; told me to check prune-trials before editing survey-brief and to cut before adding; Standards fix/2724-ledger-not-planned-accepted r1: Loaded when I read the frictions-to-fixes Skill files; used to check the survey-brief change shortens an instruction before adding one and that no prune trial covers it.; fix fix/2724-ledger-not-planned-accepted r1: Loaded when I read files under .agents. It told me to check prune-trials coverage and to cut before adding.; Standards fix/2724-ledger-not-planned-accepted r2: Loaded when I read a Skill file; checked whether an open prune trial covers the changed prose.; Spec fix/2724-ledger-not-planned-accepted r2: Loaded when I read Skill files. It backed the prune-trials coverage check and the cut-before-add test applied to the §5 clause.; Standards fix/2724-ledger-not-planned-accepted r3: Loaded when I read the skill files. It is the basis for checking prune-trials.yml coverage and the cut-before-you-add rule for the prose clause.; Spec fix/2724-ledger-not-planned-accepted r3: Loaded when I read the code-review skill area. It backs the brief's 'cut before you add' check and the prune-trials coverage check.; Standards fix/2723-subagent-claim-sources r1: Loaded when I read a Skill file; it confirmed that leaving dispatch-subagents untouched (open Prune Trial) was right, and backs the 'Keep it short' focus.; Standards fix/2723-subagent-claim-sources r2: Loaded when I read files under .agents; confirmed that the open Prune Trial is why dispatch-subagents §3 is left alone.; Spec fix/2723-subagent-claim-sources r2: Loaded when I read the code-review Skill. It sent me to check prune-trials.yml for an open trial covering the edited text.; build fix/2721-worktree-sweep-at-close: Loaded when I read the dispatch-subagents Skill; it confirmed §3 is off-limits under the open trial.; Standards fix/2721-worktree-sweep-at-close r1: Loaded when I read the dispatch-subagents Skill. It confirmed the §3 prune trial must stay untouched, and the diff respects that.; Spec fix/2721-worktree-sweep-at-close r1: Loaded when I read the dispatch-subagents diff; confirmed that §3 is under a prune trial and must stay untouched, and it is; Standards fix/2721-worktree-sweep-at-close r2: Loaded when I read the dispatch-subagents Skill diff. It confirmed §3 had to stay untouched because of the open Prune Trial, and it was.; Spec fix/2721-worktree-sweep-at-close r3: Loaded when I read SKILL files; it confirmed §3 must stay untouched under the open prune trial.; Standards fix/2660-gate-single-run-lock r2: Loaded when I read the code-review Skill. Not relevant to this diff."
     useful: yes
   - path: .claude/rules/adr-0029.md
-    reason: Loaded on reading docs/agents; no rule placement work
+    reason: "orchestrator: Loaded on reading docs/agents; no rule placement work; subagents: build fix/2723-subagent-claim-sources: Loaded when CLAUDE.md was read by Bash; governs CLAUDE.md edits; fix fix/2723-subagent-claim-sources r1: Loaded after the CLAUDE.md edit, which it governs. I did not read the full ADR."
     useful: no
   - path: .claude/rules/adr-0002.md
-    reason: Loaded when verifying the Midden remains regex; no manifest edit
+    reason: "orchestrator: Loaded when verifying the Midden remains regex; no manifest edit; subagents: triage #2719: Loaded when I read tenant.config.ts. Not relevant."
     useful: no
   - path: .claude/rules/adr-0004-human-merge.md
-    reason: "Confirmed gate.ts is Human-only for #2660's question"
+    reason: "orchestrator: Confirmed gate.ts is Human-only for #2660's question; subagents: triage #2660: Loaded when I grepped scripts/gate/gate.ts; confirmed it is Human-only; build fix/2660-gate-single-run-lock: Loaded when I read and edited gate.ts. It confirmed gate.ts is Human-only."
     useful: yes
   - path: .claude/rules/adr-0015.md
-    reason: Loaded on editing a Skill brief; frictions-to-fixes is not a pack Skill
+    reason: "orchestrator: Loaded on editing a Skill brief; frictions-to-fixes is not a pack Skill; subagents: triage #2724: Loaded on reading the frictions-to-fixes Skill; it confirmed the Skill is ours and not a pack Skill.; build fix/2725-frictions-briefs-output-paths: Loaded when I read the Skill briefs."
     useful: no
   - path: .claude/rules/adr-0026.md
-    reason: Loaded with gate.ts; no gate step change
+    reason: "orchestrator: Loaded with gate.ts; no gate step change; subagents: build fix/2660-gate-single-run-lock: Loaded with gate.ts. It confirmed that adding no step leaves the parity test unaffected."
     useful: no
   - path: .claude/rules/adr-0030.md
-    reason: Loaded via the human-merge paths read; no ADR edit
+    reason: "orchestrator: Loaded via the human-merge paths read; no ADR edit; subagents: triage #2660: Loaded on reading the ADR-0022 file; triage #2721: Loaded on reading ADR-0022. Not relevant.; triage #2723: Loaded when I read an ADR. Not relevant.; triage #2724: Loaded on reading the ADR; not relevant here.; triage #2725: Loaded on reading the ADR; not relevant.; triage #2726: Loaded on reading an ADR; not relevant to this outcome; build fix/2726-audit-docs-rotating-coverage: Loaded when I edited a Skill. It did not apply because the change touches no ADR.; fix fix/2726-audit-docs-rotating-coverage r2: Loaded with the edit; not applicable; build fix/2660-gate-single-run-lock: Loaded when I read the ADRs. Not relevant: I edited no ADR.; build fix/2721-worktree-sweep-at-close: Loaded when I read the ADRs; no ADR was edited."
     useful: no
   - path: .claude/rules/data-shapes.md
-    reason: "Shaped #2724 option b and #2719 option c as stored-shape questions for the owner"
+    reason: "orchestrator: Shaped #2724 option b and #2719 option c as stored-shape questions for the owner; subagents: triage #2719: Loaded when I read tenant.config.ts. It made option (d) a Trusted-user shape decision."
     useful: partly
   - path: .claude/rules/mdc-when-to-use.md
-    reason: Loaded with Midden config; no MDC choice
+    reason: "orchestrator: Loaded with Midden config; no MDC choice; subagents: triage #2719: Loaded when I read tenant.config.ts. Not relevant."
     useful: no
   - path: .claude/rules/tenant-glossary.md
-    reason: Loaded with Midden config; no Tenant writing this session
+    reason: "orchestrator: Loaded with Midden config; no Tenant writing this session; subagents: build fix/2719-midden-link-hash-refs: Loaded on Midden files; terms used in naming and comments"
     useful: no
   - path: .claude/rules/tenant-layers.md
-    reason: Loaded with Midden config; no layer code changed
+    reason: "orchestrator: Loaded with Midden config; no layer code changed; subagents: build fix/2719-midden-link-hash-refs: Loaded on Midden components; auto-import naming and alias limits shaped the util name and the relative import; Standards fix/2719-midden-link-hash-refs r1: Read by hand because the diff edits layers/midden/app/**; it let me confirm the Tenant-worded auto-import name and the relative-import convention"
     useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: "build fix/2719-midden-link-hash-refs: Loaded on reading the Site page route; routing untouched"
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: "build fix/2719-midden-link-hash-refs: Loaded on reading the Site page route"
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: "triage #2719: Loaded when I read the Midden glossary. Not relevant.; triage #2726: Loaded on reading docs; not relevant to this outcome; build fix/2726-audit-docs-rotating-coverage: Loaded when I edited a Skill. It did not apply.; fix fix/2726-audit-docs-rotating-coverage r2: Loaded with the edit; not applicable; build fix/2719-midden-link-hash-refs: Loaded on reading the Midden GLOSSARY"
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: "triage #2719: Loaded when I read the glossary. I changed no term.; build fix/2719-midden-link-hash-refs: Loaded on reading the Midden GLOSSARY; no term changed"
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: "triage #2721: Loaded on reading scripts/hooks. It points a hook-based fix to docs/agents/guards.md."
+    useful: partly
+  - path: .claude/rules/ui-verification.md
+    reason: "build fix/2719-midden-link-hash-refs: Loaded on Vue component edits; pointed to DOM verification"
+    useful: yes
 subagents:
   - type: workflow-subagent
     task: build fix/2726-audit-docs-rotating-coverage
@@ -300,14 +367,14 @@ subagents:
     durationSec: 21
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: build fix/2726-audit-docs-rotating-coverage
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: fix fix/2725-frictions-briefs-output-paths r1
     model: claude-sonnet-5-5
@@ -405,7 +472,7 @@ subagents:
     durationSec: 35
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Spec fix/2726-audit-docs-rotating-coverage r1
     model: claude-opus-5-5
@@ -440,7 +507,7 @@ subagents:
     durationSec: 36
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Spec fix/2726-audit-docs-rotating-coverage r3
     model: claude-opus-5-5
@@ -482,7 +549,7 @@ subagents:
     durationSec: 38
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Spec fix/2723-subagent-claim-sources r2
     model: claude-opus-5-5
@@ -538,7 +605,7 @@ subagents:
     durationSec: 564
     toolCalls: 26
     modelCalls: 21
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: Spec fix/2724-ledger-not-planned-accepted r1
     model: claude-opus-5-5
@@ -587,7 +654,7 @@ subagents:
     durationSec: 49
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec fix/2723-subagent-claim-sources r1
     model: claude-opus-5-5
@@ -608,7 +675,7 @@ subagents:
     durationSec: 686
     toolCalls: 28
     modelCalls: 24
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: workflow-subagent
     task: Spec fix/2724-ledger-not-planned-accepted r3
     model: claude-opus-5-5
@@ -643,28 +710,28 @@ subagents:
     durationSec: 48
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: build fix/2719-midden-link-hash-refs
     model: claude-opus-5-5
     durationSec: 889
     toolCalls: 37
     modelCalls: 27
-    tokenShare: 3.4
+    tokenShare: 3.3
   - type: workflow-subagent
     task: fix fix/2660-gate-single-run-lock r1
     model: claude-opus-5-5
     durationSec: 441
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: fix fix/2660-gate-single-run-lock r2
     model: claude-opus-5-5
     durationSec: 355
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: fix fix/2724-ledger-not-planned-accepted r2
     model: claude-opus-5-5
@@ -685,7 +752,7 @@ subagents:
     durationSec: 91
     toolCalls: 16
     modelCalls: 11
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #2723"
     model: claude-opus-5-5
@@ -699,14 +766,14 @@ subagents:
     durationSec: 117
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: "triage #2726"
     model: claude-opus-5-5
     durationSec: 94
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: "triage #2724"
     model: claude-opus-5-5
@@ -720,28 +787,28 @@ subagents:
     durationSec: 108
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #2660"
     model: claude-opus-5-5
     durationSec: 87
     toolCalls: 17
     modelCalls: 12
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: "triage #2725"
     model: claude-opus-5-5
     durationSec: 145
     toolCalls: 21
     modelCalls: 16
-    tokenShare: 2
+    tokenShare: 1.9
   - type: workflow-subagent
     task: gate fix/2721-worktree-sweep-at-close
     model: claude-opus-5-5
     durationSec: 253
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Standards fix/2721-worktree-sweep-at-close r1
     model: claude-opus-5-5
@@ -769,7 +836,7 @@ subagents:
     durationSec: 403
     toolCalls: 14
     modelCalls: 14
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Standards fix/2721-worktree-sweep-at-close r3
     model: claude-opus-5-5
@@ -783,7 +850,7 @@ subagents:
     durationSec: 1157
     toolCalls: 41
     modelCalls: 35
-    tokenShare: 5.5
+    tokenShare: 5.4
   - type: workflow-subagent
     task: Spec fix/2721-worktree-sweep-at-close r3
     model: claude-opus-5-5
@@ -797,7 +864,7 @@ subagents:
     durationSec: 509
     toolCalls: 13
     modelCalls: 13
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Spec fix/2721-worktree-sweep-at-close r2
     model: claude-opus-5-5
@@ -808,4 +875,6 @@ subagents:
 gitBranch: ccr-1d8e968a-4kuht9
 entrypoint: remote_mobile
 cliVersion: 2.1.316
+ideas:
+  - clear-backlog could carry each question's options as structured data through follow-up rounds, so a reply like 'Agree' or '7b' after a flip is checked against the open set and an ambiguous reply triggers one clarifying line before any build launches; this session stopped two builds on flipped answers
 landedBy: Stop
