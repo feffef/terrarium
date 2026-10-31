@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeSiq7TZmfmF5D5Rbwt
 startedAt: 2026-10-31T02:08:01Z
-endedAt: 2026-10-31T02:28:29Z
+endedAt: 2026-10-31T02:39:43Z
 kind: autonomous
 goal: Scheduled run turning logged Frictions into fixes
-status: in-review
-outcome: "Ledger PR #2727 and fix PR #2728 open; 4 issues filed (#2723-#2726)"
-summary: "Scheduled frictions-to-fixes run, no human prompt. All work was agent-initiated under the Skill's stored prompt. A survey subagent updated the ledger (33 occurrences appended, 2 new entries, fixes #2711 and #2707 recorded). I deviated from the Skill's top-three regression rule: severity ranking would have picked local-gate-green-ci-red (owner closed #2138 not planned, 0 in horizon) and two inspect-session entries (owner closed #2694 as superseded yesterday), so I filed regressions for relayed-subagent-claims, frictions-to-fixes-skill-gaps and frictions-to-fixes-briefs-mismatch by recurrence (#2723-#2725). Only two never-fixed entries had no earlier dropped design; a design subagent said dispatch the check-worktrees upstream fix (verified safe surface) and file the audit-docs coverage choice (#2726). The ledger PR #2727 passed gate:scoped and is pushed; the build agent for the check-worktrees fix was built, reviewed with code-review and opened as PR #2728. Merging both once CI is green, then the closing ledger PR, remain."
+status: completed
+outcome: "Ledger PRs #2727 and #2729 and fix PR #2728 merged; 4 issues filed (#2723-#2726)"
+summary: "Scheduled frictions-to-fixes run, no human prompt. All work was agent-initiated under the Skill's stored prompt. A survey subagent updated the ledger (33 occurrences appended, 2 new entries, fixes #2711 and #2707 recorded). I deviated from the Skill's top-three regression rule: severity ranking would have picked local-gate-green-ci-red (owner closed #2138 not planned, 0 in horizon) and two inspect-session entries (owner closed #2694 as superseded yesterday), so I filed regressions for relayed-subagent-claims, frictions-to-fixes-skill-gaps and frictions-to-fixes-briefs-mismatch by recurrence (#2723-#2725). Only two never-fixed entries had no earlier dropped design; a design subagent said dispatch the check-worktrees upstream fix (verified safe surface) and file the audit-docs coverage choice (#2726). The ledger PR #2727 passed gate:scoped and is pushed; the build agent for the check-worktrees fix was built, reviewed with code-review and opened as PR #2728. All three PRs merged; the closing ledger PR #2729 recorded the fix."
 prs:
   - "2727"
   - "2728"
+  - "2729"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: read before first git command; commit -F and trailer check
@@ -82,24 +83,30 @@ frictions:
   - description: "The ledger prune deleted local-gate-green-ci-red, losing the record of the owner's decision in #2138 (do nothing until a third base-drift case)."
     solution: Keep owner-decision refs on pruned entries, or point the decision at a durable home before the entry is deleted.
     severity: nit
-durationSec: 1228
+  - description: Posted a PR verdict comment with a placeholder SHA and had to edit it; the closing PR's branch needed a force push, which the auto-mode classifier denied, so I pushed it as a fast-forward.
+    solution: Get the head SHA before writing the verdict; after a merged PR, check whether the reset branch is a fast-forward of the remote before forcing.
+    severity: nit
+durationSec: 1902
 models:
-  claude-sonnet-5-5: 97
+  claude-sonnet-5-5: 150
 toolCounts:
-  Bash: 31
+  Bash: 45
   Read: 1
-  Skill: 4
+  Skill: 5
   Agent: 5
   ToolSearch: 1
   mcp__github__issue_write: 4
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 1
-  mcp__github__pull_request_read: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  ReadNotifications: 8
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 3
+  mcp__github__update_issue_comment: 1
+  PushNotification: 1
 filesEdited:
   - scripts/git/check-worktrees.ts
   - tests/unit/check-worktrees.spec.ts
+  - layers/journal/content/current/frictions/check-worktrees-unpushed-flags.yml
   - layers/journal/content/current/frictions/audit-skills-output-overflow.yml
   - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
   - layers/journal/content/current/frictions/bash-reads-not-read-tool.yml
@@ -107,7 +114,6 @@ filesEdited:
   - layers/journal/content/current/frictions/blocked-waiting.yml
   - layers/journal/content/current/frictions/blog-post-story-hunt-reads-pr-bodies.yml
   - layers/journal/content/current/frictions/build-before-shape-settled.yml
-  - layers/journal/content/current/frictions/check-worktrees-unpushed-flags.yml
   - layers/journal/content/current/frictions/clear-backlog-explore-transitive-grouping.yml
   - layers/journal/content/current/frictions/closure-not-invoked-at-pr-open.yml
   - layers/journal/content/current/frictions/closure-not-invoked-on-answers.yml
@@ -256,32 +262,32 @@ subagents:
     durationSec: 456
     toolCalls: 34
     modelCalls: 29
-    tokenShare: 24.6
+    tokenShare: 17.2
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 138
     toolCalls: 18
     modelCalls: 13
-    tokenShare: 8.2
+    tokenShare: 5.8
   - type: general-purpose
     task: Build check-worktrees upstream fix
     model: sonnet
     durationSec: 357
     toolCalls: 20
     modelCalls: 12
-    tokenShare: 7.4
+    tokenShare: 5.2
   - type: general-purpose
     task: Standards review of check-worktrees fix
     durationSec: 21
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 4.4
+    tokenShare: 3.1
   - type: general-purpose
     task: Spec review of check-worktrees fix
     durationSec: 26
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 4.8
+    tokenShare: 3.3
 gitBranch: claude/eager-ptolemy-2lsfxx
 entrypoint: remote_trigger
 cliVersion: 2.1.314
