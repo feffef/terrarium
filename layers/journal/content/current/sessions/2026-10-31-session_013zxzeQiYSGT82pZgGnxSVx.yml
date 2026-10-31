@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQiYSGT82pZgGnxSVx
 startedAt: 2026-10-31T13:12:02Z
-endedAt: 2026-10-31T13:21:53Z
+endedAt: 2026-10-31T13:25:32Z
 kind: autonomous
 goal: Scheduled prune trial of agent instructions
-status: in-review
-outcome: "Trimmed pr-workflow review-before-push prose; PR #2743 open, no open trial was judgeable"
-summary: 'Scheduled prune-trial run (agent-initiated, no human prompt). None of the three open trials had reached its judging floor. A search subagent ranked the review-before-push rule in pr-workflow.md first (narrowed three times, no guard). I plainly reworded it and three restatements (-4 net), wrote the ledger entry, and a Sonnet probe pinned to the commit answered six cases correctly. Standards and Spec reviewers both flagged the dropped "run it first for any other change"; I restored it, amended, ran gate:scoped green and pushed. PR #2743 opened and subscribed; its first body wrongly said a human must merge, corrected after checking the human-merge paths.'
+status: completed
+outcome: "Trimmed pr-workflow review-before-push prose; PR #2743 merged, no open trial was judgeable"
+summary: 'Scheduled prune-trial run (agent-initiated, no human prompt). None of the three open trials had reached its judging floor. A search subagent ranked the review-before-push rule in pr-workflow.md first (narrowed three times, no guard). I plainly reworded it and three restatements (-4 net), wrote the ledger entry, and a Sonnet probe pinned to the commit answered six cases correctly. Standards and Spec reviewers both flagged the dropped "run it first for any other change"; I restored it, amended, ran gate:scoped green and pushed. PR #2743 opened; its first body wrongly said a human must merge, corrected after checking the human-merge paths. CI green, verdict posted, merged via merge-pr.ts.'
 prs:
   - "2743"
 docsRead:
@@ -55,19 +55,25 @@ frictions:
   - description: Read ADR-0027 and ADR-0029 only after the post-edit hint fired; the edit was already right.
     solution: Read governing ADRs before editing the file; no harm done.
     severity: nit
-durationSec: 591
+  - description: Probe ran on the pre-amend SHA; reviewers then found a dropped clause, so the shipped text differs from what Sonnet read by one sentence.
+    solution: Run the code-review before the probe, or re-probe after any fix; the restored clause only returned old wording.
+    severity: nit
+durationSec: 810
 models:
-  claude-sonnet-5-5: 59
+  claude-sonnet-5-5: 74
 toolCounts:
-  Bash: 13
+  Bash: 17
   Read: 6
-  Skill: 4
+  Skill: 5
   Agent: 4
   Edit: 1
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__update_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - docs/agents/pr-workflow.md
   - .agents/prune-trials.yml
@@ -147,28 +153,28 @@ subagents:
     durationSec: 70
     toolCalls: 20
     modelCalls: 10
-    tokenShare: 12.7
+    tokenShare: 10.4
   - type: general-purpose
     task: Probe pruned pr-workflow
     model: sonnet
     durationSec: 13
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 7.3
+    tokenShare: 6
   - type: general-purpose
     task: Standards review of prune
     model: sonnet
     durationSec: 23
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 6.4
+    tokenShare: 5.2
   - type: general-purpose
     task: Spec review of prune
     model: sonnet
     durationSec: 35
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 7
+    tokenShare: 5.8
 gitBranch: claude/practical-rubin-i48iwd
 entrypoint: remote_trigger
 cliVersion: 2.1.316
