@@ -48,4 +48,17 @@ describe('middenGlossBody', () => {
     ])
     expect(notes.a).toEqual(['A Tenant in a ', { key: 'space', text: 'Space' }, '.'])
   })
+
+  it('links #N in Site prose, but not inside code or a link (issue #2719)', () => {
+    const body: Parameters<typeof middenGlossBody>[0] = [
+      ['p', {}, 'First.'],
+      ['p', {}, 'Closed in #1637. ', ['code', {}, '#5'], ' ', ['a', { href: '/x' }, '#6']],
+    ]
+    expect(middenGlossBody(body, {}).nodes).toEqual([
+      ['p', {}, 'First.'],
+      ['p', {}, 'Closed in ',
+        ['a', { href: 'https://github.com/feffef/terrarium/issues/1637', target: '_blank', rel: 'noopener noreferrer' }, '#1637'],
+        '. ', ['code', {}, '#5'], ' ', ['a', { href: '/x' }, '#6']],
+    ])
+  })
 })

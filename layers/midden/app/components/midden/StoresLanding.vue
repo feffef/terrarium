@@ -139,7 +139,7 @@ useHead({ title: 'The Stores · The Midden' })
 
             <h3 class="mono midden-entry__title"><MiddenTicks :text="find.title" /></h3>
 
-            <p class="midden-entry__note"><MiddenTicks :text="find.catalogNote" /></p>
+            <p class="midden-entry__note"><MiddenTicks :text="find.catalogNote" links /></p>
 
             <blockquote v-if="find.condition !== 'lost' && find.inscription" class="midden-entry__inscription">
               <span class="midden-entry__quote">&ldquo;{{ find.inscription.text }}&rdquo;</span>
