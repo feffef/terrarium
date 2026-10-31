@@ -673,3 +673,6 @@ observations:
       orphanScan counts missing from the summaries of
       session_013SbWSgqz4tjVcTMz9vF1mu and session_01WKUyPyRBzirHHAhDr7Y8Ek.
       Grade/role unchanged (routine).
+  - date: "2026-10-31"
+    note: >-
+      Behaviour check, 8 runs, all PRs merged. Known, tracked on #2472: follow-ups over 2 files self-read instead of code-review (session_01WKUyPyRBzirHHAhDr7Y8Ek, session_019g1t4RX7PcR54io7GRdxXK). Minor, self-corrected: orphanScan missing from the log summary on 10-24 and 10-25 (session_013SbWSgqz4tjVcTMz9vF1mu, session_01WKUyPyRBzirHHAhDr7Y8Ek). Grade/role unchanged.

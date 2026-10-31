@@ -330,3 +330,6 @@ observations:
       gap: that run dropped the retention sweep after a failed smoke test.
       The 757e501c ADR-0010 line works: no late-read friction since.
       Grade/role unchanged (routine).
+  - date: "2026-10-31"
+    note: >-
+      Behaviour check, 7 runs, all Digests on main. Unverified: session_013zxzePhRwXqYLtsycYUhqv (PR #2606) logged neither code-review nor a self-read for a 15-line page (#2472 family); its dropped step-5 sweep was disclosed and healed by #2653. Fact-check catches 2-4 wrong claims per run. Grade/role unchanged.

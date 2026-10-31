@@ -408,3 +408,6 @@ observations:
       in f01120b78 and 2c686826b after the fact-check commit 64d988939; which
       agent made them is unverified. Reopened #2370 with this. Grade/role
       unchanged (routine).
+  - date: "2026-10-31"
+    note: >-
+      Behaviour check, 7 runs, 11 PRs merged. Known #2370 recurs: text edited after the fact-check without a re-check in session_013zxzeRin6kPuaDZ27jyuUk (#2637) and session_013zxzeQPnKXDNxriCwJfZnz (#2679); both predate the Fact-checked-blob rule, which held in #2715. Unverified: #2715 timestamps span 4 minutes. Grade/role unchanged.

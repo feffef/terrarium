@@ -461,3 +461,6 @@ observations:
       6 of 9 runs (e.g. session_013zxzePQM2TjRCTtcKaV61o, 'ledger claimed every
       rule was kept'); no wrong figure landed. Watch: cuts keep shrinking (-1 to
       -19 lines per run). Grade/role unchanged (routine).
+  - date: "2026-10-31"
+    note: >-
+      Behaviour check, 7 runs, PRs merged. Verified: session_013zxzeSXsJSnGEYu9VQYXFH (#2641, severity-only verdict) was followed by 7576cccf6 restoring a cut dispatch-subagents line once rates rose (#2657); the rates step added since closes this gap. Unverified: session_013zxzeQmQLYRYBUN1FkDfN6 filed nothing on harness-proxy-blocks 4/177 to 4/41, judged unrelated (#2695). Grade/role unchanged.

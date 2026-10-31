@@ -110,3 +110,6 @@ observations:
       Unverified, n=1: session_013zxzeQn5ksJrQasTk95LKb hit an Invalid cursor
       past a 40-minute gap and read one session in 98 sequential pages; the
       Skill has no fallback for that cursor. Grade/role unchanged (specialist).
+  - date: "2026-10-31"
+    note: >-
+      Behaviour check, 7 runs. Unverified, n=1: session_013zxzeQn5ksJrQasTk95LKb read a 98-page session sequentially (its five recoveries cost ~1.1M tokens together) despite the >25-page full-read rule added in #2666; its extractors got partial-read briefs. Verified gap: list_events rejects a cursor past a 40-minute gap, no fallback in the Skill (repeats 10-30 note; the run suggests kinds ["result"]). Grade/role unchanged.

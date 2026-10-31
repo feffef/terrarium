@@ -24,3 +24,6 @@ observations:
       retitle round (#2651); check:worktrees fails on a merged writer
       worktree until the run branch is pushed. Grade/role unchanged
       (specialist).
+  - date: "2026-10-31"
+    note: >-
+      Behaviour check, 7 runs, PRs merged, no failure. Unverified: step 3 does not check draft titles against EVERY-PAGE (#2651); step 8 does not say check:worktrees needs the branch pushed. Grade/role unchanged.

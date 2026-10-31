@@ -424,3 +424,6 @@ observations:
       (github-integration.md single-backtick line) with no Friction logged. The
       one-checker pool fix holds since 10-27. Unverified: one reviewer covered
       only part of the docs in session_013zxzeR94ZpyH5mhKXDH22Y. Grade/role unchanged (routine).
+  - date: "2026-10-31"
+    note: >-
+      Behaviour check, 7 runs, PRs merged. Repeated, low severity: reviewers covered only part of the docs (session_013zxzeR94ZpyH5mhKXDH22Y, session_013zxzeS5X2KXN7xVdXxNmdN; earlier 10-04); step 1 has no coverage test. Unverified: 10-30 run did not read prune-trials.yml before dispatch; the checker caught the trial finding. Grade/role unchanged.
