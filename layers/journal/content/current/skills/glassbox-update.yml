@@ -113,3 +113,6 @@ observations:
       it, session_013zxzeTDLMF5mxnvWB4oyWE, ran code-review, so the fix holds so
       far. Unverified: --write does not shift lines ranges on edited pages
       (session_01A7PwrNRBtY9LTX6HrttXWW). Grade/role unchanged (specialist).
+  - date: "2026-10-31"
+    note: >-
+      Behaviour check, 8 runs, all PRs merged. Known, tracked on #2472: first-push code-review replaced by a self-read on 31-39-file re-pin diffs (session_01A7PwrNRBtY9LTX6HrttXWW, session_013zxzePLLgArtn1cuyZAmNd, session_013zxzeSJQfnNdJHrSWjVT2x); session_013zxzeRYnqNveUu5w9oJd9q ran full review after #2638. Grade/role unchanged.

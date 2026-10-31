@@ -482,3 +482,6 @@ observations:
       code-review, against the unpushed hand-back rule; the Glass Box agent's
       push was then denied, and the owner approved it. No stranded worktrees.
       Grade/role unchanged (essential).
+  - date: "2026-10-31"
+    note: >-
+      Behaviour check, 10 runs, all PRs merged. Verified: §5 check:worktrees absent from session_013zxzePnfDGz3F3p9spej9f, session_013zxzeQUV6c2tzkFzv3WgiY, session_013zxzeRoWcNj4VhbkkjybNG (repeat of the 10-26 note); filed #2721. Unverified, n=1: §3 "it pushes once a review is clean" vs lead pushing (session_013zxzePnfDGz3F3p9spej9f). About 55 save-handback calls in session_013zxzeQUV6c2tzkFzv3WgiY (cost only). Dispatch-read guard still fires first. Grade/role unchanged (essential).

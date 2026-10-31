@@ -480,3 +480,6 @@ observations:
       because its title lacks the keyword; the refiner caught the overlap.
       Dispatch-read guard blocked the first Agent call in four of seven runs
       (cost only). Grade/role unchanged (routine).
+  - date: "2026-10-31"
+    note: >-
+      Behaviour check, 7 runs, all PRs merged. Repeat: dispatch-read guard blocked visitor dispatch in 6 of 7 runs; step 2 does not name it. Unverified: merged-PR keyword grep missed prior work in session_013zxzeSxgYzYmeAuCzvJdhY. Grade/role unchanged.

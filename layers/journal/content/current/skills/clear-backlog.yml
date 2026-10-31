@@ -189,3 +189,6 @@ observations:
       comment). Hand edit pushed without re-gating in both (spec gap, CI gated
       each merge). check:worktrees still absent from the logs (unverified).
       Grade/role unchanged (specialist).
+  - date: "2026-10-31"
+    note: >-
+      Behaviour check, 10 runs. Verified from logs: close-session re-invoke at §4 replaced by a direct log-session call (session_013zxzeSgD6cuF2mawqY6jWM, session_013zxzeTK9c2HVcabwCx3b18); fix landed in #2707. Hand fixes pushed without re-gate (session_01PdrNTJLJJMKBGGZfsAhL6w, session_013zxzeTK9c2HVcabwCx3b18), CI still gated. Grade/role unchanged.
