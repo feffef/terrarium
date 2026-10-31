@@ -49,9 +49,9 @@ lenses.
 1. Fetch `origin/main` (`docs/agents/git-conventions.md`).
    Read the summaries of the last two audit-docs session logs
    (`grep -l '^trigger: audit-docs'` in
-   `layers/journal/content/current/sessions/`; newest filenames last). Each
-   ends `Covered: <areas>`. Tell Agents B and C to skip those areas unless a
-   file in one changed since that run (`git log --since=<its date>`).
+   `layers/journal/content/current/sessions/`). Tell Agents B and C to skip
+   the areas their `Covered:` line names, unless a file in one changed since
+   that run (`git log --since=<its date>`).
 2. Dispatch three read-only reviewer agents in parallel, one per pair of
    lenses below.
 3. Tell every agent the finding format: the file plus the exact sentence,
@@ -59,7 +59,7 @@ lenses.
    (reviewers get them wrong). A finding outside its own lenses is still
    reported, named by its lens, and joins the pool like any other. Tell them
    to skip text an open trial in `.agents/prune-trials.yml` covers (ADR-0027).
-   Each ends its reply with the Live files it did not read.
+   Tell each to end its reply with the Live files it did not read.
 4. Save each agent's reply verbatim into the pool, a new scratchpad folder:
    `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <pool>/<agent-id>.md`.
    Never resume a reviewer to finish; the next run covers what it skipped.
@@ -204,8 +204,8 @@ human.
    changes its route. Subscribe to it and follow it until it merges or
    closes.
 3. Log the session (ADR-0009). Its summary gives the verdict counts
-   (CONFIRMED / CONFIRMED-BUT / WRONG) and ends `Covered: <areas>` (the areas reviewers read, minus files they
-   reported unread), e.g. `Covered: docs/agents/*, GLOSSARY.md, Skills a-f`,
+   (CONFIRMED / CONFIRMED-BUT / WRONG) and ends with the areas Agents B and
+   C read in full, e.g. `Covered: docs/agents/*, GLOSSARY.md, Skills a-f`,
    even on a no-PR run.
 
 Done when the sweep PR has merged green, or is open and honestly escalated.
