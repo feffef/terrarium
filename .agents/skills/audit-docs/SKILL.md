@@ -204,7 +204,8 @@ human.
    changes its route. Subscribe to it and follow it until it merges or
    closes.
 3. Log the session (ADR-0009). Its summary gives the verdict counts
-   (CONFIRMED / CONFIRMED-BUT / WRONG) and ends `Covered: <areas>`, e.g.
-   `Covered: docs/agents/*, GLOSSARY.md, Skills a-f`, even on a no-PR run.
+   (CONFIRMED / CONFIRMED-BUT / WRONG) and ends `Covered: <areas>` (the areas reviewers read, minus files they
+   reported unread), e.g. `Covered: docs/agents/*, GLOSSARY.md, Skills a-f`,
+   even on a no-PR run.
 
 Done when the sweep PR has merged green, or is open and honestly escalated.
