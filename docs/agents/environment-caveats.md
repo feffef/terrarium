@@ -64,8 +64,8 @@ them as new. Incident detail lives in the cited issue.
   prefix, `&&`/`;` chains and pipes with git, a git `for` loop, heredocs (with
   or without `git`), a redirected `pnpm` or `git push --dry-run`, git named
   twice, "git" in a branch name, and "Bash" with "pnpm" in text. Earlier
-  reports of the other forms did not reproduce, so the guard may vary by
-  run; if blocked, run one git command per call with literal paths.
+  reports of the other forms did not reproduce; if blocked, run one git
+  command per call with literal paths.
   (issues #1180, #1499, #2612)
 - **A scheduled or autonomous session can find `mcp__github__*` unauthenticated
   with no `gh` CLI fallback.** Nothing in the repo fixes that. Push the branch as usual,
