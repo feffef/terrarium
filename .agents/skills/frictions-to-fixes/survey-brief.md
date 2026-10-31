@@ -154,7 +154,7 @@ resolution.
    matching `territory` path or keyword verbatim; with no quotable match the
    candidate is not on trial, so carry on.
 3. **Check the rest against the tracker and, where cheap, `main`** (a
-   solution isn't ripe if `main` already has it). `prune-friction-ledger.ts --candidates --out {SCRATCH_DIR}/candidates.txt`
+   solution isn't ripe if `main` already has it). `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts --candidates --out {SCRATCH_DIR}/candidates.txt`
    labels each entry from the ledger alone, so read its four labels as
    provisional and confirm each:
    - `pnpm exec tsx scripts/git/list-merges-since.ts <Friction session's startedAt>`
