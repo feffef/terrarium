@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeStBRUtsbccz5kMYNU
 startedAt: 2026-10-31T08:35:24Z
-endedAt: 2026-10-31T11:04:21Z
+endedAt: 2026-10-31T11:07:03Z
 kind: interactive
 goal: Clear the issue backlog
-status: in-review
-outcome: "All eight swept backlog issues merged (PRs #2732-#2739); follow-up PR #2740 removes the stale git-branch-name check"
-summary: "Human-instructed: the owner invoked /clear-backlog. Agent-initiated within that Skill: the sweep set (7 needs-triage issues plus ready-for-agent #2612; five ready-for-human issues skipped because an agent commented last; no external PRs), one explore run, one build run, the triage labels and comments the triage agents posted, and both PRs. #2612 (owner pick 1b from the 2026-10-28 grilling, which I checked in that session's log) probed the container worktree guard: only $VAR expansion in a git command was refused, so the doc's list of triggers was replaced (PR #2732). I cut an unverified \"may vary by run\" cause by hand. A judgement call stays open: clear-backlog-build.js still refuses branch names containing \"git\". #2725 (PR #2733) points the frictions-to-fixes briefs' output at {SCRATCH_DIR}. Its review hit the three-round cap with one open finding (two §3.3 calls had no target), which I fixed by hand. I split #2725 from #2724 despite their shared file, because #2725's brief leaves §5 to #2724. Six grill questions (#2724, #2723, #2721, #2660, #2719, #2726) were sent to the owner and are unanswered. Both PRs merged on green CI via merge-pr.ts after a posted verdict; check:worktrees passed. Owner then answered Q6 with their own design (each audit-docs run records coverage and the next reads the last two), refined by follow-up Q8a (the session log is the record); built and merged as PR #2734, where I fixed the capped review's open findings by hand. #2721 flipped 7a, 7b, then back toward 7a with 'we don't need the worktrees after merge'; I stopped two builds and asked Q9 instead of guessing. The owner answered 9b (refuse only completed/partial; abandoned may be unpushed on purpose; remove merged worktrees) and accepted my picks for Q1, Q2, Q4 and Q5. One build run produced PRs #2735 (#2724), #2736 (#2723, rule in CLAUDE.md since dispatch-subagents §3 is on trial), #2737 (#2660, Human-only gate.ts, waits for a human merge) and #2738 (#2719); #2735, #2736 and #2738 merged on green CI. #2721's build became PR #2739 (log-session --author sweeps worktrees at close: refuses completed/partial with stranded work, records a Friction otherwise, removes clean merged worktrees; narrower than the brief, per the owner's warning) and merged. Per branch: #2732 records the worktree guard's accepted/refused forms (open call: clear-backlog-build.js still refuses 'git' branch names); #2733 sends frictions-to-fixes brief output to {SCRATCH_DIR}; #2734 rotates audit-docs coverage via a Covered: line in session logs; #2735 counts ledger since: in-horizon and sends not-planned closes to accepted; #2736 asks every subagent for a source per count, id or attribution; #2738 links #N in Midden curator prose; #2737 (#2660) adds a per-checkout gate run lock without a signal handler; the owner merged it. check:worktrees passes. Follow-up, human-instructed: the owner asked what the clear-backlog-build git-branch-name check needs and chose to remove it (option a). PR #2740 removes the check and, after code-review, rewrites the ledger entry cause and note via ledger-set.ts."
+status: completed
+outcome: "All eight swept backlog issues merged (PRs #2732-#2739), plus follow-up PR #2740 removing the stale git-branch-name check"
+summary: "Human-instructed: the owner invoked /clear-backlog. Agent-initiated within that Skill: the sweep set (7 needs-triage issues plus ready-for-agent #2612; five ready-for-human issues skipped because an agent commented last; no external PRs), one explore run, one build run, the triage labels and comments the triage agents posted, and both PRs. #2612 (owner pick 1b from the 2026-10-28 grilling, which I checked in that session's log) probed the container worktree guard: only $VAR expansion in a git command was refused, so the doc's list of triggers was replaced (PR #2732). I cut an unverified \"may vary by run\" cause by hand. A judgement call stays open: clear-backlog-build.js still refuses branch names containing \"git\". #2725 (PR #2733) points the frictions-to-fixes briefs' output at {SCRATCH_DIR}. Its review hit the three-round cap with one open finding (two §3.3 calls had no target), which I fixed by hand. I split #2725 from #2724 despite their shared file, because #2725's brief leaves §5 to #2724. Six grill questions (#2724, #2723, #2721, #2660, #2719, #2726) were sent to the owner and are unanswered. Both PRs merged on green CI via merge-pr.ts after a posted verdict; check:worktrees passed. Owner then answered Q6 with their own design (each audit-docs run records coverage and the next reads the last two), refined by follow-up Q8a (the session log is the record); built and merged as PR #2734, where I fixed the capped review's open findings by hand. #2721 flipped 7a, 7b, then back toward 7a with 'we don't need the worktrees after merge'; I stopped two builds and asked Q9 instead of guessing. The owner answered 9b (refuse only completed/partial; abandoned may be unpushed on purpose; remove merged worktrees) and accepted my picks for Q1, Q2, Q4 and Q5. One build run produced PRs #2735 (#2724), #2736 (#2723, rule in CLAUDE.md since dispatch-subagents §3 is on trial), #2737 (#2660, Human-only gate.ts, waits for a human merge) and #2738 (#2719); #2735, #2736 and #2738 merged on green CI. #2721's build became PR #2739 (log-session --author sweeps worktrees at close: refuses completed/partial with stranded work, records a Friction otherwise, removes clean merged worktrees; narrower than the brief, per the owner's warning) and merged. Per branch: #2732 records the worktree guard's accepted/refused forms (open call: clear-backlog-build.js still refuses 'git' branch names); #2733 sends frictions-to-fixes brief output to {SCRATCH_DIR}; #2734 rotates audit-docs coverage via a Covered: line in session logs; #2735 counts ledger since: in-horizon and sends not-planned closes to accepted; #2736 asks every subagent for a source per count, id or attribution; #2738 links #N in Midden curator prose; #2737 (#2660) adds a per-checkout gate run lock without a signal handler; the owner merged it. check:worktrees passes. Follow-up, human-instructed: the owner asked what the clear-backlog-build git-branch-name check needs and chose to remove it (option a). PR #2740 removes the check and, after code-review, rewrites the ledger entry cause and note via ledger-set.ts; it merged on green CI."
 prs:
   - "2732"
   - "2733"
@@ -160,19 +160,19 @@ frictions:
   - description: Hand-edited a Friction Ledger entry although survey-brief.md says every ledger edit goes through ledger-set.ts; the Spec review caught it before push
     solution: Grep frictions-to-fixes for the ledger edit path before touching layers/journal/content/current/frictions/
     severity: nit
-durationSec: 8937
+durationSec: 9099
 models:
-  claude-opus-5-5: 317
+  claude-opus-5-5: 327
 toolCounts:
-  Bash: 93
+  Bash: 96
   Workflow: 8
   ToolSearch: 5
   PushNotification: 2
   mcp__github__create_pull_request: 9
   mcp__claude-code-remote__subscribe_pr_activity: 9
-  Skill: 4
-  ReadNotifications: 16
-  mcp__github__add_issue_comment: 16
+  Skill: 5
+  ReadNotifications: 18
+  mcp__github__add_issue_comment: 17
   mcp__claude-code-remote__unsubscribe_pr_activity: 2
   mcp__github__issue_write: 6
   TaskStop: 3
@@ -391,7 +391,7 @@ subagents:
     durationSec: 21
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build fix/2726-audit-docs-rotating-coverage
     model: claude-sonnet-5-5
@@ -419,7 +419,7 @@ subagents:
     durationSec: 127
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: Spec fix/2612-worktree-guard-accepted-forms r1
     model: claude-opus-5-5
@@ -461,14 +461,14 @@ subagents:
     durationSec: 42
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Standards fix/2612-worktree-guard-accepted-forms r1
     model: claude-opus-5-5
     durationSec: 41
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Spec fix/2725-frictions-briefs-output-paths r3
     model: claude-opus-5-5
@@ -489,7 +489,7 @@ subagents:
     durationSec: 56
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Standards fix/2726-audit-docs-rotating-coverage r3
     model: claude-opus-5-5
@@ -566,7 +566,7 @@ subagents:
     durationSec: 46
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Standards fix/2660-gate-single-run-lock r3
     model: claude-opus-5-5
@@ -601,7 +601,7 @@ subagents:
     durationSec: 244
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: Standards fix/2724-ledger-not-planned-accepted r3
     model: claude-opus-5-5
@@ -643,7 +643,7 @@ subagents:
     durationSec: 30
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Standards fix/2719-midden-link-hash-refs r1
     model: claude-opus-5-5
@@ -671,7 +671,7 @@ subagents:
     durationSec: 40
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 0.5
+    tokenShare: 0.4
   - type: workflow-subagent
     task: Spec fix/2719-midden-link-hash-refs r1
     model: claude-opus-5-5
@@ -734,14 +734,14 @@ subagents:
     durationSec: 48
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: build fix/2719-midden-link-hash-refs
     model: claude-opus-5-5
     durationSec: 889
     toolCalls: 37
     modelCalls: 27
-    tokenShare: 3
+    tokenShare: 2.9
   - type: workflow-subagent
     task: fix fix/2660-gate-single-run-lock r1
     model: claude-opus-5-5
@@ -790,7 +790,7 @@ subagents:
     durationSec: 117
     toolCalls: 17
     modelCalls: 13
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: "triage #2726"
     model: claude-opus-5-5
@@ -811,7 +811,7 @@ subagents:
     durationSec: 108
     toolCalls: 16
     modelCalls: 12
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: "triage #2660"
     model: claude-opus-5-5
@@ -846,7 +846,7 @@ subagents:
     durationSec: 80
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: Standards fix/2721-worktree-sweep-at-close r2
     model: claude-opus-5-5
@@ -860,21 +860,21 @@ subagents:
     durationSec: 403
     toolCalls: 14
     modelCalls: 14
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Standards fix/2721-worktree-sweep-at-close r3
     model: claude-opus-5-5
     durationSec: 40
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.9
+    tokenShare: 0.8
   - type: workflow-subagent
     task: build fix/2721-worktree-sweep-at-close
     model: claude-opus-5-5
     durationSec: 1157
     toolCalls: 41
     modelCalls: 35
-    tokenShare: 4.8
+    tokenShare: 4.7
   - type: workflow-subagent
     task: Spec fix/2721-worktree-sweep-at-close r3
     model: claude-opus-5-5
