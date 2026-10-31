@@ -205,7 +205,7 @@ describe('contentMatchesRemoteCommit()', () => {
   })
 })
 
-describe('unpushedCount() with no upstream', () => {
+describe('unpushedCount()', () => {
   it('counts only commits on no remote-tracking ref (a HEAD contained in a pushed branch is rescued)', () => {
     withTempRepo((dir, run) => {
       run('commit', '-q', '--allow-empty', '-m', 'base')
@@ -219,6 +219,22 @@ describe('unpushedCount() with no upstream', () => {
       expect(unpushedCount(dir)).toBe(0)
       run('commit', '-q', '--allow-empty', '-m', 'unpushed work')
       expect(unpushedCount(dir)).toBe(1)
+    })
+  })
+
+  it('ignores a configured upstream of origin/main when the commit is on another remote-tracking ref', () => {
+    withTempRepo((dir, run) => {
+      run('commit', '-q', '--allow-empty', '-m', 'base')
+      run('update-ref', 'refs/remotes/origin/main', 'HEAD')
+      run('checkout', '-q', '-b', 'feat')
+      run('config', 'remote.origin.url', dir)
+      run('config', 'remote.origin.fetch', '+refs/heads/*:refs/remotes/origin/*')
+      run('config', 'branch.feat.remote', 'origin')
+      run('config', 'branch.feat.merge', 'refs/heads/main')
+      run('commit', '-q', '--allow-empty', '-m', 'feat work')
+      expect(unpushedCount(dir)).toBe(1)
+      run('update-ref', 'refs/remotes/origin/feat', 'HEAD')
+      expect(unpushedCount(dir)).toBe(0)
     })
   })
 })
