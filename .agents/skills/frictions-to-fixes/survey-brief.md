@@ -157,14 +157,14 @@ resolution.
    solution isn't ripe if `main` already has it). `pnpm exec tsx .agents/skills/frictions-to-fixes/scripts/prune-friction-ledger.ts --candidates --out {SCRATCH_DIR}/candidates.txt`
    labels each entry from the ledger alone, so read its four labels as
    provisional and confirm each:
-   - `pnpm exec tsx scripts/git/list-merges-since.ts <Friction session's startedAt>`
+   - `pnpm exec tsx scripts/git/list-merges-since.ts <Friction session's startedAt> > {SCRATCH_DIR}/merges.json 2> {SCRATCH_DIR}/merges.err`
      lists every `origin/main` commit after that instant (UTC, newest first,
      `isMerge`-flagged; `--merges-only` keeps PR merges alone, else a
      window's output can overflow you). Find the fixing commit or PR there
      rather than comparing git timestamps by hand. Capture stdout and stderr
      separately: diagnostics go to stderr and break the JSON on stdout.
    - Before labelling a candidate never-fixed, filter
-     `pnpm exec tsx scripts/github/list-open-issues.ts` output locally by the
+     `pnpm exec tsx scripts/github/list-open-issues.ts > {SCRATCH_DIR}/open-issues.json` output locally by the
      Friction's tool name and error text, and page `mcp__github__list_issues`
      with `state: CLOSED` (parameters per `docs/agents/github-integration.md`),
      filtering titles locally. A title match is a hint, not proof, and a
