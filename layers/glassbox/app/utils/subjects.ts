@@ -1,7 +1,7 @@
 // Subject order and display names live here, not in content (issue #1985, Part 3).
 export const glassboxSubjects = [
   { slug: 'claude-code', name: 'Claude Code', blurb: 'The agent harness: what a session reads, runs and may start.' },
-  { slug: 'skill-pack', name: 'Skill pack', blurb: 'Outside Skills the agents plan and build with.' },
+  { slug: 'skill-pack', name: 'Installed Skills', blurb: 'Ready-made Skills the agents plan and build with, kept as installed.' },
   { slug: 'nuxt-vue', name: 'Nuxt & Vue', blurb: 'One app, one page file, many sites.' },
   { slug: 'nuxt-content', name: 'Nuxt Content', blurb: 'Files to tables: collections, isolation, the database.' },
   { slug: 'verification', name: 'Verification', blurb: 'The merge gate and its checks: types, content, tests.' },

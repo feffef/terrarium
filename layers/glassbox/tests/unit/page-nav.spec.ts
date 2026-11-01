@@ -8,7 +8,7 @@ describe('glassboxSurround', () => {
     { path: '/claude-code/claude-md', title: 'CLAUDE.md as the every-session contract' },
     { path: '/claude-code/path-scoped-rules', title: 'Path-scoped rules' },
     { path: '/nuxt-vue/layers', title: 'One app, many sites' },
-    { path: '/skill-pack/skill-pack', title: 'The Skill pack' },
+    { path: '/skill-pack/skill-pack', title: 'Installed Skills' },
     { path: '/walkthroughs/from-file-to-browser', title: 'From file to browser' },
   ]
 
@@ -20,11 +20,11 @@ describe('glassboxSurround', () => {
 
   it('crosses Subjects in Subject-map order, both ways, and says so', () => {
     expect(glassboxSurround(pages, '/claude-code/path-scoped-rules')?.next).toEqual(
-      { path: '/skill-pack/skill-pack', title: 'The Skill pack', label: 'Leaving Claude Code → Skill pack' },
+      { path: '/skill-pack/skill-pack', title: 'Installed Skills', label: 'Leaving Claude Code → Installed Skills' },
     )
     expect(glassboxSurround(pages, '/skill-pack/skill-pack')).toEqual({
-      prev: { path: '/claude-code/path-scoped-rules', title: 'Path-scoped rules', label: '← Leaving Skill pack · Claude Code' },
-      next: { path: '/nuxt-vue/layers', title: 'One app, many sites', label: 'Leaving Skill pack → Nuxt & Vue' },
+      prev: { path: '/claude-code/path-scoped-rules', title: 'Path-scoped rules', label: '← Leaving Installed Skills · Claude Code' },
+      next: { path: '/nuxt-vue/layers', title: 'One app, many sites', label: 'Leaving Installed Skills → Nuxt & Vue' },
     })
   })
 

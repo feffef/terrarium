@@ -6,8 +6,8 @@
 > The spec, with its history, is
 > [issue #1985](https://github.com/feffef/terrarium/issues/1985).
 
-Glass Box teaches the concepts Terrarium is built on: Claude Code, the outside
-Skill pack, Nuxt and Vue, Nuxt Content, Zod, TypeScript, testing, deploy, Git
+Glass Box teaches the concepts Terrarium is built on: Claude Code, installed
+Skills, Nuxt and Vue, Nuxt Content, Zod, TypeScript, testing, deploy, Git
 and GitHub, and Terrarium's own practices, with Terrarium as the worked example
 throughout. The name is the opposite of a black box: the terrarium is a glass
 box, and the site shows its inside.

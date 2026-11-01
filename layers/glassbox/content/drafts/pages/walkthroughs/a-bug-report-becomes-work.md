@@ -1,8 +1,8 @@
 ---
 title: A bug report becomes work
 description: How a visitor's issue reaches a merged fix, through a sweep that reads who wrote it, a person's approval, a session that builds it and a merge a person makes.
-revision: 'e0edb8a5963064e5075b668c6512896a6e9fcd4d'
-revisionDate: '2026-10-25'
+revision: '8725a0abf5893071ea2e261a6c2c9c500af64614'
+revisionDate: '2026-11-01'
 publishedAt: '2026-10-25T07:50:28Z'
 ---
 
@@ -28,7 +28,7 @@ Anyone can open an issue on the repository. The new issue has no label. The labe
 
 ## 2. A sweep picks it up
 
-A :term[Trusted] user starts the `auto-triage` sweep by hand, or a `clear-backlog` run resolves the same set of issues and triages them. The sweep reads every open issue and acts on those that need attention, and an issue with no label always does. It applies the per-issue rules of the pack's `triage` Skill, one subagent per issue.
+A :term[Trusted] user starts the `auto-triage` sweep by hand, or a `clear-backlog` run resolves the same set of issues and triages them. The sweep reads every open issue and acts on those that need attention, and an issue with no label always does. It applies the per-issue rules of the installed `triage` Skill, one subagent per issue.
 
 ::stop-links
 [Issue triage labels](/t/glassbox/guide/git-github/work-queue) · [Subagents](/t/glassbox/guide/claude-code/subagents)
