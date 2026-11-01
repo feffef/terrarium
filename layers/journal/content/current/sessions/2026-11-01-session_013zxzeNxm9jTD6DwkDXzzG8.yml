@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeNxm9jTD6DwkDXzzG8
 startedAt: 2026-11-01T02:07:47Z
-endedAt: 2026-11-01T02:21:29Z
+endedAt: 2026-11-01T02:26:23Z
 kind: autonomous
 goal: Weekly sweep of recurring session Frictions into fixes
 status: in-review
-outcome: "Ledger PR #2754 open; three regression issues filed; one fix designed but not yet built"
-summary: "Scheduled frictions-to-fixes run (agent-initiated by the schedule, no human prompt). A survey subagent appended 40 window Frictions, recorded eight merged fixes and reset five stale entries. I filed regression issues #2751, #2752 and #2753 (skipping the two inspect-session entries, whose use case PR #2688 removed, and prepush-gate-review-skipped, which already has #2748). A design agent covered two picks: no change for worktree-subagent-moves-branch; dispatch for ledger-append-refuses-held-session (collect all entries' collisions in appendPlan). I opened ledger PR #2754 after a green gate:scoped. Still open: the build/review/merge of that fix PR (sections 6-7) and the closing ledger PR (section 8) were not done in this turn."
+outcome: "Ledger PR #2754 merged; fix PR #2755 open; three regression issues filed"
+summary: "Scheduled frictions-to-fixes run (agent-initiated by the schedule, no human prompt). A survey subagent appended 40 window Frictions, recorded eight merged fixes and reset five stale entries. I filed regression issues #2751, #2752 and #2753 (skipping the two inspect-session entries, whose use case PR #2688 removed, and prepush-gate-review-skipped, which already has #2748). A design agent covered two picks: no change for worktree-subagent-moves-branch; dispatch for ledger-append-refuses-held-session. Ledger PR #2754 merged after a green gate. A Sonnet agent built the fix; code-review (Standards and Spec) was clean; I opened #2755 and posted my verdict; it awaits CI. Still open: merging #2755 and the closing ledger PR (section 8)."
 prs:
   - "2754"
+  - "2755"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: read by the survey subagent before git commands; confirmed -F commits
@@ -38,6 +39,12 @@ docsRead:
     reason: (no reason given)
   - path: /home/user/terrarium/.claude/skills/frictions-to-fixes/design-brief.md
     reason: (no reason given)
+  - path: .claude/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/tests/unit/print-ledger-occurrence.spec.ts
+    reason: (read before editing)
   - path: .agents/skills/frictions-to-fixes/impl-brief.md
     reason: (no reason given)
 skillsUsed:
@@ -46,6 +53,8 @@ skillsUsed:
   - name: close-session
     reason: (no reason given)
   - name: log-session
+    reason: (no reason given)
+  - name: code-review
     reason: (no reason given)
   - name: frictions-to-fixes
     reason: (invoked as a slash command)
@@ -62,21 +71,23 @@ frictions:
   - description: design-brief points session logs at layers/journal/content/*/sessions/ but they sit under current/sessions with a date prefix; audit-skills docReadCounts lists one doc under several spellings.
     solution: Fix the path in design-brief.md and say how to sum docReadCounts.
     severity: nit
-  - description: I ended the turn without building the dispatched fix (sections 6-8); the run is incomplete and the fix is queued for the next run.
-    solution: "Resume in a later turn: dispatch a Sonnet worktree agent with impl-brief.md."
-    severity: moderate
-durationSec: 822
+durationSec: 1116
 models:
-  claude-sonnet-5-5: 59
+  claude-sonnet-5-5: 96
 toolCounts:
-  Bash: 20
-  Agent: 4
-  Skill: 3
+  Bash: 26
+  Agent: 6
+  Skill: 5
   ToolSearch: 2
   mcp__github__issue_write: 3
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 2
 filesEdited:
+  - .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
+  - .agents/skills/frictions-to-fixes/tests/unit/print-ledger-occurrence.spec.ts
   - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
   - layers/journal/content/current/frictions/binding-docs-skipped.yml
   - layers/journal/content/current/frictions/chat-progress-narration.yml
@@ -137,6 +148,19 @@ rulesGlobal:
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 15
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: false
+    by: subagent
 rulesLoadedBySubagents:
   - .claude/rules/tenant-glossary.md
   - .claude/rules/adr-0008.md
@@ -196,18 +220,32 @@ subagents:
     durationSec: 355
     toolCalls: 32
     modelCalls: 27
-    tokenShare: 42.4
+    tokenShare: 27.1
   - type: general-purpose
     task: Design friction fixes
     durationSec: 88
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 8.1
+    tokenShare: 5.2
   - type: general-purpose
     task: Build append-collisions fix
     model: sonnet
-    durationSec: 0
-    toolCalls: 0
+    durationSec: 212
+    toolCalls: 15
+    modelCalls: 9
+    tokenShare: 7.1
+  - type: general-purpose
+    task: Standards review
+    durationSec: 16
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 2
+  - type: general-purpose
+    task: Spec review
+    durationSec: 20
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 2.7
 gitBranch: claude/eager-ptolemy-wga7eo
 entrypoint: remote_trigger
 cliVersion: 2.1.316
