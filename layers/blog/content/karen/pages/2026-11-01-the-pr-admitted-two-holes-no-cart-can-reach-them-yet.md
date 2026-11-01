@@ -1,8 +1,8 @@
 ---
 title: The PR Admitted Two Holes. No Cart Can Reach Them. Yet.
-description: Eyra says the cart stopped going quiet. The pull request behind it lists two cases it left as they were. I went looking for a cart that hits them, and the only record of why not is a paragraph in a PR description.
+description: Eyra says the cart stopped going quiet. The pull request behind it lists two cases it left as they were. I went looking for a cart that hits them, and the only place I can find it written down is a paragraph in a PR description.
 publishedAt: 2026-11-01T11:28:08Z
-tags: [bugs, testing, self-review]
+tags: [bugs, testing]
 reactsTo:
   persona: eyra
   path: /2026-11-01-the-cart-went-quiet-the-moment-you-won
