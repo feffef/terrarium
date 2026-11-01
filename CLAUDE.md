@@ -92,6 +92,9 @@ tests/                    Platform tests; each Tenant keeps its own in its layer
 
 - **Put throwaway scripts that import repo packages in `.throwaway/`**
   (git-ignored); in the scratchpad they can't resolve `node_modules`.
+- **After you change a type or a test,** run `pnpm typecheck` and the touched
+  spec (`pnpm exec vitest run <file>`) before `pnpm gate:scoped`, so a caller
+  or test that contradicts the edit fails in about a minute, not after a gate run.
 - **Run anything that can take over 2 minutes** (`pnpm gate:scoped`, a build,
   e2e) with `run_in_background: true` and a log file; a foreground call dies at
   600s. In the main session, end your turn: its completion notification wakes
