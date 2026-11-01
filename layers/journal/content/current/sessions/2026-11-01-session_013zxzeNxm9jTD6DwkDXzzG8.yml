@@ -1,0 +1,215 @@
+schemaVersion: 1
+session: session_013zxzeNxm9jTD6DwkDXzzG8
+startedAt: 2026-11-01T02:07:47Z
+endedAt: 2026-11-01T02:21:29Z
+kind: autonomous
+goal: Weekly sweep of recurring session Frictions into fixes
+status: in-review
+outcome: "Ledger PR #2754 open; three regression issues filed; one fix designed but not yet built"
+summary: "Scheduled frictions-to-fixes run (agent-initiated by the schedule, no human prompt). A survey subagent appended 40 window Frictions, recorded eight merged fixes and reset five stale entries. I filed regression issues #2751, #2752 and #2753 (skipping the two inspect-session entries, whose use case PR #2688 removed, and prepush-gate-review-skipped, which already has #2748). A design agent covered two picks: no change for worktree-subagent-moves-branch; dispatch for ledger-append-refuses-held-session (collect all entries' collisions in appendPlan). I opened ledger PR #2754 after a green gate:scoped. Still open: the build/review/merge of that fix PR (sections 6-7) and the closing ledger PR (section 8) were not done in this turn."
+prs:
+  - "2754"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read by the survey subagent before git commands; confirmed -F commits
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: subagent read for REST-vs-MCP guidance; I read the issue_write mapping
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: the survey subagent's brief
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: Filing an issue conventions
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: the design agent's brief
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: confirmed needs-triage for Skill-filed issues
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-first-push rules; ledger diff was simple data
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: design agent read it for the trial territory
+    useful: yes
+  - path: .claude/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
+  - path: /home/user/terrarium/.claude/skills/frictions-to-fixes/design-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: frictions-to-fixes
+    reason: (invoked as a slash command)
+frictions:
+  - description: The dispatch-read guard blocked my first Agent call because I had not read dispatch-subagents SKILL.md; I read it and retried.
+    solution: CLAUDE.md already names the trigger; read dispatch-subagents before writing the first brief.
+    severity: nit
+  - description: Stop hook asked to push twice while ADR-0004 required gate and review first; I waited as the rule says.
+    solution: None needed; the rule is clear.
+    severity: nit
+  - description: The survey subagent's batched --append aborted on a held session and it reran after grepping; and it left never-fixed labels ledger-derived, skipping the tracker check.
+    solution: The queued ledger-append-refuses-held-session fix (collect all entries' collisions in one error).
+    severity: minor
+  - description: design-brief points session logs at layers/journal/content/*/sessions/ but they sit under current/sessions with a date prefix; audit-skills docReadCounts lists one doc under several spellings.
+    solution: Fix the path in design-brief.md and say how to sum docReadCounts.
+    severity: nit
+  - description: I ended the turn without building the dispatched fix (sections 6-8); the run is incomplete and the fix is queued for the next run.
+    solution: "Resume in a later turn: dispatch a Sonnet worktree agent with impl-brief.md."
+    severity: moderate
+durationSec: 822
+models:
+  claude-sonnet-5-5: 59
+toolCounts:
+  Bash: 20
+  Agent: 4
+  Skill: 3
+  ToolSearch: 2
+  mcp__github__issue_write: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
+  - layers/journal/content/current/frictions/binding-docs-skipped.yml
+  - layers/journal/content/current/frictions/chat-progress-narration.yml
+  - layers/journal/content/current/frictions/clear-backlog-build-picks-input.yml
+  - layers/journal/content/current/frictions/clear-backlog-sweep-scope.yml
+  - layers/journal/content/current/frictions/data-shape-built-before-asked.yml
+  - layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
+  - layers/journal/content/current/frictions/edit-leaves-contradicting-sibling.yml
+  - layers/journal/content/current/frictions/findings-retyped-by-hand.yml
+  - layers/journal/content/current/frictions/flaky-e2e-matcher-timeouts.yml
+  - layers/journal/content/current/frictions/frictions-to-fixes-briefs-mismatch.yml
+  - layers/journal/content/current/frictions/github-body-unchecked-value.yml
+  - layers/journal/content/current/frictions/github-search-fields-guard-deny.yml
+  - layers/journal/content/current/frictions/harness-proxy-blocks.yml
+  - layers/journal/content/current/frictions/issue-claims-taken-unchecked.yml
+  - layers/journal/content/current/frictions/late-read-first-docs.yml
+  - layers/journal/content/current/frictions/ledger-append-refuses-held-session.yml
+  - layers/journal/content/current/frictions/list-events-transcript-overflow.yml
+  - layers/journal/content/current/frictions/pr-number-guessed-before-create.yml
+  - layers/journal/content/current/frictions/prepush-gate-review-skipped.yml
+  - layers/journal/content/current/frictions/push-chained-to-gate-run.yml
+  - layers/journal/content/current/frictions/relayed-subagent-claims.yml
+  - layers/journal/content/current/frictions/scratchpad-script-cant-import-repo-deps.yml
+  - layers/journal/content/current/frictions/screenshot-review-runaway.yml
+  - layers/journal/content/current/frictions/session-start-glossary-skipped.yml
+  - layers/journal/content/current/frictions/skill-run-diff-review-unnamed.yml
+  - layers/journal/content/current/frictions/stop-hook-nag.yml
+  - layers/journal/content/current/frictions/subagent-brief-omits-verdict-ask.yml
+  - layers/journal/content/current/frictions/survey-appends-duplicate-sessions.yml
+  - layers/journal/content/current/frictions/triage-docs-unread-before-labelling.yml
+  - layers/journal/content/current/frictions/verdict-comment-hand-typed.yml
+  - layers/journal/content/current/frictions/visual-work-published-unseen.yml
+  - layers/journal/content/current/frictions/workflow-output-result-key.yml
+  - layers/journal/content/current/frictions/worktree-subagent-moves-branch.yml
+  - layers/journal/content/current/frictions/adr-read-after-edit.yml
+  - layers/journal/content/current/frictions/clear-backlog-build-review-cap-fails.yml
+  - layers/journal/content/current/frictions/counts-not-tallied.yml
+  - layers/journal/content/current/frictions/dispatch-read-guard-deny.yml
+  - layers/journal/content/current/frictions/double-background.yml
+  - layers/journal/content/current/frictions/edit-during-gate-run.yml
+  - layers/journal/content/current/frictions/frictions-to-fixes-skill-gaps.yml
+  - layers/journal/content/current/frictions/gate-overlap-clobbers-build.yml
+  - layers/journal/content/current/frictions/glassbox-improve-unstated-steps.yml
+  - layers/journal/content/current/frictions/ledger-yaml-hand-edit-errors.yml
+  - layers/journal/content/current/frictions/misread-owner-instruction.yml
+  - layers/journal/content/current/frictions/reviewer-coverage-thin.yml
+  - layers/journal/content/current/frictions/session-id-hand-typed.yml
+  - layers/journal/content/current/frictions/stop-hook-counts-main-commits.yml
+  - layers/journal/content/current/frictions/worktree-guard-blocks-compound-bash.yml
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - .agents/skills/dispatch-subagents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to gate and review before first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Pointed to close-session for the log; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Said open the PR and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on every issue and PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by the prompt hook; nothing here changed Skills, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded by the prompt hook; no pack Skill was edited
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune Trial territory blocked prose fixes in the design; subagent applied it, summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded by a hook on a git-conventions read; unrelated to this task
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded when I read triage-labels.md; no auto-triage here
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Subagent reported it useless for this task
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Survey subagent reported it useless
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Survey subagent reported it useless
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: "Design subagent: nothing turned on it"
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "Design subagent: nothing turned on it"
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Survey frictions
+  - type: general-purpose
+    task: Survey frictions
+    durationSec: 355
+    toolCalls: 32
+    modelCalls: 27
+    tokenShare: 42.4
+  - type: general-purpose
+    task: Design friction fixes
+    durationSec: 88
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 8.1
+  - type: general-purpose
+    task: Build append-collisions fix
+    model: sonnet
+    durationSec: 0
+    toolCalls: 0
+gitBranch: claude/eager-ptolemy-wga7eo
+entrypoint: remote_trigger
+cliVersion: 2.1.316
+trigger: frictions-to-fixes
+landedBy: Stop
