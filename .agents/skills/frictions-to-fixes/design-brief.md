@@ -93,9 +93,8 @@ question back.
    touches, exactly what changes in each, and its size.
 2. Keep the fix off these surfaces: prose inside an open Prune Trial's
    territory (`.agents/prune-trials.yml`; ADR-0027), an installed
-   Skill's `SKILL.md` (a `skills-lock.json` name; ADR-0015), an ADR, a
-   Historical record (session logs, blog posts) and an installed Skill's
-   template.
+   Skill's `SKILL.md` or template (a `skills-lock.json` name; ADR-0015), an
+   ADR and a Historical record (session logs, blog posts).
 3. A doc fix must also survive `audit-docs`
    (`.agents/skills/audit-docs/SKILL.md`): it stays within "What you may
    edit" and authors none of the defects its six lenses catch.
