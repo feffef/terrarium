@@ -21,7 +21,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 `audit-docs` reviews the repo's own prose, from `CLAUDE.md` to its Skills, for drift, duplication, wordiness and contradiction, and fixes only the findings that separate checker subagents confirm from primary sources. It never edits session logs, blog posts or the pack's Skills, and never cuts a reason that keeps an old mistake from coming back: retiring one is a :term[Prune Trial]'s call. The fixes land in one PR the run merges itself; fixes a person must merge, such as an ADR edit or a change to another :term[Human-only] file, go into a second PR, and a conflict no source settles becomes an issue.
 
 ::stop-links
-[Subagents](/t/glassbox/guide/claude-code/subagents) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Prune Trials](/t/glassbox/guide/terrarium-practice/prune-trials) · [Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · :file[.agents/skills/audit-docs/SKILL.md]
+[Subagents](/t/glassbox/guide/claude-code/subagents) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Pruning instructions](/t/glassbox/guide/terrarium-practice/pruning-instructions) · [Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · :file[.agents/skills/audit-docs/SKILL.md]
 ::
 
 ## 3. audit-skills: do the Skills do their job?
@@ -37,7 +37,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 `prune-trial` first judges the open trials whose window has passed: a `major` or `blocker` Friction traced to the cut brings back one goal-shaped line; nits, minor and moderate Frictions and silence leave it standing. Then it cuts the instructions about one problem down to their goal and opens a new trial for them. It may change instruction prose, never the pack's Skills, and an ADR only in a trial a Trusted user started. The cut leaves in one PR; a cut that a subagent can't act on is dropped, and an issue proposes a hook instead.
 
 ::stop-links
-[Prune Trials](/t/glassbox/guide/terrarium-practice/prune-trials) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
+[Pruning instructions](/t/glassbox/guide/terrarium-practice/pruning-instructions) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
 ## 5. visitor-loop: fresh eyes on the site
@@ -76,6 +76,6 @@ Each run that changes something closes the same way: it commits, has the change 
 
 - [Scheduled tasks](/t/glassbox/guide/claude-code/routines)
 - [Subagents](/t/glassbox/guide/claude-code/subagents)
-- [Prune Trials](/t/glassbox/guide/terrarium-practice/prune-trials)
+- [Pruning instructions](/t/glassbox/guide/terrarium-practice/pruning-instructions)
 - [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 - [A session log lands on main](/t/glassbox/drafts/walkthroughs/session-log-lands-on-main)
