@@ -53,6 +53,8 @@ printed `URL=` returns 200 for `/`.
 
 ## 2. Send three visitors
 
+Read first: the `dispatch-subagents` Skill (every brief below follows it).
+
 Dispatch three read-only subagents **in one message**, one per model —
 `sonnet`, `fable`, `opus` (the Agent tool's `model` parameter) — so consensus
 means two *different* models agreeing, not one model echoing itself. Each gets
