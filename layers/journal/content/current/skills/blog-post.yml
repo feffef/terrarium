@@ -411,3 +411,6 @@ observations:
   - date: "2026-10-31"
     note: >-
       Behaviour check, 7 runs, 11 PRs merged. Known #2370 recurs: text edited after the fact-check without a re-check in session_013zxzeRin6kPuaDZ27jyuUk (#2637) and session_013zxzeQPnKXDNxriCwJfZnz (#2679); both predate the Fact-checked-blob rule, which held in #2715. Unverified: #2715 timestamps span 4 minutes. Grade/role unchanged.
+  - date: "2026-11-01"
+    note: >-
+      Behaviour check, 7 runs, 11 PRs merged. #2370 instance in #2680 (session_013zxzeQPnKXDNxriCwJfZnz) predates the blob rule; the rule held for #2715, #2741, #2742. Dispatch-read guard blocked the first Agent call (session_013zxzeRaFPYidUVPvEBA6NU); filed #2749. Grade/role unchanged (routine).

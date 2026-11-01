@@ -429,3 +429,6 @@ observations:
       rules without a verdict), the other nine complete, down from three of ten
       on 10-28. #2645 (no verdict provided display) is the fix; no new issue.
       Grade/role unchanged (essential).
+  - date: "2026-11-01"
+    note: >-
+      Behaviour check, 10 runs, all logs landed. ruleVerdicts incomplete again in 3 of 10 (session_013zxzeScPetuchKVyaP1PDZ: all 7 subagent-loaded rules; session_013zxzeRaFPYidUVPvEBA6NU; session_013zxzeStBRUtsbccz5kMYNU), after 1 of 10 on 10-30. Unverified whether --pending listed them. No new issue (#2645 is the fix). Grade/role unchanged (essential).

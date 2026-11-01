@@ -355,3 +355,6 @@ observations:
       closed the filed-only Human-only issue #2660 unfixed; filed #2691. Known,
       disclosed: every run since 10-24 skips two top-three regression entries
       (owner-declined). Grade/role unchanged (routine).
+  - date: "2026-11-01"
+    note: >-
+      Behaviour check, 10 runs, all PRs merged. Top-three regression rule overridden in session_013zxzeRnPtjPsVQM71SzX63, session_013zxzePnfDGz3F3p9spej9f, session_013zxzeSiq7TZmfmF5D5Rbwt; #2724 was closed by #2735 on 10-31, so later runs show whether it holds. Grade/role unchanged (routine).

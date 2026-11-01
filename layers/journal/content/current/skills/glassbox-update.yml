@@ -116,3 +116,6 @@ observations:
   - date: "2026-10-31"
     note: >-
       Behaviour check, 8 runs, all PRs merged. Known, tracked on #2472: first-push code-review replaced by a self-read on 31-39-file re-pin diffs (session_01A7PwrNRBtY9LTX6HrttXWW, session_013zxzePLLgArtn1cuyZAmNd, session_013zxzeSJQfnNdJHrSWjVT2x); session_013zxzeRYnqNveUu5w9oJd9q ran full review after #2638. Grade/role unchanged.
+  - date: "2026-11-01"
+    note: >-
+      Behaviour check, 8 runs, all PRs merged, no revert. Verified post-fix repeat of the review skip: session_013zxzeNZn2iJjZrQj2ortVS (PR #2731, 10-31, after #2638) self-read a 113-line diff that also changed prose; filed #2748. session_013zxzeRYnqNveUu5w9oJd9q listed code-review after the fix (no reason given); session_013zxzeTDLMF5mxnvWB4oyWE self-read a content-only diff. Grade/role unchanged (specialist).

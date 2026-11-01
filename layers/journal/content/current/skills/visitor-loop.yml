@@ -483,3 +483,6 @@ observations:
   - date: "2026-10-31"
     note: >-
       Behaviour check, 7 runs, all PRs merged. Repeat: dispatch-read guard blocked visitor dispatch in 6 of 7 runs; step 2 does not name it. Unverified: merged-PR keyword grep missed prior work in session_013zxzeSxgYzYmeAuCzvJdhY. Grade/role unchanged.
+  - date: "2026-11-01"
+    note: >-
+      Behaviour check, 7 runs, all PRs merged. Dispatch-read guard blocked the first Agent call again (verified session_013zxzeRuz3fA1RMj6ygrT9d; 6 of 7 per checker). Same gap hit blog-post; filed #2749 for both. Grade/role unchanged (routine).
