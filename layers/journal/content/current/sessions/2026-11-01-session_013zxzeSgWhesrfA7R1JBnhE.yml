@@ -1,0 +1,255 @@
+schemaVersion: 1
+session: session_013zxzeSgWhesrfA7R1JBnhE
+startedAt: 2026-11-01T04:03:29Z
+endedAt: 2026-11-01T04:18:39Z
+kind: autonomous
+goal: Scheduled audit of the repo's prose against its code
+status: in-review
+outcome: Sweep PR 2757 (3 fixes) open and gated; escalation PR 2758 (1 rule edit) waits for a human merge
+summary: 'Scheduled audit-docs run; the schedule started it and no human prompted anything. Three read-only reviewers (Freshness, Single-home, Coherence) returned 10 findings in total. Coherence finding 2 sat inside an open prune trial (pr-workflow "Review before the first push"), so I dropped it unchecked. One checker, resumed once to cover two findings it had skipped, gave 2 CONFIRMED (C3, C6), 2 CONFIRMED-BUT (B2, C1), 5 WRONG (A1, B1, B3, C4, C5). Sweep PR 2757 holds the C6 path fix, the B2 restored "or patches its code" clause with a rewrap, and the C1 pointer to ADR-0004. Code-review (two sub-agents) found only line-wrap nits, which I fixed. Escalation PR 2758 holds C3, the ADR-0027 summary rule wording, because .claude/rules is Human-only; I read its one-line diff myself instead of running code-review. Both gates were green locally. 2757 awaits CI, then verdict and merge-pr. Prior audit-docs logs carried no Covered line, so no areas were skipped. Covered by B and C: docs/agents/*, CLAUDE.md, GLOSSARY.md, .claude/rules/*, Skills auto-triage clear-backlog close-session dispatch-subagents guest-build guest-intake dependabot-sweep frictions-to-fixes audit-docs.'
+prs:
+  - "2757"
+  - "2758"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; read with my first fetch
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and closing a scheduled run's PR steps
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before first GitHub op; MCP surface, nothing new needed
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/agents/guest-contributions.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (read before editing)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-build/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/guest-intake/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-docs
+    reason: (invoked as a slash command)
+frictions:
+  - description: Skipped code-review on the escalation PR (one rule line) though a rule's meaning changes; I judged it a clarification and said so in the PR.
+    solution: pr-workflow's 'simple change' test should say whether a rule wording clarification that matches its ADR counts.
+    severity: minor
+  - description: Checker skipped two pool findings I had allowed it to skip; I had to resume it for B2 and B3, costing one extra round trip.
+    solution: Brief checkers that every pool finding gets a verdict; do not say 'B3 optional'.
+    severity: nit
+  - description: Launched a gate run with a text-level & plus run_in_background; the double-background guard blocked the call and I resent it.
+    solution: Write a plain foreground command when using run_in_background.
+    severity: nit
+  - description: Prior audit-docs summaries had no Covered line, so the skip-areas instruction in step 1 could not be applied.
+    solution: Make the Skill's step 3 session-log wording checkable, or look for the line in a documented field.
+    severity: nit
+durationSec: 910
+models:
+  claude-sonnet-5-5: 89
+toolCounts:
+  Bash: 28
+  Read: 2
+  Skill: 4
+  Agent: 6
+  ToolSearch: 2
+  SendMessage: 1
+  mcp__github__create_pull_request: 2
+  mcp__Claude_Code_Remote__subscribe_pr_activity: 2
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 3
+filesEdited:
+  - .claude/rules/adr-0027.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/pr-workflow.md
+  - layers/journal/content/current/pages/how-it-works.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+rulesLoadedBySubagents:
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/ui-verification.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/adr/0027-prune-trials.md
+  - docs/agents/guest-contributions.md
+  - docs/agents/domain.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/guards.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/tenant-layers.md
+  - docs/agents/triage-labels.md
+  - GLOSSARY.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/guest-build/SKILL.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+  - .agents/skills/guest-intake/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - docs/proposals/README.md
+  - .agents/skills/midden-catalogue/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me what needs code-review versus own read, and that a human must merge the rule PR; summary enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to close-session; read no full ADR as the summary was enough.
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open PRs without asking and subscribe; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session-id header on PR bodies and the commit trailer, which I checked.
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by Skill reads; no Skill structure changed, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded with Skill reads; no pack Skill was edited, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded by a glossary read; no glossary edit was made.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Told me to skip text inside open prune trials, which dropped one finding; it was also the edited rule.
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Defined the reachability check for new docs/agents files, which found none.
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: No ADR was edited, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Confirmed .claude/rules is Human-only, so I split the escalation PR out.
+    useful: yes
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded by a journal page edit; no Tenant work done.
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by editing a journal page; no diagram touched.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Freshness reviewer
+    durationSec: 66
+    toolCalls: 14
+    modelCalls: 11
+    tokenShare: 9.2
+  - type: general-purpose
+    task: Single-home reviewer
+    durationSec: 146
+    toolCalls: 20
+    modelCalls: 15
+    tokenShare: 15.4
+  - type: general-purpose
+    task: Coherence reviewer
+    durationSec: 171
+    toolCalls: 21
+    modelCalls: 20
+    tokenShare: 17.1
+  - type: general-purpose
+    task: Fact-check audit findings
+    durationSec: 131
+    toolCalls: 26
+    modelCalls: 18
+    tokenShare: 10.5
+  - type: general-purpose
+    task: Standards review
+    durationSec: 13
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 3.8
+  - type: general-purpose
+    task: Spec review
+    durationSec: 9
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 3.5
+gitBranch: claude/festive-mayer-7e0r1j
+entrypoint: remote_trigger
+cliVersion: 2.1.316
+trigger: audit-docs
+landedBy: Stop
