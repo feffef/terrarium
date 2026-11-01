@@ -1,8 +1,8 @@
 ---
 title: The Routines
 description: What Terrarium's scheduled runs do, one Routine at a time, from the docs and the Skills to the site, the day's news and the day's story. A run that changes something ends in its own PR.
-revision: 'e0edb8a5963064e5075b668c6512896a6e9fcd4d'
-revisionDate: '2026-10-25'
+revision: '8725a0abf5893071ea2e261a6c2c9c500af64614'
+revisionDate: '2026-11-01'
 publishedAt: '2026-10-25T07:50:00Z'
 ---
 
@@ -18,7 +18,7 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 
 ## 2. audit-docs: the docs checked against the code
 
-`audit-docs` reviews the repo's own prose, from `CLAUDE.md` to its Skills, for drift, duplication, wordiness and contradiction, and fixes only the findings that separate checker subagents confirm from primary sources. It never edits session logs, blog posts or the pack's Skills, and never cuts a reason that keeps an old mistake from coming back: retiring one is a :term[Prune Trial]'s call. The fixes land in one PR the run merges itself; fixes a person must merge, such as an ADR edit or a change to another :term[Human-only] file, go into a second PR, and a conflict no source settles becomes an issue.
+`audit-docs` reviews the repo's own prose, from `CLAUDE.md` to its Skills, for drift, duplication, wordiness and contradiction, and fixes only the findings that separate checker subagents confirm from primary sources. It never edits session logs, blog posts or installed Skills, and never cuts a reason that keeps an old mistake from coming back: retiring one is a :term[Prune Trial]'s call. The fixes land in one PR the run merges itself; fixes a person must merge, such as an ADR edit or a change to another :term[Human-only] file, go into a second PR, and a conflict no source settles becomes an issue.
 
 ::stop-links
 [Subagents](/t/glassbox/guide/claude-code/subagents) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Pruning instructions](/t/glassbox/guide/terrarium-practice/pruning-instructions) · [Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · :file[.agents/skills/audit-docs/SKILL.md]
@@ -26,15 +26,15 @@ A Routine, set up in a claude.ai account and kept out of the repo, starts a clou
 
 ## 3. audit-skills: do the Skills do their job?
 
-`audit-skills` checks recent session logs for a Skill that ran but didn't deliver what its `SKILL.md` promises, and for one that should have run but didn't, with one subagent per Skill. It may change only :term[Skill Inventory] entries, with notes on what it found and a Skill's importance (moved only on evidence from sessions it cites), and the cost rows kept for each Routine's runs. A finding that did real damage or repeats an earlier one becomes an issue, unless it is about a pack Skill, and its changes leave in one PR, or none when nothing changed.
+`audit-skills` checks recent session logs for a Skill that ran but didn't deliver what its `SKILL.md` promises, and for one that should have run but didn't, with one subagent per Skill. It may change only :term[Skill Inventory] entries, with notes on what it found and a Skill's importance (moved only on evidence from sessions it cites), and the cost rows kept for each Routine's runs. A finding that did real damage or repeats an earlier one becomes an issue, unless it is about an installed Skill, and its changes leave in one PR, or none when nothing changed.
 
 ::stop-links
-[Skill packs](/t/glassbox/guide/skill-pack/skill-packs) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Skill Inventory](/t/journal/current/skills) · :file[.agents/skills/audit-skills/SKILL.md]
+[Installed Skills](/t/glassbox/guide/skill-pack/skill-packs) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs) · [Skill Inventory](/t/journal/current/skills) · :file[.agents/skills/audit-skills/SKILL.md]
 ::
 
 ## 4. prune-trial: a rule cut on trial
 
-`prune-trial` first judges the open trials whose window has passed: a `major` or `blocker` Friction traced to the cut brings back one goal-shaped line; nits, minor and moderate Frictions and silence leave it standing. Then it cuts the instructions about one problem down to their goal and opens a new trial for them. It may change instruction prose, never the pack's Skills, and an ADR only in a trial a Trusted user started. The cut leaves in one PR; a cut that a subagent can't act on is dropped, and an issue proposes a hook instead.
+`prune-trial` first judges the open trials whose window has passed: a `major` or `blocker` Friction traced to the cut brings back one goal-shaped line; nits, minor and moderate Frictions and silence leave it standing. Then it cuts the instructions about one problem down to their goal and opens a new trial for them. It may change instruction prose, never installed Skills, and an ADR only in a trial a Trusted user started. The cut leaves in one PR; a cut that a subagent can't act on is dropped, and an issue proposes a hook instead.
 
 ::stop-links
 [Pruning instructions](/t/glassbox/guide/terrarium-practice/pruning-instructions) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
