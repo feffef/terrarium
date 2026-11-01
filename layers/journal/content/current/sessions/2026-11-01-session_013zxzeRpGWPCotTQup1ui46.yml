@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeRpGWPCotTQup1ui46
 startedAt: 2026-11-01T07:33:45Z
-endedAt: 2026-11-01T07:42:18Z
+endedAt: 2026-11-01T07:45:13Z
 kind: autonomous
 goal: Scheduled sync of the Glass Box guide pages with main
-status: in-review
-outcome: "PR 2759 opened: all guide pages re-pinned to main, two pages' prose updated; gate green, awaiting CI and merge"
+status: completed
+outcome: "PR 2759 merged: all guide pages re-pinned to main, two pages' prose updated; gate green"
 summary: "Scheduled glassbox-update run, no human prompts; everything was agent-initiated within the Skill's remit. The script flagged 21 pages (no terms, no major versions). I advanced all pages to main 39806bb, then read the diffs of the files those pages cite (CLAUDE.md, gate.ts, log-session.ts, pr-workflow.md, environment-caveats.md, dispatch-subagents, workflows) and grepped each flagged page for the affected claims. Only two pages went stale: Git worktrees (log-session now sweeps worktrees at close) and Merge gate (gate:scoped run lock). The other flagged pages stay true. I did not read all 91 commits one by one; staleness of pages that cite no changed file was judged from the diffs of cited paths and from grep, so a concept-level drift could be missed. Ran page tests, validate:content, one review subagent (Standards and Spec combined, not two), and gate:scoped, then pushed and opened the PR."
 prs:
   - "2759"
@@ -49,17 +49,21 @@ frictions:
   - description: The skill says to read every commit since the oldest revision against every page; with 91 commits across 55 pages I judged staleness from cited-path diffs and grep only.
     solution: Let the update script list changed files per page by concept, or have the glassbox-update Skill hand commit review to subagents per Subject.
     severity: minor
-durationSec: 513
+durationSec: 688
 models:
-  claude-sonnet-5-5: 59
+  claude-sonnet-5-5: 76
 toolCounts:
   Read: 5
-  Bash: 21
-  Skill: 3
+  Bash: 25
+  Skill: 4
   Agent: 2
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
@@ -184,7 +188,7 @@ subagents:
     durationSec: 29
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 12.1
+    tokenShare: 9.6
 gitBranch: claude/ecstatic-euler-w9s7go
 entrypoint: remote_trigger
 cliVersion: 2.1.316
