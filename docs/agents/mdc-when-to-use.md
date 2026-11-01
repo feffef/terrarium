@@ -52,7 +52,7 @@ composition**:
 - **Blocks that share page data** — a block gets only what the Markdown names
   (a Routine name, say). The page component loads the data once and `provide()`s
   it; the blocks `inject()` it. Example: the Journal's `RoutineChart` and
-  `RoutineWeeklyTable` (`composables/routineData.ts`).
+  `RoutineWeeklyTable` (`layers/journal/app/composables/routineData.ts`).
 
 ## When MDC is the wrong tool
 
