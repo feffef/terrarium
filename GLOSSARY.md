@@ -74,8 +74,8 @@ A Claude Code skill that encodes a repeatable capability for developing the
 Platform.
 
 ### Installed Skill
-A **Skill** installed from `mattpocock/skills` and pinned in `skills-lock.json`,
-used as installed and never edited (ADR-0015). Every other Skill is ours.
+A **Skill** installed from `mattpocock/skills`, pinned in `skills-lock.json` and
+never edited (ADR-0015). Every other Skill is ours.
 
 ### Skill Inventory
 An **Inventory** of the Skills in use, each with its **role** and
