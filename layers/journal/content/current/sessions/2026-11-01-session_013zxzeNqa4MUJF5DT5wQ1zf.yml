@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNqa4MUJF5DT5wQ1zf
 startedAt: 2026-11-01T00:16:07Z
-endedAt: 2026-11-01T00:27:15Z
+endedAt: 2026-11-01T00:30:47Z
 kind: autonomous
 goal: Write the 2026-10-31 Journal Digest
-status: in-review
-outcome: "PR #2747 open with the 2026-10-31 Digest and archive sweep; gate green, awaiting CI to merge"
-summary: "Scheduled digest run, no human prompts. Listed one missing closed day (2026-10-31), gathered its material, wrote the Digest, fact-checked it with a subagent (one wrong claim, the docs check was called weekly though it runs on a schedule, plus loose wordings), ran the archive sweep (1 Digest and 15 session logs moved), then ran Standards and Spec review subagents; the Standards one found prose 7 words over the cap and footer jargon, which I trimmed (231 words). Gate re-run on the final head was green; pushed and opened PR #2747, subscribed. All work was agent-initiated under the scheduled Skill; nothing was human-instructed beyond the schedule. The merge itself is still open."
+status: completed
+outcome: "PR #2747 merged: the 2026-10-31 Digest and the archive sweep, with a green gate"
+summary: "Scheduled digest run, no human prompts. Listed one missing closed day (2026-10-31), gathered its material, wrote the Digest, fact-checked it with a subagent (one wrong claim, the docs check was called weekly though it runs on a schedule, plus loose wordings), ran the archive sweep (1 Digest and 15 session logs moved), then ran Standards and Spec review subagents; the Standards one found prose 7 words over the cap and footer jargon, which I trimmed (231 words). Gate re-run on the final head was green; pushed and opened PR #2747, subscribed. All work was agent-initiated under the scheduled Skill; nothing was human-instructed beyond the schedule. CI went green on the final head and I merged it with the merge script after posting my verdict."
 prs:
   - "2747"
 docsRead:
@@ -67,20 +67,23 @@ frictions:
   - description: Stop hook asked to push or commit four times while reviews and the gate were pending; ADR-0004 overrides it but each prompt cost a turn.
     solution: The hook should skip while a gate or review subagent is running.
     severity: nit
-durationSec: 667
+durationSec: 879
 models:
-  claude-sonnet-5-5: 75
+  claude-sonnet-5-5: 91
 toolCounts:
-  Bash: 20
+  Bash: 23
   Read: 5
   Write: 1
   Agent: 4
-  Skill: 3
+  Skill: 4
   ToolSearch: 3
   TaskStop: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__github__update_pull_request: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/pages/digests/2026-10-31.md
   - layers/journal/content/archived/pages/digests/2026-10-24.md
@@ -183,21 +186,21 @@ subagents:
     durationSec: 186
     toolCalls: 56
     modelCalls: 24
-    tokenShare: 33.1
+    tokenShare: 28.8
   - type: general-purpose
     task: Standards review of digest diff
     model: sonnet
     durationSec: 39
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 4.9
+    tokenShare: 4.3
   - type: general-purpose
     task: Spec review of digest diff
     model: sonnet
     durationSec: 59
     toolCalls: 15
     modelCalls: 7
-    tokenShare: 7
+    tokenShare: 6.1
 gitBranch: claude/compassionate-lovelace-7ea818
 entrypoint: remote_trigger
 cliVersion: 2.1.316
