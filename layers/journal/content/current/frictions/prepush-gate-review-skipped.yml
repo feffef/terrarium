@@ -66,11 +66,6 @@ occurrences:
     severity: nit
     description: "Never read the full diff before the first push; only git diff --stat, though pr-workflow wants a self-read for a simple change."
     solution: "Read git diff origin/main...HEAD before pushing, even for 8 lines."
-  - session: session_01Sc82qSCs4NVP3igf9SaGXM
-    date: "2026-10-17"
-    severity: minor
-    description: "Skipped the code-review Skill before the first push of both PRs, self-reviewing two small diffs instead, against ADR-0004 and pr-workflow."
-    solution: "Say in frictions-to-fixes section 7 whether a self-review of a tiny doc diff may replace the code-review Skill."
   - session: session_01C2XPRCDijGcdz27Kw6gi3s
     date: "2026-10-18"
     severity: nit
@@ -151,3 +146,8 @@ occurrences:
     severity: minor
     description: "I told the Journal agent to push its branch before running code-review on it, breaking ADR-0004's review-before-first-push rule; the review ran after the push, before the PR"
     solution: "Always run code-review on a subagent's branch before telling it to push, as the dispatch-subagents Skill's Scope-and-trust section says"
+  - session: session_013zxzeNZn2iJjZrQj2ortVS
+    date: "2026-10-31"
+    severity: minor
+    description: "The code-review Skill asks for two parallel sub-agents, but the diff was 113 mechanical pin lines; I self-read it, deviating from pr-workflow for a non-simple change."
+    solution: "Let pr-workflow's simple-change bar cover mechanical re-pins of frontmatter."

@@ -68,3 +68,8 @@ occurrences:
     severity: nit
     description: "The ADR-0015 full-read hint fired after my commit, not before the Inventory edits it governs."
     solution: "Load the hint on first read of the Inventory files, as the rule says for the files it governs."
+  - session: session_013zxzeQiYSGT82pZgGnxSVx
+    date: "2026-10-31"
+    severity: nit
+    description: "Read ADR-0027 and ADR-0029 only after the post-edit hint fired; the edit was already right."
+    solution: "Read governing ADRs before editing the file; no harm done."

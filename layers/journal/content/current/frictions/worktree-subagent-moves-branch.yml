@@ -1,15 +1,26 @@
 name: worktree-subagent-moves-branch
 summary: >-
-  A helper agent switched the branch the main agent was using, so the main copy showed phantom changes.
+  A helper agent or workflow switched the branch the main agent was using, so the main copy showed phantom changes or a detached HEAD.
 cause: >-
-  An impl agent in a worktree checks out or pushes the branch the primary checkout has checked out, so the primary tree shows phantom reverse changes.
+  An impl agent in a worktree checks out or pushes the branch the primary checkout has checked out, so the primary tree shows phantom reverse changes; a build workflow or a read-only reviewer (Freshness) also leaves the primary checkout on a detached HEAD, which check:worktrees reports and the lead fixes by checking the session branch out again. Signals: 'detached HEAD', 'left the checkout detached at origin/main', 'check:worktrees reported', phantom reverse changes.
 surface: safe
 status: open
 notes: |-
   2026-10-27 design: guard or brief prose against git checkout in a read-only subagent dropped: the brief was already read-only, code-review is a pack Skill, a guard would touch Human-only hooks for a nit with nothing lost
+  2026-11-01 design: no change: three occurrences by three different actors (a pack Skill's reviewer, the build workflow, the Freshness reviewer); check:worktrees flags each at once and one git switch fixes it; dispatch-subagents §3 is in an open Prune Trial's territory and a guard would be Human-only
 occurrences:
   - session: session_01Y1i7HTUED6iQYzbSLBbu79
     date: "2026-10-26"
     severity: minor
     description: "The code-review Standards subagent ran git checkout --detach despite a read-only brief; it switched back, nothing lost."
     solution: "Brief read-only reviewers to use git show, never checkout."
+  - session: session_013zxzeRDagsHLSNJ939gcWK
+    date: "2026-10-30"
+    severity: nit
+    description: "The build workflow left the main checkout detached HEAD; check:worktrees reported it and I re-checked out the session branch"
+    solution: "clear-backlog-build should restore the main checkout's branch after it detaches"
+  - session: session_013zxzeRYbgUKxiRJrndpHae
+    date: "2026-10-31"
+    severity: minor
+    description: "The Freshness reviewer left the checkout detached at origin/main, so I had to switch back to the session branch."
+    solution: "Tell read-only reviewers not to change the checkout."

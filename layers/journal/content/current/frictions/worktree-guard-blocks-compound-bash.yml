@@ -2,12 +2,14 @@ name: worktree-guard-blocks-compound-bash
 summary: The container's worktree safety check refused helper agents' compound shell commands, so they rewrote them as plain calls or helper scripts.
 cause: "The container-level worktree-isolation guard refuses compound Bash in an agent worktree (loops, variable expansion, pipes, heredocs piped to node), not only commands naming git twice; agents find out by trial and fall back to plain calls or scratch helper scripts. environment-caveats.md lists some triggers. Signals: 'worktree guard refused' on a compound command, heredoc or pipe, 'forcing plain calls and a helper script'."
 surface: outside
-status: tracked
-ref: "#2612"
+status: open
 fixes:
   - pr: 1825
     date: "2026-10-12"
     summary: The dispatch Skill and environment-caveats now list what the worktree guard wrongly blocks and say one git command per call.
+  - pr: 2732
+    date: "2026-10-31"
+    summary: "environment-caveats.md replaces the guess at the guard's triggers with a dated probe list: only $VAR expansion in a git command was refused; one git command per call with literal paths."
 occurrences:
   - session: session_019jfJv6yLmcLUAJiTTomyeu
     date: "2026-10-25"

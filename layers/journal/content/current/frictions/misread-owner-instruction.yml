@@ -30,3 +30,8 @@ occurrences:
     severity: moderate
     description: "I took 'coherence lens' literally and spent ~270k subagent tokens on it; the user meant concision"
     solution: "When a user's lens name doesn't match their stated symptom (churn), ask which one first"
+  - session: session_013zxzeStBRUtsbccz5kMYNU
+    date: "2026-10-31"
+    severity: minor
+    description: "Started #2721's build on an ambiguous 'Agree' and later flip-flopped on Q7 answers, stopping two build runs mid-flight"
+    solution: "When an answer changes a pick under build, confirm the full option before relaunching; ask the clarifying question first, per the owner's stated preference"

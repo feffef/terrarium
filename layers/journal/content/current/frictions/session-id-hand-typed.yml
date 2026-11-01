@@ -16,3 +16,13 @@ occurrences:
     severity: minor
     description: "Guessed this session's id from the system reminder and got it wrong by one letter; caught only by calling get_session before any post used it."
     solution: "The Skill should say to copy the id from get_session or the commit template, not retype it."
+  - session: session_013zxzeNZn2iJjZrQj2ortVS
+    date: "2026-10-31"
+    severity: nit
+    description: "Started with an unauthorised-looking working-dir drift and mistyped the session id in a commit message draft; the commit-msg hook corrected the trailer."
+    solution: "Copy the session id from the attribution reminder instead of typing it."
+  - session: session_013zxzeRaFPYidUVPvEBA6NU
+    date: "2026-10-31"
+    severity: nit
+    description: "A commit message heredoc carried a placeholder Claude-Session id; the commit-msg hook replaced it, but I should have used the id from the attribution reminder."
+    solution: "Copy the trailer from the system reminder verbatim."

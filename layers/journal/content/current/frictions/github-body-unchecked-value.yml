@@ -14,11 +14,6 @@ occurrences:
     severity: minor
     description: "After stopping the #2231 build I cited a commit and branch from the builder's first commit; a review round had rewritten them, so I posted a correction."
     solution: "Read git log in the worktree before quoting a sha from a transcript."
-  - session: session_01P39mjYt8LWVh2TYNyxWdqN
-    date: "2026-10-17"
-    severity: nit
-    description: "The PR's merge-verdict comment's footer link rendered as \"https://claude.ai/code/code\" (a duplicated path segment) instead of \"https://claude.ai/code\", a copy-paste slip in the attribution footer."
-    solution: "Proofread the exact attribution footer text against the system reminder's literal string before posting a GitHub comment, rather than typing it from memory."
   - session: session_01VH74k3Z27QtjR19XNC76qm
     date: "2026-10-20"
     severity: nit
@@ -29,3 +24,8 @@ occurrences:
     severity: nit
     description: "Draft issue text said #2523 was open; check-states showed it closed, so I reworded before posting."
     solution: "None needed; the check worked as designed."
+  - session: session_013zxzeQiYSGT82pZgGnxSVx
+    date: "2026-10-31"
+    severity: minor
+    description: "PR body first claimed pr-workflow.md was a Human-only path without checking the rule's paths; my earlier grep printed nothing and I misread it."
+    solution: "Read the paths list before stating a merge requirement; corrected the PR body."

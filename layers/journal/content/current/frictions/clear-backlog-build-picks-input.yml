@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-22"
     summary: "Each clear-backlog workflow brief now says the relayed user reply answers the orchestrator's questions for the whole run and is not the agent's own decision."
 occurrences:
-  - session: session_01JygBaHorymh1xgVBsaTh3E
-    date: "2026-10-17"
-    severity: minor
-    description: "clear-backlog-build failed at once because I passed picks as a string; the Skill says 'the agreed picks' without naming the array shape."
-    solution: "Say 'picks: an array of strings' in clear-backlog §3, or have the script accept a string."
   - session: session_013n8e5pQ7h9GevyhHvtm4c3
     date: "2026-10-21"
     severity: moderate

@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-30"
     summary: "pr-workflow step 4: paste the Reviewed SHA from git rev-parse HEAD run in the reviewed head's checkout"
 occurrences:
-  - session: session_01Sc82qSCs4NVP3igf9SaGXM
-    date: "2026-10-17"
-    severity: nit
-    description: "Wrote a made-up full commit SHA in a PR verdict comment after seeing only the short hash; I caught it before merging and edited the comment to the real SHA."
-    solution: "Take the full head SHA from git rev-parse before writing the Reviewed line."
-  - session: session_01CXxyUmwkN3Rx5DTSK2s391
-    date: "2026-10-17"
-    severity: nit
-    description: "Typed the Reviewed SHA in the verdict comment from memory and got the tail wrong; caught it by comparing with git rev-parse and posted a correction."
-    solution: "Have the verdict comment built from the git rev-parse output, or have merge-pr.ts print the line to paste."
   - session: session_018Uhxo4D5VcScugLrS35r4w
     date: "2026-10-18"
     severity: nit
@@ -89,3 +79,13 @@ occurrences:
     severity: minor
     description: "Wrote the Reviewed SHA in the PR 2680 verdict comment from memory instead of git output, then caught it before merging and corrected the comment to the real head."
     solution: "Paste the SHA from git rev-parse HEAD into the verdict, never type it."
+  - session: session_013zxzeSiq7TZmfmF5D5Rbwt
+    date: "2026-10-31"
+    severity: nit
+    description: "Posted a PR verdict comment with a placeholder SHA and had to edit it; the closing PR's branch needed a force push, which the auto-mode classifier denied, so I pushed it as a fast-forward."
+    solution: "Get the head SHA before writing the verdict; after a merged PR, check whether the reset branch is a fast-forward of the remote before forcing."
+  - session: session_013zxzeStBRUtsbccz5kMYNU
+    date: "2026-10-31"
+    severity: nit
+    description: "Posted two PR verdicts with a wrong Reviewed SHA (a short SHA on #2734, the non-head commit on #2737) and had to edit them"
+    solution: "Paste the Reviewed SHA from git rev-parse HEAD in the worktree, as pr-workflow step 4 says, instead of from a commit list"

@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-28"
     summary: "Glass Box EVERY-PAGE.md falls back to fetching raw.githubusercontent.com/github/docs when docs.github.com is blocked, instead of sparse-cloning github/docs."
 occurrences:
-  - session: session_01CtktRkpbF4wQ3TTQVYUqLz
-    date: "2026-10-17"
-    severity: nit
-    description: "The Spec review subagent was denied running glassbox-update.ts by the auto-mode classifier, so it could not confirm step 4's done check itself"
-    solution: "Paste the done-check output into review briefs; I had already run it"
   - session: session_01TJH95qkztCQJ8PF6G6pvqs
     date: "2026-10-18"
     severity: nit
@@ -57,3 +52,13 @@ occurrences:
     severity: minor
     description: "Survey subagent: print-ledger-occurrence --append aborts the whole call on one held session, forcing grep pre-checks; gh api --paginate failed through the proxy."
     solution: "Let --append skip held sessions and report them; note the proxy pagination workaround in github-integration.md."
+  - session: session_013zxzePnfDGz3F3p9spej9f
+    date: "2026-10-30"
+    severity: nit
+    description: "Force-with-lease push of the branch restarted after merge was denied by the auto-mode classifier; I fast-forwarded the old tip onto main and cherry-picked instead (one extra call)."
+    solution: "pr-workflow: for a restarted branch, fast-forward the old tip onto main and cherry-pick, never force-push."
+  - session: session_013zxzeSiq7TZmfmF5D5Rbwt
+    date: "2026-10-31"
+    severity: nit
+    description: "Posted a PR verdict comment with a placeholder SHA and had to edit it; the closing PR's branch needed a force push, which the auto-mode classifier denied, so I pushed it as a fast-forward."
+    solution: "Get the head SHA before writing the verdict; after a merged PR, check whether the reset branch is a fast-forward of the remote before forcing."

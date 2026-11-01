@@ -113,3 +113,8 @@ occurrences:
     severity: nit
     description: "Appended pass-two log entries to the end of the YAML file, under the wrong key, so --author rejected it and I rewrote the file."
     solution: "log-session could say to insert new entries under their own key."
+  - session: session_013zxzeStBRUtsbccz5kMYNU
+    date: "2026-10-31"
+    severity: nit
+    description: "Hand-edited a Friction Ledger entry although survey-brief.md says every ledger edit goes through ledger-set.ts; the Spec review caught it before push"
+    solution: "Grep frictions-to-fixes for the ledger edit path before touching layers/journal/content/current/frictions/"

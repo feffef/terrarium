@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   git-conventions.md forbids a push or other state-changing git later in the same Bash command as a gate or test run, and says to read the exit status in its own step; sessions chain git commit, --amend or git push with gate:scoped or with reading the gate log, or read the exit code of a backgrounded command that ends in tail as the gate's own, so a red gate reaches CI or reads as green. Signals: GATE_EXIT or EXIT=1 printed by the command that pushed, 'in the same command as git commit --amend', 'chained', the exit code of tail taken for the gate's.
 surface: guard-or-hook
-status: open
-ref: "Issue #2397 (regression of #2359) closed by PR #2407. Issue #2354 closed by PR #2359, a doc rule with no guard."
+status: tracked
+ref: "issue #2752"
 fixes:
   - pr: 2359
     date: "2026-10-21"
@@ -49,3 +49,8 @@ occurrences:
     severity: nit
     description: "Mistook the exit code of a backgrounded gate command (ending in tail) for the gate's own exit; nearly read a failed gate as passing."
     solution: "Write the gate's exit status to the log on its own line, as the later runs did."
+  - session: session_013zxzeNqa4MUJF5DT5wQ1zf
+    date: "2026-11-01"
+    severity: nit
+    description: "My amend was chained into the backgrounded gate command and never ran, leaving the trimmed Digest uncommitted while the gate tested it; I amended separately."
+    solution: "Commit in its own call before any backgrounded gate command."

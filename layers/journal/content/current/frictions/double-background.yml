@@ -126,3 +126,13 @@ occurrences:
     severity: nit
     description: "A backgrounded gate command carrying a trailing ampersand plus run_in_background was blocked by the double-background guard; one wasted call."
     solution: "Pass run_in_background alone, as CLAUDE.md says."
+  - session: session_013zxzeRYbgUKxiRJrndpHae
+    date: "2026-10-31"
+    severity: nit
+    description: "First gate run used a text-level & plus run_in_background; the double-background guard blocked it and I resent the command."
+    solution: "Pass run_in_background alone."
+  - session: session_013zxzeStBRUtsbccz5kMYNU
+    date: "2026-10-31"
+    severity: nit
+    description: "Double-background guard blocked a combined two-gate Bash call using & plus run_in_background; resent as two calls"
+    solution: "Run one background gate per call, as the guard says"

@@ -16,11 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "The sibling-collapse e2e waits for the digest body to render before measuring."
 occurrences:
-  - session: session_01E7YFbvBvT8HWhVJb6kTDMq
-    date: "2026-10-17"
-    severity: minor
-    description: "gate:scoped failed once on an unrelated journal e2e accordion test and passed on rerun; I did not investigate."
-    solution: "Log the flaky journal accordion e2e test as a ledger item."
   - session: session_01TJH95qkztCQJ8PF6G6pvqs
     date: "2026-10-18"
     severity: minor

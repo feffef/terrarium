@@ -2,12 +2,16 @@ name: gate-overlap-clobbers-build
 summary: >-
   A backgrounded check run reported done early with a cut-off log, so the agent started more runs that overlapped and overwrote each other's build.
 cause: >-
-  A second gate:scoped run starts while the first is alive, and the overlapping runs clobber .nuxt, the build lock and a shared log: after a background task's completion notice arrives early with a truncated log, or after a chained command whose first step failed silently. Nothing stops a second gate run while one is alive. Signals: 'overlapped', 'clobbered .nuxt', 'build lock', an early 'completed' notice for a gate, a false EXIT 1 from two runs sharing a log.
+  A second gate:scoped run started while the first was alive and the overlapping runs clobbered .nuxt, the build lock and a shared log: after a background task's completion notice arrived early with a truncated log, or after a chained command whose first step failed silently. PR #2737 (2026-10-31) makes gate.ts refuse a second run in the same checkout (pid lock in the git dir); the early completion notice itself is unchanged. Signals: 'gate already running', 'overlapped', 'clobbered .nuxt', 'build lock', an early 'completed' notice for a gate.
 surface: guard-or-hook
 status: open
 notes: |-
   2026-10-25 design: a per-checkout lock in scripts/gate/gate.ts (Human-only) that refuses a second run dropped: one occurrence, and the cause was relaunching on an early completed notice instead of checking ps; revisit on a second occurrence.
   2026-10-30 survey: issue #2660 closed 2026-10-29 with no gate lock merged on main; status reset to open.
+fixes:
+  - pr: 2737
+    date: "2026-10-31"
+    summary: "gate:scoped takes a per-checkout pid lock and exits 1 if a live gate already runs there; a dead pid is taken over."
 occurrences:
   - session: session_01BjA9rHbNdMX5KiK49Cee99
     date: "2026-10-24"

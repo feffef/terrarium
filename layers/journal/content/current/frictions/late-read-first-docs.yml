@@ -14,41 +14,6 @@ fixes:
     date: "2026-10-15"
     summary: "Hint now says a late read that clears the call is not a Friction."
 occurrences:
-  - session: session_01J4ze3DvsZhXeP78iyRnbSd
-    date: "2026-10-17"
-    severity: nit
-    description: "Ran git branch --show-current before reading git-conventions.md, though CLAUDE.md allows only status and diff first; the hook then reminded me."
-    solution: "Use git status alone, which already prints the branch."
-  - session: session_01BZfZ9Ro87HdnHqwjc2j6m2
-    date: "2026-10-17"
-    severity: nit
-    description: "Ran git fetch and other git commands before reading docs/agents/git-conventions.md, which CLAUDE.md requires first."
-    solution: "A hook reminder arrived only after the first command; loading it at session start would have avoided it."
-  - session: session_014H5yqxJ4wuQfuCP7tqW7z5
-    date: "2026-10-17"
-    severity: nit
-    description: "My first git command ran before I read git-conventions.md; a hook flagged it after the fact. The command was read-only."
-    solution: "Nothing needed; the hook's late reminder did its job."
-  - session: session_01JygBaHorymh1xgVBsaTh3E
-    date: "2026-10-17"
-    severity: nit
-    description: "First git command (rev-parse) ran before reading git-conventions.md; the hook flagged it."
-    solution: "Read git-conventions.md before any git beyond status and diff."
-  - session: session_01BePy3Sj8TRHv7YGtPqnpfB
-    date: "2026-10-17"
-    severity: nit
-    description: "Ran git log --all --grep before reading git-conventions.md, which CLAUDE.md requires before any git log used to draw a conclusion"
-    solution: "Use Grep on the tree for a name check; the read-first hint caught it right after"
-  - session: session_01E7YFbvBvT8HWhVJb6kTDMq
-    date: "2026-10-17"
-    severity: nit
-    description: "I ran git log before reading git-conventions.md and the first MCP call before github-integration.md; hooks reminded me after the fact."
-    solution: "Read the trigger docs in the first tool batch of a scheduled run."
-  - session: session_01Sm7rZKVibYfwdy8ibzEFge
-    date: "2026-10-17"
-    severity: nit
-    description: "Ran git fetch and the frictions extract before reading docs/agents/git-conventions.md; the hook flagged it after the call."
-    solution: "Read the doc at session start for scheduled runs."
   - session: session_01DeVdzgpEMamftEbbyv26qd
     date: "2026-10-18"
     severity: nit
@@ -539,3 +504,13 @@ occurrences:
     severity: nit
     description: "Ran a read-only git log/diff in a refiner subagent without git-conventions; also I forgot the read-before-first-git rule was satisfied only via a cat in a combined command."
     solution: "Brief refiner to read docs/agents/git-conventions.md."
+  - session: session_013zxzeRYbgUKxiRJrndpHae
+    date: "2026-10-31"
+    severity: nit
+    description: "Ran git fetch origin main before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first non-read-only git command."
+    solution: "Read the doc first; the fetch itself was harmless."
+  - session: session_013zxzeRkv6UCWJtPmJ68h32
+    date: "2026-11-01"
+    severity: nit
+    description: "Filed issues without reading triage-labels.md first, as CLAUDE.md requires; I used the needs-triage label the Skill names. The hook reminded me afterwards."
+    solution: "Read issue-tracker.md and triage-labels.md whole before the first issue_write."

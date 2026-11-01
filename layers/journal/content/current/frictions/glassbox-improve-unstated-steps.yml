@@ -7,6 +7,9 @@ fixes:
   - pr: 2668
     date: "2026-10-29"
     summary: "glassbox-improve step 3 gets a tie-break for equal gap rank sums (fewer draft changes, else more raters first) and the Done line says check:worktrees exits 0 only once the run branch is pushed."
+  - pr: 2709
+    date: "2026-10-30"
+    summary: "Briefs write Skill paths as .agents/skills; writers add their own Terms and repoint links to a promoted draft; the review requires a new home per deleted sentence."
 occurrences:
   - session: session_013zxzeQRYzCbfkXYbHKwcPv
     date: "2026-10-28"

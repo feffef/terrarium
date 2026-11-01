@@ -139,3 +139,13 @@ occurrences:
     severity: nit
     description: "Editing files while a background gate:scoped ran would have aborted it, so I stopped the gate and re-ran it once on the final tree"
     solution: "Collect all review fixes before starting the gate, as pr-workflow.md's 'edit nothing until it ends' implies"
+  - session: session_013zxzeSRDhsoSRs2a2bGVgW
+    date: "2026-10-31"
+    severity: nit
+    description: "Ran the scoped gate before the review and again after review edits, doubling gate time."
+    solution: "Review first, then run the gate once, as pr-workflow says; I ran it early out of habit."
+  - session: session_013zxzeNqa4MUJF5DT5wQ1zf
+    date: "2026-11-01"
+    severity: minor
+    description: "Review findings arrived while the gate ran, so I stopped the gate and re-ran it after trimming; the first gate run was wasted."
+    solution: "Run the Standards and Spec reviews before starting the gate, as pr-workflow orders."

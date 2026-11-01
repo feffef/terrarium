@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-19"
     summary: "Added a git-ignored .throwaway/ folder whose scripts resolve the repo's node_modules, with a CLAUDE.md line pointing to it."
 occurrences:
-  - session: session_01CXxyUmwkN3Rx5DTSK2s391
-    date: "2026-10-17"
-    severity: nit
-    description: "A Playwright script with top-level await in a .ts file failed under tsx (cjs); renamed to .mts."
-    solution: "Mention in verifying-ui-changes.md that hand-rolled scripts use .mts."
   - session: session_01GfmoxeLwrvC7CARuaBAXfB
     date: "2026-10-18"
     severity: nit
