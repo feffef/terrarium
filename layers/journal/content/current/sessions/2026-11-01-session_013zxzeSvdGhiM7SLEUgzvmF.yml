@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeSvdGhiM7SLEUgzvmF
 startedAt: 2026-11-01T15:43:45Z
-endedAt: 2026-11-01T21:17:24Z
+endedAt: 2026-11-01T21:45:59Z
 kind: delegated
 goal: Raise the Glass Box guide toward its best pages (glassbox-improve run)
 status: completed
@@ -155,12 +155,16 @@ skillsUsed:
     reason: PR opened
   - name: log-session
     reason: this log
+  - name: writing-for-agents
+    reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
 frictions:
   - description: Tally rejected fable's report because one lone page had no grade; the Skill covers only parse errors, so I resumed fable and merged its addendum into a copy.
     solution: Say in glassbox-improve step 2 what to do for a missing grade, or let grades.ts tally accept an addendum file per rater.
     severity: minor
   - description: MCP create_pull_request takes the body only inline, so the 40KB tally had to be read back and retyped, roughly 25k tokens, in one call.
-    solution: Let grades.ts write the PR body to a file and add a helper that opens the PR from a file, with the ADR-0017 header, so the body is never re-emitted.
+    solution: "None wanted: the owner chose to keep the full inline PR body (issue 2700 option a) and rejected a body-file script because of ADR-0017; I proposed otherwise before checking."
     severity: moderate
   - description: To keep the PR body postable I condensed the Structural raises table; the long re-cut texts are only in the saved hand-backs, not the PR.
     solution: Post the omitted re-cut and raise texts as a PR comment, or keep the full tally in the PR with a file-based body.
@@ -186,17 +190,20 @@ frictions:
   - description: I first created rater scratch folders in the wrong place; plan --briefs already made the right ones, so the extras were unused.
     solution: Say in glassbox-improve step 1 that plan --briefs creates the rater folders.
     severity: nit
-durationSec: 20019
+  - description: Presented seven retro candidates before searching issues or the Friction Ledger; two were settled (issue 2700 chose to keep the inline PR body; stop-hook-nag is accepted via issue 2233) and the owner had to ask me to check.
+    solution: Run the redundancy search from docs/agents/issue-tracker.md before proposing, and have the retro Skill say to search issues and the ledger before presenting candidates.
+    severity: minor
+durationSec: 21735
 models:
-  claude-sonnet-5-5: 265
+  claude-sonnet-5-5: 303
 toolCounts:
-  Bash: 66
+  Bash: 74
   Read: 11
   mcp__github__list_pull_requests: 2
   Agent: 15
   ToolSearch: 4
   SendMessage: 4
-  Skill: 4
+  Skill: 5
   Monitor: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
@@ -208,8 +215,9 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__delete_trigger: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
-  Edit: 3
+  Edit: 6
   mcp__github__issue_write: 1
+  mcp__github__issue_read: 2
 filesEdited:
   - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
   - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
@@ -245,6 +253,7 @@ rulesLoaded:
   - .claude/rules/adr-0015.md
   - .claude/rules/tenant-layers.md
   - .claude/rules/adr-0022.md
+  - .claude/rules/guards.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -384,91 +393,91 @@ subagents:
     durationSec: 473
     toolCalls: 45
     modelCalls: 40
-    tokenShare: 8.1
+    tokenShare: 7.7
   - task: Rate guide pages (fable)
     model: fable
     durationSec: 533
     toolCalls: 55
     modelCalls: 19
-    tokenShare: 5.1
+    tokenShare: 4.9
   - task: Rate guide pages (opus)
     model: opus
     durationSec: 316
     toolCalls: 62
     modelCalls: 29
-    tokenShare: 6.2
+    tokenShare: 5.9
   - task: Research prune-trials promotion
     model: sonnet
     durationSec: 105
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 1
+    tokenShare: 0.9
   - task: Research planning-with-pack promotion
     model: sonnet
     durationSec: 121
     toolCalls: 18
     modelCalls: 11
-    tokenShare: 1.6
+    tokenShare: 1.5
   - task: Research mermaid-svg promotion
     model: sonnet
     durationSec: 124
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Write claude-code page fixes
     model: opus
     durationSec: 219
     toolCalls: 41
     modelCalls: 30
-    tokenShare: 3.5
+    tokenShare: 3.3
   - task: Write git-github page fixes
     model: opus
     durationSec: 799
     toolCalls: 49
     modelCalls: 28
-    tokenShare: 4.4
+    tokenShare: 4.2
   - task: Write nuxt-vue page fixes
     model: opus
     durationSec: 247
     toolCalls: 57
     modelCalls: 35
-    tokenShare: 4
+    tokenShare: 3.8
   - task: Write terrarium-practice fix
     model: opus
     durationSec: 129
     toolCalls: 24
     modelCalls: 14
-    tokenShare: 1.8
+    tokenShare: 1.7
   - task: Promote prune-trials draft
     model: opus
     durationSec: 673
     toolCalls: 49
     modelCalls: 34
-    tokenShare: 4.2
+    tokenShare: 4
   - task: Promote planning draft
     model: opus
     durationSec: 737
     toolCalls: 77
     modelCalls: 37
-    tokenShare: 5.2
+    tokenShare: 4.9
   - task: Promote mermaid-svg draft
     model: opus
     durationSec: 154
     toolCalls: 32
     modelCalls: 20
-    tokenShare: 2.1
+    tokenShare: 2
   - task: "Code review: Standards axis"
     model: opus
     durationSec: 137
     toolCalls: 18
     modelCalls: 13
-    tokenShare: 1.8
+    tokenShare: 1.7
   - task: "Code review: Spec axis"
     model: opus
     durationSec: 230
     toolCalls: 39
     modelCalls: 38
-    tokenShare: 5.1
+    tokenShare: 4.9
 gitBranch: ccr-04d825f6-77562z
 entrypoint: remote_mobile
 cliVersion: 2.1.316
@@ -478,5 +487,4 @@ learnings:
 ideas:
   - "Retitles the raters did not agree on: Engineering skills (a bucket of five Skills, sonnet), Hook-added context (coinage, sonnet), Timestamps stored as strings (Terrarium's choice, fable), Planning with the pack (borderline). Owner could rule on them in DECISIONS.md."
   - Split Commit and PR attribution (git-hooks teaching versus guard and reader, sonnet) into a git-hooks Lesson; only one rater asked, so it needs an owner ruling or a second reading.
-  - Add grades.ts pr-body that emits the finished PR body with the A set, grades, every item and the structural table, so a run never retypes 40KB through an MCP call.
 landedBy: Stop
