@@ -23,40 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      `dispatch-subagents` §3 "Write the brief" trimmed (-7 net, from `git
-      diff --numstat`: 39 added, 46 deleted; this entry not counted): the
-      justification clauses, the restated guard behaviour (what the background
-      guards deny) and doubled sentences dropped; every brief rule kept in one
-      goal-shaped line, the three sub-headings kept so inbound "Scope and
-      trust" pointers resolve. Chosen after the search subagent covered the
-      instruction corpus, guard headers and the tracker: the brief-writing
-      rules failed as prose (#2312, then #2610, which says the earlier fixes
-      #2150, #2318 and #2324 did not retire the cause); no guard checks brief
-      contents. Runner-up: `pr-workflow.md` "Review before the first push"
-      (#2472, #2474). Same run judged and deleted the `frictions-to-fixes`
-      briefs trial (landed 7231f728) and the `log-session` "When to invoke"
-      trial (landed 147e2bf4): 59 and 38 sessions since, no major or blocker
-      Friction traces to either; the closure misses since are the answer-only
-      and PR-open ones the check excludes. Rates after vs before: closure
-      entries 0/38 against 2/196 and 3/196, `close-session-bypassed-by-hand-log`
-      1/38 against 3/196; `frictions-to-fixes-briefs-mismatch` 3/50 against
-      9/184 and `frictions-to-fixes-skill-gaps` 4/50 against 10/184, one or
-      two sessions of difference, not a clear rise.
-    territory:
-      paths:
-        - ".agents/skills/dispatch-subagents/SKILL.md: §3 'Write the brief'"
-      keywords:
-        - dispatch-subagents §3
-    opened: 2026-10-29
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a subagent brief lacked
-      something the cut text said (a pinned SHA, `git -C`, the foreground-check
-      marker, the size ceiling, no `merge-pr.ts` call, the agent-count and
-      gate-slot limits) and the agent went wrong
-      for it: stale checkout, stranded or unreviewed work, a merge by an impl
-      agent. NOT damage: a brief gap the old text had too.
-  - problem: >
       `blog-post` step 9 and the "Re-derive every claim" citation bullet
       plainly reworded (-3 net, from `git diff --numstat`: 27 added, 30
       deleted; this entry not counted): clauses folded, every rule kept
@@ -87,36 +53,6 @@ trials:
       damage: `merge-pr.ts` refusing a post whose blob does not match, or a
       checker row of `wrong` that the session then fixed.
   - problem: >
-      Incident narration in the `loop-only-tool-guard.ts` and
-      `skill-inline-guard.ts` headers and one inline comment cut to the rule
-      plus the issue pointers (-12 net, from `git diff --numstat`: 9 added, 21
-      deleted; this entry not counted). Chosen after the search subagent covered
-      the instruction corpus, guard headers and the tracker (7 issues read in
-      full): both rules failed as prose (#814 after #241 and #425; #1018 after
-      #999) and wired PreToolUse guards hold them; their CLAUDE.md and doc homes
-      are already gone, so only these comments remained. Runners-up, each with
-      the same shape but more tangled: `github-provenance-guard.ts` (largest
-      mass, ADR-0017 tie), the two background guards (`dispatch-subagents`
-      trial territory), `dispatch-read-guard.ts` (CLAUDE.md line on trial
-      nearby). Code and deny messages are unchanged. Little text to cut. Same
-      run judged and deleted the "Verify before you state" and
-      `github-integration.md` trials (landed 10f009ac and ce66e262): 48
-      sessions since, no major or blocker Friction, no regression issue.
-    territory:
-      paths:
-        - "scripts/hooks/loop-only-tool-guard.ts: header and the `exempt` comment"
-        - "scripts/hooks/skill-inline-guard.ts: header"
-      keywords:
-        - ScheduleWakeup
-        - Skill-inline guard
-    opened: 2026-10-28
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session misused
-      `ScheduleWakeup` outside `/loop` or called `Skill` on an inlined Skill
-      and the guard did not stop it because a comment was cut. NOT damage: a
-      guard denying the call and the session following its message.
-  - problem: >
       `pr-workflow.md` "Review before the first push" and its three restatements
       (recipe steps 1 and 4, "Closing a scheduled run's PR" step 1) plainly
       reworded (-4 net, from `git diff --numstat`: 19 added, 23 deleted; this
@@ -146,3 +82,30 @@ trials:
       SHA was posted, and the cut wording would have prevented it. NOT damage:
       the same skip the old text allowed (#2472-style miscounts), or `merge-pr.ts`
       refusing a verdict whose SHA does not match.
+  - problem: >
+      `git-conventions.md` "Don't chain git past a step that can fail silently"
+      cut to two goal-shaped bullets (-2 net, from `git diff --numstat`: 7 added,
+      9 deleted; this entry not counted): the incident aside ("Pushes went out
+      while the gate was red") and doubled clauses dropped; every rule kept.
+      Chosen after the search subagent covered the instruction corpus, guard
+      headers and the tracker: the no-chaining rule failed as prose (#2752 after
+      #2407 and #2359; #2397) and no guard holds it. Runner-up with more mass:
+      CLAUDE.md "Docs you must read first" (owner-accepted late reads, #2066;
+      `read-first-hint.ts` quotes its trigger strings). Little text to cut. Same
+      run judged and deleted the `dispatch-subagents` §3 trial (landed 961aff2d)
+      and the guard-header trial (landed 04b5e066): 29 and 42 sessions since, no
+      major or blocker Friction traces to either; no on-trial ledger entry named
+      their territory, so judged on severity alone.
+    territory:
+      paths:
+        - "docs/agents/git-conventions.md: 'Don't chain git past a step that can fail silently'"
+      keywords:
+        - Don't chain git
+        - same Bash command as a gate
+    opened: 2026-11-01
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a push or commit ran in the
+      same command as a gate run, or a chained step failed silently and the
+      session went on, and the cut wording would have prevented it. NOT damage:
+      the nit-level chains #2752 already counts.
