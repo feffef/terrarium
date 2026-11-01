@@ -1,8 +1,8 @@
 ---
 title: From file to browser
 description: How a Markdown file in a Tenant folder becomes a table, a dump, a rendered page and a payload the browser reuses.
-revision: '4f6d8b5f98adbf1ed852a6b2dae128542440e532'
-revisionDate: '2026-10-31'
+revision: '39806bbe168a6045f338c8357c0e642736eb6344'
+revisionDate: '2026-11-01'
 ---
 
 A Markdown file is committed, and later a visitor reads it as a page. This Walkthrough follows one file from its folder to the visitor's screen: through the manifest that names its table, the build that packs the table into a dump, the server that loads the dump and renders the page, and the payload the browser reuses on the next click. Only a query no payload answers (on a route the server doesn't cache, or outside `useAsyncData`) makes the browser load the dump into a database of its own.
