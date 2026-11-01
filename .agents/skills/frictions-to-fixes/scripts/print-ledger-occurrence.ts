@@ -81,18 +81,20 @@ function refuseCollisions(text: string, refs: FrictionRef[]): void {
   if (collisions.size) throw new Error(`${[...collisions].map(([s, why]) => `${s} (${why})`).join(', ')}; nothing written`)
 }
 
-/** Each entry's new text with its blocks appended; throws before any write when one fails. */
+/** Each entry's new text with its blocks appended; throws before any write, naming every entry that fails. */
 export function appendPlan(groups: Map<string, FrictionRef[]>, logs: Logs, readEntry: (entry: string) => string): Map<string, string> {
   const plan = new Map<string, string>()
+  const failures: string[] = []
   for (const [entry, refs] of groups) {
     try {
       const text = readEntry(entry)
       refuseCollisions(text, refs)
       plan.set(entry, setEntry(text, { occurrences: refs.map((ref) => blockFor(logs, ref)).join('') }))
     } catch (err) {
-      throw new Error(`${entry}: ${err instanceof Error ? err.message : String(err)}`, { cause: err })
+      failures.push(`${entry}: ${err instanceof Error ? err.message : String(err)}`)
     }
   }
+  if (failures.length) throw new Error(failures.join('\n'))
   return plan
 }
 
