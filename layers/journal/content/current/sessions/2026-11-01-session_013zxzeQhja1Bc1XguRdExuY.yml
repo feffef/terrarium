@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQhja1Bc1XguRdExuY
 startedAt: 2026-11-01T13:11:50Z
-endedAt: 2026-11-01T13:25:21Z
+endedAt: 2026-11-01T13:28:45Z
 kind: autonomous
 goal: "Scheduled prune trial: judge two trials, prune one rule"
-status: in-review
-outcome: "PR #2762 open: two trials judged and deleted, git-conventions no-chaining rule trimmed"
-summary: "Scheduled prune-trial run, all agent-initiated, no human prompt. Judged the dispatch-subagents §3 and guard-header trials (no major or blocker damage traces to either; no on-trial ledger entry matched, so severity alone) and deleted both. A Sonnet search subagent ranked failed-prose candidates; I chose the unguarded git-conventions \"Don't chain git\" rule over the larger CLAUDE.md read-first block, whose triggers a hook quotes and the owner accepts late reads for. Trimmed it to two bullets (-2 net), probed a Sonnet subagent on the pinned SHA (passed), ran code-review (restored the \"any other state-changing git\" scope), re-ran gate:scoped green, opened PR #2762. Open: the verdict on the new trial."
+status: completed
+outcome: "PR #2762 merged: two trials judged and deleted, git-conventions no-chaining rule trimmed"
+summary: "Scheduled prune-trial run, all agent-initiated, no human prompt. Judged the dispatch-subagents §3 and guard-header trials (no major or blocker damage traces to either; no on-trial ledger entry matched, so severity alone) and deleted both. A Sonnet search subagent ranked failed-prose candidates; I chose the unguarded git-conventions \"Don't chain git\" rule over the larger CLAUDE.md read-first block, whose triggers a hook quotes and the owner accepts late reads for. Trimmed it to two bullets (-2 net), probed a Sonnet subagent on the pinned SHA (passed), ran code-review (restored the \"any other state-changing git\" scope), re-ran gate:scoped green, opened PR #2762. Merged via merge-pr.ts; the new trial awaits its verdict."
 prs:
   - "2762"
 docsRead:
@@ -62,17 +62,20 @@ frictions:
   - description: First ledger search used a wrong frictions path and glob, wasting one call before finding layers/journal/content/current/frictions.
     solution: Name the frictions directory in the prune-trial Skill.
     severity: minor
-durationSec: 811
+durationSec: 1014
 models:
-  claude-sonnet-5-5: 59
+  claude-sonnet-5-5: 71
 toolCounts:
-  Bash: 18
+  Bash: 20
   Read: 4
   Agent: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - docs/agents/git-conventions.md
@@ -146,28 +149,28 @@ subagents:
     durationSec: 191
     toolCalls: 22
     modelCalls: 19
-    tokenShare: 28.7
+    tokenShare: 25.5
   - type: general-purpose
     task: Probe pruned git rule
     model: sonnet
     durationSec: 13
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 2.9
+    tokenShare: 2.6
   - type: general-purpose
     task: Standards review of prune
     model: sonnet
     durationSec: 32
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 9
+    tokenShare: 8
   - type: general-purpose
     task: Spec review of prune
     model: sonnet
     durationSec: 59
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 10.5
+    tokenShare: 9.4
 gitBranch: claude/practical-rubin-21srer
 entrypoint: remote_trigger
 cliVersion: 2.1.316
