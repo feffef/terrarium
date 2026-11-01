@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSgWhesrfA7R1JBnhE
 startedAt: 2026-11-01T04:03:29Z
-endedAt: 2026-11-01T04:21:18Z
+endedAt: 2026-11-01T07:18:09Z
 kind: autonomous
 goal: Scheduled audit of the repo's prose against its code
-status: partial
-outcome: Sweep PR 2757 merged green; escalation PR 2758 (one rule edit) waits for a human merge
-summary: 'Scheduled audit-docs run; the schedule started it and no human prompted anything. Three read-only reviewers (Freshness, Single-home, Coherence) returned 10 findings in total. Coherence finding 2 sat inside an open prune trial (pr-workflow "Review before the first push"), so I dropped it unchecked. One checker, resumed once to cover two findings it had skipped, gave 2 CONFIRMED (C3, C6), 2 CONFIRMED-BUT (B2, C1), 5 WRONG (A1, B1, B3, C4, C5). Sweep PR 2757 holds the C6 path fix, the B2 restored "or patches its code" clause with a rewrap, and the C1 pointer to ADR-0004. Code-review (two sub-agents) found only line-wrap nits, which I fixed. Escalation PR 2758 holds C3, the ADR-0027 summary rule wording, because .claude/rules is Human-only; I read its one-line diff myself instead of running code-review. Both gates were green locally. 2757 merged via merge-pr after green CI and a verdict. Prior audit-docs logs carried no Covered line, so no areas were skipped. Covered by B and C: docs/agents/*, CLAUDE.md, GLOSSARY.md, .claude/rules/*, Skills auto-triage clear-backlog close-session dispatch-subagents guest-build guest-intake dependabot-sweep frictions-to-fixes audit-docs.'
+status: completed
+outcome: Sweep PR 2757 and escalation PR 2758 both merged
+summary: 'Scheduled audit-docs run; the schedule started it and no human prompted anything. Three read-only reviewers (Freshness, Single-home, Coherence) returned 10 findings in total. Coherence finding 2 sat inside an open prune trial (pr-workflow "Review before the first push"), so I dropped it unchecked. One checker, resumed once to cover two findings it had skipped, gave 2 CONFIRMED (C3, C6), 2 CONFIRMED-BUT (B2, C1), 5 WRONG (A1, B1, B3, C4, C5). Sweep PR 2757 holds the C6 path fix, the B2 restored "or patches its code" clause with a rewrap, and the C1 pointer to ADR-0004. Code-review (two sub-agents) found only line-wrap nits, which I fixed. Escalation PR 2758 holds C3, the ADR-0027 summary rule wording, because .claude/rules is Human-only; I read its one-line diff myself instead of running code-review. Both gates were green locally; a human later merged 2758. 2757 merged via merge-pr after green CI and a verdict. Prior audit-docs logs carried no Covered line, so no areas were skipped. Covered by B and C: docs/agents/*, CLAUDE.md, GLOSSARY.md, .claude/rules/*, Skills auto-triage clear-backlog close-session dispatch-subagents guest-build guest-intake dependabot-sweep frictions-to-fixes audit-docs.'
 prs:
   - "2757"
   - "2758"
@@ -94,19 +94,19 @@ frictions:
   - description: Prior audit-docs summaries had no Covered line, so the skip-areas instruction in step 1 could not be applied.
     solution: Make the Skill's step 3 session-log wording checkable, or look for the line in a documented field.
     severity: nit
-durationSec: 1069
+durationSec: 11680
 models:
-  claude-sonnet-5-5: 102
+  claude-sonnet-5-5: 110
 toolCounts:
-  Bash: 31
+  Bash: 33
   Read: 2
-  Skill: 4
+  Skill: 5
   Agent: 6
   ToolSearch: 2
   SendMessage: 1
   mcp__github__create_pull_request: 2
   mcp__Claude_Code_Remote__subscribe_pr_activity: 2
-  ReadNotifications: 3
+  ReadNotifications: 5
   mcp__github__pull_request_read: 3
   mcp__github__add_issue_comment: 1
   PushNotification: 1
@@ -219,37 +219,37 @@ subagents:
     durationSec: 66
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 8.5
+    tokenShare: 7.3
   - type: general-purpose
     task: Single-home reviewer
     durationSec: 146
     toolCalls: 20
     modelCalls: 15
-    tokenShare: 14.3
+    tokenShare: 12.3
   - type: general-purpose
     task: Coherence reviewer
     durationSec: 171
     toolCalls: 21
     modelCalls: 20
-    tokenShare: 15.9
+    tokenShare: 13.6
   - type: general-purpose
     task: Fact-check audit findings
     durationSec: 131
     toolCalls: 26
     modelCalls: 18
-    tokenShare: 9.7
+    tokenShare: 8.3
   - type: general-purpose
     task: Standards review
     durationSec: 13
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 3.6
+    tokenShare: 3.1
   - type: general-purpose
     task: Spec review
     durationSec: 9
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 3.2
+    tokenShare: 2.8
 gitBranch: claude/festive-mayer-7e0r1j
 entrypoint: remote_trigger
 cliVersion: 2.1.316
