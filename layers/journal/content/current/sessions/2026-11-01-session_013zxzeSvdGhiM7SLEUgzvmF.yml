@@ -1,0 +1,477 @@
+schemaVersion: 1
+session: session_013zxzeSvdGhiM7SLEUgzvmF
+startedAt: 2026-11-01T15:43:45Z
+endedAt: 2026-11-01T16:18:20Z
+kind: delegated
+goal: Raise the Glass Box guide toward its best pages (glassbox-improve run)
+status: in-review
+outcome: "PR 2763 open: 8 pages raised, 3 drafts promoted, grades recorded; gate green, awaiting CI and merge"
+summary: The one human prompt was the /glassbox-improve slash command, so every step below follows that Skill's own instructions; nothing was agent-initiated beyond its Remit, and the 3 structural steps were taken only because the Skill's queue and cap selected them. Three raters (sonnet, fable, opus) graded 42 pages at base 712ed11; none confirmed a false claim in a guide page. The tally selected 8 pages (consensus deficits or gaps; churn dropped routines and cloud-sessions because they were gap-edited on 2026-10-29; conflicting fixes dropped permissions and human-in-the-loop) and 3 promotions (Prune Trials, Planning with the pack, Mermaid). Three researchers found 3 false claims, all in the drafts being promoted, which I checked against the source before passing them on. Seven opus writers worked in worktrees; I merged their branches, ran code-review (Standards and Spec axes), sent one fix round (retitle Prune Trials to Pruning instructions, a stale anchor, two motive clauses, a misleading lead-in, a clear-backlog overstatement), merged again, wrote grades.yml, ran gate:scoped once on the final head (green), pushed and opened the PR. Open after this log - CI, my verdict comment and the merge via merge-pr.ts. Ideas for the owner are below; no issue was filed because nothing fell outside the Remit.
+prs:
+  - "2763"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: Read before first git command; confirmed -F commits and trailer check, nothing changed my route
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: Read before first GitHub op; told me writes go through MCP and the subscribe tool lives elsewhere
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Review-before-first-push and closing a scheduled run's PR steps drove the late push and gate
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Title rule, Mechanism-not-motive and Check were the standard for judging every writer result
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: Grades and how to raise a page; set which items count as deficits versus optional
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: Closed rulings; the publishedAt line backed declining the publishedAt bumps
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson and Walkthrough contracts, Two Spaces, Excerpt gap rule
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: "Brief checklist: worktree isolation, SHA pin, stranding; shaped every brief"
+    useful: yes
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: Filled by grades.ts plan; read the generated brief only
+    useful: yes
+  - path: .agents/skills/glassbox-improve/researcher-brief.md
+    reason: Template I filled for the three researchers
+    useful: yes
+  - path: .agents/skills/glassbox-improve/writer-brief.md
+    reason: Template I filled for the seven writers
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: "Prune researcher/writer: verdict tiers, Why and costs for the promoted page"
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: "Prune researcher/writer: verdict wording at lines 34-38 and 54-60 exposed the false claim"
+    useful: yes
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: "Mermaid writer: Why and Consequences for the single Why bullet"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: "Planning researcher/writer: who sets ready-for-agent, exposed the misleading watch item"
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "Planning writer: wayfinder mapping and spec rules"
+    useful: yes
+  - path: .agents/skills/ask-matt/SKILL.md
+    reason: "Planning writer: the pack's own route, a pack Skill per skills-lock.json"
+    useful: yes
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: "Planning writer: Why, rejected alternative and revisit trigger"
+    useful: yes
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: "nuxt-vue writer: home-page exception reason for auto-imports"
+    useful: yes
+  - path: docs/agents/domain.md
+    reason: "Ubiquitous-language writer and Spec reviewer: rule of two"
+    useful: yes
+  - path: docs/agents/guards.md
+    reason: "claude-code writer: subagent hooks fire and carry agent_id"
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: "git-github writer: leaves out wayfinder issues, fixed the overstatement"
+    useful: yes
+  - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/05.blocking-hooks.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/03.skills.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/04.auto-imports.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-vue/07.css-custom-properties.md
+    reason: (read before editing)
+  - path: nuxt.config.ts
+    reason: (no reason given)
+  - path: layers/glassbox/page-checks.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/drafts/pages/terrarium-practice/05.prune-trials.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/05.prune-trials.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/drafts/pages/nuxt-content/07.mermaid-svg.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/drafts/pages/skill-pack/02.planning-with-the-pack.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/skill-pack/03.engineering-skills.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/skill-pack/02.planning-with-the-pack.md
+    reason: (read before editing)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/06.hook-added-context.md
+    reason: (read before editing)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+  - path: docs/agents/verifying-ui-changes.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: .agents/skills/grilling/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/to-spec/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/to-tickets/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-improve
+    reason: the whole run
+  - name: dispatch-subagents
+    reason: briefs for raters, researchers and writers
+  - name: code-review
+    reason: Standards and Spec review of the run branch before the first push
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: this log
+frictions:
+  - description: Tally rejected fable's report because one lone page had no grade; the Skill covers only parse errors, so I resumed fable and merged its addendum into a copy.
+    solution: Say in glassbox-improve step 2 what to do for a missing grade, or let grades.ts tally accept an addendum file per rater.
+    severity: minor
+  - description: MCP create_pull_request takes the body only inline, so the 40KB tally had to be read back and retyped, roughly 25k tokens, in one call.
+    solution: Let grades.ts write the PR body to a file and add a helper that opens the PR from a file, with the ADR-0017 header, so the body is never re-emitted.
+    severity: moderate
+  - description: To keep the PR body postable I condensed the Structural raises table; the long re-cut texts are only in the saved hand-backs, not the PR.
+    solution: Post the omitted re-cut and raise texts as a PR comment, or keep the full tally in the PR with a file-based body.
+    severity: minor
+  - description: The planning writer linked a work-queue anchor that the git-github writer removed in the same run; only code-review found it.
+    solution: "Add to writer-brief: link a section of a page another writer edits this run without an anchor, or ask the coordinator."
+    severity: minor
+  - description: A claude-code writer's python heredoc containing an ampersand was denied by subagent-background-guard as a background operator; the writer switched to Edit.
+    solution: Make the guard ignore heredoc and quoted text when looking for a bare ampersand.
+    severity: minor
+  - description: "Worktree guard refused two writer commands: a curl URL containing the word github and a for loop with sed and git ls-files."
+    solution: Document in dispatch-subagents which command shapes the worktree guard refuses.
+    severity: nit
+  - description: I called a non-existent mcp__github__subscribe_pr_activity and invoked Monitor without loading its schema; both cost a wasted call.
+    solution: Name subscribe_pr_activity under mcp__claude-code-remote__ in github-integration.md.
+    severity: nit
+  - description: The Stop hook demanded a push five times while review, fix round and gate were pending; ADR-0004 required waiting, so each turn needed a refusal note.
+    solution: Let the hook skip while a code-review or gate:scoped step is known to be running.
+    severity: nit
+  - description: code-review's Standards brief and smell baseline assume code; for a Markdown guide diff I wrote my own subagent prompts and ignored the baseline.
+    solution: Give code-review a short docs-diff variant that points at the repo's page rules.
+    severity: nit
+  - description: I first created rater scratch folders in the wrong place; plan --briefs already made the right ones, so the extras were unused.
+    solution: Say in glassbox-improve step 1 that plan --briefs creates the rater folders.
+    severity: nit
+durationSec: 2075
+models:
+  claude-sonnet-5-5: 194
+toolCounts:
+  Bash: 54
+  Read: 9
+  mcp__github__list_pull_requests: 2
+  Agent: 15
+  ToolSearch: 2
+  SendMessage: 4
+  Skill: 3
+  Monitor: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/04.auto-imports.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/07.css-custom-properties.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/05.prune-trials.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/05.pruning-instructions.md
+  - layers/glassbox/content/guide/pages/nuxt-content/07.mermaid-pre-rendering.md
+  - layers/glassbox/content/guide/pages/skill-pack/02.planning-with-the-pack.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+  - layers/glassbox/content/guide/pages/claude-code/06.hook-added-context.md
+  - .agents/skills/glassbox-improve/grades.yml
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/routines.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/06.prose-overrides.md
+  - layers/glassbox/content/drafts/pages/skill-pack/02.planning-with-the-pack.md
+  - layers/glassbox/content/drafts/pages/terrarium-practice/05.prune-trials.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/07.mermaid-svg.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/03.ubiquitous-language.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0005.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+docsReadBySubagents:
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - docs/agents/verifying-ui-changes.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - GLOSSARY.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/ask-matt/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/agents/guards.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/agents/domain.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - .agents/skills/grilling/SKILL.md
+  - .agents/skills/wayfinder/SKILL.md
+  - .agents/skills/to-spec/SKILL.md
+  - .agents/skills/to-tickets/SKILL.md
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/triage-labels.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run code-review and gate:scoped before the first push despite the Stop hook; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main without a PR; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself and subscribe; confirmed a scheduled run changes only what its Skill allows; did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line one of the PR body and commit trailer; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded while reading prune files; confirmed the Prune Trial page matches the rule, no trial covered text I changed; did not open the ADR
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the hook pages; no instruction of mine depended on it
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded with Skill files; Skills are code, no Skill edited here
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded with the glossary; the ubiquitous-language page cites it, I did not need the ADR
+    useful: partly
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pointed me at layers/glassbox/GLOSSARY.md, which I read per the Skill anyway
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; none added this run
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: No counts, ids or line numbers in prose; drove the planning count fix and the prune model-name fix, writers reported it as yes
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Only applies to new diagrams; none added, writers said no
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded for subagents reading ADRs; opus reviewer used it for Human-only claims, I edited no Human-only file
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: "Planning writer: pack Skills stay as installed, backed a Why bullet"
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: "Planning writer: triage sweep context for the Why bullet"
+    useful: yes
+  - path: .claude/rules/adr-0024.md
+    reason: "Mermaid writer: partly useful for the render facts"
+    useful: partly
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded when a subagent read nuxt.config.ts; not relevant
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: Loaded when a subagent read nuxt.config.ts; not relevant
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded when a subagent read nuxt.config.ts; not relevant
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: "Nuxt-vue writer: partly, loaded on nuxt.config.ts"
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on ADR reads; not relevant to the edits
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: Loaded on mermaid code reads; no layout changed so no screenshots
+    useful: no
+  - path: .claude/rules/adr-0007.md
+    reason: Loaded on render-mermaid.ts reads; not relevant
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Loaded for the planning page's Public-request line; true but secondary
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded for a planning researcher; not relevant
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded for a planning researcher; not relevant
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded for a planning researcher; not relevant
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded for a planning researcher; not relevant
+    useful: no
+subagents:
+  - task: Rate guide pages (sonnet)
+    model: sonnet
+    durationSec: 473
+    toolCalls: 45
+    modelCalls: 40
+    tokenShare: 10.4
+  - task: Rate guide pages (fable)
+    model: fable
+    durationSec: 533
+    toolCalls: 55
+    modelCalls: 19
+    tokenShare: 6.6
+  - task: Rate guide pages (opus)
+    model: opus
+    durationSec: 316
+    toolCalls: 62
+    modelCalls: 29
+    tokenShare: 7.9
+  - task: Research prune-trials promotion
+    model: sonnet
+    durationSec: 105
+    toolCalls: 11
+    modelCalls: 7
+    tokenShare: 1.3
+  - task: Research planning-with-pack promotion
+    model: sonnet
+    durationSec: 121
+    toolCalls: 18
+    modelCalls: 11
+    tokenShare: 2
+  - task: Research mermaid-svg promotion
+    model: sonnet
+    durationSec: 124
+    toolCalls: 13
+    modelCalls: 8
+    tokenShare: 1.6
+  - task: Write claude-code page fixes
+    model: opus
+    durationSec: 219
+    toolCalls: 41
+    modelCalls: 30
+    tokenShare: 4.4
+  - task: Write git-github page fixes
+    model: opus
+    durationSec: 799
+    toolCalls: 49
+    modelCalls: 28
+    tokenShare: 5.7
+  - task: Write nuxt-vue page fixes
+    model: opus
+    durationSec: 247
+    toolCalls: 57
+    modelCalls: 35
+    tokenShare: 5.1
+  - task: Write terrarium-practice fix
+    model: opus
+    durationSec: 129
+    toolCalls: 24
+    modelCalls: 14
+    tokenShare: 2.3
+  - task: Promote prune-trials draft
+    model: opus
+    durationSec: 673
+    toolCalls: 49
+    modelCalls: 34
+    tokenShare: 5.4
+  - task: Promote planning draft
+    model: opus
+    durationSec: 737
+    toolCalls: 77
+    modelCalls: 37
+    tokenShare: 6.7
+  - task: Promote mermaid-svg draft
+    model: opus
+    durationSec: 154
+    toolCalls: 32
+    modelCalls: 20
+    tokenShare: 2.6
+  - task: "Code review: Standards axis"
+    model: opus
+    durationSec: 137
+    toolCalls: 18
+    modelCalls: 13
+    tokenShare: 2.3
+  - task: "Code review: Spec axis"
+    model: opus
+    durationSec: 230
+    toolCalls: 39
+    modelCalls: 38
+    tokenShare: 6.6
+gitBranch: ccr-04d825f6-77562z
+entrypoint: remote_mobile
+cliVersion: 2.1.316
+learnings:
+  - grades.ts tally takes exactly three hand-backs, one per model, and fails on any lone page a rater skipped
+  - Subagent hand-backs reach the coordinator as messages and must each be saved with save-handback.ts; a resumed agent's reply is a separate save
+ideas:
+  - "Retitles the raters did not agree on: Engineering skills (a bucket of five Skills, sonnet), Hook-added context (coinage, sonnet), Timestamps stored as strings (Terrarium's choice, fable), Planning with the pack (borderline). Owner could rule on them in DECISIONS.md."
+  - Split Commit and PR attribution (git-hooks teaching versus guard and reader, sonnet) into a git-hooks Lesson; only one rater asked, so it needs an owner ruling or a second reading.
+  - Add grades.ts pr-body that emits the finished PR body with the A set, grades, every item and the structural table, so a run never retypes 40KB through an MCP call.
+landedBy: Stop
