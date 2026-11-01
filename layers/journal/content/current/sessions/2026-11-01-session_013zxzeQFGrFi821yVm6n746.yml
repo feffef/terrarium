@@ -1,0 +1,236 @@
+schemaVersion: 1
+session: session_013zxzeQFGrFi821yVm6n746
+startedAt: 2026-11-01T11:09:25Z
+endedAt: 2026-11-01T11:21:53Z
+kind: autonomous
+goal: "Scheduled blog post: one Persona post grounded in recent repo activity"
+status: in-review
+outcome: Eyra post on the Tinkerfund cart hint opened as PR 2760, gate green, awaiting CI and merge; reply decision still owed
+summary: "Scheduled /blog-post run, no human prompts; everything was agent-initiated within the Skill's scope. Rotation allowed david, eyra, kevin (last karen). I read the 3-day window (PRs, session logs, recent posts) and drafted three candidates: Eyra on the Tinkerfund visitor-loop cart fix (PR 2745), David on the audit-docs run where the checker rejected 5 of 10 findings (PRs 2757, 2758), Kevin on the worktree sweep at session close (PR 2739). A blind Sonnet read picked Eyra's; I revised it for the gaps it named (glosses, who reviewed, why the table was trimmed). A fact-checker returned all claims ok; I added three glosses; Standards and Spec reviewers then asked for link ranges fixed, a re-explanation of the Terrarium removed and the side paragraph cut, and a re-check matched the final blob. gate:scoped passed on ff3e6fd52; pushed and opened PR 2760, subscribed. Still to do after CI: post a verdict, merge, then the step 12 reply decision, then re-close."
+prs:
+  - "2760"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: Required before the first non-read-only git command; confirmed commit-file and no-chain-with-gate rules
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Review before first push, closing a scheduled run's PR recipe
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Required before the first GitHub operation; MCP is the write path in the cloud
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: The dispatch-read guard blocked my first Agent call until I read it; brief rules were already in the blog-post Skill
+    useful: partly
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: Hook asked for it after I wrote a post; standalone post needs no pingback, so it changed nothing
+    useful: no
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: Campaign, Reward and Cart definitions for the glosses
+    useful: yes
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: Voice and palette for the David candidate
+    useful: yes
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: Voice and palette for the winning post
+    useful: yes
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: Voice and palette for the Kevin candidate
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: Only a grep of the glossary was credited to it; I read its first 25 lines to explain what the blind visitors are
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: "Subagent (Standards review) read it: Who a post is for gave the finding not to re-explain the Terrarium; I applied it"
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: Subagent (Standards review) read it; its length rule drove the paragraph cut. I followed the Skill text loaded in the prompt
+    useful: yes
+  - path: .agents/skills/code-review/SKILL.md
+    reason: Subagent (re-check) read it to verify my review-pass gloss; accurate
+    useful: yes
+  - path: GLOSSARY.md
+    reason: Subagent (re-check) found no Terrarium entry there, so the gloss rests on CLAUDE.md line 1
+    useful: partly
+  - path: layers/blog/content/eyra/pages/2026-11-01-the-cart-went-quiet-the-moment-you-won.md
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: The dispatch-read guard blocked my first blind-reader Agent call until I read dispatch-subagents SKILL.md; one wasted call and a 117-line read.
+    solution: Have blog-post step 6 name dispatch-subagents as a read before the first Agent call, or let the guard accept the brief rules already inlined.
+    severity: nit
+  - description: I wrote the first David draft with a wrong ranking claim ('tenth-ranked item') and an unverified 'pale strip' style, caught only at review and fact-check.
+    solution: Draft claims from the source one by one, not from memory of the summary; the checkers did their job.
+    severity: nit
+  - description: Post-write hooks demanded reading ADR-0012 and the Tinkerfund glossary after I had already written the post; both were late reads.
+    solution: Read the Tenant glossary at step 4, before drafting; the ADR hook could skip standalone posts.
+    severity: minor
+  - description: Fact-checker and reviewers repeatedly flagged loose blob-link line ranges and missing glosses, costing three extra subagent rounds and two follow-up commits.
+    solution: Have blog-post step 5 say to copy link ranges from git show -n output and gloss every Tenant term on first use.
+    severity: minor
+durationSec: 748
+models:
+  claude-sonnet-5-5: 87
+toolCounts:
+  Bash: 27
+  Read: 6
+  mcp__github__pull_request_read: 8
+  Agent: 7
+  Write: 1
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-11-01-the-cart-went-quiet-the-moment-you-won.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0012.md
+adrHints:
+  - adr: 12
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - layers/blog/GLOSSARY.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - GLOSSARY.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to gate before the first push and run code-review; the summary was enough, I did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open and at merge; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed opening the PR and subscribing without asking, and scheduled-run scope; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Reminded me of the provenance header on the PR body; the commit trailer landed; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Only about reaction posts and pingbacks; this post was standalone, so it did not apply and I read the ADR only because a hook asked
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; unrelated to a blog post, though the audit-docs story mentions it
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; unrelated to this task
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skills as Platform code; loaded when I read the dispatch Skill and persona files, did not apply
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Made me read the Tinkerfund glossary before writing about it, which fixed the glosses
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded after I read tenant.config.ts; about manifests, no manifest edit here
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: About stored fields; none touched
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: About MDC components; loaded on a content read, did not apply
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: About layer code; I only wrote a post
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: About glossary placement; I only used glossaries, did not edit one
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: About in-app navigation payloads; unrelated
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; I added none
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: About mermaid diagrams; none here
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR style; no ADR written
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when I read a file under a Human-only path glob; my PR touches no Human-only file
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Blind read of three drafts
+    model: sonnet
+  - type: general-purpose
+    task: Blind read of three drafts
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 5.9
+  - type: general-purpose
+    task: Fact-check blog post
+    model: sonnet
+    durationSec: 56
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 6
+  - type: general-purpose
+    task: Standards review of post
+    model: sonnet
+    durationSec: 36
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 4.2
+  - type: general-purpose
+    task: Spec review of post
+    model: sonnet
+    durationSec: 35
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 3.9
+  - type: general-purpose
+    task: Re-check changed post lines
+    model: sonnet
+    durationSec: 53
+    toolCalls: 10
+    modelCalls: 5
+    tokenShare: 4.8
+  - type: general-purpose
+    task: Re-check changed post lines
+    model: sonnet
+    durationSec: 39
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 4
+gitBranch: claude/zen-heisenberg-5hmrm0
+entrypoint: remote_trigger
+cliVersion: 2.1.316
+trigger: blog-post
+ideas:
+  - "Let blog-post pull a story's candidate facts mechanically: a script that, for a merged PR, prints its body tally, file line anchors and review findings, so drafts start from verified anchors instead of memory."
+landedBy: Stop
