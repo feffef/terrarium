@@ -4,10 +4,11 @@ summary: >-
 cause: >-
   A subagent's report, a triage agent's pick or another session's claim (an earlier note, a run log) is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. PR #2736 (2026-10-31) makes subagents give a source per count, id or attribution, but the main session's own relaying of a note into an issue is not covered. Signals: 'relayed', 'subagent's count', 'the survey subagent stated', 'repeating the agent's claim', 'trusting an earlier note'.
 surface: safe
-status: tracked
+status: accepted
 ref: "issue #2751"
 notes: |-
   2026-10-30 survey: issue #2657 closed by PR #2670 (recorded in fixes); status reset to open.
+  Owner accepted on 2026-11-01 (clear-backlog grilling); recent occurrences are minor or nit and caught before shipping.
 fixes:
   - pr: 2336
     date: "2026-10-20"
