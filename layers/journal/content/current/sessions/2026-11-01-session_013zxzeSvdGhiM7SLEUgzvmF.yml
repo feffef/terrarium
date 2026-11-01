@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSvdGhiM7SLEUgzvmF
 startedAt: 2026-11-01T15:43:45Z
-endedAt: 2026-11-01T21:45:59Z
+endedAt: 2026-11-01T21:47:11Z
 kind: delegated
 goal: Raise the Glass Box guide toward its best pages (glassbox-improve run)
 status: completed
 outcome: "PR 2763 merged: 8 pages raised, 3 drafts promoted, grades recorded; CI green"
-summary: "The one human prompt was the /glassbox-improve slash command, so every step below follows that Skill's own instructions; nothing was agent-initiated beyond its Remit, and the 3 structural steps were taken only because the Skill's queue and cap selected them. Three raters (sonnet, fable, opus) graded 42 pages at base 712ed11; none confirmed a false claim in a guide page. The tally selected 8 pages (consensus deficits or gaps; churn dropped routines and cloud-sessions because they were gap-edited on 2026-10-29; conflicting fixes dropped permissions and human-in-the-loop) and 3 promotions (Prune Trials, Planning with the pack, Mermaid). Three researchers found 3 false claims, all in the drafts being promoted, which I checked against the source before passing them on. Seven opus writers worked in worktrees; I merged their branches, ran code-review (Standards and Spec axes), sent one fix round (retitle Prune Trials to Pruning instructions, a stale anchor, two motive clauses, a misleading lead-in, a clear-backlog overstatement), merged again, wrote grades.yml, ran gate:scoped once on the final head (green), pushed and opened the PR. CI went green on the head; I posted a verdict comment ending in Reviewed with the head sha and merged it with merge-pr.ts (no Human-only path, Trusted author), then deleted the safety-net check-in and unsubscribed. Afterwards the owner asked where the \"skill pack\" terminology came from (answered from skills-lock.json and git history; the coiner is not recorded), asked for recommendations (installed Skill versus our Skill), and then explicitly told me to file it: issue 2764, labelled needs-triage, proposes the rename and is not built. Ideas for the owner are below."
+summary: "The one human prompt was the /glassbox-improve slash command, so every step below follows that Skill's own instructions; nothing was agent-initiated beyond its Remit, and the 3 structural steps were taken only because the Skill's queue and cap selected them. Three raters (sonnet, fable, opus) graded 42 pages at base 712ed11; none confirmed a false claim in a guide page. The tally selected 8 pages (consensus deficits or gaps; churn dropped routines and cloud-sessions because they were gap-edited on 2026-10-29; conflicting fixes dropped permissions and human-in-the-loop) and 3 promotions (Prune Trials, Planning with the pack, Mermaid). Three researchers found 3 false claims, all in the drafts being promoted, which I checked against the source before passing them on. Seven opus writers worked in worktrees; I merged their branches, ran code-review (Standards and Spec axes), sent one fix round (retitle Prune Trials to Pruning instructions, a stale anchor, two motive clauses, a misleading lead-in, a clear-backlog overstatement), merged again, wrote grades.yml, ran gate:scoped once on the final head (green), pushed and opened the PR. CI went green on the head; I posted a verdict comment ending in Reviewed with the head sha and merged it with merge-pr.ts (no Human-only path, Trusted author), then deleted the safety-net check-in and unsubscribed. Afterwards the owner asked where the \"skill pack\" terminology came from (answered from skills-lock.json and git history; the coiner is not recorded), asked for recommendations (installed Skill versus our Skill), and then explicitly told me to file it: issue 2764, labelled needs-triage, proposes the rename and is not built. The owner then asked for a /retro; I proposed seven candidates, the owner told me to check issues and the Friction Ledger first, two proved settled (issue 2700, stop-hook-nag) and I retracted them, and on the owner's instruction I filed the one new candidate as issue 2765 (needs-triage): a page check for link anchors. Ideas for the owner are below."
 prs:
   - "2763"
 docsRead:
@@ -76,6 +76,8 @@ docsRead:
   - path: .agents/skills/clear-backlog/SKILL.md
     reason: "git-github writer: leaves out wayfinder issues, fixed the overstatement"
     useful: yes
+  - path: layers/glassbox/page-checks.ts
+    reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/git-github/06.work-queue.md
@@ -93,8 +95,6 @@ docsRead:
   - path: layers/glassbox/content/guide/pages/nuxt-vue/07.css-custom-properties.md
     reason: (read before editing)
   - path: nuxt.config.ts
-    reason: (no reason given)
-  - path: layers/glassbox/page-checks.ts
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
     reason: (no reason given)
@@ -193,12 +193,12 @@ frictions:
   - description: Presented seven retro candidates before searching issues or the Friction Ledger; two were settled (issue 2700 chose to keep the inline PR body; stop-hook-nag is accepted via issue 2233) and the owner had to ask me to check.
     solution: Run the redundancy search from docs/agents/issue-tracker.md before proposing, and have the retro Skill say to search issues and the ledger before presenting candidates.
     severity: minor
-durationSec: 21735
+durationSec: 21807
 models:
-  claude-sonnet-5-5: 303
+  claude-sonnet-5-5: 322
 toolCounts:
-  Bash: 74
-  Read: 11
+  Bash: 78
+  Read: 12
   mcp__github__list_pull_requests: 2
   Agent: 15
   ToolSearch: 4
@@ -215,8 +215,8 @@ toolCounts:
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__delete_trigger: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
-  Edit: 6
-  mcp__github__issue_write: 1
+  Edit: 7
+  mcp__github__issue_write: 2
   mcp__github__issue_read: 2
 filesEdited:
   - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
@@ -393,19 +393,19 @@ subagents:
     durationSec: 473
     toolCalls: 45
     modelCalls: 40
-    tokenShare: 7.7
+    tokenShare: 7.5
   - task: Rate guide pages (fable)
     model: fable
     durationSec: 533
     toolCalls: 55
     modelCalls: 19
-    tokenShare: 4.9
+    tokenShare: 4.7
   - task: Rate guide pages (opus)
     model: opus
     durationSec: 316
     toolCalls: 62
     modelCalls: 29
-    tokenShare: 5.9
+    tokenShare: 5.7
   - task: Research prune-trials promotion
     model: sonnet
     durationSec: 105
@@ -429,43 +429,43 @@ subagents:
     durationSec: 219
     toolCalls: 41
     modelCalls: 30
-    tokenShare: 3.3
+    tokenShare: 3.2
   - task: Write git-github page fixes
     model: opus
     durationSec: 799
     toolCalls: 49
     modelCalls: 28
-    tokenShare: 4.2
+    tokenShare: 4.1
   - task: Write nuxt-vue page fixes
     model: opus
     durationSec: 247
     toolCalls: 57
     modelCalls: 35
-    tokenShare: 3.8
+    tokenShare: 3.7
   - task: Write terrarium-practice fix
     model: opus
     durationSec: 129
     toolCalls: 24
     modelCalls: 14
-    tokenShare: 1.7
+    tokenShare: 1.6
   - task: Promote prune-trials draft
     model: opus
     durationSec: 673
     toolCalls: 49
     modelCalls: 34
-    tokenShare: 4
+    tokenShare: 3.9
   - task: Promote planning draft
     model: opus
     durationSec: 737
     toolCalls: 77
     modelCalls: 37
-    tokenShare: 4.9
+    tokenShare: 4.8
   - task: Promote mermaid-svg draft
     model: opus
     durationSec: 154
     toolCalls: 32
     modelCalls: 20
-    tokenShare: 2
+    tokenShare: 1.9
   - task: "Code review: Standards axis"
     model: opus
     durationSec: 137
@@ -477,7 +477,7 @@ subagents:
     durationSec: 230
     toolCalls: 39
     modelCalls: 38
-    tokenShare: 4.9
+    tokenShare: 4.7
 gitBranch: ccr-04d825f6-77562z
 entrypoint: remote_mobile
 cliVersion: 2.1.316
