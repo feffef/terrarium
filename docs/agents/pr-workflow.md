@@ -89,7 +89,7 @@ description.
 
 `frictions-to-fixes`, `guest-build` and `midden-catalogue` narrow ADR-0004's
 rule in their SKILL.md. Dependabot PRs go through `dependabot-sweep`;
-`merge-pr.ts` merges only a plain minor or patch bump and refuses the rest.
+`merge-pr.ts` merges only the Dependabot bump ADR-0004 allows and refuses the rest.
 
 ## Closing a scheduled run's PR
 

@@ -92,11 +92,11 @@ modules that expand each Tenant's manifest into content collections and routes,
 the isolation logic that keeps one Space from ever reading another's data, CI
 itself, the hooks that police the agents, and the governance documents that
 define all of the above. A pull request touching any of them escalates to a
-person, as does one that adds a dependency or moves one to a new major version,
-changes behaviour the tests can't reach, adds logic that decides which Tenant's
-data a request can reach, or comes from outside the repo's collaborators. The one
-standing exception: a minor or patch bump that Dependabot opens, which an agent
-may merge.
+person, as does one that adds a dependency, moves one to a new major version
+or patches its code, changes behaviour the tests can't reach, adds logic that
+decides which Tenant's data a request can reach, or comes from outside the
+repo's collaborators. The one standing exception: a minor or patch bump that
+Dependabot opens, which an agent may merge.
 Ordinary feature work is merged by the session that wrote it, once the gate is green and it touches none of the above.
 
 A handful of scheduled Skills are each limited up front to a narrow kind of
