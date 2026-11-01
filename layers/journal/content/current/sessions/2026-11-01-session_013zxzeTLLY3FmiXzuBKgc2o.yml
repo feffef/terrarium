@@ -1,0 +1,555 @@
+schemaVersion: 1
+session: session_013zxzeTLLY3FmiXzuBKgc2o
+startedAt: 2026-11-01T21:48:10Z
+endedAt: 2026-11-01T23:52:05Z
+kind: interactive
+goal: Clear the issue backlog with the owner
+status: in-review
+outcome: 7 issues triaged and grilled; 2 closed, 1 parked, 4 branches built; PRs 2766 and 2767 open, 2 builds still running
+summary: "Human-instructed: the owner invoked /clear-backlog, said no reservations, and answered every grilling question (1a 2a 3a 4b 5a 6a 7a 10a 11b 12b), including asking for more detail on Q3 and Q11 and approving #2764 steps 4-5 for this session. Agent-initiated within that Skill: the sweep set (7 needs-triage issues; five ready-for-human issues skipped because an agent commented last; no ready-for-agent issues, no external PRs), one explore run, the issue comments and labels recording each answer, three build runs and the PRs. Closed as not planned: #2748 (the simple-change limit already covered the 113-line diff; text inside an open prune trial) and #2765 (all 26 internal fragment links target required Lesson ids). Parked: #2752 until its git-conventions prune trial is judged. Q3 needed two follow-ups: the owner asked how severe the recent relayed-claims Frictions were (14 since 10-26: 12 minor, 2 nit) and what prose fixes had been tried (#2336, #2378, #2485, #2670, #2736; none checks the main session's own relaying), then accepted. Q9 checking showed the issue's guessed title \"Planning with wayfinder\" was wrong (wayfinder is one of four Skills on that page), and that a Subject slug rename would break about 25 links, so the slug stays. The owner reshaped Q11 mid-answer: Engineering skills keeps its name and narrows to implement, tdd and code-review; prototype and research move to Planning Skills; diagnosing-bugs gets one line. Per branch: PR 2766 marks relayed-subagent-claims accepted and adds a CLAUDE.md line to run typecheck and the touched spec before gate:scoped (#2751, #2753). PR 2767 renames the Glass Box Subject display name to Installed Skills, retitles two pages and narrows Engineering skills (#2764 steps 4-5). Still building after a session restart killed the first run: #2749 (dispatch-subagents read-first line in visitor-loop and blog-post, already reviewed and gated) and #2764 steps 1-3 (term rename across glossary, ADRs, rules, docs, gate and Journal; Human-only, waits for a human merge)."
+prs:
+  - "2766"
+  - "2767"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: Fetch before trusting history; trailer check before push
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Label updates replace the set; write through MCP
+    useful: yes
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: Step 1 resolved the sweep set and the last-comment eligibility rule
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Required by the guard before the Workflow call; brief checklist
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: Label strings before relabelling answered issues
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: External PR recipe and closing; only skimmed
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Recipe for verdict, merge-pr.ts and closing keywords
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: A retitle keeps the URL; title names the concept; settled Q10 and Q11 picks
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: Checked the Glass Box page's description of implement against the file
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (read before editing)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (read before editing)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/agents/guards.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (read before editing)
+  - path: GLOSSARY.md
+    reason: (read before editing)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (read before editing)
+  - path: .agents/skills/prototype/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/research/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/design-brief.md
+    reason: (read before editing)
+  - path: docs/agents/domain.md
+    reason: (read before editing)
+  - path: .agents/skills/domain-modeling/GLOSSARY-FORMAT.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (read before editing)
+skillsUsed:
+  - name: clear-backlog
+    reason: Owner-invoked backlog run
+  - name: dispatch-subagents
+    reason: Guard demanded it before the first Workflow call
+  - name: close-session
+    reason: In-review log after opening the first PRs
+  - name: log-session
+    reason: (no reason given)
+  - name: tdd
+    reason: (no reason given)
+  - name: domain-modeling
+    reason: (no reason given)
+frictions:
+  - description: The dispatch-read guard blocked my first clear-backlog-explore Workflow call; the clear-backlog Skill never points to dispatch-subagents before §1.
+    solution: "Add a read-first pointer to dispatch-subagents in clear-backlog §1, as #2749 does for visitor-loop and blog-post."
+    severity: minor
+  - description: Guessed the provenance helper's export as isAiAuthored (the name auto-triage uses); scripts/lib/provenance-header.ts exports hasAuthorshipMarker, so the script failed once.
+    solution: auto-triage could name hasAuthorshipMarker, the export CLAUDE.md and ADR-0017 already use.
+    severity: nit
+  - description: A session restart at about 23:20 killed the first clear-backlog-build run mid-fix; I noticed only when the second run finished and its output file was empty, then resumed it.
+    solution: Check each running workflow's journal mtime right after a resume hook fires, as clear-backlog §3 says.
+    severity: moderate
+  - description: "Skipped inspect-session for the three regression reports (#2751, #2752, #2753) that clear-backlog §2 asks to verify; checked ledger counts and trials only and marked session details unverified."
+    solution: Run inspect-session on one cited session per regression report before grilling, or have the explore workflow do it.
+    severity: minor
+  - description: My first Q3 answer gave only occurrence counts; the owner had to ask twice (severity, then the prose fixes already tried) before deciding.
+    solution: For a recurring-Friction question, lead with the fixes already tried and two concrete recent occurrences.
+    severity: nit
+  - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_eb5231a6-e95-1, /home/user/terrarium/.claude/worktrees/wf_eb5231a6-e95-2"
+    solution: Push each, or remove it if its work is meant to be dropped.
+    severity: minor
+durationSec: 7435
+models:
+  claude-opus-5-5: 140
+toolCounts:
+  Bash: 39
+  Workflow: 5
+  Read: 1
+  ToolSearch: 3
+  PushNotification: 5
+  mcp__github__add_issue_comment: 10
+  mcp__github__issue_write: 6
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  Skill: 2
+filesEdited:
+  - CLAUDE.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - layers/glassbox/content/guide/pages/claude-code/03.skills.md
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/app/utils/subjects.ts
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/routines.md
+  - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/guide/pages/skill-pack/01.skill-packs.md
+  - layers/glassbox/content/guide/pages/skill-pack/02.planning-with-the-pack.md
+  - layers/glassbox/content/guide/pages/skill-pack/03.engineering-skills.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/02.adrs.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/06.out-of-scope-records.md
+  - layers/glassbox/tests/unit/page-nav.spec.ts
+  - layers/journal/content/current/frictions/relayed-subagent-claims.yml
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - .agents/skills/frictions-to-fixes/impl-brief.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0030.md
+  - .github/actions/gate/action.yml
+  - GLOSSARY.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - docs/agents/domain.md
+  - docs/agents/triage-labels.md
+  - docs/diagrams/interactive-map/terrarium-overview.md
+  - layers/journal/app/pages/t/journal/[space]/skills.vue
+  - layers/journal/app/utils/dashboard.ts
+  - layers/journal/content/current/skills/audit-skills.yml
+  - layers/journal/content/current/skills/grill-me.yml
+  - layers/journal/content/current/skills/retro.yml
+  - layers/journal/tenant.config.ts
+  - layers/journal/tests/unit/journal-dashboard.spec.ts
+  - layers/midden/content/trench/artifacts/the-phantom-skill.yml
+  - scripts/gate/validate-skills-lock.ts
+  - scripts/session/audit-skills.ts
+  - tests/unit/audit-skills.spec.ts
+  - tests/unit/validate-skills-lock.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0028.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0030.md
+adrHints:
+  - adr: 21
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 29
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 5
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 28
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 12
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 30
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 4
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 26
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 22
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 6
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 8
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 16
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 2
+    via: path
+    readAfter: false
+    by: subagent
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/ui-verification.md
+docsReadBySubagents:
+  - .agents/skills/triage/SKILL.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/agents/guards.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - GLOSSARY.md
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/prototype/SKILL.md
+  - .agents/skills/research/SKILL.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/0005-skill-model.md
+  - .agents/skills/frictions-to-fixes/design-brief.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - docs/agents/domain.md
+  - .agents/skills/domain-modeling/GLOSSARY-FORMAT.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: "Decided which PRs I may merge and that steps 1-3 of #2764 wait for a human; summary was enough"
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: This log goes straight to main via the hook, outside the branches
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Owner answers in the grilling were the approval for each build; PRs opened at once
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on every issue comment and PR; trailer checked before push
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Framed what triage could stamp; all seven came back as judgment calls
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: "Open trials decided #2748 and #2752 and fenced the briefs off trial text"
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading Skills; nothing in this run moved a Skill or workflow file
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Confirmed all seven issues were Trusted-authored, so no human-merge from that tier
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: "Loaded on reading docs; confirmed the #2753 line belongs in CLAUDE.md"
+    useful: partly
+  - path: .claude/rules/adr-0028.md
+    reason: Loaded on reading the Glass Box layer; navigation payloads unrelated to a content rename
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on reading Glass Box pages; the build agent read the Glass Box glossary
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on reading subjects.ts; no cross-layer code changed
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: "triage #2764"
+    model: claude-opus-5-5
+    durationSec: 87
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 2
+  - type: workflow-subagent
+    task: "triage #2752"
+    model: claude-opus-5-5
+    durationSec: 88
+    toolCalls: 15
+    modelCalls: 11
+    tokenShare: 2.4
+  - type: workflow-subagent
+    task: "triage #2753"
+    model: claude-opus-5-5
+    durationSec: 94
+    toolCalls: 17
+    modelCalls: 11
+    tokenShare: 2.6
+  - type: workflow-subagent
+    task: "triage #2751"
+    model: claude-opus-5-5
+    durationSec: 107
+    toolCalls: 16
+    modelCalls: 12
+    tokenShare: 2.8
+  - type: workflow-subagent
+    task: "triage #2749"
+    model: claude-opus-5-5
+    durationSec: 125
+    toolCalls: 21
+    modelCalls: 16
+    tokenShare: 3.3
+  - type: workflow-subagent
+    task: "triage #2748"
+    model: claude-opus-5-5
+    durationSec: 102
+    toolCalls: 15
+    modelCalls: 11
+    tokenShare: 2.5
+  - type: workflow-subagent
+    task: "triage #2765"
+    model: claude-opus-5-5
+    durationSec: 95
+    toolCalls: 16
+    modelCalls: 12
+    tokenShare: 3.7
+  - type: workflow-subagent
+    task: Standards frictions/accept-relayed-claims-early-typecheck r2
+    model: claude-opus-5-5
+    durationSec: 39
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.8
+  - type: workflow-subagent
+    task: Standards glassbox/installed-skills-subject r2
+    model: claude-opus-5-5
+    durationSec: 72
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 2.8
+  - type: workflow-subagent
+    task: Standards glassbox/installed-skills-subject r1
+    model: claude-opus-5-5
+    durationSec: 85
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 2.4
+  - type: workflow-subagent
+    task: Spec frictions/accept-relayed-claims-early-typecheck r2
+    model: claude-opus-5-5
+    durationSec: 43
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 1.3
+  - type: workflow-subagent
+    task: gate glassbox/installed-skills-subject
+    model: claude-opus-5-5
+    durationSec: 255
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: Spec frictions/accept-relayed-claims-early-typecheck r1
+    model: claude-opus-5-5
+    durationSec: 64
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 2.2
+  - type: workflow-subagent
+    task: build glassbox/installed-skills-subject
+    model: claude-opus-5-5
+    durationSec: 734
+    toolCalls: 42
+    modelCalls: 40
+    tokenShare: 11
+  - type: workflow-subagent
+    task: build frictions/accept-relayed-claims-early-typecheck
+    model: claude-sonnet-5-5
+    durationSec: 327
+    toolCalls: 17
+    modelCalls: 13
+    tokenShare: 3.1
+  - type: workflow-subagent
+    task: Spec glassbox/installed-skills-subject r1
+    model: claude-opus-5-5
+    durationSec: 82
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 2.3
+  - type: workflow-subagent
+    task: gate frictions/accept-relayed-claims-early-typecheck
+    model: claude-sonnet-5-5
+    durationSec: 259
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: Standards frictions/accept-relayed-claims-early-typecheck r1
+    model: claude-opus-5-5
+    durationSec: 44
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 1.7
+  - type: workflow-subagent
+    task: fix frictions/accept-relayed-claims-early-typecheck r1
+    model: claude-sonnet-5-5
+    durationSec: 298
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 0.9
+  - type: workflow-subagent
+    task: Spec glassbox/installed-skills-subject r2
+    model: claude-opus-5-5
+    durationSec: 85
+    toolCalls: 10
+    modelCalls: 9
+    tokenShare: 2.1
+  - type: workflow-subagent
+    task: fix glassbox/installed-skills-subject r1
+    model: claude-opus-5-5
+    durationSec: 333
+    toolCalls: 7
+    modelCalls: 7
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: fix glossary/installed-skill r1
+    model: claude-opus-5-5
+    durationSec: 31
+    toolCalls: 8
+    modelCalls: 6
+    tokenShare: 1.2
+  - type: workflow-subagent
+    task: Spec glossary/installed-skill r1
+    model: claude-opus-5-5
+    durationSec: 102
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 2.4
+  - type: workflow-subagent
+    task: build skills/dispatch-subagents-read-first
+    model: claude-sonnet-5-5
+    durationSec: 131
+    toolCalls: 14
+    modelCalls: 10
+    tokenShare: 2.6
+  - type: workflow-subagent
+    task: fix glossary/installed-skill r1
+    model: claude-opus-5-5
+    durationSec: 43
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 0.7
+  - type: workflow-subagent
+    task: Standards glossary/installed-skill r1
+    model: claude-opus-5-5
+    durationSec: 61
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 2.5
+  - type: workflow-subagent
+    task: gate skills/dispatch-subagents-read-first
+    model: claude-sonnet-5-5
+    durationSec: 44
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 0.6
+  - type: workflow-subagent
+    task: build glossary/installed-skill
+    model: claude-opus-5-5
+    durationSec: 626
+    toolCalls: 49
+    modelCalls: 41
+    tokenShare: 11
+  - type: workflow-subagent
+    task: Standards skills/dispatch-subagents-read-first r1
+    model: claude-opus-5-5
+    durationSec: 29
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.6
+  - type: workflow-subagent
+    task: Spec skills/dispatch-subagents-read-first r1
+    model: claude-opus-5-5
+    durationSec: 34
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 0.9
+gitBranch: ccr-8a84edb0-hf2co0
+entrypoint: remote_mobile
+cliVersion: 2.1.316
+landedBy: Stop
