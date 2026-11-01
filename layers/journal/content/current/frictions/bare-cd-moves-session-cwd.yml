@@ -76,3 +76,8 @@ occurrences:
     severity: nit
     description: "Bare cd in compound Bash calls moved the primary working directory twice, so later calls needed absolute paths."
     solution: "Use absolute paths and git -C instead of cd."
+  - session: session_013zxzeRaFPYidUVPvEBA6NU
+    date: "2026-10-31"
+    severity: nit
+    description: "One grep chained after a cd left the shell cwd in layers/blog/content for a command, so relative paths broke until I used absolute paths again."
+    solution: "Use absolute paths and git -C instead of cd."

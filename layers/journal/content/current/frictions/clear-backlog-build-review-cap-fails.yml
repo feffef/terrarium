@@ -13,3 +13,8 @@ occurrences:
     severity: nit
     description: "The build workflow hit its 3-round review cap on #1889 and #2146 with one small finding each, which I fixed by hand and re-gated."
     solution: "Works as the Skill describes; no change needed."
+  - session: session_013zxzeStBRUtsbccz5kMYNU
+    date: "2026-10-31"
+    severity: minor
+    description: "clear-backlog-build hit its 3-round review cap on a prose-only #2725 branch, leaving one finding to fix by hand"
+    solution: "Brief scope lines should match the done-when line; the brief named only some §3.3 calls while done-when covered all"

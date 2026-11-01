@@ -89,3 +89,13 @@ occurrences:
     severity: minor
     description: "Wrote the Reviewed SHA in the PR 2680 verdict comment from memory instead of git output, then caught it before merging and corrected the comment to the real head."
     solution: "Paste the SHA from git rev-parse HEAD into the verdict, never type it."
+  - session: session_013zxzeSiq7TZmfmF5D5Rbwt
+    date: "2026-10-31"
+    severity: nit
+    description: "Posted a PR verdict comment with a placeholder SHA and had to edit it; the closing PR's branch needed a force push, which the auto-mode classifier denied, so I pushed it as a fast-forward."
+    solution: "Get the head SHA before writing the verdict; after a merged PR, check whether the reset branch is a fast-forward of the remote before forcing."
+  - session: session_013zxzeStBRUtsbccz5kMYNU
+    date: "2026-10-31"
+    severity: nit
+    description: "Posted two PR verdicts with a wrong Reviewed SHA (a short SHA on #2734, the non-head commit on #2737) and had to edit them"
+    solution: "Paste the Reviewed SHA from git rev-parse HEAD in the worktree, as pr-workflow step 4 says, instead of from a commit list"

@@ -2,7 +2,7 @@ name: edit-leaves-contradicting-sibling
 summary: >-
   An edit to a doc, Skill or rule left other statements or references that contradicted it or pointed at removed text, caught only by review.
 cause: >-
-  After adding, changing, moving or cutting a section or rule, the author did not grep the same file and its consumers (docs, Skills, scripts, code comments, cross-references) for statements it overrides or references it breaks. Signals: a leftover line contradicting a new section, a dangling section reference, callers pointing at a removed section, a consumer of a skipped step still demanding it; caught by code-review.
+  After adding, changing, moving or cutting a section, rule, field or test, the author did not grep the same file and its consumers (docs, Skills, scripts, tests, typechecked callers, code comments, cross-references) for statements it overrides or references it breaks. Signals: a leftover line contradicting a new section, a dangling section reference, callers pointing at a removed section, a required field breaking another spec's typecheck, a test assertion built on a matcher or order the suite lacks; caught by code-review or the gate.
 surface: safe
 status: open
 fixes:
@@ -25,3 +25,13 @@ occurrences:
     severity: minor
     description: "First commit left many callers pointing at removed glossary sections (manifests, theme.css, session.ts, an Atlas page); review caught them."
     solution: "Before cutting a section, grep for its heading and phrases across code comments, not only Markdown (CLAUDE.md one home per fact)."
+  - session: session_013zxzeP5MnAU2v4XFBZHSdY
+    date: "2026-10-30"
+    severity: minor
+    description: "Adding a required DigSeason field broke a typecheck in find.spec.ts that I did not grep for; first gate run failed after about 10 minutes."
+    solution: "Grep consumers of a changed type before the gate, as CLAUDE.md says for facts."
+  - session: session_013zxzeRuz3fA1RMj6ygrT9d
+    date: "2026-10-31"
+    severity: minor
+    description: "gate:scoped failed twice (e2e assertion used a Playwright matcher the suite lacks; Popular order assertion broke under the cap) because I did not grep the tests first."
+    solution: "Grep tests for the behaviour before changing it, and run typecheck on test edits."

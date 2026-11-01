@@ -539,3 +539,13 @@ occurrences:
     severity: nit
     description: "Ran a read-only git log/diff in a refiner subagent without git-conventions; also I forgot the read-before-first-git rule was satisfied only via a cat in a combined command."
     solution: "Brief refiner to read docs/agents/git-conventions.md."
+  - session: session_013zxzeRYbgUKxiRJrndpHae
+    date: "2026-10-31"
+    severity: nit
+    description: "Ran git fetch origin main before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first non-read-only git command."
+    solution: "Read the doc first; the fetch itself was harmless."
+  - session: session_013zxzeRkv6UCWJtPmJ68h32
+    date: "2026-11-01"
+    severity: nit
+    description: "Filed issues without reading triage-labels.md first, as CLAUDE.md requires; I used the needs-triage label the Skill names. The hook reminded me afterwards."
+    solution: "Read issue-tracker.md and triage-labels.md whole before the first issue_write."

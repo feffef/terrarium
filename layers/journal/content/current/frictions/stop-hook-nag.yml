@@ -374,3 +374,18 @@ occurrences:
     severity: nit
     description: "Stop hook asked for a push three times while review and gate were still pending."
     solution: "Have the Stop hook skip the nag while a review or background gate is running."
+  - session: session_013zxzeRuz3fA1RMj6ygrT9d
+    date: "2026-10-31"
+    severity: nit
+    description: "Stop hook asked to push after every turn while the gate and review were pending; ADR-0004 correctly overrode it, but each prompt cost a turn."
+    solution: "Have the stop hook stay quiet while a gate or review is running in the background."
+  - session: session_013zxzeNqa4MUJF5DT5wQ1zf
+    date: "2026-11-01"
+    severity: nit
+    description: "Stop hook asked to push or commit four times while reviews and the gate were pending; ADR-0004 overrides it but each prompt cost a turn."
+    solution: "The hook should skip while a gate or review subagent is running."
+  - session: session_013zxzeRkv6UCWJtPmJ68h32
+    date: "2026-11-01"
+    severity: nit
+    description: "The Stop hook asked me to push four times while the review and gate were pending, as ADR-0004 anticipates; each was a wasted turn."
+    solution: "Let the hook stay quiet while a code-review is outstanding."

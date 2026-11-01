@@ -100,3 +100,23 @@ occurrences:
     severity: nit
     description: "Agent dispatch was blocked by the dispatch-read guard because I had not read dispatch-subagents yet; one wasted call set and a retry."
     solution: "The visitor-loop Skill could name dispatch-subagents so it is read before step 2."
+  - session: session_013zxzeStBRUtsbccz5kMYNU
+    date: "2026-10-31"
+    severity: nit
+    description: "Workflow call blocked by the dispatch-read guard; I had not read dispatch-subagents before launching clear-backlog-explore, though nothing in it changed the call"
+    solution: "clear-backlog could name the dispatch-subagents read before §1's workflow call, or the guard could exempt saved workflows that brief their own agents"
+  - session: session_013zxzeRaFPYidUVPvEBA6NU
+    date: "2026-10-31"
+    severity: minor
+    description: "The dispatch-read guard blocked my first Agent call until I read dispatch-subagents SKILL.md; I had read the git, GitHub and PR docs but not that Skill before briefing."
+    solution: "Name dispatch-subagents in the blog-post Skill's step 6 so it is read before the first brief."
+  - session: session_013zxzeRuz3fA1RMj6ygrT9d
+    date: "2026-10-31"
+    severity: minor
+    description: "Agent call was blocked by the dispatch-read guard because I had not read dispatch-subagents before writing the visitor briefs; three briefs had to be resent."
+    solution: "Have the visitor-loop Skill name dispatch-subagents in step 2."
+  - session: session_013zxzeNqa4MUJF5DT5wQ1zf
+    date: "2026-11-01"
+    severity: nit
+    description: "Called the first Agent call before reading dispatch-subagents, as CLAUDE.md requires before any subagent brief; the guard blocked it and the brief was resent."
+    solution: "Read dispatch-subagents right after the Skill's fact-check step names a subagent."

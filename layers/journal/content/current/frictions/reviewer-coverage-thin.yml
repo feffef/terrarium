@@ -2,8 +2,11 @@ name: reviewer-coverage-thin
 summary: A reviewer subagent could not read all the docs or pages it was given, so its coverage was thin and cost a resume or went unread.
 cause: "A reviewer or audit subagent is handed more files than it can read (the whole docs set, Skills, journal pages, glossaries); it reports partial coverage or has to be resumed, doubling its cost. Signals: 'covered only a fraction', 'reviewers reported thin coverage', 'had to be resumed', 'unread'."
 surface: safe
-status: tracked
-ref: "issue #2726"
+status: open
+fixes:
+  - pr: 2734
+    date: "2026-10-31"
+    summary: "audit-docs rotates coverage: reviewers B and C skip areas the last two runs' Covered line names, end replies with unread Live files, and are never resumed."
 occurrences:
   - session: session_013zxzeR94ZpyH5mhKXDH22Y
     date: "2026-10-28"

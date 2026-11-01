@@ -2,10 +2,9 @@ name: relayed-subagent-claims
 summary: >-
   Agents passed on a helper agent's or another session's claim or count as fact without checking it.
 cause: >-
-  A subagent's report, a triage agent's pick or another session's claim is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. Signals: "relayed", "subagent's count", "the survey subagent stated", "repeating the agent's claim".
+  A subagent's report, a triage agent's pick or another session's claim (an earlier note, a run log) is relayed into chat, an issue, a brief or the ledger as fact, unchecked against the source. PR #2736 (2026-10-31) makes subagents give a source per count, id or attribution, but the main session's own relaying of a note into an issue is not covered. Signals: 'relayed', 'subagent's count', 'the survey subagent stated', 'repeating the agent's claim', 'trusting an earlier note'.
 surface: safe
-status: tracked
-ref: "issue #2723"
+status: open
 notes: |-
   2026-10-30 survey: issue #2657 closed by PR #2670 (recorded in fixes); status reset to open.
 fixes:
@@ -21,6 +20,9 @@ fixes:
   - pr: 2670
     date: "2026-10-29"
     summary: "dispatch-subagents again tells the dispatcher to re-check a subagent's factual or attribution claims against their cited source before they ship."
+  - pr: 2736
+    date: "2026-10-31"
+    summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
   - session: session_01GVmwHZQthucdGcVwe3HAUL
     date: "2026-10-17"
@@ -142,3 +144,8 @@ occurrences:
     severity: minor
     description: "First draft repeated session-logged claims (unchecked boxes on blog posts, a blog post resting on a misread, \"blind visitors\") without checking diffs; fact-check and review found four wrong or jargon claims."
     solution: "Make digest.ts gather print each PR's touched files and have the brief say session outcomes are candidates, not facts."
+  - session: session_013zxzeRkv6UCWJtPmJ68h32
+    date: "2026-11-01"
+    severity: minor
+    description: "Filed issue #2748 and an Inventory note saying a post-fix run ran code-review, trusting an earlier note; the run's log says it self-read. Caught by the Spec review and corrected."
+    solution: "Check each cited run's log before writing it into an issue, as step 2 already says."

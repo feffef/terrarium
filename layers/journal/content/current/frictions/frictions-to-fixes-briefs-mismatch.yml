@@ -2,10 +2,9 @@ name: frictions-to-fixes-briefs-mismatch
 summary: >-
   The frictions-to-fixes survey and design briefs disagreed with the repo or left steps out, so their helper agents lost rounds or worked by hand.
 cause: >-
-  survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, search guidance that contradicts github-integration.md, no named way to find merged PRs missing from the ledger, an impossible "read every full log" ask, no owner/repo slug. Signals: a survey or design subagent reporting the brief "says ... but", a glob matching nothing, work done by hand that the brief should have pointed to.
+  survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, search guidance that contradicts github-integration.md, no named way to find merged PRs missing from the ledger, an impossible 'read every full log' ask, no owner/repo slug, and a design-brief wanting only docReadCounts from a 40 KB audit-skills JSON with no filter. PR #2733 (2026-10-31) gave the survey brief {SCRATCH_DIR} output paths and an all-or-nothing note for --append and redirected the design brief's audit-skills output. Signals: a survey or design subagent reporting the brief 'says ... but', a glob matching nothing, work done by hand that the brief should have pointed to.
 surface: safe
-status: tracked
-ref: "issue #2725"
+status: open
 notes: |-
   2026-10-30 survey: the Prune Trial of PR #2539 was judged and deleted by PR #2681; status reset to open.
 fixes:
@@ -21,6 +20,9 @@ fixes:
   - pr: 2539
     date: "2026-10-25"
     summary: "Rewrote the three frictions-to-fixes briefs in the per-step shape and fixed the dangling opening, the audit-docs pointer and the survey's candidate set."
+  - pr: 2733
+    date: "2026-10-31"
+    summary: "Survey brief passes --out {SCRATCH_DIR} paths to the summary, candidates and extract calls and redirects the merges and open-issues calls; design brief redirects audit-skills output; states that --append writes all or nothing."
 occurrences:
   - session: session_01Sc82qSCs4NVP3igf9SaGXM
     date: "2026-10-17"
@@ -92,3 +94,8 @@ occurrences:
     severity: nit
     description: "survey-brief says to pass --out, but gives no scratchpad path; the survey agent used an unset TMPDIR and wrote a stray file at the filesystem root."
     solution: "Tell the survey agent to pass --out under its scratch directory."
+  - session: session_013zxzeSiq7TZmfmF5D5Rbwt
+    date: "2026-10-31"
+    severity: nit
+    description: "Survey brief gives no scratch path for --out and its stale-status reset does not cover an issue closed not planned; the subagent followed it literally for #2694."
+    solution: "Say where --out goes and how to handle closed-not-planned in survey-brief.md (tracked in #2725)."

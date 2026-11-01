@@ -17,3 +17,8 @@ occurrences:
     severity: minor
     description: "Survey subagent: print-ledger-occurrence --append aborts the whole call on one held session, forcing grep pre-checks; gh api --paginate failed through the proxy."
     solution: "Let --append skip held sessions and report them; note the proxy pagination workaround in github-integration.md."
+  - session: session_013zxzeSiq7TZmfmF5D5Rbwt
+    date: "2026-10-31"
+    severity: minor
+    description: "Survey subagent's batched --append aborted wholly on one already-held session, writing nothing; it reran 36 triples one at a time, over two minutes."
+    solution: "Make print-ledger-occurrence.ts --append skip and report held sessions instead of aborting the batch."
