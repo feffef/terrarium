@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeNxm9jTD6DwkDXzzG8
 startedAt: 2026-11-01T02:07:47Z
-endedAt: 2026-11-01T02:26:23Z
+endedAt: 2026-11-01T02:35:23Z
 kind: autonomous
 goal: Weekly sweep of recurring session Frictions into fixes
-status: in-review
-outcome: "Ledger PR #2754 merged; fix PR #2755 open; three regression issues filed"
-summary: "Scheduled frictions-to-fixes run (agent-initiated by the schedule, no human prompt). A survey subagent appended 40 window Frictions, recorded eight merged fixes and reset five stale entries. I filed regression issues #2751, #2752 and #2753 (skipping the two inspect-session entries, whose use case PR #2688 removed, and prepush-gate-review-skipped, which already has #2748). A design agent covered two picks: no change for worktree-subagent-moves-branch; dispatch for ledger-append-refuses-held-session. Ledger PR #2754 merged after a green gate. A Sonnet agent built the fix; code-review (Standards and Spec) was clean; I opened #2755 and posted my verdict; it awaits CI. Still open: merging #2755 and the closing ledger PR (section 8)."
+status: completed
+outcome: "Ledger PRs #2754 and #2756 and fix PR #2755 merged; three regression issues filed"
+summary: "Scheduled frictions-to-fixes run (agent-initiated by the schedule, no human prompt). A survey subagent appended 40 window Frictions, recorded eight merged fixes and reset five stale entries (PR 2754). I filed regression issues 2751, 2752 and 2753, skipping the two inspect-session entries (their use case was removed by PR 2688) and prepush-gate-review-skipped (already issue 2748). A design agent covered two picks: no change for worktree-subagent-moves-branch; dispatch for ledger-append-refuses-held-session. A Sonnet agent built that fix; code-review Standards and Spec were clean; PR 2755 merged on green CI after my verdict comment; closing ledger PR 2756 recorded it. Only about two picks were designed, so most never-fixed entries (earlier drops, no new evidence) were left for later runs."
 prs:
   - "2754"
   - "2755"
+  - "2756"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: read by the survey subagent before git commands; confirmed -F commits
@@ -71,23 +72,27 @@ frictions:
   - description: design-brief points session logs at layers/journal/content/*/sessions/ but they sit under current/sessions with a date prefix; audit-skills docReadCounts lists one doc under several spellings.
     solution: Fix the path in design-brief.md and say how to sum docReadCounts.
     severity: nit
-durationSec: 1116
+  - description: Reviewed the design agent's no-change call on worktree-subagent-moves-branch from its report only; scoping picks took long because earlier drops hid new evidence.
+    solution: Have the survey list, per never-fixed candidate, whether its notes record a drop and what is new since.
+    severity: nit
+durationSec: 1656
 models:
-  claude-sonnet-5-5: 96
+  claude-sonnet-5-5: 130
 toolCounts:
-  Bash: 26
+  Bash: 36
   Agent: 6
-  Skill: 5
+  Skill: 6
   ToolSearch: 2
   mcp__github__issue_write: 3
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 3
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  ReadNotifications: 8
   mcp__github__pull_request_read: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
 filesEdited:
   - .agents/skills/frictions-to-fixes/scripts/print-ledger-occurrence.ts
   - .agents/skills/frictions-to-fixes/tests/unit/print-ledger-occurrence.spec.ts
+  - layers/journal/content/current/frictions/ledger-append-refuses-held-session.yml
   - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
   - layers/journal/content/current/frictions/binding-docs-skipped.yml
   - layers/journal/content/current/frictions/chat-progress-narration.yml
@@ -104,7 +109,6 @@ filesEdited:
   - layers/journal/content/current/frictions/harness-proxy-blocks.yml
   - layers/journal/content/current/frictions/issue-claims-taken-unchecked.yml
   - layers/journal/content/current/frictions/late-read-first-docs.yml
-  - layers/journal/content/current/frictions/ledger-append-refuses-held-session.yml
   - layers/journal/content/current/frictions/list-events-transcript-overflow.yml
   - layers/journal/content/current/frictions/pr-number-guessed-before-create.yml
   - layers/journal/content/current/frictions/prepush-gate-review-skipped.yml
@@ -220,32 +224,32 @@ subagents:
     durationSec: 355
     toolCalls: 32
     modelCalls: 27
-    tokenShare: 27.1
+    tokenShare: 20.9
   - type: general-purpose
     task: Design friction fixes
     durationSec: 88
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 5.2
+    tokenShare: 4
   - type: general-purpose
     task: Build append-collisions fix
     model: sonnet
     durationSec: 212
     toolCalls: 15
     modelCalls: 9
-    tokenShare: 7.1
+    tokenShare: 5.5
   - type: general-purpose
     task: Standards review
     durationSec: 16
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 2
+    tokenShare: 1.5
   - type: general-purpose
     task: Spec review
     durationSec: 20
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 2.7
+    tokenShare: 2.1
 gitBranch: claude/eager-ptolemy-wga7eo
 entrypoint: remote_trigger
 cliVersion: 2.1.316
