@@ -44,8 +44,8 @@ The repository holds three kinds of things.
   recorded decisions. Some are direct instructions; others explain why
   things are the way they are.
 - **Skills.** Step-by-step playbooks, each for one kind of task, such as
-  "triage an issue" or "write the daily digest". Most come from an outside
-  pack and are kept unchanged; the rest are Terrarium's own. Nine of them
+  "triage an issue" or "write the daily digest". Most are installed from
+  `mattpocock/skills` and kept unchanged; the rest are Terrarium's own. Nine of them
   run as routines.
 - **Guards & hooks.** Programs that run automatically around agent actions.
   - **Guards** check some actions before they run. When one stops an

@@ -1,7 +1,7 @@
 # Triage Labels
 
 *Seeded from `.agents/skills/setup-matt-pocock-skills/triage-labels.md`. The
-labels match the pack default 1:1; only the requester-trust note below is
+labels match the installed Skill's default 1:1; only the requester-trust note below is
 repo-specific. A changed right-hand column is a deliberate divergence: don't
 re-sync it.*
 
@@ -19,7 +19,7 @@ the AFK-ready triage label"), use that string.
 
 > **Who sets the state.** Only triage sets `ready-for-agent` and
 > `ready-for-human`: `triage`, `auto-triage`, `clear-backlog` and the guest
-> pipeline. Every other Skill, pack Skills included, files its issues
+> pipeline. Every other Skill, installed Skills included, files its issues
 > `needs-triage`, however settled they look (`to-spec` and `to-tickets` say
 > `ready-for-agent`; don't apply it), except a spec on hold, which carries no
 > label (`issue-tracker.md`, Specs).

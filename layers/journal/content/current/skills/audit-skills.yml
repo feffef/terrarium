@@ -344,16 +344,16 @@ observations:
       (PRs #1609 through #1753) re-confirmed merged, Inventory-YAML-only.
       TWO new silent failures found in this Skill's own process, both
       escalated. (1) Issue #1798: session_01KnHp9a9Ljbiuu8NjLLx8i1 (2026-10-11)
-      filed issue #1752 against `triage`, a confirmed Pack Skill
+      filed issue #1752 against `triage`, a confirmed installed Skill
       (`skills-lock.json`), directly breaking this Skill's own step-4 rule
       ("Pack Skills get no issues... their only lever is the Inventory
       entry") — its own commit text framed the choice as "correctly scoped
       to `triage`," inverting the rule rather than following it; #1752 was
       engaged with live by the owner and closed before this run caught it.
-      The gap: step 4's escalation branches have no Pack-Skill check of
+      The gap: step 4's escalation branches have no installed-Skill check of
       their own when a finding is discovered mid-investigation (via another
       Skill's usedIn session) rather than through the upfront
-      behaviourChecks roster, which excludes Pack Skills only by
+      behaviourChecks roster, which excludes installed Skills only by
       construction. (2) Issue #1797 (see close-session's own entry): this
       run's `humanPromptedClosures` signal false-flagged a friction that
       explicitly negated the keyword it matched on. The rest — audit-docs,
@@ -405,7 +405,7 @@ observations:
       Self-check: dispatched 12 behaviour-check subagents this run (one per
       behaviourChecks entry), each report independently verified before
       use. Re-derived both of this Skill's own 2026-10-13 self-findings
-      (the #1752 Pack-Skill rule break, fixed via #1798/PR#1823; the
+      (the #1752 installed-Skill rule break, fixed via #1798/PR#1823; the
       session_012VBpgxdwfQHiAvJc531UYr stale-#1627-claim) from scratch —
       both already fully recorded in the 2026-10-12/13 entries above, no
       new instance beyond what's already tracked. Four new findings from
@@ -581,7 +581,7 @@ observations:
       Self-check (the self-audit): 7/7 usedIn runs independently re-verified
       against live GitHub (7 Inventory PRs, 14 filed issues), diffs correctly
       scoped to Inventory/Routine YAML only, no unevidenced grade changes, no
-      premature observation pruning, no Pack-Skill issue violations,
+      premature observation pruning, no installed-Skill issue violations,
       routines/audit-skills.yml's 30-row cap enforced. One self-disclosed (not
       silent) deviation: session_01TFojzwXEByz1nbqt3wcKNL (10-14) ran
       code-review after its first push, not before (ADR-0004 ordering miss),

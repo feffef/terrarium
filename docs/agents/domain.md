@@ -1,6 +1,6 @@
 # Domain Docs
 
-*Repo-authoritative. Don't re-sync it against the pack's generic, reinstallable
+*Repo-authoritative. Don't re-sync it against the installed `domain-modeling` Skill's generic, reinstallable
 `domain.md` template (ADR-0005).*
 
 How to use the domain docs while exploring. The repo's shape (one shared

@@ -3,7 +3,7 @@ category: general-engineering
 importance: supporting
 installedSha256: 33fbc28568e3146f20fd908b12998bc0ab30aa4f4c87288199a40793efa94696
 role: >-
-  A pack Skill for retrospecting on a finished session's friction: finds
+  An installed Skill for retrospecting on a finished session's friction: finds
   concrete fixes (a missing check, a steering-doc no-op, a navigation gap)
   rather than vague process advice. Distinct from this project's own
   `frictions-to-fixes`, which mines Frictions across many sessions instead

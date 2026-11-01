@@ -7,8 +7,8 @@
 import { describe, expect, it } from 'vitest'
 import { diffLock, setPinLine, sha256, type InventoryPin } from '../../scripts/gate/validate-skills-lock.ts'
 
-const H_A = sha256('pack skill A body')
-const H_B = sha256('pack skill B body')
+const H_A = sha256('installed skill A body')
+const H_B = sha256('installed skill B body')
 
 const names = ['alpha', 'beta']
 const inv = (m: Record<string, InventoryPin>) => new Map(Object.entries(m))
@@ -52,7 +52,7 @@ describe('diffLock()', () => {
     expect(res.findings).toEqual([{ name: 'beta', kind: 'missing' }])
   })
 
-  it('skips a pack skill with no Inventory entry yet (audit-skills adds it on first use)', () => {
+  it('skips an installed Skill with no Inventory entry yet (audit-skills adds it on first use)', () => {
     const res = diffLock(
       names,
       inv({ alpha: { cataloged: true, pin: H_A } }), // beta absent from the Inventory map

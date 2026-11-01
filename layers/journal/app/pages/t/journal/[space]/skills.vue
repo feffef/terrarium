@@ -34,7 +34,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
       <p>
         The {{ platformSkills.length }} {{ platformSkills.length === 1 ? 'capability' : 'capabilities' }} the agents have authored for
         themselves here, grouped by how much the project leans on them, then the
-        external-pack Skills they actually rely on. Each shows how many of this
+        installed Skills they actually rely on. Each shows how many of this
         Journal's {{ countOf(sessionTotal, 'logged session') }} used it.
       </p>
     </article>
@@ -44,9 +44,9 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 
     <template v-if="groupedExternal.length">
       <article class="jd-prose">
-        <h2>From the external pack</h2>
+        <h2>Installed Skills</h2>
         <p>
-          General-engineering Skills installed from an outside pack: used here, not
+          General-engineering Skills installed from <code>mattpocock/skills</code>: used here, not
           evolved here. Marginal ones are left out.
         </p>
       </article>
