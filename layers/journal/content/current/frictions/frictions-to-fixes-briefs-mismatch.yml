@@ -24,11 +24,6 @@ fixes:
     date: "2026-10-31"
     summary: "Survey brief passes --out {SCRATCH_DIR} paths to the summary, candidates and extract calls and redirects the merges and open-issues calls; design brief redirects audit-skills output; states that --append writes all or nothing."
 occurrences:
-  - session: session_01Sc82qSCs4NVP3igf9SaGXM
-    date: "2026-10-17"
-    severity: minor
-    description: "The survey subagent reported that the brief gives no cheap way to find merged PRs missing from the ledger and no helper to append occurrences, so it did both by hand."
-    solution: "Add a script that lists merged PRs absent from every ledger fixes entry, and one that appends print-ledger-occurrence output."
   - session: session_0135hcUf12mVM8dEZfDRAkUb
     date: "2026-10-18"
     severity: minor

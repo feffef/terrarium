@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-25 design: dropped: last occurrence 2026-10-20; clear-backlog-explore.js line 84 and clear-backlog SKILL.md line 56 already say to check claims against primary sources; revisit if it recurs after those.
 occurrences:
-  - session: session_01JygBaHorymh1xgVBsaTh3E
-    date: "2026-10-17"
-    severity: minor
-    description: "I excluded #2209 and #2210 as guard changes from the issue text alone; only the owner's request for a transcript look showed neither needed one."
-    solution: "Before excluding an issue for its fix's surface, check the cited sessions; the issue's candidate fix is not the root cause."
   - session: session_01MKHvrDA9VoqiKWSG6QjpE2
     date: "2026-10-20"
     severity: nit

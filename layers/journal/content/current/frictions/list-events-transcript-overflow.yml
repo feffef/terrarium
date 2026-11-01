@@ -19,11 +19,6 @@ fixes:
     date: "2026-10-19"
     summary: "inspect-session takes bare page names, does a partial read for short sessions and has a replies selector."
 occurrences:
-  - session: session_01GVmwHZQthucdGcVwe3HAUL
-    date: "2026-10-17"
-    severity: moderate
-    description: "list_events on a screenshot-heavy session returned 14MB per page (base64 images), forcing file dumps and a custom parser"
-    solution: "list_events could offer a flag to strip image content from tool results"
   - session: session_01GfmoxeLwrvC7CARuaBAXfB
     date: "2026-10-18"
     severity: nit

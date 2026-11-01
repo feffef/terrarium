@@ -26,11 +26,6 @@ fixes:
     date: "2026-10-25"
     summary: "audit-docs saves each reviewer reply to its own file in a pool folder, since save-handback.ts overwrites its output file."
 occurrences:
-  - session: session_01PHx8z77pGDJT7vmfA7P6Sw
-    date: "2026-10-17"
-    severity: minor
-    description: "Reviewer findings arrive only as chat replies; pooling them into one file means retyping some, against the copy-never-retype step."
-    solution: "Brief each reviewer to write its full findings file, and verify the file is non-stub before it replies."
   - session: session_019U9RYQ9iFv8fwp2VQvwGny
     date: "2026-10-18"
     severity: minor

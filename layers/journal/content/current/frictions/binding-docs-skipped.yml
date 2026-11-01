@@ -16,16 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "adr-read-hint also points at the ADRs a Bash git commit touches."
 occurrences:
-  - session: session_01JygBaHorymh1xgVBsaTh3E
-    date: "2026-10-17"
-    severity: minor
-    description: "Recommended grilling picks without the CLAUDE.md grep -l of docs/adr for each changed path."
-    solution: "Run grep -l on the fix paths before writing a grilling pick."
-  - session: session_014PZ7z8L13nqP7rPdCgZRcM
-    date: "2026-10-17"
-    severity: nit
-    description: "Before recommending the audit-skills change I did not run the grep for ADRs that bind it, nor read ADR-0015 in full."
-    solution: "Run the ADR grep from CLAUDE.md before proposing a design, even in chat."
   - session: session_01TwTc2v8Afxqc9R4NdUcNPD
     date: "2026-10-18"
     severity: nit

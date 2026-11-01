@@ -19,11 +19,6 @@ fixes:
     date: "2026-10-26"
     summary: "print-ledger-occurrence --append now names every session already in the entry or repeated in the call."
 occurrences:
-  - session: session_01J4ze3DvsZhXeP78iyRnbSd
-    date: "2026-10-17"
-    severity: minor
-    description: "Survey brief says --unledgered drops carried frictions, yet 7 blocks for sessions already in a cluster reappeared and only surfaced at validate time (survey agent's friction)."
-    solution: "Have the brief say to skip a session already present in the target cluster, or filter by session in the script."
   - session: session_014tr6vJyNXmekdFQtYrEVWT
     date: "2026-10-21"
     severity: minor

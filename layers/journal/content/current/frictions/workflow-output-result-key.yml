@@ -15,11 +15,6 @@ fixes:
     date: "2026-10-27"
     summary: "run-summary.ts --verdicts now merges the verdicts of several saved runs into one block."
 occurrences:
-  - session: session_014H5yqxJ4wuQfuCP7tqW7z5
-    date: "2026-10-17"
-    severity: nit
-    description: "Workflow results are nested JSON in .output files, so reading them took a one-off node script each time."
-    solution: "A small script that prints a clear-backlog run's results (outcome, question, decisions, judgement calls) from the .output file."
   - session: session_01BTtvaFQckiQwtGZsasWPJH
     date: "2026-10-19"
     severity: minor

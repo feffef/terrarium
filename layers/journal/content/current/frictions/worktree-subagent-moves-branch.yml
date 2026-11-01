@@ -7,6 +7,7 @@ surface: safe
 status: open
 notes: |-
   2026-10-27 design: guard or brief prose against git checkout in a read-only subagent dropped: the brief was already read-only, code-review is a pack Skill, a guard would touch Human-only hooks for a nit with nothing lost
+  2026-11-01 design: no change: three occurrences by three different actors (a pack Skill's reviewer, the build workflow, the Freshness reviewer); check:worktrees flags each at once and one git switch fixes it; dispatch-subagents §3 is in an open Prune Trial's territory and a guard would be Human-only
 occurrences:
   - session: session_01Y1i7HTUED6iQYzbSLBbu79
     date: "2026-10-26"

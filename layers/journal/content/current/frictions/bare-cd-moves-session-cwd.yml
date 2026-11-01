@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-25"
     summary: "dispatch-subagents §3 and clear-backlog-build.js now say run git as git -C <worktree-root>, never cd: the Bash tool keeps its cwd and parallel calls share it."
 occurrences:
-  - session: session_01J4ze3DvsZhXeP78iyRnbSd
-    date: "2026-10-17"
-    severity: nit
-    description: "A cd into an impl agent's worktree left my shell there; the next merge-pr and ledger edits ran in the wrong checkout until the harness noted it."
-    solution: "Use absolute paths or git -C instead of cd when inspecting a worktree."
-  - session: session_01Sc82qSCs4NVP3igf9SaGXM
-    date: "2026-10-17"
-    severity: nit
-    description: "A subagent's cd and the shell's directory changes left the working directory in the frictions folder and a worktree, so later relative commands could have hit the wrong tree."
-    solution: "Use absolute paths or cd to the repo root at the start of each command."
   - session: session_019Ws4gsdRWPiAvCXBi55qac
     date: "2026-10-18"
     severity: nit

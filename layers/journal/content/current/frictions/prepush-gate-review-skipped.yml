@@ -66,11 +66,6 @@ occurrences:
     severity: nit
     description: "Never read the full diff before the first push; only git diff --stat, though pr-workflow wants a self-read for a simple change."
     solution: "Read git diff origin/main...HEAD before pushing, even for 8 lines."
-  - session: session_01Sc82qSCs4NVP3igf9SaGXM
-    date: "2026-10-17"
-    severity: minor
-    description: "Skipped the code-review Skill before the first push of both PRs, self-reviewing two small diffs instead, against ADR-0004 and pr-workflow."
-    solution: "Say in frictions-to-fixes section 7 whether a self-review of a tiny doc diff may replace the code-review Skill."
   - session: session_01C2XPRCDijGcdz27Kw6gi3s
     date: "2026-10-18"
     severity: nit
