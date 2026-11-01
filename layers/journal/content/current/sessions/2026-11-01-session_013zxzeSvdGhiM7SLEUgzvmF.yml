@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSvdGhiM7SLEUgzvmF
 startedAt: 2026-11-01T15:43:45Z
-endedAt: 2026-11-01T16:18:20Z
+endedAt: 2026-11-01T16:21:25Z
 kind: delegated
 goal: Raise the Glass Box guide toward its best pages (glassbox-improve run)
-status: in-review
-outcome: "PR 2763 open: 8 pages raised, 3 drafts promoted, grades recorded; gate green, awaiting CI and merge"
-summary: The one human prompt was the /glassbox-improve slash command, so every step below follows that Skill's own instructions; nothing was agent-initiated beyond its Remit, and the 3 structural steps were taken only because the Skill's queue and cap selected them. Three raters (sonnet, fable, opus) graded 42 pages at base 712ed11; none confirmed a false claim in a guide page. The tally selected 8 pages (consensus deficits or gaps; churn dropped routines and cloud-sessions because they were gap-edited on 2026-10-29; conflicting fixes dropped permissions and human-in-the-loop) and 3 promotions (Prune Trials, Planning with the pack, Mermaid). Three researchers found 3 false claims, all in the drafts being promoted, which I checked against the source before passing them on. Seven opus writers worked in worktrees; I merged their branches, ran code-review (Standards and Spec axes), sent one fix round (retitle Prune Trials to Pruning instructions, a stale anchor, two motive clauses, a misleading lead-in, a clear-backlog overstatement), merged again, wrote grades.yml, ran gate:scoped once on the final head (green), pushed and opened the PR. Open after this log - CI, my verdict comment and the merge via merge-pr.ts. Ideas for the owner are below; no issue was filed because nothing fell outside the Remit.
+status: completed
+outcome: "PR 2763 merged: 8 pages raised, 3 drafts promoted, grades recorded; CI green"
+summary: The one human prompt was the /glassbox-improve slash command, so every step below follows that Skill's own instructions; nothing was agent-initiated beyond its Remit, and the 3 structural steps were taken only because the Skill's queue and cap selected them. Three raters (sonnet, fable, opus) graded 42 pages at base 712ed11; none confirmed a false claim in a guide page. The tally selected 8 pages (consensus deficits or gaps; churn dropped routines and cloud-sessions because they were gap-edited on 2026-10-29; conflicting fixes dropped permissions and human-in-the-loop) and 3 promotions (Prune Trials, Planning with the pack, Mermaid). Three researchers found 3 false claims, all in the drafts being promoted, which I checked against the source before passing them on. Seven opus writers worked in worktrees; I merged their branches, ran code-review (Standards and Spec axes), sent one fix round (retitle Prune Trials to Pruning instructions, a stale anchor, two motive clauses, a misleading lead-in, a clear-backlog overstatement), merged again, wrote grades.yml, ran gate:scoped once on the final head (green), pushed and opened the PR. CI went green on the head; I posted a verdict comment ending in Reviewed with the head sha and merged it with merge-pr.ts (no Human-only path, Trusted author), then deleted the safety-net check-in and unsubscribed. Ideas for the owner are below; no issue was filed because nothing fell outside the Remit.
 prs:
   - "2763"
 docsRead:
@@ -186,22 +186,29 @@ frictions:
   - description: I first created rater scratch folders in the wrong place; plan --briefs already made the right ones, so the extras were unused.
     solution: Say in glassbox-improve step 1 that plan --briefs creates the rater folders.
     severity: nit
-durationSec: 2075
+durationSec: 2261
 models:
-  claude-sonnet-5-5: 194
+  claude-sonnet-5-5: 230
 toolCounts:
-  Bash: 54
+  Bash: 60
   Read: 9
   mcp__github__list_pull_requests: 2
   Agent: 15
-  ToolSearch: 2
+  ToolSearch: 3
   SendMessage: 4
-  Skill: 3
+  Skill: 4
   Monitor: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  Edit: 2
 filesEdited:
   - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
   - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
@@ -232,6 +239,8 @@ rulesLoaded:
   - .claude/rules/glossary-terms.md
   - .claude/rules/glassbox-content.md
   - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -247,11 +256,9 @@ rulesFollowedUp:
   - .claude/rules/adr-0005.md
 rulesLoadedBySubagents:
   - .claude/rules/adr-0001.md
-  - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0018.md
   - .claude/rules/adr-0028.md
   - .claude/rules/tenant-layers.md
-  - .claude/rules/adr-0030.md
   - .claude/rules/adr-0024.md
   - .claude/rules/ui-verification.md
   - .claude/rules/adr-0007.md
@@ -379,91 +386,91 @@ subagents:
     durationSec: 473
     toolCalls: 45
     modelCalls: 40
-    tokenShare: 10.4
+    tokenShare: 9.7
   - task: Rate guide pages (fable)
     model: fable
     durationSec: 533
     toolCalls: 55
     modelCalls: 19
-    tokenShare: 6.6
+    tokenShare: 6.2
   - task: Rate guide pages (opus)
     model: opus
     durationSec: 316
     toolCalls: 62
     modelCalls: 29
-    tokenShare: 7.9
+    tokenShare: 7.4
   - task: Research prune-trials promotion
     model: sonnet
     durationSec: 105
     toolCalls: 11
     modelCalls: 7
-    tokenShare: 1.3
+    tokenShare: 1.2
   - task: Research planning-with-pack promotion
     model: sonnet
     durationSec: 121
     toolCalls: 18
     modelCalls: 11
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Research mermaid-svg promotion
     model: sonnet
     durationSec: 124
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 1.6
+    tokenShare: 1.4
   - task: Write claude-code page fixes
     model: opus
     durationSec: 219
     toolCalls: 41
     modelCalls: 30
-    tokenShare: 4.4
+    tokenShare: 4.2
   - task: Write git-github page fixes
     model: opus
     durationSec: 799
     toolCalls: 49
     modelCalls: 28
-    tokenShare: 5.7
+    tokenShare: 5.3
   - task: Write nuxt-vue page fixes
     model: opus
     durationSec: 247
     toolCalls: 57
     modelCalls: 35
-    tokenShare: 5.1
+    tokenShare: 4.8
   - task: Write terrarium-practice fix
     model: opus
     durationSec: 129
     toolCalls: 24
     modelCalls: 14
-    tokenShare: 2.3
+    tokenShare: 2.1
   - task: Promote prune-trials draft
     model: opus
     durationSec: 673
     toolCalls: 49
     modelCalls: 34
-    tokenShare: 5.4
+    tokenShare: 5.1
   - task: Promote planning draft
     model: opus
     durationSec: 737
     toolCalls: 77
     modelCalls: 37
-    tokenShare: 6.7
+    tokenShare: 6.2
   - task: Promote mermaid-svg draft
     model: opus
     durationSec: 154
     toolCalls: 32
     modelCalls: 20
-    tokenShare: 2.6
+    tokenShare: 2.5
   - task: "Code review: Standards axis"
     model: opus
     durationSec: 137
     toolCalls: 18
     modelCalls: 13
-    tokenShare: 2.3
+    tokenShare: 2.2
   - task: "Code review: Spec axis"
     model: opus
     durationSec: 230
     toolCalls: 39
     modelCalls: 38
-    tokenShare: 6.6
+    tokenShare: 6.1
 gitBranch: ccr-04d825f6-77562z
 entrypoint: remote_mobile
 cliVersion: 2.1.316
