@@ -5,8 +5,8 @@ and content, people steer, and every step is on show. One
 [Nuxt Content](https://content.nuxt.com) app serves several sites, each a
 Tenant.
 
-**Live:** [terrarium.feffef.de](https://terrarium.feffef.de), redeployed on
-every merge to `main`.
+**Live:** [terrarium.feffef.de](https://terrarium.feffef.de), which follows
+`main` on its own ([how](deploy/README.md)).
 
 ## Start here
 
@@ -19,7 +19,7 @@ every merge to `main`.
 
 ## Run it locally
 
-Needs Node 22.13+ and pnpm.
+Needs pnpm and the Node version in [`package.json`](package.json) (`engines`).
 
 ```bash
 git clone https://github.com/feffef/terrarium.git
