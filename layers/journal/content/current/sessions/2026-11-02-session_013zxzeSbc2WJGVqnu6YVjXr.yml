@@ -1,0 +1,151 @@
+schemaVersion: 1
+session: session_013zxzeSbc2WJGVqnu6YVjXr
+startedAt: 2026-11-02T18:26:25Z
+endedAt: 2026-11-02T18:33:11Z
+kind: delegated
+goal: Fix the purple visited link on the Journal landing in dark mode
+status: in-review
+outcome: "Accent colour added to the on-ramp lead link; PR #2790 open"
+summary: "Human-instructed: the owner reported (with a screenshot) that the visited \"how Terrarium works\" link on the Journal landing showed the browser's default purple in dark mode. The cause was a missing colour rule for `.onramp-lead a` in the Journal's `[space]/index.vue`; the sibling on-ramp links already used `--jd-accent`. Added that colour plus a hover rule (two lines), built, checked the computed colour in dark and light after visiting the target and looked at a dark screenshot, ran gate:scoped (green), and opened the PR. Agent-initiated: only the routine gate, verification and PR steps the repo requires. I fixed without asking clarifying questions, as the bug and fix were unambiguous."
+prs:
+  - "2790"
+docsRead:
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: hook asked for a full read after editing a Journal page; routing, irrelevant to a CSS fix
+    useful: no
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: hook-requested full read; purpose of the Journal, irrelevant to a CSS fix
+    useful: no
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: hook-requested full read; root pages, and this file is a Space page, not a root page
+    useful: no
+  - path: docs/agents/git-conventions.md
+    reason: commit hygiene and trailer check before committing
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: simple-change exemption from code-review; gate before first push
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: read computed colour not just a screenshot; preview.ts start/stop
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: only its start was shown (head cut it); nothing needed for one PR create
+    useful: partly
+skillsUsed:
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Edit hook demanded full reads of ADR-0006, 0008 and 0016 for a two-line CSS change to a Journal page; none applied
+    solution: Skip the full-ADR read demand for style-only edits, or narrow those rules to script changes
+    severity: minor
+  - description: adr-0004-human-merge rule fired on merely reading ADR files, saying 'You just touched a Human-only file' when nothing was edited
+    solution: Fire that rule only on edits, or reword it for reads
+    severity: nit
+durationSec: 406
+models:
+  claude-opus-5-5: 46
+toolCounts:
+  Grep: 1
+  Bash: 15
+  Edit: 1
+  Read: 4
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 2
+filesEdited:
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+rulesLoaded:
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0016.md
+adrHints:
+  - adr: 6
+    via: path
+    readAfter: true
+    by: main
+  - adr: 8
+    via: path
+    readAfter: true
+    by: main
+  - adr: 16
+    via: path
+    readAfter: true
+    by: main
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me wait for gate:scoped before pushing despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Made me open the PR and subscribe without asking; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the PR body header line; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded for the Journal page I edited; routing is untouched by a CSS rule
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded for the Journal page; its content rules don't touch styling
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Loaded for a Space page, which is not a root page; nothing applied
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: No Journal terms were needed for a two-line CSS fix
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Confirmed scoped component CSS was the right place, not the layer's global theme.css
+    useful: partly
+  - path: .claude/rules/ui-verification.md
+    reason: Pointed me to the doc that made me check computed colour
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded by reading CLAUDE-adjacent docs; no instruction changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded by reading agent docs; no instruction placement was involved
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded because I read ADR files, though I changed none; slightly alarming wording for a read
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded by reading ADRs; I edited none
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded by a grep of tenant.config.ts; no manifest change
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded by the same grep; no stored field changed
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded by the same grep; no MDC involved
+    useful: no
+gitBranch: claude/loving-allen-f85mdb
+entrypoint: remote
+cliVersion: 2.1.316
+landedBy: Stop
