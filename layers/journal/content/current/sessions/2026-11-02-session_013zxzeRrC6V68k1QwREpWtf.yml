@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRrC6V68k1QwREpWtf
 startedAt: 2026-11-02T04:03:20Z
-endedAt: 2026-11-02T04:13:56Z
+endedAt: 2026-11-02T07:01:28Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs for drift and contradiction
-status: in-review
-outcome: Sweep PR 2778 merged; escalation PR 2779 (ADR-0027 wording, Human-only) open for a human merge
-summary: "Scheduled audit-docs run; the schedule started it and no human prompted any step (all agent-initiated). Three read-only reviewers (Freshness, Single-home, Coherence) returned 2 findings in total: Freshness 1 (stale \"Pack Skills\" quote in the audit-skills Inventory entry), Single-home 0, Coherence 1 (ADR-0027's verdict bullet says \"never the old text\" while its ADRs bullet restores a cut ADR's text). One checker gave 0 CONFIRMED / 1 CONFIRMED-BUT (Coherence) / 1 WRONG (Freshness: the quote is a dated verbatim observation of a rule that really read that way). It also corrected the reviewer: the .claude/rules/adr-0027.md summary does not repeat the unqualified bullet, so only its adr hash needed restamping. Sweep PR 2778 holds the one-line prune-trial SKILL.md pointer to Bounds; I read its one-line diff myself instead of code-review, gate:scoped green, merged via merge-pr. Escalation PR 2779 holds the ADR-0027 sentence plus the restamped rule hash; gate:scoped green, awaiting a human merge. No issue filed. Covered by B and C: README.md, SECURITY.md, tests/README.md, deploy/README.md, docs/proposals/README.md, GLOSSARY-MAP.md, layers/{journal,commons,marquee,tinkerfund,atlas,midden,blog}/GLOSSARY.md, journal facing pages, all 30 ADRs, Skills prune-trial audit-skills visitor-loop digest blog-post midden-catalogue midden-survey tinkerfund-campaign atlas-specimen glassbox-lesson glassbox-update glassbox-walkthrough."
+status: completed
+outcome: Sweep PR 2778 merged by me; escalation PR 2779 (ADR-0027 wording) merged by a human
+summary: "Scheduled audit-docs run; the schedule started it and no human prompted any step (all agent-initiated). Three read-only reviewers (Freshness, Single-home, Coherence) returned 2 findings in total: Freshness 1 (stale \"Pack Skills\" quote in the audit-skills Inventory entry), Single-home 0, Coherence 1 (ADR-0027's verdict bullet says \"never the old text\" while its ADRs bullet restores a cut ADR's text). One checker gave 0 CONFIRMED / 1 CONFIRMED-BUT (Coherence) / 1 WRONG (Freshness: the quote is a dated verbatim observation of a rule that really read that way). It also corrected the reviewer: the .claude/rules/adr-0027.md summary does not repeat the unqualified bullet, so only its adr hash needed restamping. Sweep PR 2778 holds the one-line prune-trial SKILL.md pointer to Bounds; I read its one-line diff myself instead of code-review, gate:scoped green, merged via merge-pr. Escalation PR 2779 holds the ADR-0027 sentence plus the restamped rule hash; gate:scoped green, a human merged it later. No issue filed. Covered by B and C: README.md, SECURITY.md, tests/README.md, deploy/README.md, docs/proposals/README.md, GLOSSARY-MAP.md, layers/{journal,commons,marquee,tinkerfund,atlas,midden,blog}/GLOSSARY.md, journal facing pages, all 30 ADRs, Skills prune-trial audit-skills visitor-loop digest blog-post midden-catalogue midden-survey tinkerfund-campaign atlas-specimen glassbox-lesson glassbox-update glassbox-walkthrough."
 prs:
   - "2778"
   - "2779"
@@ -155,20 +155,21 @@ frictions:
   - description: Many unrelated ADR rules loaded into reviewer and checker subagents when they read ADRs, adding noise to their verdict reports.
     solution: Narrower rule paths, or tell read-only auditors that rule verdicts are unneeded.
     severity: minor
-durationSec: 636
+durationSec: 10688
 models:
-  claude-sonnet-5-5: 75
+  claude-sonnet-5-5: 87
 toolCounts:
-  Bash: 26
+  Bash: 28
   Agent: 4
   Edit: 1
   ToolSearch: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 1
+  ReadNotifications: 4
   mcp__github__pull_request_read: 1
   mcp__github__add_issue_comment: 1
   Skill: 2
+  PushNotification: 1
 filesEdited:
   - .agents/skills/prune-trial/SKILL.md
   - .claude/rules/adr-0027.md
@@ -330,25 +331,25 @@ subagents:
     durationSec: 57
     toolCalls: 10
     modelCalls: 10
-    tokenShare: 7.6
+    tokenShare: 6.4
   - type: general-purpose
     task: "Audit docs: Single-home"
     durationSec: 113
     toolCalls: 20
     modelCalls: 17
-    tokenShare: 14.5
+    tokenShare: 12.2
   - type: general-purpose
     task: "Audit docs: Coherence"
     durationSec: 229
     toolCalls: 34
     modelCalls: 31
-    tokenShare: 34.6
+    tokenShare: 29.2
   - type: general-purpose
     task: Fact-check audit findings
     durationSec: 86
     toolCalls: 11
     modelCalls: 11
-    tokenShare: 6.2
+    tokenShare: 5.2
 gitBranch: claude/festive-mayer-nhx1tt
 entrypoint: remote_trigger
 cliVersion: 2.1.316
