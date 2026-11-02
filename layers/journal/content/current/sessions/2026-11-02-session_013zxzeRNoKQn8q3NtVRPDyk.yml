@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRNoKQn8q3NtVRPDyk
 startedAt: 2026-11-02T07:42:21Z
-endedAt: 2026-11-02T13:52:52Z
+endedAt: 2026-11-02T13:55:53Z
 kind: interactive
 goal: Glass Box guide landing becomes Terrarium's overview
-status: in-review
-outcome: PR 2782 open, overview rewritten on request, gate green; waits for a human merge (touches .claude/rules/)
-summary: "Human-instructed throughout: the owner asked whether Part 1 of the interactive-map brief could become one overview for human readers and agents, then decided each question in chat (overview replaces the Glass Box landing's directory, terms and sources; the Journal's Architecture & Deployment and How Humans & Agents Work pages go once their unique content moves into the overview; Scheduled tasks lists every Routine and Self-improvement loop every loop Skill as an exception to the no-growing-lists rule; a CLAUDE.md trigger; the Journal's Start here points to the overview as a cheap compromise; merge main). Agent-initiated within that ask: serving the landing through [...slug].vue so the sidebar is its menu, redirecting a bare Subject URL to its first Lesson, renumbering the Journal tour, and repointing links and tests. Two-axis code review found errors drafted from the old overview rather than the repo; all fixed. After the PR was green, the owner asked for another critical review of whether the wording served both readers. It didn't: it never said why Terrarium exists (the thesis an earlier agent missed, per the 2026-10-02 digest), led with generic infrastructure, used \"maintainer/visitors\" instead of Trusted/Public, and packed the agent guidance into one link-heavy paragraph. On the owner's go, the session rewrote it in a new order (why, who, how a change happens, who decides, the loop, then repository, shipping, stack), had it reviewed against ADR-0003, ADR-0004 and GLOSSARY.md, fixed the findings (an incomplete who-merges list that read as complete, a missing verdict step), and pushed on a green gate. Open: whether dependabot-sweep is event-triggered is unverified."
+status: completed
+outcome: "PR 2782 merged: the Glass Box landing is now the overview, the two Journal explainers are gone, and CLAUDE.md points agents to it"
+summary: "Human-instructed throughout: the owner asked whether Part 1 of the interactive-map brief could become one overview for human readers and agents, then decided each question in chat (overview replaces the Glass Box landing's directory, terms and sources; the Journal's Architecture & Deployment and How Humans & Agents Work pages go once their unique content moves into the overview; Scheduled tasks lists every Routine and Self-improvement loop every loop Skill as an exception to the no-growing-lists rule; a CLAUDE.md trigger; the Journal's Start here points to the overview as a cheap compromise; merge main). Agent-initiated within that ask: serving the landing through [...slug].vue so the sidebar is its menu, redirecting a bare Subject URL to its first Lesson, renumbering the Journal tour, and repointing links and tests. Two-axis code review found errors drafted from the old overview rather than the repo; all fixed. After the PR was green, the owner asked for another critical review of whether the wording served both readers. It didn't: it never said why Terrarium exists (the thesis an earlier agent missed, per the 2026-10-02 digest), led with generic infrastructure, used \"maintainer/visitors\" instead of Trusted/Public, and packed the agent guidance into one link-heavy paragraph. On the owner's go, the session rewrote it in a new order (why, who, how a change happens, who decides, the loop, then repository, shipping, stack), had it reviewed against ADR-0003, ADR-0004 and GLOSSARY.md, fixed the findings (an incomplete who-merges list that read as complete, a missing verdict step), and pushed on a green gate; the owner merged it. Open: whether dependabot-sweep is event-triggered is unverified."
 prs:
   - "2782"
 docsRead:
@@ -79,11 +79,11 @@ frictions:
   - description: The first overview kept Part 1's infrastructure-first order and omitted why Terrarium exists; only the owner's request for a second critical review surfaced it.
     solution: Before shipping a page for two audiences, review it against each reader's first question; the code-review spec axis checked facts, not fit.
     severity: moderate
-durationSec: 22231
+durationSec: 22412
 models:
-  claude-opus-5-5: 272
+  claude-opus-5-5: 285
 toolCounts:
-  Bash: 102
+  Bash: 103
   Write: 2
   Edit: 5
   Skill: 4
@@ -92,7 +92,7 @@ toolCounts:
   ToolSearch: 5
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 5
+  ReadNotifications: 10
   mcp__github__pull_request_read: 2
   mcp__claude-code-remote__send_later: 1
   mcp__github__add_issue_comment: 2
@@ -283,25 +283,25 @@ subagents:
     durationSec: 122
     toolCalls: 22
     modelCalls: 20
-    tokenShare: 6.7
+    tokenShare: 6.2
   - type: general-purpose
     task: Spec review of branch diff
     durationSec: 92
     toolCalls: 15
     modelCalls: 15
-    tokenShare: 5.6
+    tokenShare: 5.2
   - type: general-purpose
     task: Review follow-up fix commit
     durationSec: 47
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.8
+    tokenShare: 2.6
   - type: general-purpose
     task: Review the overview rewrite
     durationSec: 53
     toolCalls: 12
     modelCalls: 6
-    tokenShare: 2.9
+    tokenShare: 2.7
 gitBranch: claude/determined-noether-pzjwig
 entrypoint: remote
 cliVersion: 2.1.316
