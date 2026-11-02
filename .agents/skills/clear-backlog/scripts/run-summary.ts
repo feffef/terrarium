@@ -85,11 +85,17 @@ function build(r: Branch[]): string[] {
 
 const RANK = { no: 0, partly: 1, yes: 2 }
 
+const repoRelative = (p: string) => p
+  .replace(/^.*?\/\.claude\/worktrees\/[^/]+\//, '')
+  .replace(/^.*?\/(?=(\.claude|\.agents|docs|layers)\/)/, '')
+
 /** One entry per path across all runs, as close-session's `ruleVerdicts` and `docsRead` take them. */
 function verdicts(runs: (Explore | Branch[])[]): string[] {
-  const all = runs.flatMap((r) => Array.isArray(r)
+  const raw = runs.flatMap((r) => Array.isArray(r)
     ? r.flatMap((b) => b.verdicts ?? [])
     : Object.entries(r.results).flatMap(([n, t]) => (t.verdicts ?? []).map((v) => ({ ...v, agent: `triage #${n}` }))))
+  // log-session refuses anything but repo-relative paths; subagents give absolute (worktree) or comma-joined ones.
+  const all = raw.flatMap((v) => v.path.split(/\s*,\s*/).filter(Boolean).map((p) => ({ ...v, path: repoRelative(p) })))
   const best = new Map<string, Verdict[]>()
   for (const v of all) {
     const kept = best.get(v.path)

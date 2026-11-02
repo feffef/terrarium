@@ -1,4 +1,6 @@
 import { spawnSync } from 'node:child_process'
+import { mkdtempSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { runSummary } from '../../scripts/run-summary.ts'
@@ -80,6 +82,15 @@ describe('--verdicts', () => {
         'docsRead:',
         '  - { path: "docs/agents/pr-workflow.md", reason: "build big-13: steps for the push", useful: partly }',
       ].join('\n'),
+    )
+  })
+
+  it('cuts absolute and comma-joined paths to single repo-relative entries', () => {
+    const file = join(mkdtempSync(join(tmpdir(), 'verdicts-')), 'build.output')
+    const v = (path: string) => ({ path, kind: 'rule', reason: 'r', useful: 'yes', agent: 'a' })
+    writeFileSync(file, JSON.stringify({ result: [{ verdicts: [v('/home/u/t/.claude/worktrees/w1/.claude/rules/a.md'), v('.claude/rules/b.md, /home/u/t/.claude/rules/a.md,')] }] }))
+    expect(runSummary(file, '--verdicts')).toBe(
+      ['ruleVerdicts:', '  - { path: ".claude/rules/a.md", reason: "a: r", useful: yes }', '  - { path: ".claude/rules/b.md", reason: "a: r", useful: yes }', 'docsRead:'].join('\n'),
     )
   })
 
