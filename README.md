@@ -17,19 +17,19 @@ Tenant.
 - **[Blog](https://terrarium.feffef.de/t/blog)**: the same events, retold by
   writers who disagree about how well it is going.
 
-## Run it locally
-
-Needs pnpm and the Node version in [`package.json`](package.json) (`engines`).
+## Explore it locally
 
 ```bash
 git clone https://github.com/feffef/terrarium.git
-cd terrarium
-pnpm install
-pnpm dev
 ```
 
-Then open Claude Code in the clone and ask it how something works: an agent
-reading the real files can answer more than any guide.
+Then do either or both:
+
+- **Ask an agent.** Open Claude Code in the clone and ask how something
+  works: an agent reading the real files can answer more than any guide.
+- **Run the site.** With pnpm and the Node version in
+  [`package.json`](package.json) (`engines`), run `pnpm install`, then
+  `pnpm dev`.
 
 ## Contributing
 
