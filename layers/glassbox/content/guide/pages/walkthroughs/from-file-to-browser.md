@@ -1,7 +1,7 @@
 ---
 title: From file to browser
 description: How a Markdown file in a Tenant folder becomes a table, a dump, a rendered page and a payload the browser reuses.
-revision: '4b7e40b291580c3067856048b3529e6ca347c0e8'
+revision: '87ccd9f83e4314732574463fca79530755fe9045'
 revisionDate: '2026-11-02'
 ---
 
@@ -25,15 +25,15 @@ flowchart TD
 
 ## 1. A file lands in a Space's folder
 
-A :term[Document] starts as a Markdown or YAML file in its Tenant's folder under `layers/`, at `content/<space>/<collection>/`, merged to `main` like any other change. The folders name its :term[Tenant], its :term[Space] and its :term[Collection]; nothing else says where it belongs.
+A :term[Document] starts as a Markdown or YAML file in its Tenant's folder under `layers/`, at `content/<space>/<collection>/`, merged to `main` like any other change. Take a post in the Blog's `layers/blog/content/david/pages/`: the folders name its :term[Tenant] (`blog`), its :term[Space] (`david`) and its :term[Collection] (`pages`); nothing else says where it belongs.
 
 ::lessons
-[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · :file[layers/glassbox/content/]
+[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · :file[layers/blog/content/david/pages/]
 ::
 
 ## 2. The manifest names its table
 
-The Tenant's :term[manifest] lists its Spaces and Collections. Each time Nuxt Content loads `content.config.ts`, `expand()` turns every manifest into one collection per Tenant, Space and Collection, each pointed at its own folder and named by a key such as `blog_david_pages`. That key is the name of the file's table.
+The Tenant's :term[manifest] lists its Spaces and Collections. Each time Nuxt Content loads `content.config.ts`, `expand()` turns every manifest into one collection per Tenant, Space and Collection, each pointed at its own folder and named by a key joined from the three names: the post's is `blog_david_pages`. That key is the name of its table.
 
 ::lessons
 [Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
@@ -65,7 +65,7 @@ The first query for a Collection since the server started compares the checksum 
 
 ## 6. The browser hydrates, then navigates by payload
 
-Vue renders the page to HTML with the `useAsyncData` result inside, and the browser shows it, then takes the page over without fetching that data again. When the pointer rests on a link, a finger touches it or the keyboard focuses it, the browser fetches that route's code and its `_payload.json`, and the click builds the next page from them with no query. A route the server doesn't cache has no payload, and neither has a query outside `useAsyncData`, such as a search run as the visitor types. Either kind of query runs in an SQLite database in the browser, which first downloads a WebAssembly runtime and the Collection's dump.
+Vue renders the page to HTML with the `useAsyncData` result inside, and the browser shows it, then takes the page over without fetching that data again. When the pointer enters a link, a finger touches it or the keyboard focuses it, the browser fetches that route's code and its `_payload.json`, and the click builds the next page from them with no query. A query no payload answers runs instead in an SQLite database the browser builds from the Collection's dump.
 
 ::lessons
 [Hydration](/t/glassbox/guide/nuxt-vue/hydration) · [Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [Content database](/t/glassbox/guide/nuxt-content/content-database)

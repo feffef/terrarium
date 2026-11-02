@@ -1,7 +1,7 @@
 ---
 title: Asking an agent for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
-revision: '574377b55cb737b991df18e40823b7fbc51157df'
+revision: '87ccd9f83e4314732574463fca79530755fe9045'
 revisionDate: '2026-11-02'
 ---
 
@@ -89,7 +89,7 @@ Once the PR has merged, the session runs `close-session` again. It first looks b
 
 ## A real case
 
-On 15 October 2026 a Trusted user asked a session to install the `retro` Skill from the `mattpocock/skills` pack. The session installed it with the skills CLI, moved it into `.agents/skills/` with a link in `.claude/skills/`, and opened [PR #2089](https://github.com/feffef/terrarium/pull/2089): four files, among them :file[.agents/skills/retro/SKILL.md], and no Human-only path. It ran `pnpm gate:scoped` but skipped `code-review`, since the diff was an unmodified copy of upstream, and its verdict comment said it was merging on that user's instruction. CI's Gate went green and the PR merged within four minutes of opening.
+On 15 October 2026 a Trusted user asked a session to install the `retro` Skill from the `mattpocock/skills` pack. The session installed it with the skills CLI, moved it into `.agents/skills/` with a link in `.claude/skills/`, and opened [PR #2089](https://github.com/feffef/terrarium/pull/2089): four files, among them :file[.agents/skills/retro/SKILL.md], and no Human-only path. It ran `pnpm gate:scoped` but skipped `code-review` because the diff was an unmodified copy of upstream, a step stop 5 doesn't let it skip: a PR that adds files is never a simple change. Its verdict comment said it was merging as it stood on that user's instruction. CI's Gate went green and the PR merged within four minutes of opening.
 
 ## Where next
 

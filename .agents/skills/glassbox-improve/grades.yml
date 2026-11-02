@@ -1,789 +1,908 @@
+version: 3
 run: 2026-11-02
 pages:
   claude-code/01.claude-md:
     hash: 0419e168de6f5fb42108ed14794ac24e377a61b5
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: A
+    sources: 17c5429a91a939afadbaa19af826aa3c1fb98554
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02, wins: [ 2026-11-02 ] }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   claude-code/02.path-scoped-rules:
-    hash: 456ad036cbb3c04916db93bb93b7099c38152ad9
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
-    gapEdit: 2026-11-02
+    hash: 1fdc756d47633a1da001867b6d0478e6935a15e2
+    sources: 8fd848b959738995f9da3104f5728552b8b63bb2
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: C, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { evidence: 2026-11-02 }
   claude-code/03.skills:
     hash: 95539001ffefda03da41b3ed629e00e75807ddee
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: A
+    sources: 34a4ed33069c44319e44c8006735b65947c8c432
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   claude-code/04.hooks:
     hash: 4d4dde8ecf4012e18a3a75340aef1ae5d0ded6f3
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: 8085e43aa83a8bd51347aa9714c3bb877aa27bcf
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   claude-code/05.blocking-hooks:
     hash: 18116a4eee1af50eb541c0365a3534c5eb8642d4
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: A
+    sources: 0f7a425fb829dd4b6e84eb06b645ae5098eaf37d
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   claude-code/06.hook-added-context:
     hash: d4a6e12110852ed5a4e30f32c3cff305eebe3d4e
-    grades:
-      sonnet:
-        grade: C
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
-    gapEdit: 2026-11-01
+    sources: 67d10ee51a2392c01c08a452f4f22e00505ef3ba
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   claude-code/07.subagents:
     hash: 3257a71bbb5e4f1d93689fc213e7ff20fadd5811
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
-    readByAll: true
-    gapEdit: 2026-11-01
+    sources: 1bd043b4824d47f2af39950968b7347754626795
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: C, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { transfer: 2026-11-02 }
   claude-code/08.mcp-servers:
     hash: 1c97822800b94d5bf65c33a11a48ca1451cf5482
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: c8e67a5c1ff3f5af2af4e99085e2675f7bea0d91
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: C, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { placement: 2026-11-02 }
   claude-code/09.workflow-scripts:
     hash: e1ca41cba331614a09eb83caabfe2e606b05be24
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: 0f86938f79ac8c266e079bbd08f336f1e9b369bd
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   claude-code/10.routines:
     hash: 74b94a9c8faa178ac3ffeed1a27490c5f465526a
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
-    gapEdit: 2026-10-29
+    sources: feec0aeddf4641cdd463ffa19b54ab0a1fcc7772
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: C, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { evidence: 2026-11-02 }
   claude-code/11.cloud-sessions:
     hash: ef3bf0801c917d6055c4e0685113cfe87491c99c
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
-    readByAll: true
-    gapEdit: 2026-10-29
+    sources: 4c6d2f456c956ac1500064d13345a9960b0af096
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: C, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: C, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { clarity: 2026-11-02, placement: 2026-11-02 }
   claude-code/12.permissions:
     hash: b458ce7e9d605043c0f1c816813e9d5505b220a9
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: C
-        run: 2026-11-01
-      opus:
-        grade: B
-        run: 2026-11-01
-    grade: B
-    readByAll: true
+    sources: 4366ac113becc7c17ff1ccdf2d0fb99c126dd81b
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: C, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { placement: 2026-11-02 }
   deploy/01.self-updating-container:
     hash: 8f665ce64bf8397161f4f0672ad5dd43d6a6b53a
-    grades:
-      sonnet:
-        grade: C
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: 808f843004dc635f7313615fa4ac77e139bdfac6
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   deploy/02.pnpm-lockfile:
-    hash: 88e89367e9c8902f08ecd76cc7d3cdb2614e2a13
-    grades:
-      sonnet:
-        grade: C
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: C
-        run: 2026-11-02
-    grade: C
+    hash: 10e94fe39e96f3fbca7e98a257aab3c444e9e0df
+    sources: ea11a4293ecd312db8a01790a9128cc27299e584
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: C, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { clarity: 2026-11-02 }
   git-github/01.every-change-a-pr:
     hash: 8281dc3ed81fe6ac59feeaec1a2930fd44e23699
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
-    gapEdit: 2026-11-01
+    sources: 1cd04877e1aa5c4cf790106b6b0cc98480c03729
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   git-github/02.git-worktrees:
     hash: 7dd05ad569bddb95322430708e4b65cfa331a478
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-01
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-01
-    grade: B
-    readByAll: true
+    sources: 3ae6a71070404c2e531a31a2c5473fae1e904dea
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: C, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { placement: 2026-11-02 }
   git-github/03.composite-actions:
     hash: 509e6a4ef29f3d1df5bb87361f897dd9dcaa1af1
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-01
-      fable:
-        grade: B
-        run: 2026-11-01
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
-    readByAll: true
+    sources: 1e0387d70a5ee4ab890da718332a5a2d31ae069b
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: C, run: 2026-11-02 }
+      evidence: { grade: C, run: 2026-11-02 }
+      transfer: { grade: C, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { placement: 2026-11-02, evidence: 2026-11-02, transfer: 2026-11-02 }
   git-github/04.trust-tiers:
     hash: 80ee1d730934b0f9122f7aa7bf948693fe5e9923
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: fcb622c468939e66e3dcb6b2cbeeb1b44c2a2a3e
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02, wins: [ 2026-11-02 ] }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   git-github/05.attribution:
     hash: 959bee50300c9f7343ba58f4f3699a920bae50c2
-    grades:
-      sonnet:
-        grade: C
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-01
-      opus:
-        grade: B
-        run: 2026-11-01
-    grade: C
-    readByAll: true
-    gapEdit: 2026-10-29
+    sources: a02f9509ccabed99513f45c26c8168feca20b543
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: C, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { clarity: 2026-11-02 }
   git-github/06.work-queue:
     hash: 182b90552074a8d60f42c3a037bd621dbf265d42
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
-    readByAll: true
-    gapEdit: 2026-11-01
+    sources: 9e04a5c1abf80e35cd72b1c13ec354e98574beb4
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: C, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { clarity: 2026-11-02 }
   git-github/07.dependabot-grouping:
     hash: 06851dd3a908a2e14a76653b040533fc7dd5b4f0
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-01
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-01
-    grade: B
-    readByAll: true
+    sources: edc50b7c3cebbb5d7cb608c1bc5b9d0a0b3e91d7
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   nuxt-content/01.manifest-collections:
     hash: a847d0b04440079555f363530e5fbe84efdffaad
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: bfd3f9c73605e964447cfb5d89b59d7a3f3ee847
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: C, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { evidence: 2026-11-02 }
   nuxt-content/02.multi-tenant-isolation:
-    hash: 1af5ea52d940a412d20b1036ed61b698130c38ef
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: A
+    hash: d6cfe9ea5c29357e88b8d7e0ae4ec65c86662ec5
+    sources: 3a5b4666305cbf9f8bcae7bc943ebd8d890cede6
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   nuxt-content/03.content-database:
     hash: 97947fae98f59759de0a30c0556786d93bd297db
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-01
-      fable:
-        grade: B
-        run: 2026-10-29
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: 6867e21c106f894837ab2122305cc1f57c200b0c
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+  nuxt-content/04.query-collection:
+    hash: 7e4571e883720608db495656a8128772d2f3e0e9
+    sources: ca64f6bc10578bbb21bbab4aa47874beea2a9412
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: C, run: 2026-11-02 }
+      evidence: { grade: C, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { placement: 2026-11-02, evidence: 2026-11-02 }
   nuxt-content/07.mermaid-pre-rendering:
-    hash: 824383eba78ae0dccde5b22dfd9788e274cb834b
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: C
-        run: 2026-11-02
-      opus:
-        grade: C
-        run: 2026-11-02
-    grade: C
+    hash: 617e36c757ba65df585ffdec5d743d18a3f553f5
+    sources: 9a6054e24e3572a895a4602a705d05765abd2157
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: C, run: 2026-11-02 }
+      transfer: { grade: C, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { evidence: 2026-11-02, transfer: 2026-11-02 }
   nuxt-vue/01.layers:
     hash: 04d04bc92c90986789ffa404b6edb0046bf63336
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: e859492fe05921e68e62ffc9d85d29ef6f0bb487
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: C, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { placement: 2026-11-02 }
   nuxt-vue/02.file-routing:
     hash: 095c78d95fcd64d9322298a5d6de7f3bbaeb3f94
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: A
+    sources: 1dff8cd14a3f1a4342cd5bd1f8f398daeb5c0478
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   nuxt-vue/03.virtual-modules:
     hash: 14acd7f1b988d855cbebfcc1dc14b74d872fbbb7
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: A
+    sources: e8ddcc8a0f13c937fb058f4977fe81504df76618
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: C, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { transfer: 2026-11-02 }
   nuxt-vue/04.auto-imports:
     hash: 2865c43ed9233bdc3743f07f5b45f762d0dd9490
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
-    gapEdit: 2026-11-01
+    sources: 65659184ee81e5ec1dc235afc0e7a63fe59bad37
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   nuxt-vue/05.vue-components:
     hash: 88b53c3ddbaae5897112a83c7a9dfe008bd4ac17
-    grades:
-      sonnet:
-        grade: C
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: 496324e088bcb1fe29f805f8e9c1cdff476e347c
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: C, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { evidence: 2026-11-02 }
   nuxt-vue/06.use-async-data:
     hash: bf28214f950fdea1c0f57a7ba92af31dbf032d6c
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: 22075c9fdf2d9f7a8dae22b48386332132591c67
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   nuxt-vue/07.css-custom-properties:
     hash: 5fe098427dccce8fec726f31727f6cd91b4132e5
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
-    gapEdit: 2026-11-01
+    sources: c0c5f33e89c734e1e107ba8c281a67579c8767ba
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   nuxt-vue/08.hydration:
     hash: 3696098c373c42726cf2801e04f3d6cfde51deed
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: A
+    sources: aba3518602f5dd51fd53db0980e953f5077f17ee
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   nuxt-vue/09.nitro:
     hash: 3d08c05c6472bc9248c8e1bd0b64b834cda2c9c2
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: 391ced50b7917d77f0608634b74e4acd08ee09a0
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   skill-pack/01.skill-packs:
     hash: 0b4e3d0b6182b5b652be038a4b8f6fcf651259b3
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: c360560dba46a2ac185499f1011223c3406bfd75
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: C, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { evidence: 2026-11-02 }
   skill-pack/02.planning-with-the-pack:
-    hash: 8caa0d94a26a6bde88c6faac9e1aaed14b4b161a
-    grades:
-      sonnet:
-        grade: C
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: C
-        run: 2026-11-02
-    grade: C
+    hash: 00edeb6c83a39a3857bde40620a2e6c7e40c273c
+    sources: c5fc16c236281a2fd1e9420dc38207d583c4f2c7
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: C, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { clarity: 2026-11-02 }
   skill-pack/03.engineering-skills:
     hash: 2237cd8b939b1f107cea55ca7e88eae08540546e
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: 4244dc1c8d8bb5299fa5969de49b6b81147b5769
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   terrarium-practice/01.human-in-the-loop:
-    hash: 4e21d216609feff941214d94d12fbb6d4f5dc00f
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: C
-        run: 2026-11-02
-    grade: B
+    hash: fe40ecf84410cab9dc2bde10fec8f6e1f3d340b9
+    sources: d6f94e6e47d38c890ca51fc2f34ab536275c4e41
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   terrarium-practice/02.adrs:
     hash: 141984179b29c4a80905ead97ee3503f1086f1c7
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: 589d3a03ba3e7df1c3f227658d112e8f22eb6443
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   terrarium-practice/03.ubiquitous-language:
     hash: 4ad03178db5175a5bf56f2bef571c90346a5ddbe
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
-    gapEdit: 2026-11-01
+    sources: 1012c4f2dd9a1dfa91fddd7b22a67068b3d85b8f
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   terrarium-practice/04.session-logs:
     hash: cf5ef5bd27761f61dae56d8faf3ba82cf141a8af
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-01
-      opus:
-        grade: B
-        run: 2026-11-01
-    grade: B
-    readByAll: true
+    sources: d3546cd21d2908526be7ccb6d0b06f9f5829524a
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   terrarium-practice/05.pruning-instructions:
     hash: 94e9c7f3e0033d58108b291a7c62084fa3ccce30
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: 63114aa47829d17315f184e8838a196ba2e88565
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   terrarium-practice/06.out-of-scope-records:
     hash: d2417681926ac5ef8cef71d6c743cf1694d8ebff
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: a0154f26f9688b39c50124292a7dffbf15e8d811
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   terrarium-practice/07.human-only-list:
     hash: 7d9ea74ec953f70da67a4dae114328ef1e2a00dd
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: A
+    sources: 0f2b415418e3c9b0dc73843cdacb2221996dd057
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   terrarium-practice/08.cross-tenant-reads:
     hash: ac257bfad9f2757bd68c4706a1fd652c20ff5550
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: A
+    sources: 18c8fea3f0abb8ab3db7071be5d623a91ce0889b
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   terrarium-practice/09.self-improvement-loop:
-    hash: 908b66d97f77c36434ea3ef266c0e50cd4b0566e
-    grades:
-      sonnet:
-        grade: C
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: C
-        run: 2026-11-02
-    grade: C
+    hash: 6135a6cf7de0f7844d43de7405dd53aa14663228
+    sources: cbe6e13c6a97fa1c3461ce8668759cae6d986060
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: C, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { evidence: 2026-11-02 }
   verification/01.gate:
     hash: ec411c371e4927393f7d49fdb1a3ad2d0f35eee2
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-01
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-01
-    grade: B
-    readByAll: true
+    sources: 3491cf550e8a3920fff1d35d3940f2fa04b97141
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: C, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { placement: 2026-11-02 }
   verification/02.type-checking:
     hash: 6512b2a95f35c66c194b50ce02af5e7acc76f242
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: 4462683296c473431995ed76f02122491b7c0dfb
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   verification/03.content-validation:
     hash: ee7322b9ed0893d67beed61d15555efd59a512f0
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    sources: b20aa10a853ada214a0d16a7897883e45409c88b
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   verification/04.unit-and-e2e-tests:
-    hash: 58769063fcccbf357b1739ae04f900379df8b745
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-01
-      fable:
-        grade: B
-        run: 2026-11-01
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    hash: 0fa918287e8ed80b47c6485edb41ee8eb08e6613
+    sources: 3307c5694292c5ca0f9471c3d1ce97f60b5c03be
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   verification/05.linting:
     hash: 3598348a112da616928ae181a1a88e6980ce9bf1
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-01
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-10-29
-    grade: B
-    readByAll: true
+    sources: 87bf0728b3563a655012711fd58b56ab62080258
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   verification/06.schema-validation:
-    hash: b4558f92fe6b55655133763cf6dfacf7969e7d55
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-01
-      opus:
-        grade: B
-        run: 2026-10-29
-    grade: B
-    readByAll: true
+    hash: 5d059cae43a629e724cffd585dd060e3d9176716
+    sources: 1976986895ed6103d39f4c9ee43e8f55a60b8bb1
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: C, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { clarity: 2026-11-02 }
   verification/07.timestamps-stored-as-strings:
-    hash: aaaf82e91cd3cbf47879a40d44715fabdd1b7fab
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-01
-      fable:
-        grade: C
-        run: 2026-11-01
-      opus:
-        grade: C
-        run: 2026-11-02
-    grade: C
-    readByAll: true
+    hash: 1219a8d9eaebec36c882e314f331c8d9400c427b
+    sources: 1ab2a894a488efaafb0dad115b52202c84b570c8
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: C, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { clarity: 2026-11-02 }
+  verification/08.schema-evolution:
+    hash: 9831c67bac2e5e8602b652f77704e543b24e0f48
+    sources: 654156a8580ef279895d16c0fbfab4af723c4875
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: C, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { evidence: 2026-11-02 }
+  verification/09.invariant-tests:
+    hash: a5a2ba35ad2c7fb8cdcc3780ca7ee62171c28c9b
+    sources: 7c710503f6257f1d841ec4c4dfc4da2363898a79
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: B, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: B, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   walkthroughs/a-change-goes-live:
-    hash: 22f8704fdab891110aed249be9e2c2fbc8640cc6
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    hash: 672478e14ff9607b3ff77fd103f5a03a03099475
+    sources: 84f303acd055b6354b078b7fe4c40003263a7908
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: n/a, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: n/a, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   walkthroughs/adding-a-tenant:
-    hash: 0e5226e4b4f2e55b37cbbd0b2fa64b713f510cc7
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: A
+    hash: 7036240bb59398fa7ace1a6ace370ce2ec30055f
+    sources: 3171995501ee10782a6f447d6b29f831c2a8b38e
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: n/a, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: B, run: 2026-11-02 }
+      transfer: { grade: n/a, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
   walkthroughs/asking-for-a-change:
-    hash: 433e99c4efc65643e1a1b9672dfa796fa42b307e
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
+    hash: 7eed244d52df27b5547b943c69e00fc0085c3d6d
+    sources: 256d4e8322ed6ee44de0a41da70354ed446b7eac
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: n/a, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: C, run: 2026-11-02 }
+      transfer: { grade: n/a, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { evidence: 2026-11-02 }
   walkthroughs/from-file-to-browser:
-    hash: e5dd85d0ba50c2e2d2a1e031eb35ab5160ba4973
-    grades:
-      sonnet:
-        grade: B
-        run: 2026-11-02
-      fable:
-        grade: B
-        run: 2026-11-02
-      opus:
-        grade: B
-        run: 2026-11-02
-    grade: B
-candidates:
-  - kind: promote nuxt-content/05.mdc-components
+    hash: cbb93b95733cf801198699068509cc17dd0da58e
+    sources: 8ed87292479c9d5bb10fa5bb88b25066a426fa79
+    read: 2026-11-02
+    checked: 2026-11-02
+    lenses:
+      clarity: { grade: B, run: 2026-11-02 }
+      reasoning: { grade: n/a, run: 2026-11-02 }
+      placement: { grade: B, run: 2026-11-02 }
+      evidence: { grade: C, run: 2026-11-02 }
+      transfer: { grade: n/a, run: 2026-11-02 }
+      relevance: { grade: B, run: 2026-11-02 }
+    edited: { evidence: 2026-11-02 }
+steps:
+  - id: promote-mdc-components
+    kind: promote
     pages:
       - nuxt-content/05.mdc-components
+    raised:
+      - 2026-11-01
+    status: taken
     gist: MDC components, and when not to use them; all three raters ranked it.
-    since: 2026-11-01
-  - kind: promote nuxt-content/06.prose-overrides
+    decided: 2026-11-02
+  - id: promote-prose-overrides
+    kind: promote
     pages:
       - nuxt-content/06.prose-overrides
+    raised:
+      - 2026-11-02
+    status: taken
     gist: Overriding Nuxt Content's prose components at the Platform root; all three raters ranked it.
-    since: 2026-11-02
-  - kind: re-cut skill-pack/02.planning-with-the-pack
+    decided: 2026-11-02
+  - id: split-planning-with-the-pack
+    kind: split
     pages:
       - skill-pack/02.planning-with-the-pack
+    raised:
+      - 2026-11-02
+    status: taken
     gist: Split wayfinder into its own Lesson; grilling, to-spec and to-tickets stay; all three raters raised it.
-    since: 2026-11-02
-  - kind: re-cut nuxt-vue/05.vue-components + nuxt-vue/07.css-custom-properties
+    decided: 2026-11-02
+  - id: move-vue-components-into-css-custom-properties
+    kind: move
     pages:
       - nuxt-vue/05.vue-components
-      - nuxt-vue/07.css-custom-properties
+    raised:
+      - 2026-11-02
+    status: taken
     gist: Move ProgressBar's --n/--i custom-property explanation and its Why bullet to CSS custom properties; two raters raised it.
-    since: 2026-11-02
+    into: nuxt-vue/07.css-custom-properties
+    decided: 2026-11-02
+  - id: section-timestamps-stored-as-strings-into-schema-validation
+    kind: section
+    pages:
+      - verification/07.timestamps-stored-as-strings
+    into: verification/06.schema-validation
+    raised:
+      - 2026-11-02
+    status: dropped
+    gist: One refined-string helper whose concept is a .refine and whose premise (schema becomes column types) is taught on Zod refinements and Content validation.
+    decided: 2026-11-02
+  - id: section-invariant-tests-into-unit-and-e2e-tests
+    kind: section
+    pages:
+      - verification/09.invariant-tests
+    into: verification/04.unit-and-e2e-tests
+    raised:
+      - 2026-11-02
+    status: dropped
+    gist: One Blog test; Testing already says a unit test can hold a content rule and carries the same Tenant-tests Why.
+    decided: 2026-11-02
+  - id: section-out-of-scope-records-into-work-queue
+    kind: section
+    pages:
+      - terrarium-practice/06.out-of-scope-records
+    into: git-github/06.work-queue
+    raised:
+      - 2026-11-02
+    status: dropped
+    gist: A rejected-idea record is one triage-Skill folder; the sweep and wontfix flow already live on Issue triage labels.
+    decided: 2026-11-02
+  - id: section-planning-with-the-pack-into-skill-packs
+    kind: section
+    pages:
+      - skill-pack/02.planning-with-the-pack
+    into: skill-pack/01.skill-packs
+    raised:
+      - 2026-11-02
+    status: dropped
+    gist: Keep only Terrarium's wayfinder-on-GitHub mapping and the ready-for-agent rule; the seven-Skill tour is upstream and Skill Inventory content.
+    decided: 2026-11-02
+  - id: move-mcp-servers-cloud-sessions-into-permissions
+    kind: move
+    pages:
+      - claude-code/08.mcp-servers
+      - claude-code/11.cloud-sessions
+    into: claude-code/12.permissions
+    raised:
+      - 2026-11-02
+    status: taken
+    gist: Give the allow list, the untrusted-workspace rule and the cloud-ignores-allow rule one home on Permissions, with the duplicate settings.json excerpt cut from MCP servers.
+    decided: 2026-11-02
+  - id: move-gate-into-composite-actions
+    kind: move
+    pages:
+      - verification/01.gate
+    into: git-github/03.composite-actions
+    raised:
+      - 2026-11-02
+    status: taken
+    gist: The 'agents cannot push workflow files, so move steps into an action' story is told on both; keep it on Composite actions.
+    decided: 2026-11-02
+  - id: move-git-worktrees-into-session-logs
+    kind: move
+    pages:
+      - git-github/02.git-worktrees
+    into: terrarium-practice/04.session-logs
+    raised:
+      - 2026-11-02
+    status: taken
+    gist: The log-session.ts refusal to write from a linked worktree (isLinkedWorktree excerpt) is a log-script fact; Session logs does not mention it.
+    decided: 2026-11-02
+  - id: move-layers-into-auto-imports
+    kind: move
+    pages:
+      - nuxt-vue/01.layers
+    into: nuxt-vue/04.auto-imports
+    raised:
+      - 2026-11-02
+    status: taken
+    gist: Layers restates the shared auto-import namespace and silent name clash that Auto-imports owns; leave a link.
+    decided: 2026-11-02
+  - id: move-query-collection-into-file-routing
+    kind: move
+    pages:
+      - nuxt-content/04.query-collection
+    into: nuxt-vue/02.file-routing
+    raised:
+      - 2026-11-02
+    status: taken
+    gist: The literal-Tenant-name typing rule and the resolver/key-lookup recap belong to useSpace on File routing; link instead of restating.
+    decided: 2026-11-02
+  - id: promote-mdc-components-into-mdc-components
+    kind: promote
+    pages:
+      - drafts/nuxt-content/05.mdc-components
+    into: nuxt-content/05.mdc-components
+    raised:
+      - 2026-11-02
+    status: dropped
+    gist: The guide's own pages are written in MDC (::lessons, ::excerpt, :term, :file); no guide Lesson teaches it, and the Nuxt Content numbering skips 05.
+    decided: 2026-11-02
+  - id: promote-prose-overrides-into-prose-overrides
+    kind: promote
+    pages:
+      - drafts/nuxt-content/06.prose-overrides
+    into: nuxt-content/06.prose-overrides
+    raised:
+      - 2026-11-02
+    status: dropped
+    gist: Mermaid pre-rendering relies on the ProsePre override that this draft teaches; promoting it gives the Mermaid page a Lesson to link, and fills the numbering gap.
+    decided: 2026-11-02
+  - id: promote-a-bug-report-becomes-work-into-a-bug-report-becomes-work
+    kind: promote
+    pages:
+      - drafts/walkthroughs/a-bug-report-becomes-work
+    into: walkthroughs/a-bug-report-becomes-work
+    raised:
+      - 2026-11-02
+    status: taken
+    gist: The Public-author path (sweep reads who wrote it, person approves, session builds, person merges) is told by no guide Walkthrough, and the guide has no Walkthrough on the request-in direction.
+    decided: 2026-11-02

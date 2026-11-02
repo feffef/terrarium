@@ -1,7 +1,7 @@
 ---
 title: Adding a site
 description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
-revision: '574377b55cb737b991df18e40823b7fbc51157df'
+revision: '87ccd9f83e4314732574463fca79530755fe9045'
 revisionDate: '2026-11-02'
 publishedAt: '2026-10-27T18:52:48Z'
 ---
@@ -50,7 +50,7 @@ The same expansion feeds :file[modules/routing.ts], which writes the routing map
 
 ## 6. It gets its own look
 
-For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in its layer; their path has the Tenant's name where the catch-all has `[tenant]`, and they outrank it for its addresses and no others. Its components sit in a folder named after it, which gives them its name as a prefix, as in `MarqueePoster`. Its stylesheet, listed in its `nuxt.config.ts`, loads on every page of every Tenant, and it keeps its rules under a class only its pages carry and its custom properties under a short tag of its own (`--mq-`).
+For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in its layer, which outrank the Platform's catch-all for its addresses only. Its components sit in a folder named after it, which prefixes their names, as in `MarqueePoster`. Its stylesheet, listed in its `nuxt.config.ts`, loads on every page of every Tenant, so it keeps its rules under a class only its pages carry and its custom properties under a tag of its own (`--mq-`).
 
 ::lessons
 [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [Vue components](/t/glassbox/guide/nuxt-vue/vue-components) · :file[layers/marquee/app/assets/theme.css]

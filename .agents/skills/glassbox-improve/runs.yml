@@ -1,0 +1,702 @@
+runs:
+  - run: 2026-11-02
+    base: 87ccd9f83e4314732574463fca79530755fe9045
+    session: session_013zxzeQZYwzDuf4JEncnqAa
+    pr: 2801
+    costUsd: 116.91
+    relevance: true
+    pagesRead: 60
+    pagesChecked: 60
+    falseClaimsFixed: 7
+    edits: 35
+    gatePassed: 35
+    gateStopped: 0
+    aComparisons: 10
+    stepsTaken: 10
+    stepsRefused: 0
+    findings:
+      - page: claude-code/05.blocking-hooks
+        fix: "the Excerpt of .claude/settings.json renders 19 lines, more than 15: cut it to the code that makes the decision"
+        confirmed: true
+        edited: true
+      - page: claude-code/06.hook-added-context
+        fix: no other guide page links to it
+        confirmed: true
+        edited: true
+      - page: nuxt-vue/08.hydration
+        fix: "the Excerpt of layers/tinkerfund/app/components/tinkerfund/Time.vue renders 17 lines, more than 15: cut it to the code that makes the decision"
+        confirmed: true
+        edited: true
+      - page: skill-pack/02.planning-with-the-pack
+        fix: no other guide page links to it
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/05.pruning-instructions
+        fix: "the Excerpt of .agents/prune-trials.yml holds only comments: show the code that makes the decision"
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/08.cross-tenant-reads
+        fix: "the Excerpt of app/composables/catalog.ts renders 18 lines, more than 15: cut it to the code that makes the decision"
+        confirmed: true
+        edited: true
+      - page: verification/06.schema-validation
+        fix: "the Excerpt of shared/manifest.ts renders 23 lines, more than 15: cut it to the code that makes the decision"
+        confirmed: true
+        edited: true
+      - page: walkthroughs/adding-a-tenant
+        fix: 'stop "6. It gets its own look" has 93 words, more than 80: move detail to the Lessons it links'
+        confirmed: true
+        edited: true
+      - page: walkthroughs/from-file-to-browser
+        fix: 'stop "6. The browser hydrates, then navigates by payload" has 110 words, more than 80: move detail to the Lessons it links'
+        confirmed: true
+        edited: true
+      - page: claude-code/02.path-scoped-rules
+        lens: evidence
+        grade: C
+        quote: ::excerpt{path=".claude/rules/tenant-layers.md" lines="1-8,25-26"}
+        fix: The Excerpt ends mid-sentence at '(keep' and never shows an ADR summary rule with Skill-folder paths. Use .claude/rules/adr-0005.md:1-10, or extend this one to .claude/rules/tenant-layers.md:1-8,25-29
+        confirmed: true
+        edited: true
+      - page: claude-code/07.subagents
+        lens: transfer
+        grade: C
+        quote: It can't dispatch subagents of its own, so a review or a nested dispatch is the dispatching session's job.
+        fix: Say that this is a Terrarium or cloud-harness rule, since the docs allow nesting by default. Also add when not to dispatch (a quick targeted change, or work that needs the conversation's context), from sub-agents docs 'Subagents vs main conversation'.
+        confirmed: true
+        edited: true
+      - page: claude-code/08.mcp-servers
+        lens: placement
+        grade: C
+        quote: An untrusted workspace drops `permissions.allow` before matching any rule, and a multi-repository cloud session does not read it at all
+        fix: The permissions page owns the allow list and the trust rule. Keep one clause here and link to Claude Code permissions. Replace the 'Allowed by name' excerpt, which is the same settings.json lines 5-12 that 12.permissions excerpts, with a link.
+        confirmed: true
+        edited: true
+      - page: claude-code/10.routines
+        lens: evidence
+        grade: C
+        quote: "A Routine runs this Skill; its schedule lives there, not here (ADR-0005). Its approval covers only the steps below (ADR-0003): it opens no branch and edits no file."
+        fix: The only Excerpt is three lines of Skill prose that restate the rule; the code that decides is never shown. Excerpt the loop guard's decision, scripts/hooks/loop-only-tool-guard.ts:120-132, or the run-naming code, scripts/session/transcript-trace.ts:447-461 (deriveTrigger), and keep the SKILL.md lines as a link.
+        confirmed: true
+        edited: true
+      - page: claude-code/11.cloud-sessions
+        lens: clarity
+        grade: C
+        quote: a multi-repository cloud session reads only `enabledPlugins` and `extraKnownMarketplaces` from it
+        fix: A newcomer cannot tell what a multi-repository session is, or whether the hosted-environment remark in the same sentence applies to Terrarium. Say in one plain sentence which sessions read the whole settings file and which read only two keys, and move the caveat to What to watch for.
+        confirmed: true
+        edited: true
+      - page: claude-code/11.cloud-sessions
+        lens: clarity
+        grade: C
+        quote: Everything a Terrarium session needs is in the repo.
+        fix: The next paragraph says a multi-repository session reads none of the file's hooks and an untrusted workspace drops the allow list. Hedge or reorder the opening so the claim and its exceptions do not contradict each other.
+        confirmed: true
+        edited: true
+      - page: claude-code/11.cloud-sessions
+        lens: placement
+        grade: C
+        quote: an untrusted workspace drops `permissions.allow` before matching any rule
+        fix: This rule is taught on 08 and 12 too. Say once that a cloud session may not read the committed settings and link to Claude Code permissions for the allow rule.
+        confirmed: true
+        edited: true
+      - page: claude-code/11.cloud-sessions
+        lens: placement
+        grade: C
+        quote: the token can't push `.github/workflows/`
+        fix: The reason and its consequence live on Composite actions. Keep only the guard here and link to that page for why.
+        confirmed: true
+        edited: true
+      - page: claude-code/12.permissions
+        lens: placement
+        grade: C
+        quote: "[MCP servers](/t/glassbox/guide/claude-code/mcp-servers#why-its-built-this-way) says why the committed list pre-approves opening a pull request and reading it, and what that costs."
+        fix: The permissions page is the home of the allow list but points to MCP servers for it. Move the reason and the cloud-ignores-allow rule here from 08 and 11, and let them link to this page.
+        confirmed: true
+        edited: true
+      - page: deploy/02.pnpm-lockfile
+        lens: clarity
+        grade: C
+        quote: A lockfile-only change passes the path check.
+        fix: "'The path check' is never introduced on this page; it is the Human-only path check in merge-pr.ts. Name it and link Protected paths in the first clause."
+        confirmed: true
+        edited: true
+      - page: deploy/02.pnpm-lockfile
+        lens: clarity
+        grade: C
+        quote: yet a patched or new package still needs a person (ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]))
+        fix: This bullet carries four ideas and a nested parenthesis. Split it into two bullets, one for the lockfile and one for pnpm-workspace.yaml and patches, with the ADR cite on its own.
+        confirmed: true
+        edited: true
+      - page: git-github/02.git-worktrees
+        lens: placement
+        grade: C
+        quote: "The [session log](/t/glassbox/guide/terrarium-practice/session-logs) guards worktrees too: unless told otherwise, :file[scripts/session/log-session.ts] won't write a log from a linked worktree"
+        fix: This is a log-script fact on a page about worktrees, and Session logs never mentions it. Move the paragraph and its isLinkedWorktree excerpt to Session logs, and leave one linking sentence here. Subagents already points here for it, so repoint that link.
+        confirmed: true
+        edited: true
+      - page: git-github/03.composite-actions
+        lens: placement
+        grade: C
+        quote: A cloud session can't push `.github/workflows/`, so with every step there, each Gate change waited for a person to copy YAML by hand.
+        fix: Merge gate's Why 'Steps in an action file' tells the same story. Keep the story here, where the concept lives, and cut it from Merge gate to a link.
+        confirmed: true
+        edited: true
+      - page: git-github/03.composite-actions
+        lens: evidence
+        grade: C
+        quote: The workflow keeps only the triggers, the permissions, the runner, a full-history checkout and the token. Everything else is in :file[.github/actions/gate/action.yml]
+        fix: "The only Excerpt (.github/workflows/gate.yml:15-33) is the caller, and its gap hides fetch-depth: 0. Excerpt the composite action itself: .github/actions/gate/action.yml:8-16 (inputs.github-token, runs.using: composite, a run step with shell), and optionally action.yml:161-172 (the doorbell step reading inputs.github-token)."
+        confirmed: true
+        edited: true
+      - page: git-github/03.composite-actions
+        lens: transfer
+        grade: C
+        quote: A composite action bundles a list of steps into one step.
+        fix: "State the general reason to use one (reuse across jobs and workflows) and when it is the wrong choice: needing jobs, runners or permissions of its own points to a reusable workflow, and a one-off job gains nothing. The only motive given is Terrarium's own (a cloud session can push the action but not the workflow)."
+        confirmed: true
+        edited: true
+      - page: git-github/05.attribution
+        lens: clarity
+        grade: C
+        quote: "reads the one place the mark belongs (line one of a body, or the last `Claude-Session:` trailer of a commit made through the GitHub tools), and judges it:"
+        fix: The next excerpt (adjudicate, 15 lines) uses slotId, truth and sessionIdsIn before the prose defines them. Trim it to the three outcomes the following paragraph names (mismatch, malformed, missing), or explain the slot in a clause.
+        confirmed: true
+        edited: true
+      - page: git-github/05.attribution
+        lens: clarity
+        grade: C
+        quote: return PROVENANCE_HEADER.test(text) || LEGACY_PROVENANCE_FOOTER.test(text) || HARNESS_FOOTER.test(text)
+        fix: In the Reading the mark back block, LEGACY_PROVENANCE_FOOTER and HARNESS_FOOTER are unexplained identifiers in a page that already has six bold sub-sections and six excerpts. Cut that block to two sentences and a link, or excerpt only the first condition.
+        confirmed: true
+        edited: true
+      - page: git-github/06.work-queue
+        lens: clarity
+        grade: C
+        quote: leaves out any issue with a `wayfinder:*` label, which the `wayfinder` Skill drives with the owner
+        fix: wayfinder appears here and in two What to watch for bullets without being introduced, which breaks Stand alone. Add one clause saying what it is (a planning Skill that charts work as a map of sub-issues) and link Planning Skills for depth, not as a prerequisite.
+        confirmed: true
+        edited: true
+      - page: nuxt-content/01.manifest-collections
+        lens: evidence
+        grade: C
+        quote: "export default defineContentConfig({ collections: Object.fromEntries( expand(loadManifests()).map((c) => [ c.key, // … c.type === 'page' ? defineCollection({ ... schema: c.schema, })"
+        fix: The content.config.ts Excerpt (lines 20-34) stops inside an unclosed ternary and shows only the page branch; EVERY-PAGE requires ending on a whole statement. Use content.config.ts:20-23,29-42 so the expression closes and both defineCollection branches show.
+        confirmed: true
+        edited: true
+      - page: nuxt-content/04.query-collection
+        lens: placement
+        grade: C
+        quote: Take keys from `useSpace` with a literal Tenant name, or from `resolveSpaceRoute`, as :file[shared/routing.ts] explains.
+        fix: File routing owns the literal-name rule ('Pass the Tenant's name as a literal'). Reduce this to a link. The 'merge the results in code' bullet repeats Multi-tenant isolation, so link that too.
+        confirmed: true
+        edited: true
+      - page: nuxt-content/04.query-collection
+        lens: evidence
+        grade: C
+        quote: const pages = await queryCollection(pagesKey).all()
+        fix: The lead Excerpt loads whole Documents with parsed bodies, which the page's own Why ('Return only what the page reads') and What to watch for ('all() on a page collection returns whole Documents') tell readers to avoid, and the page never says the Journal does it on purpose (layers/journal/app/pages/t/journal/[space]/index.vue:44-46). Use a better Excerpt, layers/blog/app/pages/t/blog/index.vue:28-39 (where + select + all in one useAsyncData), or drop the two unselected .all() lines and keep index.vue:36-42, or add the one-line reason.
+        confirmed: true
+        edited: true
+      - page: nuxt-content/07.mermaid-pre-rendering
+        lens: evidence
+        grade: C
+        quote: "then every placeholder in the SVG is rewritten to a CSS variable with a fallback:"
+        fix: "The Excerpt after it is only the DIAGRAM_TOKENS name map (app/utils/mermaid.ts:16-24); the sentinel-to-var rewrite is not shown. Use a better Excerpt: scripts/gate/render-mermaid.ts:47-57 (themeSvg), with 34-37 (SENTINELS) if it fits."
+        confirmed: true
+        edited: true
+      - page: nuxt-content/07.mermaid-pre-rendering
+        lens: evidence
+        grade: C
+        quote: inserts the matching SVG as HTML
+        fix: "The runtime lookup (route-derived Tenant font, mermaidKey, bundled SVG) has no Excerpt, and the mermaid.render call that draws once has none either. Use a better Excerpt: app/components/MermaidDiagram.vue:37-40, and scripts/gate/render-mermaid.ts:112-122 for the single browser render."
+        confirmed: true
+        edited: true
+      - page: nuxt-content/07.mermaid-pre-rendering
+        lens: transfer
+        grade: C
+        quote: Commit `diagram.svg` beside `diagram.mmd`, show the SVG on your page instead of loading Mermaid, and add a CI check that fails when an `.mmd` file has no SVG.
+        fix: The page never says when pre-rendering is the wrong choice (diagrams supplied or edited at runtime, no Chromium available where authors work, a few diagrams on a small audience). Add one line in What to watch for or Try it; docs/adr/0024-build-time-mermaid-prerender.md holds the rejected 'Render in the browser at runtime' alternative.
+        confirmed: true
+        edited: true
+      - page: nuxt-vue/01.layers
+        lens: placement
+        grade: C
+        quote: Components, composables and utils from every layer are auto-imported everywhere, and when two of them share a name, one silently replaces the other.
+        fix: Auto-imports owns the shared namespace and the silent clash. Replace this watch item with a link there. The 'Components are kept apart by name' paragraph on content-component names belongs there too.
+        confirmed: true
+        edited: true
+      - page: nuxt-vue/03.virtual-modules
+        lens: transfer
+        grade: C
+        quote: import { addTemplate, addTypeTemplate, defineNuxtModule } from '@nuxt/kit'
+        fix: The Try-it is meant to run in someone else's app, but Terrarium itself had to list @nuxt/kit as a devDependency (package.json:34) under pnpm's strict store, and the page never says so. Nuxt's modules docs (2.directory-structure/1.modules.md) give 'nuxt/kit' for local modules because it needs no @nuxt/kit dependency. Change the import to 'nuxt/kit'.
+        confirmed: true
+        edited: true
+      - page: nuxt-vue/05.vue-components
+        lens: evidence
+        grade: C
+        quote: The bar sets the CSS custom property `--n` to the segment count, and each segment sets `--i` to its place.
+        fix: "The Excerpt (lines 1-4,18,22-23) omits the line that sets --n (ProgressBar.vue:16) and the animation-delay formula that uses --i (line 25), which the next sentence and the 'one delay formula' Why bullet rely on. Use a better Excerpt: layers/tinkerfund/app/components/tinkerfund/ProgressBar.vue:1-4,16-18,22-25."
+        confirmed: true
+        edited: true
+      - page: nuxt-vue/05.vue-components
+        lens: evidence
+        grade: C
+        quote: A live countdown needs a timer started on mount and stopped on unmount. `useTinkerfundClock` registers both
+        fix: "The composable material (a Why bullet and a What to watch for) has no Excerpt, and ref/onMounted are never shown in code. Use a better Excerpt: layers/tinkerfund/app/composables/clock.ts:16-27 (hooks registered before the first await)."
+        confirmed: true
+        edited: true
+      - page: skill-pack/01.skill-packs
+        lens: evidence
+        grade: C
+        quote: It reads the lock only to learn which Skills are installed and hashes each one's installed `SKILL.md`, no other file in its folder. It fails when that file is missing, and, for a Skill with an Inventory entry, when the entry has no pin or the hash differs from it.
+        fix: "Add an Excerpt of the check itself, diffLock: scripts/gate/validate-skills-lock.ts:77-98 (the uncatalogued skip at 91, the missing, unpinned and drifted branches at 83-97). Keep the 4-line Inventory pin Excerpt (layers/journal/content/current/skills/tdd.yml:1-4). Drop or shrink the skills-lock.json:112-117 Excerpt, whose computedHash Terrarium does not use."
+        confirmed: true
+        edited: true
+      - page: skill-pack/02.planning-with-the-pack
+        lens: clarity
+        grade: C
+        quote: A ticket worked with a person is HITL (human in the loop); one the agent can drive alone is AFK.
+        fix: AFK is never expanded, and the wayfinder paragraph stacks map, decision ticket, ticket type, frontier and Not yet specified in one block. Spell out AFK (away from keyboard) and turn that paragraph into a short term list, or define each term where it first appears.
+        confirmed: true
+        edited: true
+      - page: skill-pack/02.planning-with-the-pack
+        lens: relevance
+        grade: C
+        quote: These installed :term[Skills]{id="skill"} split planning into steps that each do one job.
+        fix: "The concept section is a tour of seven third-party Skills, which the upstream README and the Skill Inventory already hold. Terrarium's own content is two things: the GitHub mapping of wayfinder, and the rule that only triage sets ready-for-agent. Fold those into Installed Skills, and keep the pack tour as a link to the Skill Inventory."
+        confirmed: false
+        edited: false
+      - page: terrarium-practice/06.out-of-scope-records
+        lens: relevance
+        grade: C
+        quote: The records live in :file[.out-of-scope/].
+        fix: The page is one folder written by the installed triage Skill, and the sweep hands rejections to a person. It has two Where next links and no concept beyond the triage workflow. Make it a section of Issue triage labels and keep the one-record excerpt there.
+        confirmed: false
+        edited: false
+      - page: terrarium-practice/09.self-improvement-loop
+        lens: evidence
+        grade: C
+        quote: "The Ledger page derives each entry's state from the dates of its merged fixes and of its later occurrences, in :file[layers/journal/app/utils/ledger.ts]:"
+        fix: "The Excerpt (ledger.ts:9-13) is a doc comment and a type union, so the derivation the sentence names is never shown; excerpt the function ledgerFixState instead: layers/journal/app/utils/ledger.ts:56-68 (about 13 lines; it shows 'still recurring', 'likely fixed' and 'fix landed' computed from dates, with LEDGER_QUIET_DAYS at line 48)"
+        confirmed: true
+        edited: true
+      - page: verification/01.gate
+        lens: placement
+        grade: C
+        quote: Agents can't edit GitHub's workflow files, so a new check reached the local gate while its CI step waited for a person
+        fix: Composite actions tells this story and the Gate page links to it for the parity test. Cut this Why bullet to one linking sentence and keep the story on Composite actions.
+        confirmed: true
+        edited: true
+      - page: verification/06.schema-validation
+        lens: clarity
+        grade: C
+        quote: The doc comment on `effectiveSchema()` in :file[shared/expand.ts] records how `contract.merge(local)` fails when the two schemas come from two copies of Zod.
+        fix: Why two copies of Zod can meet is never said, yet the Extend, don't merge bullet rests on it. Add one sentence on how a Tenant's schema and a kind's contract end up from different Zod copies and what .merge then does to the unknown-keys policy.
+        confirmed: true
+        edited: true
+      - page: verification/07.timestamps-stored-as-strings
+        lens: clarity
+        grade: C
+        quote: Know Zod refinements already? Skip to [In Terrarium](#in-terrarium).
+        fix: The skip line repeats the sibling Zod refinements page and names a concept other than this page's (UTC timestamps kept as text). Rewrite it to match, for example 'Know how timestamps are stored in schemas already?'.
+        confirmed: true
+        edited: true
+      - page: verification/07.timestamps-stored-as-strings
+        lens: clarity
+        grade: C
+        quote: "title: Timestamps stored as strings"
+        fix: The title describes Terrarium's decision, not a general concept name as EVERY-PAGE's title rule asks. Use the field's name for the idea (for example UTC timestamps in schemas) and keep the URL.
+        confirmed: true
+        edited: true
+      - page: verification/07.timestamps-stored-as-strings
+        lens: relevance
+        grade: C
+        quote: "Every timestamp in a Terrarium schema uses one refined string, defined once in :file[shared/schemas/timestamp.ts]:"
+        fix: The page teaches one helper. Its concept is a .refine on a string, which Zod refinements already teaches, and its premise (Nuxt Content turns the schema into column types) is Content validation's. Make it a section of Zod refinements.
+        confirmed: false
+        edited: false
+      - page: verification/08.schema-evolution
+        lens: evidence
+        grade: C
+        quote: // Absent ⇒ 1. A breaking change adds a v2 object with z.literal(2) and makes
+        fix: "Both Excerpts (shared/schemas/session.ts:39-44 and 90-92) are mostly comments with one line of code each; replace them with code that shows the growth: the additive optional fields (shared/schemas/session.ts:69-72, 144-145) and the hold-back of a log that main's schema rejects (scripts/session/log-session.ts:447-453)"
+        confirmed: true
+        edited: true
+      - page: verification/09.invariant-tests
+        lens: placement
+        grade: C
+        quote: "**Tests travel with their Tenant.** The test sits in the Blog's own layer rather than a shared folder, for the reason [Testing]"
+        fix: Testing already carries the idea ('A unit test can hold a content rule too') and the same Why bullet. Move the Blog example into Testing and drop this bullet.
+        confirmed: false
+        edited: false
+      - page: verification/09.invariant-tests
+        lens: relevance
+        grade: C
+        quote: A content rule held by a unit test that names each break, with the Blog's pinned code links as the example.
+        fix: One Blog test, with two Where next links. Its concept is an ordinary unit test over content, which Testing already shows with the glassbox-pages spec. Make it a section of Testing.
+        confirmed: false
+        edited: false
+      - page: walkthroughs/asking-for-a-change
+        lens: evidence
+        grade: C
+        quote: It ran `pnpm gate:scoped` but skipped `code-review`, since the diff was an unmodified copy of upstream
+        fix: "name this as a deviation from stop 5 (docs/agents/pr-workflow.md:15-26 exempts only a simple change, a session-log commit or a self-reviewing Skill; PR #2089 added files) or use a case that shows the flow, such as a red Gate fixed and re-pushed, or a code-review finding fixed"
+        confirmed: true
+        edited: true
+      - page: walkthroughs/from-file-to-browser
+        lens: evidence
+        grade: C
+        quote: named by a key such as `blog_david_pages`
+        fix: follow one real file end to end, e.g. layers/blog/content/david/pages/<post>.md -> blog_david_pages, and point stop 1's chip at that file or folder; today stop 1 chips layers/glassbox/content/ and stop 2 switches to a Blog key (the Blog has a david Space at layers/blog/tenant.config.ts:18)
+        confirmed: true
+        edited: true
+    falseClaims:
+      - page: claude-code/07.subagents
+        claim: It can't dispatch subagents of its own
+        evidence: "https://code.claude.com/docs/en/sub-agents, section 'Let subagents spawn their own subagents': 'By default, a subagent can spawn subagents of its own, up to three layers'. Terrarium's own Skill says impl agents cannot (.agents/skills/dispatch-subagents/SKILL.md:77-78), so scope the page to Terrarium."
+        fixed: true
+      - page: git-github/05.attribution
+        claim: a `PreToolUse` hook on each GitHub write tool, listed by name in :file[.claude/settings.json]
+        evidence: .claude/settings.json:96 matcher names 9 tools; scripts/hooks/github-provenance-guard.ts:67-86 registry omits mcp__github__update_issue_comment, mcp__github__delete_file, mcp__github__create_pull_request_with_copilot and mcp__github__merge_pull_request, so not every write tool is guarded
+        fixed: true
+      - page: git-github/05.attribution
+        claim: Read `git log -1` after a commit, as :file[docs/agents/git-conventions.md] says.
+        evidence: "docs/agents/git-conventions.md:53-55 says only to check the trailer landed; its `git log -1 --oneline` (line 67) is about checking a chained step, and --oneline does not show trailers. Mild: the attribution to that doc is loose."
+        fixed: true
+      - page: terrarium-practice/09.self-improvement-loop
+        claim: "A cause that comes back after its fix merged is a regression: the run files an issue naming the fix that failed and doesn't try again."
+        evidence: .agents/skills/frictions-to-fixes/SKILL.md:61-65,75 (the issue is filed for the top three regressions only; a regression with an open issue needs none; the rest are listed in the ledger PR description)
+        fixed: true
+      - page: verification/01.gate
+        claim: Agents can't edit GitHub's workflow files, so a new check reached the local gate while its CI step waited for a person.
+        evidence: "docs/adr/0026-gate-workflow-thin-shell.md:16,25 (cloud sessions cannot push .github/workflows/; a local session can) and docs/adr/0004-objective-safety-gate.md:41 (agents may edit Human-only files). Smallest fix: 'Cloud sessions can't push GitHub's workflow files'"
+        fixed: true
+      - page: walkthroughs/a-change-goes-live
+        claim: an agent checking a diagram of this story against :file[deploy/entrypoint.sh] found a gap in stop 3
+        evidence: "issue #1701 body: 'Found while checking story 4 of the Terrarium overview diagram (PR #1694)' (https://github.com/feffef/terrarium/issues/1701); it was the overview's diagram and story 4, not this Walkthrough's stop 3"
+        fixed: true
+      - page: walkthroughs/from-file-to-browser
+        claim: When the pointer rests on a link
+        evidence: "node_modules nuxt@4.6.2 dist/app/components/nuxt-link.js:268,354-358 (minor: onPointerenter calls escalate at once, with no dwell)"
+        fixed: true
+    gate:
+      - page: claude-code/07.subagents
+        criterion: "falseClaim: correct it to match https://code.claude.com/docs/en/sub-agents, section 'Let subagents spawn their own subagents': 'By default, a subagent can spawn subagents of its own, up to three layers'. Terrarium's own Skill says impl agents cannot (.agents/skills/dispatch-subagents/SKILL.md:77-78), so scope the page to Terrarium.; transfer: Say that this is a Terrarium or cloud-harness rule, since the docs allow nesting by default. Also add when not to dispatch (a quick targeted change, or work that needs the conversation's context), from sub-agents docs 'Subagents vs main conversation'."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: git-github/05.attribution
+        criterion: "falseClaim: correct it to match .claude/settings.json:96 matcher names 9 tools; scripts/hooks/github-provenance-guard.ts:67-86 registry omits mcp__github__update_issue_comment, mcp__github__delete_file, mcp__github__create_pull_request_with_copilot and mcp__github__merge_pull_request, so not every write tool is guarded; falseClaim: correct it to match docs/agents/git-conventions.md:53-55 says only to check the trailer landed; its `git log -1 --oneline` (line 67) is about checking a chained step, and --oneline does not show trailers. Mild: the attribution to that doc is loose.; clarity: The next excerpt (adjudicate, 15 lines) uses slotId, truth and sessionIdsIn before the prose defines them. Trim it to the three outcomes the following paragraph names (mismatch, malformed, missing), or explain the slot in a clause.; clarity: In the Reading the mark back block, LEGACY_PROVENANCE_FOOTER and HARNESS_FOOTER are unexplained identifiers in a page that already has six bold sub-sections and six excerpts. Cut that block to two sentences and a link, or excerpt only the first condition."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: terrarium-practice/09.self-improvement-loop
+        criterion: "falseClaim: correct it to match .agents/skills/frictions-to-fixes/SKILL.md:61-65,75 (the issue is filed for the top three regressions only; a regression with an open issue needs none; the rest are listed in the ledger PR description); evidence: The Excerpt (ledger.ts:9-13) is a doc comment and a type union, so the derivation the sentence names is never shown; excerpt the function ledgerFixState instead: layers/journal/app/utils/ledger.ts:56-68 (about 13 lines; it shows 'still recurring', 'likely fixed' and 'fix landed' computed from dates, with LEDGER_QUIET_DAYS at line 48)"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: verification/01.gate
+        criterion: "falseClaim: correct it to match docs/adr/0026-gate-workflow-thin-shell.md:16,25 (cloud sessions cannot push .github/workflows/; a local session can) and docs/adr/0004-objective-safety-gate.md:41 (agents may edit Human-only files). Smallest fix: 'Cloud sessions can't push GitHub's workflow files'; placement: Composite actions tells this story and the Gate page links to it for the parity test. Cut this Why bullet to one linking sentence and keep the story on Composite actions.; move step: The 'agents cannot push workflow files, so move steps into an action' story is told on both; keep it on Composite actions."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: walkthroughs/a-change-goes-live
+        criterion: "falseClaim: correct it to match issue #1701 body: 'Found while checking story 4 of the Terrarium overview diagram (PR #1694)' (https://github.com/feffef/terrarium/issues/1701); it was the overview's diagram and story 4, not this Walkthrough's stop 3"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: walkthroughs/from-file-to-browser
+        criterion: "falseClaim: correct it to match node_modules nuxt@4.6.2 dist/app/components/nuxt-link.js:268,354-358 (minor: onPointerenter calls escalate at once, with no dwell); check: stop \"6. The browser hydrates, then navigates by payload\" has 110 words, more than 80: move detail to the Lessons it links; evidence: follow one real file end to end, e.g. layers/blog/content/david/pages/<post>.md -> blog_david_pages, and point stop 1's chip at that file or folder; today stop 1 chips layers/glassbox/content/ and stop 2 switches to a Blog key (the Blog has a david Space at layers/blog/tenant.config.ts:18)"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: claude-code/05.blocking-hooks
+        criterion: "check: the Excerpt of .claude/settings.json renders 19 lines, more than 15: cut it to the code that makes the decision"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: nuxt-vue/08.hydration
+        criterion: "check: the Excerpt of layers/tinkerfund/app/components/tinkerfund/Time.vue renders 17 lines, more than 15: cut it to the code that makes the decision"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: skill-pack/02.planning-with-the-pack
+        criterion: "check: no other guide page links to it; clarity: AFK is never expanded, and the wayfinder paragraph stacks map, decision ticket, ticket type, frontier and Not yet specified in one block. Spell out AFK (away from keyboard) and turn that paragraph into a short term list, or define each term where it first appears.; split step: Split wayfinder into its own Lesson; grilling, to-spec and to-tickets stay; all three raters raised it."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: terrarium-practice/05.pruning-instructions
+        criterion: "check: the Excerpt of .agents/prune-trials.yml holds only comments: show the code that makes the decision"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: terrarium-practice/08.cross-tenant-reads
+        criterion: "check: the Excerpt of app/composables/catalog.ts renders 18 lines, more than 15: cut it to the code that makes the decision"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: verification/06.schema-validation
+        criterion: "check: the Excerpt of shared/manifest.ts renders 23 lines, more than 15: cut it to the code that makes the decision; clarity: Why two copies of Zod can meet is never said, yet the Extend, don't merge bullet rests on it. Add one sentence on how a Tenant's schema and a kind's contract end up from different Zod copies and what .merge then does to the unknown-keys policy."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: walkthroughs/adding-a-tenant
+        criterion: 'check: stop "6. It gets its own look" has 93 words, more than 80: move detail to the Lessons it links'
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: claude-code/02.path-scoped-rules
+        criterion: "evidence: The Excerpt ends mid-sentence at '(keep' and never shows an ADR summary rule with Skill-folder paths. Use .claude/rules/adr-0005.md:1-10, or extend this one to .claude/rules/tenant-layers.md:1-8,25-29"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: claude-code/08.mcp-servers
+        criterion: "placement: The permissions page owns the allow list and the trust rule. Keep one clause here and link to Claude Code permissions. Replace the 'Allowed by name' excerpt, which is the same settings.json lines 5-12 that 12.permissions excerpts, with a link.; move step: Give the allow list, the untrusted-workspace rule and the cloud-ignores-allow rule one home on Permissions, with the duplicate settings.json excerpt cut from MCP servers."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: claude-code/10.routines
+        criterion: "evidence: The only Excerpt is three lines of Skill prose that restate the rule; the code that decides is never shown. Excerpt the loop guard's decision, scripts/hooks/loop-only-tool-guard.ts:120-132, or the run-naming code, scripts/session/transcript-trace.ts:447-461 (deriveTrigger), and keep the SKILL.md lines as a link."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: claude-code/11.cloud-sessions
+        criterion: "clarity: A newcomer cannot tell what a multi-repository session is, or whether the hosted-environment remark in the same sentence applies to Terrarium. Say in one plain sentence which sessions read the whole settings file and which read only two keys, and move the caveat to What to watch for.; clarity: The next paragraph says a multi-repository session reads none of the file's hooks and an untrusted workspace drops the allow list. Hedge or reorder the opening so the claim and its exceptions do not contradict each other.; placement: This rule is taught on 08 and 12 too. Say once that a cloud session may not read the committed settings and link to Claude Code permissions for the allow rule.; placement: The reason and its consequence live on Composite actions. Keep only the guard here and link to that page for why.; move step: Give the allow list, the untrusted-workspace rule and the cloud-ignores-allow rule one home on Permissions, with the duplicate settings.json excerpt cut from MCP servers."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: claude-code/12.permissions
+        criterion: "placement: The permissions page is the home of the allow list but points to MCP servers for it. Move the reason and the cloud-ignores-allow rule here from 08 and 11, and let them link to this page.; move step: Give the allow list, the untrusted-workspace rule and the cloud-ignores-allow rule one home on Permissions, with the duplicate settings.json excerpt cut from MCP servers."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: deploy/02.pnpm-lockfile
+        criterion: "clarity: 'The path check' is never introduced on this page; it is the Human-only path check in merge-pr.ts. Name it and link Protected paths in the first clause.; clarity: This bullet carries four ideas and a nested parenthesis. Split it into two bullets, one for the lockfile and one for pnpm-workspace.yaml and patches, with the ADR cite on its own."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: git-github/02.git-worktrees
+        criterion: "placement: This is a log-script fact on a page about worktrees, and Session logs never mentions it. Move the paragraph and its isLinkedWorktree excerpt to Session logs, and leave one linking sentence here. Subagents already points here for it, so repoint that link.; move step: The log-session.ts refusal to write from a linked worktree (isLinkedWorktree excerpt) is a log-script fact; Session logs does not mention it."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: git-github/03.composite-actions
+        criterion: "placement: Merge gate's Why 'Steps in an action file' tells the same story. Keep the story here, where the concept lives, and cut it from Merge gate to a link.; evidence: The only Excerpt (.github/workflows/gate.yml:15-33) is the caller, and its gap hides fetch-depth: 0. Excerpt the composite action itself: .github/actions/gate/action.yml:8-16 (inputs.github-token, runs.using: composite, a run step with shell), and optionally action.yml:161-172 (the doorbell step reading inputs.github-token).; transfer: State the general reason to use one (reuse across jobs and workflows) and when it is the wrong choice: needing jobs, runners or permissions of its own points to a reusable workflow, and a one-off job gains nothing. The only motive given is Terrarium's own (a cloud session can push the action but not the workflow).; move step: The 'agents cannot push workflow files, so move steps into an action' story is told on both; keep it on Composite actions."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: git-github/06.work-queue
+        criterion: "clarity: wayfinder appears here and in two What to watch for bullets without being introduced, which breaks Stand alone. Add one clause saying what it is (a planning Skill that charts work as a map of sub-issues) and link Planning Skills for depth, not as a prerequisite."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: nuxt-content/01.manifest-collections
+        criterion: "evidence: The content.config.ts Excerpt (lines 20-34) stops inside an unclosed ternary and shows only the page branch; EVERY-PAGE requires ending on a whole statement. Use content.config.ts:20-23,29-42 so the expression closes and both defineCollection branches show."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: nuxt-content/04.query-collection
+        criterion: "placement: File routing owns the literal-name rule ('Pass the Tenant's name as a literal'). Reduce this to a link. The 'merge the results in code' bullet repeats Multi-tenant isolation, so link that too.; evidence: The lead Excerpt loads whole Documents with parsed bodies, which the page's own Why ('Return only what the page reads') and What to watch for ('all() on a page collection returns whole Documents') tell readers to avoid, and the page never says the Journal does it on purpose (layers/journal/app/pages/t/journal/[space]/index.vue:44-46). Use a better Excerpt, layers/blog/app/pages/t/blog/index.vue:28-39 (where + select + all in one useAsyncData), or drop the two unselected .all() lines and keep index.vue:36-42, or add the one-line reason.; move step: The literal-Tenant-name typing rule and the resolver/key-lookup recap belong to useSpace on File routing; link instead of restating."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: nuxt-content/07.mermaid-pre-rendering
+        criterion: "evidence: The Excerpt after it is only the DIAGRAM_TOKENS name map (app/utils/mermaid.ts:16-24); the sentinel-to-var rewrite is not shown. Use a better Excerpt: scripts/gate/render-mermaid.ts:47-57 (themeSvg), with 34-37 (SENTINELS) if it fits.; evidence: The runtime lookup (route-derived Tenant font, mermaidKey, bundled SVG) has no Excerpt, and the mermaid.render call that draws once has none either. Use a better Excerpt: app/components/MermaidDiagram.vue:37-40, and scripts/gate/render-mermaid.ts:112-122 for the single browser render.; transfer: The page never says when pre-rendering is the wrong choice (diagrams supplied or edited at runtime, no Chromium available where authors work, a few diagrams on a small audience). Add one line in What to watch for or Try it; docs/adr/0024-build-time-mermaid-prerender.md holds the rejected 'Render in the browser at runtime' alternative."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: nuxt-vue/01.layers
+        criterion: "placement: Auto-imports owns the shared namespace and the silent clash. Replace this watch item with a link there. The 'Components are kept apart by name' paragraph on content-component names belongs there too.; move step: Layers restates the shared auto-import namespace and silent name clash that Auto-imports owns; leave a link."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: nuxt-vue/03.virtual-modules
+        criterion: "transfer: The Try-it is meant to run in someone else's app, but Terrarium itself had to list @nuxt/kit as a devDependency (package.json:34) under pnpm's strict store, and the page never says so. Nuxt's modules docs (2.directory-structure/1.modules.md) give 'nuxt/kit' for local modules because it needs no @nuxt/kit dependency. Change the import to 'nuxt/kit'."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: nuxt-vue/05.vue-components
+        criterion: "evidence: The Excerpt (lines 1-4,18,22-23) omits the line that sets --n (ProgressBar.vue:16) and the animation-delay formula that uses --i (line 25), which the next sentence and the 'one delay formula' Why bullet rely on. Use a better Excerpt: layers/tinkerfund/app/components/tinkerfund/ProgressBar.vue:1-4,16-18,22-25.; evidence: The composable material (a Why bullet and a What to watch for) has no Excerpt, and ref/onMounted are never shown in code. Use a better Excerpt: layers/tinkerfund/app/composables/clock.ts:16-27 (hooks registered before the first await).; move step: Move ProgressBar's --n/--i custom-property explanation and its Why bullet to CSS custom properties; two raters raised it."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: skill-pack/01.skill-packs
+        criterion: "evidence: Add an Excerpt of the check itself, diffLock: scripts/gate/validate-skills-lock.ts:77-98 (the uncatalogued skip at 91, the missing, unpinned and drifted branches at 83-97). Keep the 4-line Inventory pin Excerpt (layers/journal/content/current/skills/tdd.yml:1-4). Drop or shrink the skills-lock.json:112-117 Excerpt, whose computedHash Terrarium does not use."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: verification/07.timestamps-stored-as-strings
+        criterion: "clarity: The skip line repeats the sibling Zod refinements page and names a concept other than this page's (UTC timestamps kept as text). Rewrite it to match, for example 'Know how timestamps are stored in schemas already?'.; clarity: The title describes Terrarium's decision, not a general concept name as EVERY-PAGE's title rule asks. Use the field's name for the idea (for example UTC timestamps in schemas) and keep the URL."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: verification/08.schema-evolution
+        criterion: "evidence: Both Excerpts (shared/schemas/session.ts:39-44 and 90-92) are mostly comments with one line of code each; replace them with code that shows the growth: the additive optional fields (shared/schemas/session.ts:69-72, 144-145) and the hold-back of a log that main's schema rejects (scripts/session/log-session.ts:447-453)"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: walkthroughs/asking-for-a-change
+        criterion: "evidence: name this as a deviation from stop 5 (docs/agents/pr-workflow.md:15-26 exempts only a simple change, a session-log commit or a self-reviewing Skill; PR #2089 added files) or use a case that shows the flow, such as a red Gate fixed and re-pushed, or a code-review finding fixed"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: nuxt-vue/07.css-custom-properties
+        criterion: "move step: Move ProgressBar's --n/--i custom-property explanation and its Why bullet to CSS custom properties; two raters raised it."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: terrarium-practice/04.session-logs
+        criterion: "move step: The log-session.ts refusal to write from a linked worktree (isLinkedWorktree excerpt) is a log-script fact; Session logs does not mention it."
+        votes:
+          - loss
+          - win
+          - win
+        merged: true
+      - page: nuxt-vue/04.auto-imports
+        criterion: "move step: Layers restates the shared auto-import namespace and silent name clash that Auto-imports owns; leave a link."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+    comparisons:
+      - lens: clarity
+        candidate: claude-code/01.claude-md
+        against: claude-code/03.skills
+        votes:
+          - win
+          - win
+          - win
+        result: win
+      - lens: clarity
+        candidate: claude-code/01.claude-md
+        against: claude-code/02.path-scoped-rules
+        votes:
+          - win
+          - win
+          - loss
+        result: win
+      - lens: placement
+        candidate: claude-code/01.claude-md
+        against: claude-code/02.path-scoped-rules
+        votes:
+          - win
+          - win
+          - win
+        result: win
+      - lens: placement
+        candidate: claude-code/01.claude-md
+        against: claude-code/03.skills
+        votes:
+          - loss
+        result: loss
+      - lens: clarity
+        candidate: claude-code/03.skills
+        against: claude-code/01.claude-md
+        votes:
+          - loss
+        result: loss
+      - lens: clarity
+        candidate: claude-code/03.skills
+        against: claude-code/02.path-scoped-rules
+        votes:
+          - loss
+        result: loss
+      - lens: reasoning
+        candidate: terrarium-practice/01.human-in-the-loop
+        against: terrarium-practice/08.cross-tenant-reads
+        votes:
+          - loss
+        result: loss
+      - lens: reasoning
+        candidate: terrarium-practice/01.human-in-the-loop
+        against: terrarium-practice/02.adrs
+        votes:
+          - win
+          - loss
+          - loss
+        result: loss
+      - lens: placement
+        candidate: git-github/04.trust-tiers
+        against: git-github/01.every-change-a-pr
+        votes:
+          - win
+          - win
+          - win
+        result: win
+      - lens: placement
+        candidate: git-github/04.trust-tiers
+        against: git-github/05.attribution
+        votes:
+          - win
+          - win
+          - win
+        result: win
