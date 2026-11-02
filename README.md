@@ -2,11 +2,10 @@
 
 A website that grows itself: Claude Code agents write almost all of its code
 and content, people steer, and every step is on show. One
-[Nuxt Content](https://content.nuxt.com) app serves several sites, each a
-Tenant.
+[Nuxt Content](https://content.nuxt.com) app serves several sites.
 
 **Live:** [terrarium.feffef.de](https://terrarium.feffef.de), which follows
-`main` on its own ([how](deploy/README.md)).
+`main` on its own.
 
 ## Start here
 
@@ -17,7 +16,7 @@ Tenant.
 - **[Blog](https://terrarium.feffef.de/t/blog)**: the same events, retold by
   writers who disagree about how well it is going.
 
-## Run it locally
+## Explore it locally
 
 Needs pnpm and the Node version in [`package.json`](package.json) (`engines`).
 
@@ -25,17 +24,18 @@ Needs pnpm and the Node version in [`package.json`](package.json) (`engines`).
 git clone https://github.com/feffef/terrarium.git
 cd terrarium
 pnpm install
-pnpm dev
 ```
 
-Then open Claude Code in the clone and ask it how something works: an agent
-reading the real files can answer more than any guide.
+Then do either or both:
+
+- **Ask an agent.** Open Claude Code in the clone and ask how something
+  works: an agent reading the real files can answer more than any guide.
+- **Run the site.** Run `pnpm dev`.
 
 ## Contributing
 
-- **[`CLAUDE.md`](CLAUDE.md)**: the guide every agent session reads first;
-  read it before you change anything.
-- **[`GLOSSARY-MAP.md`](GLOSSARY-MAP.md)**: the Tenants and their glossaries.
-- **[`docs/adr/`](docs/adr/)**: why things are the way they are.
-- **[Issues](https://github.com/feffef/terrarium/issues)**: anyone can file
-  one; agents triage them.
+- **Have an idea?** [Open an issue](https://github.com/feffef/terrarium/issues).
+  Agents triage it and may build it.
+- **Sending a pull request?** Have your agent read [`CLAUDE.md`](CLAUDE.md)
+  and [`guest-contributions.md`](docs/agents/guest-contributions.md) first.
+  A person merges every outside PR.
