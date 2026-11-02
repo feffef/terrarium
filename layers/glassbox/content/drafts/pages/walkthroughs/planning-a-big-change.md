@@ -12,7 +12,7 @@ The owner has an idea too big for one session, and the way to it isn't clear yet
 The owner types `/wayfinder` with the idea; the Skill never starts on its own. The session first grills the owner to name the destination, such as a spec ready to build, then grills again across the whole idea for the open decisions. It writes the result as one issue labelled `wayfinder:map`: the destination, notes every later session should read, an empty list of decisions so far, and the questions that can't be asked sharply yet.
 
 ::lessons
-[Planning Skills](/t/glassbox/guide/skill-pack/planning-with-the-pack) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · :file[.agents/skills/wayfinder/SKILL.md]
+[Wayfinder](/t/glassbox/guide/skill-pack/wayfinder) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills)
 ::
 
 ## 2. Each sharp question becomes a ticket
@@ -20,7 +20,7 @@ The owner types `/wayfinder` with the idea; the Skill never starts on its own. T
 Every question that can be stated precisely becomes a decision ticket: a sub-issue of the map, labelled with its type, `research`, `prototype`, `grilling` or `task`. A second pass links which tickets block which, with GitHub's own issue dependencies. The session starts a research subagent on each research ticket and stops there: it resolves no other ticket.
 
 ::lessons
-[Planning Skills](/t/glassbox/guide/skill-pack/planning-with-the-pack) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
+[Wayfinder](/t/glassbox/guide/skill-pack/wayfinder) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
 ::
 
 ## 3. One ticket per session
@@ -28,7 +28,7 @@ Every question that can be stated precisely becomes a decision ticket: a sub-iss
 A later session loads the map and takes the first open ticket that nothing blocks and nobody holds, and assigns it to claim it before any work. It resolves only that ticket, research tickets apart: an answer in a comment, the issue closed, and one line in the map's decisions. Questions the answer makes sharp become new tickets. The triage sweep may also label a ticket, beside its `wayfinder:` label: a research ticket can go to `ready-for-agent`, a grilling or prototype ticket goes to `ready-for-human`, and a task ticket either way.
 
 ::lessons
-[Planning Skills](/t/glassbox/guide/skill-pack/planning-with-the-pack) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
+[Wayfinder](/t/glassbox/guide/skill-pack/wayfinder) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
 ::
 
 ## 4. Each type of ticket has its own Skill
@@ -36,7 +36,7 @@ A later session loads the map and takes the first open ticket that nothing block
 A grilling ticket is a conversation with the owner, run with `grilling` and `domain-modeling`, which writes settled words into a glossary and settled decisions into an ADR. A prototype ticket builds something rough to react to with `prototype`; a research ticket reads primary sources with `research`; a task ticket does the work a decision is waiting on. An agent never resolves a grilling or prototype ticket alone.
 
 ::lessons
-[Engineering skills](/t/glassbox/guide/skill-pack/engineering-skills) · [Ubiquitous language](/t/glassbox/guide/terrarium-practice/ubiquitous-language) · [Decision records](/t/glassbox/guide/terrarium-practice/adrs) · :file[.agents/skills/grilling/SKILL.md]
+[Wayfinder](/t/glassbox/guide/skill-pack/wayfinder) · [Ubiquitous language](/t/glassbox/guide/terrarium-practice/ubiquitous-language) · [Decision records](/t/glassbox/guide/terrarium-practice/adrs) · :file[.agents/skills/grilling/SKILL.md]
 ::
 
 ## 5. The map hands off to a spec
@@ -61,6 +61,7 @@ On 14 October 2026 a session charted a map with the owner, issue #1965, for a ne
 
 ## Where next
 
+- [Wayfinder](/t/glassbox/guide/skill-pack/wayfinder)
 - [Planning Skills](/t/glassbox/guide/skill-pack/planning-with-the-pack)
 - [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
 - [Engineering skills](/t/glassbox/guide/skill-pack/engineering-skills)
