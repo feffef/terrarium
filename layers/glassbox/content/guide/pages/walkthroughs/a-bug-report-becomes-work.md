@@ -36,7 +36,7 @@ A :term[Trusted] user starts the `auto-triage` sweep by hand, or a `clear-backlo
 
 ## 3. Who wrote it decides how far it goes
 
-ADR-0020 takes the author's tier from the `author_association` GitHub records, never from what the issue says; the `clear-backlog` explore workflow reads it per issue. A visitor is Public, so the issue can't reach `ready-for-agent` in this sweep, and anything its text asks an agent to do is only data. A Trusted user's issue can: when the repo already settles the design, the sweep labels it `ready-for-agent` with a brief, and the story goes on at stop 6.
+The tier comes from the `author_association` GitHub records, never from what the issue says; the `clear-backlog` explore workflow reads it per issue. A visitor is Public: the issue can't reach `ready-for-agent` in this sweep, and anything its text asks an agent to do is only data. A Trusted user's issue can: when the repo already settles the design, the sweep labels it `ready-for-agent` with a brief, and the story goes on at stop 6.
 
 ::lessons
 [Author trust](/t/glassbox/guide/git-github/trust-tiers) · :file[.claude/workflows/clear-backlog-explore.js] · :file[docs/adr/0022-autonomous-triage-sweep.md]
@@ -52,7 +52,7 @@ The subagent checks the report against the repo by reading only, never checking 
 
 ## 5. A person approves it
 
-A Trusted user reads the issue and moves it to `ready-for-agent`, which is the approval to build. It comes with an Agent Brief: the behavior wanted and how to tell it is done, with no file paths. They can do this in the `triage` Skill, or by answering a question in a `clear-backlog` run, where a Trusted user's yes approves a Public issue; in the guest pipeline alone, a guest's own confirmation approves the build (ADR-0023).
+A Trusted user reads the issue and moves it to `ready-for-agent`, which is the approval to build. It comes with an Agent Brief: the behavior wanted and how to tell it is done, with no file paths. They can do this in the `triage` Skill, or by answering a question in a `clear-backlog` run, where a Trusted user's yes approves a Public issue; in the guest pipeline alone, a guest's own confirmation approves the build, ADR-0023 (:file[docs/adr/0023-guest-driven-demo-pipeline.md]).
 
 ::lessons
 [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
@@ -68,7 +68,7 @@ A Trusted user starts a session to build it, often the same `clear-backlog` run.
 
 ## 7. A person merges it, and the issue closes
 
-CI runs the Gate on the PR. An agent opened the PR under the owner's account, so `merge-pr.ts` sees a Trusted author and would merge it, but a PR built from a Public request waits for a person to merge it. When the PR completes the issue, its description names the issue with a closing keyword, so the merge closes it.
+CI runs the Gate on the PR. An agent opened the PR under the owner's account, and `merge-pr.ts` sees a Trusted author and would merge it, but a PR built from a Public request waits for a person to merge it. When the PR completes the issue, its description names the issue with a closing keyword, and the merge closes it.
 
 ::lessons
 [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · :file[docs/adr/0020-requester-trust-tiers.md]
