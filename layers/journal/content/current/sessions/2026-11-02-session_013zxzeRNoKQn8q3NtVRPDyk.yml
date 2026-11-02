@@ -1,0 +1,281 @@
+schemaVersion: 1
+session: session_013zxzeRNoKQn8q3NtVRPDyk
+startedAt: 2026-11-02T07:42:21Z
+endedAt: 2026-11-02T08:12:59Z
+kind: interactive
+goal: Glass Box guide landing becomes Terrarium's overview
+status: in-review
+outcome: PR 2782 open with a green gate; waits for a human merge (touches .claude/rules/)
+summary: "Human-instructed throughout: the owner asked whether Part 1 of the interactive-map brief could become one overview for human readers and agents, then decided each question in chat (overview replaces the Glass Box landing's directory, terms and sources; the Journal's Architecture & Deployment and How Humans & Agents Work pages go once their unique content moves into the overview; Scheduled tasks lists every Routine and Self-improvement loop every loop Skill as an exception to the no-growing-lists rule; a CLAUDE.md trigger; the Journal's Start here points to the overview as a cheap compromise; merge main). Agent-initiated within that ask: serving the landing through [...slug].vue so the sidebar is its menu, redirecting a bare Subject URL to its first Lesson (its old target, a landing card, was gone), renumbering the Journal tour, and repointing links and tests. Before agreeing that the two Journal pages were covered, the session checked them against the Lessons and named the gaps (build-time idea, why this stack, unreported rot, why in public, per-Routine roles). Two-axis code review found real errors drafted from the old overview rather than the repo (rules loading, the Routine definition, a dependabot-sweep trigger no repo file shows, a stale Skill path, duplicated list lines); all fixed, and the follow-up got its own review. Open: whether dependabot-sweep is event-triggered is unverified, so the Lesson no longer says."
+prs:
+  - "2782"
+docsRead:
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin and link rules for editing guide pages; the standards reviewer used it too
+    useful: yes
+  - path: docs/diagrams/interactive-map/spec.md
+    reason: "Read as terrarium-overview.md: Part 1 was the source for the overview"
+    useful: yes
+  - path: docs/diagrams/interactive-map/README.md
+    reason: Pointers to the brief that had to follow the rename
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: Fetch, stash and commit hygiene; read late, after the first fetch and rebase
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Product decisions named the Subject directory the landing removed; updated
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: Grepped only for 'full list' to see whether the list exception touched it
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: Confirmed an action-bound read-first line belongs in CLAUDE.md
+    useful: yes
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts review for the four landing shots
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: "Order: commit, code-review, gate last; follow-up review rule"
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP for PR creation in the cloud
+    useful: partly
+  - path: GLOSSARY.md
+    reason: Routine is the trigger, not the session; the standards reviewer caught the overview's misuse
+    useful: yes
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: Says a Routine runs it but not what starts it; reviewer found no event trigger
+    useful: partly
+skillsUsed:
+  - name: code-review
+    reason: two-axis review before the first push, then on the follow-up
+  - name: dispatch-subagents
+    reason: briefs for the three read-only reviewers
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Broke CLAUDE.md 'Before your first git command' by running fetch and rebase before reading git-conventions.md; harmless here, branch had no commits.
+    solution: The read-first hint fired after the call; read git-conventions.md before any state-changing git command.
+    severity: minor
+  - description: "Broke pr-workflow order: started gate:scoped before committing, then committed mid-run, so the gate aborted and had to rerun."
+    solution: Commit, review, then start the gate last and edit nothing until it ends.
+    severity: minor
+  - description: "Drafted three overview claims from the old brief, not the repo: rules all path-scoped, Routine as a session, dependabot-sweep PR-triggered."
+    solution: Check each claim in a reused doc against its source file before writing; code review caught all three.
+    severity: minor
+  - description: Found late that the Glass Box glossary named the Subject directory and Subject URLs redirected to landing cards.
+    solution: Grep a page's glossary product decisions and route redirects before removing a landing section.
+    severity: nit
+durationSec: 1838
+models:
+  claude-opus-5-5: 202
+toolCounts:
+  Bash: 82
+  Write: 1
+  Edit: 5
+  Skill: 4
+  Agent: 3
+  Read: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/index.md
+  - layers/glassbox/content/guide/pages/claude-code/10.routines.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+  - CLAUDE.md
+  - .agents/skills/glassbox-walkthrough/SKILL.md
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .claude/rules/glassbox-content.md
+  - app/assets/mermaid/0abccf0190c304e5.svg
+  - app/assets/mermaid/2868be468a02ced2.svg
+  - app/assets/mermaid/46bc15dbf1700353.svg
+  - app/assets/mermaid/65f974760018f230.svg
+  - app/assets/mermaid/88c03101ea0e1d9d.svg
+  - app/assets/mermaid/f3b3cc6ef985caca.svg
+  - docs/diagrams/interactive-map/README.md
+  - docs/diagrams/interactive-map/spec.md
+  - docs/diagrams/interactive-map/terrarium-overview.md
+  - layers/glassbox/app/pages/t/glassbox/[space]/[...slug].vue
+  - layers/glassbox/app/pages/t/glassbox/[space]/index.vue
+  - layers/glassbox/app/utils/subjects.ts
+  - layers/glassbox/content/drafts/pages/nuxt-content/04.query-collection-patterns.md
+  - layers/glassbox/content/drafts/pages/verification/02.schema-only-grows.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-newcomers-first-hour.md
+  - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
+  - layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+  - layers/glassbox/content/guide/pages/deploy/01.self-updating-container.md
+  - layers/glassbox/content/guide/pages/deploy/02.pnpm-lockfile.md
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/pages/git-github/04.trust-tiers.md
+  - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+  - layers/glassbox/content/guide/pages/nuxt-content/02.multi-tenant-isolation.md
+  - layers/glassbox/content/guide/pages/nuxt-content/07.mermaid-pre-rendering.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/02.file-routing.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/01.human-in-the-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/07.human-only-list.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/page-checks.ts
+  - layers/glassbox/tests/e2e/glassbox.spec.ts
+  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
+  - layers/glassbox/tests/unit/lesson.spec.ts
+  - layers/glassbox/tests/unit/subjects.spec.ts
+  - layers/journal/app/pages/t/journal/[space]/index.vue
+  - layers/journal/content/current/pages/architecture.md
+  - layers/journal/content/current/pages/highlights.md
+  - layers/journal/content/current/pages/history.md
+  - layers/journal/content/current/pages/how-it-works.md
+  - layers/journal/content/current/pages/real-and-invented.md
+  - layers/journal/tests/e2e/journal.spec.ts
+  - tests/support/mermaid-pages.ts
+  - tests/unit/mermaid-routes.spec.ts
+  - tests/unit/shell-reads.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0029.md
+adrHints:
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - GLOSSARY.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Owner approval before building visible new work; I asked for an explicit go
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Session header on the PR body and the commit trailer check
+    useful: yes
+  - path: .claude/rules/adr-0006.md
+    reason: Confirmed the landing resolves through useSpace in [...slug].vue
+    useful: partly
+  - path: .claude/rules/adr-0016.md
+    reason: The Tenant root redirect stayed untouched; no change needed
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Made me check prune-trials.yml before editing CLAUDE.md and the glassbox rule
+    useful: yes
+  - path: .claude/rules/glassbox-content.md
+    reason: Drove stripping counts and schedules from the overview; I added the two list exceptions
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagram was drawn this session
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Sent me to the Glass Box glossary, whose product decision had to change
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Nothing layer-structural changed
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: Made me screenshot the landing and Journal instead of trusting HTML
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Placed the overview trigger in CLAUDE.md; I opened the ADR via its hint to confirm
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Told me the rules edit makes this a human merge, stated in the PR
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Kept schedules out of the Routine list wording
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on glossary reads; no term was added
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: No glossary term added or changed
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: No ADR edited
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on tenant.config read; no manifest change
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal pages removed were explainers, not logs; nothing to apply
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: No stored field changed
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: No MDC component or Collection added
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded on Skill Inventory reads; I edited no entry
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Loaded on a Skill read; no Public input involved
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded on the auto-triage Skill read; not relevant
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Loaded on reading read-first-hint.ts; confirmed the new trigger needs no hint entry
+    useful: partly
+subagents:
+  - type: general-purpose
+    task: Standards review of branch diff
+    durationSec: 122
+    toolCalls: 22
+    modelCalls: 20
+    tokenShare: 11.3
+  - type: general-purpose
+    task: Spec review of branch diff
+    durationSec: 92
+    toolCalls: 15
+    modelCalls: 15
+    tokenShare: 9.4
+  - type: general-purpose
+    task: Review follow-up fix commit
+    durationSec: 47
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 4.6
+gitBranch: claude/determined-noether-pzjwig
+entrypoint: remote
+cliVersion: 2.1.316
+learnings:
+  - Removing the Glass Box [space]/index.vue lets [...slug].vue serve the landing path '/' with the sidebar.
+landedBy: Stop
