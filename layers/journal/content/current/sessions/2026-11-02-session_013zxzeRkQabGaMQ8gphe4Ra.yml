@@ -1,0 +1,220 @@
+schemaVersion: 1
+session: session_013zxzeRkQabGaMQ8gphe4Ra
+startedAt: 2026-11-02T20:02:50Z
+endedAt: 2026-11-02T20:53:58Z
+kind: interactive
+goal: Build glassbox-improve v3 (lens grades, blind edit gate, run state in YAML)
+status: in-review
+outcome: "PR #2794 open with the v3 Skill, grades.ts, briefs and new page checks; gate green; waits for a human merge"
+summary: "The user invoked /implement on issue #2792, the owner-approved v3 redesign of glassbox-improve, and allowed questions to the session that filed it. Before building, I asked the user about the issue's open points. Human decisions: N=5 and K=3; only rater B's trimmed pages adopted (writers stay batched per Subject; the claim check is unscoped); one PR; the first v3 run writes the initial grades.yml; the test seams (page-checks warnings and grades.ts's pure functions); and, after review, the A rematch rule, interleaving rater C's shard top-3 lists, and keeping the \"so\" warning out of findings. The issue author's session confirmed my five readings of ambiguous spec lines. Agent-initiated: splitting rater C into 8-page claim-check shards (one agent can't claim-check 60 pages; experiment d's size), the CLI shape (plan/tally/gate/votes/record writing a scratch run.yml), per-judge random X/Y order, and adding an optional `relevance` field to runs.yml entries. A smoke run with fake hand-backs caught a first-run bug (an undefined previous run made one win count as two). The Spec reviewer caught a real design gap: the rotation meant a page could never win A twice in a row on 4 of 5 lenses. The PR waits for a human merge because it rewrites an unattended scheduled Skill and #2792 isn't ready-for-agent. Still open: starting the first v3 run, which needs the merge first."
+prs:
+  - "2794"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: MCP tools for issue reads and writes in the cloud
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before diffing; commit -F for backtick messages; check the trailer
+    useful: yes
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: the v2 Skill being replaced; kept its never-undo, save-handback and integrate steps
+    useful: yes
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: v2 brief, base for the v3 template with per-rater sections
+    useful: yes
+  - path: .agents/skills/glassbox-improve/researcher-brief.md
+    reason: v2 researcher brief, widened to confirm every item
+    useful: yes
+  - path: .agents/skills/glassbox-improve/writer-brief.md
+    reason: v2 writer brief; kept the size rule, items now carry lens and id
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: criteria and grades, rewritten as lenses and the per-lens A rule
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: What lives where entry for glassbox-improve, updated
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: format of closed rulings, which the run's filter uses
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: its Check names page-checks warnings; updated to point at the code
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: read after a hook asked, once the briefs were written; confirmed Skill files stay in the Skill folder
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: read after a hook asked; no open trial covers glassbox-improve
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review then gate:scoped last before the first push; the merge recipe
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief contents for the two review agents
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: the untested-behaviour exception, which made this a human merge
+    useful: yes
+  - path: .agents/skills/glassbox-improve/judge-brief.md
+    reason: new file; the Spec reviewer read it in the diff and found it fine
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: the Standards reviewer used its Pruning section; flagged the restated constants and the trial note
+    useful: yes
+skillsUsed:
+  - name: implement
+    reason: "user's /implement on #2792"
+  - name: tdd
+    reason: test-first at the two agreed seams
+  - name: code-review
+    reason: Standards and Spec review before the first push
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Wrote the rater and judge briefs before reading ADR-0005 and ADR-0027 in full; a hook asked afterwards (no change was needed)
+    solution: Read the ADRs a Skill-folder rule points to before the first Write in that folder
+    severity: nit
+  - description: Wrote four page-check tests in one red pass, then whole describe blocks per slice, instead of the tdd Skill's one test per cycle
+    solution: Keep slices smaller, or have the tdd Skill state what to do for a large, fully specified rewrite
+    severity: nit
+  - description: Didn't see until the Spec review that the K=3 rotation made two consecutive A wins impossible on 4 of 5 lenses; needed a third design round with the user
+    solution: Before showing a selection rule, run it on two concrete cases across runs (CLAUDE.md Question the premise), including how rules interact over time
+    severity: moderate
+  - description: Planned one claim-check rater for all read pages; noticed only on the smoke run that the first run would ask one agent to claim-check 60 pages
+    solution: Size each agent against the issue's experiment numbers (8 pages per claim-check rater) at design time
+    severity: minor
+  - description: The CLI's runIfMain sat above module-level consts, so the first real tally crashed (cell used before initialization); caught on the smoke run
+    solution: Keep the main block at the end of the file; smoke-run each CLI command before the review
+    severity: nit
+durationSec: 3068
+models:
+  claude-opus-5-5: 187
+toolCounts:
+  Bash: 67
+  ToolSearch: 2
+  mcp__github__issue_read: 2
+  AskUserQuestion: 3
+  mcp__claude-code-remote__send_message: 1
+  Skill: 4
+  ReadNotifications: 1
+  Write: 4
+  Edit: 1
+  Agent: 2
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/glassbox-improve/rater-brief.md
+  - .agents/skills/glassbox-improve/judge-brief.md
+  - .agents/skills/glassbox-improve/SKILL.md
+  - .agents/skills/glassbox-improve/researcher-brief.md
+  - .agents/skills/glassbox-improve/scripts/grades.ts
+  - .agents/skills/glassbox-improve/tests/unit/grades.spec.ts
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - .agents/skills/glassbox-lesson/QUALITY.md
+  - layers/glassbox/page-checks.ts
+  - .agents/skills/glassbox-improve/writer-brief.md
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0014.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/glassbox-improve/judge-brief.md
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run gate:scoped and code-review before the first push; opened the full ADR for the untested-behaviour exception
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: This log goes straight to main via close-session; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Opened the PR right after the push and subscribed; owner approval for the build came from the issue and /implement
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the session header for the PR body and the cross-session message; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Made me check prune-trials.yml for an open trial on glassbox-improve; opened the ADR after a hook asked
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading files; this task added no rule or instruction placement decision
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Confirmed briefs and scripts stay in the Skill folder; read the ADR after the hook asked
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Checked that none of the touched files is on the Human-only list
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with the human-merge rule; no ADR changed
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading the glassbox glossary; I added no term
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded on the glossary read; no term added or changed
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Reminded me to use Glass Box terms (Lesson, Walkthrough, Subject, Excerpt) in code and briefs
+    useful: partly
+  - path: .claude/rules/glassbox-content.md
+    reason: Governs page prose; I edited no page, only checks and Skill docs
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded reading a Walkthrough with a diagram; no diagram touched
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: Loaded on a tsconfig read; the routing map was not involved
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of v3 diff
+    durationSec: 79
+    toolCalls: 11
+    modelCalls: 10
+    tokenShare: 7.7
+  - type: general-purpose
+    task: Spec review of v3 diff
+    durationSec: 117
+    toolCalls: 15
+    modelCalls: 12
+    tokenShare: 9.1
+gitBranch: claude/trusting-davinci-4ay8g1
+entrypoint: remote
+cliVersion: 2.1.316
+learnings:
+  - An election that needs wins in consecutive runs breaks when the readers only see a page every K runs; the selection and the rotation must be designed together
+ideas:
+  - "Give glassbox-improve a dry-run fixture: a committed set of fake rater, judge and researcher hand-backs and a test that drives plan, tally, gate, votes and record end to end at a pinned commit, so a change to grades.ts can't break the CLI shell unnoticed (today only the pure functions are tested)"
+landedBy: Stop
