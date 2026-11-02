@@ -442,6 +442,8 @@ h1 {
   text-transform: uppercase;
   color: var(--jd-muted);
 }
+.onramp-lead a { color: var(--jd-accent); text-underline-offset: 2px; }
+.onramp-lead a:hover { color: var(--jd-accent-bright); }
 .onramp-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; }
 .onramp-card {
   display: flex;
