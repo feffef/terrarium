@@ -5,11 +5,13 @@ the concepts Terrarium is built on, with Terrarium as the worked example.
 Lesson on <gap> in <Subject>; or split, merge or move facts between
 <paths>}.
 
-**Items to fix**: {ITEMS: per page, each deficit, each gap to A with the A page
-it cites, and the new title if one is chosen}. Fix these and keep the rest of
-each page as it is. Confirm each deficit in the source before you fix it; if
-one is wrong, refuse it with proof. A gap is fixed by taking what the cited A
-page does better, not by copying it.
+**Items to fix**: {ITEMS: per page, each confirmed item with its id, lens and
+fix: a deficit, a page check's finding, or a gap to A with the page holding A
+on that lens}. Fix these and keep the rest of each page as it is; if the
+source shows one is wrong, refuse it with proof. A gap is fixed by taking what
+the cited A page does better, not by copying it. Three blind judges compare
+each page you edit with its old version on the items' fixes, and a page that
+isn't clearly better is restored: more material doesn't win.
 
 **Research**: {RESEARCH FILE, or "none: check every fact you write in the
 source yourself"}. Take facts and Excerpts from the source, never from memory.
@@ -48,7 +50,7 @@ back instead.
 Done when EVERY-PAGE's Check passes and your work is committed. Commit before
 you stop, even mid-check; don't push.
 
-Hand back: the commit, each item fixed or refused (with proof), the join
+Hand back: the commit, each item by id fixed or refused (with proof), the join
 edits, the sources you used and the Check's results. Then, for each rule and
 doc you loaded or read: its path, why it loaded or was read, and whether it
 was useful (yes, partly, no). Write every file you create outside the
