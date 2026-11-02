@@ -13,7 +13,7 @@ const { data } = await useAsyncData(route.path, async () => ({
 }))
 const platformSkills = computed(() => ownSkills(data.value?.skills ?? []))
 const groupedSkills = computed(() => skillGroups(platformSkills.value))
-const groupedExternal = computed(() => skillGroups(externalSkills(data.value?.skills ?? [])))
+const groupedInstalled = computed(() => skillGroups(installedSkills(data.value?.skills ?? [])))
 const uses = computed(() => skillUseCounts(data.value?.sessions ?? []))
 const sessionTotal = computed(() => data.value?.sessions.length ?? 0)
 
@@ -42,7 +42,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
     <JournalSkillInventory v-if="groupedSkills.length" :groups="groupedSkills" :uses="uses" class="inventory" />
     <p v-else class="jd-prose">No Platform Skills authored in this Space yet.</p>
 
-    <template v-if="groupedExternal.length">
+    <template v-if="groupedInstalled.length">
       <article class="jd-prose">
         <h2>Installed Skills</h2>
         <p>
@@ -50,7 +50,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
           evolved here. Marginal ones are left out.
         </p>
       </article>
-      <JournalSkillInventory :groups="groupedExternal" :uses="uses" class="inventory" />
+      <JournalSkillInventory :groups="groupedInstalled" :uses="uses" class="inventory" />
     </template>
 
     <SiteFooter />

@@ -126,7 +126,7 @@ export interface SkillRow {
   onDisk: boolean
   inventoried: boolean
   /** An installed Skill — its SKILL.md is not ours to patch. */
-  external: boolean
+  installed: boolean
   modelInvoked: boolean
   category: string | null
   importance: string | null
@@ -370,7 +370,7 @@ export function buildSkillRows(
   inventory: Map<string, InventoryEntry>,
   windowSessions: readonly Session[],
   allSessions: readonly Session[],
-  external: ReadonlySet<string>,
+  installed: ReadonlySet<string>,
   landings: readonly Landing[] = [],
 ): SkillRow[] {
   const windowed = tallyUsage(windowSessions)
@@ -386,7 +386,7 @@ export function buildSkillRows(
       name,
       onDisk: onDisk.has(name),
       inventoried: inventory.has(name),
-      external: external.has(name),
+      installed: installed.has(name),
       modelInvoked: onDisk.get(name)?.modelInvoked ?? false,
       category: entry?.category ?? null,
       importance: entry?.importance ?? null,
@@ -474,7 +474,7 @@ export function buildBrief(row: SkillRow, window: readonly WindowSession[]): str
 
 /** Own, on-disk Skills used often enough in the window to judge their behaviour. */
 export function pickBehaviourChecks(rows: readonly SkillRow[], minUses = BEHAVIOUR_CHECK_MIN_USES): string[] {
-  return rows.filter((r) => r.onDisk && !r.external && r.useCount >= minUses).map((r) => r.name)
+  return rows.filter((r) => r.onDisk && !r.installed && r.useCount >= minUses).map((r) => r.name)
 }
 
 /** Routine-fired sessions grouped by Routine, sorted by name, keeping input order within one. */

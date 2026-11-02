@@ -71,12 +71,12 @@ export interface VerifyResult {
  *  sha256, or `null` when its SKILL.md is missing. `inv` maps a name to what the
  *  Inventory holds. IO lives in the wrappers below so this is unit-testable. */
 export function diffLock(
-  externalNames: string[],
+  installedNames: string[],
   inv: Map<string, InventoryPin>,
   onDisk: Map<string, string | null>,
 ): VerifyResult {
   const findings: DriftFinding[] = []
-  for (const name of externalNames) {
+  for (const name of installedNames) {
     const actual = onDisk.get(name) ?? null
     if (actual === null) {
       findings.push({ name, kind: 'missing' })
@@ -92,12 +92,12 @@ export function diffLock(
       findings.push({ name, kind: 'drifted', expected: entry.pin, actual })
     }
   }
-  return { checked: externalNames.length, findings }
+  return { checked: installedNames.length, findings }
 }
 
 /** The installed Skill names — the keys of the CLI's `skills-lock.json`.
  *  Read-only: we never write this file. */
-function readExternalNames(cwd = root): string[] {
+function readInstalledNames(cwd = root): string[] {
   const file = join(cwd, SKILLS_LOCK)
   if (!existsSync(file)) throw new Error(`${SKILLS_LOCK} not found at ${file}`)
   const lock = JSON.parse(readFileSync(file, 'utf8')) as { skills?: Record<string, unknown> }
@@ -135,7 +135,7 @@ function readOnDisk(names: string[], cwd = root): Map<string, string | null> {
 }
 
 export function verify(cwd = root): VerifyResult {
-  const names = readExternalNames(cwd)
+  const names = readInstalledNames(cwd)
   return diffLock(names, readInventory(names, cwd), readOnDisk(names, cwd))
 }
 
@@ -166,7 +166,7 @@ export function setPinLine(yaml: string, hash: string): string {
  *  reports) installed Skills that have no Inventory entry or no SKILL.md — those are a
  *  cataloguing gap for a human to close, not something to fabricate here. */
 export function write(cwd = root): { pinned: string[]; uncataloged: string[]; missing: string[] } {
-  const names = readExternalNames(cwd)
+  const names = readInstalledNames(cwd)
   const onDisk = readOnDisk(names, cwd)
   const pinned: string[] = []
   const uncataloged: string[] = []

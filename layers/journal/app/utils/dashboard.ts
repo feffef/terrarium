@@ -149,7 +149,7 @@ export function ownSkills(skills: SkillDoc[]): SkillDoc[] {
 }
 
 // Installed Skills worth listing: everything graded above `peripheral`.
-export function externalSkills(skills: SkillDoc[]): SkillDoc[] {
+export function installedSkills(skills: SkillDoc[]): SkillDoc[] {
   return skills.filter((s) => s.category !== 'platform-operation' && s.importance !== 'peripheral')
 }
 
@@ -167,7 +167,7 @@ export function skillUrl(name: string, repoSkills: readonly string[]): string | 
   return repoSkills.includes(name) ? `${REPO_URL}/blob/main/.agents/skills/${name}/SKILL.md` : undefined
 }
 
-export function externalSkillCount(skills: SkillDoc[]): number {
+export function installedSkillCount(skills: SkillDoc[]): number {
   return skills.length - ownSkills(skills).length
 }
 

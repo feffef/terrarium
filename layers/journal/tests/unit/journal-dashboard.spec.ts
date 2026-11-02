@@ -25,7 +25,7 @@ import {
   sessionAnchor,
   sessionDurationMin,
   sessionDurationLabel,
-  externalSkillCount,
+  installedSkillCount,
   sessionWhen,
   sessionModelsLabel,
   subagentUsageLabel,
@@ -34,7 +34,7 @@ import {
   frictionTotals,
   kindCounts,
   ownSkills,
-  externalSkills,
+  installedSkills,
   skillUseCounts,
   prRefs,
   prRefsParts,
@@ -214,9 +214,9 @@ describe('skill inventory', () => {
     expect(ownSkills(skills).map((s) => s.name).sort()).toEqual(['add-space', 'digest', 'edit-content', 'triage'])
   })
 
-  it('externalSkills keeps installed Skills graded above peripheral', () => {
+  it('installedSkills keeps installed Skills graded above peripheral', () => {
     const withPeripheral = [...skills, skill({ name: 'teach', category: 'general-engineering', importance: 'peripheral' })]
-    expect(externalSkills(withPeripheral).map((s) => s.name).sort()).toEqual(['code-review', 'tdd'])
+    expect(installedSkills(withPeripheral).map((s) => s.name).sort()).toEqual(['code-review', 'tdd'])
   })
 
   it('skillUseCounts counts sessions, not mentions', () => {
@@ -229,8 +229,8 @@ describe('skill inventory', () => {
     expect(counts).toEqual({ tdd: 2, digest: 1 })
   })
 
-  it('externalSkillCount counts the non-own Skills', () => {
-    expect(externalSkillCount(skills)).toBe(2)
+  it('installedSkillCount counts the non-own Skills', () => {
+    expect(installedSkillCount(skills)).toBe(2)
   })
 
   it('skillGroups orders essential → routine → specialist → supporting → peripheral, alpha within a group, dropping empties', () => {
