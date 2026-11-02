@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeRwpRf2gj4m4keF6bn
 startedAt: 2026-11-02T19:11:05Z
-endedAt: 2026-11-02T19:44:44Z
+endedAt: 2026-11-02T20:04:42Z
 kind: interactive
 goal: Make the Glass Box overview's links tell readers where they lead
-status: completed
-outcome: "PR 2791 merged: Lesson links move into chip rows, file links get ↗, ::stop-links renamed :lessons"
-summary: "Human-instructed throughout. The owner said the Glass Box guide overview mixed glossary terms, GitHub file links and Lesson links that looked alike, and proposed putting Lesson links at the end of a paragraph, as Walkthrough stops do. I asked four questions first (placement, file markers, links that are a sentence's subject, scope), then prototyped on three sections and sent screenshots. The owner asked for a design with one or more chips per bullet. I built a row under each bullet; the owner asked whether it had to be on a new line, so I built an inline version that continues on the last line and wraps one chip at a time. The owner accepted it, confirmed ↗ for file links and Walkthrough labels, and asked to rename the directive in this PR (::stop-links became :lessons). Agent-initiated within that scope: a page-checks rule that the guide overview links pages only through chips, a fix to the link-title regex (the rename exposed it), reusing glassboxLinkLabel so Journal chips get a label too, and the glossary line. The two-axis code review found a WHAT comment, a duplicated label branch, an unchipped lede, a stray count that read code, and three sentences that lost meaning; I fixed all of them. The owner then confirmed ↗ on every Glass Box page and asked for a merge on green; CI's gate passed and merge-pr.ts merged it. Known limit left as is: inline chips assume tight lists."
+status: in-review
+outcome: PR 2791 merged (Lesson links in chip rows, file links get ↗, ::stop-links renamed :lessons); PR 2793 open for the overview lede
+summary: "Human-instructed throughout. The owner said the Glass Box guide overview mixed glossary terms, GitHub file links and Lesson links that looked alike, and proposed putting Lesson links at the end of a paragraph, as Walkthrough stops do. I asked four questions first (placement, file markers, links that are a sentence's subject, scope), then prototyped on three sections and sent screenshots. The owner asked for a design with one or more chips per bullet. I built a row under each bullet; the owner asked whether it had to be on a new line, so I built an inline version that continues on the last line and wraps one chip at a time. The owner accepted it, confirmed ↗ for file links and Walkthrough labels, and asked to rename the directive in this PR (::stop-links became :lessons). Agent-initiated within that scope: a page-checks rule that the guide overview links pages only through chips, a fix to the link-title regex (the rename exposed it), reusing glassboxLinkLabel so Journal chips get a label too, and the glossary line. The two-axis code review found a WHAT comment, a duplicated label branch, an unchipped lede, a stray count that read code, and three sentences that lost meaning; I fixed all of them. The owner then confirmed ↗ on every Glass Box page and asked for a merge on green; CI's gate passed and merge-pr.ts merged it. Known limit left as is: inline chips assume tight lists. Afterwards the owner asked for a proposal for the overview's lede: say briefly what Glass Box is (kept up to date as Terrarium changes), that Lessons open from links too, and what the page is for. We iterated on the wording (the owner rejected the map analogy and a sentence naming Terrarium three times), then the owner said go and open a PR; I restarted the branch from main, since PR 2791 had merged, and opened PR 2793."
 prs:
   - "2791"
+  - "2793"
 docsRead:
   - path: docs/agents/verifying-ui-changes.md
     reason: preview.ts shot/review usage and that only rendered screenshots count
@@ -62,30 +63,31 @@ frictions:
   - description: Read ADR-0021 only after editing layers/glassbox/GLOSSARY.md, when the post-edit hook asked; the edit was already right
     solution: None needed; the hook worked as designed
     severity: nit
-durationSec: 2019
+durationSec: 3217
 models:
-  claude-opus-5-5: 206
+  claude-opus-5-5: 241
 toolCounts:
-  Bash: 65
+  Bash: 74
   Read: 13
   SendUserFile: 3
   Edit: 2
   Skill: 5
   Agent: 2
-  ToolSearch: 2
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 3
+  ToolSearch: 3
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 4
   mcp__github__pull_request_read: 2
   mcp__claude-code-remote__send_later: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
   mcp__claude-code-remote__delete_trigger: 1
+  mcp__github__update_issue_comment: 1
 filesEdited:
   - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/content/guide/pages/index.md
   - layers/glassbox/app/components/glassbox/Article.vue
   - layers/glassbox/app/utils/walkthrough.ts
-  - layers/glassbox/content/guide/pages/index.md
   - layers/glassbox/page-checks.ts
   - layers/glassbox/tests/unit/glassbox-pages.spec.ts
   - layers/glassbox/tests/unit/walkthrough.spec.ts
@@ -189,13 +191,13 @@ subagents:
     durationSec: 88
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 7.6
+    tokenShare: 6.4
   - type: general-purpose
     task: Spec review of chip-row diff
     durationSec: 69
     toolCalls: 11
     modelCalls: 10
-    tokenShare: 7.2
+    tokenShare: 6.1
 gitBranch: claude/pensive-pascal-z9zf61
 entrypoint: remote
 cliVersion: 2.1.316
