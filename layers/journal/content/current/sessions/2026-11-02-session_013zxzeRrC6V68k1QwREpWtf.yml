@@ -1,0 +1,356 @@
+schemaVersion: 1
+session: session_013zxzeRrC6V68k1QwREpWtf
+startedAt: 2026-11-02T04:03:20Z
+endedAt: 2026-11-02T04:13:56Z
+kind: autonomous
+goal: Scheduled audit of the repo's docs for drift and contradiction
+status: in-review
+outcome: Sweep PR 2778 merged; escalation PR 2779 (ADR-0027 wording, Human-only) open for a human merge
+summary: "Scheduled audit-docs run; the schedule started it and no human prompted any step (all agent-initiated). Three read-only reviewers (Freshness, Single-home, Coherence) returned 2 findings in total: Freshness 1 (stale \"Pack Skills\" quote in the audit-skills Inventory entry), Single-home 0, Coherence 1 (ADR-0027's verdict bullet says \"never the old text\" while its ADRs bullet restores a cut ADR's text). One checker gave 0 CONFIRMED / 1 CONFIRMED-BUT (Coherence) / 1 WRONG (Freshness: the quote is a dated verbatim observation of a rule that really read that way). It also corrected the reviewer: the .claude/rules/adr-0027.md summary does not repeat the unqualified bullet, so only its adr hash needed restamping. Sweep PR 2778 holds the one-line prune-trial SKILL.md pointer to Bounds; I read its one-line diff myself instead of code-review, gate:scoped green, merged via merge-pr. Escalation PR 2779 holds the ADR-0027 sentence plus the restamped rule hash; gate:scoped green, awaiting a human merge. No issue filed. Covered by B and C: README.md, SECURITY.md, tests/README.md, deploy/README.md, docs/proposals/README.md, GLOSSARY-MAP.md, layers/{journal,commons,marquee,tinkerfund,atlas,midden,blog}/GLOSSARY.md, journal facing pages, all 30 ADRs, Skills prune-trial audit-skills visitor-loop digest blog-post midden-catalogue midden-survey tinkerfund-campaign atlas-specimen glassbox-lesson glassbox-update glassbox-walkthrough."
+prs:
+  - "2778"
+  - "2779"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: Read before first non-read-only git command; fetch/merge-base rules applied
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Closing a scheduled run's PR recipe, simple-change test, verdict format
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping before opening PRs; nothing new needed
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Brief checklist for reviewers and checker
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: The doc under edit; checked scope and what the verdict bullet must keep
+    useful: yes
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/commons/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/marquee/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (no reason given)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (no reason given)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: docs/adr/0005-skill-model.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (no reason given)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+  - path: docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+    reason: (no reason given)
+  - path: docs/adr/0013-content-config-built-from-manifests.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0019-content-load-error-recovery.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/adr/TEMPLATE.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/atlas/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-walkthrough/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: briefs for three reviewers and a checker
+  - name: close-session
+    reason: closure at PR open
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Stop hook twice demanded a push while gate:scoped was still running on the head, which pr-workflow says must finish first.
+    solution: Stop hook could skip its nag while a gate log is still being written.
+    severity: nit
+  - description: Coherence reviewer claimed the ADR-0027 summary rule repeats the unqualified bullet; it does not, so a fact-check was needed to correct the fix scope.
+    solution: Brief reviewers to quote both places verbatim before claiming a copy.
+    severity: nit
+  - description: Many unrelated ADR rules loaded into reviewer and checker subagents when they read ADRs, adding noise to their verdict reports.
+    solution: Narrower rule paths, or tell read-only auditors that rule verdicts are unneeded.
+    severity: minor
+durationSec: 636
+models:
+  claude-sonnet-5-5: 75
+toolCounts:
+  Bash: 26
+  Agent: 4
+  Edit: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  ReadNotifications: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  Skill: 2
+filesEdited:
+  - .agents/skills/prune-trial/SKILL.md
+  - .claude/rules/adr-0027.md
+  - docs/adr/0027-prune-trials.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: false
+    by: main
+  - adr: 29
+    via: path
+    readAfter: false
+    by: main
+  - adr: 30
+    via: path
+    readAfter: false
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/ui-verification.md
+docsReadBySubagents:
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - .agents/skills/audit-skills/SKILL.md
+  - GLOSSARY.md
+  - docs/proposals/README.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/glassbox-improve/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - layers/journal/GLOSSARY.md
+  - layers/commons/GLOSSARY.md
+  - layers/marquee/GLOSSARY.md
+  - layers/blog/GLOSSARY.md
+  - docs/research/making-repo-public.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/public-readiness-review.md
+  - layers/midden/GLOSSARY.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0007-derived-files-built-not-committed.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+  - docs/adr/0012-cross-persona-pingbacks-via-authored-denormalization.md
+  - docs/adr/0013-content-config-built-from-manifests.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0019-content-load-error-recovery.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/TEMPLATE.md
+  - layers/tinkerfund/GLOSSARY.md
+  - layers/atlas/GLOSSARY.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/glassbox-walkthrough/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and review before first push; summary enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open and subscribe PRs at once and limit a scheduled run to its Skill; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on PR bodies and the commit trailer; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when I edited a Skill file; confirmed Skill edits go through a gated PR
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded on Skill edits; confirmed Inventory observations are the audit's record, backing the WRONG verdict
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded by the audit-docs hook; no glossary change this run
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: The summary rule of the ADR I edited; needed its adr hash restamp
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded by the audit-docs hook; rule wording needed no change, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Confirmed an ADR edit needs no history note and a restamped summary; read full ADR as hook asked
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Told me the ADR edit PR waits for a human merge
+    useful: yes
+subagents:
+  - type: general-purpose
+    task: "Audit docs: Freshness"
+    durationSec: 57
+    toolCalls: 10
+    modelCalls: 10
+    tokenShare: 7.6
+  - type: general-purpose
+    task: "Audit docs: Single-home"
+    durationSec: 113
+    toolCalls: 20
+    modelCalls: 17
+    tokenShare: 14.5
+  - type: general-purpose
+    task: "Audit docs: Coherence"
+    durationSec: 229
+    toolCalls: 34
+    modelCalls: 31
+    tokenShare: 34.6
+  - type: general-purpose
+    task: Fact-check audit findings
+    durationSec: 86
+    toolCalls: 11
+    modelCalls: 11
+    tokenShare: 6.2
+gitBranch: claude/festive-mayer-nhx1tt
+entrypoint: remote_trigger
+cliVersion: 2.1.316
+trigger: audit-docs
+landedBy: Stop
