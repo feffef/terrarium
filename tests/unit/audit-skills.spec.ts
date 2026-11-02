@@ -131,7 +131,7 @@ describe('buildSkillRows()', () => {
 
   it('joins description, invocation mode, grade, windowed and all-time usage', () => {
     expect(row('blog-post')).toMatchObject({
-      onDisk: true, inventoried: true, external: false, modelInvoked: false, importance: 'routine',
+      onDisk: true, inventoried: true, installed: false, modelInvoked: false, importance: 'routine',
       description: 'author a post', useCount: 1, usedIn: ['new'], allTimeUses: 2, lastUsed: '2026-07-05T00:00:00Z',
       observations: [{ date: '2026-07-05', note: 'n' }],
     })
@@ -145,7 +145,7 @@ describe('buildSkillRows()', () => {
 
   it('flags an uninventoried installed Skill, unused', () => {
     expect(row('ghost')).toMatchObject({
-      external: true, inventoried: false, modelInvoked: true, useCount: 0, allTimeUses: 0, lastUsed: null, observations: [],
+      installed: true, inventoried: false, modelInvoked: true, useCount: 0, allTimeUses: 0, lastUsed: null, observations: [],
     })
   })
 
@@ -203,10 +203,10 @@ describe('scriptsNamedIn() / parseLandings() / pickSkillChanges() — a run answ
 
 describe('pickBehaviourChecks()', () => {
   const r = (name: string, useCount: number, over: Partial<SkillRow> = {}) =>
-    ({ name, useCount, external: false, onDisk: true, ...over }) as SkillRow
+    ({ name, useCount, installed: false, onDisk: true, ...over }) as SkillRow
 
   it('picks own, on-disk Skills at or above the threshold', () => {
-    const rows = [r('often', 3), r('rare', 2), r('pack', 9, { external: true }), r('gone', 9, { onDisk: false })]
+    const rows = [r('often', 3), r('rare', 2), r('pack', 9, { installed: true }), r('gone', 9, { onDisk: false })]
     expect(pickBehaviourChecks(rows, 3)).toEqual(['often'])
   })
 })
@@ -912,7 +912,7 @@ describe('buildBrief()', () => {
     name: 'demo',
     onDisk: true,
     inventoried: true,
-    external: false,
+    installed: false,
     modelInvoked: false,
     category: null,
     importance: null,

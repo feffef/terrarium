@@ -156,7 +156,7 @@ const dailyMax = computed(() => Math.max(1, ...dailyFrictions.value.map((d) => d
 const notes = computed(() => sessionNotes(sessions.value))
 
 const platformSkills = computed(() => ownSkills(skills.value))
-const externalSkillTotal = computed(() => externalSkillCount(skills.value))
+const installedSkillTotal = computed(() => installedSkillCount(skills.value))
 
 // The stat tiles below only ever read THIS Space's own collections (see
 // the resolver comment atop this file), and archiving retains just the newest
@@ -300,7 +300,7 @@ useSeoMeta({
       />
       <JournalStatTile v-if="space !== 'archived'" label="Platform Skills" gloss="Reusable playbooks the agents follow" :value="platformSkills.length">
         <template #sub>
-          <template v-if="externalSkillTotal">+{{ externalSkillTotal }} external · </template>
+          <template v-if="installedSkillTotal">+{{ installedSkillTotal }} installed · </template>
           <NuxtLink class="pr-link" :to="{ name: 'journal-skills', params: { space } }">browse →</NuxtLink>
         </template>
       </JournalStatTile>

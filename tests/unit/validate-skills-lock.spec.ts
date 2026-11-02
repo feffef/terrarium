@@ -1,7 +1,7 @@
 // Unit tests for the skills-lock integrity gate's pure core — the drift
 // classification (missing / uncatalogued-skip / unpinned / drifted / match) and the
 // line-preserving pin edit, where correctness bugs would hide. The file IO
-// (readExternalNames/readInventory/readOnDisk/write) is a thin wrapper over these,
+// (readInstalledNames/readInventory/readOnDisk/write) is a thin wrapper over these,
 // exercised by running the script directly against the real tree
 // (`tsx scripts/gate/validate-skills-lock.ts`).
 import { describe, expect, it } from 'vitest'
