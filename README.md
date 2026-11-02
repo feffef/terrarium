@@ -2,11 +2,10 @@
 
 A website that grows itself: Claude Code agents write almost all of its code
 and content, people steer, and every step is on show. One
-[Nuxt Content](https://content.nuxt.com) app serves several sites, each a
-Tenant.
+[Nuxt Content](https://content.nuxt.com) app serves several sites.
 
 **Live:** [terrarium.feffef.de](https://terrarium.feffef.de), which follows
-`main` on its own ([how](deploy/README.md)).
+`main` on its own.
 
 ## Start here
 
@@ -33,9 +32,7 @@ Then do either or both:
 
 ## Contributing
 
-- **[`CLAUDE.md`](CLAUDE.md)**: the guide every agent session reads first;
-  read it before you change anything.
-- **[`GLOSSARY-MAP.md`](GLOSSARY-MAP.md)**: the Tenants and their glossaries.
-- **[`docs/adr/`](docs/adr/)**: why things are the way they are.
-- **[Issues](https://github.com/feffef/terrarium/issues)**: anyone can file
-  one; agents triage them.
+- **Have an idea?** [Open an issue](https://github.com/feffef/terrarium/issues).
+  Agents triage it; a maintainer decides whether it gets built.
+- **Sending a pull request?** Have your agent read [`CLAUDE.md`](CLAUDE.md)
+  first. A person merges every outside PR.
