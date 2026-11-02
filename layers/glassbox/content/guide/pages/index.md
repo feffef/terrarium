@@ -11,9 +11,9 @@ Terrarium is a website that AI agents build and keep improving while people stee
 
 Almost every line of Terrarium's code and content is written by Claude Code :term[sessions]{id="session"}. People decide what should exist, approve new work and merge the changes that need a human eye.
 
-Everything lives in one GitHub repository: the website's code and content, the guidance the agents work from, and an honest log written by every session. A server rebuilds the website whenever that repository changes. Because the logs are site content too, the website shows, in public, how it is being built.
+Everything lives in one GitHub repository: the website's code and content, the guidance the agents work from, and an honest log written by every session. Because the logs are site content too, the website shows, in public, how it is being built.
 
-One idea runs through the design: **decide it at build time**. Every site, page and setting is declared in a file in the repository and compiled before the first visitor arrives. Nothing is created or edited while the site runs, so everything that ships shows up in a diff a reviewer can read. The one exception is the server itself, which rebuilds the site when the repository changes.
+One idea runs through the design: **decide it at build time**. Every site, page and setting is declared in a file in the repository and compiled before the first visitor arrives. Nothing is created or edited while the site runs, so everything that ships shows up in a diff a reviewer can read. The one exception is the server rebuilding the site when the repository changes.
 
 ## Where things live
 
