@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSaEvHWNU8EdNqcqGG
 startedAt: 2026-11-02T00:46:03Z
-endedAt: 2026-11-02T00:58:45Z
+endedAt: 2026-11-02T01:01:22Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "14 Skills checked, 2 repeat failures commented, Inventory PR #2771 open"
-summary: "Scheduled audit-skills run, no human prompt; every step was agent-initiated under the Skill's own instructions. Built the 7-day scorecard, had one Sonnet subagent fetch usage for 7 Routine runs and 14 Sonnet subagents check the behaviour of each Skill. Verified two repeated silent failures and commented on their existing threads, #2607 (log-session ruleVerdicts incomplete, fifth window, 3 of 10 logs) and #2724 (frictions-to-fixes top-three rule still overridden after #2735). I did not set needs-triage because both threads are closed. The glassbox-update code-review skips match #2748, which the owner closed not planned, so they are an observation only. Step 3 closure signals: orphanScan scanned 1827 merged PRs (1670 with a session); both orphan candidates carry resolvedBy (#736, #1063) and the suppression log shows only resolved-annotation entries, so cleared; one human-prompted closure (session_013zxzeRkv6UCWJtPmJ68h32, the previous audit-skills run), a known pattern, recorded as a close-session observation. No grade or role changed (no Skill had two sessions of felt-absence evidence). No coverage-gap entries: glassbox-walkthrough, implement-spec and wait-what are unused. PR #2771 adds 11 observations and 8 Routine run rows; code-review Standards found unquoted dates (fixed), Spec was clean, gate:scoped green. Left open: PR #2771 awaits CI and merge."
+status: completed
+outcome: "14 Skills checked, 2 repeat failures commented, Inventory PR #2771 merged"
+summary: "Scheduled audit-skills run, no human prompt; every step was agent-initiated under the Skill's own instructions. Built the 7-day scorecard, had one Sonnet subagent fetch usage for 7 Routine runs and 14 Sonnet subagents check the behaviour of each Skill. Verified two repeated silent failures and commented on their existing threads, #2607 (log-session ruleVerdicts incomplete, fifth window, 3 of 10 logs) and #2724 (frictions-to-fixes top-three rule still overridden after #2735). I did not set needs-triage because both threads are closed. The glassbox-update code-review skips match #2748, which the owner closed not planned, so they are an observation only. Step 3 closure signals: orphanScan scanned 1827 merged PRs (1670 with a session); both orphan candidates carry resolvedBy (#736, #1063) and the suppression log shows only resolved-annotation entries, so cleared; one human-prompted closure (session_013zxzeRkv6UCWJtPmJ68h32, the previous audit-skills run), a known pattern, recorded as a close-session observation. No grade or role changed (no Skill had two sessions of felt-absence evidence). No coverage-gap entries: glassbox-walkthrough, implement-spec and wait-what are unused. PR #2771 adds 11 observations and 8 Routine run rows; code-review Standards found unquoted dates (fixed), Spec was clean, gate:scoped green. PR #2771 merged on green CI after my verdict comment."
 prs:
   - "2771"
 docsRead:
@@ -89,21 +89,23 @@ frictions:
   - description: A coverage-gap check printed a scorecard whose behaviourChecks is a list of strings; my first script assumed objects and failed, costing one extra call.
     solution: The Scorecard type in audit-skills.ts documents it; skim it before scripting against the JSON.
     severity: nit
-durationSec: 761
+durationSec: 918
 models:
-  claude-sonnet-5-5: 124
+  claude-sonnet-5-5: 141
 toolCounts:
-  Bash: 39
+  Bash: 43
   Read: 2
-  Skill: 4
+  Skill: 5
   Agent: 17
   Workflow: 1
-  ToolSearch: 3
+  ToolSearch: 4
   mcp__Claude_Code_Remote__get_session: 1
-  mcp__github__add_issue_comment: 2
+  mcp__github__add_issue_comment: 3
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
   PushNotification: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -241,119 +243,119 @@ subagents:
     durationSec: 24
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 2.9
+    tokenShare: 2.7
   - type: general-purpose
     task: Audit audit-docs
     model: sonnet
     durationSec: 64
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 3.2
+    tokenShare: 3
   - type: general-purpose
     task: Audit audit-skills
     model: sonnet
     durationSec: 82
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 4.9
+    tokenShare: 4.5
   - type: general-purpose
     task: Audit blog-post
     model: sonnet
     durationSec: 85
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 4.5
+    tokenShare: 4.1
   - type: general-purpose
     task: Audit clear-backlog
     model: sonnet
     durationSec: 77
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 2.9
+    tokenShare: 2.6
   - type: general-purpose
     task: Audit close-session
     model: sonnet
     durationSec: 63
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 2.8
+    tokenShare: 2.6
   - type: general-purpose
     task: Audit digest
     model: sonnet
     durationSec: 68
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 3.6
+    tokenShare: 3.3
   - type: general-purpose
     task: Audit dispatch-subagents
     model: sonnet
     durationSec: 105
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 5.7
+    tokenShare: 5.3
   - type: general-purpose
     task: Audit frictions-to-fixes
     model: sonnet
     durationSec: 65
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 3.1
+    tokenShare: 2.8
   - type: general-purpose
     task: Audit glassbox-improve
     model: sonnet
     durationSec: 89
     toolCalls: 12
     modelCalls: 11
-    tokenShare: 3.6
+    tokenShare: 3.3
   - type: general-purpose
     task: Audit glassbox-update
     model: sonnet
     durationSec: 45
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 2.2
+    tokenShare: 2
   - type: general-purpose
     task: Audit inspect-session
     model: sonnet
     durationSec: 92
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 4.5
+    tokenShare: 4.1
   - type: general-purpose
     task: Audit log-session
     model: sonnet
     durationSec: 75
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 4.3
+    tokenShare: 3.9
   - type: general-purpose
     task: Audit prune-trial
     model: sonnet
     durationSec: 56
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 2.7
+    tokenShare: 2.4
   - type: general-purpose
     task: Audit visitor-loop
     model: sonnet
     durationSec: 90
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 4.7
+    tokenShare: 4.3
   - type: general-purpose
     task: Review standards axis
     model: sonnet
     durationSec: 47
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 3.7
+    tokenShare: 3.4
   - type: general-purpose
     task: Review spec axis
     model: sonnet
     durationSec: 60
     toolCalls: 9
     modelCalls: 7
-    tokenShare: 2.9
+    tokenShare: 2.7
 gitBranch: claude/upbeat-sagan-uw7d6v
 entrypoint: remote_trigger
 cliVersion: 2.1.316
