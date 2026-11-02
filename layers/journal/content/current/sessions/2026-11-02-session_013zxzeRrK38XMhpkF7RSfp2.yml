@@ -1,0 +1,195 @@
+schemaVersion: 1
+session: session_013zxzeRrK38XMhpkF7RSfp2
+startedAt: 2026-11-02T11:18:20Z
+endedAt: 2026-11-02T11:32:37Z
+kind: autonomous
+goal: "Scheduled blog post: David on an accepted recurring problem"
+status: in-review
+outcome: PR 2783 opened with one David post; gate green, fact-checked; awaiting CI, self-merge and the reply decision.
+summary: "Scheduled /blog-post run (no human prompt; agent-initiated throughout). Rotation allowed only David. Gathered the Oct 30 to Nov 2 window, drafted three David candidates (the 'Skill pack' rename #2769, the relayed-subagent-claims Friction accepted in #2766, the ADR-0027 self-contradiction #2778/#2779). A blind Sonnet reader picked the accepted Friction. Revised for its gaps, fact-checked twice (one wrong claim, 'same second', fixed; glosses added), ran code-review (no hard violations) and gate:scoped (green), pushed and opened PR 2783. Still open this turn: CI, self-merge, step 12 reply decision, final close-session."
+prs:
+  - "2783"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before first non-read-only git command; nothing new for this run
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: required before first GitHub tool use; confirmed MCP use and entity-encoded bodies
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and closing a scheduled run's PR steps
+    useful: yes
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: voice and palette for drafts
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: source for a candidate topic, read via git show
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: required before writing subagent briefs; brief checklist
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: "reported by the Standards subagent: who a post is for, tag rules"
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: "reported by the Standards subagent: reference sections used as standards"
+    useful: yes
+  - path: GLOSSARY.md
+    reason: "reported by the fact-check subagent: Friction Ledger, Skill, Trusted definitions"
+    useful: yes
+  - path: layers/journal/GLOSSARY.md
+    reason: "reported by the fact-check subagent: what the Journal is"
+    useful: yes
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: Path-scoped rules (tenant-layers, data-shapes, mdc, adr-0002) loaded by merely reading the blog tenant.config.ts for tags; none applied to a content post.
+    solution: Narrow those rules' paths so a read-only look at a config for its tag list does not load them.
+    severity: nit
+  - description: Drafting three full candidates and a blind read cost many tokens; the two discarded drafts' value was only the loser topics, by design.
+    solution: None needed; the Skill deliberately keeps this.
+    severity: nit
+durationSec: 857
+models:
+  claude-sonnet-5-5: 82
+toolCounts:
+  Bash: 25
+  Read: 3
+  mcp__github__pull_request_read: 10
+  mcp__github__issue_read: 4
+  Agent: 5
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/david/pages/2026-11-02-five-fixes-did-not-retire-the-problem-so-the-owner-accepted-it.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0008.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+rulesLoadedBySubagents:
+  - .claude/rules/mermaid-lanes.md
+docsReadBySubagents:
+  - layers/blog/GLOSSARY.md
+  - .agents/skills/blog-post/SKILL.md
+  - GLOSSARY.md
+  - layers/journal/GLOSSARY.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before first push; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR without asking and subscribe; scheduled-run scope; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and commit trailer; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback rule; a standalone post needs none, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded while reading prune-trial material for a candidate topic; context only.
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with ADR-0027 reading; irrelevant to writing a post.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when reading the Skill; no Skill edited, so unused.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary rule loaded by a subagent; the post needed only existing terms.
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; none added.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by touching ADR files in a git show; no Human-only file edited.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: ADR history rule; loaded by reading ADR text, not applicable.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded when I read the blog tenant.config.ts; no manifest edit.
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded with the tenant config read; no stored field changed.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with the tenant config read; no component work.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Tenant glossary rule loaded under layers/blog; I had read the glossary guidance via subagent.
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded under layers/blog; layout rules irrelevant to a content post.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Journal logbook rule loaded when reading journal files; context only.
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded for a subagent; irrelevant to this task.
+    useful: no
+subagents:
+  - task: Blind read of three posts
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 7.3
+  - task: Fact-check blog post
+    model: sonnet
+    durationSec: 93
+    toolCalls: 14
+    modelCalls: 7
+    tokenShare: 8.8
+  - task: Re-check changed post lines
+    model: sonnet
+    durationSec: 35
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 5.6
+  - task: Standards review of post
+    model: sonnet
+    durationSec: 35
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 5.6
+  - task: Spec review of post
+    model: sonnet
+    durationSec: 33
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 5.6
+gitBranch: claude/zen-heisenberg-f72izt
+entrypoint: remote_trigger
+cliVersion: 2.1.316
+trigger: blog-post
+landedBy: Stop
