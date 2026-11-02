@@ -35,13 +35,30 @@ const middenEntries = [
 // it ships in the page payload (#1702).
 const { data: teasers } = await useAsyncData('home-timeline', async () => {
   const timeline = await queryTimeline()
+  const blogPosts = timeline.filter((e) => e.genre === 'post' && e.tenant === 'blog').slice(0, 10)
+  // A reply post names the Persona it answers (`reactsTo`), which the Timeline
+  // doesn't carry; the home page may read the Blog directly (ADR-0025). Only
+  // the shown posts' answered Persona rides in the payload (ADR-0028).
+  const shown = new Set(blogPosts.map((p) => p.url))
+  const repliesTo: Record<string, string> = {}
+  for (const slug of PERSONA_SLUGS) {
+    const r = resolveSpaceRoute('blog', slug, undefined)
+    if (!r) continue
+    const docs = await queryCollection(r.pagesKey).where('reactsTo', 'IS NOT NULL').select('path', 'reactsTo').all()
+    for (const d of docs) {
+      const url = `/t/blog/${slug}${d.path}`
+      if (d.reactsTo && shown.has(url)) repliesTo[url] = d.reactsTo.persona
+    }
+  }
   return {
     digests: timeline.filter((e) => e.genre === 'digest' && e.space === 'current'),
-    blogPosts: timeline.filter((e) => e.genre === 'post' && e.tenant === 'blog').slice(0, 10),
+    blogPosts,
+    repliesTo,
   }
 })
 const digests = computed(() => teasers.value?.digests ?? [])
 const blogPosts = computed(() => teasers.value?.blogPosts ?? [])
+const repliesTo = computed(() => teasers.value?.repliesTo ?? {})
 
 // UTC so SSR and hydration agree, and a digest (stamped end-of-day UTC) shows the day it covers.
 function shortDate(when: string): string {
@@ -232,6 +249,7 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
                     <time :datetime="p.when">{{ shortDate(p.when) }}</time>
                   </span>
                   <span class="post-title">{{ p.summary }}</span>
+                  <span v-if="repliesTo[p.url]" class="post-reply">↳ in reply to {{ personaMeta(repliesTo[p.url]!).name }}</span>
                 </NuxtLink>
               </li>
             </ul>
@@ -640,6 +658,10 @@ useHead({ title: 'terrarium · a self-growing garden of websites' })
   font-family: var(--bl-serif);
   font-size: 1rem;
   line-height: 1.35;
+}
+.post-reply {
+  font-size: 0.78rem;
+  color: var(--bl-muted);
 }
 .post:hover .post-title {
   text-decoration: underline;
