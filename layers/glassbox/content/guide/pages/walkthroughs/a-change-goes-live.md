@@ -1,7 +1,7 @@
 ---
 title: A change goes live
 description: How a commit on main reaches visitors, through one container that notices it, builds it beside the live site and swaps only a good build.
-revision: '574377b55cb737b991df18e40823b7fbc51157df'
+revision: '87ccd9f83e4314732574463fca79530755fe9045'
 revisionDate: '2026-11-02'
 publishedAt: '2026-10-27T18:52:18Z'
 ---
@@ -76,7 +76,7 @@ The restarted server serves the new build. The first query for each Collection c
 
 ## A real case
 
-On 9 October 2026 an agent checking a diagram of this story against :file[deploy/entrypoint.sh] found a gap in stop 3: the script moved its checkout to the new commit before installing, so after a failed install the next commit's lockfile hash already matched, the install was skipped, and the build ran on the old packages. It filed [issue #1701](https://github.com/feffef/terrarium/issues/1701); the case had not happened on the live server yet. [PR #1717](https://github.com/feffef/terrarium/pull/1717) made the script keep the hash of its last good install outside the checkout. Its description said no test covers the script's behaviour, so a human had to merge it, and a Trusted user did at 05:53 UTC on 10 October.
+On 9 October 2026 an agent checking story 4 of the Terrarium overview's diagram against :file[deploy/entrypoint.sh] found a gap in the step stop 3 covers: the script moved its checkout to the new commit before installing, so after a failed install the next commit's lockfile hash already matched, the install was skipped, and the build ran on the old packages. It filed [issue #1701](https://github.com/feffef/terrarium/issues/1701); the case had not happened on the live server yet. [PR #1717](https://github.com/feffef/terrarium/pull/1717) made the script keep the hash of its last good install outside the checkout. Its description said no test covers the script's behaviour, so a human had to merge it, and a Trusted user did at 05:53 UTC on 10 October.
 
 ## Where next
 
