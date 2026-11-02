@@ -15,7 +15,7 @@ import { Document, isMap, isPair, isScalar, parse as parseYaml, stringify, visit
 import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { frontmatterBlock, splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { git, tryGit } from '../../../../scripts/lib/git.ts'
-import { glassboxCites, glassboxJournalRoutes, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, repoGit, type GlassboxGit, type GlassboxSite } from '../../../../layers/glassbox/page-checks.ts'
+import { glassboxCites, glassboxJournalRoutes, glassboxOrphanText, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, repoGit, type GlassboxGit, type GlassboxSite } from '../../../../layers/glassbox/page-checks.ts'
 import { glassboxPageRefs } from '../../../../layers/glassbox/page-refs.ts'
 
 export const lenses = ['clarity', 'reasoning', 'placement', 'evidence', 'transfer', 'relevance'] as const
@@ -81,7 +81,7 @@ export interface RunEntry {
   stepsRefused: number
   findings?: { page: string; lens?: Lens; grade?: Grade; quote?: string; fix: string; confirmed: boolean; edited: boolean }[]
   falseClaims?: { page: string; claim: string; evidence: string; fixed: boolean }[]
-  gate?: { page: string; criterion: string; votes: Vote[]; merged: boolean }[]
+  gate?: GateEntry[]
   comparisons?: { lens: Lens; candidate: string; against: string; votes: Vote[]; result: 'win' | 'loss' }[]
 }
 
@@ -126,6 +126,10 @@ export function readRecord(text: string | undefined): GradeRecord {
   return { version: 3, pages: {}, steps }
 }
 
+/** The lenses on which a page won every comparison last run and doesn't hold A yet. */
+const pendingWins = (record: GradeRecord, page: string): Lens[] =>
+  lenses.filter((l) => record.run && record.pages[page]?.lenses[l]?.grade !== 'A' && record.pages[page]?.lenses[l]?.wins?.at(-1) === record.run)
+
 export interface Plan {
   base: string
   /** Every guide page; rater B reads them all. */
@@ -134,6 +138,8 @@ export interface Plan {
   read: string[]
   changed: string[]
   rotation: string[]
+  /** Pages that won their A comparisons last run, read again so they can win twice in a row. */
+  rematch: string[]
   /** Why Relevance is rated this run, or undefined when it isn't. */
   relevance?: string
   stale: string[]
@@ -145,9 +151,10 @@ export function planPages(record: GradeRecord, current: Record<string, { hash: s
     const r = record.pages[p]
     return !r || !r.read || r.hash !== current[p]!.hash || r.sources !== current[p]!.sources
   })
+  const rematch = pages.filter((p) => !changed.includes(p) && pendingWins(record, p).length)
   const readOn = (p: string) => record.pages[p]?.read ?? ''
   const rotation = pages
-    .filter((p) => !changed.includes(p))
+    .filter((p) => !changed.includes(p) && !rematch.includes(p))
     .sort((a, b) => readOn(a).localeCompare(readOn(b)) || a.localeCompare(b))
     .slice(0, Math.ceil(pages.length / rotationRuns))
   const stale = Object.keys(record.pages).filter((p) => !(p in current)).sort()
@@ -158,7 +165,7 @@ export function planPages(record: GradeRecord, current: Record<string, { hash: s
     : added.length || stale.length
       ? `pages added or gone: ${[...added, ...stale].join(', ')}`
       : recent.some((r) => r.relevance) ? undefined : `none of the last ${relevanceEvery - 1} runs rated it`
-  return { pages, read: [...changed, ...rotation].sort(), changed, rotation, ...(relevance ? { relevance } : {}), stale }
+  return { pages, read: [...changed, ...rematch, ...rotation].sort(), changed, rotation, rematch, ...(relevance ? { relevance } : {}), stale }
 }
 
 export type RaterId = 'A' | 'B' | 'C'
@@ -320,7 +327,7 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: 
       }
     }
   }
-  // Weakest lens first: a page's lowest grade, then the page, then the lens.
+  // The owner's order (issue #2792): weakest lens first.
   const weakest = (page: string) => Math.min(...Object.values(grades[page] ?? {}).map((g) => gradeRank[g]))
   deficits.sort((a, b) => weakest(a.page) - weakest(b.page) || a.page.localeCompare(b.page) || lenses.indexOf(a.lens!) - lenses.indexOf(b.lens!))
   gaps.sort((a, b) => a.page.localeCompare(b.page) || lenses.indexOf(a.lens!) - lenses.indexOf(b.lens!))
@@ -356,10 +363,12 @@ function plannedComparisons(record: GradeRecord, plan: Plan, reports: Report[], 
   const gradeOf = (page: string, lens: Lens) => (record.pages[page]?.lenses[lens]?.grade === 'A' ? 'A' : grades[page]?.[lens] ?? record.pages[page]?.lenses[lens]?.grade)
   const lastWin = (page: string, lens: Lens) => record.pages[page]?.lenses[lens]?.wins?.at(-1) ?? ''
   for (const lens of electedLenses) {
-    const rater = reports.find((r) => r.top3?.[lens])
-    const top3 = rater?.top3?.[lens]?.slice(0, 3) ?? []
-    for (const candidate of top3) {
-      const reported = rater!.pages.find((p) => p.page === candidate)?.lenses[lens]
+    // Rater C's shards each name a top 3 among their own pages: take them by rank, at most 3.
+    const lists = reports.map((r) => r.top3?.[lens]?.slice(0, 3) ?? [])
+    const top3 = [...new Set([0, 1, 2].flatMap((rank) => lists.flatMap((l) => (l[rank] ? [l[rank]] : []))))].slice(0, 3)
+    const rematch = plan.read.filter((p) => pendingWins(record, p).includes(lens) && !top3.includes(p))
+    for (const candidate of [...rematch, ...top3]) {
+      const reported = reports.flatMap((r) => r.pages).find((p) => p.page === candidate && p.lenses[lens])?.lenses[lens]
       if (record.pages[candidate]?.lenses[lens]?.grade === 'A' || reported?.grade !== 'B' || reported.findings?.length || reported.gaps?.length) continue
       if (busy.has(candidate)) {
         waiting.push(`${candidate} on ${lens}: it has work this run`)
@@ -639,7 +648,7 @@ function pageChecks(base: string): Record<string, string[]> {
     const found = glassboxPageWarnings(text).filter((w) => !w.startsWith('In Terrarium may give a motive'))
     if (found.length && file !== 'index.md') checks[file.slice(0, -3)] = found
   }
-  for (const file of glassboxOrphans(files)) (checks[file.slice(0, -3)] ??= []).push('no other guide page links to it')
+  for (const file of glassboxOrphans(files)) (checks[file.slice(0, -3)] ??= []).push(glassboxOrphanText)
   return checks
 }
 
@@ -770,6 +779,7 @@ runIfMain(import.meta.url, () => {
       `Relevance this run: ${thePlan.relevance ?? 'no'}`, '',
       `## Read by raters A and C: ${thePlan.read.length} of ${thePlan.pages.length} (rater C in ${claimShards(thePlan).length} claim-check shards of at most ${claimCheckPages})`, '',
       '### Changed since their last read', '', ...list(thePlan.changed), '',
+      '### Rematch (won their A comparisons last run)', '', ...list(thePlan.rematch), '',
       `### Rotation (read longest ago; every page at least every ${rotationRuns} runs)`, '', ...list(thePlan.rotation), '',
       `## Entries for pages gone at the base: ${thePlan.stale.join(', ') || 'none'}`,
     ].join('\n'))
@@ -802,7 +812,7 @@ runIfMain(import.meta.url, () => {
     const wanted = flags.pages?.split(',').filter(Boolean)
     const criteria = new Map<string, string[]>()
     for (const i of state.items.filter((i) => i.edited)) criteria.set(i.page, [...(criteria.get(i.page) ?? []), `${i.lens ?? i.kind}: ${i.fix}`])
-    for (const s of state.steps.filter((s) => s.status === 'taken')) for (const p of s.pages) criteria.set(p, [...(criteria.get(p) ?? []), `${s.kind} step: ${s.gist}`])
+    for (const s of state.steps.filter((s) => s.status === 'taken')) for (const p of [...s.pages, ...(s.into ? [s.into] : [])]) criteria.set(p, [...(criteria.get(p) ?? []), `${s.kind} step: ${s.gist}`])
     const briefs: string[] = []
     for (const [page, list] of [...criteria].filter(([p]) => !wanted || wanted.includes(p))) {
       const path = `${pagesDir('guide')}/${page}.md`

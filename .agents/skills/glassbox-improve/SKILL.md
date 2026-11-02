@@ -1,6 +1,6 @@
 ---
 name: glassbox-improve
-description: "Raise the Glass Box guide lens by lens: scripted checks, three sonnet lens raters on the pages that changed, a researcher who confirms every finding, and a blind gate on every edit; elects A per lens and self-merges one PR."
+description: "Raise the Glass Box guide lens by lens: scripted checks, sonnet lens raters on the pages that changed, a researcher who confirms every finding, and a blind gate on every edit; elects A per lens and self-merges one PR."
 disable-model-invocation: true
 ---
 
@@ -57,7 +57,8 @@ fresh `origin/main` and note that commit as **the base**. Save
 `grades.ts plan --base <base> --briefs <scratch folder>` to the scratch
 folder: it lists the pages raters A and C read (those whose text or cited
 files changed since their last read, plus the rotation, so every page is read
-at least every 3 runs), says whether Relevance is rated this run, and writes
+at least every 3 runs, plus each page that won its A comparisons last run),
+says whether Relevance is rated this run, and writes
 each rater's filled brief. Also list the guide pages any other open PR
 touches: the run edits those only to fix a confirmed false claim. Done when
 both are saved.
@@ -134,7 +135,8 @@ on the run branch.
 Run `grades.ts gate --base <base> --out <scratch folder>`. For each page an
 edit changed, it writes three judge briefs from
 [`judge-brief.md`](judge-brief.md): old and new in random order, with the
-criterion the edit targeted and the house rules. Dispatch one judge per brief,
+criterion the edit targeted and the house rules; a page new since the base
+has no old version, so `code-review` alone checks it. Dispatch one judge per brief,
 save the hand-backs and run `grades.ts votes --out <scratch folder>
 <hand-backs>`. An edit merges on 2 wins of 3; `equal` fails. A failed edit goes
 back to its writer once with the judges' `worse` notes: merge its new commit

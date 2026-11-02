@@ -80,6 +80,14 @@ describe('planPages', () => {
     expect(plan.relevance).toBe('pages added or gone: a/07, gone')
   })
 
+  it('reads again a page that won its comparisons last run, so it can win twice in a row', () => {
+    const won = { clarity: { grade: 'B' as const, run: '2026-11-01', wins: ['2026-11-01'] } }
+    const record: GradeRecord = { version: 3, run: '2026-11-01', pages: { 'a/01': rec('2026-11-01'), 'a/02': rec('2026-11-01', { lenses: won }), 'a/03': rec('2026-10-01'), 'a/04': rec('2026-11-01') }, steps: [] }
+    const plan = planPages(record, current(['a/01', 'a/02', 'a/03', 'a/04']), [run('2026-11-01', { relevance: true })])
+    expect(plan.rematch).toEqual(['a/02'])
+    expect(plan.read).toEqual(['a/01', 'a/02', 'a/03'])
+  })
+
   it('runs Relevance when none of the last 4 runs did', () => {
     const record: GradeRecord = { version: 3, pages: { 'a/01': rec('2026-11-01') }, steps: [] }
     const runs = ['2026-11-04', '2026-11-03', '2026-11-02', '2026-11-01'].map((d) => run(d))
@@ -96,7 +104,7 @@ describe('trimPage', () => {
 })
 
 describe('reports', () => {
-  const plan: Plan = { base: 'b', pages: ['a/01.x', 'a/02.y', 'walkthroughs/w'], read: ['a/01.x', 'walkthroughs/w'], changed: [], rotation: [], relevance: 'first v3 run', stale: [] }
+  const plan: Plan = { base: 'b', pages: ['a/01.x', 'a/02.y', 'walkthroughs/w'], read: ['a/01.x', 'walkthroughs/w'], changed: [], rotation: [], rematch: [], relevance: 'first v3 run', stale: [] }
   const good: Report = {
     rater: 'A',
     pages: [
@@ -165,7 +173,7 @@ describe('reports', () => {
 
 describe('tally', () => {
   const today = '2026-11-05'
-  const plan: Plan = { base: 'b', pages: ['a/01.p', 'a/02.p', 'a/03.p', 'a/04.p', 'b/01.p'], read: ['a/01.p', 'a/02.p', 'a/03.p', 'a/04.p', 'b/01.p'], changed: [], rotation: [], stale: [] }
+  const plan: Plan = { base: 'b', pages: ['a/01.p', 'a/02.p', 'a/03.p', 'a/04.p', 'b/01.p'], read: ['a/01.p', 'a/02.p', 'a/03.p', 'a/04.p', 'b/01.p'], changed: [], rotation: [], rematch: [], stale: [] }
   const lensesOf = (grades: Record<string, unknown>) => grades as Report['pages'][number]['lenses']
   const reportA = (pages: Record<string, Record<string, unknown>>, top3: Report['top3'] = {}): Report => ({ rater: 'A', pages: Object.entries(pages).map(([page, l]) => ({ page, lenses: lensesOf(l) })), top3 })
   const allB = { clarity: { grade: 'B' }, reasoning: { grade: 'B' } }
@@ -240,6 +248,19 @@ describe('tally', () => {
     expect(result.waiting).toEqual(['a/04.p on reasoning: it has work this run', 'b/01.p on reasoning: b has fewer than 2 other B pages'])
   })
 
+  it('compares again a page that won last run, without a top-3 place', () => {
+    const a = reportA({ 'a/01.p': allB, 'a/02.p': allB, 'a/03.p': allB, 'a/04.p': allB, 'b/01.p': allB })
+    const won = record({ 'a/01.p': { hash: 'h', sources: 's', lenses: { clarity: { grade: 'B', run: '2026-11-02', wins: ['2026-11-02'] } } } })
+    expect(tally(won, plan, [a], [], {}, today).comparisons.map((c) => [c.candidate, c.against])).toEqual([['a/01.p', 'a/02.p'], ['a/01.p', 'a/03.p']])
+  })
+
+  it('takes rater C\'s candidates from its shards by rank, at most 3', () => {
+    const shard = (pages: string[]): Report => ({ rater: 'C', pages: pages.map((page) => ({ page, lenses: { evidence: { grade: 'B' }, transfer: { grade: 'B' } } })), top3: { evidence: pages } })
+    const wide: Plan = { ...plan, pages: ['a/01.p', 'a/02.p', 'a/03.p', 'a/04.p', 'a/05.p', 'a/06.p'] }
+    const result = tally(record(), wide, [shard(['a/01.p', 'a/02.p', 'a/03.p']), shard(['a/04.p', 'a/05.p', 'a/06.p'])], [], {}, today)
+    expect([...new Set(result.comparisons.map((c) => c.candidate))]).toEqual(['a/01.p', 'a/04.p', 'a/02.p'])
+  })
+
   it('stops at 10 comparisons a run', () => {
     const pages = Object.fromEntries(Array.from({ length: 8 }, (_, i) => [`a/0${i}.p`, allB]))
     const wide: Plan = { ...plan, pages: Object.keys(pages), read: Object.keys(pages) }
@@ -274,7 +295,7 @@ describe('blind comparisons', () => {
 
 describe('nextRecord and runEntry', () => {
   const today = '2026-11-05'
-  const plan: Plan = { base: 'b', pages: ['a/01.p', 'a/02.p', 'a/03.p'], read: ['a/01.p', 'a/02.p'], changed: [], rotation: [], relevance: 'first v3 run', stale: [] }
+  const plan: Plan = { base: 'b', pages: ['a/01.p', 'a/02.p', 'a/03.p'], read: ['a/01.p', 'a/02.p'], changed: [], rotation: [], rematch: [], relevance: 'first v3 run', stale: [] }
   const current = { 'a/01.p': { hash: 'h1', sources: 's1' }, 'a/02.p': { hash: 'h2', sources: 's2' }, 'a/03.p': { hash: 'h3', sources: 's3' } }
   const old: GradeRecord = {
     version: 3,

@@ -45,7 +45,7 @@ source.
   It loses A only through a confirmed deficit on that lens.
 - **B**: meets the bar, even if another wording is imaginable.
 - **C**: a noticeable deficit.
-- **D**: several deficits, or a failed cut.
+- **D**: several deficits.
 
 In a PR from before `glassbox-improve`'s `grades.yml` existed, A meant today's
 B, B today's C and C today's D; before its v3, a page had one grade, not one

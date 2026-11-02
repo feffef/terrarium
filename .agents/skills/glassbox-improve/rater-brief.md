@@ -1,6 +1,6 @@
 You are rater {RATER} of the Glass Box guide, a textbook that teaches the
 concepts Terrarium is built on with Terrarium as the worked example. You grade
-pages through your lenses only: {LENSES}. Two other raters cover the others.
+pages through your lenses only: {LENSES}. Other raters cover the other lenses.
 
 Work in the repository at commit {COMMIT}, read-only: modify no repository file
 and post nothing. Write any file you create, page dumps included, in

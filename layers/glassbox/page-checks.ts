@@ -341,11 +341,11 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
 }
 
 // A reviewer's call, so these warn and never fail (#2701); glassbox-improve
-// takes each as a finding (issue #2792).
+// takes each but the "so" clause as a finding (issue #2792).
 const excerptMaxLines = 15
 const stopMaxWords = 80
 const linkOnlyMaxWords = 3
-const comment = /^\s*(?:\/\/|#|--|\/?\*|\*\/|<!--)/
+const commentLine = /^\s*(?:\/\/|#|--|\/?\*|\*\/|<!--)/
 const wordCount = (text: string) => text.split(/\s+/).filter((w) => /\w/.test(w)).length
 
 /** What a reviewer should look at on a page: a "so" clause in In Terrarium, long or
@@ -356,7 +356,7 @@ export function glassboxPageWarnings(source: string): string[] {
   for (const ref of glassboxPageRefs(body).files) {
     const lines = ref.excerpt?.split('\n') ?? []
     if (lines.length > excerptMaxLines) warnings.push(`the Excerpt of ${ref.path} renders ${lines.length} lines, more than ${excerptMaxLines}: cut it to the code that makes the decision`)
-    if (lines.some((l) => l.trim()) && lines.every((l) => !l.trim() || comment.test(l))) warnings.push(`the Excerpt of ${ref.path} holds only comments: show the code that makes the decision`)
+    if (lines.some((l) => l.trim()) && lines.every((l) => !l.trim() || commentLine.test(l))) warnings.push(`the Excerpt of ${ref.path} holds only comments: show the code that makes the decision`)
   }
   for (const s of readBody(body).sections.filter((s) => glassboxStopNumber(s.title))) {
     const n = wordCount(s.text.split(/^::lessons/m)[0]!)
@@ -371,6 +371,8 @@ export function glassboxPageWarnings(source: string): string[] {
 }
 
 /** Each guide page, by file under `pages/`, that no other page links to; the overview is the root. */
+export const glassboxOrphanText = 'no other guide page links to it'
+
 export function glassboxOrphans(sources: Record<string, string>): string[] {
   const linked = new Set<string>()
   for (const [file, source] of Object.entries(sources)) {
@@ -389,7 +391,7 @@ runIfMain(import.meta.url, () => {
   }
   const guide = join(content, 'guide/pages')
   const sources = Object.fromEntries(globSync('**/*.md', { cwd: guide }).map((f) => [f, readFileSync(join(guide, f), 'utf8')]))
-  for (const file of glassboxOrphans(sources)) console.log(`guide/pages/${file}: no other page links to it`)
+  for (const file of glassboxOrphans(sources)) console.log(`guide/pages/${file}: ${glassboxOrphanText}`)
 })
 
 /** Every entry in the `terms` Collection, by id. */
