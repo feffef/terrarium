@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRkQabGaMQ8gphe4Ra
 startedAt: 2026-11-02T20:02:50Z
-endedAt: 2026-11-02T20:53:58Z
+endedAt: 2026-11-02T21:58:41Z
 kind: interactive
 goal: Build glassbox-improve v3 (lens grades, blind edit gate, run state in YAML)
-status: in-review
-outcome: "PR #2794 open with the v3 Skill, grades.ts, briefs and new page checks; gate green; waits for a human merge"
-summary: "The user invoked /implement on issue #2792, the owner-approved v3 redesign of glassbox-improve, and allowed questions to the session that filed it. Before building, I asked the user about the issue's open points. Human decisions: N=5 and K=3; only rater B's trimmed pages adopted (writers stay batched per Subject; the claim check is unscoped); one PR; the first v3 run writes the initial grades.yml; the test seams (page-checks warnings and grades.ts's pure functions); and, after review, the A rematch rule, interleaving rater C's shard top-3 lists, and keeping the \"so\" warning out of findings. The issue author's session confirmed my five readings of ambiguous spec lines. Agent-initiated: splitting rater C into 8-page claim-check shards (one agent can't claim-check 60 pages; experiment d's size), the CLI shape (plan/tally/gate/votes/record writing a scratch run.yml), per-judge random X/Y order, and adding an optional `relevance` field to runs.yml entries. A smoke run with fake hand-backs caught a first-run bug (an undefined previous run made one win count as two). The Spec reviewer caught a real design gap: the rotation meant a page could never win A twice in a row on 4 of 5 lenses. The PR waits for a human merge because it rewrites an unattended scheduled Skill and #2792 isn't ready-for-agent. Still open: starting the first v3 run, which needs the merge first."
+status: completed
+outcome: "PR #2794 merged by the owner; issue #2792 closed; the first v3 run started in session_013zxzeQZYwzDuf4JEncnqAa"
+summary: "The user invoked /implement on issue #2792, the owner-approved v3 redesign of glassbox-improve, and allowed questions to the session that filed it. Before building, I asked the user about the issue's open points. Human decisions: N=5 and K=3; only rater B's trimmed pages adopted (writers stay batched per Subject; the claim check is unscoped); one PR; the first v3 run writes the initial grades.yml and is started from this session; the test seams; after my review, the A rematch rule, interleaving rater C's shard top 3s, and keeping the \"so\" warning out of findings; after the owner's review, keeping the 60-page first run and storing `edited` as one run per lens. The issue author's session confirmed my five readings of ambiguous spec lines. Agent-initiated: rater C in 8-page claim-check shards, the CLI shape (plan/tally/gate/votes/record over a scratch run.yml), per-judge random X/Y order, an optional `relevance` field in runs.yml, and the fixes for the owner's review findings 2, 3 and 5-8. A smoke run caught a first-run double win; my Spec review caught that the rotation made two consecutive A wins impossible on 4 of 5 lenses; the owner's review (a fable reviewer) caught vote-array holes, splits that escaped the churn guard, and judges getting the lens only by pointer. The owner turned on auto-merge and it merged; I then started the first v3 run in a new session."
 prs:
   - "2794"
 docsRead:
@@ -88,22 +88,33 @@ frictions:
   - description: The CLI's runIfMain sat above module-level consts, so the first real tally crashed (cell used before initialization); caught on the smoke run
     solution: Keep the main block at the end of the file; smoke-run each CLI command before the review
     severity: nit
-durationSec: 3068
+  - description: "My two-axis code-review missed bugs the owner's reviewer found: vote-array holes deciding a gate early, and a split without into escaping the churn guard"
+    solution: Give the Spec and Standards reviewers concrete adversarial inputs to try (out-of-order verdicts, missing optional fields) for each counting rule, not just the spec text
+    severity: moderate
+  - description: Folded the second review's fixes into the unpushed follow-up commit with only my own read, though the delta was over pr-workflow's 10-line simple-change limit
+    solution: Either run code-review on the delta or keep review-driven fixes under the simple-change limit; pr-workflow could say how a fix for a review's own findings is reviewed
+    severity: minor
+durationSec: 6951
 models:
-  claude-opus-5-5: 187
+  claude-opus-5-5: 282
 toolCounts:
-  Bash: 67
-  ToolSearch: 2
-  mcp__github__issue_read: 2
-  AskUserQuestion: 3
+  Bash: 90
+  ToolSearch: 3
+  mcp__github__issue_read: 3
+  AskUserQuestion: 4
   mcp__claude-code-remote__send_message: 1
   Skill: 4
-  ReadNotifications: 1
+  ReadNotifications: 12
   Write: 4
   Edit: 1
-  Agent: 2
+  Agent: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 2
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__create_session: 1
 filesEdited:
   - .agents/skills/glassbox-improve/rater-brief.md
   - .agents/skills/glassbox-improve/judge-brief.md
@@ -203,18 +214,31 @@ subagents:
     durationSec: 79
     toolCalls: 11
     modelCalls: 10
-    tokenShare: 7.7
+    tokenShare: 4.1
   - type: general-purpose
     task: Spec review of v3 diff
     durationSec: 117
     toolCalls: 15
     modelCalls: 12
-    tokenShare: 9.1
+    tokenShare: 4.9
+  - type: general-purpose
+    task: Standards review of follow-up
+    durationSec: 122
+    toolCalls: 15
+    modelCalls: 14
+    tokenShare: 4.1
+  - type: general-purpose
+    task: Spec review of follow-up
+    durationSec: 60
+    toolCalls: 9
+    modelCalls: 6
+    tokenShare: 2.7
 gitBranch: claude/trusting-davinci-4ay8g1
 entrypoint: remote
 cliVersion: 2.1.316
 learnings:
   - An election that needs wins in consecutive runs breaks when the readers only see a page every K runs; the selection and the rotation must be designed together
+  - The lens definition now comes from QUALITY.md at the base, so a smoke run at an older base (before the v3 QUALITY.md) fails in tally; smoke runs need a base that has the docs the script reads
 ideas:
   - "Give glassbox-improve a dry-run fixture: a committed set of fake rater, judge and researcher hand-backs and a test that drives plan, tally, gate, votes and record end to end at a pinned commit, so a change to grades.ts can't break the CLI shell unnoticed (today only the pure functions are tested)"
 landedBy: Stop
