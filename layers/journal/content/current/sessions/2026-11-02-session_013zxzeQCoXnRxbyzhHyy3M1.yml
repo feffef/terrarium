@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeQCoXnRxbyzhHyy3M1
 startedAt: 2026-11-02T21:45:54Z
-endedAt: 2026-11-02T21:56:12Z
+endedAt: 2026-11-02T22:05:29Z
 kind: interactive
 goal: Rewrite the README as a brief newcomer entry point
 status: in-review
-outcome: "PR 2795 open: README links the Glass Box guide, Journal and Blog and adds a local quickstart"
-summary: 'The owner asked me to check the stale README and propose which live-site pages best introduce Terrarium. I proposed the Glass Box guide plus a couple of deep links and four questions; the owner answered (audience is both readers and contributors, add a clone-and-run quickstart that suggests chatting with an agent in the clone, keep the Blog link, no deep links into individual Lessons) and green-lit the other suggestions and a PR. Human-instructed: the whole rewrite and its shape. Agent-initiated: cutting "The idea"/"Status" as duplicates of the guide, fixing the "layers of isolation" wording (ADR-0018), and after code-review pointing the Node version and the deploy claim at package.json and deploy/README.md. I verified pnpm dev serves the three linked routes locally; gate:scoped passed. Kept "writers" over "Personas" for newcomer readability.'
+outcome: PR 2795 merged; follow-up PR 2797 open with local options and real contribution paths
+summary: "The owner asked me to check the stale README and propose which live-site pages best introduce Terrarium. After I asked four questions, the owner set the shape (readers and contributors, a clone-and-run quickstart that suggests asking an agent, keep the Blog link, no deep links into Lessons), and PR 2795 merged. The owner then pointed out two flaws: the local section read as if you needed pnpm dev to ask an agent, and the Contributing links were arbitrary. I proposed two real contribution paths and two small cuts; the owner approved them and asked to keep the guest pipeline vague. Human-instructed: the whole rewrite, the either-or local options, the Contributing redesign, both cuts. Agent-initiated: cutting the duplicated idea/status prose, the ADR-0018 wording fix, pointing facts at their homes, and, after the second code-review, putting pnpm install before both options (the SessionStart hook and guards need node_modules) and replacing \"a maintainer decides\" (false under ADR-0023). I kept the deploy-link cut over the reviewer's suggestion because the owner approved it."
 prs:
   - "2795"
+  - "2797"
 docsRead:
   - path: layers/glassbox/content/guide/pages/index.md
     reason: the overview; became the README's main link
@@ -34,6 +35,12 @@ docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: "standards subagent: confirmed Lesson term"
     useful: partly
+  - path: docs/agents/guest-contributions.md
+    reason: the two outside contribution modes; source for the new Contributing section
+    useful: yes
+  - path: docs/agents/environment-caveats.md
+    reason: confirmed guards with onFailure block fail without node_modules
+    useful: yes
 skillsUsed:
   - name: code-review
     reason: two-axis review of the README diff; found two drift-prone facts
@@ -45,19 +52,28 @@ frictions:
   - description: Ran git log on README.md and git fetch to judge staleness before reading docs/agents/git-conventions.md, breaking CLAUDE.md's first-git-command rule
     solution: Low impact here; a PreToolUse hint on the first log/fetch would catch it before the call rather than after
     severity: minor
-durationSec: 618
+  - description: My first README told readers that asking an agent in the clone needs no install, though the SessionStart hook runs pnpm install and guards need node_modules; the owner and a second review caught the gaps
+    solution: Before telling readers what a local session needs, read .claude/settings.json hooks, not just package.json
+    severity: moderate
+  - description: I kept the Contributing list from the old README without asking whether an outsider could act on it; the owner had to point out it was arbitrary
+    solution: "Apply CLAUDE.md 'question the premise' to inherited sections too: give each link a reason for the stated audience"
+    severity: minor
+durationSec: 1175
 models:
-  claude-opus-5-5: 51
+  claude-opus-5-5: 119
 toolCounts:
-  Bash: 16
+  Bash: 35
   Read: 1
   Write: 1
-  Skill: 3
-  Agent: 2
-  Edit: 2
-  ToolSearch: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 4
+  Agent: 4
+  Edit: 7
+  ToolSearch: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - README.md
 rulesLoaded:
@@ -73,6 +89,9 @@ rulesLoaded:
   - .claude/rules/adr-0030.md
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0023.md
+  - .claude/rules/guards.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -160,20 +179,43 @@ ruleVerdicts:
   - path: .claude/rules/mdc-when-to-use.md
     reason: "Standards subagent: not relevant"
     useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: Backed 'a person merges every outside PR'; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0023.md
+    reason: Standards reviewer used it to show 'a maintainer decides' is false in the guest pipeline
+    useful: yes
+  - path: .claude/rules/guards.md
+    reason: Loaded reading environment-caveats; roster not needed
+    useful: no
 subagents:
   - type: general-purpose
     task: Standards review of README
     durationSec: 42
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 13.5
+    tokenShare: 5.2
   - type: general-purpose
     task: Spec review of README
     durationSec: 32
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 10
+    tokenShare: 3.9
+  - type: general-purpose
+    task: Standards review README follow-up
+    durationSec: 41
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 8.5
+  - type: general-purpose
+    task: Spec review README follow-up
+    durationSec: 21
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 6.5
 gitBranch: claude/relaxed-hopper-1166f3
 entrypoint: remote
 cliVersion: 2.1.316
+learnings:
+  - "In this repo a Claude Code session in a fresh clone needs pnpm install: the SessionStart hook runs it and tsx-based guards block tool calls without node_modules"
 landedBy: Stop
