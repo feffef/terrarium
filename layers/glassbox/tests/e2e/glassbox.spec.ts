@@ -9,22 +9,13 @@ describe('glassbox Tenant', async () => {
   it('redirects the Tenant root /t/glassbox to its guide Space', () =>
     expectRedirect('/t/glassbox', '/t/glassbox/guide'))
 
-  it('sends a Subject folder URL to its card on the guide landing', () =>
-    expectRedirect('/t/glassbox/guide/nuxt-vue', '/t/glassbox/guide#nuxt-vue'))
+  it('sends a Subject folder URL to its first Lesson', () =>
+    expectRedirect('/t/glassbox/guide/nuxt-vue', '/t/glassbox/guide/nuxt-vue/layers'))
 
-  // Walkthroughs don't lead while they're being worked out (layers/glassbox/GLOSSARY.md).
-  it('leads the guide landing with Subjects, Walkthroughs after them and no Start here', async () => {
+  // The landing is the overview, framed like every page, with the sidebar as its menu.
+  it('serves the guide landing as the overview with the sidebar', async () => {
     const html = await $fetch<string>('/t/glassbox/guide')
-    expect(html).not.toContain('Start here')
-    expect(html.indexOf('class="directory"')).toBeGreaterThan(0)
-    expect(html.indexOf('class="walkthroughs"')).toBeGreaterThan(html.indexOf('class="directory"'))
-  })
-
-  // The filter narrows in the browser; the served page lists everything (ADR-0028).
-  it('serves the full Subject list with an empty Find a Lesson box', async () => {
-    const html = await $fetch<string>('/t/glassbox/guide')
-    expect(html).toContain('type="search"')
-    expect(html).toMatch(/role="status"[^>]*><\/p>/)
-    expect(html.match(/class="card gb-pane"/g)?.length).toBeGreaterThan(5)
+    expect(html).toContain('id="gb-nav"')
+    expect(html).toContain('How an agent session works')
   })
 })

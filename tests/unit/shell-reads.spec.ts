@@ -30,7 +30,7 @@ describe('scope', () => {
   })
 
   it('excludes a Tenant content tree — the exact-depth layers pattern (ADR-0021)', () => {
-    expect(paths('cat layers/journal/content/current/pages/how-it-works.md')).toEqual([])
+    expect(paths('cat layers/journal/content/current/pages/history.md')).toEqual([])
     expect(isInstructionDoc('layers/journal/GLOSSARY.md')).toBe(true)
   })
 

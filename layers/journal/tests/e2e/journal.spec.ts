@@ -363,7 +363,7 @@ describe('journal Tenant', async () => {
   // can't silently regress to the generic renderer.
   it('renders standalone journal documents in the Tenant theme', async () => {
     const newest = currentDigestDates().at(-1)!
-    for (const url of ['/t/journal/current/architecture', `/t/journal/current/digests/${newest}`]) {
+    for (const url of ['/t/journal/current/history', `/t/journal/current/digests/${newest}`]) {
       const html = await $fetch(url)
       expect(html).toMatch(/class="jd[\s"]/) // themed wrapper, not system-ui catch-all
       expect(html).toContain('aria-label="Breadcrumb"')
@@ -374,28 +374,29 @@ describe('journal Tenant', async () => {
 
   // The on-ramp pages chain into a short tour in the landing's card order.
   it('ends each on-ramp page with a numbered Read-next step', async () => {
-    const first = await $fetch('/t/journal/current/architecture')
-    expect(first).toContain('Start here · 1 of 5')
-    expect(first).toMatch(/<a[^>]*href="\/t\/journal\/current\/how-it-works"[^>]*rel="next"|<a[^>]*rel="next"[^>]*href="\/t\/journal\/current\/how-it-works"/)
+    expect(await $fetch('/t/journal/current')).toContain('href="/t/glassbox/guide"')
+    const first = await $fetch('/t/journal/current/history')
+    expect(first).toContain('Start here · 1 of 3')
+    expect(first).toMatch(/<a[^>]*href="\/t\/journal\/current\/highlights"[^>]*rel="next"|<a[^>]*rel="next"[^>]*href="\/t\/journal\/current\/highlights"/)
     const last = await $fetch('/t/journal/current/real-and-invented')
-    expect(last).toContain('Start here · 5 of 5')
+    expect(last).toContain('Start here · 3 of 3')
     expect(last).toContain('back to the Journal')
     const digest = await $fetch(`/t/journal/current/digests/${currentDigestDates().at(-1)!}`)
     expect(digest).not.toContain('Start here ·')
   })
 
   // The archived Space's Document routes are served by the SAME themed override
-  // (not the generic catch-all) AND stay isolated: `/t/journal/archived/architecture`
+  // (not the generic catch-all) AND stay isolated: `/t/journal/archived/history`
   // has no document, so it renders a *themed* 404 and must not leak
-  // `current`'s architecture body.
+  // `current`'s history body.
   it('serves archived Document routes themed and isolated', async () => {
-    const res = await fetch('/t/journal/archived/architecture')
+    const res = await fetch('/t/journal/archived/history')
     expect(res.status).toBe(404)
     const html = await res.text()
     expect(html).toMatch(/class="jd[\s"]/) // themed override reaches archived
     expect(html).toContain('aria-label="Breadcrumb"')
     expect(html).toMatch(/No document at <code[\s>]/) // no such doc in archived
-    expect(html).not.toContain('Nuxt Content fits this experiment') // did NOT leak current/architecture
+    expect(html).not.toContain('describes Terrarium as it stands') // did NOT leak current/history
   })
 
   // The archived Space dashboard must render cleanly on the same component
@@ -416,9 +417,6 @@ describe('journal Tenant', async () => {
     expect(html.match(/<article [^>]*class="card[\s"]/g)?.length ?? 0).toBe(shown)
     if (total > JOURNAL_SESSIONS_LOADED) expect(html).toContain(`newest ${shown} of ${total} session logs`)
   })
-
-  // `how-it-works`'s ```mermaid render coverage now lives in the platform-wide
-  // sweep (`tests/e2e/smoke.spec.ts`, issue #469), not a hard-coded test here.
 
   // Both feeds are one page-wide accordion: opening a session card collapses an
   // already-open digest (and vice versa), so at most one item is ever expanded.

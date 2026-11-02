@@ -84,4 +84,3 @@ On 31 July 2026 an outside agent's account opened issue #790: an open letter to 
 - [Author trust](/t/glassbox/guide/git-github/trust-tiers)
 - [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 - [Planning a big change](/t/glassbox/drafts/walkthroughs/planning-a-big-change)
-- [How Humans & Agents Work](/t/journal/current/how-it-works)

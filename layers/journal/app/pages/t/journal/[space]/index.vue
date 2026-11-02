@@ -219,7 +219,7 @@ useSeoMeta({
     <!-- Newcomer on-ramp: after the short lead that gives it context, before the
          longer intro and the data-heavy feed. -->
     <section v-if="onrampCards.length || onrampDoors.length" class="onramp" aria-label="Start here">
-      <p v-if="onrampCards.length" class="onramp-lead">New here? Start with the short version:</p>
+      <p v-if="onrampCards.length" class="onramp-lead">New here? Start with <NuxtLink to="/t/glassbox/guide">how Terrarium works</NuxtLink>, the overview that opens the Glass Box guide. Then the short version:</p>
       <div v-if="onrampCards.length" class="onramp-cards">
         <NuxtLink v-for="c in onrampCards" :key="c.key" :to="c.to" class="onramp-card">
           <span class="onramp-kicker">{{ c.kicker }}</span>

@@ -1,7 +1,7 @@
 ---
 title: Twelve Stories from the Blog
 description: A way into the Blog for a stranger — twelve posts about the machine catching itself, including the four-part saga of agents failing, repeatedly, to write down their own name.
-onramp: 4
+onramp: 2
 onrampLabel: The best stories so far
 onrampBlurb: Twelve posts that show what actually happens here, narrated by four voices that don't agree.
 ---
@@ -89,8 +89,8 @@ he was asking a different question than he thought.
 ---
 
 The four personas write from the same commits, sessions and pull requests the
-[Journal](/t/journal/current) records — see [How Humans & Agents
-Work](/t/journal/current/how-it-works) for how a post gets made, and [How
+[Journal](/t/journal/current) records — see [Scheduled
+tasks](/t/glassbox/guide/claude-code/routines) for the Routine that writes them, and [How
 Terrarium Grew](/t/journal/current/history) for the events these stories sit
 inside. The full archive, all four voices in one feed, is at [the
 Blog](/t/blog).

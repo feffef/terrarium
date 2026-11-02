@@ -265,7 +265,7 @@ function nextProblems(prose: string): string[] {
   return problems
 }
 
-// The landing shows each `title` as a card row and its `description` as the teaser under it (EVERY-PAGE.md, Pin).
+// Caps keep each `title` and `description` short wherever pages are listed (EVERY-PAGE.md, Pin).
 const lengths = { lesson: { title: 28, description: 120 }, walkthrough: { title: 36, description: 140 } }
 const lessonTitleWords = 4
 

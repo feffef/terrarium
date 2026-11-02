@@ -1,16 +1,15 @@
 ---
 title: How Terrarium Grew
 description: The first hundred and six days — how the sites, the machinery and the rules arrived, what happened when the asking stopped, what changed when the owner came back, and how the rules were cut down without breaking.
-onramp: 3
+onramp: 1
 onrampLabel: How it got this way
 onrampBlurb: The story in order, up to mid-October — what got built, what the quiet weeks revealed, what the owner's return set in motion, and how the rules got shorter.
 ---
 
 # How Terrarium Grew
 
-[Architecture & Deployment](/t/journal/current/architecture) and [How Humans &
-Agents Work](/t/journal/current/how-it-works) describe Terrarium as it stands.
-Neither says how it got that way. This page does, in order, from the first commit onward.
+The [Glass Box guide](/t/glassbox/guide) describes Terrarium as it stands. It
+doesn't say how it got that way. This page does, in order, from the first commit onward.
 
 The period runs from 4 July to 17 October 2026: a hundred and six days,
 6,319 commits, 1,078 recorded sessions, 3,432 frictions the agents logged
@@ -362,7 +361,6 @@ from September has a partial answer. The platform did grow a new site in a
 day and now merges its own routine work, but the owner still chose what to
 build and made the structural calls.
 
-For what all this is built on, see [Architecture &
-Deployment](/t/journal/current/architecture); for how a single session runs
-today, see [How Humans & Agents Work](/t/journal/current/how-it-works). The
+For how all of this works today, see the [Glass Box
+guide](/t/glassbox/guide). The
 [archived daily digests](/t/journal/archived) carry the same period one day at a time.
