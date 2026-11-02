@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeR2kopqGDtf5GQztz6
 startedAt: 2026-11-02T07:41:12Z
-endedAt: 2026-11-02T19:06:38Z
+endedAt: 2026-11-02T19:16:51Z
 kind: interactive
 goal: Report the API cost and design fit of glassbox-improve sessions
 status: completed
 outcome: Costs and design fit of glassbox-improve runs reported; a dry run of six-lens sonnet raters compared with the 11-02 mixed-model run; no repo change
-summary: "The owner asked how API costs of glassbox-improve sessions developed. I first answered from session logs only, wrongly concluding no cost data exists; on the owner's pointer to inspect-session, get_session gave each session's list-price cost and result events the per-model split. On the owner's requests I then checked the v2 runs and the new 11-02 run (PR 2787) against the v2 design from logs and PR bodies, explained why A is elected rather than rated, and measured model agreement from grades.yml. The owner proposed rating by aspects instead of by model; together we settled six lenses in three pairs (like audit-docs), correctness as an always-fix issue, capped A per lens, weakest-lens-first selection and researcher confirmation. On the owner's instruction I ran a read-only dry run: three sonnet lens raters on the 11-02 base commit 4b7e40b, briefs drafted in this session (scratchpad lens-dryrun), and compared their grades with the 11-02 mixed-model grades; a second dry run with an adjusted brief (lens-dryrun/run2) measured consistency: 92% identical lens grades, about two thirds of below-B grades repeated, A sets stable only for Relevance. The owner then agreed the 3-step cap could go if churn is prevented, and that run state may move from the PR body to repo YAML plus scripts. Nothing was built, filed or committed; all work was human-instructed."
+summary: "The owner asked how API costs of glassbox-improve sessions developed. I first answered from session logs only, wrongly concluding no cost data exists; on the owner's pointer to inspect-session, get_session gave each session's list-price cost and result events the per-model split. On the owner's requests I then checked the v2 runs and the new 11-02 run (PR 2787) against the v2 design from logs and PR bodies, explained why A is elected rather than rated, and measured model agreement from grades.yml. The owner proposed rating by aspects instead of by model; together we settled six lenses in three pairs (like audit-docs), correctness as an always-fix issue, capped A per lens, weakest-lens-first selection and researcher confirmation. On the owner's instruction I ran a read-only dry run: three sonnet lens raters on the 11-02 base commit 4b7e40b, briefs drafted in this session (scratchpad lens-dryrun), and compared their grades with the 11-02 mixed-model grades; a second dry run with an adjusted brief (lens-dryrun/run2) measured consistency: 92% identical lens grades, about two thirds of below-B grades repeated, A sets stable only for Relevance. The owner then agreed the 3-step cap could go if churn is prevented, and that run state may move from the PR body to repo YAML plus scripts. On the owner's request I wrote all proposals and evidence into the scratchpad (glassbox-improve-v3-proposal.md), had a fable agent review it, verified its key factual corrections and fixed them in the document. Nothing was built, filed or committed; all work was human-instructed."
 prs: []
 docsRead:
   - path: .claude/skills/inspect-session/SKILL.md
@@ -32,6 +32,10 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/glassbox-lesson/DECISIONS.md
     reason: (no reason given)
+  - path: .agents/skills/glassbox-improve/researcher-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-improve/writer-brief.md
+    reason: (no reason given)
   - path: docs/agents/issue-tracker.md
     reason: (no reason given)
   - path: docs/agents/pr-workflow.md
@@ -54,11 +58,11 @@ frictions:
   - description: Ran git fetch and git log before reading docs/agents/git-conventions.md, against CLAUDE.md's docs-first rule; no harm here as both were read-only lookups.
     solution: Read git-conventions.md before the first non-read-only git command, as the PostToolUse hint said.
     severity: nit
-durationSec: 41127
+durationSec: 41739
 models:
-  claude-opus-5-5: 155
+  claude-opus-5-5: 181
 toolCounts:
-  Bash: 43
+  Bash: 49
   Skill: 4
   mcp__claude-code-remote__get_session: 9
   mcp__claude-code-remote__list_events: 3
@@ -66,7 +70,9 @@ toolCounts:
   ToolSearch: 1
   mcp__github__pull_request_read: 2
   mcp__claude-code-remote__list_sessions: 1
-  Agent: 6
+  Agent: 7
+  Write: 1
+  Edit: 6
 rulesLoaded:
   - .claude/rules/adr-0015.md
   - .claude/rules/tenant-glossary.md
@@ -88,6 +94,8 @@ docsReadBySubagents:
   - layers/glassbox/GLOSSARY.md
   - .agents/skills/glassbox-lesson/EVERY-PAGE.md
   - .agents/skills/glassbox-lesson/DECISIONS.md
+  - .agents/skills/glassbox-improve/researcher-brief.md
+  - .agents/skills/glassbox-improve/writer-brief.md
   - docs/agents/issue-tracker.md
   - docs/agents/pr-workflow.md
   - docs/adr/TEMPLATE.md
@@ -135,42 +143,49 @@ subagents:
     durationSec: 288
     toolCalls: 36
     modelCalls: 25
-    tokenShare: 12.6
+    tokenShare: 11
   - type: general-purpose
     task: "Lens rater 2: relevance+single home"
     model: sonnet
     durationSec: 258
     toolCalls: 33
     modelCalls: 27
-    tokenShare: 11.3
+    tokenShare: 9.8
   - type: general-purpose
     task: "Lens rater 3: evidence+transfer"
     model: sonnet
     durationSec: 264
     toolCalls: 84
     modelCalls: 18
-    tokenShare: 11.1
+    tokenShare: 9.6
   - type: general-purpose
     task: "Lens run 2: clarity+reasoning"
     model: sonnet
     durationSec: 204
     toolCalls: 68
     modelCalls: 12
-    tokenShare: 7.5
+    tokenShare: 6.5
   - type: general-purpose
     task: "Lens run 2: relevance+single home"
     model: sonnet
     durationSec: 279
     toolCalls: 27
     modelCalls: 23
-    tokenShare: 8.8
+    tokenShare: 7.6
   - type: general-purpose
     task: "Lens run 2: evidence+transfer"
     model: sonnet
     durationSec: 288
     toolCalls: 39
     modelCalls: 30
-    tokenShare: 12.6
+    tokenShare: 11
+  - type: general-purpose
+    task: Fable review of v3 proposal
+    model: fable
+    durationSec: 298
+    toolCalls: 19
+    modelCalls: 19
+    tokenShare: 6.7
 gitBranch: claude/cool-galileo-0lqed0
 entrypoint: remote
 cliVersion: 2.1.316
