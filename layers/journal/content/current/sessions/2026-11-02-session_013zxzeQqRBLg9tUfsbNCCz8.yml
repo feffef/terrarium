@@ -1,14 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeQqRBLg9tUfsbNCCz8
 startedAt: 2026-11-02T02:07:52Z
-endedAt: 2026-11-02T02:25:04Z
+endedAt: 2026-11-02T02:37:21Z
 kind: autonomous
 goal: Turn recurring session frictions into fixes
-status: in-review
-outcome: "Ledger PR #2775 open, 3 regression issues filed, 1 fix built and awaiting a re-review fix"
-summary: "Scheduled frictions-to-fixes run (no human prompt; the schedule is the only instruction). A survey subagent filed 33 window Frictions into the Friction Ledger and found 4 regressions plus 2 new entries. I filed regression issues #2772, #2773 and #2774 (top three by severity; the third is weak: likely an owner-chosen half of #2700), picked the one never-fixed candidate (run-summary-verdict-paths), had a design agent design it and a Sonnet agent build it. code-review found a real bug (lazy regex mis-cuts a worktree path nested under .claude/), so the build agent was resumed to fix it. Ledger PR #2775 is open with a green gate. Still open: re-review and PR for the fix, then the closing ledger PR."
+status: completed
+outcome: "Ledger PRs #2775 and #2777 and fix PR #2776 merged; regression issues #2772, #2773, #2774 filed"
+summary: "Scheduled frictions-to-fixes run (no human prompt; the schedule is the only instruction). A survey subagent filed 33 window Frictions into the Friction Ledger and found 4 regressions plus 2 new entries. I filed regression issues #2772, #2773 and #2774 (top three by severity; the third is weak: likely an owner-chosen half of #2700), picked the one never-fixed candidate (run-summary-verdict-paths), had a design agent design it and a Sonnet agent build it. code-review found a real bug (lazy regex mis-cuts a worktree path nested under .claude/), so the build agent was resumed to fix it. The fix (PR #2776), the ledger PR (#2775) and the closing ledger PR (#2777) all merged after green gates."
 prs:
   - "2775"
+  - "2776"
+  - "2777"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: required before first non-read-only git command
@@ -67,20 +69,31 @@ frictions:
   - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/agent-ac20f9a29706df114"
     solution: Push each, or remove it if its work is meant to be dropped.
     severity: minor
-durationSec: 1032
+  - description: "I typed the Reviewed SHA in the #2777 verdict from memory and got it wrong; I caught it on re-read and edited the comment."
+    solution: Paste the SHA from git rev-parse HEAD, as pr-workflow step 4 says.
+    severity: minor
+  - description: Survey and design briefs assume doc-based Frictions and a date field in list-merges-since output; both were moot or missing for a script fix.
+    solution: Say which brief steps are skipped for a script fix, and add merge dates to list-merges-since.
+    severity: minor
+durationSec: 1769
 models:
-  claude-sonnet-5-5: 77
+  claude-sonnet-5-5: 137
 toolCounts:
-  Bash: 18
+  Bash: 33
   Read: 6
-  Skill: 4
+  Skill: 5
   Agent: 5
   ToolSearch: 1
   mcp__github__issue_write: 3
   SendMessage: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  ReadNotifications: 7
+  mcp__github__add_issue_comment: 3
+  mcp__github__pull_request_read: 2
+  mcp__github__update_issue_comment: 1
 filesEdited:
+  - layers/journal/content/current/frictions/run-summary-verdict-paths.yml
   - .agents/skills/clear-backlog/scripts/run-summary.ts
   - .agents/skills/clear-backlog/tests/unit/run-summary.spec.ts
   - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
@@ -108,7 +121,6 @@ filesEdited:
   - layers/journal/content/current/frictions/relayed-subagent-claims.yml
   - layers/journal/content/current/frictions/required-doc-read-truncated.yml
   - layers/journal/content/current/frictions/restart-kills-background-work.yml
-  - layers/journal/content/current/frictions/run-summary-verdict-paths.yml
   - layers/journal/content/current/frictions/scratchpad-script-cant-import-repo-deps.yml
   - layers/journal/content/current/frictions/skill-run-diff-review-unnamed.yml
   - layers/journal/content/current/frictions/stop-hook-nag.yml
@@ -204,32 +216,32 @@ subagents:
     durationSec: 343
     toolCalls: 28
     modelCalls: 22
-    tokenShare: 27.7
+    tokenShare: 17.4
   - type: general-purpose
     task: Design fix for verdict paths
     durationSec: 192
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 4.9
+    tokenShare: 3.1
   - type: general-purpose
     task: Implement verdict path normalising
     model: sonnet
-    durationSec: 329
-    toolCalls: 20
-    modelCalls: 14
-    tokenShare: 10.7
+    durationSec: 432
+    toolCalls: 24
+    modelCalls: 17
+    tokenShare: 7.6
   - type: general-purpose
     task: Standards review of verdict-paths fix
     durationSec: 20
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 5.4
+    tokenShare: 3.4
   - type: general-purpose
     task: Spec review of verdict-paths fix
     durationSec: 30
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 5.5
+    tokenShare: 3.5
 gitBranch: claude/eager-ptolemy-14i0hp
 entrypoint: remote_trigger
 cliVersion: 2.1.316
