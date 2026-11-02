@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeQBuD3C4A1V2DpoHYu
 startedAt: 2026-11-02T07:34:28Z
-endedAt: 2026-11-02T07:43:09Z
+endedAt: 2026-11-02T07:47:22Z
 kind: autonomous
 goal: Scheduled sync of Glass Box guide pages to main
-status: in-review
-outcome: "PR #2781 repins all guide pages to main and fixes two Excerpts; gate green, awaiting merge"
+status: completed
+outcome: "PR #2781 merged: guide pages repinned to main and two Excerpts fixed"
 summary: 'Scheduled glassbox-update run (no human prompt). Ran the update script, advanced pins to main 574377b5, then checked the 22 flagged pages and 25 flagged terms against the diffs. Main change upstream was the rename of "pack Skills" to "installed Skills", plus small CLAUDE.md, git-conventions and ADR-0027 edits. Only two pages needed edits (an Excerpt of triage-labels.md and one of the prune-trial SKILL.md); the other pages and terms still hold. Opened PR #2781 and subscribed. I reviewed the diff myself instead of running code-review. All of it was agent-initiated under the schedule.'
 prs:
   - "2781"
@@ -54,15 +54,19 @@ frictions:
   - description: Skipped the code-review Skill for a 58-file diff and used my own read of a mechanical diff; the pr-workflow simple-change test names size limits this exceeds.
     solution: State the exemption plainly or run code-review on the two edited files.
     severity: minor
-durationSec: 521
+durationSec: 774
 models:
-  claude-sonnet-5-5: 60
+  claude-sonnet-5-5: 78
 toolCounts:
-  Bash: 29
+  Bash: 33
   Read: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
