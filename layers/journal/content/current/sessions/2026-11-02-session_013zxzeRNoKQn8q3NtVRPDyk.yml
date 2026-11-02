@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRNoKQn8q3NtVRPDyk
 startedAt: 2026-11-02T07:42:21Z
-endedAt: 2026-11-02T08:12:59Z
+endedAt: 2026-11-02T13:52:52Z
 kind: interactive
 goal: Glass Box guide landing becomes Terrarium's overview
 status: in-review
-outcome: PR 2782 open with a green gate; waits for a human merge (touches .claude/rules/)
-summary: "Human-instructed throughout: the owner asked whether Part 1 of the interactive-map brief could become one overview for human readers and agents, then decided each question in chat (overview replaces the Glass Box landing's directory, terms and sources; the Journal's Architecture & Deployment and How Humans & Agents Work pages go once their unique content moves into the overview; Scheduled tasks lists every Routine and Self-improvement loop every loop Skill as an exception to the no-growing-lists rule; a CLAUDE.md trigger; the Journal's Start here points to the overview as a cheap compromise; merge main). Agent-initiated within that ask: serving the landing through [...slug].vue so the sidebar is its menu, redirecting a bare Subject URL to its first Lesson (its old target, a landing card, was gone), renumbering the Journal tour, and repointing links and tests. Before agreeing that the two Journal pages were covered, the session checked them against the Lessons and named the gaps (build-time idea, why this stack, unreported rot, why in public, per-Routine roles). Two-axis code review found real errors drafted from the old overview rather than the repo (rules loading, the Routine definition, a dependabot-sweep trigger no repo file shows, a stale Skill path, duplicated list lines); all fixed, and the follow-up got its own review. Open: whether dependabot-sweep is event-triggered is unverified, so the Lesson no longer says."
+outcome: PR 2782 open, overview rewritten on request, gate green; waits for a human merge (touches .claude/rules/)
+summary: "Human-instructed throughout: the owner asked whether Part 1 of the interactive-map brief could become one overview for human readers and agents, then decided each question in chat (overview replaces the Glass Box landing's directory, terms and sources; the Journal's Architecture & Deployment and How Humans & Agents Work pages go once their unique content moves into the overview; Scheduled tasks lists every Routine and Self-improvement loop every loop Skill as an exception to the no-growing-lists rule; a CLAUDE.md trigger; the Journal's Start here points to the overview as a cheap compromise; merge main). Agent-initiated within that ask: serving the landing through [...slug].vue so the sidebar is its menu, redirecting a bare Subject URL to its first Lesson, renumbering the Journal tour, and repointing links and tests. Two-axis code review found errors drafted from the old overview rather than the repo; all fixed. After the PR was green, the owner asked for another critical review of whether the wording served both readers. It didn't: it never said why Terrarium exists (the thesis an earlier agent missed, per the 2026-10-02 digest), led with generic infrastructure, used \"maintainer/visitors\" instead of Trusted/Public, and packed the agent guidance into one link-heavy paragraph. On the owner's go, the session rewrote it in a new order (why, who, how a change happens, who decides, the loop, then repository, shipping, stack), had it reviewed against ADR-0003, ADR-0004 and GLOSSARY.md, fixed the findings (an incomplete who-merges list that read as complete, a missing verdict step), and pushed on a green gate. Open: whether dependabot-sweep is event-triggered is unverified."
 prs:
   - "2782"
 docsRead:
@@ -46,6 +46,14 @@ docsRead:
   - path: .agents/skills/dependabot-sweep/SKILL.md
     reason: Says a Routine runs it but not what starts it; reviewer found no event trigger
     useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: Who-merges list and why the gate makes self-merge safe; I and the rewrite reviewer checked the overview against it
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: What counts as new work and who approves it, for the Who decides section
+    useful: yes
+  - path: layers/glassbox/content/guide/pages/index.md
+    reason: (read before editing)
 skillsUsed:
   - name: code-review
     reason: two-axis review before the first push, then on the follow-up
@@ -68,24 +76,33 @@ frictions:
   - description: Found late that the Glass Box glossary named the Subject directory and Subject URLs redirected to landing cards.
     solution: Grep a page's glossary product decisions and route redirects before removing a landing section.
     severity: nit
-durationSec: 1838
+  - description: The first overview kept Part 1's infrastructure-first order and omitted why Terrarium exists; only the owner's request for a second critical review surfaced it.
+    solution: Before shipping a page for two audiences, review it against each reader's first question; the code-review spec axis checked facts, not fit.
+    severity: moderate
+durationSec: 22231
 models:
-  claude-opus-5-5: 202
+  claude-opus-5-5: 272
 toolCounts:
-  Bash: 82
-  Write: 1
+  Bash: 102
+  Write: 2
   Edit: 5
   Skill: 4
-  Agent: 3
-  Read: 2
-  ToolSearch: 1
+  Agent: 4
+  Read: 3
+  ToolSearch: 5
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 5
+  mcp__github__pull_request_read: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__update_pull_request: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/index.md
   - layers/glassbox/content/guide/pages/claude-code/10.routines.md
   - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
   - CLAUDE.md
+  - layers/glassbox/tests/e2e/glassbox.spec.ts
   - .agents/skills/glassbox-walkthrough/SKILL.md
   - layers/glassbox/GLOSSARY.md
   - .agents/skills/audit-docs/SKILL.md
@@ -123,7 +140,6 @@ filesEdited:
   - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
   - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
   - layers/glassbox/page-checks.ts
-  - layers/glassbox/tests/e2e/glassbox.spec.ts
   - layers/glassbox/tests/unit/glassbox-pages.spec.ts
   - layers/glassbox/tests/unit/lesson.spec.ts
   - layers/glassbox/tests/unit/subjects.spec.ts
@@ -160,13 +176,17 @@ rulesLoaded:
   - .claude/rules/adr-0020.md
   - .claude/rules/adr-0022.md
   - .claude/rules/guards.md
+  - .claude/rules/adr-0010.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0003.md
   - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
 adrHints:
   - adr: 29
     via: path
@@ -254,25 +274,34 @@ ruleVerdicts:
   - path: .claude/rules/guards.md
     reason: Loaded on reading read-first-hint.ts; confirmed the new trigger needs no hint entry
     useful: partly
+  - path: .claude/rules/adr-0010.md
+    reason: Loaded when I grepped a digest for the thesis incident; I wrote no Digest
+    useful: no
 subagents:
   - type: general-purpose
     task: Standards review of branch diff
     durationSec: 122
     toolCalls: 22
     modelCalls: 20
-    tokenShare: 11.3
+    tokenShare: 6.7
   - type: general-purpose
     task: Spec review of branch diff
     durationSec: 92
     toolCalls: 15
     modelCalls: 15
-    tokenShare: 9.4
+    tokenShare: 5.6
   - type: general-purpose
     task: Review follow-up fix commit
     durationSec: 47
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 4.6
+    tokenShare: 2.8
+  - type: general-purpose
+    task: Review the overview rewrite
+    durationSec: 53
+    toolCalls: 12
+    modelCalls: 6
+    tokenShare: 2.9
 gitBranch: claude/determined-noether-pzjwig
 entrypoint: remote
 cliVersion: 2.1.316
