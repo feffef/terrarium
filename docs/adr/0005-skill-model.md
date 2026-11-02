@@ -14,9 +14,9 @@ Skill lives outside the repo.
   writes that Tenant's manifest and follows its schema. A Skill for one Tenant
   is fine only for a repeated workflow unique to that Tenant, such as writing
   its content.
-- **Pack Skills stay as installed** (ADR-0015). A doc we copy from a pack
-  template becomes ours: we edit it and never re-sync it, and the template
-  stays generic.
+- **Installed Skills are never edited** (ADR-0015). A doc we copy from an
+  installed Skill's template becomes ours: we edit it and never re-sync it,
+  and the template stays generic.
 - **Workflow scripts.** A Claude Code workflow script runs a fixed sequence of
   agent steps, so the model cannot skip or reorder them. It belongs to the one
   Skill that runs it, and that Skill names it. It is a real file in
@@ -47,9 +47,9 @@ Skill lives outside the repo.
   conventions with them.
 - **Keep workflow scripts in the Skill's folder and link them into
   `.claude/workflows/`.** Saving a workflow refuses a link.
-- **Separate our Skills from pack Skills by folder or name.** `skills-lock.json`
-  already lists every pack Skill, and the Skill Inventory records each Skill's
-  role.
+- **Separate our Skills from installed Skills by folder or name.**
+  `skills-lock.json` already lists every installed Skill, and the Skill
+  Inventory records each Skill's role.
 
 ## See
 

@@ -32,8 +32,8 @@ fixes a human must merge.
 - **Historical:** session logs and blog posts. Never edit them. A journal
   Digest is a summary, not a record: fix a wrong fact in it like any Live
   doc (ADR-0010).
-- **Pack-generic:** external pack Skills (keyed in `skills-lock.json`). Never
-  edit them; the gate rejects it.
+- **Installed:** installed Skills (keyed in `skills-lock.json`). Never edit
+  them; the gate rejects it.
 - **Skip:** Tenant content that makes no claim about the Terrarium
   (`GLOSSARY-MAP.md`'s Relationships section names those Tenants), Glass Box
   pages (`glassbox-update` keeps them), `docs/proposals/<N>-*.md` bodies and

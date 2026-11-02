@@ -12,7 +12,7 @@ hit and leave the cut alone until it is judged.
 - **What a trial may change:** any text that instructs our agents: `CLAUDE.md`,
   `GLOSSARY.md`, `docs/`, our own Skills, and comments in scripts. A whole-file
   rewrite keeps every rule and decision the file holds.
-- **What it may not change:** pack Skills (ADR-0015), session logs, and
+- **What it may not change:** installed Skills (ADR-0015), session logs, and
   anything that changes what runs. When a verdict shows a behaviour needs a
   hook, the trial files an issue, and a session with a human present builds it.
 - **ADRs and their summary rules** change in a trial only when a Trusted user

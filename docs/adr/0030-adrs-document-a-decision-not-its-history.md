@@ -80,6 +80,6 @@ evidence would justify that.
 ## See
 
 - `docs/adr/TEMPLATE.md`: the template. It replaces the section layout and
-  Status field of the pack's `.agents/skills/domain-modeling/ADR-FORMAT.md`,
+  Status field of the installed `.agents/skills/domain-modeling/ADR-FORMAT.md`,
   whose test for when a decision deserves an ADR still applies.
 - `scripts/gate/validate-adr-rules.ts`: fails the gate on history in an ADR.

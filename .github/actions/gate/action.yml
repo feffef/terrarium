@@ -41,7 +41,7 @@ runs:
         HEAD_SHA: ${{ github.sha }}
       run: pnpm exec tsx scripts/gate/gate.ts --decide --base "$BASE_SHA" --head "$HEAD_SHA"
 
-    # Pins each external pack Skill's installed SKILL.md hash against its
+    # Pins each installed Skill's SKILL.md hash against its
     # Skill Inventory entry (ADR-0015) — a governance/provenance
     # check, arguably its own layer rather than one of L0-L3, but the
     # cheapest check available, so it runs first, mirroring `pnpm gate`'s order.

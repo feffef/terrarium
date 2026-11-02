@@ -90,7 +90,7 @@ already records the same thing). Every other finding is an observation
 to `close-session`'s observations.
 
 First, check the Skill a finding is about (not the one you audit) against
-`skills-lock.json`. A Pack Skill's `SKILL.md` is not ours: its finding is an
+`skills-lock.json`. An installed Skill's `SKILL.md` is not ours: its finding is an
 observation for its Inventory entry (step 5), never an issue or comment.
 
 For each other finding that clears that bar:
@@ -133,13 +133,13 @@ Grade each Skill's importance by the definitions below, after reading its
 - **Grade on felt absence, not counts.** Read each Skill's `mentionedIn`
   logs for where it **caught** something or where **skipping it cost**
   something; `humanInvokedIn` is a human reaching for it. These are the
-  evidence, pack Skills included.
+  evidence, installed Skills included.
 - **A grade change needs ≥2 windowed sessions as evidence**, in either
   direction, and those session ids are cited.
 - **A Skill that runs another takes the credit** (`grill-with-docs` runs
   `grilling`); grade the inner Skill on its standalone uses.
 - **A missed invocation of an own Skill is a trigger problem**: step 4's
-  issue, not a demotion. For a pack Skill, whose trigger we cannot fix, the
+  issue, not a demotion. For an installed Skill, whose trigger we cannot fix, the
   grade is the lever.
 - **`role`** stays ≤ ~50 words and free of PR, issue or session ids. The
   scorecard prints it; rewrite any claim this run's evidence contradicts.
@@ -157,7 +157,7 @@ Grade each Skill's importance by the definitions below, after reading its
   It appends each step 1 run to its Routine's file, prunes old rows and
   reports what it appended, skipped and dropped.
 - **Coverage gaps**: create an entry for a Skill that is used but not
-  inventoried (`category` is `general-engineering` for a pack Skill,
+  inventoried (`category` is `general-engineering` for an installed Skill,
   `platform-operation` for our own). Propose removing an entry whose Skill is
   gone from disk, unless it is a built-in CLI Skill, which you flag instead.
 - **Ideas**: when the evidence suggests a new Skill, a split or a

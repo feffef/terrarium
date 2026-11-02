@@ -56,7 +56,7 @@ export const RESOLVED_ORPHANED_SESSIONS: ReadonlyMap<string, string> = new Map([
 /** Paths this helper reads. */
 export const INVENTORY_DIR = 'layers/journal/content/current/skills'
 export const SKILLS_DIR = '.agents/skills'
-/** The external pack's lockfile — a Skill named here is not ours to edit (ADR-0015). */
+/** The installed Skills' lockfile — a Skill named here is not ours to edit (ADR-0015). */
 export const SKILLS_LOCK = 'skills-lock.json'
 
 // Exported so the unit tests can build synthetic `git log` output with them.
@@ -125,7 +125,7 @@ export interface SkillRow {
   name: string
   onDisk: boolean
   inventoried: boolean
-  /** In the external pack — its SKILL.md is not ours to patch. */
+  /** An installed Skill — its SKILL.md is not ours to patch. */
   external: boolean
   modelInvoked: boolean
   category: string | null
@@ -942,7 +942,7 @@ function readInventory(cwd = root): Map<string, InventoryEntry> {
   return out
 }
 
-/** The names of externally-packed Skills (keys of `skills-lock.json` → `skills`). */
+/** The names of installed Skills (keys of `skills-lock.json` → `skills`). */
 function readLock(cwd = root): Set<string> {
   const file = join(cwd, SKILLS_LOCK)
   if (!existsSync(file)) return new Set()

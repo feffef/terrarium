@@ -143,12 +143,12 @@ export function prRefsParts(refs: string[]): { shown: string[]; rest: number } {
 
 // ── Skill Inventory ──────────────────────────────────────
 // OWN Skills are the platform-operation ones the Platform authors and evolves;
-// the general-engineering pack is used, not evolved here.
+// installed Skills are used, not evolved here.
 export function ownSkills(skills: SkillDoc[]): SkillDoc[] {
   return skills.filter((s) => s.category === 'platform-operation')
 }
 
-// Pack Skills worth listing: everything graded above `peripheral`.
+// Installed Skills worth listing: everything graded above `peripheral`.
 export function externalSkills(skills: SkillDoc[]): SkillDoc[] {
   return skills.filter((s) => s.category !== 'platform-operation' && s.importance !== 'peripheral')
 }

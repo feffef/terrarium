@@ -1,24 +1,24 @@
-# ADR-0015: Pack Skills stay as installed; every Skill is graded by need
+# ADR-0015: Installed Skills are never edited; every Skill is graded by need
 
-We never edit a Skill installed from the outside pack, and the gate checks each
+We never edit an installed Skill, and the gate checks each
 one that has a Skill Inventory entry. The Skill Inventory records each Skill's
-role and importance to this project, and is where a pack Skill gets our notes.
+role and importance to this project, and is where an installed Skill gets our notes.
 The `audit-skills` Skill checks that our own Skills fire and do their job, and
 keeps the Inventory in line with that evidence; it edits only Inventory entries,
 Routine run costs and issues.
 
 ## Scope
 
-- **Pack Skills.** A Skill named in `skills-lock.json` comes from the outside
-  pack. Nobody here edits its files. Its Inventory entry pins a hash of its
+- **Installed Skills.** A Skill named in `skills-lock.json` is installed from
+  `mattpocock/skills`. Nobody here edits its files. Its Inventory entry pins a hash of its
   installed `SKILL.md`, which the gate compares. Notes on how it fits this
   project, and problems with its text, go in that entry, never in an issue.
-- **The Inventory covers every Skill in use,** ours and the pack's. A Skill
+- **The Inventory covers every Skill in use,** ours and the installed ones. A Skill
   gets an entry when it is first seen in use, not when it is installed.
 - **Importance is how much a Skill matters when its kind of work comes up,**
   never how often it runs. A rare Skill that is the tool for its job keeps a
   high grade. Disuse alone never lowers a grade. Sessions of its kind going
-  without it can lower a pack Skill's grade, since we can't fix its trigger;
+  without it can lower an installed Skill's grade, since we can't fix its trigger;
   for our own Skill, that is a trigger problem to report. A grade moves only
   on cited session evidence. One grade, `routine`, instead marks a Skill that
   scheduled runs drive. `audit-skills` defines the grades.
@@ -36,7 +36,7 @@ Routine run costs and issues.
 
 ## Why
 
-- Reinstalling the pack overwrites any local edit, so the edit is lost without
+- Reinstalling a Skill overwrites any local edit, so the edit is lost without
   notice. The gate turns that into a visible failure.
 - Grading by frequency punishes the Skills we most want to keep: rare work
   with one right tool.
@@ -55,19 +55,19 @@ Routine run costs and issues.
   frictions, so the signal is confounded.
 - **Watch for regressions through frictions.** It found almost nothing and
   can't see a failure that leaves no friction.
-- **Pin pack Skills with `skills-lock.json`'s own hash.** That file belongs to
+- **Pin installed Skills with `skills-lock.json`'s own hash.** That file belongs to
   the installer, and its hash is of the upstream source, which can't be
   checked offline.
 
 ## Consequences
 
-- The gate checks only pack Skills that have an Inventory entry. One that is
+- The gate checks only installed Skills that have an Inventory entry. One that is
   installed but not yet used goes unchecked until the audit adds its entry.
-- A legitimate pack update re-pins in the same PR, or the gate fails.
+- A legitimate upstream update re-pins in the same PR, or the gate fails.
 
 ## See
 
-- `scripts/gate/validate-skills-lock.ts`: the pack check and how to re-pin.
+- `scripts/gate/validate-skills-lock.ts`: the installed-Skill check and how to re-pin.
 - `.agents/skills/audit-skills/SKILL.md`: the audit's steps and limits.
 - `scripts/session/audit-skills.ts`: the scorecard and which Skills get checked.
 - `layers/journal/tenant.config.ts`: the Inventory schema.

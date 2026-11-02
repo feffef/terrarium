@@ -143,7 +143,7 @@ describe('buildSkillRows()', () => {
     expect(r).toMatchObject({ mentionedIn: ['named'], humanInvokedIn: ['named'], useCount: 0 })
   })
 
-  it('flags an uninventoried pack Skill, unused', () => {
+  it('flags an uninventoried installed Skill, unused', () => {
     expect(row('ghost')).toMatchObject({
       external: true, inventoried: false, modelInvoked: true, useCount: 0, allTimeUses: 0, lastUsed: null, observations: [],
     })

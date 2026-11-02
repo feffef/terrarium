@@ -146,7 +146,7 @@ resolution.
 ### Instructions
 
 1. **Drop what isn't ours to change:** a candidate whose only fix edits an
-   external pack Skill's `SKILL.md` (ADR-0015; the gate rejects it). A
+   installed Skill's `SKILL.md` (ADR-0015; the gate rejects it). A
    repo-specific fit-note belongs in that Skill's Inventory entry:
    `audit-skills`' job, not a Friction fix.
 2. **Drop what is on trial:** a candidate whose fix would restore prose

@@ -30,9 +30,9 @@ export const skillSchema = z
     // own description, and free of PR/issue/session ids (ADR-0015). Length:
     // `.agents/skills/audit-skills/SKILL.md` step 5.
     role: z.string(),
-    // Integrity pin for EXTERNAL pack Skills only (those keyed in
+    // Integrity pin for installed Skills only (those keyed in
     // skills-lock.json): sha256 of the installed `SKILL.md`, verified by
-    // `pnpm verify:skills-lock` so a pack Skill can't be silently edited
+    // `pnpm verify:skills-lock` so an installed Skill can't be silently edited
     // (ADR-0015). Machine-managed — do NOT hand-edit; regenerate with
     // `pnpm verify:skills-lock --write`. Absent on our own Skills.
     installedSha256: z.string().optional(),
@@ -162,8 +162,8 @@ export default defineTenant({
     },
     // The Platform's Skill Inventory — structured data, not routed. Strict → L1.
     // Its purpose is NOT to restate each Skill's own description, but to record
-    // its *role and importance to this project*. Skills are installed wholesale
-    // from an external pack (skills-lock.json), so this is where they get
+    // its *role and importance to this project*. Installed Skills come wholesale
+    // from `mattpocock/skills` (skills-lock.json), so this is where they get
     // Terrarium-specific context (ADR-0015). The
     // `audit-skills` Skill keeps it current.
     skills: {

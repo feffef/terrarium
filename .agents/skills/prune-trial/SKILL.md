@@ -171,7 +171,7 @@ Three exceptions and one refusal:
 - **ADRs** (`docs/adr/`) and their summary rules — they change only through
   a human-led rewrite (ADR-0030) or a trial a Trusted user starts; a `major`
   or `blocker` verdict on such a trial restores the cut text.
-- **External pack Skills** (`skills-lock.json`) — the Gate rejects the edit.
+- **Installed Skills** (`skills-lock.json`) — the Gate rejects the edit.
 - **Session logs** — the record, not instructions.
 - **Retiring a Skill or a Routine, including your own** — file a `needs-triage`
   issue (`docs/agents/issue-tracker.md`'s "Filing an issue"), never act; `audit-skills` records the same class of signal as an

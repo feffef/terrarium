@@ -8,7 +8,7 @@ provenance:
   continuityCheck: >-
     thirty-six skill definitions have ever been added to this repository and the
     same thirty-six are present today; no `review/` directory is among them, in any
-    commit, ever. The external pack's lock file has never held a `review` key across
+    commit, ever. The installed Skills' lock file has never held a `review` key across
     either of its two revisions. The one plausible successor, `code-review`, was
     ruled out by the dead entry's own text, which called the two distinct — and
     `code-review` is still scoped to the working diff before a gated pull request,

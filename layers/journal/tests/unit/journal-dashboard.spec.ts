@@ -214,7 +214,7 @@ describe('skill inventory', () => {
     expect(ownSkills(skills).map((s) => s.name).sort()).toEqual(['add-space', 'digest', 'edit-content', 'triage'])
   })
 
-  it('externalSkills keeps pack Skills graded above peripheral', () => {
+  it('externalSkills keeps installed Skills graded above peripheral', () => {
     const withPeripheral = [...skills, skill({ name: 'teach', category: 'general-engineering', importance: 'peripheral' })]
     expect(externalSkills(withPeripheral).map((s) => s.name).sort()).toEqual(['code-review', 'tdd'])
   })

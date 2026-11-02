@@ -73,6 +73,10 @@ maintains it.
 A Claude Code skill that encodes a repeatable capability for developing the
 Platform.
 
+### Installed Skill
+A **Skill** installed from `mattpocock/skills`, pinned in `skills-lock.json` and
+never edited (ADR-0015). Every other Skill is ours.
+
 ### Skill Inventory
 An **Inventory** of the Skills in use, each with its **role** and
 **importance**, kept current by `audit-skills`. An Inventory is a derived,
@@ -181,3 +185,4 @@ Still in older text; avoid them in new writing.
 - **chartered job**, **ledger row**: ADR-0003's former table of what scheduled
   jobs may change. Say "scheduled Skill".
 - **Journal entry**: say "session log" (or "research write-up").
+- **Skill pack**, **pack Skill**, **the outside pack**: say "installed Skill".
