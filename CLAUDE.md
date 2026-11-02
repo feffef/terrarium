@@ -16,6 +16,10 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   the cross-cutting ones load at session start, the rest when you read or edit
   a file they govern or run a Skill they name. When a summary says so, read the
   full ADR before you act.
+- **Before you explain how Terrarium works, or plan or review work that spans
+  its parts** (a new Tenant, Skill or Routine, a cross-cutting review, prose
+  that tells readers how the Platform works): the overview,
+  `layers/glassbox/content/guide/pages/index.md`.
 - **Before your first git command** beyond the read-only `status`, `diff`,
   `show`, `ls-tree`, `cat-file`, `grep` and `ls-files` (commit, fetch, pull,
   rebase, amend, reset, or `log`/`blame` to draw a conclusion):

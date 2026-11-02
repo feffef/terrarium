@@ -84,4 +84,3 @@ On 9 October 2026 an agent checking a diagram of this story against :file[deploy
 - [pnpm and the lockfile](/t/glassbox/guide/deploy/pnpm-lockfile)
 - [Content database](/t/glassbox/guide/nuxt-content/content-database)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)
-- [Architecture & Deployment](/t/journal/current/architecture)

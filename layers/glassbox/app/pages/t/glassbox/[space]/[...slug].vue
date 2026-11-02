@@ -30,9 +30,9 @@ const { data, status, error } = await useAsyncData(route.path, async () => {
 })
 
 const page = computed(() => data.value?.page ?? null)
-// A Subject has no page of its own: send its bare folder URL to its card on the landing.
-const subjectCard = data.value?.subjects.find((subject) => path === `/${subject.slug}`)
-if (!page.value && subjectCard) await navigateTo(`${base}#${subjectCard.slug}`, { replace: true })
+// A Subject has no page of its own: send its bare folder URL to its first Lesson.
+const subjectStart = data.value?.subjects.find((subject) => path === `/${subject.slug}`)?.lessons[0]
+if (!page.value && subjectStart) await navigateTo(`${base}${subjectStart.path}`, { replace: true })
 else if (!page.value && !error.value) setResponseStatus(404)
 provide(glassboxRevisionKey, computed(() => page.value ?? undefined))
 // On main, not at `revision`: a page is pinned before it is written, so its own file there is older or missing.

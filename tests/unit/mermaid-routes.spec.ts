@@ -8,7 +8,7 @@ import { mermaidPageRoute } from '../support/mermaid-pages.ts'
 
 describe('mermaidPageRoute()', () => {
   it('routes a top-level file to its slug', () => {
-    expect(mermaidPageRoute('journal', 'current', 'how-it-works.md')).toBe('/t/journal/current/how-it-works')
+    expect(mermaidPageRoute('journal', 'current', 'history.md')).toBe('/t/journal/current/history')
   })
 
   it('routes a nested file to its nested slug', () => {

@@ -1,17 +1,14 @@
 // Subject order and display names live here, not in content (issue #1985, Part 3).
 export const glassboxSubjects = [
-  { slug: 'claude-code', name: 'Claude Code', blurb: 'The agent harness: what a session reads, runs and may start.' },
-  { slug: 'skill-pack', name: 'Installed Skills', blurb: 'Ready-made Skills the agents plan and build with, kept as installed.' },
-  { slug: 'nuxt-vue', name: 'Nuxt & Vue', blurb: 'One app, one page file, many sites.' },
-  { slug: 'nuxt-content', name: 'Nuxt Content', blurb: 'Files to tables: collections, isolation, the database.' },
-  { slug: 'verification', name: 'Verification', blurb: 'The merge gate and its checks: types, content, tests.' },
-  { slug: 'deploy', name: 'Deploy', blurb: 'One container that builds and swaps main.' },
-  { slug: 'git-github', name: 'Git & GitHub', blurb: 'Pull requests, worktrees and who may direct an agent.' },
-  { slug: 'terrarium-practice', name: 'House rules', blurb: 'Decision records, session logs, required reviewers.' },
+  { slug: 'claude-code', name: 'Claude Code' },
+  { slug: 'skill-pack', name: 'Installed Skills' },
+  { slug: 'nuxt-vue', name: 'Nuxt & Vue' },
+  { slug: 'nuxt-content', name: 'Nuxt Content' },
+  { slug: 'verification', name: 'Verification' },
+  { slug: 'deploy', name: 'Deploy' },
+  { slug: 'git-github', name: 'Git & GitHub' },
+  { slug: 'terrarium-practice', name: 'House rules' },
 ] as const
-
-/** The landing's term strip: `terms` entries a newcomer meets first, picked from what guide Lessons expand most. */
-export const glassboxLandingTerms = ['gate', 'tenant', 'human-only', 'collection', 'space', 'skill', 'rule', 'manifest'] as const
 
 export interface GlassboxPageLink {
   path: string

@@ -12,8 +12,8 @@ first: it holds the Walkthrough contract. The steps every page shares are in
 
 1. **Place it.** Take the story from the
    [topic inventory](https://github.com/feffef/terrarium/issues/1966#issuecomment-6176385964)'s
-   candidate Walkthroughs; the numbered stories in Part 2 of
-   `docs/diagrams/interactive-map/terrarium-overview.md` tell many of them step
+   candidate Walkthroughs; the numbered stories in
+   `docs/diagrams/interactive-map/spec.md` tell many of them step
    by step. Check that story against the code: the code wins. The file is
    `layers/glassbox/content/guide/pages/walkthroughs/<slug>.md`.
 2. **Pin** it (EVERY-PAGE.md).

@@ -3,9 +3,9 @@
 The goal: one interactive diagram that shows a newcomer where Terrarium's
 parts live and how agents and people keep improving it.
 
-- **The brief:** [`terrarium-overview.md`](./terrarium-overview.md).
-  - Part 1 explains Terrarium in plain words.
-  - Part 2 specifies the diagram.
+- **The spec:** [`spec.md`](./spec.md), once Part 2 of the brief. Part 1, the
+  plain-words overview, is now the Glass Box guide's landing page,
+  [`layers/glassbox/content/guide/pages/index.md`](../../../layers/glassbox/content/guide/pages/index.md).
 - **The current diagram:** <https://claude.ai/artifact/E9spdeUp54KzsmXZjSJZ8L>.
   It is an experiment: a first build of Part 2, made with heavy use of
   agents. The unified diagram turned out too ambitious to render easily, and
@@ -193,4 +193,4 @@ Both attempts were abandoned.
 After this, a Fable agent built the diagram from version 9 as an
 [artifact](https://claude.ai/artifact/E9spdeUp54KzsmXZjSJZ8L), and the brief
 moved to this folder. The current version is
-[`terrarium-overview.md`](./terrarium-overview.md).
+[`spec.md`](./spec.md).

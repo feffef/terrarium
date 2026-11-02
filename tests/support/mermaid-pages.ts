@@ -10,7 +10,7 @@ import { root, type ExpandedCollection } from '../../shared/expand.ts'
 
 /**
  * The route for a `page`-collection Document at `relPath` (posix, relative to its
- * collection's content dir — e.g. `'index.md'`, `'how-it-works.md'`,
+ * collection's content dir — e.g. `'index.md'`, `'history.md'`,
  * `'digests/2026-07-04.md'`) within `(tenant, space)`. Mirrors the file → route
  * convention `app/pages/t/[tenant]/[space]/[...slug].vue` resolves at runtime: an
  * `index.md` (at any depth) is its own directory's route; every other file's

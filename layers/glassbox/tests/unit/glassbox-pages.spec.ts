@@ -32,7 +32,7 @@ const fakeGit: GlassboxGit = {
 }
 const site: GlassboxSite = {
   pages: ['/t/glassbox/guide', '/t/glassbox/guide/nuxt-content/collections', '/t/glassbox/guide/terrarium-practice/gate', '/t/glassbox/guide/walkthroughs/from-file-to-browser', '/t/glassbox/drafts/zod/timestamps'],
-  journal: ['/t/journal/current', '/t/journal/current/how-it-works', '/t/journal/current/skills'],
+  journal: ['/t/journal/current', '/t/journal/current/history', '/t/journal/current/skills'],
   terms: ['collection'],
   cites: { '/t/glassbox/guide/nuxt-content/collections': ['shared/expand.ts'] },
   titles: { '/t/glassbox/guide': 'Home', '/t/glassbox/guide/nuxt-content/collections': 'Collections', '/t/glassbox/guide/terrarium-practice/gate': 'The Gate', '/t/glassbox/drafts/zod/timestamps': 'Timestamps' },
@@ -70,7 +70,7 @@ export function catalogFrom(cols) {
 
 ### What to watch for
 
-See ADR-0004, [how it works](/t/journal/current/how-it-works) and [the Skills](/t/journal/current/skills).
+See ADR-0004, [how it works](/t/journal/current/history) and [the Skills](/t/journal/current/skills).
 Inline code shows syntax: \`ADR-9999\`, \`[x](/t/journal/nope)\`.
 
 Issues like https://github.com/feffef/terrarium/issues/1985 are fine.
@@ -87,7 +87,7 @@ see github.com/feffef/terrarium/blob/main/x.ts and ADR-9999
 - [The Gate](/t/glassbox/guide/terrarium-practice/gate)
 `
 const gateItem = '- [The Gate](/t/glassbox/guide/terrarium-practice/gate)\n'
-const journalItem = '- [How it works](/t/journal/current/how-it-works)\n'
+const journalItem = '- [How it works](/t/journal/current/history)\n'
 const walkthrough = `${frontmatter}
 How a page opens.
 
@@ -158,7 +158,7 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a Why bullet with no bold lead-in', (s: string) => s.replace('**One expansion step.** ', ''), 'not a bullet that opens with a bold lead-in'],
     ['an ADR missing at revision', (s: string) => s.replace('ADR-0004', 'ADR-0099'), 'ADR-0099 does not exist'],
     ['a guide link to no page', (s: string) => s.replace('terrarium-practice/gate', 'terrarium-practice/gates'), 'link /t/glassbox/guide/terrarium-practice/gates resolves to no page'],
-    ['a Journal link to no content file', (s: string) => s.replace('current/how-it-works', 'current/made-up'), 'link /t/journal/current/made-up resolves to no page'],
+    ['a Journal link to no content file', (s: string) => s.replace('current/history', 'current/made-up'), 'link /t/journal/current/made-up resolves to no page'],
     ['a Lesson with no Full reference', (s: string) => s.replace('(https://content', '(http://content'), 'no "Full reference" https link'],
     ['a Lesson section heading at h3', (s: string) => s.replace('## Try it', '### Try it'), 'no h2 #try-it-in-your-project'],
     ['Lesson sections out of order', (s: string) => s.replace(/(## Try it[^#]*)(## Where next[^]*)$/, '$2\n$1'), 'section #where-next is out of order'],
@@ -305,7 +305,7 @@ describe('every Glass Box page matches the code at its revision', () => {
   }
 
   it('reaches Journal content pages and the Journal\'s own Vue routes', () => {
-    expect(realSite.journal).toEqual(expect.arrayContaining(['/t/journal/current', '/t/journal/current/how-it-works', '/t/journal/archived/skills']))
+    expect(realSite.journal).toEqual(expect.arrayContaining(['/t/journal/current', '/t/journal/current/history', '/t/journal/archived/skills']))
   })
 
   it('finds the landing page and a draft (canary: the walk must not match nothing)', () => {
