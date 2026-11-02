@@ -1,45 +1,48 @@
 ---
 name: glassbox-improve
-description: "Raise the Glass Box guide toward its best pages: three raters read every guide page, the run fixes what two of them agree on, elects the best pages, and self-merges one PR."
+description: "Raise the Glass Box guide lens by lens: scripted checks, sonnet lens raters on the pages that changed, a researcher who confirms every finding, and a blind gate on every edit; elects A per lens and self-merges one PR."
 disable-model-invocation: true
 ---
 
 # glassbox-improve
 
-Each run lifts the guide toward its best pages, and the next run's grades show
-whether the edits held. Three raters on different models read the guide every
-run; an edit needs two of them to agree, so one rater's taste never drives
-one, while a false claim needs only to be confirmed in the source. A few
-pages hold A, best in class (QUALITY.md, Grades): the rest are compared with
-them.
+Each run lifts the guide one lens at a time (QUALITY.md, Lenses) and measures
+whether its edits helped. Scripts do the counting; the lead dispatches agents
+and decides only what a script can't. A provable false claim is fixed the same
+run, a confirmed finding on the weakest lens next, and no edit lands unless
+blind judges prefer it to the page it replaces.
 
 Read first: `layers/glassbox/GLOSSARY.md` (page shapes),
 [`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md),
-[`../glassbox-lesson/QUALITY.md`](../glassbox-lesson/QUALITY.md) (the grades,
-and how to raise a page),
+[`../glassbox-lesson/QUALITY.md`](../glassbox-lesson/QUALITY.md) (the lenses,
+the grades, the A rule, and how to raise a page),
 [`../glassbox-lesson/DECISIONS.md`](../glassbox-lesson/DECISIONS.md) (closed
 rulings) and `dispatch-subagents` (every brief below follows it). Subagents
 read committed files at the base with `git show <base>:<path>`, which can't
 follow the `.claude/skills/<name>` link, so write every Skill path in a brief
 as `.agents/skills/...`.
 
-`scripts/grades.ts` does the counting: `plan` splits the pages among the
-raters and, with `--briefs <folder>`, writes each rater's filled brief, `tally` merges their reports and runs the election, `tally --write`
-writes [`grades.yml`](grades.yml), the one home of each page's grades, and
-`drafts` lists each draft's promotion blockers. Run it
-with `pnpm exec tsx`; its header gives the flags.
+[`scripts/grades.ts`](scripts/grades.ts) does the counting; its header gives
+each command. It writes the run's state to `run.yml` in the scratch folder
+(`--out`), and at the end [`grades.yml`](grades.yml) (each page's lens grades,
+and the structural steps) and [`runs.yml`](runs.yml) (the last 10 runs'
+metrics and detail). Never edit either file by hand. A v2 `grades.yml` (no
+`version: 3`) reads as empty, so the first v3 run reads every page once and
+its waiting candidates become steps.
+
+Every agent below runs on `sonnet`, except writers on `opus`.
 
 ## Remit
 
 The run changes only `layers/glassbox/content/`, the diagram SVGs it
-re-renders in `app/assets/mermaid/` and `grades.yml`, and lands one PR titled
-`glassbox-improve: <YYYY-MM-DD>`, even when only `grades.yml` changed. It raises
-every page the tally selects and takes at most 3 structural steps (promote a
-draft, write a Lesson for a gap, or re-cut pages inside the existing
-Subjects), and fixes every confirmed false claim with the smallest correction.
-Out of remit: a new Subject or diagram, moving a page to another Subject, and
-any change to this Skill, the `glassbox-lesson` docs or the page checks; step
-8 files them.
+re-renders in `app/assets/mermaid/`, `grades.yml` and `runs.yml`, and lands
+one PR titled `glassbox-improve: <YYYY-MM-DD>`, even when only those two files
+changed. It fixes every confirmed false claim with the smallest correction,
+works the confirmed findings, and takes every confirmed structural step the
+churn guard allows (promote a draft, write a Lesson, or merge, split, move,
+cut or section pages inside the existing Subjects). Out of remit: a new
+Subject or diagram, moving a page to another Subject, and any change to this
+Skill, the `glassbox-lesson` docs or the page checks; step 10 files them.
 
 Save every subagent reply, a resumed one's too, with
 `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <file> [<agent-id> <file> ...]`
@@ -51,133 +54,129 @@ If a PR titled `glassbox-update:` or `glassbox-improve:` is open, stop: invoke
 `close-session` as `blocked`, naming it. Otherwise, on the session's designated
 branch (with none, `glassbox-improve/<YYYY-MM-DD>-<HHMM>` in UTC), start from a
 fresh `origin/main` and note that commit as **the base**. Save
-`grades.ts plan --base <base> --briefs <scratch folder>` to the scratch folder, and list the guide pages
-any other open PR touches: the run edits those only to fix a confirmed false
-claim. Done when both are saved.
+`grades.ts plan --base <base> --briefs <scratch folder>` to the scratch
+folder: it lists the pages raters A and C read (those whose text or cited
+files changed since their last read, plus the rotation, so every page is read
+at least every 3 runs, plus each page that won its A comparisons last run),
+says whether Relevance is rated this run, and writes
+each rater's filled brief. Also list the guide pages any other open PR
+touches: the run edits those only to fix a confirmed false claim. Done when
+both are saved.
 
 ## 2. Rate
 
-Dispatch three raters **in one message**, one per model (`sonnet`, `fable`,
-`opus`), each told to follow its `rater-brief-<model>.md`, which step 1's
-`plan` filled from [`rater-brief.md`](rater-brief.md) with the model, the base,
-the all-three pages, that model's lone pages, the catalog and the rater's
-scratch subfolder. Done when all three hand-backs are
-saved and `grades.ts tally` accepts them; on a parse error, fix only the line
-it names in the saved hand-back. Resume a stalled rater once with
-`SendMessage`; if it still returns nothing, dispatch a fresh one on the same
-model and log a Friction.
+Dispatch, **in one message**, one agent per brief `plan` wrote, each told to
+follow its `rater-brief-<name>.md`: rater A (Clarity, Reasoning), rater B
+(Placement on every page, Relevance when due, and the structural steps) and
+one rater C per claim-check shard (`C1`, `C2`…: Evidence, Transfer and the
+full claim check). Done when every hand-back is saved and `grades.ts tally`
+accepts them; on a parse error, fix only the line it names in the saved
+hand-back. Resume a stalled rater once with `SendMessage`; if it still
+returns nothing, dispatch a fresh one with the same brief and log a Friction.
 
 ## 3. Tally
 
-Run `grades.ts tally --base <base> <sonnet> <fable> <opus>`: it prints the
-grades, the election, every item each rater raised (grouped by page and
-criterion), the lone pages that go to all three next run, the structural
-raises ranked, and the steps this run takes and those that wait. Then:
+Run `grades.ts tally --base <base> --out <scratch folder> <every hand-back>`.
+It adds the page checks' findings (`layers/glassbox/page-checks.ts`) and
+prints the work in order: false claims, page checks, deficits weakest page
+first, then gaps; the steps queue, with each inverse of a step taken in the
+last 5 runs refused; and the A comparisons, at most 10. Then, in `run.yml`:
 
-- **Cluster** each page's reports of one deficit or gap, however worded. An
-  item two raters raise is **consensus**; check each against the page and drop
-  a misreading with its reason. A lone page never reaches consensus: the
-  script sends it to all three next run.
-- **False claims** need one rater: confirm each in the source, and it is fixed
-  this run. Drop one you can't confirm, with its reason.
-- **Titles.** A title deficit is consensus only when two raters cite the same
-  clause of EVERY-PAGE's title rule; the new title is one two of them propose,
-  else the retitle becomes an idea (step 8).
-- **Filters.** Drop every item a `DECISIONS.md` line settles. Drop a fix that
-  would undo a change from the last 2 runs unless that change made the page
-  false: read those runs' PR bodies and, for a title or link,
-  `git log -p origin/main -- <page>`. A dropped undo becomes a proposed
-  `DECISIONS.md` line.
-- **Churn.** A page whose `gapEdit` in `grades.yml` is one of the last 2 runs
-  takes no gap edit; note each consensus gap dropped this way for step 7's
-  `--read-by-all`. Deficits are always fixed.
-- **Select** every page with a consensus deficit or a consensus gap (both
-  raters citing an A page), every page two raters grade below B (its writer
-  fixes the deficits it confirms), and the structural steps the tally lists
-  for this run: the first 3 of its queue (`grades.yml` `candidates` oldest
-  first, then this run's two-rater raises by rank). A step you drop gives its
-  place to the next in the queue; the rest wait (step 7), as does the later of
-  two steps that touch one page. A draft that needs about half its lines
-  changed is not promoted (an idea). A selected page a structural step touches
-  belongs to that step's writer.
+- **Filters.** Mark `skipped` with its reason every item a `DECISIONS.md` line
+  settles, and every fix that would undo a change from the last 2 runs unless
+  that change made the page false (read those runs in `runs.yml` and, for a
+  title or link, `git log -p origin/main -- <page>`). A dropped undo becomes a
+  proposed `DECISIONS.md` line.
+- **Steps.** A step that touches a page another step takes waits (leave it
+  `pending`); a draft that needs about half its lines changed is not promoted
+  (mark it `dropped`, and it becomes an idea).
 
-Run the tally again with `--selected <pages>` (comma-separated), since a
-selected page can't hold A, and save its output: the PR body's tally. Done
-when every item is kept or dropped with its reason and the selection says why
-each step beat the next. If nothing is selected and no false claim is
-confirmed, write the record (step 7) and go to step 8.
+Done when every item and step is kept or has its reason.
 
 ## 4. Research
 
-For each structural step, dispatch one read-only `sonnet` researcher with
-[`researcher-brief.md`](researcher-brief.md) filled in: its task, the base,
-its draft's section of `grades.ts drafts --base <base>` (saved once to the
-scratch folder) and its own scratch subfolder. Done when every hand-back is saved and every claim
-it says the source contradicts is confirmed as a false claim or dropped with
-its reason.
+Dispatch read-only researchers with
+[`researcher-brief.md`](researcher-brief.md) filled in: one per Subject for
+its kept items, and one per pending step with its draft's section of
+`grades.ts drafts --base <base>` (saved once to the scratch folder). Each
+confirms every item in the source or refuses it with proof. In `run.yml`, set
+each item's `confirmed` to `true` or `false` and each step's `status` to
+`taken` or `dropped`. An unconfirmed item is dropped; a contradicted claim a
+researcher finds is added as a false claim once you confirm it. Done when every
+kept item and pending step has its answer.
 
 ## 5. Write
 
-Dispatch one `opus` writer per structural step, and one per Subject for the
-selected pages in it, each with `isolation: 'worktree'` and
+Dispatch one `opus` writer per taken step, and one per Subject for the
+confirmed items in it, each with `isolation: 'worktree'` and
 [`writer-brief.md`](writer-brief.md) filled in: its task, its items (with the
-A page each gap cites), the research file if any, the base, every false claim
-the run confirmed, and its own scratch subfolder. Propose or fix only facts
-and wording you have found in the source, an absence claim most of all. Fix a
-false claim on a page no writer holds, or whose writer dropped out, yourself
-after step 6's merges. Done when every hand-back is saved and each writer has
-a commit that passes EVERY-PAGE's Check, or refused or stopped with its reason.
-Drop a refused or stopped item, remove its worktree
-(`git worktree remove --force <path>`) and say why in the PR body.
+A page each gap cites), the research file, the base, every false claim the run
+confirmed, and its own scratch subfolder. A page a step touches belongs to that
+step's writer. Fix a false claim on a page no writer holds, or whose writer
+dropped out, yourself after step 6's merges. Done when every hand-back is
+saved and each writer has a commit that passes EVERY-PAGE's Check, or refused
+or stopped with its reason; set `edited: true` on each item a commit fixed.
+Drop a refused or stopped item, and remove its worktree
+(`git worktree remove --force <path>`).
 
 ## 6. Integrate
 
 Merge each writer's branch into the run branch; never cherry-pick or squash,
 which orphans the writers' commits and fails `pnpm check:worktrees`. Then make
 the **join edits** the writers reported, on any page: link text after a
-retitle, Walkthrough chips and Where next entries. Writers add their own Terms
-and repoint links to a draft they promote (`writer-brief.md`, Your files), so
-don't forbid a writer to edit other drafts; when two writers' branches add the
-same Term id, keep one file. Add a link only where its list has room, replace only a
-link that broke or was retitled, and keep each list's order. Pin each page you
-edit yourself to the base. Done when EVERY-PAGE's Check passes on the run
-branch.
+retitle, Walkthrough chips and Where next entries. When two writers' branches
+add the same Term id, keep one file. Add a link only where its list has room,
+replace only a link that broke or was retitled, and keep each list's order. Pin
+each page you edit yourself to the base. Done when EVERY-PAGE's Check passes
+on the run branch.
 
-## 7. Review
+## 7. Blind gate
 
-There is no re-grade: the next run's three raters read every changed page.
+Run `grades.ts gate --base <base> --out <scratch folder>`. For each page an
+edit changed, it writes three judge briefs from
+[`judge-brief.md`](judge-brief.md): old and new in random order, with the
+criterion the edit targeted and the house rules; a page new since the base
+has no old version, so `code-review` alone checks it. Dispatch one judge per brief,
+save the hand-backs and run `grades.ts votes --out <scratch folder>
+<hand-backs>`. An edit merges on 2 wins of 3; `equal` fails. A failed edit goes
+back to its writer once with the judges' `worse` notes: merge its new commit
+and gate that page again (`gate --pages <page>`). If it fails again, restore
+the page to the base, set its items' `edited: false`, and it counts as
+stopped. Done when every gated page has merged or stopped.
+
+## 8. A election
+
+Dispatch one judge per A brief `tally` wrote, save the hand-backs and run
+`votes`; it writes the briefs of the second and third judges for each
+candidate that won its first, then dispatch those and run `votes` again. A
+candidate takes A only by beating every page it meets this run and last run
+(QUALITY.md, Grades). Done when `votes` reports no judges owed.
+
+## 9. Review, record and land
+
 Run `code-review` on the run branch against the base, with the tally as the
 spec and this added to it: for each changed claim, show the cited file at the
 base (`git show <base>:<path>`) and quote the `path:line` that backs it, never
-accepting a claim on assertion; for each sentence an edit deletes from a page,
-name the page and line that now states it (a fact with no home is a finding,
-unless the tally asked to drop it); and no section the tally didn't fault got
-worse. Send each finding on a page to its writer with `SendMessage` and merge
-its new commit; fix join findings yourself. One fix round.
+accepting a claim on assertion; and for each sentence an edit deletes from a
+page, name the page and line that now states it (a fact with no home is a
+finding, unless an item asked to drop it). Send each finding on a page to its
+writer with `SendMessage` and merge its new commit; fix join findings yourself.
+One fix round.
 
-Then write the record: the step-3 tally command with `--write --selected
-<pages> --gap-edit <pages a gap edit changed> --read-by-all <pages whose
-consensus gap the churn rule dropped>`. It keeps the base's hashes, so every
-page this run edited counts as changed and all three read it next run. In
-`grades.yml`'s `candidates`, remove each step this run took and add each step
-that waited, with the tally's name for it as `kind`, its pages, a one-line
-gist and today's date (or its old date). Done when every finding is fixed or refused with its reason, and
-`grades.yml` is committed (with no edits, only the latter).
+Fetch `origin/main`; if it changed a page you edited, merge it into the run
+branch, keeping your page with its pin at the base. Run `grades.ts record
+--base <base> --out <scratch folder> --session <this session's id>` and commit
+`grades.yml` and `runs.yml`. Follow "Closing a scheduled run's PR" in
+`docs/agents/pr-workflow.md`, with a short PR body: how many pages were read,
+false claims fixed, edits merged and stopped, steps taken and refused, and A
+changes, and a link to `runs.yml` for the rest. Once the PR is open, run
+`record` again with `--pr <number> --cost <usage.cost_usd from get_session>`
+(it replaces this run's entry), commit, push, and point the body's link at
+`runs.yml` at that commit; that commit is a simple follow-up
+(`pr-workflow.md`). If anything outside the Remit is in the diff, leave the PR
+open for a human.
 
-## 8. Land and file
-
-Fetch `origin/main`. If it changed a page you edited, merge it into the run
-branch, keeping your page with its pin at the base. Then follow "Closing a
-scheduled run's PR" in `docs/agents/pr-workflow.md`; its `pnpm gate:scoped`
-on the final head is the run's only one. The PR body holds every intermediate
-result, so nobody has to read this session's events: each change as
-`page | item | change`; step 3's saved tally output (grades before and this
-run's, the A set before and after, each rater's top 10, every item raised),
-with your reason beside each item you kept or dropped; each structural step
-with why it won or waits; and the review findings with what became of each.
-If anything outside the Remit is in the diff, leave the PR open for a human.
-
-File the rest:
+## 10. File
 
 - **Problems the run hit** (a step that misfired, a rule in the bar or a page
   check that got in the way) are Frictions in the session log.
@@ -186,9 +185,16 @@ File the rest:
   labelled `needs-triage`, body per `docs/agents/issue-tracker.md`, only where
   none covers it.
 - **Ideas for the owner** go into the session log's `ideas`, one line each:
-  proposed `DECISIONS.md` lines, retitles the raters didn't agree on, and
-  drafts too far from the bar to promote.
+  proposed `DECISIONS.md` lines and drafts too far from the bar to promote.
 
 Done when every Friction, issue and idea is written and `pnpm check:worktrees`
 exits 0, which it does only once the run branch is pushed. Then invoke
 `close-session`.
+
+## Review after the first runs
+
+The owner adopted the A rule and the blind gate as a trial (issue #2792).
+After 3 to 5 v3 runs, compare `runs.yml` with the v2 runs listed in that
+issue: the gate pass rate (near 100% means a rubber stamp, near 50% weak
+selection or writing), whether low-value edits were stopped, how many inverse
+steps were refused, and the cost per run and per page that passed the gate.

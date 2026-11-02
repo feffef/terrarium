@@ -1,80 +1,96 @@
-// The mechanical half of the glassbox-improve Skill: which pages each rater
-// reads, the tally of their reports, the A election, `grades.yml`, and each
-// draft's promotion blockers. Usage:
-//   pnpm exec tsx .agents/skills/glassbox-improve/scripts/grades.ts plan --base <sha> [--briefs <scratch>]
-//   pnpm exec tsx .agents/skills/glassbox-improve/scripts/grades.ts tally --base <sha> <sonnet> <fable> <opus>
-//     [--write --selected a,b --gap-edit a,b --read-by-all a,b]
-//   pnpm exec tsx .agents/skills/glassbox-improve/scripts/grades.ts drafts --base <sha>
+// The mechanical half of the glassbox-improve Skill: the reading plan, the
+// tally of the lens raters' reports, the blind comparisons, `grades.yml`,
+// `runs.yml`, and each draft's promotion blockers. Usage (`pnpm exec tsx` this file):
+//   plan --base <sha> --briefs <dir>        the plan; writes the rater briefs and rater B's trimmed pages
+//   tally --base <sha> --out <dir> <hand-back> ...  the work list (rater A, B and every C shard); writes <dir>/run.yml and the first A judges' briefs
+//   gate --base <sha> --out <dir> [--pages a,b]  writes the gate judges' briefs for the pages edited since the base
+//   votes --out <dir> <hand-back> ...        reads judges' verdicts into run.yml; writes the next A judges' briefs
+//   record --base <sha> --out <dir> [--session s] [--pr n] [--cost usd]  writes grades.yml and runs.yml
+//   drafts --base <sha>                      each draft's promotion blockers
 // A page is named by its path under `layers/glassbox/content/guide/pages`, without `.md`.
 import { createHash } from 'node:crypto'
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { parse as parseYaml, stringify } from 'yaml'
-import { extractFlag, extractSwitch, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { Document, isMap, isPair, isScalar, parse as parseYaml, stringify, visit } from 'yaml'
+import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { frontmatterBlock, splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { git, tryGit } from '../../../../scripts/lib/git.ts'
-import { glassboxCites, glassboxJournalRoutes, glassboxPageProblems, glassboxSitePath, repoGit, type GlassboxGit, type GlassboxSite } from '../../../../layers/glassbox/page-checks.ts'
+import { glassboxCites, glassboxJournalRoutes, glassboxOrphanText, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, repoGit, type GlassboxGit, type GlassboxSite } from '../../../../layers/glassbox/page-checks.ts'
+import { glassboxPageRefs } from '../../../../layers/glassbox/page-refs.ts'
 
-export const models = ['sonnet', 'fable', 'opus'] as const
-export type Model = (typeof models)[number]
-export type Grade = 'A' | 'B' | 'C' | 'D'
+export const lenses = ['clarity', 'reasoning', 'placement', 'evidence', 'transfer', 'relevance'] as const
+export type Lens = (typeof lenses)[number]
+export type Grade = 'A' | 'B' | 'C' | 'D' | 'n/a'
+export const stepKinds = ['merge', 'split', 'move', 'cut', 'promote', 'lesson', 'section'] as const
+export type StepKind = (typeof stepKinds)[number]
 
-// #2693: the run's cost grows with each structural step's researcher and writer.
-export const stepsPerRun = 3
-// QUALITY.md, Grades.
-const lessonSeats = 10
-const outsideTop = lessonSeats + 1
-const recordPath = '.agents/skills/glassbox-improve/grades.yml'
-const pagesDir = (space: string) => `layers/glassbox/content/${space}/pages`
+// The owner's values (issue #2792): N for Relevance and the churn guard, K for the rotation.
+export const relevanceEvery = 5
+export const churnRuns = 5
+export const rotationRuns = 3
+export const runsKept = 10
+
+export interface LensRecord {
+  grade: Grade
+  run: string
+  wins?: string[]
+}
 
 export interface PageRecord {
   hash: string
-  grade?: Grade
-  grades: Partial<Record<Model, { grade: Grade; run: string }>>
-  readByAll?: boolean
-  gapEdit?: string
+  sources: string
+  read?: string
+  checked?: string
+  lenses: Partial<Record<Lens, LensRecord>>
+  /** Each lens's last edit, for the churn pause on gap edits. */
+  edited?: Partial<Record<Lens, string>>
 }
 
-export interface Candidate {
-  kind: string
+export interface Step {
+  id: string
+  kind: StepKind
   pages: string[]
+  into?: string
+  raised: string[]
+  status: 'pending' | 'taken' | 'dropped' | 'refused'
+  decided?: string
   gist: string
-  since: string
 }
 
 export interface GradeRecord {
+  version: 3
   run?: string
   pages: Record<string, PageRecord>
-  candidates: Candidate[]
+  steps: Step[]
 }
 
-export interface Report {
-  rater: Model
-  pages: {
-    page: string
-    grade: Grade
-    deficits?: { criterion: string; quote: string; fix: string; titleClause?: string; title?: string }[]
-    gaps?: { section: string; exemplar: string; take: string }[]
-    falseClaims?: { quote: string; source: string }[]
-    optional?: string[]
-    aWorthy?: boolean
-  }[]
-  top10: string[]
-  bestWalkthrough?: string
-  missingLessons?: { concept: string; subject: string; draft?: string; rank: number }[]
-  recuts?: { pages: string[]; move: string }[]
-}
-
-export interface Plan {
+export interface RunEntry {
+  run: string
+  session?: string
   base: string
-  allThree: string[]
-  lone: Record<Model, string[]>
-  stale: string[]
+  pr?: number
+  costUsd?: number
+  relevance?: boolean
+  pagesRead: number
+  pagesChecked: number
+  falseClaimsFixed: number
+  edits: number
+  gatePassed: number
+  gateStopped: number
+  aComparisons: number
+  stepsTaken: number
+  stepsRefused: number
+  findings?: { page: string; lens?: Lens; grade?: Grade; quote?: string; fix: string; confirmed: boolean; edited: boolean }[]
+  falseClaims?: { page: string; claim: string; evidence: string; fixed: boolean }[]
+  gate?: GateEntry[]
+  comparisons?: { lens: Lens; candidate: string; against: string; votes: Vote[]; result: 'win' | 'loss' }[]
 }
 
-const isWalkthrough = (page: string) => page.startsWith('walkthroughs/')
-const aPages = (record: GradeRecord) => Object.entries(record.pages).filter(([, p]) => p.grade === 'A').map(([page]) => page).sort()
-const electedPages = (e: Election) => [...e.lessons, ...(e.walkthrough ? [e.walkthrough] : [])]
+export type Vote = 'win' | 'loss' | 'equal'
+
+const sha1 = (text: string) => createHash('sha1').update(text).digest('hex')
+const subjectOf = (page: string) => page.split('/')[0]!
+const slug = (page: string) => page.split('/').at(-1)!.replace(/^\d+\./, '')
 
 /** What a page teaches: the file without the lines `glassbox-update` moves daily
  *  (the pin and the Excerpt ranges), so a re-pin doesn't count as a change. */
@@ -82,215 +98,435 @@ export function pageHash(text: string): string {
   const block = frontmatterBlock(text)
   const frontmatter = (block?.yaml ?? '').split('\n').filter((l) => !/^(revision|revisionDate|publishedAt):/.test(l))
   const body = text.slice(block?.length ?? 0).replace(/\s*lines="[^"]*"/g, '')
-  return createHash('sha1').update([...frontmatter, body].join('\n')).digest('hex')
+  return sha1([...frontmatter, body].join('\n'))
 }
 
-export function planPages(record: GradeRecord, hashes: Record<string, string>): Omit<Plan, 'base'> {
-  const pages = Object.keys(hashes).sort()
-  const noA = !Object.values(record.pages).some((p) => p.grade === 'A')
-  const allThree = pages.filter((page) => {
-    const r = record.pages[page]
-    return noA || isWalkthrough(page) || !r || r.hash !== hashes[page] || r.grade === 'A' || r.readByAll
+/** One hash over the files a page cites, so a change to any of them sends the page to the raters. */
+export function sourcesHash(paths: string[], read: (path: string) => string | undefined): string {
+  return sha1([...new Set(paths)].sort().map((p) => `${p}\n${read(p) ?? ''}`).join('\n'))
+}
+
+export function stepId(kind: StepKind, pages: string[], into?: string): string {
+  return [kind, ...pages.map(slug), ...(into ? ['into', slug(into)] : [])].join('-')
+}
+
+/** `grades.yml`; a v2 file starts fresh (issue #2792, Migration), its waiting candidates kept as steps. */
+export function readRecord(text: string | undefined): GradeRecord {
+  const parsed = (text ? parseYaml(text) : null) as Record<string, unknown> | null
+  if (parsed?.version === 3) return parsed as unknown as GradeRecord
+  const candidates = (parsed?.candidates ?? []) as { kind: string; pages: string[]; gist: string; since: string }[]
+  const steps = candidates.map((c): Step => {
+    // v2 named a re-cut without its direction; the gist's verb gives it.
+    const kind = (c.kind.startsWith('promote') ? 'promote' : stepKinds.find((k) => c.gist.toLowerCase().startsWith(k)) ?? 'move') as StepKind
+    const [first, into] = c.pages
+    const pages = kind === 'move' && into ? [first!] : c.pages
+    const step: Step = { id: stepId(kind, pages, kind === 'move' ? into : undefined), kind, pages, raised: [c.since], status: 'pending', gist: c.gist }
+    if (kind === 'move' && into) step.into = into
+    return step
   })
-  const lone = Object.fromEntries(models.map((m) => [m, [] as string[]])) as Record<Model, string[]>
-  for (const page of pages.filter((p) => !allThree.includes(p))) {
-    const runOf = (m: Model) => record.pages[page]!.grades[m]?.run ?? ''
-    const oldest = runOf([...models].sort((a, b) => runOf(a).localeCompare(runOf(b)))[0]!)
-    const tied = models.filter((m) => runOf(m) === oldest)
-    // Ties go to the model with the fewest lone pages so far, so the shares stay even.
-    const pick = tied.reduce((best, m) => (lone[m].length < lone[best].length ? m : best))
-    lone[pick].push(page)
-  }
-  const stale = Object.keys(record.pages).filter((p) => !(p in hashes)).sort()
-  return { allThree, lone, stale }
+  return { version: 3, pages: {}, steps }
 }
 
-/** The middle of three grades, or the only one. */
-export function middle(grades: Grade[]): Grade {
-  return [...grades].sort()[Math.floor((grades.length - 1) / 2)]!
+/** The lenses on which a page won every comparison last run and doesn't hold A yet. */
+const pendingWins = (record: GradeRecord, page: string): Lens[] =>
+  lenses.filter((l) => record.run && record.pages[page]?.lenses[l]?.grade !== 'A' && record.pages[page]?.lenses[l]?.wins?.at(-1) === record.run)
+
+export interface Plan {
+  base: string
+  /** Every guide page; rater B reads them all. */
+  pages: string[]
+  /** The pages raters A and C read: the changed ones and the rotation. */
+  read: string[]
+  changed: string[]
+  rotation: string[]
+  /** Pages that won their A comparisons last run, read again so they can win twice in a row. */
+  rematch: string[]
+  /** Why Relevance is rated this run, or undefined when it isn't. */
+  relevance?: string
+  stale: string[]
 }
 
-export interface Election {
-  lessons: string[]
-  walkthrough?: string
-  sums: Record<string, number>
+export function planPages(record: GradeRecord, current: Record<string, { hash: string; sources: string }>, runs: RunEntry[]): Omit<Plan, 'base'> {
+  const pages = Object.keys(current).sort()
+  const changed = pages.filter((p) => {
+    const r = record.pages[p]
+    return !r || !r.read || r.hash !== current[p]!.hash || r.sources !== current[p]!.sources
+  })
+  const rematch = pages.filter((p) => !changed.includes(p) && pendingWins(record, p).length)
+  const readOn = (p: string) => record.pages[p]?.read ?? ''
+  const rotation = pages
+    .filter((p) => !changed.includes(p) && !rematch.includes(p))
+    .sort((a, b) => readOn(a).localeCompare(readOn(b)) || a.localeCompare(b))
+    .slice(0, Math.ceil(pages.length / rotationRuns))
+  const stale = Object.keys(record.pages).filter((p) => !(p in current)).sort()
+  const added = pages.filter((p) => !record.pages[p])
+  const recent = runs.slice(0, relevanceEvery - 1)
+  const relevance = !Object.keys(record.pages).length
+    ? 'first v3 run'
+    : added.length || stale.length
+      ? `pages added or gone: ${[...added, ...stale].join(', ')}`
+      : recent.some((r) => r.relevance) ? undefined : `none of the last ${relevanceEvery - 1} runs rated it`
+  return { pages, read: [...changed, ...rematch, ...rotation].sort(), changed, rotation, rematch, ...(relevance ? { relevance } : {}), stale }
 }
 
-/** The A election, among the pages all three read; this is its one home (QUALITY.md, Grades, points here). */
-export function elect(reports: Report[], incumbents: string[], selected: string[], pool: string[]): Election {
-  const rankOf = (r: Report, page: string) => (r.top10.includes(page) ? r.top10.indexOf(page) + 1 : outsideTop)
-  const lessons = pool.filter((p) => !isWalkthrough(p) && !selected.includes(p))
-  const sums = Object.fromEntries(lessons.map((p) => [p, reports.reduce((s, r) => s + rankOf(r, p), 0)]))
-  const backed = (p: string) => reports.filter((r) => r.top10.includes(p)).length >= 2
-  const seats = incumbents.filter((p) => lessons.includes(p) && backed(p))
-  const challengers = lessons
-    .filter((p) => !seats.includes(p) && backed(p))
-    .sort((a, b) => sums[a]! - sums[b]! || a.localeCompare(b))
-  for (const c of challengers) {
-    if (seats.length < lessonSeats) {
-      seats.push(c)
-      continue
-    }
-    const worst = [...seats].sort((a, b) => sums[b]! - sums[a]! || b.localeCompare(a))[0]!
-    if (sums[c]! < sums[worst]!) seats.splice(seats.indexOf(worst), 1, c)
-  }
-  const named = reports.map((r) => r.bestWalkthrough).filter((w): w is string => !!w && !selected.includes(w))
-  const agreed = named.find((w) => named.filter((x) => x === w).length >= 2)
-  const held = incumbents.find((p) => isWalkthrough(p) && pool.includes(p) && !selected.includes(p))
-  return { lessons: seats.sort(), walkthrough: agreed ?? held, sums }
+export type RaterId = 'A' | 'B' | 'C'
+export const raterLenses: Record<RaterId, Lens[]> = { A: ['clarity', 'reasoning'], B: ['placement'], C: ['evidence', 'transfer'] }
+const raterIds = Object.keys(raterLenses) as RaterId[]
+// GLOSSARY.md: a Walkthrough has no Why and teaches no concept of its own.
+const walkthroughNa: Lens[] = ['reasoning', 'transfer']
+const isWalkthrough = (page: string) => page.startsWith('walkthroughs/')
+// Relevance leads to steps, never to a page to learn from.
+const electedLenses = lenses.filter((l) => l !== 'relevance')
+export const comparisonsPerRun = 10
+const holdersCompared = 3
+const freshOpponents = 2
+
+export interface LensReport {
+  grade: Grade
+  findings?: { quote: string; fix: string }[]
+  gaps?: { section: string; exemplar: string; take: string }[]
 }
 
-/** Checks a report against the plan; returns its problems. */
-export function reportProblems(report: Report, plan: Plan): string[] {
-  const problems: string[] = []
-  const expected = [...plan.allThree, ...plan.lone[report.rater]]
-  const graded = new Map(report.pages.map((p) => [p.page, p]))
-  for (const page of expected) if (!graded.has(page)) problems.push(`${report.rater}: no grade for ${page}`)
-  for (const p of report.pages) {
-    if (!expected.includes(p.page)) problems.push(`${report.rater}: graded ${p.page}, which is not in its plan`)
-    if (!['B', 'C', 'D'].includes(p.grade)) problems.push(`${report.rater}: ${p.page} has grade ${p.grade}; raters grade B, C or D`)
-    if (p.aWorthy && plan.allThree.includes(p.page)) problems.push(`${report.rater}: ${p.page} is flagged A-worthy but all three read it`)
-  }
-  if (report.top10.length > lessonSeats) problems.push(`${report.rater}: top10 lists ${report.top10.length} pages`)
-  for (const page of report.top10) {
-    if (!plan.allThree.includes(page) || isWalkthrough(page)) problems.push(`${report.rater}: top10 lists ${page}, not a Lesson all three read`)
-    else if (graded.get(page)?.grade !== 'B') problems.push(`${report.rater}: top10 lists ${page}, which it did not grade B`)
-  }
-  const w = report.bestWalkthrough
-  if (w && (!isWalkthrough(w) || !plan.allThree.includes(w) || graded.get(w)?.grade !== 'B')) problems.push(`${report.rater}: bestWalkthrough ${w} is not a Walkthrough it graded B`)
-  return problems
+export interface Report {
+  rater: RaterId
+  pages: {
+    page: string
+    lenses: Partial<Record<Lens, LensReport>>
+    falseClaims?: { quote: string; source: string }[]
+    claims?: string[]
+    docs?: string
+  }[]
+  top3?: Partial<Record<Lens, string[]>>
+  steps?: { kind: StepKind; pages: string[]; into?: string; gist: string }[]
 }
 
 /** The rater's YAML block: the last fenced `yaml` block in its hand-back. */
 export function parseReport(handback: string): Report {
-  const blocks = [...handback.matchAll(/```ya?ml\n([\s\S]*?)\n```/g)]
-  const block = blocks.at(-1)?.[1]
+  const block = [...handback.matchAll(/```ya?ml\n([\s\S]*?)\n```/g)].at(-1)?.[1]
   if (!block) throw new Error('no ```yaml block in the hand-back')
   const report = parseYaml(block) as Report
-  if (!models.includes(report.rater)) throw new Error(`rater is ${report.rater}, not one of ${models.join(', ')}`)
+  if (!raterIds.includes(report.rater)) throw new Error(`rater is ${report.rater}, not one of ${raterIds.join(', ')}`)
   report.pages ??= []
-  report.top10 ??= []
   return report
 }
 
+export const lensesOf = (rater: RaterId, plan: Pick<Plan, 'relevance'>): Lens[] => [...raterLenses[rater], ...(rater === 'B' && plan.relevance ? ['relevance' as const] : [])]
+
+// Experiment d (issue #2792): a rater claim-checked 8 pages in about 160-180k tokens.
+export const claimCheckPages = 8
+
+/** Rater C's pages in shards, one claim-check agent each. */
+export const claimShards = (plan: Pick<Plan, 'read'>) => Array.from({ length: Math.ceil(plan.read.length / claimCheckPages) }, (_, i) => plan.read.slice(i * claimCheckPages, (i + 1) * claimCheckPages))
+
+const expectedPages = (rater: RaterId, plan: Plan) => (rater === 'B' ? plan.pages : plan.read)
+
+/** Every page each rater must grade, once, across its reports (rater C's shards together). */
+export function coverageProblems(reports: Report[], plan: Plan): string[] {
+  const problems: string[] = []
+  for (const r of raterIds) {
+    const graded = reports.filter((x) => x.rater === r).flatMap((x) => x.pages.map((p) => p.page))
+    for (const page of expectedPages(r, plan)) if (!graded.includes(page)) problems.push(`${r}: no grades for ${page}`)
+    for (const page of new Set(graded.filter((p, i) => graded.indexOf(p) !== i))) problems.push(`${r}: graded ${page} twice`)
+  }
+  return problems
+}
+
+/** Checks one report against the plan; returns its problems. */
+export function reportProblems(report: Report, plan: Plan): string[] {
+  const r = report.rater
+  const mine = lensesOf(r, plan)
+  const expected = expectedPages(r, plan)
+  const problems: string[] = []
+  for (const p of report.pages) {
+    if (!expected.includes(p.page)) {
+      problems.push(`${r}: graded ${p.page}, which is not in its plan`)
+      continue
+    }
+    for (const [lens, l] of Object.entries(p.lenses ?? {}) as [Lens, LensReport][]) {
+      if (!lenses.includes(lens)) problems.push(`${r}: ${p.page} grades ${lens}, an unknown lens`)
+      else if (!mine.includes(lens)) problems.push(`${r}: ${p.page} grades ${lens}, not one of its lenses (${mine.join(', ')})`)
+      else if (!['B', 'C', 'D', 'n/a'].includes(l.grade)) problems.push(`${r}: ${p.page} ${lens} is ${l.grade}; raters grade B, C, D or n/a`)
+      else if (l.grade === 'n/a' && !(isWalkthrough(p.page) && walkthroughNa.includes(lens))) problems.push(`${r}: ${p.page} ${lens} is n/a, which only a Walkthrough takes`)
+      else if (l.grade !== 'n/a' && isWalkthrough(p.page) && walkthroughNa.includes(lens)) problems.push(`${r}: ${p.page} ${lens} must be n/a on a Walkthrough`)
+      else if ((l.grade === 'C' || l.grade === 'D') && !l.findings?.length) problems.push(`${r}: ${p.page} ${lens} is ${l.grade} without a finding`)
+    }
+    for (const lens of mine) if (!p.lenses?.[lens]) problems.push(`${r}: ${p.page} has no ${lens} grade`)
+    if (r === 'C' && (!p.claims?.length || !p.docs)) problems.push(`${r}: ${p.page} has no claim check (claims and docs)`)
+  }
+  for (const s of report.steps ?? []) {
+    if (!stepKinds.includes(s.kind)) problems.push(`${r}: step ${s.kind} is not one of ${stepKinds.join(', ')}`)
+    // The churn guard finds a step's inverse by its direction (`inverse`).
+    else if (s.kind !== 'cut' && !s.into) problems.push(`${r}: step ${s.kind} of ${s.pages.join(', ')} has no into`)
+  }
+  return problems
+}
+
+export interface Item {
+  id: string
+  page: string
+  kind: 'falseClaim' | 'check' | 'deficit' | 'gap'
+  lens?: Lens
+  grade?: Grade
+  quote?: string
+  fix: string
+  source?: string
+  exemplar?: string
+  /** Why the run leaves it, when it does. */
+  skipped?: string
+  /** Set by the lead: the researcher confirmed it, and a writer's edit fixed it. */
+  confirmed?: boolean | null
+  edited?: boolean
+}
+
+export interface Comparison {
+  id: string
+  lens: Lens
+  candidate: string
+  against: string
+  votes: Vote[]
+  result?: 'win' | 'loss'
+}
+
 export interface Tally {
-  grades: Record<string, Partial<Record<Model, Grade>>>
-  election: Election
-  /** Lone pages whose reader raised something, so all three read them next run. */
-  triggered: string[]
-  markdown: string
+  grades: Record<string, Partial<Record<Lens, Grade>>>
+  items: Item[]
+  steps: Step[]
+  comparisons: Comparison[]
+  /** Top-3 pages not compared this run, each with why. */
+  waiting: string[]
 }
 
-export function tally(record: GradeRecord, plan: Plan, reports: Report[], selected: string[] = []): Tally {
+/** The run date from which a decision still counts for the churn guard: the last `churnRuns` runs. */
+const churnCutoff = (runs: RunEntry[]) => runs[churnRuns - 1]?.run ?? ''
+
+/** Whether `t` moves content back where `s` took it from. */
+export function inverse(s: Pick<Step, 'kind' | 'pages' | 'into'>, t: Pick<Step, 'kind' | 'pages' | 'into'>): boolean {
+  const back = s.into !== undefined && t.into !== undefined && t.pages.includes(s.into) && s.pages.includes(t.into)
+  // A split of the page a step filled undoes it, whatever the split names its new page.
+  const refill = (a: typeof s, b: typeof s) => b.kind === 'split' && a.kind !== 'split' && a.into !== undefined && b.pages.includes(a.into)
+  return back || refill(s, t) || refill(t, s) || (s.kind === 'cut' && t.into !== undefined && s.pages.includes(t.into)) || (t.kind === 'cut' && s.into !== undefined && t.pages.includes(s.into))
+}
+
+const gradeRank: Record<Grade, number> = { D: 0, C: 1, B: 2, A: 3, 'n/a': 4 }
+
+export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: RunEntry[], checks: Record<string, string[]>, run: string): Tally {
   const grades: Tally['grades'] = {}
-  for (const r of reports) for (const p of r.pages) (grades[p.page] ??= {})[r.rater] = p.grade
-  const election = elect(reports, aPages(record), selected, plan.allThree)
-  const loneReader = new Map(models.flatMap((m) => plan.lone[m].map((p) => [p, m] as const)))
-  const triggered = reports.flatMap((r) =>
-    r.pages
-      .filter((p) => loneReader.get(p.page) === r.rater)
-      .filter((p) => p.grade !== 'B' || p.aWorthy || p.deficits?.length || p.gaps?.length)
-      .map((p) => p.page),
-  )
-  return { grades, election, triggered, markdown: markdown(record, plan, reports, grades, election, triggered) }
-}
-
-const cell = (s: string) => s.replace(/\|/g, '\\|').replace(/\n/g, ' ')
-
-export interface Raise {
-  key: string
-  raters: Model[]
-  rankSum?: number
-  items: string[]
-}
-
-/** Missing Lessons grouped by the draft that fills them (else by concept) and
- *  re-cuts by their pages; most raters first, then the lowest summed rank. */
-export function structural(reports: Report[]): Raise[] {
-  const raises = new Map<string, Raise>()
-  const add = (key: string, rater: Model, item: string, rank?: number) => {
-    const raise = raises.get(key) ?? { key, raters: [], items: [] }
-    if (!raise.raters.includes(rater)) raise.raters.push(rater)
-    if (rank !== undefined) raise.rankSum = (raise.rankSum ?? 0) + rank
-    raise.items.push(`${rater}: ${item}`)
-    raises.set(key, raise)
-  }
-  for (const r of reports) {
-    for (const m of r.missingLessons ?? []) add(m.draft ? `promote ${m.draft}` : `new Lesson: ${m.concept}`, r.rater, `${m.concept} (${m.subject})`, m.rank)
-    for (const c of r.recuts ?? []) add(`re-cut ${[...c.pages].sort().join(' + ')}`, r.rater, c.move)
-  }
-  return [...raises.values()].sort((a, b) => b.raters.length - a.raters.length || (a.rankSum ?? Infinity) - (b.rankSum ?? Infinity) || a.key.localeCompare(b.key))
-}
-
-/** This run's structural steps: waiting candidates oldest first, so none starves, then
- *  this run's two-rater raises by rank; the first `stepsPerRun` are taken, the rest wait. */
-export function stepQueue(raises: Raise[], candidates: Candidate[]): { take: string[]; wait: string[] } {
-  const waiting = [...candidates].sort((a, b) => a.since.localeCompare(b.since)).map((c) => c.kind)
-  const queue = [...new Set([...waiting, ...raises.filter((r) => r.raters.length >= 2).map((r) => r.key)])]
-  return { take: queue.slice(0, stepsPerRun), wait: queue.slice(stepsPerRun) }
-}
-
-function markdown(record: GradeRecord, plan: Plan, reports: Report[], grades: Tally['grades'], election: Election, triggered: string[]): string {
-  const out: string[] = []
-  const before = (page: string) => models.map((m) => record.pages[page]?.grades[m]?.grade ?? '–').join('/')
-  const now = (page: string) => models.map((m) => grades[page]?.[m] ?? '–').join('/')
-  out.push('## A set', '', `Before: ${aPages(record).join(', ') || 'none'}`, '', `After: ${electedPages(election).join(', ') || 'none'}`, '')
-  for (const r of reports) out.push(`- ${r.rater} top 10: ${r.top10.join(', ') || 'none'}; best Walkthrough: ${r.bestWalkthrough ?? 'none'}`)
-  out.push('', '<details><summary>Grades (sonnet/fable/opus)</summary>', '', 'page | read by | before | this run', '--- | --- | --- | ---')
-  for (const page of Object.keys(grades).sort()) {
-    const by = plan.allThree.includes(page) ? 'all three' : models.find((m) => plan.lone[m].includes(page))
-    out.push(`${page} | ${by} | ${before(page)} | ${now(page)}`)
-  }
-  out.push('', '</details>', '', '<details><summary>Every item each rater raised</summary>', '')
-  // Rows sort by page, then kind (criterion or section), so a cluster's reports sit together.
-  const rows: [string, string, string, string][] = []
+  for (const r of reports) for (const p of r.pages) for (const [lens, l] of Object.entries(p.lenses ?? {}) as [Lens, LensReport][]) (grades[p.page] ??= {})[lens] = l.grade
+  const cutoff = churnCutoff(runs)
+  const raw: Omit<Item, 'id'>[] = []
+  for (const r of reports) for (const p of r.pages) for (const f of p.falseClaims ?? []) raw.push({ page: p.page, kind: 'falseClaim', quote: f.quote, source: f.source, fix: `correct it to match ${f.source}` })
+  for (const [page, list] of Object.entries(checks).sort()) for (const fix of list) raw.push({ page, kind: 'check', fix })
+  const deficits: Omit<Item, 'id'>[] = []
+  const gaps: Omit<Item, 'id'>[] = []
   for (const r of reports) {
     for (const p of r.pages) {
-      for (const d of p.deficits ?? []) rows.push([p.page, `deficit: ${d.criterion}`, r.rater, `"${d.quote}" → ${d.fix}`])
-      for (const g of p.gaps ?? []) rows.push([p.page, `gap: ${g.section}`, r.rater, `${g.exemplar}: ${g.take}`])
-      for (const f of p.falseClaims ?? []) rows.push([p.page, 'false claim', r.rater, `"${f.quote}" (${f.source})`])
-      for (const o of p.optional ?? []) rows.push([p.page, 'optional', r.rater, o])
-      if (p.aWorthy) rows.push([p.page, 'A-worthy', r.rater, ''])
+      for (const lens of lenses) {
+        const l = p.lenses?.[lens]
+        if (!l) continue
+        for (const f of l.findings ?? []) deficits.push({ page: p.page, kind: 'deficit', lens, grade: l.grade, quote: f.quote, fix: f.fix })
+        for (const g of l.gaps ?? []) {
+          const edited = record.pages[p.page]?.edited
+          const skipped = record.pages[g.exemplar]?.lenses[lens]?.grade !== 'A'
+            ? `${g.exemplar} holds no A on ${lens}`
+            : edited?.[lens] && edited[lens]! >= cutoff ? `edited on ${lens} within the last ${churnRuns} runs` : undefined
+          gaps.push({ page: p.page, kind: 'gap', lens, quote: g.section, exemplar: g.exemplar, fix: g.take, ...(skipped ? { skipped } : {}) })
+        }
+      }
     }
   }
-  rows.sort((a, b) => a[0].localeCompare(b[0]) || a[1].localeCompare(b[1]))
-  out.push('page | kind | rater | item', '--- | --- | --- | ---', ...rows.map((row) => row.map(cell).join(' | ')))
-  out.push('', '</details>', '', `Read by all three next run (lone reader raised something): ${triggered.join(', ') || 'none'}`, '')
-  out.push('<details><summary>Structural raises, most raters first</summary>', '', 'step | raters | rank sum | items', '--- | --- | --- | ---')
-  for (const s of structural(reports)) out.push([s.key, s.raters.join(', '), String(s.rankSum ?? '–'), s.items.join('; ')].map(cell).join(' | '))
-  for (const c of record.candidates) out.push(`${cell(`waiting since ${c.since}: ${c.kind}`)} | | | ${cell(`${c.pages.join(' + ')}: ${c.gist}`)}`)
-  const queue = stepQueue(structural(reports), record.candidates)
-  out.push('', '</details>', '', `Structural steps this run: ${queue.take.join(', ') || 'none'}`, '', `Wait in candidates: ${queue.wait.join(', ') || 'none'}`)
-  return out.join('\n')
+  // The owner's order (issue #2792): weakest lens first.
+  const weakest = (page: string) => Math.min(...Object.values(grades[page] ?? {}).map((g) => gradeRank[g]))
+  deficits.sort((a, b) => weakest(a.page) - weakest(b.page) || a.page.localeCompare(b.page) || lenses.indexOf(a.lens!) - lenses.indexOf(b.lens!))
+  gaps.sort((a, b) => a.page.localeCompare(b.page) || lenses.indexOf(a.lens!) - lenses.indexOf(b.lens!))
+  const items = [...raw, ...deficits, ...gaps].map((item, i) => ({ id: `f${i + 1}`, ...item }))
+
+  const steps = record.steps.map((s) => ({ ...s, raised: [...s.raised] }))
+  for (const r of reports) {
+    for (const raise of r.steps ?? []) {
+      const id = stepId(raise.kind, raise.pages, raise.into)
+      const old = steps.find((s) => s.id === id)
+      if (!old) steps.push({ id, kind: raise.kind, pages: raise.pages, ...(raise.into ? { into: raise.into } : {}), raised: [run], status: 'pending', gist: raise.gist })
+      else if (old.status !== 'taken') {
+        if (!old.raised.includes(run)) old.raised.push(run)
+        // A researcher dropped it; only a new reason earns another (nextRecord forgets it after the churn window).
+        if (old.status === 'dropped' && raise.gist === old.gist) continue
+        old.gist = raise.gist
+        old.status = 'pending'
+        delete old.decided
+      }
+    }
+  }
+  for (const s of steps.filter((s) => s.status === 'pending')) {
+    if (steps.some((t) => t.status === 'taken' && (t.decided ?? '') >= cutoff && inverse(s, t))) Object.assign(s, { status: 'refused', decided: run })
+  }
+
+  const { comparisons, waiting } = plannedComparisons(record, plan, reports, grades, items)
+  return { grades, items, steps, comparisons, waiting }
 }
 
-export interface WriteOptions {
-  run: string
-  hashes: Record<string, string>
-  gapEdit: string[]
-  readByAll: string[]
+/** QUALITY.md, Grades: each top-3 page meets the Subject's A holders on that lens, or 2 of its B pages while it has none. */
+function plannedComparisons(record: GradeRecord, plan: Plan, reports: Report[], grades: Tally['grades'], items: Item[]) {
+  const comparisons: Comparison[] = []
+  const waiting: string[] = []
+  const busy = new Set(items.filter((i) => !i.skipped).map((i) => i.page))
+  // Raters never give A, so a holder keeps it here; only a confirmed deficit takes it (nextRecord).
+  const gradeOf = (page: string, lens: Lens) => (record.pages[page]?.lenses[lens]?.grade === 'A' ? 'A' : grades[page]?.[lens] ?? record.pages[page]?.lenses[lens]?.grade)
+  const lastWin = (page: string, lens: Lens) => record.pages[page]?.lenses[lens]?.wins?.at(-1) ?? ''
+  const queues = electedLenses.map((lens) => {
+    // Rater C's shards each name a top 3 among their own pages: take them by rank, at most 3.
+    const lists = reports.map((r) => r.top3?.[lens]?.slice(0, 3) ?? [])
+    const top3 = [...new Set([0, 1, 2].flatMap((rank) => lists.flatMap((l) => (l[rank] ? [l[rank]] : []))))].slice(0, 3)
+    const rematch = plan.read.filter((p) => pendingWins(record, p).includes(lens) && !top3.includes(p))
+    return { lens, top3, candidates: [...rematch, ...top3] }
+  })
+  // Round-robin across lenses, so the cap never starves a late lens.
+  const order = Array.from({ length: Math.max(0, ...queues.map((q) => q.candidates.length)) }, (_, rank) => queues.flatMap((q) => (q.candidates[rank] ? [{ ...q, candidate: q.candidates[rank] }] : []))).flat()
+  for (const { lens, top3, candidate } of order) {
+    const reported = reports.flatMap((r) => r.pages).find((p) => p.page === candidate && p.lenses[lens])?.lenses[lens]
+    if (record.pages[candidate]?.lenses[lens]?.grade === 'A') continue
+    if (reported?.grade !== 'B') {
+      waiting.push(`${candidate} on ${lens}: graded ${reported?.grade ?? 'nothing'} this run, not B`)
+      continue
+    }
+    if (reported.findings?.length || reported.gaps?.length) {
+      waiting.push(`${candidate} on ${lens}: it has a finding or gap on that lens`)
+      continue
+    }
+    if (busy.has(candidate)) {
+      waiting.push(`${candidate} on ${lens}: it has work this run`)
+      continue
+    }
+    const subject = subjectOf(candidate)
+    const peers = plan.pages.filter((p) => p !== candidate && subjectOf(p) === subject)
+    const holders = peers.filter((p) => gradeOf(p, lens) === 'A').sort((a, b) => lastWin(b, lens).localeCompare(lastWin(a, lens)) || a.localeCompare(b)).slice(0, holdersCompared)
+    const fresh = peers.filter((p) => gradeOf(p, lens) === 'B').sort((a, b) => Number(top3.includes(b)) - Number(top3.includes(a)) || top3.indexOf(a) - top3.indexOf(b) || a.localeCompare(b)).slice(0, freshOpponents)
+    const against = holders.length ? holders : fresh
+    if (!holders.length && fresh.length < freshOpponents) waiting.push(`${candidate} on ${lens}: ${subject} has fewer than ${freshOpponents} other B pages`)
+    else if (comparisons.length + against.length > comparisonsPerRun) waiting.push(`${candidate} on ${lens}: no comparisons left this run`)
+    else for (const a of against) comparisons.push({ id: `a${comparisons.length + 1}`, lens, candidate, against: a, votes: [] })
+  }
+  return { comparisons, waiting }
 }
 
-/** The next `grades.yml`: this run's grades over the old ones. `readByAll` holds
- *  only this run's flags, since every flagged page was read by all three. */
-export function nextRecord(record: GradeRecord, result: Tally, opts: WriteOptions): GradeRecord {
+export interface Pair<T> {
+  X: T
+  Y: T
+  /** Which side shows the new version, or the A candidate. */
+  challenger: 'X' | 'Y'
+}
+
+/** Two versions in an order the judge can't infer. */
+export function blindPair<T>(challenger: T, other: T, coin: () => boolean = () => Math.random() < 0.5): Pair<T> {
+  return coin() ? { X: challenger, Y: other, challenger: 'X' } : { X: other, Y: challenger, challenger: 'Y' }
+}
+
+export function decodeVerdict(verdict: string, challenger: 'X' | 'Y'): Vote {
+  if (!['X', 'Y', 'equal'].includes(verdict)) throw new Error(`verdict ${verdict} is not X, Y or equal`)
+  return verdict === 'equal' ? 'equal' : verdict === challenger ? 'win' : 'loss'
+}
+
+const wins = (votes: Vote[]) => votes.filter((v) => v === 'win').length
+// A verdict read out of order leaves a hole in the array; count only the votes cast.
+const cast = (votes: Vote[]) => votes.filter(Boolean).length
+
+/** The blind gate: 2 wins of 3 merge; "equal" fails, which guards against churn. Undefined until all 3 voted. */
+export function gateMerged(votes: Vote[]): boolean | undefined {
+  return cast(votes) < 3 ? undefined : wins(votes) >= 2
+}
+
+/** One judge first; the other two only if the candidate wins (issue #2792). Undefined while judges are owed. */
+export function comparisonResult(votes: Vote[]): 'win' | 'loss' | undefined {
+  if (votes[0] && votes[0] !== 'win') return 'loss'
+  return cast(votes) < 3 ? undefined : wins(votes) >= 2 ? 'win' : 'loss'
+}
+
+/** The next `grades.yml`. A grade below B whose findings the researcher all dropped counts as B;
+ *  A is lost only through a confirmed deficit, and taken by winning every comparison in two runs in a row. */
+export function nextRecord(record: GradeRecord, plan: Plan, current: Record<string, { hash: string; sources: string }>, result: Tally, runs: RunEntry[], run: string): GradeRecord {
+  const confirmed = (page: string, lens: Lens) => result.items.some((i) => i.page === page && i.lens === lens && i.kind === 'deficit' && i.confirmed)
+  const compared = new Map<string, Comparison[]>()
+  for (const c of result.comparisons.filter((c) => c.result)) compared.set(`${c.candidate} ${c.lens}`, [...(compared.get(`${c.candidate} ${c.lens}`) ?? []), c])
   const pages: GradeRecord['pages'] = {}
-  const elected = new Set(electedPages(result.election))
-  for (const page of Object.keys(opts.hashes).sort()) {
+  for (const page of Object.keys(current).sort()) {
     const old = record.pages[page]
-    const read = result.grades[page] ?? {}
-    const grades = { ...old?.grades }
-    for (const m of models) if (read[m]) grades[m] = { grade: read[m]!, run: opts.run }
-    const thisRun = models.map((m) => read[m]).filter((g): g is Grade => !!g)
-    const entry: PageRecord = { hash: opts.hashes[page]!, grades }
-    const grade = elected.has(page) ? 'A' : thisRun.length ? middle(thisRun) : old?.grade
-    if (grade) entry.grade = grade
-    if (result.triggered.includes(page) || opts.readByAll.includes(page)) entry.readByAll = true
-    const gapEdit = opts.gapEdit.includes(page) ? opts.run : old?.gapEdit
-    if (gapEdit) entry.gapEdit = gapEdit
+    const read = plan.read.includes(page)
+    const entry: PageRecord = { hash: current[page]!.hash, sources: current[page]!.sources, ...(old?.read || read ? { read: read ? run : old!.read } : {}), ...(old?.checked || read ? { checked: read ? run : old!.checked } : {}), lenses: { ...old?.lenses } }
+    for (const [lens, rated] of Object.entries(result.grades[page] ?? {}) as [Lens, Grade][]) {
+      const grade = (rated === 'C' || rated === 'D') && !confirmed(page, lens) ? 'B' : rated
+      const was = old?.lenses[lens]
+      if (was?.grade === 'A' && !confirmed(page, lens)) continue
+      entry.lenses[lens] = { grade, run, ...(was?.wins && grade === 'B' ? { wins: was.wins } : {}) }
+    }
+    for (const lens of electedLenses) {
+      const results = compared.get(`${page} ${lens}`)
+      if (!results) continue
+      const now = entry.lenses[lens]!
+      if (results.some((c) => c.result === 'loss')) {
+        delete now.wins
+        continue
+      }
+      const won = [...(record.run && now.wins?.at(-1) === record.run ? [record.run] : []), run]
+      entry.lenses[lens] = { grade: won.length >= 2 ? 'A' : now.grade, run, wins: won }
+    }
+    entry.lenses = Object.fromEntries(lenses.filter((l) => entry.lenses[l]).map((l) => [l, entry.lenses[l]]))
+    const edited = result.items.filter((i) => i.page === page && i.edited)
+    const editedLenses = { ...old?.edited, ...Object.fromEntries(edited.flatMap((i) => (i.lens ? [[i.lens, run]] : []))) }
+    if (Object.keys(editedLenses).length) entry.edited = editedLenses
     pages[page] = entry
   }
-  return { run: opts.run, pages, candidates: record.candidates }
+  const cutoff = churnCutoff([{ run } as RunEntry, ...runs])
+  const steps = result.steps
+    .map((s) => (s.status !== 'pending' && !s.decided ? { ...s, decided: run } : s))
+    .filter((s) => s.status === 'pending' || s.decided! >= cutoff)
+  return { version: 3, run, pages, steps }
+}
+
+export interface GateEntry {
+  page: string
+  criterion: string
+  votes: Vote[]
+  merged: boolean
+}
+
+/** This run's `runs.yml` entry. */
+export function runEntry(meta: Pick<RunEntry, 'run' | 'base' | 'session' | 'pr' | 'costUsd'>, plan: Plan, result: Tally, gate: GateEntry[]): RunEntry {
+  const decidedNow = (status: Step['status']) => result.steps.filter((s) => s.status === status && (s.decided ?? meta.run) === meta.run).length
+  const done = result.comparisons.filter((c) => c.result)
+  return {
+    ...meta,
+    relevance: !!plan.relevance,
+    pagesRead: plan.read.length,
+    pagesChecked: plan.read.length,
+    falseClaimsFixed: result.items.filter((i) => i.kind === 'falseClaim' && i.edited).length,
+    edits: gate.length,
+    gatePassed: gate.filter((g) => g.merged).length,
+    gateStopped: gate.filter((g) => !g.merged).length,
+    aComparisons: done.length,
+    stepsTaken: decidedNow('taken'),
+    stepsRefused: decidedNow('refused'),
+    findings: result.items.filter((i) => i.kind !== 'falseClaim').map((i) => ({
+      page: i.page, ...(i.lens ? { lens: i.lens } : {}), ...(i.grade ? { grade: i.grade } : {}), ...(i.quote ? { quote: i.quote } : {}), fix: i.fix, confirmed: !!i.confirmed, edited: !!i.edited,
+    })),
+    falseClaims: result.items.filter((i) => i.kind === 'falseClaim').map((i) => ({ page: i.page, claim: i.quote!, evidence: i.source!, fixed: !!i.edited })),
+    gate,
+    comparisons: done.map((c) => ({ lens: c.lens, candidate: c.candidate, against: c.against, votes: c.votes, result: c.result! })),
+  }
+}
+
+const trimmedLine = 200
+
+/** A page for rater B, who judges placement across the guide: title, description and
+ *  prose, each code block cut to its line count and each line to `trimmedLine` chars. */
+export function trimPage(text: string): string {
+  const { frontmatter, body } = splitFrontmatter(text)
+  const lines = (n: number) => `${n} line${n === 1 ? '' : 's'}`
+  const cut = body
+    .replace(/^::excerpt\{[^}]*path="([^"]*)"[^}]*\}\n(`{3,})[^\n]*\n([\s\S]*?)\n\2\n::$/gm, (_, path: string, _f, code: string) => `[Excerpt of ${path}: ${lines(code.split('\n').length)}]`)
+    .replace(/^(`{3,})[^\n]*\n([\s\S]*?)\n\1$/gm, (_, _f, code: string) => `[code: ${lines(code.split('\n').length)}]`)
+    .split('\n')
+    .map((l) => (l.length > trimmedLine ? `${l.slice(0, trimmedLine)}…` : l))
+    .join('\n')
+  return `title: ${frontmatter.title}\ndescription: ${frontmatter.description}\n\n${cut.replace(/^\n+/, '')}`
 }
 
 export interface DraftsInput {
@@ -301,8 +537,6 @@ export interface DraftsInput {
   terms: string[]
   journal: string[]
 }
-
-/** Each draft's promotion blockers: the page checks run as if it sat in the guide, pinned to the base. */
 export function draftsReport({ base, guide, drafts, terms, journal }: DraftsInput, repo: GlassboxGit): string {
   const baseDate = repo.commit(base)?.date ?? ''
   const titles = (sources: Record<string, string>, space: string) =>
@@ -332,23 +566,72 @@ export function draftsReport({ base, guide, drafts, terms, journal }: DraftsInpu
   return `${out.join('\n')}\n`
 }
 
-const pagePaths = (pages: string[], held: string[]) => pages.map((p) => `- ${pagesDir('guide')}/${p}.md${held.includes(p) ? ' (A)' : ''}`)
-
-/** rater-brief.md filled in for one model. */
-export function raterBrief(template: string, plan: Plan, model: Model, fill: { held: string[]; catalog: string[]; scratch: string }): string {
-  const list = (lines: string[]) => lines.join('\n') || 'none'
-  const values: Record<string, string> = {
-    MODEL: model,
-    COMMIT: plan.base,
-    SCRATCH: fill.scratch,
-    'ALL THREE': list(pagePaths(plan.allThree, fill.held)),
-    LONE: list(pagePaths(plan.lone[model], fill.held)),
-    CATALOG: list(fill.catalog),
-  }
-  return template.replace(/\{(MODEL|COMMIT|SCRATCH|ALL THREE|LONE|CATALOG)\}/g, (_, key: string) => values[key]!)
+export interface BriefFill {
+  commit: string
+  scratch: string
+  pages: string[]
+  trimmed: string
+  catalog: string[]
+  held: Partial<Record<Lens, string[]>>
+  relevance?: string
 }
 
-// The shell: git at the base, the record in the working tree.
+const exampleLens: Record<Lens, string> = {
+  clarity: '{ grade: C, findings: [{ quote: "…", fix: "…" }] }',
+  reasoning: '{ grade: B, gaps: [{ section: "Why it\'s built this way", exemplar: claude-code/03.skills, take: "…" }] }',
+  placement: '{ grade: B }',
+  evidence: '{ grade: C, findings: [{ quote: "…", fix: "a better Excerpt: scripts/hooks/guards.ts:12-20" }] }',
+  transfer: '{ grade: B }',
+  relevance: '{ grade: B }',
+}
+
+/** rater-brief.md filled in for one rater, keeping only the sections marked for it. */
+export function raterBrief(template: string, rater: RaterId, plan: Pick<Plan, 'relevance'>, fill: BriefFill): string {
+  const mine = lensesOf(rater, plan)
+  const kept = template.replace(/<!-- rater ([A-C ]+) -->\n([\s\S]*?)<!-- \/rater -->\n/g, (_, who: string, body: string) => (who.split(' ').includes(rater) ? body : ''))
+  const held = mine.flatMap((l) => (fill.held[l]?.length ? [`${l}: ${fill.held[l]!.join(', ')}`] : []))
+  const example = [
+    ...mine.map((l) => `      ${l}: ${exampleLens[l]}`),
+    ...(rater === 'C' ? ['    claims: ["hooks that match run in parallel", "…"]', '    docs: https://code.claude.com/docs/en/hooks', '    falseClaims:', '      - { quote: "…", source: "scripts/hooks/guards.ts:12" }'] : []),
+  ]
+  const top3 = [
+    ...mine.filter((l) => l !== 'relevance').map((l) => `  ${l}: [claude-code/03.skills, claude-code/01.claude-md]`),
+    ...(rater === 'B' ? ['steps:', '  - { kind: merge, pages: [verification/07.timestamps-stored-as-strings], into: verification/06.schema-validation, gist: "…" }'] : []),
+  ]
+  const values: Record<string, string> = {
+    RATER: rater,
+    LENSES: mine.join(', '),
+    COMMIT: fill.commit,
+    SCRATCH: fill.scratch,
+    PAGES: fill.pages.map((p) => `- ${pagesDir('guide')}/${p}.md`).join('\n') || 'none',
+    TRIMMED: fill.trimmed,
+    CATALOG: fill.catalog.join('\n'),
+    RELEVANCE: plan.relevance ? `This run you also grade **Relevance** (${plan.relevance}): does the concept deserve its own page? A low grade leads to a step, never a rewrite. How much Terrarium relies on a concept is evidence, never the rule.` : '',
+    HELD: held.join('; ') || 'none yet',
+    EXAMPLE: example.join('\n'),
+    TOP3: top3.join('\n'),
+  }
+  return kept.replace(/\{(RATER|LENSES|COMMIT|SCRATCH|PAGES|TRIMMED|CATALOG|RELEVANCE|HELD|EXAMPLE|TOP3)\}/g, (_, key: string) => values[key]!)
+}
+
+const fence = (text: string) => `\`\`\`\`markdown\n${text.replace(/\n$/, '')}\n\`\`\`\``
+
+/** judge-brief.md filled in for one judge. */
+export function judgeBrief(template: string, judge: string, question: string, x: string, y: string): string {
+  const values: Record<string, string> = { JUDGE: judge, QUESTION: question, X: fence(x), Y: fence(y) }
+  return template.replace(/\{(JUDGE|QUESTION|X|Y)\}/g, (_, key: string) => values[key]!)
+}
+
+// The shell: git at the base, the run's scratch state in <out>/run.yml.
+
+const skillDir = '.agents/skills/glassbox-improve'
+const recordPath = `${skillDir}/grades.yml`
+const runsPath = `${skillDir}/runs.yml`
+const pagesDir = (space: string) => `layers/glassbox/content/${space}/pages`
+const showAt = (rev: string, path: string) => {
+  const r = tryGit(['show', `${rev}:${path}`], root)
+  return r.ok ? r.out : undefined
+}
 
 /** Each file of a Space's pages at the base, by path under `pages/`, with its text. */
 function spaceFiles(base: string, space: string): Record<string, string> {
@@ -373,70 +656,231 @@ function catalog(base: string): string[] {
   )
 }
 
-export function readRecord(text: string | undefined): GradeRecord {
-  const parsed = (text ? parseYaml(text) : null) as Partial<GradeRecord> | null
-  return { run: parsed?.run, pages: parsed?.pages ?? {}, candidates: parsed?.candidates ?? [] }
+function currentPages(base: string) {
+  return Object.fromEntries(spacePages(base, 'guide').map(([page, text]) => {
+    const cited = glassboxPageRefs(splitFrontmatter(text).body).files.map((f) => f.path)
+    return [page, { hash: pageHash(text), sources: sourcesHash(cited, (p) => showAt(base, p)) }]
+  }))
 }
 
-const pageList = (value: string | undefined) => (value ?? '').split(',').filter(Boolean)
+/** The page checks' findings at the base; a "so" clause is a reviewer's call, not a finding. */
+function pageChecks(base: string): Record<string, string[]> {
+  const files = spaceFiles(base, 'guide')
+  const checks: Record<string, string[]> = {}
+  for (const [file, text] of Object.entries(files)) {
+    const found = glassboxPageWarnings(text).filter((w) => !w.startsWith('In Terrarium may give a motive'))
+    if (found.length && file !== 'index.md') checks[file.slice(0, -3)] = found
+  }
+  for (const file of glassboxOrphans(files)) (checks[file.slice(0, -3)] ??= []).push(glassboxOrphanText)
+  return checks
+}
+
+interface RunState {
+  base: string
+  run: string
+  plan: Plan
+  grades: Tally['grades']
+  items: Item[]
+  steps: Step[]
+  comparisons: Comparison[]
+  waiting: string[]
+  gate: (Omit<GateEntry, 'merged'> & { merged?: boolean })[]
+}
+
+const statePath = (out: string) => join(out, 'run.yml')
+const keyPath = (out: string) => join(out, 'judges', 'key.yml')
+const readYaml = <T>(path: string, fallback: T): T => (existsSync(path) ? (parseYaml(readFileSync(path, 'utf8')) as T) : fallback)
+const writeYaml = (path: string, value: unknown) => writeFileSync(path, stringify(value, { lineWidth: 0 }))
+
+function writeJudge(out: string, judge: string, question: string, challenger: string, other: string) {
+  const pair = blindPair(challenger, other)
+  const key = readYaml<Record<string, 'X' | 'Y'>>(keyPath(out), {})
+  key[judge] = pair.challenger
+  mkdirSync(join(out, 'judges'), { recursive: true })
+  writeYaml(keyPath(out), key)
+  const path = join(out, 'judges', `${judge}.md`)
+  writeFileSync(path, judgeBrief(readFileSync(join(root, skillDir, 'judge-brief.md'), 'utf8'), judge, question, pair.X, pair.Y))
+  return path
+}
+
+/** A lens's definition, from its bullet under QUALITY.md's Lenses: judges get it inline,
+ *  since #2792's control showed a named criterion is what lets them reject a worse edit. */
+export function lensDefinition(quality: string, lens: Lens): string {
+  const name = lens[0]!.toUpperCase() + lens.slice(1)
+  const bullet = quality.match(new RegExp(`^- \\*\\*${name}\\.?\\*\\*[^\\n]*(?:\\n  [^\\n]*)*`, 'm'))?.[0]
+  if (!bullet) throw new Error(`QUALITY.md has no Lenses bullet for ${name}`)
+  return bullet.replace(/^- /, '').replace(/\s*\n\s*/g, ' ')
+}
+
+const comparisonQuestion = (base: string, c: Comparison) => {
+  const quality = showAt(base, '.agents/skills/glassbox-lesson/QUALITY.md') ?? fail('no QUALITY.md at the base')
+  return `X and Y are two different pages of one Subject of the guide. Which is better on this lens: ${lensDefinition(quality, c.lens)} Judge them on that lens alone, never on which topic matters more.`
+}
+
+const runsAt = (base: string) => ((parseYaml(showAt(base, runsPath) ?? '') as { runs?: RunEntry[] } | null)?.runs ?? [])
+
+/** Reads judges' verdicts into run.yml and writes the briefs of the A judges now owed. */
+function votes(out: string, handbacks: string[]) {
+  const state = readYaml<RunState | undefined>(statePath(out), undefined) ?? fail(`no ${statePath(out)}: run tally first`)
+  const key = readYaml<Record<string, 'X' | 'Y'>>(keyPath(out), {})
+  for (const file of handbacks) {
+    const block = [...readFileSync(file, 'utf8').matchAll(/```ya?ml\n([\s\S]*?)\n```/g)].at(-1)?.[1]
+    const v = (block ? parseYaml(block) : {}) as { judge?: string; verdict?: string }
+    const m = v.judge?.match(/^(gate-(\d+)|(a\d+))-([1-3])$/)
+    if (!m || !key[v.judge!]) fail(`${file}: judge ${v.judge} is not one this run briefed`)
+    let vote: Vote
+    try {
+      vote = decodeVerdict(String(v.verdict), key[v.judge!]!)
+    } catch (err) {
+      return fail(`${file}: ${(err as Error).message}`)
+    }
+    const votesOf = m[2] ? state.gate[Number(m[2]) - 1]?.votes : state.comparisons.find((c) => c.id === m[3])?.votes
+    if (!votesOf) fail(`${file}: no ${m[1]} in run.yml`)
+    votesOf[Number(m[4]) - 1] = vote
+  }
+  const briefs: string[] = []
+  const pageText = (p: string) => showAt(state.base, `${pagesDir('guide')}/${p}.md`) ?? ''
+  for (const g of state.gate) {
+    const merged = gateMerged(g.votes)
+    if (merged === undefined) delete g.merged
+    else g.merged = merged
+  }
+  for (const c of state.comparisons) {
+    const result = comparisonResult(c.votes)
+    if (result) c.result = result
+    else if (c.votes.length === 1) for (const j of [2, 3]) briefs.push(writeJudge(out, `${c.id}-${j}`, comparisonQuestion(state.base, c), pageText(c.candidate), pageText(c.against)))
+  }
+  writeYaml(statePath(out), state)
+  console.log([
+    ...state.gate.map((g) => `gate ${g.page}: ${g.votes.filter(Boolean).join(', ') || 'no votes'} → ${g.merged === undefined ? 'judges owed' : g.merged ? 'merge' : 'fail'}`),
+    ...state.comparisons.filter((c) => c.votes.length).map((c) => `${c.id} ${c.lens} ${c.candidate} vs ${c.against}: ${c.votes.filter(Boolean).join(', ')} → ${c.result ?? 'judges 2 and 3 owed'}`),
+    ...(briefs.length ? ['', 'Judges now owed:', ...briefs.map((b) => `- ${b}`)] : []),
+  ].join('\n'))
+}
+
+const cell = (s: string) => s.replace(/\|/g, '\\|').replace(/\n/g, ' ')
+
+function summary(state: RunState): string {
+  const out = [`# Tally at ${state.base}`, '', '## Work, in order', '', 'id | page | kind | lens | grade | item | fix | skipped', '--- | --- | --- | --- | --- | --- | --- | ---']
+  for (const i of state.items) out.push([i.id, i.page, i.kind, i.lens ?? '', i.grade ?? '', i.exemplar ? `${i.quote} (${i.exemplar})` : i.source ? `"${i.quote}" (${i.source})` : i.quote ? `"${i.quote}"` : '', i.fix, i.skipped ?? ''].map(cell).join(' | '))
+  out.push('', '## Steps', '', 'id | kind | pages | into | status | raised | gist', '--- | --- | --- | --- | --- | --- | ---')
+  for (const s of state.steps) out.push([s.id, s.kind, s.pages.join(', '), s.into ?? '', s.status, s.raised.join(', '), s.gist].map(cell).join(' | '))
+  out.push('', '## A comparisons', '', ...(state.comparisons.length ? state.comparisons.map((c) => `- ${c.id}: ${c.candidate} vs ${c.against} on ${c.lens}`) : ['- none']))
+  out.push('', `Top-3 pages not compared: ${state.waiting.join('; ') || 'none'}`)
+  return out.join('\n')
+}
 
 runIfMain(import.meta.url, () => {
   const [command, ...args] = process.argv.slice(2)
-  const { value: base, rest: a1 } = extractFlag(args, '--base')
-  const { value: selectedFlag, rest: a2 } = extractFlag(a1, '--selected')
-  const { value: gapEditFlag, rest: a3 } = extractFlag(a2, '--gap-edit')
-  const { value: readByAllFlag, rest: a4 } = extractFlag(a3, '--read-by-all')
-  const { value: briefs, rest: a5 } = extractFlag(a4, '--briefs')
-  const { on: write, rest: files } = extractSwitch(a5, '--write')
-  if (!base) fail('--base <sha> is required')
-  const sha = git(['rev-parse', `${base}^{commit}`], root).trim()
+  const flags: Record<string, string | undefined> = {}
+  let rest = args
+  for (const name of ['base', 'briefs', 'out', 'pages', 'session', 'pr', 'cost']) {
+    const r = extractFlag(rest, `--${name}`)
+    flags[name] = r.value
+    rest = r.rest
+  }
+  const out = flags.out
+  if (command === 'votes') return votes(out ?? fail('--out <dir> is required'), rest)
+  if (!flags.base) fail('--base <sha> is required')
+  const sha = git(['rev-parse', `${flags.base}^{commit}`], root).trim()
   if (command === 'drafts') {
     const termsDir = 'layers/glassbox/content/guide/terms/'
     const terms = tryGit(['ls-tree', '-r', '--name-only', sha, termsDir], root).out.split('\n').filter((f) => f.endsWith('.yml')).map((f) => f.slice(termsDir.length, -4))
     console.log(draftsReport({ base: sha, guide: spaceFiles(sha, 'guide'), drafts: spaceFiles(sha, 'drafts'), terms, journal: glassboxJournalRoutes() }, repoGit))
     return
   }
-  const record = readRecord(tryGit(['show', `${sha}:${recordPath}`], root).out || undefined)
-  const hashes = Object.fromEntries(spacePages(sha, 'guide').map(([page, text]) => [page, pageHash(text)]))
-  const plan: Plan = { base: sha, ...planPages(record, hashes) }
+  const record = readRecord(showAt(sha, recordPath))
+  const runs = runsAt(sha)
+  const current = currentPages(sha)
+  const thePlan: Plan = { base: sha, ...planPages(record, current, runs) }
   if (command === 'plan') {
-    const held = aPages(record)
-    const paths = (ps: string[]) => pagePaths(ps, held)
     const pageCatalog = catalog(sha)
-    if (briefs) {
-      const template = readFileSync(join(root, '.agents/skills/glassbox-improve/rater-brief.md'), 'utf8')
-      for (const m of models) {
-        const scratch = join(briefs, m)
+    const held = Object.fromEntries(lenses.map((l) => [l, Object.entries(record.pages).filter(([, p]) => p.lenses[l]?.grade === 'A').map(([page]) => page)]))
+    if (flags.briefs) {
+      const trimmed = join(flags.briefs, 'trimmed-pages.md')
+      mkdirSync(flags.briefs, { recursive: true })
+      writeFileSync(trimmed, spacePages(sha, 'guide').map(([page, text]) => `# ${page}\n\n${trimPage(text)}`).join('\n\n'))
+      const template = readFileSync(join(root, skillDir, 'rater-brief.md'), 'utf8')
+      const briefs: [string, RaterId, string[]][] = [['A', 'A', thePlan.read], ['B', 'B', thePlan.pages], ...claimShards(thePlan).map((pages, i): [string, RaterId, string[]] => [`C${i + 1}`, 'C', pages])]
+      for (const [name, r, pages] of briefs) {
+        const scratch = join(flags.briefs, `rater-${name}`)
         mkdirSync(scratch, { recursive: true })
-        writeFileSync(join(briefs, `rater-brief-${m}.md`), raterBrief(template, plan, m, { held, catalog: pageCatalog, scratch }))
+        writeFileSync(join(flags.briefs, `rater-brief-${name}.md`), raterBrief(template, r, thePlan, { commit: sha, scratch, pages, trimmed, catalog: pageCatalog, held }))
       }
     }
+    const list = (ps: string[]) => (ps.length ? ps.map((p) => `- ${p}`) : ['- none'])
     console.log([
       `# Plan at ${sha}`, '',
-      '## Read by all three', '', ...paths(plan.allThree), '',
-      ...models.flatMap((m) => [`## Read by ${m} alone`, '', ...paths(plan.lone[m]), '']),
-      `## Entries for pages gone at the base: ${plan.stale.join(', ') || 'none'}`, '',
-      '## Every page and draft (path: title — description)', '', ...pageCatalog,
+      `Relevance this run: ${thePlan.relevance ?? 'no'}`, '',
+      `## Read by raters A and C: ${thePlan.read.length} of ${thePlan.pages.length} (rater C in ${claimShards(thePlan).length} claim-check shards of at most ${claimCheckPages})`, '',
+      '### Changed since their last read', '', ...list(thePlan.changed), '',
+      '### Rematch (won their A comparisons last run)', '', ...list(thePlan.rematch), '',
+      `### Rotation (read longest ago; every page at least every ${rotationRuns} runs)`, '', ...list(thePlan.rotation), '',
+      `## Entries for pages gone at the base: ${thePlan.stale.join(', ') || 'none'}`,
     ].join('\n'))
     return
   }
-  if (command !== 'tally') fail(`unknown command ${command}; use plan, tally or drafts`)
-  if (files.length !== models.length) fail(`give the ${models.length} raters' saved hand-backs`)
-  const reports = files.map((f) => {
-    try {
-      return parseReport(readFileSync(f, 'utf8'))
-    } catch (err) {
-      return fail(`${f}: ${(err as Error).message}`)
+  if (!out) fail('--out <dir> is required')
+  if (command === 'tally') {
+    const reports = rest.map((f) => {
+      try {
+        return parseReport(readFileSync(f, 'utf8'))
+      } catch (err) {
+        return fail(`${f}: ${(err as Error).message}`)
+      }
+    })
+    const problems = [...coverageProblems(reports, thePlan), ...reports.flatMap((r) => reportProblems(r, thePlan))]
+    if (problems.length) fail(`the reports don't match the plan:\n${problems.join('\n')}`)
+    const run = new Date().toISOString().slice(0, 10)
+    const result = tally(record, thePlan, reports, runs, pageChecks(sha), run)
+    mkdirSync(out, { recursive: true })
+    const state: RunState = { base: sha, run, plan: thePlan, ...result, gate: [] }
+    writeYaml(statePath(out), state)
+    const pageText = (p: string) => showAt(sha, `${pagesDir('guide')}/${p}.md`) ?? ''
+    const briefs = result.comparisons.map((c) => writeJudge(out, `${c.id}-1`, comparisonQuestion(sha, c), pageText(c.candidate), pageText(c.against)))
+    console.log(summary(state))
+    console.log(['', `## First A judges' briefs (one sonnet judge each)`, '', ...(briefs.length ? briefs.map((b) => `- ${b}`) : ['- none'])].join('\n'))
+    return
+  }
+  const state = readYaml<RunState | undefined>(statePath(out), undefined) ?? fail(`no ${statePath(out)}: run tally first`)
+  if (command === 'gate') {
+    const wanted = flags.pages?.split(',').filter(Boolean)
+    const criteria = new Map<string, string[]>()
+    for (const i of state.items.filter((i) => i.edited)) criteria.set(i.page, [...(criteria.get(i.page) ?? []), `${i.lens ?? i.kind}: ${i.fix}`])
+    for (const s of state.steps.filter((s) => s.status === 'taken')) for (const p of [...s.pages, ...(s.into ? [s.into] : [])]) criteria.set(p, [...(criteria.get(p) ?? []), `${s.kind} step: ${s.gist}`])
+    const briefs: string[] = []
+    for (const [page, list] of [...criteria].filter(([p]) => !wanted || wanted.includes(p))) {
+      const path = `${pagesDir('guide')}/${page}.md`
+      const old = showAt(sha, path)
+      const now = existsSync(join(root, path)) ? readFileSync(join(root, path), 'utf8') : undefined
+      if (!old || !now || old === now) {
+        console.log(`skipped ${page}: ${!old ? 'new since the base' : !now ? 'gone from the run branch' : 'unchanged'}`)
+        continue
+      }
+      const criterion = list.join('; ')
+      const at = state.gate.findIndex((g) => g.page === page)
+      const n = at < 0 ? state.gate.push({ page, criterion, votes: [] }) : at + 1
+      state.gate[n - 1] = { page, criterion, votes: [] }
+      for (const j of [1, 2, 3]) briefs.push(writeJudge(out, `gate-${n}-${j}`, `X and Y are two versions of one page. Which better meets what its edit targeted: ${criterion}`, now, old))
     }
-  })
-  const problems = reports.flatMap((r) => reportProblems(r, plan))
-  if (problems.length) fail(`the reports don't match the plan:\n${problems.join('\n')}`)
-  const selected = pageList(selectedFlag)
-  const result = tally(record, plan, reports, selected)
-  console.log(result.markdown)
-  if (!write) return
-  const run = new Date().toISOString().slice(0, 10)
-  const next = nextRecord(record, result, { run, hashes, gapEdit: pageList(gapEditFlag), readByAll: pageList(readByAllFlag) })
-  writeFileSync(join(root, recordPath), stringify(next, { lineWidth: 0 }))
-  console.error(`wrote ${recordPath}`)
+    writeYaml(statePath(out), state)
+    console.log(['## Gate judges\' briefs (three sonnet judges per page)', '', ...(briefs.length ? briefs.map((b) => `- ${b}`) : ['- none'])].join('\n'))
+    return
+  }
+  if (command === 'record') {
+    const owed = [...state.gate.filter((g) => g.merged === undefined).map((g) => `gate on ${g.page}`), ...state.comparisons.filter((c) => c.votes.length && !c.result).map((c) => `comparison ${c.id}`)]
+    if (owed.length) fail(`judges still owed: ${owed.join(', ')}`)
+    const result: Tally = { grades: state.grades, items: state.items, steps: state.steps, comparisons: state.comparisons, waiting: state.waiting }
+    const next = nextRecord(record, state.plan, current, result, runs, state.run)
+    const meta = { run: state.run, base: sha, ...(flags.session ? { session: flags.session } : {}), ...(flags.pr ? { pr: Number(flags.pr) } : {}), ...(flags.cost ? { costUsd: Number(flags.cost) } : {}) }
+    const entry = runEntry(meta, state.plan, result, state.gate as GateEntry[])
+    // One line per lens record and edit, as in issue #2792's data shape.
+    const doc = new Document(next)
+    visit(doc, { Pair: (_, pair) => { if (isPair(pair) && isScalar(pair.key) && [...lenses, 'edited'].includes(String(pair.key.value)) && isMap(pair.value)) pair.value.flow = true } })
+    writeFileSync(join(root, recordPath), doc.toString({ lineWidth: 0 }))
+    writeYaml(join(root, runsPath), { runs: [entry, ...runs.filter((r) => r.run !== state.run)].slice(0, runsKept) })
+    console.error(`wrote ${recordPath} and ${runsPath}`)
+    return
+  }
+  fail(`unknown command ${command}; use plan, tally, gate, votes, record or drafts`)
 })

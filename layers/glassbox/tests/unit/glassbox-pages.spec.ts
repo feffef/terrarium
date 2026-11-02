@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
 import glassbox from '../../tenant.config.ts'
-import { glassboxCites, glassboxJournalRoutes, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
+import { glassboxCites, glassboxJournalRoutes, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
 const expandTs = [
@@ -289,6 +289,39 @@ describe('In Terrarium motive and long Excerpts', () => {
     const long = (n: number) => lesson.replace('  // …\n', '  // …\n'.repeat(n - 3))
     expect(glassboxPageWarnings(long(15))).toEqual([])
     expect(glassboxPageWarnings(long(16))).toEqual(['the Excerpt of shared/expand.ts renders 16 lines, more than 15: cut it to the code that makes the decision'])
+  })
+})
+
+describe('mechanical findings for glassbox-improve', () => {
+  const walkthrough = (stop: string) => `${frontmatter}\nIntro.\n\n## 1. A stop\n\n${stop}\n\n::lessons\n[Collections](/t/glassbox/guide/nuxt-content/collections)\n::\n`
+
+  it('warns on an Excerpt that holds only comments', () => {
+    const comments = lesson.replace('export function catalogFrom(cols) {\n  // …\n  return out\n}', '// One expansion step.\n// …\n# per Tenant')
+    expect(glassboxPageWarnings(comments)).toEqual(['the Excerpt of shared/expand.ts holds only comments: show the code that makes the decision'])
+  })
+
+  it('warns on a Walkthrough stop over 80 words before its chips', () => {
+    const words = (n: number) => `${'word '.repeat(n - 1)}end.`
+    expect(glassboxPageWarnings(walkthrough(`${words(40)} ${words(40)}`))).toEqual([])
+    expect(glassboxPageWarnings(walkthrough(`${words(40)} ${words(41)}`))).toEqual(['stop "1. A stop" has 81 words, more than 80: move detail to the Lessons it links'])
+  })
+
+  it('warns on a Why bullet that is only a link', () => {
+    const linkOnly = lesson.replace('One expansion step turns a manifest into Collections, so a Tenant never writes them by hand. :file[shared/expand.ts].', 'See [how the manifest expands into Collections for every Tenant layer](/t/journal/current/history).')
+    expect(glassboxPageWarnings(linkOnly)).toEqual(['Why it\'s built this way bullet "One expansion step." is only a link: give the reason in its own words'])
+  })
+})
+
+describe('glassboxOrphans', () => {
+  const linking = (to: string) => `${frontmatter}\nSee [it](/t/glassbox/guide/${to}).\n`
+  it('lists a guide page no other page links to, never the overview', () => {
+    const sources = {
+      'index.md': `${frontmatter}\n::lessons\n[A](/t/glassbox/guide/a/a)\n::\n`,
+      'a/01.a.md': linking('a/b'),
+      'a/02.b.md': linking('a/b'),
+      'a/03.c.md': linking('a/a#in-terrarium'),
+    }
+    expect(glassboxOrphans(sources)).toEqual(['a/03.c.md'])
   })
 })
 

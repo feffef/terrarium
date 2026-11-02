@@ -6,44 +6,56 @@ shape in `layers/glassbox/GLOSSARY.md` (Lesson or Walkthrough), the rules in
 [`DECISIONS.md`](DECISIONS.md) holds rulings that are closed: a point it settles
 is never a deficit.
 
-## Criteria
+## Lenses
 
 Read the page as two readers: a developer new to the tool, and one who knows
-the tool but not Terrarium.
+the tool but not Terrarium. Each lens is graded on its own.
 
-- **Title.** It passes EVERY-PAGE's title rule.
-- **Cut.** One concept, enough of it to teach, readable on its own
-  (EVERY-PAGE's Stand alone) with each Terrarium word explained at first use,
-  and the only home of each fact it teaches: a sibling that teaches the same
-  thing is an overlap on both pages.
-- **Accuracy.** Every claim is true at the page's `revision`, every reason
+- **Clarity.** A newcomer can follow the page: its order, plain words, each
+  term introduced before use (EVERY-PAGE's Stand alone), a title that passes
+  EVERY-PAGE's title rule, and the page's shape with EVERY-PAGE's Write rules
+  and the glassbox-content rule.
+- **Reasoning.** Each Why gives a reason, its cost and the alternative, and
   traces to the ADR or file it cites (for an ADR, its Why, Rejected
-  alternatives and When to revisit all count), and the lede holds for the
-  edge cases the page itself names.
-- **Examples.** Every Excerpt and code fence teaches (EVERY-PAGE's Excerpts
-  teach).
-- **Contract.** The page has its shape, and keeps EVERY-PAGE's Write rules and
-  the glassbox-content rule.
-- **Value.** The newcomer learns the concept; the experienced reader learns how
-  and why Terrarium applies it.
+  alternatives and When to revisit all count). `n/a` on a Walkthrough.
+- **Placement** (single home and placement). One concept per page, no fact
+  taught on another page too (an overlap counts on both), the right Subject,
+  and useful Where next links.
+- **Evidence.** The In Terrarium examples and Excerpts are the best place in
+  the repo to see the concept, and each teaches (EVERY-PAGE's Excerpts teach).
+  A finding names the better Excerpt by file and line.
+- **Transfer.** The page teaches the general concept beyond Terrarium, and
+  says when it is the wrong choice. `n/a` on a Walkthrough.
+- **Relevance.** The concept deserves its own page. A low grade leads to a
+  merge, section or cut, never a rewrite.
+
+Correctness is not a lens. A claim the source contradicts at the page's
+`revision`, or a lede that fails an edge case the page itself names, is a
+false claim: it is fixed with the smallest correction once confirmed in the
+source.
 
 ## Grades
 
-- **A**: best in class. At most 10 guide Lessons and 1 Walkthrough hold it,
-  elected from the raters' top lists by `glassbox-improve`
-  (`elect` in its `scripts/grades.ts`); no rater or writer awards it.
+- **A**: best in class on that lens. Several pages of a Subject may hold it;
+  Relevance has none. No rater or writer awards it: `glassbox-improve` elects
+  it by blind comparison (`plannedComparisons` and `nextRecord` in its
+  `scripts/grades.ts`). A page a rater puts in its top 3 on a lens, graded B
+  with no finding, must beat the Subject's holders on that lens (the 3 most
+  recent), or 2 of its other B pages while it has none, in two runs in a row.
+  It loses A only through a confirmed deficit on that lens.
 - **B**: meets the bar, even if another wording is imaginable.
 - **C**: a noticeable deficit.
-- **D**: several deficits, a failed cut, or a failed accuracy check.
+- **D**: several deficits.
 
 In a PR from before `glassbox-improve`'s `grades.yml` existed, A meant today's
-B, B today's C and C today's D.
+B, B today's C and C today's D; before its v3, a page had one grade, not one
+per lens.
 
-Each deficit names its criterion, quotes the page and says the fix. A B page
-may have **gaps to A**: a section where an A page does the same job better,
-named with that page and what to take from it. A gap never lowers a grade.
-Anything short of a deficit or gap goes under **Optional**; an Optional item
-never drives an edit.
+Each deficit names its lens, quotes the page and says the fix. A B may have
+**gaps to A**: a section where a page holding A on that lens does the same job
+better, named with that page and what to take from it. A gap never lowers a
+grade. Anything short of a deficit or gap goes under **Optional**; an Optional
+item never drives an edit.
 
 ## Raising a page
 
@@ -58,7 +70,7 @@ never drives an edit.
 - **Re-cut by moving, not rewriting.** For two concepts on one page, or one
   concept across two, move each fact to its one home and link to it from the
   other page.
-- **Promote a draft** by raising it to B, then moving it into the guide's
+- **Promote a draft** by raising it to B on every lens, then moving it into the guide's
   Subject folder and dropping its links to drafts (GLOSSARY.md, Two Spaces).
 - **Share every correction.** A wrong fact a review finds goes into the brief
   of every agent writing in the same run.

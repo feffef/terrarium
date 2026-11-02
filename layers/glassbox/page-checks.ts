@@ -234,6 +234,14 @@ function motiveLines(body: string, word: string) {
   return lines.flatMap((l, i) => i > at && (end < 0 || i < end) && new RegExp(`\\b${word}\\b`, 'i').test(l) ? [raw[i]!.trim()] : [])
 }
 
+/** The items of a Lesson's Why it's built this way, from its prose. */
+function whyItems(prose: string): string[] {
+  const lines = prose.split('\n')
+  const start = lines.findIndex((l) => /^### /.test(l) && glassboxTermId(l.slice(4)) === glassboxLessonIds.why)
+  const end = lines.findIndex((l, i) => i > start && /^#{2,3} /.test(l))
+  return start < 0 ? [] : lines.slice(start + 1, end < 0 ? undefined : end).join('\n').split(/\n\s*\n|\n(?=- )/).filter((p) => p.trim())
+}
+
 function lessonProblems(file: string, body: string, prose: string, space: string): string[] {
   const headings = [...prose.matchAll(/^(#{2,3}) (.+)$/gm)].map((m) => ({ level: m[1]!.length, id: glassboxTermId(m[2]!) }))
   const problems: string[] = []
@@ -245,11 +253,7 @@ function lessonProblems(file: string, body: string, prose: string, space: string
     else if (i < last) problems.push(`Lesson section #${id} is out of order`)
     else last = i
   }
-  const lines = prose.split('\n')
-  const start = lines.findIndex((l) => /^### /.test(l) && glassboxTermId(l.slice(4)) === glassboxLessonIds.why)
-  const end = lines.findIndex((l, i) => i > start && /^#{2,3} /.test(l))
-  const items = start < 0 ? [] : lines.slice(start + 1, end < 0 ? undefined : end).join('\n').split(/\n\s*\n|\n(?=- )/).filter((p) => p.trim())
-  for (const p of items) {
+  for (const p of whyItems(prose)) {
     if ([...p.matchAll(adrCite)].some((m) => m[1] !== m[2])) problems.push(`Why it's built this way cites an ADR by another ADR's file: ${p}`)
     const rest = p.replace(adrCite, '')
     if (/\bADR-\d{4}\b|docs\/adr\//.test(rest)) problems.push(`Why it's built this way cites an ADR not as "ADR-NNNN (:file[…])": ${p}`)
@@ -336,26 +340,58 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   return problems
 }
 
-// A reviewer's call, so these warn and never fail (#2701).
+// A reviewer's call, so these warn and never fail (#2701); glassbox-improve
+// takes each but the "so" clause as a finding (issue #2792).
 const excerptMaxLines = 15
+const stopMaxWords = 80
+const linkOnlyMaxWords = 3
+const commentLine = /^\s*(?:\/\/|#|--|\/?\*|\*\/|<!--)/
+const wordCount = (text: string) => text.split(/\s+/).filter((w) => /\w/.test(w)).length
 
-/** What a reviewer should look at on a page: a "so" clause in In Terrarium, and long Excerpts. */
+/** What a reviewer should look at on a page: a "so" clause in In Terrarium, long or
+ *  comment-only Excerpts, long Walkthrough stops and Why bullets that are only a link. */
 export function glassboxPageWarnings(source: string): string[] {
   const { body } = splitFrontmatter(source)
   const warnings = motiveLines(body, 'so').map((l) => `In Terrarium may give a motive ("so"); check it states mechanism: ${l}`)
   for (const ref of glassboxPageRefs(body).files) {
-    const n = ref.excerpt?.split('\n').length ?? 0
-    if (n > excerptMaxLines) warnings.push(`the Excerpt of ${ref.path} renders ${n} lines, more than ${excerptMaxLines}: cut it to the code that makes the decision`)
+    const lines = ref.excerpt?.split('\n') ?? []
+    if (lines.length > excerptMaxLines) warnings.push(`the Excerpt of ${ref.path} renders ${lines.length} lines, more than ${excerptMaxLines}: cut it to the code that makes the decision`)
+    if (lines.some((l) => l.trim()) && lines.every((l) => !l.trim() || commentLine.test(l))) warnings.push(`the Excerpt of ${ref.path} holds only comments: show the code that makes the decision`)
+  }
+  for (const s of readBody(body).sections.filter((s) => glassboxStopNumber(s.title))) {
+    const n = wordCount(s.text.split(/^::lessons/m)[0]!)
+    if (n > stopMaxWords) warnings.push(`stop "${s.title}" has ${n} words, more than ${stopMaxWords}: move detail to the Lessons it links`)
+  }
+  for (const bullet of whyItems(readBody(body).prose)) {
+    const lead = bullet.match(/^- \*\*([^*]+)\*\*/)
+    const own = bullet.slice(lead?.[0].length ?? 2).replace(/\[[^\]]*\]\([^)]*\)|:file\[[^\]]*\]|\bADR-\d{4}\b/g, '')
+    if (lead && wordCount(own) <= linkOnlyMaxWords) warnings.push(`Why it's built this way bullet "${lead[1]}" is only a link: give the reason in its own words`)
   }
   return warnings
 }
 
-// Usage: pnpm exec tsx layers/glassbox/page-checks.ts — prints every page's warnings.
+/** Each guide page, by file under `pages/`, that no other page links to; the overview is the root. */
+export const glassboxOrphanText = 'no other guide page links to it'
+
+export function glassboxOrphans(sources: Record<string, string>): string[] {
+  const linked = new Set<string>()
+  for (const [file, source] of Object.entries(sources)) {
+    for (const [, path] of source.matchAll(/\]\((\/t\/glassbox\/guide\/[^)\s#?]*)/g)) {
+      if (path!.replace(/\/$/, '') !== glassboxSitePath('guide', file)) linked.add(path!.replace(/\/$/, ''))
+    }
+  }
+  return Object.keys(sources).filter((f) => f !== 'index.md' && !linked.has(glassboxSitePath('guide', f))).sort()
+}
+
+// Usage: pnpm exec tsx layers/glassbox/page-checks.ts — prints every page's warnings and the guide's orphans.
 runIfMain(import.meta.url, () => {
   const content = join(root, 'layers/glassbox/content')
   for (const file of globSync('*/pages/**/*.md', { cwd: content }).sort()) {
     for (const warning of glassboxPageWarnings(readFileSync(join(content, file), 'utf8'))) console.log(`${file}: ${warning}`)
   }
+  const guide = join(content, 'guide/pages')
+  const sources = Object.fromEntries(globSync('**/*.md', { cwd: guide }).map((f) => [f, readFileSync(join(guide, f), 'utf8')]))
+  for (const file of glassboxOrphans(sources)) console.log(`guide/pages/${file}: ${glassboxOrphanText}`)
 })
 
 /** Every entry in the `terms` Collection, by id. */
