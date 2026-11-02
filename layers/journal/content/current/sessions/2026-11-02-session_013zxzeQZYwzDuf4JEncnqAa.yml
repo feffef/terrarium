@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeQZYwzDuf4JEncnqAa
 startedAt: 2026-11-02T21:58:43Z
-endedAt: 2026-11-02T23:11:26Z
+endedAt: 2026-11-02T23:57:56Z
 kind: autonomous
 goal: First v3 run of glassbox-improve on the Glass Box guide
 status: completed
@@ -246,54 +246,58 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: writing-for-agents
+    reason: (no reason given)
   - name: context
     reason: (invoked as a slash command)
+  - name: retro
+    reason: (invoked as a slash command)
 frictions:
+  - description: "merge-pr.ts refused my first verdict because it lacked a 'Reviewed: <head sha>' line, so I posted a second comment"
+    solution: The format is at docs/agents/pr-workflow.md:55 but 'Closing a scheduled run's PR' doesn't point to it; add that pointer
+    severity: nit
   - description: The blind gate never judged claude-code/04.hooks; it was edited for item f9, whose page is 06, so gate skipped it
-    solution: grades.ts gate should brief every page the diff changes, not only item pages
+    solution: grades.ts gate (scripts/grades.ts:846-858) builds pages only from items and steps and prints nothing for others; diff the base and flag changed pages with no criterion
     severity: minor
   - description: A judge misread a move's direction on session-logs, read the target as the source, and voted against it
     solution: judge-brief should name a move's source and target pages explicitly
     severity: minor
   - description: About 127 judges were dispatched by hand in seven waves, which is heavy lead orchestration and a large token cost
-    solution: Run gate and election judges through a workflow script that grades.ts emits
+    solution: No glassbox-improve workflow exists in .claude/workflows/; one script could fan out judges from the briefs grades.ts writes and call votes
     severity: moderate
   - description: Writers hit worktree-guard and inline-heredoc refusals and worked around them with script files
     solution: writer-brief should tell writers to write edit scripts to their scratch folder from the start
     severity: minor
   - description: The page-checks 'so' motive warning fires on dozens of mechanism sentences, so every Check output is noise to triage
-    solution: Narrow the heuristic in layers/glassbox/page-checks.ts, e.g. to 'so that' or to clauses citing intent
+    solution: 32 such warnings on the merged branch, none a motive; narrow page-checks.ts to intent clauses (so that, in order to) or cut it
     severity: minor
   - description: A review fix asked for an ADR chip that the page test refuses because a linked Lesson already cites it; the reviewer brief lacks that rule
-    solution: Add the chip-repeat rule to EVERY-PAGE or the walkthrough Skill where reviewers read it
+    solution: The rule is in layers/glassbox/GLOSSARY.md:92 and enforced by glassbox-pages.spec.ts:361; step 9's review addendum should have reviewers run that test on proposed fixes
     severity: nit
-  - description: The Stop hook asked about 30 times to push before the gate ran, each answer costing a turn
-    solution: Stop hook could skip its push request while a background gate run or subagent is live
-    severity: minor
+  - description: The Stop hook asked to push in 106 user turns (counted in the transcript) before the gate allowed it; each cost a turn to decline
+    solution: "~/.claude/stop-hook-git-check.sh is harness-owned: report upstream so it stays quiet while agents or a background command run, or after one decline"
+    severity: moderate
   - description: "Broke CLAUDE.md 'Verify before you state': I forwarded an Excerpt trim without counting; it would still render 18 lines and drop a named line"
     solution: Count rendered lines against the cited file before sending a trim; the writer caught it
     severity: minor
   - description: Fix-round SendMessages to resumed writers did not repeat CLAUDE.md's ask for rule and doc verdicts; only the original briefs did
     solution: Include the verdict ask in every resume message
     severity: nit
-  - description: "merge-pr.ts refused my first verdict because it lacked a 'Reviewed: <head sha>' line, so I posted a second comment"
-    solution: Re-read pr-workflow step 4's verdict format before posting; the script message names it
-    severity: nit
-durationSec: 4364
+durationSec: 7153
 models:
-  claude-opus-5-5: 759
+  claude-opus-5-5: 778
 toolCounts:
-  Bash: 141
+  Bash: 147
   ToolSearch: 3
   mcp__github__list_pull_requests: 1
   Agent: 180
-  Skill: 4
+  Skill: 5
   SendMessage: 15
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__claude-code-remote__get_session: 1
   mcp__github__update_pull_request: 1
-  ReadNotifications: 4
+  ReadNotifications: 5
   mcp__github__pull_request_read: 6
   mcp__claude-code-remote__send_later: 1
   mcp__github__add_issue_comment: 2
@@ -587,7 +591,7 @@ subagents:
     durationSec: 644
     toolCalls: 72
     modelCalls: 70
-    tokenShare: 2.7
+    tokenShare: 2.6
   - type: general-purpose
     task: Rater C3 claim check
     model: sonnet
@@ -601,7 +605,7 @@ subagents:
     durationSec: 864
     toolCalls: 86
     modelCalls: 83
-    tokenShare: 3.5
+    tokenShare: 3.4
   - type: general-purpose
     task: Rater C5 claim check
     model: sonnet
