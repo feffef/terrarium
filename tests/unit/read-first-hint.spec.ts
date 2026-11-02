@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
-import { CLOSE_SESSION_HINT, LATE_READ_NOTE, READ_FIRST, triggeredDocs } from '../../scripts/hooks/read-first-hint.ts'
+import { CLOSE_SESSION_HINT, LATE_READ_NOTE, MERGE_CLOSE_SESSION_HINT, READ_FIRST, triggeredDocs } from '../../scripts/hooks/read-first-hint.ts'
 import { runTsx } from '../support/run-script.ts'
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
@@ -207,6 +207,22 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
     const earlier = transcript('earlier.jsonl', [prUse('p1'), toolResult('p1', 'ok'), skill, prUse('p2')])
     expect(pr({ transcript_path: earlier })).toContain(CLOSE_SESSION_HINT)
     expect(context(run(call('x', { tool_name: 'mcp__github__get_me', tool_input: {} })))).not.toContain(CLOSE_SESSION_HINT)
+  })
+
+  it('says to invoke close-session after a successful main-session merge-pr.ts, unless invoked after it', () => {
+    const merge = 'pnpm exec tsx scripts/github/merge-pr.ts 12'
+    const merged = (extra: object = {}) => context(run(call(merge, extra)))
+    expect(merged()).toContain(MERGE_CLOSE_SESSION_HINT)
+    expect(merged({ hook_event_name: 'PostToolUseFailure' })).not.toContain(MERGE_CLOSE_SESSION_HINT)
+    transcript('m/subagents/agent-s1.jsonl', [{ type: 'user', message: { content: 'go' } }])
+    expect(merged({ transcript_path: join(dir, 'm.jsonl'), agent_id: 's1' })).not.toContain(MERGE_CLOSE_SESSION_HINT)
+    const mergeUse = (id: string) => toolUse(id, 'Bash', { command: merge })
+    const skill = toolUse('s', 'Skill', { skill: 'close-session' })
+    expect(merged({ transcript_path: transcript('m-after.jsonl', [mergeUse('m1'), skill]) })).not.toContain(MERGE_CLOSE_SESSION_HINT)
+    const earlier = transcript('m-earlier.jsonl', [mergeUse('m1'), toolResult('m1', 'ok'), skill, mergeUse('m2')])
+    expect(merged({ transcript_path: earlier })).toContain(MERGE_CLOSE_SESSION_HINT)
+    expect(merged({ transcript_path: earlier })).not.toContain(CLOSE_SESSION_HINT)
+    expect(context(run(call('git log')))).not.toContain(MERGE_CLOSE_SESSION_HINT)
   })
 
   it('--dry-run prints the pointer for an unread doc, and nothing for git status', () => {
