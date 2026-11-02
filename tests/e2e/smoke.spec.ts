@@ -113,6 +113,17 @@ describe('L2 smoke render', async () => {
       }
     })
 
+    it('words every reply marker on the home Blog teaser as a reply to a Persona', async () => {
+      const page = await createPage()
+      try {
+        await page.goto(url('/'), { waitUntil: 'hydration' })
+        const replies = await page.locator('.posts .post-reply').allTextContents()
+        for (const r of replies) expect(r).toMatch(/^↳ in reply to (David|Karen|Kevin|Eyra)$/)
+      } finally {
+        await page.close()
+      }
+    })
+
     it('shows Tinkerfund’s two Spaces and a Campaign of the day in its own colours', async () => {
       const page = await createPage()
       try {
