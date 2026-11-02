@@ -145,3 +145,8 @@ occurrences:
     severity: minor
     description: "Misread the 28th triage option (a), an agent-run git diff step, as a check enforced by code, and built Karen's whole reply thesis on it until the fact-checker caught it."
     solution: "Quote an option's own sentence next to my paraphrase before drafting a thesis on it; the checker step worked as designed."
+  - session: session_013zxzeRkv6UCWJtPmJ68h32
+    date: "2026-11-01"
+    severity: moderate
+    description: "Told the user the completed log was authored and would be committed, without checking the scratch or origin/main. It still said in-review and main held the in-review log."
+    solution: "Verify the scratch status and the origin/main log commit before saying the log landed (CLAUDE.md: verify before you state)."

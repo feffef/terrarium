@@ -26,3 +26,8 @@ occurrences:
     severity: minor
     description: "Survey subagent's batched --append aborted wholly on one already-held session, writing nothing; it reran 36 triples one at a time, over two minutes."
     solution: "Make print-ledger-occurrence.ts --append skip and report held sessions instead of aborting the batch."
+  - session: session_013zxzeNxm9jTD6DwkDXzzG8
+    date: "2026-11-01"
+    severity: minor
+    description: "The survey subagent's batched --append aborted on a held session and it reran after grepping; and it left never-fixed labels ledger-derived, skipping the tracker check."
+    solution: "The queued ledger-append-refuses-held-session fix (collect all entries' collisions in one error)."

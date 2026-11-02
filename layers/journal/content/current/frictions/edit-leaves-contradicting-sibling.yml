@@ -4,12 +4,14 @@ summary: >-
 cause: >-
   After adding, changing, moving or cutting a section, rule, field or test, the author did not grep the same file and its consumers (docs, Skills, scripts, tests, typechecked callers, code comments, cross-references) for statements it overrides or references it breaks. Signals: a leftover line contradicting a new section, a dangling section reference, callers pointing at a removed section, a required field breaking another spec's typecheck, a test assertion built on a matcher or order the suite lacks; caught by code-review or the gate.
 surface: safe
-status: tracked
-ref: "issue #2753"
+status: open
 fixes:
   - pr: 2336
     date: "2026-10-20"
     summary: "CLAUDE.md \"Verify before you state\" now names subagent reports, script behaviour from recall, \"only\"/\"every\"/\"nothing\" claims and one-test causes; \"One home per fact\" says to grep for other statements when changing one."
+  - pr: 2766
+    date: "2026-11-01"
+    summary: "CLAUDE.md Self-verification: after changing a type or a test, run pnpm typecheck and the touched spec before gate:scoped."
 occurrences:
   - session: session_012f7o6FcYxq1MWxvsdgKS6m
     date: "2026-10-20"

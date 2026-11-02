@@ -6,11 +6,6 @@ surface: guard-or-hook
 status: open
 ref: "issue #2167 closed 2026-10-23: owner kept bash-rules-hint.ts as is; no open issue or trial tracks it."
 occurrences:
-  - session: session_0135hcUf12mVM8dEZfDRAkUb
-    date: "2026-10-18"
-    severity: nit
-    description: "Hook-injected rule files (adr-0005, adr-0021, adr-0029 and others) loaded after plain reads of unrelated docs, adding context with no bearing."
-    solution: "Narrow those rules' paths."
   - session: session_01FPzSKyY66o24rfLL8SJFxw
     date: "2026-10-19"
     severity: nit

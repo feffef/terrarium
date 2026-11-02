@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-30"
     summary: "CLAUDE.md: in the main session end your turn and let the completion notification wake you; never wait with pgrep -f"
 occurrences:
-  - session: session_01Sr3uwZro23NY3Z4sk5ojsM
-    date: "2026-10-18"
-    severity: nit
-    description: "Called ScheduleWakeup to wait on a running subagent instead of just ending the turn; it was blocked outright by the /loop-only tool guard (issue #814), since this is not a /loop session."
-    solution: "No cost beyond one wasted tool call - the guard's error message was clear and I ended the turn correctly afterward. Remember that a dispatched Agent-tool subagent self-notifies on completion; no wait/poll tool is ever needed for it."
-  - session: session_01Ai3w5epHj4PWgBC8XSoEwz
-    date: "2026-10-18"
-    severity: nit
-    description: "Tried ScheduleWakeup and a foreground sleep to wait for visitors; both were blocked by guards, wasting two calls."
-    solution: "Visitor-loop step 2 could say: subagents self-notify, end the turn and wait."
   - session: session_0183U5MkKrjuhRKdjpFxD9Xj
     date: "2026-10-19"
     severity: nit
@@ -99,3 +89,8 @@ occurrences:
     severity: minor
     description: "Waited with a pgrep -f loop that matched itself and hung ten minutes; also two other wait loops timed out and had to be stopped."
     solution: "Use the harness background-completion notification instead of polling loops."
+  - session: session_013zxzeQFGrFi821yVm6n746
+    date: "2026-11-01"
+    severity: nit
+    description: "A foreground sleep to wait for the gate was blocked by the harness; I ended the turn and relied on the completion notification instead, a minor detour."
+    solution: "Say in blog-post step 10 to run the gate in the background and end the turn at once."

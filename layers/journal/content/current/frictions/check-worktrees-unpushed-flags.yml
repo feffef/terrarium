@@ -1,6 +1,6 @@
 name: check-worktrees-unpushed-flags
 summary: check:worktrees reported a worktree or checkout as unpushed or detached after a push or build that the Skill had not told the session to follow up.
-cause: "A worktree pushed with 'git push origin HEAD:branch' has no upstream, or the main checkout was left on a detached HEAD by a build workflow; check:worktrees fails until the session pushes the run branch or sets upstreams by hand. Signals: 'pnpm check:worktrees failed', 'reported them unpushed', 'no upstream', 'detached HEAD'."
+cause: "A worktree pushed with 'git push origin HEAD:branch' has no upstream, or the main checkout was left on a detached HEAD by a build workflow; check:worktrees fails until the session pushes the run branch or sets upstreams by hand. Signals: 'pnpm check:worktrees failed', 'reported them unpushed', 'no upstream', 'detached HEAD'. Since PR #2739, log-session --author also runs the sweep at close and lists linked worktrees left with uncommitted or unpushed work (build workflow worktrees) as a Friction or a refusal."
 surface: safe
 status: open
 fixes:
@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "Worktrees pushed with git push origin HEAD:branch had no upstream, so check:worktrees reported them unpushed until I set upstreams by hand"
     solution: "clear-backlog §4 could push with git push -u origin HEAD:branch, or check:worktrees could compare against origin/branch when no upstream is set"
+  - session: session_013zxzeTLLY3FmiXzuBKgc2o
+    date: "2026-11-01"
+    severity: minor
+    description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/wf_eb5231a6-e95-1, /home/user/terrarium/.claude/worktrees/wf_eb5231a6-e95-2"
+    solution: "Push each, or remove it if its work is meant to be dropped."

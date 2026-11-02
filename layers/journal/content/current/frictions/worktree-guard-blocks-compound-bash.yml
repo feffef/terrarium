@@ -16,3 +16,8 @@ occurrences:
     severity: nit
     description: "Design subagent reported: the isolation guard's source is not in the repo, so whether git -C passes had to be tested empirically (the impl agent did), and docsRead merges subagent reasons into one field."
     solution: "Document the guard's accepted forms in environment-caveats, or put its source under scripts/hooks."
+  - session: session_013zxzeSvdGhiM7SLEUgzvmF
+    date: "2026-11-01"
+    severity: nit
+    description: "Worktree guard refused two writer commands: a curl URL containing the word github and a for loop with sed and git ls-files."
+    solution: "Document in dispatch-subagents which command shapes the worktree guard refuses."

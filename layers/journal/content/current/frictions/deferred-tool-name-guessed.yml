@@ -1,0 +1,16 @@
+name: deferred-tool-name-guessed
+surface: outside
+summary: Agents called a deferred tool under the wrong name or without loading its schema, and the call failed once.
+cause: "A deferred MCP tool (subscribe_pr_activity, Monitor) is called with a guessed prefix or before ToolSearch loads its schema; resolution is by fully-qualified name only (github-integration.md 'Resolving deferred tool names'). Signals: 'No such tool available', 'mcp__github__subscribe_pr_activity', 'without loading its schema'."
+status: open
+occurrences:
+  - session: session_013zxzeRuz3fA1RMj6ygrT9d
+    date: "2026-10-31"
+    severity: nit
+    description: "First subscribe_pr_activity call used the mcp__github__ prefix; the tool is mcp__claude-code-remote__subscribe_pr_activity."
+    solution: "Say the right prefix in the github-integration doc or the Skill."
+  - session: session_013zxzeSvdGhiM7SLEUgzvmF
+    date: "2026-11-01"
+    severity: nit
+    description: "I called a non-existent mcp__github__subscribe_pr_activity and invoked Monitor without loading its schema; both cost a wasted call."
+    solution: "Name subscribe_pr_activity under mcp__claude-code-remote__ in github-integration.md."

@@ -98,11 +98,6 @@ occurrences:
     severity: nit
     description: "textwrap split hyphenated words in appended observations, so validate:content failed on four files and I rejoined them by hand."
     solution: "Wrap with break_on_hyphens=False, or give audit-skills a script that appends observations."
-  - session: session_01GfmoxeLwrvC7CARuaBAXfB
-    date: "2026-10-18"
-    severity: minor
-    description: "First migration script re-serialized skill YAML, reformatting every long prose field, so I had to restore the files and redo the edit as a text cut."
-    solution: "Edit YAML as text or with parseDocument for a field removal; check git diff --stat right after any data migration."
   - session: session_013zxzeR86n7CjfWXZh4HXyc
     date: "2026-10-28"
     severity: minor

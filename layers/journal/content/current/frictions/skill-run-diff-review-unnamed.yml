@@ -32,16 +32,6 @@ occurrences:
     severity: minor
     description: "Skipped the code-review Skill before the first push on a 20-file diff (mostly renames), substituting my own read and the fact-check subagent."
     solution: "The pr-workflow simple-change bar says nothing about pure archive moves; state whether rename-only sweeps count, or have the digest Skill name its review step."
-  - session: session_01DeVdzgpEMamftEbbyv26qd
-    date: "2026-10-18"
-    severity: nit
-    description: "Skipped the code-review Skill before the first push, self-reviewing a prose-only fact-checked digest diff against ADR-0004 and pr-workflow."
-    solution: "Let the digest Skill say the fact-check plus gate counts as the review for digest PRs."
-  - session: session_0148agurVWH8QQeSkGCDm23e
-    date: "2026-10-18"
-    severity: nit
-    description: "The code-review Skill demands two parallel sub-agents, which is out of proportion for a diff of 50 lines that only change pin fields."
-    solution: "Let pr-workflow skip sub-agents for a diff that glassbox-update's script produced and a grep shows is pin-only."
   - session: session_01XueFVQyVySVEKHxSHTFeTh
     date: "2026-10-19"
     severity: nit

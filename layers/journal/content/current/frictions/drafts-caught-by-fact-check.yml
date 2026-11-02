@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-30"
     summary: "merge-pr.ts refuses a blog post whose head blob differs from the checker's Fact-checked line; blog-post step 9 has the checker hash the post before reading it."
 occurrences:
-  - session: session_018Uhxo4D5VcScugLrS35r4w
-    date: "2026-10-18"
-    severity: minor
-    description: "First draft stated a few things as fact without checking them: Dependabot auto-merge (still only a Proposal), one wrong date, ADR word counts, which July guard was deleted"
-    solution: "Check each claim drawn from a subagent or blog post against git before writing it; the Spec fact-check caught them all before the push"
   - session: session_01AwaGncaYJFWdJnc6yqDoTS
     date: "2026-10-19"
     severity: nit
@@ -78,3 +73,13 @@ occurrences:
     severity: minor
     description: "First Digest draft called the docs check and Skills check weekly and the log sweep stray; the fact-check showed daily schedules and narrower behaviour, so I reworded."
     solution: "Digest Skill could tell the writer never to state a cadence from session-goal wording."
+  - session: session_013zxzeQFGrFi821yVm6n746
+    date: "2026-11-01"
+    severity: minor
+    description: "Fact-checker and reviewers repeatedly flagged loose blob-link line ranges and missing glosses, costing three extra subagent rounds and two follow-up commits."
+    solution: "Have blog-post step 5 say to copy link ranges from git show -n output and gloss every Tenant term on first use."
+  - session: session_013zxzeQqj3Eh1SgeFLWsNcD
+    date: "2026-11-02"
+    severity: minor
+    description: "First draft said agents were told to accept relayed claims (it was a Ledger status change) and called the skills check weekly; I wrote from PR titles without reading diffs, caught by the fact-check."
+    solution: "Have gather print each PR's touched files and first diff lines so the draft starts from the change, not the title."

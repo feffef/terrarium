@@ -24,11 +24,6 @@ fixes:
     date: "2026-10-31"
     summary: "Survey brief passes --out {SCRATCH_DIR} paths to the summary, candidates and extract calls and redirects the merges and open-issues calls; design brief redirects audit-skills output; states that --append writes all or nothing."
 occurrences:
-  - session: session_0135hcUf12mVM8dEZfDRAkUb
-    date: "2026-10-18"
-    severity: minor
-    description: "design-brief.md opens with a dangling fragment after {PICKS} and its session-log glob matches nothing; the design agent lost rounds on both."
-    solution: "Rewrite the brief's first lines and give the real glob (*session_<id>*.yml)."
   - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
     date: "2026-10-21"
     severity: nit
@@ -94,3 +89,8 @@ occurrences:
     severity: nit
     description: "Survey brief gives no scratch path for --out and its stale-status reset does not cover an issue closed not planned; the subagent followed it literally for #2694."
     solution: "Say where --out goes and how to handle closed-not-planned in survey-brief.md (tracked in #2725)."
+  - session: session_013zxzeNxm9jTD6DwkDXzzG8
+    date: "2026-11-01"
+    severity: nit
+    description: "design-brief points session logs at layers/journal/content/*/sessions/ but they sit under current/sessions with a date prefix; audit-skills docReadCounts lists one doc under several spellings."
+    solution: "Fix the path in design-brief.md and say how to sum docReadCounts."

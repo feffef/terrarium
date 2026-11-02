@@ -2,7 +2,8 @@ name: restart-kills-background-work
 summary: A container or worker restart silently killed running workflows and gate runs, and the main agent only found out later.
 cause: "Container/worker restart kills background workflows and gate runs (exit 137); clear-backlog SKILL.md does not say to check run liveness after a resume or that resumeFromRunId needs the original args. Signals: 'container restart killed', 'exit 137', 'args.session required'."
 surface: outside
-status: open
+status: tracked
+ref: "issue #2773"
 fixes:
   - pr: 2140
     date: "2026-10-16"
@@ -23,3 +24,8 @@ occurrences:
     severity: nit
     description: "The worker process restarted mid code-review; state survived but the review dispatch had to be redone."
     solution: "None needed beyond committing before long steps, which held."
+  - session: session_013zxzeTLLY3FmiXzuBKgc2o
+    date: "2026-11-01"
+    severity: moderate
+    description: "A session restart at about 23:20 killed the first clear-backlog-build run mid-fix; I noticed only when the second run finished and its output file was empty, then resumed it."
+    solution: "Check each running workflow's journal mtime right after a resume hook fires, as clear-backlog §3 says."
