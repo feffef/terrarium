@@ -1,0 +1,83 @@
+schemaVersion: 1
+session: session_013zxzeR2kopqGDtf5GQztz6
+startedAt: 2026-11-02T07:41:12Z
+endedAt: 2026-11-02T07:46:22Z
+kind: interactive
+goal: Report the API cost trend of glassbox-improve sessions
+status: completed
+outcome: Per-session USD cost for 8 glassbox-improve runs read via get_session and reported; no repo change
+summary: The owner asked how API costs of glassbox-improve sessions developed. I found the 8 sessions whose logs list the Skill and first answered from session logs only, wrongly concluding no cost data exists and offering three options. The owner then asked whether inspect-session could get the costs; following that Skill (human-instructed), get_session returned usage.cost_usd for each session (list price), totalling about 337 USD, and one result event gave a per-model split. Nothing was built or filed; all work was human-instructed reading.
+prs: []
+docsRead:
+  - path: .claude/skills/inspect-session/SKILL.md
+    reason: get_session usage and result events carry cost
+    useful: yes
+skillsUsed:
+  - name: inspect-session
+    reason: cost per session via get_session
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Answered from session logs alone and told the owner no cost data existed, though get_session holds usage.cost_usd; the owner had to point at inspect-session.
+    solution: "CLAUDE.md's trigger 'before you inspect another session: inspect-session' should have prompted reading the Skill, whose step 1-2 names get_session usage as a cheap cost source."
+    severity: moderate
+  - description: Ran git fetch and git log before reading docs/agents/git-conventions.md, against CLAUDE.md's docs-first rule; no harm here as both were read-only lookups.
+    solution: Read git-conventions.md before the first non-read-only git command, as the PostToolUse hint said.
+    severity: nit
+durationSec: 310
+models:
+  claude-opus-5-5: 38
+toolCounts:
+  Bash: 9
+  Skill: 3
+  mcp__claude-code-remote__get_session: 8
+  mcp__claude-code-remote__list_events: 1
+rulesLoaded:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/data-shapes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: No PR or push in a read-only question session, so the gate rule did not apply
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session even for a question-only session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: No change landed and nothing new was built, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0017.md
+    reason: No GitHub write was made, so the provenance header rule did not apply
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded on reading audit-skills.ts; it pointed at Routine run costs, but glassbox-improve is no Routine
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on reading a Journal Inventory entry; no Tenant work was done
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on reading shared/schemas/session.ts; nothing was edited
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: Loaded on a shared/ read; no cross-Tenant read was built
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Kept me offering, not building, a cost field in the session log; summary was enough
+    useful: yes
+gitBranch: claude/cool-galileo-0lqed0
+entrypoint: remote
+cliVersion: 2.1.316
+learnings:
+  - Session logs keep only subagent tokenShare; absolute USD cost of a cloud session sits in get_session usage.cost_usd (list price) and in result events' modelUsage.
+ideas:
+  - Have log-session's mechanical half record get_session usage.cost_usd and per-model costUSD, so Skill cost trends are answerable from the Journal without MCP calls (needs a data-shape decision first).
+landedBy: Stop
