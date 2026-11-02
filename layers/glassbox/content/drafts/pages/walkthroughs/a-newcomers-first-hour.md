@@ -28,7 +28,7 @@ The Journal's landing page opens with "New here? Start with the short version", 
 An explainer page that sets `onramp` ends in a footer: "Start here", its place in the tour, a link back and a link to the next page. The Journal's own page for its Documents builds the footer: it asks Nuxt Content for just the tour fields of every page with an `onramp` value, and sorts them the same way the landing page does. The last page's footer leads back to the Journal. On the way, the newcomer reads how the Platform is built and deployed and how humans and agents work on it.
 
 ::stop-links
-[queryCollection patterns](/t/glassbox/drafts/nuxt-content/query-collection-patterns) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/journal/app/components/journal/OnrampTour.vue]
+[queryCollection](/t/glassbox/guide/nuxt-content/query-collection) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/journal/app/components/journal/OnrampTour.vue]
 ::
 
 ## 4. One tour page sorts real from invented
@@ -63,6 +63,6 @@ On 28 September 2026 a `visitor-loop` run sent three first-time-visitor agents, 
 
 - [CLAUDE.md](/t/glassbox/guide/claude-code/claude-md)
 - [Ubiquitous language](/t/glassbox/guide/terrarium-practice/ubiquitous-language)
-- [queryCollection patterns](/t/glassbox/drafts/nuxt-content/query-collection-patterns)
+- [queryCollection](/t/glassbox/guide/nuxt-content/query-collection)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)
 - [What's Real, What's Invented](/t/journal/current/real-and-invented)

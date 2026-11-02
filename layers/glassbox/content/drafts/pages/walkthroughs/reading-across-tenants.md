@@ -36,7 +36,7 @@ When `expand()` builds the Blog's collections, it adds the `page` contract's fie
 A visitor opens `/t/commons/search`. The Commons layer's Space page renders its `CommonsSearch` component, which calls `queryPages()` inside `useAsyncData`. That calls `queryAcrossTenants('page', …)`: one `queryCollection` for each key the Catalog lists under `page`, each row cut down to the page fields and tagged with its Tenant, Space and Collection. `queryPages()` then gives each row its own address with `documentUrl()`.
 
 ::stop-links
-[queryCollection patterns](/t/glassbox/drafts/nuxt-content/query-collection-patterns) · [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads)
+[queryCollection](/t/glassbox/guide/nuxt-content/query-collection) · [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads)
 ::
 
 ## 5. The browser filters the list
@@ -58,7 +58,7 @@ The Commons's own `pages` name no kind, so its Search never lists itself. A Coll
 ## Where next
 
 - [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads)
-- [queryCollection patterns](/t/glassbox/drafts/nuxt-content/query-collection-patterns)
+- [queryCollection](/t/glassbox/guide/nuxt-content/query-collection)
 - [Virtual modules](/t/glassbox/guide/nuxt-vue/virtual-modules)
 - [Adding a site](/t/glassbox/guide/walkthroughs/adding-a-tenant)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)

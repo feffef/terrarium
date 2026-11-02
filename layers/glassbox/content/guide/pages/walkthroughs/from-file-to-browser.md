@@ -1,7 +1,7 @@
 ---
 title: From file to browser
 description: How a Markdown file in a Tenant folder becomes a table, a dump, a rendered page and a payload the browser reuses.
-revision: '574377b55cb737b991df18e40823b7fbc51157df'
+revision: '4b7e40b291580c3067856048b3529e6ca347c0e8'
 revisionDate: '2026-11-02'
 ---
 
@@ -52,7 +52,7 @@ The Tenant's :term[manifest] lists its Spaces and Collections. Each time Nuxt Co
 A Caddy proxy passes the visitor's request to :term[Nitro], Nuxt's server, which first checks its page cache: a copy rendered moments ago goes back as it is. On a miss, Nuxt picks the page file that matches the address, and its `useSpace` turns the address into the keys of one Space's Collections, or a 404. The page's `useAsyncData` then calls `queryCollection` with its key, on the server.
 
 ::stop-links
-[Nitro server engine](/t/glassbox/guide/nuxt-vue/nitro) · [Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
+[Nitro server engine](/t/glassbox/guide/nuxt-vue/nitro) · [Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · [queryCollection](/t/glassbox/guide/nuxt-content/query-collection)
 ::
 
 ## 5. The first query restores the table from the dump
