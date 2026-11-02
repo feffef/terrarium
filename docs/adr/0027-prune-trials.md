@@ -23,7 +23,8 @@ hit and leave the cut alone until it is judged.
   user's approval (ADR-0003).
 - **The verdict.** A trial is judged only after its window has passed since
   the cut landed on `main`. A `major` or `blocker` Friction caused by the cut
-  puts back one line stating the goal, never the old text. Anything less, and
+  puts back one line stating the goal, never the old text; a cut ADR gets its
+  text back. Anything less, and
   the cut stays; but `moderate` damage, or a clear rise in how often sessions
   hit a Friction the cut covers, files an issue so a person decides whether to
   restore anything. If the landing can't be found, the trial is not judged:
