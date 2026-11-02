@@ -95,7 +95,7 @@ How a page opens.
 
 It reaches the router. The router picks a page.
 
-::stop-links
+::lessons
 [Collections](/t/glassbox/guide/nuxt-content/collections)
 ::
 
@@ -107,7 +107,7 @@ The page reads \`shared/expand.ts\`, e.g. its keys, under "New here? Start. Go!"
 return \`out\`. // Not. A. Sentence.
 \`\`\`
 
-::stop-links
+::lessons
 :file[shared/expand.ts]
 ::
 
@@ -124,6 +124,12 @@ describe('glassboxPageProblems on fixture pages', () => {
     expect(problemsOf('terrarium-practice/01.gate.md', lesson.replace(/^Full reference.*$/m, ''))).toEqual([])
     expect(problemsOf('walkthroughs/from-file-to-browser.md', walkthrough)).toEqual([])
     expect(problemsOf('index.md', `${frontmatter}\nWelcome.\n`)).toEqual([])
+  })
+
+  it('lets the overview link pages only through :lessons rows', () => {
+    const rows = `${frontmatter}\n- A bullet. :lessons[[Home](/t/glassbox/guide) · [History](/t/journal/current/history)]\n\nA paragraph.\n\n::lessons\n[Home](/t/glassbox/guide)\n::\n`
+    expect(problemsOf('index.md', rows)).toEqual([])
+    expect(problemsOf('index.md', `${rows}\nSee [Home](/t/glassbox/guide).\n`).join('\n')).toContain('overview links /t/glassbox/guide in its prose')
   })
 
   it.each([
@@ -163,7 +169,8 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a Lesson section heading at h3', (s: string) => s.replace('## Try it', '### Try it'), 'no h2 #try-it-in-your-project'],
     ['Lesson sections out of order', (s: string) => s.replace(/(## Try it[^#]*)(## Where next[^]*)$/, '$2\n$1'), 'section #where-next is out of order'],
     ['a reworded Lesson heading', (s: string) => s.replace('### What to watch for', '### Watch for'), 'no h3 #what-to-watch-for'],
-    ['a ::stop-links block on a Lesson', (s: string) => `${s}\n::stop-links\n[Home](/t/glassbox/guide)\n::\n`, '1 ::stop-links block(s) sit outside a Walkthrough stop'],
+    ['a ::lessons block on a Lesson', (s: string) => `${s}\n::lessons\n[Home](/t/glassbox/guide)\n::\n`, '1 :lessons row(s) sit outside a Walkthrough stop'],
+    ['an inline :lessons row on a Lesson', (s: string) => s.replace('keeps mistakes off', 'keeps mistakes off :lessons[[Home](/t/glassbox/guide)]'), '1 :lessons row(s) sit outside a Walkthrough stop'],
     ['a :term with no entry', (s: string) => s.replace(':term[Collection]', ':term[Space]'), ':term space has no entry'],
     ['a hand-written blob link', (s: string) => `${s}\n[x](https://github.com/feffef/terrarium/blob/${rev}/shared/expand.ts)\n`, 'hand-written link'],
     ['a Why bullet citing an ADR file without its number', (s: string) => s.replace(':file[shared/expand.ts].', ':file[docs/adr/0004-objective-safety-gate.md].'), 'cites an ADR not as'],
@@ -177,12 +184,12 @@ describe('glassboxPageProblems on fixture pages', () => {
 
   it.each([
     ['no stops', (s: string) => s.replace(/## \d\. /g, '## '), 'no "## N. Title" stops'],
-    ['a stop with no ::stop-links block', (s: string) => s.replace('::stop-links\n:file[shared/expand.ts]\n::', ''), 'stop "2. The page renders" has 0 ::stop-links blocks'],
-    ['a stop with two ::stop-links blocks', (s: string) => s.replace('It reaches the router.', '::stop-links\n[A](/t/glassbox/guide)\n::'), 'stop "1. The request arrives" has 2'],
-    ['a ::stop-links block before stop 1', (s: string) => s.replace('How a page opens.', 'How a page opens.\n\n::stop-links\n[Home](/t/glassbox/guide)\n::'), '1 ::stop-links block(s) sit outside a Walkthrough stop'],
-    ['a ::stop-links block in A real case', (s: string) => s.replace('## Where next', '## A real case\n\n::stop-links\n[Home](/t/glassbox/guide)\n::\n\n## Where next'), '1 ::stop-links block(s) sit outside'],
-    ['a stop whose ::stop-links holds only a :term', (s: string) => s.replace(':file[shared/expand.ts]', ':term[Collection]'), 'stop "2. The page renders" links nothing'],
-    ['a stop whose ::stop-links links nothing', (s: string) => s.replace(':file[shared/expand.ts]', 'Nothing.'), 'stop "2. The page renders" links nothing'],
+    ['a stop with no ::lessons block', (s: string) => s.replace('::lessons\n:file[shared/expand.ts]\n::', ''), 'stop "2. The page renders" has 0 ::lessons blocks'],
+    ['a stop with two ::lessons blocks', (s: string) => s.replace('It reaches the router.', '::lessons\n[A](/t/glassbox/guide)\n::'), 'stop "1. The request arrives" has 2'],
+    ['a ::lessons block before stop 1', (s: string) => s.replace('How a page opens.', 'How a page opens.\n\n::lessons\n[Home](/t/glassbox/guide)\n::'), '1 :lessons row(s) sit outside a Walkthrough stop'],
+    ['a ::lessons block in A real case', (s: string) => s.replace('## Where next', '## A real case\n\n::lessons\n[Home](/t/glassbox/guide)\n::\n\n## Where next'), '1 :lessons row(s) sit outside'],
+    ['a stop whose ::lessons holds only a :term', (s: string) => s.replace(':file[shared/expand.ts]', ':term[Collection]'), 'stop "2. The page renders" links nothing'],
+    ['a stop whose ::lessons links nothing', (s: string) => s.replace(':file[shared/expand.ts]', 'Nothing.'), 'stop "2. The page renders" links nothing'],
     ['a Where next over 5 pages', (s: string) => `${s}${gateItem.repeat(5)}`, 'Where next lists 6 pages, more than 5'],
     ['a Journal page before a Lesson in Where next', (s: string) => `${s}${journalItem}${gateItem}`, 'Where next lists a Journal page before its end'],
     ['a stop with over 5 chips', (s: string) => s.replace(':file[shared/expand.ts]\n', `${Array(6).fill(':file[layers/]').join(' · ')}\n`), 'stop "2. The page renders" has 6 chips, more than 5'],

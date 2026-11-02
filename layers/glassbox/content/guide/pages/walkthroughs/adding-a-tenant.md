@@ -12,7 +12,7 @@ A new site joins Terrarium. This Walkthrough follows the work from the side of t
 
 A :term[Trusted] user approves the new :term[Tenant] before an agent starts on it, by asking for it in a session or by labelling its issue `ready-for-agent`. One other route exists: while the owner runs the guest pipeline, a :term[Public] guest's confirmation on their own issue is the approval, and the owner merges the result. Either way the agent works on a feature branch, and the result lands as a PR like any other change.
 
-::stop-links
+::lessons
 [Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Author trust](/t/glassbox/guide/git-github/trust-tiers) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
@@ -20,7 +20,7 @@ A :term[Trusted] user approves the new :term[Tenant] before an agent starts on i
 
 The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which can be as small as `defineNuxtConfig({})`. Nuxt registers every folder under `layers/` by itself; the root config stays as it is. A running dev server doesn't watch a brand-new layer folder and needs a restart. From now on the folder is also read as a Tenant: the build stops if it holds no `tenant.config.ts`, or one whose name differs from the folder's.
 
-::stop-links
+::lessons
 [Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · :file[layers/marquee/nuxt.config.ts]
 ::
 
@@ -28,7 +28,7 @@ The agent creates `layers/<tenant>/` and puts a `nuxt.config.ts` in it, which ca
 
 Beside it goes the :term[manifest], `tenant.config.ts`: the Tenant's name, its :term[Spaces]{id="space"}, and the :term[Collections]{id="collection"} that every Space holds, each of type `page` or `data`. Marquee's is about as small as one gets, with one Space, `reel`, and one Collection, `pages`, the only name that gets addresses. Before anything is built from it, `validateManifest()` checks it, and a misspelt key or a Collection the rules don't allow stops the build with a line that names the field.
 
-::stop-links
+::lessons
 [Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Zod refinements](/t/glassbox/guide/verification/schema-validation) · :file[layers/marquee/tenant.config.ts]
 ::
 
@@ -36,7 +36,7 @@ Beside it goes the :term[manifest], `tenant.config.ts`: the Tenant's name, its :
 
 The Tenant's files go under `content/<space>/<collection>/` in its folder, and each Space's `pages` folder gets an `index.md`, the Space's front page. Nobody lists the new collections anywhere: `content.config.ts` runs `expand()` over every manifest each time Nuxt Content loads it, and the new Spaces and Collections come out as keys such as `marquee_reel_pages`. Each key is its own table in the content database, so the new content shares no table with any other Space.
 
-::stop-links
+::lessons
 [Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
 ::
 
@@ -44,7 +44,7 @@ The Tenant's files go under `content/<space>/<collection>/` in its folder, and e
 
 The same expansion feeds :file[modules/routing.ts], which writes the routing map into `#routing` each time Nuxt starts or builds. Once the map holds the new Tenant, the Platform's catch-all page answers `/t/<tenant>/<space>/…` for it with no page file of its own: each Space's front page and every Document, plainly styled. The bare `/t/<tenant>` answers only once the Tenant adds a root page; Marquee's sends the visitor on to `reel`.
 
-::stop-links
+::lessons
 [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[app/pages/t/] · :file[layers/marquee/app/pages/t/marquee/index.vue]
 ::
 
@@ -52,7 +52,7 @@ The same expansion feeds :file[modules/routing.ts], which writes the routing map
 
 For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in its layer; their path has the Tenant's name where the catch-all has `[tenant]`, and they outrank it for its addresses and no others. Its components sit in a folder named after it, which gives them its name as a prefix, as in `MarqueePoster`. Its stylesheet, listed in its `nuxt.config.ts`, loads on every page of every Tenant, and it keeps its rules under a class only its pages carry and its custom properties under a short tag of its own (`--mq-`).
 
-::stop-links
+::lessons
 [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [Nuxt layers](/t/glassbox/guide/nuxt-vue/layers) · [Vue components](/t/glassbox/guide/nuxt-vue/vue-components) · :file[layers/marquee/app/assets/theme.css]
 ::
 
@@ -60,7 +60,7 @@ For a design of its own, the Tenant adds pages under `app/pages/t/<tenant>/` in 
 
 It writes its own `GLOSSARY.md` for the words only it uses. Then it adds itself to `GLOSSARY-MAP.md`.
 
-::stop-links
+::lessons
 :file[layers/marquee/GLOSSARY.md]
 ::
 
@@ -68,7 +68,7 @@ It writes its own `GLOSSARY.md` for the words only it uses. Then it adds itself 
 
 No test config names the new Tenant. The smoke test reads its entry addresses from the manifests, loads each new Space's front page in a browser, and fails on a console error or a front page with no Document; it never visits a Tenant's root. What only this Tenant has, such as its root page's redirect, goes in its own e2e spec under `tests/e2e/` in its folder, which the e2e project's glob picks up. The :term[Gate] runs them all.
 
-::stop-links
+::lessons
 [Testing](/t/glassbox/guide/verification/unit-and-e2e-tests) · [Merge gate](/t/glassbox/guide/verification/gate) · :file[layers/marquee/tests/e2e/marquee.spec.ts]
 ::
 
@@ -76,7 +76,7 @@ No test config names the new Tenant. The smoke test reads its entry addresses fr
 
 Its pages appear in the Commons Search only if its `pages` Collection names the `page` :term[kind]{id="collection-kind"}, as Marquee's does, and on the Commons Timeline only those of them that carry a `publishedAt`. The Platform home page lists no new Tenant by itself: it is a hand-picked showcase, and a Tenant joins it when someone adds its tile to :file[app/pages/index.vue].
 
-::stop-links
+::lessons
 [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · :file[layers/marquee/tenant.config.ts]
 ::
 

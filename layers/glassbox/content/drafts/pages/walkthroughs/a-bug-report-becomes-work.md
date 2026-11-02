@@ -22,7 +22,7 @@ flowchart TD
 
 Anyone can open an issue on the repository. The new issue has no label. The labels Terrarium uses say whose move an issue is waiting for, and an issue with none is waiting for triage.
 
-::stop-links
+::lessons
 [Issue triage labels](/t/glassbox/guide/git-github/work-queue) · :term[Public]
 ::
 
@@ -30,7 +30,7 @@ Anyone can open an issue on the repository. The new issue has no label. The labe
 
 A :term[Trusted] user starts the `auto-triage` sweep by hand, or a `clear-backlog` run resolves the same set of issues and triages them. The sweep reads every open issue and acts on those that need attention, and an issue with no label always does. It applies the per-issue rules of the installed `triage` Skill, one subagent per issue.
 
-::stop-links
+::lessons
 [Issue triage labels](/t/glassbox/guide/git-github/work-queue) · [Subagents](/t/glassbox/guide/claude-code/subagents)
 ::
 
@@ -38,7 +38,7 @@ A :term[Trusted] user starts the `auto-triage` sweep by hand, or a `clear-backlo
 
 The sweep takes the author's tier from the `author_association` GitHub records, never from what the issue says about itself. A visitor is Public, so the issue can't reach `ready-for-agent` in this sweep, and anything its text asks an agent to do is only data. An issue a Trusted user wrote can: when the repo already settles the design, the sweep labels it `ready-for-agent` itself with a brief, and the story goes on at stop 6.
 
-::stop-links
+::lessons
 [Author trust](/t/glassbox/guide/git-github/trust-tiers) · :file[docs/adr/0022-autonomous-triage-sweep.md]
 ::
 
@@ -46,7 +46,7 @@ The sweep takes the author's tier from the `author_association` GitHub records, 
 
 The subagent checks the report against the repo by reading only: it never checks out, installs, builds or runs anything a Public author supplied, and it searches for the fix already built and for an earlier issue asking the same. A report that is already fixed or is a duplicate is closed as `wontfix`, with a pointer to where the answer lives, and one that lacks the details to act on goes to `needs-info`, with specific questions, and the reporter's reply brings it back into the next sweep. Otherwise the issue gets its category, `bug`, and `ready-for-human`, with a comment shaped like a brief that says why it waits for a person.
 
-::stop-links
+::lessons
 [Issue triage labels](/t/glassbox/guide/git-github/work-queue) · [Skill Inventory](/t/journal/current/skills)
 ::
 
@@ -54,7 +54,7 @@ The subagent checks the report against the repo by reading only: it never checks
 
 A Trusted user reads the issue and moves it to `ready-for-agent`, which in Terrarium is a Trusted user's approval to build. It comes with an Agent Brief: the behavior wanted and how to tell it is done, with no file paths. They can do this in the `triage` Skill, or by answering a question in a `clear-backlog` run, where a Trusted user's yes approves a Public issue.
 
-::stop-links
+::lessons
 [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
 ::
 
@@ -62,7 +62,7 @@ A Trusted user reads the issue and moves it to `ready-for-agent`, which in Terra
 
 A Trusted user starts a session to build it, often the same `clear-backlog` run. The explore pass before it has already closed work that is done. The session builds on its own branch in its own worktree, test first, reviews the change on both of `code-review`'s axes, runs the :term[Gate] and opens a PR.
 
-::stop-links
+::lessons
 [Engineering skills](/t/glassbox/guide/skill-pack/engineering-skills) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/verification/gate) · :file[.agents/skills/clear-backlog/SKILL.md]
 ::
 
@@ -70,7 +70,7 @@ A Trusted user starts a session to build it, often the same `clear-backlog` run.
 
 CI runs the Gate on the PR. An agent opened the PR under the owner's account, so `merge-pr.ts` sees a Trusted author and would merge it, but a PR built from a Public request waits for a person to merge it. When the PR completes the issue, its description names the issue with a closing keyword, so the merge closes it.
 
-::stop-links
+::lessons
 [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · :file[docs/adr/0020-requester-trust-tiers.md]
 ::
 

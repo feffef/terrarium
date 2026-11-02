@@ -24,7 +24,7 @@ const parts = computed(() => {
   const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
   return {
     intro: withBody(intro),
-    sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base) : [{ nodes: sections }])
+    sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base) : [{ nodes: sections.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
       .map((part) => ({ ...part, value: withBody(part.nodes) })),
     toc: body.toc?.links ?? [],
   }
@@ -207,8 +207,8 @@ const parts = computed(() => {
 .stop-pane :deep(> :last-child) { margin-bottom: 0; }
 .stop.current .stop-n { border-color: var(--gb-solid); background: var(--gb-solid); color: var(--gb-solid-ink); }
 .stop.current .stop-pane { border-color: color-mix(in srgb, var(--gb-accent) 45%, transparent); }
-.stop-pane :deep(.gb-stop-links) { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
-.stop-pane :deep(.gb-stop-links li) {
+.article :deep(.gb-lessons) { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 0; padding: 0; list-style: none; }
+.article :deep(.gb-lessons li) {
   position: relative;
   margin: 0;
   padding: 3px 11px;
@@ -220,10 +220,13 @@ const parts = computed(() => {
   max-width: 100%;
   overflow-wrap: anywhere;
 }
-.stop-pane :deep(.gb-stop-links span:first-child) { color: var(--gb-muted); }
-.stop-pane :deep(.gb-stop-links span:first-child)::after { content: ' · '; }
-.stop-pane :deep(.gb-stop-links li > a:not(.file)) { color: var(--gb-ink); text-decoration: none; }
-.stop-pane :deep(.gb-stop-links li > a:not(.file))::after { content: ' →'; }
+.article :deep(.gb-lessons span:first-child) { color: var(--gb-muted); }
+.article :deep(.gb-lessons span:first-child)::after { content: ' · '; }
+.article :deep(.gb-lessons li > a:not(.file)) { color: var(--gb-ink); text-decoration: none; }
+.article :deep(.gb-lessons li > a:not(.file))::after { content: ' →'; }
+/* A bullet's own chips run on after its text and wrap one by one. */
+.article :deep(li > .gb-lessons), .article :deep(li > p > .gb-lessons) { display: inline; margin: 0; }
+.article :deep(li > .gb-lessons li), .article :deep(li > p > .gb-lessons li) { display: inline-block; margin: 3px 6px 3px 0; padding: 0 8px; font-size: 13px; }
 
 .article :deep(.gb-case) {
   margin-top: 36px;

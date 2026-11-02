@@ -23,7 +23,7 @@ every page shares are in [`EVERY-PAGE.md`](EVERY-PAGE.md).
    issues that made or changed the design. Done when every claim about
    Terrarium is checked against its file at `revision`, and each reason traces
    to a source you read.
-4. **Join the other pages.** Add the Lesson as a chip to the `::stop-links` of
+4. **Join the other pages.** Add the Lesson as a chip to the `::lessons` of
    every Walkthrough stop whose mechanism it explains, and to the Where next of
    every existing Lesson it relates to, above any Journal page. Both are
    capped (the contracts): a full list takes it only in place of its weakest
