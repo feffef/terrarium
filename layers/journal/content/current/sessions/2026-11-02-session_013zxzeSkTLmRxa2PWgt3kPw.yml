@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSkTLmRxa2PWgt3kPw
 startedAt: 2026-11-02T15:44:39Z
-endedAt: 2026-11-02T16:27:14Z
+endedAt: 2026-11-02T16:28:41Z
 kind: autonomous
 goal: Raise the Glass Box guide by rater consensus (glassbox-improve, 2026-11-02)
-status: in-review
-outcome: "PR #2787 raises 6 pages, promotes 3 drafts to the guide and records the grades; CI pending"
-summary: "Run of the glassbox-improve Skill. The /glassbox-improve invocation was the only human prompt; everything after followed the Skill's steps, with no further human instruction. Three raters (sonnet, fable, opus) graded 57 guide pages. The tally found no confirmed false claim. I selected 6 pages with consensus deficits or gaps: path-scoped rules, pnpm lockfile, Mermaid pre-rendering, planning Skills, human-in-the-loop and self-improvement loop. The three oldest candidates became this run's structural steps: promote schema-only-grows (now Schema evolution), query-collection-patterns (now queryCollection) and invariants-as-tests (now Invariant tests). Three gaps on subagents, cloud-sessions and work-queue were dropped by the churn rule and marked read-by-all. The 05+09 prune re-cut was done as 09's deficit fix, because Pruning instructions already holds every verdict rule. Three sonnet researchers measured each draft at 15-30% to change, so all three were promoted. Eight opus writers worked in worktrees; I merged them and made the join edits only where a Where next list had room. code-review (Standards and Spec) found one hard cite-form breach and several repeats, all fixed in one round; the rest were refused with reasons in the PR body. gate:scoped passed. I filed issue #2786 for the out-of-remit Subject move that opus proposed for Mermaid pre-rendering. The PR is open and awaits CI, then my verdict comment and merge-pr.ts."
+status: completed
+outcome: "PR #2787 merged: 6 pages raised, 3 drafts promoted to the guide, grades recorded"
+summary: "Run of the glassbox-improve Skill. The /glassbox-improve invocation was the only human prompt; everything after followed the Skill's steps, with no further human instruction. Three raters (sonnet, fable, opus) graded 57 guide pages. The tally found no confirmed false claim. I selected 6 pages with consensus deficits or gaps: path-scoped rules, pnpm lockfile, Mermaid pre-rendering, planning Skills, human-in-the-loop and self-improvement loop. The three oldest candidates became this run's structural steps: promote schema-only-grows (now Schema evolution), query-collection-patterns (now queryCollection) and invariants-as-tests (now Invariant tests). Three gaps on subagents, cloud-sessions and work-queue were dropped by the churn rule and marked read-by-all. The 05+09 prune re-cut was done as 09's deficit fix, because Pruning instructions already holds every verdict rule. Three sonnet researchers measured each draft at 15-30% to change, so all three were promoted. Eight opus writers worked in worktrees; I merged them and made the join edits only where a Where next list had room. code-review (Standards and Spec) found one hard cite-form breach and several repeats, all fixed in one round; the rest were refused with reasons in the PR body. gate:scoped passed. I filed issue #2786 for the out-of-remit Subject move that opus proposed for Mermaid pre-rendering. CI went green, I posted my verdict and merge-pr.ts merged #2787."
 prs:
   - "2787"
 docsRead:
@@ -119,21 +119,25 @@ frictions:
   - description: The Stop hook asked me to push about ten times while writers and the gate ran; each nag cost a turn explaining that ADR-0004 holds the push
     solution: Let the stop-hook git check skip a branch with no PR yet whose gate:scoped has not run
     severity: minor
-durationSec: 2555
+durationSec: 2642
 models:
-  claude-opus-5-5: 220
+  claude-opus-5-5: 244
 toolCounts:
-  Bash: 79
+  Bash: 85
   ToolSearch: 2
   mcp__github__list_pull_requests: 1
   Agent: 16
   Write: 3
-  Skill: 3
+  Skill: 4
   SendMessage: 5
   mcp__github__issue_write: 1
   mcp__github__create_pull_request: 1
   Read: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/nuxt-content/07.mermaid-pre-rendering.md
   - layers/glassbox/content/guide/pages/nuxt-content/04.query-collection.md
@@ -306,21 +310,21 @@ subagents:
     durationSec: 788
     toolCalls: 62
     modelCalls: 49
-    tokenShare: 13.2
+    tokenShare: 12.5
   - type: general-purpose
     task: Glass Box rater fable
     model: fable
     durationSec: 523
     toolCalls: 62
     modelCalls: 20
-    tokenShare: 5.5
+    tokenShare: 5.2
   - type: general-purpose
     task: Glass Box rater opus
     model: opus
     durationSec: 349
     toolCalls: 46
     modelCalls: 45
-    tokenShare: 8.9
+    tokenShare: 8.5
   - type: general-purpose
     task: Research schema-only-grows promotion
     model: sonnet
@@ -341,28 +345,28 @@ subagents:
     durationSec: 169
     toolCalls: 17
     modelCalls: 9
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: "Writer: path-scoped rules"
     model: opus
     durationSec: 986
     toolCalls: 36
     modelCalls: 28
-    tokenShare: 3.9
+    tokenShare: 3.7
   - type: general-purpose
     task: "Writer: pnpm lockfile"
     model: opus
     durationSec: 238
     toolCalls: 30
     modelCalls: 18
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: general-purpose
     task: "Writer: Mermaid pre-rendering"
     model: opus
     durationSec: 978
     toolCalls: 37
     modelCalls: 25
-    tokenShare: 3.6
+    tokenShare: 3.5
   - type: general-purpose
     task: "Writer: planning Skills"
     model: opus
@@ -376,40 +380,40 @@ subagents:
     durationSec: 170
     toolCalls: 20
     modelCalls: 18
-    tokenShare: 2.1
+    tokenShare: 2
   - type: general-purpose
     task: "Writer: promote queryCollection"
     model: opus
     durationSec: 831
     toolCalls: 69
     modelCalls: 52
-    tokenShare: 7.7
+    tokenShare: 7.4
   - type: general-purpose
     task: "Writer: promote schema evolution"
     model: opus
     durationSec: 826
     toolCalls: 53
     modelCalls: 41
-    tokenShare: 5.1
+    tokenShare: 4.9
   - type: general-purpose
     task: "Writer: promote invariant tests"
     model: opus
     durationSec: 821
     toolCalls: 35
     modelCalls: 26
-    tokenShare: 3.4
+    tokenShare: 3.3
   - type: general-purpose
     task: "Review: Standards axis"
     durationSec: 133
     toolCalls: 14
     modelCalls: 13
-    tokenShare: 2
+    tokenShare: 1.9
   - type: general-purpose
     task: "Review: Spec axis"
     durationSec: 269
     toolCalls: 52
     modelCalls: 48
-    tokenShare: 6.3
+    tokenShare: 6
 gitBranch: ccr-745a6485-98p0qu
 entrypoint: remote_mobile
 cliVersion: 2.1.316
