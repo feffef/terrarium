@@ -33,7 +33,7 @@ fix — `frictions-to-fixes` files those, naming the fix that didn't hold.
 
 - `major` or `blocker` damage that traces to the trial → restore the
   **minimum**: the one goal-shaped line that would have prevented it, never the
-  wall that was there before.
+  wall that was there before (a cut ADR gets its text back; see Bounds).
 - `moderate` damage that traces to the trial → the prune holds; see below.
 - `nit`, `minor`, silence → the prune holds.
 
