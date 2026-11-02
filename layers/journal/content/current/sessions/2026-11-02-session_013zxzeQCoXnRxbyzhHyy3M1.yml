@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeQCoXnRxbyzhHyy3M1
 startedAt: 2026-11-02T21:45:54Z
-endedAt: 2026-11-02T22:05:29Z
+endedAt: 2026-11-02T22:07:51Z
 kind: interactive
 goal: Rewrite the README as a brief newcomer entry point
-status: in-review
-outcome: PR 2795 merged; follow-up PR 2797 open with local options and real contribution paths
+status: completed
+outcome: "Merged PRs 2795 and 2797: README links the live-site intro pages, local options and real contribution paths"
 summary: "The owner asked me to check the stale README and propose which live-site pages best introduce Terrarium. After I asked four questions, the owner set the shape (readers and contributors, a clone-and-run quickstart that suggests asking an agent, keep the Blog link, no deep links into Lessons), and PR 2795 merged. The owner then pointed out two flaws: the local section read as if you needed pnpm dev to ask an agent, and the Contributing links were arbitrary. I proposed two real contribution paths and two small cuts; the owner approved them and asked to keep the guest pipeline vague. Human-instructed: the whole rewrite, the either-or local options, the Contributing redesign, both cuts. Agent-initiated: cutting the duplicated idea/status prose, the ADR-0018 wording fix, pointing facts at their homes, and, after the second code-review, putting pnpm install before both options (the SessionStart hook and guards need node_modules) and replacing \"a maintainer decides\" (false under ADR-0023). I kept the deploy-link cut over the reviewer's suggestion because the owner approved it."
 prs:
   - "2795"
@@ -58,22 +58,27 @@ frictions:
   - description: I kept the Contributing list from the old README without asking whether an outsider could act on it; the owner had to point out it was arbitrary
     solution: "Apply CLAUDE.md 'question the premise' to inherited sections too: give each link a reason for the stated audience"
     severity: minor
-durationSec: 1175
+  - description: Re-authored the log as completed after the merge without re-invoking close-session; log-session refused it and the sed-edited scratch silently kept in-review until I checked
+    solution: After a merge, invoke close-session first as its Skill says, then author
+    severity: nit
+durationSec: 1317
 models:
-  claude-opus-5-5: 119
+  claude-opus-5-5: 142
 toolCounts:
-  Bash: 35
+  Bash: 43
   Read: 1
   Write: 1
-  Skill: 4
+  Skill: 5
   Agent: 4
   Edit: 7
   ToolSearch: 2
   mcp__github__create_pull_request: 2
   mcp__claude-code-remote__subscribe_pr_activity: 2
-  ReadNotifications: 2
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__unsubscribe_pr_activity: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__delete_trigger: 1
 filesEdited:
   - README.md
 rulesLoaded:
@@ -194,25 +199,25 @@ subagents:
     durationSec: 42
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 5.2
+    tokenShare: 4.3
   - type: general-purpose
     task: Spec review of README
     durationSec: 32
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 3.9
+    tokenShare: 3.2
   - type: general-purpose
     task: Standards review README follow-up
     durationSec: 41
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 8.5
+    tokenShare: 7.1
   - type: general-purpose
     task: Spec review README follow-up
     durationSec: 21
     toolCalls: 3
     modelCalls: 3
-    tokenShare: 6.5
+    tokenShare: 5.5
 gitBranch: claude/relaxed-hopper-1166f3
 entrypoint: remote
 cliVersion: 2.1.316
