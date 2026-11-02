@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQZYwzDuf4JEncnqAa
 startedAt: 2026-11-02T21:58:43Z
-endedAt: 2026-11-02T23:08:53Z
+endedAt: 2026-11-02T23:11:26Z
 kind: autonomous
 goal: First v3 run of glassbox-improve on the Glass Box guide
-status: in-review
-outcome: "PR #2801 open: 35 gated edits, 10 steps, 7 false claims fixed, initial v3 grades.yml and runs.yml"
-summary: "Another session (session_013zxzeRkQabGaMQ8gphe4Ra) started this run at the owner's request right after PR #2794 merged. No human prompted this session after kickoff, so every action was agent-initiated within the glassbox-improve Skill's remit. All 60 guide pages were rated by raters A, B and C1-C8, and the tally queued false claims, deficits, gaps and steps. Researchers confirmed items and dropped 4 section steps and 2 duplicate promote steps. Eighteen opus writers in worktrees produced edits, 3 promotions, a split (Wayfinder out of Planning Skills) and 6 moves, then merged with join edits. A blind gate of about 127 sonnet judges passed all 35 changed pages, and the A election gave first-run wins to claude-md (clarity) and trust-tiers (placement). A code-review in four shards found no false claims but did find motive in In Terrarium, stale counts, two homeless facts, long Excerpts and bare ADR cites. One fix round across 15 writers resolved them. gate:scoped passed, and grades.ts record wrote the v3 files. Still open: the PR's CI and its merge. The run cost about 117 USD, mostly judges and writers."
+status: completed
+outcome: "PR #2801 merged: 35 gated edits, 10 steps, 7 false claims fixed, initial v3 grades.yml and runs.yml"
+summary: "Another session (session_013zxzeRkQabGaMQ8gphe4Ra) started this run at the owner's request right after PR #2794 merged. No human prompted this session after kickoff, so every action was agent-initiated within the glassbox-improve Skill's remit. All 60 guide pages were rated by raters A, B and C1-C8, and the tally queued false claims, deficits, gaps and steps. Researchers confirmed items and dropped 4 section steps and 2 duplicate promote steps. Eighteen opus writers in worktrees produced edits, 3 promotions, a split (Wayfinder out of Planning Skills) and 6 moves, then merged with join edits. A blind gate of about 127 sonnet judges passed all 35 changed pages, and the A election gave first-run wins to claude-md (clarity) and trust-tiers (placement). A code-review in four shards found no false claims but did find motive in In Terrarium, stale counts, two homeless facts, long Excerpts and bare ADR cites. One fix round across 15 writers resolved them. gate:scoped passed, and grades.ts record wrote the v3 files. CI went green and the PR merged through merge-pr.ts. The run cost about 117 USD, mostly judges and writers."
 prs:
   - "2801"
 docsRead:
@@ -276,20 +276,29 @@ frictions:
   - description: Fix-round SendMessages to resumed writers did not repeat CLAUDE.md's ask for rule and doc verdicts; only the original briefs did
     solution: Include the verdict ask in every resume message
     severity: nit
-durationSec: 4210
+  - description: "merge-pr.ts refused my first verdict because it lacked a 'Reviewed: <head sha>' line, so I posted a second comment"
+    solution: Re-read pr-workflow step 4's verdict format before posting; the script message names it
+    severity: nit
+durationSec: 4364
 models:
-  claude-opus-5-5: 721
+  claude-opus-5-5: 759
 toolCounts:
-  Bash: 135
+  Bash: 141
   ToolSearch: 3
   mcp__github__list_pull_requests: 1
   Agent: 180
-  Skill: 3
+  Skill: 4
   SendMessage: 15
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__claude-code-remote__get_session: 1
   mcp__github__update_pull_request: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 6
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/walkthroughs/a-bug-report-becomes-work.md
   - layers/glassbox/content/guide/pages/verification/06.schema-validation.md
@@ -585,7 +594,7 @@ subagents:
     durationSec: 681
     toolCalls: 82
     modelCalls: 78
-    tokenShare: 3.2
+    tokenShare: 3.1
   - type: general-purpose
     task: Rater C4 claim check
     model: sonnet
@@ -620,7 +629,7 @@ subagents:
     durationSec: 403
     toolCalls: 52
     modelCalls: 47
-    tokenShare: 1.8
+    tokenShare: 1.7
   - type: general-purpose
     task: Research claude-code items
     model: sonnet
@@ -781,7 +790,7 @@ subagents:
     durationSec: 2142
     toolCalls: 56
     modelCalls: 40
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: "Writer: split planning page"
     model: opus
@@ -851,7 +860,7 @@ subagents:
     durationSec: 2079
     toolCalls: 44
     modelCalls: 28
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: "Writer: nuxt-content items"
     model: opus
@@ -879,14 +888,14 @@ subagents:
     durationSec: 2129
     toolCalls: 52
     modelCalls: 36
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: general-purpose
     task: "Writer: verification items"
     model: opus
     durationSec: 2100
     toolCalls: 56
     modelCalls: 40
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: "Writer: walkthroughs items"
     model: opus
