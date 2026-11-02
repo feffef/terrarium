@@ -1,0 +1,1821 @@
+schemaVersion: 1
+session: session_013zxzeQZYwzDuf4JEncnqAa
+startedAt: 2026-11-02T21:58:43Z
+endedAt: 2026-11-02T23:08:53Z
+kind: autonomous
+goal: First v3 run of glassbox-improve on the Glass Box guide
+status: in-review
+outcome: "PR #2801 open: 35 gated edits, 10 steps, 7 false claims fixed, initial v3 grades.yml and runs.yml"
+summary: "Another session (session_013zxzeRkQabGaMQ8gphe4Ra) started this run at the owner's request right after PR #2794 merged. No human prompted this session after kickoff, so every action was agent-initiated within the glassbox-improve Skill's remit. All 60 guide pages were rated by raters A, B and C1-C8, and the tally queued false claims, deficits, gaps and steps. Researchers confirmed items and dropped 4 section steps and 2 duplicate promote steps. Eighteen opus writers in worktrees produced edits, 3 promotions, a split (Wayfinder out of Planning Skills) and 6 moves, then merged with join edits. A blind gate of about 127 sonnet judges passed all 35 changed pages, and the A election gave first-run wins to claude-md (clarity) and trust-tiers (placement). A code-review in four shards found no false claims but did find motive in In Terrarium, stale counts, two homeless facts, long Excerpts and bare ADR cites. One fix round across 15 writers resolved them. gate:scoped passed, and grades.ts record wrote the v3 files. Still open: the PR's CI and its merge. The run cost about 117 USD, mostly judges and writers."
+prs:
+  - "2801"
+docsRead:
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: page rules (Pin, Mechanism not motive, Excerpt cap, Check) that briefs and review cited
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: lenses, grades and the A rule used by raters and the election
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: closed rulings for the tally filters; none matched an item
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson and Walkthrough shapes
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: merge rather than cherry-pick/squash, and commit trailers
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief shape and resuming writers via SendMessage
+    useful: yes
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: template plan filled for raters
+    useful: yes
+  - path: .agents/skills/glassbox-improve/judge-brief.md
+    reason: template gate filled for judges
+    useful: yes
+  - path: .agents/skills/glassbox-improve/researcher-brief.md
+    reason: filled per Subject and per step
+    useful: yes
+  - path: .agents/skills/glassbox-improve/writer-brief.md
+    reason: filled per writer, with false claims and scratch folder
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP-first GitHub writes and the provenance header
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: "Closing a scheduled run's PR: gate green, one PR, subscribe, merge-pr.ts"
+    useful: yes
+  - path: docs/agents/mdc-when-to-use.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/agents/tenant-layers.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/glassbox-walkthrough/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/agents/environment-caveats.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/agents/guest-contributions.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/close-session/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/grilling/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/ask-matt/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/to-spec/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/to-tickets/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/research/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/triage/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/agents/triage-labels.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/triage/AGENT-BRIEF.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0017-provenance-footer-on-agent-authored-content.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/setup-matt-pocock-skills/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/prototype/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/implement/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/tdd/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/code-review/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/log-session/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: GLOSSARY.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/TEMPLATE.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/domain-modeling/ADR-FORMAT.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/digest/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: .agents/skills/triage/OUT-OF-SCOPE.md
+    reason: subagents read it at the base to confirm or refute a guide page claim (raters, researchers, writers); a source, not guidance
+    useful: partly
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/06.schema-validation.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/verification/07.timestamps-stored-as-strings.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/verification/08.schema-evolution.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+    reason: (read before editing)
+skillsUsed:
+  - name: glassbox-improve
+    reason: the run itself
+  - name: code-review
+    reason: step 9 review in four shards against the base
+  - name: dispatch-subagents
+    reason: raters, researchers, writers and judges
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: context
+    reason: (invoked as a slash command)
+frictions:
+  - description: The blind gate never judged claude-code/04.hooks; it was edited for item f9, whose page is 06, so gate skipped it
+    solution: grades.ts gate should brief every page the diff changes, not only item pages
+    severity: minor
+  - description: A judge misread a move's direction on session-logs, read the target as the source, and voted against it
+    solution: judge-brief should name a move's source and target pages explicitly
+    severity: minor
+  - description: About 127 judges were dispatched by hand in seven waves, which is heavy lead orchestration and a large token cost
+    solution: Run gate and election judges through a workflow script that grades.ts emits
+    severity: moderate
+  - description: Writers hit worktree-guard and inline-heredoc refusals and worked around them with script files
+    solution: writer-brief should tell writers to write edit scripts to their scratch folder from the start
+    severity: minor
+  - description: The page-checks 'so' motive warning fires on dozens of mechanism sentences, so every Check output is noise to triage
+    solution: Narrow the heuristic in layers/glassbox/page-checks.ts, e.g. to 'so that' or to clauses citing intent
+    severity: minor
+  - description: A review fix asked for an ADR chip that the page test refuses because a linked Lesson already cites it; the reviewer brief lacks that rule
+    solution: Add the chip-repeat rule to EVERY-PAGE or the walkthrough Skill where reviewers read it
+    severity: nit
+  - description: The Stop hook asked about 30 times to push before the gate ran, each answer costing a turn
+    solution: Stop hook could skip its push request while a background gate run or subagent is live
+    severity: minor
+  - description: "Broke CLAUDE.md 'Verify before you state': I forwarded an Excerpt trim without counting; it would still render 18 lines and drop a named line"
+    solution: Count rendered lines against the cited file before sending a trim; the writer caught it
+    severity: minor
+  - description: Fix-round SendMessages to resumed writers did not repeat CLAUDE.md's ask for rule and doc verdicts; only the original briefs did
+    solution: Include the verdict ask in every resume message
+    severity: nit
+durationSec: 4210
+models:
+  claude-opus-5-5: 721
+toolCounts:
+  Bash: 135
+  ToolSearch: 3
+  mcp__github__list_pull_requests: 1
+  Agent: 180
+  Skill: 3
+  SendMessage: 15
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__claude-code-remote__get_session: 1
+  mcp__github__update_pull_request: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/guide/pages/verification/06.schema-validation.md
+  - layers/glassbox/content/guide/pages/verification/07.timestamps-stored-as-strings.md
+  - layers/glassbox/content/guide/pages/verification/08.schema-evolution.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/08.hydration.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/03.virtual-modules.md
+  - layers/glassbox/content/guide/pages/git-github/03.composite-actions.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/05.pruning-instructions.md
+  - layers/glassbox/content/guide/pages/deploy/02.pnpm-lockfile.md
+  - layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
+  - layers/glassbox/content/guide/pages/skill-pack/04.wayfinder.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/guide/pages/git-github/05.attribution.md
+  - layers/glassbox/content/guide/pages/git-github/06.work-queue.md
+  - .agents/skills/glassbox-improve/runs.yml
+  - .agents/skills/glassbox-improve/grades.yml
+  - layers/glassbox/content/guide/pages/skill-pack/02.planning-with-the-pack.md
+  - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
+  - layers/glassbox/content/guide/pages/claude-code/07.subagents.md
+  - layers/glassbox/content/guide/pages/claude-code/10.routines.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/05.vue-components.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/07.css-custom-properties.md
+  - layers/glassbox/content/guide/pages/nuxt-content/01.manifest-collections.md
+  - layers/glassbox/content/guide/pages/nuxt-content/04.query-collection.md
+  - layers/glassbox/content/guide/pages/nuxt-content/05.mdc-components.md
+  - layers/glassbox/content/guide/pages/nuxt-content/06.prose-overrides.md
+  - layers/glassbox/content/guide/pages/claude-code/08.mcp-servers.md
+  - layers/glassbox/content/guide/pages/claude-code/12.permissions.md
+  - layers/glassbox/content/guide/pages/skill-pack/01.skill-packs.md
+  - layers/glassbox/content/guide/pages/nuxt-content/07.mermaid-pre-rendering.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/guide/pages/verification/01.gate.md
+  - layers/glassbox/content/guide/pages/claude-code/04.hooks.md
+  - layers/glassbox/content/guide/pages/claude-code/05.blocking-hooks.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+  - layers/glassbox/content/guide/pages/terrarium-practice/08.cross-tenant-reads.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/05.mdc-components.md
+  - layers/glassbox/content/drafts/pages/nuxt-content/06.prose-overrides.md
+  - layers/glassbox/content/guide/pages/claude-code/11.cloud-sessions.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/01.layers.md
+  - layers/glassbox/content/guide/pages/nuxt-vue/04.auto-imports.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0017.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0024.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0007.md
+  - .claude/rules/adr-0024.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0013.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0011.md
+docsReadBySubagents:
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/tenant-layers.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0007-derived-files-built-not-committed.md
+  - docs/adr/0025-cross-tenant-catalog-and-collection-kinds.md
+  - docs/research/content-client-queries-without-wasm.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - .agents/skills/glassbox-walkthrough/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/adr/0027-prune-trials.md
+  - docs/agents/guest-contributions.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/wayfinder/SKILL.md
+  - .agents/skills/grilling/SKILL.md
+  - .agents/skills/ask-matt/SKILL.md
+  - .agents/skills/to-spec/SKILL.md
+  - .agents/skills/to-tickets/SKILL.md
+  - .agents/skills/research/SKILL.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/triage/SKILL.md
+  - docs/agents/triage-labels.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/triage/AGENT-BRIEF.md
+  - .agents/skills/glassbox-improve/SKILL.md
+  - docs/adr/0017-provenance-footer-on-agent-authored-content.md
+  - docs/adr/0004-objective-safety-gate.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - .agents/skills/prototype/SKILL.md
+  - docs/agents/issue-tracker.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/tdd/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/log-session/SKILL.md
+  - GLOSSARY.md
+  - docs/adr/TEMPLATE.md
+  - .agents/skills/domain-modeling/ADR-FORMAT.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/triage/OUT-OF-SCOPE.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Held the push until code-review and gate:scoped passed despite ~30 Stop-hook push requests; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Made me close-session at PR open with an in-review log; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself once pushed and subscribe; a scheduled run changes only its Skill's remit
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the PR body header and the commit trailer I checked after each commit
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded on reading Skill files; this run changed no Skill code, only its state files
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Tenant glossary map rule; confirmed Glass Box terms come from its own GLOSSARY
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded on Skill reads; no open prune trial touched this run's text
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on rule reads; nothing about where instructions live came up
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Writers kept Term ids unique, and no join had duplicate Term files
+    useful: partly
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded with glassbox content; no glossary edit this run
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: The no-changing-counts rule drove three review fixes (two Skills, two GitHub tools)
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded with the mermaid page; no diagram was re-rendered
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded when a subagent read an ADR as a claim source; no ADR was edited
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Checked its paths: no Human-only file in the diff, so the PR can self-merge"
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/ui-verification.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0006.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0014.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0020.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0007.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0024.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0001.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0013.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0018.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0028.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: loaded in a subagent when it read a governed file as a claim source; subagents reported it irrelevant to judging page text
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Rater A: clarity, reasoning"
+    model: sonnet
+    durationSec: 406
+    toolCalls: 30
+    modelCalls: 29
+    tokenShare: 1.6
+  - type: general-purpose
+    task: "Rater B: placement, relevance, steps"
+    model: sonnet
+    durationSec: 282
+    toolCalls: 14
+    modelCalls: 13
+    tokenShare: 0.9
+  - type: general-purpose
+    task: Rater C1 claim check
+    model: sonnet
+    durationSec: 392
+    toolCalls: 42
+    modelCalls: 40
+    tokenShare: 1.5
+  - type: general-purpose
+    task: Rater C2 claim check
+    model: sonnet
+    durationSec: 644
+    toolCalls: 72
+    modelCalls: 70
+    tokenShare: 2.7
+  - type: general-purpose
+    task: Rater C3 claim check
+    model: sonnet
+    durationSec: 681
+    toolCalls: 82
+    modelCalls: 78
+    tokenShare: 3.2
+  - type: general-purpose
+    task: Rater C4 claim check
+    model: sonnet
+    durationSec: 864
+    toolCalls: 86
+    modelCalls: 83
+    tokenShare: 3.5
+  - type: general-purpose
+    task: Rater C5 claim check
+    model: sonnet
+    durationSec: 658
+    toolCalls: 83
+    modelCalls: 74
+    tokenShare: 2.8
+  - type: general-purpose
+    task: Rater C6 claim check
+    model: sonnet
+    durationSec: 409
+    toolCalls: 42
+    modelCalls: 41
+    tokenShare: 1.6
+  - type: general-purpose
+    task: Rater C7 claim check
+    model: sonnet
+    durationSec: 392
+    toolCalls: 50
+    modelCalls: 49
+    tokenShare: 1.5
+  - type: general-purpose
+    task: Rater C8 claim check
+    model: sonnet
+    durationSec: 403
+    toolCalls: 52
+    modelCalls: 47
+    tokenShare: 1.8
+  - type: general-purpose
+    task: Research claude-code items
+    model: sonnet
+    durationSec: 174
+    toolCalls: 28
+    modelCalls: 24
+    tokenShare: 0.6
+  - type: general-purpose
+    task: Research git-github items
+    model: sonnet
+    durationSec: 129
+    toolCalls: 16
+    modelCalls: 14
+    tokenShare: 0.4
+  - type: general-purpose
+    task: Research terrarium-practice items
+    model: sonnet
+    durationSec: 65
+    toolCalls: 8
+    modelCalls: 8
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Research verification items
+    model: sonnet
+    durationSec: 211
+    toolCalls: 24
+    modelCalls: 23
+    tokenShare: 0.6
+  - type: general-purpose
+    task: Research walkthroughs items
+    model: sonnet
+    durationSec: 180
+    toolCalls: 30
+    modelCalls: 26
+    tokenShare: 0.6
+  - type: general-purpose
+    task: Research nuxt-vue items
+    model: sonnet
+    durationSec: 79
+    toolCalls: 11
+    modelCalls: 11
+    tokenShare: 0.3
+  - type: general-purpose
+    task: Research skill-pack items
+    model: sonnet
+    durationSec: 62
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Research nuxt-content items
+    model: sonnet
+    durationSec: 88
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Research step promote-mdc-components
+    model: sonnet
+    durationSec: 62
+    toolCalls: 7
+    modelCalls: 7
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Research step promote-prose-overrides
+    model: sonnet
+    durationSec: 161
+    toolCalls: 26
+    modelCalls: 23
+    tokenShare: 0.5
+  - type: general-purpose
+    task: Research step split planning page
+    model: sonnet
+    durationSec: 103
+    toolCalls: 13
+    modelCalls: 10
+    tokenShare: 0.3
+  - type: general-purpose
+    task: Research step move vue-components
+    model: sonnet
+    durationSec: 58
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Research step section timestamps
+    model: sonnet
+    durationSec: 121
+    toolCalls: 15
+    modelCalls: 14
+    tokenShare: 0.3
+  - type: general-purpose
+    task: Research step section out-of-scope
+    model: sonnet
+    durationSec: 45
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Research step move into permissions
+    model: sonnet
+    durationSec: 48
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Research step move gate story
+    model: sonnet
+    durationSec: 47
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Research step move worktrees fact
+    model: sonnet
+    durationSec: 37
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Research step move layers fact
+    model: sonnet
+    durationSec: 50
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Research step move queryCollection fact
+    model: sonnet
+    durationSec: 59
+    toolCalls: 11
+    modelCalls: 11
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Research step promote bug-report walkthrough
+    model: sonnet
+    durationSec: 264
+    toolCalls: 31
+    modelCalls: 25
+    tokenShare: 0.8
+  - type: general-purpose
+    task: Research deploy items
+    model: sonnet
+    durationSec: 85
+    toolCalls: 17
+    modelCalls: 16
+    tokenShare: 0.3
+  - type: general-purpose
+    task: "Writer: promote nuxt-content drafts"
+    model: opus
+    durationSec: 2094
+    toolCalls: 39
+    modelCalls: 31
+    tokenShare: 1
+  - type: general-purpose
+    task: "Writer: promote bug-report walkthrough"
+    model: opus
+    durationSec: 2142
+    toolCalls: 56
+    modelCalls: 40
+    tokenShare: 1.3
+  - type: general-purpose
+    task: "Writer: split planning page"
+    model: opus
+    durationSec: 2112
+    toolCalls: 53
+    modelCalls: 41
+    tokenShare: 1.4
+  - type: general-purpose
+    task: "Writer: move vue to css page"
+    model: opus
+    durationSec: 2108
+    toolCalls: 39
+    modelCalls: 29
+    tokenShare: 0.9
+  - type: general-purpose
+    task: "Writer: move into permissions"
+    model: opus
+    durationSec: 2095
+    toolCalls: 35
+    modelCalls: 27
+    tokenShare: 1
+  - type: general-purpose
+    task: "Writer: move gate story"
+    model: opus
+    durationSec: 396
+    toolCalls: 34
+    modelCalls: 26
+    tokenShare: 0.8
+  - type: general-purpose
+    task: "Writer: move worktrees fact"
+    model: opus
+    durationSec: 2107
+    toolCalls: 46
+    modelCalls: 24
+    tokenShare: 0.8
+  - type: general-purpose
+    task: "Writer: move layers fact"
+    model: opus
+    durationSec: 216
+    toolCalls: 16
+    modelCalls: 12
+    tokenShare: 0.4
+  - type: general-purpose
+    task: "Writer: trim queryCollection"
+    model: opus
+    durationSec: 2101
+    toolCalls: 33
+    modelCalls: 25
+    tokenShare: 0.8
+  - type: general-purpose
+    task: "Writer: claude-code items"
+    model: opus
+    durationSec: 2107
+    toolCalls: 42
+    modelCalls: 35
+    tokenShare: 1.3
+  - type: general-purpose
+    task: "Writer: deploy items"
+    model: opus
+    durationSec: 2098
+    toolCalls: 36
+    modelCalls: 28
+    tokenShare: 0.8
+  - type: general-purpose
+    task: "Writer: git-github items"
+    model: opus
+    durationSec: 2079
+    toolCalls: 44
+    modelCalls: 28
+    tokenShare: 1.1
+  - type: general-purpose
+    task: "Writer: nuxt-content items"
+    model: opus
+    durationSec: 2105
+    toolCalls: 33
+    modelCalls: 26
+    tokenShare: 0.9
+  - type: general-purpose
+    task: "Writer: nuxt-vue items"
+    model: opus
+    durationSec: 2098
+    toolCalls: 38
+    modelCalls: 23
+    tokenShare: 0.8
+  - type: general-purpose
+    task: "Writer: skill-pack item"
+    model: opus
+    durationSec: 2093
+    toolCalls: 27
+    modelCalls: 22
+    tokenShare: 0.7
+  - type: general-purpose
+    task: "Writer: terrarium-practice items"
+    model: opus
+    durationSec: 2129
+    toolCalls: 52
+    modelCalls: 36
+    tokenShare: 1.2
+  - type: general-purpose
+    task: "Writer: verification items"
+    model: opus
+    durationSec: 2100
+    toolCalls: 56
+    modelCalls: 40
+    tokenShare: 1.4
+  - type: general-purpose
+    task: "Writer: walkthroughs items"
+    model: opus
+    durationSec: 373
+    toolCalls: 36
+    modelCalls: 29
+    tokenShare: 0.7
+  - type: general-purpose
+    task: Gate judge 1-1
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 1-2
+    model: sonnet
+    durationSec: 15
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 1-3
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 2-1
+    model: sonnet
+    durationSec: 14
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 2-2
+    model: sonnet
+    durationSec: 16
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 2-3
+    model: sonnet
+    durationSec: 18
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 3-1
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 3-2
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 3-3
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 4-1
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 4-2
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 4-3
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 5-1
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 5-2
+    model: sonnet
+    durationSec: 9
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 5-3
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 6-1
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 6-2
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 6-3
+    model: sonnet
+    durationSec: 17
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 7-1
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 7-2
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 7-3
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 8-1
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 8-2
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 8-3
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 9-1
+    model: sonnet
+    durationSec: 17
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 9-2
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 9-3
+    model: sonnet
+    durationSec: 15
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 10-1
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 10-2
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 10-3
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 11-1
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 11-2
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 11-3
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 12-1
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 12-2
+    model: sonnet
+    durationSec: 14
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 12-3
+    model: sonnet
+    durationSec: 15
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 13-1
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 13-2
+    model: sonnet
+    durationSec: 14
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 13-3
+    model: sonnet
+    durationSec: 15
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 14-1
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 14-2
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 14-3
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 15-1
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 15-2
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 15-3
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 16-1
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 16-2
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 16-3
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 17-1
+    model: sonnet
+    durationSec: 15
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 17-2
+    model: sonnet
+    durationSec: 15
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 17-3
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 18-1
+    model: sonnet
+    durationSec: 15
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 18-2
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 18-3
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 19-1
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 19-2
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 19-3
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 20-1
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 20-2
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 20-3
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 21-1
+    model: sonnet
+    durationSec: 17
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 21-2
+    model: sonnet
+    durationSec: 8
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 21-3
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 22-1
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 22-2
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 22-3
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 23-1
+    model: sonnet
+    durationSec: 7
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 23-2
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 23-3
+    model: sonnet
+    durationSec: 8
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 24-1
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 24-2
+    model: sonnet
+    durationSec: 14
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 24-3
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 25-1
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 25-2
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 25-3
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 26-1
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 26-2
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 26-3
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 27-1
+    model: sonnet
+    durationSec: 7
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 27-2
+    model: sonnet
+    durationSec: 8
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 27-3
+    model: sonnet
+    durationSec: 6
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 28-1
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 28-2
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 28-3
+    model: sonnet
+    durationSec: 18
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 29-1
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 29-2
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 29-3
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 30-1
+    model: sonnet
+    durationSec: 9
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 30-2
+    model: sonnet
+    durationSec: 9
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 30-3
+    model: sonnet
+    durationSec: 8
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 31-1
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 31-2
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 31-3
+    model: sonnet
+    durationSec: 14
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 32-1
+    model: sonnet
+    durationSec: 7
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 32-2
+    model: sonnet
+    durationSec: 8
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 32-3
+    model: sonnet
+    durationSec: 9
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 33-1
+    model: sonnet
+    durationSec: 9
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 33-2
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 33-3
+    model: sonnet
+    durationSec: 9
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 34-1
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 34-2
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.2
+  - type: general-purpose
+    task: Gate judge 34-3
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 35-1
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 35-2
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: Gate judge 35-3
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a1-1
+    model: sonnet
+    durationSec: 16
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a2-1
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a3-1
+    model: sonnet
+    durationSec: 14
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a4-1
+    model: sonnet
+    durationSec: 9
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a5-1
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a6-1
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a7-1
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a8-1
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a9-1
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a10-1
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a1-2
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a1-3
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a2-2
+    model: sonnet
+    durationSec: 9
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a2-3
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a3-2
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a3-3
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a8-2
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a8-3
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a9-2
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a9-3
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a10-2
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: A judge a10-3
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.1
+  - type: general-purpose
+    task: "Review spec: claude-code, deploy, git-github"
+    model: opus
+    durationSec: 213
+    toolCalls: 38
+    modelCalls: 37
+    tokenShare: 1.1
+  - type: general-purpose
+    task: "Review spec: nuxt-content, nuxt-vue, skill-pack"
+    model: opus
+    durationSec: 184
+    toolCalls: 32
+    modelCalls: 31
+    tokenShare: 1.1
+  - type: general-purpose
+    task: "Review spec: practice, verification, walkthroughs"
+    model: opus
+    durationSec: 241
+    toolCalls: 40
+    modelCalls: 39
+    tokenShare: 1.3
+  - type: general-purpose
+    task: Review standards across the diff
+    model: sonnet
+    durationSec: 90
+    toolCalls: 10
+    modelCalls: 9
+    tokenShare: 0.3
+gitBranch: HEAD
+entrypoint: remote
+cliVersion: 2.1.316
+ideas:
+  - "Proposed DECISIONS line: keep Planning with the pack as its own Lesson, since a deficit fix that merges it back undoes the 2026-11-01 promotion (item f47)"
+  - "Proposed DECISIONS line: keep Invariant tests as its own Lesson with its Blog example, since moving it into Testing undoes the 2026-11-02 promotion (f56, f57)"
+  - Have grades.ts emit a workflow script for the gate and the A election, so judges fan out deterministically instead of by hand
+landedBy: Stop
