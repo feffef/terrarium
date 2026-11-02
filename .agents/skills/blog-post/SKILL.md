@@ -376,8 +376,7 @@ every fact so readers can go look:
   composed it:** links, counts, dates and weekdays, relative times, SHAs,
   authors, quotes, causal claims. Use `git`, the GitHub API or the file on disk,
   never memory, and reconcile counts that share a paragraph. Take timestamps
-  (dates, times, relative times) from events or comment headers (GitHub API
-  timestamps, git), never from issue prose. For "who decided" /
+  from events or comment headers, never from issue prose. For "who decided" /
   "the session reasoned" / "on its own", the authority is the PR's own review
   comments and timeline, not a commit message or a session log's summary line.
   For where a rule lives or what agents read, it is the loaded
