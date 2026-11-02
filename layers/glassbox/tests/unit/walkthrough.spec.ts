@@ -55,7 +55,7 @@ describe('glassboxWalkthroughParts', () => {
           ['li', {}, ['span', {}, 'Lesson'], link(`${base}/nuxt-vue/layers`, 'Layers')],
           ['li', {}, ['file', {}, 'docs/adr/0009-session-logs-commit-directly-to-main.md']],
           ['li', {}, ['term', {}, 'Friction']],
-          ['li', {}, ' see ', link('/t/journal/current', 'the Journal')],
+          ['li', {}, ' see ', ['span', {}, 'Journal'], link('/t/journal/current', 'the Journal')],
         ],
       ] },
       { stop: '2', id: '2-end', nodes: [['h2', { id: '2-end' }, 'End'], ['p', {}, 'More.']] },

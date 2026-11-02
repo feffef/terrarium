@@ -106,12 +106,11 @@ function stopSentences(text: string) {
 
 // An inline `:lessons[…]` row, whose links nest their own brackets.
 const inlineRow = /:lessons\[(?:[^[\]]|\[[^\]]*\])*\]/g
-const blockRow = /^::lessons\n[^]*?^::$/gm
+const blockRow = /^[ \t]*::lessons[ \t]*\r?\n[^]*?^[ \t]*::[ \t]*$/gm
 
-/** The Walkthrough entry in GLOSSARY.md: at least one `## N. Title` stop of 2–4 sentences, each with exactly one
- *  `::lessons` block holding a link or `:file`, at most `cap` chips and no `:file` a Lesson
- *  it links cites. Lesson rows sit only in stops and on the overview, whose prose links pages
- *  only through them, so a link in its text never leaves the page. */
+/** The Walkthrough entry and the overview bullet in GLOSSARY.md: at least one `## N. Title` stop
+ *  of 2–4 sentences, each with exactly one `::lessons` block holding a link or `:file`, at most
+ *  `cap` chips and no `:file` a Lesson it links cites; `:lessons` chips elsewhere only on the overview. */
 export function glassboxStopProblems(body: string, walkthrough: boolean, overview: boolean, cites: GlassboxSite['cites']): string[] {
   const stops = walkthrough ? readBody(body).sections.filter((s) => glassboxStopNumber(s.title)) : []
   const problems = walkthrough && !stops.length ? ['Walkthrough has no "## N. Title" stops'] : []
@@ -135,11 +134,11 @@ export function glassboxStopProblems(body: string, walkthrough: boolean, overvie
   }
   if (overview) {
     const inline = [...readBody(body.replace(blockRow, '').replace(inlineRow, '')).prose.matchAll(/\]\((\/t\/[^)\s]*)\)/g)].map((m) => m[1])
-    if (inline.length) problems.push(`overview links ${inline.join(', ')} in its prose, not in a :lessons row`)
+    if (inline.length) problems.push(`overview links ${inline.join(', ')} in its prose, not in :lessons chips`)
     return problems
   }
-  const stray = glassboxPageRefs(body).lessonRows.length - inStops + (body.match(inlineRow)?.length ?? 0)
-  if (stray) problems.push(`${stray} :lessons row(s) sit outside a Walkthrough stop`)
+  const stray = glassboxPageRefs(body).lessonRows.length - inStops + (readBody(body).prose.match(inlineRow)?.length ?? 0)
+  if (stray) problems.push(`${stray} :lessons chip block(s) sit outside a Walkthrough stop`)
   return problems
 }
 

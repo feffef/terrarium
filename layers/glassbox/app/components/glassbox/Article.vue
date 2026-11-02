@@ -23,7 +23,7 @@ const parts = computed(() => {
   const sections = glassboxFrameDiagrams(rest)
   const withBody = (nodes: typeof intro) => ({ ...props.page, body: { ...body, value: nodes } })
   return {
-    intro: withBody(intro),
+    intro: withBody(walkthrough.value ? intro : intro.map((node) => glassboxLessonChipsDeep(node, props.base))),
     sections: (walkthrough.value ? glassboxWalkthroughParts(sections, props.base) : [{ nodes: sections.map((node) => glassboxLessonChipsDeep(node, props.base)) }])
       .map((part) => ({ ...part, value: withBody(part.nodes) })),
     toc: body.toc?.links ?? [],
@@ -224,7 +224,6 @@ const parts = computed(() => {
 .article :deep(.gb-lessons span:first-child)::after { content: ' · '; }
 .article :deep(.gb-lessons li > a:not(.file)) { color: var(--gb-ink); text-decoration: none; }
 .article :deep(.gb-lessons li > a:not(.file))::after { content: ' →'; }
-/* A bullet's own chips run on after its text and wrap one by one. */
 .article :deep(li > .gb-lessons), .article :deep(li > p > .gb-lessons) { display: inline; margin: 0; }
 .article :deep(li > .gb-lessons li), .article :deep(li > p > .gb-lessons li) { display: inline-block; margin: 3px 6px 3px 0; padding: 0 8px; font-size: 13px; }
 

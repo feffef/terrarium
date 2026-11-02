@@ -1,6 +1,6 @@
 import type { MinimarkElement, MinimarkNode } from '@nuxt/content'
-import { glassboxLessonIds, glassboxLessonLabels, glassboxNextList } from './lesson'
-import { glassboxSubjectOf, glassboxWalkthroughs, type GlassboxPageLink } from './subjects'
+import { glassboxLessonIds, glassboxLessonLabels, glassboxLinkLabel, glassboxNextList } from './lesson'
+import { glassboxWalkthroughs, type GlassboxPageLink } from './subjects'
 
 // Design 1b's stops, keyed on the headings writers already write (#1993). The
 // contract writers follow is the Walkthrough entry in layers/glassbox/GLOSSARY.md.
@@ -54,8 +54,8 @@ export function glassboxLessonChips(node: MinimarkNode, base: string): MinimarkN
   const chips: MinimarkNode[][] = [[]]
   for (const child of inline) {
     if (typeof child !== 'string') {
-      if (child[0] === 'a' && isLesson(String(child[1].href), base)) chips.at(-1)!.push(['span', {}, glassboxLessonLabels.lesson])
-      else if (child[0] === 'a' && String(child[1].href).startsWith(`${base}/walkthroughs/`)) chips.at(-1)!.push(['span', {}, glassboxLessonLabels.walkthrough])
+      const label = child[0] === 'a' ? glassboxLinkLabel(String(child[1].href), base) : undefined
+      if (label && label !== glassboxLessonLabels.page) chips.at(-1)!.push(['span', {}, label])
       chips.at(-1)!.push(child)
       continue
     }
@@ -67,15 +67,13 @@ export function glassboxLessonChips(node: MinimarkNode, base: string): MinimarkN
   return ['ul', { class: 'gb-lessons' }, ...chips.filter((chip) => chip.length).map((chip) => ['li', {}, ...chip] as MinimarkNode)]
 }
 
-/** The same chips at any depth, so a bullet can end with its own row. */
+/** The same chips at any depth: the overview ends a bullet with its own (GLOSSARY.md). */
 export function glassboxLessonChipsDeep(node: MinimarkNode, base: string): MinimarkNode {
   if (typeof node === 'string') return node
   if (node[0] === 'lessons') return glassboxLessonChips(node, base)
   const [tag, props, ...children] = node
   return [tag, props, ...(children as MinimarkNode[]).map((child) => glassboxLessonChipsDeep(child, base))] as MinimarkNode
 }
-
-const isLesson = (href: string, base: string) => href.startsWith(`${base}/`) && !!glassboxSubjectOf(href.slice(base.length))
 
 const target = (href: unknown) => String(href).replace(/[?#].*$/, '').replace(/\/$/, '')
 const linksTo = (nodes: MinimarkNode[], url: string): boolean => nodes.some((node) =>

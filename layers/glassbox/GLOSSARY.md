@@ -31,9 +31,10 @@ Terrarium applies them without reading the source.
   date in `revisionDate`), so it reads like a dated edition.
 - **An overview, then a reference.** The guide's landing page,
   `guide/pages/index.md`, is the overview of how Terrarium works, in plain
-  words, linking the Lessons for depth. Its prose links pages only through
-  chips, so a link in a sentence is a `:term` or a `:file ↗`: a `::lessons`
-  block after a paragraph, or `:lessons[…]` ending a bullet. Past it there is no reading order: readers use the sidebar, where
+  words, linking the Lessons for depth. It links pages only through chips, a
+  `::lessons` block after a paragraph or `:lessons[…]` ending a bullet, so a
+  link in a sentence is always a `:term` or a `:file`. Past it there is no
+  reading order: readers use the sidebar, where
   Lessons lead and Walkthroughs follow the Subjects, plainly listed, none
   named a starting point while they are still being worked out.
 - **Two Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to

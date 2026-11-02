@@ -38,7 +38,7 @@ Agents may propose anything, but they build new work, such as a new Tenant, feat
 [Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
 ::
 
-Agents change a system that includes their own tools, and the gate's automatic checks are what make that safe. So an agent merges its own work on a green gate, and a person merges what a machine can't judge, such as a change to a :term[Human-only] file like the rules themselves, a new dependency, or work that came from a Public user. ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]) gives the full list.
+Agents change a system that includes their own tools, and the gate's automatic checks are what make that safe. So an agent merges its own work on a green gate, and a person merges what a machine can't judge, such as a change to a :term[Human-only] file like the rules themselves, a new dependency, or work that came from a Public user. ADR-0004 (:file[docs/adr/0004-objective-safety-gate.md]) gives the full list, and a Lesson shows how those files are kept.
 
 ::lessons
 [Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list)
@@ -48,7 +48,7 @@ Agents change a system that includes their own tools, and the gate's automatic c
 
 > work → session log with Frictions → fixes → better guidance → fewer Frictions next time
 
-Routines turn the logs into fixes. One files each recent Friction under its root cause and writes a fix for it. Others look for problems no session reports: documents that no longer match the code, Skills that don't do their job, and rules nobody needs, which are cut on trial to see whether anything breaks. When a written rule keeps failing, a Trusted user has a hook built that enforces it. The Lessons below show every Skill in the loop and list every Routine.
+Routines turn the logs into fixes. One files each recent Friction under its root cause and writes a fix for it. Others look for problems no session reports: documents that no longer match the code, Skills that don't do their job, and rules nobody needs, which are cut on trial to see whether anything breaks. When a written rule keeps failing, a Trusted user has a hook built that enforces it. One Lesson shows every Skill in the loop, another lists every Routine.
 
 ::lessons
 [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/claude-code/routines)
@@ -101,7 +101,7 @@ A change merged into `main` goes live without anyone deploying it, the one thing
 [A change goes live](/t/glassbox/guide/walkthroughs/a-change-goes-live) · [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container)
 ::
 
-On a first visit, the server renders the page to HTML from the content database and sends the page's data with it, so the browser shows it at once. Vue then takes over in the browser, and later clicks fetch only the next page's data. A Walkthrough follows one file all the way.
+On a first visit, the server renders the page to HTML from the content database and sends the page's data with it, so the browser shows it at once. Vue then takes over in the browser, and later clicks fetch only the next page's data. A Walkthrough follows one file all the way, and three Lessons cover its parts.
 
 ::lessons
 [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser) · [Content database](/t/glassbox/guide/nuxt-content/content-database) · [Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [Hydration](/t/glassbox/guide/nuxt-vue/hydration)
