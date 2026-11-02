@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeR2kopqGDtf5GQztz6
 startedAt: 2026-11-02T07:41:12Z
-endedAt: 2026-11-02T18:11:01Z
+endedAt: 2026-11-02T18:57:44Z
 kind: interactive
 goal: Report the API cost and design fit of glassbox-improve sessions
 status: completed
-outcome: Costs of 9 glassbox-improve runs and a design check of the three v2 runs reported; no repo change
-summary: "The owner asked how API costs of glassbox-improve sessions developed. I first answered from session logs only, wrongly concluding no cost data exists; on the owner's pointer to inspect-session, get_session gave each session's list-price cost (about 337 USD for 8 runs), and result events gave the per-model split of the two v2 runs (10-29 and 11-01). The owner then asked, via inspect-session, whether the v2 runs worked as designed; I asked scope and depth first, and the owner chose the v2 changes only, from logs and PR descriptions, events only if needed. I checked PRs 2688 and 2711 (the design) against the two run logs, PRs 2689 and 2763, and grades.yml. One point (hand-backs saved in pairs) needs an event read, which I offered instead of running. On the owner asking about the new run, I checked session_013zxzeSkTLmRxa2PWgt3kPw (PR 2787) the same way: cost, per-model split, log and PR body. Nothing was built or filed; all work was human-instructed reading."
+outcome: Costs and design fit of glassbox-improve runs reported; a dry run of six-lens sonnet raters compared with the 11-02 mixed-model run; no repo change
+summary: "The owner asked how API costs of glassbox-improve sessions developed. I first answered from session logs only, wrongly concluding no cost data exists; on the owner's pointer to inspect-session, get_session gave each session's list-price cost and result events the per-model split. On the owner's requests I then checked the v2 runs and the new 11-02 run (PR 2787) against the v2 design from logs and PR bodies, explained why A is elected rather than rated, and measured model agreement from grades.yml. The owner proposed rating by aspects instead of by model; together we settled six lenses in three pairs (like audit-docs), correctness as an always-fix issue, capped A per lens, weakest-lens-first selection and researcher confirmation. On the owner's instruction I ran a read-only dry run: three sonnet lens raters on the 11-02 base commit 4b7e40b, briefs drafted in this session (scratchpad lens-dryrun), and compared their grades with the 11-02 mixed-model grades. Nothing was built, filed or committed; all work was human-instructed."
 prs: []
 docsRead:
   - path: .claude/skills/inspect-session/SKILL.md
@@ -18,9 +18,29 @@ docsRead:
   - path: docs/agents/github-integration.md
     reason: before PR reads; gh api REST works for bulk body reads
     useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: docs/agents/pr-workflow.md
+    reason: (no reason given)
 skillsUsed:
   - name: inspect-session
     reason: cost per session via get_session
+  - name: dispatch-subagents
+    reason: brief rules for the three read-only lens raters
   - name: close-session
     reason: (no reason given)
   - name: log-session
@@ -32,18 +52,19 @@ frictions:
   - description: Ran git fetch and git log before reading docs/agents/git-conventions.md, against CLAUDE.md's docs-first rule; no harm here as both were read-only lookups.
     solution: Read git-conventions.md before the first non-read-only git command, as the PostToolUse hint said.
     severity: nit
-durationSec: 37790
+durationSec: 40592
 models:
-  claude-opus-5-5: 80
+  claude-opus-5-5: 138
 toolCounts:
-  Bash: 22
-  Skill: 3
+  Bash: 38
+  Skill: 4
   mcp__claude-code-remote__get_session: 9
   mcp__claude-code-remote__list_events: 3
-  AskUserQuestion: 1
+  AskUserQuestion: 2
   ToolSearch: 1
   mcp__github__pull_request_read: 2
   mcp__claude-code-remote__list_sessions: 1
+  Agent: 3
 rulesLoaded:
   - .claude/rules/adr-0015.md
   - .claude/rules/tenant-glossary.md
@@ -53,11 +74,20 @@ rulesLoaded:
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0029.md
   - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/glossary-terms.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - .agents/skills/glassbox-lesson/DECISIONS.md
+  - docs/agents/issue-tracker.md
+  - docs/agents/pr-workflow.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: No PR or push in a read-only question session, so the gate rule did not apply
@@ -95,11 +125,35 @@ ruleVerdicts:
   - path: .claude/rules/adr-0005.md
     reason: Loaded on reading grades.yml; no Skill was changed
     useful: no
+subagents:
+  - type: general-purpose
+    task: "Lens rater 1: clarity+reasoning"
+    model: sonnet
+    durationSec: 288
+    toolCalls: 36
+    modelCalls: 25
+    tokenShare: 19.5
+  - type: general-purpose
+    task: "Lens rater 2: relevance+single home"
+    model: sonnet
+    durationSec: 258
+    toolCalls: 33
+    modelCalls: 27
+    tokenShare: 17.5
+  - type: general-purpose
+    task: "Lens rater 3: evidence+transfer"
+    model: sonnet
+    durationSec: 264
+    toolCalls: 84
+    modelCalls: 18
+    tokenShare: 17.1
 gitBranch: claude/cool-galileo-0lqed0
 entrypoint: remote
 cliVersion: 2.1.316
 learnings:
   - Session logs keep only subagent tokenShare; absolute USD cost of a cloud session sits in get_session usage.cost_usd (list price) and in result events' modelUsage.
+  - Single-model lens raters at one commit flagged 25 of 58 pages on at least one lens, against 10 pages with any C from the three mixed-model raters; the per-grade below-B rate stayed about 11%.
 ideas:
   - Have log-session's mechanical half record get_session usage.cost_usd and per-model costUSD, so Skill cost trends are answerable from the Journal without MCP calls (needs a data-shape decision first).
+  - Record each glassbox-improve run's cost (get_session usage.cost_usd) the way Routines record costUsd in layers/journal/content/current/routines, so cost per run is comparable without MCP reads.
 landedBy: Stop
