@@ -41,3 +41,8 @@ occurrences:
     severity: nit
     description: "Cooling-off step: git diff -M --name-status over the whole tree between merge and base printed about 60 unrelated Journal rename and delete lines before I found the one glassbox deletion."
     solution: "Scope that command to layers/glassbox/content in the Skill's cooling-off step."
+  - session: session_013zxzeSvdGhiM7SLEUgzvmF
+    date: "2026-11-01"
+    severity: minor
+    description: "Tally rejected fable's report because one lone page had no grade; the Skill covers only parse errors, so I resumed fable and merged its addendum into a copy."
+    solution: "Say in glassbox-improve step 2 what to do for a missing grade, or let grades.ts tally accept an addendum file per rater."

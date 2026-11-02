@@ -514,3 +514,18 @@ occurrences:
     severity: nit
     description: "Filed issues without reading triage-labels.md first, as CLAUDE.md requires; I used the needs-triage label the Skill names. The hook reminded me afterwards."
     solution: "Read issue-tracker.md and triage-labels.md whole before the first issue_write."
+  - session: session_013zxzeQFGrFi821yVm6n746
+    date: "2026-11-01"
+    severity: minor
+    description: "Post-write hooks demanded reading ADR-0012 and the Tinkerfund glossary after I had already written the post; both were late reads."
+    solution: "Read the Tenant glossary at step 4, before drafting; the ADR hook could skip standalone posts."
+  - session: session_013zxzeQhja1Bc1XguRdExuY
+    date: "2026-11-01"
+    severity: nit
+    description: "Read dispatch-subagents SKILL.md and git-conventions only at first use rather than before the first brief or git command."
+    solution: "Read the triggered doc before the first matching call."
+  - session: session_013zxzeSaEvHWNU8EdNqcqGG
+    date: "2026-11-02"
+    severity: nit
+    description: "I ran gh search and git fetch-style calls before reading github-integration.md and git-conventions.md; hooks flagged each read late. Read-only, no harm."
+    solution: "Read the two docs as the first step of any scheduled run that touches git or GitHub."

@@ -374,3 +374,28 @@ occurrences:
     severity: nit
     description: "The Stop hook asked me to push four times while the review and gate were pending, as ADR-0004 anticipates; each was a wasted turn."
     solution: "Let the hook stay quiet while a code-review is outstanding."
+  - session: session_013zxzeNxm9jTD6DwkDXzzG8
+    date: "2026-11-01"
+    severity: nit
+    description: "Stop hook asked to push twice while ADR-0004 required gate and review first; I waited as the rule says."
+    solution: "None needed; the rule is clear."
+  - session: session_013zxzeQFGrFi821yVm6n746
+    date: "2026-11-01"
+    severity: nit
+    description: "The Stop hook asked me to push while the gate was still running, twice; pushing would have broken the rule never to push before the gate result is read, so I answered it instead of acting."
+    solution: "Let the Stop hook skip its unpushed-commits check while a gate:scoped run is live in the checkout."
+  - session: session_013zxzeSvdGhiM7SLEUgzvmF
+    date: "2026-11-01"
+    severity: nit
+    description: "The Stop hook demanded a push five times while review, fix round and gate were pending; ADR-0004 required waiting, so each turn needed a refusal note."
+    solution: "Let the hook skip while a code-review or gate:scoped step is known to be running."
+  - session: session_013zxzeQqj3Eh1SgeFLWsNcD
+    date: "2026-11-02"
+    severity: nit
+    description: "The Stop hook asked me to push or commit five times while the fact-check, reviews and gate were pending; ADR-0004 says wait, so each turn needed a refusal."
+    solution: "Let the Stop hook stay quiet while a background gate or subagent is running."
+  - session: session_013zxzeSaEvHWNU8EdNqcqGG
+    date: "2026-11-02"
+    severity: nit
+    description: "The Stop hook asked me to push uncommitted edits while the Spec review and gate were still pending; I amended locally and pushed after the gate, as ADR-0004 requires."
+    solution: "The hook could stay quiet while a code-review is in flight."

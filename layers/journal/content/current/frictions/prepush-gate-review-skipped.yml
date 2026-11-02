@@ -4,10 +4,12 @@ summary: >-
 cause: >-
   ADR-0004 and pr-workflow.md ask for the code-review Skill before a branch's first push (and on a larger follow-up), allowing only a simple change (at most 10 lines in 2 files, adding, renaming or moving no file since PR #2638) the author's own read; sessions judge a small, prose, ledger, test or follow-up diff simple without counting it, self-review instead, or review only after pushing. Signals: 'skipped the code-review Skill', 'pushed before running gate:scoped and code-review', 'reviewed inline', 'self-reviewed', 'simple-change bar', 'without a fresh code-review', code-review run after the first push. A gate:scoped run that did not test the final head belongs to edit-during-gate-run.
 surface: guard-or-hook
-status: open
+status: accepted
+ref: "Issue #2748 (first-push code-review skipped again after #2638) closed not planned 2026-11-01: the owner declines a further fix."
 notes: |-
   2026-10-28 survey: the PR #2412 Prune Trial is no longer in .agents/prune-trials.yml (judged and deleted by the 2026-10-27 prune run), so the entry is no longer on trial; issue #2472 (regression of #2407) is open.
   2026-10-29 survey: issue #2472 closed by PR #2638 (merged 2026-10-28), which recorded as a fix here.
+  2026-11-02 survey: set accepted after issue #2748 closed not planned; session_013zxzeSgWhesrfA7R1JBnhE (escalation PR, one rule line) is the newest occurrence.
 fixes:
   - pr: 1852
     date: "2026-10-12"
@@ -151,3 +153,8 @@ occurrences:
     severity: minor
     description: "The code-review Skill asks for two parallel sub-agents, but the diff was 113 mechanical pin lines; I self-read it, deviating from pr-workflow for a non-simple change."
     solution: "Let pr-workflow's simple-change bar cover mechanical re-pins of frontmatter."
+  - session: session_013zxzeSgWhesrfA7R1JBnhE
+    date: "2026-11-01"
+    severity: minor
+    description: "Skipped code-review on the escalation PR (one rule line) though a rule's meaning changes; I judged it a clarification and said so in the PR."
+    solution: "pr-workflow's 'simple change' test should say whether a rule wording clarification that matches its ADR counts."

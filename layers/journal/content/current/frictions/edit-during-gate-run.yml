@@ -149,3 +149,13 @@ occurrences:
     severity: minor
     description: "Review findings arrived while the gate ran, so I stopped the gate and re-ran it after trimming; the first gate run was wasted."
     solution: "Run the Standards and Spec reviews before starting the gate, as pr-workflow orders."
+  - session: session_013zxzeQhja1Bc1XguRdExuY
+    date: "2026-11-01"
+    severity: nit
+    description: "Ran the long gate:scoped twice because a post-review prose fix changed the head after the first green run."
+    solution: "Run code-review before the gate so its fixes land first."
+  - session: session_013zxzeQqj3Eh1SgeFLWsNcD
+    date: "2026-11-02"
+    severity: nit
+    description: "Ran gate:scoped twice because the post-review prose fixes changed the head after the first green run."
+    solution: "Fold the fact-check and review fixes in before the first gate when both reports are cheap to wait for."

@@ -99,3 +99,8 @@ occurrences:
     severity: minor
     description: "Waited with a pgrep -f loop that matched itself and hung ten minutes; also two other wait loops timed out and had to be stopped."
     solution: "Use the harness background-completion notification instead of polling loops."
+  - session: session_013zxzeQFGrFi821yVm6n746
+    date: "2026-11-01"
+    severity: nit
+    description: "A foreground sleep to wait for the gate was blocked by the harness; I ended the turn and relied on the completion notification instead, a minor detour."
+    solution: "Say in blog-post step 10 to run the gate in the background and end the turn at once."
