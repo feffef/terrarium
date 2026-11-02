@@ -16,11 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "adr-read-hint also points at the ADRs a Bash git commit touches."
 occurrences:
-  - session: session_01TwTc2v8Afxqc9R4NdUcNPD
-    date: "2026-10-18"
-    severity: nit
-    description: "Gave recommendations on Routine cost before checking the ADRs that bind them, as CLAUDE.md asks. ADR-0015 loaded only afterwards via a hook; no conflict found."
-    solution: "Run grep -l on docs/adr before recommending a change."
   - session: session_01AwaGncaYJFWdJnc6yqDoTS
     date: "2026-10-19"
     severity: nit

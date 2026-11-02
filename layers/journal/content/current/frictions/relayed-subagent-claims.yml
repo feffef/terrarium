@@ -25,11 +25,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_01SRYx7bNrHJ2bWYsrdFUgtm
-    date: "2026-10-18"
-    severity: nit
-    description: "Stated the source session's 48-file empirical claim in the issue without re-verifying it, against 'Verify before you state'; attributed it instead."
-    solution: "Attribute second-hand counts explicitly, as done, or spot-check one file before filing."
   - session: session_012f7o6FcYxq1MWxvsdgKS6m
     date: "2026-10-20"
     severity: moderate

@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-30"
     summary: "merge-pr.ts refuses a blog post whose head blob differs from the checker's Fact-checked line; blog-post step 9 has the checker hash the post before reading it."
 occurrences:
-  - session: session_018Uhxo4D5VcScugLrS35r4w
-    date: "2026-10-18"
-    severity: minor
-    description: "First draft stated a few things as fact without checking them: Dependabot auto-merge (still only a Proposal), one wrong date, ADR word counts, which July guard was deleted"
-    solution: "Check each claim drawn from a subagent or blog post against git before writing it; the Spec fact-check caught them all before the push"
   - session: session_01AwaGncaYJFWdJnc6yqDoTS
     date: "2026-10-19"
     severity: nit

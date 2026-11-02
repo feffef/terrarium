@@ -39,11 +39,6 @@ occurrences:
     severity: nit
     description: "Read docs/agents/github-integration.md with head -80 instead of in full, against CLAUDE.md's read-first-in-full rule, before the first GitHub write."
     solution: "Read the trigger docs whole; a short doc costs little."
-  - session: session_0148agurVWH8QQeSkGCDm23e
-    date: "2026-10-18"
-    severity: nit
-    description: "Combined cat of three docs exceeded the output limit and was saved to a file, so git-conventions.md was never read before my git fetch."
-    solution: "Read each required doc with its own call, so a long doc cannot swallow the rest."
   - session: session_01XWMuHGcaNTvRPHfYb9T7z2
     date: "2026-10-19"
     severity: nit

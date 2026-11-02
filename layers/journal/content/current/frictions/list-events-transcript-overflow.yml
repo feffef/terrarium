@@ -19,11 +19,6 @@ fixes:
     date: "2026-10-19"
     summary: "inspect-session takes bare page names, does a partial read for short sessions and has a replies selector."
 occurrences:
-  - session: session_01GfmoxeLwrvC7CARuaBAXfB
-    date: "2026-10-18"
-    severity: nit
-    description: "A subagent could not reach the screenshot phase of the stuck session through list_events, so image handling as the cause stayed unconfirmed after a full run."
-    solution: "The transcript recipe could say pages span only minutes and to expect the log, not the transcript, to hold late phases."
   - session: session_01Bopw6N86uYzPzfaRpVqzhU
     date: "2026-10-19"
     severity: minor

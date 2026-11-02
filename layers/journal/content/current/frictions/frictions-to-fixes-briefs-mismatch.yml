@@ -24,11 +24,6 @@ fixes:
     date: "2026-10-31"
     summary: "Survey brief passes --out {SCRATCH_DIR} paths to the summary, candidates and extract calls and redirects the merges and open-issues calls; design brief redirects audit-skills output; states that --append writes all or nothing."
 occurrences:
-  - session: session_0135hcUf12mVM8dEZfDRAkUb
-    date: "2026-10-18"
-    severity: minor
-    description: "design-brief.md opens with a dangling fragment after {PICKS} and its session-log glob matches nothing; the design agent lost rounds on both."
-    solution: "Rewrite the brief's first lines and give the real glob (*session_<id>*.yml)."
   - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
     date: "2026-10-21"
     severity: nit

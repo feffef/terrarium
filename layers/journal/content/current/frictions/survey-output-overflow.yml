@@ -16,16 +16,6 @@ fixes:
     date: "2026-10-28"
     summary: "prune-friction-ledger --summary and --candidates write output over a size threshold to a file under TMPDIR and print one notice line; --out PATH always writes to that path."
 occurrences:
-  - session: session_0135hcUf12mVM8dEZfDRAkUb
-    date: "2026-10-18"
-    severity: nit
-    description: "The Skill says the survey agent works from a read of the extract file, but the compact output was still 90 KB with long docsRead arrays."
-    solution: "Have extract-frictions --compact drop docsRead."
-  - session: session_01TwTc2v8Afxqc9R4NdUcNPD
-    date: "2026-10-18"
-    severity: nit
-    description: "First dump of eight Skill Inventory entries was 36KB and truncated; a second query for observations was 137KB. Cost two extra calls before I filtered to recent dates."
-    solution: "Filter Inventory observations by date and truncate notes on the first query."
   - session: session_019jfJv6yLmcLUAJiTTomyeu
     date: "2026-10-25"
     severity: minor

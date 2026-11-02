@@ -26,11 +26,6 @@ fixes:
     date: "2026-10-25"
     summary: "audit-docs saves each reviewer reply to its own file in a pool folder, since save-handback.ts overwrites its output file."
 occurrences:
-  - session: session_019U9RYQ9iFv8fwp2VQvwGny
-    date: "2026-10-18"
-    severity: minor
-    description: "save-handback.ts failed on every reviewer because they delivered their report as a hand-back message, not final text, so I retyped the pool by hand."
-    solution: "Have save-handback read SubagentHandback messages too, or tell audit-docs briefs to end with a plain final reply."
   - session: session_0183U5MkKrjuhRKdjpFxD9Xj
     date: "2026-10-19"
     severity: moderate

@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-23"
     summary: "Cut long-command backgrounding to one home: CLAUDE.md's Self-verification bullet tightened and blog-post §10's restatement dropped."
 occurrences:
-  - session: session_01TANViXz17btvY9rH87SHcB
-    date: "2026-10-18"
-    severity: moderate
-    description: "Ran pnpm gate:scoped with a 600s timeout equal to the tool limit; it expired mid-e2e and wasted about ten minutes before a background rerun."
-    solution: "Start the gate with run_in_background from the first call, as CLAUDE.md's Self-verification section says."
   - session: session_01Pzj23dzUMace5jwZCvxmx7
     date: "2026-10-19"
     severity: nit
