@@ -67,7 +67,8 @@ and its own commits.
   can't tell a pause from an end, and can fail with no network.
 - **A hook that reminds or blocks until a log exists, at every pause.** It is
   runtime code the gate can't test. The one reminder we keep is narrow:
-  `read-first-hint.ts` says to invoke `close-session` after a PR opens. A Skill
+  `read-first-hint.ts` says to invoke `close-session` after a PR opens or
+  merges. A Skill
   whose use we measure is the cheaper bet for the rest.
 - **Find shell reads by parsing the command.** Each glob, loop or `cd` needs
   a new rule.

@@ -12,7 +12,8 @@
 // After a successful `mcp__github__create_pull_request` in the main session it
 // also says to invoke `close-session`, unless the transcript shows it invoked
 // after that PR call, so each PR gets it (issue #2209): prose alone left sessions
-// logging only at the end (issue #1859).
+// logging only at the end (issue #1859). After a successful `merge-pr.ts` run it
+// says the same for the merge, which ADR-0009 also closes on (issue #2772).
 // Fails open: any error adds nothing. `scripts/hooks/read-first-hint.sh` is the Bash
 // hot-path pre-filter.
 //
@@ -81,6 +82,10 @@ export const LATE_READ_NOTE = 'If the doc shows your call was already right, the
 
 export const CLOSE_SESSION_HINT = 'PR opened: invoke the `close-session` Skill before this turn ends for an in-review first log (CLAUDE.md); re-invoking it later is safe.'
 
+export const MERGE_CLOSE_SESSION_HINT = 'PR merged: invoke the `close-session` Skill to update your log (ADR-0009); it replaces the earlier one.'
+
+const mergesPr = (segs: string[][]) => segs.some((w) => w.some((x) => /(^|\/)merge-pr\.ts$/.test(x)))
+
 /** The docs this transcript already read or was pointed to. */
 function seen(records: Record<string, unknown>[], docs: ReadFirst[], trace: ReturnType<typeof extractTrace>): Set<string> {
   const read = [...trace.filesRead, ...trace.docsReadViaShell]
@@ -93,19 +98,22 @@ function seen(records: Record<string, unknown>[], docs: ReadFirst[], trace: Retu
     || hinted.includes(pointer(r))).map((r) => r.doc))
 }
 
-/** The record holding the latest `create_pull_request` call: the one this hook
- *  fires for, once written. -1 when none is written, so the whole transcript counts. */
-const lastPrCall = (records: Record<string, unknown>[]) => records.findLastIndex((r) => r.type === 'assistant'
-  && [prop(prop(r, 'message'), 'content')].flat().some((b) => prop(b, 'type') === 'tool_use' && prop(b, 'name') === 'mcp__github__create_pull_request'))
+/** The record holding the latest call `isIt` matches: the one this hook fires
+ *  for, once written. -1 when none is written, so the whole transcript counts. */
+const lastCall = (records: Record<string, unknown>[], isIt: (tool: unknown, input: unknown) => boolean) => records.findLastIndex((r) => r.type === 'assistant'
+  && [prop(prop(r, 'message'), 'content')].flat().some((b) => prop(b, 'type') === 'tool_use' && isIt(prop(b, 'name'), prop(b, 'input'))))
+const isMerge = (tool: unknown, input: unknown) => tool === 'Bash' && typeof prop(input, 'command') === 'string'
+  && mergesPr(commandWords(prop(input, 'command') as string))
 
 function hintFor(payload: unknown, dryRun = false): string | null {
   const tool = String(prop(payload, 'tool_name'))
   const docs = triggeredDocs(tool, prop(prop(payload, 'tool_input'), 'command'))
   const parent = prop(payload, 'transcript_path')
   const agent = prop(payload, 'agent_id')
-  const prOpened = tool === 'mcp__github__create_pull_request' && agent === undefined
-    && prop(payload, 'hook_event_name') !== 'PostToolUseFailure'
-  if (docs.length === 0 && !prOpened) return null
+  const mainOk = agent === undefined && prop(payload, 'hook_event_name') !== 'PostToolUseFailure'
+  const prOpened = mainOk && tool === 'mcp__github__create_pull_request'
+  const merged = mainOk && isMerge(tool, prop(payload, 'tool_input'))
+  if (docs.length === 0 && !prOpened && !merged) return null
   let records: Record<string, unknown>[] | null
   if (typeof parent !== 'string') records = dryRun && parent === undefined ? [] : null
   else if (agent === undefined) records = readTranscript(parent)
@@ -116,7 +124,9 @@ function hintFor(payload: unknown, dryRun = false): string | null {
   const skip = seen(records, docs, trace)
   const lines = docs.filter((r) => !skip.has(r.doc)).map(pointer)
   if (lines.length) lines.push(LATE_READ_NOTE)
-  if (prOpened && !extractTrace(records.slice(lastPrCall(records) + 1), process.env).skillsUsed.includes('close-session')) lines.push(CLOSE_SESSION_HINT)
+  const closedAfter = (isIt: Parameters<typeof lastCall>[1]) => extractTrace(records.slice(lastCall(records, isIt) + 1), process.env).skillsUsed.includes('close-session')
+  if (prOpened && !closedAfter((t) => t === 'mcp__github__create_pull_request')) lines.push(CLOSE_SESSION_HINT)
+  if (merged && !closedAfter(isMerge)) lines.push(MERGE_CLOSE_SESSION_HINT)
   return lines.length ? lines.join('\n') : null
 }
 
