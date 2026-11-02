@@ -31,7 +31,10 @@ Terrarium applies them without reading the source.
   date in `revisionDate`), so it reads like a dated edition.
 - **An overview, then a reference.** The guide's landing page,
   `guide/pages/index.md`, is the overview of how Terrarium works, in plain
-  words, linking the Lessons for depth. Past it there is no reading order: readers use the sidebar, where
+  words, linking the Lessons for depth. It links pages only through chips, a
+  `::lessons` block after a paragraph or `:lessons[…]` ending a bullet, so a
+  link in a sentence is always a `:term` or a `:file`. Past it there is no
+  reading order: readers use the sidebar, where
   Lessons lead and Walkthroughs follow the Subjects, plainly listed, none
   named a starting point while they are still being worked out.
 - **Two Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
@@ -82,7 +85,7 @@ design 1b (`layers/glassbox/app/utils/walkthrough.ts`):
 
 - a lede paragraph, then at most one diagram;
 - at least one numbered **stop**, each `## 1. Title`: 2–4 sentences of this
-  story's part, ending in exactly one `::stop-links` block of chips separated
+  story's part, ending in exactly one `::lessons` block of chips separated
   by `·`. A chip is a link (a Lesson where one exists, a Journal page), a
   `:file` or a `:term`; each block holds at least one link or `:file`, since a
   `:term` alone doesn't count. A stop holds at most 5 chips, Lessons first;

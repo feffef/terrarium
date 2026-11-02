@@ -1,6 +1,6 @@
 import type { MinimarkElement, MinimarkNode } from '@nuxt/content'
-import { glassboxLessonIds, glassboxLessonLabels, glassboxNextList } from './lesson'
-import { glassboxSubjectOf, glassboxWalkthroughs, type GlassboxPageLink } from './subjects'
+import { glassboxLessonIds, glassboxLessonLabels, glassboxLinkLabel, glassboxNextList } from './lesson'
+import { glassboxWalkthroughs, type GlassboxPageLink } from './subjects'
 
 // Design 1b's stops, keyed on the headings writers already write (#1993). The
 // contract writers follow is the Walkthrough entry in layers/glassbox/GLOSSARY.md.
@@ -19,7 +19,7 @@ export interface GlassboxWalkthroughPart {
 }
 
 /** A Walkthrough body cut into parts: each stop (`## 1. Title` up to the next
- *  h2) on its own, its number moved out of the heading and its `::stop-links`
+ *  h2) on its own, its number moved out of the heading and its `::lessons`
  *  drawn as chips; whatever lies between stops in plain parts, with A real case
  *  framed and Where next drawn as rows. */
 export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string): GlassboxWalkthroughPart[] {
@@ -42,19 +42,20 @@ export function glassboxWalkthroughParts(nodes: MinimarkNode[], base: string): G
     if (!parts.length) parts.push({ nodes: [] })
     const part = parts.at(-1)!
     const isNextList = section === glassboxLessonIds.whereNext && tag === 'ul'
-    ;(box ?? part.nodes).push(part.stop ? stopLinks(node, base) : isNextList ? glassboxNextList(node, base) : node)
+    ;(box ?? part.nodes).push(part.stop ? glassboxLessonChips(node, base) : isNextList ? glassboxNextList(node, base) : node)
   }
   return parts
 }
 
 // Chips are the block's inline content, cut at each `·`.
-function stopLinks(node: MinimarkNode, base: string): MinimarkNode {
-  if (typeof node === 'string' || node[0] !== 'stop-links') return node
+export function glassboxLessonChips(node: MinimarkNode, base: string): MinimarkNode {
+  if (typeof node === 'string' || node[0] !== 'lessons') return node
   const inline = (node.slice(2) as MinimarkNode[]).flatMap((child) => typeof child !== 'string' && child[0] === 'p' ? child.slice(2) as MinimarkNode[] : [child])
   const chips: MinimarkNode[][] = [[]]
   for (const child of inline) {
     if (typeof child !== 'string') {
-      if (child[0] === 'a' && isLesson(String(child[1].href), base)) chips.at(-1)!.push(['span', {}, glassboxLessonLabels.lesson])
+      const label = child[0] === 'a' ? glassboxLinkLabel(String(child[1].href), base) : undefined
+      if (label && label !== glassboxLessonLabels.page) chips.at(-1)!.push(['span', {}, label])
       chips.at(-1)!.push(child)
       continue
     }
@@ -63,10 +64,16 @@ function stopLinks(node: MinimarkNode, base: string): MinimarkNode {
       if (text.trim()) chips.at(-1)!.push(text)
     })
   }
-  return ['ul', { class: 'gb-stop-links' }, ...chips.filter((chip) => chip.length).map((chip) => ['li', {}, ...chip] as MinimarkNode)]
+  return ['ul', { class: 'gb-lessons' }, ...chips.filter((chip) => chip.length).map((chip) => ['li', {}, ...chip] as MinimarkNode)]
 }
 
-const isLesson = (href: string, base: string) => href.startsWith(`${base}/`) && !!glassboxSubjectOf(href.slice(base.length))
+/** The same chips at any depth: the overview ends a bullet with its own (GLOSSARY.md). */
+export function glassboxLessonChipsDeep(node: MinimarkNode, base: string): MinimarkNode {
+  if (typeof node === 'string') return node
+  if (node[0] === 'lessons') return glassboxLessonChips(node, base)
+  const [tag, props, ...children] = node
+  return [tag, props, ...(children as MinimarkNode[]).map((child) => glassboxLessonChipsDeep(child, base))] as MinimarkNode
+}
 
 const target = (href: unknown) => String(href).replace(/[?#].*$/, '').replace(/\/$/, '')
 const linksTo = (nodes: MinimarkNode[], url: string): boolean => nodes.some((node) =>

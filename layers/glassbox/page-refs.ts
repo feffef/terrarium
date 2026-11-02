@@ -90,7 +90,7 @@ interface CitedFilesAndTerms {
   terms: string[]
 }
 
-export interface StopLinksBlock extends CitedFilesAndTerms {
+export interface LessonRow extends CitedFilesAndTerms {
   /** Markdown link targets. */
   links: string[]
 }
@@ -109,11 +109,11 @@ function relined(tag: string, ref: FileRef, relines?: Relines) {
 function scan(body: string, relines?: Relines) {
   const files: FileRef[] = []
   const terms: string[] = []
-  const stopLinks: StopLinksBlock[] = []
+  const lessonRows: LessonRow[] = []
   const out: string[] = []
   let fence: string | undefined
   let excerpt: FileRef | undefined
-  let stop: StopLinksBlock | undefined
+  let stop: LessonRow | undefined
   let code: string[] = []
 
   for (const line of body.split(/\r?\n/)) {
@@ -140,9 +140,9 @@ function scan(body: string, relines?: Relines) {
       out[out.length - 1] = relined(line, excerpt, relines)
       continue
     }
-    if (trimmed === '::stop-links') {
+    if (trimmed === '::lessons') {
       stop = { links: [], files: [], terms: [] }
-      stopLinks.push(stop)
+      lessonRows.push(stop)
       continue
     }
     if (trimmed === '::') excerpt = stop = undefined
@@ -166,15 +166,15 @@ function scan(body: string, relines?: Relines) {
     }
     if (stop) for (const m of prose.matchAll(/\]\(([^)\s]+)/g)) stop.links.push(m[1]!)
   }
-  return { files, terms, stopLinks, body: out.join('\n') }
+  return { files, terms, lessonRows, body: out.join('\n') }
 }
 
 /** Every `:file` and `::excerpt` (in order), every `:term`'s entry id, and what each
- *  `::stop-links` block links to. Inline code and fences outside `::excerpt`
+ *  `::lessons` block links to. Inline code and fences outside `::excerpt`
  *  show syntax, so they cite nothing. */
-export function glassboxPageRefs(body: string): CitedFilesAndTerms & { stopLinks: StopLinksBlock[] } {
-  const { files, terms, stopLinks } = scan(body)
-  return { files, terms, stopLinks }
+export function glassboxPageRefs(body: string): CitedFilesAndTerms & { lessonRows: LessonRow[] } {
+  const { files, terms, lessonRows } = scan(body)
+  return { files, terms, lessonRows }
 }
 
 /** `body` with each cited `lines` range that `relines` moves rewritten, read as

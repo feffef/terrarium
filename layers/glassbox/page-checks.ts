@@ -97,25 +97,29 @@ function readBody(body: string) {
   return { prose: prose.join('\n'), sections: sections.map((s) => ({ title: s.title, text: s.text.join('\n') })) }
 }
 
-/** A stop's sentences before its `::stop-links`, counted by their end marks; none inside
+/** A stop's sentences before its `::lessons`, counted by their end marks; none inside
  *  code, a "quote" or "e.g." counts (#2096). */
 function stopSentences(text: string) {
-  const prose = readBody(text.split(/^::stop-links/m)[0]!).prose.replace(/"[^"\n]*"/g, 'quote').replace(/\b(e\.g|i\.e)\./g, '$1')
+  const prose = readBody(text.split(/^::lessons/m)[0]!).prose.replace(/"[^"\n]*"/g, 'quote').replace(/\b(e\.g|i\.e)\./g, '$1')
   return prose.match(/[.!?](?=["')\]]*(\s|$))/g)?.length ?? 0
 }
 
-/** The Walkthrough entry in GLOSSARY.md: at least one `## N. Title` stop of 2–4 sentences, each with exactly one
- *  `::stop-links` block holding a link or `:file`, at most `cap` chips and no `:file` a Lesson
- *  it links cites. Outside a stop the block renders unstyled. */
-export function glassboxStopProblems(body: string, walkthrough: boolean, cites: GlassboxSite['cites']): string[] {
+// An inline `:lessons[…]` row, whose links nest their own brackets.
+const inlineRow = /:lessons\[(?:[^[\]]|\[[^\]]*\])*\]/g
+const blockRow = /^[ \t]*::lessons[ \t]*\r?\n[^]*?^[ \t]*::[ \t]*$/gm
+
+/** The Walkthrough entry and the overview bullet in GLOSSARY.md: at least one `## N. Title` stop
+ *  of 2–4 sentences, each with exactly one `::lessons` block holding a link or `:file`, at most
+ *  `cap` chips and no `:file` a Lesson it links cites; `:lessons` chips elsewhere only on the overview. */
+export function glassboxStopProblems(body: string, walkthrough: boolean, overview: boolean, cites: GlassboxSite['cites']): string[] {
   const stops = walkthrough ? readBody(body).sections.filter((s) => glassboxStopNumber(s.title)) : []
   const problems = walkthrough && !stops.length ? ['Walkthrough has no "## N. Title" stops'] : []
   let inStops = 0
   for (const s of stops) {
-    const blocks = glassboxPageRefs(s.text).stopLinks
+    const blocks = glassboxPageRefs(s.text).lessonRows
     inStops += blocks.length
-    if (blocks.length !== 1) problems.push(`stop "${s.title}" has ${blocks.length} ::stop-links blocks, not 1`)
-    else if (!blocks[0]!.links.length && !blocks[0]!.files.length) problems.push(`stop "${s.title}" links nothing in its ::stop-links block`)
+    if (blocks.length !== 1) problems.push(`stop "${s.title}" has ${blocks.length} ::lessons blocks, not 1`)
+    else if (!blocks[0]!.links.length && !blocks[0]!.files.length) problems.push(`stop "${s.title}" links nothing in its ::lessons block`)
     else {
       const { links, files, terms } = blocks[0]!
       const chips = links.length + files.length + terms.length
@@ -128,8 +132,13 @@ export function glassboxStopProblems(body: string, walkthrough: boolean, cites: 
     const sentences = stopSentences(s.text)
     if (sentences < 2 || sentences > 4) problems.push(`stop "${s.title}" has ${sentences} sentence(s), not 2 to 4`)
   }
-  const stray = glassboxPageRefs(body).stopLinks.length - inStops
-  if (stray) problems.push(`${stray} ::stop-links block(s) sit outside a Walkthrough stop`)
+  if (overview) {
+    const inline = [...readBody(body.replace(blockRow, '').replace(inlineRow, '')).prose.matchAll(/\]\((\/t\/[^)\s]*)\)/g)].map((m) => m[1])
+    if (inline.length) problems.push(`overview links ${inline.join(', ')} in its prose, not in :lessons chips`)
+    return problems
+  }
+  const stray = glassboxPageRefs(body).lessonRows.length - inStops + (readBody(body).prose.match(inlineRow)?.length ?? 0)
+  if (stray) problems.push(`${stray} :lessons chip block(s) sit outside a Walkthrough stop`)
   return problems
 }
 
@@ -287,7 +296,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   const refs = glassboxPageRefs(body)
   const problems = placeProblems(file)
   const route = `/${contentRoute(file)}`
-  problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route), site.cites))
+  problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route), space === 'guide' && route === '/', site.cites))
   if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, body, prose, space))
   if (glassboxSubjectOf(route) || glassboxWalkthroughOf(route)) problems.push(...nextProblems(prose))
   // Drafts are set aside (GLOSSARY.md, Two Spaces); a page moved to the guide meets its caps.
@@ -300,7 +309,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   const pages = new Set(site.pages)
   const journal = new Set(site.journal)
   const guide = glassboxSitePath('guide', 'index.md')
-  for (const [, text, link] of prose.matchAll(/\[([^\]]*)\]\((\/t\/(?:glassbox\/[a-z0-9]+|journal)(?:\/[^)\s#?]*)?)/g)) {
+  for (const [, text, link] of prose.matchAll(/\[([^[\]]*)\]\((\/t\/(?:glassbox\/[a-z0-9]+|journal)(?:\/[^)\s#?]*)?)/g)) {
     const path = link!.replace(/\/$/, '')
     // A link quoting its target's title goes stale when the title changes; lowercase text is running prose (#2114).
     const title = site.titles[path]

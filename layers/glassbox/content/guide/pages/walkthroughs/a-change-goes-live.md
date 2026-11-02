@@ -30,7 +30,7 @@ flowchart TD
 
 The commit is a merged PR, or a :term[session log], which lands without one. Both take the same road from here: a blog post, a session log and a code fix all go live through the same pull, build and restart.
 
-::stop-links
+::lessons
 [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
@@ -38,7 +38,7 @@ The commit is a merged PR, or a :term[session log], which lands without one. Bot
 
 The script that runs the container fetches `main` again after each pause. When `origin/main` differs from its checkout, it resets the checkout to the new commit. It doesn't wait for CI: the Gate also runs on every push to `main`, but nothing in the container reads the result.
 
-::stop-links
+::lessons
 [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container) · [Merge gate](/t/glassbox/guide/verification/gate) · :file[.github/workflows/gate.yml]
 ::
 
@@ -46,7 +46,7 @@ The script that runs the container fetches `main` again after each pause. When `
 
 The script compares a hash of `pnpm-lock.yaml` with the hash it saved after its last good install. Only when they differ does it install packages again, from the lockfile exactly. If that install fails, the previous build stays live, and the next commit installs again.
 
-::stop-links
+::lessons
 [pnpm and the lockfile](/t/glassbox/guide/deploy/pnpm-lockfile) · [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container)
 ::
 
@@ -54,7 +54,7 @@ The script compares a hash of `pnpm-lock.yaml` with the hash it saved after its 
 
 The build runs in the checkout, beside the live server, which keeps answering. It writes `.output/`: a server that runs on its own, with the content inside. If the build fails, nothing is swapped, the old build stays live, and the next commit tries again.
 
-::stop-links
+::lessons
 [Nitro server engine](/t/glassbox/guide/nuxt-vue/nitro) · [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container) · [Content database](/t/glassbox/guide/nuxt-content/content-database)
 ::
 
@@ -62,7 +62,7 @@ The build runs in the checkout, beside the live server, which keeps answering. I
 
 The script copies the new `.output/` over the folder the server runs from, stops Node and starts it again from that copy. In the short gap while the new server starts, the site doesn't answer.
 
-::stop-links
+::lessons
 [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container)
 ::
 
@@ -70,7 +70,7 @@ The script copies the new `.output/` over the folder the server runs from, stops
 
 The restarted server serves the new build. The first query for each Collection compares its table's checksum with the build's and, where they differ, restores the table from the new dump.
 
-::stop-links
+::lessons
 [Content database](/t/glassbox/guide/nuxt-content/content-database)
 ::
 

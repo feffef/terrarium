@@ -20,6 +20,7 @@ const path = () => glassboxSlotText(slots)
   text-underline-offset: 4px;
   overflow-wrap: anywhere;
 }
+a.file::after { content: ' ↗'; font-family: var(--gb-sans, sans-serif); }
 span.file {
   color: inherit;
   text-decoration: none;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import type { MinimarkNode } from '@nuxt/content'
-import { glassboxWalkthroughParts, glassboxWalkthroughsThrough } from '../../app/utils/walkthrough.ts'
+import { glassboxLessonChipsDeep, glassboxWalkthroughParts, glassboxWalkthroughsThrough } from '../../app/utils/walkthrough.ts'
 
 const base = '/t/glassbox/guide'
 const link = (href: string, text = 'x'): MinimarkNode => ['a', { href }, text]
@@ -15,7 +15,7 @@ describe('glassboxWalkthroughsThrough', () => {
 
   it('lists each Walkthrough whose stops or A real case link the Lesson, once however often', () => {
     expect(glassboxWalkthroughsThrough([
-      walkthrough('/walkthroughs/b', 'B', stop, ['p', {}, link(layers)], ['stop-links', {}, ['p', {}, link(`${layers}#in-terrarium`)]]),
+      walkthrough('/walkthroughs/b', 'B', stop, ['p', {}, link(layers)], ['lessons', {}, ['p', {}, link(`${layers}#in-terrarium`)]]),
       walkthrough('/walkthroughs/a', 'A', realCase, ['ul', {}, ['li', {}, link(`${layers}/`)]]),
       walkthrough('/walkthroughs/c', 'C', stop, ['p', {}, link(`${base}/nuxt-vue/layers-two`)]),
     ], layers)).toEqual([
@@ -36,11 +36,11 @@ describe('glassboxWalkthroughsThrough', () => {
 })
 
 describe('glassboxWalkthroughParts', () => {
-  it('cuts each numbered stop into its own part, its number out of the heading and its ::stop-links drawn as chips', () => {
+  it('cuts each numbered stop into its own part, its number out of the heading and its ::lessons drawn as chips', () => {
     expect(glassboxWalkthroughParts([
       ['h2', { id: '1-start' }, '1. Start'],
       ['p', {}, 'Story.'],
-      ['stop-links', {}, ['p', {},
+      ['lessons', {}, ['p', {},
         link(`${base}/nuxt-vue/layers`, 'Layers'), ' · ',
         ['file', {}, 'docs/adr/0009-session-logs-commit-directly-to-main.md'], ' · ',
         ['term', {}, 'Friction'], ' · see ', link('/t/journal/current', 'the Journal'),
@@ -51,11 +51,11 @@ describe('glassboxWalkthroughParts', () => {
       { stop: '1', id: '1-start', nodes: [
         ['h2', { id: '1-start' }, 'Start'],
         ['p', {}, 'Story.'],
-        ['ul', { class: 'gb-stop-links' },
+        ['ul', { class: 'gb-lessons' },
           ['li', {}, ['span', {}, 'Lesson'], link(`${base}/nuxt-vue/layers`, 'Layers')],
           ['li', {}, ['file', {}, 'docs/adr/0009-session-logs-commit-directly-to-main.md']],
           ['li', {}, ['term', {}, 'Friction']],
-          ['li', {}, ' see ', link('/t/journal/current', 'the Journal')],
+          ['li', {}, ' see ', ['span', {}, 'Journal'], link('/t/journal/current', 'the Journal')],
         ],
       ] },
       { stop: '2', id: '2-end', nodes: [['h2', { id: '2-end' }, 'End'], ['p', {}, 'More.']] },
@@ -78,5 +78,16 @@ describe('glassboxWalkthroughParts', () => {
         ['li', {}, ['span', {}, 'Journal'], link('/t/journal/current')],
       ],
     ] }])
+  })
+})
+
+describe('glassboxLessonChipsDeep', () => {
+  it('draws a bullet\'s own :lessons row as chips, labelling a Walkthrough as one', () => {
+    expect(glassboxLessonChipsDeep(['ul', {}, ['li', {}, 'A bullet. ', ['lessons', {},
+      link(`${base}/nuxt-vue/layers`, 'Layers'), ' · ', link(`${base}/walkthroughs/adding-a-tenant`, 'Adding a site'),
+    ]]], base)).toEqual(['ul', {}, ['li', {}, 'A bullet. ', ['ul', { class: 'gb-lessons' },
+      ['li', {}, ['span', {}, 'Lesson'], link(`${base}/nuxt-vue/layers`, 'Layers')],
+      ['li', {}, ['span', {}, 'Walkthrough'], link(`${base}/walkthroughs/adding-a-tenant`, 'Adding a site')],
+    ]]])
   })
 })
