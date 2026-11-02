@@ -43,7 +43,12 @@ const overflow = props.entries.length - listed.length
         <h3 class="title">
           <NuxtLink :to="path" class="title-link">{{ tenant }}<span class="arrow" aria-hidden="true">→</span></NuxtLink>
         </h3>
-        <span v-if="reality" class="reality">{{ reality }}</span>
+        <NuxtLink
+          v-if="reality"
+          to="/t/journal/current/real-and-invented"
+          class="reality"
+          :aria-label="`${reality}: what's real, what's invented`"
+        >{{ reality }}</NuxtLink>
       </div>
       <p class="blurb">{{ blurb }}</p>
     </header>
@@ -145,9 +150,14 @@ const overflow = props.entries.length - listed.length
 }
 .reality {
   color: var(--root-muted);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
   font-size: 0.72rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+.reality:hover {
+  color: var(--root-ink);
 }
 .title {
   margin: 0;
