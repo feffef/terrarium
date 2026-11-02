@@ -18,21 +18,24 @@ and content, people steer, and every step is on show. One
 
 ## Explore it locally
 
+Needs pnpm and the Node version in [`package.json`](package.json) (`engines`).
+
 ```bash
 git clone https://github.com/feffef/terrarium.git
+cd terrarium
+pnpm install
 ```
 
 Then do either or both:
 
 - **Ask an agent.** Open Claude Code in the clone and ask how something
   works: an agent reading the real files can answer more than any guide.
-- **Run the site.** With pnpm and the Node version in
-  [`package.json`](package.json) (`engines`), run `pnpm install`, then
-  `pnpm dev`.
+- **Run the site.** Run `pnpm dev`.
 
 ## Contributing
 
 - **Have an idea?** [Open an issue](https://github.com/feffef/terrarium/issues).
-  Agents triage it; a maintainer decides whether it gets built.
+  Agents triage it and may build it.
 - **Sending a pull request?** Have your agent read [`CLAUDE.md`](CLAUDE.md)
-  first. A person merges every outside PR.
+  and [`guest-contributions.md`](docs/agents/guest-contributions.md) first.
+  A person merges every outside PR.
