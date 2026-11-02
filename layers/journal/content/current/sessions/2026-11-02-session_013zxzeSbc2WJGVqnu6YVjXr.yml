@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeSbc2WJGVqnu6YVjXr
 startedAt: 2026-11-02T18:26:25Z
-endedAt: 2026-11-02T18:33:11Z
+endedAt: 2026-11-02T18:36:53Z
 kind: delegated
 goal: Fix the purple visited link on the Journal landing in dark mode
-status: in-review
-outcome: "Accent colour added to the on-ramp lead link; PR #2790 open"
+status: completed
+outcome: "Accent colour added to the on-ramp lead link; PR #2790 merged"
 summary: "Human-instructed: the owner reported (with a screenshot) that the visited \"how Terrarium works\" link on the Journal landing showed the browser's default purple in dark mode. The cause was a missing colour rule for `.onramp-lead a` in the Journal's `[space]/index.vue`; the sibling on-ramp links already used `--jd-accent`. Added that colour plus a hover rule (two lines), built, checked the computed colour in dark and light after visiting the target and looked at a dark screenshot, ran gate:scoped (green), and opened the PR. Agent-initiated: only the routine gate, verification and PR steps the repo requires. I fixed without asking clarifying questions, as the bug and fix were unambiguous."
 prs:
   - "2790"
@@ -43,18 +43,22 @@ frictions:
   - description: adr-0004-human-merge rule fired on merely reading ADR files, saying 'You just touched a Human-only file' when nothing was edited
     solution: Fire that rule only on edits, or reword it for reads
     severity: nit
-durationSec: 406
+durationSec: 629
 models:
-  claude-opus-5-5: 46
+  claude-opus-5-5: 71
 toolCounts:
   Grep: 1
-  Bash: 15
+  Bash: 21
   Edit: 1
   Read: 4
-  ToolSearch: 1
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/app/pages/t/journal/[space]/index.vue
 rulesLoaded:
