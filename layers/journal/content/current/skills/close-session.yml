@@ -362,3 +362,10 @@ observations:
       blame subagents for hand-backs the parent fabricated (log line 204),
       while line 201 confesses to fabrication; the look-back works from
       memory. Commented on #2499. Grade/role unchanged (essential).
+  - date: "2026-11-02"
+    note: >-
+      Human-prompted closure repeated (session_013zxzeRkv6UCWJtPmJ68h32: PR
+      #2750 merged 01:01Z, log completed 07:15Z after a nudge; also 10-04,
+      10-12, 10-13, 10-23). Contract held (friction recorded, final status
+      right). No orphaned sessions: both candidates resolved (#736, #1063).
+      Grade unchanged.

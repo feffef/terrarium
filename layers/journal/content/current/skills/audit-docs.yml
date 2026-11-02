@@ -427,3 +427,9 @@ observations:
   - date: "2026-10-31"
     note: >-
       Behaviour check, 7 runs, PRs merged. Repeated, low severity: reviewers covered only part of the docs (session_013zxzeR94ZpyH5mhKXDH22Y, session_013zxzeS5X2KXN7xVdXxNmdN; earlier 10-04); step 1 has no coverage test. Unverified: 10-30 run did not read prune-trials.yml before dispatch; the checker caught the trial finding. Grade/role unchanged.
+  - date: "2026-11-02"
+    note: >-
+      Minor, no damage: 11-01 escalation PR #2758 skipped code-review for its
+      own read of a one-line diff (self-logged); reviewer coverage thin on
+      10-29/10-30 (fixed by #2726; the 11-01 Covered line is unverified).
+      session_01BgQzSd9CmFPiugdXAQh6HW (10-26) not checked.

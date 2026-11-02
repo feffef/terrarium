@@ -432,3 +432,12 @@ observations:
   - date: "2026-11-01"
     note: >-
       Behaviour check, 10 runs, all logs landed. ruleVerdicts incomplete again in 3 of 10 (session_013zxzeScPetuchKVyaP1PDZ: all 7 subagent-loaded rules; session_013zxzeRaFPYidUVPvEBA6NU; session_013zxzeStBRUtsbccz5kMYNU), after 1 of 10 on 10-30. Unverified whether --pending listed them. No new issue (#2645 is the fix). Grade/role unchanged (essential).
+  - date: "2026-11-02"
+    note: >-
+      Verified silent failure, fifth window: ruleVerdicts incomplete in 3 of 10
+      logs (session_013zxzeRkv6UCWJtPmJ68h32 7/18,
+      session_013zxzeSgWhesrfA7R1JBnhE 14/27, both subagent-loaded;
+      session_013zxzeSvdGhiM7SLEUgzvmF 1/29, guards.md, main session). All
+      started after #2645 and #2687; no friction logged. Rates 3,1,1,3,3 of 10.
+      Commented on #2607 (owner chose "make it visible", so may be accepted).
+      Grade unchanged.

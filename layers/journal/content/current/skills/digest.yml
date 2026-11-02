@@ -333,3 +333,9 @@ observations:
   - date: "2026-10-31"
     note: >-
       Behaviour check, 7 runs, all Digests on main. Unverified: session_013zxzePhRwXqYLtsycYUhqv (PR #2606) logged neither code-review nor a self-read for a 15-line page (#2472 family); its dropped step-5 sweep was disclosed and healed by #2653. Fact-check catches 2-4 wrong claims per run. Grade/role unchanged.
+  - date: "2026-11-02"
+    note: >-
+      session_013zxzePhRwXqYLtsycYUhqv (PR #2606) dropped the step-5 sweep
+      (disclosed, status partial) and records no code-review or self-read before
+      push (unverified; #2472 family). First draft carried wrong claims in 6 of
+      7 runs, all caught by the fact-check.
