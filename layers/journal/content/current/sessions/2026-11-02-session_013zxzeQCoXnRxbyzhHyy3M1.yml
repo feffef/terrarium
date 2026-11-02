@@ -1,0 +1,179 @@
+schemaVersion: 1
+session: session_013zxzeQCoXnRxbyzhHyy3M1
+startedAt: 2026-11-02T21:45:54Z
+endedAt: 2026-11-02T21:56:12Z
+kind: interactive
+goal: Rewrite the README as a brief newcomer entry point
+status: in-review
+outcome: "PR 2795 open: README links the Glass Box guide, Journal and Blog and adds a local quickstart"
+summary: 'The owner asked me to check the stale README and propose which live-site pages best introduce Terrarium. I proposed the Glass Box guide plus a couple of deep links and four questions; the owner answered (audience is both readers and contributors, add a clone-and-run quickstart that suggests chatting with an agent in the clone, keep the Blog link, no deep links into individual Lessons) and green-lit the other suggestions and a PR. Human-instructed: the whole rewrite and its shape. Agent-initiated: cutting "The idea"/"Status" as duplicates of the guide, fixing the "layers of isolation" wording (ADR-0018), and after code-review pointing the Node version and the deploy claim at package.json and deploy/README.md. I verified pnpm dev serves the three linked routes locally; gate:scoped passed. Kept "writers" over "Personas" for newcomer readability.'
+prs:
+  - "2795"
+docsRead:
+  - path: layers/glassbox/content/guide/pages/index.md
+    reason: the overview; became the README's main link
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: fetch before trusting history; commit hygiene; read after my first git log
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: simple-change threshold (over 10 lines so code-review plus gate) and merge recipe
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP for writes in the cloud; check-runs polling
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist for the two read-only reviewers; most lines were for impl agents
+    useful: partly
+  - path: layers/blog/GLOSSARY.md
+    reason: "subagents: confirmed Persona is the Blog term; flagged 'writers' as a judgement call"
+    useful: yes
+  - path: GLOSSARY.md
+    reason: "standards subagent: confirmed Persona and Observability terms"
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: "standards subagent: confirmed Lesson term"
+    useful: partly
+skillsUsed:
+  - name: code-review
+    reason: two-axis review of the README diff; found two drift-prone facts
+  - name: close-session
+    reason: PR-open log
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git log on README.md and git fetch to judge staleness before reading docs/agents/git-conventions.md, breaking CLAUDE.md's first-git-command rule
+    solution: Low impact here; a PreToolUse hint on the first log/fetch would catch it before the call rather than after
+    severity: minor
+durationSec: 618
+models:
+  claude-opus-5-5: 51
+toolCounts:
+  Bash: 16
+  Read: 1
+  Write: 1
+  Skill: 3
+  Agent: 2
+  Edit: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - README.md
+rulesLoaded:
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0018.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0011.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+docsReadBySubagents:
+  - layers/blog/GLOSSARY.md
+  - GLOSSARY.md
+  - layers/glassbox/GLOSSARY.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before the first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log at PR open via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed opening the PR and subscribing; the owner approved the work directly
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the PR body header line and commit trailer check
+    useful: yes
+  - path: .claude/rules/adr-0001.md
+    reason: Loaded on nuxt.config grep; build-time architecture didn't bear on a README edit
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Its paths confirmed README.md is not Human-only, so an agent may merge
+    useful: yes
+  - path: .claude/rules/adr-0018.md
+    reason: Backed removing 'layers of isolation' for Tenants/Spaces/Collections
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Navigation payload caching; irrelevant to README
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Layer coding rules; no layer code touched
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Loaded reading the guide; I didn't edit Glass Box pages
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pointed reviewers at Blog Persona term
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagrams involved
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement; not relevant to README
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: ADR writing style; I edited no ADR
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; nothing I changed was under trial
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded reading dispatch-subagents; Skill model not relevant
+    useful: no
+  - path: .claude/rules/adr-0011.md
+    reason: "Subagents: showed deploy switches only on a successful build, prompting the deploy/README pointer"
+    useful: yes
+  - path: .claude/rules/adr-0008.md
+    reason: "Subagents: loaded via glossaries; no bearing"
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: "Subagents: loaded via glossaries; no bearing"
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: "Subagents: backed the Persona-vs-writers judgement call"
+    useful: partly
+  - path: .claude/rules/adr-0002.md
+    reason: "Standards subagent: no help"
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: "Standards subagent: not relevant"
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: "Standards subagent: not relevant"
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of README
+    durationSec: 42
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 13.5
+  - type: general-purpose
+    task: Spec review of README
+    durationSec: 32
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 10
+gitBranch: claude/relaxed-hopper-1166f3
+entrypoint: remote
+cliVersion: 2.1.316
+landedBy: Stop
