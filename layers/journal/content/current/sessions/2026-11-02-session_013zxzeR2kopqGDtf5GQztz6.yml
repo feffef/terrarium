@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeR2kopqGDtf5GQztz6
 startedAt: 2026-11-02T07:41:12Z
-endedAt: 2026-11-02T19:47:57Z
+endedAt: 2026-11-02T20:03:15Z
 kind: interactive
 goal: Report the API cost and design fit of glassbox-improve sessions
 status: completed
-outcome: Costs and design fit of glassbox-improve runs reported; a dry run of six-lens sonnet raters compared with the 11-02 mixed-model run; no repo change
-summary: "The owner asked how API costs of glassbox-improve sessions developed. I first answered from session logs only, wrongly concluding no cost data exists; on the owner's pointer to inspect-session, get_session gave each session's list-price cost and result events the per-model split. On the owner's requests I then checked the v2 runs and the new 11-02 run (PR 2787) against the v2 design from logs and PR bodies, explained why A is elected rather than rated, and measured model agreement from grades.yml. The owner proposed rating by aspects instead of by model; together we settled six lenses in three pairs (like audit-docs), correctness as an always-fix issue, capped A per lens, weakest-lens-first selection and researcher confirmation. On the owner's instruction I ran a read-only dry run: three sonnet lens raters on the 11-02 base commit 4b7e40b, briefs drafted in this session (scratchpad lens-dryrun), and compared their grades with the 11-02 mixed-model grades; a second dry run with an adjusted brief (lens-dryrun/run2) measured consistency: 92% identical lens grades, about two thirds of below-B grades repeated, A sets stable only for Relevance. The owner then agreed the 3-step cap could go if churn is prevented, and that run state may move from the PR body to repo YAML plus scripts. On the owner's request I wrote all proposals and evidence into the scratchpad (glassbox-improve-v3-proposal.md), had a fable agent review it, verified its key factual corrections and fixed them in the document. The owner then had me relay a follow-up asking the reviewer for its own design, and approved its proposed first experiment: three blind sonnet judges compared the 6 pages PR 2787 edited, before and after (blind-ab/), and preferred the edited version 18 of 18 times. On the owner's go I ran a negative control (blind-ab/negctl/: 6 real, 3 deliberately worse, 2 neutral edits; 3 judges with the criterion named, 3 without), and added both results to the proposal document. The owner chose a hybrid design and decisions 1c, 2b, 3 and 5; I wrote glassbox-improve-v3-hybrid.md, ran a planted-claims experiment (sonnet and opus both found 5/5, no false alarms) and had the fable reviewer assess the hybrid and its cost (estimate about $30 vs $38.61). A second planted-claims round with page-consistent plants (plant2/) gave 5/5 and no false alarms for both a check-every and a spot-check sonnet brief. I also drafted the v3 YAML data shapes for owner sign-off (glassbox-improve-v3-data-shapes.md). Nothing was built, filed or committed; all work was human-instructed."
+outcome: Filed issue 2792 (glassbox-improve v3 spec with context and experiment evidence) and closed the superseded issue 2774; no repo change
+summary: "The owner asked how API costs of glassbox-improve sessions developed. I first answered from session logs only, wrongly concluding no cost data exists; on the owner's pointer to inspect-session, get_session gave each session's list-price cost and result events the per-model split. On the owner's requests I checked the v2 runs and the 11-02 run against the v2 design, explained the A election, and measured model agreement. The owner proposed rating by aspects; together we designed six lenses, and on the owner's instructions I ran read-only experiments: two lens dry runs, a fable review and a fable alternative design, a blind before/after comparison of the 11-02 edits (18/18), a negative control (criterion named: 9/9 bad edits rejected, 16/18 real kept), and two planted-false-claims rounds (sonnet and opus 5/5). The owner chose a hybrid design and decided each open point; I drafted data shapes the owner approved with changes. On the owner's instruction I filed issue 2792 (needs-triage) with context, evidence and spec, and closed issue 2774 as superseded. All work was human-instructed; nothing was built or committed besides this log."
 prs: []
 docsRead:
   - path: .claude/skills/inspect-session/SKILL.md
@@ -17,6 +17,12 @@ docsRead:
     useful: partly
   - path: docs/agents/github-integration.md
     reason: before PR reads; gh api REST works for bulk body reads
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "filing rules: verified vs assumed, background, labels"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: a filed proposal gets needs-triage, never ready-for-agent
     useful: yes
   - path: .agents/skills/glassbox-lesson/QUALITY.md
     reason: (no reason given)
@@ -64,8 +70,6 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/glassbox-improve/writer-brief.md
     reason: (no reason given)
-  - path: docs/agents/issue-tracker.md
-    reason: (no reason given)
   - path: docs/agents/pr-workflow.md
     reason: (no reason given)
   - path: .agents/skills/visitor-loop/SKILL.md
@@ -98,22 +102,27 @@ frictions:
   - description: Ran git fetch and git log before reading docs/agents/git-conventions.md, against CLAUDE.md's docs-first rule; no harm here as both were read-only lookups.
     solution: Read git-conventions.md before the first non-read-only git command, as the PostToolUse hint said.
     severity: nit
-durationSec: 43606
+  - description: Built the first planted-claims round with plants the page's own text contradicted, so it could not separate the models; the fable reviewer caught it and a second round was needed.
+    solution: When planting errors to test a checker, plant facts stated once that contradict nothing else on the page.
+    severity: minor
+durationSec: 44523
 models:
-  claude-opus-5-5: 297
+  claude-opus-5-5: 336
 toolCounts:
-  Bash: 84
+  Bash: 96
   Skill: 4
   mcp__claude-code-remote__get_session: 9
   mcp__claude-code-remote__list_events: 3
   AskUserQuestion: 2
-  ToolSearch: 2
+  ToolSearch: 4
   mcp__github__pull_request_read: 2
   mcp__claude-code-remote__list_sessions: 1
   Agent: 20
-  Write: 3
+  Write: 5
   Edit: 10
   SendMessage: 3
+  mcp__github__issue_write: 2
+  mcp__github__add_issue_comment: 1
 rulesLoaded:
   - .claude/rules/adr-0015.md
   - .claude/rules/tenant-glossary.md
@@ -126,6 +135,11 @@ rulesLoaded:
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0030.md
   - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0022.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -154,7 +168,6 @@ docsReadBySubagents:
   - .agents/skills/dependabot-sweep/SKILL.md
   - .agents/skills/glassbox-improve/researcher-brief.md
   - .agents/skills/glassbox-improve/writer-brief.md
-  - docs/agents/issue-tracker.md
   - docs/agents/pr-workflow.md
   - .agents/skills/visitor-loop/SKILL.md
   - .agents/skills/digest/SKILL.md
@@ -200,6 +213,30 @@ ruleVerdicts:
   - path: .claude/rules/adr-0005.md
     reason: Loaded on reading grades.yml; no Skill was changed
     useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded via a subagent's glossary reads; no glossary term was added
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded via ADR reads; no ADR was changed
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded on reading the Glass Box glossary; no term changed
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded on reading the Journal manifest for the Routine-costs precedent; no manifest edit
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Confirmed run data need not live in the Journal; summary was enough
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded with the Journal manifest; no new Collection was made
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded with the Journal manifest; no layer code touched
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded with triage-labels; confirmed only triage sets ready labels, so the issue got needs-triage
+    useful: partly
 subagents:
   - type: general-purpose
     task: "Lens rater 1: clarity+reasoning"
@@ -207,77 +244,77 @@ subagents:
     durationSec: 288
     toolCalls: 36
     modelCalls: 25
-    tokenShare: 5.7
+    tokenShare: 5.3
   - type: general-purpose
     task: "Lens rater 2: relevance+single home"
     model: sonnet
     durationSec: 258
     toolCalls: 33
     modelCalls: 27
-    tokenShare: 5.1
+    tokenShare: 4.7
   - type: general-purpose
     task: "Lens rater 3: evidence+transfer"
     model: sonnet
     durationSec: 264
     toolCalls: 84
     modelCalls: 18
-    tokenShare: 5
+    tokenShare: 4.6
   - type: general-purpose
     task: "Lens run 2: clarity+reasoning"
     model: sonnet
     durationSec: 204
     toolCalls: 68
     modelCalls: 12
-    tokenShare: 3.4
+    tokenShare: 3.1
   - type: general-purpose
     task: "Lens run 2: relevance+single home"
     model: sonnet
     durationSec: 279
     toolCalls: 27
     modelCalls: 23
-    tokenShare: 4
+    tokenShare: 3.7
   - type: general-purpose
     task: "Lens run 2: evidence+transfer"
     model: sonnet
     durationSec: 288
     toolCalls: 39
     modelCalls: 30
-    tokenShare: 5.7
+    tokenShare: 5.3
   - type: general-purpose
     task: Fable review of v3 proposal
     model: fable
     durationSec: 1756
     toolCalls: 25
     modelCalls: 25
-    tokenShare: 6.6
+    tokenShare: 6.1
   - type: general-purpose
     task: Blind judge 1
     model: sonnet
     durationSec: 46
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Blind judge 2
     model: sonnet
     durationSec: 46
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: Blind judge 3
     model: sonnet
     durationSec: 43
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Neg-control judge A1 (criterion)
     model: sonnet
     durationSec: 54
     toolCalls: 8
     modelCalls: 8
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: general-purpose
     task: Neg-control judge A2 (criterion)
     model: sonnet
@@ -298,14 +335,14 @@ subagents:
     durationSec: 44
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: general-purpose
     task: Neg-control judge B2 (overall)
     model: sonnet
     durationSec: 42
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: general-purpose
     task: Neg-control judge B3 (overall)
     model: sonnet
@@ -319,28 +356,28 @@ subagents:
     durationSec: 174
     toolCalls: 44
     modelCalls: 16
-    tokenShare: 3.3
+    tokenShare: 3
   - type: general-purpose
     task: Planted-claims rater (opus)
     model: opus
     durationSec: 180
     toolCalls: 53
     modelCalls: 28
-    tokenShare: 4.2
+    tokenShare: 3.9
   - type: general-purpose
     task: Plant2 sonnet, check-every brief
     model: sonnet
     durationSec: 271
     toolCalls: 60
     modelCalls: 30
-    tokenShare: 4.5
+    tokenShare: 4.2
   - type: general-purpose
     task: Plant2 sonnet, spot-check brief
     model: sonnet
     durationSec: 280
     toolCalls: 83
     modelCalls: 33
-    tokenShare: 4.5
+    tokenShare: 4.2
 gitBranch: claude/cool-galileo-0lqed0
 entrypoint: remote
 cliVersion: 2.1.316
