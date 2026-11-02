@@ -42,7 +42,8 @@ export interface PageRecord {
   read?: string
   checked?: string
   lenses: Partial<Record<Lens, LensRecord>>
-  edited?: { run: string; lenses: Lens[] }
+  /** Each lens's last edit, for the churn pause on gap edits. */
+  edited?: Partial<Record<Lens, string>>
 }
 
 export interface Step {
@@ -252,7 +253,11 @@ export function reportProblems(report: Report, plan: Plan): string[] {
     for (const lens of mine) if (!p.lenses?.[lens]) problems.push(`${r}: ${p.page} has no ${lens} grade`)
     if (r === 'C' && (!p.claims?.length || !p.docs)) problems.push(`${r}: ${p.page} has no claim check (claims and docs)`)
   }
-  for (const s of report.steps ?? []) if (!stepKinds.includes(s.kind)) problems.push(`${r}: step ${s.kind} is not one of ${stepKinds.join(', ')}`)
+  for (const s of report.steps ?? []) {
+    if (!stepKinds.includes(s.kind)) problems.push(`${r}: step ${s.kind} is not one of ${stepKinds.join(', ')}`)
+    // The churn guard finds a step's inverse by its direction (`inverse`).
+    else if (s.kind !== 'cut' && !s.into) problems.push(`${r}: step ${s.kind} of ${s.pages.join(', ')} has no into`)
+  }
   return problems
 }
 
@@ -297,7 +302,9 @@ const churnCutoff = (runs: RunEntry[]) => runs[churnRuns - 1]?.run ?? ''
 /** Whether `t` moves content back where `s` took it from. */
 export function inverse(s: Pick<Step, 'kind' | 'pages' | 'into'>, t: Pick<Step, 'kind' | 'pages' | 'into'>): boolean {
   const back = s.into !== undefined && t.into !== undefined && t.pages.includes(s.into) && s.pages.includes(t.into)
-  return back || (s.kind === 'cut' && t.into !== undefined && s.pages.includes(t.into)) || (t.kind === 'cut' && s.into !== undefined && t.pages.includes(s.into))
+  // A split of the page a step filled undoes it, whatever the split names its new page.
+  const refill = (a: typeof s, b: typeof s) => b.kind === 'split' && a.kind !== 'split' && a.into !== undefined && b.pages.includes(a.into)
+  return back || refill(s, t) || refill(t, s) || (s.kind === 'cut' && t.into !== undefined && s.pages.includes(t.into)) || (t.kind === 'cut' && s.into !== undefined && t.pages.includes(s.into))
 }
 
 const gradeRank: Record<Grade, number> = { D: 0, C: 1, B: 2, A: 3, 'n/a': 4 }
@@ -321,7 +328,7 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: 
           const edited = record.pages[p.page]?.edited
           const skipped = record.pages[g.exemplar]?.lenses[lens]?.grade !== 'A'
             ? `${g.exemplar} holds no A on ${lens}`
-            : edited && edited.lenses.includes(lens) && edited.run >= cutoff ? `edited on ${lens} within the last ${churnRuns} runs` : undefined
+            : edited?.[lens] && edited[lens]! >= cutoff ? `edited on ${lens} within the last ${churnRuns} runs` : undefined
           gaps.push({ page: p.page, kind: 'gap', lens, quote: g.section, exemplar: g.exemplar, fix: g.take, ...(skipped ? { skipped } : {}) })
         }
       }
@@ -341,6 +348,9 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: 
       if (!old) steps.push({ id, kind: raise.kind, pages: raise.pages, ...(raise.into ? { into: raise.into } : {}), raised: [run], status: 'pending', gist: raise.gist })
       else if (old.status !== 'taken') {
         if (!old.raised.includes(run)) old.raised.push(run)
+        // A researcher dropped it; only a new reason earns another (nextRecord forgets it after the churn window).
+        if (old.status === 'dropped' && raise.gist === old.gist) continue
+        old.gist = raise.gist
         old.status = 'pending'
         delete old.decided
       }
@@ -362,27 +372,38 @@ function plannedComparisons(record: GradeRecord, plan: Plan, reports: Report[], 
   // Raters never give A, so a holder keeps it here; only a confirmed deficit takes it (nextRecord).
   const gradeOf = (page: string, lens: Lens) => (record.pages[page]?.lenses[lens]?.grade === 'A' ? 'A' : grades[page]?.[lens] ?? record.pages[page]?.lenses[lens]?.grade)
   const lastWin = (page: string, lens: Lens) => record.pages[page]?.lenses[lens]?.wins?.at(-1) ?? ''
-  for (const lens of electedLenses) {
+  const queues = electedLenses.map((lens) => {
     // Rater C's shards each name a top 3 among their own pages: take them by rank, at most 3.
     const lists = reports.map((r) => r.top3?.[lens]?.slice(0, 3) ?? [])
     const top3 = [...new Set([0, 1, 2].flatMap((rank) => lists.flatMap((l) => (l[rank] ? [l[rank]] : []))))].slice(0, 3)
     const rematch = plan.read.filter((p) => pendingWins(record, p).includes(lens) && !top3.includes(p))
-    for (const candidate of [...rematch, ...top3]) {
-      const reported = reports.flatMap((r) => r.pages).find((p) => p.page === candidate && p.lenses[lens])?.lenses[lens]
-      if (record.pages[candidate]?.lenses[lens]?.grade === 'A' || reported?.grade !== 'B' || reported.findings?.length || reported.gaps?.length) continue
-      if (busy.has(candidate)) {
-        waiting.push(`${candidate} on ${lens}: it has work this run`)
-        continue
-      }
-      const subject = subjectOf(candidate)
-      const peers = plan.pages.filter((p) => p !== candidate && subjectOf(p) === subject)
-      const holders = peers.filter((p) => gradeOf(p, lens) === 'A').sort((a, b) => lastWin(b, lens).localeCompare(lastWin(a, lens)) || a.localeCompare(b)).slice(0, holdersCompared)
-      const fresh = peers.filter((p) => gradeOf(p, lens) === 'B').sort((a, b) => Number(top3.includes(b)) - Number(top3.includes(a)) || top3.indexOf(a) - top3.indexOf(b) || a.localeCompare(b)).slice(0, freshOpponents)
-      const against = holders.length ? holders : fresh
-      if (!holders.length && fresh.length < freshOpponents) waiting.push(`${candidate} on ${lens}: ${subject} has fewer than ${freshOpponents} other B pages`)
-      else if (comparisons.length + against.length > comparisonsPerRun) waiting.push(`${candidate} on ${lens}: no comparisons left this run`)
-      else for (const a of against) comparisons.push({ id: `a${comparisons.length + 1}`, lens, candidate, against: a, votes: [] })
+    return { lens, top3, candidates: [...rematch, ...top3] }
+  })
+  // Round-robin across lenses, so the cap never starves a late lens.
+  const order = Array.from({ length: Math.max(0, ...queues.map((q) => q.candidates.length)) }, (_, rank) => queues.flatMap((q) => (q.candidates[rank] ? [{ ...q, candidate: q.candidates[rank] }] : []))).flat()
+  for (const { lens, top3, candidate } of order) {
+    const reported = reports.flatMap((r) => r.pages).find((p) => p.page === candidate && p.lenses[lens])?.lenses[lens]
+    if (record.pages[candidate]?.lenses[lens]?.grade === 'A') continue
+    if (reported?.grade !== 'B') {
+      waiting.push(`${candidate} on ${lens}: graded ${reported?.grade ?? 'nothing'} this run, not B`)
+      continue
     }
+    if (reported.findings?.length || reported.gaps?.length) {
+      waiting.push(`${candidate} on ${lens}: it has a finding or gap on that lens`)
+      continue
+    }
+    if (busy.has(candidate)) {
+      waiting.push(`${candidate} on ${lens}: it has work this run`)
+      continue
+    }
+    const subject = subjectOf(candidate)
+    const peers = plan.pages.filter((p) => p !== candidate && subjectOf(p) === subject)
+    const holders = peers.filter((p) => gradeOf(p, lens) === 'A').sort((a, b) => lastWin(b, lens).localeCompare(lastWin(a, lens)) || a.localeCompare(b)).slice(0, holdersCompared)
+    const fresh = peers.filter((p) => gradeOf(p, lens) === 'B').sort((a, b) => Number(top3.includes(b)) - Number(top3.includes(a)) || top3.indexOf(a) - top3.indexOf(b) || a.localeCompare(b)).slice(0, freshOpponents)
+    const against = holders.length ? holders : fresh
+    if (!holders.length && fresh.length < freshOpponents) waiting.push(`${candidate} on ${lens}: ${subject} has fewer than ${freshOpponents} other B pages`)
+    else if (comparisons.length + against.length > comparisonsPerRun) waiting.push(`${candidate} on ${lens}: no comparisons left this run`)
+    else for (const a of against) comparisons.push({ id: `a${comparisons.length + 1}`, lens, candidate, against: a, votes: [] })
   }
   return { comparisons, waiting }
 }
@@ -405,16 +426,18 @@ export function decodeVerdict(verdict: string, challenger: 'X' | 'Y'): Vote {
 }
 
 const wins = (votes: Vote[]) => votes.filter((v) => v === 'win').length
+// A verdict read out of order leaves a hole in the array; count only the votes cast.
+const cast = (votes: Vote[]) => votes.filter(Boolean).length
 
 /** The blind gate: 2 wins of 3 merge; "equal" fails, which guards against churn. Undefined until all 3 voted. */
 export function gateMerged(votes: Vote[]): boolean | undefined {
-  return votes.length < 3 ? undefined : wins(votes) >= 2
+  return cast(votes) < 3 ? undefined : wins(votes) >= 2
 }
 
 /** One judge first; the other two only if the candidate wins (issue #2792). Undefined while judges are owed. */
 export function comparisonResult(votes: Vote[]): 'win' | 'loss' | undefined {
-  if (votes.length && votes[0] !== 'win') return 'loss'
-  return votes.length < 3 ? undefined : wins(votes) >= 2 ? 'win' : 'loss'
+  if (votes[0] && votes[0] !== 'win') return 'loss'
+  return cast(votes) < 3 ? undefined : wins(votes) >= 2 ? 'win' : 'loss'
 }
 
 /** The next `grades.yml`. A grade below B whose findings the researcher all dropped counts as B;
@@ -447,8 +470,8 @@ export function nextRecord(record: GradeRecord, plan: Plan, current: Record<stri
     }
     entry.lenses = Object.fromEntries(lenses.filter((l) => entry.lenses[l]).map((l) => [l, entry.lenses[l]]))
     const edited = result.items.filter((i) => i.page === page && i.edited)
-    if (edited.length) entry.edited = { run, lenses: [...new Set(edited.flatMap((i) => (i.lens ? [i.lens] : [])))] }
-    else if (old?.edited) entry.edited = old.edited
+    const editedLenses = { ...old?.edited, ...Object.fromEntries(edited.flatMap((i) => (i.lens ? [[i.lens, run]] : []))) }
+    if (Object.keys(editedLenses).length) entry.edited = editedLenses
     pages[page] = entry
   }
   const cutoff = churnCutoff([{ run } as RunEntry, ...runs])
@@ -680,7 +703,19 @@ function writeJudge(out: string, judge: string, question: string, challenger: st
   return path
 }
 
-const comparisonQuestion = (c: Comparison) => `X and Y are two different pages of one Subject of the guide. Which is better on the ${c.lens} lens (QUALITY.md, Lenses)? Judge them on that lens alone, never on which topic matters more.`
+/** A lens's definition, from its bullet under QUALITY.md's Lenses: judges get it inline,
+ *  since #2792's control showed a named criterion is what lets them reject a worse edit. */
+export function lensDefinition(quality: string, lens: Lens): string {
+  const name = lens[0]!.toUpperCase() + lens.slice(1)
+  const bullet = quality.match(new RegExp(`^- \\*\\*${name}\\.?\\*\\*[^\\n]*(?:\\n  [^\\n]*)*`, 'm'))?.[0]
+  if (!bullet) throw new Error(`QUALITY.md has no Lenses bullet for ${name}`)
+  return bullet.replace(/^- /, '').replace(/\s*\n\s*/g, ' ')
+}
+
+const comparisonQuestion = (base: string, c: Comparison) => {
+  const quality = showAt(base, '.agents/skills/glassbox-lesson/QUALITY.md') ?? fail('no QUALITY.md at the base')
+  return `X and Y are two different pages of one Subject of the guide. Which is better on this lens: ${lensDefinition(quality, c.lens)} Judge them on that lens alone, never on which topic matters more.`
+}
 
 const runsAt = (base: string) => ((parseYaml(showAt(base, runsPath) ?? '') as { runs?: RunEntry[] } | null)?.runs ?? [])
 
@@ -713,12 +748,12 @@ function votes(out: string, handbacks: string[]) {
   for (const c of state.comparisons) {
     const result = comparisonResult(c.votes)
     if (result) c.result = result
-    else if (c.votes.length === 1) for (const j of [2, 3]) briefs.push(writeJudge(out, `${c.id}-${j}`, comparisonQuestion(c), pageText(c.candidate), pageText(c.against)))
+    else if (c.votes.length === 1) for (const j of [2, 3]) briefs.push(writeJudge(out, `${c.id}-${j}`, comparisonQuestion(state.base, c), pageText(c.candidate), pageText(c.against)))
   }
   writeYaml(statePath(out), state)
   console.log([
-    ...state.gate.map((g) => `gate ${g.page}: ${g.votes.join(', ') || 'no votes'} → ${g.merged === undefined ? 'judges owed' : g.merged ? 'merge' : 'fail'}`),
-    ...state.comparisons.filter((c) => c.votes.length).map((c) => `${c.id} ${c.lens} ${c.candidate} vs ${c.against}: ${c.votes.join(', ')} → ${c.result ?? 'judges 2 and 3 owed'}`),
+    ...state.gate.map((g) => `gate ${g.page}: ${g.votes.filter(Boolean).join(', ') || 'no votes'} → ${g.merged === undefined ? 'judges owed' : g.merged ? 'merge' : 'fail'}`),
+    ...state.comparisons.filter((c) => c.votes.length).map((c) => `${c.id} ${c.lens} ${c.candidate} vs ${c.against}: ${c.votes.filter(Boolean).join(', ')} → ${c.result ?? 'judges 2 and 3 owed'}`),
     ...(briefs.length ? ['', 'Judges now owed:', ...briefs.map((b) => `- ${b}`)] : []),
   ].join('\n'))
 }
@@ -802,7 +837,7 @@ runIfMain(import.meta.url, () => {
     const state: RunState = { base: sha, run, plan: thePlan, ...result, gate: [] }
     writeYaml(statePath(out), state)
     const pageText = (p: string) => showAt(sha, `${pagesDir('guide')}/${p}.md`) ?? ''
-    const briefs = result.comparisons.map((c) => writeJudge(out, `${c.id}-1`, comparisonQuestion(c), pageText(c.candidate), pageText(c.against)))
+    const briefs = result.comparisons.map((c) => writeJudge(out, `${c.id}-1`, comparisonQuestion(sha, c), pageText(c.candidate), pageText(c.against)))
     console.log(summary(state))
     console.log(['', `## First A judges' briefs (one sonnet judge each)`, '', ...(briefs.length ? briefs.map((b) => `- ${b}`) : ['- none'])].join('\n'))
     return

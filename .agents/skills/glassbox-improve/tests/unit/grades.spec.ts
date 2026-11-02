@@ -2,7 +2,7 @@
 // the blind comparisons, the next record and the drafts report. The git shell runs in the Skill.
 import { describe, expect, it } from 'vitest'
 import type { GlassboxGit } from '../../../../../layers/glassbox/page-checks.ts'
-import { blindPair, claimShards, judgeBrief, raterBrief, comparisonResult, coverageProblems, decodeVerdict, draftsReport, gateMerged, nextRecord, pageHash, parseReport, runEntry, planPages, readRecord, reportProblems, sourcesHash, tally, trimPage, type GradeRecord, type PageRecord, type Plan, type Report, type RunEntry, type Step, type Tally } from '../../scripts/grades.ts'
+import { blindPair, claimShards, judgeBrief, lensDefinition, raterBrief, comparisonResult, coverageProblems, decodeVerdict, draftsReport, gateMerged, nextRecord, pageHash, parseReport, runEntry, planPages, readRecord, reportProblems, sourcesHash, tally, trimPage, type GradeRecord, type PageRecord, type Plan, type Report, type RunEntry, type Step, type Tally, type Vote } from '../../scripts/grades.ts'
 
 const page = '---\ntitle: Hooks\nrevision: abc\nrevisionDate: 2026-10-01\n---\nBody\n::excerpt{path="a.ts" lines="3-5"}\n'
 
@@ -169,6 +169,11 @@ describe('reports', () => {
   it('rejects a step of an unknown kind', () => {
     expect(reportProblems({ ...good, steps: [{ kind: 'recut' as never, pages: ['a/01.x'], gist: 'g' }] }, plan)).toEqual(['A: step recut is not one of merge, split, move, cut, promote, lesson, section'])
   })
+
+  it('needs every step but a cut to say where its content goes, so the churn guard can see its inverse', () => {
+    const steps: Report['steps'] = [{ kind: 'split', pages: ['a/01.x'], gist: 'g' }, { kind: 'cut', pages: ['a/02.y'], gist: 'g' }]
+    expect(reportProblems({ ...good, steps }, plan)).toEqual(['A: step split of a/01.x has no into'])
+  })
 })
 
 describe('tally', () => {
@@ -204,11 +209,11 @@ describe('tally', () => {
     })
     const runs = ['2026-11-04', '2026-11-03', '2026-11-02', '2026-11-01', '2026-10-31'].map((d) => run(d))
     const held = record({
-      'a/01.p': { hash: 'h', sources: 's', lenses: {}, edited: { run: '2026-10-31', lenses: ['reasoning'] } },
+      'a/01.p': { hash: 'h', sources: 's', lenses: {}, edited: { reasoning: '2026-10-31', clarity: '2026-10-20' } },
       'a/04.p': { hash: 'h', sources: 's', lenses: { reasoning: { grade: 'A', run: '2026-11-02' } } },
     })
     expect(tally(held, plan, [a], runs, {}, today).items.map((i) => i.skipped)).toEqual(['a/03.p holds no A on clarity', 'edited on reasoning within the last 5 runs'])
-    held.pages['a/01.p']!.edited!.run = '2026-10-30'
+    held.pages['a/01.p']!.edited!.reasoning = '2026-10-30'
     expect(tally(held, plan, [a], runs, {}, today).items.map((i) => i.skipped)).toEqual(['a/03.p holds no A on clarity', undefined])
   })
 
@@ -225,6 +230,20 @@ describe('tally', () => {
       ['split-p-into-p', 'refused', [today]],
       ['cut-p', 'pending', [today]],
     ])
+  })
+
+  it('keeps a dropped step dropped when raised again with the same gist; nextRecord prunes it after 5 runs', () => {
+    const dropped: Step = { id: 'cut-p', kind: 'cut', pages: ['a/04.p'], raised: ['2026-11-02'], status: 'dropped', decided: '2026-11-02', gist: 'g' }
+    const b: Report = { rater: 'B', pages: [], steps: [{ kind: 'cut', pages: ['a/04.p'], gist: 'g' }] }
+    expect(tally(record({}, [dropped]), plan, [b], [run('2026-11-02')], {}, today).steps.map((s) => [s.status, s.raised])).toEqual([['dropped', ['2026-11-02', today]]])
+    const registed = { ...b, steps: [{ kind: 'cut' as const, pages: ['a/04.p'], gist: 'a new reason' }] }
+    expect(tally(record({}, [dropped]), plan, [registed], [run('2026-11-02')], {}, today).steps.map((s) => [s.status, s.gist])).toEqual([['pending', 'a new reason']])
+  })
+
+  it('refuses splitting a page a recent step moved content into, whatever the new page is named', () => {
+    const merged: Step = { id: 'merge-02-into-03', kind: 'merge', pages: ['a/02.p'], into: 'a/03.p', raised: ['2026-11-01'], status: 'taken', decided: '2026-11-02', gist: 'g' }
+    const b: Report = { rater: 'B', pages: [], steps: [{ kind: 'split', pages: ['a/03.p'], into: 'a/09.timestamps', gist: 'g' }] }
+    expect(tally(record({}, [merged]), plan, [b], [run('2026-11-02')], {}, today).steps.map((s) => s.status)).toEqual(['taken', 'refused'])
   })
 
   it('compares each top-3 candidate with the Subject\'s 3 most recent A holders on that lens', () => {
@@ -261,6 +280,22 @@ describe('tally', () => {
     expect([...new Set(result.comparisons.map((c) => c.candidate))]).toEqual(['a/01.p', 'a/04.p', 'a/02.p'])
   })
 
+  it('says why a top-3 page with a gap on that lens is not compared', () => {
+    const a = reportA({ 'a/01.p': { clarity: { grade: 'B', gaps: [{ section: 'Lede', exemplar: 'a/02.p', take: 't' }] }, reasoning: { grade: 'B' } }, 'a/02.p': allB, 'a/03.p': allB, 'a/04.p': allB, 'b/01.p': allB }, { clarity: ['a/01.p'] })
+    expect(tally(record(), plan, [a], [], {}, today).waiting).toEqual(['a/01.p on clarity: it has a finding or gap on that lens'])
+    const c = reportA({ 'a/01.p': { clarity: { grade: 'C', findings: [{ quote: 'q', fix: 'f' }] }, reasoning: { grade: 'B' } }, 'a/02.p': allB, 'a/03.p': allB, 'a/04.p': allB, 'b/01.p': allB })
+    const won = record({ 'a/01.p': { hash: 'h', sources: 's', lenses: { clarity: { grade: 'B', run: '2026-11-02', wins: ['2026-11-02'] } } } })
+    expect(tally(won, plan, [c], [], {}, today).waiting).toEqual(['a/01.p on clarity: graded C this run, not B'])
+  })
+
+  it('shares the 10 comparisons across lenses, best-ranked first', () => {
+    const pages = Object.fromEntries(Array.from({ length: 8 }, (_, i) => [`a/0${i}.p`, allB]))
+    const wide: Plan = { ...plan, pages: Object.keys(pages), read: Object.keys(pages) }
+    const a = reportA(pages, { clarity: ['a/00.p', 'a/01.p', 'a/02.p'], reasoning: ['a/03.p', 'a/04.p', 'a/05.p'] })
+    const result = tally(record(), wide, [a], [], {}, today)
+    expect([...new Set(result.comparisons.map((c) => `${c.lens} ${c.candidate}`))]).toEqual(['clarity a/00.p', 'reasoning a/03.p', 'clarity a/01.p', 'reasoning a/04.p', 'clarity a/02.p'])
+  })
+
   it('stops at 10 comparisons a run', () => {
     const pages = Object.fromEntries(Array.from({ length: 8 }, (_, i) => [`a/0${i}.p`, allB]))
     const wide: Plan = { ...plan, pages: Object.keys(pages), read: Object.keys(pages) }
@@ -283,6 +318,11 @@ describe('blind comparisons', () => {
     expect(gateMerged(['win', 'win', 'loss'])).toBe(true)
     expect(gateMerged(['win', 'equal', 'equal'])).toBe(false)
     expect(gateMerged(['win', 'win'])).toBeUndefined()
+    // Judge 3's verdict read before judge 2's leaves a hole, not a third vote.
+    const hole: Vote[] = []
+    hole[0] = 'win'
+    hole[2] = 'win'
+    expect(gateMerged(hole)).toBeUndefined()
   })
 
   it('decides an A comparison on its first judge\'s loss, else on 2 wins of 3', () => {
@@ -290,6 +330,10 @@ describe('blind comparisons', () => {
     expect(comparisonResult(['win'])).toBeUndefined()
     expect(comparisonResult(['win', 'loss', 'win'])).toBe('win')
     expect(comparisonResult(['win', 'loss', 'equal'])).toBe('loss')
+    const hole: Vote[] = []
+    hole[0] = 'win'
+    hole[2] = 'loss'
+    expect(comparisonResult(hole)).toBeUndefined()
   })
 })
 
@@ -329,8 +373,13 @@ describe('nextRecord and runEntry', () => {
     const next = nextRecord(old, plan, current, result, runs, today)
     expect(next.run).toBe(today)
     expect(next.pages['a/01.p']).toEqual({ hash: 'h1', sources: 's1', read: today, checked: today, lenses: { clarity: { grade: 'A', run: '2026-10-20', wins: ['2026-10-15', '2026-10-20'] }, reasoning: { grade: 'A', run: today, wins: ['2026-11-02', today] } } })
-    expect(next.pages['a/02.p']).toEqual({ hash: 'h2', sources: 's2', read: today, checked: today, lenses: { clarity: { grade: 'D', run: today }, reasoning: { grade: 'B', run: today } }, edited: { run: today, lenses: ['clarity'] } })
+    expect(next.pages['a/02.p']).toEqual({ hash: 'h2', sources: 's2', read: today, checked: today, lenses: { clarity: { grade: 'D', run: today }, reasoning: { grade: 'B', run: today } }, edited: { clarity: today } })
     expect(next.pages['a/03.p']).toEqual(old.pages['a/03.p'])
+  })
+
+  it('keeps each lens\'s last edit, so an edit on another lens leaves its pause', () => {
+    const before = { ...old, pages: { ...old.pages, 'a/02.p': { hash: 'h', sources: 's', lenses: {}, edited: { reasoning: '2026-11-02', clarity: '2026-10-01' } } } }
+    expect(nextRecord(before, plan, current, result, runs, today).pages['a/02.p']!.edited).toEqual({ reasoning: '2026-11-02', clarity: today })
   })
 
   it('takes A only through a confirmed deficit, and keeps a lone win only from the run before', () => {
@@ -374,6 +423,13 @@ describe('briefs', () => {
   it('keeps only the sections marked for the rater, and its lenses', () => {
     expect(raterBrief(template, 'A', {}, fill)).toBe('Rater A on clarity, reasoning; held: clarity: a/02.y.\nPages:\n- layers/glassbox/content/guide/pages/a/01.x.md\nEnd.\n')
     expect(raterBrief(template, 'B', { relevance: 'first v3 run' }, fill)).toMatch(/^Rater B on placement, relevance; held: none yet\.\nAll of t\.md\. This run you also grade \*\*Relevance\*\* \(first v3 run\)/)
+  })
+
+  it('takes a lens\'s definition from its QUALITY.md bullet, for the judge to read inline', () => {
+    const quality = '## Lenses\n\n- **Clarity.** A newcomer can follow the page: its\n  order and plain words.\n- **Placement** (single home). One concept per page.\n\nCorrectness is not a lens.\n'
+    expect(lensDefinition(quality, 'clarity')).toBe('**Clarity.** A newcomer can follow the page: its order and plain words.')
+    expect(lensDefinition(quality, 'placement')).toBe('**Placement** (single home). One concept per page.')
+    expect(() => lensDefinition(quality, 'transfer')).toThrow('QUALITY.md has no Lenses bullet for Transfer')
   })
 
   it('fences each version so a page\'s own code fences stay inside it', () => {

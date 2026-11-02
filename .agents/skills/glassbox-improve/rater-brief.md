@@ -31,8 +31,9 @@ Besides grades, raise **steps**: a page that should merge into another or
 become a section of it (`merge`, `section`), split (`split`), lose facts to
 another (`move`) or be cut (`cut`), a draft to promote (`promote`), and a
 concept Terrarium relies on that no Lesson teaches (`lesson`). Each step names
-its `pages` and, when it moves content, where it goes (`into`); a `lesson` or
-`promote` names the new guide path as `into`. {RELEVANCE}
+its `pages` and where their content goes (`into`): the page a merge, move or
+section fills, the new page a split, `lesson` or `promote` creates. Only a
+`cut` has no `into`. {RELEVANCE}
 <!-- /rater -->
 <!-- rater C -->
 **The claim check is your main task.** On each page, check every concrete
