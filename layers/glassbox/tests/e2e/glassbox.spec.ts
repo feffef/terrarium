@@ -16,6 +16,6 @@ describe('glassbox Tenant', async () => {
   it('serves the guide landing as the overview with the sidebar', async () => {
     const html = await $fetch<string>('/t/glassbox/guide')
     expect(html).toContain('id="gb-nav"')
-    expect(html).toContain('How an agent session works')
+    expect(html).toContain('How a change happens')
   })
 })
