@@ -13,19 +13,19 @@ Almost every line of Terrarium's code and content is written by Claude Code :ter
 
 Everything lives in one GitHub repository: the website's code and content, the guidance the agents work from, and an honest log written by every session. A server rebuilds the website whenever that repository changes. Because the logs are site content too, the website shows, in public, how it is being built.
 
-One idea runs through the design: **decide it at build time**. Every site, page and setting is declared in a file in the repository and compiled before the first visitor arrives. Nothing is created or edited while the site runs, so everything that ships shows up in a diff a reviewer can read.
+One idea runs through the design: **decide it at build time**. Every site, page and setting is declared in a file in the repository and compiled before the first visitor arrives. Nothing is created or edited while the site runs, so everything that ships shows up in a diff a reviewer can read. The one exception is the server itself, which rebuilds the site when the repository changes.
 
 ## Where things live
 
 - **People.** The maintainer, who owns the repository, and visitors, who are everyone else.
-- **Claude.** The agents. A :term[Routine] is a session started on a timer; the maintainer starts the others from claude.ai/code or from Claude Code on a laptop. All are the same thing underneath: a Claude Code session working on its own copy of the repository.
+- **Claude.** The agents. A :term[Routine] is a timer that starts a session to run one Skill; the maintainer starts other sessions from claude.ai/code or from Claude Code on a laptop. All are the same thing underneath: a Claude Code session working on its own copy of the repository.
 - **GitHub.** The repository, its issues and pull requests, and CI, the checks that run on every pull request.
 - **The server.** One container that watches the repository, builds the website and serves it.
 - **The browser.** It shows the pages and takes over navigation after the first one.
 
 ## What the repository holds
 
-**Guidance for agents.** `CLAUDE.md` is the one file every session reads first ([CLAUDE.md](/t/glassbox/guide/claude-code/claude-md)). :term[Rules]{id="rule"} load only with the files they are about ([Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules)). Decision records say why things are the way they are ([Decision records](/t/glassbox/guide/terrarium-practice/adrs)). :term[Skills]{id="skill"} are step-by-step playbooks for one kind of task ([Claude Code Skills](/t/glassbox/guide/claude-code/skills)); some are installed from elsewhere and kept unchanged ([Installed Skills](/t/glassbox/guide/skill-pack/skill-packs)). Hooks run at fixed points around a session, and some refuse a wrong action and say what to do instead ([Claude Code hooks](/t/glassbox/guide/claude-code/hooks), [Blocking hooks](/t/glassbox/guide/claude-code/blocking-hooks)). A shared glossary keeps the words exact ([Ubiquitous language](/t/glassbox/guide/terrarium-practice/ubiquitous-language)).
+**Guidance for agents.** `CLAUDE.md` is the one file every session reads first ([CLAUDE.md](/t/glassbox/guide/claude-code/claude-md)). Most :term[rules]{id="rule"} load only with the files they are about ([Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules)). Decision records say why things are the way they are ([Decision records](/t/glassbox/guide/terrarium-practice/adrs)). :term[Skills]{id="skill"} are step-by-step playbooks for one kind of task ([Claude Code Skills](/t/glassbox/guide/claude-code/skills)); some are installed from elsewhere and kept unchanged ([Installed Skills](/t/glassbox/guide/skill-pack/skill-packs)). Hooks run at fixed points around a session, and some refuse a wrong action and say what to do instead ([Claude Code hooks](/t/glassbox/guide/claude-code/hooks), [Blocking hooks](/t/glassbox/guide/claude-code/blocking-hooks)). A shared glossary keeps the words exact ([Ubiquitous language](/t/glassbox/guide/terrarium-practice/ubiquitous-language)).
 
 **The app.** One Nuxt application serves every site. Each site is a :term[Tenant] with its own pages, components and design, kept in a folder of its own ([Nuxt layers](/t/glassbox/guide/nuxt-vue/layers)).
 
