@@ -1,0 +1,169 @@
+schemaVersion: 1
+session: session_013zxzeRynjgY3G22uZYaKCk
+startedAt: 2026-11-02T13:11:46Z
+endedAt: 2026-11-02T13:24:11Z
+kind: autonomous
+goal: Scheduled prune trial of the Platform's agent instructions
+status: in-review
+outcome: "One trial judged and deleted, one restating bullet pruned as a new trial; PR #2785 open, not merged"
+summary: 'Scheduled /prune-trial run, agent-initiated; no human instruction beyond the stored prompt. Judged the blog-post fact-check trial: no major or blocker Friction traces to it, so the prune holds; the drafts-caught-by-fact-check share rose 7/164 to 5/20, which section 1 treats as a clear rise, so I filed #2784 (my first draft reasoned the rise away; the Spec reviewer caught that before the push). Search subagent found relayed-subagent-claims as the best failed-prose problem; I deleted the dispatch-subagents "candidate material" bullet, a pure restatement of CLAUDE.md "Verify before you state". Sonnet probe at the pinned SHA cited the CLAUDE.md rule correctly. Code-review, gate:scoped green, PR #2785 opened and subscribed. Open: merge after CI; the other two trials are not judgeable until 2026-11-03 and 11-04.'
+prs:
+  - "2785"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command; nothing in it changed the route
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push order and the simple-change test; showed the cut was not simple
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: guard-required read before the briefs; also the file I pruned
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "Filing an issue guidance for #2784"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: confirmed needs-triage is the label for a Skill's issue
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before the first GitHub write; MCP write advice applied
+    useful: partly
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: Spec reviewer's source; its section 1 exposed my skipped issue duty
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: Standards reviewer checked the cut against it
+    useful: partly
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: only matched a grep in the search subagent
+    useful: no
+  - path: .agents/prune-trials.yml
+    reason: (read before editing)
+  - path: CLAUDE.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the scheduled task itself
+  - name: dispatch-subagents
+    reason: read before briefing the search, probe and review agents
+  - name: code-review
+    reason: required before the first push; found the missing issue
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Stop hook asked five times to push while the probe, reviews and gate were pending; ADR-0004 says wait, so each turn needed a refusal.
+    solution: Let the Stop hook stay quiet while a pending ADR-0004 review or background gate exists.
+    severity: nit
+  - description: My first ledger entry reasoned away a clear share rise instead of filing the issue prune-trial section 1 requires; the Spec reviewer caught it before the push.
+    solution: Treat a clear share rise as file-an-issue whatever my causal theory says; section 1 could put that sentence first.
+    severity: nit
+  - description: "extract-frictions counted 28 sessions in the window but friction-rates counted 20; I could not reconcile them and said so in #2784."
+    solution: Have friction-rates print how it picks the sessions it counts.
+    severity: nit
+durationSec: 745
+models:
+  claude-sonnet-5-5: 66
+toolCounts:
+  Bash: 18
+  Read: 6
+  Agent: 4
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__issue_write: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - .agents/skills/dispatch-subagents/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0022.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - .agents/skills/glassbox-improve/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to review and gate before pushing despite the Stop hook; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to run close-session and keep logs off the branch; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR and subscribe, and that a scheduled run changes only what its Skill allows.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Told me to start issue and PR bodies with the session header; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Confirmed a clear rise keeps the cut and files an issue, and trial territory is off limits.
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; this run changed no rule placement.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR rewrites; I touched no ADR.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded by a Bash read of a journal file; no Tenant work happened.
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill placement; the Skill edit was a one-bullet cut, so it was not needed.
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: About the triage sweep; unrelated to this run.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: A search subagent loaded it; it reported it had no bearing on a read-only search.
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: A search subagent loaded it; it reported no bearing on a read-only search.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Search for failed prose rules
+    model: sonnet
+    durationSec: 115
+    toolCalls: 12
+    modelCalls: 8
+    tokenShare: 15.3
+  - type: general-purpose
+    task: Sonnet probe of pruned rule
+    model: sonnet
+    durationSec: 12
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Standards review of prune diff
+    model: sonnet
+    durationSec: 25
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 5.8
+  - type: general-purpose
+    task: Spec review of prune diff
+    model: sonnet
+    durationSec: 52
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 6.6
+gitBranch: claude/practical-rubin-pzcmvk
+entrypoint: remote_trigger
+cliVersion: 2.1.316
+trigger: prune-trial
+landedBy: Stop
