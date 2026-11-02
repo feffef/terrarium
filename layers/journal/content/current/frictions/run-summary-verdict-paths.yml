@@ -2,7 +2,11 @@ name: run-summary-verdict-paths
 surface: safe
 summary: The run summary script printed rule paths in a form the session-log author step refused, so the agent normalised them by hand.
 cause: "run-summary.ts --verdicts emits subagent rule paths as absolute /home/user/terrarium/.claude/rules/... paths (and once a comma-joined list), which log-session --author refuses; the session filters or rewrites them by hand. Signals: 'run-summary.ts --verdicts', 'absolute paths', 'log-session --author refused'."
-status: tracked
+status: open
+fixes:
+  - pr: 2776
+    date: "2026-11-02"
+    summary: "run-summary.ts --verdicts splits comma-joined paths, strips worktree prefixes and cuts absolute paths to repo-relative."
 occurrences:
   - session: session_013zxzeStBRUtsbccz5kMYNU
     date: "2026-10-31"
