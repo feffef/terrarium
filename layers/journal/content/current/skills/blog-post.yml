@@ -414,3 +414,10 @@ observations:
   - date: "2026-11-01"
     note: >-
       Behaviour check, 7 runs, 11 PRs merged. #2370 instance in #2680 (session_013zxzeQPnKXDNxriCwJfZnz) predates the blob rule; the rule held for #2715, #2741, #2742. Dispatch-read guard blocked the first Agent call (session_013zxzeRaFPYidUVPvEBA6NU); filed #2749. Grade/role unchanged (routine).
+  - date: "2026-11-02"
+    note: >-
+      Unverified, minor: step 9 tally was invented or missing in PR bodies
+      (session_013zxzeQV6Jcqg4jYk2tkwBq 10-27 "54" vs 49;
+      session_013zxzeQFGrFi821yVm6n746 11-01), disclosed both times.
+      Dispatch-read guard blocked the first Agent call in 6 of 7 runs; d1d302476
+      now names dispatch-subagents in step 6, untested.

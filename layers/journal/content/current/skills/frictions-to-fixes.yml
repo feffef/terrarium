@@ -358,3 +358,11 @@ observations:
   - date: "2026-11-01"
     note: >-
       Behaviour check, 10 runs, all PRs merged. Top-three regression rule overridden in session_013zxzeRnPtjPsVQM71SzX63, session_013zxzePnfDGz3F3p9spej9f, session_013zxzeSiq7TZmfmF5D5Rbwt; #2724 was closed by #2735 on 10-31, so later runs show whether it holds. Grade/role unchanged (routine).
+  - date: "2026-11-02"
+    note: >-
+      Verified silent failure, repeated: the §2 top-three regression rule is
+      overridden by every run since 10-24; session_013zxzeNxm9jTD6DwkDXzzG8
+      (11-01), the only run after #2735, still skipped two entries whose use
+      case was removed. #2735 changed scripts, not §2. Commented on #2724.
+      Closed: #2691 (session_013zxzeRnPtjPsVQM71SzX63) not seen again. Grade
+      unchanged.

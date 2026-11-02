@@ -192,3 +192,9 @@ observations:
   - date: "2026-10-31"
     note: >-
       Behaviour check, 10 runs. Verified from logs: close-session re-invoke at §4 replaced by a direct log-session call (session_013zxzeSgD6cuF2mawqY6jWM, session_013zxzeTK9c2HVcabwCx3b18); fix landed in #2707. Hand fixes pushed without re-gate (session_01PdrNTJLJJMKBGGZfsAhL6w, session_013zxzeTK9c2HVcabwCx3b18), CI still gated. Grade/role unchanged.
+  - date: "2026-11-02"
+    note: >-
+      No new failure, 8 runs. Open points: §1 has no "read dispatch-subagents
+      first" line (guard blocked the first Agent call in
+      session_013zxzeTLLY3FmiXzuBKgc2o); stranded worktrees at close in that
+      run; hand edits after the review cap not re-gated (10-30, 10-31).
