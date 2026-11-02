@@ -1,0 +1,198 @@
+schemaVersion: 1
+session: session_013zxzeRwpRf2gj4m4keF6bn
+startedAt: 2026-11-02T19:11:05Z
+endedAt: 2026-11-02T19:41:49Z
+kind: interactive
+goal: Make the Glass Box overview's links tell readers where they lead
+status: in-review
+outcome: "PR 2791 open: Lesson links move into chip rows, file links get ↗, ::stop-links renamed :lessons"
+summary: "Human-instructed throughout. The owner said the Glass Box guide overview mixed glossary terms, GitHub file links and Lesson links that looked alike, and proposed putting Lesson links at the end of a paragraph, as Walkthrough stops do. I asked four questions first (placement, file markers, links that are a sentence's subject, scope), then prototyped on three sections and sent screenshots. The owner asked for a design with one or more chips per bullet. I built a row under each bullet; the owner asked whether it had to be on a new line, so I built an inline version that continues on the last line and wraps one chip at a time. The owner accepted it, confirmed ↗ for file links and Walkthrough labels, and asked to rename the directive in this PR (::stop-links became :lessons). Agent-initiated within that scope: a page-checks rule that the guide overview links pages only through chips, a fix to the link-title regex (the rename exposed it), reusing glassboxLinkLabel so Journal chips get a label too, and the glossary line. The two-axis code review found a WHAT comment, a duplicated label branch, an unchipped lede, a stray count that read code, and three sentences that lost meaning; I fixed all of them. Still open: the owner hasn't said whether ↗ should appear on every Glass Box page or only the overview, and inline chips assume tight lists."
+prs:
+  - "2791"
+docsRead:
+  - path: docs/agents/verifying-ui-changes.md
+    reason: preview.ts shot/review usage and that only rendered screenshots count
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit -F for messages with backticks; fetch before diffing
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: commit, code-review, then gate:scoped before the first push
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Walkthrough stop contract and the overview entry I extended
+    useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: confirmed a product decision belongs in the Tenant glossary
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: write through MCP; no PR template caveats
+    useful: partly
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: checked whether CSS-only rendering counts as untested behaviour; it is not listed
+    useful: yes
+  - path: docs/agents/mdc-when-to-use.md
+    reason: "Standards subagent: the in-prose chips meet its checklist"
+    useful: partly
+  - path: docs/agents/tenant-layers.md
+    reason: "Standards subagent: nothing relevant to this diff"
+    useful: no
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec review before the first push
+  - name: dispatch-subagents
+    reason: brief rules for the two review agents
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: The Stop hook asked four times to commit and push an uncommitted prototype the owner was still reviewing; each time cost a turn
+    solution: Let the Stop hook stay quiet when the turn ends on a question to the user, or only nag about commits older than the last user message
+    severity: minor
+  - description: A throwaway script to test MDC parsing of inline :lessons[...] could not import @nuxtjs/mdc from .throwaway/; I fell back to a full build
+    solution: Document a quick MDC parse helper (for example via @nuxt/content's parser) in docs/agents/tenant-layers.md or add scripts/ui/parse-mdc.ts
+    severity: minor
+  - description: "preview.ts shot with a mistyped #anchor printed a locator timeout once, then printed nothing at all on the next run; no screenshot was written"
+    solution: "Make preview.ts shot exit non-zero with a clear 'anchor not found' message whenever the --wait-for or #anchor element never attaches"
+    severity: minor
+  - description: The existing link-title check in page-checks.ts read [[Title]( as link text '[Title', so any nested-bracket syntax failed it with a confusing message
+    solution: Fixed in PR 2791 by excluding [ from the link-text class
+    severity: nit
+  - description: Read ADR-0021 only after editing layers/glassbox/GLOSSARY.md, when the post-edit hook asked; the edit was already right
+    solution: None needed; the hook worked as designed
+    severity: nit
+durationSec: 1845
+models:
+  claude-opus-5-5: 173
+toolCounts:
+  Bash: 58
+  Read: 13
+  SendUserFile: 3
+  Edit: 1
+  Skill: 4
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/app/components/glassbox/Article.vue
+  - layers/glassbox/app/utils/walkthrough.ts
+  - layers/glassbox/content/guide/pages/index.md
+  - layers/glassbox/page-checks.ts
+  - layers/glassbox/tests/unit/glassbox-pages.spec.ts
+  - layers/glassbox/tests/unit/walkthrough.spec.ts
+  - .agents/skills/glassbox-lesson/SKILL.md
+  - layers/glassbox/app/components/content/File.vue
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-bug-report-becomes-work.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-friction-becomes-a-fix.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/a-newcomers-first-hour.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/planning-a-big-change.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/reading-across-tenants.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/routines.md
+  - layers/glassbox/content/drafts/pages/walkthroughs/session-log-lands-on-main.md
+  - layers/glassbox/content/guide/pages/walkthroughs/a-change-goes-live.md
+  - layers/glassbox/content/guide/pages/walkthroughs/adding-a-tenant.md
+  - layers/glassbox/content/guide/pages/walkthroughs/asking-for-a-change.md
+  - layers/glassbox/content/guide/pages/walkthroughs/from-file-to-browser.md
+  - layers/glassbox/page-refs.ts
+  - layers/glassbox/tests/unit/page-refs.spec.ts
+rulesLoaded:
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0004-human-merge.md
+adrHints:
+  - adr: 21
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - docs/agents/mdc-when-to-use.md
+  - docs/agents/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me run code-review and gate:scoped before pushing and hold the commit while prototyping; opened the ADR to check the untested-behaviour list
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session at PR open and keep the log off the branch; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Made me open the PR as soon as the branch was pushed; the owner approved the work directly
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Gave the PR body's session header line and the commit trailer check; summary was enough
+    useful: yes
+  - path: .claude/rules/glassbox-content.md
+    reason: Kept counts and ids out of the reworded prose; the Spec subagent used it to check meaning loss
+    useful: partly
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on Walkthrough files; no diagrams were changed
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pointed me to the Glass Box glossary, whose Walkthrough contract I followed
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Auto-import naming made me prefix the new util glassbox; the rest did not apply
+    useful: partly
+  - path: .claude/rules/ui-verification.md
+    reason: Sent me to the verifying doc before screenshots, so I checked rendered pages, not HTML
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded on walkthrough.ts; no prune trial covered this text
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on walkthrough.ts; I added no instruction that needed a rule
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Reused an existing MDC directive rather than adding a component; the summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Hook asked me to read the ADR after the glossary edit; it confirmed the edit's home
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: I added no new term, only extended an existing entry
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Checked the changed paths against it; none is Human-only
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading the ADR list; no ADR was changed
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of chip-row diff
+    durationSec: 88
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 9.4
+  - type: general-purpose
+    task: Spec review of chip-row diff
+    durationSec: 69
+    toolCalls: 11
+    modelCalls: 10
+    tokenShare: 8.9
+gitBranch: claude/pensive-pascal-z9zf61
+entrypoint: remote
+cliVersion: 2.1.316
+learnings:
+  - MDC parses an inline :name[[link](url) · [link](url)] component inside a tight list item; in a loose list the li wraps text in a p, so a block ul there would be invalid HTML
+landedBy: Stop
