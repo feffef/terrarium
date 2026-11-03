@@ -3,14 +3,13 @@ a textbook that teaches the concepts Terrarium is built on, with Terrarium as
 the worked example. Raters found the items below; no writer acts on one until
 you confirm it in the source.
 
-**Task**: {TASK: confirm the items on the pages of <Subject>; or research the
-step: the draft to promote, the Lesson to write, or the pages to merge, split,
-move, cut or section, and what the step will do}.
+**Task**: {TASK}.
 
-**Items**: {ITEMS: each with its id, page, lens, quote and fix, or "none"}.
+**Items**:
+{ITEMS}
 
 **Draft report** (the mechanical blockers to promotion, from `grades.ts
-drafts`): {DRAFT REPORT, or "none"}. Start from it, and spend your effort on
+drafts`): {DRAFT REPORT}. Start from it, and spend your effort on
 the claims and on how much of the page needs rewriting.
 
 Work in the repository at commit {COMMIT}, read-only: modify no repository

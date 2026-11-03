@@ -80,7 +80,7 @@ Run `grades.ts tally --base <base> --out <scratch folder> <every hand-back>`.
 It adds the page checks' findings (`layers/glassbox/page-checks.ts`) and
 prints the work in order: false claims, page checks, deficits weakest page
 first, then gaps; the steps queue, with each inverse of a step taken in the
-last 5 runs refused; and the A comparisons, at most 10. Then, in `run.yml`:
+last 5 runs refused; and the A comparisons, at most 4. Then, in `run.yml`:
 
 - **Filters.** Mark `skipped` with its reason every item a `DECISIONS.md` line
   settles, and every fix that would undo a change from the last 2 runs unless
@@ -95,11 +95,10 @@ Done when every item and step is kept or has its reason.
 
 ## 4. Research
 
-Dispatch read-only researchers with
-[`researcher-brief.md`](researcher-brief.md) filled in: one per Subject for
-its kept items, and one per pending step with its draft's section of
-`grades.ts drafts --base <base>` (saved once to the scratch folder). Each
-confirms every item in the source or refuses it with proof. In `run.yml`, set
+Run `grades.ts briefs --kind researcher --base <base> --out <scratch folder>`
+(one brief per Subject of the kept items and per pending step), save each
+hand-back as `research-<name>.md` beside its brief, and dispatch read-only
+researchers on them. Each confirms every item in the source or refuses it with proof. In `run.yml`, set
 each item's `confirmed` to `true` or `false` and each step's `status` to
 `taken` or `dropped`. An unconfirmed item is dropped; a contradicted claim a
 researcher finds is added as a false claim once you confirm it. Done when every
@@ -107,11 +106,9 @@ kept item and pending step has its answer.
 
 ## 5. Write
 
-Dispatch one `opus` writer per taken step, and one per Subject for the
-confirmed items in it, each with `isolation: 'worktree'` and
-[`writer-brief.md`](writer-brief.md) filled in: its task, its items (with the
-A page each gap cites), the research file, the base, every false claim the run
-confirmed, and its own scratch subfolder. A page a step touches belongs to that
+Run `grades.ts briefs --kind writer --base <base> --out <scratch folder>`
+(one brief per taken step and per Subject of the other confirmed items), then
+dispatch one `opus` writer per brief, each with `isolation: 'worktree'`. A page a step touches belongs to that
 step's writer. Fix a false claim on a page no writer holds, or whose writer
 dropped out, yourself after step 6's merges. Done when every hand-back is
 saved and each writer has a commit that passes EVERY-PAGE's Check, or refused
@@ -133,13 +130,13 @@ on the run branch.
 ## 7. Blind gate
 
 Run `grades.ts gate --base <base> --out <scratch folder>`. For each page named
-by an `edited` item or a taken step, it writes three judge briefs from
+by an `edited` item or a taken step, it writes one judge brief from
 [`judge-brief.md`](judge-brief.md): old and new in random order, with the
 criterion the edit targeted and the house rules; a page new since the base
 has no old version, so `code-review` alone checks it. Dispatch one judge per brief,
 save the hand-backs and run `grades.ts votes --out <scratch folder>
-<hand-backs>`. An edit merges on 2 wins of 3; `equal` fails. A failed edit goes
-back to its writer once with the judges' `worse` notes: merge its new commit
+<hand-backs>`. An edit merges on a win of 1; `equal` fails. A failed edit goes
+back to its writer once with the judge's `worse` notes: merge its new commit
 and gate that page again (`gate --pages <page>`). If it fails again, restore
 the page to the base, set its items' `edited: false`, and it counts as
 stopped. Done when every gated page has merged or stopped.
@@ -155,11 +152,7 @@ candidate takes A only by beating every page it meets this run and last run
 ## 9. Review, record and land
 
 Run `code-review` on the run branch against the base, with the tally as the
-spec and this added to it: for each changed claim, show the cited file at the
-base (`git show <base>:<path>`) and quote the `path:line` that backs it, never
-accepting a claim on assertion; and for each sentence an edit deletes from a
-page, name the page and line that now states it (a fact with no home is a
-finding, unless an item asked to drop it). Send each finding on a page to its
+spec. Send each finding on a page to its
 writer with `SendMessage` and merge its new commit; fix join findings yourself.
 One fix round.
 

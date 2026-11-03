@@ -3,7 +3,8 @@
 // `runs.yml`, and each draft's promotion blockers. Usage (`pnpm exec tsx` this file):
 //   plan --base <sha> --briefs <dir>        the plan; writes the rater briefs and rater B's trimmed pages
 //   tally --base <sha> --out <dir> <hand-back> ...  the work list (rater A, B and every C shard); writes <dir>/run.yml and the first A judges' briefs
-//   gate --base <sha> --out <dir> [--pages a,b]  writes the gate judges' briefs for the pages edited since the base
+//   gate --base <sha> --out <dir> [--pages a,b]  writes the gate judge's brief for each page edited since the base
+//   briefs --kind researcher|writer --base <sha> --out <dir>  writes the researcher or writer briefs from <dir>/run.yml; fails on an unfilled placeholder
 //   votes --out <dir> <hand-back> ...        reads judges' verdicts into run.yml; writes the next A judges' briefs
 //   record --base <sha> --out <dir> [--session s] [--pr n] [--cost usd]  writes grades.yml and runs.yml
 //   drafts --base <sha>                      each draft's promotion blockers
@@ -177,7 +178,8 @@ const walkthroughNa: Lens[] = ['reasoning', 'transfer']
 const isWalkthrough = (page: string) => page.startsWith('walkthroughs/')
 // Relevance leads to steps, never to a page to learn from.
 const electedLenses = lenses.filter((l) => l !== 'relevance')
-export const comparisonsPerRun = 10
+// Cost: 26 judges awarded nothing in the 2026-11-03 run (retro).
+export const comparisonsPerRun = 4
 const holdersCompared = 3
 const freshOpponents = 2
 
@@ -207,6 +209,17 @@ export function parseReport(handback: string): Report {
   const report = parseYaml(block) as Report
   if (!raterIds.includes(report.rater)) throw new Error(`rater is ${report.rater}, not one of ${raterIds.join(', ')}`)
   report.pages ??= []
+  // Fail here, naming the mistake, not later in summary() at cell().
+  const need = (where: string, what: string, entry: object, keys: string[]) => {
+    for (const k of keys) if (!(entry as Record<string, unknown>)[k]) throw new Error(`rater ${report.rater}, ${where}: ${what} is missing "${k}"`)
+  }
+  for (const p of report.pages) {
+    for (const [lens, l] of Object.entries(p.lenses ?? {}) as [Lens, LensReport][]) {
+      for (const g of l.gaps ?? []) need(`page ${p.page}, lens ${lens}`, 'gap', g, ['section', 'exemplar', 'take'])
+      for (const f of l.findings ?? []) need(`page ${p.page}, lens ${lens}`, 'finding', f, ['quote', 'fix'])
+    }
+    for (const f of p.falseClaims ?? []) need(`page ${p.page}`, 'false claim', f, ['quote', 'source'])
+  }
   return report
 }
 
@@ -429,9 +442,15 @@ const wins = (votes: Vote[]) => votes.filter((v) => v === 'win').length
 // A verdict read out of order leaves a hole in the array; count only the votes cast.
 const cast = (votes: Vote[]) => votes.filter(Boolean).length
 
-/** The blind gate: 2 wins of 3 merge; "equal" fails, which guards against churn. Undefined until all 3 voted. */
+/** The blind gate: one judge; a win merges, "equal" fails, which guards against churn. Undefined until it voted. */
 export function gateMerged(votes: Vote[]): boolean | undefined {
-  return cast(votes) < 3 ? undefined : wins(votes) >= 2
+  return votes[0] === undefined ? undefined : votes[0] === 'win'
+}
+
+/** What the gate judge is told a taken step targeted on `page`. A move or section fills its `into`: say the facts arrive there (issue #2816). */
+export function stepCriterion(s: Pick<Step, 'kind' | 'pages' | 'into' | 'gist'>, page: string): string {
+  const receives = (s.kind === 'move' || s.kind === 'section') && s.into === page && !s.pages.includes(page)
+  return `${s.kind} step: ${receives ? `this page RECEIVES the facts, moved here from ${s.pages.join(', ')}: ` : ''}${s.gist}`
 }
 
 /** One judge first; the other two only if the candidate wins (issue #2792). Undefined while judges are owed. */
@@ -614,6 +633,43 @@ export function raterBrief(template: string, rater: RaterId, plan: Pick<Plan, 'r
   return kept.replace(/\{(RATER|LENSES|COMMIT|SCRATCH|PAGES|TRIMMED|CATALOG|RELEVANCE|HELD|EXAMPLE|TOP3)\}/g, (_, key: string) => values[key]!)
 }
 
+/** A researcher or writer brief filled in; a placeholder with no value is an error, so none ships unfilled. */
+export function fillBrief(template: string, values: Record<string, string>): string {
+  return template.replace(/\{([A-Z][A-Z ]+)\}/g, (_, key: string) => {
+    if (!values[key]) throw new Error(`no value for {${key}}`)
+    return values[key]!
+  })
+}
+
+const itemLine = (i: Item) => `- ${i.id}, ${i.page}${i.lens ? `, ${i.lens}` : ''}${i.quote ? `, "${i.quote}"` : ''}: ${i.fix}${i.exemplar ? ` (A page: ${i.exemplar})` : ''}`
+
+/** The briefs of one kind from the run's items and steps: it fills what run.yml holds and decides nothing. */
+export function agentBriefs(kind: 'researcher' | 'writer', state: Pick<RunState, 'base' | 'items' | 'steps'>, template: string, out: string, draftSection: (pages: string[]) => string): { name: string; text: string }[] {
+  const stepPages = (s: Step) => [...s.pages, ...(s.into ? [s.into] : [])]
+  const describe = (s: Step) => `${s.kind} ${s.pages.join(', ')}${s.into ? ` into ${s.into}` : ''} (${s.id}): ${s.gist}`
+  const falseClaims = state.items.filter((i) => i.kind === 'falseClaim' && !i.skipped && i.confirmed !== false).map((i) => `- ${i.page}: "${i.quote}" (${i.source})`)
+  const bySubject = (items: Item[]) => [...new Set(items.map((i) => subjectOf(i.page)))].map((subject): [string, Item[]] => [subject, items.filter((i) => subjectOf(i.page) === subject)])
+  const units: { name: string; task: string; items: Item[]; draft: string }[] = []
+  if (kind === 'researcher') {
+    const kept = state.items.filter((i) => !i.skipped && i.confirmed !== false)
+    for (const [subject, items] of bySubject(kept)) units.push({ name: subject, task: `confirm the items on the pages of ${subject}`, items, draft: 'none' })
+    for (const s of state.steps.filter((s) => s.status === 'pending')) units.push({ name: s.id, task: `research the step: ${describe(s)}`, items: [], draft: draftSection(s.pages) })
+  } else {
+    const confirmed = state.items.filter((i) => i.confirmed === true)
+    const taken = state.steps.filter((s) => s.status === 'taken')
+    const touched = new Set(taken.flatMap(stepPages))
+    for (const s of taken) units.push({ name: s.id, task: `${describe(s)}`, items: confirmed.filter((i) => stepPages(s).includes(i.page)), draft: 'none' })
+    for (const [subject, items] of bySubject(confirmed.filter((i) => !touched.has(i.page)))) units.push({ name: subject, task: `raise ${[...new Set(items.map((i) => i.page))].join(', ')}`, items, draft: 'none' })
+  }
+  return units.map((u) => ({
+    name: `${kind}-${u.name}`,
+    text: fillBrief(template, {
+      TASK: u.task, ITEMS: u.items.map(itemLine).join('\n') || 'none', 'DRAFT REPORT': u.draft, COMMIT: state.base, BASE: state.base,
+      SCRATCH: join(out, `${kind}-${u.name}`), 'RESEARCH FILE': join(out, `research-${u.name}.md`), 'FALSE CLAIMS': falseClaims.join('\n') || 'none',
+    }),
+  }))
+}
+
 const fence = (text: string) => `\`\`\`\`markdown\n${text.replace(/\n$/, '')}\n\`\`\`\``
 
 /** judge-brief.md filled in for one judge. */
@@ -765,7 +821,7 @@ function summary(state: RunState): string {
   for (const i of state.items) out.push([i.id, i.page, i.kind, i.lens ?? '', i.grade ?? '', i.exemplar ? `${i.quote} (${i.exemplar})` : i.source ? `"${i.quote}" (${i.source})` : i.quote ? `"${i.quote}"` : '', i.fix, i.skipped ?? ''].map(cell).join(' | '))
   out.push('', '## Steps', '', 'id | kind | pages | into | status | raised | gist', '--- | --- | --- | --- | --- | --- | ---')
   for (const s of state.steps) out.push([s.id, s.kind, s.pages.join(', '), s.into ?? '', s.status, s.raised.join(', '), s.gist].map(cell).join(' | '))
-  out.push('', '## A comparisons', '', ...(state.comparisons.length ? state.comparisons.map((c) => `- ${c.id}: ${c.candidate} vs ${c.against} on ${c.lens}`) : ['- none']))
+  out.push('', `## A comparisons (at most ${comparisonsPerRun})`, '', ...(state.comparisons.length ? state.comparisons.map((c) => `- ${c.id}: ${c.candidate} vs ${c.against} on ${c.lens}`) : ['- none']))
   out.push('', `Top-3 pages not compared: ${state.waiting.join('; ') || 'none'}`)
   return out.join('\n')
 }
@@ -774,7 +830,7 @@ runIfMain(import.meta.url, () => {
   const [command, ...args] = process.argv.slice(2)
   const flags: Record<string, string | undefined> = {}
   let rest = args
-  for (const name of ['base', 'briefs', 'out', 'pages', 'session', 'pr', 'cost']) {
+  for (const name of ['base', 'briefs', 'kind', 'out', 'pages', 'session', 'pr', 'cost']) {
     const r = extractFlag(rest, `--${name}`)
     flags[name] = r.value
     rest = r.rest
@@ -783,10 +839,13 @@ runIfMain(import.meta.url, () => {
   if (command === 'votes') return votes(out ?? fail('--out <dir> is required'), rest)
   if (!flags.base) fail('--base <sha> is required')
   const sha = git(['rev-parse', `${flags.base}^{commit}`], root).trim()
-  if (command === 'drafts') {
+  const draftsText = () => {
     const termsDir = 'layers/glassbox/content/guide/terms/'
     const terms = tryGit(['ls-tree', '-r', '--name-only', sha, termsDir], root).out.split('\n').filter((f) => f.endsWith('.yml')).map((f) => f.slice(termsDir.length, -4))
-    console.log(draftsReport({ base: sha, guide: spaceFiles(sha, 'guide'), drafts: spaceFiles(sha, 'drafts'), terms, journal: glassboxJournalRoutes() }, repoGit))
+    return draftsReport({ base: sha, guide: spaceFiles(sha, 'guide'), drafts: spaceFiles(sha, 'drafts'), terms, journal: glassboxJournalRoutes() }, repoGit)
+  }
+  if (command === 'drafts') {
+    console.log(draftsText())
     return
   }
   const record = readRecord(showAt(sha, recordPath))
@@ -843,11 +902,27 @@ runIfMain(import.meta.url, () => {
     return
   }
   const state = readYaml<RunState | undefined>(statePath(out), undefined) ?? fail(`no ${statePath(out)}: run tally first`)
+  if (command === 'briefs') {
+    if (flags.kind !== 'researcher' && flags.kind !== 'writer') fail('--kind researcher|writer is required')
+    const kind = flags.kind
+    const report = state.steps.some((s) => s.status === 'pending') && kind === 'researcher' ? draftsText() : ''
+    const section = (pages: string[]) => report.split(/^(?=## )/m).filter((s) => pages.some((p) => s.startsWith(`## ${p}.md `))).join('\n').trim() || 'none'
+    let written
+    try {
+      written = agentBriefs(kind, state, readFileSync(join(root, skillDir, `${kind}-brief.md`), 'utf8'), out, section)
+    } catch (err) {
+      return fail((err as Error).message)
+    }
+    mkdirSync(out, { recursive: true })
+    for (const b of written) writeFileSync(join(out, `${b.name}.md`), b.text)
+    console.log([`## ${kind} briefs`, '', ...(written.length ? written.map((b) => `- ${join(out, `${b.name}.md`)}`) : ['- none'])].join('\n'))
+    return
+  }
   if (command === 'gate') {
     const wanted = flags.pages?.split(',').filter(Boolean)
     const criteria = new Map<string, string[]>()
     for (const i of state.items.filter((i) => i.edited)) criteria.set(i.page, [...(criteria.get(i.page) ?? []), `${i.lens ?? i.kind}: ${i.fix}`])
-    for (const s of state.steps.filter((s) => s.status === 'taken')) for (const p of [...s.pages, ...(s.into ? [s.into] : [])]) criteria.set(p, [...(criteria.get(p) ?? []), `${s.kind} step: ${s.gist}`])
+    for (const s of state.steps.filter((s) => s.status === 'taken')) for (const p of new Set([...s.pages, ...(s.into ? [s.into] : [])])) criteria.set(p, [...(criteria.get(p) ?? []), stepCriterion(s, p)])
     const briefs: string[] = []
     for (const [page, list] of [...criteria].filter(([p]) => !wanted || wanted.includes(p))) {
       const path = `${pagesDir('guide')}/${page}.md`
@@ -861,10 +936,10 @@ runIfMain(import.meta.url, () => {
       const at = state.gate.findIndex((g) => g.page === page)
       const n = at < 0 ? state.gate.push({ page, criterion, votes: [] }) : at + 1
       state.gate[n - 1] = { page, criterion, votes: [] }
-      for (const j of [1, 2, 3]) briefs.push(writeJudge(out, `gate-${n}-${j}`, `X and Y are two versions of one page. Which better meets what its edit targeted: ${criterion}`, now, old))
+      briefs.push(writeJudge(out, `gate-${n}-1`, `X and Y are two versions of one page. Which better meets what its edit targeted: ${criterion}`, now, old))
     }
     writeYaml(statePath(out), state)
-    console.log(['## Gate judges\' briefs (three sonnet judges per page)', '', ...(briefs.length ? briefs.map((b) => `- ${b}`) : ['- none'])].join('\n'))
+    console.log(['## Gate judges\' briefs (one sonnet judge per page)', '', ...(briefs.length ? briefs.map((b) => `- ${b}`) : ['- none'])].join('\n'))
     return
   }
   if (command === 'record') {
@@ -882,5 +957,5 @@ runIfMain(import.meta.url, () => {
     console.error(`wrote ${recordPath} and ${runsPath}`)
     return
   }
-  fail(`unknown command ${command}; use plan, tally, gate, votes, record or drafts`)
+  fail(`unknown command ${command}; use plan, tally, gate, briefs, votes, record or drafts`)
 })
