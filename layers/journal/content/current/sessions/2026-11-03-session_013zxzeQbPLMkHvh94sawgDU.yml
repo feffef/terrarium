@@ -1,0 +1,222 @@
+schemaVersion: 1
+session: session_013zxzeQbPLMkHvh94sawgDU
+startedAt: 2026-11-03T20:40:57Z
+endedAt: 2026-11-03T20:50:00Z
+kind: delegated
+goal: Clear the open issue backlog
+status: in-review
+outcome: "Four issues swept: one closed as done, one left open by owner choice, two fixed in PR 2826 awaiting CI"
+summary: "The owner ran /clear-backlog (human-instructed, the only prompt). The sweep found four issues: #2806 (ready-for-agent), and #2823, #2822, #2816 (needs-triage, no comments). The other six open issues were skipped because an agent comment was last. Explore triage closed #2816 as already done (agent-initiated close, allowed by ADR-0022), briefed #2822 and #2823 as ready-for-agent, and found #2806 already built, but the owner's recorded answer says it stays open as the evidence log, so I left it alone (its ready-for-agent label now has nothing to build; open for the owner). No grilling was needed. #2822 and #2823 share grades.ts, so one branch built both; it passed gate:scoped and two review axes in one round. I pushed it to the session's designated branch (not a clear-backlog-named one) and opened PR 2826, which touches no Human-only path. It still needs green CI, my verdict comment and merge. Judgement calls left open are listed in the PR (duplicated taken-this-run predicate, weak churn test)."
+prs:
+  - "2826"
+docsRead:
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: "step 1 of the sweep: eligibility rules for the set"
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read after my first git command; nothing changed
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read after first GitHub reads; confirmed list script and write routes
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: push and PR steps; review-before-push already done by the build workflow
+    useful: yes
+  - path: .agents/skills/triage/SKILL.md
+    reason: subagents reported it gave per-issue rules and brief format
+    useful: yes
+  - path: .agents/skills/implement/SKILL.md
+    reason: "build subagent: short, said to use tdd and commit"
+    useful: partly
+  - path: docs/adr/0005-skill-model.md
+    reason: build subagent read it on a hook prompt; changed nothing
+    useful: no
+  - path: docs/adr/0027-prune-trials.md
+    reason: build subagent read it on a hook prompt; no open trial applied
+    useful: no
+  - path: .agents/skills/code-review/SKILL.md
+    reason: Standards reviewer used it as the smell baseline
+    useful: yes
+  - path: .agents/skills/inspect-session/SKILL.md
+    reason: "triage #2806 read it and found the owner-requested line already present"
+    useful: yes
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: "triage #2822 grepped it for run id wording"
+    useful: partly
+  - path: .claude/skills/dispatch-subagents/SKILL.md
+    reason: a guard demanded it before the first Workflow call; the brief rules were already met
+    useful: partly
+  - path: scripts/lib/author-trust.ts
+    reason: triage subagents used it to confirm OWNER is Trusted
+    useful: yes
+  - path: CLAUDE.md
+    reason: "build subagent: worktree, commit and gate conventions"
+    useful: yes
+  - path: .agents/skills/glassbox-improve/scripts/grades.ts
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-improve/tests/unit/grades.spec.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: clear-backlog
+    reason: (invoked as a slash command)
+  - name: tdd
+    reason: (no reason given)
+frictions:
+  - description: Ran git rev-parse, list-open-issues and gh api reads before reading git-conventions.md and github-integration.md, which CLAUDE.md says to read before the first such command.
+    solution: Read both docs first; a hook only reminded me after the commands, so the reminder could fire before the first non-allowlisted call.
+    severity: nit
+  - description: "First Workflow call failed twice: the dispatch-read guard wanted dispatch-subagents read first, and I had mistyped the session id with an extra letter."
+    solution: Read dispatch-subagents before the first Workflow call; copy the session id from the attribution template instead of retyping it.
+    severity: minor
+  - description: "The #2806 triage agent reported close-done while the owner's recorded answer says keep it open, leaving a ready-for-agent label with nothing to build."
+    solution: Let the explore result carry a 'built, keep open' outcome so the label can be dropped without a human.
+    severity: nit
+durationSec: 544
+models:
+  claude-sonnet-5-5: 38
+toolCounts:
+  Bash: 9
+  Read: 4
+  Workflow: 3
+  Skill: 3
+  mcp__github__issue_read: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/glassbox-improve/tests/unit/grades.spec.ts
+  - .agents/skills/glassbox-improve/scripts/grades.ts
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0020.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: true
+    by: subagent
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - .agents/skills/triage/SKILL.md
+  - .agents/skills/inspect-session/SKILL.md
+  - .agents/skills/glassbox-improve/SKILL.md
+  - .agents/skills/implement/SKILL.md
+  - docs/adr/0005-skill-model.md
+  - docs/adr/0027-prune-trials.md
+  - .agents/skills/code-review/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR and subscribe at once; subagents found it irrelevant. Summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0004.md
+    reason: Required gate and review before first push, and the Human-only check; summary was enough, no full ADR.
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Subagent only: loaded after reading docs/adr; it confirmed no touched file was Human-only."
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Skill scripts change through a gated PR; confirmed the route, did not open the ADR.
+    useful: partly
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session when the PR opened; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and commit trailer, which I checked landed; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0020.md
+    reason: Confirmed all four issues are owner-authored, so none was Public; no full ADR needed.
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Allowed the sweep to label ready-for-agent and close only done work; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded by the hook; no open prune trial covered the touched text, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; not relevant to this backlog work.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "Subagent only: loaded mid-session and not relevant to the change."
+    useful: no
+subagents:
+  - type: workflow-subagent
+    task: "triage #2823"
+    model: claude-sonnet-5-5
+    durationSec: 47
+    toolCalls: 20
+    modelCalls: 8
+    tokenShare: 8.7
+  - type: workflow-subagent
+    task: "triage #2806"
+    model: claude-sonnet-5-5
+    durationSec: 39
+    toolCalls: 10
+    modelCalls: 6
+    tokenShare: 10.6
+  - type: workflow-subagent
+    task: "triage #2822"
+    model: claude-sonnet-5-5
+    durationSec: 48
+    toolCalls: 18
+    modelCalls: 7
+    tokenShare: 7.8
+  - type: workflow-subagent
+    task: "triage #2816"
+    model: claude-sonnet-5-5
+    durationSec: 51
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 8.3
+  - type: workflow-subagent
+    task: gate glassbox-improve-run-keys
+    model: claude-sonnet-5-5
+    durationSec: 66
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 2.5
+  - type: workflow-subagent
+    task: build glassbox-improve-run-keys
+    model: claude-sonnet-5-5
+    durationSec: 237
+    toolCalls: 31
+    modelCalls: 19
+    tokenShare: 22.9
+  - type: workflow-subagent
+    task: Standards glassbox-improve-run-keys r1
+    model: claude-sonnet-5-5
+    durationSec: 21
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 7.5
+  - type: workflow-subagent
+    task: Spec glassbox-improve-run-keys r1
+    model: claude-sonnet-5-5
+    durationSec: 20
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 3.8
+gitBranch: ccr-0764972d-6w4efu
+entrypoint: remote_mobile
+cliVersion: 2.1.317
+landedBy: Stop
