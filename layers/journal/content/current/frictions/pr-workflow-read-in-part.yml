@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-28 design: dropped: a partial grep read, no repo change helps; none since 2026-10-21.
 occurrences:
-  - session: session_011xvPjJVknZzx45v7NjhebT
-    date: "2026-10-19"
-    severity: minor
-    description: "Read only the 'Closing a scheduled run's PR' section of docs/agents/pr-workflow.md via grep -A 40, not the whole doc, before pushing/opening the PR, even though CLAUDE.md's trigger says read it in full. Missed running scripts/github/check-conflicting-issues.ts --pr <number> (recipe step 2) until after the PR was already open."
-    solution: "Read the full doc with the Read tool the first time a CLAUDE.md trigger names it, not a grepped section - a partial read misses adjacent steps like the conflicting-issues check."
   - session: session_01QPvWywTuiADmXNMMLARnsF
     date: "2026-10-21"
     severity: nit

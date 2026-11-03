@@ -73,3 +73,13 @@ occurrences:
     severity: nit
     description: "Read ADR-0027 and ADR-0029 only after the post-edit hint fired; the edit was already right."
     solution: "Read governing ADRs before editing the file; no harm done."
+  - session: session_013zxzeSbc2WJGVqnu6YVjXr
+    date: "2026-11-02"
+    severity: minor
+    description: "Edit hook demanded full reads of ADR-0006, 0008 and 0016 for a two-line CSS change to a Journal page; none applied"
+    solution: "Skip the full-ADR read demand for style-only edits, or narrow those rules to script changes"
+  - session: session_013zxzeRwpRf2gj4m4keF6bn
+    date: "2026-11-02"
+    severity: nit
+    description: "Read ADR-0021 only after editing layers/glassbox/GLOSSARY.md, when the post-edit hook asked; the edit was already right"
+    solution: "None needed; the hook worked as designed"

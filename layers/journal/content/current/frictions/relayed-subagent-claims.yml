@@ -140,3 +140,13 @@ occurrences:
     severity: minor
     description: "Filed issue #2748 and an Inventory note saying a post-fix run ran code-review, trusting an earlier note; the run's log says it self-read. Caught by the Spec review and corrected."
     solution: "Check each cited run's log before writing it into an issue, as step 2 already says."
+  - session: session_013zxzeNxm9jTD6DwkDXzzG8
+    date: "2026-11-01"
+    severity: nit
+    description: "Reviewed the design agent's no-change call on worktree-subagent-moves-branch from its report only; scoping picks took long because earlier drops hid new evidence."
+    solution: "Have the survey list, per never-fixed candidate, whether its notes record a drop and what is new since."
+  - session: session_013zxzeSkTLmRxa2PWgt3kPw
+    date: "2026-11-02"
+    severity: nit
+    description: "The query researcher gave the Journal Excerpt range as 33-43; it is 33-42, and the writer lost a test run finding it"
+    solution: "Researchers check an Excerpt range with cat -A for a trailing blank line"

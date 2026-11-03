@@ -33,11 +33,6 @@ fixes:
     date: "2026-10-28"
     summary: "pr-workflow.md's simple-change bar now says a simple change adds, renames or moves no file, so a rename sweep gets code-review before its first push."
 occurrences:
-  - session: session_01F2JGBVz5DXj7Yi8x2NBZcM
-    date: "2026-10-19"
-    severity: nit
-    description: "Amended the commit after code-review to trim one sentence, then pushed without re-running review, since the change was a pure deletion in a docs file."
-    solution: "State in pr-workflow whether a review-driven trim needs a re-review."
   - session: session_01Uq2Kx5jumw8Va6DETgxNV8
     date: "2026-10-20"
     severity: minor
@@ -68,16 +63,6 @@ occurrences:
     severity: nit
     description: "Never read the full diff before the first push; only git diff --stat, though pr-workflow wants a self-read for a simple change."
     solution: "Read git diff origin/main...HEAD before pushing, even for 8 lines."
-  - session: session_01Bopw6N86uYzPzfaRpVqzhU
-    date: "2026-10-19"
-    severity: nit
-    description: "The code-review Skill prescribes two parallel sub-agents, disproportionate for a one-word label change; I reviewed inline, deviating from the Skill."
-    solution: "Let pr-workflow.md or the Skill allow an inline review for diffs under a few lines."
-  - session: session_016Nsq9SWL64V4RqDJPQYodp
-    date: "2026-10-19"
-    severity: nit
-    description: "Ran code-review inline rather than the Skill's two subagents because the diff was comments only; the Skill has no size threshold."
-    solution: "Let code-review say when a comments-only diff may skip the subagents."
   - session: session_01CMjFaMZxZgD7oTzNXmWwzv
     date: "2026-10-23"
     severity: minor
@@ -148,3 +133,13 @@ occurrences:
     severity: minor
     description: "Skipped code-review on the escalation PR (one rule line) though a rule's meaning changes; I judged it a clarification and said so in the PR."
     solution: "pr-workflow's 'simple change' test should say whether a rule wording clarification that matches its ADR counts."
+  - session: session_013zxzeQBuD3C4A1V2DpoHYu
+    date: "2026-11-02"
+    severity: minor
+    description: "Skipped the code-review Skill for a 58-file diff and used my own read of a mechanical diff; the pr-workflow simple-change test names size limits this exceeds."
+    solution: "State the exemption plainly or run code-review on the two edited files."
+  - session: session_013zxzeRkQabGaMQ8gphe4Ra
+    date: "2026-11-02"
+    severity: minor
+    description: "Folded the second review's fixes into the unpushed follow-up commit with only my own read, though the delta was over pr-workflow's 10-line simple-change limit"
+    solution: "Either run code-review on the delta or keep review-driven fixes under the simple-change limit; pr-workflow could say how a fix for a review's own findings is reviewed"

@@ -21,21 +21,6 @@ fixes:
 notes: |-
   2026-10-23 re-cluster: 01Fay2Gi (a check grepping failure-only output), 013RCsUF (dated content not excluded), 011RZgGT (explore triage schema lacks the ADR-0004 exception), 011xvPjJ (audit-skills ids, PR 2318), 01XWMuHG (auth research boundary), 01WxHaU2 (workflow agent asked to dispatch), 0135hcUf and 01VH74k3 (frictions-to-fixes Skill briefs) each need their own fix; left here as single low-severity strays.
 occurrences:
-  - session: session_011xvPjJVknZzx45v7NjhebT
-    date: "2026-10-19"
-    severity: minor
-    description: "The 12 behaviour-check subagent briefs didn't ask each subagent to name a specific new session/PR/issue id directly in its summary prose (vs. a parenthetical count like '7/7 sessions') - two of the 12 Inventory entries I drafted from their reports were bare re-confirmations with no visible new citation, caught only by the Spec-axis code-review pass rather than earlier."
-    solution: "When drafting an Inventory observation from a subagent's report, name the specific session/PR/issue id in the note's own prose before code-review has to catch a missing citation."
-  - session: session_01XWMuHGcaNTvRPHfYb9T7z2
-    date: "2026-10-19"
-    severity: minor
-    description: "The sources research brief told the subagent to inspect MCP config and env var names; it drifted into probing how the CLI's worker credential is sourced until the classifier blocked it"
-    solution: "Research briefs that touch auth should say: never investigate credential sourcing; report the endpoint and stop"
-  - session: session_01WxHaU21bCG18GRezDo4Yfe
-    date: "2026-10-19"
-    severity: nit
-    description: "The #2262 triage brief told the builder to dispatch a probe subagent, which a workflow agent may not be able to do; I ran the probe myself"
-    solution: "clear-backlog-explore triage could note when a fact needs the orchestrator to gather it"
   - session: session_01E3XmTJcpKMZstW7MHL2eks
     date: "2026-10-23"
     severity: nit

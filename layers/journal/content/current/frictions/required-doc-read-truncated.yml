@@ -39,11 +39,6 @@ occurrences:
     severity: nit
     description: "Read docs/agents/github-integration.md with head -80 instead of in full, against CLAUDE.md's read-first-in-full rule, before the first GitHub write."
     solution: "Read the trigger docs whole; a short doc costs little."
-  - session: session_01XWMuHGcaNTvRPHfYb9T7z2
-    date: "2026-10-19"
-    severity: nit
-    description: "Read GLOSSARY-MAP.md and GLOSSARY.md via cat piped to head -300, which cut GLOSSARY.md short, so the session-start glossary read was incomplete"
-    solution: "Read the glossary files whole with the Read tool, not a capped pipe"
   - session: session_012Yzae3uty5Jj8ZPug9zpjr
     date: "2026-10-23"
     severity: nit

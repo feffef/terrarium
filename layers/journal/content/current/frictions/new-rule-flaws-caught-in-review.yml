@@ -2,7 +2,8 @@ name: new-rule-flaws-caught-in-review
 surface: safe
 summary: A rule or selection step drafted for a Skill or the ledger had a logic flaw that only later reviewers caught, costing extra rounds.
 cause: "The author drafts a new ordering, splitting or selection rule without trying it on the cases it must handle (a ranking direction, two clusters of the same shape); reviewers or the owner find the flaw after the draft. Signals: 'first draft', 'reviewers flagged', 'would have raised the best pages', 'the user had to settle it'."
-status: open
+status: tracked
+ref: "#2804"
 fixes:
   - pr: 2697
     date: "2026-10-30"
@@ -18,3 +19,8 @@ occurrences:
     severity: moderate
     description: "My first split rule (split only a different friction, keep a fix-caught slip) let me split one cluster and keep two of the same shape; both reviewers flagged it and the user had to settle it."
     solution: "Ask the deciding question with a worked pair of examples before applying a rule to data."
+  - session: session_013zxzeRkQabGaMQ8gphe4Ra
+    date: "2026-11-02"
+    severity: moderate
+    description: "Didn't see until the Spec review that the K=3 rotation made two consecutive A wins impossible on 4 of 5 lenses; needed a third design round with the user"
+    solution: "Before showing a selection rule, run it on two concrete cases across runs (CLAUDE.md Question the premise), including how rules interact over time"

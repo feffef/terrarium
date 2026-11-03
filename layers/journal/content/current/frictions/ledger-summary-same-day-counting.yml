@@ -10,11 +10,6 @@ fixes:
     date: "2026-10-20"
     summary: "The ledger summary counts same-day regressions by merge time and a new --candidates option prints the survey labels from the ledger."
 occurrences:
-  - session: session_01Wv24DMMmjdNR6a23HtkZ8i
-    date: "2026-10-19"
-    severity: minor
-    description: "survey-brief says to append every friction but --unledgered drops sessions, and --summary counts regressions by date, so same-day post-fix sessions were missed and needed hand checking."
-    solution: "Count regressions by session start in --summary; name a per-cluster dedupe step in the brief."
   - session: session_01Uq2Kx5jumw8Va6DETgxNV8
     date: "2026-10-20"
     severity: minor

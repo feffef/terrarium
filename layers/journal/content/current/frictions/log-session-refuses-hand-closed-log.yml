@@ -42,3 +42,13 @@ occurrences:
     severity: nit
     description: "Re-authored the log as completed straight through log-session after the merge; it refused until close-session ran, costing one extra call."
     solution: "After a merge, invoke close-session first, as its re-invoke line says; I went by memory of the earlier flow."
+  - session: session_013zxzeSuucewJSDd3eyaNnh
+    date: "2026-11-02"
+    severity: minor
+    description: "After opening PRs 2798-2800 and merging 2796, 2799 and 2800, I updated the log by calling log-session --author directly instead of re-invoking close-session, which ADR-0009 asks for at PR open and at merge. log-session refused the completed log until close-session ran: the same slip #2772 fixes."
+    solution: "PR #2798's merge hint now covers it; that hint landed only at the end of this session."
+  - session: session_013zxzeQCoXnRxbyzhHyy3M1
+    date: "2026-11-02"
+    severity: nit
+    description: "Re-authored the log as completed after the merge without re-invoking close-session; log-session refused it and the sed-edited scratch silently kept in-review until I checked"
+    solution: "After a merge, invoke close-session first as its Skill says, then author"

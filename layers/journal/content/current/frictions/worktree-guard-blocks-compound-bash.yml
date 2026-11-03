@@ -21,3 +21,8 @@ occurrences:
     severity: nit
     description: "Worktree guard refused two writer commands: a curl URL containing the word github and a for loop with sed and git ls-files."
     solution: "Document in dispatch-subagents which command shapes the worktree guard refuses."
+  - session: session_013zxzeQZYwzDuf4JEncnqAa
+    date: "2026-11-02"
+    severity: minor
+    description: "Writers hit worktree-guard and inline-heredoc refusals and worked around them with script files"
+    solution: "writer-brief should tell writers to write edit scripts to their scratch folder from the start"

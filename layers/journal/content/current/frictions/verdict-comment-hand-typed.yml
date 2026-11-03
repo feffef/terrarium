@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-30"
     summary: "pr-workflow step 4: paste the Reviewed SHA from git rev-parse HEAD run in the reviewed head's checkout"
 occurrences:
-  - session: session_01MeatWCLdQDV2rWVNHumqX7
-    date: "2026-10-19"
-    severity: nit
-    description: "My first verdict comment named a mistyped short SHA (30a92a7247 vs ...7244); merge-pr.ts refused and I edited the comment."
-    solution: "Paste the head SHA from git rev-parse HEAD into the verdict rather than typing it."
   - session: session_01QsVUJGmHhhoAn8T6ewjnLP
     date: "2026-10-21"
     severity: nit
@@ -84,3 +79,18 @@ occurrences:
     severity: nit
     description: "Posted two PR verdicts with a wrong Reviewed SHA (a short SHA on #2734, the non-head commit on #2737) and had to edit them"
     solution: "Paste the Reviewed SHA from git rev-parse HEAD in the worktree, as pr-workflow step 4 says, instead of from a commit list"
+  - session: session_013zxzeQqRBLg9tUfsbNCCz8
+    date: "2026-11-02"
+    severity: minor
+    description: "I typed the Reviewed SHA in the #2777 verdict from memory and got it wrong; I caught it on re-read and edited the comment."
+    solution: "Paste the SHA from git rev-parse HEAD, as pr-workflow step 4 says."
+  - session: session_013zxzeRwpRf2gj4m4keF6bn
+    date: "2026-11-02"
+    severity: nit
+    description: "The first verdict comment on PR 2793 gave a short SHA, while pr-workflow.md step 4 asks for the full one from git rev-parse HEAD"
+    solution: "Edited the comment before merging; merge-pr.ts could also print the expected full SHA when it finds a short one"
+  - session: session_013zxzeQZYwzDuf4JEncnqAa
+    date: "2026-11-02"
+    severity: nit
+    description: "merge-pr.ts refused my first verdict because it lacked a 'Reviewed: <head sha>' line, so I posted a second comment"
+    solution: "The format is at docs/agents/pr-workflow.md:55 but 'Closing a scheduled run's PR' doesn't point to it; add that pointer"

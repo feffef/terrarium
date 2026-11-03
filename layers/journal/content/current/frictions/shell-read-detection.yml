@@ -35,3 +35,8 @@ occurrences:
     severity: moderate
     description: "SHELL-READ-DETECTION: for f in SKILL.md rater-brief.md researcher-brief.md writer-brief.md; do echo \"=== $f\"; cat $f; done read all four glassbox-improve files but was not credited."
     solution: "shell-reads.ts could expand a for-loop over literal names into reads of each path (.agents/skills/glassbox-improve/SKILL.md and the three briefs)."
+  - session: session_013zxzePh7qKycsJT9g2eqU1
+    date: "2026-11-03"
+    severity: moderate
+    description: "SHELL-READ-DETECTION: .agents/skills/clear-backlog/SKILL.md was credited from shell output, but the session marked it (not read)"
+    solution: "Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts"
