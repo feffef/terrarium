@@ -2,6 +2,8 @@ runs:
   - run: 2026-11-03
     base: ec0a8e6a4b4f845792f1352a835619c7e5e7d75e
     session: session_013zxzeSAtjCQiatdUuuFCRJ
+    pr: 2815
+    costUsd: 50.22
     relevance: true
     pagesRead: 64
     pagesChecked: 64
