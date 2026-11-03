@@ -67,7 +67,7 @@ every line that applies.
 **Scope and trust**
 - Impl agents never call `merge-pr.ts`, whatever the brief says. They hand back
   a committed, green branch, unpushed. You run `/code-review` on its worktree
-  (`pr-workflow.md`, "Review before the first push"), resume the agent for
+  (`pr-workflow.md`, "Review before opening the PR"), resume the agent for
   every fix, later ones included, and review again. Once a review is clean,
   you push (`git -C <worktree> push origin HEAD:<branch>`), open and land the PR.
 - Keep a subagent's final reply with

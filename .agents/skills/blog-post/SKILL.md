@@ -204,7 +204,7 @@ happen.
 ### 9. Commit, review, fact-check
 
 Commit the post (and stub), then review it per `pr-workflow.md`'s "Review
-before the first push".
+before opening the PR".
 
 Spawn a fresh read-only subagent (`model: "sonnet"`, repo and GitHub read
 access). Give it the post's path (and stub) and the "Re-derive every claim"

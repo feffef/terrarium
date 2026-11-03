@@ -81,7 +81,8 @@ GitHub PR-files API has the same gap: read `previous_filename` too.
 
 ## When the Stop hook flags unpushed or inherited commits
 
-Fix or rewrite only commits this session made. `git log origin/main..HEAD` lists
+Push your own commits to your session's branch whenever the hook asks: a push
+opens no PR (ADR-0003). Fix or rewrite only commits this session made. `git log origin/main..HEAD` lists
 the candidates; a commit outside it is public history, so never rebase it (for
 example via the hook's suggested `--reset-author`). In a working copy shared with
 other sessions the list also holds theirs. `--reset-author` may fail to sign: see the signing-key caveat in

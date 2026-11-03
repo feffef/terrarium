@@ -13,10 +13,11 @@ A human merges the few PRs whose risk the gate cannot see.
   another's Documents (L3). Code and tests cite these labels.
 - **Skipping steps.** The gate may skip a step only when it proves no changed
   file can affect that step. Without proof, it runs everything.
-- **Before the first push,** the branch passes the gate locally and gets a code
+- **Before its PR opens,** the branch passes the gate locally and gets a code
   review. CI's run of the gate decides the merge. A simple change, and a simple
   follow-up commit, gets the author's own read of its full diff instead; a
-  larger follow-up gets a review of its own diff, not the whole branch.
+  larger follow-up gets a review of its own diff, not the whole branch. Pushing
+  earlier is free: only the PR waits (ADR-0003).
 - **Who merges.** The agent that wrote the PR, once CI's gate is green and it
   has posted its verdict on the PR, unless an exception below applies.
 - **A human merges a PR that:**
@@ -61,10 +62,9 @@ blindness matters, so a person reads them before they land.
 - **Make every exception a path, so a script enforces all of them.** A new
   dependency, untested behaviour, new isolation logic or an untrusted author
   has no path to match.
-- **Enforce the first-push review with a push hook matching the reviewed
-  sha.** The fix and the gate come after the review, so the reviewed sha
-  rarely equals the pushed head, and `merge-pr.ts` already wants a verdict
-  naming the head.
+- **Enforce the pre-PR review with a hook matching the reviewed sha.** The fix
+  and the gate come after the review, so the reviewed sha rarely equals the
+  head, and `merge-pr.ts` already wants a verdict naming the head.
 - **Skip review for prose-only changes.** Skills, rules and agent docs steer
   every later session, so a mistake in them costs as much as a code bug.
 - **Rely on human review without a gate.** Review misses mechanical breakage,
