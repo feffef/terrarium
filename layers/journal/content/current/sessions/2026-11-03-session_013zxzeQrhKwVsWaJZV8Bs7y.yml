@@ -1,0 +1,176 @@
+schemaVersion: 1
+session: session_013zxzeQrhKwVsWaJZV8Bs7y
+startedAt: 2026-11-03T06:43:30Z
+endedAt: 2026-11-03T06:53:27Z
+kind: interactive
+goal: Find the cost of recent clear-backlog runs, then document the cost lookup
+status: in-review
+outcome: "Costs found ($137.76 for five runs); PR #2812 open to mention API cost and token usage in CLAUDE.md and the inspect-session description"
+summary: "Human asked what the last five clear-backlog runs cost. I first answered from journal logs (durations, subagent token shares) and wrongly said no cost was recorded; the human then asked whether inspect-session could do it, and get_session usage.cost_usd gave a dollar figure per run (five runs, $137.76). The human asked whether that included subagents; result events' modelUsage (a Sonnet line in an Opus session, parts summing to total_cost_usd) showed it does, inferred for one run only. The human then instructed adding a mention of cost and token extraction to CLAUDE.md and the Skill's front matter. I made both edits, reviewed (code-review: no violations), ran gate:scoped green, pushed, opened PR #2812 and subscribed. Opening the PR and the review were agent-initiated per ADR-0003/0004; the edits were human-instructed."
+prs:
+  - "2812"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: "commit hygiene: -F file, trailer check"
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: showed the Skill frontmatter edit is not simple, so code-review was needed
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping for creating the PR
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: confirmed the pointer belongs in CLAUDE.md
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: hook demanded it after the SKILL.md edit; edit was fine
+    useful: no
+  - path: docs/adr/0027-prune-trials.md
+    reason: hook demanded it; checked no open trial covers the text
+    useful: partly
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: Standards subagent used it for pointer rules; its verdict was yes
+    useful: yes
+  - path: CLAUDE.md
+    reason: (read before editing)
+skillsUsed:
+  - name: inspect-session
+    reason: get_session usage and result events gave the real costs
+  - name: dispatch-subagents
+    reason: read after the dispatch-read guard blocked my review agents
+  - name: code-review
+    reason: required before first push; Skill frontmatter is not a simple change
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read journal logs and audit-skills.ts about other sessions before invoking inspect-session, then told the user cost was not recorded; it was in get_session.
+    solution: "Invoke inspect-session first (CLAUDE.md: before inspecting another session); this PR makes cost lookup a stated trigger."
+    severity: major
+  - description: First review Agent dispatch was blocked by the dispatch-read guard because I had not read dispatch-subagents.
+    solution: Read dispatch-subagents before writing any subagent brief.
+    severity: minor
+  - description: Read git-conventions, pr-workflow and github-integration docs after the first non-read-only git command was planned, not before.
+    solution: Read the CLAUDE.md read-first docs before the first git or GitHub operation.
+    severity: minor
+durationSec: 597
+models:
+  claude-sonnet-5-5: 83
+toolCounts:
+  Bash: 22
+  Skill: 5
+  mcp__claude-code-remote__get_session: 5
+  mcp__claude-code-remote__list_events: 1
+  Read: 1
+  Edit: 2
+  Agent: 4
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/skills/inspect-session/SKILL.md
+rulesLoaded:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+adrHints:
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me gate and review before pushing despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: About session logs; used only via close-session, summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the provenance header on the PR body; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded by reading audit-skills.ts; inspect-session is not an installed Skill, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on a journal read; I checked neither edited file is on its list
+    useful: partly
+  - path: .claude/rules/adr-0025.md
+    reason: Catalog reads; unrelated to this task
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Stored-field rule; no field was added
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: No Tenant work
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skill location rule; confirmed the edit stays a gated PR, read the full ADR when the hook asked
+    useful: partly
+  - path: .claude/rules/adr-0022.md
+    reason: Triage sweep rule; unrelated, loaded by a script read
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Made me check prune-trials.yml for overlap; none
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Confirmed CLAUDE.md is the home for this pointer; read the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: ADR-writing rule; no ADR changed, loaded by a read
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review
+  - type: general-purpose
+    task: Spec review
+  - type: general-purpose
+    task: Standards review
+    durationSec: 17
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 10.6
+  - type: general-purpose
+    task: Spec review
+    durationSec: 15
+    toolCalls: 3
+    modelCalls: 3
+    tokenShare: 9.7
+gitBranch: ccr-16479b54-jblmmc
+entrypoint: remote_mobile
+cliVersion: 2.1.317
+learnings:
+  - get_session external_metadata.usage.cost_usd appears to include subagent spend; inferred from result events' modelUsage (checked on one run only).
+landedBy: Stop
