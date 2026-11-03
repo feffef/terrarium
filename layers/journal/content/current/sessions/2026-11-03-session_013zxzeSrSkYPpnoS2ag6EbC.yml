@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSrSkYPpnoS2ag6EbC
 startedAt: 2026-11-03T02:07:38Z
-endedAt: 2026-11-03T02:21:09Z
+endedAt: 2026-11-03T02:24:27Z
 kind: autonomous
 goal: "Scheduled run: turn logged Frictions into fixes"
-status: in-review
-outcome: "Ledger PR #2807 open and gate-green; three regression issues filed; no fix dispatched"
-summary: "Scheduled frictions-to-fixes run, nothing human-instructed beyond the stored prompt. A survey subagent read 27 sessions, filed 51 occurrences (count unverified by it) into 28 entries, opened two entries and recorded fix PRs #2798 and #2794. I filed regression issues #2804, #2805 and #2806 (the top three moderate regressions not already tracked), then a design agent judged all three never-fixed picks as no change (installed code-review Skill is uneditable; CLAUDE.md already covers the rewrite slip; validate:content cost is below a Human-only gate edit). I recorded those as dropped notes, tracked the regression entries, pruned the ledger, ran gate:scoped green, pushed and opened PR #2807. No fix PRs, so no closing ledger PR. Still open: merge of #2807 once CI is green."
+status: completed
+outcome: "Ledger PR #2807 merged; three regression issues filed; no fix dispatched"
+summary: "Scheduled frictions-to-fixes run, nothing human-instructed beyond the stored prompt. A survey subagent read 27 sessions, filed 51 occurrences (count unverified by it) into 28 entries, opened two entries and recorded fix PRs #2798 and #2794. I filed regression issues #2804, #2805 and #2806 (the top three moderate regressions not already tracked), then a design agent judged all three never-fixed picks as no change (installed code-review Skill is uneditable; CLAUDE.md already covers the rewrite slip; validate:content cost is below a Human-only gate edit). I recorded those as dropped notes, tracked the regression entries, pruned the ledger, ran gate:scoped green, pushed and opened PR #2807. No fix PRs, so no closing ledger PR. PR #2807 merged after green CI and my verdict comment."
 prs:
   - "2807"
 docsRead:
@@ -59,19 +59,24 @@ frictions:
   - description: The Stop hook asked twice to push the ledger commits before the pre-push gate and review had run, as ADR-0004 allows overriding.
     solution: Have the hook stay quiet while a gate run is in progress or on a branch with no PR yet.
     severity: nit
-durationSec: 812
+  - description: log-session refused the completed log right after the merge until I re-invoked close-session, though I had just run the same close steps; one extra round trip.
+    solution: Let the merge hint say to invoke close-session before editing the log's status, as PR 2798 now does.
+    severity: nit
+durationSec: 1010
 models:
-  claude-sonnet-5-5: 55
+  claude-sonnet-5-5: 72
 toolCounts:
-  Bash: 16
-  Skill: 3
+  Bash: 20
+  Skill: 4
   Read: 2
   Agent: 2
-  ReadNotifications: 1
-  ToolSearch: 2
+  ReadNotifications: 3
+  ToolSearch: 3
   mcp__github__issue_write: 3
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/frictions/adr-check-output-oversized.yml
   - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
@@ -220,13 +225,13 @@ subagents:
     durationSec: 312
     toolCalls: 33
     modelCalls: 31
-    tokenShare: 44.9
+    tokenShare: 38.4
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 107
     toolCalls: 14
     modelCalls: 11
-    tokenShare: 13.2
+    tokenShare: 11.3
 gitBranch: claude/eager-ptolemy-y9kqz0
 entrypoint: remote_trigger
 cliVersion: 2.1.317
