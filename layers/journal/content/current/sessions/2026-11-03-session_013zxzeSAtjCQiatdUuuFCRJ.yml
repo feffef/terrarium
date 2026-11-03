@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeSAtjCQiatdUuuFCRJ
 startedAt: 2026-11-03T07:57:16Z
-endedAt: 2026-11-03T08:55:21Z
-kind: delegated
-goal: Weekly improvement run on the Glass Box guide
-status: completed
-outcome: "PR 2815 merged: 19 page edits through the blind gate, 5 false claims fixed, 5 structural steps, gate and CI green"
-summary: "Human-instructed: the owner started the glassbox-improve Skill (one prompt, the kickoff); every step after that followed the Skill's own instructions. Agent-initiated: the three judgement calls below. I rated all 64 pages with 10 raters, tallied, filtered and researched with 20 researchers, wrote with 12 opus writers in worktrees, merged their branches, gated 19 pages through 57 blind judges, ran the A election with 26 judges, ran code-review, and opened PR 2815 after gate:scoped passed. Judgement calls: (1) I skipped three deficits and one step that would have undone last run's changes (prose-overrides promotion, the Pruning instructions Excerpt, the Session logs Excerpt) and proposed them as DECISIONS lines instead; (2) three pages that receive a moved fact failed the first gate round because the judge question did not say the fact moves to them, so I rewrote that question once and re-gated them (all three then won 3 of 3), filing the Skill defect as issue 2816; (3) the code review found two factual slips that the blind judges had passed (a Ledger sentence contradicted the prune script, and a CSS sentence said every Tenant maps the diagram tokens), which I fixed myself. The run cost 50.22 dollars and about 92 judges were dispatched by hand, which repeats issue 2805. After CI went green on the final head I posted my verdict and merged with merge-pr.ts (merge commit 122aeeb4d). Still open for the next run: the pending guest-contributions Lesson step, which waits on pages other steps took."
+endedAt: 2026-11-03T10:11:44Z
+kind: interactive
+goal: Weekly improvement run on the Glass Box guide, then cutting its judge cost
+status: in-review
+outcome: "Run PR 2815 merged; follow-up PR 2817 open: one gate judge, 4 A comparisons, per-page gate question, briefs command"
+summary: "Human-instructed: the owner started the glassbox-improve Skill (the kickoff), later asked what the run cost, which page improved most, whether a workflow would save tokens and which step had the worst cost to benefit, ran /retro, and then told me to do the cheaper gate and the retro's items 3, 4 and 5 as one PR built by sonnet agents with a single code-review. Answers to my two design questions (cap the A election at 4 comparisons, include issue 2816) were also the owner's. Agent-initiated: skipping three deficits that would undo last run's changes, re-gating three receiving pages with a clearer question, and the small review fixes. Part 1 (PR 2815): I rated 64 pages with 10 raters, researched with 20, wrote with 12 opus writers, gated 19 pages through 57 blind judges, ran the A election with 26 judges, reviewed, and merged 19 page edits, 5 false claims fixed, 5 structural steps, at about 53 dollars (the recorded figure is 50.22). The gate stopped nothing, so the retro named it the worst cost to benefit (about 4.1 million subagent tokens, 39 percent). Part 2 (PR 2817): one sonnet agent built the changes test-first in a worktree; I ran one code-review (Standards and Spec in parallel), fixed three small findings, ran gate:scoped, pushed and opened the PR. Open: CI on PR 2817, my verdict and the merge; the workflow-script conversion stays with issue 2805."
 prs:
   - "2815"
+  - "2817"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: required before my first git command; told me to fetch and use git commit -F
@@ -87,6 +88,14 @@ docsRead:
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/nuxt-content/04.query-collection.md
     reason: (read before editing)
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-improve/scripts/grades.ts
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-improve/tests/unit/grades.spec.ts
+    reason: (read before editing)
+  - path: layers/glassbox/page-checks.ts
+    reason: (no reason given)
   - path: .agents/skills/auto-triage/SKILL.md
     reason: (no reason given)
   - path: /home/user/terrarium/.agents/skills/wayfinder/SKILL.md
@@ -99,8 +108,6 @@ docsRead:
     reason: (no reason given)
   - path: .agents/skills/wayfinder/SKILL.md
     reason: (no reason given)
-  - path: layers/glassbox/page-checks.ts
-    reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/nuxt-vue/03.virtual-modules.md
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/nuxt-content/07.mermaid-pre-rendering.md
@@ -109,6 +116,8 @@ docsRead:
     reason: (read before editing)
   - path: layers/glassbox/content/guide/pages/git-github/05.attribution.md
     reason: (read before editing)
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
   - path: docs/adr/0009-session-logs-commit-directly-to-main.md
     reason: (no reason given)
   - path: .agents/skills/blog-post/SKILL.md
@@ -182,6 +191,12 @@ skillsUsed:
     reason: Standards and Spec reviewers on the run branch before the first push
   - name: close-session
     reason: invoked once the PR opened
+  - name: retro
+    reason: owner-invoked retrospective of the run; its candidates led to PR 2817
+  - name: writing-for-agents
+    reason: loaded as the retro's step 1
+  - name: implement
+    reason: owner-named; I dispatched one sonnet agent to build the spec test-first
   - name: log-session
     reason: (no reason given)
 frictions:
@@ -215,27 +230,40 @@ frictions:
   - description: The researcher brief I filled in kept the placeholder phrase listed in the run notes below, which named a list that did not exist; I patched it with sed.
     solution: Fill briefs from one script that asserts no placeholder text is left, and keep the run notes out of the brief.
     severity: nit
-durationSec: 3485
+  - description: I told the owner /retro was not a skill without listing .claude/skills; it was a repo Skill, and my wrong answer cost one round trip.
+    solution: Before saying a slash command doesn't exist, list .claude/skills and .agents/skills for it.
+    severity: minor
+  - description: I said the session's cost_usd included the subagents' tokens without checking; get_session reports the lead session and I had no evidence either way, so I corrected it when asked.
+    solution: State only what the figure measures (lead usage) and say that the subagent share is unknown.
+    severity: minor
+  - description: My own recommendation to run the A election on rematches only would have made a first A impossible; I caught it before building by checking the rule and asked the owner.
+    solution: Run a recommendation on two concrete cases before giving it (CLAUDE.md, Question the premise); the A rule needs a first win.
+    severity: minor
+  - description: The brief for the implementation agent had a garbled reset-to-pin line, a mistyped sha followed by a correction in the same sentence.
+    solution: Fill pins from a variable and re-read the brief once before dispatch, as dispatch-subagents asks.
+    severity: nit
+durationSec: 8068
 models:
-  claude-sonnet-5-5: 498
+  claude-sonnet-5-5: 580
 toolCounts:
-  Bash: 106
+  Bash: 121
   Read: 18
   mcp__github__list_pull_requests: 1
-  Agent: 136
-  Edit: 20
-  Skill: 4
+  Agent: 139
+  Edit: 21
+  Skill: 8
   ToolSearch: 2
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__claude-code-remote__get_session: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
+  mcp__claude-code-remote__get_session: 2
   mcp__github__update_pull_request: 2
   mcp__github__issue_read: 1
   mcp__github__issue_write: 1
-  Write: 1
-  ReadNotifications: 2
+  Write: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 3
   mcp__github__add_issue_comment: 1
+  AskUserQuestion: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
   - layers/glassbox/content/guide/pages/walkthroughs/a-friction-becomes-a-fix.md
@@ -254,6 +282,11 @@ filesEdited:
   - layers/glassbox/content/guide/pages/nuxt-content/07.mermaid-pre-rendering.md
   - layers/glassbox/content/guide/pages/terrarium-practice/01.human-in-the-loop.md
   - layers/glassbox/content/guide/pages/git-github/05.attribution.md
+  - .agents/skills/glassbox-improve/scripts/grades.ts
+  - .agents/skills/glassbox-improve/tests/unit/grades.spec.ts
+  - .agents/skills/glassbox-improve/writer-brief.md
+  - .agents/skills/glassbox-improve/SKILL.md
+  - .agents/skills/glassbox-improve/researcher-brief.md
   - .agents/skills/glassbox-improve/runs.yml
   - .agents/skills/glassbox-improve/grades.yml
   - layers/glassbox/content/drafts/pages/walkthroughs/a-friction-becomes-a-fix.md
@@ -272,6 +305,8 @@ rulesLoaded:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0030.md
   - .claude/rules/adr-0022.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0014.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
@@ -284,6 +319,15 @@ rulesFollowedUp:
   - .claude/rules/adr-0026.md
   - .claude/rules/adr-0020.md
   - .claude/rules/adr-0019.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: false
+    by: subagent
+  - adr: 27
+    via: path
+    readAfter: false
+    by: subagent
 rulesLoadedBySubagents:
   - .claude/rules/adr-0021.md
   - .claude/rules/glossary-terms.md
@@ -296,12 +340,10 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0020.md
   - .claude/rules/adr-0026.md
   - .claude/rules/adr-0028.md
-  - .claude/rules/guards.md
   - .claude/rules/ui-verification.md
   - .claude/rules/adr-0006.md
   - .claude/rules/adr-0007.md
   - .claude/rules/adr-0013.md
-  - .claude/rules/adr-0014.md
   - .claude/rules/adr-0016.md
   - .claude/rules/adr-0018.md
   - .claude/rules/adr-0015.md
@@ -333,6 +375,7 @@ docsReadBySubagents:
   - docs/adr/0016-tenant-root-layer-routes.md
   - docs/adr/0014-build-time-virtual-routing-module.md
   - docs/adr/0007-derived-files-built-not-committed.md
+  - .agents/skills/glassbox-improve/SKILL.md
   - .agents/skills/wayfinder/SKILL.md
   - docs/adr/0030-adrs-document-a-decision-not-its-history.md
   - docs/adr/0020-requester-trust-tiers.md
@@ -399,61 +442,61 @@ subagents:
     durationSec: 241
     toolCalls: 20
     modelCalls: 20
-    tokenShare: 2.3
+    tokenShare: 2.1
   - task: Rater B
     model: sonnet
     durationSec: 186
     toolCalls: 10
     modelCalls: 10
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Rater C1
     model: sonnet
     durationSec: 319
     toolCalls: 33
     modelCalls: 32
-    tokenShare: 2.4
+    tokenShare: 2.1
   - task: Rater C2
     model: sonnet
     durationSec: 502
     toolCalls: 70
     modelCalls: 65
-    tokenShare: 4
+    tokenShare: 3.6
   - task: Rater C3
     model: sonnet
     durationSec: 383
     toolCalls: 55
     modelCalls: 49
-    tokenShare: 3.1
+    tokenShare: 2.7
   - task: Rater C4
     model: sonnet
     durationSec: 557
     toolCalls: 75
     modelCalls: 71
-    tokenShare: 4.7
+    tokenShare: 4.2
   - task: Rater C5
     model: sonnet
     durationSec: 416
     toolCalls: 54
     modelCalls: 50
-    tokenShare: 3.1
+    tokenShare: 2.7
   - task: Rater C6
     model: sonnet
     durationSec: 307
     toolCalls: 30
     modelCalls: 29
-    tokenShare: 2
+    tokenShare: 1.8
   - task: Rater C7
     model: sonnet
     durationSec: 327
     toolCalls: 43
     modelCalls: 41
-    tokenShare: 2.9
+    tokenShare: 2.5
   - task: Rater C8
     model: sonnet
     durationSec: 190
     toolCalls: 28
     modelCalls: 21
-    tokenShare: 1.3
+    tokenShare: 1.1
   - task: Research subject claude-code
     model: sonnet
     durationSec: 72
@@ -465,7 +508,7 @@ subagents:
     durationSec: 54
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Research subject git-github
     model: sonnet
     durationSec: 47
@@ -477,7 +520,7 @@ subagents:
     durationSec: 60
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Research subject nuxt-vue
     model: sonnet
     durationSec: 86
@@ -507,7 +550,7 @@ subagents:
     durationSec: 81
     toolCalls: 10
     modelCalls: 9
-    tokenShare: 0.4
+    tokenShare: 0.3
   - task: Research step invariant-tests
     model: sonnet
     durationSec: 54
@@ -519,13 +562,13 @@ subagents:
     durationSec: 64
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Research step pnpm move
     model: sonnet
     durationSec: 56
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Research step claude-md move
     model: sonnet
     durationSec: 50
@@ -537,7 +580,7 @@ subagents:
     durationSec: 59
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Research step hitl trust-tiers move
     model: sonnet
     durationSec: 45
@@ -549,19 +592,19 @@ subagents:
     durationSec: 87
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 0.4
+    tokenShare: 0.3
   - task: Research step planning work-queue move
     model: sonnet
     durationSec: 65
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Research step query-collection move
     model: sonnet
     durationSec: 53
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Research step css-mermaid move
     model: sonnet
     durationSec: 55
@@ -573,79 +616,79 @@ subagents:
     durationSec: 140
     toolCalls: 14
     modelCalls: 12
-    tokenShare: 0.6
+    tokenShare: 0.5
   - task: Write claude-code pages
     model: opus
     durationSec: 489
     toolCalls: 59
     modelCalls: 33
-    tokenShare: 1.8
+    tokenShare: 1.6
   - task: Write mcp attribution move
     model: opus
     durationSec: 345
     toolCalls: 33
     modelCalls: 22
-    tokenShare: 1.1
+    tokenShare: 1
   - task: Write pnpm path-check move
     model: opus
     durationSec: 354
     toolCalls: 35
     modelCalls: 26
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Write engineering skills move
     model: opus
     durationSec: 361
     toolCalls: 35
     modelCalls: 22
-    tokenShare: 1.2
+    tokenShare: 1
   - task: Write css mermaid cut
     model: opus
     durationSec: 275
     toolCalls: 27
     modelCalls: 16
-    tokenShare: 0.9
+    tokenShare: 0.8
   - task: Write skill-pack pages
     model: opus
     durationSec: 417
     toolCalls: 46
     modelCalls: 29
-    tokenShare: 1.6
+    tokenShare: 1.4
   - task: Write nuxt-content query page
     model: opus
     durationSec: 293
     toolCalls: 25
     modelCalls: 16
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Write nuxt-vue virtual modules
     model: opus
     durationSec: 303
     toolCalls: 29
     modelCalls: 19
-    tokenShare: 0.9
+    tokenShare: 0.8
   - task: Write terrarium-practice pages
     model: opus
     durationSec: 259
     toolCalls: 25
     modelCalls: 12
-    tokenShare: 0.8
+    tokenShare: 0.7
   - task: Write git-github trust tiers
     model: opus
     durationSec: 344
     toolCalls: 30
     modelCalls: 22
-    tokenShare: 1
+    tokenShare: 0.9
   - task: Write verification testing page
     model: opus
     durationSec: 289
     toolCalls: 32
     modelCalls: 17
-    tokenShare: 0.9
+    tokenShare: 0.8
   - task: Write friction walkthrough promotion
     model: opus
     durationSec: 426
     toolCalls: 54
     modelCalls: 35
-    tokenShare: 1.7
+    tokenShare: 1.5
   - task: Judge gate 1-1
     model: sonnet
     durationSec: 11
@@ -879,7 +922,7 @@ subagents:
     durationSec: 16
     toolCalls: 2
     modelCalls: 3
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Judge gate 14-1
     model: sonnet
     durationSec: 16
@@ -939,19 +982,19 @@ subagents:
     durationSec: 15
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Judge gate 17-2
     model: sonnet
     durationSec: 18
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Judge gate 17-3
     model: sonnet
     durationSec: 13
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Judge gate 18-1
     model: sonnet
     durationSec: 10
@@ -993,7 +1036,7 @@ subagents:
     durationSec: 11
     toolCalls: 2
     modelCalls: 3
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Re-judge gate 16-2
     model: sonnet
     durationSec: 8
@@ -1017,7 +1060,7 @@ subagents:
     durationSec: 13
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Re-judge gate 17-3
     model: sonnet
     durationSec: 15
@@ -1101,7 +1144,7 @@ subagents:
     durationSec: 14
     toolCalls: 2
     modelCalls: 3
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: A judge a1-2
     model: sonnet
     durationSec: 20
@@ -1185,7 +1228,7 @@ subagents:
     durationSec: 23
     toolCalls: 2
     modelCalls: 3
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: A judge a10-2
     model: sonnet
     durationSec: 15
@@ -1203,13 +1246,31 @@ subagents:
     durationSec: 174
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 0.9
+    tokenShare: 0.8
   - task: Spec review of run diff
     model: sonnet
     durationSec: 188
     toolCalls: 25
     modelCalls: 24
-    tokenShare: 1.8
+    tokenShare: 1.6
+  - task: Implement glassbox-improve cuts
+    model: sonnet
+    durationSec: 381
+    toolCalls: 25
+    modelCalls: 18
+    tokenShare: 1.1
+  - task: Standards review of grades.ts change
+    model: sonnet
+    durationSec: 62
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 0.4
+  - task: Spec review of grades.ts change
+    model: sonnet
+    durationSec: 91
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 0.6
 gitBranch: ccr-f4cbc421-qtb46a
 entrypoint: remote_mobile
 cliVersion: 2.1.317
@@ -1220,4 +1281,5 @@ ideas:
   - "Make the glassbox-improve judge step one workflow script in .claude/workflows/: read every judges/*.md brief, dispatch sonnet judges 20 at a time, save the replies, run grades.ts votes and loop until nothing is owed. It removes about 90 hand calls per run and is the fix issue 2805 asks for."
   - "Proposed DECISIONS lines: Keep Prose overrides as its own Lesson, moving it into MDC components undoes the 2026-11-02 promotion; Pruning instructions keeps the find-trial-window.ts Excerpt because .agents/prune-trials.yml shows only comments; Session logs keeps the isLinkedWorktree Excerpt that last run's move added."
   - Five drafts are still waiting after this run (planning-a-big-change, a-newcomers-first-hour, reading-across-tenants, routines, session-log-lands-on-main); next run could promote the one that raters rank highest.
+  - Add a tokens field per dispatched agent to run.yml, filled by the lead from each completion notice, and have record print the share per step, so the next retro reads cost per step from one table instead of adding up notices by hand.
 landedBy: Stop
