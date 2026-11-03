@@ -1,9 +1,9 @@
 ---
 title: A friction becomes a fix
-description: How a pain-point one agent logs becomes a change to the instructions every later agent works under, through a scheduled Skill that groups, screens, fixes and merges.
-revision: '8725a0abf5893071ea2e261a6c2c9c500af64614'
-revisionDate: '2026-11-01'
-publishedAt: '2026-10-17T09:52:35Z'
+description: How a pain-point one agent logs becomes a change to the instructions later agents work under, through a scheduled Skill.
+revision: 'ec0a8e6a4b4f845792f1352a835619c7e5e7d75e'
+revisionDate: '2026-11-03'
+publishedAt: '2026-11-03T08:18:44Z'
 ---
 
 No one reads every session to fix what went wrong in it. Each session reports its own pain-points instead, and a scheduled agent turns the ones that recur or cost the most into fixes. This Walkthrough follows one Friction from the session that hit it, through that agent's run, to the changed instruction a later session reads.
@@ -23,7 +23,7 @@ flowchart TD
 Something costs a session effort: a doc misled it, a tool call was refused, a step was missing. When the session logs its work, it records every :term[Friction], each with a description, a possible fix and a severity from `nit` to `blocker`, small ones too.
 
 ::lessons
-[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
+[Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
 ## 2. The log lands on `main`
@@ -31,7 +31,7 @@ Something costs a session effort: a doc misled it, a tool call was refused, a st
 A hook commits the :term[session log] straight to `main`, without a PR. The Friction is on record from then on, whether or not the session's own work ever merges.
 
 ::lessons
-[Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
+[Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
 ::
 
 ## 3. A Routine starts `frictions-to-fixes`
@@ -39,12 +39,12 @@ A hook commits the :term[session log] straight to `main`, without a PR. The Fric
 A :term[Routine] starts a session that runs the `frictions-to-fixes` Skill, or a Trusted user runs it by hand. It is a session like any other, following the Skill's steps.
 
 ::lessons
-[Scheduled tasks](/t/glassbox/guide/claude-code/routines) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills) · :file[.agents/skills/frictions-to-fixes/SKILL.md]
+[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/claude-code/routines) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills)
 ::
 
 ## 4. A subagent reads the logs
 
-One subagent reads the logs and hands back a short ranked report. It reads every log in a recent window and files each matching Friction under an entry of the :term[Friction Ledger]: one entry per root cause, with every session that hit it. It commits those Ledger changes and changes nothing else.
+One subagent reads the logs and hands back a short ranked report. It reads every log in a recent window and files each matching Friction under an entry of the :term[Friction Ledger]: one entry per root cause, with every recent session that hit it. It commits those Ledger changes and changes nothing else.
 
 ::lessons
 [Subagents](/t/glassbox/guide/claude-code/subagents) · [Friction Ledger](/t/journal/current/frictions) · :file[scripts/session/extract-frictions.ts] · :file[layers/journal/content/current/frictions/]
@@ -52,7 +52,7 @@ One subagent reads the logs and hands back a short ranked report. It reads every
 
 ## 5. It screens out what a fix can't help
 
-The subagent drops a Friction that a merged change already fixed, one that an open issue or PR already tracks (unless it has sat idle), one inside an instruction that a :term[Prune Trial] is testing, and one that only an edit to an installed Skill could fix. A Friction that came back after its fix merged is a regression: the run files an issue that names the fix that failed, and doesn't try the same fix again.
+The subagent drops a Friction that a merged change already fixed, one that an open issue or PR already tracks (unless it has sat idle), one inside an instruction that a :term[Prune Trial] is testing, and one that only an edit to an installed Skill could fix. A Friction that came back after its fix merged is a regression: the run never fixes it again, and files an issue naming the failed fix for only the worst few.
 
 ::lessons
 [Pruning instructions](/t/glassbox/guide/terrarium-practice/pruning-instructions) · [Installed Skills](/t/glassbox/guide/skill-pack/skill-packs) · :file[scripts/git/list-merges-since.ts]
@@ -87,17 +87,17 @@ The run reviews each branch itself, opens its PR and posts its verdict there as 
 The fix lands in a doc, a repo-owned Skill, a script or config. A later session that opens that doc or runs that Skill gets the new text, and its log lists that doc among the docs it read, or that Skill among the Skills it used. The Ledger entry records the fix's PR and the date it merged, and from then on only sessions that started after the fix count as a recurrence.
 
 ::lessons
-[Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [CLAUDE.md as the every-session contract](/t/glassbox/guide/claude-code/claude-md) · [Friction Ledger](/t/journal/current/frictions)
+[Claude Code Skills](/t/glassbox/guide/claude-code/skills) · [CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Friction Ledger](/t/journal/current/frictions)
 ::
 
 ## A real case
 
-In July 2026 a session waited about two hours on a PR's CI. It had called `ScheduleWakeup` to wake it later, but that tool paces `/loop`, and nothing woke the session. An issue filed from the logged Friction added a line to an agent doc (#241), and a later `frictions-to-fixes` run added another (#425). On 31 July two scheduled sessions made the same mistake; neither had any reason to open that doc. A run filed it as a regression (#814), and the owner chose both a line in CLAUDE.md and a guard. Since PR #843, :file[scripts/hooks/loop-only-tool-guard.ts] denies a new wakeup outside `/loop`, and its message says what to use instead.
+On 8 July 2026 a scheduled session waited about two hours on a PR's CI. It had called `ScheduleWakeup` to wake it later, but that tool paces `/loop`, and nothing woke the session. A `frictions-to-fixes` run filed the logged Friction as an issue (#241), whose fix added a line to an agent doc, and a later run added another (#425). On 31 July two sessions made the same mistake again. A run on 2 August filed it as a regression for a human (#814), and PR #843 fixed it twice over: a line in CLAUDE.md at the time, and a guard. Since then, :file[scripts/hooks/loop-only-tool-guard.ts] denies a new wakeup outside `/loop`, and its message says what to use instead.
 
 ## Where next
 
-- [Session logs and Frictions](/t/glassbox/guide/terrarium-practice/session-logs)
+- [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop)
+- [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
 - [Scheduled tasks](/t/glassbox/guide/claude-code/routines)
-- [Claude Code Skills](/t/glassbox/guide/claude-code/skills)
 - [Asking an agent for a change](/t/glassbox/guide/walkthroughs/asking-for-a-change)
 - [Friction Ledger](/t/journal/current/frictions)
