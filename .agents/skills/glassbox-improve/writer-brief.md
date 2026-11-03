@@ -12,8 +12,8 @@ the cited A page does better, not by copying it. A blind judge compares
 each page you edit with its old version on the items' fixes, and a page that
 isn't clearly better is restored: more material doesn't win.
 
-**Research**: {RESEARCH FILE}. Check every fact you write in the source
-yourself. Take facts and Excerpts from the source, never from memory.
+**Research**: {RESEARCH FILE}. Take facts and Excerpts from the source,
+never from memory.
 
 **False claims found in this run** (on any page; never repeat one):
 {FALSE CLAIMS}

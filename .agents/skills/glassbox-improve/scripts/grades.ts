@@ -178,7 +178,7 @@ const walkthroughNa: Lens[] = ['reasoning', 'transfer']
 const isWalkthrough = (page: string) => page.startsWith('walkthroughs/')
 // Relevance leads to steps, never to a page to learn from.
 const electedLenses = lenses.filter((l) => l !== 'relevance')
-// Cost: 26 judges awarded nothing in the 2026-11-03 run (retro).
+// Cost: a comparison can take three judges (issue #2805).
 export const comparisonsPerRun = 4
 const holdersCompared = 3
 const freshOpponents = 2

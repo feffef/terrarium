@@ -411,7 +411,7 @@ describe('nextRecord and runEntry', () => {
   })
 
   it('counts the run for runs.yml', () => {
-    const gate = [{ page: 'a/02.p', criterion: 'clarity: f', votes: ['win', 'win', 'equal'] as const, merged: true }]
+    const gate = [{ page: 'a/02.p', criterion: 'clarity: f', votes: ['win'] as const, merged: true }]
     const entry = runEntry({ run: today, base: 'b', session: 'session_x', pr: 2801, costUsd: 31.2 }, plan, result, [...gate.map((g) => ({ ...g, votes: [...g.votes] }))])
     expect(entry).toEqual({
       run: today, session: 'session_x', base: 'b', pr: 2801, costUsd: 31.2, relevance: true,
@@ -421,7 +421,7 @@ describe('nextRecord and runEntry', () => {
         { page: 'a/02.p', lens: 'clarity', grade: 'D', quote: 'q', fix: 'f', confirmed: true, edited: true },
       ],
       falseClaims: [{ page: 'a/02.p', claim: 'runs daily', evidence: 'x.ts:3', fixed: true }],
-      gate: [{ page: 'a/02.p', criterion: 'clarity: f', votes: ['win', 'win', 'equal'], merged: true }],
+      gate: [{ page: 'a/02.p', criterion: 'clarity: f', votes: ['win'], merged: true }],
       comparisons: [{ lens: 'reasoning', candidate: 'a/01.p', against: 'a/03.p', votes: ['win', 'win', 'loss'], result: 'win' }],
     })
   })
