@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSuptjybJT9eajhiUR
 startedAt: 2026-11-03T04:03:28Z
-endedAt: 2026-11-03T04:16:18Z
+endedAt: 2026-11-03T04:19:15Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs for staleness and muddle
-status: in-review
-outcome: Sweep PR 2808 open with 6 checker-confirmed fixes; gate green, CI pending
-summary: "Scheduled audit-docs run; the schedule started it and no human prompted any step (all agent-initiated). Three read-only reviewers returned: Freshness 0 findings, Single-home 7, Coherence 9. After merging overlaps (Single-home 1 = Coherence 1) there were 15 distinct findings, fact-checked by two checkers. Verdicts by finding: 7 CONFIRMED / CONFIRMED-BUT (glassbox-improve Inventory entry, code-review Inventory role, branch-protection owner-identity clause (only the section 2 edit), mermaid sentence, glassbox-improve SKILL section 7 gate wording, Q2 pointer), and 9 WRONG (Single-home 3, 6, 7 and the branch-protection section 5 half; Coherence 3, 4, 5a, 5b, 7, 8, 9). I applied the confirmed text only; I left out the checker-corrected optional added sentence in SKILL section 7 to keep it short. The commit was reviewed by two code-review subagents (Standards and Spec), both clean apart from a role word-count nit that the edit shortened; gate:scoped green on the final head. Sweep PR 2808 is open and subscribed; it touches no Human-only path, so no escalation PR was needed. No issue filed. Covered by B and C: docs/research/*, the glassbox-improve Skill with its briefs, Skill Inventory entries (role and gist plus last two observations), and diffs of files changed since 2026-11-01 (README.md, CLAUDE.md, docs/agents/guards.md, ADR-0009, ADR-0027, layers/glassbox/GLOSSARY.md, journal facing pages highlights, history, real-and-invented). Earlier areas were skipped per the two prior Covered lines."
+status: completed
+outcome: Sweep PR 2808 merged with 6 checker-confirmed doc fixes; no escalation needed
+summary: "Scheduled audit-docs run; the schedule started it and no human prompted any step (all agent-initiated). Three read-only reviewers returned: Freshness 0 findings, Single-home 7, Coherence 9. After merging overlaps (Single-home 1 = Coherence 1) there were 15 distinct findings, fact-checked by two checkers. Verdicts by finding: 7 CONFIRMED / CONFIRMED-BUT (glassbox-improve Inventory entry, code-review Inventory role, branch-protection owner-identity clause (only the section 2 edit), mermaid sentence, glassbox-improve SKILL section 7 gate wording, Q2 pointer), and 9 WRONG (Single-home 3, 6, 7 and the branch-protection section 5 half; Coherence 3, 4, 5a, 5b, 7, 8, 9). I applied the confirmed text only; I left out the checker-corrected optional added sentence in SKILL section 7 to keep it short. The commit was reviewed by two code-review subagents (Standards and Spec), both clean apart from a role word-count nit that the edit shortened; gate:scoped green on the final head. Sweep PR 2808 merged via merge-pr after green CI and a verdict; it touches no Human-only path, so no escalation PR was needed. No issue filed. Covered by B and C: docs/research/*, the glassbox-improve Skill with its briefs, Skill Inventory entries (role and gist plus last two observations), and diffs of files changed since 2026-11-01 (README.md, CLAUDE.md, docs/agents/guards.md, ADR-0009, ADR-0027, layers/glassbox/GLOSSARY.md, journal facing pages highlights, history, real-and-invented). Earlier areas were skipped per the two prior Covered lines."
 prs:
   - "2808"
 docsRead:
@@ -87,15 +87,18 @@ frictions:
   - description: A Stop hook repeatedly asked me to push while review and gate were still running, contradicting the review-before-first-push rule.
     solution: Have the Stop hook skip its push prompt while a code-review or gate is pending, or say it defers to ADR-0004.
     severity: nit
-durationSec: 769
+durationSec: 946
 models:
-  claude-sonnet-5-5: 61
+  claude-sonnet-5-5: 78
 toolCounts:
-  Bash: 19
+  Bash: 24
   Agent: 7
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/skills/glassbox-improve/SKILL.md
   - docs/research/github-branch-protection-vs-autonomous-log-commits.md
@@ -184,43 +187,43 @@ subagents:
     durationSec: 82
     toolCalls: 14
     modelCalls: 14
-    tokenShare: 7.4
+    tokenShare: 6.9
   - type: general-purpose
     task: "Audit docs: Single-home"
     durationSec: 196
     toolCalls: 28
     modelCalls: 26
-    tokenShare: 19.7
+    tokenShare: 18.3
   - type: general-purpose
     task: "Audit docs: Coherence"
     durationSec: 213
     toolCalls: 32
     modelCalls: 31
-    tokenShare: 23
+    tokenShare: 21.3
   - type: general-purpose
     task: Fact-check findings pool 1
     durationSec: 170
     toolCalls: 25
     modelCalls: 18
-    tokenShare: 10.5
+    tokenShare: 9.7
   - type: general-purpose
     task: Fact-check findings pool 2
     durationSec: 137
     toolCalls: 26
     modelCalls: 22
-    tokenShare: 10.5
+    tokenShare: 9.7
   - type: general-purpose
     task: Review Standards axis
     durationSec: 15
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: general-purpose
     task: Review Spec axis
     durationSec: 26
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 2.1
+    tokenShare: 1.9
 gitBranch: claude/festive-mayer-wzv9h4
 entrypoint: remote_trigger
 cliVersion: 2.1.317
