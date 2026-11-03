@@ -1,0 +1,230 @@
+schemaVersion: 1
+session: session_013zxzeSuptjybJT9eajhiUR
+startedAt: 2026-11-03T04:03:28Z
+endedAt: 2026-11-03T04:16:18Z
+kind: autonomous
+goal: Scheduled audit of the repo's docs for staleness and muddle
+status: in-review
+outcome: Sweep PR 2808 open with 6 checker-confirmed fixes; gate green, CI pending
+summary: "Scheduled audit-docs run; the schedule started it and no human prompted any step (all agent-initiated). Three read-only reviewers returned: Freshness 0 findings, Single-home 7, Coherence 9. After merging overlaps (Single-home 1 = Coherence 1) there were 15 distinct findings, fact-checked by two checkers. Verdicts by finding: 7 CONFIRMED / CONFIRMED-BUT (glassbox-improve Inventory entry, code-review Inventory role, branch-protection owner-identity clause (only the section 2 edit), mermaid sentence, glassbox-improve SKILL section 7 gate wording, Q2 pointer), and 9 WRONG (Single-home 3, 6, 7 and the branch-protection section 5 half; Coherence 3, 4, 5a, 5b, 7, 8, 9). I applied the confirmed text only; I left out the checker-corrected optional added sentence in SKILL section 7 to keep it short. The commit was reviewed by two code-review subagents (Standards and Spec), both clean apart from a role word-count nit that the edit shortened; gate:scoped green on the final head. Sweep PR 2808 is open and subscribed; it touches no Human-only path, so no escalation PR was needed. No issue filed. Covered by B and C: docs/research/*, the glassbox-improve Skill with its briefs, Skill Inventory entries (role and gist plus last two observations), and diffs of files changed since 2026-11-01 (README.md, CLAUDE.md, docs/agents/guards.md, ADR-0009, ADR-0027, layers/glassbox/GLOSSARY.md, journal facing pages highlights, history, real-and-invented). Earlier areas were skipped per the two prior Covered lines."
+prs:
+  - "2808"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before fetch; confirmed fetch and origin/main usage
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: gave the review-before-push, gate and closing-a-scheduled-run steps I followed
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before first GitHub operation; PR create went through MCP as it says
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist for the reviewers and checkers
+    useful: yes
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: the run's own steps and tiers
+    useful: yes
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: (no reason given)
+  - path: docs/research/shell-reads-by-output-matching.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: (read before editing)
+  - path: docs/research/public-readiness-review.md
+    reason: (no reason given)
+  - path: docs/research/making-repo-public.md
+    reason: (no reason given)
+  - path: docs/research/mermaid-server-side-rendering.md
+    reason: (read before editing)
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: (no reason given)
+  - path: docs/research/github-actions-public-vs-private-limits.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/agents/mdc-when-to-use.md
+    reason: (no reason given)
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: layers/glassbox/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-improve/judge-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-improve/researcher-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-improve/writer-brief.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled task itself
+  - name: code-review
+    reason: reviewed the 5-file diff before the first push
+  - name: dispatch-subagents
+    reason: wrote the reviewer and checker briefs
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Reviewers found many WRONG findings (9 of 15), mostly dated research-note text they read as stale present tense, which cost two checker runs.
+    solution: Tell reviewers up front that docs/research notes are dated records; only flag claims the doc presents as current.
+    severity: minor
+  - description: A Stop hook repeatedly asked me to push while review and gate were still running, contradicting the review-before-first-push rule.
+    solution: Have the Stop hook skip its push prompt while a code-review or gate is pending, or say it defers to ADR-0004.
+    severity: nit
+durationSec: 769
+models:
+  claude-sonnet-5-5: 61
+toolCounts:
+  Bash: 19
+  Agent: 7
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/glassbox-improve/SKILL.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/mermaid-server-side-rendering.md
+  - layers/journal/content/current/skills/code-review.yml
+  - layers/journal/content/current/skills/glassbox-improve.yml
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/tenant-glossary.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+rulesLoadedBySubagents:
+  - .claude/rules/glossary-terms.md
+docsReadBySubagents:
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/glassbox-improve/SKILL.md
+  - .agents/skills/glassbox-lesson/QUALITY.md
+  - docs/research/shell-reads-by-output-matching.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - docs/research/github-branch-protection-vs-autonomous-log-commits.md
+  - docs/research/public-readiness-review.md
+  - docs/research/making-repo-public.md
+  - docs/research/mermaid-server-side-rendering.md
+  - docs/research/content-client-queries-without-wasm.md
+  - docs/research/github-actions-public-vs-private-limits.md
+  - docs/research/nuxt-content-review-grounding.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/agents/environment-caveats.md
+  - docs/agents/mdc-when-to-use.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - layers/glassbox/GLOSSARY.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/glassbox-improve/rater-brief.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/glassbox-improve/judge-brief.md
+  - .agents/skills/glassbox-improve/researcher-brief.md
+  - .agents/skills/glassbox-improve/writer-brief.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to review and run gate:scoped before the first push and to merge only after a verdict; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session when the PR opens; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Required opening the PR and subscribing without asking, despite the system prompt; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on the PR body and commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skill-model rule loaded on Skill edits; nothing in it changed what I did
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Kept role free of ids in the Inventory edits and left importance alone; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement rule; no glossary changed this run
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Reminded me to skip text under open prune trials; none overlapped
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: Rule placement; no rule edited this run
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: ADR rewrite rule; no ADR edited this run
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded by a subagent read; no term changed
+    useful: no
+subagents:
+  - type: general-purpose
+    task: "Audit docs: Freshness"
+    durationSec: 82
+    toolCalls: 14
+    modelCalls: 14
+    tokenShare: 7.4
+  - type: general-purpose
+    task: "Audit docs: Single-home"
+    durationSec: 196
+    toolCalls: 28
+    modelCalls: 26
+    tokenShare: 19.7
+  - type: general-purpose
+    task: "Audit docs: Coherence"
+    durationSec: 213
+    toolCalls: 32
+    modelCalls: 31
+    tokenShare: 23
+  - type: general-purpose
+    task: Fact-check findings pool 1
+    durationSec: 170
+    toolCalls: 25
+    modelCalls: 18
+    tokenShare: 10.5
+  - type: general-purpose
+    task: Fact-check findings pool 2
+    durationSec: 137
+    toolCalls: 26
+    modelCalls: 22
+    tokenShare: 10.5
+  - type: general-purpose
+    task: Review Standards axis
+    durationSec: 15
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.6
+  - type: general-purpose
+    task: Review Spec axis
+    durationSec: 26
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 2.1
+gitBranch: claude/festive-mayer-wzv9h4
+entrypoint: remote_trigger
+cliVersion: 2.1.317
+trigger: audit-docs
+learnings:
+  - The .claude/skills/ paths are symlinks, so git show origin/main:.claude/skills/... fails; use .agents/skills/.
+landedBy: Stop
