@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePh7qKycsJT9g2eqU1
 startedAt: 2026-11-03T00:46:03Z
-endedAt: 2026-11-03T00:56:16Z
+endedAt: 2026-11-03T00:59:53Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "Inventory PR #2803 opened: notes for 6 Skills, 3 new entries, 8 routine cost rows; no issue filed"
-summary: "Scheduled audit-skills run over the last 7 days, all agent-initiated by the schedule; no human instruction. Gathered the scorecard, collected usage for 8 routine runs with one subagent, and ran 14 read-only behaviour checks. Step 3 closure signals: orphanScan scanned true (1852 merged PRs, 1695 with a session); 2 orphan candidates, both resolvedBy (#736, #1063); the suppression log holds those 2 resolved-annotation entries, plausible; 1 human-prompted closure (session_013zxzeRkv6UCWJtPmJ68h32, already observed last window, no new issue); no manually rescued closures. No finding cleared the bar for an issue or comment. The verified failures were repeats the owner already accepted or closed (log-session ruleVerdicts sixth window, the frictions-to-fixes top-three rule, glassbox-update review skips closed as #2748, the clear-backlog read-first gap) or single runs (glassbox-improve gates only pages named by run items, verified in grades.ts). They went to observations. The clear-backlog skip of the inspect-session check was disclosed, which the step allows, so it is no failure. Landed PR #2803 with 6 notes, 3 coverage-gap entries and 8 routine rows. The first gate failed because my line wrapping split hyphenated words in folded YAML; I fixed it, amended and the second gate was green. Not merged yet."
+status: completed
+outcome: "Inventory PR #2803 merged: notes for 6 Skills, 3 new entries, 8 routine cost rows; no issue filed"
+summary: "Scheduled audit-skills run over the last 7 days, all agent-initiated by the schedule; no human instruction. Gathered the scorecard, collected usage for 8 routine runs with one subagent, and ran 14 read-only behaviour checks. Step 3 closure signals: orphanScan scanned true (1852 merged PRs, 1695 with a session); 2 orphan candidates, both resolvedBy (#736, #1063); the suppression log holds those 2 resolved-annotation entries, plausible; 1 human-prompted closure (session_013zxzeRkv6UCWJtPmJ68h32, already observed last window, no new issue); no manually rescued closures. No finding cleared the bar for an issue or comment. The verified failures were repeats the owner already accepted or closed (log-session ruleVerdicts sixth window, the frictions-to-fixes top-three rule, glassbox-update review skips closed as #2748, the clear-backlog read-first gap) or single runs (glassbox-improve gates only pages named by run items, verified in grades.ts). They went to observations. The clear-backlog skip of the inspect-session check was disclosed, which the step allows, so it is no failure. Landed PR #2803 with 6 notes, 3 coverage-gap entries and 8 routine rows. The first gate failed because my line wrapping split hyphenated words in folded YAML; I fixed it, amended and the second gate was green. CI was green on the head, I posted my verdict and merged with merge-pr.ts."
 prs:
   - "2803"
 docsRead:
@@ -102,17 +102,21 @@ frictions:
   - description: "SHELL-READ-DETECTION: docs/agents/triage-labels.md was credited from shell output, but the session marked it (not read)"
     solution: Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts
     severity: moderate
-durationSec: 613
+durationSec: 831
 models:
-  claude-sonnet-5-5: 121
+  claude-sonnet-5-5: 141
 toolCounts:
-  Bash: 33
+  Bash: 36
   Read: 6
   Agent: 17
-  Skill: 3
-  ToolSearch: 1
+  Skill: 4
+  ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__github__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -222,103 +226,103 @@ subagents:
     durationSec: 21
     toolCalls: 11
     modelCalls: 4
-    tokenShare: 2.9
+    tokenShare: 2.7
   - task: Audit audit-docs
     model: sonnet
     durationSec: 58
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 3.9
+    tokenShare: 3.6
   - task: Audit audit-skills
     model: sonnet
     durationSec: 82
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 4.5
+    tokenShare: 4.2
   - task: Audit blog-post
     model: sonnet
     durationSec: 77
     toolCalls: 22
     modelCalls: 16
-    tokenShare: 5.7
+    tokenShare: 5.2
   - task: Audit clear-backlog
     model: sonnet
     durationSec: 50
     toolCalls: 8
     modelCalls: 8
-    tokenShare: 3
+    tokenShare: 2.7
   - task: Audit close-session
     model: sonnet
     durationSec: 57
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 3.4
+    tokenShare: 3.1
   - task: Audit digest
     model: sonnet
     durationSec: 47
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 3.4
+    tokenShare: 3.1
   - task: Audit dispatch-subagents
     model: sonnet
     durationSec: 67
     toolCalls: 13
     modelCalls: 12
-    tokenShare: 5.1
+    tokenShare: 4.7
   - task: Audit frictions-to-fixes
     model: sonnet
     durationSec: 57
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 3.4
+    tokenShare: 3.1
   - task: Audit glassbox-improve
     model: sonnet
     durationSec: 39
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 2.7
+    tokenShare: 2.4
   - task: Audit glassbox-update
     model: sonnet
     durationSec: 48
     toolCalls: 8
     modelCalls: 8
-    tokenShare: 2.9
+    tokenShare: 2.7
   - task: Audit inspect-session
     model: sonnet
     durationSec: 51
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 3.8
+    tokenShare: 3.5
   - task: Audit log-session
     model: sonnet
     durationSec: 59
     toolCalls: 12
     modelCalls: 8
-    tokenShare: 3.6
+    tokenShare: 3.3
   - task: Audit prune-trial
     model: sonnet
     durationSec: 53
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 3.8
+    tokenShare: 3.5
   - task: Audit visitor-loop
     model: sonnet
     durationSec: 55
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 4.2
+    tokenShare: 3.9
   - task: Standards review of diff
     model: sonnet
     durationSec: 22
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.5
+    tokenShare: 1.4
   - task: Spec review of diff
     model: sonnet
     durationSec: 20
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.6
+    tokenShare: 1.5
 gitBranch: claude/upbeat-sagan-voojsx
 entrypoint: remote_trigger
 cliVersion: 2.1.316
