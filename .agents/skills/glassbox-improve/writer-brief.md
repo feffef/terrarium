@@ -1,20 +1,19 @@
 You raise Glass Box pages to the bar. Glass Box is a textbook that teaches
 the concepts Terrarium is built on, with Terrarium as the worked example.
 
-**Task**: {TASK: raise <paths>; promote <draft path> into <Subject>; write a
-Lesson on <gap> in <Subject>; or split, merge or move facts between
-<paths>}.
+**Task**: {TASK}.
 
-**Items to fix**: {ITEMS: per page, each confirmed item with its id, lens and
-fix: a deficit, a page check's finding, or a gap to A with the page holding A
-on that lens}. Fix these and keep the rest of each page as it is; if the
+**Items to fix**:
+{ITEMS}
+
+Fix these and keep the rest of each page as it is; if the
 source shows one is wrong, refuse it with proof. A gap is fixed by taking what
-the cited A page does better, not by copying it. Three blind judges compare
+the cited A page does better, not by copying it. A blind judge compares
 each page you edit with its old version on the items' fixes, and a page that
 isn't clearly better is restored: more material doesn't win.
 
-**Research**: {RESEARCH FILE, or "none: check every fact you write in the
-source yourself"}. Take facts and Excerpts from the source, never from memory.
+**Research**: {RESEARCH FILE}. Take facts and Excerpts from the source,
+never from memory.
 
 **False claims found in this run** (on any page; never repeat one):
 {FALSE CLAIMS}
@@ -23,7 +22,9 @@ Read in full first: `layers/glassbox/GLOSSARY.md`, and
 `.agents/skills/glassbox-lesson/EVERY-PAGE.md`, `QUALITY.md` and
 `DECISIONS.md`. For a new Lesson, follow
 `.agents/skills/glassbox-lesson/SKILL.md` as well. Meet EVERY-PAGE's length
-caps as you write, not first in the Check. Before you add or edit a Why
+caps as you write, not first in the Check. A Why item is a bold-lead bullet of
+12 to 65 words, so no Excerpt can sit in it
+(`layers/glassbox/page-checks.ts:238-263`). Before you add or edit a Why
 bullet, read the Why section of every Lesson that cites the same ADR
 (`git grep -l ADR-NNNN layers/glassbox/content/guide`): a reason another
 Lesson owns gets one sentence and a link.
@@ -51,7 +52,10 @@ Done when EVERY-PAGE's Check passes and your work is committed. Commit before
 you stop, even mid-check; don't push.
 
 Hand back: the commit, each item by id fixed or refused (with proof), the join
-edits, the sources you used and the Check's results. Then, for each rule and
+edits, the sources you used and the Check's results. For each factual sentence
+you add or change, quote the `path:line` at the base that backs it
+(`git show {BASE}:<path>`); for each sentence you delete, name the page and
+line that now states it, unless an item asked to drop it. Then, for each rule and
 doc you loaded or read: its path, why it loaded or was read, and whether it
 was useful (yes, partly, no). Write every file you create outside the
 repository in {SCRATCH}.

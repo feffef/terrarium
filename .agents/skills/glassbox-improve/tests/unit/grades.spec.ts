@@ -2,7 +2,7 @@
 // the blind comparisons, the next record and the drafts report. The git shell runs in the Skill.
 import { describe, expect, it } from 'vitest'
 import type { GlassboxGit } from '../../../../../layers/glassbox/page-checks.ts'
-import { blindPair, claimShards, judgeBrief, lensDefinition, raterBrief, comparisonResult, coverageProblems, decodeVerdict, draftsReport, gateMerged, nextRecord, pageHash, parseReport, runEntry, planPages, readRecord, reportProblems, sourcesHash, tally, trimPage, type GradeRecord, type PageRecord, type Plan, type Report, type RunEntry, type Step, type Tally, type Vote } from '../../scripts/grades.ts'
+import { agentBriefs, blindPair, claimShards, judgeBrief, lensDefinition, raterBrief, comparisonResult, coverageProblems, decodeVerdict, draftsReport, gateMerged, nextRecord, pageHash, parseReport, runEntry, planPages, readRecord, reportProblems, sourcesHash, stepCriterion, tally, trimPage, type GradeRecord, type PageRecord, type Plan, type Report, type RunEntry, type Step, type Tally, type Vote } from '../../scripts/grades.ts'
 
 const page = '---\ntitle: Hooks\nrevision: abc\nrevisionDate: 2026-10-01\n---\nBody\n::excerpt{path="a.ts" lines="3-5"}\n'
 
@@ -116,6 +116,13 @@ describe('reports', () => {
   it('parses the last yaml block of a hand-back', () => {
     expect(parseReport('```yaml\nrater: B\n```\ntext\n```yaml\nrater: A\npages: []\n```\n')).toEqual({ rater: 'A', pages: [] })
     expect(() => parseReport('```yaml\nrater: opus\n```')).toThrow('rater is opus, not one of A, B, C')
+  })
+
+  it('names the rater, page, lens and key of a malformed gap, finding or false claim', () => {
+    const lens = (body: string) => `\`\`\`yaml\nrater: C\npages:\n  - page: claude-code/03.skills\n    lenses:\n      evidence: { grade: B, ${body} }\n\`\`\``
+    expect(() => parseReport(lens('gaps: [{ section: Lede, better: claude-code/01.claude-md }]'))).toThrow('rater C, page claude-code/03.skills, lens evidence: gap is missing "exemplar"')
+    expect(() => parseReport(lens('findings: [{ quote: q }]'))).toThrow('rater C, page claude-code/03.skills, lens evidence: finding is missing "fix"')
+    expect(() => parseReport('```yaml\nrater: C\npages:\n  - { page: a/01.x, lenses: {}, falseClaims: [{ quote: q }] }\n```')).toThrow('rater C, page a/01.x: false claim is missing "source"')
   })
 
   it('accepts a report that grades its lenses on its pages', () => {
@@ -273,11 +280,11 @@ describe('tally', () => {
     expect(tally(won, plan, [a], [], {}, today).comparisons.map((c) => [c.candidate, c.against])).toEqual([['a/01.p', 'a/02.p'], ['a/01.p', 'a/03.p']])
   })
 
-  it('takes rater C\'s candidates from its shards by rank, at most 3', () => {
+  it('takes rater C\'s candidates from its shards by rank, as many as the 4 comparisons allow', () => {
     const shard = (pages: string[]): Report => ({ rater: 'C', pages: pages.map((page) => ({ page, lenses: { evidence: { grade: 'B' }, transfer: { grade: 'B' } } })), top3: { evidence: pages } })
     const wide: Plan = { ...plan, pages: ['a/01.p', 'a/02.p', 'a/03.p', 'a/04.p', 'a/05.p', 'a/06.p'] }
     const result = tally(record(), wide, [shard(['a/01.p', 'a/02.p', 'a/03.p']), shard(['a/04.p', 'a/05.p', 'a/06.p'])], [], {}, today)
-    expect([...new Set(result.comparisons.map((c) => c.candidate))]).toEqual(['a/01.p', 'a/04.p', 'a/02.p'])
+    expect([...new Set(result.comparisons.map((c) => c.candidate))]).toEqual(['a/01.p', 'a/04.p'])
   })
 
   it('says why a top-3 page with a gap on that lens is not compared', () => {
@@ -288,21 +295,21 @@ describe('tally', () => {
     expect(tally(won, plan, [c], [], {}, today).waiting).toEqual(['a/01.p on clarity: graded C this run, not B'])
   })
 
-  it('shares the 10 comparisons across lenses, best-ranked first', () => {
+  it('shares the 4 comparisons across lenses, best-ranked first', () => {
     const pages = Object.fromEntries(Array.from({ length: 8 }, (_, i) => [`a/0${i}.p`, allB]))
     const wide: Plan = { ...plan, pages: Object.keys(pages), read: Object.keys(pages) }
     const a = reportA(pages, { clarity: ['a/00.p', 'a/01.p', 'a/02.p'], reasoning: ['a/03.p', 'a/04.p', 'a/05.p'] })
     const result = tally(record(), wide, [a], [], {}, today)
-    expect([...new Set(result.comparisons.map((c) => `${c.lens} ${c.candidate}`))]).toEqual(['clarity a/00.p', 'reasoning a/03.p', 'clarity a/01.p', 'reasoning a/04.p', 'clarity a/02.p'])
+    expect([...new Set(result.comparisons.map((c) => `${c.lens} ${c.candidate}`))]).toEqual(['clarity a/00.p', 'reasoning a/03.p'])
   })
 
-  it('stops at 10 comparisons a run', () => {
+  it('stops at 4 comparisons a run', () => {
     const pages = Object.fromEntries(Array.from({ length: 8 }, (_, i) => [`a/0${i}.p`, allB]))
     const wide: Plan = { ...plan, pages: Object.keys(pages), read: Object.keys(pages) }
     const a = reportA(pages, { clarity: ['a/00.p', 'a/01.p', 'a/02.p'], reasoning: ['a/03.p', 'a/04.p', 'a/05.p'] })
     const result = tally(record(), wide, [a], [], {}, today)
-    expect(result.comparisons).toHaveLength(10)
-    expect(result.waiting).toEqual(['a/05.p on reasoning: no comparisons left this run'])
+    expect(result.comparisons).toHaveLength(4)
+    expect(result.waiting).toEqual(['a/01.p on clarity: no comparisons left this run', 'a/04.p on reasoning: no comparisons left this run', 'a/02.p on clarity: no comparisons left this run', 'a/05.p on reasoning: no comparisons left this run'])
   })
 })
 
@@ -314,15 +321,19 @@ describe('blind comparisons', () => {
     expect(() => decodeVerdict('both', 'X')).toThrow('verdict both is not X, Y or equal')
   })
 
-  it('merges an edit on 2 wins of 3; equal counts as a fail', () => {
-    expect(gateMerged(['win', 'win', 'loss'])).toBe(true)
-    expect(gateMerged(['win', 'equal', 'equal'])).toBe(false)
-    expect(gateMerged(['win', 'win'])).toBeUndefined()
-    // Judge 3's verdict read before judge 2's leaves a hole, not a third vote.
-    const hole: Vote[] = []
-    hole[0] = 'win'
-    hole[2] = 'win'
-    expect(gateMerged(hole)).toBeUndefined()
+  it('merges an edit on its one judge\'s win; a loss or equal fails', () => {
+    expect(gateMerged(['win'])).toBe(true)
+    expect(gateMerged(['equal'])).toBe(false)
+    expect(gateMerged(['loss'])).toBe(false)
+    expect(gateMerged([])).toBeUndefined()
+  })
+
+  it('tells the page a move or section fills that its facts arrive there, and the giving page nothing new', () => {
+    const move = { kind: 'move' as const, pages: ['a/01.x'], into: 'a/02.y', gist: 'Move the timeouts.' }
+    expect(stepCriterion(move, 'a/02.y')).toBe('move step: this page RECEIVES the facts, moved here from a/01.x: Move the timeouts.')
+    expect(stepCriterion(move, 'a/01.x')).toBe('move step: Move the timeouts.')
+    expect(stepCriterion({ ...move, pages: ['a/01.x', 'a/02.y'] }, 'a/02.y')).toBe('move step: Move the timeouts.')
+    expect(stepCriterion({ ...move, kind: 'merge' }, 'a/02.y')).toBe('merge step: Move the timeouts.')
   })
 
   it('decides an A comparison on its first judge\'s loss, else on 2 wins of 3', () => {
@@ -400,7 +411,7 @@ describe('nextRecord and runEntry', () => {
   })
 
   it('counts the run for runs.yml', () => {
-    const gate = [{ page: 'a/02.p', criterion: 'clarity: f', votes: ['win', 'win', 'equal'] as const, merged: true }]
+    const gate = [{ page: 'a/02.p', criterion: 'clarity: f', votes: ['win'] as const, merged: true }]
     const entry = runEntry({ run: today, base: 'b', session: 'session_x', pr: 2801, costUsd: 31.2 }, plan, result, [...gate.map((g) => ({ ...g, votes: [...g.votes] }))])
     expect(entry).toEqual({
       run: today, session: 'session_x', base: 'b', pr: 2801, costUsd: 31.2, relevance: true,
@@ -410,7 +421,7 @@ describe('nextRecord and runEntry', () => {
         { page: 'a/02.p', lens: 'clarity', grade: 'D', quote: 'q', fix: 'f', confirmed: true, edited: true },
       ],
       falseClaims: [{ page: 'a/02.p', claim: 'runs daily', evidence: 'x.ts:3', fixed: true }],
-      gate: [{ page: 'a/02.p', criterion: 'clarity: f', votes: ['win', 'win', 'equal'], merged: true }],
+      gate: [{ page: 'a/02.p', criterion: 'clarity: f', votes: ['win'], merged: true }],
       comparisons: [{ lens: 'reasoning', candidate: 'a/01.p', against: 'a/03.p', votes: ['win', 'win', 'loss'], result: 'win' }],
     })
   })
@@ -515,5 +526,42 @@ Write one manifest.
 
 - no problems
 `)
+  })
+})
+
+describe('agentBriefs', () => {
+  const items = [
+    { id: 'f1', page: 'a/01.x', kind: 'deficit' as const, lens: 'clarity' as const, quote: 'q1', fix: 'fix1', confirmed: true },
+    { id: 'f2', page: 'a/02.y', kind: 'gap' as const, lens: 'reasoning' as const, quote: 'Lede', exemplar: 'a/09.z', fix: 'take', confirmed: true },
+    { id: 'f3', page: 'b/01.p', kind: 'deficit' as const, lens: 'clarity' as const, quote: 'q3', fix: 'fix3', confirmed: false },
+    { id: 'f4', page: 'b/02.p', kind: 'check' as const, fix: 'fix4', skipped: 'decided' },
+    { id: 'f5', page: 'b/03.p', kind: 'falseClaim' as const, quote: 'runs daily', source: 'x.ts:3', fix: 'correct it' },
+  ]
+  const steps: Step[] = [
+    { id: 'move-x-into-q', kind: 'move', pages: ['c/01.x'], into: 'c/02.q', raised: ['d'], status: 'taken', gist: 'Move timeouts.' },
+    { id: 'promote-d', kind: 'promote', pages: ['d/01.d'], raised: ['d'], status: 'pending', gist: 'Promote it.' },
+  ]
+  const state = { base: 'abc', items, steps }
+  const researcher = 'T: {TASK}\nI: {ITEMS}\nD: {DRAFT REPORT}\nC: {COMMIT} S: {SCRATCH}'
+  const writer = 'T: {TASK}\nI: {ITEMS}\nR: {RESEARCH FILE}\nF: {FALSE CLAIMS}\nB: {BASE} S: {SCRATCH}'
+
+  it('writes a researcher brief per Subject of the kept items and per pending step', () => {
+    const got = agentBriefs('researcher', state, researcher, '/o', (pages) => `draft of ${pages}`)
+    expect(got.map((b) => b.name)).toEqual(['researcher-a', 'researcher-b', 'researcher-promote-d'])
+    expect(got[0]!.text).toBe('T: confirm the items on the pages of a\nI: - f1, a/01.x, clarity, "q1": fix1\n- f2, a/02.y, reasoning, "Lede": take (A page: a/09.z)\nD: none\nC: abc S: /o/researcher-a')
+    expect(got[1]!.text).toContain('- f5, b/03.p, "runs daily": correct it')
+    expect(got[1]!.text).not.toContain('f3')
+    expect(got[2]!.text).toBe('T: research the step: promote d/01.d (promote-d): Promote it.\nI: none\nD: draft of d/01.d\nC: abc S: /o/researcher-promote-d')
+  })
+
+  it('writes a writer brief per taken step and per Subject of the confirmed items off the steps\' pages', () => {
+    const got = agentBriefs('writer', state, writer, '/o', () => 'none')
+    expect(got.map((b) => b.name)).toEqual(['writer-move-x-into-q', 'writer-a'])
+    expect(got[1]!.text).toBe('T: raise a/01.x, a/02.y\nI: - f1, a/01.x, clarity, "q1": fix1\n- f2, a/02.y, reasoning, "Lede": take (A page: a/09.z)\nR: /o/research-a.md\nF: - b/03.p: "runs daily" (x.ts:3)\nB: abc S: /o/writer-a')
+    expect(got[0]!.text).toContain('T: move c/01.x into c/02.q (move-x-into-q): Move timeouts.\nI: none')
+  })
+
+  it('fails when a placeholder has no value', () => {
+    expect(() => agentBriefs('writer', state, 'run {NOTES} below', '/o', () => 'none')).toThrow('no value for {NOTES}')
   })
 })
