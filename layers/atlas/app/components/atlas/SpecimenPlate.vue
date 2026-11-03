@@ -20,6 +20,7 @@ defineProps<{
     </div>
     <figcaption class="plate-caption">
       <template v-if="number">Plate {{ number }} · </template><span class="binomial">{{ binomial }}</span>
+      <span v-if="conjectural" class="plate-conj">reconstructed from a partial sighting</span>
     </figcaption>
   </figure>
 </template>

@@ -28,6 +28,8 @@ describe('atlas Tenant', async () => {
       const rows = await page.locator('.today .roster-astir li').allTextContents()
       for (const row of rows) expect(row).toMatch(/The (Canopy|Floor|Pool)$/)
       expect(today).not.toMatch(/and \d+ more/)
+      for (const row of await page.locator('.today .today-log li').allTextContents()) expect(row).toMatch(/· The (Canopy|Floor|Pool)$/)
+      expect(await page.locator('.today .today-note').textContent()).toMatch(/falls on the \d+(st|nd|rd|th) of \w+\./)
     })
   })
 

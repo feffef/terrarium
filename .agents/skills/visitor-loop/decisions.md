@@ -24,3 +24,4 @@ here is dropped. One line each, in the order added, citing the PR where it was m
 - No "How to Read a Session Log" Journal page or "New here?" card for it (owner, 2026-10-18).
 - No "Try it in your project" page or landing link collecting every Lesson's exercise; the exercise stays inside each Lesson (owner, 2026-10-18).
 - No RSS/Atom feeds for the Journal Digests or the Blog for now; a visitor asking for one is not a finding (owner, #2415, 2026-10-23).
+- No cross-Biome root pages on the Atlas (plates gallery, random, and likewise a ledger or open-cases page); the ruling's home is `layers/atlas/GLOSSARY.md` Product decisions (owner, #1984, 2026-10-15).

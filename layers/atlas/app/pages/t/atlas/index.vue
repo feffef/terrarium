@@ -10,7 +10,7 @@ import { resolveSpaceRoute } from '#shared/routing'
 
 const SIGHTINGS_SHOWN = 4
 
-interface Sighting { date: string; note?: string; name?: string; to?: string }
+interface Sighting { date: string; note?: string; name?: string; to?: string; biome: string }
 
 // Prerendered, so "today" is the build day — same as the wing dials.
 const day = useGlassToday()
@@ -61,7 +61,7 @@ const { data } = await useAsyncData('atlas-front', async () => {
     const newest = all.slice(0, SIGHTINGS_SHOWN)
     for (const o of newest) {
       const s = docs.find((d) => d.slug === o.specimen)
-      recent.push({ date: o.date, note: o.note, name: s?.binomial, to: s && `/t/atlas/${b.slug}${s.path}` })
+      recent.push({ date: o.date, note: o.note, name: s?.binomial, to: s && `/t/atlas/${b.slug}${s.path}`, biome: b.name })
     }
     stats[b.slug] = docs.length
     commonNames[b.slug] = docs.map((s) => s.common).filter((c): c is string => Boolean(c))
@@ -154,7 +154,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
       <section class="today" aria-labelledby="today-h">
         <h2 id="today-h" class="atlas-eyebrow">Today under the glass</h2>
         <p>Day {{ day }} of the Glass Year — {{ season.label }}<template v-if="season.gloss">, {{ season.gloss }}</template>.</p>
-        <p class="today-note">The Glass Year is our own calendar counted from day 0 (1 January), cut into the terrarium’s six seasons.</p>
+        <p class="today-note">We count the Glass Year from the first of January, so day {{ day }} falls on {{ dayToDateLabel(day) }}.</p>
         <div v-if="creatures.length" class="today-almanac">
           <AtlasPhenologyWheel class="today-wheel" wing :observations="observations" />
           <div class="today-roster">
@@ -174,7 +174,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
           <ul class="today-log">
             <li v-for="o in recent" :key="`${o.date}-${o.note}`">
               <span class="when">{{ o.date }}</span>
-              <NuxtLink v-if="o.name && o.to" :to="o.to">{{ o.name }}</NuxtLink><template v-if="o.name"> — </template>{{ o.note }}
+              <NuxtLink v-if="o.name && o.to" :to="o.to">{{ o.name }}</NuxtLink><template v-if="o.name"> — </template>{{ o.note }} <span class="biome-tag"><span aria-hidden="true">· </span>{{ o.biome }}</span>
             </li>
           </ul>
         </template>
@@ -240,6 +240,7 @@ useHead({ title: 'The Atlas of the Terrarium' })
 .today-log { list-style: none; margin: 0; padding: 0; color: var(--atlas-muted); font-size: 0.92rem; }
 .today-log li { padding: 0.35rem 0; border-top: 1px solid var(--atlas-line); }
 .today-log li:first-child { border-top: 0; }
+.today-log .biome-tag { font-family: var(--atlas-data); font-size: 0.74rem; color: var(--atlas-muted); white-space: nowrap; }
 .today-log .when { display: block; font-family: var(--atlas-data); font-size: 0.74rem; color: var(--atlas-faint); }
 
 /* Directory — three wings, each a card that wears its own palette. */
