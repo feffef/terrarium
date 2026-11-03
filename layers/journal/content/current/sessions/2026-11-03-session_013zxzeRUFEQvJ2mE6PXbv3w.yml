@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRUFEQvJ2mE6PXbv3w
 startedAt: 2026-11-03T13:11:00Z
-endedAt: 2026-11-03T13:23:22Z
+endedAt: 2026-11-03T13:27:54Z
 kind: autonomous
 goal: Scheduled prune trial of agent instructions
-status: in-review
-outcome: "PR #2820 judges the pr-workflow trial (holds) and opens a small CLAUDE.md git-bullet trial; awaiting CI and merge"
-summary: "Scheduled prune-trial run, agent-initiated, no human prompt. Judged the pr-workflow review-before-push trial (the only judgeable one): no major or blocker Friction traces to it and covered rates were flat, so I deleted its entry. Search subagent ranked CLAUDE.md \"Docs you must read first\" first. My first prune also cut the ADR and typecheck bullets; the Standards and Spec reviews showed both lost meaning, so I reverted them and kept only the git bullet's command-list cut (-1 net), then re-probed on Sonnet at the amended SHA. Gate green; PR #2820 open, subscribed. Still open: CI, verdict comment, merge."
+status: completed
+outcome: "PR #2820 merged: pr-workflow trial judged (holds), CLAUDE.md git-bullet trial opened"
+summary: "Scheduled prune-trial run, agent-initiated, no human prompt. Judged the pr-workflow review-before-push trial (the only judgeable one): no major or blocker Friction traces to it and covered rates were flat, so I deleted its entry. Search subagent ranked CLAUDE.md \"Docs you must read first\" first. My first prune also cut the ADR and typecheck bullets; the Standards and Spec reviews showed both lost meaning, so I reverted them and kept only the git bullet's command-list cut (-1 net), then re-probed on Sonnet at the amended SHA. Gate green; PR #2820 open, subscribed. Merged after green CI and a verdict comment."
 prs:
   - "2820"
 docsRead:
@@ -62,18 +62,21 @@ frictions:
   - description: I typed a wrong session id in the commit message trailer; the commit-msg hook corrected it, which I verified in git log.
     solution: Copy the id from the system-prompt template, not from memory.
     severity: nit
-durationSec: 743
+durationSec: 1014
 models:
-  claude-sonnet-5-5: 79
+  claude-sonnet-5-5: 96
 toolCounts:
-  Bash: 20
+  Bash: 24
   Read: 7
   Agent: 6
   Edit: 3
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - CLAUDE.md
   - .agents/prune-trials.yml
@@ -144,35 +147,35 @@ subagents:
     durationSec: 104
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 13.1
+    tokenShare: 11
   - type: general-purpose
     task: Probe pruned CLAUDE.md on Sonnet
     model: sonnet
     durationSec: 16
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 2.8
+    tokenShare: 2.4
   - type: general-purpose
     task: Standards review of prune
     model: sonnet
     durationSec: 26
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 7
+    tokenShare: 5.9
   - type: general-purpose
     task: Spec review of prune
     model: sonnet
     durationSec: 44
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 9.4
+    tokenShare: 7.9
   - type: general-purpose
     task: Re-probe git bullet on Sonnet
     model: sonnet
     durationSec: 19
     toolCalls: 2
     modelCalls: 3
-    tokenShare: 3
+    tokenShare: 2.6
 gitBranch: claude/practical-rubin-nt8t96
 entrypoint: remote_trigger
 cliVersion: 2.1.317
