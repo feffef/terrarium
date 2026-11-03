@@ -60,7 +60,7 @@ The subagent drops a Friction that a merged change already fixed, one that an op
 
 ## 6. The run picks what to fix
 
-The run weighs recurrence and severity together and picks the top candidates, and one design subagent reads each occurrence's full log and designs every fix. For a Friction that a doc already covers, it checks whether the session had opened that doc: if not, the instruction sits where nobody looks; if so, its wording failed. A fix that would touch a :term[Human-only] file, a guard or the hook wiring, or that turns on a design choice a person should make, is never built in this run: it gets an issue with the design instead.
+The run weighs recurrence and severity, picks the top candidates, and has one design subagent read the full logs and design each fix. For a Friction a doc already covers, it checks whether the session opened that doc: if not, nobody looks where the instruction sits; if so, its wording failed. A fix touching a :term[Human-only] file, a guard, the hook wiring or a person's design choice is not built here: it gets an issue with the design.
 
 ::lessons
 [Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · [Blocking hooks](/t/glassbox/guide/claude-code/blocking-hooks) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue) · :file[.agents/skills/frictions-to-fixes/design-brief.md]
