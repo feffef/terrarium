@@ -16,8 +16,7 @@ A human merges the few PRs whose risk the gate cannot see.
 - **Before its PR opens,** the branch passes the gate locally and gets a code
   review. CI's run of the gate decides the merge. A simple change, and a simple
   follow-up commit, gets the author's own read of its full diff instead; a
-  larger follow-up gets a review of its own diff, not the whole branch. Pushing
-  earlier is free: only the PR waits (ADR-0003).
+  larger follow-up gets a review of its own diff, not the whole branch.
 - **Who merges.** The agent that wrote the PR, once CI's gate is green and it
   has posted its verdict on the PR, unless an exception below applies.
 - **A human merges a PR that:**

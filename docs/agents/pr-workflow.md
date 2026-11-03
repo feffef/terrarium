@@ -28,8 +28,9 @@ the meaning of a Skill, rule, ADR or agent doc. A follow-up commit after a
 review takes the same test; a larger one gets `code-review` on its own diff.
 
 A later push to an open PR that changes only prose or docs may skip
-`gate:scoped` and rely on CI's gate; run it first for any other change. If `gate:scoped` passed but CI failed, check for base drift, then log
-a `major` Friction.
+`gate:scoped` and rely on CI's gate; run it first for any other change. If
+`gate:scoped` passed but CI failed, check for base drift, then log a `major`
+Friction.
 
 ## Assembling several stories into one integration PR
 
@@ -40,8 +41,8 @@ re-review each story or repeat its findings.
 
 ## The recipe
 
-1. Run `pnpm gate:scoped` and wait, unless the push rules above let you skip
-   it. A red gate never merges.
+1. Run `pnpm gate:scoped` and wait, unless the rules above let you skip it. A
+   red gate never merges.
 2. Run `pnpm exec tsx scripts/github/check-conflicting-issues.ts --pr <number>`.
    It is advisory: a hit means read that issue (#798), not that there is a
    conflict.
