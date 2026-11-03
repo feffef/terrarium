@@ -210,7 +210,7 @@ For each branch the agent hands back:
    and stays on a safe surface. A doc branch must also survive `audit-docs`
    ([`impl-brief.md`](impl-brief.md)): a fix that would be a future
    `audit-docs` finding goes back.
-3. **Have the agent push; open the PR yourself.** Its description carries
+3. **Push its branch and open the PR yourself.** Its description carries
    the problem, evidence and design. A fix taken from an open issue (§2)
    also `Closes` it.
 4. **Post your review as a PR comment**, always, before any merge
