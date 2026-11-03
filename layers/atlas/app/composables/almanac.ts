@@ -163,3 +163,14 @@ export function useAlmanac(): Almanac | null {
 export function useGlassToday(): number {
   return useState('atlas-glass-today', () => glassDayOf(new Date())).value
 }
+
+/** Mirror the needle's day into `?day=` (shareable, zero new routes). Parked at
+ *  today, the default, the param comes off. `history.state` is passed through so
+ *  vue-router's state survives. */
+export function writeAlmanacDayToUrl(day: number, today: number) {
+  if (import.meta.server) return
+  const url = new URL(window.location.href)
+  if (day === today) url.searchParams.delete('day')
+  else url.searchParams.set('day', String(day))
+  history.replaceState(history.state, '', url.toString())
+}
