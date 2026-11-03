@@ -15,7 +15,7 @@ const meta = computed(() => rarityMeta(props.grade))
   >
     <span v-if="meta.grade === 'mythic'" class="star" aria-hidden="true">✦</span>
     <span v-else class="dots" aria-hidden="true"
-      ><span v-for="i in 5" :key="i" :class="{ off: i > meta.dots }">●</span></span
+      ><span v-for="i in 5" :key="i" :class="{ off: i > meta.dots }">{{ i > meta.dots ? '○' : '●' }}</span></span
     >
     <span v-if="showGrade" class="grade">{{ meta.grade }}</span>
   </span>

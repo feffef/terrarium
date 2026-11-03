@@ -209,16 +209,6 @@
 /* The signature tint is exposed to authored SVGs as currentColor overrides via
    these utility vars the illustration can reference (stroke=var(--sig-1)). */
 .atlas-plate.is-conjectural .plate-figure { opacity: 0.9; }
-.atlas-plate.is-conjectural .plate-figure::after {
-  content: "reconstructed from a partial sighting";
-  position: absolute;
-  bottom: 0.4rem;
-  font-family: var(--atlas-data);
-  font-size: 0.6rem;
-  letter-spacing: 0.06em;
-  color: var(--atlas-faint);
-  font-style: italic;
-}
 .atlas-plate .plate-caption {
   font-family: var(--atlas-data);
   font-size: 0.68rem;
@@ -230,6 +220,7 @@
   border-top: 1px solid var(--atlas-line);
   margin-top: 0.6rem;
 }
+.atlas-plate .plate-caption .plate-conj { display: block; margin-top: 0.2rem; font-style: italic; text-transform: none; letter-spacing: 0.04em; font-size: 0.72rem; color: var(--atlas-muted); }
 .atlas-plate .plate-caption .binomial { font-style: italic; text-transform: none; letter-spacing: 0.01em; color: var(--atlas-ink); }
 
 /* ── The museum label (#67) ────────────────────────────────────────────────
@@ -281,7 +272,7 @@
 /* ── Rarity mark (#69) ─────────────────────────────────────────────────────*/
 .atlas-rarity { display: inline-flex; align-items: center; gap: 0.5ch; font-family: var(--atlas-data); }
 .atlas-rarity .dots { letter-spacing: 0.12em; color: var(--sig-1); }
-.atlas-rarity .dots .off { color: var(--atlas-faint); opacity: 0.5; }
+.atlas-rarity .dots .off { color: var(--atlas-muted); }
 .atlas-rarity .grade {
   font-family: var(--atlas-label);
   font-size: 0.66rem;

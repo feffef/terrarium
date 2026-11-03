@@ -249,6 +249,16 @@ const MONTH_NAMES = [
   'July', 'August', 'September', 'October', 'November', 'December',
 ]
 
+/** Day-of-year (0..364) → its calendar date, e.g. 'the 3rd of November'. The
+ *  inverse of `dateToDay` on whole days; 29 February has no day of its own. */
+export function dayToDateLabel(day: number): string {
+  const d = normalizeDay(Math.round(day))
+  const m = DAYS_BEFORE_MONTH.filter((start) => start <= d).length - 1
+  const n = d - DAYS_BEFORE_MONTH[m]! + 1
+  const suffix = n % 100 >= 11 && n % 100 <= 13 ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' } as Record<number, string>)[n % 10] ?? 'th'
+  return `the ${n}${suffix} of ${MONTH_NAMES[m]}`
+}
+
 /** Real ISO date ('YYYY-MM-DD') → its spoken form, e.g. '20 June 2026' — the
  *  Sighting citation's display string. Shares `parseIsoDate` with `dateToDay`
  *  but does not validate the month/day: callers gate on `dateToDay` first. The

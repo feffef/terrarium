@@ -9,6 +9,7 @@ import {
   arcPath,
   dateToDay,
   dayToAngle,
+  dayToDateLabel,
   GLASS_SEASONS,
   inSpan,
   normalizeAngle,
@@ -277,5 +278,15 @@ describe('arcPath()', () => {
     const d = arcPath([300, 0], 50, 100)
     expect(d.match(/M /g)).toHaveLength(1)
     expect(d.match(/Z/g)).toHaveLength(1)
+  })
+})
+
+describe('dayToDateLabel()', () => {
+  it('inverts dateToDay and speaks the ordinal', () => {
+    expect(dayToDateLabel(0)).toBe('the 1st of January')
+    expect(dayToDateLabel(306)).toBe('the 3rd of November')
+    expect(dayToDateLabel(364)).toBe('the 31st of December')
+    expect(dayToDateLabel(dateToDay('2026-03-12'))).toBe('the 12th of March')
+    expect(dayToDateLabel(dateToDay('2026-06-22'))).toBe('the 22nd of June')
   })
 })
