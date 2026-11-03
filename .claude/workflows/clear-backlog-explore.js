@@ -99,7 +99,7 @@ ${RELAYED_REPLY} ${ASK_VERDICTS}`
 
 const input = (args.issues || []).map(i => ({ ...i, all: args.issues }))
 for (const i of input) if (!MODE[i.mode]) throw new Error(`#${i.number}: unknown mode ${i.mode}`)
-const triage = (issue, phase) => agent(brief(issue), { label: `triage #${issue.number}`, phase, schema: RESULT })
+const triage = (issue, phase) => agent(brief(issue), { label: `triage #${issue.number}`, phase, schema: RESULT, model: 'sonnet' })
 
 phase('Triage')
 const first = await pipeline(input, issue => triage(issue, 'Triage'))
