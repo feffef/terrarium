@@ -1,0 +1,179 @@
+schemaVersion: 1
+session: session_013zxzeSF22kmtzW5QWaTDTX
+startedAt: 2026-11-03T11:09:13Z
+endedAt: 2026-11-03T11:21:43Z
+kind: autonomous
+goal: Scheduled blog post in a Persona's voice
+status: in-review
+outcome: Kevin post on the Glass Box gate fix opened as PR 2818; gate green, awaiting merge
+summary: A scheduled /blog-post run, fully agent-initiated (no human prompt). Rotation allowed only Kevin. Drafted three Kevin candidates (Glass Box gate judges, orchestrator-pushes, prune trial), a blind Sonnet reader picked the gate post, which I revised for its gaps. The first fact-check found the causal framing wrong (the question fix and the judge cut were separate changes in one PR, the cut driven by cost), plus a line range; I reframed title and text, added glosses, renamed the file, and a re-check passed. Code review found no hard violations; its length and jargon notes were left to keep the checked blob. gate:scoped green, PR 2818 opened and subscribed. Merge and the reply decision (step 12) are still open.
+prs:
+  - "2818"
+docsRead:
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief rules for the blind reader and checker
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read before first git command; checker also read it; nothing changed
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read before first GitHub call; confirmed MCP use; checker also read it
+    useful: partly
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: voice palette for drafts
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and closing recipe
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: the spec; the spec reviewer read it
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: checker used it for the plain-words rule
+    useful: yes
+  - path: .agents/skills/glassbox-improve/judge-brief.md
+    reason: checker read it to confirm the gate's blind setup
+    useful: yes
+  - path: layers/blog/content/kevin/pages/2026-11-03-three-judges-misread-one-question-the-fix-deleted-two-of-them.md
+    reason: (read before editing)
+  - path: layers/blog/content/kevin/pages/2026-11-03-three-judges-misread-one-question-then-the-gate-dropped-to-one.md
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: My first draft framed the one-judge cut as the fix for the misread question; the checker found they were separate changes, the cut cost-driven.
+    solution: Read the PR body's change list before writing a causal link between two changes; the checker caught it before landing.
+    severity: minor
+  - description: The Stop hook asked twice to push before the gate and review finished; ADR-0004 required waiting.
+    solution: Stop hook could skip the nag while a gate run is in progress.
+    severity: nit
+durationSec: 750
+models:
+  claude-sonnet-5-5: 86
+toolCounts:
+  Bash: 25
+  Read: 1
+  mcp__github__pull_request_read: 6
+  mcp__github__issue_read: 3
+  Agent: 4
+  ReadNotifications: 3
+  SendMessage: 1
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/kevin/pages/2026-11-03-three-judges-misread-one-question-the-fix-deleted-two-of-them.md
+  - layers/blog/content/kevin/pages/2026-11-03-three-judges-misread-one-question-then-the-gate-dropped-to-one.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+  - layers/blog/GLOSSARY.md
+  - .agents/skills/glassbox-improve/judge-brief.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me gate and review come before the first push despite the Stop hook; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Said to open the PR myself and subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body header and commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback rule; no reaction here so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Prune trials; only a story topic, no instruction of mine was changed
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About rule placement; unrelated to writing a post
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as code; I did not edit a Skill
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest rule loaded on reading tenant.config.ts; I edited no manifest
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Stored data shapes; I added no field
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: MDC choice; not relevant to plain Markdown
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pointed me to the Blog glossary; checker used it
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Layer code rules; I wrote content only
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: A subagent loaded it; it reported no relevance
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: A subagent loaded it; it reported no relevance
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: A subagent loaded it; it reported no relevance
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Blind read of three drafts
+    model: sonnet
+    durationSec: 19
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 6.6
+  - type: general-purpose
+    task: Fact-check blog post
+    model: sonnet
+    durationSec: 164
+    toolCalls: 26
+    modelCalls: 13
+    tokenShare: 14.7
+  - type: general-purpose
+    task: Standards review of blog post
+    model: sonnet
+    durationSec: 27
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 4.4
+  - type: general-purpose
+    task: Spec review of blog post
+    model: sonnet
+    durationSec: 18
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 4.4
+gitBranch: claude/zen-heisenberg-qf5ni1
+entrypoint: remote_trigger
+cliVersion: 2.1.317
+trigger: blog-post
+landedBy: Stop
