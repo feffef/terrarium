@@ -6,9 +6,8 @@ gist: Checks a change against repo rules and the original ask before landing.
 role: >-
   Review the working diff (Standards+Spec) before every code-landing gated PR
   (ADR-0003/0004); it routinely catches bugs self-review missed. A spec-reviewer
-  subagent has cited a fabricated line, so restate CLAUDE.md's "verify before
-  you state" rule in each review brief and re-verify every cited line and
-  finding with a fresh Read. It reviews a diff against a fixed point; for a
+  subagent has cited a fabricated line; CLAUDE.md's "Verify before you state"
+  covers it. It reviews a diff against a fixed point; for a
   whole tree, treat the tree as the diff or run per directory.
 observations:
   - date: 2026-09-29
