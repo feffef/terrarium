@@ -108,6 +108,4 @@ worktree, not your own tree.
 ## 6. Resume a stopped subagent; never re-dispatch it
 
 Use `SendMessage` to its agent id. A fresh `Agent` call gets a brand-new checkout
-with no memory, risking a duplicate branch or lost local commits. When its
-branch already has a PR, check the PR is unmerged before you push
-(`pr-workflow.md`).
+with no memory, risking a duplicate branch or lost local commits.
