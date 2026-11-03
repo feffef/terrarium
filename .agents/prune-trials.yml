@@ -50,36 +50,6 @@ trials:
       relayed-subagent-claims rate; compare that entry's share of sessions with
       `friction-rates.ts`.
   - problem: >
-      `pr-workflow.md` "Review before the first push" and its three restatements
-      (recipe steps 1 and 4, "Closing a scheduled run's PR" step 1) plainly
-      reworded (-4 net, from `git diff --numstat`: 19 added, 23 deleted; this
-      entry not counted): exemption and simple-change lists folded into
-      one-sentence rules, "not the whole branch", "fails on our own PRs" and the
-      duplicated review-kinds list in step 4 cut; every rule kept. Chosen after
-      the search subagent covered the instruction corpus, guard headers and the
-      tracker: the review-before-push rule failed as prose and was narrowed three
-      times (#2311 after #1852 and #1853; #2397 after #2359; #2472, whose text
-      says "a prose rule with no guard"), and no hook checks it. Runners-up:
-      `git-conventions.md` "Don't chain git" (#2397), CLAUDE.md "Verify before
-      you state" (#2341, already cut back once). Pointers in `dispatch-subagents`
-      (open trial territory), `frictions-to-fixes`, `clear-backlog` and
-      `blog-post` untouched. Little text to cut. No open trial was judgeable
-      this run (`find-trial-window.ts`: all three before their floor).
-    territory:
-      paths:
-        - "docs/agents/pr-workflow.md: 'Review before the first push', recipe steps 1 and 4, 'Closing a scheduled run's PR' step 1"
-      keywords:
-        - simple change
-        - Review before the first push
-    opened: 2026-10-31
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a first push skipped
-      `code-review`, or a non-simple diff got a self-read, or a stale verdict
-      SHA was posted, and the cut wording would have prevented it. NOT damage:
-      the same skip the old text allowed (#2472-style miscounts), or `merge-pr.ts`
-      refusing a verdict whose SHA does not match.
-  - problem: >
       `git-conventions.md` "Don't chain git past a step that can fail silently"
       cut to two goal-shaped bullets (-2 net, from `git diff --numstat`: 7 added,
       9 deleted; this entry not counted): the incident aside ("Pushes went out
@@ -106,3 +76,33 @@ trials:
       same command as a gate run, or a chained step failed silently and the
       session went on, and the cut wording would have prevented it. NOT damage:
       the nit-level chains #2752 already counts.
+  - problem: >
+      CLAUDE.md "Docs you must read first" git bullet cut (-1 net, from
+      `git diff --numstat`: 2 added, 3 deleted; this entry not counted): the
+      list of mutating commands (commit, fetch, pull, rebase, amend, reset)
+      dropped, since the rule is already "beyond the read-only ones"; the
+      trigger string `read-first-hint.ts` quotes stays. Chosen after the search
+      subagent covered the instruction corpus, guard headers and the tracker:
+      the read-first block failed as prose (#1754, #1819, #2066, #2475, #2543;
+      ledger `binding-docs-skipped`), and the hints cover only git, GitHub,
+      issue writes and screenshots. Little text to cut. Left alone: the "Every
+      subagent brief" bullet and "Verify before you state" (open
+      dispatch-subagents trial), "Question the premise" (owner-approved wording),
+      the foreground-gate bullet (already trialled, #2426 closed). Same run
+      judged and deleted the `pr-workflow.md` review-before-push trial (landed
+      67c211d6): 36 sessions started since, no major or blocker Friction traces
+      to it; rates flat (prepush-gate-review-skipped 10.7% -> 10.3%); the one
+      rise, edit-during-gate-run 12.6% -> 17.2% (5 of 29 sessions), is edits
+      made while a gate ran, which the cut text did not touch, so no issue.
+    territory:
+      paths:
+        - "CLAUDE.md: 'Docs you must read first', the git bullet"
+      keywords:
+        - Before your first git command
+    opened: 2026-11-03
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session ran a mutating git
+      command (commit, rebase, reset...) without reading git-conventions.md
+      and the missing command list would have prevented it. NOT damage: a late
+      read the hint already counts as accepted (`binding-docs-skipped`).
