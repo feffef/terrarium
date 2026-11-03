@@ -50,8 +50,9 @@ records that without committing anyone to it. Removing a Skill needs the same
 approval because nothing breaks when a Skill stops running, so no check would
 catch a mistaken removal.
 
-Opening the PR without asking costs nothing: the answer to a question would
-always be yes, and a PR that no one follows goes stale. The PR waits for review
+Once review and the gate have passed, opening the PR without asking costs
+nothing: an unopened branch is invisible to review, and a PR that no one
+follows goes stale. The PR waits for review
 and the gate because it is where CI runs and an agent can merge; a pushed
 branch alone starts neither, and pushing early keeps work out of a container
 that may be reclaimed. A Trusted user who starts a scheduled run approves the
