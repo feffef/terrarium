@@ -198,3 +198,12 @@ observations:
       first" line (guard blocked the first Agent call in
       session_013zxzeTLLY3FmiXzuBKgc2o); stranded worktrees at close in that
       run; hand edits after the review cap not re-gated (10-30, 10-31).
+  - date: "2026-11-03"
+    note: >-
+      Behaviour check, 7 runs, 42 of 42 PRs on main, no revert. Read-first
+      gap now 7 of 7 runs (dispatch-subagents guard blocks the first
+      Workflow call; accepted in #2580). Section 4 re-invoke skipped again
+      after #2707 in session_013zxzeSuucewJSDd3eyaNnh; worktrees flagged at
+      close there and in session_013zxzeTLLY3FmiXzuBKgc2o. The skipped
+      inspect-session check in section 2 was disclosed as unverified, which
+      the step allows: not a failure.

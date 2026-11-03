@@ -1,0 +1,14 @@
+name: implement-spec
+category: general-engineering
+importance: peripheral
+installedSha256: 7a22dd2e60b8fcece478ced9d2533582adf3520d695acd3ab715341535c9e56d
+role: >-
+  Implements a spec and its tickets on one integration branch with subagents.
+  An installed Skill with no use recorded here; to-spec and to-tickets, its
+  inputs, are unused too.
+observations:
+  - date: "2026-11-03"
+    note: >-
+      Coverage gap: installed and on disk, no Inventory entry, allTimeUses 0.
+      Graded peripheral on no evidence of use; a grade change later needs
+      cited sessions.

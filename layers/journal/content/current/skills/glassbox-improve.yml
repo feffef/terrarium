@@ -27,3 +27,12 @@ observations:
   - date: "2026-10-31"
     note: >-
       Behaviour check, 7 runs, PRs merged, no failure. Unverified: step 3 does not check draft titles against EVERY-PAGE (#2651); step 8 does not say check:worktrees needs the branch pushed. Grade/role unchanged.
+  - date: "2026-11-03"
+    note: >-
+      Behaviour check, 10 runs, PRs merged, no revert. Verified in source
+      (grades.ts:846-851): gate builds its page list from run items and
+      steps, so a page an edit changed that no item names is never judged.
+      session_013zxzeQZYwzDuf4JEncnqAa (PR #2801): claude-code/04.hooks
+      edited for an item on page 06, ungated, no warning. Also unverified,
+      from its log: ~127 judges dispatched by hand in 7 waves, no workflow
+      script. Single run, no issue. Grade unchanged.

@@ -1,0 +1,15 @@
+name: glassbox-walkthrough
+category: platform-operation
+importance: specialist
+gist: Writes one Glass Box Walkthrough that follows one story across Lessons.
+role: >-
+  Writes a single Glass Box Walkthrough: one story told in stops that link into
+  the Lessons holding each mechanism, pinned to a revision and checked against
+  the code. Dispatched per story, not model-invoked
+  (disable-model-invocation: true).
+observations:
+  - date: "2026-11-03"
+    note: >-
+      Coverage gap: on disk, no Inventory entry, no recorded use
+      (allTimeUses 0). Graded specialist on its structure, like
+      glassbox-lesson: needed whenever a Walkthrough is written, which is rare.
