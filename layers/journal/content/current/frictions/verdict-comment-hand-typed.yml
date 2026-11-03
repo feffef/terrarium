@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-30"
     summary: "pr-workflow step 4: paste the Reviewed SHA from git rev-parse HEAD run in the reviewed head's checkout"
 occurrences:
-  - session: session_01MeatWCLdQDV2rWVNHumqX7
-    date: "2026-10-19"
-    severity: nit
-    description: "My first verdict comment named a mistyped short SHA (30a92a7247 vs ...7244); merge-pr.ts refused and I edited the comment."
-    solution: "Paste the head SHA from git rev-parse HEAD into the verdict rather than typing it."
   - session: session_01QsVUJGmHhhoAn8T6ewjnLP
     date: "2026-10-21"
     severity: nit

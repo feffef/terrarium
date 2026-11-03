@@ -13,16 +13,6 @@ fixes:
     date: "2026-10-30"
     summary: "merge-pr.ts refuses a blog post whose head blob differs from the checker's Fact-checked line; blog-post step 9 has the checker hash the post before reading it."
 occurrences:
-  - session: session_01AwaGncaYJFWdJnc6yqDoTS
-    date: "2026-10-19"
-    severity: nit
-    description: "My first wording for adr-check step 2 was stricter than ADR-0027 and would have blocked an allowed repoint; the Spec review caught it."
-    solution: "Quote the ADR's own verbs when restating its duty in a Skill."
-  - session: session_01BTtvaFQckiQwtGZsasWPJH
-    date: "2026-10-19"
-    severity: nit
-    description: "The first #2233 commit used Closes, which would have closed the issue as completed instead of not planned, and its ref claimed the issue was already closed; the Spec review caught both."
-    solution: "Use a closing keyword only when completed is the right reason; otherwise close by hand."
   - session: session_01RZ2pN3CEsoJyKxUWC2RFW5
     date: "2026-10-20"
     severity: minor

@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-23"
     summary: "Retired the adr-check Skill and its CLAUDE.md trigger; a new PostToolUse hook (adr-read-hint.ts) now names, once per agent, each ADR an Edit or Write touches by its rule paths or by number and that the agent has not read in full."
 occurrences:
-  - session: session_01AwaGncaYJFWdJnc6yqDoTS
-    date: "2026-10-19"
-    severity: minor
-    description: "One adr-check run for a chat review cost about 13k tokens: 6k summaries, 3k trial ledger, 4k full ADRs."
-    solution: "PR 2287 cuts the ledger part; a lighter path for chat opinions is still open."
   - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
     date: "2026-10-21"
     severity: minor

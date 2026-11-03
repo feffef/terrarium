@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-28 design: dropped: the fix is a read-first hint entry in read-first-hint.ts (Human-only); the five slips of this and pr-workflow-read-in-part span 10-19 to 10-24 with none since, and the two have different causes.
 occurrences:
-  - session: session_01MwrXDH7XwMNUofgz3HvQ5N
-    date: "2026-10-19"
-    severity: minor
-    description: "Pushed the prototype/ branch without reading docs/agents/pr-workflow.md, which CLAUDE.md requires before any push."
-    solution: "Read pr-workflow.md before pushing any branch, even a prototype/ branch that gets no PR."
   - session: session_01E3XmTJcpKMZstW7MHL2eks
     date: "2026-10-23"
     severity: nit

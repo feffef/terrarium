@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-21 design: a guard on Bash python replaces dropped: it is Human-only, would flag legitimate migration scripts, and every slip was caught or restored.
 occurrences:
-  - session: session_01MeatWCLdQDV2rWVNHumqX7
-    date: "2026-10-19"
-    severity: nit
-    description: "A python replace-assertion for the SKILL.md edit failed because my anchor started mid-line (' from the last NEXT line'); cost one retry."
-    solution: "Anchor edits on a whole distinctive line, or use the Edit tool for prose."
   - session: session_013zxzeSaEvHWNU8EdNqcqGG
     date: "2026-11-02"
     severity: minor

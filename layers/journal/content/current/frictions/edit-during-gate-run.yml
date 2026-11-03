@@ -29,11 +29,6 @@ occurrences:
     severity: minor
     description: "Edited the Digest after gate:scoped had started, to apply fact-check fixes, so the gate did not see the final text; reran validate:content only."
     solution: "Wait for the fact-check before starting the gate."
-  - session: session_01AwaGncaYJFWdJnc6yqDoTS
-    date: "2026-10-19"
-    severity: minor
-    description: "gate:scoped started on the first commit; review fixes were amended in mid-run, so I ran the gate a second time (about 5 extra minutes). The origin session logged the same."
-    solution: "Run code-review before starting gate:scoped, so amends land before the gate."
   - session: session_01FNv8z61n7roCRsM4AYVtf6
     date: "2026-10-21"
     severity: minor
@@ -54,11 +49,6 @@ occurrences:
     severity: minor
     description: "Edited files while the first gate:scoped run was in flight, so it had to be re-run on the final head (pr-workflow: edit nothing until it ends)."
     solution: "Apply review fixes before starting the gate, then wait."
-  - session: session_01BTtvaFQckiQwtGZsasWPJH
-    date: "2026-10-19"
-    severity: nit
-    description: "gate:scoped ran on the pre-amend #2233 commit; the amend changed only one YAML string, and I re-ran only validate:content on it."
-    solution: "Amend before starting the gate, or re-run gate:scoped after any amend; CI's gate decides anyway."
   - session: session_011W3gVNQAR433FiJcPAAEDK
     date: "2026-10-20"
     severity: minor

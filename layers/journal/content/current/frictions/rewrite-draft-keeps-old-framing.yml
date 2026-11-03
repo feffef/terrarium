@@ -3,6 +3,8 @@ surface: safe
 summary: A rewrite of an existing guide or README kept the old structure and content instead of asking what its reader needs, and only a second review or the owner found the gap.
 cause: "A rewrite agent starts from the old text's order and lists (Part 1's infrastructure-first order, a Contributing list) and does not ask who reads the result and what they must be able to do. The first draft omits the reader's need (why Terrarium exists; whether an outsider can act on a list) until the owner or a second critical review raises it. Signals: 'kept the old', 'omitted why', 'owner had to point out', rewrite of README or Glass Box overview."
 status: open
+notes: |-
+  2026-11-03 design: no change: CLAUDE.md "Question the premise" already covers it and was read past; widening the owner-approved bullet is the owner's call and more prose has not worked for this family; dropped: file an issue if a third occurrence appears
 occurrences:
   - session: session_013zxzeRNoKQn8q3NtVRPDyk
     date: "2026-11-02"

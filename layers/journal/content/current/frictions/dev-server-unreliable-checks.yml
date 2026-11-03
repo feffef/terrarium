@@ -5,11 +5,6 @@ cause: >-
 surface: safe
 status: open
 occurrences:
-  - session: session_01Bopw6N86uYzPzfaRpVqzhU
-    date: "2026-10-19"
-    severity: minor
-    description: "Dev preview server returned 503 for script chunks so the page never hydrated; ~2 wasted runs before switching to a production build."
-    solution: "Note in verifying-ui-changes.md that click tests need the production build when the dev server 503s."
   - session: session_01CQhPd23d8eRP33TzyDha76
     date: "2026-10-21"
     severity: nit

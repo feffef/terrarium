@@ -16,11 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "The sibling-collapse e2e waits for the digest body to render before measuring."
 occurrences:
-  - session: session_01Pzj23dzUMace5jwZCvxmx7
-    date: "2026-10-19"
-    severity: nit
-    description: "Full vitest run failed one unrelated journal e2e accordion test that passed when rerun alone, costing an extra rerun."
-    solution: "Fix or quarantine the flaky journal accordion e2e test."
   - session: session_01VfbgTTxASAKYdiziaLGuXM
     date: "2026-10-25"
     severity: nit

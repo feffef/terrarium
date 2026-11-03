@@ -9,11 +9,6 @@ notes: |-
   2026-10-21 design: a build-workflow precheck dropped: clear-backlog SKILL.md section 2 Done already requires ready-for-agent, and the workflow has no shell, so a check costs an agent call per run.
   2026-10-25 design: dropped again: the label precheck stays dropped (no shell in the workflow; clear-backlog §2 Done already requires the label), and nothing new since 2026-10-20.
 occurrences:
-  - session: session_01BTtvaFQckiQwtGZsasWPJH
-    date: "2026-10-19"
-    severity: minor
-    description: "Nothing checks that owner-approved issues are relabelled ready-for-agent before clear-backlog-build runs; merge-pr.ts caught it only after two PRs were built and gated."
-    solution: "clear-backlog-build.js checks each branch issue's ready-for-agent label first and returns needs-owner when it is missing."
   - session: session_012f7o6FcYxq1MWxvsdgKS6m
     date: "2026-10-20"
     severity: nit
