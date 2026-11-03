@@ -1,5 +1,289 @@
 runs:
   - run: 2026-11-03
+    base: 43aa2027c9e40d2165c6b5eb11bc99dc75b5df98
+    session: session_013zxzeQH3GSc8uMpvhebnFr
+    pr: 2821
+    costUsd: 43.98
+    relevance: true
+    pagesRead: 58
+    pagesChecked: 58
+    falseClaimsFixed: 2
+    edits: 19
+    gatePassed: 18
+    gateStopped: 1
+    aComparisons: 4
+    stepsTaken: 4
+    stepsRefused: 0
+    findings:
+      - page: claude-code/04.hooks
+        lens: transfer
+        grade: C
+        quote: A hook is a command that Claude Code itself runs at a fixed point in a session, so it happens every time, whatever the model decides.
+        fix: "The page never says when a hook is the wrong choice. Add one sentence to The concept: use an instruction for judgement calls and a hook for what must hold; every matching call starts a process, so scope the matcher; the command runs with your permissions. Move the general cost out of the Terrarium-only bullet 'Starting a script takes a moment', and link 06's 'a hint is the wrong tool' line. Optional: show a formatter hook that reads file_path from stdin, as the hooks guide does, instead of `npx prettier --write .`."
+        confirmed: true
+        edited: true
+      - page: claude-code/11.cloud-sessions
+        lens: evidence
+        grade: C
+        quote: |-
+          export function main(): void {
+            if (!isCloudSession()) return
+            // …
+          }
+        fix: "an Excerpt that shows what a cloud session receives or what the guard denies: .claude/settings.json:181-190 (the SessionStart hook that installs and unshallows) or scripts/hooks/workflow-edit-guard.ts:62-69,150-151"
+        confirmed: true
+        edited: true
+      - page: deploy/02.pnpm-lockfile
+        lens: placement
+        grade: C
+        quote: "**These pnpm files pass the Human-only path check.** The lockfile isn't on the list, nor is `pnpm-workspace.yaml`, which `pnpm patch-commit` writes to patch a package and `pnpm approve-builds` writes to let the dependencies you approve run their install scripts; a new or patched package still needs a person"
+        fix: The same fact is in terrarium-practice/07.human-only-list ('The check sees paths, not effects. `pnpm-lock.yaml` and a new `pnpm-workspace.yaml` aren't on the list'). Cut this bullet to one sentence on what writes `pnpm-workspace.yaml` and link Protected paths for the path-check blind spot.
+        confirmed: true
+        edited: true
+      - page: git-github/01.every-change-a-pr
+        lens: clarity
+        grade: C
+        quote: Each story stacked into an integration PR was reviewed on its own, and a review of one story can't see how correct stories interact.
+        fix: A Why bullet must have no unexplained jargon. Say what an integration PR and a story are in plain words (a PR that gathers several smaller PRs), or drop the bullet and keep the link to docs/agents/pr-workflow.md.
+        confirmed: true
+        edited: true
+      - page: git-github/02.git-worktrees
+        lens: clarity
+        grade: C
+        quote: it refuses a completed or partial log while another linked worktree holds work to rescue. For any other status it records a Friction instead.
+        fix: A reader new to Terrarium has not met the session log, its statuses or a Friction on this page. Wrap session log and Friction in :term[...], say the script is the session's closing record, and name the statuses (completed, partial, blocked) in one clause, or cut the sentence down to the sweep itself.
+        confirmed: true
+        edited: true
+      - page: git-github/02.git-worktrees
+        lens: transfer
+        grade: C
+        quote: A worktree is a fresh checkout, so it has none of the main folder's untracked files, such as installed dependencies.
+        fix: add the Claude Code fact that a subagent worktree under .claude/worktrees/ does not load the worktree root's own CLAUDE.md or .claude/rules/ (https://code.claude.com/docs/en/worktrees#isolate-subagents-with-worktrees), so a reader on any project knows what a subagent in a worktree still sees
+        confirmed: true
+        edited: true
+      - page: git-github/05.attribution
+        lens: clarity
+        grade: C
+        quote: which, for example, the guest pipeline's scan uses to skip its own earlier replies
+        fix: The guest pipeline is not introduced on this page. Cut the example, or link and gloss it; the sentence needs only that hasAuthorshipMarker has a wrapper, isAiAuthored.
+        confirmed: true
+        edited: true
+      - page: git-github/05.attribution
+        lens: clarity
+        grade: C
+        quote: "`verdictRefusal` in :file[scripts/github/merge-pr.ts] looks for a verdict whose header names this very session"
+        fix: Verdict is not defined here. Say in a clause that it is the comment an agent posts before merging, and shorten the Reading the mark back paragraph, the densest in a very long In Terrarium.
+        confirmed: true
+        edited: true
+      - page: nuxt-vue/01.layers
+        lens: transfer
+        grade: C
+        quote: Pick one section of your Nuxt app, such as an admin area. Move its pages and components into `layers/admin/`
+        fix: say when layers are the wrong choice, e.g. sites needing separate deploys or per-site dependencies a layer cannot scope (.claude/rules/tenant-layers.md:25-29)
+        confirmed: true
+        edited: true
+      - page: nuxt-vue/04.auto-imports
+        lens: transfer
+        grade: C
+        quote: "Run `nuxt prepare` and open `.nuxt/imports.d.ts`: it lists every composable and util your app can use without an import"
+        fix: "add a line on when a many-layer or shared-name app should import explicitly from #imports or turn scanning off instead of relying on auto-imports"
+        confirmed: true
+        edited: true
+      - page: nuxt-vue/06.use-async-data
+        lens: placement
+        grade: C
+        quote: "**Return what the page reads.** A handler that returns whole Documents sends every field. The Blog's front page, `layers/blog/app/pages/t/blog/index.vue`, `.select()`s only the fields it lists."
+        fix: nuxt-content/04.query-collection owns this ('`all()` on a page collection returns whole Documents, parsed body included. A list that shows titles needs `select`'). Replace the bullet with a one-line link to that item.
+        confirmed: false
+        edited: false
+      - page: skill-pack/02.planning-with-the-pack
+        lens: reasoning
+        grade: C
+        quote: "[Installed Skills](/t/glassbox/guide/skill-pack/skill-packs#why-its-built-this-way) gives both reasons and what each costs."
+        fix: "The page's only Why bullet states no reason, cost or alternative and cites no ADR or file. Put the one-sentence reason in it: a reinstall would overwrite an edit, and the seeded tracker doc is Terrarium's own. Add a Why for the choice this page owns, why to-spec and to-tickets are told to file needs-triage and never ready-for-agent, citing ADR-0020 or docs/agents/triage-labels.md. LIMIT: do not re-add the ready-for-agent rule as a Why; the 2026-11-03 run moved it to Issue triage labels (step move-planning-with-the-pack-into-work-queue dropped, rule already there). Fix only the existing Why bullet."
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/01.human-in-the-loop
+        lens: transfer
+        grade: C
+        quote: "The concept: Split the work into steering and building. … Then send every change down one path where it can be reviewed and checked before it lands"
+        fix: Add a sentence to The concept saying when a human gate is the wrong choice (for example a throwaway or sandboxed project where no change reaches production, or where review would only rubber-stamp). The page quotes Anthropic's 'the right balance differs' but never says when to loosen the gate.
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/02.adrs
+        lens: evidence
+        grade: C
+        quote: "Terrarium's ADRs live in :file[docs/adr/], one numbered file each, and every one follows :file[docs/adr/TEMPLATE.md]: a `# ADR-NNNN:` heading, a short summary … then *Scope*, *Why* and *Rejected alternatives*"
+        fix: "The only Excerpt is the HISTORY regex list, so the reader never sees what an ADR looks like. Add an Excerpt of the shape: docs/adr/TEMPLATE.md:1-20 (heading, summary, Scope, Why, Rejected alternatives), or the opening of docs/adr/0030-adrs-document-a-decision-not-its-history.md:1-8."
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/07.human-only-list
+        lens: transfer
+        grade: C
+        quote: "A check that decides whether a change may merge reads some settings: which files are sensitive, who may approve them. If it reads them from the branch under review, the branch is judging itself."
+        fix: The Concept never says when a protected-path list is the wrong choice (for example a team where every PR already needs a second reviewer, or a repo with no self-merging agents). Add one sentence on that, plus the cost of maintaining the list.
+        confirmed: true
+        edited: true
+      - page: verification/07.timestamps-stored-as-strings
+        lens: relevance
+        grade: C
+        quote: Declare a timestamp as a date in a Nuxt Content schema and the time of day is quietly dropped. Terrarium stores each instant as a string and checks its format with a refinement.
+        fix: The page is one gotcha plus one 6-line schema. Its concept section restates that Nuxt Content turns a schema into columns (verification/03.content-validation owns that) and its refine use (verification/06.schema-validation owns that). Make it a section of verification/03.content-validation.
+        confirmed: false
+        edited: false
+      - page: verification/09.invariant-tests
+        lens: relevance
+        grade: C
+        quote: "Some rules about content must hold on every page, every day: a link into the code shows the code the author saw."
+        fix: The concept is a content rule held by a unit test, and verification/04.unit-and-e2e-tests already teaches it ('A unit test can hold a content rule too. Glass Box's glassbox-pages.spec.ts runs page-checks.ts on every Glass Box page'). The Blog's pinned-links test is one more example. Make it a section of verification/04.unit-and-e2e-tests.
+        confirmed: false
+        edited: false
+      - page: walkthroughs/a-friction-becomes-a-fix
+        lens: placement
+        grade: C
+        quote: "A Friction that came back after its fix merged is a regression: the run never fixes it again, and files an issue naming the failed fix for only the worst few."
+        fix: terrarium-practice/09.self-improvement-loop already states this rule twice (In Terrarium, and the 'A fix that failed goes to a person' Why bullet). A Walkthrough links Lessons instead of repeating them (GLOSSARY.md, Walkthrough). Cut the rule, and the screening list around it in stop 5, to one clause plus the existing Self-improvement loop chip. Stop 6's picking rule needs the same trim.
+        confirmed: false
+        edited: false
+    falseClaims:
+      - page: claude-code/06.hook-added-context
+        claim: End the hook's command with `|| true`, so a bug in it never blocks a call.
+        evidence: "The page's own line 15 (the hook runs after the tool, so it cannot stop it) and hooks.md:784 (a failing hook is a non-blocking error unless onFailure is block). Same reasoning for line 66, 'never stall the agent's tool calls'. `|| true` only silences the hook-error notice. Page: layers/glassbox/content/guide/pages/claude-code/06.hook-added-context.md:77"
+        fixed: true
+      - page: terrarium-practice/09.self-improvement-loop
+        claim: listing the recent sessions that hit it and every PR meant to fix it
+        evidence: .agents/skills/frictions-to-fixes/survey-brief.md:85 (`fixes` records "each PR that merged to fix a cluster"; the open PR number goes in `ref`, not `fixes`)
+        fixed: true
+    gate:
+      - page: claude-code/06.hook-added-context
+        criterion: "falseClaim: correct it to match The page's own line 15 (the hook runs after the tool, so it cannot stop it) and hooks.md:784 (a failing hook is a non-blocking error unless onFailure is block). Same reasoning for line 66, 'never stall the agent's tool calls'. `|| true` only silences the hook-error notice. Page: layers/glassbox/content/guide/pages/claude-code/06.hook-added-context.md:77"
+        votes:
+          - win
+        merged: true
+      - page: terrarium-practice/09.self-improvement-loop
+        criterion: "falseClaim: correct it to match .agents/skills/frictions-to-fixes/survey-brief.md:85 (`fixes` records \"each PR that merged to fix a cluster\"; the open PR number goes in `ref`, not `fixes`); move step: this page RECEIVES the facts, moved here from walkthroughs/a-friction-becomes-a-fix: Stops 5 and 6 repeat the Lesson's rules (screening, regression, picking). Keep each rule only in the Lesson and leave the Walkthrough a chip to it."
+        votes:
+          - win
+        merged: true
+      - page: claude-code/04.hooks
+        criterion: "transfer: The page never says when a hook is the wrong choice. Add one sentence to The concept: use an instruction for judgement calls and a hook for what must hold; every matching call starts a process, so scope the matcher; the command runs with your permissions. Move the general cost out of the Terrarium-only bullet 'Starting a script takes a moment', and link 06's 'a hint is the wrong tool' line. Optional: show a formatter hook that reads file_path from stdin, as the hooks guide does, instead of `npx prettier --write .`."
+        votes:
+          - win
+        merged: true
+      - page: claude-code/11.cloud-sessions
+        criterion: "evidence: an Excerpt that shows what a cloud session receives or what the guard denies: .claude/settings.json:181-190 (the SessionStart hook that installs and unshallows) or scripts/hooks/workflow-edit-guard.ts:62-69,150-151; move step: Give the allow list, the untrusted-workspace rule and the cloud-ignores-allow rule one home on Permissions, with the duplicate settings.json excerpt cut from MCP servers."
+        votes:
+          - win
+        merged: true
+      - page: deploy/02.pnpm-lockfile
+        criterion: "placement: The same fact is in terrarium-practice/07.human-only-list ('The check sees paths, not effects. `pnpm-lock.yaml` and a new `pnpm-workspace.yaml` aren't on the list'). Cut this bullet to one sentence on what writes `pnpm-workspace.yaml` and link Protected paths for the path-check blind spot.; move step: the two merge-pr.ts path-check bullets (lockfile-only change, new pnpm-workspace.yaml)"
+        votes:
+          - win
+        merged: true
+      - page: git-github/01.every-change-a-pr
+        criterion: "clarity: A Why bullet must have no unexplained jargon. Say what an integration PR and a story are in plain words (a PR that gathers several smaller PRs), or drop the bullet and keep the link to docs/agents/pr-workflow.md.; move step: this page RECEIVES the facts, moved here from skill-pack/03.engineering-skills: the review-before-first-push and integration-PR review reasons"
+        votes:
+          - win
+        merged: true
+      - page: git-github/02.git-worktrees
+        criterion: "clarity: A reader new to Terrarium has not met the session log, its statuses or a Friction on this page. Wrap session log and Friction in :term[...], say the script is the session's closing record, and name the statuses (completed, partial, blocked) in one clause, or cut the sentence down to the sweep itself.; transfer: add the Claude Code fact that a subagent worktree under .claude/worktrees/ does not load the worktree root's own CLAUDE.md or .claude/rules/ (https://code.claude.com/docs/en/worktrees#isolate-subagents-with-worktrees), so a reader on any project knows what a subagent in a worktree still sees; move step: The log-session.ts refusal to write from a linked worktree (isLinkedWorktree excerpt) is a log-script fact; Session logs does not mention it."
+        votes:
+          - win
+        merged: true
+      - page: git-github/05.attribution
+        criterion: "clarity: The guest pipeline is not introduced on this page. Cut the example, or link and gloss it; the sentence needs only that hasAuthorshipMarker has a wrapper, isAiAuthored.; clarity: Verdict is not defined here. Say in a clause that it is the comment an agent posts before merging, and shorten the Reading the mark back paragraph, the densest in a very long In Terrarium.; move step: this page RECEIVES the facts, moved here from claude-code/08.mcp-servers: the provenance guard registry and the Block posts reasoning; the MCP page keeps full-name use and matcher shape"
+        votes:
+          - win
+        merged: true
+      - page: nuxt-vue/01.layers
+        criterion: "transfer: say when layers are the wrong choice, e.g. sites needing separate deploys or per-site dependencies a layer cannot scope (.claude/rules/tenant-layers.md:25-29); move step: Layers restates the shared auto-import namespace and silent name clash that Auto-imports owns; leave a link."
+        votes:
+          - win
+        merged: true
+      - page: nuxt-vue/04.auto-imports
+        criterion: "transfer: add a line on when a many-layer or shared-name app should import explicitly from #imports or turn scanning off instead of relying on auto-imports; move step: this page RECEIVES the facts, moved here from nuxt-vue/01.layers: Layers restates the shared auto-import namespace and silent name clash that Auto-imports owns; leave a link."
+        votes:
+          - win
+        merged: true
+      - page: skill-pack/02.planning-with-the-pack
+        criterion: "reasoning: The page's only Why bullet states no reason, cost or alternative and cites no ADR or file. Put the one-sentence reason in it: a reinstall would overwrite an edit, and the seeded tracker doc is Terrarium's own. Add a Why for the choice this page owns, why to-spec and to-tickets are told to file needs-triage and never ready-for-agent, citing ADR-0020 or docs/agents/triage-labels.md. LIMIT: do not re-add the ready-for-agent rule as a Why; the 2026-11-03 run moved it to Issue triage labels (step move-planning-with-the-pack-into-work-queue dropped, rule already there). Fix only the existing Why bullet.; split step: Split wayfinder into its own Lesson; grilling, to-spec and to-tickets stay; all three raters raised it."
+        votes:
+          - win
+        merged: true
+      - page: terrarium-practice/01.human-in-the-loop
+        criterion: "transfer: Add a sentence to The concept saying when a human gate is the wrong choice (for example a throwaway or sandboxed project where no change reaches production, or where review would only rubber-stamp). The page quotes Anthropic's 'the right balance differs' but never says when to loosen the gate.; lesson step: outside contributors and the guest pipeline (ADR-0020, ADR-0023, docs/agents/guest-contributions.md) are cited from several pages but no Lesson teaches them"
+        votes:
+          - win
+        merged: true
+      - page: terrarium-practice/02.adrs
+        criterion: "evidence: The only Excerpt is the HISTORY regex list, so the reader never sees what an ADR looks like. Add an Excerpt of the shape: docs/adr/TEMPLATE.md:1-20 (heading, summary, Scope, Why, Rejected alternatives), or the opening of docs/adr/0030-adrs-document-a-decision-not-its-history.md:1-8."
+        votes:
+          - win
+        merged: true
+      - page: terrarium-practice/07.human-only-list
+        criterion: "transfer: The Concept never says when a protected-path list is the wrong choice (for example a team where every PR already needs a second reviewer, or a repo with no self-merging agents). Add one sentence on that, plus the cost of maintaining the list.; move step: this page RECEIVES the facts, moved here from deploy/02.pnpm-lockfile: the two merge-pr.ts path-check bullets (lockfile-only change, new pnpm-workspace.yaml)"
+        votes:
+          - win
+        merged: true
+      - page: nuxt-content/04.query-collection
+        criterion: "move step: The literal-Tenant-name typing rule and the resolver/key-lookup recap belong to useSpace on File routing; link instead of restating."
+        votes:
+          - equal
+        merged: false
+      - page: verification/03.content-validation
+        criterion: "section step: this page RECEIVES the facts, moved here from verification/07.timestamps-stored-as-strings: One Nuxt Content gotcha (z.date() drops the time) plus one refined string. It sits beside the page that says Nuxt Content uses a schema only for column types."
+        votes:
+          - win
+        merged: true
+      - page: git-github/04.trust-tiers
+        criterion: "lesson step: outside contributors and the guest pipeline (ADR-0020, ADR-0023, docs/agents/guest-contributions.md) are cited from several pages but no Lesson teaches them"
+        votes:
+          - win
+        merged: true
+      - page: git-github/06.work-queue
+        criterion: "lesson step: outside contributors and the guest pipeline (ADR-0020, ADR-0023, docs/agents/guest-contributions.md) are cited from several pages but no Lesson teaches them"
+        votes:
+          - win
+        merged: true
+      - page: walkthroughs/a-friction-becomes-a-fix
+        criterion: "move step: Stops 5 and 6 repeat the Lesson's rules (screening, regression, picking). Keep each rule only in the Lesson and leave the Walkthrough a chip to it."
+        votes:
+          - win
+        merged: true
+    comparisons:
+      - lens: clarity
+        candidate: claude-code/01.claude-md
+        against: claude-code/03.skills
+        votes:
+          - win
+          - loss
+          - win
+        result: win
+      - lens: clarity
+        candidate: claude-code/01.claude-md
+        against: claude-code/02.path-scoped-rules
+        votes:
+          - win
+          - win
+          - win
+        result: win
+      - lens: reasoning
+        candidate: claude-code/05.blocking-hooks
+        against: claude-code/01.claude-md
+        votes:
+          - win
+          - win
+          - win
+        result: win
+      - lens: reasoning
+        candidate: claude-code/05.blocking-hooks
+        against: claude-code/02.path-scoped-rules
+        votes:
+          - win
+          - win
+          - win
+        result: win
+  - run: 2026-11-03
     base: ec0a8e6a4b4f845792f1352a835619c7e5e7d75e
     session: session_013zxzeSAtjCQiatdUuuFCRJ
     pr: 2815
