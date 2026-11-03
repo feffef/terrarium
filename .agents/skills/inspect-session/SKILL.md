@@ -1,6 +1,6 @@
 ---
 name: inspect-session
-description: Use before you inspect another Claude session's events (list_events, get_event) to find out what it did, read, dispatched or failed, or how it ended. Answers from its session log and cheap reads first, then searches its events in a subagent so they never enter your context.
+description: Use before you inspect another Claude session's events (list_events, get_event) to find out what it did, read, dispatched or failed, or how it ended, or to extract its API cost and token usage. Answers from its session log and cheap reads first, then searches its events in a subagent so they never enter your context.
 ---
 
 # inspect-session

@@ -32,8 +32,8 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   and `docs/agents/triage-labels.md`.
 - **Before you act on an issue or PR from someone without write access, or
   from an outside agent:** `docs/agents/guest-contributions.md`.
-- **Before you inspect another session** (`list_events`, `get_event`): the
-  `inspect-session` Skill.
+- **Before you inspect another session** (`list_events`, `get_event`), or to
+  read its API cost and token usage (`get_session`): the `inspect-session` Skill.
 - **Before you write a subagent brief, or resume a stopped subagent:** the
   `dispatch-subagents` Skill.
 - **Every subagent brief** asks it to return, in its final reply, a verdict
