@@ -2,7 +2,7 @@
 // the blind comparisons, the next record and the drafts report. The git shell runs in the Skill.
 import { describe, expect, it } from 'vitest'
 import type { GlassboxGit } from '../../../../../layers/glassbox/page-checks.ts'
-import { agentBriefs, blindPair, claimShards, judgeBrief, lensDefinition, raterBrief, comparisonResult, coverageProblems, decodeVerdict, draftsReport, gateMerged, nextRecord, pageHash, parseReport, runEntry, planPages, readRecord, reportProblems, sourcesHash, stepCriterion, tally, trimPage, type GradeRecord, type PageRecord, type Plan, type Report, type RunEntry, type Step, type Tally, type Vote } from '../../scripts/grades.ts'
+import { agentBriefs, blindPair, claimShards, judgeBrief, lensDefinition, raterBrief, comparisonResult, coverageProblems, decodeVerdict, draftsReport, gateCriteria, gateMerged, nextRecord, pageHash, parseReport, runEntry, planPages, readRecord, reportProblems, sourcesHash, stepCriterion, tally, trimPage, type GradeRecord, type PageRecord, type Plan, type Report, type RunEntry, type Step, type Tally, type Vote } from '../../scripts/grades.ts'
 
 const page = '---\ntitle: Hooks\nrevision: abc\nrevisionDate: 2026-10-01\n---\nBody\n::excerpt{path="a.ts" lines="3-5"}\n'
 
@@ -541,7 +541,7 @@ describe('agentBriefs', () => {
     { id: 'move-x-into-q', kind: 'move', pages: ['c/01.x'], into: 'c/02.q', raised: ['d'], status: 'taken', gist: 'Move timeouts.' },
     { id: 'promote-d', kind: 'promote', pages: ['d/01.d'], raised: ['d'], status: 'pending', gist: 'Promote it.' },
   ]
-  const state = { base: 'abc', items, steps }
+  const state = { base: 'abc', run: '2026-11-05', items, steps }
   const researcher = 'T: {TASK}\nI: {ITEMS}\nD: {DRAFT REPORT}\nC: {COMMIT} S: {SCRATCH}'
   const writer = 'T: {TASK}\nI: {ITEMS}\nR: {RESEARCH FILE}\nF: {FALSE CLAIMS}\nB: {BASE} S: {SCRATCH}'
 
@@ -563,5 +563,42 @@ describe('agentBriefs', () => {
 
   it('fails when a placeholder has no value', () => {
     expect(() => agentBriefs('writer', state, 'run {NOTES} below', '/o', () => 'none')).toThrow('no value for {NOTES}')
+  })
+
+  it('briefs and gates only the steps taken this run; a confirmed item on an older step\'s page goes to a Subject brief', () => {
+    const now = '2026-11-05T0900'
+    const both: Step[] = [
+      { id: 'cut-old', kind: 'cut', pages: ['a/01.x'], raised: ['2026-11-05'], status: 'taken', decided: '2026-11-05', gist: 'Cut it.' },
+      { id: 'cut-new', kind: 'cut', pages: ['c/01.x'], raised: [now], status: 'taken', gist: 'Cut that.' },
+    ]
+    const got = agentBriefs('writer', { base: 'abc', run: now, items, steps: both }, writer, '/o', () => 'none')
+    expect(got.map((b) => b.name)).toEqual(['writer-cut-new', 'writer-a'])
+    expect(got[1]!.text).toContain('T: raise a/01.x, a/02.y')
+    const criteria = gateCriteria(items.map((i) => ({ ...i, edited: true })), both, now)
+    expect([...criteria.keys()]).toEqual(['a/01.x', 'a/02.y', 'b/01.p', 'b/02.p', 'b/03.p', 'c/01.x'])
+    expect(criteria.get('a/01.x')).toEqual(['clarity: fix1'])
+    expect(criteria.get('c/01.x')).toEqual(['cut step: Cut that.'])
+  })
+})
+
+describe('run keys', () => {
+  const first = '2026-11-05T0900'
+  const second = '2026-11-05T1500'
+  const plan: Plan = { base: 'b', pages: ['a/01.p'], read: ['a/01.p'], changed: [], rotation: [], rematch: [], relevance: undefined, stale: [] }
+  const step = (id: string, status: Step['status'], decided?: string): Step => ({ id, kind: 'cut', pages: ['a/0.p'], raised: ['2026-11-05'], status, ...(decided ? { decided } : {}), gist: 'g' })
+  const result: Tally = { grades: {}, items: [], steps: [step('older', 'taken', first), step('mine', 'taken'), step('no', 'refused')], comparisons: [], waiting: [] }
+
+  it('keeps two same-day runs apart: the later one counts only its own steps', () => {
+    const runs = [run(first), run('2026-11-05'), run('2026-11-04')]
+    const entry = runEntry({ run: second, base: 'b' }, plan, result, [])
+    expect([entry.run, entry.stepsTaken, entry.stepsRefused]).toEqual([second, 1, 1])
+    const next = nextRecord({ version: 3, run: first, pages: {}, steps: [] }, plan, {}, result, runs, second)
+    expect(next.steps.map((s) => [s.id, s.decided])).toEqual([['older', first], ['mine', second], ['no', second]])
+  })
+
+  it('sorts a timestamp after its own bare date, so an old entry still sets the churn cutoff', () => {
+    const old = [step('t', 'taken', '2026-11-05'), step('u', 'taken', '2026-11-04')]
+    const kept = nextRecord({ version: 3, pages: {}, steps: [] }, plan, {}, { ...result, steps: old }, [run('2026-11-05'), run('2026-11-04'), run('2026-11-03'), run('2026-11-02')], second)
+    expect(kept.steps.map((s) => s.id)).toEqual(['t', 'u'])
   })
 })
