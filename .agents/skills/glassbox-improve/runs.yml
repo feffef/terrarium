@@ -1,4 +1,464 @@
 runs:
+  - run: 2026-11-03
+    base: ec0a8e6a4b4f845792f1352a835619c7e5e7d75e
+    session: session_013zxzeSAtjCQiatdUuuFCRJ
+    pr: 2815
+    costUsd: 50.22
+    relevance: true
+    pagesRead: 64
+    pagesChecked: 64
+    falseClaimsFixed: 5
+    edits: 19
+    gatePassed: 19
+    gateStopped: 0
+    aComparisons: 10
+    stepsTaken: 5
+    stepsRefused: 0
+    findings:
+      - page: claude-code/01.claude-md
+        lens: placement
+        grade: C
+        quote: "**A hint at the first call.** Even with triggers, many sessions read the git or GitHub doc just after their first call"
+        fix: The read-first hint is taught here and again in hook-added-context (read-first-hint bullet and the Backing loaded instructions reason). Keep one sentence and a link here; the hint's mechanism and reason live in hook-added-context.
+        confirmed: true
+        edited: true
+      - page: claude-code/08.mcp-servers
+        lens: placement
+        grade: C
+        quote: "**Guarded by name.** The guard that checks every GitHub post for its session header, :file[scripts/hooks/github-provenance-guard.ts], keeps a registry with one row per write tool"
+        fix: The same guard, its registry and the Block posts reason are taught in Commit and PR attribution, and the matcher-cost reason repeats Claude Code hooks (Name tools, not the server). Cut this page to how MCP tool names are used (full names, matchers) and link attribution for the guard.
+        confirmed: true
+        edited: true
+      - page: claude-code/09.workflow-scripts
+        lens: evidence
+        grade: C
+        quote: "The build script gives each branch's build agent its own worktree, and turns an agent that returned nothing into a failed result whose reason names where its commits may be:"
+        fix: Neither Excerpt shows the fixed order the lede promises, and the build Excerpt no longer matches the file at ec0a8e6 (...modelOf(b) is now ...SONNET). Excerpt .claude/workflows/clear-backlog-build.js:157-165,176-181 (build, parallel Standards and Spec review, fix, re-gate, capped at MAX_ROUNDS) or :189 (pipeline of build then review).
+        confirmed: true
+        edited: true
+      - page: claude-code/11.cloud-sessions
+        lens: clarity
+        grade: C
+        quote: A session started on the Terrarium repository alone, not as a thread in a project, reads the whole file; one started on several repositories at once reads only `enabledPlugins` and `extraKnownMarketplaces` from it
+        fix: Define a cloud 'project' and a 'thread in a project' once in The concept (a sentence each), then name the three cases (one repo, several repos, a project thread) in one short list. The page uses the term three times with no definition.
+        confirmed: true
+        edited: true
+      - page: claude-code/11.cloud-sessions
+        lens: clarity
+        grade: C
+        quote: and a cloud thread in a project applies none of its permission rules, hooks or `env` ([settings docs](https://code.claude.com/docs/en/settings#settings-in-cloud-sessions))
+        fix: This is the third case, reached only in What to watch for, and it sits beside the 'several repositories' case in the previous clause. Move all three cases into one place in In Terrarium and have What to watch for point back to it, so a newcomer can tell which sessions get which settings.
+        confirmed: true
+        edited: true
+      - page: deploy/02.pnpm-lockfile
+        lens: placement
+        grade: C
+        quote: "**A lockfile-only change passes the Human-only path check.** That check, in :file[scripts/github/merge-pr.ts]"
+        fix: This bullet and the next (a new pnpm-workspace.yaml passes it too) teach merge-pr.ts behaviour that Protected paths owns, including its Dependabot lockfile-only exception. Move both there and leave one linked sentence.
+        confirmed: true
+        edited: true
+      - page: git-github/04.trust-tiers
+        lens: transfer
+        grade: C
+        quote: "`OWNER`, `MEMBER` and `COLLABORATOR` have been given access, `CONTRIBUTOR` has had a change merged before"
+        fix: The page never says when an author_association split is the wrong choice. Add one concept sentence that MEMBER and COLLABORATOR do not guarantee write access in an organisation repo (a read-only member is still MEMBER), so a project with such members should check the collaborator permission endpoint instead of the association.
+        confirmed: true
+        edited: true
+      - page: nuxt-content/04.query-collection
+        lens: placement
+        grade: C
+        quote: "**Return only what the page reads.** Everything a page's `useAsyncData` returns travels in its payload, so queries `select` the fields a page shows."
+        fix: Data fetching owns payload size (its Return what the page reads watch item) and the query-outside-useAsyncData warning appears on both pages. Keep the select advice here and link Data fetching for the payload reason.
+        confirmed: true
+        edited: true
+      - page: nuxt-content/04.query-collection
+        lens: placement
+        grade: C
+        quote: "**Keys from the resolver, not names.** Each Collection is its own table, so a query reaches only the Space whose key it holds"
+        fix: Multi-tenant isolation already teaches take keys from the resolver; replace this reason with a one-line link.
+        confirmed: true
+        edited: true
+      - page: nuxt-content/06.prose-overrides
+        lens: relevance
+        grade: C
+        quote: Terrarium replaces one prose component. :file[app/components/content/ProsePre.vue] sends a `mermaid` code block to the diagram component
+        fix: One override, one Why bullet, and the ProsePre hand-off is also taught in Mermaid pre-rendering. Make it a section of MDC components (Markdown rendering and components), keeping the ContentRenderer components pass, and link from Mermaid pre-rendering.
+        confirmed: false
+        edited: false
+      - page: nuxt-vue/03.virtual-modules
+        lens: transfer
+        grade: C
+        quote: "A Nuxt module offers a third way: work the data out each time Nuxt prepares, builds or starts in development, and give it to the code as an ordinary import."
+        fix: Say when a build-time virtual module is the wrong choice (data that changes at runtime or depends on the request; data large enough to bloat the bundle) in one closing Try-it or concept paragraph, as nuxt-content/07.mermaid-pre-rendering's last Try-it paragraph does.
+        confirmed: true
+        edited: true
+      - page: nuxt-vue/07.css-custom-properties
+        lens: placement
+        grade: C
+        quote: Mermaid diagrams read their colours from `--diagram-*` properties, listed in :file[app/utils/mermaid.ts]
+        fix: The DIAGRAM_TOKENS contract and the Diagrams opt in by contract reason duplicate Mermaid pre-rendering (Colours follow the page). Keep one sentence and a link here.
+        confirmed: true
+        edited: true
+      - page: skill-pack/02.planning-with-the-pack
+        lens: clarity
+        grade: C
+        quote: without asking anything new apart from checking the test seams
+        fix: "'Test seams' is never explained on this page. It is defined only on the later Engineering skills page (public boundaries where behaviour can be seen). Gloss it in a few words here, or drop the clause."
+        confirmed: true
+        edited: true
+      - page: skill-pack/02.planning-with-the-pack
+        lens: clarity
+        grade: C
+        quote: A wide refactor that no single slice can land green goes through expand, migrate and contract steps instead.
+        fix: Say in one clause what expand, migrate and contract mean (add the new shape beside the old, move the users over, then remove the old), or cut the sentence.
+        confirmed: true
+        edited: true
+      - page: skill-pack/02.planning-with-the-pack
+        lens: placement
+        grade: C
+        quote: "**Ignore their `ready-for-agent`.** `to-spec` and `to-tickets` tell the agent to label what they publish `ready-for-agent`, but in Terrarium only triage sets that label"
+        fix: Issue triage labels already teaches this in its Who sets the state excerpt, and Human-in-the-loop covers approval. Replace this bullet and the Writing a spec isn't approving it reason with one link.
+        confirmed: true
+        edited: true
+      - page: skill-pack/02.planning-with-the-pack
+        lens: evidence
+        grade: C
+        quote: "The same doc says how a spec looks here: an ordinary issue, with each user story a sub-issue that also starts with a `Part of` line naming the spec."
+        fix: "In In Terrarium, add an ::excerpt of docs/agents/issue-tracker.md:55-66 (Specs: ordinary issue, sub-issues, Part of line) and one of docs/agents/triage-labels.md:20-25 (only triage sets ready-for-agent; to-spec and to-tickets say it, don't apply it). The page currently shows no Terrarium file."
+        confirmed: true
+        edited: true
+      - page: skill-pack/03.engineering-skills
+        lens: placement
+        grade: C
+        quote: "**Review before the first push.** A pushed branch gets its PR at once, and an agent merges its own PR on a green CI run"
+        fix: The first-push review rule and the integration-PR review belong with Pull requests, which Merge gate and the asking-for-a-change walkthrough already point at. Move those two reasons there; keep here only what the installed Skills do and the fixed code-review step in a sentence.
+        confirmed: true
+        edited: true
+      - page: skill-pack/04.wayfinder
+        lens: evidence
+        grade: C
+        quote: Terrarium's `auto-triage` sweep, a pass a person starts that labels every issue needing attention, also triages wayfinder tickets
+        fix: The GitHub mapping (map, ticket, blocking, claim, resolve) is prose only and the Excerpt shows a side consequence, the triage overlay. Excerpt docs/agents/issue-tracker.md:107-108,112-113 (Wayfinding operations) and move the auto-triage 74-81 Excerpt under the Why bullet.
+        confirmed: true
+        edited: true
+      - page: skill-pack/04.wayfinder
+        lens: transfer
+        grade: C
+        quote: Some work is too big for one agent session, and the way to the goal can't be seen yet.
+        fix: "Say when not to use it: .agents/skills/wayfinder/SKILL.md:112 ('If this surfaces no fog ... you don't need a map') and .agents/skills/ask-matt/SKILL.md:52 ('never a well-scoped feature'). State the general idea (a map of decisions, with unknowns left unspecified) apart from the Skill's labels."
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/01.human-in-the-loop
+        lens: placement
+        grade: C
+        quote: Terrarium has two tiers. A :term[Trusted] user has write access to the repository; everyone else is :term[Public].
+        fix: Author trust owns the tiers and its lede says who may direct an agent comes from identity, never the text. Here the concept sentence Who may give an approval comes from identity, never from what a message says, the tiers paragraph and the A review comment can come from anyone watch item restate it. Keep one sentence and link Author trust; keep this page on approval and remit.
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/04.session-logs
+        lens: evidence
+        grade: C
+        quote: ::excerpt{path="scripts/session/log-session.ts" lines="208-216"} (isLinkedWorktree)
+        fix: The worktree guard is a side detail; the decision (one file straight to main) has no Excerpt. Use scripts/session/log-session.ts:293-298 (refuses unless exactly the log file changed) or .claude/settings.json:201-215 (the Stop hook). Keep the schema Excerpt.
+        confirmed: false
+        edited: false
+      - page: terrarium-practice/05.pruning-instructions
+        lens: evidence
+        grade: C
+        quote: ::excerpt{path=".agents/skills/prune-trial/scripts/find-trial-window.ts" lines="39,45,107-109"}
+        fix: A window constant is the least instructive part of the mechanism. The ledger entry (problem, territory, opened, check) is described only in prose. Excerpt .agents/prune-trials.yml:12-21.
+        confirmed: false
+        edited: false
+      - page: verification/04.unit-and-e2e-tests
+        lens: evidence
+        grade: C
+        quote: The e2e tests share one build. :file[tests/support/e2e-global-setup.ts] runs once before them
+        fix: "The only Excerpt (vitest.config.ts:49-59) shows globs and a poll-timeout comment, but three of the four Why bullets (one build, a database per spec, no isolation) have no code. Excerpt the one-build mechanism at tests/support/e2e-global-setup.ts:10-22, or setupL2() at tests/support/e2e.ts:37-47 (build: false, own database copy). Optionally show the isolate: false comment at vitest.config.ts:38-47 in place of the poll-timeout lines."
+        confirmed: true
+        edited: true
+      - page: verification/07.timestamps-stored-as-strings
+        lens: relevance
+        grade: C
+        quote: Every timestamp in a Terrarium schema uses one refined string, defined once in :file[shared/schemas/timestamp.ts]
+        fix: A six-line excerpt, two reasons and one finding that Content validation already sets up (Nuxt Content turns a schema into column types). Fold it into Content validation as a Column types section.
+        confirmed: false
+        edited: false
+      - page: verification/09.invariant-tests
+        lens: relevance
+        grade: C
+        quote: The Blog's writing Skill, :file[.agents/skills/blog-post/SKILL.md], asks every link to a file or a line to name a full commit SHA, never `main`.
+        fix: One narrow example, and Testing already says A unit test can hold a content rule too (Glass Box page-checks). Make this a section of Testing.
+        confirmed: false
+        edited: false
+      - page: walkthroughs/a-bug-report-becomes-work
+        lens: evidence
+        grade: C
+        quote: "No sweep took this issue: a Trusted user steered a session that built one small piece of the letter as PR #820, so the case shows stop 7 alone."
+        fix: "Use a case that shows several stops, such as issue #551 with PR #552 (Public author, guest pipeline, ready-for-agent, merged by the owner), or cut the real case"
+        confirmed: false
+        edited: false
+      - page: claude-code/03.skills
+        lens: evidence
+        quote: In Terrarium, invocation choice
+        fix: "Show the model-invoked contrast beside the glassbox-lesson frontmatter: .agents/skills/dispatch-subagents/SKILL.md:1-4. The Try-it says to write the description as triggers but only the user-invoked frontmatter is shown. No page holds A; 05.blocking-hooks pairs its two wirings side by side, the pattern to take."
+        confirmed: false
+        edited: false
+      - page: claude-code/03.skills
+        lens: transfer
+        quote: The concept
+        fix: It never says when a Skill is the wrong choice (an every-session instruction belongs in CLAUDE.md, a must-always-run step in a hook). 07.subagents does this with 'Keep a quick, targeted change... in the main conversation'.
+        confirmed: false
+        edited: false
+      - page: claude-code/04.hooks
+        lens: transfer
+        quote: The concept
+        fix: It never says when a hook is the wrong choice; the only cost note (script start-up) is in a Terrarium Why. 06.hook-added-context ('a hint is the wrong tool; a guard... is the right one') and 05.blocking-hooks (a guard that can't tell may fail open) show the pattern.
+        confirmed: false
+        edited: false
+      - page: claude-code/07.subagents
+        lens: evidence
+        quote: In Terrarium, Impl-agents excerpt (SKILL.md 76-77)
+        fix: Asserts a subagent 'cannot spawn subagents' with no mechanism while the concept says nesting is allowed. .claude/workflows/clear-backlog-build.js:123 names the cause (CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1), but I found nothing in the repo setting it; verify, or word it as the Skill's rule. 05.blocking-hooks shows the mechanism beside the rule.
+        confirmed: false
+        edited: false
+      - page: claude-code/08.mcp-servers
+        lens: transfer
+        quote: The concept
+        fix: It never says when MCP is the wrong choice (CLI already installed, or bulk reads that overflow). That appears only as a Terrarium aside (list-open-issues.ts; github-integration.md:57-81). Lift one general sentence into the concept, as 07.subagents does.
+        confirmed: false
+        edited: false
+    falseClaims:
+      - page: claude-code/09.workflow-scripts
+        claim: "const r = await agent(buildPrompt(b), { label: `build ${b.name}`, phase: 'Build', schema: WORK, isolation: 'worktree', ...modelOf(b) })"
+        evidence: .claude/workflows/clear-backlog-build.js:149 (now ...SONNET; modelOf removed after the page's revision 0fe8681)
+        fixed: true
+      - page: skill-pack/02.planning-with-the-pack
+        claim: so the planning Skills never set it
+        evidence: ".agents/skills/to-spec/SKILL.md:19 and .agents/skills/to-tickets/SKILL.md:63 (both tell the agent to apply ready-for-agent; the page's own watch item says so; smallest fix: 'so Terrarium doesn't let them set it')"
+        fixed: true
+      - page: skill-pack/03.engineering-skills
+        claim: ::excerpt{path=".claude/workflows/clear-backlog-build.js" lines="156,163-174"}
+        evidence: .claude/workflows/clear-backlog-build.js:157,164-175 at ec0a8e6 (shifted one line; and the excerpt text '...modelOf(b)' is now '...SONNET' at :169; changed after revision 0fe8681d, so the Excerpt no longer matches)
+        fixed: true
+      - page: skill-pack/03.engineering-skills
+        claim: Terrarium's Inventory entry for `code-review` asks each review brief to restate "verify before you state", and every cited line to be read again before it is acted on.
+        evidence: layers/journal/content/current/skills/code-review.yml:6-10 (the role only says a subagent once cited a fabricated line and that CLAUDE.md's 'Verify before you state' covers it; it asks nothing of review briefs)
+        fixed: true
+      - page: terrarium-practice/09.self-improvement-loop
+        claim: one YAML file per root cause in :file[layers/journal/content/current/frictions/], listing every session that hit it and every PR meant to fix it
+        evidence: "layers/journal/app/utils/ledger.ts:15 (LEDGER_HORIZON_DAYS = 14: 'Occurrences older than this many days are dropped (prune-friction-ledger.ts)'), so older sessions are not listed"
+        fixed: true
+    gate:
+      - page: claude-code/09.workflow-scripts
+        criterion: "falseClaim: correct it to match .claude/workflows/clear-backlog-build.js:149 (now ...SONNET; modelOf removed after the page's revision 0fe8681); evidence: Neither Excerpt shows the fixed order the lede promises, and the build Excerpt no longer matches the file at ec0a8e6 (...modelOf(b) is now ...SONNET). Excerpt .claude/workflows/clear-backlog-build.js:157-165,176-181 (build, parallel Standards and Spec review, fix, re-gate, capped at MAX_ROUNDS) or :189 (pipeline of build then review)."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: skill-pack/02.planning-with-the-pack
+        criterion: "falseClaim: correct it to match .agents/skills/to-spec/SKILL.md:19 and .agents/skills/to-tickets/SKILL.md:63 (both tell the agent to apply ready-for-agent; the page's own watch item says so; smallest fix: 'so Terrarium doesn't let them set it'); clarity: 'Test seams' is never explained on this page. It is defined only on the later Engineering skills page (public boundaries where behaviour can be seen). Gloss it in a few words here, or drop the clause.; clarity: Say in one clause what expand, migrate and contract mean (add the new shape beside the old, move the users over, then remove the old), or cut the sentence.; placement: Issue triage labels already teaches this in its Who sets the state excerpt, and Human-in-the-loop covers approval. Replace this bullet and the Writing a spec isn't approving it reason with one link.; evidence: In In Terrarium, add an ::excerpt of docs/agents/issue-tracker.md:55-66 (Specs: ordinary issue, sub-issues, Part of line) and one of docs/agents/triage-labels.md:20-25 (only triage sets ready-for-agent; to-spec and to-tickets say it, don't apply it). The page currently shows no Terrarium file.; split step: Split wayfinder into its own Lesson; grilling, to-spec and to-tickets stay; all three raters raised it."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: skill-pack/03.engineering-skills
+        criterion: "falseClaim: correct it to match .claude/workflows/clear-backlog-build.js:157,164-175 at ec0a8e6 (shifted one line; and the excerpt text '...modelOf(b)' is now '...SONNET' at :169; changed after revision 0fe8681d, so the Excerpt no longer matches); falseClaim: correct it to match layers/journal/content/current/skills/code-review.yml:6-10 (the role only says a subagent once cited a fabricated line and that CLAUDE.md's 'Verify before you state' covers it; it asks nothing of review briefs); placement: The first-push review rule and the integration-PR review belong with Pull requests, which Merge gate and the asking-for-a-change walkthrough already point at. Move those two reasons there; keep here only what the installed Skills do and the fixed code-review step in a sentence.; move step: the review-before-first-push and integration-PR review reasons"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: terrarium-practice/09.self-improvement-loop
+        criterion: "falseClaim: correct it to match layers/journal/app/utils/ledger.ts:15 (LEDGER_HORIZON_DAYS = 14: 'Occurrences older than this many days are dropped (prune-friction-ledger.ts)'), so older sessions are not listed"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: claude-code/01.claude-md
+        criterion: "placement: The read-first hint is taught here and again in hook-added-context (read-first-hint bullet and the Backing loaded instructions reason). Keep one sentence and a link here; the hint's mechanism and reason live in hook-added-context."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: claude-code/08.mcp-servers
+        criterion: "placement: The same guard, its registry and the Block posts reason are taught in Commit and PR attribution, and the matcher-cost reason repeats Claude Code hooks (Name tools, not the server). Cut this page to how MCP tool names are used (full names, matchers) and link attribution for the guard.; move step: Give the allow list, the untrusted-workspace rule and the cloud-ignores-allow rule one home on Permissions, with the duplicate settings.json excerpt cut from MCP servers.; move step: the provenance guard registry and the Block posts reasoning; the MCP page keeps full-name use and matcher shape"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: claude-code/11.cloud-sessions
+        criterion: "clarity: Define a cloud 'project' and a 'thread in a project' once in The concept (a sentence each), then name the three cases (one repo, several repos, a project thread) in one short list. The page uses the term three times with no definition.; clarity: This is the third case, reached only in What to watch for, and it sits beside the 'several repositories' case in the previous clause. Move all three cases into one place in In Terrarium and have What to watch for point back to it, so a newcomer can tell which sessions get which settings.; move step: Give the allow list, the untrusted-workspace rule and the cloud-ignores-allow rule one home on Permissions, with the duplicate settings.json excerpt cut from MCP servers."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: deploy/02.pnpm-lockfile
+        criterion: "placement: This bullet and the next (a new pnpm-workspace.yaml passes it too) teach merge-pr.ts behaviour that Protected paths owns, including its Dependabot lockfile-only exception. Move both there and leave one linked sentence.; move step: the two merge-pr.ts path-check bullets (lockfile-only change, new pnpm-workspace.yaml)"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: git-github/04.trust-tiers
+        criterion: "transfer: The page never says when an author_association split is the wrong choice. Add one concept sentence that MEMBER and COLLABORATOR do not guarantee write access in an organisation repo (a read-only member is still MEMBER), so a project with such members should check the collaborator permission endpoint instead of the association."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: nuxt-content/04.query-collection
+        criterion: "placement: Data fetching owns payload size (its Return what the page reads watch item) and the query-outside-useAsyncData warning appears on both pages. Keep the select advice here and link Data fetching for the payload reason.; placement: Multi-tenant isolation already teaches take keys from the resolver; replace this reason with a one-line link.; move step: The literal-Tenant-name typing rule and the resolver/key-lookup recap belong to useSpace on File routing; link instead of restating."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: nuxt-vue/03.virtual-modules
+        criterion: "transfer: Say when a build-time virtual module is the wrong choice (data that changes at runtime or depends on the request; data large enough to bloat the bundle) in one closing Try-it or concept paragraph, as nuxt-content/07.mermaid-pre-rendering's last Try-it paragraph does."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: nuxt-vue/07.css-custom-properties
+        criterion: "placement: The DIAGRAM_TOKENS contract and the Diagrams opt in by contract reason duplicate Mermaid pre-rendering (Colours follow the page). Keep one sentence and a link here.; move step: Move ProgressBar's --n/--i custom-property explanation and its Why bullet to CSS custom properties; two raters raised it.; move step: the --diagram-* contract paragraph and the Diagrams opt in by contract reason"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: skill-pack/04.wayfinder
+        criterion: "evidence: The GitHub mapping (map, ticket, blocking, claim, resolve) is prose only and the Excerpt shows a side consequence, the triage overlay. Excerpt docs/agents/issue-tracker.md:107-108,112-113 (Wayfinding operations) and move the auto-triage 74-81 Excerpt under the Why bullet.; transfer: Say when not to use it: .agents/skills/wayfinder/SKILL.md:112 ('If this surfaces no fog ... you don't need a map') and .agents/skills/ask-matt/SKILL.md:52 ('never a well-scoped feature'). State the general idea (a map of decisions, with unknowns left unspecified) apart from the Skill's labels."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: terrarium-practice/01.human-in-the-loop
+        criterion: "placement: Author trust owns the tiers and its lede says who may direct an agent comes from identity, never the text. Here the concept sentence Who may give an approval comes from identity, never from what a message says, the tiers paragraph and the A review comment can come from anyone watch item restate it. Keep one sentence and link Author trust; keep this page on approval and remit."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: verification/04.unit-and-e2e-tests
+        criterion: "evidence: The only Excerpt (vitest.config.ts:49-59) shows globs and a poll-timeout comment, but three of the four Why bullets (one build, a database per spec, no isolation) have no code. Excerpt the one-build mechanism at tests/support/e2e-global-setup.ts:10-22, or setupL2() at tests/support/e2e.ts:37-47 (build: false, own database copy). Optionally show the isolate: false comment at vitest.config.ts:38-47 in place of the poll-timeout lines."
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: terrarium-practice/07.human-only-list
+        criterion: "move step: the two merge-pr.ts path-check bullets (lockfile-only change, new pnpm-workspace.yaml)"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: git-github/05.attribution
+        criterion: "move step: the provenance guard registry and the Block posts reasoning; the MCP page keeps full-name use and matcher shape"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+      - page: git-github/01.every-change-a-pr
+        criterion: "move step: the review-before-first-push and integration-PR review reasons"
+        votes:
+          - win
+          - win
+          - loss
+        merged: true
+      - page: nuxt-content/07.mermaid-pre-rendering
+        criterion: "move step: the --diagram-* contract paragraph and the Diagrams opt in by contract reason"
+        votes:
+          - win
+          - win
+          - win
+        merged: true
+    comparisons:
+      - lens: evidence
+        candidate: claude-code/05.blocking-hooks
+        against: claude-code/01.claude-md
+        votes:
+          - win
+          - win
+          - win
+        result: win
+      - lens: evidence
+        candidate: claude-code/05.blocking-hooks
+        against: claude-code/02.path-scoped-rules
+        votes:
+          - win
+          - win
+          - win
+        result: win
+      - lens: transfer
+        candidate: claude-code/07.subagents
+        against: claude-code/01.claude-md
+        votes:
+          - win
+          - win
+          - win
+        result: win
+      - lens: transfer
+        candidate: claude-code/07.subagents
+        against: claude-code/02.path-scoped-rules
+        votes:
+          - win
+          - win
+          - win
+        result: win
+      - lens: clarity
+        candidate: claude-code/03.skills
+        against: claude-code/01.claude-md
+        votes:
+          - loss
+        result: loss
+      - lens: clarity
+        candidate: claude-code/03.skills
+        against: claude-code/02.path-scoped-rules
+        votes:
+          - win
+          - loss
+          - win
+        result: win
+      - lens: reasoning
+        candidate: nuxt-vue/06.use-async-data
+        against: nuxt-vue/01.layers
+        votes:
+          - win
+          - win
+          - win
+        result: win
+      - lens: reasoning
+        candidate: nuxt-vue/06.use-async-data
+        against: nuxt-vue/02.file-routing
+        votes:
+          - loss
+        result: loss
+      - lens: placement
+        candidate: nuxt-vue/08.hydration
+        against: nuxt-vue/01.layers
+        votes:
+          - win
+          - equal
+          - loss
+        result: loss
+      - lens: placement
+        candidate: nuxt-vue/08.hydration
+        against: nuxt-vue/02.file-routing
+        votes:
+          - win
+          - win
+          - win
+        result: win
   - run: 2026-11-02
     base: 87ccd9f83e4314732574463fca79530755fe9045
     session: session_013zxzeQZYwzDuf4JEncnqAa
