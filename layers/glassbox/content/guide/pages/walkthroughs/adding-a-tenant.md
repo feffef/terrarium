@@ -1,7 +1,7 @@
 ---
 title: Adding a site
 description: 'How a new site joins Terrarium: one folder, one manifest, tables of its own and tests that find it by themselves.'
-revision: '0fe8681d9e1aabea7d1933903cbb92aab03ca527'
+revision: '43aa2027c9e40d2165c6b5eb11bc99dc75b5df98'
 revisionDate: '2026-11-03'
 publishedAt: '2026-10-27T18:52:48Z'
 ---
@@ -13,7 +13,7 @@ A new site joins Terrarium. This Walkthrough follows the work from the side of t
 A :term[Trusted] user approves the new :term[Tenant] before an agent starts on it, by asking for it in a session or by labelling its issue `ready-for-agent`. One other route exists: while the owner runs the guest pipeline, a :term[Public] guest's confirmation on their own issue is the approval, and the owner merges the result. Either way the agent works on a feature branch, and the result lands as a PR like any other change.
 
 ::lessons
-[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Author trust](/t/glassbox/guide/git-github/trust-tiers) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+[Human-in-the-loop agents](/t/glassbox/guide/terrarium-practice/human-in-the-loop) · [Author trust](/t/glassbox/guide/git-github/trust-tiers) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Outside contributions](/t/glassbox/guide/terrarium-practice/outside-contributions)
 ::
 
 ## 2. A folder becomes a layer
