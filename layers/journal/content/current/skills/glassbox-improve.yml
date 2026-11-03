@@ -1,10 +1,11 @@
 name: glassbox-improve
 category: platform-operation
 importance: specialist
-gist: Raises the Glass Box guide one step by fixing its weakest page.
+gist: Raises the Glass Box guide lens by lens, gating each edit with blind judges.
 role: >-
-  Three raters grade every Glass Box guide page; the run fixes the weakest by
-  consensus and self-merges one PR. Meant to be manual
+  Lens raters grade the Glass Box guide, researchers confirm each finding, and
+  an edit lands only if blind judges prefer it to the page it replaces; judges
+  also elect A per lens. Self-merges one PR. Meant to be manual
   (disable-model-invocation).
 observations:
   - date: "2026-10-28"

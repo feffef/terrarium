@@ -132,8 +132,8 @@ on the run branch.
 
 ## 7. Blind gate
 
-Run `grades.ts gate --base <base> --out <scratch folder>`. For each page an
-edit changed, it writes three judge briefs from
+Run `grades.ts gate --base <base> --out <scratch folder>`. For each page named
+by an `edited` item or a taken step, it writes three judge briefs from
 [`judge-brief.md`](judge-brief.md): old and new in random order, with the
 criterion the edit targeted and the house rules; a page new since the base
 has no old version, so `code-review` alone checks it. Dispatch one judge per brief,
