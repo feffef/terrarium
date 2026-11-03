@@ -1,11 +1,11 @@
 name: glassbox-improve-run-cost
-summary: A glassbox-improve run spent many rater, researcher and writer agents and review rounds on a few small page changes.
-cause: "glassbox-improve v1 re-graded after each round, took every structural step two raters raised (about 35 subagents) and had the lead paste page and draft lists into each rater brief by hand. PR #2688 (v2) dropped re-grade rounds and ranks structural raises; PR #2711 caps a run at 3 structural steps, fills rater briefs from the tally and saves hand-backs in pairs. The first-run cooling-off cost is glassbox-improve-first-run-cost. Signals: 'rounds', 'raters twice', 'about 35 subagents', 'token cost', 'under-10 guidance', 'brief pasted by hand'."
+summary: A glassbox-improve run spent many agents, hand-run dispatch waves and review rounds, or a retyped PR body, on a few small page changes.
+cause: "glassbox-improve v1 re-graded after each round, took every structural step two raters raised (about 35 subagents) and had the lead paste page and draft lists into each rater brief by hand. PR #2688 (v2) dropped re-grade rounds and ranks structural raises; PR #2711 caps a run at 3 structural steps, fills rater briefs from the tally and saves hand-backs in pairs; PR #2794 (v3) keeps run state in repo YAML and plans briefs by script. A run still retyped a 40-53 KB tally into the PR body (create_pull_request takes body only inline) and the first v3 run dispatched about 127 judges by hand in waves. The first-run cooling-off cost is glassbox-improve-first-run-cost. Signals: 'rounds', 'raters twice', 'about 35 subagents', 'token cost', 'under-10 guidance', 'brief pasted by hand', 'PR body', 'judges dispatched by hand'."
 surface: safe
-status: tracked
-ref: "issue #2774"
+status: open
 notes: |-
   2026-11-02 survey: the full inline PR body (create_pull_request takes body only inline, ~25k tokens for a 40 KB tally) was left unchanged by PR #2711 on the owner's choice in issue #2700 (options 2 and 3 only); session_013zxzeSvdGhiM7SLEUgzvmF repeats it.
+  2026-11-03 survey: issue #2774 closed 2026-11-02 as superseded by #2792 (closed), whose v3 landed in PR #2794; status reset to open. Two later or unlogged runs: SkTL's 53 KB inline PR body (before #2794) and QZYw's first v3 run, with about 127 judges dispatched by hand in seven waves (after it).
 fixes:
   - pr: 2688
     date: "2026-10-29"
@@ -13,6 +13,9 @@ fixes:
   - pr: 2711
     date: "2026-10-30"
     summary: "Caps each run at 3 structural steps by queue (waiting candidates first), fills rater briefs from the tally, and saves subagent hand-backs in pairs."
+  - pr: 2794
+    date: "2026-11-02"
+    summary: "glassbox-improve v3 keeps run state in repo YAML (grades.yml, runs.yml); scripts/grades.ts plans the rater briefs and tallies, and a blind judge gate decides edits."
 occurrences:
   - session: session_013zxzeQ5JaiqQgggGaNSagD
     date: "2026-10-29"
@@ -34,3 +37,13 @@ occurrences:
     severity: moderate
     description: "MCP create_pull_request takes the body only inline, so the 40KB tally had to be read back and retyped, roughly 25k tokens, in one call."
     solution: "None wanted: the owner chose to keep the full inline PR body (issue 2700 option a) and rejected a body-file script because of ADR-0017; I proposed otherwise before checking."
+  - session: session_013zxzeSkTLmRxa2PWgt3kPw
+    date: "2026-11-02"
+    severity: minor
+    description: "The PR body must hold the whole tally, so it is 53 KB and too large to paste through the MCP tool; I set it with gh api from a file instead of MCP"
+    solution: "Let grades.ts write a PR-body file and let the provenance guard accept gh api --input from the scratch folder, or have the Skill keep the full tally in a details file"
+  - session: session_013zxzeQZYwzDuf4JEncnqAa
+    date: "2026-11-02"
+    severity: moderate
+    description: "About 127 judges were dispatched by hand in seven waves, which is heavy lead orchestration and a large token cost"
+    solution: "No glassbox-improve workflow exists in .claude/workflows/; one script could fan out judges from the briefs grades.ts writes and call votes"

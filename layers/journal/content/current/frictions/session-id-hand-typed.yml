@@ -26,3 +26,8 @@ occurrences:
     severity: nit
     description: "A commit message heredoc carried a placeholder Claude-Session id; the commit-msg hook replaced it, but I should have used the id from the attribution reminder."
     solution: "Copy the trailer from the system reminder verbatim."
+  - session: session_013zxzePh7qKycsJT9g2eqU1
+    date: "2026-11-03"
+    severity: nit
+    description: "Typed a wrong session id into my commit trailer from memory; the commit-msg hook replaced it with the right one."
+    solution: "Copy the id from the system prompt, or leave the trailer to the hook."

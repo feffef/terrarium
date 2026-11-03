@@ -57,3 +57,8 @@ occurrences:
     severity: nit
     description: "Posted a PR verdict comment with a placeholder SHA and had to edit it; the closing PR's branch needed a force push, which the auto-mode classifier denied, so I pushed it as a fast-forward."
     solution: "Get the head SHA before writing the verdict; after a merged PR, check whether the reset branch is a fast-forward of the remote before forcing."
+  - session: session_013zxzeSkTLmRxa2PWgt3kPw
+    date: "2026-11-02"
+    severity: minor
+    description: "Official-docs URLs content.nuxt.com, v3.zod.dev, vitest.dev and docs.github.com were blocked by the proxy; the queryCollection Full reference stays unverified over the network"
+    solution: "Allow those hosts in the environment's network policy, or fetch docs sources the way EVERY-PAGE describes"

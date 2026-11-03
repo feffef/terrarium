@@ -52,3 +52,8 @@ occurrences:
     severity: minor
     description: "Chose the work-queue draft without checking its title against EVERY-PAGE's title rule; two raters then flagged five words, costing a retitle round and link-text edits on five pages."
     solution: "Have step 3 check a candidate draft's title against the rule before it is chosen, or add the word count to page-checks (issue 2651)."
+  - session: session_013zxzeRkQabGaMQ8gphe4Ra
+    date: "2026-11-02"
+    severity: nit
+    description: "Wrote the rater and judge briefs before reading ADR-0005 and ADR-0027 in full; a hook asked afterwards (no change was needed)"
+    solution: "Read the ADRs a Skill-folder rule points to before the first Write in that folder"

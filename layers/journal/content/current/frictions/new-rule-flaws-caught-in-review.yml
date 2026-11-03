@@ -18,3 +18,8 @@ occurrences:
     severity: moderate
     description: "My first split rule (split only a different friction, keep a fix-caught slip) let me split one cluster and keep two of the same shape; both reviewers flagged it and the user had to settle it."
     solution: "Ask the deciding question with a worked pair of examples before applying a rule to data."
+  - session: session_013zxzeRkQabGaMQ8gphe4Ra
+    date: "2026-11-02"
+    severity: moderate
+    description: "Didn't see until the Spec review that the K=3 rotation made two consecutive A wins impossible on 4 of 5 lenses; needed a third design round with the user"
+    solution: "Before showing a selection rule, run it on two concrete cases across runs (CLAUDE.md Question the premise), including how rules interact over time"

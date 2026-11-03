@@ -159,3 +159,13 @@ occurrences:
     severity: nit
     description: "Ran gate:scoped twice because the post-review prose fixes changed the head after the first green run."
     solution: "Fold the fact-check and review fixes in before the first gate when both reports are cheap to wait for."
+  - session: session_013zxzeRNoKQn8q3NtVRPDyk
+    date: "2026-11-02"
+    severity: minor
+    description: "Broke pr-workflow order: started gate:scoped before committing, then committed mid-run, so the gate aborted and had to rerun."
+    solution: "Commit, review, then start the gate last and edit nothing until it ends."
+  - session: session_013zxzeQ61FGG5kRKhi89YE9
+    date: "2026-11-02"
+    severity: nit
+    description: "Edited a test file while gate:scoped was running; the gate aborted and had to be rerun, costing about two minutes."
+    solution: "Apply review findings only after the gate ends, or start the gate after the review."

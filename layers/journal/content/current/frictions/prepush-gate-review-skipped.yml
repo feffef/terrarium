@@ -148,3 +148,13 @@ occurrences:
     severity: minor
     description: "Skipped code-review on the escalation PR (one rule line) though a rule's meaning changes; I judged it a clarification and said so in the PR."
     solution: "pr-workflow's 'simple change' test should say whether a rule wording clarification that matches its ADR counts."
+  - session: session_013zxzeQBuD3C4A1V2DpoHYu
+    date: "2026-11-02"
+    severity: minor
+    description: "Skipped the code-review Skill for a 58-file diff and used my own read of a mechanical diff; the pr-workflow simple-change test names size limits this exceeds."
+    solution: "State the exemption plainly or run code-review on the two edited files."
+  - session: session_013zxzeRkQabGaMQ8gphe4Ra
+    date: "2026-11-02"
+    severity: minor
+    description: "Folded the second review's fixes into the unpushed follow-up commit with only my own read, though the delta was over pr-workflow's 10-line simple-change limit"
+    solution: "Either run code-review on the delta or keep review-driven fixes under the simple-change limit; pr-workflow could say how a fix for a review's own findings is reviewed"

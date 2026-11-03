@@ -100,3 +100,8 @@ occurrences:
     severity: minor
     description: "I wrote fact-check tallies (28 claims, 7 fixed; 53 claims, 12 fixed) into both PR bodies without counting them, breaching Verify before you state; caught when opening the second PR and corrected."
     solution: "Have blog-post step 9 say to count the checker's rows (wc on the returned table) before writing the tally, or drop the number."
+  - session: session_013zxzeQZYwzDuf4JEncnqAa
+    date: "2026-11-02"
+    severity: minor
+    description: "Broke CLAUDE.md 'Verify before you state': I forwarded an Excerpt trim without counting; it would still render 18 lines and drop a named line"
+    solution: "Count rendered lines against the cited file before sending a trim; the writer caught it"

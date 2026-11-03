@@ -479,3 +479,43 @@ occurrences:
     severity: nit
     description: "I ran gh search and git fetch-style calls before reading github-integration.md and git-conventions.md; hooks flagged each read late. Read-only, no harm."
     solution: "Read the two docs as the first step of any scheduled run that touches git or GitHub."
+  - session: session_013zxzeR2kopqGDtf5GQztz6
+    date: "2026-11-02"
+    severity: nit
+    description: "Ran git fetch and git log before reading docs/agents/git-conventions.md, against CLAUDE.md's docs-first rule; no harm here as both were read-only lookups."
+    solution: "Read git-conventions.md before the first non-read-only git command, as the PostToolUse hint said."
+  - session: session_013zxzeRNoKQn8q3NtVRPDyk
+    date: "2026-11-02"
+    severity: minor
+    description: "Broke CLAUDE.md 'Before your first git command' by running fetch and rebase before reading git-conventions.md; harmless here, branch had no commits."
+    solution: "The read-first hint fired after the call; read git-conventions.md before any state-changing git command."
+  - session: session_013zxzeSkTLmRxa2PWgt3kPw
+    date: "2026-11-02"
+    severity: nit
+    description: "CLAUDE.md says read triage-labels.md before filing an issue; I only grepped it for needs-triage and filed #2786 first"
+    solution: "Read the doc whole before the first issue_write; the hook reminder arrived after the call"
+  - session: session_013zxzeQ61FGG5kRKhi89YE9
+    date: "2026-11-02"
+    severity: nit
+    description: "Ran git fetch and checkout before reading docs/agents/git-conventions.md, which CLAUDE.md requires before the first non-read-only git command."
+    solution: "Read the doc in the same turn before the first git command; the hook caught it after the fact."
+  - session: session_013zxzeQBuD3C4A1V2DpoHYu
+    date: "2026-11-02"
+    severity: nit
+    description: "Read docs/agents/git-conventions.md only after my first fetch; the hook reminded me afterwards."
+    solution: "Read the doc before the first non-read-only git command."
+  - session: session_013zxzeR8CEiWCmTmvjhCZ1A
+    date: "2026-11-03"
+    severity: nit
+    description: "Ran git status and the digest list before reading git-conventions.md, which CLAUDE.md requires before git beyond read-only commands; status is read-only so no harm."
+    solution: "None needed; the hook reminded me and the doc was read before any commit."
+  - session: session_013zxzePh7qKycsJT9g2eqU1
+    date: "2026-11-03"
+    severity: minor
+    description: "Ran git rev-parse HEAD before reading docs/agents/git-conventions.md, which CLAUDE.md orders before the first git command beyond read-only ones."
+    solution: "Read the doc first; the hook caught it and the late read changed nothing."
+  - session: session_013zxzeQCoXnRxbyzhHyy3M1
+    date: "2026-11-02"
+    severity: minor
+    description: "Ran git log on README.md and git fetch to judge staleness before reading docs/agents/git-conventions.md, breaking CLAUDE.md's first-git-command rule"
+    solution: "Low impact here; a PreToolUse hint on the first log/fetch would catch it before the call rather than after"

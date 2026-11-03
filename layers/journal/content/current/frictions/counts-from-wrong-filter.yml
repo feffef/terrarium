@@ -35,3 +35,8 @@ occurrences:
     severity: minor
     description: "Told the owner there were 65 Artifacts from an ls line count that included directory headers; real count 52."
     solution: "Count files with a glob, not ls output; CLAUDE.md's verify-before-you-state already says so."
+  - session: session_013zxzeRynjgY3G22uZYaKCk
+    date: "2026-11-02"
+    severity: nit
+    description: "extract-frictions counted 28 sessions in the window but friction-rates counted 20; I could not reconcile them and said so in #2784."
+    solution: "Have friction-rates print how it picks the sessions it counts."

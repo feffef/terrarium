@@ -54,3 +54,8 @@ occurrences:
     severity: nit
     description: "My amend was chained into the backgrounded gate command and never ran, leaving the trimmed Digest uncommitted while the gate tested it; I amended separately."
     solution: "Commit in its own call before any backgrounded gate command."
+  - session: session_013zxzeQBuD3C4A1V2DpoHYu
+    date: "2026-11-02"
+    severity: nit
+    description: "Ran git commit and pnpm gate:scoped in one Bash command, against git-conventions' rule not to mix state-changing git with a gate run; the push waited for a separate exit-status read."
+    solution: "Commit in its own call, then start the gate in the background."

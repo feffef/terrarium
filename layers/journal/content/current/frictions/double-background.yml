@@ -146,3 +146,8 @@ occurrences:
     severity: minor
     description: "A claude-code writer's python heredoc containing an ampersand was denied by subagent-background-guard as a background operator; the writer switched to Edit."
     solution: "Make the guard ignore heredoc and quoted text when looking for a bare ampersand."
+  - session: session_013zxzeQqRBLg9tUfsbNCCz8
+    date: "2026-11-02"
+    severity: nit
+    description: "I stacked run_in_background with a trailing & on a gate command; the double-background guard blocked it and nothing ran."
+    solution: "Pass run_in_background alone with a plain foreground command."

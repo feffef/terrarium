@@ -144,3 +144,8 @@ occurrences:
     severity: minor
     description: "The dispatch-read guard blocked my first clear-backlog-explore Workflow call; the clear-backlog Skill never points to dispatch-subagents before §1."
     solution: "Add a read-first pointer to dispatch-subagents in clear-backlog §1, as #2749 does for visitor-loop and blog-post."
+  - session: session_013zxzeSuucewJSDd3eyaNnh
+    date: "2026-11-02"
+    severity: nit
+    description: "The first Workflow call was blocked by the dispatch-read guard: I had not read the dispatch-subagents Skill, which CLAUDE.md requires before a subagent brief. A workflow run counts as one."
+    solution: "The guard worked as designed; clear-backlog §1 could name the dispatch-subagents read before the first Workflow call."

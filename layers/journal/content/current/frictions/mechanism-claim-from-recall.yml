@@ -150,3 +150,23 @@ occurrences:
     severity: moderate
     description: "Told the user the completed log was authored and would be committed, without checking the scratch or origin/main. It still said in-review and main held the in-review log."
     solution: "Verify the scratch status and the origin/main log commit before saying the log landed (CLAUDE.md: verify before you state)."
+  - session: session_013zxzeR2kopqGDtf5GQztz6
+    date: "2026-11-02"
+    severity: moderate
+    description: "Answered from session logs alone and told the owner no cost data existed, though get_session holds usage.cost_usd; the owner had to point at inspect-session."
+    solution: "CLAUDE.md's trigger 'before you inspect another session: inspect-session' should have prompted reading the Skill, whose step 1-2 names get_session usage as a cheap cost source."
+  - session: session_013zxzeRNoKQn8q3NtVRPDyk
+    date: "2026-11-02"
+    severity: minor
+    description: "Drafted three overview claims from the old brief, not the repo: rules all path-scoped, Routine as a session, dependabot-sweep PR-triggered."
+    solution: "Check each claim in a reused doc against its source file before writing; code review caught all three."
+  - session: session_013zxzeRrC6V68k1QwREpWtf
+    date: "2026-11-02"
+    severity: nit
+    description: "Coherence reviewer claimed the ADR-0027 summary rule repeats the unqualified bullet; it does not, so a fact-check was needed to correct the fix scope."
+    solution: "Brief reviewers to quote both places verbatim before claiming a copy."
+  - session: session_013zxzeQCoXnRxbyzhHyy3M1
+    date: "2026-11-02"
+    severity: moderate
+    description: "My first README told readers that asking an agent in the clone needs no install, though the SessionStart hook runs pnpm install and guards need node_modules; the owner and a second review caught the gaps"
+    solution: "Before telling readers what a local session needs, read .claude/settings.json hooks, not just package.json"

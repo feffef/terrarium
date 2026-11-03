@@ -85,3 +85,8 @@ occurrences:
     severity: minor
     description: "Skill's top-three regression rule ranks by severity, which put owner-decided or superseded entries first; I skipped them by judgement, as four earlier runs did."
     solution: "Fix the rule in SKILL.md §2 (filed as #2724): skip owner-closed-not-planned entries and those with no occurrence in the horizon, tie-break by recurrence."
+  - session: session_013zxzeQqRBLg9tUfsbNCCz8
+    date: "2026-11-02"
+    severity: minor
+    description: "The third regression issue had no good candidate: the remaining moderate regressions were owner-decided or superseded, yet the Skill says to file the top three anyway."
+    solution: "Let the Skill skip a regression whose use case was removed or whose half the owner chose to keep."

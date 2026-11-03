@@ -33,3 +33,8 @@ occurrences:
     severity: nit
     description: "The two code-review agent prompts omitted the CLAUDE.md request for a rule and doc verdict in the final reply."
     solution: "Put the verdict request in a reusable brief snippet so every dispatch carries it."
+  - session: session_013zxzeQZYwzDuf4JEncnqAa
+    date: "2026-11-02"
+    severity: nit
+    description: "Fix-round SendMessages to resumed writers did not repeat CLAUDE.md's ask for rule and doc verdicts; only the original briefs did"
+    solution: "Include the verdict ask in every resume message"

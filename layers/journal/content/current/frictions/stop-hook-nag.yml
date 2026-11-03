@@ -369,3 +369,38 @@ occurrences:
     severity: nit
     description: "The Stop hook asked me to push uncommitted edits while the Spec review and gate were still pending; I amended locally and pushed after the gate, as ADR-0004 requires."
     solution: "The hook could stay quiet while a code-review is in flight."
+  - session: session_013zxzeQqRBLg9tUfsbNCCz8
+    date: "2026-11-02"
+    severity: nit
+    description: "The Stop hook repeatedly asked me to push the survey agent's ledger commits while the gate and review were still pending."
+    solution: "None needed; the push rule correctly waits for gate and review."
+  - session: session_013zxzeRrC6V68k1QwREpWtf
+    date: "2026-11-02"
+    severity: nit
+    description: "Stop hook twice demanded a push while gate:scoped was still running on the head, which pr-workflow says must finish first."
+    solution: "Stop hook could skip its nag while a gate log is still being written."
+  - session: session_013zxzeRynjgY3G22uZYaKCk
+    date: "2026-11-02"
+    severity: nit
+    description: "Stop hook asked five times to push while the probe, reviews and gate were pending; ADR-0004 says wait, so each turn needed a refusal."
+    solution: "Let the Stop hook stay quiet while a pending ADR-0004 review or background gate exists."
+  - session: session_013zxzeSkTLmRxa2PWgt3kPw
+    date: "2026-11-02"
+    severity: minor
+    description: "The Stop hook asked me to push about ten times while writers and the gate ran; each nag cost a turn explaining that ADR-0004 holds the push"
+    solution: "Let the stop-hook git check skip a branch with no PR yet whose gate:scoped has not run"
+  - session: session_013zxzeRwpRf2gj4m4keF6bn
+    date: "2026-11-02"
+    severity: minor
+    description: "The Stop hook asked four times to commit and push an uncommitted prototype the owner was still reviewing; each time cost a turn"
+    solution: "Let the Stop hook stay quiet when the turn ends on a question to the user, or only nag about commits older than the last user message"
+  - session: session_013zxzeR8CEiWCmTmvjhCZ1A
+    date: "2026-11-03"
+    severity: nit
+    description: "Stop hook asked to commit and push twice while the fact-check and gate were pending; ADR-0004 says wait, so each time needed a refusal."
+    solution: "Have the Stop hook stay quiet while a background subagent or gate run is in flight."
+  - session: session_013zxzeQZYwzDuf4JEncnqAa
+    date: "2026-11-02"
+    severity: moderate
+    description: "The Stop hook asked to push in 106 user turns (counted in the transcript) before the gate allowed it; each cost a turn to decline"
+    solution: "~/.claude/stop-hook-git-check.sh is harness-owned: report upstream so it stays quiet while agents or a background command run, or after one decline"
