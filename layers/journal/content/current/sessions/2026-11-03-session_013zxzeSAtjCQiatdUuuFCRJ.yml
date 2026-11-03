@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSAtjCQiatdUuuFCRJ
 startedAt: 2026-11-03T07:57:16Z
-endedAt: 2026-11-03T08:52:13Z
+endedAt: 2026-11-03T08:55:21Z
 kind: delegated
 goal: Weekly improvement run on the Glass Box guide
-status: in-review
-outcome: "PR 2815 open: 19 page edits through the blind gate, 5 false claims fixed, 5 structural steps; gate passed, awaiting CI and merge"
-summary: "Human-instructed: the owner started the glassbox-improve Skill (one prompt, the kickoff); every step after that followed the Skill's own instructions. Agent-initiated: the three judgement calls below. I rated all 64 pages with 10 raters, tallied, filtered and researched with 20 researchers, wrote with 12 opus writers in worktrees, merged their branches, gated 19 pages through 57 blind judges, ran the A election with 26 judges, ran code-review, and opened PR 2815 after gate:scoped passed. Judgement calls: (1) I skipped three deficits and one step that would have undone last run's changes (prose-overrides promotion, the Pruning instructions Excerpt, the Session logs Excerpt) and proposed them as DECISIONS lines instead; (2) three pages that receive a moved fact failed the first gate round because the judge question did not say the fact moves to them, so I rewrote that question once and re-gated them (all three then won 3 of 3), filing the Skill defect as issue 2816; (3) the code review found two factual slips that the blind judges had passed (a Ledger sentence contradicted the prune script, and a CSS sentence said every Tenant maps the diagram tokens), which I fixed myself. The run cost 50.22 dollars and about 92 judges were dispatched by hand, which repeats issue 2805. Open: CI on the PR, my verdict comment, the merge with merge-pr.ts, and the pending guest-contributions Lesson step."
+status: completed
+outcome: "PR 2815 merged: 19 page edits through the blind gate, 5 false claims fixed, 5 structural steps, gate and CI green"
+summary: "Human-instructed: the owner started the glassbox-improve Skill (one prompt, the kickoff); every step after that followed the Skill's own instructions. Agent-initiated: the three judgement calls below. I rated all 64 pages with 10 raters, tallied, filtered and researched with 20 researchers, wrote with 12 opus writers in worktrees, merged their branches, gated 19 pages through 57 blind judges, ran the A election with 26 judges, ran code-review, and opened PR 2815 after gate:scoped passed. Judgement calls: (1) I skipped three deficits and one step that would have undone last run's changes (prose-overrides promotion, the Pruning instructions Excerpt, the Session logs Excerpt) and proposed them as DECISIONS lines instead; (2) three pages that receive a moved fact failed the first gate round because the judge question did not say the fact moves to them, so I rewrote that question once and re-gated them (all three then won 3 of 3), filing the Skill defect as issue 2816; (3) the code review found two factual slips that the blind judges had passed (a Ledger sentence contradicted the prune script, and a CSS sentence said every Tenant maps the diagram tokens), which I fixed myself. The run cost 50.22 dollars and about 92 judges were dispatched by hand, which repeats issue 2805. After CI went green on the final head I posted my verdict and merged with merge-pr.ts (merge commit 122aeeb4d). Still open for the next run: the pending guest-contributions Lesson step, which waits on pages other steps took."
 prs:
   - "2815"
 docsRead:
@@ -215,16 +215,16 @@ frictions:
   - description: The researcher brief I filled in kept the placeholder phrase listed in the run notes below, which named a list that did not exist; I patched it with sed.
     solution: Fill briefs from one script that asserts no placeholder text is left, and keep the run notes out of the brief.
     severity: nit
-durationSec: 3297
+durationSec: 3485
 models:
-  claude-sonnet-5-5: 467
+  claude-sonnet-5-5: 498
 toolCounts:
-  Bash: 101
+  Bash: 106
   Read: 18
   mcp__github__list_pull_requests: 1
   Agent: 136
-  Edit: 18
-  Skill: 3
+  Edit: 20
+  Skill: 4
   ToolSearch: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
@@ -233,6 +233,9 @@ toolCounts:
   mcp__github__issue_read: 1
   mcp__github__issue_write: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
   - layers/glassbox/content/guide/pages/walkthroughs/a-friction-becomes-a-fix.md
@@ -396,55 +399,55 @@ subagents:
     durationSec: 241
     toolCalls: 20
     modelCalls: 20
-    tokenShare: 2.4
+    tokenShare: 2.3
   - task: Rater B
     model: sonnet
     durationSec: 186
     toolCalls: 10
     modelCalls: 10
-    tokenShare: 1.3
+    tokenShare: 1.2
   - task: Rater C1
     model: sonnet
     durationSec: 319
     toolCalls: 33
     modelCalls: 32
-    tokenShare: 2.5
+    tokenShare: 2.4
   - task: Rater C2
     model: sonnet
     durationSec: 502
     toolCalls: 70
     modelCalls: 65
-    tokenShare: 4.2
+    tokenShare: 4
   - task: Rater C3
     model: sonnet
     durationSec: 383
     toolCalls: 55
     modelCalls: 49
-    tokenShare: 3.2
+    tokenShare: 3.1
   - task: Rater C4
     model: sonnet
     durationSec: 557
     toolCalls: 75
     modelCalls: 71
-    tokenShare: 4.9
+    tokenShare: 4.7
   - task: Rater C5
     model: sonnet
     durationSec: 416
     toolCalls: 54
     modelCalls: 50
-    tokenShare: 3.2
+    tokenShare: 3.1
   - task: Rater C6
     model: sonnet
     durationSec: 307
     toolCalls: 30
     modelCalls: 29
-    tokenShare: 2.1
+    tokenShare: 2
   - task: Rater C7
     model: sonnet
     durationSec: 327
     toolCalls: 43
     modelCalls: 41
-    tokenShare: 3
+    tokenShare: 2.9
   - task: Rater C8
     model: sonnet
     durationSec: 190
@@ -510,7 +513,7 @@ subagents:
     durationSec: 54
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Research step timestamps section
     model: sonnet
     durationSec: 64
@@ -564,7 +567,7 @@ subagents:
     durationSec: 55
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Research step promote friction walkthrough
     model: sonnet
     durationSec: 140
@@ -576,7 +579,7 @@ subagents:
     durationSec: 489
     toolCalls: 59
     modelCalls: 33
-    tokenShare: 1.9
+    tokenShare: 1.8
   - task: Write mcp attribution move
     model: opus
     durationSec: 345
@@ -588,7 +591,7 @@ subagents:
     durationSec: 354
     toolCalls: 35
     modelCalls: 26
-    tokenShare: 1.3
+    tokenShare: 1.2
   - task: Write engineering skills move
     model: opus
     durationSec: 361
@@ -618,7 +621,7 @@ subagents:
     durationSec: 303
     toolCalls: 29
     modelCalls: 19
-    tokenShare: 1
+    tokenShare: 0.9
   - task: Write terrarium-practice pages
     model: opus
     durationSec: 259
@@ -630,19 +633,19 @@ subagents:
     durationSec: 344
     toolCalls: 30
     modelCalls: 22
-    tokenShare: 1.1
+    tokenShare: 1
   - task: Write verification testing page
     model: opus
     durationSec: 289
     toolCalls: 32
     modelCalls: 17
-    tokenShare: 1
+    tokenShare: 0.9
   - task: Write friction walkthrough promotion
     model: opus
     durationSec: 426
     toolCalls: 54
     modelCalls: 35
-    tokenShare: 1.8
+    tokenShare: 1.7
   - task: Judge gate 1-1
     model: sonnet
     durationSec: 11
@@ -846,13 +849,13 @@ subagents:
     durationSec: 13
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Judge gate 12-2
     model: sonnet
     durationSec: 13
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Judge gate 12-3
     model: sonnet
     durationSec: 13
@@ -882,19 +885,19 @@ subagents:
     durationSec: 16
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Judge gate 14-2
     model: sonnet
     durationSec: 11
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Judge gate 14-3
     model: sonnet
     durationSec: 17
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Judge gate 15-1
     model: sonnet
     durationSec: 13
@@ -972,19 +975,19 @@ subagents:
     durationSec: 15
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Judge gate 19-2
     model: sonnet
     durationSec: 15
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Judge gate 19-3
     model: sonnet
     durationSec: 28
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Re-judge gate 16-1
     model: sonnet
     durationSec: 11
@@ -1026,19 +1029,19 @@ subagents:
     durationSec: 10
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Re-judge gate 19-2
     model: sonnet
     durationSec: 7
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: Re-judge gate 19-3
     model: sonnet
     durationSec: 8
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.2
+    tokenShare: 0.1
   - task: A judge a1-1
     model: sonnet
     durationSec: 12
@@ -1200,13 +1203,13 @@ subagents:
     durationSec: 174
     toolCalls: 13
     modelCalls: 11
-    tokenShare: 1
+    tokenShare: 0.9
   - task: Spec review of run diff
     model: sonnet
     durationSec: 188
     toolCalls: 25
     modelCalls: 24
-    tokenShare: 1.9
+    tokenShare: 1.8
 gitBranch: ccr-f4cbc421-qtb46a
 entrypoint: remote_mobile
 cliVersion: 2.1.317
