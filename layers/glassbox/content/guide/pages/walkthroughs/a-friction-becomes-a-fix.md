@@ -1,9 +1,9 @@
 ---
 title: A friction becomes a fix
 description: How a pain-point one agent logs becomes a change to the instructions later agents work under, through a scheduled Skill.
-revision: 'ec0a8e6a4b4f845792f1352a835619c7e5e7d75e'
+revision: '43aa2027c9e40d2165c6b5eb11bc99dc75b5df98'
 revisionDate: '2026-11-03'
-publishedAt: '2026-11-03T08:18:44Z'
+publishedAt: '2026-11-03T13:25:30Z'
 ---
 
 No one reads every session to fix what went wrong in it. Each session reports its own pain-points instead, and a scheduled agent turns the ones that recur or cost the most into fixes. This Walkthrough follows one Friction from the session that hit it, through that agent's run, to the changed instruction a later session reads.
@@ -52,18 +52,18 @@ One subagent reads the logs and hands back a short ranked report. It reads every
 
 ## 5. It screens out what a fix can't help
 
-The subagent drops a Friction that a merged change already fixed, one that an open issue or PR already tracks (unless it has sat idle), one inside an instruction that a :term[Prune Trial] is testing, and one that only an edit to an installed Skill could fix. A Friction that came back after its fix merged is a regression: the run never fixes it again, and files an issue naming the failed fix for only the worst few.
+The subagent checks each candidate against the changes merged since its sessions, the open issues and PRs, and the open :term[Prune Trial]s. It labels each one never-fixed, dropped, already tracked or a regression, and ranks what is left.
 
 ::lessons
-[Pruning instructions](/t/glassbox/guide/terrarium-practice/pruning-instructions) · [Installed Skills](/t/glassbox/guide/skill-pack/skill-packs) · :file[scripts/git/list-merges-since.ts]
+[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Pruning instructions](/t/glassbox/guide/terrarium-practice/pruning-instructions) · :file[scripts/git/list-merges-since.ts]
 ::
 
 ## 6. The run picks what to fix
 
-The run weighs recurrence and severity, picks the top candidates, and has one design subagent read the full logs and design each fix. For a Friction a doc already covers, it checks whether the session opened that doc: if not, nobody looks where the instruction sits; if so, its wording failed. A fix touching a :term[Human-only] file, a guard, the hook wiring or a person's design choice is not built here: it gets an issue with the design.
+The run picks the top candidates and has one design subagent design each fix and judge its risk. A fix the run may not build becomes an issue with the design; the rest go on to be built.
 
 ::lessons
-[Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · [Blocking hooks](/t/glassbox/guide/claude-code/blocking-hooks) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue) · :file[.agents/skills/frictions-to-fixes/design-brief.md]
+[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · [Blocking hooks](/t/glassbox/guide/claude-code/blocking-hooks) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
 ::
 
 ## 7. Helper agents write the fixes
