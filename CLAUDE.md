@@ -64,7 +64,8 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
 - **Question the premise.** Before you recommend, build or harden a change,
   give each part a reason from the current goal; drop the parts you can't, and
   add nothing beyond the ask. Before you show a new ordering, split or
-  selection rule, run it on two concrete cases of the data it must handle.
+  selection rule, run it on two concrete cases of the data it must handle; run
+  one that repeats across runs (rotates, carries state) across consecutive runs.
 - **One home per fact.** Write each fact once; elsewhere, point to it. When a
   fact and reality differ, fix its home. When you change a fact, grep for its
   other statements and its consumers in the same edit.
