@@ -45,8 +45,7 @@ every line that applies.
   own worktree.
 
 **Stranding**
-- Commit before stopping, even mid-gate: an agent can end at any time. Once
-  its branch is reviewed, you push it ("Scope and trust").
+- Commit before stopping, even mid-gate: an agent can end at any time.
 - Bank progress to logs after each step. The harness refuses a subagent's Write
   of report files, so have it return structured results in its final message.
 - Create the agent's scratchpad subfolder first (CLAUDE.md); a shared name
@@ -69,9 +68,8 @@ every line that applies.
 - Impl agents never call `merge-pr.ts`, whatever the brief says. They hand back
   a committed, green branch, unpushed. You run `/code-review` on its worktree
   (`pr-workflow.md`, "Review before the first push"), resume the agent for
-  every fix, later ones included, and review again; once a review is clean you push it from its
-  worktree (`git -C <worktree> push origin HEAD:<branch>`; a classifier can
-  refuse an agent's push), open and land the PR.
+  every fix, later ones included, and review again; once a review is clean you push it
+  (`git -C <worktree> push origin HEAD:<branch>`), open and land the PR.
 - Keep a subagent's final reply with
   `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`, never by
   retyping it.

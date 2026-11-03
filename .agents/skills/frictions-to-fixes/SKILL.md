@@ -218,7 +218,7 @@ For each branch the agent hands back:
 5. **Decide:**
    - **Merge** a clean, low-risk change by the recipe.
    - **Send it back** when the agent can fix the findings: resume it, review
-     the new commits as in step 2, have it push them, then decide again.
+     the new commits as in step 2, push them, then decide again.
    - **Escalate** only when the diff meets an ADR-0004 exception (check the
      *Scope* list in `docs/adr/0004-objective-safety-gate.md` against the
      diff). Once the ledger PR has merged, have the agent merge `origin/main`
