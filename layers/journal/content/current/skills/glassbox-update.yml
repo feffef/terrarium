@@ -127,3 +127,12 @@ observations:
       session_013zxzeTDLMF5mxnvWB4oyWE, session_013zxzeNZn2iJjZrQj2ortVS). Owner
       closed #2748 not planned ("rule has no gap"), so no new issue. Unverified:
       step 3 "every commit read" cannot be met on 91-174 commits.
+  - date: "2026-11-03"
+    note: >-
+      Behaviour check, 7 runs, all PRs merged, no revert. Known, no new
+      issue (#2748 closed not planned): code-review skipped for a 58-file
+      re-pin diff in session_013zxzeQBuD3C4A1V2DpoHYu. Step 3 'every commit
+      read' was met by cited-path diffs, not commit by commit, at 91 and 174
+      commits (session_013zxzeRpGWPCotTQup1ui46,
+      session_013zxzeSJQfnNdJHrSWjVT2x); the logs disclose it. Unverified:
+      step 5 screenshots, no log mentions one. Grade unchanged.

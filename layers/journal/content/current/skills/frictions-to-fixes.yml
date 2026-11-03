@@ -366,3 +366,11 @@ observations:
       case was removed. #2735 changed scripts, not §2. Commented on #2724.
       Closed: #2691 (session_013zxzeRnPtjPsVQM71SzX63) not seen again. Grade
       unchanged.
+  - date: "2026-11-03"
+    note: >-
+      Behaviour check, 8 runs delivered, no revert. Top-three regression
+      rule overridden in 7 of 8 runs (verified from logs);
+      session_013zxzeQqRBLg9tUfsbNCCz8 (11-02) filed the plain top three,
+      the first run to do so since 10-24. No new issue; #2724 already
+      carries the thread. Unverified: #2661 closing #2660 (filed as #2691)
+      did not recur. Grade unchanged.

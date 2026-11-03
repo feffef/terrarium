@@ -1,0 +1,13 @@
+name: wait-what
+category: general-engineering
+importance: peripheral
+installedSha256: d961bb37defd975c539427edb8f450cdbccdcdd552e213c1ece46676a7970905
+role: >-
+  Asks the agent to re-pitch a message that did not land, in plain technical
+  English and the repo's glossary terms. A user-invoked aid with no recorded
+  use here.
+observations:
+  - date: "2026-11-03"
+    note: >-
+      Coverage gap: installed and on disk, no Inventory entry, allTimeUses 0.
+      Graded peripheral on no evidence of use.
