@@ -1,0 +1,180 @@
+schemaVersion: 1
+session: session_013zxzeRUFEQvJ2mE6PXbv3w
+startedAt: 2026-11-03T13:11:00Z
+endedAt: 2026-11-03T13:23:22Z
+kind: autonomous
+goal: Scheduled prune trial of agent instructions
+status: in-review
+outcome: "PR #2820 judges the pr-workflow trial (holds) and opens a small CLAUDE.md git-bullet trial; awaiting CI and merge"
+summary: "Scheduled prune-trial run, agent-initiated, no human prompt. Judged the pr-workflow review-before-push trial (the only judgeable one): no major or blocker Friction traces to it and covered rates were flat, so I deleted its entry. Search subagent ranked CLAUDE.md \"Docs you must read first\" first. My first prune also cut the ADR and typecheck bullets; the Standards and Spec reviews showed both lost meaning, so I reverted them and kept only the git bullet's command-list cut (-1 net), then re-probed on Sonnet at the amended SHA. Gate green; PR #2820 open, subscribed. Still open: CI, verdict comment, merge."
+prs:
+  - "2820"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read before first git command; nothing changed my route
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push order and closing a scheduled run's PR
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: guard forced the read before my first Agent call; brief needs
+    useful: partly
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: hook demanded it after editing CLAUDE.md; confirmed the edit placement
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: trial scope and verdict rules; confirmed CLAUDE.md is in scope
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before first GitHub operation; MCP create_pull_request needed nothing from it
+    useful: partly
+  - path: docs/agents/guards.md
+    reason: search subagent read it for the guard roster; it reported useful
+    useful: yes
+  - path: CLAUDE.md
+    reason: (read before editing)
+  - path: .claude/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: prune-trial
+    reason: the scheduled task itself
+  - name: code-review
+    reason: two-axis review before first push; caught two lossy edits
+  - name: dispatch-subagents
+    reason: briefs for search, probes and reviews
+  - name: close-session
+    reason: PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: My first prune cut the ADR bullet and typecheck clause in ways that lost meaning; reviewers caught both before the push and I reverted them.
+    solution: Before committing a CLAUDE.md wording cut, reread each cut bullet against the rule summaries it paraphrases.
+    severity: minor
+  - description: Edited CLAUDE.md before reading ADR-0029, which the post-edit hook then required; the late read changed nothing.
+    solution: Read the governing ADR summary's full ADR before the first edit of CLAUDE.md in a prune run.
+    severity: nit
+  - description: My first Agent call was blocked by the dispatch-read guard because I had not read dispatch-subagents; one wasted call.
+    solution: Read dispatch-subagents before the first brief in a prune run.
+    severity: nit
+  - description: The Stop hook asked me to push four times while the probe, review and gate were pending; ADR-0004 required waiting.
+    solution: Have the Stop hook stay quiet while a probe, review or gate is pending.
+    severity: nit
+  - description: I typed a wrong session id in the commit message trailer; the commit-msg hook corrected it, which I verified in git log.
+    solution: Copy the id from the system-prompt template, not from memory.
+    severity: nit
+durationSec: 743
+models:
+  claude-sonnet-5-5: 79
+toolCounts:
+  Bash: 20
+  Read: 7
+  Agent: 6
+  Edit: 3
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - CLAUDE.md
+  - .agents/prune-trials.yml
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/guards.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+adrHints:
+  - adr: 29
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - docs/agents/guards.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Made me wait for probe, review and gate despite Stop hook nags; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session-log rule; confirmed close-session routing, summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR without asking and subscribe; summary enough, no ADR read
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header on PR body; commit trailer checked after the hook rewrote my mistyped id
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Trial rules for cutting and leaving open trials alone; I also opened the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Rule vs CLAUDE.md placement; read full ADR after edit as the hook demanded
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR rewrites; no ADR touched, so it did not apply
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded by reading a journal ledger file; no Tenant work, did not apply
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills are code; I edited no Skill, did not apply
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by a Bash read; CLAUDE.md is not on the Human-only list, confirmed by grep
+    useful: partly
+  - path: .claude/rules/guards.md
+    reason: Pointer to guards.md; no guard change, did not apply
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Find failed-prose rule to prune
+    model: sonnet
+  - type: general-purpose
+    task: Find failed-prose rule to prune
+    model: sonnet
+    durationSec: 104
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 13.1
+  - type: general-purpose
+    task: Probe pruned CLAUDE.md on Sonnet
+    model: sonnet
+    durationSec: 16
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 2.8
+  - type: general-purpose
+    task: Standards review of prune
+    model: sonnet
+    durationSec: 26
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 7
+  - type: general-purpose
+    task: Spec review of prune
+    model: sonnet
+    durationSec: 44
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 9.4
+  - type: general-purpose
+    task: Re-probe git bullet on Sonnet
+    model: sonnet
+    durationSec: 19
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 3
+gitBranch: claude/practical-rubin-nt8t96
+entrypoint: remote_trigger
+cliVersion: 2.1.317
+trigger: prune-trial
+landedBy: Stop
