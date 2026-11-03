@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzePCZc7PkwLBo6YoDJt
 startedAt: 2026-11-03T16:49:18Z
-endedAt: 2026-11-03T17:25:06Z
+endedAt: 2026-11-03T17:42:30Z
 kind: autonomous
 goal: "Visitor-loop run on the Atlas: three blind visitors, fix consensus problems, build one feature"
 status: in-review
-outcome: "Fix PR #2824 open with green gate and verdict; feature PR (season buttons under the front-door dial) not yet built"
-summary: "Scheduled visitor-loop run, focus atlas (all agent-initiated; no human prompt). Built and served the site, sent sonnet, opus and fable visitors through /t/atlas, tallied consensus. The fit-check agent dropped most consensus items on owner rulings (diagrams on phones, footer, no explainer, plates page removed in the owner's 1984 ruling) and the first two feature picks (plates index, creature of the day: homepage already has Specimen of the day). Fixed five kept findings in PR #2824: rarity empty-dot glyph, conjectural caption into figcaption, Biome on front-door sightings, dated Glass Year note, clearer dial hint; added a decisions.md line. Reviewed with code-review, gate green, verdict posted, subscribed. Still open: merge #2824 on green CI, then build season buttons (kept by the refiner) as the feature PR, file nothing out-of-remit, and log ideas."
+outcome: "Fix PR #2824 merged; feature PR #2825 (season buttons) open with green gate and verdict"
+summary: "Scheduled visitor-loop run, focus atlas (all agent-initiated; no human prompt). Served the production build, sent sonnet, opus and fable visitors through /t/atlas, tallied consensus. The fit-check agent dropped most consensus items on owner rulings (diagrams on phones, footer, no explainer, plates page removed in the owner's 1984 ruling) and the first two feature picks (plates index; creature of the day, which the homepage already has). Fixed five kept findings in PR 2824 (merged): rarity empty-dot glyph, caption into figcaption, Biome on front-door sightings, dated Glass Year note, clearer dial hint, plus a decisions.md line. Built season buttons (kept by the refiner) in PR 2825: reviewed, standards fixes applied, one gate failure from my own e2e locator fixed, gate green, verdict posted. Open: merge 2825 on green CI. No out-of-remit issues needed; unbuilt single-visitor findings are in ideas."
 prs:
   - "2824"
+  - "2825"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: read after hook prompt; nothing changed my route
@@ -83,32 +84,38 @@ frictions:
   - description: The mid-gate Stop hook asked repeatedly to push unreviewed commits, conflicting with the review-first rule.
     solution: Hook could skip the nag while a gate or review is in flight.
     severity: nit
+  - description: Own e2e test used a re-resolving first-unpressed locator and failed the first gate; the reviewer had also caught a once-a-year date flaw in it.
+    solution: Hold the clicked button by its label; reason about the day-0 case when a test asserts ?day=.
+    severity: nit
   - description: "SHELL-READ-DETECTION: docs/agents/verifying-ui-changes.md was credited from shell output, but the session marked it (not read)"
     solution: Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts
     severity: moderate
-durationSec: 2148
+durationSec: 3192
 models:
-  claude-sonnet-5-5: 126
+  claude-sonnet-5-5: 182
 toolCounts:
-  Bash: 48
-  Skill: 4
-  Read: 4
-  Agent: 6
+  Bash: 67
+  Skill: 5
+  Read: 5
+  Agent: 7
   SendMessage: 1
   ToolSearch: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__add_issue_comment: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__add_issue_comment: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 1
+  ReadNotifications: 3
 filesEdited:
+  - layers/atlas/app/components/atlas/PhenologyWheel.vue
+  - layers/atlas/app/composables/almanac.ts
+  - layers/atlas/app/pages/t/atlas/index.vue
+  - layers/atlas/tests/e2e/atlas.spec.ts
   - .agents/skills/visitor-loop/decisions.md
   - layers/atlas/app/assets/theme.css
   - layers/atlas/app/components/atlas/RarityMark.vue
   - layers/atlas/app/components/atlas/SpecimenPlate.vue
   - layers/atlas/app/pages/t/atlas/[space]/index.vue
-  - layers/atlas/app/pages/t/atlas/index.vue
   - layers/atlas/app/utils/almanac.ts
-  - layers/atlas/tests/e2e/atlas.spec.ts
   - layers/atlas/tests/unit/almanac.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0028.md
@@ -207,37 +214,43 @@ subagents:
     durationSec: 99
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 4.4
+    tokenShare: 3.1
   - task: Visitor (fable)
     model: fable
     durationSec: 336
     toolCalls: 45
     modelCalls: 25
-    tokenShare: 12
+    tokenShare: 8.6
   - task: Visitor (opus)
     model: opus
     durationSec: 202
     toolCalls: 26
     modelCalls: 19
-    tokenShare: 8.4
+    tokenShare: 6
   - task: Refiner fit check
     model: opus
     durationSec: 308
     toolCalls: 57
     modelCalls: 38
-    tokenShare: 22.4
+    tokenShare: 16.1
   - task: Standards review
     model: opus
     durationSec: 45
     toolCalls: 10
     modelCalls: 5
-    tokenShare: 3.2
+    tokenShare: 2.3
   - task: Spec review
     model: opus
     durationSec: 41
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 2.5
+    tokenShare: 1.8
+  - task: Feature code review
+    model: opus
+    durationSec: 57
+    toolCalls: 7
+    modelCalls: 6
+    tokenShare: 3
 gitBranch: claude/adoring-galileo-xxwpe7
 entrypoint: remote_trigger
 cliVersion: 2.1.317
@@ -245,7 +258,6 @@ trigger: visitor-loop
 learnings:
   - Atlas plate numbers (I to XXIII) are authored data; owner removed the plates page, so visitors keep re-proposing it.
 ideas:
-  - "Atlas front door: season buttons under the dial so touch visitors can pick a season without dragging the needle (S single; chosen as this run's feature)"
   - "Atlas field logs: capitalise sentence starts or join with semicolons in observation notes (lowercase after full stops read as typos; fable single)"
   - "Atlas floor/pool pages: give 'Show all sightings' a shareable URL such as ?log=all (fable single)"
   - "Atlas echo-cantans: prose says nine reports but 2 sightings are listed; add the missing sightings or soften the count (fable single)"
