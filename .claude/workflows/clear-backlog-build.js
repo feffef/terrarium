@@ -9,7 +9,7 @@ export const meta = {
 }
 
 // args: { session: 'session_…', branches: [{ name, issues: [n], brief, picks?: [string] | string,
-//   model?: 'sonnet', cherryPick?: prNumber, worktree?: path, question?: string, answer?: string }] }
+//   cherryPick?: prNumber, worktree?: path, question?: string, answer?: string }] }
 if (!args || !args.session) throw new Error('args.session (this session id, session_…) is required for the provenance header')
 const HEADER = `🤖 [Claude](https://claude.ai/code/${args.session})`
 const MAX_ROUNDS = 3
@@ -70,7 +70,8 @@ const REVIEW = {
   required: ['findings', 'summary'],
 }
 
-const modelOf = b => (b.model ? { model: b.model } : {})
+// Sonnet everywhere except the round-1 reviewers, whose findings steer every later round.
+const SONNET = { model: 'sonnet' }
 const tagged = (r, agent) => ((r && r.verdicts) || []).map(v => ({ ...v, agent }))
 const slug = b => b.name.replace(/[^a-z0-9]+/gi, '-')
 
@@ -145,7 +146,7 @@ ${rules(b)}`
 
 async function buildBranch(b) {
   // Isolated even on a re-run: if b.worktree was auto-removed, the agent starts fresh in its own.
-  const r = await agent(buildPrompt(b), { label: `build ${b.name}`, phase: 'Build', schema: WORK, isolation: 'worktree', ...modelOf(b) })
+  const r = await agent(buildPrompt(b), { label: `build ${b.name}`, phase: 'Build', schema: WORK, isolation: 'worktree', ...SONNET })
   return r || { status: 'failed', reason: 'build agent returned nothing; its worktree may hold commits, and `pnpm check:worktrees` lists it', commits: [], decisions: [], worktree: b.worktree }
 }
 
@@ -157,7 +158,7 @@ async function reviewBranch(built, b) {
     out.rounds = round
     const axes = ['Standards', 'Spec']
     const reviews = await parallel(axes.map(axis => () =>
-      agent(reviewPrompt(b, axis, out.worktree, round, out.decisions), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW })))
+      agent(reviewPrompt(b, axis, out.worktree, round, out.decisions), { label: `${axis} ${b.name} r${round}`, phase: 'Review', schema: REVIEW, ...(round > 1 ? SONNET : {}) })))
     reviews.forEach((r, i) => out.verdicts.push(...tagged(r, `${axes[i]} ${b.name} r${round}`)))
     if (reviews.some(r => !r)) return { ...out, status: 'failed', reason: `round ${round}: a reviewer returned nothing` }
     const all = reviews.flatMap(r => r.findings)
@@ -165,7 +166,7 @@ async function reviewBranch(built, b) {
     out.judgementCalls = all.filter(f => !f.worthFixing)
     if (!toFix.length) {
       // Re-gate unconditionally: a stale gatePassed: true is the usual failure (#2523).
-      const gate = await agent(gatePrompt(b, out.worktree), { label: `gate ${b.name}`, phase: 'Review', schema: WORK, ...modelOf(b) })
+      const gate = await agent(gatePrompt(b, out.worktree), { label: `gate ${b.name}`, phase: 'Review', schema: WORK, ...SONNET })
       out.verdicts.push(...tagged(gate, `gate ${b.name}`))
       if (!gate || !gate.gatePassed) return { ...out, status: 'failed', reason: `final gate: ${gate ? gate.reason || 'gate:scoped did not pass' : 'gate agent returned nothing'}` }
       out.commits = gate.commits
@@ -176,7 +177,7 @@ async function reviewBranch(built, b) {
       log(`${b.name}: review capped at ${MAX_ROUNDS} rounds`)
       return { ...out, status: 'failed', reason: `review capped at ${MAX_ROUNDS} rounds`, openFindings: toFix }
     }
-    const fix = await agent(fixPrompt(b, out.worktree, toFix, round), { label: `fix ${b.name} r${round}`, phase: 'Review', schema: WORK, ...modelOf(b) })
+    const fix = await agent(fixPrompt(b, out.worktree, toFix, round), { label: `fix ${b.name} r${round}`, phase: 'Review', schema: WORK, ...SONNET })
     if (!fix) return { ...out, status: 'failed', reason: `round ${round}: fix agent returned nothing` }
     out.verdicts.push(...tagged(fix, `fix ${b.name} r${round}`))
     out.commits = fix.commits
