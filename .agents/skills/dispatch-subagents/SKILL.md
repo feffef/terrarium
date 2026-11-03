@@ -38,15 +38,14 @@ every line that applies.
   stale (issue #1420). Agents sharing one checkout each get an explicit SHA.
 - A review agent for a PR whose branch is checked out elsewhere checks out the
   PR's commit SHA detached, never the branch name.
-- Impl agents pushing to the branch you have checked out: detach your checkout
-  first and re-sync after hand-back. Each agent bases on a fresh
-  `origin/<branch>` and pushes `HEAD:<branch>`, with no same-named local branch.
+- Impl agents on the branch you have checked out: detach your checkout first
+  and re-sync after hand-back. Each agent bases on a fresh `origin/<branch>`,
+  with no same-named local branch.
 - A read-only agent that wants to experiment copies the file aside or uses its
   own worktree.
 
 **Stranding**
-- Commit before stopping, even mid-gate: an agent can end at any time. Push
-  once its branch is reviewed ("Scope and trust").
+- Commit before stopping, even mid-gate: an agent can end at any time.
 - Bank progress to logs after each step. The harness refuses a subagent's Write
   of report files, so have it return structured results in its final message.
 - Create the agent's scratchpad subfolder first (CLAUDE.md); a shared name
@@ -69,8 +68,8 @@ every line that applies.
 - Impl agents never call `merge-pr.ts`, whatever the brief says. They hand back
   a committed, green branch, unpushed. You run `/code-review` on its worktree
   (`pr-workflow.md`, "Review before the first push"), resume the agent for
-  every fix, later ones included, and review again; it pushes once a review is clean, and you open
-  and land the PR.
+  every fix, later ones included, and review again. Once a review is clean,
+  you push (`git -C <worktree> push origin HEAD:<branch>`), open and land the PR.
 - Keep a subagent's final reply with
   `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <out>`, never by
   retyping it.
@@ -109,6 +108,4 @@ worktree, not your own tree.
 ## 6. Resume a stopped subagent; never re-dispatch it
 
 Use `SendMessage` to its agent id. A fresh `Agent` call gets a brand-new checkout
-with no memory, risking a duplicate branch or lost local commits. When its
-branch already has a PR, tell it to check the PR is unmerged before it pushes
-(`pr-workflow.md`).
+with no memory, risking a duplicate branch or lost local commits.

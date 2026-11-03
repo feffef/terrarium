@@ -69,8 +69,8 @@ against #555 before a human stepped in).
    rather than touch any human-only surface.
 3. **Review on a different model.** The impl is Sonnet; run `/code-review` in
    its worktree on the orchestrator's own model (a distinct model, as the demo
-   requires), per `dispatch-subagents` §3 ("Scope and trust"). Once clean, the
-   agent pushes and you open a **gated PR** that `Closes #N`, labelled
+   requires), per `dispatch-subagents` §3 ("Scope and trust"). Once clean, you
+   push and open a **gated PR** that `Closes #N`, labelled
    `guest-pipeline` (`GUEST_PIPELINE_LABEL` in `scripts/github/merge-pr.ts`, which
    refuses to merge it). **Post the verdict as a PR
    comment — every time, even when clean** — so the audit trail lives on the PR

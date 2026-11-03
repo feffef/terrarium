@@ -210,7 +210,7 @@ For each branch the agent hands back:
    and stays on a safe surface. A doc branch must also survive `audit-docs`
    ([`impl-brief.md`](impl-brief.md)): a fix that would be a future
    `audit-docs` finding goes back.
-3. **Have the agent push; open the PR yourself.** Its description carries
+3. **Push its branch and open the PR yourself.** Its description carries
    the problem, evidence and design. A fix taken from an open issue (§2)
    also `Closes` it.
 4. **Post your review as a PR comment**, always, before any merge
@@ -218,7 +218,7 @@ For each branch the agent hands back:
 5. **Decide:**
    - **Merge** a clean, low-risk change by the recipe.
    - **Send it back** when the agent can fix the findings: resume it, review
-     the new commits as in step 2, have it push them, then decide again.
+     the new commits as in step 2, push them, then decide again.
    - **Escalate** only when the diff meets an ADR-0004 exception (check the
      *Scope* list in `docs/adr/0004-objective-safety-gate.md` against the
      diff). Once the ledger PR has merged, have the agent merge `origin/main`
