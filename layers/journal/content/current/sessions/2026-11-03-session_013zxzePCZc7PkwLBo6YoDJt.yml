@@ -1,0 +1,254 @@
+schemaVersion: 1
+session: session_013zxzePCZc7PkwLBo6YoDJt
+startedAt: 2026-11-03T16:49:18Z
+endedAt: 2026-11-03T17:25:06Z
+kind: autonomous
+goal: "Visitor-loop run on the Atlas: three blind visitors, fix consensus problems, build one feature"
+status: in-review
+outcome: "Fix PR #2824 open with green gate and verdict; feature PR (season buttons under the front-door dial) not yet built"
+summary: "Scheduled visitor-loop run, focus atlas (all agent-initiated; no human prompt). Built and served the site, sent sonnet, opus and fable visitors through /t/atlas, tallied consensus. The fit-check agent dropped most consensus items on owner rulings (diagrams on phones, footer, no explainer, plates page removed in the owner's 1984 ruling) and the first two feature picks (plates index, creature of the day: homepage already has Specimen of the day). Fixed five kept findings in PR #2824: rarity empty-dot glyph, conjectural caption into figcaption, Biome on front-door sightings, dated Glass Year note, clearer dial hint; added a decisions.md line. Reviewed with code-review, gate green, verdict posted, subscribed. Still open: merge #2824 on green CI, then build season buttons (kept by the refiner) as the feature PR, file nothing out-of-remit, and log ideas."
+prs:
+  - "2824"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read after hook prompt; nothing changed my route
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-push and recipe steps
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP write rules before first GitHub call
+    useful: partly
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: owner rulings that dropped diagram, footer and plates items
+    useful: yes
+  - path: .agents/skills/visitor-loop/refiner-brief.md
+    reason: brief for the fit-check agent
+    useful: yes
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: refiner read it for the Remit; useful
+    useful: yes
+  - path: layers/atlas/GLOSSARY.md
+    reason: "refiner: Product decisions held the plates removal; Biome term"
+    useful: yes
+  - path: GLOSSARY.md
+    reason: "refiner: required by brief, no use"
+    useful: no
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: "refiner: fixed caption wording and voice"
+    useful: yes
+  - path: docs/agents/tenant-layers.md
+    reason: "standards reviewer: no use"
+    useful: no
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: "reviewers: payload rule for the sighting field; partly"
+    useful: partly
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: "refiner: root page testing, partly"
+    useful: partly
+  - path: .claude/skills/visitor-loop/visitor-brief.md
+    reason: (no reason given)
+  - path: scripts/lib/chromium.ts
+    reason: (no reason given)
+  - path: layers/atlas/app/components/atlas/RarityMark.vue
+    reason: (read before editing)
+  - path: layers/atlas/app/pages/t/atlas/index.vue
+    reason: (read before editing)
+  - path: layers/atlas/app/components/atlas/RarityLegend.vue
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: briefs for visitors, refiner and reviewers
+  - name: code-review
+    reason: Standards and Spec review before first push
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: visitor-loop
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git fetch before reading git-conventions.md, which CLAUDE.md requires before a non-read-only git command; the hook then pointed me to it.
+    solution: Fetch is the first command the Skill itself needs; list fetch as allowed before the doc read.
+    severity: nit
+  - description: Feature duplicate check filtered for atlas and missed the homepage's existing Specimen of the day, and the owner's plates removal sat in the Atlas glossary, not decisions.md; two feature picks died in refinement.
+    solution: Have step 3 grep git log and the Tenant glossary's Product decisions, and add Tenant removal rulings to decisions.md.
+    severity: moderate
+  - description: owner-corrections.ts timed out on git fetch and then on its own run twice, costing several background reruns.
+    solution: Raise its fetch timeout or reuse the already-fetched origin/main.
+    severity: minor
+  - description: Piped owner-corrections output through head, truncating the JSON, then had to rerun it.
+    solution: Redirect to a file first; the Skill could say so.
+    severity: nit
+  - description: The mid-gate Stop hook asked repeatedly to push unreviewed commits, conflicting with the review-first rule.
+    solution: Hook could skip the nag while a gate or review is in flight.
+    severity: nit
+  - description: "SHELL-READ-DETECTION: docs/agents/verifying-ui-changes.md was credited from shell output, but the session marked it (not read)"
+    solution: Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts
+    severity: moderate
+durationSec: 2148
+models:
+  claude-sonnet-5-5: 126
+toolCounts:
+  Bash: 48
+  Skill: 4
+  Read: 4
+  Agent: 6
+  SendMessage: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - .agents/skills/visitor-loop/decisions.md
+  - layers/atlas/app/assets/theme.css
+  - layers/atlas/app/components/atlas/RarityMark.vue
+  - layers/atlas/app/components/atlas/SpecimenPlate.vue
+  - layers/atlas/app/pages/t/atlas/[space]/index.vue
+  - layers/atlas/app/pages/t/atlas/index.vue
+  - layers/atlas/app/utils/almanac.ts
+  - layers/atlas/tests/e2e/atlas.spec.ts
+  - layers/atlas/tests/unit/almanac.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0028.md
+  - .claude/rules/adr-0016.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0025.md
+docsReadBySubagents:
+  - .agents/skills/visitor-loop/SKILL.md
+  - layers/atlas/GLOSSARY.md
+  - GLOSSARY.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/agents/tenant-layers.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to review and gate before first push; summary enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Log goes to main via close-session; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR and limit scope to the Skill remit; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header and trailer on PR and comment; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Reminded that sighting fields travel in the payload; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials, did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About rule placement, did not apply
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skills as code, did not apply
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pushed me to use Biome in new identifiers
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: Auto-import note; partly applied
+    useful: partly
+  - path: .claude/rules/ui-verification.md
+    reason: Made me measure the rendered DOM rather than grep HTML
+    useful: yes
+  - path: .claude/rules/adr-0006.md
+    reason: Loaded by atlas pages; routing unchanged, did not apply
+    useful: no
+  - path: .claude/rules/adr-0016.md
+    reason: Loaded by atlas root page; no root-page change, did not apply
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on a doc read, no mermaid here
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: "Subagent: product decisions live in the Tenant glossary"
+    useful: yes
+  - path: .claude/rules/glossary-terms.md
+    reason: "Subagent: did not apply"
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: "Subagent: Human-only paths, none touched"
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: "Subagent: did not apply"
+    useful: no
+  - path: .claude/rules/adr-0025.md
+    reason: "Subagent: Catalog rule, did not apply"
+    useful: no
+subagents:
+  - task: Visitor (sonnet)
+    model: sonnet
+    durationSec: 99
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 4.4
+  - task: Visitor (fable)
+    model: fable
+    durationSec: 336
+    toolCalls: 45
+    modelCalls: 25
+    tokenShare: 12
+  - task: Visitor (opus)
+    model: opus
+    durationSec: 202
+    toolCalls: 26
+    modelCalls: 19
+    tokenShare: 8.4
+  - task: Refiner fit check
+    model: opus
+    durationSec: 308
+    toolCalls: 57
+    modelCalls: 38
+    tokenShare: 22.4
+  - task: Standards review
+    model: opus
+    durationSec: 45
+    toolCalls: 10
+    modelCalls: 5
+    tokenShare: 3.2
+  - task: Spec review
+    model: opus
+    durationSec: 41
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 2.5
+gitBranch: claude/adoring-galileo-xxwpe7
+entrypoint: remote_trigger
+cliVersion: 2.1.317
+trigger: visitor-loop
+learnings:
+  - Atlas plate numbers (I to XXIII) are authored data; owner removed the plates page, so visitors keep re-proposing it.
+ideas:
+  - "Atlas front door: season buttons under the dial so touch visitors can pick a season without dragging the needle (S single; chosen as this run's feature)"
+  - "Atlas field logs: capitalise sentence starts or join with semicolons in observation notes (lowercase after full stops read as typos; fable single)"
+  - "Atlas floor/pool pages: give 'Show all sightings' a shareable URL such as ?log=all (fable single)"
+  - "Atlas echo-cantans: prose says nine reports but 2 sightings are listed; add the missing sightings or soften the count (fable single)"
+  - "Atlas umbra-vacans: prose says first report was 24 June but ledger starts 2026-06-06; align the date (opus single)"
+  - "Atlas: carry the dial's chosen day across wings via ?day= links on wing cards (fable single)"
+landedBy: Stop
