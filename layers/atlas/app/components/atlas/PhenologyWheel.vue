@@ -279,15 +279,8 @@ function onKeydown(e: KeyboardEvent) {
   commitDayToUrl()
 }
 
-/** Scrub-end: mirror the day into `?day=` (shareable, zero new routes). Parked
- *  at today — the default — the param comes off, keeping the canonical URL
- *  clean. `history.state` is passed through so vue-router's state survives. */
 function commitDayToUrl() {
-  if (import.meta.server) return
-  const url = new URL(window.location.href)
-  if (day.value === today) url.searchParams.delete('day')
-  else url.searchParams.set('day', String(day.value))
-  history.replaceState(history.state, '', url.toString())
+  writeAlmanacDayToUrl(day.value, today)
 }
 </script>
 

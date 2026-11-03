@@ -18,9 +18,13 @@ const season = seasonOf(day)
 const route = useRoute()
 
 // The landing owns the shared needle (as a wing landing does): the dial parks at
-// today, restores a shared `?day=` link and writes its scrub back to it.
+// today, restores a shared `?day=` link and writes its scrub or season pick back to it.
 const almanac = provideAlmanac({ initialDay: parseAlmanacDayParam(route.query.day) })
 const currentSeason = computed(() => seasonOf(almanac.day.value))
+function pickSeason(s: Season) {
+  almanac.setDay(spanMidpoint(s.span))
+  writeAlmanacDayToUrl(almanac.day.value, almanac.today)
+}
 const daySuffix = computed(() => (almanac.day.value === almanac.today ? '' : `?day=${almanac.day.value}`))
 
 const { data } = await useAsyncData('atlas-front', async () => {
@@ -166,7 +170,16 @@ useHead({ title: 'The Atlas of the Terrarium' })
               </li>
             </ul>
             <p v-else class="roster-none">Nothing is abroad; the glass keeps to itself.</p>
-            <p class="roster-hint">Turn the needle to another season to see who the glass holds then.</p>
+            <p class="roster-hint">Turn the needle, or choose a season, to see who the glass holds then.</p>
+            <div class="season-picks" role="group" aria-label="Seasons of the Glass Year">
+              <button
+                v-for="s in GLASS_SEASONS"
+                :key="s.name"
+                type="button"
+                :aria-pressed="currentSeason.name === s.name"
+                @click="pickSeason(s)"
+              >{{ s.label }}</button>
+            </div>
           </div>
         </div>
         <template v-if="recent.length">
@@ -294,6 +307,10 @@ useHead({ title: 'The Atlas of the Terrarium' })
 .roster-astir .rname:hover { border-bottom-color: currentColor; }
 .roster-astir .rcommon { font-style: italic; font-size: 0.82rem; color: var(--atlas-muted); text-align: right; }
 .roster-none { color: var(--atlas-faint); font-style: italic; margin: 0 0 0.8rem; }
+.season-picks { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.8rem; }
+.season-picks button { font-family: var(--atlas-label); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--atlas-ink); background: transparent; border: 1px solid var(--atlas-line); padding: 0.45rem 0.7rem; min-height: 2.75rem; cursor: pointer; }
+.season-picks button[aria-pressed="true"] { color: var(--atlas-ink); border-color: var(--atlas-ink); background: var(--atlas-paper-2); }
+.season-picks button:focus-visible { outline: 2px solid var(--atlas-ink); outline-offset: 2px; }
 .roster-hint { font-size: 0.85rem; color: var(--atlas-muted); margin: 0; }
 @media (max-width: 46rem) {
   .today-almanac { grid-template-columns: 1fr; justify-items: center; }

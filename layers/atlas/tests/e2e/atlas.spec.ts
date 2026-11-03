@@ -33,6 +33,21 @@ describe('atlas Tenant', async () => {
     })
   })
 
+  it('lets the front-door dial be set from season buttons', async () => {
+    await withRendered('/t/atlas', async (page) => {
+      const buttons = page.locator('.today .season-picks button')
+      expect(await buttons.count()).toBe(6)
+      // An unpressed season, so its midpoint is never today and `?day=` is always written.
+      const label = (await page.locator('.today .season-picks button[aria-pressed="false"]').first().textContent())!
+      const other = buttons.filter({ hasText: label })
+      await other.click()
+      expect(await other.getAttribute('aria-pressed')).toBe('true')
+      expect(await page.locator('.today .season-picks button[aria-pressed="true"]').count()).toBe(1)
+      expect(await page.locator('.today .roster-season').textContent()).toContain(label.replace(/^the /, ''))
+      expect(page.url()).toMatch(/[?&]day=\d+/)
+    })
+  })
+
   // issue #342: a prose-text check passes on an unclosed
   // `::almanac`/`::phase-note`/`::sighting` block, which still carries its text
   // once MDC degrades it to plain paragraphs — no console error either way. Assert
