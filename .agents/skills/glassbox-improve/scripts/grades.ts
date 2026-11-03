@@ -309,7 +309,7 @@ export interface Tally {
   waiting: string[]
 }
 
-/** The run date from which a decision still counts for the churn guard: the last `churnRuns` runs. */
+/** The run key from which a decision still counts for the churn guard: the last `churnRuns` runs. */
 const churnCutoff = (runs: RunEntry[]) => runs[churnRuns - 1]?.run ?? ''
 
 /** Whether `t` moves content back where `s` took it from. */
@@ -644,7 +644,7 @@ export function fillBrief(template: string, values: Record<string, string>): str
 const itemLine = (i: Item) => `- ${i.id}, ${i.page}${i.lens ? `, ${i.lens}` : ''}${i.quote ? `, "${i.quote}"` : ''}: ${i.fix}${i.exemplar ? ` (A page: ${i.exemplar})` : ''}`
 
 /** The briefs of one kind from the run's items and steps: it fills what run.yml holds and decides nothing. */
-export function agentBriefs(kind: 'researcher' | 'writer', state: Pick<RunState, 'base' | 'items' | 'steps'>, template: string, out: string, draftSection: (pages: string[]) => string): { name: string; text: string }[] {
+export function agentBriefs(kind: 'researcher' | 'writer', state: Pick<RunState, 'base' | 'run' | 'items' | 'steps'>, template: string, out: string, draftSection: (pages: string[]) => string): { name: string; text: string }[] {
   const stepPages = (s: Step) => [...s.pages, ...(s.into ? [s.into] : [])]
   const describe = (s: Step) => `${s.kind} ${s.pages.join(', ')}${s.into ? ` into ${s.into}` : ''} (${s.id}): ${s.gist}`
   const falseClaims = state.items.filter((i) => i.kind === 'falseClaim' && !i.skipped && i.confirmed !== false).map((i) => `- ${i.page}: "${i.quote}" (${i.source})`)
@@ -656,7 +656,7 @@ export function agentBriefs(kind: 'researcher' | 'writer', state: Pick<RunState,
     for (const s of state.steps.filter((s) => s.status === 'pending')) units.push({ name: s.id, task: `research the step: ${describe(s)}`, items: [], draft: draftSection(s.pages) })
   } else {
     const confirmed = state.items.filter((i) => i.confirmed === true)
-    const taken = state.steps.filter((s) => s.status === 'taken')
+    const taken = state.steps.filter((s) => s.status === 'taken' && (s.decided ?? state.run) === state.run)
     const touched = new Set(taken.flatMap(stepPages))
     for (const s of taken) units.push({ name: s.id, task: `${describe(s)}`, items: confirmed.filter((i) => stepPages(s).includes(i.page)), draft: 'none' })
     for (const [subject, items] of bySubject(confirmed.filter((i) => !touched.has(i.page)))) units.push({ name: subject, task: `raise ${[...new Set(items.map((i) => i.page))].join(', ')}`, items, draft: 'none' })
@@ -668,6 +668,15 @@ export function agentBriefs(kind: 'researcher' | 'writer', state: Pick<RunState,
       SCRATCH: join(out, `${kind}-${u.name}`), 'RESEARCH FILE': join(out, `research-${u.name}.md`), 'FALSE CLAIMS': falseClaims.join('\n') || 'none',
     }),
   }))
+}
+
+/** What each page's gate judge is told its edits targeted: this run's edited items and taken steps. */
+export function gateCriteria(items: Item[], steps: Step[], run: string): Map<string, string[]> {
+  const criteria = new Map<string, string[]>()
+  const add = (page: string, text: string) => criteria.set(page, [...(criteria.get(page) ?? []), text])
+  for (const i of items.filter((i) => i.edited)) add(i.page, `${i.lens ?? i.kind}: ${i.fix}`)
+  for (const s of steps.filter((s) => s.status === 'taken' && (s.decided ?? run) === run)) for (const p of new Set([...s.pages, ...(s.into ? [s.into] : [])])) add(p, stepCriterion(s, p))
+  return criteria
 }
 
 const fence = (text: string) => `\`\`\`\`markdown\n${text.replace(/\n$/, '')}\n\`\`\`\``
@@ -890,7 +899,7 @@ runIfMain(import.meta.url, () => {
     })
     const problems = [...coverageProblems(reports, thePlan), ...reports.flatMap((r) => reportProblems(r, thePlan))]
     if (problems.length) fail(`the reports don't match the plan:\n${problems.join('\n')}`)
-    const run = new Date().toISOString().slice(0, 10)
+    const run = new Date().toISOString().slice(0, 16).replace(':', '')
     const result = tally(record, thePlan, reports, runs, pageChecks(sha), run)
     mkdirSync(out, { recursive: true })
     const state: RunState = { base: sha, run, plan: thePlan, ...result, gate: [] }
@@ -920,9 +929,7 @@ runIfMain(import.meta.url, () => {
   }
   if (command === 'gate') {
     const wanted = flags.pages?.split(',').filter(Boolean)
-    const criteria = new Map<string, string[]>()
-    for (const i of state.items.filter((i) => i.edited)) criteria.set(i.page, [...(criteria.get(i.page) ?? []), `${i.lens ?? i.kind}: ${i.fix}`])
-    for (const s of state.steps.filter((s) => s.status === 'taken')) for (const p of new Set([...s.pages, ...(s.into ? [s.into] : [])])) criteria.set(p, [...(criteria.get(p) ?? []), stepCriterion(s, p)])
+    const criteria = gateCriteria(state.items, state.steps, state.run)
     const briefs: string[] = []
     for (const [page, list] of [...criteria].filter(([p]) => !wanted || wanted.includes(p))) {
       const path = `${pagesDir('guide')}/${page}.md`
