@@ -205,7 +205,7 @@ For each branch the agent hands back:
 
 1. **Gate green?** A red gate is never mergeable: resume the agent to fix
    it.
-2. **Review the diff** before the first push (`dispatch-subagents` §3, "Scope
+2. **Review the diff** before opening the PR (`dispatch-subagents` §3, "Scope
    and trust"). Check it implements the §4 design, follows repo conventions
    and stays on a safe surface. A doc branch must also survive `audit-docs`
    ([`impl-brief.md`](impl-brief.md)): a fix that would be a future

@@ -90,7 +90,7 @@ own, never the whole owner reply), and `cherryPick` when a
 closed, unmerged PR already implements the agreed pick. It isolates, briefs and
 reviews its agents itself. Each branch is built in its own worktree off
 `origin/main`, then reviewed on both `code-review` axes and fixed until only
-judgement calls remain. Its review rounds are the review before the first push
+judgement calls remain. Its review rounds are the review before opening the PR
 (`pr-workflow.md`).
 
 Act on each branch's `status` (`run-summary.ts --build`):

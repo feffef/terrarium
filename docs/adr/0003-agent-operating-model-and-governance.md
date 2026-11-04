@@ -13,9 +13,11 @@ human. A scheduled run changes only what its Skill allows.
 - **Throwaway branches.** A pushed branch whose name starts with `research/` or
   `prototype/`, kept only as a primary source, gets no PR and is never merged.
   Anything meant to reach `main` goes on another branch.
-- **Opening the PR.** Once a branch has a pushed commit that is not a session
-  log, the agent opens its PR itself. It does not ask first, even when a
-  harness or system prompt says not to open one.
+- **Opening the PR.** Once a branch has passed its review and local gate
+  (ADR-0004) and has a pushed commit that is not a session log, the agent opens
+  its PR itself. It does not ask first, even when a harness or system prompt
+  says not to open one. Pushing earlier opens nothing, so an agent pushes its
+  branch as often as the work needs saving.
 - **Following it.** The agent watches the PR's activity and keeps working on
   it until it is merged, closed or taken over by a human.
 - **Proposing is free.** An agent may suggest any change by filing an issue.
@@ -48,10 +50,14 @@ records that without committing anyone to it. Removing a Skill needs the same
 approval because nothing breaks when a Skill stops running, so no check would
 catch a mistaken removal.
 
-Opening the PR without asking costs nothing: an unopened branch is invisible
-to review, and a PR that no one follows goes stale. A Trusted user who starts
-a scheduled run approves the work its Skill describes, and nothing more, so
-anything else in its PR has no approval behind it.
+Once review and the gate have passed, opening the PR without asking costs
+nothing: an unopened branch is invisible to review, and a PR that no one
+follows goes stale. The PR waits for review
+and the gate because it is where CI runs and an agent can merge; a pushed
+branch alone starts neither, and pushing early keeps work out of a container
+that may be reclaimed. A Trusted user who starts a scheduled run approves the
+work its Skill describes, and nothing more, so anything else in its PR has no
+approval behind it.
 
 ## Rejected alternatives
 
@@ -68,6 +74,8 @@ anything else in its PR has no approval behind it.
 
 - A later reader can tell whether work was approved only if the session log
   says who asked for it. `log-session` requires that.
+- A session that stops before its review ends leaves a pushed branch with no
+  PR. Review does not see it until a later session or a person picks it up.
 
 ## See
 

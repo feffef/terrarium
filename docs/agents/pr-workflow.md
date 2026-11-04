@@ -7,16 +7,17 @@ change: its Skill (ADR-0003). `main`'s branch-protection state:
 The `mcp__github__*` tool surface (retries, polling, overflow traps):
 [`github-integration.md`](./github-integration.md).
 
-## Review before the first push
+## Review before opening the PR
 
-Opening the PR follows the push at once (ADR-0003), so review first. Before a
-branch's first push: check that no PR exists for it, commit, run the
+Push the branch early and often; that opens nothing. The PR is where CI runs
+and an agent can merge (ADR-0003), so review first. Before you open a branch's
+PR: check that no PR exists for it, commit, run the
 [`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on the
 committed diff against `origin/main` in the checkout that holds it, fix the
 findings, then run `pnpm gate:scoped` last on the final head and edit nothing
-until it ends, even when the Stop hook asks you to push. Exempt: a session-log
-commit, and a Skill whose own steps review the diff before the push
-(`midden-catalogue` §4).
+until it ends. Push that head, then open the PR. Exempt: a session-log commit,
+and a Skill whose own steps review the diff before the PR (`midden-catalogue`
+§4).
 
 **A simple change** gets your own read of its full diff instead. Count; don't
 judge by how plain it looks. Simple means a typo, rewrap, broken link or path,
@@ -26,9 +27,10 @@ logic, hooks, workflow scripts, Skill or rule frontmatter (bar that hash), or
 the meaning of a Skill, rule, ADR or agent doc. A follow-up commit after a
 review takes the same test; a larger one gets `code-review` on its own diff.
 
-A later push that changes only prose or docs may skip `gate:scoped` and rely on
-CI's gate; run it first for any other change. If `gate:scoped` passed but CI failed, check for base drift, then log
-a `major` Friction.
+A later push to an open PR that changes only prose or docs may skip
+`gate:scoped` and rely on CI's gate; run it first for any other change. If
+`gate:scoped` passed but CI failed, check for base drift, then log a `major`
+Friction.
 
 ## Assembling several stories into one integration PR
 
@@ -39,8 +41,8 @@ re-review each story or repeat its findings.
 
 ## The recipe
 
-1. Run `pnpm gate:scoped` and wait, unless the push rules above let you skip
-   it. A red gate never merges.
+1. Run `pnpm gate:scoped` and wait, unless the rules above let you skip it. A
+   red gate never merges.
 2. Run `pnpm exec tsx scripts/github/check-conflicting-issues.ts --pr <number>`.
    It is advisory: a hit means read that issue (#798), not that there is a
    conflict.
@@ -98,7 +100,7 @@ many per run) close with these steps once their work is staged. Each SKILL.md
 adds only its delta: what its diff is limited to, and what to do when something
 outside that scope rides in.
 
-1. Commit, then follow "Review before the first push". Done when
+1. Commit, then follow "Review before opening the PR". Done when
    `pnpm gate:scoped` is green on the final head.
 2. Push with retry and open **one gated PR** scoped to the Skill's own diff
    (more only if its SKILL.md says so).
