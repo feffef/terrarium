@@ -33,3 +33,8 @@ occurrences:
     severity: minor
     description: "gate:scoped failed twice (e2e assertion used a Playwright matcher the suite lacks; Popular order assertion broke under the cap) because I did not grep the tests first."
     solution: "Grep tests for the behaviour before changing it, and run typecheck on test edits."
+  - session: session_013zxzeSvdGhiM7SLEUgzvmF
+    date: "2026-11-01"
+    severity: minor
+    description: "The planning writer linked a work-queue anchor that the git-github writer removed in the same run; only code-review found it."
+    solution: "Add to writer-brief: link a section of a page another writer edits this run without an anchor, or ask the coordinator."

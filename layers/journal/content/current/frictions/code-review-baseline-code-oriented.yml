@@ -1,0 +1,16 @@
+name: code-review-baseline-code-oriented
+summary: The code-review Skill's Standards brief and smell baseline assume code, so a reviewer of a Markdown or prose diff had to ignore most of it or the session wrote its own prompts.
+cause: "The installed code-review Skill (ADR-0015: never edited) ships a code-oriented smell baseline; for a prose-only or Markdown diff the Standards reviewer reports it mostly does not apply, or the session writes its own subagent prompts instead. Signals: 'smell baseline', 'code-oriented', 'prose-only diff', 'wrote my own subagent prompts'. A fix in the Skill's SKILL.md is not ours to make; a repo-specific note belongs in its Inventory entry."
+surface: safe
+status: open
+occurrences:
+  - session: session_013zxzeSvdGhiM7SLEUgzvmF
+    date: "2026-11-01"
+    severity: nit
+    description: "code-review's Standards brief and smell baseline assume code; for a Markdown guide diff I wrote my own subagent prompts and ignored the baseline."
+    solution: "Give code-review a short docs-diff variant that points at the repo's page rules."
+  - session: session_013zxzePui7aGrhHSAUCjE85
+    date: "2026-11-03"
+    severity: nit
+    description: "The code-review smell baseline is code-oriented, so most of it did not fit a prose-only diff and the Standards reviewer had to say so."
+    solution: "Let code-review mark which baseline smells apply to prose, such as duplicated statements of one fact."

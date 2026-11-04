@@ -32,3 +32,8 @@ occurrences:
     severity: moderate
     description: "My two-axis code-review missed bugs the owner's reviewer found: vote-array holes deciding a gate early, and a split without into escaping the churn guard"
     solution: "Give the Spec and Standards reviewers concrete adversarial inputs to try (out-of-order verdicts, missing optional fields) for each counting rule, not just the spec text"
+  - session: session_013zxzeR4cgWA8MkV51fqC4t
+    date: "2026-11-03"
+    severity: minor
+    description: "Build agents' review rounds left small spec mismatches (inspect-session asked for after_id/position no brief returns; ambiguous 'push it') that I fixed by hand and re-gated"
+    solution: "Reviewers marked them worthFixing false; mark a cheap wording mismatch worth fixing so the fix agent handles it"

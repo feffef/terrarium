@@ -25,3 +25,8 @@ occurrences:
     severity: minor
     description: "Started #2721's build on an ambiguous 'Agree' and later flip-flopped on Q7 answers, stopping two build runs mid-flight"
     solution: "When an answer changes a pick under build, confirm the full option before relaunching; ask the clarifying question first, per the owner's stated preference"
+  - session: session_013zxzeR4cgWA8MkV51fqC4t
+    date: "2026-11-03"
+    severity: nit
+    description: "Owner's '2 checked the parked ones' was ambiguous; I proceeded on one reading instead of asking, and stated it"
+    solution: "Fine here since blocked-check is cheap; for costlier readings, ask"

@@ -1,0 +1,15 @@
+name: glassbox-grades-run-key-and-brief-bugs
+summary: The glassbox-improve grades.ts script overwrote an earlier same-day run and put earlier runs' taken steps into a later run's briefs and gate, so the lead had to restore state by hand.
+cause: "grades.ts keyed runs by date, so a second run on one day overwrote the first runs.yml entry and counted its steps, and 'briefs --kind writer' and 'gate' took every step marked taken in earlier runs (stale step units got writer briefs; a dropped step was listed pending again). PR #2826 (2026-11-03) made run ids timestamped and limited briefs and gate to steps taken in the current run. Signals: 'overwrote the earlier run's runs.yml entry', 'also take every step marked taken in earlier runs', 'stepsTaken corrected by hand'."
+surface: safe
+status: open
+fixes:
+  - pr: 2826
+    date: "2026-11-03"
+    summary: "Run ids become YYYY-MM-DDTHHMM so a second same-day run no longer overwrites the first; writer briefs and the gate count only steps taken in the current run (closes #2822, #2823)."
+occurrences:
+  - session: session_013zxzeQH3GSc8uMpvhebnFr
+    date: "2026-11-03"
+    severity: moderate
+    description: "grades.ts briefs --kind writer and gate also take every step marked taken in earlier runs, so 20 writer briefs came out and pages like deploy/02 went to stale step units instead of Subject writers."
+    solution: "Brief and gate only steps with decided equal to this run, or pages this run changed; I masked old steps in a temporary run.yml copy and filed issue 2823."

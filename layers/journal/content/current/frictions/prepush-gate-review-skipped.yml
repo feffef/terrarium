@@ -143,3 +143,8 @@ occurrences:
     severity: minor
     description: "Folded the second review's fixes into the unpushed follow-up commit with only my own read, though the delta was over pr-workflow's 10-line simple-change limit"
     solution: "Either run code-review on the delta or keep review-driven fixes under the simple-change limit; pr-workflow could say how a fix for a review's own findings is reviewed"
+  - session: session_013zxzePsSguQyDiqnq52irG
+    date: "2026-11-04"
+    severity: minor
+    description: "Skipped the code-review Skill on a diff that adds a file, though the simple-change test excludes added files; I read the diff myself."
+    solution: "Run code-review, or let the pr-workflow simple test exempt Digest pages."

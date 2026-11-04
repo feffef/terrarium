@@ -33,3 +33,18 @@ occurrences:
     severity: nit
     description: "My new sentence about the because check itself contained the word and failed the page test, costing one rerun."
     solution: "Run the glassbox page test after each prose edit."
+  - session: session_013zxzePhrV1oZiDPfSuW2Hm
+    date: "2026-11-03"
+    severity: nit
+    description: "Added a sentence to a Why bullet and exceeded the word cap, found only by the page spec run."
+    solution: "Check ownWords cap before lengthening a Why bullet."
+  - session: session_013zxzeSAtjCQiatdUuuFCRJ
+    date: "2026-11-03"
+    severity: minor
+    description: "Item f23 asked to move an Excerpt under a Why bullet, which page-checks forbids; the writer found out only by failing the page spec."
+    solution: "Researcher and writer briefs should state that a Why item must be a bold-lead bullet of 12 to 65 words (page-checks.ts:238-263), so no Excerpt can sit in it."
+  - session: session_013zxzeQZYwzDuf4JEncnqAa
+    date: "2026-11-02"
+    severity: nit
+    description: "A review fix asked for an ADR chip that the page test refuses because a linked Lesson already cites it; the reviewer brief lacks that rule"
+    solution: "The rule is in layers/glassbox/GLOSSARY.md:92 and enforced by glassbox-pages.spec.ts:361; step 9's review addendum should have reviewers run that test on proposed fixes"

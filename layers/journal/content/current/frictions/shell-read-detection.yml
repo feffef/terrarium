@@ -40,3 +40,8 @@ occurrences:
     severity: moderate
     description: "SHELL-READ-DETECTION: .agents/skills/clear-backlog/SKILL.md was credited from shell output, but the session marked it (not read)"
     solution: "Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts"
+  - session: session_013zxzePCZc7PkwLBo6YoDJt
+    date: "2026-11-03"
+    severity: moderate
+    description: "SHELL-READ-DETECTION: docs/agents/verifying-ui-changes.md was credited from shell output, but the session marked it (not read)"
+    solution: "Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts"

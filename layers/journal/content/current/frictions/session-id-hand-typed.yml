@@ -31,3 +31,18 @@ occurrences:
     severity: nit
     description: "Typed a wrong session id into my commit trailer from memory; the commit-msg hook replaced it with the right one."
     solution: "Copy the id from the system prompt, or leave the trailer to the hook."
+  - session: session_013zxzeRUFEQvJ2mE6PXbv3w
+    date: "2026-11-03"
+    severity: nit
+    description: "I typed a wrong session id in the commit message trailer; the commit-msg hook corrected it, which I verified in git log."
+    solution: "Copy the id from the system-prompt template, not from memory."
+  - session: session_013zxzeQFKLDc1URLih3edaf
+    date: "2026-11-04"
+    severity: nit
+    description: "Typed a wrong session id in the commit trailer; the commit-msg hook replaced it with the correct one."
+    solution: "Let the hook add the trailer instead of hand-typing it."
+  - session: session_013zxzeQbPLMkHvh94sawgDU
+    date: "2026-11-03"
+    severity: minor
+    description: "First Workflow call failed twice: the dispatch-read guard wanted dispatch-subagents read first, and I had mistyped the session id with an extra letter."
+    solution: "Read dispatch-subagents before the first Workflow call; copy the session id from the attribution template instead of retyping it."

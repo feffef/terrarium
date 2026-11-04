@@ -150,3 +150,8 @@ occurrences:
     severity: nit
     description: "The query researcher gave the Journal Excerpt range as 33-43; it is 33-42, and the writer lost a test run finding it"
     solution: "Researchers check an Excerpt range with cat -A for a trailing blank line"
+  - session: session_013zxzePui7aGrhHSAUCjE85
+    date: "2026-11-03"
+    severity: nit
+    description: "I put the claim that frictions-to-fixes and guest-build say unpushed in the PR body from the Spec reviewer's report before checking; a grep afterwards confirmed it."
+    solution: "Grep each cited line before writing it into a PR body, as CLAUDE.md says."

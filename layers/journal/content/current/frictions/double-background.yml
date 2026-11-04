@@ -126,3 +126,18 @@ occurrences:
     severity: nit
     description: "I stacked run_in_background with a trailing & on a gate command; the double-background guard blocked it and nothing ran."
     solution: "Pass run_in_background alone with a plain foreground command."
+  - session: session_013zxzePhrV1oZiDPfSuW2Hm
+    date: "2026-11-03"
+    severity: nit
+    description: "Backgrounding gate with trailing & plus run_in_background was blocked by the double-background guard; resent plain."
+    solution: "Remember run_in_background alone; the Skill doc could say so at the gate step."
+  - session: session_013zxzeSAtjCQiatdUuuFCRJ
+    date: "2026-11-03"
+    severity: nit
+    description: "A bash command set run_in_background and also ended in an ampersand, so the double-background guard blocked it and I resent it."
+    solution: "Pass run_in_background alone with a plain foreground command, as the guard says."
+  - session: session_013zxzeQH3GSc8uMpvhebnFr
+    date: "2026-11-03"
+    severity: nit
+    description: "My first gate:scoped call set run_in_background and ended with a trailing ampersand; the double-background guard refused it and I resent it plainly."
+    solution: "Pass run_in_background alone, as the guard's message and CLAUDE.md say."

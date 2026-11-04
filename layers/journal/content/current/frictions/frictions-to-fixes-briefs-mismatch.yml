@@ -99,3 +99,8 @@ occurrences:
     severity: minor
     description: "Survey and design briefs assume doc-based Frictions and a date field in list-merges-since output; both were moot or missing for a script fix."
     solution: "Say which brief steps are skipped for a script fix, and add merge dates to list-merges-since."
+  - session: session_013zxzeSrSkYPpnoS2ag6EbC
+    date: "2026-11-03"
+    severity: minor
+    description: "The survey report omitted each regression's highest-severity-since, though its brief asks for it; I re-derived it from the summary file with grep."
+    solution: "Have the survey brief require the since value column copied per regression, or write the ranked list to a file."

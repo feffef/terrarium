@@ -83,3 +83,13 @@ occurrences:
     severity: nit
     description: "Read ADR-0021 only after editing layers/glassbox/GLOSSARY.md, when the post-edit hook asked; the edit was already right"
     solution: "None needed; the hook worked as designed"
+  - session: session_013zxzeRUFEQvJ2mE6PXbv3w
+    date: "2026-11-03"
+    severity: nit
+    description: "Edited CLAUDE.md before reading ADR-0029, which the post-edit hook then required; the late read changed nothing."
+    solution: "Read the governing ADR summary's full ADR before the first edit of CLAUDE.md in a prune run."
+  - session: session_013zxzePui7aGrhHSAUCjE85
+    date: "2026-11-03"
+    severity: minor
+    description: "The ADR read hint made me read ADRs 0005, 0015, 0022 and 0012 in full after one-phrase Skill cross-reference repoints; none applied, about 4000 tokens."
+    solution: "Let adr-read-hint skip an edit that only changes a quoted cross-reference, or limit it to ADRs relevant to the edited lines."

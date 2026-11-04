@@ -48,3 +48,8 @@ occurrences:
     severity: moderate
     description: "About 127 judges were dispatched by hand in seven waves, which is heavy lead orchestration and a large token cost"
     solution: "No glassbox-improve workflow exists in .claude/workflows/; one script could fan out judges from the briefs grades.ts writes and call votes"
+  - session: session_013zxzeSAtjCQiatdUuuFCRJ
+    date: "2026-11-03"
+    severity: moderate
+    description: "About 92 gate and election judges plus 42 raters, researchers and writers were dispatched by hand across many waves, repeating the cost in issue 2805."
+    solution: "A glassbox-improve workflow script that fans out the briefs grades.ts writes, saves the hand-backs and calls votes (issue 2805)."

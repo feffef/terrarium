@@ -33,3 +33,8 @@ occurrences:
     severity: nit
     description: "First prune dropped four rules and the ledger claimed every rule was kept; code-review caught it before the push."
     solution: "List every rule in the section before trimming and check each against the new text."
+  - session: session_013zxzeRUFEQvJ2mE6PXbv3w
+    date: "2026-11-03"
+    severity: minor
+    description: "My first prune cut the ADR bullet and typecheck clause in ways that lost meaning; reviewers caught both before the push and I reverted them."
+    solution: "Before committing a CLAUDE.md wording cut, reread each cut bullet against the rule summaries it paraphrases."

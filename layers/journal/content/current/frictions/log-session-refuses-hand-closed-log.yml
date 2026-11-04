@@ -52,3 +52,13 @@ occurrences:
     severity: nit
     description: "Re-authored the log as completed after the merge without re-invoking close-session; log-session refused it and the sed-edited scratch silently kept in-review until I checked"
     solution: "After a merge, invoke close-session first as its Skill says, then author"
+  - session: session_013zxzeSrSkYPpnoS2ag6EbC
+    date: "2026-11-03"
+    severity: nit
+    description: "log-session refused the completed log right after the merge until I re-invoked close-session, though I had just run the same close steps; one extra round trip."
+    solution: "Let the merge hint say to invoke close-session before editing the log's status, as PR 2798 now does."
+  - session: session_013zxzeQFKLDc1URLih3edaf
+    date: "2026-11-04"
+    severity: nit
+    description: "Edited the authored log to completed and ran --author before re-invoking close-session after the merge; it refused, costing one retry."
+    solution: "Re-invoke close-session first whenever merge-pr.ts prints merged, as the hook says."

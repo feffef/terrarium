@@ -1,0 +1,16 @@
+name: owner-corrections-slow-runtime
+summary: owner-corrections.ts took over two minutes or timed out, so its output got mixed with other commands or had to be rerun to a file.
+cause: "owner-corrections.ts (visitor-loop owner-memory check) runs a git fetch and a long scan; run in the foreground or piped through head it exceeded the foreground wait, timed out on its own fetch, or was truncated, and the session reran it in the background to a file. Signals: 'owner-corrections.ts takes over two minutes', 'timed out on git fetch', 'piped through head, truncating the JSON'."
+surface: safe
+status: open
+occurrences:
+  - session: session_013zxzeQ61FGG5kRKhi89YE9
+    date: "2026-11-02"
+    severity: minor
+    description: "owner-corrections.ts takes over two minutes; its output got mixed with other commands in one call, so I reran it to a file."
+    solution: "Run it alone, to a file, in the background, as SKILL step 3 could say."
+  - session: session_013zxzePCZc7PkwLBo6YoDJt
+    date: "2026-11-03"
+    severity: minor
+    description: "owner-corrections.ts timed out on git fetch and then on its own run twice, costing several background reruns."
+    solution: "Raise its fetch timeout or reuse the already-fetched origin/main."

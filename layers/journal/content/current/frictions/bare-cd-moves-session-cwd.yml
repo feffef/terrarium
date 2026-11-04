@@ -61,3 +61,8 @@ occurrences:
     severity: nit
     description: "One grep chained after a cd left the shell cwd in layers/blog/content for a command, so relative paths broke until I used absolute paths again."
     solution: "Use absolute paths and git -C instead of cd."
+  - session: session_013zxzePui7aGrhHSAUCjE85
+    date: "2026-11-03"
+    severity: nit
+    description: "Bash kept a changed directory, so a counting script found zero session logs and a reference grep covered only the ledger folder; both reruns cost calls."
+    solution: "Use absolute paths in every command instead of relying on cd."

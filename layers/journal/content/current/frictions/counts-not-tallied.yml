@@ -105,3 +105,8 @@ occurrences:
     severity: minor
     description: "Broke CLAUDE.md 'Verify before you state': I forwarded an Excerpt trim without counting; it would still render 18 lines and drop a named line"
     solution: "Count rendered lines against the cited file before sending a trim; the writer caught it"
+  - session: session_013zxzeSAtjCQiatdUuuFCRJ
+    date: "2026-11-03"
+    severity: minor
+    description: "I wrote 'Six more steps were dropped' in the PR body from memory; run.yml counted seven. I caught it at the close-session check and corrected the body."
+    solution: "Count from run.yml before writing any figure into a PR body, as Verify before you state says."

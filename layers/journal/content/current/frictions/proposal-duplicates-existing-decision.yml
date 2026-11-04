@@ -1,0 +1,16 @@
+name: proposal-duplicates-existing-decision
+summary: Agents proposed features or retro candidates without checking the tracker, the Friction Ledger or the site for something already settled, and the owner or refinement killed them.
+cause: "A candidate list (retro candidates, visitor-loop feature picks) is built before searching issues, the Friction Ledger, Tenant decisions.md/GLOSSARY or the live homepage for an existing feature or a recorded owner decision; the duplicate check filters too narrowly (by Tenant name) or skips a source. Signals: 'before searching issues or the Friction Ledger', 'duplicate check', 'the owner had to ask me to check', 'two feature picks died in refinement'."
+surface: safe
+status: open
+occurrences:
+  - session: session_013zxzeSvdGhiM7SLEUgzvmF
+    date: "2026-11-01"
+    severity: minor
+    description: "Presented seven retro candidates before searching issues or the Friction Ledger; two were settled (issue 2700 chose to keep the inline PR body; stop-hook-nag is accepted via issue 2233) and the owner had to ask me to check."
+    solution: "Run the redundancy search from docs/agents/issue-tracker.md before proposing, and have the retro Skill say to search issues and the ledger before presenting candidates."
+  - session: session_013zxzePCZc7PkwLBo6YoDJt
+    date: "2026-11-03"
+    severity: moderate
+    description: "Feature duplicate check filtered for atlas and missed the homepage's existing Specimen of the day, and the owner's plates removal sat in the Atlas glossary, not decisions.md; two feature picks died in refinement."
+    solution: "Have step 3 grep git log and the Tenant glossary's Product decisions, and add Tenant removal rulings to decisions.md."
