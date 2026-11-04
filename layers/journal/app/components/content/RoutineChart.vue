@@ -24,9 +24,15 @@ const bars = computed(() => {
       w: step * 0.76,
       h,
       clipped,
-      label: `${run.startedAt.slice(0, 10)}: ${formatRoutineMetric(metric.value, value)}`,
+      cost: formatRoutineMetric('costUsd', run.costUsd),
     }
   })
+})
+// A native <title> tooltip shows after a delay, so the cost is drawn by hand.
+const hovered = ref<number | null>(null)
+const tip = computed(() => {
+  const b = hovered.value === null ? undefined : bars.value[hovered.value]
+  return b && { text: b.cost, left: `${((b.x + b.w / 2) / W) * 100}%`, bottom: `${(b.h / H) * 100}%` }
 })
 const total = computed(() => runs.value.reduce((a, run) => a + run[metric.value], 0))
 const label = computed(() => ROUTINE_METRICS.find((m) => m.key === metric.value)!.label)
@@ -44,21 +50,24 @@ if (import.meta.dev && !series.value) {
         {{ formatRoutineMetric(metric, total) }} over {{ runs.length }} {{ runs.length === 1 ? 'run' : 'runs' }}
       </span>
     </figcaption>
-    <svg
-      class="rc-svg"
-      :viewBox="`0 0 ${W} ${H}`"
-      preserveAspectRatio="none"
-      role="img"
-      :aria-label="`${series.name}: ${label} per run, ${runs.length} runs, ${formatRoutineMetric(metric, total)} in total`"
-    >
-      <line class="rc-base" x1="0" :x2="W" :y1="H" :y2="H" />
-      <g v-for="(b, i) in bars" :key="i">
-        <rect :class="['rc-bar', { clipped: b.clipped }]" :x="b.x" :y="H - b.h" :width="b.w" :height="b.h">
-          <title>{{ b.label }}</title>
-        </rect>
-        <rect v-if="b.clipped" class="rc-cut" :x="b.x" y="0" :width="b.w" height="3" />
-      </g>
-    </svg>
+    <div class="rc-plot">
+      <svg
+        class="rc-svg"
+        :viewBox="`0 0 ${W} ${H}`"
+        preserveAspectRatio="none"
+        role="img"
+        :aria-label="`${series.name}: ${label} per run, ${runs.length} runs, ${formatRoutineMetric(metric, total)} in total`"
+        @pointerleave="hovered = null"
+      >
+        <line class="rc-base" x1="0" :x2="W" :y1="H" :y2="H" />
+        <g v-for="(b, i) in bars" :key="i">
+          <rect :class="['rc-bar', { clipped: b.clipped, on: hovered === i }]" :x="b.x" :y="H - b.h" :width="b.w" :height="b.h" />
+          <rect v-if="b.clipped" class="rc-cut" :x="b.x" y="0" :width="b.w" height="3" />
+          <rect class="rc-hit" :x="b.x" y="0" :width="b.w" :height="H" @pointerenter="hovered = i" />
+        </g>
+      </svg>
+      <span v-if="tip" class="rc-tip" :style="{ left: tip.left, bottom: tip.bottom }">{{ tip.text }}</span>
+    </div>
     <div class="rc-axis">
       <span>{{ runs[0]?.startedAt.slice(0, 10) }}</span>
       <span v-if="cap > 0">axis tops out at {{ formatRoutineMetric(metric, cap) }}</span>
@@ -83,7 +92,22 @@ if (import.meta.dev && !series.value) {
 .rc-svg { display: block; width: 100%; height: 5rem; }
 .rc-base { stroke: var(--jd-line); stroke-width: 1; vector-effect: non-scaling-stroke; }
 .rc-bar { fill: var(--jd-accent); }
-.rc-bar:hover { fill: var(--jd-accent-bright); }
+.rc-bar.on { fill: var(--jd-accent-bright); }
+.rc-hit { fill: transparent; }
+.rc-plot { position: relative; margin-top: 1.2rem; }
+.rc-tip {
+  position: absolute;
+  transform: translate(-50%, -0.2rem);
+  padding: 0 0.3rem;
+  font-family: var(--jd-mono);
+  font-size: 0.72rem;
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--jd-ink);
+  background: var(--jd-surface);
+  border-radius: 3px;
+  pointer-events: none;
+}
 .rc-cut { fill: var(--jd-sev-major); }
 .rc-axis {
   display: flex;
