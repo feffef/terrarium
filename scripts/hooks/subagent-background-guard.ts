@@ -46,13 +46,8 @@ export function hasBackgroundOperator(command: string): boolean {
   return withoutOperators.includes('&')
 }
 
-/** Denies a `Bash` call outside a positively established main session when
- *  either: `run_in_background: true` is set, or the command text itself
- *  backgrounds via any bare `&` job-control operator, trailing or not — the
- *  `nohup … &` idiom included, since it's just this same operator with a
- *  `nohup` prefix (issue #964 — both are text-level bypasses of the
- *  `run_in_background` flag). Never throws; a non-object `toolInput` simply
- *  carries no `run_in_background`/`command`. */
+/** A bare `&` in the command text bypasses the `run_in_background` flag the same
+ *  way (issue #964), so both are denied. */
 export function checkBackgroundedBash(
   toolName: string,
   toolInput: unknown,
@@ -69,10 +64,7 @@ export function checkBackgroundedBash(
   return null
 }
 
-/** Denies a `Monitor` call outside a positively established main session
- *  (issue #964): a dispatched subagent has no wake mechanism a `Monitor`
- *  notification could ever resume, so the call can only strand it "waiting"
- *  the same way a backgrounded Bash command does. */
+/** A `Monitor` notification can't resume a subagent either (issue #964). */
 export function checkMonitorCall(toolName: string, context: AgentContext): BackgroundFinding | null {
   if (toolName !== 'Monitor') return null
   if (context === 'main') return null
@@ -107,15 +99,12 @@ export function formatGuardMessage(f: BackgroundFinding): string {
   )
 }
 
-/** `null` when nothing should be blocked, so `main` writes nothing and the
- *  call proceeds untouched. */
 export function denyOutputFor(finding: BackgroundFinding | null): DenyOutput | null {
   return finding ? buildDenyOutput(formatGuardMessage(finding)) : null
 }
 
-/** Always exits 0 — the deny travels in stdout, not the exit code. The
- *  pre-filter only forwards backgrounded-looking calls, so failing closed on an
- *  unreadable payload can never wedge foreground tool use. */
+/** Failing closed on an unreadable payload can't wedge foreground tool use: the
+ *  pre-filter only forwards backgrounded-looking calls. */
 export function main(): void {
   const read = readHookPayload()
   if (read.kind === 'none') return
