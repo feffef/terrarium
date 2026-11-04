@@ -304,6 +304,17 @@ describe('journal Tenant', async () => {
     })
   })
 
+  it('labels a hovered Routine chart bar with the selected metric', async () => {
+    await withRendered('/t/journal/current/routines', async (page) => {
+      const bar = page.locator('.rc-hit').first()
+      await bar.hover()
+      expect(await page.locator('.rc-tip').textContent()).toMatch(/^\$\d/)
+      await page.getByRole('button', { name: 'Output tokens' }).click()
+      await bar.hover()
+      expect(await page.locator('.rc-tip').textContent()).not.toContain('$')
+    })
+  })
+
   it('opens the Friction Ledger on its default window', async () => {
     await withRendered('/t/journal/current/frictions', async (page) => {
       expect(await page.getByLabel('Frictions from the last').inputValue()).toBe(String(LEDGER_DEFAULT_DAYS))
