@@ -38,6 +38,15 @@ describe('setEntry()', () => {
       entry.replace('occurrences:', '  - pr: 11\n    date: "2026-10-03"\n    summary: "Second fix."\noccurrences:'),
     )
   })
+  it('reopens an accepted entry when a fix is appended, unless --status is given or fixes are replaced', () => {
+    const accepted = entry.replace('status: open', 'status: accepted')
+    const fix = { pr: 11, date: '2026-10-03', summary: 'Second fix.' }
+    expect(setEntry(accepted, { fixes: [fix] })).toContain('status: open\n')
+    expect(setEntry(accepted, { fixes: [fix], status: 'accepted' })).toContain('status: accepted\n')
+    expect(setEntry(accepted, { fixes: [fix], replaceFixes: true })).toContain('status: accepted\n')
+    expect(setEntry(accepted, { notes: ['n'] })).toContain('status: accepted\n')
+    expect(setEntry(entry.replace('status: open', 'status: tracked'), { fixes: [fix] })).toContain('status: tracked\n')
+  })
   it('replaces the fixes with replaceFixes', () => {
     expect(setEntry(entry, { fixes: [{ pr: 12, date: '2026-10-04', summary: 'Only fix.' }], replaceFixes: true })).toBe(
       entry.replace(/fixes:\n[\s\S]*?occurrences:/, 'fixes:\n  - pr: 12\n    date: "2026-10-04"\n    summary: "Only fix."\noccurrences:'),

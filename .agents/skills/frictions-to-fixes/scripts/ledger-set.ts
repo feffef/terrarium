@@ -78,7 +78,10 @@ export function setEntry(text: string, changes: LedgerChanges): string {
     if (isScalar(old)) node.type = old.type
     put(doc, key, node)
   }
-  if (changes.status !== undefined) put(doc, 'status', changes.status)
+  // A recorded fix reopens an `accepted` entry, so its fix state shows again (otherwise `accepted` hides it for good).
+  const reopens = doc.get('status') === 'accepted' && !changes.replaceFixes && !!changes.fixes?.length
+  const status = changes.status ?? (reopens ? 'open' : undefined)
+  if (status !== undefined) put(doc, 'status', status)
   if (changes.ref === '') doc.delete('ref')
   else if (changes.ref !== undefined) put(doc, 'ref', changes.ref)
   if (changes.notes?.length) {

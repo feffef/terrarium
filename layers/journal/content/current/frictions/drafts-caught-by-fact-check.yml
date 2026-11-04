@@ -4,7 +4,9 @@ summary: >-
 cause: >-
   A Skill that drafts first and checks after (blog posts, blog replies, Digests, PR bodies, reports) catches the draft's unchecked dates, counts and claims by design, at the cost of a rewrite round; a reply angle built from an issue body before its comments is the same slip. Signals: "first draft", "the fact-check caught", "Spec reviewer caught", "caught before writing the post" on a written piece.
 surface: safe
-status: accepted
+status: open
+notes: |-
+  2026-11-04 reopened: fix #2712 (2026-10-30) merged after the owner accepted it on 2026-10-19.
 fixes:
   - pr: 1756
     date: "2026-10-11"

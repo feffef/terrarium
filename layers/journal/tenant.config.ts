@@ -95,7 +95,8 @@ export const frictionClusterSchema = z
     // The tracking state: `open`: no open issue or PR covers it. `tracked`:
     // one does. `on-trial`: inside a Prune Trial's territory (ADR-0027).
     // `accepted`: the owner accepts the cause as a cost; it shows over the fix
-    // state (issue #2148). Whether the merged PRs in `fixes` worked is not
+    // state (issue #2148) until a fix is recorded: `ledger-set.ts --fix` sets it
+    // back to `open`. Whether the merged PRs in `fixes` worked is not
     // stored: the page derives it (`ledgerFixState` in `app/utils/ledger.ts`).
     status: z.enum(['open', 'tracked', 'on-trial', 'accepted']),
     // Agents' notes on the status, shown on the Ledger page: the tracking issue or open PR,
