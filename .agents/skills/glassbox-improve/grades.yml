@@ -1,825 +1,843 @@
 version: 3
-run: 2026-11-03
+run: 2026-11-04T2259
 pages:
   claude-code/01.claude-md:
-    hash: 6ba79ed59bb29380932cbe2d14f68f472d4992dd
-    sources: 3810711ec680181e87ea9cbba3f1a5a407f7d445
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: d2d15f7f70b9bff67485e374d519c5ff8d4803f7
+    sources: 26429db527930b0bb39150977bb14e514b092b4e
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03, wins: [ 2026-11-03 ] }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { placement: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259, wins: [ 2026-11-03 ] }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: C, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { placement: 2026-11-04T2259 }
   claude-code/02.path-scoped-rules:
     hash: 1acc8dbb6f55a0710e7a93a24bb831cd711b56be
-    sources: d5b3726d417f0c446f83415b71a32a4e6c4d6c1c
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 4a3b3faf202dfe671e1cdc391770b0d39c43a944
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { evidence: 2026-11-02 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: C, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { evidence: 2026-11-02, placement: 2026-11-04T2259 }
   claude-code/03.skills:
     hash: 95539001ffefda03da41b3ed629e00e75807ddee
-    sources: e55906129ea9cabfaae855ec1a50c1b32ab5795f
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: a825444c0d6bd5bb49746467de2ff6c1c73f58a0
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   claude-code/04.hooks:
-    hash: 094cbbbfe118e9e55171c8af3b86f562333b017e
-    sources: 3f57fb6f0e3d733f10bf96f14344043020cd6c26
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 2273725d6f3707885aa3249405076b947e02f27b
+    sources: aab85c5eb282438b2c27fae028c1808e9af92e4b
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: C, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { transfer: 2026-11-03 }
+      clarity: { grade: C, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { transfer: 2026-11-03, clarity: 2026-11-04T2259 }
   claude-code/05.blocking-hooks:
     hash: 45dfba61a9761e0241dd3dddf8a306d987cbf1c8
-    sources: ed9cbac1194544146dbea636db623e25a1066e10
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 6aa85dfa3e9f62da8b4c478a71f76e3c3f990a2f
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03, wins: [ 2026-11-03 ] }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03, wins: [ 2026-11-03 ] }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: A, run: 2026-11-04T2259, wins: [ 2026-11-03, 2026-11-04T2259 ] }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259, wins: [ 2026-11-03 ] }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   claude-code/06.hook-added-context:
-    hash: f87e89c43e656bce96f788966ec014d01fe0d0ff
+    hash: da7719cfd3002c8962aafb5504e69252061dea5a
     sources: 1837ecdad20761a8d0e9d197564a3e75dc18b710
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: C, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { placement: 2026-11-04T2259 }
   claude-code/07.subagents:
-    hash: dc1a89700942acf9b83a18ffcd4103a7726375ef
-    sources: 6b0830badc9c03d11453e805f51560303f000d3f
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 1f548c615682135d0091981f295350936082ead7
+    sources: f6b5649795d520490c9eeb69081987431601339f
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03, wins: [ 2026-11-03 ] }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { transfer: 2026-11-02 }
+      clarity: { grade: C, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: C, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259, wins: [ 2026-11-03 ] }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { transfer: 2026-11-02, clarity: 2026-11-04T2259, evidence: 2026-11-04T2259 }
   claude-code/08.mcp-servers:
     hash: 8bdf6903a93d04929b75db5733d23442b7c42cf4
     sources: f7d886bb3fae78c834d190d5a690e30b8e150329
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { placement: 2026-11-03 }
   claude-code/09.workflow-scripts:
     hash: a2f6027c88238d9441ad02de209ceb8038e829b4
-    sources: 4f56adf935e38a3d504988fe6d00efc9e35276f0
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: c992d1e57f2ae4976e60aa3a18c5b3b61f2c5efd
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { evidence: 2026-11-03 }
   claude-code/10.routines:
     hash: 6a90267845f25417695cc6e1014f61f6af92e4d6
-    sources: 5cf76e7540e715dfcb1539b67f72ce836083e4df
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: f5a6409a15e503074216d662b7d9ff0bf6aa529d
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { evidence: 2026-11-02 }
   claude-code/11.cloud-sessions:
-    hash: 06c895733b539651f0c0603fd68a921c3b9caba1
-    sources: edd7bc3e0578a8592515ac0068b6a9d9b6fa7f6f
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 4a461b28ec2ad943dddc26855da32937ca6e4e67
+    sources: e752ef9f634aee060d54b12340c4b514148d0992
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: C, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { clarity: 2026-11-03, placement: 2026-11-02, evidence: 2026-11-03 }
   claude-code/12.permissions:
     hash: 992b5ed623bc5dc86d9affed685c7b1bde535d99
-    sources: 4366ac113becc7c17ff1ccdf2d0fb99c126dd81b
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 59f47d3b09f9a516364a3cbd2c2bef1e54636b0a
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { placement: 2026-11-02 }
   deploy/01.self-updating-container:
     hash: 8f665ce64bf8397161f4f0672ad5dd43d6a6b53a
     sources: 808f843004dc635f7313615fa4ac77e139bdfac6
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   deploy/02.pnpm-lockfile:
-    hash: 01fb502b323ee2a864b3af0975f868c2d4c19f93
-    sources: ea11a4293ecd312db8a01790a9128cc27299e584
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 5baef40919af83d1c872639d0b71cb43ce350961
+    sources: dacadd3bd0afcfef71cc74b4d1a9ed3cbe9fee9f
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: C, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { clarity: 2026-11-02, placement: 2026-11-03 }
   git-github/01.every-change-a-pr:
-    hash: 418c12a68acd0285fdbcd410ef4ddd41840a6a7a
-    sources: 133b37ad0530ef7529385460fe86104566a1f40a
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: b9c0eacd673b0040dd1d85e8d6ed81b2b1b17ca2
+    sources: 0cfb0294b5dbba8f3e8f2c7e8e7f711f90c2ff30
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: C, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { clarity: 2026-11-03 }
   git-github/02.git-worktrees:
-    hash: db19ac738ca33b68f7cda6acf7ff560eeecd3a48
-    sources: 2f81960a1e60238c2030a482f9fae853956ce340
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: cea83e0d80da2853972e82b5d97f5752d7582eae
+    sources: 363c03c512c4d4d96d39df867e6789c35a9c59f9
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: C, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: C, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { placement: 2026-11-02, clarity: 2026-11-03, transfer: 2026-11-03 }
   git-github/03.composite-actions:
     hash: f03a56d7cab116165e601cdebf4d6a9a918bb4f7
-    sources: 1e0387d70a5ee4ab890da718332a5a2d31ae069b
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 5b8a686b1d51f6335fd9060b1bbe4a6e38bd74c1
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { placement: 2026-11-02, evidence: 2026-11-02, transfer: 2026-11-02 }
   git-github/04.trust-tiers:
-    hash: 0ae52c45d1dfa2b397492e62c65a01709c3e7280
+    hash: 0f0a25e0d2020f10fd2cc808f255bf1387907536
     sources: fcb622c468939e66e3dcb6b2cbeeb1b44c2a2a3e
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03, wins: [ 2026-11-02 ] }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { transfer: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259, wins: [ 2026-11-02 ] }
+      evidence: { grade: C, run: 2026-11-04T2259 }
+      transfer: { grade: C, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { transfer: 2026-11-04T2259, evidence: 2026-11-04T2259 }
   git-github/05.attribution:
-    hash: 1c2bfcab13b426238cf9573a434250a67067cbaa
-    sources: a02f9509ccabed99513f45c26c8168feca20b543
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 2969d552da77e429e00e66d69038718d33e8de05
+    sources: d704575e017a4bd0d067f124a3b15670caaf0e1c
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: C, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { clarity: 2026-11-03 }
+      clarity: { grade: C, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { clarity: 2026-11-04T2259 }
   git-github/06.work-queue:
-    hash: ce8c29f796a4ddf5218584c569f55ae7f727f0eb
-    sources: 5442a3eca9cf6a81258a5f35c06616f20e6863cf
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 8c9eee6bb9e31d59f836fb2133a7bcbc027254cb
+    sources: 8ee40a06a3b09deb92906ef70b24811ebdd214ab
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { clarity: 2026-11-02 }
+      clarity: { grade: C, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { clarity: 2026-11-04T2259 }
   git-github/07.dependabot-grouping:
     hash: 06851dd3a908a2e14a76653b040533fc7dd5b4f0
-    sources: edc50b7c3cebbb5d7cb608c1bc5b9d0a0b3e91d7
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: ef2a3e34b4cdfdb6122e0689bb01973fe3ddb4e4
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   nuxt-content/01.manifest-collections:
     hash: c6983442bc614ea593bf9f64b0af6bdc718645d5
     sources: bfd3f9c73605e964447cfb5d89b59d7a3f3ee847
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { evidence: 2026-11-02 }
   nuxt-content/02.multi-tenant-isolation:
     hash: d6cfe9ea5c29357e88b8d7e0ae4ec65c86662ec5
-    sources: 3a5b4666305cbf9f8bcae7bc943ebd8d890cede6
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 03b5912c6a6d0f1a07808590024fa527be09ba6b
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: C, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { placement: 2026-11-04T2259 }
   nuxt-content/03.content-database:
     hash: 97947fae98f59759de0a30c0556786d93bd297db
     sources: 6867e21c106f894837ab2122305cc1f57c200b0c
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   nuxt-content/04.query-collection:
-    hash: 1326717ab4615c931e654abaa563af017b3d10a0
+    hash: 12c1a7781273050cce73d475f4b900e9b0560995
     sources: e1127d819cf4ddff76dd96523b7358449ed8d517
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { placement: 2026-11-03, evidence: 2026-11-02 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: C, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: C, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { placement: 2026-11-03, evidence: 2026-11-02, reasoning: 2026-11-04T2259, transfer: 2026-11-04T2259 }
   nuxt-content/05.mdc-components:
     hash: 8157d549865d40dd5101c31936a52048d089915e
-    sources: 609c5ad09c21c71ddcb226e43a6bd36669815434
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 770b82bb14500c624b987aefa15d5a4a81a79f1d
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   nuxt-content/06.prose-overrides:
     hash: 9a0d31421f2253a8dad93b7d19e04f0920984f10
     sources: f14492f4603ae93412536c07fc0ff81a2b7c14ff
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   nuxt-content/07.mermaid-pre-rendering:
     hash: 80d57cc66a4de30db49086f9a15fccaf8ee01a78
-    sources: 8737c55e3b2e547c919943f4a3d17379b4043e8f
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 7401f2edff38430d9ae651c351807707fbe1eb93
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { evidence: 2026-11-02, transfer: 2026-11-02 }
   nuxt-vue/01.layers:
-    hash: 74a44ce9e6cf8a906fb37eb4c1bca932fd65b728
-    sources: ac9cc770d0d012f05a4cce62e34ad974589f1da1
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: efffdaedd347113fa44a7805016242a38a444fa3
+    sources: 41ba3ccfc3cdec054af10809c01a558e7e3e5dc8
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: C, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { placement: 2026-11-02, transfer: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: C, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { placement: 2026-11-02, transfer: 2026-11-03, evidence: 2026-11-04T2259 }
   nuxt-vue/02.file-routing:
     hash: 095c78d95fcd64d9322298a5d6de7f3bbaeb3f94
-    sources: aec6d9913d1088eb49a419abf5945f6920ddeb72
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 59d5f5e507cfef613406894a9dd3fcab5420e60d
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: C, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { transfer: 2026-11-04T2259 }
   nuxt-vue/03.virtual-modules:
     hash: 91a9ad54e27d320e4868e2101919fc68bf9bce1f
     sources: e8ddcc8a0f13c937fb058f4977fe81504df76618
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { transfer: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: C, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { transfer: 2026-11-03, placement: 2026-11-04T2259 }
   nuxt-vue/04.auto-imports:
-    hash: b8731b785846869e9644e99a51fab731bd01f055
+    hash: 24317482cc6639d94e98d48f2d7b0caf716cb06e
     sources: 65659184ee81e5ec1dc235afc0e7a63fe59bad37
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: C, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { transfer: 2026-11-03 }
   nuxt-vue/05.vue-components:
     hash: b33daa41f3b3ff5e5d5bbc2d562703739b30144a
-    sources: 496324e088bcb1fe29f805f8e9c1cdff476e347c
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 638c023b289e758f0af25b45b84ad9654a958dd6
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { evidence: 2026-11-02 }
   nuxt-vue/06.use-async-data:
     hash: bf28214f950fdea1c0f57a7ba92af31dbf032d6c
-    sources: 57a2464ff5e4c98968974562a91e77e565e98f6b
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 7975773917ed676247733b0f9010c4238faa1064
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   nuxt-vue/07.css-custom-properties:
     hash: fb0d903f6a7f9ba94f6787a9cf2b999d69d8d134
-    sources: 874fca8892381b25a0b1980594d5912d5d550736
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 2c8fe58c80f5809c3c4ce044445c6e23af731d4c
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { placement: 2026-11-03 }
   nuxt-vue/08.hydration:
     hash: fdf2207490f38f1530c90a6663ca1aa9ef4ccde1
-    sources: b6d6ca77dc9b80f6a76701488e65c363bfad7fc4
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 208fc4fe40bc630a2792cdf6fc9853cdccaec1f9
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   nuxt-vue/09.nitro:
     hash: 3d08c05c6472bc9248c8e1bd0b64b834cda2c9c2
     sources: 391ced50b7917d77f0608634b74e4acd08ee09a0
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   skill-pack/01.skill-packs:
     hash: ebf52b6024f4068cd5f5eb4911dd807187bdd10b
-    sources: ac076e098a3fa57650f6cf6fbfbad67c0d837eed
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 3dd7dfc665e6a9ba87caf331565160512c6921eb
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { evidence: 2026-11-02 }
   skill-pack/02.planning-with-the-pack:
-    hash: a8f7d05bc35f077a6f51ce2d739f9b407cdc6e7c
-    sources: 228e936a47a436b226ae5a6b93490dfa1f13d18b
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 2f67f62adbaf11a3381d37cef8a7ed6ecb081a21
+    sources: 43d978df31c8cd84b4940db92dcbad78c2aa6660
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: C, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { clarity: 2026-11-03, placement: 2026-11-03, evidence: 2026-11-03, reasoning: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: C, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { clarity: 2026-11-03, placement: 2026-11-04T2259, evidence: 2026-11-03, reasoning: 2026-11-03 }
   skill-pack/03.engineering-skills:
-    hash: 3a48a00b74c0fd092f5ba32cb85d381d278b4caa
-    sources: 9203543795054ff89d2c4e4290a2c444fe977a24
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: c2c6decc6d84efeef88273b25328292f5e50b56f
+    sources: 4d021a52da02a458552456f7086fe441de25e92b
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { placement: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: C, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { placement: 2026-11-04T2259 }
   skill-pack/04.wayfinder:
-    hash: 6455b6ccce6dd0bdce9b9b11e3a08d08830f56c8
-    sources: a5f3344546e837824edb6bb7b007eb883f485cbf
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 01a9476cea086261d84b90fe9df616e7c2188965
+    sources: 11d26b65fcefa5984e4c745563a3493d9499886b
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { evidence: 2026-11-03, transfer: 2026-11-03 }
   terrarium-practice/01.human-in-the-loop:
-    hash: a2edf81c25b82f543a9f53448f2ca0bb2f480db5
-    sources: d6f94e6e47d38c890ca51fc2f34ab536275c4e41
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 6d046821c2aed871c572d96d05e7a54869322c7f
+    sources: 52bdaf8f8e6f79eeab4aa52282cfa8d68013912b
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: C, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { placement: 2026-11-03, transfer: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: C, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { placement: 2026-11-04T2259, transfer: 2026-11-03 }
   terrarium-practice/02.adrs:
-    hash: 141984179b29c4a80905ead97ee3503f1086f1c7
-    sources: c2b44fabf8777cf0d33436b4b01cb7c88fa3b982
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 22813c856230c171dd7f7e3b14246ea693c42cd6
+    sources: d51f4e6a93c36da51acd593f07bf2b086713be3a
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: C, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { evidence: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: C, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { evidence: 2026-11-03, placement: 2026-11-04T2259 }
   terrarium-practice/03.ubiquitous-language:
     hash: 4ad03178db5175a5bf56f2bef571c90346a5ddbe
-    sources: 1c138911099d275de27bd8864814dec86d2ee87a
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: a578f87b7717762baf6ee2c7e7fbff77313635e2
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: C, run: 2026-11-04T2259 }
+      transfer: { grade: C, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { evidence: 2026-11-04T2259, transfer: 2026-11-04T2259 }
   terrarium-practice/04.session-logs:
     hash: 16d354a7e5aee512b2885e183f6b0b9cef0eae2b
     sources: 0698030642f7b9fe05ac27f9fdfe7e93cf471a90
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: C, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { transfer: 2026-11-04T2259 }
   terrarium-practice/05.pruning-instructions:
     hash: 6859e296160113d04fd904b19d3731cebbfce27e
-    sources: 63114aa47829d17315f184e8838a196ba2e88565
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 11e82400ff86e4f8af936e133ab26cc30a4cc027
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   terrarium-practice/06.out-of-scope-records:
     hash: d2417681926ac5ef8cef71d6c743cf1694d8ebff
-    sources: e2f31de80c0115f40d8649eedaa2a9c4ba511403
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 723941503d4975262ec622448cbac34cd946a6e7
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   terrarium-practice/07.human-only-list:
-    hash: f275d0922e029d69cd6f721155ee56ee1dfedeb3
-    sources: 0f2b415418e3c9b0dc73843cdacb2221996dd057
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 94a73e03bebcece10c5a764f8799931293b14f1a
+    sources: 0784a2a099e5906bbb0dd80356213ed89826c1ea
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: C, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { transfer: 2026-11-03 }
   terrarium-practice/08.cross-tenant-reads:
     hash: c1032bd83617c92dadfb5fba20042de9b3eb268d
-    sources: 18c8fea3f0abb8ab3db7071be5d623a91ce0889b
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 0e5ef5c5293cafbc2b8e9ac69652d3740b87f989
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   terrarium-practice/09.self-improvement-loop:
-    hash: 8bf477baf71b0c8c42fe5746c26e65158f3eadc2
-    sources: 36d56ae3df0424d3b74c1982a4c952712095893a
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: e82a069ac1c539a1797daa53a47e006c04988602
+    sources: 841573e394d8da0cf2916185bd14c88f5657945a
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { evidence: 2026-11-02 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: C, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { evidence: 2026-11-04T2259 }
+  terrarium-practice/10.outside-contributions:
+    hash: fddfd713d290a205baa5b71b601b3dfcb8ea6230
+    sources: 889707b67163e337182a3b31097356b81bbb1600
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
+    lenses:
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: C, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { placement: 2026-11-04T2259 }
   verification/01.gate:
-    hash: 5802e80c4007e31bb27bd6790534edae51b3c05c
-    sources: 3c853ae99fe79dce0c95e051f4deeadc4983c06a
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 506d5b2e33f1e6bea83b6fed0537dfeedcdd16cc
+    sources: 4dc332c189cb7ca131fb273d66753d3c48501eed
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { placement: 2026-11-02 }
   verification/02.type-checking:
     hash: 6512b2a95f35c66c194b50ce02af5e7acc76f242
     sources: 4462683296c473431995ed76f02122491b7c0dfb
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   verification/03.content-validation:
-    hash: ee7322b9ed0893d67beed61d15555efd59a512f0
-    sources: b20aa10a853ada214a0d16a7897883e45409c88b
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: d76d9e1cb5c231b8bb77778f5ed71230deafea40
+    sources: ba980cf86e727ed166c3d464e69f2e3a34d3615c
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   verification/04.unit-and-e2e-tests:
     hash: e3327a0c819d51ddfc745cf299df3f57eed500a3
-    sources: f0945a8ddce5c7601e9e9c0877683f71533c4eb9
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: bfe8944665a01403a20d4bbdd78e64b4ce4c98e9
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { evidence: 2026-11-03 }
   verification/05.linting:
     hash: 3598348a112da616928ae181a1a88e6980ce9bf1
     sources: 87bf0728b3563a655012711fd58b56ab62080258
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   verification/06.schema-validation:
     hash: 7cb5e6fea20ff8091f0b9f9f2c01d05b5f0503f4
     sources: 1976986895ed6103d39f4c9ee43e8f55a60b8bb1
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
-    edited: { clarity: 2026-11-02 }
-  verification/07.timestamps-stored-as-strings:
-    hash: 308da51d4617a3726bce5d5a5a4b493b8491a253
-    sources: 1ab2a894a488efaafb0dad115b52202c84b570c8
-    read: 2026-11-03
-    checked: 2026-11-03
-    lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { clarity: 2026-11-02 }
   verification/08.schema-evolution:
-    hash: f8400bffeaa55e20ce287c77c01c88aedb554e3a
+    hash: 4eec540eaf7ef438c32ff093ad23c56fd9c1a0b6
     sources: 30c8f6eeaa75120ed79dfe56987d887f95fb7e09
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { evidence: 2026-11-02 }
   verification/09.invariant-tests:
     hash: a5a2ba35ad2c7fb8cdcc3780ca7ee62171c28c9b
-    sources: 1355df38891dc29be527b3d0c060e5687c68ed8d
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: b7c08c7503c1652ea09b6e093d31add0c490acec
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: B, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: B, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: B, run: 2026-11-04T2259 }
+      placement: { grade: C, run: 2026-11-04T2259 }
+      evidence: { grade: C, run: 2026-11-04T2259 }
+      transfer: { grade: B, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
+    edited: { placement: 2026-11-04T2259, evidence: 2026-11-04T2259 }
   walkthroughs/a-bug-report-becomes-work:
     hash: 797ec14651630c06baeff6866c80cdbe88ee4df8
-    sources: aea034cf269eb7f37fac62bf3d8941b02a0bc981
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: cb1417bdc6486f1a9b364ab377083192bc893663
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: n/a, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: n/a, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: n/a, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: n/a, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   walkthroughs/a-change-goes-live:
     hash: 689ad8b0146f00a09ed4eea9b1ff551edbf01ff5
     sources: 84f303acd055b6354b078b7fe4c40003263a7908
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: n/a, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: n/a, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: n/a, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: n/a, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   walkthroughs/a-friction-becomes-a-fix:
-    hash: 317b8888686d052b6f453e285f74317287f5cc5b
-    sources: bd181bc570eeef8f29034e5e8766598a92d3bce7
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 77a91a96bc9581a0c3e6ea2247225dbd92903a2f
+    sources: 07dacc1355705489e657869620977d64566723d2
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: n/a, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: n/a, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: n/a, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: n/a, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   walkthroughs/adding-a-tenant:
-    hash: 224e1fddf9be529d73b1df145f6b94ecd7dcfc07
-    sources: 995f511f617758eab0ab833a4f20ace49c995b11
-    read: 2026-11-03
-    checked: 2026-11-03
+    hash: 7742b3e1109a2935dae3543d5aa86f787c5ca8cb
+    sources: db1794f676c6c678cd8f464a9acedf7bb2d9f28d
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: n/a, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: n/a, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: n/a, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: n/a, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
   walkthroughs/asking-for-a-change:
-    hash: 71fff674c4d3e091f6aad7e8cf243632b926c3ba
+    hash: 737f5113de040ea58d0f7e733c7e017548d682b9
     sources: 256d4e8322ed6ee44de0a41da70354ed446b7eac
-    read: 2026-11-03
-    checked: 2026-11-03
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: n/a, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: n/a, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: n/a, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: n/a, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { evidence: 2026-11-02 }
   walkthroughs/from-file-to-browser:
     hash: 259847dd458bcbb24bd04c77330f794f465a604c
-    sources: 62e86e82683a5cf04d3434f2be615addd765a265
-    read: 2026-11-03
-    checked: 2026-11-03
+    sources: 5cffa9e37e957b7c16c9d3b06d5f5b346fa25c4f
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
     lenses:
-      clarity: { grade: B, run: 2026-11-03 }
-      reasoning: { grade: n/a, run: 2026-11-03 }
-      placement: { grade: B, run: 2026-11-03 }
-      evidence: { grade: B, run: 2026-11-03 }
-      transfer: { grade: n/a, run: 2026-11-03 }
-      relevance: { grade: B, run: 2026-11-03 }
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: n/a, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: n/a, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
     edited: { evidence: 2026-11-02 }
+  walkthroughs/planning-a-big-change:
+    hash: 3787f521c17ce68ca1b3b511dfa3f827bc7c34f9
+    sources: 8c1c6ee6aa78bd591f393aebb3e10a1b65513fc6
+    read: 2026-11-04T2259
+    checked: 2026-11-04T2259
+    lenses:
+      clarity: { grade: B, run: 2026-11-04T2259 }
+      reasoning: { grade: n/a, run: 2026-11-04T2259 }
+      placement: { grade: B, run: 2026-11-04T2259 }
+      evidence: { grade: B, run: 2026-11-04T2259 }
+      transfer: { grade: n/a, run: 2026-11-04T2259 }
+      relevance: { grade: B, run: 2026-11-04T2259 }
 steps:
   - id: promote-mdc-components
     kind: promote
@@ -876,9 +894,10 @@ steps:
     raised:
       - 2026-11-02
       - 2026-11-03
+      - 2026-11-04T2259
     status: dropped
-    gist: Testing already teaches a content rule held by a unit test. The Blog's pinned-link test becomes a second example there.
-    decided: 2026-11-03
+    gist: Fold the Blog pinned-link test in as the worked example of 'a unit test can hold a content rule'; Testing already says it, and the Tenant-travel Why bullet is duplicated.
+    decided: 2026-11-04T2259
   - id: section-out-of-scope-records-into-work-queue
     kind: section
     pages:
@@ -886,9 +905,10 @@ steps:
     into: git-github/06.work-queue
     raised:
       - 2026-11-02
-    status: dropped
-    gist: A rejected-idea record is one triage-Skill folder; the sweep and wontfix flow already live on Issue triage labels.
-    decided: 2026-11-02
+      - 2026-11-04T2259
+    status: taken
+    gist: Out-of-scope records are one step of the triage queue the installed triage Skill runs; add a short section there and drop the standalone page.
+    decided: 2026-11-04T2259
   - id: section-planning-with-the-pack-into-skill-packs
     kind: section
     pages:
@@ -987,9 +1007,10 @@ steps:
     into: nuxt-content/05.mdc-components
     raised:
       - 2026-11-03
+      - 2026-11-04T2259
     status: dropped
-    gist: one prose override (ProsePre) plus the per-page ContentRenderer components pass; fits as the renderer side of components in Markdown
-    decided: 2026-11-03
+    gist: One override and one Why bullet; both pages are how Nuxt Content draws Markdown with Vue. Keep the ProsePre excerpt and the ContentRenderer components prop; Mermaid keeps its ProsePre link.
+    decided: 2026-11-04T2259
   - id: section-timestamps-stored-as-strings-into-content-validation
     kind: section
     pages:
@@ -1017,9 +1038,10 @@ steps:
     into: claude-code/06.hook-added-context
     raised:
       - 2026-11-03
-    status: dropped
-    gist: the read-first hint paragraph and the A hint at the first call reason
-    decided: 2026-11-03
+      - 2026-11-04T2259
+    status: taken
+    gist: Read-first-hint reasoning ('A hint at the first call') lives once on Hook-added context; CLAUDE.md keeps a one-line pointer.
+    decided: 2026-11-04T2259
   - id: move-mcp-servers-into-attribution
     kind: move
     pages:
@@ -1122,3 +1144,92 @@ steps:
     status: taken
     gist: No guide Walkthrough follows a too-big idea from map to spec to stories. It links only guide pages and has a real case. Raise it to B on every lens first.
     decided: 2026-11-03
+  - id: merge-engineering-skills-into-planning-with-the-pack
+    kind: merge
+    pages:
+      - skill-pack/03.engineering-skills
+    into: skill-pack/02.planning-with-the-pack
+    raised:
+      - 2026-11-04T2259
+    status: refused
+    gist: One page on the pack's plan-then-build Skills; keep the code-review fixed step by link to Pull requests and the loop by link to Workflow scripts.
+    decided: 2026-11-04T2259
+  - id: move-content-validation-into-schema-validation
+    kind: move
+    pages:
+      - verification/03.content-validation
+    into: verification/06.schema-validation
+    raised:
+      - 2026-11-04T2259
+    status: dropped
+    gist: Move the timestamp refinement (shared/schemas/timestamp.ts excerpt, the UTC-string Why bullet, the toISOString and Date.parse watch items) to Zod refinements; the removed timestamps page is correctly gone, but its content landed in the wrong home.
+    decided: 2026-11-04T2259
+  - id: move-multi-tenant-isolation-into-file-routing
+    kind: move
+    pages:
+      - nuxt-content/02.multi-tenant-isolation
+    into: nuxt-vue/02.file-routing
+    raised:
+      - 2026-11-04T2259
+    status: dropped
+    gist: Move the resolver facts (resolveSpaceRoute testability, small reviewed core, keys from the resolver) to File routing beside useSpace; cut Virtual modules' 'A plain import' to a link; keep only key-per-table isolation here.
+    decided: 2026-11-04T2259
+  - id: move-human-in-the-loop-into-outside-contributions
+    kind: move
+    pages:
+      - terrarium-practice/01.human-in-the-loop
+    into: terrarium-practice/10.outside-contributions
+    raised:
+      - 2026-11-04T2259
+    status: taken
+    gist: Move the guest-exception Why bullet and guest-pipeline sentences; Human-in-the-loop keeps one link, and Outside contributions drops its restatements of Author trust and Attribution.
+    decided: 2026-11-04T2259
+  - id: move-adrs-into-path-scoped-rules
+    kind: move
+    pages:
+      - terrarium-practice/02.adrs
+    into: claude-code/02.path-scoped-rules
+    raised:
+      - 2026-11-04T2259
+    status: taken
+    gist: ADR-to-summary-rule mechanism and the 'why a summary' reasoning live once on Path-specific rules; Decision records keeps the template, the in-place rewrite and the Gate's shape checks.
+    decided: 2026-11-04T2259
+  - id: lesson-hooks-into-session-transcripts
+    kind: lesson
+    pages:
+      - claude-code/04.hooks
+    into: claude-code/13.session-transcripts
+    raised:
+      - 2026-11-04T2259
+    status: taken
+    gist: Teach the session transcript (JSONL file, transcript_path in a hook payload, what it records). Hints dedupe from it, session logs derive their trace from it, attribution finds the session id in it, and Routines take their trigger from its first turn; no Lesson teaches it.
+    decided: 2026-11-04T2259
+  - id: promote-session-log-lands-on-main-into-session-log-lands-on-main
+    kind: promote
+    pages:
+      - drafts/walkthroughs/session-log-lands-on-main
+    into: walkthroughs/session-log-lands-on-main
+    raised:
+      - 2026-11-04T2259
+    status: taken
+    gist: Whole Stop-hook-to-plumbing-commit story, linking only guide Lessons; after promotion trim the Stop-hook detail on Hooks and Session logs to links.
+    decided: 2026-11-04T2259
+  - id: promote-reading-across-tenants-into-reading-across-tenants
+    kind: promote
+    pages:
+      - drafts/walkthroughs/reading-across-tenants
+    into: walkthroughs/reading-across-tenants
+    raised:
+      - 2026-11-04T2259
+    status: taken
+    gist: Follows one Blog post through kind, Catalog and queryAcrossTenants, linking Cross-tenant reads and Virtual modules; adds the Walkthrough view missing for the Commons Search.
+    decided: 2026-11-04T2259
+  - id: cut-routines
+    kind: cut
+    pages:
+      - drafts/walkthroughs/routines
+    raised:
+      - 2026-11-04T2259
+    status: taken
+    gist: A per-Routine catalogue, not one story; it duplicates the complete Routine list Scheduled tasks keeps and the Skill list in Self-improvement loop.
+    decided: 2026-11-04T2259

@@ -1,7 +1,7 @@
 ---
 title: Glass Box guide
 description: How Terrarium works as a whole, in plain words, with links to the Lessons that explain each part in depth.
-revision: 'ba33716c55a69685f50c3e6a8b72737c4aba880d'
+revision: '2dad9ca14dba0b31b8aec171353d34a33bca72fc'
 revisionDate: '2026-11-04'
 ---
 
@@ -88,7 +88,7 @@ One idea runs through the design: **decide it at build time**. Every site, page 
 Each Space gets tables of its own, so a page can never read another Space's content by mistake. Reading across Tenants works only for the shapes a Tenant chose to offer; the Commons builds its search and timeline that way.
 
 ::lessons
-[Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads)
+[Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · [Reading across Tenants](/t/glassbox/guide/walkthroughs/reading-across-tenants)
 ::
 
 Some Tenants record the real build, such as the Journal, this Glass Box and the Midden, a museum of discarded work. Others are invented practice grounds and demos. :file[GLOSSARY-MAP.md] lists them all and says how each relates to the build.
