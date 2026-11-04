@@ -124,7 +124,8 @@ no `tracked` or `on-trial` entry points at something closed.
   `--summary` derive `fix landed`, `likely fixed` (3 quiet days after the
   latest PR) or `still recurring`. A re-fix after a regression needs only
   its `fixes` entry. An `accepted` cluster (the owner accepts its cost) is
-  never re-proposed.
+  never re-proposed; recording a fix on it (`ledger-set.ts --fix`) sets it
+  back to `open`.
 - `ref` holds the tracking issue or open PR, the trial's territory match,
   what a fix left open, or the entry and fix a new cause came from; never a
   merged PR that fixes this entry (that goes in `fixes`).

@@ -1,6 +1,7 @@
 // Creates or edits one Friction Ledger entry so no agent hand-edits its YAML:
 // sets `summary`, `cause`, `surface`, `status` and `ref`, appends `notes` lines,
-// appends or replaces `fixes`, appends occurrence blocks as
+// appends or replaces `fixes` (an appended fix sets an `accepted` entry back to
+// `open` unless `--status` says otherwise), appends occurrence blocks as
 // `print-ledger-occurrence.ts` prints them.
 // Refuses a result the ledger schema rejects; the file's other content and
 // comments stay as written.
@@ -78,7 +79,10 @@ export function setEntry(text: string, changes: LedgerChanges): string {
     if (isScalar(old)) node.type = old.type
     put(doc, key, node)
   }
-  if (changes.status !== undefined) put(doc, 'status', changes.status)
+  // A recorded fix reopens an `accepted` entry, so its fix state shows again (otherwise `accepted` hides it for good).
+  const reopens = doc.get('status') === 'accepted' && !changes.replaceFixes && !!changes.fixes?.length
+  const status = changes.status ?? (reopens ? 'open' : undefined)
+  if (status !== undefined) put(doc, 'status', status)
   if (changes.ref === '') doc.delete('ref')
   else if (changes.ref !== undefined) put(doc, 'ref', changes.ref)
   if (changes.notes?.length) {
