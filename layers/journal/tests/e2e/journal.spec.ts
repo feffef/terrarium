@@ -304,6 +304,25 @@ describe('journal Tenant', async () => {
     })
   })
 
+  it('labels a hovered Routine chart bar with the selected metric', async () => {
+    await withRendered('/t/journal/current/routines', async (page) => {
+      const chart = page.locator('.rc').first()
+      const hit = chart.locator('.rc-hit').nth(3)
+      const bar = chart.locator('.rc-bar').nth(3)
+      const tip = chart.locator('.rc-tip')
+      await page.getByRole('button', { name: 'Cost (USD)' }).click()
+      await hit.hover()
+      expect(await tip.textContent()).toMatch(/^\$\d+\.\d\d$/)
+      // Above the bar's centre, not at the cursor (which sits mid-column).
+      const [t, b] = [await tip.boundingBox(), await bar.boundingBox()]
+      expect(Math.abs(t!.x + t!.width / 2 - (b!.x + b!.width / 2))).toBeLessThan(2)
+      expect(t!.y + t!.height).toBeLessThanOrEqual(b!.y + 1)
+      await page.getByRole('button', { name: 'Output tokens' }).click()
+      await hit.hover()
+      expect(await tip.textContent()).toMatch(/^\d[\d.]*[KMB]?$/)
+    })
+  })
+
   it('opens the Friction Ledger on its default window', async () => {
     await withRendered('/t/journal/current/frictions', async (page) => {
       expect(await page.getByLabel('Frictions from the last').inputValue()).toBe(String(LEDGER_DEFAULT_DAYS))
