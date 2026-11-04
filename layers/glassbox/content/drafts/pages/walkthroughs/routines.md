@@ -78,4 +78,4 @@ Each run that changes something closes the same way: it commits, has the change 
 - [Subagents](/t/glassbox/guide/claude-code/subagents)
 - [Pruning instructions](/t/glassbox/guide/terrarium-practice/pruning-instructions)
 - [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
-- [A session log lands on main](/t/glassbox/drafts/walkthroughs/session-log-lands-on-main)
+- [A session log lands on main](/t/glassbox/guide/walkthroughs/session-log-lands-on-main)
