@@ -4,6 +4,10 @@ cause: "owner-corrections.ts (visitor-loop owner-memory check) runs a git fetch 
 surface: safe
 status: tracked
 ref: "#2836"
+fixes:
+  - pr: 2836
+    date: "2026-11-04"
+    summary: "owner-corrections.ts fetches with a 60 s timeout and visitor-loop step 3 says to run it alone in the background."
 occurrences:
   - session: session_013zxzeQ61FGG5kRKhi89YE9
     date: "2026-11-02"
