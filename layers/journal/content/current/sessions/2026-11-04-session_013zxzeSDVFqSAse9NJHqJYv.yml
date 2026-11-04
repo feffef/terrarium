@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSDVFqSAse9NJHqJYv
 startedAt: 2026-11-04T04:03:38Z
-endedAt: 2026-11-04T04:15:02Z
+endedAt: 2026-11-04T04:16:42Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs for staleness and contradictions
-status: in-review
-outcome: Sweep PR 2838 open with 5 confirmed doc fixes; awaiting CI then merge
-summary: "Scheduled audit-docs run; the schedule started it and no human prompted any step (all agent-initiated). Three read-only reviewers returned: Freshness 2 findings, Single-home 10 (13 entries counting sub-parts), Coherence 7 plus nits. Two checkers fact-checked all 22 findings: 4 CONFIRMED (Freshness 1, Single-home 3a, Coherence 6 and 7), 1 CONFIRMED-BUT (Single-home 9 first bullet, corrected to keep one git command per call), 17 WRONG. Most WRONG verdicts were cuts that lost a rule or a pointer, or reviewer misreads (the tenant-layers doc has four sections, not one; a stated issue placement beat two Mis-location moves). I applied only checker-confirmed text in one commit (5 files, +8/-8, none Human-only). Two code-review subagents (Standards and Spec) were clean; I re-wrapped one long line after them, then gate:scoped passed on the final head. Pushed and opened sweep PR 2838, subscribed; merge follows once CI is green and I post a verdict. No issue filed and no escalation PR needed. Covered by B and C: docs/agents/*, CLAUDE.md, GLOSSARY.md, GLOSSARY-MAP.md, .claude/rules/*, layers/glassbox/GLOSSARY.md, ADRs 0003 0004 0009 0027, Skills audit-docs auto-triage clear-backlog close-session dependabot-sweep dispatch-subagents frictions-to-fixes guest-build guest-intake inspect-session log-session."
+status: completed
+outcome: Sweep PR 2838 merged with 5 confirmed doc fixes
+summary: "Scheduled audit-docs run; the schedule started it and no human prompted any step (all agent-initiated). Three read-only reviewers returned: Freshness 2 findings, Single-home 10 (13 entries counting sub-parts), Coherence 7 plus nits. Two checkers fact-checked all 22 findings: 4 CONFIRMED (Freshness 1, Single-home 3a, Coherence 6 and 7), 1 CONFIRMED-BUT (Single-home 9 first bullet, corrected to keep one git command per call), 17 WRONG. Most WRONG verdicts were cuts that lost a rule or a pointer, or reviewer misreads (the tenant-layers doc has four sections, not one; a stated issue placement beat two Mis-location moves). I applied only checker-confirmed text in one commit (5 files, +8/-8, none Human-only). Two code-review subagents (Standards and Spec) were clean; I re-wrapped one long line after them, then gate:scoped passed on the final head. Pushed and opened sweep PR 2838, subscribed, posted my verdict and merged it via merge-pr after green CI. No issue filed and no escalation PR needed. Covered by B and C: docs/agents/*, CLAUDE.md, GLOSSARY.md, GLOSSARY-MAP.md, .claude/rules/*, layers/glassbox/GLOSSARY.md, ADRs 0003 0004 0009 0027, Skills audit-docs auto-triage clear-backlog close-session dependabot-sweep dispatch-subagents frictions-to-fixes guest-build guest-intake inspect-session log-session."
 prs:
   - "2838"
 docsRead:
@@ -100,18 +100,19 @@ frictions:
   - description: "Reviewer findings were mostly wrong (17 of 22): reviewers proposed cuts without checking what each original sentence carried, costing two checker runs."
     solution: Tell reviewers to list each rule and pointer in the original before proposing a cut, as the checkers must.
     severity: minor
-durationSec: 684
+durationSec: 784
 models:
-  claude-sonnet-5-5: 60
+  claude-sonnet-5-5: 79
 toolCounts:
-  Bash: 18
-  Skill: 4
+  Bash: 24
+  Skill: 5
   Agent: 7
-  ReadNotifications: 1
+  ReadNotifications: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - .agents/skills/dispatch-subagents/SKILL.md
   - .agents/skills/frictions-to-fixes/impl-brief.md
@@ -221,43 +222,43 @@ subagents:
     durationSec: 56
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 7.2
+    tokenShare: 6.5
   - type: general-purpose
     task: "Audit B: Single-home"
     durationSec: 197
     toolCalls: 18
     modelCalls: 16
-    tokenShare: 15.2
+    tokenShare: 13.8
   - type: general-purpose
     task: "Audit C: Coherence"
     durationSec: 244
     toolCalls: 29
     modelCalls: 20
-    tokenShare: 18.8
+    tokenShare: 17
   - type: general-purpose
     task: Fact-check findings, half 1
     durationSec: 168
     toolCalls: 27
     modelCalls: 23
-    tokenShare: 11.6
+    tokenShare: 10.6
   - type: general-purpose
     task: Fact-check findings, half 2
     durationSec: 113
     toolCalls: 21
     modelCalls: 18
-    tokenShare: 9.5
+    tokenShare: 8.7
   - type: general-purpose
     task: "Review: Standards axis"
     durationSec: 32
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 5
+    tokenShare: 4.6
   - type: general-purpose
     task: "Review: Spec axis"
     durationSec: 24
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 4.8
+    tokenShare: 4.4
 gitBranch: claude/festive-mayer-oby4l9
 entrypoint: remote_trigger
 cliVersion: 2.1.318
