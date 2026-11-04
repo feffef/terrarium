@@ -25,16 +25,6 @@ fixes:
     date: "2026-10-31"
     summary: "CLAUDE.md and the clear-backlog workflows' shared brief line ask each subagent to give every count, id or attribution with its source (command or file:line) or mark it unverified."
 occurrences:
-  - session: session_012f7o6FcYxq1MWxvsdgKS6m
-    date: "2026-10-20"
-    severity: moderate
-    description: "First-round picks relayed the triage agents' claims (e.g. #2310 all trailing ampersand, #2312 one repo-caused case) that a session check then overturned on all three issues."
-    solution: "clear-backlog §2 could have the main session check a regression issue's cited sessions with inspect-session before grilling, not only on owner request."
-  - session: session_01MKHvrDA9VoqiKWSG6QjpE2
-    date: "2026-10-20"
-    severity: minor
-    description: "My #2329 build brief copied the triage agent's replacement example without checking the pages; review found it already closes 10 of 15 specimens, so I cut it by hand."
-    solution: "When a brief proposes example wording to stop repetition, grep the content for it first."
   - session: session_01HcMFbKDTkG7hs2VhByAs4b
     date: "2026-10-21"
     severity: nit
@@ -150,3 +140,8 @@ occurrences:
     severity: nit
     description: "The query researcher gave the Journal Excerpt range as 33-43; it is 33-42, and the writer lost a test run finding it"
     solution: "Researchers check an Excerpt range with cat -A for a trailing blank line"
+  - session: session_013zxzePui7aGrhHSAUCjE85
+    date: "2026-11-03"
+    severity: nit
+    description: "I put the claim that frictions-to-fixes and guest-build say unpushed in the PR body from the Spec reviewer's report before checking; a grep afterwards confirmed it."
+    solution: "Grep each cited line before writing it into a PR body, as CLAUDE.md says."

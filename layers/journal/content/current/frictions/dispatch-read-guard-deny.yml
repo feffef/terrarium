@@ -149,3 +149,28 @@ occurrences:
     severity: nit
     description: "The first Workflow call was blocked by the dispatch-read guard: I had not read the dispatch-subagents Skill, which CLAUDE.md requires before a subagent brief. A workflow run counts as one."
     solution: "The guard worked as designed; clear-backlog §1 could name the dispatch-subagents read before the first Workflow call."
+  - session: session_013zxzeR4cgWA8MkV51fqC4t
+    date: "2026-11-03"
+    severity: nit
+    description: "First clear-backlog-explore Workflow call was blocked until I read dispatch-subagents; the Skill doesn't say that read comes first"
+    solution: "clear-backlog §1 could name dispatch-subagents as a prerequisite before running the workflows"
+  - session: session_013zxzeQrhKwVsWaJZV8Bs7y
+    date: "2026-11-03"
+    severity: minor
+    description: "First review Agent dispatch was blocked by the dispatch-read guard because I had not read dispatch-subagents."
+    solution: "Read dispatch-subagents before writing any subagent brief."
+  - session: session_013zxzeRUFEQvJ2mE6PXbv3w
+    date: "2026-11-03"
+    severity: nit
+    description: "My first Agent call was blocked by the dispatch-read guard because I had not read dispatch-subagents; one wasted call."
+    solution: "Read dispatch-subagents before the first brief in a prune run."
+  - session: session_013zxzeQbPLMkHvh94sawgDU
+    date: "2026-11-03"
+    severity: minor
+    description: "First Workflow call failed twice: the dispatch-read guard wanted dispatch-subagents read first, and I had mistyped the session id with an extra letter."
+    solution: "Read dispatch-subagents before the first Workflow call; copy the session id from the attribution template instead of retyping it."
+  - session: session_013zxzePsSguQyDiqnq52irG
+    date: "2026-11-04"
+    severity: nit
+    description: "First Agent call for the fact-check was blocked until I read dispatch-subagents; the digest Skill does not say that read comes first."
+    solution: "Name the dispatch-subagents read in the digest Skill's fact-check step."

@@ -51,3 +51,8 @@ occurrences:
     severity: nit
     description: "Standards reviewer flagged missing screenshots I had already taken, because its follow-up brief didn't say so"
     solution: "Name the checks already done, with their outputs, in a follow-up review brief"
+  - session: session_013zxzeSAtjCQiatdUuuFCRJ
+    date: "2026-11-03"
+    severity: nit
+    description: "The researcher brief I filled in kept the placeholder phrase listed in the run notes below, which named a list that did not exist; I patched it with sed."
+    solution: "Fill briefs from one script that asserts no placeholder text is left, and keep the run notes out of the brief."

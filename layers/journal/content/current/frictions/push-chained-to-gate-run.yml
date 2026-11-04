@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-22"
     summary: "git-conventions.md's chaining rule now forbids a push or other state-changing git only when it comes later in the same command as a gate or test run."
 occurrences:
-  - session: session_01FTPnEsW1XNhaqYFdxaE24v
-    date: "2026-10-20"
-    severity: moderate
-    description: "Pushed 423b029e in the same command that printed GATE_EXIT=2, so a typecheck failure reached CI on PR #2345; git-conventions.md forbids exactly this chaining."
-    solution: "Run the gate alone, read its exit status in a separate step, and only then push; a guard could deny git push in a command that also reads a gate log."
   - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
     date: "2026-10-22"
     severity: minor

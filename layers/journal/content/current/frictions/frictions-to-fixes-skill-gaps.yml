@@ -90,3 +90,8 @@ occurrences:
     severity: minor
     description: "The third regression issue had no good candidate: the remaining moderate regressions were owner-decided or superseded, yet the Skill says to file the top three anyway."
     solution: "Let the Skill skip a regression whose use case was removed or whose half the owner chose to keep."
+  - session: session_013zxzeSrSkYPpnoS2ag6EbC
+    date: "2026-11-03"
+    severity: minor
+    description: "The Skill ranks regressions by highest severity since the fix but gives no tie-break; four were moderate with one occurrence each, and I picked the third by horizon count."
+    solution: "Say how to break ties, or allow fewer than three when the remaining candidates are superseded or server faults."

@@ -26,3 +26,8 @@ occurrences:
     severity: nit
     description: "Subagents broke brief lines or hook-requested reads: the sonnet rater used cd with git, and several never read git-conventions.md after the hook asked, because their calls were read-only."
     solution: "The hook's wording could say read-only show, diff and ls-tree calls need no read, so agents stop reporting it as a miss."
+  - session: session_013zxzeSkTLmRxa2PWgt3kPw
+    date: "2026-11-02"
+    severity: nit
+    description: "Several subagents ran git log/show before reading docs/agents/git-conventions.md, which CLAUDE.md requires first"
+    solution: "Name git-conventions.md in the rater, researcher and writer briefs' read-first lists"

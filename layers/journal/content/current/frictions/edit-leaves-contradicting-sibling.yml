@@ -13,11 +13,6 @@ fixes:
     date: "2026-11-01"
     summary: "CLAUDE.md Self-verification: after changing a type or a test, run pnpm typecheck and the touched spec before gate:scoped."
 occurrences:
-  - session: session_012f7o6FcYxq1MWxvsdgKS6m
-    date: "2026-10-20"
-    severity: minor
-    description: "#2319 left pr-workflow step 4 demanding a code-review sha for PRs the new skip exempted, a contradiction I only found when the owner asked what guarantees review."
-    solution: "When an ADR change adds a skip, grep every consumer of the skipped step (merge-pr.ts verdict, step 4) in the same PR."
   - session: session_019CbZiWqLbydExXQCmHRDyg
     date: "2026-10-22"
     severity: minor
@@ -33,3 +28,8 @@ occurrences:
     severity: minor
     description: "gate:scoped failed twice (e2e assertion used a Playwright matcher the suite lacks; Popular order assertion broke under the cap) because I did not grep the tests first."
     solution: "Grep tests for the behaviour before changing it, and run typecheck on test edits."
+  - session: session_013zxzeSvdGhiM7SLEUgzvmF
+    date: "2026-11-01"
+    severity: minor
+    description: "The planning writer linked a work-queue anchor that the git-github writer removed in the same run; only code-review found it."
+    solution: "Add to writer-brief: link a section of a page another writer edits this run without an anchor, or ask the coordinator."
