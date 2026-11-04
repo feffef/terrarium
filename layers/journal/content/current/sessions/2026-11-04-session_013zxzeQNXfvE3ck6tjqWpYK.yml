@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQNXfvE3ck6tjqWpYK
 startedAt: 2026-11-04T22:17:03Z
-endedAt: 2026-11-04T22:38:07Z
+endedAt: 2026-11-04T22:41:42Z
 kind: interactive
 goal: Make a recorded fix reopen an accepted Friction Ledger entry
-status: in-review
-outcome: Rule and five reopened entries are in PR 2846 with the gate green; waiting on CI and merge
-summary: "The owner asked why the stop-hook-nag cluster was still accepted after fix 2828. I traced it: the ledger never recomputes the accepted status, and nothing reset it when a fix was recorded. The owner chose (human-instructed) to change the rule, and answered two design questions: reset at write time in ledger-set.ts, and any recorded fix triggers it. I built that with a test and comment updates. A mid-session ask from the owner (human-instructed) had me list the other accepted entries that got fixes after acceptance; the owner then said to reopen those six in the same PR. I reopened five, because relayed-subagent-claims was re-accepted after its last fix; I found that while verifying, and the first list (from git first-add dates) was wrong about it. The owner also asked why acceptance has no UTC timestamp; I answered that none is stored, offered a proposal, and did not build it (a stored field needs the owner to settle its shape). Agent- initiated: the review round (code-review, two small fixes), softening the stop-hook-nag note, and opening and subscribing to the PR as ADR-0003 requires. Open: whether the stop-hook-nag ref condition counts as met is the owner's call; stale ref text on the reopened entries is kept as history."
+status: completed
+outcome: Rule and five reopened entries merged in PR 2846 after a green gate
+summary: "The owner asked why the stop-hook-nag cluster was still accepted after fix 2828. I traced it: the ledger never recomputes the accepted status, and nothing reset it when a fix was recorded. The owner chose (human-instructed) to change the rule, and answered two design questions: reset at write time in ledger-set.ts, and any recorded fix triggers it. I built that with a test and comment updates. A mid-session ask from the owner (human-instructed) had me list the other accepted entries that got fixes after acceptance; the owner then said to reopen those six in the same PR. I reopened five, because relayed-subagent-claims was re-accepted after its last fix; I found that while verifying, and the first list (from git first-add dates) was wrong about it. The owner also asked why acceptance has no UTC timestamp; I answered that none is stored, offered a proposal, and did not build it (a stored field needs the owner to settle its shape). Agent- initiated: the review round (code-review, two small fixes), softening the stop-hook-nag note, and opening and subscribing to the PR as ADR-0003 requires, and merging it with merge-pr.ts once CI was green and no ADR-0004 exception applied (merge commit cb0861688). Open: whether the stop-hook-nag ref condition counts as met is the owner's call; stale ref text on the reopened entries is kept as history."
 prs:
   - "2846"
 docsRead:
@@ -72,24 +72,30 @@ frictions:
   - description: Acceptance time is stored nowhere and fix dates have day precision, so judging whether a fix came after acceptance needed git history work.
     solution: Propose a stored acceptedOn timestamp to the owner as a data-shape question.
     severity: minor
-durationSec: 1264
+durationSec: 1479
 models:
-  claude-sonnet-5-5: 111
+  claude-sonnet-5-5: 138
 toolCounts:
   Grep: 5
   Read: 12
-  Bash: 27
+  Bash: 32
   AskUserQuestion: 1
   Glob: 1
-  Edit: 7
-  ToolSearch: 2
+  Edit: 9
+  ToolSearch: 3
   TaskStop: 1
-  Skill: 4
+  Skill: 5
   Agent: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/skills/frictions-to-fixes/scripts/ledger-set.ts
   - .agents/skills/frictions-to-fixes/tests/unit/ledger-set.spec.ts
@@ -208,13 +214,13 @@ subagents:
     durationSec: 25
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 9.4
+    tokenShare: 7.5
   - type: general-purpose
     task: Spec review of ledger diff
     durationSec: 38
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 10.6
+    tokenShare: 8.5
 gitBranch: claude/vibrant-shannon-94ef8u
 entrypoint: remote
 cliVersion: 2.1.318
