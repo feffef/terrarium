@@ -207,7 +207,7 @@ function threadNumber(url: string): number {
 }
 
 export function ownerCorrections(since: string | undefined, cwd = root): Candidate[] {
-  fetchOriginMain(cwd, 'origin', undefined, true)
+  fetchOriginMain(cwd, 'origin', 60_000, true)
   const cutoff = since ?? lastDecisionsCommit(cwd)
   const access = resolveAccess(cwd)
 

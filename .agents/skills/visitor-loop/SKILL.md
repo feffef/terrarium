@@ -87,7 +87,7 @@ tally in your scratchpad:
   by its URL; one line may name several): a rejected approach or standing
   preference becomes one new line in `decisions.md` (committed with step 5's
   PR; say "decisions.md" on the tally line); anything else is marked *not a
-  ruling (why)*.
+  ruling (why)*. Run it alone, in the background, to a file; it can take minutes.
 - **Filters.** Then drop anything [`decisions.md`](decisions.md) rules out or
   that is in the same family as one of its rulings,
   anything an open or closed issue/PR already covers (list, don't search: filter
