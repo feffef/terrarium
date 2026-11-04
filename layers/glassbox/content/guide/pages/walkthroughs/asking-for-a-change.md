@@ -1,8 +1,8 @@
 ---
 title: Asking an agent for a change
 description: How a request to an agent session becomes a merged PR, and the log the session leaves on main.
-revision: '0fe8681d9e1aabea7d1933903cbb92aab03ca527'
-revisionDate: '2026-11-03'
+revision: 'ba33716c55a69685f50c3e6a8b72737c4aba880d'
+revisionDate: '2026-11-04'
 ---
 
 Someone with write access asks an agent for a change. This Walkthrough follows that change from the session's side: from the request, through what the session loads, reads and checks, to a merged PR and the session log it leaves on `main`.
@@ -25,7 +25,7 @@ The session gets its own copy of the repository. A `SessionStart` hook in `.clau
 
 ## 3. It reads its instructions
 
-`CLAUDE.md` loads into the session at once. Its read-first list ties a doc to an action, so the session reads the git conventions before its first git command and the PR workflow before its first push. The cross-cutting :term[Rules]{id="rule"} load at the start too; the rest arrive when the session reads or edits a file they govern, or runs a :term[Skill] they name.
+`CLAUDE.md` loads into the session at once. Its read-first list ties a doc to an action, so the session reads the git conventions before its first git command and the PR workflow before it opens, updates or merges a PR. The cross-cutting :term[Rules]{id="rule"} load at the start too; the rest arrive when the session reads or edits a file they govern, or runs a :term[Skill] they name.
 
 ::lessons
 [CLAUDE.md](/t/glassbox/guide/claude-code/claude-md) · [Path-specific rules](/t/glassbox/guide/claude-code/path-scoped-rules) · [Claude Code Skills](/t/glassbox/guide/claude-code/skills)
@@ -41,7 +41,7 @@ The session edits on a feature branch, never on `main`, and may hand parts of th
 
 ## 5. It checks its own work
 
-Before the first push, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find. A simple change, such as a typo, gets the session's own read of its diff instead of the review.
+Before it opens the PR, the session runs `pnpm gate:scoped`, the local run of the :term[Gate], and the `code-review` Skill, which reviews the committed diff against the repo's standards and against the request. It fixes what they find. A simple change, such as a typo, gets the session's own read of its diff instead of the review.
 
 ::lessons
 [Merge gate](/t/glassbox/guide/verification/gate) · [Type checking](/t/glassbox/guide/verification/type-checking) · [Linting](/t/glassbox/guide/verification/linting) · [Testing](/t/glassbox/guide/verification/unit-and-e2e-tests)
