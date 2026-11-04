@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeT8tDd5GPJiRNZRA4J
 startedAt: 2026-11-04T22:46:38Z
-endedAt: 2026-11-04T23:34:04Z
+endedAt: 2026-11-04T23:36:31Z
 kind: delegated
 goal: "Improve the Glass Box guide: one glassbox-improve run"
-status: in-review
-outcome: "Run done and its PR open: 12 false claims fixed, 30 edits merged, 8 structural steps taken; PR awaits CI and the merge."
-summary: "The one human prompt was the kickoff, the `/glassbox-improve` Skill; everything else (which items and steps to skip or take, the churn filters, filing issue #2848, opening PR #2847) was agent-initiated within that Skill's Remit and ADR-0003's PR rule, with no further human approval. The run read all 66 guide pages with 11 raters (A, B and nine claim-check shards), tallied 72 items and 22 steps, and had 17 researchers confirm them. I filtered 9 items and 3 steps as undoing recent runs or already subsumed, and the researchers refused the step to fold Invariant tests into Testing, which an earlier run had already dropped. 16 opus writers in worktrees then fixed 48 items and took 8 steps (fold of Out-of-scope records into Work queue; three moves of duplicated reasoning to one home; a new Session transcripts Lesson; two drafts promoted; the Routines draft cut). All 30 gated pages beat their old versions with blind judges (a pass rate that deserves suspicion), and Blocking hooks won Reasoning against CLAUDE.md and Path-specific rules. Code-review found one real defect (the Layers excerpt), fixed in one round. Surprises: the tally re-raised steps grades.yml already held as dropped, crashed on a step without a gist, and the lesson-step writer brief never said to write the Lesson, so I resumed that writer. A reviewer subagent silently detached the primary checkout, so my fix-round merges and the record commits sat on a detached HEAD and the PR branch stayed stale until check:worktrees flagged it; I fast-forwarded the branch and pushed. Still open: CI, a verdict comment and the merge by merge-pr.ts; three proposed DECISIONS.md lines; and issue #2848 for the Skill's script problems."
+status: completed
+outcome: "Run merged in one PR: 12 false claims fixed, 30 edits merged, 8 structural steps taken."
+summary: "The one human prompt was the kickoff, the `/glassbox-improve` Skill; everything else (which items and steps to skip or take, the churn filters, filing issue #2848, opening PR #2847) was agent-initiated within that Skill's Remit and ADR-0003's PR rule, with no further human approval. The run read all 66 guide pages with 11 raters (A, B and nine claim-check shards), tallied 72 items and 22 steps, and had 17 researchers confirm them. I filtered 9 items and 3 steps as undoing recent runs or already subsumed, and the researchers refused the step to fold Invariant tests into Testing, which an earlier run had already dropped. 16 opus writers in worktrees then fixed 48 items and took 8 steps (fold of Out-of-scope records into Work queue; three moves of duplicated reasoning to one home; a new Session transcripts Lesson; two drafts promoted; the Routines draft cut). All 30 gated pages beat their old versions with blind judges (a pass rate that deserves suspicion), and Blocking hooks won Reasoning against CLAUDE.md and Path-specific rules. Code-review found one real defect (the Layers excerpt), fixed in one round. Surprises: the tally re-raised steps grades.yml already held as dropped, crashed on a step without a gist, and the lesson-step writer brief never said to write the Lesson, so I resumed that writer. A reviewer subagent silently detached the primary checkout, so my fix-round merges and the record commits sat on a detached HEAD and the PR branch stayed stale until check:worktrees flagged it; I fast-forwarded the branch and pushed. CI's gate went green on the final head (the first green signals named the stale head, which I did not trust); I posted the verdict and merge-pr.ts merged PR 2847 as 5839152 after checking that main had moved by one session log only. Still open for a person: three proposed DECISIONS.md lines, and issue #2848 for the Skill's script problems."
 prs:
   - "2847"
 docsRead:
@@ -261,7 +261,7 @@ skillsUsed:
   - name: code-review
     reason: Standards and Spec review of the run branch before the PR
   - name: close-session
-    reason: PR is open
+    reason: PR opened, then merged
   - name: log-session
     reason: this log
 frictions:
@@ -292,20 +292,26 @@ frictions:
   - description: Pushed the run branch only when the Stop hook reported 35 unpushed commits, not early and often as ADR-0003 asks.
     solution: Push the run branch right after step 1's branch cut and after each merge round.
     severity: nit
+  - description: Docs hosts (nuxt.com, vuejs.org, docs.github.com, content.nuxt.com) returned 403 through the proxy, so a dozen raters, researchers and writers each rebuilt a raw GitHub fallback.
+    solution: Name the raw.githubusercontent.com source paths in the rater, researcher and writer briefs, or allow the docs hosts.
+    severity: minor
+  - description: About a hundred long subagent hand-backs arrived in my context, each re-read to decide the next step; the skill saves them to files but still wants me to read them.
+    solution: Have each hand-back end in a short machine-readable verdict block and give the lead only that, with the full text read from the saved file when needed.
+    severity: minor
   - description: "SHELL-READ-DETECTION: .agents/skills/glassbox-improve/researcher-brief.md was credited from shell output, but the session marked it (not read)"
     solution: Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts
     severity: moderate
   - description: "SHELL-READ-DETECTION: .agents/skills/glassbox-improve/writer-brief.md was credited from shell output, but the session marked it (not read)"
     solution: Check the transcript for which command (or subagent) read it; only if none did, tighten scripts/session/shell-reads.ts
     severity: moderate
-durationSec: 2847
+durationSec: 2993
 models:
-  claude-sonnet-5-5: 406
+  claude-sonnet-5-5: 439
 toolCounts:
   Read: 10
-  Skill: 4
-  Bash: 70
-  ToolSearch: 5
+  Skill: 5
+  Bash: 75
+  ToolSearch: 6
   mcp__github__list_pull_requests: 2
   Agent: 84
   SendMessage: 3
@@ -315,6 +321,10 @@ toolCounts:
   mcp__github__update_pull_request: 1
   mcp__github__issue_write: 1
   Write: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  Edit: 4
 filesEdited:
   - layers/glassbox/content/guide/pages/terrarium-practice/09.self-improvement-loop.md
   - layers/glassbox/content/guide/pages/terrarium-practice/04.session-logs.md
@@ -516,7 +526,7 @@ subagents:
     durationSec: 415
     toolCalls: 44
     modelCalls: 39
-    tokenShare: 3.2
+    tokenShare: 3.1
   - task: Rater B (Placement, steps)
     model: sonnet
     durationSec: 250
@@ -534,25 +544,25 @@ subagents:
     durationSec: 598
     toolCalls: 74
     modelCalls: 69
-    tokenShare: 4.5
+    tokenShare: 4.3
   - task: Rater C3 claim check
     model: sonnet
     durationSec: 641
     toolCalls: 84
     modelCalls: 82
-    tokenShare: 5.3
+    tokenShare: 5.1
   - task: Rater C4 claim check
     model: sonnet
     durationSec: 606
     toolCalls: 71
     modelCalls: 67
-    tokenShare: 3.7
+    tokenShare: 3.6
   - task: Rater C5 claim check
     model: sonnet
     durationSec: 544
     toolCalls: 72
     modelCalls: 69
-    tokenShare: 4
+    tokenShare: 3.9
   - task: Rater C6 claim check
     model: sonnet
     durationSec: 274
@@ -564,19 +574,19 @@ subagents:
     durationSec: 486
     toolCalls: 63
     modelCalls: 57
-    tokenShare: 3.8
+    tokenShare: 3.7
   - task: Rater C8 claim check
     model: sonnet
     durationSec: 527
     toolCalls: 62
     modelCalls: 55
-    tokenShare: 3.2
+    tokenShare: 3.1
   - task: Rater C9 claim check
     model: sonnet
     durationSec: 164
     toolCalls: 26
     modelCalls: 23
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Research claude-code items
     model: sonnet
     durationSec: 181
@@ -696,7 +706,7 @@ subagents:
     durationSec: 366
     toolCalls: 42
     modelCalls: 24
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Write step ADRs move
     model: opus
     durationSec: 1118
@@ -708,13 +718,13 @@ subagents:
     durationSec: 467
     toolCalls: 67
     modelCalls: 34
-    tokenShare: 1.8
+    tokenShare: 1.7
   - task: Write step promote session-log
     model: opus
     durationSec: 394
     toolCalls: 60
     modelCalls: 36
-    tokenShare: 1.7
+    tokenShare: 1.6
   - task: Write step promote reading-across
     model: opus
     durationSec: 220
@@ -738,19 +748,19 @@ subagents:
     durationSec: 333
     toolCalls: 47
     modelCalls: 30
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Write git-github items
     model: opus
     durationSec: 407
     toolCalls: 73
     modelCalls: 42
-    tokenShare: 2
+    tokenShare: 1.9
   - task: Write nuxt-vue items
     model: opus
     durationSec: 1111
     toolCalls: 56
     modelCalls: 43
-    tokenShare: 2.2
+    tokenShare: 2.1
   - task: Write verification items
     model: opus
     durationSec: 200
@@ -762,7 +772,7 @@ subagents:
     durationSec: 332
     toolCalls: 50
     modelCalls: 29
-    tokenShare: 1.4
+    tokenShare: 1.3
   - task: Write skill-pack items
     model: opus
     durationSec: 247
@@ -792,7 +802,7 @@ subagents:
     durationSec: 10
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Gate judge 4
     model: sonnet
     durationSec: 9
@@ -810,7 +820,7 @@ subagents:
     durationSec: 9
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Gate judge 7
     model: sonnet
     durationSec: 15
@@ -828,7 +838,7 @@ subagents:
     durationSec: 9
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Gate judge 10
     model: sonnet
     durationSec: 10
@@ -846,13 +856,13 @@ subagents:
     durationSec: 11
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Gate judge 13
     model: sonnet
     durationSec: 13
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Gate judge 14
     model: sonnet
     durationSec: 13
@@ -882,7 +892,7 @@ subagents:
     durationSec: 10
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 0.3
+    tokenShare: 0.2
   - task: Gate judge 19
     model: sonnet
     durationSec: 10
