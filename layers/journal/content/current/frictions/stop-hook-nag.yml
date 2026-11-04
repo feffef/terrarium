@@ -2,7 +2,7 @@ name: stop-hook-nag
 summary: >-
   An end-of-turn reminder told agents to commit and push while checks were still running.
 cause: >-
-  The Stop hook demands commit and push on every turn while a gate, build or fact-check subagent is still running, against ADR-0004's push-after-gate rule.
+  The Stop hook demands commit and push on every turn while a gate, build or fact-check subagent is still running, against ADR-0004's push-after-gate rule. Since PR #2828 (2026-11-04) ADR-0003 and ADR-0004 let agents push their branch early and often (a push opens nothing) and open the PR only after code-review and the gate, so a pushed commit on the Stop hook's ask no longer breaks a rule.
 surface: outside
 status: accepted
 ref: "issue #2233: the owner accepts the cost, since the nag comes from the harness-side stop-hook-git-check.sh (issue #1653) and repo rules already say to decline it. Not for a survey to re-propose: the owner alone may revisit pushing the branch early and opening the PR after review, once the pr-workflow.md prune trial is judged"
@@ -13,37 +13,10 @@ fixes:
   - pr: 1612
     date: "2026-10-05"
     summary: "Moved the end-of-turn reminder caveat into the main project instructions so more sessions read it."
+  - pr: 2828
+    date: "2026-11-04"
+    summary: "ADR-0003/0004 and pr-workflow.md: agents may push early and often, the PR opens only after review and the gate; git-conventions says to push when the Stop hook asks."
 occurrences:
-  - session: session_011G3PKUqDog2WRSuqypmuJX
-    date: "2026-10-20"
-    severity: nit
-    description: "Stop hook asked three times to commit and push while gate and fact-check were still running, against ADR-0004 order."
-    solution: "Have the hook skip the nag while a background gate is running."
-  - session: session_01Uq2Kx5jumw8Va6DETgxNV8
-    date: "2026-10-20"
-    severity: nit
-    description: "The Stop hook asked to push twice while the ledger gate and impl agents were still running and the skill said not to push before the gate."
-    solution: "None; accepted stop-hook-nag cluster."
-  - session: session_01R6bzvTEBJCmagf7BbWfBqG
-    date: "2026-10-20"
-    severity: nit
-    description: "Stop hook asked to push an unpushed commit while the background gate was still running."
-    solution: "Declined until the gate was green, per ADR-0004; the hook could skip while a gate log is still open."
-  - session: session_016zEtXv32CmX793LgZvt7Hm
-    date: "2026-10-20"
-    severity: minor
-    description: "The Stop hook asked me twice to push before the gate and probe finished; I held the push per ADR-0004."
-    solution: "Stop hook could skip the nag while a background gate or subagent runs."
-  - session: session_01FTPnEsW1XNhaqYFdxaE24v
-    date: "2026-10-20"
-    severity: nit
-    description: "The Stop hook asked to push five times while the gate and reviews ran; ADR-0004 says hold, so each nag cost a turn."
-    solution: "Have the git-check Stop hook stay quiet while a gate:scoped run for the branch is in progress or a review agent is running."
-  - session: session_01VH74k3Z27QtjR19XNC76qm
-    date: "2026-10-20"
-    severity: nit
-    description: "The Stop hook asked to push six times while the gate and reviews were still running and ADR-0004 forbids pushing before them."
-    solution: "Accepted cost (stop-hook-nag cluster, issue #2233)."
   - session: session_01Dz5nEANXqTtZzTki1C5ArD
     date: "2026-10-21"
     severity: nit
@@ -364,3 +337,48 @@ occurrences:
     severity: moderate
     description: "The Stop hook asked to push in 106 user turns (counted in the transcript) before the gate allowed it; each cost a turn to decline"
     solution: "~/.claude/stop-hook-git-check.sh is harness-owned: report upstream so it stays quiet while agents or a background command run, or after one decline"
+  - session: session_013zxzeSrSkYPpnoS2ag6EbC
+    date: "2026-11-03"
+    severity: nit
+    description: "The Stop hook asked twice to push the ledger commits before the pre-push gate and review had run, as ADR-0004 allows overriding."
+    solution: "Have the hook stay quiet while a gate run is in progress or on a branch with no PR yet."
+  - session: session_013zxzeSuptjybJT9eajhiUR
+    date: "2026-11-03"
+    severity: nit
+    description: "A Stop hook repeatedly asked me to push while review and gate were still running, contradicting the review-before-first-push rule."
+    solution: "Have the Stop hook skip its push prompt while a code-review or gate is pending, or say it defers to ADR-0004."
+  - session: session_013zxzeSAtjCQiatdUuuFCRJ
+    date: "2026-11-03"
+    severity: nit
+    description: "The Stop hook asked me repeatedly to push 25 commits while ADR-0004 required code-review and gate:scoped first; each turn I explained instead of working."
+    solution: "Let the unpushed-commit hook stay quiet until the review and gate have run, or have its message cite the ADR-0004 order."
+  - session: session_013zxzeSF22kmtzW5QWaTDTX
+    date: "2026-11-03"
+    severity: nit
+    description: "The Stop hook asked twice to push before the gate and review finished; ADR-0004 required waiting."
+    solution: "Stop hook could skip the nag while a gate run is in progress."
+  - session: session_013zxzeQH3GSc8uMpvhebnFr
+    date: "2026-11-03"
+    severity: nit
+    description: "The Stop hook asked me to push six times while the review and gate were still pending; each time I had to restate ADR-0004's 'even when the Stop hook asks'."
+    solution: "Have the Stop hook skip the nudge while the branch has no first push and a closure-review Skill is running, or point to the ADR-0004 rule in its message."
+  - session: session_013zxzeRUFEQvJ2mE6PXbv3w
+    date: "2026-11-03"
+    severity: nit
+    description: "The Stop hook asked me to push four times while the probe, review and gate were pending; ADR-0004 required waiting."
+    solution: "Have the Stop hook stay quiet while a probe, review or gate is pending."
+  - session: session_013zxzePCZc7PkwLBo6YoDJt
+    date: "2026-11-03"
+    severity: nit
+    description: "The mid-gate Stop hook asked repeatedly to push unreviewed commits, conflicting with the review-first rule."
+    solution: "Hook could skip the nag while a gate or review is in flight."
+  - session: session_013zxzePui7aGrhHSAUCjE85
+    date: "2026-11-03"
+    severity: minor
+    description: "I first looked for the push nag in the repo settings, then guessed it came from the harness, until the owner said it was in the home folder."
+    solution: "Read the stop-hook-nag ledger entry first (it names stop-hook-git-check.sh), or check ~/.claude/launcher-settings.json when a repo grep finds no such hook."
+  - session: session_013zxzePsSguQyDiqnq52irG
+    date: "2026-11-04"
+    severity: nit
+    description: "Stop hook asked three times to commit and push while the fact-check and gate were pending, contradicting the review-before-first-push rule."
+    solution: "Make the Stop hook skip when a gate or subagent is in flight."

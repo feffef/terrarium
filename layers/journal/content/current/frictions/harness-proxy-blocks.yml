@@ -2,10 +2,9 @@ name: harness-proxy-blocks
 summary: >-
   The hosting environment's network proxy blocked sites and downloads the work needed, with no way to override it in the session.
 cause: >-
-  The cloud agent proxy or its DNS refuses a host (github.com/user-attachments, content.nuxt.com, zod.dev, nitro.build, nuxt.com, docs.github.com, the deployed site) with a 403 or connection failure and no in-session override; the fix is to list the host and its workaround in environment-caveats.md, and since PR #2647 the Glass Box page guide fetches blocked GitHub docs from raw.githubusercontent.com. Signals: proxy 403, curl 000, a DNS failure from WebFetch. Auto-mode classifier denials (a deleted pushed branch, a review subagent's script, a force-with-lease push) with no shared fix also stay here; CI job logs are ci-job-logs-unreachable, Self-Modification denials auto-mode-self-modification-denials.
+  The cloud agent proxy or its DNS refuses a host (github.com/user-attachments, content.nuxt.com, zod.dev, nitro.build, nuxt.com, docs.github.com, the deployed site) with a 403 or connection failure and no in-session override; the fix is to list the host and its workaround in environment-caveats.md, and since PR #2647 the Glass Box page guide fetches blocked GitHub docs from raw.githubusercontent.com. Signals: proxy 403, curl 000, a DNS failure from WebFetch. Auto-mode classifier denials (a deleted pushed branch, a review subagent's script, a force-with-lease push) with no shared fix also stay here; CI job logs are ci-job-logs-unreachable, Self-Modification denials auto-mode-self-modification-denials. Since PR #2811 (2026-11-03) the orchestrator, not the subagent, pushes every reviewed branch, so a classifier denial no longer strands an agent's branch.
 surface: outside
-status: tracked
-ref: "issue #2695"
+status: open
 fixes:
   - pr: 2030
     date: "2026-10-15"
@@ -16,6 +15,9 @@ fixes:
   - pr: 2647
     date: "2026-10-28"
     summary: "Glass Box EVERY-PAGE.md falls back to fetching raw.githubusercontent.com/github/docs when docs.github.com is blocked, instead of sparse-cloning github/docs."
+  - pr: 2811
+    date: "2026-11-03"
+    summary: "dispatch-subagents: impl agents hand back an unpushed branch and the orchestrator pushes every reviewed branch, so a classifier-denied subagent push cannot strand it."
 occurrences:
   - session: session_015P9szA8dP4wxv4wiXkZcRZ
     date: "2026-10-24"

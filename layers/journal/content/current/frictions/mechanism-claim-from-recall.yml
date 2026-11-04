@@ -160,3 +160,13 @@ occurrences:
     severity: moderate
     description: "My first README told readers that asking an agent in the clone needs no install, though the SessionStart hook runs pnpm install and guards need node_modules; the owner and a second review caught the gaps"
     solution: "Before telling readers what a local session needs, read .claude/settings.json hooks, not just package.json"
+  - session: session_013zxzeSAtjCQiatdUuuFCRJ
+    date: "2026-11-03"
+    severity: minor
+    description: "I told the owner /retro was not a skill without listing .claude/skills; it was a repo Skill, and my wrong answer cost one round trip."
+    solution: "Before saying a slash command doesn't exist, list .claude/skills and .agents/skills for it."
+  - session: session_013zxzeSuptjybJT9eajhiUR
+    date: "2026-11-03"
+    severity: minor
+    description: "Reviewers found many WRONG findings (9 of 15), mostly dated research-note text they read as stale present tense, which cost two checker runs."
+    solution: "Tell reviewers up front that docs/research notes are dated records; only flag claims the doc presents as current."

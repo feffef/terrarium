@@ -28,3 +28,13 @@ occurrences:
     severity: nit
     description: "Fix-round SendMessages to resumed writers did not repeat CLAUDE.md's ask for rule and doc verdicts; only the original briefs did"
     solution: "Include the verdict ask in every resume message"
+  - session: session_013zxzeSAtjCQiatdUuuFCRJ
+    date: "2026-11-03"
+    severity: nit
+    description: "I skipped CLAUDE.md's rule that every subagent brief asks for a verdict on each rule and doc: my re-judge and A-judge prompts left that request out."
+    solution: "Keep one shared prompt tail with the verdict request and use it for every wave."
+  - session: session_013zxzeQH3GSc8uMpvhebnFr
+    date: "2026-11-03"
+    severity: nit
+    description: "I dispatched 19 gate judges, 12 A judges and the review agents without the CLAUDE.md ask for verdicts on loaded docs and sourced counts; blind judges read only their brief by design."
+    solution: "Add the blind-judge exception to the CLAUDE.md subagent-brief rule, so the rule matches what glassbox-improve must do."

@@ -2,7 +2,8 @@ name: first-review-pass-misses-defect
 surface: safe
 summary: A build's first Standards and Spec review let a defect through that the session or a later review found.
 cause: "The Standards and Spec review of a clear-backlog-build branch passes a defect (a regex that rejects ordinary prose; a real gap in a rule's coverage flagged only as a judgement call) and the main session finds it reading the diff, or a later review round does. Signals: 'review passed', 'I caught it reading the diff', 'flagged as a mere judgement call', a fix round after the build reported ready."
-status: open
+status: tracked
+ref: "#2834"
 notes: |-
   2026-10-29 design: one line in clear-backlog-build's review brief for a gap against a 'never' clause dropped: two unrelated minors, both caught by the main session before the push; revisit if a defect reaches CI
   2026-11-03 design: no change: the newest miss came from the installed code-review Skill (ADR-0015, uneditable); the one editable surface, clear-backlog-build reviewPrompt, was not implicated since 2026-10-28; dropped: revisit if a defect reaches CI or recurs in a build workflow
@@ -32,3 +33,8 @@ occurrences:
     severity: moderate
     description: "My two-axis code-review missed bugs the owner's reviewer found: vote-array holes deciding a gate early, and a split without into escaping the churn guard"
     solution: "Give the Spec and Standards reviewers concrete adversarial inputs to try (out-of-order verdicts, missing optional fields) for each counting rule, not just the spec text"
+  - session: session_013zxzeR4cgWA8MkV51fqC4t
+    date: "2026-11-03"
+    severity: minor
+    description: "Build agents' review rounds left small spec mismatches (inspect-session asked for after_id/position no brief returns; ambiguous 'push it') that I fixed by hand and re-gated"
+    solution: "Reviewers marked them worthFixing false; mark a cheap wording mismatch worth fixing so the fix agent handles it"

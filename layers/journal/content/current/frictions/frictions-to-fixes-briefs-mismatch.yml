@@ -34,11 +34,6 @@ occurrences:
     severity: minor
     description: "Survey agent reported the survey brief pulls opposite ways on closed-issue search (brief says search_issues, github-integration.md says avoid it), and that --summary's max-severity column does not match the brief's 'since the latest PR' part (e)."
     solution: "Make --summary print the severity since the latest PR, and reconcile the search guidance in the brief with github-integration.md."
-  - session: session_01VH74k3Z27QtjR19XNC76qm
-    date: "2026-10-20"
-    severity: minor
-    description: "Design brief says read the full log of every occurrence, impossible for 35 occurrences; the design agent scripted extracts and listed what it read. It also gave no repo slug, so a GitHub read failed on a wrong owner."
-    solution: "Brief: full logs for moderate and above plus the newest three; give feffef/terrarium as owner/repo."
   - session: session_01CfTFFQrkwq1eUsDy61AJzz
     date: "2026-10-23"
     severity: minor
@@ -99,3 +94,8 @@ occurrences:
     severity: minor
     description: "Survey and design briefs assume doc-based Frictions and a date field in list-merges-since output; both were moot or missing for a script fix."
     solution: "Say which brief steps are skipped for a script fix, and add merge dates to list-merges-since."
+  - session: session_013zxzeSrSkYPpnoS2ag6EbC
+    date: "2026-11-03"
+    severity: minor
+    description: "The survey report omitted each regression's highest-severity-since, though its brief asks for it; I re-derived it from the summary file with grep."
+    solution: "Have the survey brief require the since value column copied per regression, or write the ranked list to a file."

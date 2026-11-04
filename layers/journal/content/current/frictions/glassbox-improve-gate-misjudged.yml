@@ -1,0 +1,20 @@
+name: glassbox-improve-gate-misjudged
+summary: Blind glassbox-improve gate judges read only their brief and voted against a correct page change because a question or a move's direction was unclear.
+cause: "A gate or election judge sees only the brief: a step's raw gist used as the receiving page's question made judges read it as taking facts off the page (three pages failed round one), and a move's source and target read the wrong way round on session-logs. Signals: 'gate question was the raw gist', 'misread a move's direction', 'voted against it', 'failed round one'.\" Since PR #2817 (2026-11-03; issue #2816 closed) a move's receiving page gets a question saying the facts moved to it (stepCriterion in grades.ts)."
+surface: safe
+status: open
+fixes:
+  - pr: 2817
+    date: "2026-11-03"
+    summary: "glassbox-improve v3 follow-up: grades.ts gate gives a move's or section's receiving page the question 'this page RECEIVES the facts, moved here', so judges no longer read it as taking facts off the page (#2816)."
+occurrences:
+  - session: session_013zxzeQZYwzDuf4JEncnqAa
+    date: "2026-11-02"
+    severity: minor
+    description: "A judge misread a move's direction on session-logs, read the target as the source, and voted against it"
+    solution: "judge-brief should name a move's source and target pages explicitly"
+  - session: session_013zxzeSAtjCQiatdUuuFCRJ
+    date: "2026-11-03"
+    severity: moderate
+    description: "Gate question for a move's receiving page was the step's raw gist, so judges read it as taking facts off the page; three pages failed round one."
+    solution: "Build each gate question per page from the step's pages and into, so the receiving page's question says the fact arrives there (issue 2816)."

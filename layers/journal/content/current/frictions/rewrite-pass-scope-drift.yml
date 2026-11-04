@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-23 design: a rewrite-discipline line dropped: the two newer sessions were caught by code-review before merge, no session shipped the drift, and the candidate homes sit in open Prune Trial territory.
 occurrences:
-  - session: session_01FTPnEsW1XNhaqYFdxaE24v
-    date: "2026-10-20"
-    severity: minor
-    description: "First rewrite pass dropped several pointers and why-clauses and a no-argument default while claiming every rule kept; the spec review caught them."
-    solution: "Before committing a whole-file rewrite, diff an old-vs-new rule checklist myself rather than relying on review to find losses."
   - session: session_0149fVyZ37qWGMuwVPw3Uryc
     date: "2026-10-22"
     severity: nit
@@ -33,3 +28,8 @@ occurrences:
     severity: nit
     description: "First prune dropped four rules and the ledger claimed every rule was kept; code-review caught it before the push."
     solution: "List every rule in the section before trimming and check each against the new text."
+  - session: session_013zxzeRUFEQvJ2mE6PXbv3w
+    date: "2026-11-03"
+    severity: minor
+    description: "My first prune cut the ADR bullet and typecheck clause in ways that lost meaning; reviewers caught both before the push and I reverted them."
+    solution: "Before committing a CLAUDE.md wording cut, reread each cut bullet against the rule summaries it paraphrases."
