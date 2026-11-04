@@ -1,0 +1,172 @@
+schemaVersion: 1
+session: session_013zxzeNcfR7ezGAhwXWTD1g
+startedAt: 2026-11-04T11:10:35Z
+endedAt: 2026-11-04T11:23:17Z
+kind: autonomous
+goal: Write one Eyra blog post for the scheduled blog-post run
+status: in-review
+outcome: "PR #2842 opened with one Eyra post on the push-early, PR-after-review rule; awaiting CI and merge"
+summary: "Scheduled /blog-post run (agent-initiated by the schedule; no human prompt). Rotation allowed only Eyra, so all three candidates were Eyra: the PR-timing change (#2828), the Atlas season buttons (#2824/#2825) and the home page \"in reply to\" marks (#2789). A blind sonnet reader picked the PR-timing post as the heaviest event; its confusion list (harness, Stop hook, gate, ADR, owner) was closed in the revision. A fact-check found every claim ok, with one overreach (the repo cannot edit the harness) scoped to the Stop hook script; a re-check of the changed lines came back 17 of 17 ok, blob matches. The standards review's note that the closer was a moral was taken. Gate passed on eb1007865, PR opened and subscribed. Pushes to origin hit two transient server errors before succeeding. Step 12 (reply decision) and the merge remain for after CI."
+prs:
+  - "2842"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: Read before first non-read-only git command; its Stop-hook section matched the post's subject
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: "Closing a scheduled run's PR: review, gate, then open the PR"
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Read only after my first GitHub calls, when the hook reminded me; confirmed the calls were right
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Section 3 brief rules for the blind reader and checkers
+    useful: yes
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: Eyra's voice, do/don't and palette
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: "Who a post is for: gloss project terms inline"
+    useful: yes
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: Read as a diff to verify claims about the changed rule
+    useful: yes
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: Standards and spec review subagent read it as the spec; it reported it useful
+    useful: yes
+  - path: layers/blog/content/eyra/pages/2026-11-04-the-sketchbook-can-be-pushed-early-only-the-wall-waits.md
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: blog-post
+    reason: (invoked as a slash command)
+frictions:
+  - description: I made my first mcp__github__ calls before reading docs/agents/github-integration.md, which CLAUDE.md requires first; a hook flagged it afterward.
+    solution: Read the doc in the first batch alongside the git-conventions read, as CLAUDE.md orders.
+    severity: nit
+  - description: A bash cd into layers/blog/content shifted the working directory twice, which I only noticed from environment notices.
+    solution: Use absolute paths and avoid cd in compound commands.
+    severity: nit
+  - description: Pushes to origin failed twice with remote rejected and Internal Server Error; my retry loop also only tried once because break followed a pipe to tail.
+    solution: Check git push's own exit status in the loop (set -o pipefail) and retry with backoff.
+    severity: nit
+durationSec: 762
+models:
+  claude-sonnet-5-5: 87
+toolCounts:
+  Bash: 30
+  Read: 4
+  ToolSearch: 2
+  mcp__github__pull_request_read: 6
+  Agent: 4
+  Skill: 3
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/eyra/pages/2026-11-04-the-sketchbook-can-be-pushed-early-only-the-wall-waits.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0003.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to invoke close-session at PR open; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Said to open the PR after review and gate and subscribe; also the subject of the post, checked via diff not the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and the commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Pingback rule; the post is standalone so no stub was needed
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; nothing in this run touched trial text
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; not relevant to writing a post
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Reminded me to read the Blog glossary before writing; I did
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: About Skills as code; loaded by reading the blog-post Skill but did not apply
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement; did not apply to a blog post
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; none added
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by a git show of a doc; no diagrams involved
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded when I read the blog tenant config for tags; manifest edit rule did not apply
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: About stored fields; none changed
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: About MDC components; the post is plain markdown
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded by reading Atlas code for a losing candidate; I edited no layer code
+    useful: no
+subagents:
+  - task: Blind read of three drafts
+    model: sonnet
+    durationSec: 19
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 6.6
+  - task: Fact-check blog post
+    model: sonnet
+    durationSec: 103
+    toolCalls: 18
+    modelCalls: 11
+    tokenShare: 10.6
+  - task: Standards and spec review
+    model: sonnet
+    durationSec: 26
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 5.1
+  - task: Re-check changed lines
+    model: sonnet
+    durationSec: 45
+    toolCalls: 7
+    modelCalls: 4
+    tokenShare: 5.3
+gitBranch: claude/zen-heisenberg-qy4e9u
+entrypoint: remote_trigger
+cliVersion: 2.1.318
+trigger: blog-post
+landedBy: Stop
