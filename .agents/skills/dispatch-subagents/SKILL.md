@@ -30,8 +30,8 @@ The subagent sees none of your context, so the brief is self-contained. Include
 every line that applies.
 
 **Git and checkout**
-- Run git as `git -C <worktree-root> ...`, never `cd`, one git command per Bash
-  call; a heredoc goes in a script file (`docs/agents/environment-caveats.md`).
+- Run git as `git -C <worktree-root> ...` with literal paths (no `$VAR`), one
+  git command per Bash call (`docs/agents/environment-caveats.md`).
 - Have the agent run `pnpm install` in its worktree first.
 - Pin the SHA to work from (`origin/<default-branch>` if none). The agent
   checks that HEAD matches and re-branches if not; worktrees sometimes start

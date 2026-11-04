@@ -134,7 +134,8 @@ ideas:                             # OPTIONAL — omit unless something sparked
   surprised you, what's still open. Don't retell the diff.
 
 **Recovering the id:** copy the `session_01…` at the end of the
-`Claude-Session:` URL in your own system-prompt commit template — never from
+`Claude-Session:` URL in your own system-prompt commit template (a local session has no such
+URL: use its raw UUID, `docs/agents/environment-caveats.md`) — never from
 `git log` (it holds other sessions' ids, issue #99). The landing script overwrites this
 field from ground truth whenever it can (issue #387), so it is only a fallback.
 
