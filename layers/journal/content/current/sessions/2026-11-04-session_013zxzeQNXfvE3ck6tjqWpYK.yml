@@ -1,0 +1,225 @@
+schemaVersion: 1
+session: session_013zxzeQNXfvE3ck6tjqWpYK
+startedAt: 2026-11-04T22:17:03Z
+endedAt: 2026-11-04T22:38:07Z
+kind: interactive
+goal: Make a recorded fix reopen an accepted Friction Ledger entry
+status: in-review
+outcome: Rule and five reopened entries are in PR 2846 with the gate green; waiting on CI and merge
+summary: "The owner asked why the stop-hook-nag cluster was still accepted after fix 2828. I traced it: the ledger never recomputes the accepted status, and nothing reset it when a fix was recorded. The owner chose (human-instructed) to change the rule, and answered two design questions: reset at write time in ledger-set.ts, and any recorded fix triggers it. I built that with a test and comment updates. A mid-session ask from the owner (human-instructed) had me list the other accepted entries that got fixes after acceptance; the owner then said to reopen those six in the same PR. I reopened five, because relayed-subagent-claims was re-accepted after its last fix; I found that while verifying, and the first list (from git first-add dates) was wrong about it. The owner also asked why acceptance has no UTC timestamp; I answered that none is stored, offered a proposal, and did not build it (a stored field needs the owner to settle its shape). Agent- initiated: the review round (code-review, two small fixes), softening the stop-hook-nag note, and opening and subscribing to the PR as ADR-0003 requires. Open: whether the stop-hook-nag ref condition counts as met is the owner's call; stale ref text on the reopened entries is kept as history."
+prs:
+  - "2846"
+docsRead:
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: Showed that only a dispatched fix gets status open in section 8, so a human-steered fix like 2828 never resets
+    useful: yes
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: Held the accepted never-re-proposed line I extended with the reopen rule
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: Told me to push when the Stop hook asks and commit with -F; I read it late, after a read-only git log
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Write through MCP, check runs and the tool surface before opening the PR
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Review-then-gate-then-push order and the edit-nothing-during-gate rule; read via head in a shell command
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: Hook demanded it after my edit; confirmed our own Skill may change through a gated PR
+    useful: partly
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: Hook demanded it; frictions-to-fixes is not an installed Skill, so nothing applied
+    useful: no
+  - path: docs/adr/0027-prune-trials.md
+    reason: Checked no open prune trial covered the touched text; none did
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: Standards reviewer subagent read it for one-home-per-fact; it said useful yes
+    useful: yes
+  - path: layers/journal/content/current/frictions/stop-hook-nag.yml
+    reason: (read before editing)
+  - path: layers/blog/content/david/pages/2026-11-04-the-push-nag-was-accepted-on-october-19th-and-fixed-on-november-4th.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/scripts/ledger-set.ts
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/tests/unit/ledger-set.spec.ts
+    reason: (read before editing)
+  - path: layers/journal/tenant.config.ts
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: Standards and Spec review of the two commits before opening the PR
+  - name: dispatch-subagents
+    reason: Brief checklist for the two read-only review agents
+  - name: close-session
+    reason: Closure after the PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Committed while pnpm gate:scoped was running; the gate aborted because HEAD changed, so I reran it, against pr-workflow's edit-nothing-until-it-ends.
+    solution: Treat a commit as an edit while a gate runs; the Stop hook's push ask is safe, a commit is not.
+    severity: minor
+  - description: Built the first list of six reopen candidates from the first git -S date for status accepted, which missed relayed-subagent-claims' re-acceptance, so I corrected to five.
+    solution: Read each entry's ref and its latest status commit, not the first, before reporting acceptance dates.
+    severity: minor
+  - description: Edited ledger-set.ts, its spec and survey-brief.md before reading the ADRs the hook then asked for in full; I read them after.
+    solution: Read the ADRs a Skill's files name before the first edit there.
+    severity: nit
+  - description: The Stop hook asked twice to commit and push while checks ran; the git-conventions rule says to push, so it cost only a turn each.
+    solution: None needed beyond the stop-hook-nag cluster.
+    severity: nit
+  - description: Acceptance time is stored nowhere and fix dates have day precision, so judging whether a fix came after acceptance needed git history work.
+    solution: Propose a stored acceptedOn timestamp to the owner as a data-shape question.
+    severity: minor
+durationSec: 1264
+models:
+  claude-sonnet-5-5: 111
+toolCounts:
+  Grep: 5
+  Read: 12
+  Bash: 27
+  AskUserQuestion: 1
+  Glob: 1
+  Edit: 7
+  ToolSearch: 2
+  TaskStop: 1
+  Skill: 4
+  Agent: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+filesEdited:
+  - .agents/skills/frictions-to-fixes/scripts/ledger-set.ts
+  - .agents/skills/frictions-to-fixes/tests/unit/ledger-set.spec.ts
+  - layers/journal/tenant.config.ts
+  - .agents/skills/frictions-to-fixes/survey-brief.md
+  - layers/journal/content/current/frictions/stop-hook-nag.yml
+  - layers/journal/content/current/frictions/dispatch-read-guard-deny.yml
+  - layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
+  - layers/journal/content/current/frictions/edit-during-gate-run.yml
+  - layers/journal/content/current/frictions/mechanism-claim-from-recall.yml
+rulesLoaded:
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0005.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 15
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+  - adr: 2
+    via: path
+    readAfter: false
+    by: main
+  - adr: 8
+    via: path
+    readAfter: false
+    by: main
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the PR and checked the merge exceptions; the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Said to open the PR myself after review and the gate and to subscribe; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session logs go straight to main; it governed this closure and the summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header line one in the PR body and the commit trailer; I checked the trailer landed
+    useful: yes
+  - path: .claude/rules/tenant-glossary.md
+    reason: I touched the journal manifest only for a comment, so the Tenant glossary did not apply
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No Mermaid diagram was touched in this task
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: About Blog pingbacks; no Blog post was written in this task
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Made me check the open prune trials for overlap; I did and opened the full ADR to be sure
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Warned against editing installed Skills; frictions-to-fixes is ours, so it only needed a check
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Skill edits go through a gated PR; confirmed my route and the summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; I added no new rule, so it did not apply
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Made me ask before adding a stored field, so I offered acceptedOn as a proposal instead of building it
+    useful: yes
+  - path: .claude/rules/tenant-layers.md
+    reason: I changed only a comment in a Tenant manifest; the layer rules did not apply
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Manifest edits go in tenant.config.ts; I only edited a comment there, so it was barely relevant
+    useful: partly
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: No MDC or new Collection was involved
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Inventories like the Friction Ledger are derived and refreshed in place, which matched editing entries through ledger-set.ts
+    useful: partly
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Checked that none of my paths were Human-only, so an agent may merge
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: About rewriting ADRs; I changed no ADR
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of ledger diff
+    durationSec: 25
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 9.4
+  - type: general-purpose
+    task: Spec review of ledger diff
+    durationSec: 38
+    toolCalls: 5
+    modelCalls: 5
+    tokenShare: 10.6
+gitBranch: claude/vibrant-shannon-94ef8u
+entrypoint: remote
+cliVersion: 2.1.318
+learnings:
+  - The ledger ignores fixes while an entry is accepted (ledgerFixState returns nothing), and only a dispatched fix PR resets it in frictions-to-fixes section 8
+ideas:
+  - Store an acceptedOn UTC timestamp on accepted Friction Ledger entries so ledger.ts can derive fix after acceptance itself and ledger-set.ts needs no reset rule
+landedBy: Stop
