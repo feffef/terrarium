@@ -1,0 +1,180 @@
+schemaVersion: 1
+session: session_013zxzePH6icDjygJ7mcE1s7
+startedAt: 2026-11-04T13:59:34Z
+endedAt: 2026-11-04T14:20:41Z
+kind: interactive
+goal: Show the selected metric instantly above a hovered Routine chart bar
+status: in-review
+outcome: PR 2845 open with gate green and review done; merge still to do
+summary: The user asked for the Routine cost bar charts to show dollar costs on hover. I found a native tooltip already existed, asked questions first as the user's preference said, and learned they wanted an instant label right above the hovered bar, not at the cursor, per-Routine charts only. I built it (human-instructed) as an HTML label driven by a hovered-bar index, with full-height hit areas. I first showed cost only, which was my own assumption; the user then corrected it to the selected metric and said no date. On their question I measured edge placement (slight overhang of the card on a 360px phone) and left it unclamped because they did not ask for it. On "review, open PR and merge" (human-instructed) I added an e2e test so ADR-0004's untested-behaviour exception does not force a human merge, ran code-review (standards and spec subagents), strengthened the test per their findings, ran gate:scoped green, and opened the PR. Merge waits on CI, the verdict comment and merge-pr.ts.
+prs:
+  - "2845"
+docsRead:
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: hook demanded it after editing a journal component; the edit was already right
+    useful: no
+  - path: docs/agents/verifying-ui-changes.md
+    reason: told me to check the rendered DOM and where the dev server and screenshots work
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: commit via -F file and check the trailer landed
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review, gate order and merge recipe; showed an untested UI change needs a test or a human merge
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping for PR creation
+    useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: confirmed the untested-behaviour exception, which led me to add an e2e test
+    useful: yes
+  - path: docs/agents/mdc-when-to-use.md
+    reason: only the standards subagent read it; it found no component being added so it did not apply
+    useful: no
+  - path: layers/journal/app/pages/t/journal/[space]/routines.vue
+    reason: (no reason given)
+  - path: layers/journal/app/components/content/RoutineChart.vue
+    reason: (read before editing)
+  - path: layers/journal/app/utils/routineRuns.ts
+    reason: (no reason given)
+skillsUsed:
+  - name: code-review
+    reason: standards and spec review of the branch diff before the PR
+  - name: dispatch-subagents
+    reason: brief rules for the two review subagents
+  - name: close-session
+    reason: PR opened, so log the session
+  - name: log-session
+    reason: write the in-review log
+frictions:
+  - description: I assumed the hover label should always show cost; the user wanted the selected metric. A premise check on the first ask would have caught it.
+    solution: Ask in the first round whether the label follows the metric switch or is fixed to cost.
+    severity: moderate
+  - description: A Nuxt dev server (PID 1071) was already running, so three preview.ts start --dev attempts died on its lock, costing about four calls before I found the existing URL.
+    solution: Check for a running dev server first, or have preview.ts reuse the running one.
+    severity: minor
+  - description: I did not verify the Claude-Session commit trailer on the last two commits after they landed, though git-conventions says to check it.
+    solution: Run git log -1 --format=%B after every commit, not only the first two.
+    severity: minor
+durationSec: 1267
+models:
+  claude-sonnet-5-5: 127
+toolCounts:
+  Grep: 3
+  Read: 10
+  AskUserQuestion: 1
+  Edit: 8
+  Bash: 33
+  Skill: 4
+  Agent: 2
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Write: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - layers/journal/app/components/content/RoutineChart.vue
+  - layers/journal/tests/e2e/journal.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0006.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/adr-0016.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0004-human-merge.md
+adrHints:
+  - adr: 8
+    via: path
+    readAfter: true
+    by: main
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+docsReadBySubagents:
+  - docs/agents/mdc-when-to-use.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to gate and review before the PR and listed human-merge exceptions; I opened the full ADR to check the untested-behaviour one.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Pointed me to close-session for the log; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Said to open the PR myself and subscribe; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and the commit trailer; the summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0006.md
+    reason: About Space routing; this change touched only a chart component.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Reminded me to read the journal glossary; I did not read it whole.
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Confirmed layer-local code and the rc- class prefix were fine.
+    useful: partly
+  - path: .claude/rules/ui-verification.md
+    reason: Led me to read verifying-ui-changes.md before saying the UI worked.
+    useful: yes
+  - path: .claude/rules/adr-0016.md
+    reason: About Tenant root pages; not relevant to a chart component.
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Hook sent me to the Journal ADR after editing a journal component; the edit was already right.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: About adding MDC components; I only edited an existing one.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About writing ADRs; none were edited.
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; no trial covered this work.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Human-only paths; none were touched, so merge-pr.ts should not refuse.
+    useful: partly
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; I wrote none.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Only the standards subagent loaded it; it reported it did not bear on the diff.
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Only the standards subagent loaded it; it reported it did not bear on the diff.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of hover label
+    durationSec: 26
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 9.4
+  - type: general-purpose
+    task: Spec review of hover label
+    durationSec: 31
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 9.4
+gitBranch: claude/laughing-turing-42asge
+entrypoint: remote
+cliVersion: 2.1.318
+learnings:
+  - ADR-0004's untested-behaviour exception is cleared by adding an e2e test that pins the behaviour, so an agent may merge a UI change.
+landedBy: Stop
