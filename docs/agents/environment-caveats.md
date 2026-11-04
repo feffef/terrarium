@@ -69,7 +69,7 @@ them as new. Incident detail lives in the cited issue.
   (issues #1180, #1499, #2612)
 - **A scheduled or autonomous session can find `mcp__github__*` unauthenticated
   with no `gh` CLI fallback.** Nothing in the repo fixes that. Push the branch as usual,
-  then say so in the session log's `outcome` and `summary` (for example
+  then log `status: blocked` and say so in `outcome` and `summary` (for example
   "branch pushed, PR NOT opened — no GitHub write access this run") so it
   doesn't read as ordinary completion. (issue #982)
 - **In an unattended run, a dispatched subagent's tool call that needs human

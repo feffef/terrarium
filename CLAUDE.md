@@ -25,7 +25,7 @@ once per session; read it whole if you can, since a rule can sit anywhere in it.
   draw a conclusion: `docs/agents/git-conventions.md`.
 - **Before your first GitHub operation** (`mcp__github__*` tool or `gh`):
   `docs/agents/github-integration.md`.
-- **Before you push a branch, or open, update or merge a PR:**
+- **Before you open, update or merge a PR:**
   `docs/agents/pr-workflow.md`.
 - **Before you file, triage or label an issue:** `docs/agents/issue-tracker.md`
   and `docs/agents/triage-labels.md`.
