@@ -90,4 +90,3 @@ The log shows on the Journal's dashboard. Each run of `pnpm validate:content`, a
 - [Claude Code hooks](/t/glassbox/guide/claude-code/hooks)
 - [Schema evolution](/t/glassbox/guide/verification/schema-evolution)
 - [Commit and PR attribution](/t/glassbox/guide/git-github/attribution)
-- [The Routines](/t/glassbox/drafts/walkthroughs/routines)
