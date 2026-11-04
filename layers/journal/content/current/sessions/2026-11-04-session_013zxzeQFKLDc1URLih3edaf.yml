@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQFKLDc1URLih3edaf
 startedAt: 2026-11-04T00:46:53Z
-endedAt: 2026-11-04T00:56:59Z
+endedAt: 2026-11-04T01:00:05Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "PR #2830 opened with Skill Inventory notes and Routine run costs; gate green, reviewed, CI pending"
-summary: "Scheduled audit-skills run (autonomous, no human prompt; all work followed the Skill's steps). Gathered the scorecard and the usage of 8 Routine sessions through one subagent, then ran 14 read-only Sonnet checkers, one per Skill. Delivery held for all 14 and nothing was reverted. Findings were repeats of known items or low harm, so none became an issue: code-review skipped or thinned on digest and glassbox-update diffs (#2472, #2748), the frictions-to-fixes top-three rule overridden, log-session ruleVerdicts gaps (#2607), inspect-session cost questions, glassbox-improve overwrite (fixed by #2826), clear-backlog worktree cleanup. Step 3 closure check - orphanScan scanned=true (1873 merged PRs, 1716 with a session); 2 orphanedSessions, both resolvedBy (#736, #1063); orphanSuppressionLog entries all resolved-annotation; humanPromptedClosures 1 (session_013zxzeRkv6UCWJtPmJ68h32, already in observations); manuallyRescuedClosures 0. Wrote 8 Inventory observations and appended 8 Routine run rows; no grade or role changed. Own review: Standards and Spec subagents found no hard violations; gate:scoped green."
+status: completed
+outcome: "PR #2830 merged: Skill Inventory notes and Routine run costs recorded; gate green, reviewed"
+summary: "Scheduled audit-skills run (autonomous, no human prompt; all work followed the Skill's steps). Gathered the scorecard and the usage of 8 Routine sessions through one subagent, then ran 14 read-only Sonnet checkers, one per Skill. Delivery held for all 14 and nothing was reverted. Findings were repeats of known items or low harm, so none became an issue: code-review skipped or thinned on digest and glassbox-update diffs (#2472, #2748), the frictions-to-fixes top-three rule overridden, log-session ruleVerdicts gaps (#2607), inspect-session cost questions, glassbox-improve overwrite (fixed by #2826), clear-backlog worktree cleanup. Step 3 closure check - orphanScan scanned=true (1873 merged PRs, 1716 with a session); 2 orphanedSessions, both resolvedBy (#736, #1063); orphanSuppressionLog entries all resolved-annotation; humanPromptedClosures 1 (session_013zxzeRkv6UCWJtPmJ68h32, already in observations); manuallyRescuedClosures 0. Wrote 8 Inventory observations and appended 8 Routine run rows; no grade or role changed. PR #2830 merged after green CI. Own review: Standards and Spec subagents found no hard violations; gate:scoped green."
 prs:
   - "2830"
 docsRead:
@@ -90,17 +90,23 @@ frictions:
   - description: The audit-skills Skill asks for a subagent per Skill (14) plus a usage agent; reports repeated the same hook-hint and unrelated-rule noise, so reading them cost many tokens.
     solution: Have the brief ask checkers to omit rule and doc verdicts that read "no" and to cap the report.
     severity: minor
-durationSec: 605
+  - description: Edited the authored log to completed and ran --author before re-invoking close-session after the merge; it refused, costing one retry.
+    solution: Re-invoke close-session first whenever merge-pr.ts prints merged, as the hook says.
+    severity: nit
+durationSec: 792
 models:
-  claude-sonnet-5-5: 78
+  claude-sonnet-5-5: 97
 toolCounts:
-  Bash: 15
+  Bash: 21
   Agent: 17
-  Skill: 3
+  Skill: 4
   Read: 1
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -124,13 +130,13 @@ rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0029.md
   - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0004-human-merge.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesLoadedBySubagents:
-  - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0030.md
   - .claude/rules/adr-0021.md
   - .claude/rules/adr-0010.md
@@ -195,103 +201,103 @@ subagents:
     durationSec: 23
     toolCalls: 11
     modelCalls: 4
-    tokenShare: 2.9
+    tokenShare: 2.7
   - task: Check audit-docs behaviour
     model: sonnet
     durationSec: 79
     toolCalls: 12
     modelCalls: 10
-    tokenShare: 5.9
+    tokenShare: 5.4
   - task: Check audit-skills behaviour
     model: sonnet
     durationSec: 79
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 5.3
+    tokenShare: 5
   - task: Check blog-post behaviour
     model: sonnet
     durationSec: 100
     toolCalls: 18
     modelCalls: 12
-    tokenShare: 6.9
+    tokenShare: 6.4
   - task: Check clear-backlog behaviour
     model: sonnet
     durationSec: 124
     toolCalls: 14
     modelCalls: 10
-    tokenShare: 5.8
+    tokenShare: 5.3
   - task: Check close-session behaviour
     model: sonnet
     durationSec: 64
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 3.9
+    tokenShare: 3.7
   - task: Check digest behaviour
     model: sonnet
     durationSec: 36
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 3.5
+    tokenShare: 3.3
   - task: Check dispatch-subagents behaviour
     model: sonnet
     durationSec: 99
     toolCalls: 16
     modelCalls: 13
-    tokenShare: 7.2
+    tokenShare: 6.6
   - task: Check frictions-to-fixes behaviour
     model: sonnet
     durationSec: 64
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 4.4
+    tokenShare: 4.1
   - task: Check glassbox-improve behaviour
     model: sonnet
     durationSec: 47
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3.8
+    tokenShare: 3.5
   - task: Check glassbox-update behaviour
     model: sonnet
     durationSec: 39
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3.5
+    tokenShare: 3.3
   - task: Check inspect-session behaviour
     model: sonnet
     durationSec: 60
     toolCalls: 12
     modelCalls: 7
-    tokenShare: 5
+    tokenShare: 4.6
   - task: Check log-session behaviour
     model: sonnet
     durationSec: 80
     toolCalls: 13
     modelCalls: 10
-    tokenShare: 5.4
+    tokenShare: 5
   - task: Check prune-trial behaviour
     model: sonnet
     durationSec: 65
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 4.8
+    tokenShare: 4.5
   - task: Check visitor-loop behaviour
     model: sonnet
     durationSec: 64
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 4.4
+    tokenShare: 4.1
   - task: Standards review of diff
     model: sonnet
     durationSec: 36
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 1.7
+    tokenShare: 1.5
   - task: Spec review of diff
     model: sonnet
     durationSec: 25
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.9
+    tokenShare: 1.8
 gitBranch: claude/upbeat-sagan-w8e949
 entrypoint: remote_trigger
 cliVersion: 2.1.318
