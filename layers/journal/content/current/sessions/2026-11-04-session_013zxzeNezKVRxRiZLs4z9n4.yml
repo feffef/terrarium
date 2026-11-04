@@ -1,15 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeNezKVRxRiZLs4z9n4
 startedAt: 2026-11-04T02:07:21Z
-endedAt: 2026-11-04T02:24:22Z
+endedAt: 2026-11-04T02:35:16Z
 kind: autonomous
 goal: Scheduled run turning logged session frictions into fixes
-status: in-review
-outcome: "Ledger PR #2835 and one fix PR #2836 open; 3 regression issues and 1 fix issue filed"
-summary: "Scheduled frictions-to-fixes run, agent-initiated by the schedule with no human prompt. A survey subagent filed the 36-session window into the Friction Ledger (54 occurrences, 6 new entries, 8 merged fixes recorded, 3 stale statuses reset). I filed regression issues #2831, #2832, #2833 and a fix issue #2834, picked four never-fixed candidates, and a design agent recommended dispatching one (owner-corrections-slow-runtime), filing one and dropping two. A Sonnet agent built the dispatched fix (PR #2836); I left it open for a human because its 60 s fetch timeout is behaviour no test observes and the slowness was never timed. Ledger PR #2835 is gate-green and awaits CI before merge; the closing ledger PR is still to do."
+status: completed
+outcome: "Ledger PRs #2835 and #2837 merged; fix PR #2836 left open for a human; 4 issues filed"
+summary: "Scheduled frictions-to-fixes run, agent-initiated by the schedule with no human prompt. A survey subagent filed the 36-session window into the Friction Ledger (54 occurrences, 6 new entries, 8 merged fixes recorded, 3 stale statuses reset). I filed regression issues #2831, #2832, #2833 and a fix issue #2834, and picked four never-fixed candidates. A design agent recommended dispatching one (owner-corrections-slow-runtime), filing one and dropping two. A Sonnet agent built the dispatched fix (PR #2836); I left it open for a human because its 60 s fetch timeout is behaviour no test observes and the slowness was never timed. Ledger PR #2835 and the closing ledger PR #2837 merged through merge-pr.ts after green gates."
 prs:
   - "2835"
   - "2836"
+  - "2837"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: required before first git command; commit-message-file and no-chaining rules applied
@@ -91,23 +92,34 @@ frictions:
   - description: The skill's regression rule files an issue for minor and nit recurrences too; I filed three issues for sub-moderate regressions where earlier fixes had mostly dropped designs.
     solution: Rank regressions by cost since the fix, not only by severity, so repeat nits do not take the three slots.
     severity: nit
-durationSec: 1021
+  - description: "I typed a full SHA from the short hash in my #2836 verdict update, the exact slip the verdict-comment-hand-typed entry records; I fixed the comment one call later."
+    solution: Run git rev-parse HEAD in the same step before writing any Reviewed line.
+    severity: nit
+  - description: I passed both -m and -F to git commit, which git rejects; the failed commit left the branch unchanged and I redid it.
+    solution: Use only -F for commit messages, as git-conventions says.
+    severity: nit
+durationSec: 1675
 models:
-  claude-sonnet-5-5: 91
+  claude-sonnet-5-5: 160
 toolCounts:
-  Bash: 27
+  Bash: 46
   Read: 2
-  Skill: 3
+  Skill: 4
   Agent: 3
   ToolSearch: 2
   mcp__github__list_issues: 1
   mcp__github__issue_write: 5
-  mcp__github__create_pull_request: 2
-  mcp__github__subscribe_pr_activity: 2
-  mcp__github__add_issue_comment: 2
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  mcp__github__add_issue_comment: 4
+  ReadNotifications: 10
+  mcp__github__pull_request_read: 2
+  mcp__github__update_issue_comment: 1
+  PushNotification: 1
 filesEdited:
   - .agents/skills/visitor-loop/scripts/owner-corrections.ts
   - .agents/skills/visitor-loop/SKILL.md
+  - layers/journal/content/current/frictions/owner-corrections-slow-runtime.yml
   - layers/journal/content/current/frictions/adr-check-scope-in-skill-runs.yml
   - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
   - layers/journal/content/current/frictions/blocked-waiting.yml
@@ -127,7 +139,6 @@ filesEdited:
   - layers/journal/content/current/frictions/ledger-summary-same-day-counting.yml
   - layers/journal/content/current/frictions/ledger-yaml-hand-edit-errors.yml
   - layers/journal/content/current/frictions/misread-owner-instruction.yml
-  - layers/journal/content/current/frictions/owner-corrections-slow-runtime.yml
   - layers/journal/content/current/frictions/pr-number-guessed-before-create.yml
   - layers/journal/content/current/frictions/premise-not-questioned.yml
   - layers/journal/content/current/frictions/prepush-gate-review-skipped.yml
@@ -268,20 +279,20 @@ subagents:
     durationSec: 396
     toolCalls: 38
     modelCalls: 31
-    tokenShare: 33
+    tokenShare: 21.2
   - type: general-purpose
     task: Design friction fixes
     durationSec: 176
     toolCalls: 25
     modelCalls: 22
-    tokenShare: 16.2
+    tokenShare: 10.4
   - type: general-purpose
     task: Build owner-corrections fix
     model: sonnet
     durationSec: 165
     toolCalls: 18
     modelCalls: 10
-    tokenShare: 4.8
+    tokenShare: 3.1
 gitBranch: claude/eager-ptolemy-0e9ecz
 entrypoint: remote_trigger
 cliVersion: 2.1.318
