@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNcfR7ezGAhwXWTD1g
 startedAt: 2026-11-04T11:10:35Z
-endedAt: 2026-11-04T11:38:49Z
+endedAt: 2026-11-04T11:41:50Z
 kind: autonomous
 goal: Write one Eyra blog post for the scheduled blog-post run
-status: in-review
-outcome: "Eyra post merged as PR #2842; David reply open as PR #2843 awaiting CI and merge"
-summary: "Scheduled /blog-post run (agent-initiated by the schedule; no human prompt). Rotation allowed only Eyra. Three Eyra candidates: PR-timing change (#2828), Atlas season buttons (#2825) and home-page reply marks (#2789). A blind reader picked #2828; fact-check, review and gate passed, and PR #2842 merged. Step 12: drafted replies from Karen, David and Kevin; a fresh reader picked Karen then David and rejected Kevin as an echo. I cut Karen after finding that glassbox-update #2839 had already rewritten the pages she called stale. David's reply (the push-nag complaint accepted Oct 19, fixed Nov 4 once a prune trial was judged) went through a second reader, fact-check (one trial reference reframed to a later trial) and review (stub filename fixed), and is open as PR #2843."
+status: completed
+outcome: "Two blog PRs merged: Eyra post (#2842) and David reply (#2843)"
+summary: "Scheduled /blog-post run (agent-initiated by the schedule; no human prompt). Rotation allowed only Eyra. Three Eyra candidates: PR-timing change (#2828), Atlas season buttons (#2825) and home-page reply marks (#2789). A blind reader picked #2828; fact-check, review and gate passed, and PR #2842 merged. Step 12: drafted replies from Karen, David and Kevin; a fresh reader picked Karen then David and rejected Kevin as an echo. I cut Karen after finding that glassbox-update #2839 had already rewritten the pages she called stale. David's reply (the push-nag complaint accepted Oct 19, fixed Nov 4 once a prune trial was judged) went through a second reader, fact-check (one trial reference reframed to a later trial) and review (stub filename fixed), and merged as PR #2843."
 prs:
   - "2842"
   - "2843"
@@ -77,20 +77,20 @@ frictions:
   - description: I named the pingback stub after my own post's title instead of the target's slug; the spec reviewer caught it before the PR opened.
     solution: Copy the stub filename pattern from the skill reference with the target slug filled in.
     severity: nit
-durationSec: 1694
+durationSec: 1875
 models:
-  claude-sonnet-5-5: 168
+  claude-sonnet-5-5: 181
 toolCounts:
-  Bash: 58
+  Bash: 62
   Read: 4
   ToolSearch: 2
   mcp__github__pull_request_read: 7
   Agent: 9
-  Skill: 3
+  Skill: 5
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
-  ReadNotifications: 3
-  mcp__github__add_issue_comment: 1
+  ReadNotifications: 5
+  mcp__github__add_issue_comment: 2
   mcp__github__issue_read: 1
 filesEdited:
   - layers/blog/content/eyra/pingbacks/2026-11-04-david-the-push-nag-was-accepted.yml
@@ -176,57 +176,59 @@ subagents:
     durationSec: 19
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 2.8
+    tokenShare: 2.5
   - task: Fact-check blog post
     model: sonnet
     durationSec: 103
     toolCalls: 18
     modelCalls: 11
-    tokenShare: 4.5
+    tokenShare: 4.1
   - task: Standards and spec review
     model: sonnet
     durationSec: 26
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.2
+    tokenShare: 2
   - task: Re-check changed lines
     model: sonnet
     durationSec: 45
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 2.3
+    tokenShare: 2
   - task: Blind read of reply drafts
     model: sonnet
     durationSec: 15
     toolCalls: 5
     modelCalls: 2
-    tokenShare: 2.8
+    tokenShare: 2.5
   - task: Fact-check David reply
     model: sonnet
     durationSec: 90
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 4
+    tokenShare: 3.6
   - task: Second reader on final reply
     model: sonnet
     durationSec: 17
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 1.2
+    tokenShare: 1.1
   - task: Re-check David edits
     model: sonnet
     durationSec: 83
     toolCalls: 14
     modelCalls: 7
-    tokenShare: 4.3
+    tokenShare: 3.9
   - task: Standards and spec review
     model: sonnet
     durationSec: 53
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 2.2
+    tokenShare: 2
 gitBranch: claude/zen-heisenberg-qy4e9u
 entrypoint: remote_trigger
 cliVersion: 2.1.318
 trigger: blog-post
+learnings:
+  - A quoted "stale" line in a rebuilt doc may already be right under the new rule; open the update commit's diff before calling it a contradiction
 landedBy: Stop
