@@ -24,15 +24,15 @@ const bars = computed(() => {
       w: step * 0.76,
       h,
       clipped,
-      cost: formatRoutineMetric('costUsd', run.costUsd),
+      text: formatRoutineMetric(metric.value, value),
     }
   })
 })
-// A native <title> tooltip shows after a delay, so the cost is drawn by hand.
+// A native <title> tooltip shows after a delay, so the value is drawn by hand.
 const hovered = ref<number | null>(null)
 const tip = computed(() => {
   const b = hovered.value === null ? undefined : bars.value[hovered.value]
-  return b && { text: b.cost, left: `${((b.x + b.w / 2) / W) * 100}%`, bottom: `${(b.h / H) * 100}%` }
+  return b && { text: b.text, left: `${((b.x + b.w / 2) / W) * 100}%`, bottom: `${(b.h / H) * 100}%` }
 })
 const total = computed(() => runs.value.reduce((a, run) => a + run[metric.value], 0))
 const label = computed(() => ROUTINE_METRICS.find((m) => m.key === metric.value)!.label)
