@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePH6icDjygJ7mcE1s7
 startedAt: 2026-11-04T13:59:34Z
-endedAt: 2026-11-04T14:20:41Z
+endedAt: 2026-11-04T14:23:21Z
 kind: interactive
 goal: Show the selected metric instantly above a hovered Routine chart bar
-status: in-review
-outcome: PR 2845 open with gate green and review done; merge still to do
-summary: The user asked for the Routine cost bar charts to show dollar costs on hover. I found a native tooltip already existed, asked questions first as the user's preference said, and learned they wanted an instant label right above the hovered bar, not at the cursor, per-Routine charts only. I built it (human-instructed) as an HTML label driven by a hovered-bar index, with full-height hit areas. I first showed cost only, which was my own assumption; the user then corrected it to the selected metric and said no date. On their question I measured edge placement (slight overhang of the card on a 360px phone) and left it unclamped because they did not ask for it. On "review, open PR and merge" (human-instructed) I added an e2e test so ADR-0004's untested-behaviour exception does not force a human merge, ran code-review (standards and spec subagents), strengthened the test per their findings, ran gate:scoped green, and opened the PR. Merge waits on CI, the verdict comment and merge-pr.ts.
+status: completed
+outcome: "PR 2845 merged: Routine chart bars show the selected metric instantly above the hovered bar"
+summary: "The user asked for the Routine cost bar charts to show dollar costs on hover. I found a native tooltip already existed, asked questions first as the user's preference said, and learned they wanted an instant label right above the hovered bar, not at the cursor, per-Routine charts only. I built it (human-instructed) as an HTML label driven by a hovered-bar index, with full-height hit areas. I first showed cost only, which was my own assumption; the user then corrected it to the selected metric and said no date. On their question I measured edge placement (slight overhang of the card on a 360px phone) and left it unclamped because they did not ask for it. On \"review, open PR and merge\" (human-instructed) I added an e2e test so ADR-0004's untested-behaviour exception does not force a human merge, ran code-review (standards and spec subagents), strengthened the test per their findings, ran gate:scoped green, and opened the PR. CI's gate went green on the head; I checked the doorbell's SHA was the merge ref, posted my verdict comment and merged with merge-pr.ts (human-instructed: \"review, open PR and merge\"). Edge clamping of the label is still open, unrequested."
 prs:
   - "2845"
 docsRead:
@@ -56,23 +56,28 @@ frictions:
   - description: I did not verify the Claude-Session commit trailer on the last two commits after they landed, though git-conventions says to check it.
     solution: Run git log -1 --format=%B after every commit, not only the first two.
     severity: minor
-durationSec: 1267
+durationSec: 1427
 models:
-  claude-sonnet-5-5: 127
+  claude-sonnet-5-5: 158
 toolCounts:
   Grep: 3
   Read: 10
   AskUserQuestion: 1
-  Edit: 8
-  Bash: 33
-  Skill: 4
+  Edit: 11
+  Bash: 37
+  Skill: 5
   Agent: 2
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   Write: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 4
+  ReadNotifications: 2
+  mcp__claude-code-remote__send_later: 1
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__delete_trigger: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/app/components/content/RoutineChart.vue
   - layers/journal/tests/e2e/journal.spec.ts
@@ -165,16 +170,17 @@ subagents:
     durationSec: 26
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 9.4
+    tokenShare: 7.6
   - type: general-purpose
     task: Spec review of hover label
     durationSec: 31
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 9.4
+    tokenShare: 7.6
 gitBranch: claude/laughing-turing-42asge
 entrypoint: remote
 cliVersion: 2.1.318
 learnings:
   - ADR-0004's untested-behaviour exception is cleared by adding an e2e test that pins the behaviour, so an agent may merge a UI change.
+  - The gate's green doorbell comment names the PR's merge ref SHA (refs/pull/N/merge), not the head; confirm with get_check_runs and git ls-remote before trusting it.
 landedBy: Stop
