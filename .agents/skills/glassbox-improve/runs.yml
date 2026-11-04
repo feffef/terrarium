@@ -1,4 +1,649 @@
 runs:
+  - run: 2026-11-04T2259
+    base: 2dad9ca14dba0b31b8aec171353d34a33bca72fc
+    session: session_013zxzeT8tDd5GPJiRNZRA4J
+    relevance: true
+    pagesRead: 66
+    pagesChecked: 66
+    falseClaimsFixed: 12
+    edits: 30
+    gatePassed: 30
+    gateStopped: 0
+    aComparisons: 4
+    stepsTaken: 8
+    stepsRefused: 1
+    findings:
+      - page: claude-code/01.claude-md
+        lens: placement
+        grade: C
+        quote: "is a backstop: at the first matching call it adds a pointer to the doc"
+        fix: Cut the read-first-hint paragraph and the 'A hint at the first call' Why bullet to one sentence plus a link; hook-added-context owns the hint and its reasons.
+        confirmed: true
+        edited: true
+      - page: claude-code/02.path-scoped-rules
+        lens: placement
+        grade: C
+        quote: Every :term[ADR] has a summary rule too, `adr-NNNN.md`.
+        fix: Keep the ADR-summary-rule mechanism here, and have Decision records only link it; the 'Short ADR summaries' bullet is taught on both pages.
+        confirmed: true
+        edited: true
+      - page: claude-code/02.path-scoped-rules
+        lens: placement
+        grade: C
+        quote: "**Hooks as backstop.** Some ways an agent reads files load no rule"
+        fix: Hook-added context's 'Backing loaded instructions' states the same reason; keep one home and link the other.
+        confirmed: false
+        edited: false
+      - page: claude-code/04.hooks
+        lens: clarity
+        grade: C
+        quote: the second, :file[scripts/hooks/harness-tag-stop.ts], blocks the stop once if the reply holds a tag only the harness delivers
+        fix: "Name the tag and the mistake: the hook blocks once when the agent's reply contains a `<task-notification>` block, which only the harness may write, so the agent wrote a subagent's report itself."
+        confirmed: true
+        edited: true
+      - page: claude-code/04.hooks
+        lens: clarity
+        grade: C
+        quote: "`SessionEnd`, at teardown, and `SessionStart`, on resume, call the same `--land` as fallbacks, and the lander never exits with an error."
+        fix: "'The lander' is never defined, and `SessionStart` was described earlier as installing packages. Say 'the log script (`log-session.ts --land`)' and fold the resume fallback into the earlier SessionStart sentence."
+        confirmed: true
+        edited: true
+      - page: claude-code/06.hook-added-context
+        lens: placement
+        grade: C
+        quote: "**Backing loaded instructions.** A read-first line in `CLAUDE.md` can be skipped, and a :term[Rule] arrives only after the read or edit that loads it"
+        fix: Make this the one home of the read-first-hint reasoning (CLAUDE.md and Path-specific rules then link here), and drop the repeated rule-arrives-late cost from the other two pages.
+        confirmed: true
+        edited: true
+      - page: claude-code/07.subagents
+        lens: clarity
+        grade: C
+        quote: Most of the Skill is a checklist for the brief.
+        fix: "'Brief' is never introduced; The concept calls it 'a message describing the task'. Say 'the message that starts a subagent, its brief' at first use."
+        confirmed: true
+        edited: true
+      - page: claude-code/07.subagents
+        lens: clarity
+        grade: C
+        quote: It writes no session log ([Session logs](/t/glassbox/guide/terrarium-practice/session-logs) says how the log script refuses).
+        fix: "'It' follows an Excerpt and has no clear referent. Write 'A building subagent writes no session log'."
+        confirmed: true
+        edited: true
+      - page: claude-code/07.subagents
+        lens: clarity
+        grade: C
+        quote: "- Impl agents do not run `close-session` and cannot spawn subagents: run"
+        fix: "'Impl agents' is not explained on the page. Add one sentence before the Excerpt: the Skill calls a subagent that builds a branch an impl agent."
+        confirmed: true
+        edited: true
+      - page: claude-code/07.subagents
+        lens: evidence
+        grade: C
+        quote: Terrarium allows a subagent less than Claude Code does.
+        fix: Say the Skill's rule and the environment depth cap, not a Terrarium restriction. Excerpt .claude/workflows/clear-backlog-build.js:123 (CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1); the .agents/skills/dispatch-subagents/SKILL.md:75-76 excerpt only shows the dispatcher's rule
+        confirmed: true
+        edited: true
+      - page: git-github/04.trust-tiers
+        lens: evidence
+        grade: C
+        quote: The code that acts on the line sits at the merge.
+        fix: "excerpt the enforcement, not only the constant: scripts/github/merge-pr.ts:211-221 (prOriginRefusal: fork, !TRUSTED_ASSOCIATIONS, guest-pipeline label)"
+        confirmed: true
+        edited: true
+      - page: git-github/04.trust-tiers
+        lens: transfer
+        grade: C
+        quote: Write down which `author_association` values your agent may take instructions from, and check it in code before the agent acts on an issue or merges a PR.
+        fix: the concept paragraph says MEMBER and COLLABORATOR do not guarantee write access in an org repo, yet Terrarium trusts both (scripts/lib/author-trust.ts:2) and the page never says why that is safe here (a personal repo). Add one sentence in What to watch saying so, and make Try it say that an org repo should ask the collaborator-permission endpoint instead of mapping associations.
+        confirmed: true
+        edited: true
+      - page: git-github/05.attribution
+        lens: clarity
+        grade: C
+        quote: "The guard finds this session's id (`truth`) from the session's environment or transcript, and reads the one place the mark belongs: line one of a body, or the last `Claude-Session:` trailer of a commit made through the GitHub tools. `slotId` is the id found there, if any; without one, `sessionIdsIn` lists every session id anywhere in the text:"
+        fix: "A newcomer is walked through the guard's variable names. Cut the identifiers and this Excerpt, and say in plain words that the guard reads the mark only at its slot and names the three outcomes: missing, another session's, or in the wrong place."
+        confirmed: true
+        edited: true
+      - page: git-github/05.attribution
+        lens: clarity
+        grade: C
+        quote: A row names its `field`, the parameter that holds the text, only when it isn't `body`; its `surface` says whether that text takes the header or the commit trailers; and `required` marks a call that may carry no text.
+        fix: This inventories registry internals the Excerpt already shows. Replace it with one sentence on what the registry is. The page is about twice the length of its peers and the guard section carries most of that.
+        confirmed: true
+        edited: true
+      - page: git-github/06.work-queue
+        lens: clarity
+        grade: C
+        quote: takes every open issue in it, plus the ones a default sweep picks up
+        fix: "'Default sweep' is never defined. Say what that is, or drop the clause and link the auto-triage Skill."
+        confirmed: true
+        edited: true
+      - page: git-github/06.work-queue
+        lens: clarity
+        grade: C
+        quote: The sweep's other modes and skips, and what it may label and close, are in its Skill and ADR-0022
+        fix: No 'modes' were introduced. Write 'The sweep has further rules in its Skill and ADR-0022'.
+        confirmed: true
+        edited: true
+      - page: git-github/06.work-queue
+        lens: clarity
+        grade: C
+        quote: except a spec on hold, which carries no label (`issue-tracker.md`, Specs).
+        fix: The Excerpt names `to-spec`, `to-tickets` and 'a spec on hold' without introducing them, so the page does not stand alone. Add one sentence naming them as the installed planning Skills with a link to Planning Skills, or Excerpt a shorter span.
+        confirmed: true
+        edited: true
+      - page: nuxt-content/02.multi-tenant-isolation
+        lens: placement
+        grade: C
+        quote: "**Testable resolver.** The lookup first lived in the catch-all page, where no test reached it"
+        fix: Resolver design (useSpace, plain function, reviewed core) belongs on File routing and Virtual modules; keep here only the one-table-per-key isolation and link the rest.
+        confirmed: false
+        edited: false
+      - page: nuxt-content/02.multi-tenant-isolation
+        lens: placement
+        grade: C
+        quote: "**Reads across Tenants are opt-in.** A Collection opts in by naming a shared :term[kind]"
+        fix: Cross-tenant reads owns opt-in (its 'Opt-in, not open'); replace with a link.
+        confirmed: true
+        edited: true
+      - page: nuxt-content/04.query-collection
+        lens: reasoning
+        grade: C
+        quote: "**Return only what the page reads.** The Journal's landing returns whole pages on purpose: opening a Digest then needs no further request. The cost: every Digest body ships in the landing's payload"
+        fix: The bullet's title states a rule but its body defends the exception and never gives the rule's reason. Open with the reason (everything `useAsyncData` returns travels in the payload, so `select` keeps it small, ADR-0028), then present the Journal landing as the deliberate exception with its cost, or retitle the bullet for the exception.
+        confirmed: true
+        edited: true
+      - page: nuxt-content/04.query-collection
+        lens: transfer
+        grade: C
+        quote: "Write a list page that asks the database for exactly what it shows, then compare the size of the `__NUXT_DATA__` script in the page's view-source with a plain `all()`:"
+        fix: "Add a closing paragraph on when the query builder is the wrong tool: a navigation tree (queryCollectionNavigation), prev/next (queryCollectionItemSurroundings) or full-text sections (queryCollectionSearchSections). All three are exported at node_modules/@nuxt/content/dist/runtime/client.js:11-17, and the 4.utils docs have pages for them. Also data that is not content at all, which belongs in a server route."
+        confirmed: true
+        edited: true
+      - page: nuxt-content/06.prose-overrides
+        lens: relevance
+        grade: C
+        quote: Terrarium replaces one prose component.
+        fix: One override, one Why bullet; a section of MDC components (both are how Nuxt Content draws Markdown with Vue). Mermaid pre-rendering already covers ProsePre's mermaid branch.
+        confirmed: false
+        edited: false
+      - page: nuxt-vue/01.layers
+        lens: evidence
+        grade: C
+        quote: "A Tenant's layer config is small. Most only add the Tenant's stylesheet, with the path built from the config file's own location, as the Nuxt docs advise. Glass Box's is the whole file:"
+        fix: The only Excerpt (layers/glassbox/nuxt.config.ts:1-5) repeats the Concept section's own example, so it adds nothing. The Terrarium-specific facts have none. Use nuxt.config.ts:6-12, the root config with its no-`extends` comment and `modules` list. Or shared/expand.ts:67-90, the readdirSync of layers/ and the folder-name/manifest-name mismatch throw that the 'read twice' watch item describes.
+        confirmed: true
+        edited: true
+      - page: nuxt-vue/02.file-routing
+        lens: transfer
+        grade: C
+        quote: In a Nuxt app, add `app/pages/docs/[...slug].vue` that prints `useRoute().params.slug`, then `app/pages/docs/intro.vue`.
+        fix: Add a short paragraph on when file routing or a catch-all is the wrong choice. Nuxt's pages docs say vue-router is dropped when there is no pages/ directory (pages 'Usage' intro, line 9). Routes that come from data or need custom matching use the Custom Routing hooks (pages:extend, router.options.ts; docs line 479). A catch-all that looks up content costs a database read per address and gives up typed named routes.
+        confirmed: true
+        edited: true
+      - page: nuxt-vue/03.virtual-modules
+        lens: placement
+        grade: C
+        quote: "**A plain import.** Reaching the map through a Nuxt composable would tie the resolver to a running Nuxt app."
+        fix: 'Cut "A plain import" to its own reason (a static #routing import rather than a Nuxt composable) and link Multi-tenant isolation, which stays the one home for why the resolver is testable.'
+        confirmed: true
+        edited: true
+      - page: skill-pack/02.planning-with-the-pack
+        lens: placement
+        grade: C
+        quote: "**Stock Skills, our tracker doc.** A reinstall would overwrite any local edit, so the planning Skills stay as installed"
+        fix: Installed Skills owns the stay-as-installed and seeded-doc reasons; keep only the tracker-mapping reason here and link. The 'Ignore their ready-for-agent' watch item repeats Issue triage labels; link it.
+        confirmed: true
+        edited: true
+      - page: skill-pack/03.engineering-skills
+        lens: placement
+        grade: C
+        quote: One :term[Workflow] runs the loop from end to end.
+        fix: Workflow scripts owns the clear-backlog build loop and its excerpt; link instead of re-excerpting clear-backlog-build.js.
+        confirmed: true
+        edited: true
+      - page: skill-pack/03.engineering-skills
+        lens: placement
+        grade: C
+        quote: Before it opens a branch's PR, a session runs `code-review` against `origin/main`
+        fix: Pull requests' 'Review before the PR opens' already teaches this fixed step; link it.
+        confirmed: true
+        edited: true
+      - page: skill-pack/03.engineering-skills
+        lens: relevance
+        grade: C
+        quote: Terrarium makes one of them a fixed step.
+        fix: Beyond that fixed step (taught on Pull requests) the page describes a third party's Skills; merge into Planning Skills as one pack page and keep code-review's fixed step by link.
+        confirmed: false
+        edited: false
+      - page: terrarium-practice/01.human-in-the-loop
+        lens: placement
+        grade: C
+        quote: "**The guest exception runs only while the owner runs it.**"
+        fix: The guest pipeline's reasons belong to Outside contributions; cut the bullet to a link.
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/01.human-in-the-loop
+        lens: placement
+        grade: C
+        quote: The script refuses those it can detect by path, author or label
+        fix: merge-pr.ts's refusals are taught on Pull requests, Author trust and Protected paths; replace the paragraph with links.
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/02.adrs
+        lens: placement
+        grade: C
+        quote: "**Summary Rule, full ADR.** Loading each whole ADR as a Rule would cost context every time"
+        fix: Path-specific rules owns why ADRs get a short summary rule ('Short ADR summaries'); keep only the Gate's summary-in-step check here and link.
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/03.ubiquitous-language
+        lens: evidence
+        grade: C
+        quote: ::excerpt{path="docs/adr/0021-multi-context-domain-docs.md" lines="11-14"} ... A term an agent needs whatever the task goes in the root GLOSSARY.md
+        fix: "Show the artifact the concept is about: a glossary entry that carries a use-this-word guard (GLOSSARY.md:14-20, the Tenant entry that says 'say Tenant... layer only for the Nuxt mechanism') and/or the map (GLOSSARY-MAP.md top 12 lines). Keep the ADR-0021 text as a link, not the only Excerpt."
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/03.ubiquitous-language
+        lens: transfer
+        grade: C
+        quote: One language rarely fits a large system. The same word can mean different things in two parts of it
+        fix: "In The concept, add one or two sentences on when a glossary or per-part glossaries are the wrong choice: a single-context project needs one file and no map, and a glossary nobody reads or checks only adds cost."
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/04.session-logs
+        lens: transfer
+        grade: C
+        quote: The problems are the point. One log's complaint is an anecdote; the same complaint in many logs is a pattern worth fixing.
+        fix: Add to The concept when session logs are the wrong choice, e.g. a single short-lived agent a person watches end to end, or logs nobody reads or mines, where they only cost tokens. Keep the sentence short.
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/06.out-of-scope-records
+        lens: relevance
+        grade: C
+        quote: The records live in :file[.out-of-scope/].
+        fix: A one-folder practice run inside the installed triage Skill; make it a section of Issue triage labels, where Where next should already point.
+        confirmed: false
+        edited: false
+      - page: terrarium-practice/09.self-improvement-loop
+        lens: evidence
+        grade: C
+        quote: "It files each Friction under an entry of the :term[Friction Ledger]: one YAML file per root cause in :file[layers/journal/content/current/frictions/], listing the recent sessions that hit it and each PR that merged to fix it."
+        fix: "Excerpt the Ledger entry shape, which the page never shows: layers/journal/tenant.config.ts:82-117 (frictionClusterSchema: cause, status, fixes, occurrences, trimmed with // … gaps), placed before the ledgerFixState Excerpt. A live entry such as frictions/adr-check-output-oversized.yml:1-20 is less stable because entries are pruned after 14 days."
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/10.outside-contributions
+        lens: placement
+        grade: C
+        quote: "**The header marks the agent.** Agents post as the owner"
+        fix: Commit and PR attribution owns reading the mark; reduce to a sentence and link.
+        confirmed: true
+        edited: true
+      - page: terrarium-practice/10.outside-contributions
+        lens: placement
+        grade: C
+        quote: Who may direct an agent therefore comes from identity, not from the text
+        fix: Author trust's whole concept; link it. Make this page the single home of the guest-exception reasoning that Human-in-the-loop repeats.
+        confirmed: true
+        edited: true
+      - page: verification/03.content-validation
+        lens: placement
+        grade: C
+        quote: The column types shape one schema of Terrarium's own. Every timestamp is a string, checked by one refinement
+        fix: The timestamp refinement, its Why bullet 'Timestamps are refined strings' and the toISOString/Date.parse watch items are a Zod-refinement subject; move them to Zod refinements (or Schema evolution).
+        confirmed: false
+        edited: false
+      - page: verification/03.content-validation
+        lens: placement
+        grade: C
+        quote: "[Zod](https://v3.zod.dev/) is a TypeScript library for describing the shape of data in code."
+        fix: Zod refinements opens with the same Zod/safeParse primer; teach it once and link.
+        confirmed: false
+        edited: false
+      - page: verification/09.invariant-tests
+        lens: placement
+        grade: C
+        quote: "**Tests travel with their Tenant.**"
+        fix: Testing owns this reason; cut to a link. Testing's paragraph 'A unit test can hold a content rule too' already teaches the pattern.
+        confirmed: true
+        edited: true
+      - page: verification/09.invariant-tests
+        lens: evidence
+        grade: C
+        quote: "It reads every Markdown file under the Blog's content and fails on any file link whose ref is not a commit SHA:"
+        fix: The Excerpt (spec lines 21-26) is two regex constants plus four comment lines and never shows the read-every-file loop or the failure message the lede promises ('the test can say exactly which link broke it'). Excerpt layers/blog/tests/unit/blog-immutable-links.spec.ts:33-46 (it.each over the files, matchAll, SHA.test, expect(mutable, message naming the links).toEqual([])), and link or prose the two regexes.
+        confirmed: true
+        edited: true
+      - page: verification/09.invariant-tests
+        lens: relevance
+        grade: C
+        quote: Like every :term[Tenant]'s unit tests, it runs in `pnpm test`
+        fix: One test file illustrates an ordinary unit test; fold into Testing as a section on content-rule tests.
+        confirmed: false
+        edited: false
+      - page: claude-code/01.claude-md
+        lens: reasoning
+        quote: Why it's built this way (Triggers, not topics)
+        fix: end the bullet with its cost and the ADR or file that records the choice, as that page does for each reason
+        confirmed: false
+        edited: false
+      - page: claude-code/06.hook-added-context
+        lens: reasoning
+        quote: Why it's built this way (Backing loaded instructions)
+        fix: state what the hint costs, as 'A crash blocks' does for the guard
+        confirmed: false
+        edited: false
+      - page: claude-code/09.workflow-scripts
+        lens: clarity
+        quote: In Terrarium (last paragraph before Why)
+        fix: "name the referent: ':file[.claude/settings.json] allows them by name' follows three Excerpts, so 'them' is unclear; write 'allows the two clear-backlog workflows by name'"
+        confirmed: false
+        edited: false
+      - page: claude-code/11.cloud-sessions
+        lens: reasoning
+        quote: Why it's built this way
+        fix: give each Terrarium choice its own bullet with reason, cost and the alternative; only the workflow-edit guard has one here, and committing hooks and env to the repo (versus an environment setup script) has none
+        confirmed: false
+        edited: false
+      - page: deploy/01.self-updating-container
+        lens: reasoning
+        quote: Why it's built this way (Swap only good builds; Shared server, no new port)
+        fix: add 'The cost:' to each bullet
+        confirmed: false
+        edited: false
+      - page: git-github/07.dependabot-grouping
+        lens: reasoning
+        quote: In Terrarium and Why it's built this way
+        fix: "give a reason for putting every Actions update in one group, and for setting `default-days: 3` when it 'restates the default cooldown'; neither has a Why bullet"
+        confirmed: false
+        edited: false
+      - page: nuxt-content/05.mdc-components
+        lens: reasoning
+        quote: Why it's built this way (Frontmatter where the layout decides)
+        fix: state the cost of the choice and end with the ADR or file that records it
+        confirmed: false
+        edited: false
+      - page: nuxt-content/06.prose-overrides
+        lens: reasoning
+        quote: Why it's built this way
+        fix: the single bullet has no cost and no alternative; add what the global home costs, and the alternative of routing a mermaid block through a component or a layer-local override
+        confirmed: false
+        edited: false
+      - page: nuxt-vue/03.virtual-modules
+        lens: reasoning
+        quote: Why it's built this way
+        fix: four of the five bullets give no 'The cost:'; add each choice's cost as that page does
+        confirmed: false
+        edited: false
+      - page: nuxt-vue/06.use-async-data
+        lens: reasoning
+        quote: Why it's built this way (Documented settings only)
+        fix: name the rejected options (full page loads, a server endpoint, patching Content, per ADR-0028) as 'Opt-in, not open' names its rejected alternative; 'The other options' names none and ends with a cost-free restatement
+        confirmed: false
+        edited: false
+      - page: nuxt-vue/07.css-custom-properties
+        lens: reasoning
+        quote: Why it's built this way (Tokens set once; One stylesheet for every page)
+        fix: add the cost and the rejected alternative to each of the first two bullets
+        confirmed: false
+        edited: false
+      - page: skill-pack/02.planning-with-the-pack
+        lens: reasoning
+        quote: What to watch for (Ignore their ready-for-agent)
+        fix: give the override its own Why bullet (reason, cost, ADR) instead of a link only; the page's single Why repeats the Installed Skills reason
+        confirmed: false
+        edited: false
+      - page: skill-pack/03.engineering-skills
+        lens: reasoning
+        quote: Why it's built this way
+        fix: "the Whys only point to sibling pages; give the page's own choices a reason and cost: why the build script runs the two review axes itself and skips implement's code-review step"
+        confirmed: false
+        edited: false
+      - page: terrarium-practice/09.self-improvement-loop
+        lens: reasoning
+        quote: Why it's built this way (One complaint, or a pattern)
+        fix: end the bullet with the file or ADR that holds the reason
+        confirmed: false
+        edited: false
+      - page: verification/09.invariant-tests
+        lens: reasoning
+        quote: Why it's built this way (Branch links rot silently)
+        fix: add the cost of the choice (a short SHA passes, and the check cannot tell a missing commit) and the alternative of linking by tag
+        confirmed: false
+        edited: false
+    falseClaims:
+      - page: claude-code/07.subagents
+        claim: Terrarium allows a subagent less than Claude Code does.
+        evidence: .claude/workflows/clear-backlog-build.js:123 (the environment sets CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1; no repo file imposes it)
+        fixed: true
+      - page: claude-code/10.routines
+        claim: Each run is a new cloud session on a fresh clone of each repository it names
+        evidence: "https://code.claude.com/docs/en/routines: 'In a project, a run can continue a thread rather than start a new session.' (low severity: a Routine started from a project)"
+        fixed: true
+      - page: deploy/01.self-updating-container
+        claim: builds each new commit itself
+        evidence: "deploy/entrypoint.sh:139-147 resets to the tip of origin/main and builds only that, so a commit that lands inside a poll interval is never built on its own; docs/adr/0011 Consequences: 'the newest commit on main that built'"
+        fixed: true
+      - page: deploy/02.pnpm-lockfile
+        claim: A plain install in CI could update the lockfile on the fly and test a tree nobody committed.
+        evidence: "https://pnpm.io/10.x/cli/install: 'In a CI environment, installation fails if a lockfile is present but needs an update'; --frozen-lockfile defaults to true for CI; pnpm's own error text says so too. Also contradicts the page's concept paragraph, 'in CI that is the default'."
+        fixed: true
+      - page: git-github/01.every-change-a-pr
+        claim: A PR from a fork or a :term[Public] author is never merged by an agent
+        evidence: "scripts/github/merge-pr.ts:26-28 and :519-521: a same-repo dependabot[bot] minor/patch PR skips the Public-author refusal, and .claude/rules/adr-0004.md lets an agent merge it"
+        fixed: true
+      - page: git-github/02.git-worktrees
+        claim: Then run `git worktree list`, and remove the extra folder with `git worktree remove .claude/worktrees/try-it`.
+        evidence: "Try it changes a file in the worktree first. git refuses: 'contains modified or untracked files, use --force to delete it' (reproduced in wt-demo/; git-worktree.adoc: remove refuses an unclean worktree unless --force)"
+        fixed: true
+      - page: git-github/04.trust-tiers
+        claim: GitHub warns that approving fork runs only for first-time contributors lets someone qualify with one harmless typo fix.
+        evidence: "github/docs data/reusables/actions/workflows-from-public-fork-setting.md: the warning is about the setting that requires approval only for first-time contributors, so a user with any merged change no longer needs approval. The page reverses this."
+        fixed: true
+      - page: git-github/05.attribution
+        claim: It appends whichever trailer is missing, rewrites a `Claude-Session:` line that names another session
+        evidence: "scripts/session/commit-trailer.ts:226-229: when only `Claude-Session:` is present, COAUTHOR_LINE.test fails and the whole two-line footer is appended, duplicating the Claude-Session line. The in-place rewrite at lines 204-220 runs only when both trailers are present."
+        fixed: true
+      - page: git-github/07.dependabot-grouping
+        claim: So the npm group holds only minor and patch updates, the set an agent may land, and each major arrives alone.
+        evidence: "scripts/github/merge-pr.ts:252-255 and .agents/skills/dependabot-sweep/SKILL.md:15-16: a 0.x minor counts as a major and the agent may not land it, yet update-types [minor, patch] puts a 0.x minor inside the group, not alone. The lede has the same gap."
+        fixed: true
+      - page: nuxt-vue/04.auto-imports
+        claim: "A layer whose `nuxt.config.ts` sets `imports: { scan: false }` keeps its own `composables/`, `utils/` and `types/` out of the shared names, and code imports them by path."
+        evidence: "Repro in rater-C4/proj with nuxt 4.6.2: a layer setting imports.scan:false and nothing in the root config made .nuxt/imports.d.ts drop fromRoot (root app/utils) and fromB (another layer) as well as fromA, so scanning was off app-wide. It only acts per layer when the root config sets imports.scan:true (fromRoot and fromB stayed, fromA dropped). Code: node_modules/.pnpm/nuxt@4.6.2…/node_modules/nuxt/dist/index.mjs:6040-6045 (merged options.scan gates the whole loop; the per-layer check only runs inside it). Docs: nuxt/nuxt docs/3.guide/1.concepts/3.auto-imports.md, 'Partially Disabling Auto-imports', which shows scan:false in the root config only. Smallest fix: say the root config must set `imports: { scan: true }` for a layer's `scan: false` to apply to that layer alone."
+        fixed: true
+      - page: nuxt-vue/07.css-custom-properties
+        claim: Tinkerfund gets the same result in one block, with CSS's `light-dark()` function in each token.
+        evidence: "layers/tinkerfund/app/assets/theme.css:54-57 (--tf-font, --tf-radius and the other non-colour tokens do not use light-dark(); only the colour and shadow tokens do). Fix: 'in each colour token'."
+        fixed: true
+      - page: terrarium-practice/06.out-of-scope-records
+        claim: is one pass a :term[Trusted] user starts that triages every open issue without asking about each
+        evidence: ".agents/skills/auto-triage/SKILL.md:22-24,35-37: it scans every open issue but skips wayfinder:map and any ticket whose latest comment is already an agent's; smallest fix: 'that scans every open issue and triages those that need attention'"
+        fixed: false
+      - page: verification/09.invariant-tests
+        claim: A first check fails if the walk finds no content at all, as it would if the content folder moved.
+        evidence: layers/blog/tests/unit/blog-immutable-links.spec.ts:17 (readdirSync of a missing folder throws at import and fails the whole file before the canary at lines 29-31 runs; the canary only fires when the folder exists but holds no .md files)
+        fixed: true
+    gate:
+      - page: claude-code/07.subagents
+        criterion: "falseClaim: correct it to match .claude/workflows/clear-backlog-build.js:123 (the environment sets CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1; no repo file imposes it); clarity: 'Brief' is never introduced; The concept calls it 'a message describing the task'. Say 'the message that starts a subagent, its brief' at first use.; clarity: 'It' follows an Excerpt and has no clear referent. Write 'A building subagent writes no session log'.; clarity: 'Impl agents' is not explained on the page. Add one sentence before the Excerpt: the Skill calls a subagent that builds a branch an impl agent.; evidence: Say the Skill's rule and the environment depth cap, not a Terrarium restriction. Excerpt .claude/workflows/clear-backlog-build.js:123 (CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH=1); the .agents/skills/dispatch-subagents/SKILL.md:75-76 excerpt only shows the dispatcher's rule"
+        votes:
+          - win
+        merged: true
+      - page: claude-code/10.routines
+        criterion: "falseClaim: correct it to match https://code.claude.com/docs/en/routines: 'In a project, a run can continue a thread rather than start a new session.' (low severity: a Routine started from a project)"
+        votes:
+          - win
+        merged: true
+      - page: deploy/01.self-updating-container
+        criterion: "falseClaim: correct it to match deploy/entrypoint.sh:139-147 resets to the tip of origin/main and builds only that, so a commit that lands inside a poll interval is never built on its own; docs/adr/0011 Consequences: 'the newest commit on main that built'"
+        votes:
+          - win
+        merged: true
+      - page: deploy/02.pnpm-lockfile
+        criterion: "falseClaim: Say what a plain install does where it matters: in CI the frozen flag is already pnpm's default, so the explicit flag only states the intent; the container is not a CI environment, so there a plain install would rewrite the lockfile instead of failing. Do not reword it to \"the CI default is enough\": the container half and the line that both refuse to install must stay true."
+        votes:
+          - win
+        merged: true
+      - page: git-github/01.every-change-a-pr
+        criterion: "falseClaim: correct it to match scripts/github/merge-pr.ts:26-28 and :519-521: a same-repo dependabot[bot] minor/patch PR skips the Public-author refusal, and .claude/rules/adr-0004.md lets an agent merge it"
+        votes:
+          - win
+        merged: true
+      - page: git-github/02.git-worktrees
+        criterion: 'falseClaim: Make the Try it work: git worktree remove refuses a worktree with a modified file ("use --force"). Commit or discard the change first, or add --force and say it discards the change; git worktree remove also leaves the try-it branch behind.'
+        votes:
+          - win
+        merged: true
+      - page: git-github/04.trust-tiers
+        criterion: "falseClaim: correct it to match github/docs data/reusables/actions/workflows-from-public-fork-setting.md: the warning is about the setting that requires approval only for first-time contributors, so a user with any merged change no longer needs approval. The page reverses this.; evidence: excerpt the enforcement, not only the constant: scripts/github/merge-pr.ts:211-221 (prOriginRefusal: fork, !TRUSTED_ASSOCIATIONS, guest-pipeline label); transfer: the concept paragraph says MEMBER and COLLABORATOR do not guarantee write access in an org repo, yet Terrarium trusts both (scripts/lib/author-trust.ts:2) and the page never says why that is safe here (a personal repo). Add one sentence in What to watch saying so, and make Try it say that an org repo should ask the collaborator-permission endpoint instead of mapping associations."
+        votes:
+          - win
+        merged: true
+      - page: git-github/05.attribution
+        criterion: "falseClaim: correct it to match scripts/session/commit-trailer.ts:226-229: when only `Claude-Session:` is present, COAUTHOR_LINE.test fails and the whole two-line footer is appended, duplicating the Claude-Session line. The in-place rewrite at lines 204-220 runs only when both trailers are present.; clarity: A newcomer is walked through the guard's variable names. Cut the identifiers and this Excerpt, and say in plain words that the guard reads the mark only at its slot and names the three outcomes: missing, another session's, or in the wrong place.; clarity: This inventories registry internals the Excerpt already shows. Replace it with one sentence on what the registry is. The page is about twice the length of its peers and the guard section carries most of that."
+        votes:
+          - win
+        merged: true
+      - page: git-github/07.dependabot-grouping
+        criterion: "falseClaim: correct it to match scripts/github/merge-pr.ts:252-255 and .agents/skills/dependabot-sweep/SKILL.md:15-16: a 0.x minor counts as a major and the agent may not land it, yet update-types [minor, patch] puts a 0.x minor inside the group, not alone. The lede has the same gap."
+        votes:
+          - win
+        merged: true
+      - page: nuxt-vue/04.auto-imports
+        criterion: "falseClaim: correct it to match Repro in rater-C4/proj with nuxt 4.6.2: a layer setting imports.scan:false and nothing in the root config made .nuxt/imports.d.ts drop fromRoot (root app/utils) and fromB (another layer) as well as fromA, so scanning was off app-wide. It only acts per layer when the root config sets imports.scan:true (fromRoot and fromB stayed, fromA dropped). Code: node_modules/.pnpm/nuxt@4.6.2…/node_modules/nuxt/dist/index.mjs:6040-6045 (merged options.scan gates the whole loop; the per-layer check only runs inside it). Docs: nuxt/nuxt docs/3.guide/1.concepts/3.auto-imports.md, 'Partially Disabling Auto-imports', which shows scan:false in the root config only. Smallest fix: say the root config must set `imports: { scan: true }` for a layer's `scan: false` to apply to that layer alone."
+        votes:
+          - win
+        merged: true
+      - page: nuxt-vue/07.css-custom-properties
+        criterion: 'falseClaim: Say "in each colour and shadow token": layers/tinkerfund/app/assets/theme.css:38-52 (colours) and :59-61 (--tf-shadow) use light-dark(); the font, radius and duration tokens do not.'
+        votes:
+          - win
+        merged: true
+      - page: verification/09.invariant-tests
+        criterion: "falseClaim: correct it to match layers/blog/tests/unit/blog-immutable-links.spec.ts:17 (readdirSync of a missing folder throws at import and fails the whole file before the canary at lines 29-31 runs; the canary only fires when the folder exists but holds no .md files); placement: Testing owns this reason; cut to a link. Testing's paragraph 'A unit test can hold a content rule too' already teaches the pattern.; evidence: The Excerpt (spec lines 21-26) is two regex constants plus four comment lines and never shows the read-every-file loop or the failure message the lede promises ('the test can say exactly which link broke it'). Excerpt layers/blog/tests/unit/blog-immutable-links.spec.ts:33-46 (it.each over the files, matchAll, SHA.test, expect(mutable, message naming the links).toEqual([])), and link or prose the two regexes."
+        votes:
+          - win
+        merged: true
+      - page: claude-code/01.claude-md
+        criterion: "placement: Cut the read-first-hint paragraph and the 'A hint at the first call' Why bullet to one sentence plus a link; hook-added-context owns the hint and its reasons.; move step: Read-first-hint reasoning ('A hint at the first call') lives once on Hook-added context; CLAUDE.md keeps a one-line pointer."
+        votes:
+          - win
+        merged: true
+      - page: claude-code/02.path-scoped-rules
+        criterion: "placement: Keep the ADR-summary-rule mechanism here, and have Decision records only link it; the 'Short ADR summaries' bullet is taught on both pages.; move step: this page RECEIVES the facts, moved here from terrarium-practice/02.adrs: ADR-to-summary-rule mechanism and the 'why a summary' reasoning live once on Path-specific rules; Decision records keeps the template, the in-place rewrite and the Gate's shape checks."
+        votes:
+          - win
+        merged: true
+      - page: claude-code/04.hooks
+        criterion: "clarity: Name the tag and the mistake: the hook blocks once when the agent's reply contains a `<task-notification>` block, which only the harness may write, so the agent wrote a subagent's report itself.; clarity: 'The lander' is never defined, and `SessionStart` was described earlier as installing packages. Say 'the log script (`log-session.ts --land`)' and fold the resume fallback into the earlier SessionStart sentence.; lesson step: Teach the session transcript (JSONL file, transcript_path in a hook payload, what it records). Hints dedupe from it, session logs derive their trace from it, attribution finds the session id in it, and Routines take their trigger from its first turn; no Lesson teaches it."
+        votes:
+          - win
+        merged: true
+      - page: claude-code/06.hook-added-context
+        criterion: "placement: Make this the one home of the read-first-hint reasoning (CLAUDE.md and Path-specific rules then link here), and drop the repeated rule-arrives-late cost from the other two pages.; move step: this page RECEIVES the facts, moved here from claude-code/01.claude-md: Read-first-hint reasoning ('A hint at the first call') lives once on Hook-added context; CLAUDE.md keeps a one-line pointer."
+        votes:
+          - win
+        merged: true
+      - page: git-github/06.work-queue
+        criterion: "clarity: 'Default sweep' is never defined. Say what that is, or drop the clause and link the auto-triage Skill.; clarity: No 'modes' were introduced. Write 'The sweep has further rules in its Skill and ADR-0022'.; clarity: The Excerpt names `to-spec`, `to-tickets` and 'a spec on hold' without introducing them, so the page does not stand alone. Add one sentence naming them as the installed planning Skills with a link to Planning Skills, or Excerpt a shorter span.; section step: this page RECEIVES the facts, moved here from terrarium-practice/06.out-of-scope-records: Out-of-scope records are one step of the triage queue the installed triage Skill runs; add a short section there and drop the standalone page."
+        votes:
+          - win
+        merged: true
+      - page: nuxt-content/02.multi-tenant-isolation
+        criterion: "placement: Cross-tenant reads owns opt-in (its 'Opt-in, not open'); replace with a link."
+        votes:
+          - win
+        merged: true
+      - page: nuxt-content/04.query-collection
+        criterion: "reasoning: The bullet's title states a rule but its body defends the exception and never gives the rule's reason. Open with the reason (everything `useAsyncData` returns travels in the payload, so `select` keeps it small, ADR-0028), then present the Journal landing as the deliberate exception with its cost, or retitle the bullet for the exception.; transfer: Add a closing paragraph on when the query builder is the wrong tool: a navigation tree (queryCollectionNavigation), prev/next (queryCollectionItemSurroundings) or full-text sections (queryCollectionSearchSections). All three are exported at node_modules/@nuxt/content/dist/runtime/client.js:11-17, and the 4.utils docs have pages for them. Also data that is not content at all, which belongs in a server route."
+        votes:
+          - win
+        merged: true
+      - page: nuxt-vue/01.layers
+        criterion: "evidence: The only Excerpt (layers/glassbox/nuxt.config.ts:1-5) repeats the Concept section's own example, so it adds nothing. The Terrarium-specific facts have none. Use nuxt.config.ts:6-12, the root config with its no-`extends` comment and `modules` list. Or shared/expand.ts:67-90, the readdirSync of layers/ and the folder-name/manifest-name mismatch throw that the 'read twice' watch item describes."
+        votes:
+          - win
+        merged: true
+      - page: nuxt-vue/02.file-routing
+        criterion: "transfer: Add a short paragraph on when file routing or a catch-all is the wrong choice. Nuxt's pages docs say vue-router is dropped when there is no pages/ directory (pages 'Usage' intro, line 9). Routes that come from data or need custom matching use the Custom Routing hooks (pages:extend, router.options.ts; docs line 479). A catch-all that looks up content costs a database read per address and gives up typed named routes."
+        votes:
+          - win
+        merged: true
+      - page: nuxt-vue/03.virtual-modules
+        criterion: 'placement: Cut "A plain import" to its own reason (a static #routing import rather than a Nuxt composable) and link Multi-tenant isolation, which stays the one home for why the resolver is testable.'
+        votes:
+          - win
+        merged: true
+      - page: skill-pack/02.planning-with-the-pack
+        criterion: "placement: Installed Skills owns the stay-as-installed and seeded-doc reasons; keep only the tracker-mapping reason here and link. The 'Ignore their ready-for-agent' watch item repeats Issue triage labels; link it."
+        votes:
+          - win
+        merged: true
+      - page: skill-pack/03.engineering-skills
+        criterion: "placement: Workflow scripts owns the clear-backlog build loop and its excerpt; link instead of re-excerpting clear-backlog-build.js.; placement: Pull requests' 'Review before the PR opens' already teaches this fixed step; link it."
+        votes:
+          - win
+        merged: true
+      - page: terrarium-practice/01.human-in-the-loop
+        criterion: "placement: The guest pipeline's reasons belong to Outside contributions; cut the bullet to a link.; placement: merge-pr.ts's refusals are taught on Pull requests, Author trust and Protected paths; replace the paragraph with links.; move step: Move the guest-exception Why bullet and guest-pipeline sentences; Human-in-the-loop keeps one link, and Outside contributions drops its restatements of Author trust and Attribution."
+        votes:
+          - win
+        merged: true
+      - page: terrarium-practice/02.adrs
+        criterion: "placement: Path-specific rules owns why ADRs get a short summary rule ('Short ADR summaries'); keep only the Gate's summary-in-step check here and link.; move step: ADR-to-summary-rule mechanism and the 'why a summary' reasoning live once on Path-specific rules; Decision records keeps the template, the in-place rewrite and the Gate's shape checks."
+        votes:
+          - win
+        merged: true
+      - page: terrarium-practice/03.ubiquitous-language
+        criterion: "evidence: Show the artifact the concept is about: a glossary entry that carries a use-this-word guard (GLOSSARY.md:14-20, the Tenant entry that says 'say Tenant... layer only for the Nuxt mechanism') and/or the map (GLOSSARY-MAP.md top 12 lines). Keep the ADR-0021 text as a link, not the only Excerpt.; transfer: In The concept, add one or two sentences on when a glossary or per-part glossaries are the wrong choice: a single-context project needs one file and no map, and a glossary nobody reads or checks only adds cost."
+        votes:
+          - win
+        merged: true
+      - page: terrarium-practice/04.session-logs
+        criterion: "transfer: Add to The concept when session logs are the wrong choice, e.g. a single short-lived agent a person watches end to end, or logs nobody reads or mines, where they only cost tokens. Keep the sentence short."
+        votes:
+          - win
+        merged: true
+      - page: terrarium-practice/09.self-improvement-loop
+        criterion: "evidence: Excerpt the Ledger entry shape, which the page never shows: layers/journal/tenant.config.ts:82-117 (frictionClusterSchema: cause, status, fixes, occurrences, trimmed with // … gaps), placed before the ledgerFixState Excerpt. A live entry such as frictions/adr-check-output-oversized.yml:1-20 is less stable because entries are pruned after 14 days."
+        votes:
+          - win
+        merged: true
+      - page: terrarium-practice/10.outside-contributions
+        criterion: "placement: Commit and PR attribution owns reading the mark; reduce to a sentence and link.; placement: Author trust's whole concept; link it. Make this page the single home of the guest-exception reasoning that Human-in-the-loop repeats.; move step: this page RECEIVES the facts, moved here from terrarium-practice/01.human-in-the-loop: Move the guest-exception Why bullet and guest-pipeline sentences; Human-in-the-loop keeps one link, and Outside contributions drops its restatements of Author trust and Attribution."
+        votes:
+          - win
+        merged: true
+    comparisons:
+      - lens: reasoning
+        candidate: claude-code/05.blocking-hooks
+        against: claude-code/01.claude-md
+        votes:
+          - win
+          - win
+          - win
+        result: win
+      - lens: reasoning
+        candidate: claude-code/05.blocking-hooks
+        against: claude-code/02.path-scoped-rules
+        votes:
+          - win
+          - win
+          - win
+        result: win
+      - lens: placement
+        candidate: nuxt-vue/08.hydration
+        against: nuxt-vue/01.layers
+        votes:
+          - loss
+        result: loss
+      - lens: placement
+        candidate: nuxt-vue/08.hydration
+        against: nuxt-vue/02.file-routing
+        votes:
+          - loss
+        result: loss
   - run: 2026-11-03
     base: 43aa2027c9e40d2165c6b5eb11bc99dc75b5df98
     session: session_013zxzeQH3GSc8uMpvhebnFr
