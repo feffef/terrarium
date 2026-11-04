@@ -3,6 +3,7 @@ summary: owner-corrections.ts took over two minutes or timed out, so its output 
 cause: "owner-corrections.ts (visitor-loop owner-memory check) runs a git fetch and a long scan; run in the foreground or piped through head it exceeded the foreground wait, timed out on its own fetch, or was truncated, and the session reran it in the background to a file. Signals: 'owner-corrections.ts takes over two minutes', 'timed out on git fetch', 'piped through head, truncating the JSON'."
 surface: safe
 status: tracked
+ref: "#2836"
 fixes:
   - pr: 2836
     date: "2026-11-04"

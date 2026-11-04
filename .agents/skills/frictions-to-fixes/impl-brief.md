@@ -23,9 +23,8 @@ Every design is in the working tree.
 
 Only when you were given doc fixes:
 
-- Never edit an installed Skill's `SKILL.md` or template (a
-  `skills-lock.json` name), an ADR (its PR needs a human merge, ADR-0004) or
-  a Historical record (session logs, blog posts).
+- Edit only what `audit-docs` "What you may edit" lists as Live; never an
+  ADR (its PR needs a human merge, ADR-0004).
 - The main session self-merges doc commits, so a doc fix must survive
   `audit-docs` (`.agents/skills/audit-docs/SKILL.md`): stay within "What
   you may edit", author none of the defects its six lenses catch, above all
