@@ -7,7 +7,7 @@ surface: outside
 status: open
 ref: "issue #2233: the owner accepts the cost, since the nag comes from the harness-side stop-hook-git-check.sh (issue #1653) and repo rules already say to decline it. Not for a survey to re-propose: the owner alone may revisit pushing the branch early and opening the PR after review, once the pr-workflow.md prune trial is judged"
 notes: |-
-  2026-11-04 reopened: fix #2828 merged, which meets the condition in ref (the owner revisits pushing early once the pr-workflow.md trial is judged).
+  2026-11-04 reopened: fix #2828 (2026-11-04) merged after the owner accepted it on 2026-10-19; ref's condition (pr-workflow.md prune trial judged) is the owner's call to confirm.
 fixes:
   - pr: 1588
     date: "2026-10-04"
