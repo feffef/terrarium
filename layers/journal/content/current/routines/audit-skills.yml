@@ -1,13 +1,5 @@
 name: audit-skills
 runs:
-  - session: session_01LsUHzQXAhqgRneHtsX7qm7
-    startedAt: 2026-10-04T00:45:51Z
-    durationSeconds: 1736
-    inputTokens: 596
-    outputTokens: 177525
-    cacheReadTokens: 40167332
-    cacheWriteTokens: 1083930
-    costUsd: 12.8556839
   - session: session_01KyKW5E8oFPkSu3a4mCpT25
     startedAt: 2026-10-05T00:47:00Z
     durationSeconds: 1631
@@ -240,3 +232,11 @@ runs:
     cacheReadTokens: 20663333
     cacheWriteTokens: 1082774
     costUsd: 6.2599603
+  - session: session_013zxzePh7qKycsJT9g2eqU1
+    startedAt: 2026-11-03T00:46:03Z
+    durationSeconds: 830
+    inputTokens: 501
+    outputTokens: 104515
+    cacheReadTokens: 21823704
+    cacheWriteTokens: 1020972
+    costUsd: 6.0539449

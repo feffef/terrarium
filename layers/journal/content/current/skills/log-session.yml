@@ -448,3 +448,6 @@ observations:
       five subagent-only), the other nine complete. Rates 3,1,1,3,3,1 of 10.
       No friction logged. Not re-commented on #2607 (owner chose
       make-it-visible). Grade unchanged.
+  - date: "2026-11-04"
+    note: >-
+      Behaviour check, 10 runs, all logs landed, no revert. Verified silent failure, seventh window: ruleVerdicts incomplete in session_013zxzeQrhKwVsWaJZV8Bs7y (2 of 16) and session_013zxzeSAtjCQiatdUuuFCRJ (2 of 17); rates now 3,1,1,3,3,1,2 of 10. No friction logged; not re-commented on #2607 (owner chose make-it-visible). Grade unchanged.

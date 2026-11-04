@@ -128,3 +128,6 @@ observations:
       that step allows, so it is not a missed invocation. The Invalid-cursor
       gap rests on the same single run as before; no new evidence. Grade
       unchanged.
+  - date: "2026-11-04"
+    note: >-
+      Behaviour check, 4 runs. Verified repeat: cost questions answered from journal logs without the Skill in session_013zxzeR2kopqGDtf5GQztz6 and session_013zxzeQrhKwVsWaJZV8Bs7y; description gained cost wording in #2812, untested since. Rejected-cursor rule (#2827) also untested; evidence is one run (session_013zxzeQn5ksJrQasTk95LKb). Watch only. Grade unchanged.

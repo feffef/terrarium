@@ -339,3 +339,6 @@ observations:
       (disclosed, status partial) and records no code-review or self-read before
       push (unverified; #2472 family). First draft carried wrong claims in 6 of
       7 runs, all caught by the fact-check.
+  - date: "2026-11-04"
+    note: >-
+      Behaviour check, 7 runs, all PRs merged, no revert. Verified (self-disclosed, same family as #2472): code-review skipped on session_013zxzePsSguQyDiqnq52irG's diff (adds a file, so not simple); the other six ran it. Fact-check caught wrong claims in every first draft, so it works. No new issue. Grade unchanged.

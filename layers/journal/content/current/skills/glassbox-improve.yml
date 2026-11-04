@@ -37,3 +37,6 @@ observations:
       edited for an item on page 06, ungated, no warning. Also unverified,
       from its log: ~127 judges dispatched by hand in 7 waves, no workflow
       script. Single run, no issue. Grade unchanged.
+  - date: "2026-11-04"
+    note: >-
+      Behaviour check, 10 runs, all PRs merged, no revert. Verified silent failure, fixed in #2826: same-day runs session_013zxzeQH3GSc8uMpvhebnFr and session_013zxzeSAtjCQiatdUuuFCRJ overwrote each other's runs.yml entry. Known, unfixed: gate misses edited pages no item names (session_013zxzeQZYwzDuf4JEncnqAa). Unverified: 127 judges dispatched by hand. Grade unchanged.

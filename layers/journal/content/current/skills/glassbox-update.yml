@@ -136,3 +136,6 @@ observations:
       commits (session_013zxzeRpGWPCotTQup1ui46,
       session_013zxzeSJQfnNdJHrSWjVT2x); the logs disclose it. Unverified:
       step 5 screenshots, no log mentions one. Grade unchanged.
+  - date: "2026-11-04"
+    note: >-
+      Behaviour check, 7 runs, all PRs merged, no revert. Verified (self-disclosed, tracked in #2472; #2748 closed not planned): code-review replaced by a self-read or thinned in 5 of 7 (session_013zxzeSJQfnNdJHrSWjVT2x, session_013zxzeQBuD3C4A1V2DpoHYu, session_013zxzeNZn2iJjZrQj2ortVS, session_013zxzePhrV1oZiDPfSuW2Hm, session_013zxzeRpGWPCotTQup1ui46). Unverified idea: step 3 'every commit read' is unmeetable at 91 to 174 commits. No new issue. Grade unchanged.

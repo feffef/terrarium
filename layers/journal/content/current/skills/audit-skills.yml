@@ -682,3 +682,6 @@ observations:
       check-states.ts --text and its summary gives no orphanScan counts (also
       10-24, 10-25); closure was human-prompted. Runs otherwise delivered (PRs
       #2555-#2750 merged).
+  - date: "2026-11-04"
+    note: >-
+      Behaviour check, 3 newest runs delivered. Unverified: run of 11-03 (PR #2803) inventoried glassbox-walkthrough, implement-spec and wait-what with zero uses, which earlier runs left out; step 5 is ambiguous about on-disk-only Skills. orphanScan counts missing from the 11-01 summary (repeat). No issue.

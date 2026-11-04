@@ -374,3 +374,6 @@ observations:
       the first run to do so since 10-24. No new issue; #2724 already
       carries the thread. Unverified: #2661 closing #2660 (filed as #2691)
       did not recur. Grade unchanged.
+  - date: "2026-11-04"
+    note: >-
+      Behaviour check, 8 runs, all PRs merged. Repeat: section 2 'top three' rule overridden by judgement in 6 of 8 logs (e.g. session_013zxzeQvE9RNYoZRiZEEKBG, session_013zxzeRnPtjPsVQM71SzX63); the two latest runs filed three. Low harm, no regression unfiled. Rule has no exclusion for owner-declined entries. No new issue. Grade unchanged.
