@@ -28,26 +28,6 @@ fixes:
     date: "2026-10-28"
     summary: "ledger-set.ts sets summary, cause and surface on an existing entry; prune-friction-ledger.ts --move writes block style into an entry created with empty occurrences."
 occurrences:
-  - session: session_019xiqcwnB2itTcdugr6EFZL
-    date: "2026-10-20"
-    severity: minor
-    description: "Used yaml's parseDocument(...).toString({lineWidth: 0}) to append new observation entries to 10 existing Skill Inventory YAML files. This collapsed every pre-existing multi-line block-scalar note onto one line, producing a ~2900-line unrelated reformatting diff across all 10 files instead of the intended ~10-line additions. Caught before committing by running `git diff --stat` as a sanity check, not by any guard. Reverted all 10 files with `git checkout --` and redid the same appends with plain-text Edit calls matching the files' existing ~79-column wrap style, which worked cleanly."
-    solution: "For an existing file with human-style prose wrapping, append via plain-text Edit matching the surrounding wrap width instead of parse-and-restringify with the yaml package."
-  - session: session_0115DiEWEHCxV2UhwYf636YG
-    date: "2026-10-20"
-    severity: minor
-    description: "New observation YAML with colons in unquoted notes failed validate-content-schema in gate:scoped, costing a full gate cycle."
-    solution: "atlas-specimen §5 example should say to quote notes that contain colons."
-  - session: session_01FTPnEsW1XNhaqYFdxaE24v
-    date: "2026-10-20"
-    severity: minor
-    description: "The audit-docs log-session pass failed silently on an unquoted # because I grepped its output for one phrase; caught only on the next pass."
-    solution: "Read the whole --author output, or check its exit code, instead of grepping for one expected line."
-  - session: session_01VH74k3Z27QtjR19XNC76qm
-    date: "2026-10-20"
-    severity: minor
-    description: "prune-friction-ledger.ts --summary compares dates as strings, hiding same-day post-fix sessions; the survey agent counted them by hand. Same cause as open issue #2333, and one subagent hit three ledger YAML edit hazards (blank line, quoting)."
-    solution: "Compare session start time with the fix merged_at, as issue #2333 proposes."
   - session: session_01SaChfBZfspYfAm5F7ArCfK
     date: "2026-10-21"
     severity: nit

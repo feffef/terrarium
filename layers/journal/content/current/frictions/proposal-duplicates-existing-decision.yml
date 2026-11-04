@@ -3,6 +3,8 @@ summary: Agents proposed features or retro candidates without checking the track
 cause: "A candidate list (retro candidates, visitor-loop feature picks) is built before searching issues, the Friction Ledger, Tenant decisions.md/GLOSSARY or the live homepage for an existing feature or a recorded owner decision; the duplicate check filters too narrowly (by Tenant name) or skips a source. Signals: 'before searching issues or the Friction Ledger', 'duplicate check', 'the owner had to ask me to check', 'two feature picks died in refinement'."
 surface: safe
 status: open
+notes: |-
+  2026-11-04 design: no change dropped: the retro half is an installed Skill (ADR-0015) and the visitor-loop half was closed by PR #2824 (decisions.md line) with the step 4 refiner as backstop; revisit on a third occurrence.
 occurrences:
   - session: session_013zxzeSvdGhiM7SLEUgzvmF
     date: "2026-11-01"
