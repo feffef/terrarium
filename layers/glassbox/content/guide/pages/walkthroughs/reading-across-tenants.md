@@ -1,8 +1,9 @@
 ---
 title: Reading across Tenants
-description: How a Blog post ends up as a result in the Commons Search, through a kind named in a manifest, a catalog built with the site and one read function.
-revision: 'a5f8e8cdb2ec0841bc8d52dc4aae5c8dfdbe7cd6'
-revisionDate: '2026-10-28'
+description: How a Blog post becomes a Commons Search result, through a kind named in a manifest, a catalog built with the site and one read function.
+revision: '2dad9ca14dba0b31b8aec171353d34a33bca72fc'
+revisionDate: '2026-11-04'
+publishedAt: '2026-11-04T23:07:44Z'
 ---
 
 Terrarium keeps each Tenant's content in tables of its own, yet the Commons Search lists pages from several Tenants at once. This Walkthrough follows a Blog post from the side of the code that reads it: from one field in the Blog's manifest, through a list built with the site, to a result in the search box. It ends where the reading stops, at the Collections that never opted in.
