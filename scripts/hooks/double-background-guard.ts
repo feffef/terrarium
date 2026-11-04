@@ -25,13 +25,7 @@ import { hasBackgroundOperator } from './subagent-background-guard.ts'
 const LABEL = 'double-background guard'
 const REF = 'issue #1208'
 
-/** True only when BOTH signals fire on the same call: `run_in_background:
- *  true` AND the command text itself also backgrounds. Either alone is fine
- *  and untouched — `run_in_background: true` alone is the ordinary, correct
- *  way to background a command, and a lone trailing `&`/`nohup … &` with no
- *  flag set backgrounds only the shell's own job, which the tool call still
- *  waits out correctly. Never throws; a non-object `toolInput` simply
- *  carries neither signal. */
+/** Only both signals together are wrong; either alone backgrounds correctly. */
 export function checkDoubleBackground(toolName: string, toolInput: unknown): boolean {
   if (toolName !== 'Bash') return false
   const input = toolInput !== null && typeof toolInput === 'object' ? (toolInput as Record<string, unknown>) : {}
@@ -58,13 +52,10 @@ export function formatGuardMessage(): string {
   )
 }
 
-/** `null` when nothing should be blocked, so an ordinary call proceeds
- *  untouched. */
 export function denyOutputFor(finding: boolean): DenyOutput | null {
   return finding ? buildDenyOutput(formatGuardMessage()) : null
 }
 
-/** Always exits 0 — the deny travels in stdout, not the exit code. */
 export function main(): void {
   const result = readHookPayload()
   if (result.kind === 'none') return

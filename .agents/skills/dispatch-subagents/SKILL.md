@@ -50,10 +50,9 @@ every line that applies.
   of report files, so have it return structured results in its final message.
 - Create the agent's scratchpad subfolder first (CLAUDE.md); a shared name
   silently collides.
-- Tell the agent to run `pnpm gate:scoped` and other checks in the foreground
-  (`docs/agents/guards.md`). If a check may outlast one call, name a log-file
-  marker as the done signal and resume with `SendMessage`, pasting the log's
-  real tail.
+- Tell the agent to run every check in the foreground; a guard denies a
+  subagent's background run. If one may outlast a call, name a log-file marker
+  as the done signal and resume with `SendMessage`, pasting the log's real tail.
 - Launch at most (20 − running) agents; every Agent call runs async, so wait
   for its notification. After a user interrupt, check agents are alive before
   you report them as running.
