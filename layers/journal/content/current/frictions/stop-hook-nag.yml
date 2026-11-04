@@ -4,8 +4,10 @@ summary: >-
 cause: >-
   The Stop hook demands commit and push on every turn while a gate, build or fact-check subagent is still running, against ADR-0004's push-after-gate rule. Since PR #2828 (2026-11-04) ADR-0003 and ADR-0004 let agents push their branch early and often (a push opens nothing) and open the PR only after code-review and the gate, so a pushed commit on the Stop hook's ask no longer breaks a rule.
 surface: outside
-status: accepted
+status: open
 ref: "issue #2233: the owner accepts the cost, since the nag comes from the harness-side stop-hook-git-check.sh (issue #1653) and repo rules already say to decline it. Not for a survey to re-propose: the owner alone may revisit pushing the branch early and opening the PR after review, once the pr-workflow.md prune trial is judged"
+notes: |-
+  2026-11-04 reopened: fix #2828 merged, which meets the condition in ref (the owner revisits pushing early once the pr-workflow.md trial is judged).
 fixes:
   - pr: 1588
     date: "2026-10-04"

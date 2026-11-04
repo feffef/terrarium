@@ -2,8 +2,10 @@ name: dispatch-read-guard-deny
 surface: guard-or-hook
 summary: Agents called a subagent or workflow before reading the dispatch-subagents Skill, so a safety check refused the call and they had to retry.
 cause: "PR #2550's guard denies the first Agent, Workflow or SendMessage call until the dispatch-subagents Skill is read; agents reach the dispatch first (often a Skill's saved workflow such as clear-backlog-explore, or the visitor dispatches) and resend after reading. Signals: 'dispatch-read guard blocked', 'blocked ... until I read dispatch-subagents', a dispatch repeated unchanged."
-status: accepted
+status: open
 ref: "Comes from PR #2550, the fix for dispatch-subagents-skill-unread (briefs written without the Skill). Issue #2580 closed not planned on 2026-10-27: the owner accepts the one-retry cost; saved workflows stay unexempted, since clear-backlog-build takes orchestrator-written briefs."
+notes: |-
+  2026-11-04 reopened: fix #2768 (2026-11-02) merged after the owner accepted it on 2026-10-27.
 fixes:
   - pr: 2768
     date: "2026-11-02"
