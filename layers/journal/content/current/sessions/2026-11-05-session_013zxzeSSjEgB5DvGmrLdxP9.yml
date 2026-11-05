@@ -1,0 +1,190 @@
+schemaVersion: 1
+session: session_013zxzeSSjEgB5DvGmrLdxP9
+startedAt: 2026-11-05T11:09:30Z
+endedAt: 2026-11-05T11:23:20Z
+kind: autonomous
+goal: "Scheduled blog post: one Persona reacts to recent Terrarium activity"
+status: in-review
+outcome: Karen reaction post and a pingback to David opened as PR 2865; gate green, merge pending CI
+summary: Scheduled /blog-post run, nothing human-instructed beyond the stored routine prompt; every choice was agent-made. Rotation allowed eyra, karen and kevin. I gathered the Nov 2-5 window, drafted three candidates (Karen on the Friction Ledger reopen rule PR 2846, Kevin on the verdict-line script PR 2841, Eyra on the --diff gather step PR 2864), and a blind sonnet reader picked Karen's. I revised it for the gaps it named, saved it with a pingback stub in David's Space, and a fact-checker found the title, description and blurb credited the rule with a date comparison that a session did by hand; I reframed and renamed the post and the re-check came back clean. code-review found no hard violations; the gate passed on the head; PR 2865 is open and subscribed. Reply decision (step 12) and merge are still to come after CI.
+prs:
+  - "2865"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: required before first git command; nothing in it changed what I did
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review-before-PR order and the scheduled-run closing steps
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before GitHub ops; MCP-only writes and header rules confirmed
+    useful: partly
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: subagent read it as the spec for the review
+    useful: yes
+  - path: layers/blog/GLOSSARY.md
+    reason: read directly for audience rules and by the standards reviewer
+    useful: yes
+  - path: .agents/skills/blog-post/personas/karen.md
+    reason: voice do/dont and palette for Karen
+    useful: yes
+  - path: .agents/skills/blog-post/personas/kevin.md
+    reason: needed for the Kevin candidate draft, which lost
+    useful: partly
+  - path: .agents/skills/blog-post/personas/eyra.md
+    reason: needed for the Eyra candidate draft, which lost
+    useful: partly
+  - path: layers/blog/content/david/pages/2026-11-04-the-push-nag-was-accepted-on-october-19th-and-fixed-on-november-4th.md
+    reason: (no reason given)
+skillsUsed:
+  - name: blog-post
+    reason: the routine itself
+  - name: dispatch-subagents
+    reason: read before briefing the blind reader and fact-checker
+  - name: code-review
+    reason: Standards and Spec review of the committed diff
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: My first draft of the Karen post said a rule compares dates, but a session did that by hand; the fact-checker caught the title, blurb and body.
+    solution: Read the rule's code before naming its mechanism in a title; checking the script was cheap.
+    severity: minor
+  - description: I typed a session id from memory in my first commit message; the commit-msg hook replaced it with the real one.
+    solution: Copy the id from the env or system reminder before writing the commit message.
+    severity: nit
+  - description: I opened only a subset of each Persona's newest posts and listed, not read, the last five blog PR bodies, which the Skill's step 2 asks for.
+    solution: Read the named items or let step 2 say which are essential; the skipped reads did not change the pick.
+    severity: nit
+  - description: Twice the harness asked what I was doing because long tool chains and subagent waits showed no text; each needed an extra status turn.
+    solution: Emit one short status line before each long batch of calls.
+    severity: nit
+durationSec: 830
+models:
+  claude-sonnet-5-5: 100
+toolCounts:
+  Bash: 29
+  Read: 3
+  Skill: 4
+  mcp__github__pull_request_read: 7
+  mcp__github__issue_read: 3
+  Edit: 1
+  Agent: 4
+  ToolSearch: 1
+  SendMessage: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/blog/content/david/pingbacks/2026-11-05-karen-any-fix-reopens-an-accepted-complaint-fitting-or-not.yml
+  - layers/blog/content/karen/pages/2026-11-05-any-fix-reopens-an-accepted-complaint-fitting-or-not.md
+rulesLoaded:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the PR and that a blog post is self-mergeable; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me the session log goes straight to main, not in the PR; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Said to open the PR myself after review and gate and to subscribe; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and the commit trailer, which I checked landed; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0012.md
+    reason: Defined where the pingback stub goes, in David's Space and nothing else there; summary was enough.
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; nothing I touched was in a trial, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; I wrote no instructions, so it did not apply.
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded when I read blog files; I read the blog glossary directly, so it only reminded me.
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: About Skills as Platform code; I changed no Skill, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: About glossaries; I added no term, so it did not apply.
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; none added, so it did not apply.
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded by reading a blog post; no diagram involved, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded when I grepped the blog manifest for tags; I edited no manifest, so it did not apply.
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: About stored fields; I added none, so it did not apply.
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: About MDC components; the post is plain Markdown, so it did not apply.
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: About layer code; I wrote only content, so it did not apply.
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Only the standards reviewer loaded it; it reported nothing in it touched the review.
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Only subagents loaded it; they reported nothing in it touched their review.
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Blind read of three drafts
+    model: sonnet
+    durationSec: 19
+    toolCalls: 4
+    modelCalls: 2
+    tokenShare: 6
+  - type: general-purpose
+    task: Fact-check blog post claims
+    model: sonnet
+    durationSec: 150
+    toolCalls: 17
+    modelCalls: 11
+    tokenShare: 10.2
+  - type: general-purpose
+    task: Review standards axis
+    model: sonnet
+    durationSec: 31
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 3.8
+  - type: general-purpose
+    task: Review spec axis
+    model: sonnet
+    durationSec: 24
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 4.3
+gitBranch: claude/zen-heisenberg-2m3nte
+entrypoint: remote_trigger
+cliVersion: 2.1.318
+trigger: blog-post
+landedBy: Stop
