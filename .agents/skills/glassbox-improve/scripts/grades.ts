@@ -270,6 +270,7 @@ export function reportProblems(report: Report, plan: Plan): string[] {
     if (!stepKinds.includes(s.kind)) problems.push(`${r}: step ${s.kind} is not one of ${stepKinds.join(', ')}`)
     // The churn guard finds a step's inverse by its direction (`inverse`).
     else if (s.kind !== 'cut' && !s.into) problems.push(`${r}: step ${s.kind} of ${s.pages.join(', ')} has no into`)
+    if (!s.gist) problems.push(`${r}: step ${s.kind} of ${s.pages.join(', ')} has no gist`)
   }
   return problems
 }
@@ -307,6 +308,8 @@ export interface Tally {
   comparisons: Comparison[]
   /** Top-3 pages not compared this run, each with why. */
   waiting: string[]
+  /** Steps a restated gist put back to pending, with the decision it cleared. */
+  restated?: string[]
 }
 
 /** The run key from which a decision still counts for the churn guard: the last `churnRuns` runs. */
@@ -354,6 +357,7 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: 
   const items = [...raw, ...deficits, ...gaps].map((item, i) => ({ id: `f${i + 1}`, ...item }))
 
   const steps = record.steps.map((s) => ({ ...s, raised: [...s.raised] }))
+  const restated: string[] = []
   for (const r of reports) {
     for (const raise of r.steps ?? []) {
       const id = stepId(raise.kind, raise.pages, raise.into)
@@ -363,6 +367,7 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: 
         if (!old.raised.includes(run)) old.raised.push(run)
         // A researcher dropped it; only a new reason earns another (nextRecord forgets it after the churn window).
         if (old.status === 'dropped' && raise.gist === old.gist) continue
+        if (old.decided) restated.push(`${id}: ${old.status} ${old.decided} as "${old.gist}", raised again as "${raise.gist}"`)
         old.gist = raise.gist
         old.status = 'pending'
         delete old.decided
@@ -374,7 +379,7 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: 
   }
 
   const { comparisons, waiting } = plannedComparisons(record, plan, reports, grades, items)
-  return { grades, items, steps, comparisons, waiting }
+  return { grades, items, steps, comparisons, waiting, restated }
 }
 
 /** QUALITY.md, Grades: each top-3 page meets the Subject's A holders on that lens, or 2 of its B pages while it has none. */
@@ -658,7 +663,7 @@ export function agentBriefs(kind: 'researcher' | 'writer', state: Pick<RunState,
     const confirmed = state.items.filter((i) => i.confirmed === true)
     const taken = state.steps.filter((s) => s.status === 'taken' && (s.decided ?? state.run) === state.run)
     const touched = new Set(taken.flatMap(stepPages))
-    for (const s of taken) units.push({ name: s.id, task: `${describe(s)}`, items: confirmed.filter((i) => stepPages(s).includes(i.page)), draft: 'none' })
+    for (const s of taken) units.push({ name: s.id, task: s.kind === 'lesson' && s.into ? `write the new page ${s.into}, following .agents/skills/glassbox-lesson/SKILL.md; the items below on ${s.pages.join(', ')} are secondary. ${describe(s)}` : describe(s), items: confirmed.filter((i) => stepPages(s).includes(i.page)), draft: 'none' })
     for (const [subject, items] of bySubject(confirmed.filter((i) => !touched.has(i.page)))) units.push({ name: subject, task: `raise ${[...new Set(items.map((i) => i.page))].join(', ')}`, items, draft: 'none' })
   }
   return units.map((u) => ({
@@ -749,6 +754,7 @@ interface RunState {
   steps: Step[]
   comparisons: Comparison[]
   waiting: string[]
+  restated?: string[]
   gate: (Omit<GateEntry, 'merged'> & { merged?: boolean })[]
 }
 
@@ -831,6 +837,7 @@ function summary(state: RunState): string {
   out.push('', '## Steps', '', 'id | kind | pages | into | status | raised | gist', '--- | --- | --- | --- | --- | --- | ---')
   for (const s of state.steps) out.push([s.id, s.kind, s.pages.join(', '), s.into ?? '', s.status, s.raised.join(', '), s.gist].map(cell).join(' | '))
   out.push('', `## A comparisons (at most ${comparisonsPerRun})`, '', ...(state.comparisons.length ? state.comparisons.map((c) => `- ${c.id}: ${c.candidate} vs ${c.against} on ${c.lens}`) : ['- none']))
+  if (state.restated?.length) out.push('', '## Steps raised again with a new gist (back to pending)', '', ...state.restated.map((l) => `- ${l}`))
   out.push('', `Top-3 pages not compared: ${state.waiting.join('; ') || 'none'}`)
   return out.join('\n')
 }
@@ -952,7 +959,7 @@ runIfMain(import.meta.url, () => {
   if (command === 'record') {
     const owed = [...state.gate.filter((g) => g.merged === undefined).map((g) => `gate on ${g.page}`), ...state.comparisons.filter((c) => c.votes.length && !c.result).map((c) => `comparison ${c.id}`)]
     if (owed.length) fail(`judges still owed: ${owed.join(', ')}`)
-    const result: Tally = { grades: state.grades, items: state.items, steps: state.steps, comparisons: state.comparisons, waiting: state.waiting }
+    const result: Tally = { grades: state.grades, items: state.items, steps: state.steps, comparisons: state.comparisons, waiting: state.waiting, restated: state.restated }
     const next = nextRecord(record, state.plan, current, result, runs, state.run)
     const meta = { run: state.run, base: sha, ...(flags.session ? { session: flags.session } : {}), ...(flags.pr ? { pr: Number(flags.pr) } : {}), ...(flags.cost ? { costUsd: Number(flags.cost) } : {}) }
     const entry = runEntry(meta, state.plan, result, state.gate as GateEntry[])
