@@ -1,0 +1,606 @@
+schemaVersion: 1
+session: session_013zxzeTJp1jinYqgNJRczgA
+startedAt: 2026-11-05T21:54:25Z
+endedAt: 2026-11-05T22:34:35Z
+kind: delegated
+goal: Run the Glass Box guide improvement pass for 2026-11-05
+status: in-review
+outcome: Read all 68 guide pages, fixed 5 false claims and 2 page folds with every edit passing the blind gate; PR 2869 open, CI pending
+summary: "The one human prompt was the kickoff, the /glassbox-improve command; the user's standing preference to ask questions first was not used because the Skill fully specifies the run. Everything after was agent-initiated within the Skill: eleven raters (A, B, C1-C9) read all 68 guide pages; the tally listed 80 items; the run takes 8, so I kept the 5 false claims, the stop-6 length check and the two pending section steps, and researchers confirmed all of them. Six opus writers fixed them in worktrees and I merged the branches. Seven blind gate judges preferred every edited page, four A candidates won all three comparisons (A needs a second run in a row, so none was awarded), and the code-review Standards and Spec reviewers found no hard violation, so no fix round ran. I judged and recorded that the Prose overrides fold, which last run's researcher had dropped, was acceptable because it falls outside the last-two-runs window; the owner may want a DECISIONS line. Opening the PR was ADR-0003's standing instruction, not a human ask. Two hand-backs needed their saved text edited so the tally would parse them (a wrong gap shape from C7, a draft page outside B's plan). Open: CI on the PR, then the merge, and the deferred deficits and steps wait for later runs."
+prs:
+  - "2869"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read before my first non-read-only git command; confirmed -F commits and trailer check, nothing changed my route
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: read before the first GitHub operation; said to write through MCP and tool-select rules, used for create and update of the PR
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Closing a scheduled run's PR and the simple follow-up rule shaped the gate, review, PR and record-commit order
+    useful: yes
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson, Walkthrough, Excerpt and Term shapes that the raters and writers were graded against
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin and Check rules; decided publishedAt handling for corrections and the Check commands
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: grades, A rule and the smallest-correction rule; decided what counted as a false claim
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: closed rulings; none applied to a kept item, though line 3 settled publishedAt on corrections
+    useful: partly
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: read the filled copies grades.ts plan wrote from this template, not the template itself
+    useful: yes
+  - path: .agents/skills/glassbox-improve/judge-brief.md
+    reason: read the filled gate-judge briefs generated from this template, to check blindness before dispatch
+    useful: yes
+  - path: .agents/skills/glassbox-improve/researcher-brief.md
+    reason: read the filled researcher briefs generated from this template before dispatch
+    useful: yes
+  - path: .agents/skills/glassbox-improve/writer-brief.md
+    reason: read a filled writer brief generated from this template and added shared corrections to it
+    useful: yes
+  - path: layers/glassbox/content/guide/pages/verification/02.type-checking.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/verification/06.schema-validation.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/claude-code/13.session-transcripts.md
+    reason: (read before editing)
+  - path: /home/user/terrarium/docs/agents/git-conventions.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/05.mdc-components.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/nuxt-content/06.prose-overrides.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/verification/04.unit-and-e2e-tests.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/verification/09.invariant-tests.md
+    reason: (read before editing)
+  - path: layers/glassbox/content/guide/pages/walkthroughs/session-log-lands-on-main.md
+    reason: (read before editing)
+  - path: layers/glassbox/page-checks.ts
+    reason: (no reason given)
+  - path: .agents/skills/implement/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/tdd/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/code-review/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/diagnosing-bugs/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0015-audit-skills-and-conditional-importance.md
+    reason: (no reason given)
+  - path: .agents/skills/wayfinder/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/auto-triage/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/TEMPLATE.md
+    reason: (no reason given)
+  - path: docs/adr/0030-adrs-document-a-decision-not-its-history.md
+    reason: (no reason given)
+  - path: .agents/skills/domain-modeling/ADR-FORMAT.md
+    reason: (no reason given)
+  - path: GLOSSARY.md
+    reason: (no reason given)
+  - path: docs/agents/domain.md
+    reason: (no reason given)
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: (no reason given)
+  - path: docs/adr/0008-self-documentation-tenant-is-a-journal.md
+    reason: (no reason given)
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0027-prune-trials.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0001-single-container-baked-multitenancy.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0028-navigation-reads-server-payloads.md
+    reason: (no reason given)
+  - path: .agents/skills/to-spec/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/to-tickets/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/triage-labels.md
+    reason: (no reason given)
+  - path: docs/agents/issue-tracker.md
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: docs/research/content-client-queries-without-wasm.md
+    reason: (no reason given)
+  - path: .agents/skills/setup-matt-pocock-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/grill-me/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0026-gate-workflow-thin-shell.md
+    reason: (no reason given)
+  - path: .agents/skills/dependabot-sweep/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/tenant-layers.md
+    reason: (no reason given)
+  - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0024-build-time-mermaid-prerender.md
+    reason: (no reason given)
+  - path: docs/adr/0019-content-load-error-recovery.md
+    reason: (no reason given)
+  - path: docs/research/nuxt-content-review-grounding.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: docs/agents/environment-caveats.md
+    reason: (no reason given)
+  - path: docs/adr/0011-poc-self-updating-deploy-container.md
+    reason: (no reason given)
+skillsUsed:
+  - name: glassbox-improve
+    reason: the Skill this whole run executed, steps 1 to 10
+  - name: dispatch-subagents
+    reason: brief rules for 11 raters, 6 researchers, 6 writers and 19 judges, and save-handback for every reply
+  - name: code-review
+    reason: Standards and Spec review of the run branch before opening the PR
+  - name: close-session
+    reason: closure after the PR opened, as CLAUDE.md requires
+  - name: log-session
+    reason: authored this log
+frictions:
+  - description: I typed the base commit SHA from memory into the plan command and it failed to resolve; CLAUDE.md says never take an id from memory
+    solution: Read it with git rev-parse origin/main once and save it to a file, as I did next; the Skill could say 'write the base to base.txt'
+    severity: nit
+  - description: I forgot step 5's edited:true marking, so the first gate run wrote briefs for only the 2 step pages instead of all 7 edited pages and I regenerated it
+    solution: Make grades.ts gate warn when a writer branch changed a page that no item marks edited, or mark items edited from the merged diff
+    severity: minor
+  - description: Rater C7's brief example for rater C shows no gaps shape, so it wrote gaps as quote and fix; the tally rejected the hand-back and I rewrote six lines
+    solution: Put a gaps example with section, exemplar and take into the rater C brief template
+    severity: minor
+  - description: Rater B graded a draft page that was not in its plan, so the tally rejected the reports; I had to delete that page entry from the saved hand-back
+    solution: Tell rater B in its brief to grade only the plan pages and ignore drafts
+    severity: minor
+  - description: The Standards reviewer ran git checkout --detach in my checkout because my brief only said read-only; dispatch-subagents section 3 says review agents never use the lead's checkout
+    solution: Add 'read commits with git show only; never check out or switch branches' to every review and research brief
+    severity: minor
+  - description: Eleven raters read all 68 pages, about 2.5M subagent tokens by their usage lines, yet the run takes 8 of 80 items, so most findings were skipped by the cap
+    solution: "Size the reading plan to the cap: read changed pages plus a short rotation, or do a cheap first pass and let a full rater read only the suspects"
+    severity: moderate
+  - description: The tally prints every historical step beside the pending ones, so I needed a script to see which two steps formed the queue before researching
+    solution: Print only pending and refused steps in the tally, with the history left in grades.yml
+    severity: minor
+  - description: Several subagents read git-conventions late after a hook, and Rater C8 ran gh api without reading github-integration.md; my briefs did not carry CLAUDE.md's read-first triggers
+    solution: Add one line to dispatch-subagents briefs naming the read-first triggers, or say read-only git show needs no doc
+    severity: minor
+  - description: The harness flagged nearly every hand-back as instruction-shaped because Glass Box pages quote settings.json; each flag needed a check that it asked for nothing
+    solution: Note in environment-caveats that settings-json flags on Glass Box reports are expected noise
+    severity: nit
+durationSec: 2410
+models:
+  claude-sonnet-5-5: 292
+toolCounts:
+  Bash: 75
+  Read: 8
+  Skill: 4
+  mcp__github__list_pull_requests: 1
+  Agent: 44
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__get_session: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__update_pull_request: 1
+  Write: 1
+  Edit: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/claude-code/13.session-transcripts.md
+  - layers/glassbox/content/guide/pages/git-github/01.every-change-a-pr.md
+  - layers/glassbox/content/guide/pages/nuxt-content/05.mdc-components.md
+  - layers/glassbox/content/guide/pages/nuxt-content/07.mermaid-pre-rendering.md
+  - layers/glassbox/content/guide/pages/verification/04.unit-and-e2e-tests.md
+  - layers/glassbox/content/guide/pages/walkthroughs/session-log-lands-on-main.md
+  - .agents/skills/glassbox-improve/runs.yml
+  - .agents/skills/glassbox-improve/grades.yml
+  - layers/glassbox/content/guide/pages/nuxt-content/06.prose-overrides.md
+  - layers/glassbox/content/guide/pages/verification/09.invariant-tests.md
+  - layers/glassbox/content/guide/pages/verification/02.type-checking.md
+  - layers/glassbox/content/guide/pages/verification/06.schema-validation.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0004-human-merge.md
+docsReadBySubagents:
+  - .agents/skills/implement/SKILL.md
+  - .agents/skills/tdd/SKILL.md
+  - .agents/skills/code-review/SKILL.md
+  - .agents/skills/diagnosing-bugs/SKILL.md
+  - docs/adr/0015-audit-skills-and-conditional-importance.md
+  - .agents/skills/wayfinder/SKILL.md
+  - .agents/skills/auto-triage/SKILL.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/log-session/SKILL.md
+  - docs/adr/TEMPLATE.md
+  - docs/adr/0030-adrs-document-a-decision-not-its-history.md
+  - .agents/skills/domain-modeling/ADR-FORMAT.md
+  - GLOSSARY.md
+  - docs/agents/domain.md
+  - docs/adr/0021-multi-context-domain-docs.md
+  - docs/adr/0008-self-documentation-tenant-is-a-journal.md
+  - docs/adr/0009-session-logs-commit-directly-to-main.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0001-single-container-baked-multitenancy.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0028-navigation-reads-server-payloads.md
+  - .agents/skills/to-spec/SKILL.md
+  - .agents/skills/to-tickets/SKILL.md
+  - docs/agents/triage-labels.md
+  - docs/agents/issue-tracker.md
+  - .agents/skills/close-session/SKILL.md
+  - docs/research/content-client-queries-without-wasm.md
+  - .agents/skills/setup-matt-pocock-skills/SKILL.md
+  - .agents/skills/grill-me/SKILL.md
+  - docs/adr/0026-gate-workflow-thin-shell.md
+  - .agents/skills/dependabot-sweep/SKILL.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - docs/agents/tenant-layers.md
+  - docs/adr/0029-instructions-load-with-the-files-they-govern.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - docs/adr/0024-build-time-mermaid-prerender.md
+  - docs/adr/0019-content-load-error-recovery.md
+  - docs/research/nuxt-content-review-grounding.md
+  - .agents/skills/audit-skills/SKILL.md
+  - docs/agents/environment-caveats.md
+  - docs/adr/0011-poc-self-updating-deploy-container.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me CI decides the merge and Human-only files need a human; I did not open the full ADR because the summary was enough and I merged nothing
+    useful: partly
+  - path: .claude/rules/adr-0009.md
+    reason: Kept the session log out of the branch and PR; the summary sufficed so I did not open the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself after review and the gate, and subscribe; the summary was enough, no full ADR needed
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Put the session header on the PR body and made me check the commit trailer landed; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded after I read docs; no trial-covered text was touched so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the docs I read; this run added no rule or instruction file
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded when I read the Glass Box glossary; no glossary term was added or changed
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Said to read the Tenant glossary before working on a layer; I had already read layers/glassbox/GLOSSARY.md for the Skill
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; no term was added this run
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded when I read Skill files; no Skill or workflow script was changed
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: The no-volatile-facts rule was the check I applied to writer text; the writers and raters used it too
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on page reads; no diagram was edited this run
+    useful: no
+subagents:
+  - task: Rater A
+    model: sonnet
+    durationSec: 449
+    toolCalls: 36
+    modelCalls: 36
+    tokenShare: 5.2
+  - task: Rater B
+    model: sonnet
+    durationSec: 321
+    toolCalls: 17
+    modelCalls: 16
+    tokenShare: 2.8
+  - task: Rater C1
+    model: sonnet
+    durationSec: 563
+    toolCalls: 56
+    modelCalls: 56
+    tokenShare: 5.6
+  - task: Rater C2
+    model: sonnet
+    durationSec: 807
+    toolCalls: 81
+    modelCalls: 80
+    tokenShare: 10
+  - task: Rater C3
+    model: sonnet
+    durationSec: 426
+    toolCalls: 44
+    modelCalls: 42
+    tokenShare: 4.4
+  - task: Rater C4
+    model: sonnet
+    durationSec: 420
+    toolCalls: 43
+    modelCalls: 42
+    tokenShare: 4
+  - task: Rater C5
+    model: sonnet
+    durationSec: 493
+    toolCalls: 56
+    modelCalls: 54
+    tokenShare: 4.8
+  - task: Rater C6
+    model: sonnet
+    durationSec: 364
+    toolCalls: 45
+    modelCalls: 41
+    tokenShare: 3.9
+  - task: Rater C7
+    model: sonnet
+    durationSec: 663
+    toolCalls: 68
+    modelCalls: 63
+    tokenShare: 7.6
+  - task: Rater C8
+    model: sonnet
+    durationSec: 464
+    toolCalls: 43
+    modelCalls: 40
+    tokenShare: 3.7
+  - task: Rater C9
+    model: sonnet
+    durationSec: 445
+    toolCalls: 49
+    modelCalls: 48
+    tokenShare: 4.2
+  - task: Research claude-code
+    model: sonnet
+    durationSec: 46
+    toolCalls: 6
+    modelCalls: 6
+    tokenShare: 0.4
+  - task: Research git-github
+    model: sonnet
+    durationSec: 40
+    toolCalls: 7
+    modelCalls: 7
+    tokenShare: 0.5
+  - task: Research verification
+    model: sonnet
+    durationSec: 51
+    toolCalls: 8
+    modelCalls: 7
+    tokenShare: 0.5
+  - task: Research walkthroughs
+    model: sonnet
+    durationSec: 71
+    toolCalls: 13
+    modelCalls: 12
+    tokenShare: 0.7
+  - task: Research step invariant-tests
+    model: sonnet
+    durationSec: 54
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 0.5
+  - task: Research step prose-overrides
+    model: sonnet
+    durationSec: 72
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 0.6
+  - task: Write claude-code
+    model: opus
+    durationSec: 190
+    toolCalls: 34
+    modelCalls: 19
+    tokenShare: 1.5
+  - task: Write git-github
+    model: opus
+    durationSec: 151
+    toolCalls: 23
+    modelCalls: 15
+    tokenShare: 1.2
+  - task: Write verification
+    model: opus
+    durationSec: 156
+    toolCalls: 19
+    modelCalls: 12
+    tokenShare: 1.1
+  - task: Write walkthroughs
+    model: opus
+    durationSec: 223
+    toolCalls: 34
+    modelCalls: 22
+    tokenShare: 1.6
+  - task: Write step invariant-tests
+    model: opus
+    durationSec: 199
+    toolCalls: 27
+    modelCalls: 14
+    tokenShare: 1.3
+  - task: Write step prose-overrides
+    model: opus
+    durationSec: 309
+    toolCalls: 56
+    modelCalls: 35
+    tokenShare: 2.7
+  - task: Gate judge 1
+    model: sonnet
+    durationSec: 14
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.6
+  - task: Gate judge 2
+    model: sonnet
+    durationSec: 13
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.5
+  - task: Gate judge 3
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.5
+  - task: Gate judge 4
+    model: sonnet
+    durationSec: 9
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.5
+  - task: Gate judge 5
+    model: sonnet
+    durationSec: 10
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.5
+  - task: Gate judge 6
+    model: sonnet
+    durationSec: 16
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.6
+  - task: Gate judge 7
+    model: sonnet
+    durationSec: 15
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.5
+  - task: A judge a1
+    model: sonnet
+    durationSec: 21
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.3
+  - task: A judge a2
+    model: sonnet
+    durationSec: 18
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.3
+  - task: A judge a3
+    model: sonnet
+    durationSec: 11
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - task: A judge a4
+    model: sonnet
+    durationSec: 15
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.3
+  - task: A judge a1-2
+    model: sonnet
+    durationSec: 26
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.3
+  - task: A judge a1-3
+    model: sonnet
+    durationSec: 26
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.3
+  - task: A judge a2-2
+    model: sonnet
+    durationSec: 24
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 0.3
+  - task: A judge a2-3
+    model: sonnet
+    durationSec: 26
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 0.3
+  - task: A judge a3-2
+    model: sonnet
+    durationSec: 21
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - task: A judge a3-3
+    model: sonnet
+    durationSec: 20
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - task: A judge a4-2
+    model: sonnet
+    durationSec: 18
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 0.2
+  - task: A judge a4-3
+    model: sonnet
+    durationSec: 26
+    toolCalls: 2
+    modelCalls: 3
+    tokenShare: 0.3
+  - task: "Code review: Standards axis"
+    model: sonnet
+    durationSec: 116
+    toolCalls: 16
+    modelCalls: 14
+    tokenShare: 1.1
+  - task: "Code review: Spec axis"
+    model: sonnet
+    durationSec: 105
+    toolCalls: 12
+    modelCalls: 13
+    tokenShare: 1
+gitBranch: claude/amazing-fermat-ktnxjj
+entrypoint: remote
+cliVersion: 2.1.318
+learnings:
+  - grades.ts record keeps a deleted page's grades entry until the next run's plan reports it as gone (inferred from the plan's stale line and a grep, not from reading record's code)
+  - grades.ts gate writes briefs only for pages whose items are marked edited or whose steps are taken (inferred from getting 2 briefs, then 7 once f1 to f6 were marked)
+ideas:
+  - "Size the glassbox-improve reading plan to workPerRun: this run read 68 pages with 11 raters to take 8 items. Pick pages by recent change and findings per page so rating cost tracks the work taken, and cut per-run spend"
+  - Add a DECISIONS line for churn on promoted pages, for example whether a page promoted within 5 runs may be folded into another. The Prose overrides step was dropped on 11-04, taken on 11-05, and undid a 11-02 promotion
+landedBy: Stop
