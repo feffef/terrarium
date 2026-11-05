@@ -663,7 +663,10 @@ export function agentBriefs(kind: 'researcher' | 'writer', state: Pick<RunState,
     const confirmed = state.items.filter((i) => i.confirmed === true)
     const taken = state.steps.filter((s) => s.status === 'taken' && (s.decided ?? state.run) === state.run)
     const touched = new Set(taken.flatMap(stepPages))
-    for (const s of taken) units.push({ name: s.id, task: s.kind === 'lesson' && s.into ? `write the new page ${s.into}, following .agents/skills/glassbox-lesson/SKILL.md; the items below on ${s.pages.join(', ')} are secondary. ${describe(s)}` : describe(s), items: confirmed.filter((i) => stepPages(s).includes(i.page)), draft: 'none' })
+    for (const s of taken) {
+      const task = s.kind === 'lesson' && s.into ? `write the new page ${s.into}, following .agents/skills/glassbox-lesson/SKILL.md; the items below on ${s.pages.join(', ')} are secondary. ${describe(s)}` : describe(s)
+      units.push({ name: s.id, task, items: confirmed.filter((i) => stepPages(s).includes(i.page)), draft: 'none' })
+    }
     for (const [subject, items] of bySubject(confirmed.filter((i) => !touched.has(i.page)))) units.push({ name: subject, task: `raise ${[...new Set(items.map((i) => i.page))].join(', ')}`, items, draft: 'none' })
   }
   return units.map((u) => ({
@@ -959,7 +962,7 @@ runIfMain(import.meta.url, () => {
   if (command === 'record') {
     const owed = [...state.gate.filter((g) => g.merged === undefined).map((g) => `gate on ${g.page}`), ...state.comparisons.filter((c) => c.votes.length && !c.result).map((c) => `comparison ${c.id}`)]
     if (owed.length) fail(`judges still owed: ${owed.join(', ')}`)
-    const result: Tally = { grades: state.grades, items: state.items, steps: state.steps, comparisons: state.comparisons, waiting: state.waiting, restated: state.restated }
+    const result: Tally = { grades: state.grades, items: state.items, steps: state.steps, comparisons: state.comparisons, waiting: state.waiting }
     const next = nextRecord(record, state.plan, current, result, runs, state.run)
     const meta = { run: state.run, base: sha, ...(flags.session ? { session: flags.session } : {}), ...(flags.pr ? { pr: Number(flags.pr) } : {}), ...(flags.cost ? { costUsd: Number(flags.cost) } : {}) }
     const entry = runEntry(meta, state.plan, result, state.gate as GateEntry[])
