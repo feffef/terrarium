@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeSjNrJGoGzDkoSzhK9
 startedAt: 2026-11-05T06:40:46Z
-endedAt: 2026-11-05T06:55:34Z
+endedAt: 2026-11-05T07:04:30Z
 kind: interactive
 goal: Show ten Friction Ledger clusters per section, with an expand button
-status: in-review
-outcome: "PR #2860 opened with the gate green on the final head; not merged yet"
-summary: "The user asked, in one sentence, to show only the first ten clusters per section on the Journal Friction page and add an expand control. That ask and two answers to my questions (expand-only, and auto-expand a section for a deep link to a hidden cluster) are the human-instructed parts. Everything else was agent-initiated: the e2e test, the two review subagents, and the fixes. I read frictions.vue first, asked two questions per the user's preference, then built a per-section cut with a Show-all button. The first gate attempt was started before the code-review finished, and I then edited files, so that run was moot. One review claim (the generic comma is unneeded in a .vue arrow function) was adopted without checking and turned the next gate red at lint; a function declaration fixed it. At 90 days the live data has 15 severe and 56 frequent clusters, so the test asserts both exceed ten. No screenshot was taken and the deep-link path has no test. subscribe_pr_activity has not been called yet."
+status: completed
+outcome: "PR #2860 merged; ten clusters per section with a Show all button"
+summary: "The user asked, in one sentence, to show only the first ten clusters per section on the Journal Friction page and add an expand control. That ask and two answers to my questions (expand-only, and auto-expand a section for a deep link to a hidden cluster) are the human-instructed parts. Everything else was agent-initiated: the e2e test, the two review subagents, and the fixes. I read frictions.vue first, asked two questions per the user's preference, then built a per-section cut with a Show-all button. The first gate attempt was started before the code-review finished, and I then edited files, so that run was moot. One review claim (the generic comma is unneeded in a .vue arrow function) was adopted without checking and turned the next gate red at lint; a function declaration fixed it. At 90 days the live data has 15 severe and 56 frequent clusters, so the test asserts both exceed ten. No screenshot was taken and the deep-link path had no test, which ADR-0004 treats as untested behaviour needing a human merge, so after CI went green I added a deep-link e2e test, reran the gate and merged with merge-pr.ts after a verdict comment. The agent-initiated parts also included choosing to merge myself; the user asked only for the feature."
 prs:
   - "2860"
 docsRead:
@@ -58,22 +58,29 @@ frictions:
   - description: Took no screenshot of the rendered page; the UI was checked only through the e2e test and counts from SSR HTML.
     solution: Run scripts/ui/preview.ts shot on the built page before the PR.
     severity: minor
-durationSec: 888
+  - description: Realised only after CI went green that the deep-link auto-expand was untested behaviour (an ADR-0004 human-merge condition); needed another test, gate run and CI cycle.
+    solution: When adding behaviour, ask at build time which part no test observes and cover it before the first gate run.
+    severity: minor
+durationSec: 1424
 models:
-  claude-sonnet-5-5: 103
+  claude-sonnet-5-5: 147
 toolCounts:
   Grep: 2
   Read: 7
   AskUserQuestion: 1
-  Edit: 10
-  Bash: 28
-  Skill: 4
+  Edit: 11
+  Bash: 38
+  Skill: 5
   Agent: 2
-  ToolSearch: 1
+  ToolSearch: 3
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   Write: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 6
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/journal/app/pages/t/journal/[space]/frictions.vue
   - layers/journal/tests/e2e/journal.spec.ts
@@ -171,13 +178,13 @@ subagents:
     durationSec: 31
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 9.9
+    tokenShare: 6.9
   - type: general-purpose
     task: Spec review of diff
     durationSec: 27
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 9.6
+    tokenShare: 6.7
 gitBranch: ccr-25e7706e-7tlljq
 entrypoint: remote_mobile
 cliVersion: 2.1.318
