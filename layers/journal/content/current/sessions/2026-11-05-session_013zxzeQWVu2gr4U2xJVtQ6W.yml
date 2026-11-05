@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQWVu2gr4U2xJVtQ6W
 startedAt: 2026-11-05T00:16:14Z
-endedAt: 2026-11-05T00:25:58Z
+endedAt: 2026-11-05T00:29:58Z
 kind: autonomous
 goal: Write the 2026-11-04 Journal Digest
-status: in-review
-outcome: PR 2849 open with the 2026-11-04 Digest and archive sweep; gate green, awaiting CI
-summary: "Scheduled digest run (no human prompts). Found one closed day, gathered it, wrote the Digest, fact-checked it with a sonnet subagent (4 fixes: guide-page count, a wrong scheduled label, edit wording, missing 2836), ran the archive sweep (1 Digest and 16 session logs), ran code-review (Standards and Spec both clean), gate:scoped green, pushed and opened PR 2849. Everything was agent-initiated under the digest Skill; nothing was human-instructed beyond the schedule."
+status: completed
+outcome: "PR 2849 merged on a green gate: the 2026-11-04 Digest and archive sweep"
+summary: "Scheduled digest run (no human prompts). Found one closed day, gathered it, wrote the Digest, fact-checked it with a sonnet subagent (4 fixes: guide-page count, a wrong scheduled label, edit wording, missing 2836), ran the archive sweep (1 Digest and 16 session logs), ran code-review (Standards and Spec both clean), gate:scoped green, pushed, opened PR 2849, and merged it on a green CI gate. Everything was agent-initiated under the digest Skill; nothing was human-instructed beyond the schedule."
 prs:
   - "2849"
 docsRead:
@@ -58,17 +58,23 @@ frictions:
   - description: I omitted PR 2836 from Also shipped because its session said left open; git showed it merged.
     solution: Cross-check the gather PR list against merge commits, not session outcomes.
     severity: nit
-durationSec: 584
+  - description: After the merge I authored a completed log before re-invoking close-session, which log-session refused; one wasted call.
+    solution: Have the merge-pr.ts output remind to run close-session before authoring.
+    severity: nit
+durationSec: 824
 models:
-  claude-sonnet-5-5: 55
+  claude-sonnet-5-5: 71
 toolCounts:
-  Bash: 16
+  Bash: 20
   Read: 5
   Agent: 3
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/archived/pages/digests/2026-10-28.md
   - layers/journal/content/archived/sessions/2026-10-27-session_013zxzeQ8EBq9v7NXqWmAFRF.yml
@@ -164,19 +170,19 @@ subagents:
     durationSec: 179
     toolCalls: 38
     modelCalls: 28
-    tokenShare: 38.5
+    tokenShare: 32.7
   - task: Standards review of Digest diff
     model: sonnet
     durationSec: 29
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 4.5
+    tokenShare: 3.8
   - task: Spec review of Digest diff
     model: sonnet
     durationSec: 35
     toolCalls: 10
     modelCalls: 4
-    tokenShare: 6.2
+    tokenShare: 5.3
 gitBranch: claude/compassionate-lovelace-3uctly
 entrypoint: remote_trigger
 cliVersion: 2.1.318
