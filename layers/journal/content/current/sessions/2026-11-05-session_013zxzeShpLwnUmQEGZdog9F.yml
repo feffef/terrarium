@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeShpLwnUmQEGZdog9F
 startedAt: 2026-11-05T13:10:53Z
-endedAt: 2026-11-05T13:19:22Z
+endedAt: 2026-11-05T13:23:00Z
 kind: autonomous
 goal: "Scheduled prune trial: judge one trial, prune one problem"
-status: in-review
-outcome: "PR #2867 open: one trial judged and deleted, gate-freeze prose pruned"
-summary: "Scheduled prune-trial run (no human prompt; everything agent-initiated under the Skill). Judged the one judgeable trial, the dispatch-subagents \"candidate material\" bullet: relayed-subagent-claims 12.8% to 14.3%, counts-not-tallied 8.8% to 5.7%; the one moderate hit was a code claim, not the cut prose, so the prune holds and the entry is deleted. A search subagent ranked failed-prose candidates; I picked pr-workflow.md's gate-freeze prose because gate.ts stepAbort now holds the behaviour, verified in gate.ts. Pruned it (-1 net), a pinned-SHA Sonnet probe answered correctly, code-review on both axes found only minor notes, gate:scoped green on the final head, PR #2867 opened and subscribed. Open: the other two trials are not judgeable until 2026-11-06 and 2026-11-07."
+status: completed
+outcome: "PR #2867 merged: one trial judged and deleted, gate-freeze prose pruned"
+summary: "Scheduled prune-trial run (no human prompt; everything agent-initiated under the Skill). Judged the one judgeable trial, the dispatch-subagents \"candidate material\" bullet: relayed-subagent-claims 12.8% to 14.3%, counts-not-tallied 8.8% to 5.7%; the one moderate hit was a code claim, not the cut prose, so the prune holds and the entry is deleted. A search subagent ranked failed-prose candidates; I picked pr-workflow.md's gate-freeze prose because gate.ts stepAbort now holds the behaviour, verified in gate.ts. Pruned it (-1 net), a pinned-SHA Sonnet probe answered correctly, code-review on both axes found only minor notes, gate:scoped green on the final head, PR #2867 opened, verdict posted and merged via merge-pr.ts. Open: the other two trials are not judgeable until 2026-11-06 and 2026-11-07."
 prs:
   - "2867"
 docsRead:
@@ -47,18 +47,21 @@ frictions:
   - description: Rules unrelated to the task (adr-0021, guards, adr-0022 and others) loaded into the search subagent as hook side effects, adding noise to its report.
     solution: Narrower paths for those rules so a grep over scripts or journal files doesn't load them.
     severity: nit
-durationSec: 509
+durationSec: 727
 models:
-  claude-sonnet-5-5: 52
+  claude-sonnet-5-5: 68
 toolCounts:
-  Bash: 15
+  Bash: 19
   Read: 4
   Agent: 4
-  Skill: 3
+  Skill: 5
   ToolSearch: 1
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - .agents/prune-trials.yml
   - docs/agents/pr-workflow.md
@@ -144,28 +147,28 @@ subagents:
     durationSec: 61
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 10.9
+    tokenShare: 8.8
   - type: general-purpose
     task: Sonnet probe of pruned doc
     model: sonnet
     durationSec: 12
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 7.4
+    tokenShare: 6
   - type: general-purpose
     task: Standards review of prune diff
     model: sonnet
     durationSec: 37
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 10.9
+    tokenShare: 8.8
   - type: general-purpose
     task: Spec review of prune diff
     model: sonnet
     durationSec: 32
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 10.3
+    tokenShare: 8.3
 gitBranch: claude/practical-rubin-5wpcds
 entrypoint: remote_trigger
 cliVersion: 2.1.318
