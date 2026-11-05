@@ -19,16 +19,6 @@ occurrences:
     severity: minor
     description: "Pushed the reply branch in the same command that printed the gate log tail, though the gate had exited 1 (a Journal accordion e2e test outside the diff). A re-run passed."
     solution: "Read the gate exit status in its own step before any push, as git-conventions says; the Monitor result alone showed EXIT=1."
-  - session: session_015WxXTQihe7mgBPgpAYZUqB
-    date: "2026-10-21"
-    severity: nit
-    description: "Chained git commit --amend before the gate run in one Bash command, against git-conventions (no state-changing git in a gate command). No push happened."
-    solution: "Amend in one call, start the gate in a separate backgrounded call."
-  - session: session_01QPvWywTuiADmXNMMLARnsF
-    date: "2026-10-21"
-    severity: nit
-    description: "Ran git commit and the background gate in one command, against git-conventions' no state-changing git next to a gate run; I read that doc only after my first git commands."
-    solution: "Hook-level reminder of git-conventions before the first git command, not after."
   - session: session_01T4UbBvJmjSunCwb3cUN68Q
     date: "2026-10-22"
     severity: nit

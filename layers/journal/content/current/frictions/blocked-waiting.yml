@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-30"
     summary: "CLAUDE.md: in the main session end your turn and let the completion notification wake you; never wait with pgrep -f"
 occurrences:
-  - session: session_011UkamwPwXvoBVMmNHuoBaD
-    date: "2026-10-21"
-    severity: nit
-    description: "Started a pointless background sleep to wait on the subagent, wasting two calls."
-    solution: "End the turn and wait for the notification."
   - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
     date: "2026-10-22"
     severity: nit

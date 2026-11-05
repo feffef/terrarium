@@ -20,16 +20,6 @@ fixes:
     date: "2026-10-31"
     summary: "describeEntry counts since from in-horizon occurrences only; survey-brief section 5 sends an issue closed not planned to accepted."
 occurrences:
-  - session: session_014tr6vJyNXmekdFQtYrEVWT
-    date: "2026-10-21"
-    severity: nit
-    description: "Section 2 says to file the top three regressions by severity, count and proof together, but gives no rule for severity before versus after the fix, so my pick of the third was a judgement call."
-    solution: "Say to rank by the highest severity since the latest fix PR, as the summary shows it."
-  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
-    date: "2026-10-21"
-    severity: nit
-    description: "Ran the Skill with its autonomous decisions and built without the grilling the owner's preference for questions-first suggests; no question was asked."
-    solution: "Say in the Skill that the owner's start is the approval for picks, so no question is expected."
   - session: session_01CfTFFQrkwq1eUsDy61AJzz
     date: "2026-10-23"
     severity: nit

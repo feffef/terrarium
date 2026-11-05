@@ -6,6 +6,7 @@ status: open
 ref: "Comes from the fixes PR #2452 and #2536 for close-session-bypassed-by-hand-log (a log closed by hand, skipping close-session, so the user had to ask for a proper close)."
 notes: |-
   2026-10-28 design: dropped: the refusal is the designed enforcement of #2536 and names the fix; cost is one call.
+  2026-11-05 design: stronger close-session hint or relaxing the refusal dropped: the refusal is the designed enforcement (close-session-bypassed-by-hand-log), a hint change is Human-only, the cost is one call; the #2798 hint did not move it
 occurrences:
   - session: session_01JJcYmSGnRbUcVyvdPbkGs9
     date: "2026-10-24"

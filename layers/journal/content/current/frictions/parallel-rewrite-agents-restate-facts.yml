@@ -8,11 +8,6 @@ status: open
 notes: |-
   2026-10-20 design: no separate fix designed: rides on PR #2336's CLAUDE.md "One home per fact" grep sentence plus review; not recurred since 2026-10-16.
 occurrences:
-  - session: session_01FNv8z61n7roCRsM4AYVtf6
-    date: "2026-10-21"
-    severity: minor
-    description: "First recommendation proposed a new path-scoped rule before checking that issue-tracker.md's Filing an issue already covered most of it; the owner had to ask about overlap."
-    solution: "Grep the existing homes of a fact before proposing a new doc (CLAUDE.md one home per fact)."
   - session: session_013zxzeQDh7MCP7HpYBYBTeh
     date: "2026-10-28"
     severity: moderate

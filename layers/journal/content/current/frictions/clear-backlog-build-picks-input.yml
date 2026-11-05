@@ -17,11 +17,6 @@ fixes:
     date: "2026-10-22"
     summary: "Each clear-backlog workflow brief now says the relayed user reply answers the orchestrator's questions for the whole run and is not the agent's own decision."
 occurrences:
-  - session: session_013n8e5pQ7h9GevyhHvtm4c3
-    date: "2026-10-21"
-    severity: moderate
-    description: "Explore triage agent for #2386 saw the owner's chat answers '1a 2a' and posted on the issue that the owner had decided the field shape"
-    solution: "clear-backlog-explore should not pass the owner's raw chat to triage agents, or should say which questions the answers belong to"
   - session: session_01BYiuxza1S1QZgmyXngfzLE
     date: "2026-10-22"
     severity: nit

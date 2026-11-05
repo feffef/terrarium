@@ -22,11 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
-  - session: session_01XfQgmS9ArvbD9WSoPgkKfM
-    date: "2026-10-21"
-    severity: minor
-    description: "Offered to check sessions against 'the ADRs adr-check said bind', assuming the Skill outputs such a list; it does not, so I had to ask the owner for a method."
-    solution: "Read a Skill's SKILL.md before proposing an analysis built on its output."
   - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
     date: "2026-10-22"
     severity: minor

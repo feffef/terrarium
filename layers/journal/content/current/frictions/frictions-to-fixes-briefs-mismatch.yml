@@ -24,11 +24,6 @@ fixes:
     date: "2026-10-31"
     summary: "Survey brief passes --out {SCRATCH_DIR} paths to the summary, candidates and extract calls and redirects the merges and open-issues calls; design brief redirects audit-skills output; states that --append writes all or nothing."
 occurrences:
-  - session: session_01WU8rXHT5rKQKDYbYqCv7Sd
-    date: "2026-10-21"
-    severity: nit
-    description: "Survey brief mixes window start and session end dates, and never says which status a ledger entry takes when its issue closes not planned or its Skill sits in a trial."
-    solution: "State the window by session start, and list the status for closed-not-planned and on-trial entries in the brief."
   - session: session_01JkRFBik4MUWwZcP45q7egk
     date: "2026-10-22"
     severity: minor
