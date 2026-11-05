@@ -21,7 +21,7 @@
 //   PR merged at or after that time instead (a bare date is midnight UTC).
 //   Add --diff to either form to also print each PR's touched files (renames
 //   as delete + add) and the first lines of its diff, so a draft starts from
-//   the change, not the title (#2854).
+//   the change, not the title (#2854): { number, title, mergedAtUtc, files, diff }.
 import { git, readMergeCommits, type RawMergeCommit } from '../lib/git.ts'
 import { toUtcIso } from './list-merges-since.ts'
 import { root, fail, runIfMain } from '../lib/cli.ts'
@@ -130,12 +130,16 @@ function describeChanges(prs: RecentPr[]): RecentPr[] {
 function main(): void {
   const raw = process.argv.slice(2)
   const argv = raw.filter((a) => a !== '--diff')
-  const detail = (prs: RecentPr[]) => (raw.includes('--diff') ? describeChanges(prs) : prs)
+  // `hash` only feeds --diff; keep it out of the printed shape.
+  const print = (prs: RecentPr[]) =>
+    process.stdout.write(
+      JSON.stringify(raw.includes('--diff') ? describeChanges(prs) : prs, (k, v) => (k === 'hash' ? undefined : v), 2) + '\n',
+    )
   if (argv[0] === '--since') {
     const since = argv[1]
     if (since === undefined) fail('--since needs an ISO date or datetime')
     try {
-      process.stdout.write(JSON.stringify(detail(prsSince(readMergeCommits(root), since)), null, 2) + '\n')
+      print(prsSince(readMergeCommits(root), since))
     } catch (e) {
       fail((e as Error).message)
     }
@@ -147,7 +151,7 @@ function main(): void {
     limit = Number(limitArg)
     if (!Number.isInteger(limit) || limit <= 0) fail(`not a positive integer: ${limitArg}`)
   }
-  process.stdout.write(JSON.stringify(detail(recentPrs(readMergeCommits(root), limit)), null, 2) + '\n')
+  print(recentPrs(readMergeCommits(root), limit))
 }
 
 runIfMain(import.meta.url, main)

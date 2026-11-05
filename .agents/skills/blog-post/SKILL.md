@@ -64,8 +64,7 @@ Read, hunting for the best stories rather than confirming one:
   time.
 - `pnpm exec tsx scripts/git/list-recent-prs.ts --since <window start> --diff` lists
   the window's merged PRs (number, title, merge time, touched files, first
-  diff lines), so you start from the change, not the title; read the PR bodies
-  only of the stories you pick.
+  diff lines); read the PR bodies only of the stories you pick.
 - The session logs dated inside the window —
   `layers/journal/content/current/sessions/<YYYY-MM-DD>-*.yml`: outcomes and,
   above all, frictions.
