@@ -84,7 +84,9 @@ const sections = computed(() => [
 const SECTION_LIMIT = 10
 const expanded = ref(new Set<string>())
 const expand = (id: string) => (expanded.value = new Set(expanded.value).add(id))
-const shownEntries = <T>(sec: { id: string; entries: T[] }) => (expanded.value.has(sec.id) ? sec.entries : sec.entries.slice(0, SECTION_LIMIT))
+function shownEntries<T>(sec: { id: string; entries: T[] }): T[] {
+  return expanded.value.has(sec.id) ? sec.entries : sec.entries.slice(0, SECTION_LIMIT)
+}
 // A link to a hidden cluster (`#cluster-<name>`) opens its section, then scrolls to it.
 onMounted(async () => {
   const target = route.hash.slice(1)
