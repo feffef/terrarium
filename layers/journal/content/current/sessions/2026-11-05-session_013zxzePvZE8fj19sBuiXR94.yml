@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePvZE8fj19sBuiXR94
 startedAt: 2026-11-05T04:03:04Z
-endedAt: 2026-11-05T04:17:36Z
+endedAt: 2026-11-05T21:52:47Z
 kind: autonomous
 goal: Scheduled audit of the repo's docs for stale or muddled prose
 status: completed
-outcome: Sweep PR 2858 merged on green; ADR-0010 cut sits in escalation PR 2859 awaiting a human merge
-summary: "Scheduled audit-docs run; the schedule started it and no human prompted any step (all agent-initiated). Three read-only reviewers returned: Freshness 0 findings, Single-home 9 (one with three sub-parts), Coherence 3. Two checkers fact-checked all of them: 3 CONFIRMED (midden-catalogue placement, digest close-session line, prune-trial ADR bullet), 7 CONFIRMED-BUT (tests/README gate steps, visitor-loop anywhere, midden-survey, SQLite sentence, tinkerfund Home pointer, digest intro, journal count), 3 WRONG (Midden proposal note, blog persona stances, ADR-0013 vs ADR-0002), plus the ADR-0010 sentence cut CONFIRMED but human-merge. I applied the checker text in one commit (8 files, +15/-18); I left out the optional digest-intro rewrite after the Spec reviewer flagged it as longer, not shorter. The Spec reviewer also claimed the midden-survey parenthetical was dropped; the file still held it, so no change. Gate:scoped green on the final head; PR 2858 opened, subscribed, verdict posted and merged via merge-pr after green CI. The ADR-0010 cut plus its adr restamp went to separate PR 2859 (Human-only path), gate green, subscribed. No issue filed. Covered by B and C: README.md, SECURITY.md, tests/README.md, deploy/README.md, docs/proposals/README.md, layers/atlas blog commons journal marquee midden tinkerfund GLOSSARY.md, Skills blog-post visitor-loop digest midden-survey midden-catalogue prune-trial tinkerfund-campaign atlas-specimen, ADRs 0002 0006 0007 0010 0013 0014 0016 0018 0020 0022 0023, journal pages highlights history real-and-invented (partly)."
+outcome: Sweep PR 2858 merged on green; ADR-0010 cut merged by a human in escalation PR 2859
+summary: "Scheduled audit-docs run; the schedule started it and no human prompted any step (all agent-initiated). Three read-only reviewers returned: Freshness 0 findings, Single-home 9 (one with three sub-parts), Coherence 3. Two checkers fact-checked all of them: 3 CONFIRMED (midden-catalogue placement, digest close-session line, prune-trial ADR bullet), 7 CONFIRMED-BUT (tests/README gate steps, visitor-loop anywhere, midden-survey, SQLite sentence, tinkerfund Home pointer, digest intro, journal count), 3 WRONG (Midden proposal note, blog persona stances, ADR-0013 vs ADR-0002), plus the ADR-0010 sentence cut CONFIRMED but human-merge. I applied the checker text in one commit (8 files, +15/-18); I left out the optional digest-intro rewrite after the Spec reviewer flagged it as longer, not shorter. The Spec reviewer also claimed the midden-survey parenthetical was dropped; the file still held it, so no change. Gate:scoped green on the final head; PR 2858 opened, subscribed, verdict posted and merged via merge-pr after green CI. The ADR-0010 cut plus its adr restamp went to separate PR 2859 (Human-only path), gate green, subscribed; a human merged it later the same day. No issue filed. Covered by B and C: README.md, SECURITY.md, tests/README.md, deploy/README.md, docs/proposals/README.md, layers/atlas blog commons journal marquee midden tinkerfund GLOSSARY.md, Skills blog-post visitor-loop digest midden-survey midden-catalogue prune-trial tinkerfund-campaign atlas-specimen, ADRs 0002 0006 0007 0010 0013 0014 0016 0018 0020 0022 0023, journal pages highlights history real-and-invented (partly)."
 prs:
   - "2858"
   - "2859"
@@ -112,20 +112,21 @@ frictions:
   - description: A Spec reviewer wrongly said the midden-survey parenthetical was dropped; I reread the file to settle it, a small detour.
     solution: Give the reviewer the file path to read rather than only the corrected text.
     severity: nit
-durationSec: 871
+durationSec: 64182
 models:
-  claude-sonnet-5-5: 96
+  claude-sonnet-5-5: 108
 toolCounts:
   Read: 3
-  Skill: 6
-  Bash: 30
+  Skill: 7
+  Bash: 32
   Agent: 7
   ToolSearch: 1
   mcp__github__create_pull_request: 2
   mcp__github__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 1
-  ReadNotifications: 3
+  ReadNotifications: 6
   mcp__github__pull_request_read: 3
+  PushNotification: 1
 filesEdited:
   - .claude/rules/adr-0010.md
   - docs/adr/0010-digests-derived-append-only-journal-pages.md
@@ -259,37 +260,37 @@ subagents:
     durationSec: 111
     toolCalls: 26
     modelCalls: 25
-    tokenShare: 14
+    tokenShare: 11.5
   - task: Audit B Single-home
     durationSec: 146
     toolCalls: 20
     modelCalls: 16
-    tokenShare: 12.9
+    tokenShare: 10.6
   - task: Audit C Coherence
     durationSec: 143
     toolCalls: 24
     modelCalls: 21
-    tokenShare: 13
+    tokenShare: 10.7
   - task: Fact-check findings batch 1
     durationSec: 102
     toolCalls: 26
     modelCalls: 15
-    tokenShare: 7
+    tokenShare: 5.7
   - task: Fact-check findings batch 2
     durationSec: 71
     toolCalls: 23
     modelCalls: 8
-    tokenShare: 4.3
+    tokenShare: 3.5
   - task: Review Standards axis
     durationSec: 33
     toolCalls: 12
     modelCalls: 4
-    tokenShare: 3.9
+    tokenShare: 3.2
   - task: Review Spec axis
     durationSec: 27
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 3.7
+    tokenShare: 3.1
 gitBranch: claude/festive-mayer-tjgy70
 entrypoint: remote_trigger
 cliVersion: 2.1.318
