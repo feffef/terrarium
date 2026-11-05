@@ -1,0 +1,173 @@
+schemaVersion: 1
+session: session_013zxzeShpLwnUmQEGZdog9F
+startedAt: 2026-11-05T13:10:53Z
+endedAt: 2026-11-05T13:19:22Z
+kind: autonomous
+goal: "Scheduled prune trial: judge one trial, prune one problem"
+status: in-review
+outcome: "PR #2867 open: one trial judged and deleted, gate-freeze prose pruned"
+summary: "Scheduled prune-trial run (no human prompt; everything agent-initiated under the Skill). Judged the one judgeable trial, the dispatch-subagents \"candidate material\" bullet: relayed-subagent-claims 12.8% to 14.3%, counts-not-tallied 8.8% to 5.7%; the one moderate hit was a code claim, not the cut prose, so the prune holds and the entry is deleted. A search subagent ranked failed-prose candidates; I picked pr-workflow.md's gate-freeze prose because gate.ts stepAbort now holds the behaviour, verified in gate.ts. Pruned it (-1 net), a pinned-SHA Sonnet probe answered correctly, code-review on both axes found only minor notes, gate:scoped green on the final head, PR #2867 opened and subscribed. Open: the other two trials are not judgeable until 2026-11-06 and 2026-11-07."
+prs:
+  - "2867"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: read before first git command; no conflict with this work
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief requirements for the search, probe and review subagents
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: the pruned doc and the review-before-PR sequence I followed
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: read before PR creation; MCP write path
+    useful: partly
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: the spec; the Spec reviewer reported reading it as the requirements source
+    useful: yes
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: only the search subagent grepped it for restatements; it reported snippets only
+    useful: partly
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: only the search subagent grepped it; line not located
+    useful: partly
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: prune-trial
+    reason: (invoked as a slash command)
+frictions:
+  - description: Review subagents' counts disagreed on the deleted trial's landing SHA (one found different commits via git log -S); I had to trust find-trial-window.ts output over it.
+    solution: Have review briefs paste find-trial-window.ts output so reviewers don't re-derive landing commits.
+    severity: nit
+  - description: Rules unrelated to the task (adr-0021, guards, adr-0022 and others) loaded into the search subagent as hook side effects, adding noise to its report.
+    solution: Narrower paths for those rules so a grep over scripts or journal files doesn't load them.
+    severity: nit
+durationSec: 509
+models:
+  claude-sonnet-5-5: 52
+toolCounts:
+  Bash: 15
+  Read: 4
+  Agent: 4
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/prune-trials.yml
+  - docs/agents/pr-workflow.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0026.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/guards.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0015.md
+docsReadBySubagents:
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/glassbox-improve/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run code-review and gate:scoped before the PR; summary was enough, no full ADR needed
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Reminded me to invoke close-session; log lands on main; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR and subscribe; scheduled run limited to the Skill; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the PR body and commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: Confirmed what a trial may change and the moderate-damage verdict; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded with the prune-trial prompt; no rule moved this run
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded with the prune-trial prompt; no ADR touched
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded from a grep over journal files; no Tenant work done
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by a Skill-file read; no Skill structure changed
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded when a gate file was read; my diff touches no Human-only path
+    useful: no
+  - path: .claude/rules/adr-0026.md
+    reason: Loaded when gate.ts was read; I changed no gate step
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded for the search subagent only; not relevant to the prune
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Subagent-loaded side effect; not relevant
+    useful: no
+  - path: .claude/rules/guards.md
+    reason: Subagent-loaded when it read guard files; not relevant
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Subagent-loaded side effect; not relevant
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Subagent-loaded side effect; not relevant
+    useful: no
+  - path: .claude/rules/adr-0015.md
+    reason: Subagent-loaded side effect; not relevant
+    useful: no
+subagents:
+  - type: Explore
+    task: Search corpus for failed prose
+    durationSec: 61
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 10.9
+  - type: general-purpose
+    task: Sonnet probe of pruned doc
+    model: sonnet
+    durationSec: 12
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 7.4
+  - type: general-purpose
+    task: Standards review of prune diff
+    model: sonnet
+    durationSec: 37
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 10.9
+  - type: general-purpose
+    task: Spec review of prune diff
+    model: sonnet
+    durationSec: 32
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 10.3
+gitBranch: claude/practical-rubin-5wpcds
+entrypoint: remote_trigger
+cliVersion: 2.1.318
+trigger: prune-trial
+landedBy: Stop
