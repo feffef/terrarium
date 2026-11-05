@@ -9,28 +9,27 @@ The `mcp__github__*` tool surface (retries, polling, overflow traps):
 
 ## Review before opening the PR
 
-Push the branch early and often; that opens nothing. The PR is where CI runs
-and an agent can merge (ADR-0003), so review first. Before you open a branch's
-PR: check that no PR exists for it, commit, run the
+Push early and often; a push opens nothing. The PR is where CI runs and an agent
+can merge (ADR-0003), so review first. Before you open a branch's PR: check no
+PR exists for it, commit, run the
 [`code-review`](../../.agents/skills/code-review/SKILL.md) Skill on the
 committed diff against `origin/main` in the checkout that holds it, fix the
-findings, then run `pnpm gate:scoped` last on the final head and edit nothing
-until it ends. Push that head, then open the PR. Exempt: a session-log commit,
-and a Skill whose own steps review the diff before the PR (`midden-catalogue`
-§4).
+findings, then run `pnpm gate:scoped` on the final head. Edit nothing while it
+runs: the gate aborts if HEAD or the tree changes. Push that head, then open the
+PR. Exempt: a session-log commit, and a Skill whose own steps review the diff
+before the PR (`midden-catalogue` §4).
 
 **A simple change** gets your own read of its full diff instead. Count; don't
-judge by how plain it looks. Simple means a typo, rewrap, broken link or path,
-an `adr:` hash or token-estimate restamp, or at most 10 lines in at most 2
-files; and in every case no file added, renamed or moved, and no change to code
-logic, hooks, workflow scripts, Skill or rule frontmatter (bar that hash), or
-the meaning of a Skill, rule, ADR or agent doc. A follow-up commit after a
-review takes the same test; a larger one gets `code-review` on its own diff.
+judge by how plain it looks. Simple is a typo, rewrap, broken link or path, an
+`adr:` hash or token-estimate restamp, or at most 10 lines in at most 2 files;
+and never a file added, renamed or moved, or a change to code logic, hooks,
+workflow scripts, Skill or rule frontmatter (bar that hash), or the meaning of a
+Skill, rule, ADR or agent doc. A follow-up commit after a review takes the same
+test; a larger one gets `code-review` on its own diff.
 
 A later push to an open PR that changes only prose or docs may skip
-`gate:scoped` and rely on CI's gate; run it first for any other change. If
-`gate:scoped` passed but CI failed, check for base drift, then log a `major`
-Friction.
+`gate:scoped` and rely on CI's gate. If `gate:scoped` passed but CI failed,
+check for base drift, then log a `major` Friction.
 
 ## Assembling several stories into one integration PR
 
