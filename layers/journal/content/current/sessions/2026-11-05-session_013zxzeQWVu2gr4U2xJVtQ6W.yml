@@ -1,0 +1,184 @@
+schemaVersion: 1
+session: session_013zxzeQWVu2gr4U2xJVtQ6W
+startedAt: 2026-11-05T00:16:14Z
+endedAt: 2026-11-05T00:25:58Z
+kind: autonomous
+goal: Write the 2026-11-04 Journal Digest
+status: in-review
+outcome: PR 2849 open with the 2026-11-04 Digest and archive sweep; gate green, awaiting CI
+summary: "Scheduled digest run (no human prompts). Found one closed day, gathered it, wrote the Digest, fact-checked it with a sonnet subagent (4 fixes: guide-page count, a wrong scheduled label, edit wording, missing 2836), ran the archive sweep (1 Digest and 16 session logs), ran code-review (Standards and Spec both clean), gate:scoped green, pushed and opened PR 2849. Everything was agent-initiated under the digest Skill; nothing was human-instructed beyond the schedule."
+prs:
+  - "2849"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: push and gate-separation rules; held the push until review and gate
+    useful: yes
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: Digest scope; archive moves allowed, no index edit
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief rules for the fact-check and review agents
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before the GitHub calls; nothing new for opening a PR
+    useful: no
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR and review-before-PR steps
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: Spec review subagent read it for the writing rules; it reported yes
+    useful: yes
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: fact-check subagent only; used to see whether the Glass Box run was scheduled
+    useful: partly
+  - path: layers/journal/content/current/pages/digests/2026-11-04.md
+    reason: (read before editing)
+skillsUsed:
+  - name: digest
+    reason: the run itself
+  - name: code-review
+    reason: Standards and Spec review before the PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git status, the digest list and gather before reading git-conventions.md as CLAUDE.md orders; a hook pointed to it afterwards. All were read-only.
+    solution: Allow the read-only first commands the doc already names, or make the hook fire before them.
+    severity: nit
+  - description: The Stop hook asked five times to push while review and the gate were pending, against ADR-0004's hold-the-push rule; I declined each time.
+    solution: Have the Stop hook skip when a branch has not yet passed review and gate.
+    severity: minor
+  - description: My first draft called the Glass Box run an overnight-style and then scheduled pass, inferred from titles, not session kind; the fact-check caught it.
+    solution: Check run kind in the session log before describing how a run started.
+    severity: minor
+  - description: Draft said eight guide pages reworded, copied from the session outcome; the diff showed seven with non-pin changes, so the fact-check made me drop the number.
+    solution: Verify counts from a session outcome against the diff before writing them.
+    severity: minor
+  - description: I omitted PR 2836 from Also shipped because its session said left open; git showed it merged.
+    solution: Cross-check the gather PR list against merge commits, not session outcomes.
+    severity: nit
+durationSec: 584
+models:
+  claude-sonnet-5-5: 55
+toolCounts:
+  Bash: 16
+  Read: 5
+  Agent: 3
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/archived/pages/digests/2026-10-28.md
+  - layers/journal/content/archived/sessions/2026-10-27-session_013zxzeQ8EBq9v7NXqWmAFRF.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzePhRwXqYLtsycYUhqv.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeQDh7MCP7HpYBYBTeh.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeQRYzCbfkXYbHKwcPv.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeQmVnqMqDkRgFRWx5T.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeQvE9RNYoZRiZEEKBG.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeQxsePnJds2jEpgirL.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeR86n7CjfWXZh4HXyc.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeR94ZpyH5mhKXDH22Y.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeRin6kPuaDZ27jyuUk.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeRpJV1qxKtqhnjBVTy.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeSJQfnNdJHrSWjVT2x.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeSXsJSnGEYu9VQYXFH.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeSxgYzYmeAuCzvJdhY.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeTGYbEWeFyEywFafxw.yml
+  - layers/journal/content/archived/sessions/2026-10-28-session_013zxzeTK9c2HVcabwCx3b18.yml
+  - layers/journal/content/current/pages/digests/2026-10-28.md
+  - layers/journal/content/current/pages/digests/2026-11-04.md
+rulesLoaded:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0010.md
+rulesLoadedBySubagents:
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/glossary-terms.md
+docsReadBySubagents:
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/glassbox-improve/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Gate then review before PR; the summary was enough, did not open the full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Push early, open PR after review; allowed holding the push despite the Stop hook
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body header and commit trailer; checked the trailer landed
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Digest scope; I read the full ADR for detail on archive moves
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; not relevant to a Digest
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where rules live; not relevant here
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR writing; not relevant here
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on touching nothing Human-only; confirmed no human merge needed
+    useful: partly
+  - path: .claude/rules/adr-0005.md
+    reason: Skill model; not relevant to a Digest
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Only a subagent loaded it; it reported no use
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Only subagents loaded it; reported no use
+    useful: no
+  - path: .claude/rules/adr-0008.md
+    reason: Only a subagent loaded it; reported no use
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Only a subagent loaded it; reported no use
+    useful: no
+  - path: .claude/rules/glossary-terms.md
+    reason: Only a subagent loaded it; reported no use
+    useful: no
+subagents:
+  - task: Fact-check 2026-11-04 Digest
+    model: sonnet
+    durationSec: 179
+    toolCalls: 38
+    modelCalls: 28
+    tokenShare: 38.5
+  - task: Standards review of Digest diff
+    model: sonnet
+    durationSec: 29
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 4.5
+  - task: Spec review of Digest diff
+    model: sonnet
+    durationSec: 35
+    toolCalls: 10
+    modelCalls: 4
+    tokenShare: 6.2
+gitBranch: claude/compassionate-lovelace-3uctly
+entrypoint: remote_trigger
+cliVersion: 2.1.318
+trigger: digest
+landedBy: Stop
