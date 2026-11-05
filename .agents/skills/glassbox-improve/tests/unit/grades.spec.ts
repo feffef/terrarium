@@ -181,6 +181,11 @@ describe('reports', () => {
     const steps: Report['steps'] = [{ kind: 'split', pages: ['a/01.x'], gist: 'g' }, { kind: 'cut', pages: ['a/02.y'], gist: 'g' }]
     expect(reportProblems({ ...good, steps }, plan)).toEqual(['A: step split of a/01.x has no into'])
   })
+
+  it('needs every step to carry a gist', () => {
+    const steps: Report['steps'] = [{ kind: 'cut', pages: ['a/02.y'] } as never, { kind: 'cut', pages: ['a/03.z'], gist: '' }]
+    expect(reportProblems({ ...good, steps }, plan)).toEqual(['A: step cut of a/02.y has no gist', 'A: step cut of a/03.z has no gist'])
+  })
 })
 
 describe('tally', () => {
@@ -244,7 +249,9 @@ describe('tally', () => {
     const b: Report = { rater: 'B', pages: [], steps: [{ kind: 'cut', pages: ['a/04.p'], gist: 'g' }] }
     expect(tally(record({}, [dropped]), plan, [b], [run('2026-11-02')], {}, today).steps.map((s) => [s.status, s.raised])).toEqual([['dropped', ['2026-11-02', today]]])
     const registed = { ...b, steps: [{ kind: 'cut' as const, pages: ['a/04.p'], gist: 'a new reason' }] }
-    expect(tally(record({}, [dropped]), plan, [registed], [run('2026-11-02')], {}, today).steps.map((s) => [s.status, s.gist])).toEqual([['pending', 'a new reason']])
+    const restated = tally(record({}, [dropped]), plan, [registed], [run('2026-11-02')], {}, today)
+    expect(restated.steps.map((s) => [s.status, s.gist])).toEqual([['pending', 'a new reason']])
+    expect(restated.restated).toEqual(['cut-p: dropped 2026-11-02 as "g", raised again as "a new reason"'])
   })
 
   it('refuses splitting a page a recent step moved content into, whatever the new page is named', () => {
@@ -559,6 +566,12 @@ describe('agentBriefs', () => {
     expect(got.map((b) => b.name)).toEqual(['writer-move-x-into-q', 'writer-a'])
     expect(got[1]!.text).toBe('T: raise a/01.x, a/02.y\nI: - f1, a/01.x, clarity, "q1": fix1\n- f2, a/02.y, reasoning, "Lede": take (A page: a/09.z)\nR: /o/research-a.md\nF: - b/03.p: "runs daily" (x.ts:3)\nB: abc S: /o/writer-a')
     expect(got[0]!.text).toContain('T: move c/01.x into c/02.q (move-x-into-q): Move timeouts.\nI: none')
+  })
+
+  it('tells a lesson writer to write the new page into its target, the old page\'s items second', () => {
+    const lesson: Step[] = [{ id: 'lesson-x', kind: 'lesson', pages: ['d/01.d'], into: 'd/02.new', raised: ['d'], status: 'taken', gist: 'Teach it.' }]
+    const got = agentBriefs('writer', { base: 'abc', run: '2026-11-05', items, steps: lesson }, writer, '/o', () => 'none')
+    expect(got[0]!.text).toContain('T: write the new page d/02.new, following .agents/skills/glassbox-lesson/SKILL.md; the items below on d/01.d are secondary. lesson d/01.d into d/02.new (lesson-x): Teach it.')
   })
 
   it('fails when a placeholder has no value', () => {
