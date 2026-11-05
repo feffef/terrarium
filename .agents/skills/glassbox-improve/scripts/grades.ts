@@ -17,7 +17,7 @@ import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.
 import { frontmatterBlock, splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { git, tryGit } from '../../../../scripts/lib/git.ts'
 import { findLatestTranscript } from '../../../../scripts/session/transcript-trace.ts'
-import { readBreakdown, type CostBreakdown, type Mark } from './cost.ts'
+import { anchor, readBreakdown, type CostBreakdown, type Mark } from './cost.ts'
 import { glassboxCites, glassboxJournalRoutes, glassboxOrphanText, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, repoGit, type GlassboxGit, type GlassboxSite } from '../../../../layers/glassbox/page-checks.ts'
 import { glassboxPageRefs } from '../../../../layers/glassbox/page-refs.ts'
 
@@ -77,7 +77,7 @@ export interface RunEntry {
   pr?: number
   /** From get_session, entered after the PR opens. */
   costUsd?: number
-  /** In USD at list prices, recomputed from the local transcript at every `record`; `totalUsd` should land near `costUsd`. */
+  /** Recomputed from the local transcript at every `record`: exact tokens by phase, estimated shares, and `usd` (shares of `costUsd`) once `--cost` is given. */
   costBreakdown?: CostBreakdown
   relevance?: boolean
   pagesRead: number
@@ -1007,6 +1007,7 @@ runIfMain(import.meta.url, () => {
     let costBreakdown: CostBreakdown | undefined
     try {
       costBreakdown = transcript ? readBreakdown(transcript, marksIn(out)) : undefined
+      if (costBreakdown && flags.cost) costBreakdown = anchor(costBreakdown, Number(flags.cost))
       if (!costBreakdown) console.error('no local transcript, so no cost breakdown (pass --transcript <jsonl>)')
     } catch (err) {
       console.error(`no cost breakdown: ${(err as Error).message}`)

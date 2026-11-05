@@ -200,6 +200,8 @@ After 3 to 5 v3 runs, compare `runs.yml` with the v2 runs listed in that
 issue: the gate pass rate (near 100% means a rubber stamp, near 50% weak
 selection or writing), whether low-value edits were stopped, how many inverse
 steps were refused, and the cost per run and per page that passed the gate.
-`costBreakdown` in each `runs.yml` entry (USD) splits that cost: the lead's
-cost and context at each phase start, and the subagents' cost per phase. Check
-`totalUsd` against `costUsd` first, since the prices are not yet calibrated.
+`costBreakdown` in each `runs.yml` entry splits that cost: tokens by
+class (counted from the transcripts) for the lead and each subagent phase, the lead's context at each phase
+start, and estimated shares (`sharePct`). `usd` is those shares times `costUsd`,
+so it exists once `record` gets `--cost`. The shares rest on uncalibrated
+weights; read them as estimates, and the lead-versus-subagents split with care.

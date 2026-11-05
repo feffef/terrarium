@@ -1,6 +1,6 @@
 // The cost of a run by phase, from a small fixture transcript.
 import { describe, expect, it } from 'vitest'
-import { breakdown, costOf, phaseOf, requestsOf } from '../../scripts/cost.ts'
+import { anchor, breakdown, phaseOf, requestsOf, tokensOf, weightOf } from '../../scripts/cost.ts'
 
 const rec = (id: string, at: string, model: string, usage: Record<string, unknown>) => ({ type: 'assistant', timestamp: at, message: { id, model, usage } })
 
@@ -16,15 +16,25 @@ describe('requestsOf', () => {
   })
 })
 
-describe('costOf', () => {
-  it('prices input, cache reads, 1h and 5m cache writes and output by model', () => {
+describe('tokensOf', () => {
+  it('sums thousand tokens by class, both cache write lifetimes as writes', () => {
+    const rs = requestsOf([
+      rec('a', '2026-11-05T10:00:00Z', 'claude-sonnet-5-5', { input_tokens: 1000, output_tokens: 2000, cache_read_input_tokens: 3000, cache_creation: { ephemeral_5m_input_tokens: 4000, ephemeral_1h_input_tokens: 5000 } }),
+      rec('b', '2026-11-05T10:01:00Z', 'claude-sonnet-5-5', { input_tokens: 1000, cache_creation_input_tokens: 1000 }),
+    ])
+    expect(tokensOf(rs)).toEqual({ inputK: 2, outputK: 2, readK: 3, writeK: 10 })
+  })
+})
+
+describe('weightOf', () => {
+  it('weighs input, cache reads, 1h and 5m cache writes and output by model, as ratios', () => {
     const usage = { input_tokens: 1e6, cache_read_input_tokens: 1e6, cache_creation: { ephemeral_5m_input_tokens: 1e6, ephemeral_1h_input_tokens: 1e6 }, output_tokens: 1e6 }
     // sonnet: 2 + 0.2 + 2.5 + 4 + 10; opus: 4 + 0.2 + 5 + 8 + 20
-    expect(costOf({ at: 0, model: 'claude-sonnet-5-5', usage })).toBeCloseTo(18.7)
-    expect(costOf({ at: 0, model: 'claude-opus-5-5', usage })).toBeCloseTo(37.2)
+    expect(weightOf({ at: 0, model: 'claude-sonnet-5-5', usage })).toBeCloseTo(18.7)
+    expect(weightOf({ at: 0, model: 'claude-opus-5-5', usage })).toBeCloseTo(37.2)
   })
-  it('refuses a model it has no price for', () => {
-    expect(() => costOf({ at: 0, model: 'claude-unknown-9', usage: {} })).toThrow('no price for model claude-unknown-9')
+  it('refuses a model it has no weight for', () => {
+    expect(() => weightOf({ at: 0, model: 'claude-unknown-9', usage: {} })).toThrow('no weight for model claude-unknown-9')
   })
 })
 
@@ -47,19 +57,31 @@ describe('breakdown', () => {
   ]
   const marks = [{ phase: 'tally', at: '2026-11-05T10:01:00Z' }, { phase: 'gate', at: '2026-11-05T10:12:00Z' }, { phase: 'record', at: '2026-11-05T10:30:00Z' }]
 
-  it('sums the lead, groups agents by phase and checks the lead at each phase start, counting from the first', () => {
+  it('gives each part its share of the run, groups agents by phase and checks the lead at each phase start, counting from the first', () => {
+    // weights: lead 1.2, write 8, gate 2: total 11.2
     const b = breakdown(lead, agents, marks)
-    expect(b.agentsUsd).toEqual({ write: 8, gate: 2 })
-    expect(b.leadUsd).toBe(1.2)
-    expect(b.totalUsd).toBe(11.2)
+    expect(b.sharePct).toEqual({ lead: 10.7, agents: { write: 71.4, gate: 17.9 } })
+    expect(b.tokens.agents.write).toEqual({ inputK: 2000, outputK: 0, readK: 0, writeK: 0 })
+    expect(b.tokens.lead.inputK).toBe(600)
     expect(b.lead).toEqual([
-      { phase: 'tally', at: '2026-11-05T10:01:00Z', contextK: 100, costUsd: 0 },
-      { phase: 'gate', at: '2026-11-05T10:12:00Z', contextK: 200, costUsd: 0.4 },
-      { phase: 'record', at: '2026-11-05T10:30:00Z', contextK: 300, costUsd: 1 },
+      { phase: 'tally', at: '2026-11-05T10:01:00Z', contextK: 100, cumPct: 0 },
+      { phase: 'gate', at: '2026-11-05T10:12:00Z', contextK: 200, cumPct: 3.6 },
+      { phase: 'record', at: '2026-11-05T10:30:00Z', contextK: 300, cumPct: 8.9 },
     ])
+    expect(b.usd).toBeUndefined()
   })
   it('keeps only the first start of a phase that ran in several rounds', () => {
     const rounds = [...marks, { phase: 'gate', at: '2026-11-05T10:25:00Z' }]
     expect(breakdown(lead, agents, rounds).lead.map((p) => p.phase)).toEqual(['tally', 'gate', 'record'])
+  })
+  it('reports no share for an empty run', () => {
+    expect(breakdown([], [], []).sharePct).toEqual({ lead: 0, agents: {} })
+  })
+})
+
+describe('anchor', () => {
+  it('scales the shares to the recorded cost', () => {
+    const b = anchor(breakdown(requestsOf([rec('l', '2026-11-05T10:00:00Z', 'claude-sonnet-5-5', { input_tokens: 1e6 })]), [{ label: 'Write x', requests: requestsOf([rec('w', '2026-11-05T10:01:00Z', 'claude-sonnet-5-5', { input_tokens: 3e6 })]) }], []), 40)
+    expect(b.usd).toEqual({ total: 40, lead: 10, agents: { write: 30 } })
   })
 })
