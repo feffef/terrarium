@@ -1,6 +1,6 @@
 # Tests
 
-Where each test lives, and the non-obvious e2e rules. Every spec reuses one build, because a spec that builds its own copy multiplies the gate's slowest step. Each spec's server gets its own SQLite file, because servers sharing one raced and failed.
+Where each test lives, and the non-obvious e2e rules. Every spec reuses one build, because a spec that builds its own copy multiplies the gate's slowest step.
 
 ## A test is homed with the code it exercises
 
@@ -64,5 +64,5 @@ transition) needs its timeout raised per-call —
   `layers/*/tests/unit/**` and `.agents/skills/*/tests/unit/**`.
 - `pnpm test:e2e` — the L2 specs, in parallel, on the gate's build.
 
-Both are part of the safety gate (ADR-0004); the steps live in `package.json`'s
-`gate` script.
+Both are part of the safety gate (ADR-0004); the steps live in `package.json`'s `gate`,
+`scripts/gate/gate.ts` and the CI action, which must agree (ADR-0026).
