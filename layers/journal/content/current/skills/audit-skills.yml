@@ -685,3 +685,8 @@ observations:
   - date: "2026-11-04"
     note: >-
       Behaviour check, 3 newest runs delivered. Unverified: run of 11-03 (PR #2803) inventoried glassbox-walkthrough, implement-spec and wait-what with zero uses, which earlier runs left out; step 5 is ambiguous about on-disk-only Skills. orphanScan counts missing from the 11-01 summary (repeat). No issue.
+  - date: "2026-11-05"
+    note: >-
+      Run session_013zxzeRkv6UCWJtPmJ68h32 took 23358s: audit done in 15 min, PR #2750 merged 01:01Z, log completed 07:15Z after a human nudge (also
+      recorded on close-session). Step 6 says to invoke close-session once, not again after the merge; ADR-0009 does. The 11-04 run hit the same
+      refusal once. Tracked as #2772. 11-01 summary omitted orphanScan counts (third time); 11-02 to 11-04 had them. Grade unchanged.

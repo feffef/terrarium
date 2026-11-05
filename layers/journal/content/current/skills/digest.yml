@@ -342,3 +342,7 @@ observations:
   - date: "2026-11-04"
     note: >-
       Behaviour check, 7 runs, all PRs merged, no revert. Verified (self-disclosed, same family as #2472): code-review skipped on session_013zxzePsSguQyDiqnq52irG's diff (adds a file, so not simple); the other six ran it. Fact-check caught wrong claims in every first draft, so it works. No new issue. Grade unchanged.
+  - date: "2026-11-05"
+    note: >-
+      All 7 delivered, 7-date retention holds. code-review skipped on session_013zxzePsSguQyDiqnq52irG's diff (adds a file); #2472 family, step 6
+      does not name code-review. Dispatch-read guard blocked the first Agent call in 4 of 7 runs. Grade unchanged.

@@ -491,3 +491,7 @@ observations:
       Dispatch-read guard blocked the first Agent call in all 6 runs; 9d85a5c5c
       ("Read first") is untested. Unverified: #2745 dismissed a 16-candidate
       owner-corrections list in one line.
+  - date: "2026-11-05"
+    note: >-
+      Dispatch-read guard no longer blocked the 11-02 and 11-03 runs after 9d85a5c5c (2 of 2). Minor repeat: step 3's duplicate check is keyword-based
+      and missed the homepage's Specimen of the day on 11-03 (session_013zxzePCZc7PkwLBo6YoDJt); the refiner caught it. Grade unchanged.

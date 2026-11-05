@@ -210,3 +210,8 @@ observations:
   - date: "2026-11-04"
     note: >-
       Behaviour check, 8 runs, 44 PRs merged, no revert. Partial, repeated: worktrees left with unpushed work at close in the 11-02 (SuucE) and 11-01 (TLLY) runs (check:worktrees exit 0 criterion; nudge fires before merges). Unverified exit status. Known slip: log-session --author used instead of re-invoking close-session (fixed in #2798). Grade unchanged.
+  - date: "2026-11-05"
+    note: >-
+      All 3 newest runs delivered (PRs #2809-#2811, #2826-#2827, #2840-#2841). Spec conflict: the system prompt pins a branch and bars PRs, while
+      section 4 and ADR-0003 say push and open; session_013zxzeQbPLMkHvh94sawgDU pushed to the designated branch. check:worktrees exit 0 is claimed
+      only by the 11-04 run. Grade unchanged.

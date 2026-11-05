@@ -485,3 +485,10 @@ observations:
   - date: "2026-10-31"
     note: >-
       Behaviour check, 10 runs, all PRs merged. Verified: §5 check:worktrees absent from session_013zxzePnfDGz3F3p9spej9f, session_013zxzeQUV6c2tzkFzv3WgiY, session_013zxzeRoWcNj4VhbkkjybNG (repeat of the 10-26 note); filed #2721. Unverified, n=1: §3 "it pushes once a review is clean" vs lead pushing (session_013zxzePnfDGz3F3p9spej9f). About 55 save-handback calls in session_013zxzeQUV6c2tzkFzv3WgiY (cost only). Dispatch-read guard still fires first. Grade/role unchanged (essential).
+  - date: "2026-11-05"
+    note: >-
+      Verified (unfiled): session_013zxzeT8tDd5GPJiRNZRA4J's read-only code-review subagent ran git checkout --detach in the shared
+      checkout; the lead's merges landed on a detached HEAD until check:worktrees flagged it. No lasting damage. SKILL says only that a read-only
+      agent copies the file aside or uses its own worktree; a one-line 'no checkout, switch or reset in the shared tree' is the candidate fix.
+      Same shape in session_013zxzeRDagsHLSNJ939gcWK (10-30, workflow run). Escalate on a third. Same run skipped section 4 (16 writers, 4 hand-resolved
+      conflicts). Grade unchanged.
