@@ -26,3 +26,8 @@ occurrences:
     severity: nit
     description: "Two raters wrote their page dumps (b2.txt, d1.txt …) to the shared scratchpad root with the same names, not the subfolder the brief named."
     solution: "rater-brief could say every file goes in its own subfolder, with the folder path repeated next to the report instructions."
+  - session: session_013zxzeT8tDd5GPJiRNZRA4J
+    date: "2026-11-04"
+    severity: nit
+    description: "Did not create per-agent scratchpad subfolders first (dispatch-subagents section 3); several writers dropped logs flat in improve/, two of them both called install.log."
+    solution: "Have the writer brief generator create the named subfolder before the agent starts."

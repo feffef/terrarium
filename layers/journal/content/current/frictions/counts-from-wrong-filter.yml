@@ -40,3 +40,8 @@ occurrences:
     severity: nit
     description: "extract-frictions counted 28 sessions in the window but friction-rates counted 20; I could not reconcile them and said so in #2784."
     solution: "Have friction-rates print how it picks the sessions it counts."
+  - session: session_013zxzeQNXfvE3ck6tjqWpYK
+    date: "2026-11-04"
+    severity: minor
+    description: "Built the first list of six reopen candidates from the first git -S date for status accepted, which missed relayed-subagent-claims' re-acceptance, so I corrected to five."
+    solution: "Read each entry's ref and its latest status commit, not the first, before reporting acceptance dates."

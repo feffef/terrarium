@@ -1,13 +1,15 @@
 name: check-worktrees-unpushed-flags
 summary: check:worktrees reported a worktree or checkout as unpushed or detached after a push or build that the Skill had not told the session to follow up.
-cause: "A worktree pushed with 'git push origin HEAD:branch' has no upstream, or the main checkout was left on a detached HEAD by a build workflow; check:worktrees fails until the session pushes the run branch or sets upstreams by hand. Signals: 'pnpm check:worktrees failed', 'reported them unpushed', 'no upstream', 'detached HEAD'. Since PR #2739, log-session --author also runs the sweep at close and lists linked worktrees left with uncommitted or unpushed work (build workflow worktrees) as a Friction or a refusal."
+cause: "A worktree pushed with 'git push origin HEAD:branch' has no upstream, or the main checkout was left on a detached HEAD by a build workflow; check:worktrees fails until the session pushes the run branch or sets upstreams by hand. PR #2811 (2026-11-03) has the orchestrator push reviewed branches; issue #2831 closed 2026-11-04 as most likely fixed, unproven (no later session tested it). Since PR #2739, log-session --author also runs the sweep at close and lists linked worktrees left with uncommitted or unpushed work as a Friction or a refusal. Signals: 'pnpm check:worktrees failed', 'reported them unpushed', 'no upstream', 'detached HEAD'."
 surface: safe
-status: tracked
-ref: "#2831"
+status: open
 fixes:
   - pr: 2728
     date: "2026-10-31"
     summary: "check:worktrees counts commits on no remote-tracking ref, ignoring the branch's upstream, so a worktree branched from origin/main and pushed to its own branch no longer reads as unpushed."
+  - pr: 2811
+    date: "2026-11-03"
+    summary: "dispatch-subagents §3: impl agents hand back an unpushed branch and the orchestrator pushes the reviewed branch, so no subagent push is classifier-denied or leaves a worktree without upstream."
 occurrences:
   - session: session_013zxzeQDh7MCP7HpYBYBTeh
     date: "2026-10-28"

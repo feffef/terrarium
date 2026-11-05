@@ -444,3 +444,18 @@ occurrences:
     severity: nit
     description: "Ran my first git command before reading git-conventions.md; the PostToolUse hint arrived only after it, though the call was read-only."
     solution: "Fire the git-conventions hint before the first state-changing git command, not after any git call."
+  - session: session_013zxzeNcfR7ezGAhwXWTD1g
+    date: "2026-11-04"
+    severity: nit
+    description: "I made my first mcp__github__ calls before reading docs/agents/github-integration.md, which CLAUDE.md requires first; a hook flagged it afterward."
+    solution: "Read the doc in the first batch alongside the git-conventions read, as CLAUDE.md orders."
+  - session: session_013zxzeQWVu2gr4U2xJVtQ6W
+    date: "2026-11-05"
+    severity: nit
+    description: "Ran git status, the digest list and gather before reading git-conventions.md as CLAUDE.md orders; a hook pointed to it afterwards. All were read-only."
+    solution: "Allow the read-only first commands the doc already names, or make the hook fire before them."
+  - session: session_013zxzeQAvRVQM2NhW8WWUPJ
+    date: "2026-11-05"
+    severity: nit
+    description: "Read git-conventions.md and github-integration.md only after my first git and GitHub commands, because the hook hint arrived afterwards."
+    solution: "Read both docs before the first command, as CLAUDE.md says."

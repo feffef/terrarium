@@ -85,3 +85,13 @@ occurrences:
     severity: minor
     description: "Fact-check found two wrong claims in my draft, an attribution mix-up of two same-day runs and a miscited PR; I had inferred from PR titles rather than checking."
     solution: "Check PR merge times and files before writing about which run did what."
+  - session: session_013zxzeNcfR7ezGAhwXWTD1g
+    date: "2026-11-04"
+    severity: minor
+    description: "I drafted a Karen reply claiming the Glass Box textbook still taught the old rule without reading what the textbook update commit had changed; the blind reader picked it, and my later check showed the premise false."
+    solution: "Open the cited commit's diff before drafting a receipt-style claim from one stale-looking line."
+  - session: session_013zxzeQWVu2gr4U2xJVtQ6W
+    date: "2026-11-05"
+    severity: minor
+    description: "My first draft called the Glass Box run an overnight-style and then scheduled pass, inferred from titles, not session kind; the fact-check caught it."
+    solution: "Check run kind in the session log before describing how a run started."

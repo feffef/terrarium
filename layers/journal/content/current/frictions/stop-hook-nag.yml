@@ -384,3 +384,18 @@ occurrences:
     severity: nit
     description: "Stop hook asked three times to commit and push while the fact-check and gate were pending, contradicting the review-before-first-push rule."
     solution: "Make the Stop hook skip when a gate or subagent is in flight."
+  - session: session_013zxzeNezKVRxRiZLs4z9n4
+    date: "2026-11-04"
+    severity: nit
+    description: "A stop hook asked me to push twice while the gate ran; git-conventions forbids pushing in the same command as a gate, so I had to push in separate calls."
+    solution: "Fine as is; the separate-call rule worked."
+  - session: session_013zxzeQNXfvE3ck6tjqWpYK
+    date: "2026-11-04"
+    severity: nit
+    description: "The Stop hook asked twice to commit and push while checks ran; the git-conventions rule says to push, so it cost only a turn each."
+    solution: "None needed beyond the stop-hook-nag cluster."
+  - session: session_013zxzeQWVu2gr4U2xJVtQ6W
+    date: "2026-11-05"
+    severity: minor
+    description: "The Stop hook asked five times to push while review and the gate were pending, against ADR-0004's hold-the-push rule; I declined each time."
+    solution: "Have the Stop hook skip when a branch has not yet passed review and gate."

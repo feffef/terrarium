@@ -19,3 +19,8 @@ occurrences:
     severity: nit
     description: "Worked on a local branch audit-docs/2026-10-26 and pushed it to the designated session branch rather than staying on it."
     solution: "Rename the session branch instead of cutting a second one."
+  - session: session_013zxzeSKLjL9xzvaR2kQ4po
+    date: "2026-11-04"
+    severity: minor
+    description: "System prompt says push only to the designated branch and open no PR unless asked, while clear-backlog and ADR-0003 say to push per-issue branches and open PRs; I followed the Skill."
+    solution: "State in the clear-backlog Skill that invoking it authorises pushing its named branches and opening PRs despite a session branch pin."

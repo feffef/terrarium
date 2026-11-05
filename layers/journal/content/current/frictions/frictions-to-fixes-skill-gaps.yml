@@ -95,3 +95,8 @@ occurrences:
     severity: minor
     description: "The Skill ranks regressions by highest severity since the fix but gives no tie-break; four were moderate with one occurrence each, and I picked the third by horizon count."
     solution: "Say how to break ties, or allow fewer than three when the remaining candidates are superseded or server faults."
+  - session: session_013zxzeNezKVRxRiZLs4z9n4
+    date: "2026-11-04"
+    severity: nit
+    description: "The skill's regression rule files an issue for minor and nit recurrences too; I filed three issues for sub-moderate regressions where earlier fixes had mostly dropped designs."
+    solution: "Rank regressions by cost since the fix, not only by severity, so repeat nits do not take the three slots."

@@ -99,3 +99,8 @@ occurrences:
     severity: minor
     description: "The survey report omitted each regression's highest-severity-since, though its brief asks for it; I re-derived it from the summary file with grep."
     solution: "Have the survey brief require the since value column copied per regression, or write the ranked list to a file."
+  - session: session_013zxzeNezKVRxRiZLs4z9n4
+    date: "2026-11-04"
+    severity: minor
+    description: "Survey brief's list_issues CLOSED paging asks for a heavy scan; the survey agent substituted a gh api scan, and the survey omitted each regression's severity-since that its brief requires."
+    solution: "Have the survey brief require the since column copied per regression, and name the cheap closed-issue scan."

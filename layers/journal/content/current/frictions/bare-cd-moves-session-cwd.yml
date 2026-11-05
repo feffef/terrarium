@@ -61,3 +61,8 @@ occurrences:
     severity: nit
     description: "Bash kept a changed directory, so a counting script found zero session logs and a reference grep covered only the ledger folder; both reruns cost calls."
     solution: "Use absolute paths in every command instead of relying on cd."
+  - session: session_013zxzeNcfR7ezGAhwXWTD1g
+    date: "2026-11-04"
+    severity: nit
+    description: "A bash cd into layers/blog/content shifted the working directory twice, which I only noticed from environment notices."
+    solution: "Use absolute paths and avoid cd in compound commands."

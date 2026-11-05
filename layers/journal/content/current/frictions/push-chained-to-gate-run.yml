@@ -54,3 +54,13 @@ occurrences:
     severity: nit
     description: "Ran git commit and pnpm gate:scoped in one Bash command, against git-conventions' rule not to mix state-changing git with a gate run; the push waited for a separate exit-status read."
     solution: "Commit in its own call, then start the gate in the background."
+  - session: session_013zxzeSDVFqSAse9NJHqJYv
+    date: "2026-11-04"
+    severity: nit
+    description: "I chained a git commit --amend and the gate:scoped run in one Bash command, against git-conventions' rule to keep state-changing git apart from gate runs."
+    solution: "Amend in one call, read its result, then start the gate in a separate call."
+  - session: session_013zxzeQAvRVQM2NhW8WWUPJ
+    date: "2026-11-05"
+    severity: minor
+    description: "Chained git commit, push and gate:scoped in one background command, against git-conventions. Gate was green, but a failed step could have hidden behind the chain."
+    solution: "Run the push in its own call after reading the gate's exit status."

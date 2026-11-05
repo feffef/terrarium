@@ -151,3 +151,8 @@ occurrences:
     severity: nit
     description: "Edited a test file while gate:scoped was running; the gate aborted and had to be rerun, costing about two minutes."
     solution: "Apply review findings only after the gate ends, or start the gate after the review."
+  - session: session_013zxzeQNXfvE3ck6tjqWpYK
+    date: "2026-11-04"
+    severity: minor
+    description: "Committed while pnpm gate:scoped was running; the gate aborted because HEAD changed, so I reran it, against pr-workflow's edit-nothing-until-it-ends."
+    solution: "Treat a commit as an edit while a gate runs; the Stop hook's push ask is safe, a commit is not."

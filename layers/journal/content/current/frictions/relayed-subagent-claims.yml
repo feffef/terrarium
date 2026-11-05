@@ -145,3 +145,18 @@ occurrences:
     severity: nit
     description: "I put the claim that frictions-to-fixes and guest-build say unpushed in the PR body from the Spec reviewer's report before checking; a grep afterwards confirmed it."
     solution: "Grep each cited line before writing it into a PR body, as CLAUDE.md says."
+  - session: session_013zxzeQbPLMkHvh94sawgDU
+    date: "2026-11-03"
+    severity: nit
+    description: "The #2806 triage agent reported close-done while the owner's recorded answer says keep it open, leaving a ready-for-agent label with nothing to build."
+    solution: "Let the explore result carry a 'built, keep open' outcome so the label can be dropped without a human."
+  - session: session_013zxzeSKLjL9xzvaR2kQ4po
+    date: "2026-11-04"
+    severity: minor
+    description: "Triage agent's pick cited PR 2688 as removing the inspect-session use case, but 2688 is about glassbox-improve; I could only mark it unverified."
+    solution: "Require triage picks to name the commit or file line proving each cited PR claim."
+  - session: session_013zxzeQAvRVQM2NhW8WWUPJ
+    date: "2026-11-05"
+    severity: minor
+    description: "A subagent's 'no main-session gap' claim for ruleVerdicts went into an Inventory note unchecked; the Spec review caught it as wrong and I corrected it."
+    solution: "Check each subagent count against the log before writing it into a note."

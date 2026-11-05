@@ -172,3 +172,8 @@ occurrences:
     severity: minor
     description: "Reviewers found many WRONG findings (9 of 15), mostly dated research-note text they read as stale present tense, which cost two checker runs."
     solution: "Tell reviewers up front that docs/research notes are dated records; only flag claims the doc presents as current."
+  - session: session_013zxzeSDVFqSAse9NJHqJYv
+    date: "2026-11-04"
+    severity: minor
+    description: "Reviewer findings were mostly wrong (17 of 22): reviewers proposed cuts without checking what each original sentence carried, costing two checker runs."
+    solution: "Tell reviewers to list each rule and pointer in the original before proposing a cut, as the checkers must."
