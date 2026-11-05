@@ -62,9 +62,10 @@ Read, hunting for the best stories rather than confirming one:
   `get_commits` / `merged_at`) or `scripts/git/list-merges-since.ts`. Lifetimes and
   durations on main use the PR `merged_at`, never a commit's author or revert
   time.
-- `pnpm exec tsx scripts/git/list-recent-prs.ts --since <window start>` lists
-  the window's merged PRs (number, title, merge time); read the PR bodies only
-  of the stories you pick.
+- `pnpm exec tsx scripts/git/list-recent-prs.ts --since <window start> --diff` lists
+  the window's merged PRs (number, title, merge time, touched files, first
+  diff lines), so you start from the change, not the title; read the PR bodies
+  only of the stories you pick.
 - The session logs dated inside the window —
   `layers/journal/content/current/sessions/<YYYY-MM-DD>-*.yml`: outcomes and,
   above all, frictions.

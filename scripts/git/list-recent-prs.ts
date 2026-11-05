@@ -19,11 +19,16 @@
 //   Prints the last N merged PRs (default 20) on `origin/main` as JSON:
 //   { number, title, mergedAtUtc }. Newest-first. With --since, prints every
 //   PR merged at or after that time instead (a bare date is midnight UTC).
-import { readMergeCommits, type RawMergeCommit } from '../lib/git.ts'
+//   Add --diff to either form to also print each PR's touched files (renames
+//   as delete + add) and the first lines of its diff, so a draft starts from
+//   the change, not the title (#2854).
+import { git, readMergeCommits, type RawMergeCommit } from '../lib/git.ts'
 import { toUtcIso } from './list-merges-since.ts'
 import { root, fail, runIfMain } from '../lib/cli.ts'
 
 const DEFAULT_LIMIT = 20
+const MAX_FILES = 30
+const MAX_DIFF_LINES = 15
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -33,6 +38,9 @@ export interface RecentPr {
   number: number
   title: string
   mergedAtUtc: string
+  /** Only with --diff. */
+  files?: string[]
+  diff?: string[]
 }
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
@@ -90,6 +98,27 @@ export function prsSince(commits: RawMergeCommit[], since: string): RecentPr[] {
   return recentPrs(commits, Infinity).filter((pr) => Date.parse(pr.mergedAtUtc) >= sinceMs)
 }
 
+/** Attach a PR's touched files and the first changed lines of its diff
+ *  (hunk headers and +/- lines, no file headers). Both are capped so a wide PR
+ *  cannot flood the output. */
+export function withChange(pr: RecentPr, nameOnly: string, patch: string): RecentPr {
+  const files = nameOnly.split('\n').filter(Boolean)
+  const diff = patch
+    .split('\n')
+    .filter((l) => /^(@@|[+-])/.test(l) && !/^(\+\+\+|---)/.test(l))
+    .slice(0, MAX_DIFF_LINES)
+  return { ...pr, files: files.slice(0, MAX_FILES), diff }
+}
+
+function describeChanges(prs: RecentPr[], commits: RawMergeCommit[]): RecentPr[] {
+  const hashes = new Map(commits.map((c) => [parsePrNumber(c.subject), c.hash]))
+  return prs.map((pr) => {
+    const hash = hashes.get(pr.number)!
+    const run = (flag: string) => git(['diff', '--no-renames', flag, '--no-color', `${hash}^1`, hash], root)
+    return withChange(pr, run('--name-only'), run('-U0'))
+  })
+}
+
 // ── Command ─────────────────────────────────────────────────────────────────
 
 export function recentPrsOnMain(limit = DEFAULT_LIMIT, cwd = root): RecentPr[] {
@@ -99,12 +128,15 @@ export function recentPrsOnMain(limit = DEFAULT_LIMIT, cwd = root): RecentPr[] {
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
 function main(): void {
-  const argv = process.argv.slice(2)
+  const raw = process.argv.slice(2)
+  const argv = raw.filter((a) => a !== '--diff')
+  const detail = (prs: RecentPr[], commits: RawMergeCommit[]) => (raw.includes('--diff') ? describeChanges(prs, commits) : prs)
   if (argv[0] === '--since') {
     const since = argv[1]
     if (since === undefined) fail('--since needs an ISO date or datetime')
     try {
-      process.stdout.write(JSON.stringify(prsSince(readMergeCommits(root), since), null, 2) + '\n')
+      const commits = readMergeCommits(root)
+      process.stdout.write(JSON.stringify(detail(prsSince(commits, since), commits), null, 2) + '\n')
     } catch (e) {
       fail((e as Error).message)
     }
@@ -116,7 +148,8 @@ function main(): void {
     limit = Number(limitArg)
     if (!Number.isInteger(limit) || limit <= 0) fail(`not a positive integer: ${limitArg}`)
   }
-  process.stdout.write(JSON.stringify(recentPrsOnMain(limit), null, 2) + '\n')
+  const commits = readMergeCommits(root)
+  process.stdout.write(JSON.stringify(detail(recentPrs(commits, limit), commits), null, 2) + '\n')
 }
 
 runIfMain(import.meta.url, main)

@@ -10,6 +10,7 @@ import {
   prsSince,
   recentPrs,
   toRecentPr,
+  withChange,
 } from '../../scripts/git/list-recent-prs.ts'
 import type { RawMergeCommit } from '../../scripts/lib/git.ts'
 
@@ -113,5 +114,18 @@ describe('prsSince()', () => {
   })
   it('rejects a value that is not a date', () => {
     expect(() => prsSince(commits, 'last week')).toThrow(/not an ISO date/)
+  })
+})
+
+describe('withChange()', () => {
+  const pr = { number: 1, title: 't', mergedAtUtc: '2026-07-11T07:00:00.000Z' }
+  it('lists touched files and keeps only hunk headers and changed lines', () => {
+    const patch = 'diff --git a/x b/x\nindex 1..2\n--- a/x\n+++ b/x\n@@ -1 +1 @@\n-old\n+new\n context'
+    expect(withChange(pr, 'a.ts\nb.ts\n', patch)).toEqual({ ...pr, files: ['a.ts', 'b.ts'], diff: ['@@ -1 +1 @@', '-old', '+new'] })
+  })
+  it('caps the diff at 15 lines and the files at 30', () => {
+    const out = withChange(pr, Array.from({ length: 40 }, (_, i) => `f${i}`).join('\n'), Array.from({ length: 40 }, (_, i) => `+l${i}`).join('\n'))
+    expect(out.files).toHaveLength(30)
+    expect(out.diff).toHaveLength(15)
   })
 })
