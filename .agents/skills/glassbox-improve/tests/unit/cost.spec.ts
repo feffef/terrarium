@@ -47,15 +47,15 @@ describe('breakdown', () => {
   ]
   const marks = [{ phase: 'tally', at: '2026-11-05T10:01:00Z' }, { phase: 'gate', at: '2026-11-05T10:12:00Z' }, { phase: 'record', at: '2026-11-05T10:30:00Z' }]
 
-  it('sums the lead, groups agents by phase and checks the lead at each phase start', () => {
+  it('sums the lead, groups agents by phase and checks the lead at each phase start, counting from the first', () => {
     const b = breakdown(lead, agents, marks)
     expect(b.agentsUsd).toEqual({ write: 8, gate: 2 })
     expect(b.leadUsd).toBe(1.2)
     expect(b.totalUsd).toBe(11.2)
     expect(b.lead).toEqual([
-      { phase: 'tally', at: '2026-11-05T10:01:00Z', contextK: 100, costUsd: 0.2 },
-      { phase: 'gate', at: '2026-11-05T10:12:00Z', contextK: 200, costUsd: 0.6 },
-      { phase: 'record', at: '2026-11-05T10:30:00Z', contextK: 300, costUsd: 1.2 },
+      { phase: 'tally', at: '2026-11-05T10:01:00Z', contextK: 100, costUsd: 0 },
+      { phase: 'gate', at: '2026-11-05T10:12:00Z', contextK: 200, costUsd: 0.4 },
+      { phase: 'record', at: '2026-11-05T10:30:00Z', contextK: 300, costUsd: 1 },
     ])
   })
   it('keeps only the first start of a phase that ran in several rounds', () => {

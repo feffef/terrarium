@@ -393,8 +393,7 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: 
   return { grades, items, steps, comparisons, waiting, restated, deferred }
 }
 
-/** Keeps the first `workPerRun` of: false claims and page checks, pending steps, then deficits and gaps.
- *  The rest is marked skipped (items) or returned (steps), and the next run finds it again. */
+/** Runs before the lead's filters and the researchers, so a slot can go to an item they later drop: the cap bounds cost, it doesn't promise 8 edits. */
 function capWork(items: Item[], steps: Step[]): string[] {
   let room = workPerRun
   const over = `over the ${workPerRun} items a run takes`

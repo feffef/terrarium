@@ -46,8 +46,8 @@ export function costOf({ model, usage: u }: Request): number {
   if (!price) throw new Error(`no price for model ${model}`)
   const split = u.cache_creation
   const write = split ? 1.25 * (split.ephemeral_5m_input_tokens ?? 0) + 2 * (split.ephemeral_1h_input_tokens ?? 0) : 1.25 * (u.cache_creation_input_tokens ?? 0)
-  const perMillion = (u.input_tokens ?? 0) * price.input + write * price.input + (u.cache_read_input_tokens ?? 0) * price.read + (u.output_tokens ?? 0) * price.output
-  return perMillion / 1e6
+  const weighted = (u.input_tokens ?? 0) * price.input + write * price.input + (u.cache_read_input_tokens ?? 0) * price.read + (u.output_tokens ?? 0) * price.output
+  return weighted / 1e6
 }
 
 const contextOf = ({ usage: u }: Request) => (u.input_tokens ?? 0) + (u.cache_read_input_tokens ?? 0) + (u.cache_creation_input_tokens ?? 0)
@@ -64,7 +64,7 @@ export interface Mark {
 export interface LeadPoint extends Mark {
   /** The lead's context size at the start of the phase, in thousand tokens. */
   contextK: number
-  /** What the lead had cost by then, in USD. */
+  /** What the lead had cost since the first mark, in USD, so the session's work before the run doesn't count. */
   costUsd: number
 }
 
@@ -78,20 +78,22 @@ export interface CostBreakdown {
   lead: LeadPoint[]
 }
 
-const cents = (n: number) => Math.round(n * 100) / 100
+const roundUsd = (n: number) => Math.round(n * 100) / 100
 
 export function breakdown(lead: Request[], agents: { label: string; requests: Request[] }[], marks: Mark[]): CostBreakdown {
   const sum = (rs: Request[]) => rs.reduce((n, r) => n + costOf(r), 0)
   const agentsUsd: Record<string, number> = {}
   for (const a of agents) agentsUsd[phaseOf(a.label)] = (agentsUsd[phaseOf(a.label)] ?? 0) + sum(a.requests)
   const firsts = marks.filter((m, i) => marks.findIndex((x) => x.phase === m.phase) === i)
+  const before = (m: Mark) => lead.filter((r) => r.at <= Date.parse(m.at))
+  const origin = firsts[0] ? sum(before(firsts[0])) : 0
   const points = firsts.map((m): LeadPoint => {
-    const before = lead.filter((r) => r.at <= Date.parse(m.at))
-    return { ...m, contextK: Math.round(contextOf(before.at(-1) ?? { at: 0, model: '', usage: {} }) / 1000), costUsd: cents(sum(before)) }
+    const done = before(m)
+    return { ...m, contextK: Math.round(contextOf(done.at(-1) ?? { at: 0, model: '', usage: {} }) / 1000), costUsd: roundUsd(sum(done) - origin) }
   })
   const leadUsd = sum(lead)
-  const rounded = Object.fromEntries(Object.entries(agentsUsd).map(([k, v]) => [k, cents(v)]))
-  return { totalUsd: cents(leadUsd + Object.values(agentsUsd).reduce((a, b) => a + b, 0)), leadUsd: cents(leadUsd), agentsUsd: rounded, lead: points }
+  const rounded = Object.fromEntries(Object.entries(agentsUsd).map(([k, v]) => [k, roundUsd(v)]))
+  return { totalUsd: roundUsd(leadUsd + Object.values(agentsUsd).reduce((a, b) => a + b, 0)), leadUsd: roundUsd(leadUsd), agentsUsd: rounded, lead: points }
 }
 
 /** The breakdown of the run in `transcriptPath` (the lead's transcript, with its subagents beside it). */
