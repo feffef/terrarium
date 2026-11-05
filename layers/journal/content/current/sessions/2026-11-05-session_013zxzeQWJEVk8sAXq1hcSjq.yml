@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQWJEVk8sAXq1hcSjq
 startedAt: 2026-11-05T21:11:11Z
-endedAt: 2026-11-05T21:39:00Z
+endedAt: 2026-11-05T21:50:39Z
 kind: interactive
-goal: Cap glassbox-improve run work and record cost per phase
+goal: Cap glassbox-improve run work and record its cost by phase
 status: in-review
-outcome: PR 2868 open with the cap and per-phase cost; gate green, prices not yet calibrated
-summary: "Human-instructed: the owner asked to implement issue 2850 (per-phase cost in runs.yml, price-weighted shape B) and, in parallel, to limit the cost of each run by limiting the changes done per session, so later runs can be compared with the new per-phase cost without huge sessions. The owner's preference was to be asked first, so I asked: the cap counts pages per run, is enforced in grades.ts, ships in the same PR, and I should research before proposing numbers. The owner also interrupted me to say only v3 runs count as evidence. I proposed a cap of 12; the owner chose 8, with false claims counting and coming first, and steps counted inside the same budget. The owner then approved opening the PR. Agent-initiated: the USD unit and the shape of costBreakdown (the issue left the unit to the builder), the phase-mark names and phases.yml file, the dispatch-name convention in SKILL.md, putting steps right after false claims and checks in the cap order, and the review fixes. Built grades.ts capWork, a new cost.ts reading the lead's and subagents' transcripts, specs for both, and SKILL.md edits. Prices come from the claude-api Skill table because this session's transcript held no cost-state record, so they are not calibrated against a recorded costUSD and nothing was tested on a real glassbox run; the PR says so. Two-axis code review found one real bug (the lead curve counted from the transcript start), fixed in a second commit. A gate run was wasted when I committed during it."
+outcome: "PR 2868 open: cap of 8 per run and cost split anchored to costUsd; gate green, recommended for a human merge"
+summary: "Human-instructed: the owner asked to implement issue 2850 (per-phase cost in runs.yml) and, in parallel, to limit the cost of each run by limiting the changes done per session. The owner's preference was to be asked first, so I asked: the cap counts pages per run, is enforced in grades.ts, ships in the same PR, and I should research before proposing numbers. The owner interrupted me to say only v3 runs count as evidence, chose 8 (I proposed 12) with false claims counting and coming first and steps inside the same budget, approved opening the PR, asked what calibrating the prices needs, told me to fit the prices from recent sessions, then chose option 1 (anchor the split to costUsd) and told me to build it. Agent-initiated: the shape of costBreakdown and the phase-mark names, the dispatch-name convention in SKILL.md, putting steps right after false claims in the cap order, keeping raw token counts next to the anchored dollars, and the review fixes. The first version priced tokens with list prices from the claude-api Skill; a comparison with get_session cost_usd on ten sessions showed those prices 1.0x to 1.6x too high and a fit of the rates unstable, so I rebuilt it: tokens by class, estimated % shares by relative weight, and usd only as share times the recorded costUsd. I had called the counts exact and then checked them against get_session (cache read -2%, write +2%, output +14%, input differs), so the claim was removed. Two code-review rounds found a real bug (the lead curve counted from the transcript start), a NaN --cost and leftover wording, all fixed. Open: not tested on a real glassbox run, the shares' lead-versus-agents split depends on uncalibrated weights, and I recommend a human merge because record's wiring is unobserved by any test. Not merged; the owner has not asked me to merge."
 prs:
   - "2868"
 docsRead:
@@ -69,21 +69,36 @@ frictions:
   - description: The data-shapes rule did not load for runs.yml or cost.ts, so the new stored field was not flagged; the Standards reviewer had to raise it.
     solution: Add .agents/skills/*/runs.yml to the paths of .claude/rules/data-shapes.md.
     severity: nit
-durationSec: 1668
+  - description: Wrote that token counts were exact before comparing them with get_session; the check showed read -2%, write +2%, output +14% and input differing.
+    solution: Compare a derived number with its nearest independent source before describing it as exact in code, SKILL.md or a PR.
+    severity: nit
+  - description: Shipped a price table sourced from the claude-api Skill without checking it against cost_usd, then found it 1.0x to 1.6x too high and redesigned the breakdown.
+    solution: Test a price table against one get_session cost_usd before building on it; get_session needs no transcript, so the check is cheap.
+    severity: moderate
+  - description: Fetched nine get_session records of about 2,500 tokens each, mostly unused metadata, to read four usage fields.
+    solution: A get_session option or script that returns only usage and cost_usd, or a list_sessions field with them.
+    severity: minor
+durationSec: 2368
 models:
-  claude-sonnet-5-5: 155
+  claude-sonnet-5-5: 260
 toolCounts:
   Read: 5
-  ToolSearch: 3
+  ToolSearch: 5
   mcp__github__issue_read: 2
   AskUserQuestion: 2
-  Bash: 46
-  Skill: 5
-  Write: 4
-  Agent: 2
+  Bash: 66
+  Skill: 6
+  Write: 6
+  Agent: 4
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 4
+  mcp__claude-code-remote__send_later: 1
+  mcp__claude-code-remote__get_session: 11
+  mcp__claude-code-remote__list_sessions: 1
+  mcp__github__update_pull_request: 1
 filesEdited:
   - .agents/skills/glassbox-improve/scripts/cost.ts
   - .agents/skills/glassbox-improve/scripts/grades.ts
@@ -149,19 +164,33 @@ subagents:
     durationSec: 30
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 6.4
+    tokenShare: 3.5
   - type: general-purpose
     task: Spec review of cost diff
     durationSec: 50
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 6.8
+    tokenShare: 3.7
+  - type: general-purpose
+    task: Standards review of anchor change
+    durationSec: 33
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 3.1
+  - type: general-purpose
+    task: Spec review of anchor change
+    durationSec: 36
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 3.2
 gitBranch: claude/festive-dirac-g1wbfu
 entrypoint: remote
 cliVersion: 2.1.318
 learnings:
   - A transcript's assistant records repeat per content block with one message id; the last record per id holds the final usage, so dedupe by id keeping the last.
   - The harness gate (gate:scoped) aborts if HEAD or the tree changes during its run, so a local commit mid-run costs a full re-run.
+  - get_session returns cumulative cache_read, cache_write, input and output tokens plus cost_usd, with no 5-minute versus 1-hour write split, so rates cannot be fitted from it alone.
 ideas:
   - Store the lead-session transcript path and a cost-state sample in the glassbox-improve scratch at the first record, so price calibration against costUSD can run in the next run instead of being a manual check.
+  - Add usage and cost_usd to list_sessions rows, so cost calibration and run comparisons need one call instead of one get_session per session.
 landedBy: Stop
