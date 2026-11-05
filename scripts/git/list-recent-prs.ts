@@ -36,6 +36,8 @@ const MAX_DIFF_LINES = 15
  *  exists to provide (author/merged_by deliberately excluded, see header). */
 export interface RecentPr {
   number: number
+  /** Merge commit, so --diff can read the change without re-parsing subjects. */
+  hash: string
   title: string
   mergedAtUtc: string
   /** Only with --diff. */
@@ -72,6 +74,7 @@ export function toRecentPr(commit: RawMergeCommit): RecentPr | null {
   if (number === null) return null
   return {
     number,
+    hash: commit.hash,
     title: extractTitle(commit.subject, commit.body),
     mergedAtUtc: toUtcIso(commit.isoCommitTime),
   }
@@ -115,19 +118,11 @@ export function withChange(pr: RecentPr, nameOnly: string, patch: string): Recen
   return { ...pr, files: files.slice(0, MAX_FILES), diff }
 }
 
-function describeChanges(prs: RecentPr[], commits: RawMergeCommit[]): RecentPr[] {
-  const hashes = new Map(commits.map((c) => [parsePrNumber(c.subject), c.hash]))
+function describeChanges(prs: RecentPr[]): RecentPr[] {
   return prs.map((pr) => {
-    const hash = hashes.get(pr.number)!
-    const run = (flag: string) => git(['diff', '--no-renames', flag, '--no-color', `${hash}^1`, hash], root)
+    const run = (flag: string) => git(['diff', '--no-renames', flag, '--no-color', `${pr.hash}^1`, pr.hash], root)
     return withChange(pr, run('--name-only'), run('-U0'))
   })
-}
-
-// ── Command ─────────────────────────────────────────────────────────────────
-
-export function recentPrsOnMain(limit = DEFAULT_LIMIT, cwd = root): RecentPr[] {
-  return recentPrs(readMergeCommits(cwd), limit)
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
@@ -135,13 +130,12 @@ export function recentPrsOnMain(limit = DEFAULT_LIMIT, cwd = root): RecentPr[] {
 function main(): void {
   const raw = process.argv.slice(2)
   const argv = raw.filter((a) => a !== '--diff')
-  const detail = (prs: RecentPr[], commits: RawMergeCommit[]) => (raw.includes('--diff') ? describeChanges(prs, commits) : prs)
+  const detail = (prs: RecentPr[]) => (raw.includes('--diff') ? describeChanges(prs) : prs)
   if (argv[0] === '--since') {
     const since = argv[1]
     if (since === undefined) fail('--since needs an ISO date or datetime')
     try {
-      const commits = readMergeCommits(root)
-      process.stdout.write(JSON.stringify(detail(prsSince(commits, since), commits), null, 2) + '\n')
+      process.stdout.write(JSON.stringify(detail(prsSince(readMergeCommits(root), since)), null, 2) + '\n')
     } catch (e) {
       fail((e as Error).message)
     }
@@ -153,8 +147,7 @@ function main(): void {
     limit = Number(limitArg)
     if (!Number.isInteger(limit) || limit <= 0) fail(`not a positive integer: ${limitArg}`)
   }
-  const commits = readMergeCommits(root)
-  process.stdout.write(JSON.stringify(detail(recentPrs(commits, limit), commits), null, 2) + '\n')
+  process.stdout.write(JSON.stringify(detail(recentPrs(readMergeCommits(root), limit)), null, 2) + '\n')
 }
 
 runIfMain(import.meta.url, main)

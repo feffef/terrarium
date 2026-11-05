@@ -54,6 +54,7 @@ describe('toRecentPr()', () => {
     }
     expect(toRecentPr(commit)).toEqual({
       number: 312,
+      hash: 'h1',
       title: "adr-0010: stop restating the digest Skill's schedule cadence",
       mergedAtUtc: '2026-07-11T07:00:00.000Z',
     })
@@ -80,16 +81,16 @@ describe('recentPrs()', () => {
 
   it('skips non-PR-merge commits and sorts the rest newest-first', () => {
     expect(recentPrs(commits)).toEqual([
-      { number: 310, title: 'newest title', mergedAtUtc: '2026-07-11T11:00:00.000Z' },
-      { number: 308, title: 'second-newest title', mergedAtUtc: '2026-07-11T10:00:00.000Z' },
-      { number: 312, title: 'third-newest title', mergedAtUtc: '2026-07-11T09:00:00.000Z' },
+      { number: 310, hash: 'h2', title: 'newest title', mergedAtUtc: '2026-07-11T11:00:00.000Z' },
+      { number: 308, hash: 'h4', title: 'second-newest title', mergedAtUtc: '2026-07-11T10:00:00.000Z' },
+      { number: 312, hash: 'h1', title: 'third-newest title', mergedAtUtc: '2026-07-11T09:00:00.000Z' },
     ])
   })
 
   it('respects the limit, keeping only the newest N', () => {
     expect(recentPrs(commits, 2)).toEqual([
-      { number: 310, title: 'newest title', mergedAtUtc: '2026-07-11T11:00:00.000Z' },
-      { number: 308, title: 'second-newest title', mergedAtUtc: '2026-07-11T10:00:00.000Z' },
+      { number: 310, hash: 'h2', title: 'newest title', mergedAtUtc: '2026-07-11T11:00:00.000Z' },
+      { number: 308, hash: 'h4', title: 'second-newest title', mergedAtUtc: '2026-07-11T10:00:00.000Z' },
     ])
   })
 
@@ -118,7 +119,7 @@ describe('prsSince()', () => {
 })
 
 describe('withChange()', () => {
-  const pr = { number: 1, title: 't', mergedAtUtc: '2026-07-11T07:00:00.000Z' }
+  const pr = { number: 1, hash: 'h', title: 't', mergedAtUtc: '2026-07-11T07:00:00.000Z' }
   it('lists touched files and keeps only hunk headers and changed lines', () => {
     const patch = 'diff --git a/x b/x\nindex 1..2\n--- a/x\n+++ b/x\n@@ -1 +1 @@\n-old\n+new\n context'
     expect(withChange(pr, 'a.ts\nb.ts\n', patch)).toEqual({ ...pr, files: ['a.ts', 'b.ts'], diff: ['@@ -1 +1 @@', '-old', '+new'] })

@@ -83,7 +83,7 @@ Large results overflow your context. Keep them small and read every hit.
 ## Script escapes — cheaper than the API
 
 - **Recently merged PRs:** `pnpm exec tsx scripts/git/list-recent-prs.ts [N]` reads
-  `git log origin/main` (number, title, merge time only).
+  `git log origin/main` (number, title, merge time only; `--diff` adds touched files and first diff lines).
 - **Open issues:** `pnpm exec tsx scripts/github/list-open-issues.ts [N]` (number,
   title, labels, updated time). It falls back to `curl` with `GH_TOKEN` /
   `GITHUB_TOKEN` when `gh` is missing; with neither, use the MCP tools.
