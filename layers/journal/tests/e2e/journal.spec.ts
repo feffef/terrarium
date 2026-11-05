@@ -329,6 +329,19 @@ describe('journal Tenant', async () => {
     })
   })
 
+  it('lists ten Friction Ledger clusters per section until its button shows all', async () => {
+    await withRendered('/t/journal/current/frictions?days=90', async (page) => {
+      const rows = page.locator('h2#severe-h + .intro + .ledger > li')
+      const all = page.locator('h2#severe-h .n')
+      const total = Number(await all.textContent())
+      expect(await rows.count()).toBe(Math.min(total, 10))
+      const button = page.getByRole('button', { name: /^Show all/ }).first()
+      if (total <= 10) return expect(await button.count()).toBe(0)
+      await button.click()
+      expect(await rows.count()).toBe(total)
+    })
+  })
+
   it('hydrates the sub pages with no unresolved components', async () => {
     await expectCleanHydration('/t/journal/current/routines')
     await expectCleanHydration('/t/journal/current/skills')
