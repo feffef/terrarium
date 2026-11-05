@@ -78,7 +78,7 @@ tally in your scratchpad:
   with the reason.
 - **Feature.** Ideas need no consensus. Weigh every visitor's ideas and pick
   the **one** you judge best: the most visible payoff for a first-time
-  visitor that fits the remit, a single PR and today's focus. Consensus fixes may land anywhere.
+  visitor that fits the remit, a single PR and today's focus. Consensus fixes may land outside today's focus.
 - **Owner memory.** First run `pnpm exec tsx .agents/skills/visitor-loop/scripts/owner-corrections.ts`:
   it prints every candidate owner correction since the last `decisions.md`
   commit (human reviews of `visitor-loop` PRs, merged PRs that revert or

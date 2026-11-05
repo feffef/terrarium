@@ -49,9 +49,9 @@ the tests a new Campaign disturbs.
 6. **Fix what the Campaign disturbs** in `layers/tinkerfund/tests/e2e/tinkerfund.spec.ts`'s
    server-rendered `prod` checks: add the slug and its expected action to the
    prod Campaign page list, and re-read the Home assertion. Home derives its
-   sections: *featured* is the Live Campaign with the highest % funded, *Ending
-   soon* is Live and ending within 48h, *Popular now* is every non-Ended
-   Campaign by Backers, *Just launched* launched within 14 days. Either pick
+   sections (featured, Ending soon, Popular now, Just launched) in
+   `tinkerfundHomeSections`, `layers/tinkerfund/app/utils/browse.ts`; read it
+   before picking numbers. Either pick
    numbers that leave Home's story as asserted, or change the assertion on
    purpose. Done when those checks describe the catalog as it now is.
 7. **Verify.** `pnpm validate:content`, `crowd.mjs`, then `pnpm gate:scoped`.

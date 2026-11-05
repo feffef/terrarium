@@ -20,8 +20,7 @@ firing one).
 ## 1. Ground yourself, then run the mechanical sweep
 
 - Read `layers/midden/GLOSSARY.md` first — especially **The inclusion bar**
-  (Gate A: terminal disposition; Gate B: no living successor) and **Artifact**
-  (what a candidate would become).
+  and **Artifact** (what a candidate would become).
 - The sweep needs full history: if `git rev-parse --is-shallow-repository`
   says `true`, run `git fetch --unshallow origin main` first. The script below
   refuses to run shallow rather than silently under-reporting.

@@ -47,9 +47,8 @@ write has a source you have read this session. What the record doesn't say
   schema's shape. A cluster that died together for one reason is one find.
   `remains` link the file at the full SHA before deletion; `inscription` is a
   verbatim line, byte-for-byte.
-- **Placement** — trench when the find carries a decision, reversal or
-  transferable fact a report can argue from; stores otherwise (GLOSSARY.md,
-  The Stores). A trench find needs a `site`: fold it into an existing report
+- **Placement** — trench or stores, by the test in GLOSSARY.md, The Stores.
+  A trench find needs a `site`: fold it into an existing report
   whose argument it extends, or write a new one.
 - **Condition** — grade against the definition text in `condition.ts`, never
   the word's connotation.

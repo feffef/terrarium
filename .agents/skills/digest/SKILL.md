@@ -158,4 +158,4 @@ cases above — is open and honestly awaiting a human.
 
 ## 7. Log this session
 
-Invoke `close-session`: first before the turn that opens the PR ends, again once it merges.
+Invoke `close-session` (ADR-0009).
