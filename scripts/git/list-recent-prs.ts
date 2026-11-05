@@ -19,11 +19,16 @@
 //   Prints the last N merged PRs (default 20) on `origin/main` as JSON:
 //   { number, title, mergedAtUtc }. Newest-first. With --since, prints every
 //   PR merged at or after that time instead (a bare date is midnight UTC).
-import { readMergeCommits, type RawMergeCommit } from '../lib/git.ts'
+//   Add --diff to either form to also print each PR's touched files (renames
+//   as delete + add) and the first lines of its diff, so a draft starts from
+//   the change, not the title (#2854): { number, title, mergedAtUtc, files, diff }.
+import { git, readMergeCommits, type RawMergeCommit } from '../lib/git.ts'
 import { toUtcIso } from './list-merges-since.ts'
 import { root, fail, runIfMain } from '../lib/cli.ts'
 
 const DEFAULT_LIMIT = 20
+const MAX_FILES = 30
+const MAX_DIFF_LINES = 15
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -31,8 +36,13 @@ const DEFAULT_LIMIT = 20
  *  exists to provide (author/merged_by deliberately excluded, see header). */
 export interface RecentPr {
   number: number
+  /** Merge commit, so --diff can read the change without re-parsing subjects. */
+  hash: string
   title: string
   mergedAtUtc: string
+  /** Only with --diff. */
+  files?: string[]
+  diff?: string[]
 }
 
 // ── Pure core (unit-tested) ───────────────────────────────────────────────────
@@ -64,6 +74,7 @@ export function toRecentPr(commit: RawMergeCommit): RecentPr | null {
   if (number === null) return null
   return {
     number,
+    hash: commit.hash,
     title: extractTitle(commit.subject, commit.body),
     mergedAtUtc: toUtcIso(commit.isoCommitTime),
   }
@@ -90,21 +101,45 @@ export function prsSince(commits: RawMergeCommit[], since: string): RecentPr[] {
   return recentPrs(commits, Infinity).filter((pr) => Date.parse(pr.mergedAtUtc) >= sinceMs)
 }
 
-// ── Command ─────────────────────────────────────────────────────────────────
+/** Attach a PR's touched files and the first changed lines of its diff
+ *  (hunk headers and +/- lines, no file headers). Both are capped so a wide PR
+ *  cannot flood the output. */
+export function withChange(pr: RecentPr, nameOnly: string, patch: string): RecentPr {
+  const files = nameOnly.split('\n').filter(Boolean)
+  let inHeader = false // file headers sit between `diff --git` and the first `@@`
+  const diff = patch
+    .split('\n')
+    .filter((l) => {
+      if (l.startsWith('diff --git')) inHeader = true
+      else if (l.startsWith('@@')) inHeader = false
+      return !inHeader && /^(@@|[+-])/.test(l)
+    })
+    .slice(0, MAX_DIFF_LINES)
+  return { ...pr, files: files.slice(0, MAX_FILES), diff }
+}
 
-export function recentPrsOnMain(limit = DEFAULT_LIMIT, cwd = root): RecentPr[] {
-  return recentPrs(readMergeCommits(cwd), limit)
+function describeChanges(prs: RecentPr[]): RecentPr[] {
+  return prs.map((pr) => {
+    const run = (flag: string) => git(['diff', '--no-renames', flag, '--no-color', `${pr.hash}^1`, pr.hash], root)
+    return withChange(pr, run('--name-only'), run('-U0'))
+  })
 }
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
 function main(): void {
-  const argv = process.argv.slice(2)
+  const raw = process.argv.slice(2)
+  const argv = raw.filter((a) => a !== '--diff')
+  // `hash` only feeds --diff; keep it out of the printed shape.
+  const print = (prs: RecentPr[]) =>
+    process.stdout.write(
+      JSON.stringify(raw.includes('--diff') ? describeChanges(prs) : prs, (k, v) => (k === 'hash' ? undefined : v), 2) + '\n',
+    )
   if (argv[0] === '--since') {
     const since = argv[1]
     if (since === undefined) fail('--since needs an ISO date or datetime')
     try {
-      process.stdout.write(JSON.stringify(prsSince(readMergeCommits(root), since), null, 2) + '\n')
+      print(prsSince(readMergeCommits(root), since))
     } catch (e) {
       fail((e as Error).message)
     }
@@ -116,7 +151,7 @@ function main(): void {
     limit = Number(limitArg)
     if (!Number.isInteger(limit) || limit <= 0) fail(`not a positive integer: ${limitArg}`)
   }
-  process.stdout.write(JSON.stringify(recentPrsOnMain(limit), null, 2) + '\n')
+  print(recentPrs(readMergeCommits(root), limit))
 }
 
 runIfMain(import.meta.url, main)

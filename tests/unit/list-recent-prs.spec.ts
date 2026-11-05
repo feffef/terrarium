@@ -10,6 +10,7 @@ import {
   prsSince,
   recentPrs,
   toRecentPr,
+  withChange,
 } from '../../scripts/git/list-recent-prs.ts'
 import type { RawMergeCommit } from '../../scripts/lib/git.ts'
 
@@ -53,6 +54,7 @@ describe('toRecentPr()', () => {
     }
     expect(toRecentPr(commit)).toEqual({
       number: 312,
+      hash: 'h1',
       title: "adr-0010: stop restating the digest Skill's schedule cadence",
       mergedAtUtc: '2026-07-11T07:00:00.000Z',
     })
@@ -79,16 +81,16 @@ describe('recentPrs()', () => {
 
   it('skips non-PR-merge commits and sorts the rest newest-first', () => {
     expect(recentPrs(commits)).toEqual([
-      { number: 310, title: 'newest title', mergedAtUtc: '2026-07-11T11:00:00.000Z' },
-      { number: 308, title: 'second-newest title', mergedAtUtc: '2026-07-11T10:00:00.000Z' },
-      { number: 312, title: 'third-newest title', mergedAtUtc: '2026-07-11T09:00:00.000Z' },
+      { number: 310, hash: 'h2', title: 'newest title', mergedAtUtc: '2026-07-11T11:00:00.000Z' },
+      { number: 308, hash: 'h4', title: 'second-newest title', mergedAtUtc: '2026-07-11T10:00:00.000Z' },
+      { number: 312, hash: 'h1', title: 'third-newest title', mergedAtUtc: '2026-07-11T09:00:00.000Z' },
     ])
   })
 
   it('respects the limit, keeping only the newest N', () => {
     expect(recentPrs(commits, 2)).toEqual([
-      { number: 310, title: 'newest title', mergedAtUtc: '2026-07-11T11:00:00.000Z' },
-      { number: 308, title: 'second-newest title', mergedAtUtc: '2026-07-11T10:00:00.000Z' },
+      { number: 310, hash: 'h2', title: 'newest title', mergedAtUtc: '2026-07-11T11:00:00.000Z' },
+      { number: 308, hash: 'h4', title: 'second-newest title', mergedAtUtc: '2026-07-11T10:00:00.000Z' },
     ])
   })
 
@@ -113,5 +115,22 @@ describe('prsSince()', () => {
   })
   it('rejects a value that is not a date', () => {
     expect(() => prsSince(commits, 'last week')).toThrow(/not an ISO date/)
+  })
+})
+
+describe('withChange()', () => {
+  const pr = { number: 1, hash: 'h', title: 't', mergedAtUtc: '2026-07-11T07:00:00.000Z' }
+  it('lists touched files and keeps only hunk headers and changed lines', () => {
+    const patch = 'diff --git a/x b/x\nindex 1..2\n--- a/x\n+++ b/x\n@@ -1 +1 @@\n-old\n+new\n context'
+    expect(withChange(pr, 'a.ts\nb.ts\n', patch)).toEqual({ ...pr, files: ['a.ts', 'b.ts'], diff: ['@@ -1 +1 @@', '-old', '+new'] })
+  })
+  it('keeps removed lines that start with dashes, such as a deleted `---`', () => {
+    const patch = 'diff --git a/x b/x\n--- a/x\n+++ b/x\n@@ -1,2 +0,0 @@\n----\n--- x\n'
+    expect(withChange(pr, 'x', patch).diff).toEqual(['@@ -1,2 +0,0 @@', '----', '--- x'])
+  })
+  it('caps the diff at 15 lines and the files at 30', () => {
+    const out = withChange(pr, Array.from({ length: 40 }, (_, i) => `f${i}`).join('\n'), Array.from({ length: 40 }, (_, i) => `+l${i}`).join('\n'))
+    expect(out.files).toHaveLength(30)
+    expect(out.diff).toHaveLength(15)
   })
 })
