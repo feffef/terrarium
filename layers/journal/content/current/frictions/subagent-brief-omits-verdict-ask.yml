@@ -38,3 +38,8 @@ occurrences:
     severity: nit
     description: "I dispatched 19 gate judges, 12 A judges and the review agents without the CLAUDE.md ask for verdicts on loaded docs and sourced counts; blind judges read only their brief by design."
     solution: "Add the blind-judge exception to the CLAUDE.md subagent-brief rule, so the rule matches what glassbox-improve must do."
+  - session: session_013zxzeT8tDd5GPJiRNZRA4J
+    date: "2026-11-04"
+    severity: nit
+    description: "Gate, rater and researcher briefs asked for per-doc verdicts and sourced counts but my 38 judge prompts did not (CLAUDE.md subagent-brief rule), so the judges report no rule verdicts."
+    solution: "Add the verdict and source-your-counts lines to the judge wrapper prompt, or to the judge brief template."

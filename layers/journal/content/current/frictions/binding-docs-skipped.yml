@@ -16,16 +16,6 @@ fixes:
     date: "2026-10-26"
     summary: "adr-read-hint also points at the ADRs a Bash git commit touches."
 occurrences:
-  - session: session_01XfQgmS9ArvbD9WSoPgkKfM
-    date: "2026-10-21"
-    severity: minor
-    description: "Proposed adr-check changes in chat before running adr-check, against CLAUDE.md's 'opinion asked in chat counts' trigger; ran it only before posting to 2286."
-    solution: "No hook can tell a recommendation from an answer; evidence for 2342 rather than a new rule."
-  - session: session_01Y8rMxQ5cH3oLqzHegyQnFx
-    date: "2026-10-21"
-    severity: minor
-    description: "Started forming a recommendation before running adr-check (CLAUDE.md requires it before any opinion); caught at close-session and ran it before answering."
-    solution: "Run adr-check as soon as the ask is an opinion on a change."
   - session: session_01PWZU3TqUdSp6uD1KaoQXit
     date: "2026-10-23"
     severity: minor

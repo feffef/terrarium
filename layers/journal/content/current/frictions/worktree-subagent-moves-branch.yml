@@ -4,10 +4,11 @@ summary: >-
 cause: >-
   An impl agent in a worktree checks out or pushes the branch the primary checkout has checked out, so the primary tree shows phantom reverse changes; a build workflow or a read-only reviewer (Freshness) also leaves the primary checkout on a detached HEAD, which check:worktrees reports and the lead fixes by checking the session branch out again. Signals: 'detached HEAD', 'left the checkout detached at origin/main', 'check:worktrees reported', phantom reverse changes.
 surface: safe
-status: open
+status: tracked
 notes: |-
   2026-10-27 design: guard or brief prose against git checkout in a read-only subagent dropped: the brief was already read-only, code-review is a pack Skill, a guard would touch Human-only hooks for a nit with nothing lost
   2026-11-01 design: no change: three occurrences by three different actors (a pack Skill's reviewer, the build workflow, the Freshness reviewer); check:worktrees flags each at once and one git switch fixes it; dispatch-subagents §3 is in an open Prune Trial's territory and a guard would be Human-only
+  2026-11-05 design: reword dispatch-subagents §2 so a review agent checks a SHA out detached only in its own worktree; dispatched this run
 occurrences:
   - session: session_01Y1i7HTUED6iQYzbSLBbu79
     date: "2026-10-26"
@@ -24,3 +25,8 @@ occurrences:
     severity: minor
     description: "The Freshness reviewer left the checkout detached at origin/main, so I had to switch back to the session branch."
     solution: "Tell read-only reviewers not to change the checkout."
+  - session: session_013zxzeT8tDd5GPJiRNZRA4J
+    date: "2026-11-04"
+    severity: moderate
+    description: "A read-only code-review subagent ran git checkout --detach HEAD in the shared checkout; my later merges and record commits landed on a detached HEAD while pushes updated only the stale branch."
+    solution: "Brief read-only agents to run no checkout, switch or reset in the shared tree; run git status -sb before each push (git-conventions: check the step landed)."

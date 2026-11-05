@@ -93,3 +93,13 @@ occurrences:
     severity: minor
     description: "The ADR read hint made me read ADRs 0005, 0015, 0022 and 0012 in full after one-phrase Skill cross-reference repoints; none applied, about 4000 tokens."
     solution: "Let adr-read-hint skip an edit that only changes a quoted cross-reference, or limit it to ADRs relevant to the edited lines."
+  - session: session_013zxzeRxyt249HTzdiM9oo3
+    date: "2026-11-04"
+    severity: nit
+    description: "Edited .agents/prune-trials.yml before reading ADR-0027; the hook asked for it only after my commit. The edit was right."
+    solution: "Read the ADR named by the skill's own rule before the first trials-file edit."
+  - session: session_013zxzeQNXfvE3ck6tjqWpYK
+    date: "2026-11-04"
+    severity: nit
+    description: "Edited ledger-set.ts, its spec and survey-brief.md before reading the ADRs the hook then asked for in full; I read them after."
+    solution: "Read the ADRs a Skill's files name before the first edit there."

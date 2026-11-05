@@ -2,10 +2,9 @@ name: verdict-comment-hand-typed
 summary: >-
   Agents typed the reviewed commit's SHA into their merge verdict by hand and got it wrong.
 cause: >-
-  The Reviewed SHA in a PR verdict comment is typed from memory, a short hash, the workflow's commit list or a CI comment's merge ref instead of copied from git rev-parse HEAD, so merge-pr.ts refuses it or the session corrects it. Signals: 'typed the Reviewed SHA from memory', 'made-up full commit SHA', 'mistyped short SHA', merge-pr refusing the verdict's SHA.
+  The Reviewed SHA in a PR verdict comment is typed from memory, a short hash, the workflow's commit list or a CI comment's merge ref instead of copied from git rev-parse HEAD, so merge-pr.ts refuses it or the session corrects it. Since PR #2841 (2026-11-04) pr-workflow step 4 says to paste the output of scripts/github/verdict-line.ts, which prints the line from git rev-parse HEAD. Signals: 'typed the Reviewed SHA from memory', 'made-up full commit SHA', 'mistyped short SHA', merge-pr refusing the verdict's SHA.
 surface: safe
-status: tracked
-ref: "#2833"
+status: open
 notes: |-
   2026-10-21 design: a pr-workflow line or a guard on hand-typed SHAs and paths dropped: all 8 sessions read pr-workflow.md and slipped anyway, merge-pr.ts already refuses a wrong Reviewed SHA and prints the line, and a guard is a Human-only edit for a nit-level cost.
   2026-10-23 design: a merge-pr.ts flag or hand-typed-value guard dropped again: merge-pr.ts already refuses a wrong Reviewed SHA and prints the exact line, so a slip costs one edit, and a guard is a Human-only edit.
@@ -14,12 +13,10 @@ fixes:
   - pr: 2697
     date: "2026-10-30"
     summary: "pr-workflow step 4: paste the Reviewed SHA from git rev-parse HEAD run in the reviewed head's checkout"
+  - pr: 2841
+    date: "2026-11-04"
+    summary: "New scripts/github/verdict-line.ts prints the Reviewed line from git rev-parse HEAD (warns when HEAD is not the PR head) and pr-workflow step 4 says to paste its output."
 occurrences:
-  - session: session_01QsVUJGmHhhoAn8T6ewjnLP
-    date: "2026-10-21"
-    severity: nit
-    description: "My first verdict comment on PR 2360 named the oldest commit as Reviewed, because I took the build output's commit list order for newest-first; corrected by an edit."
-    solution: "Take the Reviewed sha from git rev-parse HEAD in the worktree, never from the workflow's commits list."
   - session: session_0149fVyZ37qWGMuwVPw3Uryc
     date: "2026-10-22"
     severity: minor
@@ -95,3 +92,8 @@ occurrences:
     severity: nit
     description: "merge-pr.ts refused my first verdict because it lacked a 'Reviewed: <head sha>' line, so I posted a second comment"
     solution: "The format is at docs/agents/pr-workflow.md:55 but 'Closing a scheduled run's PR' doesn't point to it; add that pointer"
+  - session: session_013zxzeNezKVRxRiZLs4z9n4
+    date: "2026-11-04"
+    severity: nit
+    description: "I typed a full SHA from the short hash in my #2836 verdict update, the exact slip the verdict-comment-hand-typed entry records; I fixed the comment one call later."
+    solution: "Run git rev-parse HEAD in the same step before writing any Reviewed line."

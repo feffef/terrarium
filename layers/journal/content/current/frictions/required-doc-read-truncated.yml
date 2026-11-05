@@ -24,21 +24,6 @@ occurrences:
     severity: minor
     description: "Root GLOSSARY.md was catted together with other docs; output overflowed to a file and I read only its first 2KB, not the whole glossary the start-of-session rule requires."
     solution: "Read big required docs in their own Read call so truncation is visible."
-  - session: session_014tr6vJyNXmekdFQtYrEVWT
-    date: "2026-10-21"
-    severity: nit
-    description: "Read GLOSSARY.md and three docs in one Bash cat, which truncated at 30KB, then needed a second Read; the git-conventions doc was read after my first git status."
-    solution: "Read each required doc with the Read tool, one call each."
-  - session: session_01Dz5nEANXqTtZzTki1C5ArD
-    date: "2026-10-21"
-    severity: nit
-    description: "Ran git status before reading git-conventions.md and read the large GLOSSARY and github docs in one truncated cat."
-    solution: "Read the docs one at a time before the first git command."
-  - session: session_01FNv8z61n7roCRsM4AYVtf6
-    date: "2026-10-21"
-    severity: nit
-    description: "Read docs/agents/github-integration.md with head -80 instead of in full, against CLAUDE.md's read-first-in-full rule, before the first GitHub write."
-    solution: "Read the trigger docs whole; a short doc costs little."
   - session: session_012Yzae3uty5Jj8ZPug9zpjr
     date: "2026-10-23"
     severity: nit

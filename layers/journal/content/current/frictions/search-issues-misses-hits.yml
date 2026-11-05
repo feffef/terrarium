@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-28"
     summary: "visitor-loop section 3 lists open issues with list-open-issues.ts and checks merged PRs with git log origin/main --grep instead of searching; github-integration.md unchanged."
 occurrences:
-  - session: session_01CQhPd23d8eRP33TzyDha76
-    date: "2026-10-21"
-    severity: minor
-    description: "Issue search for the New here card returned no match, missing merged PR #1952 that already fixed it; only the refiner caught it."
-    solution: "Step 3 should also say to search PRs (search_pull_requests) by page or component, not issues alone."
   - session: session_0195CYW3YBg2stBS6aGigmbp
     date: "2026-10-22"
     severity: minor

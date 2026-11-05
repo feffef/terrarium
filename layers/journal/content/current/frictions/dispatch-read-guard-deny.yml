@@ -176,3 +176,8 @@ occurrences:
     severity: nit
     description: "First Agent call for the fact-check was blocked until I read dispatch-subagents; the digest Skill does not say that read comes first."
     solution: "Name the dispatch-subagents read in the digest Skill's fact-check step."
+  - session: session_013zxzeSKLjL9xzvaR2kQ4po
+    date: "2026-11-04"
+    severity: nit
+    description: "Called the Workflow tool without reading dispatch-subagents first, as CLAUDE.md requires before any subagent brief; the dispatch-read guard blocked the call."
+    solution: "Read dispatch-subagents right after reading the clear-backlog Skill, since it launches workflows."

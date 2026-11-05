@@ -1,0 +1,17 @@
+name: glassbox-grades-tally-crashes
+surface: safe
+summary: The glassbox-improve grades.ts tally crashed with a TypeError on a rater's report it did not expect, with no line named.
+cause: "grades.ts tally summary throws a bare TypeError on an input shape it does not validate (a gap written with keys better instead of exemplar and take; a cut step without a gist) instead of naming the offending line; issue #2848 (open) also covers the tally listing already-dropped steps as pending and the lesson-step brief gaps. Signals: 'grades.ts tally', 'TypeError in summary', 'crashed'."
+status: tracked
+ref: "#2848"
+occurrences:
+  - session: session_013zxzeSAtjCQiatdUuuFCRJ
+    date: "2026-11-03"
+    severity: minor
+    description: "grades.ts tally crashed with a TypeError in summary when rater C1 wrote gaps with the keys better instead of exemplar and take; no line was named."
+    solution: "Validate gap keys while parsing the hand-back and name the page and key, like the skill promises for parse errors; tell raters the keys in the brief."
+  - session: session_013zxzeT8tDd5GPJiRNZRA4J
+    date: "2026-11-04"
+    severity: minor
+    description: "grades.ts tally listed two steps as pending that grades.yml already held as dropped, and a cut step without a gist crashed its summary with a TypeError."
+    solution: "Print a step's earlier decision beside any re-raise, and require a gist in reportProblems (filed in issue 2848)."

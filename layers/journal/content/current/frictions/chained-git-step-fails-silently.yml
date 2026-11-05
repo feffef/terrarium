@@ -30,3 +30,8 @@ occurrences:
     severity: nit
     description: "A chained Python edit failed on an assertion but the following git add and commit still ran, committing the unedited Digest; I amended afterward."
     solution: "Never put a commit after a step that can fail in the same call; check exit status first, as git-conventions already says."
+  - session: session_013zxzeNezKVRxRiZLs4z9n4
+    date: "2026-11-04"
+    severity: nit
+    description: "I passed both -m and -F to git commit, which git rejects; the failed commit left the branch unchanged and I redid it."
+    solution: "Use only -F for commit messages, as git-conventions says."

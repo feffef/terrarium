@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-25"
     summary: "dispatch-subagents §3 and clear-backlog-build.js now say run git as git -C <worktree-root>, never cd: the Bash tool keeps its cwd and parallel calls share it."
 occurrences:
-  - session: session_014tr6vJyNXmekdFQtYrEVWT
-    date: "2026-10-21"
-    severity: nit
-    description: "Ran a cd into the frictions directory in Bash and the primary working directory moved; I had to cd back."
-    solution: "Use absolute paths or a subshell instead of a bare cd."
   - session: session_01PYyNMqrrDLZdXEej11LMzs
     date: "2026-10-24"
     severity: moderate
@@ -61,3 +56,8 @@ occurrences:
     severity: nit
     description: "Bash kept a changed directory, so a counting script found zero session logs and a reference grep covered only the ledger folder; both reruns cost calls."
     solution: "Use absolute paths in every command instead of relying on cd."
+  - session: session_013zxzeNcfR7ezGAhwXWTD1g
+    date: "2026-11-04"
+    severity: nit
+    description: "A bash cd into layers/blog/content shifted the working directory twice, which I only noticed from environment notices."
+    solution: "Use absolute paths and avoid cd in compound commands."

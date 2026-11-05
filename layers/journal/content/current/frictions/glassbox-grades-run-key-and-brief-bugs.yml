@@ -13,3 +13,8 @@ occurrences:
     severity: moderate
     description: "grades.ts briefs --kind writer and gate also take every step marked taken in earlier runs, so 20 writer briefs came out and pages like deploy/02 went to stale step units instead of Subject writers."
     solution: "Brief and gate only steps with decided equal to this run, or pages this run changed; I masked old steps in a temporary run.yml copy and filed issue 2823."
+  - session: session_013zxzeT8tDd5GPJiRNZRA4J
+    date: "2026-11-04"
+    severity: moderate
+    description: "The lesson-step writer brief names the new Lesson in its task line but lists only old-page items, so the writer fixed those and never wrote the Lesson; I had to resume it."
+    solution: "For a lesson step, put 'write this new page' and its path first in the brief (filed in issue 2848)."

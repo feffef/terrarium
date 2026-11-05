@@ -26,16 +26,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve step 7 fixes a false claim from the last re-grade before step 8's gate, and Done counts it."
 occurrences:
-  - session: session_01FNv8z61n7roCRsM4AYVtf6
-    date: "2026-10-21"
-    severity: minor
-    description: "Applied review fixes and amended the commit while the first gate:scoped run was still going, against pr-workflow.md's edit-nothing-until-it-ends; had to re-run the gate."
-    solution: "Start the gate only after the review fixes are in, as pr-workflow.md orders."
-  - session: session_01Y8rMxQ5cH3oLqzHegyQnFx
-    date: "2026-10-21"
-    severity: nit
-    description: "Committed while a gate run was still in progress, which pr-workflow.md forbids (edit nothing until it ends); I re-ran the gate on the final head."
-    solution: "Wait for the gate notification before touching the tree."
   - session: session_012rLVzSFUzNKnypyiRd1X2X
     date: "2026-10-22"
     severity: minor
@@ -151,3 +141,8 @@ occurrences:
     severity: nit
     description: "Edited a test file while gate:scoped was running; the gate aborted and had to be rerun, costing about two minutes."
     solution: "Apply review findings only after the gate ends, or start the gate after the review."
+  - session: session_013zxzeQNXfvE3ck6tjqWpYK
+    date: "2026-11-04"
+    severity: minor
+    description: "Committed while pnpm gate:scoped was running; the gate aborted because HEAD changed, so I reran it, against pr-workflow's edit-nothing-until-it-ends."
+    solution: "Treat a commit as an edit while a gate runs; the Stop hook's push ask is safe, a commit is not."

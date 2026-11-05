@@ -21,3 +21,8 @@ occurrences:
     severity: minor
     description: "The update script flags every page and term on any path change, so reading 182 commits per page took many tool calls."
     solution: "Have the script print per-page diffs of just the cited paths."
+  - session: session_013zxzeNsjXNYsepq7RSwxjV
+    date: "2026-11-04"
+    severity: minor
+    description: "glassbox-update script pins every page without an edited range, so pages with one stay on the old revision and fail the spec until pinned by hand."
+    solution: "SKILL.md step 2 should say pages with an edited range need a manual pin, or the script should pin them after you re-verify."

@@ -27,3 +27,13 @@ occurrences:
     severity: minor
     description: "I designed the running out-of-remit issue without checking that the Friction Ledger already clusters run problems; run 1's finding landed in both, and the owner had to point it out."
     solution: "Before adding a place to record findings, check what the Ledger and session-log fields already capture."
+  - session: session_013zxzeSAtjCQiatdUuuFCRJ
+    date: "2026-11-03"
+    severity: minor
+    description: "My own recommendation to run the A election on rematches only would have made a first A impossible; I caught it before building by checking the rule and asked the owner."
+    solution: "Run a recommendation on two concrete cases before giving it (CLAUDE.md, Question the premise); the A rule needs a first win."
+  - session: session_013zxzePH6icDjygJ7mcE1s7
+    date: "2026-11-04"
+    severity: moderate
+    description: "I assumed the hover label should always show cost; the user wanted the selected metric. A premise check on the first ask would have caught it."
+    solution: "Ask in the first round whether the label follows the metric switch or is fixed to cost."

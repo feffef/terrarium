@@ -61,3 +61,8 @@ occurrences:
     severity: nit
     description: "Read the dispatch-subagents Skill only after the first Workflow call (CLAUDE.md trigger: before writing a subagent brief); the hint caught it, no harm."
     solution: "Owner chose a deny guard for this (#2543), being built in this run."
+  - session: session_013zxzeR8CEiWCmTmvjhCZ1A
+    date: "2026-11-03"
+    severity: nit
+    description: "Subagent briefs and the dispatch-subagents Skill were read after the first Agent call was already written in my head; I invoked the Skill just before dispatching, so no guard fired."
+    solution: "None needed."

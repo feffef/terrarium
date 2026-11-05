@@ -25,3 +25,8 @@ occurrences:
     severity: nit
     description: "I cut the advisory conflicting-issues output with tail before merging PR 2524 and read the hit only afterwards; it was my own issue 2520, so no harm."
     solution: "Read the whole advisory output before merge-pr, as the recipe says; print it without tail."
+  - session: session_013zxzePCZc7PkwLBo6YoDJt
+    date: "2026-11-03"
+    severity: nit
+    description: "Piped owner-corrections output through head, truncating the JSON, then had to rerun it."
+    solution: "Redirect to a file first; the Skill could say so."

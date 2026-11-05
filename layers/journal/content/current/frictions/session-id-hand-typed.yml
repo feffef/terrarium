@@ -46,3 +46,8 @@ occurrences:
     severity: minor
     description: "First Workflow call failed twice: the dispatch-read guard wanted dispatch-subagents read first, and I had mistyped the session id with an extra letter."
     solution: "Read dispatch-subagents before the first Workflow call; copy the session id from the attribution template instead of retyping it."
+  - session: session_013zxzeQAvRVQM2NhW8WWUPJ
+    date: "2026-11-05"
+    severity: nit
+    description: "Wrote the wrong session id in the first commit message; the commit-msg hook replaced it with the right trailer, so nothing landed wrong."
+    solution: "Copy the id from the system prompt template instead of the scorecard."

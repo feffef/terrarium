@@ -6,6 +6,7 @@ status: open
 ref: "Comes from the fixes PR #2452 and #2536 for close-session-bypassed-by-hand-log (a log closed by hand, skipping close-session, so the user had to ask for a proper close)."
 notes: |-
   2026-10-28 design: dropped: the refusal is the designed enforcement of #2536 and names the fix; cost is one call.
+  2026-11-05 design: stronger close-session hint or relaxing the refusal dropped: the refusal is the designed enforcement (close-session-bypassed-by-hand-log), a hint change is Human-only, the cost is one call; the #2798 hint did not move it
 occurrences:
   - session: session_01JJcYmSGnRbUcVyvdPbkGs9
     date: "2026-10-24"
@@ -62,3 +63,13 @@ occurrences:
     severity: nit
     description: "Edited the authored log to completed and ran --author before re-invoking close-session after the merge; it refused, costing one retry."
     solution: "Re-invoke close-session first whenever merge-pr.ts prints merged, as the hook says."
+  - session: session_013zxzeSKLjL9xzvaR2kQ4po
+    date: "2026-11-04"
+    severity: nit
+    description: "After the PR merged I authored a completed log before re-invoking close-session, which log-session refused; one wasted call."
+    solution: "After any merge, invoke close-session first, as the merge hook says, then author."
+  - session: session_013zxzeQWVu2gr4U2xJVtQ6W
+    date: "2026-11-05"
+    severity: nit
+    description: "After the merge I authored a completed log before re-invoking close-session, which log-session refused; one wasted call."
+    solution: "Have the merge-pr.ts output remind to run close-session before authoring."

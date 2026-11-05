@@ -11,11 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_01SaChfBZfspYfAm5F7ArCfK
-    date: "2026-10-21"
-    severity: nit
-    description: "My first pnpm gate:scoped background run failed immediately because the scratchpad/logs directory I'd meant to create in the same shell call never existed - an earlier combined mkdir-then-gate call with a trailing shell \"&\" was correctly refused outright by the double-background guard, but I didn't notice the guard's \"nothing in this call ran\" meant the mkdir was skipped too, not just the backgrounded command."
-    solution: "After a blocked double-background call, re-issue every part of it, since the guard refuses the whole call, not just the backgrounded part."
   - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
     date: "2026-10-22"
     severity: nit

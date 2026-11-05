@@ -19,3 +19,8 @@ occurrences:
     severity: minor
     description: "PR body first claimed pr-workflow.md was a Human-only path without checking the rule's paths; my earlier grep printed nothing and I misread it."
     solution: "Read the paths list before stating a merge requirement; corrected the PR body."
+  - session: session_013zxzeR4cgWA8MkV51fqC4t
+    date: "2026-11-03"
+    severity: nit
+    description: "First PR #2809 body had a garbled size line, fixed with update_pull_request"
+    solution: "Reread the PR body before creating"
