@@ -6,7 +6,7 @@
 //   gate --base <sha> --out <dir> [--pages a,b]  writes the gate judge's brief for each page edited since the base
 //   briefs --kind researcher|writer --base <sha> --out <dir>  writes the researcher or writer briefs from <dir>/run.yml; fails on an unfilled placeholder
 //   votes --out <dir> <hand-back> ...        reads judges' verdicts into run.yml; writes the next A judges' briefs
-//   record --base <sha> --out <dir> [--session s] [--pr n] [--cost usd]  writes grades.yml and runs.yml
+//   record --base <sha> --out <dir> [--session s] [--pr n] [--cost usd] [--transcript jsonl]  writes grades.yml and runs.yml, with the cost by phase from the lead's transcript
 //   drafts --base <sha>                      each draft's promotion blockers
 // A page is named by its path under `layers/glassbox/content/guide/pages`, without `.md`.
 import { createHash } from 'node:crypto'
@@ -16,6 +16,8 @@ import { Document, isMap, isPair, isScalar, parse as parseYaml, stringify, visit
 import { extractFlag, fail, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { frontmatterBlock, splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { git, tryGit } from '../../../../scripts/lib/git.ts'
+import { findLatestTranscript } from '../../../../scripts/session/transcript-trace.ts'
+import { readBreakdown, type CostBreakdown, type Mark } from './cost.ts'
 import { glassboxCites, glassboxJournalRoutes, glassboxOrphanText, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, repoGit, type GlassboxGit, type GlassboxSite } from '../../../../layers/glassbox/page-checks.ts'
 import { glassboxPageRefs } from '../../../../layers/glassbox/page-refs.ts'
 
@@ -30,6 +32,9 @@ export const relevanceEvery = 5
 export const churnRuns = 5
 export const rotationRuns = 3
 export const runsKept = 10
+// What one run takes: items to fix plus steps, false claims first. A run costs about 2 USD per edit
+// (runs.yml, runs after the one-gate-judge change), so 8 keeps it near 25 USD and lets later runs take the rest.
+export const workPerRun = 8
 
 export interface LensRecord {
   grade: Grade
@@ -70,7 +75,10 @@ export interface RunEntry {
   session?: string
   base: string
   pr?: number
+  /** From get_session, entered after the PR opens. */
   costUsd?: number
+  /** In USD at list prices, recomputed from the local transcript at every `record`; `totalUsd` should land near `costUsd`. */
+  costBreakdown?: CostBreakdown
   relevance?: boolean
   pagesRead: number
   pagesChecked: number
@@ -310,6 +318,8 @@ export interface Tally {
   waiting: string[]
   /** Steps a restated gist put back to pending, with the decision it cleared. */
   restated?: string[]
+  /** Pending steps past the `workPerRun` cap; they stay pending for a later run. */
+  deferred?: string[]
 }
 
 /** The run key from which a decision still counts for the churn guard: the last `churnRuns` runs. */
@@ -378,8 +388,22 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: 
     if (steps.some((t) => t.status === 'taken' && (t.decided ?? '') >= cutoff && inverse(s, t))) Object.assign(s, { status: 'refused', decided: run })
   }
 
+  const deferred = capWork(items, steps)
   const { comparisons, waiting } = plannedComparisons(record, plan, reports, grades, items)
-  return { grades, items, steps, comparisons, waiting, restated }
+  return { grades, items, steps, comparisons, waiting, restated, deferred }
+}
+
+/** Keeps the first `workPerRun` of: false claims and page checks, pending steps, then deficits and gaps.
+ *  The rest is marked skipped (items) or returned (steps), and the next run finds it again. */
+function capWork(items: Item[], steps: Step[]): string[] {
+  let room = workPerRun
+  const over = `over the ${workPerRun} items a run takes`
+  const take = () => room-- > 0
+  const group = (kinds: Item['kind'][]) => items.filter((i) => kinds.includes(i.kind) && !i.skipped)
+  for (const i of group(['falseClaim', 'check'])) if (!take()) i.skipped = over
+  const deferred = steps.filter((s) => s.status === 'pending' && !take()).map((s) => s.id)
+  for (const i of group(['deficit', 'gap'])) if (!take()) i.skipped = over
+  return deferred
 }
 
 /** QUALITY.md, Grades: each top-3 page meets the Subject's A holders on that lens, or 2 of its B pages while it has none. */
@@ -513,7 +537,7 @@ export interface GateEntry {
 }
 
 /** This run's `runs.yml` entry. */
-export function runEntry(meta: Pick<RunEntry, 'run' | 'base' | 'session' | 'pr' | 'costUsd'>, plan: Plan, result: Tally, gate: GateEntry[]): RunEntry {
+export function runEntry(meta: Pick<RunEntry, 'run' | 'base' | 'session' | 'pr' | 'costUsd' | 'costBreakdown'>, plan: Plan, result: Tally, gate: GateEntry[]): RunEntry {
   const decidedNow = (status: Step['status']) => result.steps.filter((s) => s.status === status && (s.decided ?? meta.run) === meta.run).length
   const done = result.comparisons.filter((c) => c.result)
   return {
@@ -649,7 +673,7 @@ export function fillBrief(template: string, values: Record<string, string>): str
 const itemLine = (i: Item) => `- ${i.id}, ${i.page}${i.lens ? `, ${i.lens}` : ''}${i.quote ? `, "${i.quote}"` : ''}: ${i.fix}${i.exemplar ? ` (A page: ${i.exemplar})` : ''}`
 
 /** The briefs of one kind from the run's items and steps: it fills what run.yml holds and decides nothing. */
-export function agentBriefs(kind: 'researcher' | 'writer', state: Pick<RunState, 'base' | 'run' | 'items' | 'steps'>, template: string, out: string, draftSection: (pages: string[]) => string): { name: string; text: string }[] {
+export function agentBriefs(kind: 'researcher' | 'writer', state: Pick<RunState, 'base' | 'run' | 'items' | 'steps' | 'deferred'>, template: string, out: string, draftSection: (pages: string[]) => string): { name: string; text: string }[] {
   const stepPages = (s: Step) => [...s.pages, ...(s.into ? [s.into] : [])]
   const describe = (s: Step) => `${s.kind} ${s.pages.join(', ')}${s.into ? ` into ${s.into}` : ''} (${s.id}): ${s.gist}`
   const falseClaims = state.items.filter((i) => i.kind === 'falseClaim' && !i.skipped && i.confirmed !== false).map((i) => `- ${i.page}: "${i.quote}" (${i.source})`)
@@ -658,7 +682,7 @@ export function agentBriefs(kind: 'researcher' | 'writer', state: Pick<RunState,
   if (kind === 'researcher') {
     const kept = state.items.filter((i) => !i.skipped && i.confirmed !== false)
     for (const [subject, items] of bySubject(kept)) units.push({ name: subject, task: `confirm the items on the pages of ${subject}`, items, draft: 'none' })
-    for (const s of state.steps.filter((s) => s.status === 'pending')) units.push({ name: s.id, task: `research the step: ${describe(s)}`, items: [], draft: draftSection(s.pages) })
+    for (const s of state.steps.filter((s) => s.status === 'pending' && !state.deferred?.includes(s.id))) units.push({ name: s.id, task: `research the step: ${describe(s)}`, items: [], draft: draftSection(s.pages) })
   } else {
     const confirmed = state.items.filter((i) => i.confirmed === true)
     const taken = state.steps.filter((s) => s.status === 'taken' && (s.decided ?? state.run) === state.run)
@@ -758,10 +782,18 @@ interface RunState {
   comparisons: Comparison[]
   waiting: string[]
   restated?: string[]
+  deferred?: string[]
   gate: (Omit<GateEntry, 'merged'> & { merged?: boolean })[]
 }
 
 const statePath = (out: string) => join(out, 'run.yml')
+const marksPath = (dir: string) => join(dir, 'phases.yml')
+const marksIn = (dir: string) => readYaml<Mark[]>(marksPath(dir), [])
+/** The start of a phase, for the cost breakdown; the lead's cost is cut at these times. */
+function stamp(dir: string, phase: string) {
+  mkdirSync(dir, { recursive: true })
+  writeYaml(marksPath(dir), [...marksIn(dir), { phase, at: new Date().toISOString().slice(0, 19) + 'Z' }])
+}
 const keyPath = (out: string) => join(out, 'judges', 'key.yml')
 const readYaml = <T>(path: string, fallback: T): T => (existsSync(path) ? (parseYaml(readFileSync(path, 'utf8')) as T) : fallback)
 const writeYaml = (path: string, value: unknown) => writeFileSync(path, stringify(value, { lineWidth: 0 }))
@@ -837,8 +869,8 @@ const cell = (s: string) => s.replace(/\|/g, '\\|').replace(/\n/g, ' ')
 function summary(state: RunState): string {
   const out = [`# Tally at ${state.base}`, '', '## Work, in order', '', 'id | page | kind | lens | grade | item | fix | skipped', '--- | --- | --- | --- | --- | --- | --- | ---']
   for (const i of state.items) out.push([i.id, i.page, i.kind, i.lens ?? '', i.grade ?? '', i.exemplar ? `${i.quote} (${i.exemplar})` : i.source ? `"${i.quote}" (${i.source})` : i.quote ? `"${i.quote}"` : '', i.fix, i.skipped ?? ''].map(cell).join(' | '))
-  out.push('', '## Steps', '', 'id | kind | pages | into | status | raised | gist', '--- | --- | --- | --- | --- | --- | ---')
-  for (const s of state.steps) out.push([s.id, s.kind, s.pages.join(', '), s.into ?? '', s.status, s.raised.join(', '), s.gist].map(cell).join(' | '))
+  out.push('', `## Steps (a run takes at most ${workPerRun} items and steps together)`, '', 'id | kind | pages | into | status | raised | gist', '--- | --- | --- | --- | --- | --- | ---')
+  for (const s of state.steps) out.push([s.id, s.kind, s.pages.join(', '), s.into ?? '', state.deferred?.includes(s.id) ? 'pending, deferred to a later run' : s.status, s.raised.join(', '), s.gist].map(cell).join(' | '))
   out.push('', `## A comparisons (at most ${comparisonsPerRun})`, '', ...(state.comparisons.length ? state.comparisons.map((c) => `- ${c.id}: ${c.candidate} vs ${c.against} on ${c.lens}`) : ['- none']))
   if (state.restated?.length) out.push('', '## Steps raised again with a new gist (back to pending)', '', ...state.restated.map((l) => `- ${l}`))
   out.push('', `Top-3 pages not compared: ${state.waiting.join('; ') || 'none'}`)
@@ -849,13 +881,16 @@ runIfMain(import.meta.url, () => {
   const [command, ...args] = process.argv.slice(2)
   const flags: Record<string, string | undefined> = {}
   let rest = args
-  for (const name of ['base', 'briefs', 'kind', 'out', 'pages', 'session', 'pr', 'cost']) {
+  for (const name of ['base', 'briefs', 'kind', 'out', 'pages', 'session', 'pr', 'cost', 'transcript']) {
     const r = extractFlag(rest, `--${name}`)
     flags[name] = r.value
     rest = r.rest
   }
   const out = flags.out
-  if (command === 'votes') return votes(out ?? fail('--out <dir> is required'), rest)
+  if (command === 'votes') {
+    if (out) stamp(out, 'votes')
+    return votes(out ?? fail('--out <dir> is required'), rest)
+  }
   if (!flags.base) fail('--base <sha> is required')
   const sha = git(['rev-parse', `${flags.base}^{commit}`], root).trim()
   const draftsText = () => {
@@ -875,6 +910,7 @@ runIfMain(import.meta.url, () => {
     const pageCatalog = catalog(sha)
     const held = Object.fromEntries(lenses.map((l) => [l, Object.entries(record.pages).filter(([, p]) => p.lenses[l]?.grade === 'A').map(([page]) => page)]))
     if (flags.briefs) {
+      stamp(flags.briefs, 'plan')
       const trimmed = join(flags.briefs, 'trimmed-pages.md')
       mkdirSync(flags.briefs, { recursive: true })
       writeFileSync(trimmed, spacePages(sha, 'guide').map(([page, text]) => `# ${page}\n\n${trimPage(text)}`).join('\n\n'))
@@ -912,6 +948,7 @@ runIfMain(import.meta.url, () => {
     const run = new Date().toISOString().slice(0, 16).replace(':', '')
     const result = tally(record, thePlan, reports, runs, pageChecks(sha), run)
     mkdirSync(out, { recursive: true })
+    stamp(out, 'tally')
     const state: RunState = { base: sha, run, plan: thePlan, ...result, gate: [] }
     writeYaml(statePath(out), state)
     const pageText = (p: string) => showAt(sha, `${pagesDir('guide')}/${p}.md`) ?? ''
@@ -924,6 +961,7 @@ runIfMain(import.meta.url, () => {
   if (command === 'briefs') {
     if (flags.kind !== 'researcher' && flags.kind !== 'writer') fail('--kind researcher|writer is required')
     const kind = flags.kind
+    stamp(out, kind === 'researcher' ? 'research' : 'write')
     const report = state.steps.some((s) => s.status === 'pending') && kind === 'researcher' ? draftsText() : ''
     const section = (pages: string[]) => report.split(/^(?=## )/m).filter((s) => pages.some((p) => s.startsWith(`## ${p}.md `))).join('\n').trim() || 'none'
     let written
@@ -938,6 +976,7 @@ runIfMain(import.meta.url, () => {
     return
   }
   if (command === 'gate') {
+    stamp(out, 'gate')
     const wanted = flags.pages?.split(',').filter(Boolean)
     const criteria = gateCriteria(state.items, state.steps, state.run)
     const briefs: string[] = []
@@ -964,7 +1003,16 @@ runIfMain(import.meta.url, () => {
     if (owed.length) fail(`judges still owed: ${owed.join(', ')}`)
     const result: Tally = { grades: state.grades, items: state.items, steps: state.steps, comparisons: state.comparisons, waiting: state.waiting }
     const next = nextRecord(record, state.plan, current, result, runs, state.run)
-    const meta = { run: state.run, base: sha, ...(flags.session ? { session: flags.session } : {}), ...(flags.pr ? { pr: Number(flags.pr) } : {}), ...(flags.cost ? { costUsd: Number(flags.cost) } : {}) }
+    stamp(out, 'record')
+    const transcript = flags.transcript ?? findLatestTranscript(root, process.env.HOME)
+    let costBreakdown: CostBreakdown | undefined
+    try {
+      costBreakdown = transcript ? readBreakdown(transcript, marksIn(out)) : undefined
+      if (!costBreakdown) console.error('no local transcript, so no cost breakdown (pass --transcript <jsonl>)')
+    } catch (err) {
+      console.error(`no cost breakdown: ${(err as Error).message}`)
+    }
+    const meta = { run: state.run, base: sha, ...(flags.session ? { session: flags.session } : {}), ...(flags.pr ? { pr: Number(flags.pr) } : {}), ...(flags.cost ? { costUsd: Number(flags.cost) } : {}), ...(costBreakdown ? { costBreakdown } : {}) }
     const entry = runEntry(meta, state.plan, result, state.gate as GateEntry[])
     // One line per lens record and edit, as in issue #2792's data shape.
     const doc = new Document(next)

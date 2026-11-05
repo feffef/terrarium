@@ -2,7 +2,7 @@
 // the blind comparisons, the next record and the drafts report. The git shell runs in the Skill.
 import { describe, expect, it } from 'vitest'
 import type { GlassboxGit } from '../../../../../layers/glassbox/page-checks.ts'
-import { agentBriefs, blindPair, claimShards, judgeBrief, lensDefinition, raterBrief, comparisonResult, coverageProblems, decodeVerdict, draftsReport, gateCriteria, gateMerged, nextRecord, pageHash, parseReport, runEntry, planPages, readRecord, reportProblems, sourcesHash, stepCriterion, tally, trimPage, type GradeRecord, type PageRecord, type Plan, type Report, type RunEntry, type Step, type Tally, type Vote } from '../../scripts/grades.ts'
+import { agentBriefs, blindPair, claimShards, judgeBrief, lensDefinition, raterBrief, comparisonResult, coverageProblems, decodeVerdict, draftsReport, gateCriteria, gateMerged, nextRecord, pageHash, parseReport, runEntry, planPages, readRecord, reportProblems, sourcesHash, stepCriterion, tally, trimPage, workPerRun, type GradeRecord, type PageRecord, type Plan, type Report, type RunEntry, type Step, type Tally, type Vote } from '../../scripts/grades.ts'
 
 const page = '---\ntitle: Hooks\nrevision: abc\nrevisionDate: 2026-10-01\n---\nBody\n::excerpt{path="a.ts" lines="3-5"}\n'
 
@@ -195,6 +195,27 @@ describe('tally', () => {
   const reportA = (pages: Record<string, Record<string, unknown>>, top3: Report['top3'] = {}): Report => ({ rater: 'A', pages: Object.entries(pages).map(([page, l]) => ({ page, lenses: lensesOf(l) })), top3 })
   const allB = { clarity: { grade: 'B' }, reasoning: { grade: 'B' } }
   const record = (pages: GradeRecord['pages'] = {}, steps: Step[] = []): GradeRecord => ({ version: 3, run: '2026-11-02', pages, steps })
+
+  it('takes at most workPerRun items and steps together, false claims first, and defers the rest', () => {
+    const finding = (n: number) => ({ quote: `q${n}`, fix: `f${n}` })
+    const many = reportA({ 'a/01.p': { clarity: { grade: 'C', findings: Array.from({ length: 6 }, (_, i) => finding(i)) }, reasoning: { grade: 'B' } }, 'a/02.p': { clarity: { grade: 'C', findings: [finding(9)] }, reasoning: { grade: 'B' } } })
+    const claims: Report = { rater: 'C', pages: [{ page: 'b/01.p', lenses: {}, falseClaims: [{ quote: 'x', source: 'x.ts:1' }, { quote: 'y', source: 'y.ts:1' }] }] }
+    const step = (id: string): Step => ({ id, kind: 'cut', pages: ['a/03.p'], raised: ['2026-11-01'], status: 'pending', gist: 'g' })
+    const result = tally(record({}, [step('cut-one'), step('cut-two')]), plan, [many, claims], [], {}, today)
+    const kept = result.items.filter((i) => !i.skipped)
+    // 2 false claims + 2 steps leave room for 4 of the 7 deficits; a step and a claim never lose their place to a deficit.
+    expect(kept.map((i) => i.kind)).toEqual(['falseClaim', 'falseClaim', 'deficit', 'deficit', 'deficit', 'deficit'])
+    expect(result.items.filter((i) => i.skipped).map((i) => i.skipped)).toEqual(Array(3).fill(`over the ${workPerRun} items a run takes`))
+    expect(result.deferred).toEqual([])
+  })
+
+  it('defers pending steps once false claims and checks fill the run', () => {
+    const claims: Report = { rater: 'C', pages: [{ page: 'b/01.p', lenses: {}, falseClaims: Array.from({ length: workPerRun }, (_, i) => ({ quote: `c${i}`, source: 'x.ts:1' })) }] }
+    const step: Step = { id: 'cut-one', kind: 'cut', pages: ['a/03.p'], raised: ['2026-11-01'], status: 'pending', gist: 'g' }
+    const result = tally(record({}, [step]), plan, [claims], [], {}, today)
+    expect(result.deferred).toEqual(['cut-one'])
+    expect(result.steps.map((s) => s.status)).toEqual(['pending'])
+  })
 
   it('orders the work: false claims, page checks, deficits weakest page first, then gaps', () => {
     const a = reportA({
