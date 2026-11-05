@@ -1,0 +1,167 @@
+schemaVersion: 1
+session: session_013zxzeQWJEVk8sAXq1hcSjq
+startedAt: 2026-11-05T21:11:11Z
+endedAt: 2026-11-05T21:39:00Z
+kind: interactive
+goal: Cap glassbox-improve run work and record cost per phase
+status: in-review
+outcome: PR 2868 open with the cap and per-phase cost; gate green, prices not yet calibrated
+summary: "Human-instructed: the owner asked to implement issue 2850 (per-phase cost in runs.yml, price-weighted shape B) and, in parallel, to limit the cost of each run by limiting the changes done per session, so later runs can be compared with the new per-phase cost without huge sessions. The owner's preference was to be asked first, so I asked: the cap counts pages per run, is enforced in grades.ts, ships in the same PR, and I should research before proposing numbers. The owner also interrupted me to say only v3 runs count as evidence. I proposed a cap of 12; the owner chose 8, with false claims counting and coming first, and steps counted inside the same budget. The owner then approved opening the PR. Agent-initiated: the USD unit and the shape of costBreakdown (the issue left the unit to the builder), the phase-mark names and phases.yml file, the dispatch-name convention in SKILL.md, putting steps right after false claims and checks in the cap order, and the review fixes. Built grades.ts capWork, a new cost.ts reading the lead's and subagents' transcripts, specs for both, and SKILL.md edits. Prices come from the claude-api Skill table because this session's transcript held no cost-state record, so they are not calibrated against a recorded costUSD and nothing was tested on a real glassbox run; the PR says so. Two-axis code review found one real bug (the lead curve counted from the transcript start), fixed in a second commit. A gate run was wasted when I committed during it."
+prs:
+  - "2868"
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: which MCP tool reads issues and how comments are encoded
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: told me not to run state-changing git in the same command as a gate; I read it too late to avoid that
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: review before opening the PR, no closing keyword unless the issue is completed
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: hook asked for it after I wrote cost.ts; confirmed a Skill script change is an ordinary gated PR
+    useful: partly
+  - path: docs/adr/0027-prune-trials.md
+    reason: hook asked for it; led me to check prune-trials.yml, which had no glassbox-improve trial
+    useful: partly
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: read the plan, tally and record steps I edited; credited from a grep of it
+    useful: yes
+  - path: .claude/rules/data-shapes.md
+    reason: new stored field needs a Trusted user to settle its shape; the issue's owner decision covered it
+    useful: yes
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: Standards subagent read it to judge my SKILL.md edits; it found them short and plain
+    useful: partly
+skillsUsed:
+  - name: claude-api
+    reason: source the model prices instead of recalling them
+  - name: dispatch-subagents
+    reason: brief the two code-review subagents
+  - name: code-review
+    reason: Standards and Spec review before the PR
+  - name: close-session
+    reason: required before the PR-opening turn ends
+  - name: log-session
+    reason: (no reason given)
+  - name: implement
+    reason: (invoked as a slash command)
+frictions:
+  - description: Committed locally while pnpm gate:scoped ran in the background, so the gate aborted before its test step and had to be re-run.
+    solution: Read git-conventions.md first (it says no state-changing git beside a gate) and commit before starting the gate, not during it.
+    severity: minor
+  - description: Chained git add -A onto the gate command in one Bash call, against git-conventions.md, before I had read that doc's rule about it.
+    solution: A hook or CLAUDE.md line that loads the doc before the first staging command, not only before the first non-read-only git command.
+    severity: nit
+  - description: Used git log to draw a conclusion about which runs are v3 before reading git-conventions.md, which CLAUDE.md requires first.
+    solution: The read-first hint appeared only after the command ran; load it before any git log used for a conclusion.
+    severity: nit
+  - description: Printed about 150 lines of runs.yml findings when I only needed the cost columns, then misjudged which runs counted as v3 until the owner corrected me.
+    solution: Grep the numeric fields first, and ask the owner which runs count before reading them.
+    severity: minor
+  - description: Loaded the full claude-api Skill, a very long document, only to read four model prices, and the transcript still held no cost-state record to calibrate them.
+    solution: Grep the price table directly, and check for a cost-state record in a real run transcript before designing the calibration step.
+    severity: minor
+  - description: Asked clarifying questions with AskUserQuestion instead of the grilling Skill that CLAUDE.md names for settling what to build.
+    solution: CLAUDE.md could say the grilling Skill is required even for a short round of questions, or accept AskUserQuestion.
+    severity: nit
+  - description: The data-shapes rule did not load for runs.yml or cost.ts, so the new stored field was not flagged; the Standards reviewer had to raise it.
+    solution: Add .agents/skills/*/runs.yml to the paths of .claude/rules/data-shapes.md.
+    severity: nit
+durationSec: 1668
+models:
+  claude-sonnet-5-5: 155
+toolCounts:
+  Read: 5
+  ToolSearch: 3
+  mcp__github__issue_read: 2
+  AskUserQuestion: 2
+  Bash: 46
+  Skill: 5
+  Write: 4
+  Agent: 2
+  mcp__github__list_pull_requests: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - .agents/skills/glassbox-improve/scripts/cost.ts
+  - .agents/skills/glassbox-improve/scripts/grades.ts
+  - .agents/skills/glassbox-improve/tests/unit/cost.spec.ts
+  - .agents/skills/glassbox-improve/SKILL.md
+  - .agents/skills/glassbox-improve/tests/unit/grades.spec.ts
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+adrHints:
+  - adr: 5
+    via: path
+    readAfter: true
+    by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: main
+docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me gate:scoped plus code-review before the PR and that a Skill change merges like code; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded after I read the glassbox files; none of my changed paths are Human-only, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0003.md
+    reason: Says to open the PR myself once reviewed; it conflicted with the harness instruction, so I asked the owner first; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Sent me to close-session at PR open and at merge; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on line one of the PR body and the commit trailer, which I checked; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skill code lives in the Skill folder and changes through a gated PR; I read the full ADR when a hook asked
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Told me to check for an open prune trial covering glassbox-improve before editing; none existed; I read the ADR when a hook asked
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; I wrote none, so it did not apply
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About rewriting ADRs; I changed no ADR, so it did not apply
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Standards review of cost diff
+    durationSec: 30
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 6.4
+  - type: general-purpose
+    task: Spec review of cost diff
+    durationSec: 50
+    toolCalls: 7
+    modelCalls: 5
+    tokenShare: 6.8
+gitBranch: claude/festive-dirac-g1wbfu
+entrypoint: remote
+cliVersion: 2.1.318
+learnings:
+  - A transcript's assistant records repeat per content block with one message id; the last record per id holds the final usage, so dedupe by id keeping the last.
+  - The harness gate (gate:scoped) aborts if HEAD or the tree changes during its run, so a local commit mid-run costs a full re-run.
+ideas:
+  - Store the lead-session transcript path and a cost-state sample in the glassbox-improve scratch at the first record, so price calibration against costUSD can run in the next run instead of being a manual check.
+landedBy: Stop
