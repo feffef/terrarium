@@ -1,14 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeS7NuFmaoXJkxVfNby
 startedAt: 2026-11-05T02:08:30Z
-endedAt: 2026-11-05T02:27:37Z
+endedAt: 2026-11-05T02:39:22Z
 kind: autonomous
 goal: Turn this window's session Frictions into fixes
-status: in-review
-outcome: "Ledger PR #2855 open and gate-green; one doc fix built and reviewed, its PR still to open; three regression issues filed."
-summary: "Scheduled frictions-to-fixes run (agent-initiated by the schedule, no human prompt). A survey subagent updated the Friction Ledger from 23 sessions (new entry glassbox-grades-tally-crashes, three fixes recorded, stale statuses reset). I filed regression issues #2852, #2853 and #2854 (the top three that had no open issue; the glassbox-grades regression is covered by open #2848). Picks: worktree-subagent-moves-branch (a design agent recommended a one-bullet rewording of dispatch-subagents, built by a Sonnet agent on claude/fix-dispatch-detach-scope, reviewed, not yet pushed) and log-session-refuses-hand-closed-log (dropped, noted). Ledger PR #2855 opened after gate:scoped passed. Still open: fix PR, closing ledger PR, final log."
+status: completed
+outcome: "Ledger PRs #2855 and #2857 and the dispatch-subagents fix #2856 merged; three regression issues filed."
+summary: "Scheduled frictions-to-fixes run (agent-initiated by the schedule, no human prompt). A survey subagent updated the Friction Ledger from 23 sessions (new entry glassbox-grades-tally-crashes, three fixes recorded, stale statuses reset). I filed regression issues #2852, #2853 and #2854 (the top three with no open issue; the glassbox-grades regression is covered by open #2848). Picks: worktree-subagent-moves-branch (a Sonnet agent rewrote one dispatch-subagents bullet; code-review found a no-op addition and a dropped condition, so I sent it back once; merged as #2856) and log-session-refuses-hand-closed-log (dropped with a note). Ledger PR #2855 and the closing ledger PR #2857 merged after gate:scoped. Open: the three regression issues await the owner."
 prs:
   - "2855"
+  - "2856"
+  - "2857"
 docsRead:
   - path: .agents/skills/frictions-to-fixes/survey-brief.md
     reason: Survey subagent's brief; also told me what the survey must return
@@ -52,7 +54,12 @@ docsRead:
   - path: docs/agents/guards.md
     reason: Design agent read it for the hint/guard roster, yes
     useful: yes
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: Checked the Scope exceptions to decide a prose Skill edit is agent-mergeable
+    useful: yes
   - path: /home/user/terrarium/.agents/skills/frictions-to-fixes/impl-brief.md
+    reason: (no reason given)
+  - path: .agents/skills/writing-for-agents/SKILL.md
     reason: (no reason given)
   - path: /home/user/terrarium/.agents/skills/frictions-to-fixes/design-brief.md
     reason: (no reason given)
@@ -95,19 +102,30 @@ frictions:
   - description: "Linked worktree(s) left with uncommitted or unpushed work at close: /home/user/terrarium/.claude/worktrees/agent-a340b30517ffb24ad"
     solution: Push each, or remove it if its work is meant to be dropped.
     severity: minor
-durationSec: 1147
+  - description: After the last PR merged I authored a completed log before re-invoking close-session; log-session refused it, costing one call.
+    solution: Invoke close-session immediately after merge-pr.ts (the hint already says so).
+    severity: nit
+  - description: Wrote a PR verdict comment's Reviewed SHA by hand (a made-up full hash from a short one) instead of pasting verdict-line.ts output; caught and corrected before merging.
+    solution: Run verdict-line.ts first and paste its output; never type the hash.
+    severity: nit
+durationSec: 1852
 models:
-  claude-sonnet-5-5: 71
+  claude-sonnet-5-5: 146
 toolCounts:
-  Bash: 22
+  Bash: 47
   Agent: 5
   ToolSearch: 2
   mcp__github__issue_write: 4
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
-  Skill: 3
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 2
+  Skill: 4
+  ReadNotifications: 7
+  SendMessage: 1
+  mcp__github__add_issue_comment: 3
+  mcp__github__update_issue_comment: 1
 filesEdited:
   - .agents/skills/dispatch-subagents/SKILL.md
+  - layers/journal/content/current/frictions/worktree-subagent-moves-branch.yml
   - layers/journal/content/current/frictions/adr-check-output-oversized.yml
   - layers/journal/content/current/frictions/adr-check-scope-in-skill-runs.yml
   - layers/journal/content/current/frictions/bare-cd-moves-session-cwd.yml
@@ -143,7 +161,6 @@ filesEdited:
   - layers/journal/content/current/frictions/transform-untested-on-real-data.yml
   - layers/journal/content/current/frictions/verdict-comment-hand-typed.yml
   - layers/journal/content/current/frictions/worktree-guard-false-positive.yml
-  - layers/journal/content/current/frictions/worktree-subagent-moves-branch.yml
   - layers/journal/content/current/frictions/adr-read-after-edit.yml
   - layers/journal/content/current/frictions/chained-git-step-fails-silently.yml
   - layers/journal/content/current/frictions/check-worktrees-unpushed-flags.yml
@@ -173,12 +190,15 @@ rulesLoaded:
   - .claude/rules/adr-0029.md
   - .claude/rules/tenant-glossary.md
   - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0030.md
 rulesGlobal:
   - .claude/rules/adr-0004.md
   - .claude/rules/adr-0009.md
   - .claude/rules/adr-0003.md
   - .claude/rules/adr-0017.md
 rulesFollowedUp:
+  - .claude/rules/adr-0004.md
   - .claude/rules/adr-0027.md
   - .claude/rules/adr-0005.md
 adrHints:
@@ -194,14 +214,13 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0008.md
   - .claude/rules/tenant-layers.md
   - .claude/rules/adr-0021.md
-  - .claude/rules/adr-0030.md
-  - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/guards.md
 docsReadBySubagents:
   - docs/agents/environment-caveats.md
   - .agents/skills/audit-docs/SKILL.md
   - docs/adr/0027-prune-trials.md
   - docs/adr/0005-skill-model.md
+  - .agents/skills/writing-for-agents/SKILL.md
   - docs/agents/guards.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
@@ -258,28 +277,32 @@ subagents:
     durationSec: 623
     toolCalls: 39
     modelCalls: 35
-    tokenShare: 39.8
+    tokenShare: 22.3
   - type: general-purpose
     task: Design fixes for picks
     durationSec: 88
     toolCalls: 10
     modelCalls: 7
-    tokenShare: 6.6
+    tokenShare: 3.7
   - type: general-purpose
     task: Build dispatch-subagents doc fix
     model: sonnet
-    durationSec: 127
-    toolCalls: 20
-    modelCalls: 14
-    tokenShare: 8.8
+    durationSec: 384
+    toolCalls: 25
+    modelCalls: 19
+    tokenShare: 6.4
   - type: general-purpose
     task: Standards review of doc diff
-    durationSec: 0
-    toolCalls: 0
+    durationSec: 34
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 2
   - type: general-purpose
     task: Spec review of doc diff
-    durationSec: 0
-    toolCalls: 0
+    durationSec: 15
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 1.1
 gitBranch: claude/eager-ptolemy-q7prmf
 entrypoint: remote_trigger
 cliVersion: 2.1.318
