@@ -341,6 +341,18 @@ describe('journal Tenant', async () => {
     })
   })
 
+  it('opens the Friction Ledger section that holds a cluster a link points at', async () => {
+    let hidden = ''
+    await withRendered('/t/journal/current/frictions?days=90', async (page) => {
+      await page.getByRole('button', { name: /^Show all/ }).first().click()
+      hidden = (await page.locator('h2#severe-h + .intro + .ledger > li').nth(10).getAttribute('id')) ?? ''
+    })
+    expect(hidden).toMatch(/^cluster-/)
+    await withRendered(`/t/journal/current/frictions?days=90#${hidden}`, async (page) => {
+      await page.locator(`#${hidden}`).waitFor({ state: 'visible' })
+    })
+  })
+
   it('hydrates the sub pages with no unresolved components', async () => {
     await expectCleanHydration('/t/journal/current/routines')
     await expectCleanHydration('/t/journal/current/skills')
