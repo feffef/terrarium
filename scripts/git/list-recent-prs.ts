@@ -103,9 +103,14 @@ export function prsSince(commits: RawMergeCommit[], since: string): RecentPr[] {
  *  cannot flood the output. */
 export function withChange(pr: RecentPr, nameOnly: string, patch: string): RecentPr {
   const files = nameOnly.split('\n').filter(Boolean)
+  let inHeader = false // file headers sit between `diff --git` and the first `@@`
   const diff = patch
     .split('\n')
-    .filter((l) => /^(@@|[+-])/.test(l) && !/^(\+\+\+|---)/.test(l))
+    .filter((l) => {
+      if (l.startsWith('diff --git')) inHeader = true
+      else if (l.startsWith('@@')) inHeader = false
+      return !inHeader && /^(@@|[+-])/.test(l)
+    })
     .slice(0, MAX_DIFF_LINES)
   return { ...pr, files: files.slice(0, MAX_FILES), diff }
 }

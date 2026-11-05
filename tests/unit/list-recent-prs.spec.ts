@@ -123,6 +123,10 @@ describe('withChange()', () => {
     const patch = 'diff --git a/x b/x\nindex 1..2\n--- a/x\n+++ b/x\n@@ -1 +1 @@\n-old\n+new\n context'
     expect(withChange(pr, 'a.ts\nb.ts\n', patch)).toEqual({ ...pr, files: ['a.ts', 'b.ts'], diff: ['@@ -1 +1 @@', '-old', '+new'] })
   })
+  it('keeps removed lines that start with dashes, such as a deleted `---`', () => {
+    const patch = 'diff --git a/x b/x\n--- a/x\n+++ b/x\n@@ -1,2 +0,0 @@\n----\n--- x\n'
+    expect(withChange(pr, 'x', patch).diff).toEqual(['@@ -1,2 +0,0 @@', '----', '--- x'])
+  })
   it('caps the diff at 15 lines and the files at 30', () => {
     const out = withChange(pr, Array.from({ length: 40 }, (_, i) => `f${i}`).join('\n'), Array.from({ length: 40 }, (_, i) => `+l${i}`).join('\n'))
     expect(out.files).toHaveLength(30)
