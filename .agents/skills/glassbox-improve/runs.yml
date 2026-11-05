@@ -2,13 +2,15 @@ runs:
   - run: 2026-11-05T2210
     base: 4d310050167a9ba8c72d79edc611de2c5a8a643d
     session: session_013zxzeTJp1jinYqgNJRczgA
+    pr: 2869
+    costUsd: 34.98
     costBreakdown:
       tokens:
         lead:
           inputK: 0
-          outputK: 50
-          readK: 25706
-          writeK: 351
+          outputK: 55
+          readK: 30744
+          writeK: 363
         agents:
           gate:
             inputK: 0
@@ -41,14 +43,14 @@ runs:
             readK: 10444
             writeK: 625
       sharePct:
-        lead: 15.5
+        lead: 17.6
         agents:
-          gate: 3.3
+          gate: 3.2
           research: 3.5
-          rate: 58.1
-          elect: 3.2
+          rate: 56.7
+          elect: 3.1
           review: 2.1
-          write: 14.3
+          write: 13.9
       lead:
         - phase: plan
           at: 2026-11-05T21:55:08Z
@@ -57,27 +59,37 @@ runs:
         - phase: tally
           at: 2026-11-05T22:10:09Z
           contextK: 244
-          cumPct: 3.5
+          cumPct: 3.4
         - phase: research
           at: 2026-11-05T22:10:54Z
           contextK: 270
-          cumPct: 4.4
+          cumPct: 4.3
         - phase: write
           at: 2026-11-05T22:13:00Z
           contextK: 309
-          cumPct: 6.3
+          cumPct: 6.1
         - phase: gate
           at: 2026-11-05T22:19:42Z
           contextK: 346
-          cumPct: 9.8
+          cumPct: 9.6
         - phase: votes
           at: 2026-11-05T22:20:39Z
           contextK: 366
-          cumPct: 11
+          cumPct: 10.8
         - phase: record
           at: 2026-11-05T22:25:48Z
           contextK: 416
-          cumPct: 14.8
+          cumPct: 14.5
+      usd:
+        total: 34.98
+        lead: 6.16
+        agents:
+          gate: 1.12
+          research: 1.22
+          rate: 19.83
+          elect: 1.08
+          review: 0.73
+          write: 4.86
     relevance: true
     pagesRead: 68
     pagesChecked: 68
