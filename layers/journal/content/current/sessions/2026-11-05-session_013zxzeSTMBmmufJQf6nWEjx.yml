@@ -1,11 +1,11 @@
 schemaVersion: 1
 session: session_013zxzeSTMBmmufJQf6nWEjx
 startedAt: 2026-11-05T07:33:04Z
-endedAt: 2026-11-05T07:40:16Z
+endedAt: 2026-11-05T07:44:52Z
 kind: autonomous
 goal: Scheduled sync of Glass Box guide pages to main
-status: in-review
-outcome: PR 2861 re-pins all guide pages and fixes two; gate green, awaiting CI
+status: completed
+outcome: "PR 2861 merged: all guide pages re-pinned, two pages fixed"
 summary: Scheduled glassbox-update run (no human prompt; agent-initiated by the Routine). Ran the report against main f24d21037, advanced pins, read the code diffs behind the 14 flagged pages, and edited two (Self-improvement loop, Workflow scripts) where prose had drifted. Other flagged pages were still true. Checks and gate:scoped passed; opened PR 2861 and subscribed. Own read of the diff instead of code-review, since it is pin bumps plus two one-line edits.
 prs:
   - "2861"
@@ -36,14 +36,17 @@ frictions:
   - description: Sent run_in_background with a trailing & and disown on the gate run; the double-background guard denied it
     solution: Pass run_in_background alone; the guard message said so
     severity: nit
-durationSec: 432
+durationSec: 708
 models:
-  claude-sonnet-5-5: 46
+  claude-sonnet-5-5: 63
 toolCounts:
-  Bash: 22
+  Bash: 28
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  Skill: 2
+  Skill: 3
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
