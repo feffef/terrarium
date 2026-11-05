@@ -29,8 +29,7 @@ an ordinary gated PR, not the direct-to-main path that session logs use.
 - A Digest fits neither other Journal kind (ADR-0008). It is derived from
   records, like an Inventory, but it covers a finished day, so a run writes it
   once.
-- It is prose for people, with links, so it is a page. Data collections get
-  no route.
+- It is prose for people, with links, so it is a page.
 - Only a Space's `pages` collection gets routes (ADR-0006). A separate
   collection would need a change to the routing code, which a human must
   merge, and the `digests/` path already finds them.
