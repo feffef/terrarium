@@ -1,7 +1,7 @@
 ---
 title: A session log lands on main
 description: How an agent session's record of its work reaches main without a PR, from the agent's judgement to one commit built by git plumbing.
-revision: 'f24d21037680455f0ec7ff04e82af3383444b297'
+revision: '4d310050167a9ba8c72d79edc611de2c5a8a643d'
 revisionDate: '2026-11-05'
 publishedAt: '2026-11-04T23:08:39Z'
 ---
@@ -50,7 +50,7 @@ The stitched entry must pass the session schema, and its file name is fixed: the
 
 ## 6. One file goes straight to main
 
-Instead of `git commit`, which commits what is staged on the current branch, the lander uses git's plumbing commands, low-level commands meant for scripts, with its own temporary index: it loads `origin/main`'s tree, adds the log as a blob, writes the tree and commits it with `main` as its one parent. The working copy and the session's branch never change:
+Instead of `git commit`, which commits what is staged on the current branch, the lander uses git's plumbing, low-level commands meant for scripts, on a temporary index. The session's working copy and branch never change.
 
 ::excerpt{path="scripts/session/log-session.ts" lines="279-291"}
 ```ts
@@ -62,8 +62,6 @@ Instead of `git commit`, which commits what is staged on the current branch, the
     const commit = git(['commit-tree', tree, '-p', base, '-m', subject, '-m', trailer], cwd, { env }).trim()
 ```
 ::
-
-`idxEnv` sets `GIT_INDEX_FILE` to the temporary index.
 
 ::lessons
 [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
