@@ -1,46 +1,46 @@
 schemaVersion: 1
 session: session_013zxzeSbd2LJtWWawqrWBJD
 startedAt: 2026-11-05T06:43:59Z
-endedAt: 2026-11-05T08:31:58Z
+endedAt: 2026-11-05T15:09:28Z
 kind: interactive
 goal: Clear the open backlog of triage issues
-status: in-review
-outcome: Five issues triaged and grilled; one fix PR open, two builds and one investigation still running
-summary: "The owner started the clear-backlog Skill (human-instructed). I resolved the sweep set (five needs-triage issues; six others skipped because an agent wrote the last comment), ran the explore workflow, then grilled four questions. Answers (human-instructed): \\#2850 investigate and prototype first with an opus subagent, because tokenShare covers only subagents and the owner wants main-session usage per page; \\#2852 accept the cost; \\#2853 add a clause that user-facing UI must be clarified with extra care; \\#2854 option B. Agent-initiated: closing \\#2852 as not planned on my reading of \"accept\" (the owner then asked about the Friction entry, I edited it, and they told me to leave it, so I reverted); splitting \\#2848 off its group so it could build while grilling ran; re-dispatching after a restart. A container restart about an hour in killed both build workflows and the first opus agent; I resumed the workflows with their original args and re-dispatched the investigation. Results: \\#2848 merged as PR 2862 after a transient GitHub 503 (merge confirmed on origin/main); \\#2853 is PR 2863, left for a human merge because a CLAUDE.md instruction change is behaviour no gate step observes (ADR-0004); \\#2854 hit the build review cap with five small findings, which I fixed by hand, gated and re-reviewed on both axes, and merged as PR 2864 (confirmed on origin/main). The opus prototype for \\#2850 reported the lead transcript has per-request usage, and recommended a per-phase lead curve; I put shape and weighting back to the owner as Q5, unanswered. Open: PR 2863 (waits for a human merge) and Q5 on 2850, which needs the owner's pick before it can become ready-for-agent."
+status: completed
+outcome: Three issues fixed and merged, one closed by owner decision, one awaiting the owner's pick
+summary: "The owner started the clear-backlog Skill (human-instructed). I resolved the sweep set (five needs-triage issues; six others skipped because an agent wrote the last comment), ran the explore workflow, then grilled four questions. Answers (human-instructed): \\#2850 investigate and prototype first with an opus subagent, because tokenShare covers only subagents and the owner wants main-session usage per page; \\#2852 accept the cost; \\#2853 add a clause that user-facing UI must be clarified with extra care; \\#2854 option B. Agent-initiated: closing \\#2852 as not planned on my reading of \"accept\" (the owner then asked about the Friction entry, I edited it, and they told me to leave it, so I reverted); splitting \\#2848 off its group so it could build while grilling ran; re-dispatching after a restart. A container restart about an hour in killed both build workflows and the first opus agent; I resumed the workflows with their original args and re-dispatched the investigation. Results: \\#2848 merged as PR 2862 after a transient GitHub 503 (merge confirmed on origin/main); \\#2853 is PR 2863, left for a human merge because a CLAUDE.md instruction change is behaviour no gate step observes (ADR-0004); \\#2854 hit the build review cap with five small findings, which I fixed by hand, gated and re-reviewed on both axes, and merged as PR 2864 (confirmed on origin/main). The opus prototype for \\#2850 reported the lead transcript has per-request usage, and recommended a per-phase lead curve; I put shape and weighting back to the owner as Q5, unanswered. PR 2863 was merged by the owner (human-merge, as flagged). Open: Q5 on 2850, which needs the owner's pick before it can become ready-for-agent; no PR or agent can start it until then."
 prs:
   - "2862"
   - "2863"
   - "2864"
 docsRead:
   - path: .agents/skills/auto-triage/SKILL.md
-    reason: Step 1 defined the eligible set and the AI-last-comment skip
+    reason: "Step 1 defined the eligible set and the AI-last-comment skip Subagents: triage #2848: Task required it; per-issue rules and wayfinder overlay.; triage #2850: Required by the task; supplied the brave-within-determinability rule and the ready-for-human escalation line.; triage #2852: Task instructed reading it..."
     useful: yes
   - path: docs/agents/github-integration.md
-    reason: Read before first GitHub op; confirmed issue_write replaces labels and add_issue_comment for comments
+    reason: "Read before first GitHub op; confirmed issue_write replaces labels and add_issue_comment for comments Subagents: triage #2848: Hook demanded it after first GitHub call; confirmed my calls (issue_write replaces labels, add_issue_comment for comments) were right.; triage #2850: A hook surfaced it after my first GitHub call; it confirmed that issue_wr..."
     useful: yes
   - path: docs/agents/git-conventions.md
-    reason: Hook demanded it after a read-only git call; nothing changed in my call
+    reason: "Hook demanded it after a read-only git call; nothing changed in my call Subagents: build fix/glassbox-improve-tally-gist: CLAUDE.md requires it before the first git command; the -F commit advice was used; build fix/ask-before-building-ui: Hook said to read it after my first git command; its commit -F and trailer-check ..."
     useful: partly
   - path: .agents/skills/dispatch-subagents/SKILL.md
     reason: A guard blocked Workflow until I read it; the checkout and commit rules fed the briefs
     useful: partly
   - path: docs/agents/issue-tracker.md
-    reason: Read before labelling; label and close recipes
+    reason: "Read before labelling; label and close recipes Subagents: triage #2848: Hook demanded it after labelling; supersession and prune-trial checks applied."
     useful: partly
   - path: docs/agents/triage-labels.md
-    reason: Confirmed ready-for-agent and ready-for-human strings
+    reason: "Confirmed ready-for-agent and ready-for-human strings Subagents: triage #2848: Hook demanded it after labelling; confirmed label strings.; triage #2852: Read before labelling; confirmed ready-for-human meaning; triage #2853: A hook asked for it after my label write; read late, and the ready-for-human ..."
     useful: partly
   - path: docs/agents/pr-workflow.md
     reason: Review-before-PR and verdict steps; the build workflow had already reviewed and gated
     useful: yes
   - path: .agents/skills/implement/SKILL.md
-    reason: Build subagents read it; their reply called it useful
+    reason: "Build subagents read it; their reply called it useful Subagents: build fix/glassbox-improve-tally-gist: named by the task; build fix/ask-before-building-ui: The task told me to read and follow it."
     useful: yes
   - path: .agents/skills/code-review/SKILL.md
-    reason: Review subagents used it for the Standards and Spec axes; they reported it useful
+    reason: "Review subagents used it for the Standards and Spec axes; they reported it useful Subagents: Standards fix/glassbox-improve-tally-gist r1: The brief told me to read it. It supplied the Standards axis and the smell baseline (Speculative Generality, Mysterious Name and the rest).; Standards fix/glassbox-improve-tally-gist r2: Read..."
     useful: yes
   - path: .agents/skills/triage/SKILL.md
-    reason: Triage subagents used it for per-issue rules; reported useful
+    reason: "Triage subagents used it for per-issue rules; reported useful Subagents: triage #2848: Task required it; roles and verification steps.; triage #2850: Required by the task; supplied the roles and the claim-verification steps.; triage #2854: Brief told me to read it"
     useful: yes
   - path: .agents/skills/blog-post/SKILL.md
     reason: Triage subagent for 2854 read it to judge scope; no verdict reported
@@ -49,7 +49,7 @@ docsRead:
     reason: The opus investigation read it; no verdict reported
     useful: partly
   - path: docs/adr/0029-instructions-load-with-the-files-they-govern.md
-    reason: A build subagent read it; no verdict reported
+    reason: "A build subagent read it; no verdict reported Subagents: build fix/ask-before-building-ui: Edit hook asked for a read of the full ADR after editing CLAUDE.md."
     useful: partly
   - path: .agents/skills/grilling/SKILL.md
     reason: I loaded it for the grilling; a triage subagent also grepped it, no verdict reported
@@ -66,13 +66,23 @@ docsRead:
   - path: docs/adr/0027-prune-trials.md
     reason: A hook demanded it for the blog-post Skill; I checked prune-trials.yml, no open trial covers it
     useful: partly
+  - path: .claude/skills/tdd/SKILL.md
+    reason: "Subagents: build fix/glassbox-improve-tally-gist: invoked via Skill tool per the task"
+    useful: yes
+  - path: CLAUDE.md
+    reason: "Subagents: triage #2853: Project instructions loaded at start; line 63 holds the 'Question the premise' bullet at issue.; Standards fix/glassbox-improve-tally-gist r1: Project instructions loaded at session start. Its 'keep it short' and 'one home ..."
+    useful: yes
+  - path: GLOSSARY-MAP.md
+    reason: "Subagents: Spec fix/ask-before-building-ui r1: Injected with CLAUDE.md. It was not needed for this review."
+    useful: no
+  - path: scripts/lib/author-trust.ts
+    reason: "Subagents: triage #2848: Named by the task for trust associations; OWNER is Trusted.; triage #2850: Named in the task; used to classify OWNER as Trusted."
+    useful: yes
   - path: scripts/git/list-recent-prs.ts
     reason: (read before editing)
   - path: /home/user/terrarium/docs/agents/github-integration.md
     reason: (no reason given)
   - path: wf_11240032-753-1/.agents/skills/code-review/SKILL.md
-    reason: (no reason given)
-  - path: scripts/lib/author-trust.ts
     reason: (no reason given)
   - path: layers/journal/content/current/frictions/drafts-caught-by-fact-check.yml
     reason: (no reason given)
@@ -128,14 +138,17 @@ frictions:
   - description: I almost merged PR 2864 without running code-review on my hand-fix commit, then ran it after noticing the follow-up exceeded the simple-change limit, and first gave the review a wrong fixed point.
     solution: Apply the pr-workflow simple-change count to a hand-fix commit before opening the PR, and take the fixed point from git log.
     severity: nit
-durationSec: 6479
+  - description: The PostToolUse hook said "PR merged" after two merge-pr.ts runs that failed with a GitHub 503; I had to check origin/main to learn the PR was not merged.
+    solution: 'Make the hook fire only when merge-pr.ts prints merged: true, or word it as "if merged".'
+    severity: nit
+durationSec: 30329
 models:
-  claude-sonnet-5-5: 189
+  claude-sonnet-5-5: 205
 toolCounts:
-  Bash: 42
+  Bash: 47
   Read: 11
   Workflow: 6
-  Skill: 4
+  Skill: 5
   ToolSearch: 3
   PushNotification: 1
   mcp__github__add_issue_comment: 6
@@ -146,7 +159,7 @@ toolCounts:
   mcp__github__create_pull_request: 3
   mcp__claude-code-remote__subscribe_pr_activity: 3
   Write: 1
-  ReadNotifications: 9
+  ReadNotifications: 11
   mcp__github__pull_request_read: 5
   mcp__claude-code-remote__send_later: 1
   mcp__claude-code-remote__delete_trigger: 1
@@ -224,55 +237,55 @@ docsReadBySubagents:
   - .agents/skills/glassbox-improve/writer-brief.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
-    reason: Told me the gate runs before the PR; the build workflow ran it, so the summary was enough and I skipped the full ADR
+    reason: "Told me the gate runs before the PR; the build workflow ran it, so the summary was enough and I skipped the full ADR Subagents: fix fix/glassbox-improve-tally-gist r1: Loaded at session start; the gate:scoped requirement applied.; gate fix/glassbox-improve-tally-gist: Loaded at session start; confirms the gate must pass before a PR.; gate fix/ask-before-building-..."
     useful: partly
   - path: .claude/rules/adr-0009.md
-    reason: Told me to invoke close-session when the PR opens; the summary was enough
+    reason: "Told me to invoke close-session when the PR opens; the summary was enough Subagents: triage #2848: Loaded at session start; session logs, not relevant to triage.; triage #2850: Loaded at session start; not relevant to a triage-only run.; triage #2852: Loaded at session start; not relevant; triage #2853: Loaded at session..."
     useful: yes
   - path: .claude/rules/adr-0003.md
-    reason: Told me to open and subscribe to the PR myself; the summary was enough
+    reason: "Told me to open and subscribe to the PR myself; the summary was enough Subagents: triage #2848: Loaded; new-work approval, not decisive here.; build fix/ask-before-building-ui: Session-start rule; no push or PR by me per task.; Spec fix/ask-before-building-ui r1: Loaded at session start. It covers PR and approval gove..."
     useful: yes
   - path: .claude/rules/adr-0017.md
-    reason: Gave the session header for every GitHub body; the summary was enough
+    reason: "Gave the session header for every GitHub body; the summary was enough Subagents: triage #2848: Loaded; provenance header on the comment.; triage #2850: Loaded at session start; governed the provenance header on my comment.; triage #2852: Loaded at session start; required provenance header on comment; triage #2853: Lo..."
     useful: yes
   - path: .claude/rules/adr-0022.md
-    reason: Decided what the sweep may label ready-for-agent and what goes to ready-for-human; the summary was enough
+    reason: "Decided what the sweep may label ready-for-agent and what goes to ready-for-human; the summary was enough Subagents: triage #2848: Loaded at session start/after triage; governs what the sweep may label ready-for-agent for Trusted issues.; triage #2850: Loaded in session context for the triage sweep; confirmed judgment calls and real design doubt go to ..."
     useful: yes
   - path: .claude/rules/adr-0027.md
-    reason: Cut-before-add steered the 2853 pick and brief; the summary was enough
+    reason: "Cut-before-add steered the 2853 pick and brief; the summary was enough Subagents: triage #2853: Loaded at session start; its cut-before-add principle shaped the options and my pick.; build fix/ask-before-building-ui: Loaded after reading prune-trials.yml; told me to check for open trials covering CLAUDE.md text.; Stan..."
     useful: partly
   - path: .claude/rules/adr-0020.md
-    reason: Trusted and Public tiers; every issue here was the owner's, so it did not change a step
+    reason: "Trusted and Public tiers; every issue here was the owner's, so it did not change a step Subagents: triage #2848: Loaded; trust tiers. Confirmed OWNER author is Trusted.; triage #2852: Loaded at session start; trust tier check (author is OWNER, Trusted); triage #2853: Loaded at session start; used to check the issue author's trust tier..."
     useful: partly
   - path: .claude/rules/adr-0005.md
-    reason: Loaded when I read a Skill; it confirmed Skill changes go through a gated PR
+    reason: "Loaded when I read a Skill; it confirmed Skill changes go through a gated PR Subagents: Standards fix/glassbox-improve-tally-gist r2: Loaded when I read a Skill file (.agents/skills/code-review/SKILL.md). It confirms the change goes through a gated PR. The diff is entirely Skill code under .agents/skills/glassbox-improve, s..."
     useful: partly
   - path: .claude/rules/adr-0029.md
-    reason: About where instructions live; it did not apply to this task
+    reason: "About where instructions live; it did not apply to this task Subagents: build fix/ask-before-building-ui: Loaded on CLAUDE.md edit; confirmed CLAUDE.md is the right home for an every-session instruction."
     useful: no
   - path: .claude/rules/tenant-glossary.md
-    reason: Loaded when I touched the Journal's frictions; I wrote nothing there and it did not apply
+    reason: "Loaded when I touched the Journal's frictions; I wrote nothing there and it did not apply Subagents: triage #2852: Loaded by hook after reading a Journal file; not relevant; triage #2853: Loaded mid-run; no Tenant work involved.; triage #2854: Loaded; no tenant work done; build fix/ask-before-building-ui: Loaded with the journal layer r..."
     useful: no
   - path: .claude/rules/adr-0008.md
-    reason: Loaded when I read Journal files; it did not apply
+    reason: "Loaded when I read Journal files; it did not apply Subagents: build fix/ask-before-building-ui: Loaded by the journal ledger read; not relevant to the edit."
     useful: no
   - path: .claude/rules/adr-0021.md
-    reason: Loaded when I read Journal files; it did not apply
+    reason: "Loaded when I read Journal files; it did not apply Subagents: build fix/ask-before-building-ui: Loaded by the glossary-related reads; not relevant."
     useful: no
   - path: .claude/rules/glossary-terms.md
-    reason: Loaded when I grepped Journal files; I added no term, so it did not apply
+    reason: "Loaded when I grepped Journal files; I added no term, so it did not apply Subagents: build fix/ask-before-building-ui: Loaded with glossary read; no glossary term changed."
     useful: no
   - path: .claude/rules/adr-0004-human-merge.md
-    reason: Loaded only for subagents; no Human-only file was touched, no verdict reported
+    reason: "Loaded only for subagents; no Human-only file was touched, no verdict reported Subagents: build fix/ask-before-building-ui: Loaded after the gate/commit step; CLAUDE.md is not stated as Human-only in anything I read, unverified whether it is on the list."
     useful: no
   - path: .claude/rules/adr-0025.md
-    reason: Loaded for a triage subagent; the one that reported a verdict said it did not apply
+    reason: "Loaded for a triage subagent; the one that reported a verdict said it did not apply Subagents: triage #2850: Loaded by a hook after a Bash read; not relevant."
     useful: no
   - path: .claude/rules/data-shapes.md
-    reason: "The 2850 triage subagent reported it decided the outcome: a new stored field needs a Trusted decision"
+    reason: "The 2850 triage subagent reported it decided the outcome: a new stored field needs a Trusted decision Subagents: triage #2850: Loaded when I read shared/schemas/session.ts and when the hook surfaced it; it decided the outcome (new stored field needs a Trusted user's shape decision)."
     useful: yes
   - path: .claude/rules/adr-0012.md
-    reason: Loaded only for subagents; no verdict reported and it did not apply to my steps
+    reason: "Loaded only for subagents; no verdict reported and it did not apply to my steps Subagents: triage #2854: Loaded on reading blog-post skill; not relevant"
     useful: no
   - path: .claude/rules/adr-0010.md
     reason: Loaded only for subagents; no verdict reported and it did not apply to my steps
@@ -281,7 +294,7 @@ ruleVerdicts:
     reason: Loaded only for subagents; no verdict reported and it did not apply to my steps
     useful: no
   - path: .claude/rules/adr-0030.md
-    reason: Loaded only for subagents; no verdict reported and it did not apply to my steps
+    reason: "Loaded only for subagents; no verdict reported and it did not apply to my steps Subagents: build fix/ask-before-building-ui: Loaded during gate run; not relevant to a CLAUDE.md edit."
     useful: no
 subagents:
   - type: general-purpose
@@ -290,77 +303,77 @@ subagents:
     durationSec: 130
     toolCalls: 19
     modelCalls: 19
-    tokenShare: 4.8
+    tokenShare: 4.3
   - type: general-purpose
     task: Prototype per-phase cost data
     model: opus
     durationSec: 548
     toolCalls: 55
     modelCalls: 54
-    tokenShare: 13.9
+    tokenShare: 12.5
   - type: general-purpose
     task: Standards review of 2854 follow-up
     model: sonnet
     durationSec: 29
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.5
+    tokenShare: 1.3
   - type: general-purpose
     task: Spec review of 2854 follow-up
     model: sonnet
     durationSec: 46
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1.7
+    tokenShare: 1.5
   - type: workflow-subagent
     task: Spec fix/ask-before-building-ui r1
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 7
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: Standards fix/ask-before-building-ui r1
     model: claude-sonnet-5-5
     durationSec: 21
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.6
+    tokenShare: 1.5
   - type: workflow-subagent
     task: Standards fix/gather-step-diff-lines r2
     model: claude-sonnet-5-5
     durationSec: 24
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: Spec fix/gather-step-diff-lines r2
     model: claude-sonnet-5-5
     durationSec: 34
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: Spec fix/gather-step-diff-lines r3
     model: claude-sonnet-5-5
     durationSec: 39
     toolCalls: 9
     modelCalls: 5
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: fix fix/gather-step-diff-lines r1
     model: claude-sonnet-5-5
     durationSec: 235
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 1.2
+    tokenShare: 1.1
   - type: workflow-subagent
     task: build fix/gather-step-diff-lines
     model: claude-sonnet-5-5
     durationSec: 130
     toolCalls: 15
     modelCalls: 13
-    tokenShare: 2.3
+    tokenShare: 2.1
   - type: workflow-subagent
     task: Spec fix/ask-before-building-ui r1
     model: claude-sonnet-5-5
@@ -374,35 +387,35 @@ subagents:
     durationSec: 317
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 2.4
+    tokenShare: 2.1
   - type: workflow-subagent
     task: Standards fix/gather-step-diff-lines r1
     model: claude-sonnet-5-5
     durationSec: 24
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.7
+    tokenShare: 0.6
   - type: workflow-subagent
     task: gate fix/ask-before-building-ui
     model: claude-sonnet-5-5
     durationSec: 54
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 0.6
+    tokenShare: 0.5
   - type: workflow-subagent
     task: fix fix/gather-step-diff-lines r2
     model: claude-sonnet-5-5
     durationSec: 284
     toolCalls: 8
     modelCalls: 7
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: workflow-subagent
     task: Standards fix/gather-step-diff-lines r3
     model: claude-sonnet-5-5
     durationSec: 41
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 0.8
+    tokenShare: 0.7
   - type: workflow-subagent
     task: Standards fix/ask-before-building-ui r1
     model: claude-sonnet-5-5
@@ -416,49 +429,49 @@ subagents:
     durationSec: 46
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: build fix/ask-before-building-ui
     model: claude-sonnet-5-5
     durationSec: 117
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #2850"
     model: claude-sonnet-5-5
     durationSec: 52
     toolCalls: 14
     modelCalls: 6
-    tokenShare: 1.6
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #2852"
     model: claude-sonnet-5-5
     durationSec: 46
     toolCalls: 11
     modelCalls: 6
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: workflow-subagent
     task: "triage #2854"
     model: claude-sonnet-5-5
     durationSec: 50
     toolCalls: 16
     modelCalls: 7
-    tokenShare: 1.8
+    tokenShare: 1.6
   - type: workflow-subagent
     task: "triage #2853"
     model: claude-sonnet-5-5
     durationSec: 61
     toolCalls: 14
     modelCalls: 7
-    tokenShare: 2.5
+    tokenShare: 2.3
   - type: workflow-subagent
     task: "triage #2848"
     model: claude-sonnet-5-5
     durationSec: 80
     toolCalls: 21
     modelCalls: 11
-    tokenShare: 2.6
+    tokenShare: 2.3
   - type: workflow-subagent
     task: gate fix/glassbox-improve-tally-gist
     model: claude-sonnet-5-5
@@ -472,50 +485,52 @@ subagents:
     durationSec: 245
     toolCalls: 19
     modelCalls: 16
-    tokenShare: 3.8
+    tokenShare: 3.4
   - type: workflow-subagent
     task: Standards fix/glassbox-improve-tally-gist r1
     model: claude-sonnet-5-5
     durationSec: 32
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 1.7
+    tokenShare: 1.5
   - type: workflow-subagent
     task: Spec fix/glassbox-improve-tally-gist r2
     model: claude-sonnet-5-5
     durationSec: 26
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 1.1
+    tokenShare: 1
   - type: workflow-subagent
     task: Spec fix/glassbox-improve-tally-gist r1
     model: claude-sonnet-5-5
     durationSec: 35
     toolCalls: 10
     modelCalls: 6
-    tokenShare: 1.4
+    tokenShare: 1.2
   - type: workflow-subagent
     task: gate fix/glassbox-improve-tally-gist
     model: claude-sonnet-5-5
     durationSec: 116
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: workflow-subagent
     task: Standards fix/glassbox-improve-tally-gist r2
     model: claude-sonnet-5-5
     durationSec: 26
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 1
+    tokenShare: 0.9
   - type: workflow-subagent
     task: fix fix/glassbox-improve-tally-gist r1
     model: claude-sonnet-5-5
     durationSec: 134
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 1.1
+    tokenShare: 1
 gitBranch: ccr-9a8591c0-7onpo8
 entrypoint: remote_mobile
 cliVersion: 2.1.318
+learnings:
+  - A container restart kills running workflows and subagents silently; the journal mtime and process start times were the only signs, and the stale mtime was visible well before I acted on it.
 landedBy: Stop
