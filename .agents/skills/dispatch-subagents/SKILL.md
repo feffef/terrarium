@@ -36,8 +36,9 @@ every line that applies.
 - Pin the SHA to work from (`origin/<default-branch>` if none). The agent
   checks that HEAD matches and re-branches if not; worktrees sometimes start
   stale (issue #1420). Agents sharing one checkout each get an explicit SHA.
-- A review agent for a PR whose branch is checked out elsewhere checks out the
-  PR's commit SHA detached, never the branch name.
+- A review agent for a PR whose branch is checked out elsewhere reads the PR's
+  commit (`git show <sha>:<path>`) or checks that SHA out detached in its
+  isolation worktree, never the branch name and never in your checkout.
 - Impl agents on the branch you have checked out: detach your checkout first
   and re-sync after hand-back. Each agent bases on a fresh `origin/<branch>`,
   with no same-named local branch.
