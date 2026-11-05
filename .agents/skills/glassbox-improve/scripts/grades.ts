@@ -77,7 +77,7 @@ export interface RunEntry {
   pr?: number
   /** From get_session, entered after the PR opens. */
   costUsd?: number
-  /** Recomputed from the local transcript at every `record`: exact tokens by phase, estimated shares, and `usd` (shares of `costUsd`) once `--cost` is given. */
+  /** Recomputed from the local transcript at every `record` (see cost.ts); `usd` once `--cost` is given. */
   costBreakdown?: CostBreakdown
   relevance?: boolean
   pagesRead: number
@@ -1002,17 +1002,19 @@ runIfMain(import.meta.url, () => {
     if (owed.length) fail(`judges still owed: ${owed.join(', ')}`)
     const result: Tally = { grades: state.grades, items: state.items, steps: state.steps, comparisons: state.comparisons, waiting: state.waiting }
     const next = nextRecord(record, state.plan, current, result, runs, state.run)
+    const cost = flags.cost === undefined ? 0 : Number(flags.cost)
+    if (!Number.isFinite(cost) || cost < 0) fail(`--cost must be a number of USD, got ${flags.cost}`)
     stamp(out, 'record')
     const transcript = flags.transcript ?? findLatestTranscript(root, process.env.HOME)
     let costBreakdown: CostBreakdown | undefined
     try {
       costBreakdown = transcript ? readBreakdown(transcript, marksIn(out)) : undefined
-      if (costBreakdown && flags.cost) costBreakdown = anchor(costBreakdown, Number(flags.cost))
+      if (costBreakdown && flags.cost) costBreakdown = anchor(costBreakdown, cost)
       if (!costBreakdown) console.error('no local transcript, so no cost breakdown (pass --transcript <jsonl>)')
     } catch (err) {
       console.error(`no cost breakdown: ${(err as Error).message}`)
     }
-    const meta = { run: state.run, base: sha, ...(flags.session ? { session: flags.session } : {}), ...(flags.pr ? { pr: Number(flags.pr) } : {}), ...(flags.cost ? { costUsd: Number(flags.cost) } : {}), ...(costBreakdown ? { costBreakdown } : {}) }
+    const meta = { run: state.run, base: sha, ...(flags.session ? { session: flags.session } : {}), ...(flags.pr ? { pr: Number(flags.pr) } : {}), ...(flags.cost ? { costUsd: cost } : {}), ...(costBreakdown ? { costBreakdown } : {}) }
     const entry = runEntry(meta, state.plan, result, state.gate as GateEntry[])
     // One line per lens record and edit, as in issue #2792's data shape.
     const doc = new Document(next)

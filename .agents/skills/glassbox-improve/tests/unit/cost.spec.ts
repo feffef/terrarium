@@ -84,4 +84,8 @@ describe('anchor', () => {
     const b = anchor(breakdown(requestsOf([rec('l', '2026-11-05T10:00:00Z', 'claude-sonnet-5-5', { input_tokens: 1e6 })]), [{ label: 'Write x', requests: requestsOf([rec('w', '2026-11-05T10:01:00Z', 'claude-sonnet-5-5', { input_tokens: 3e6 })]) }], []), 40)
     expect(b.usd).toEqual({ total: 40, lead: 10, agents: { write: 30 } })
   })
+  it('rounds to cents', () => {
+    const b = anchor({ tokens: { lead: { inputK: 0, outputK: 0, readK: 0, writeK: 0 }, agents: {} }, sharePct: { lead: 33.3, agents: { write: 66.7 } }, lead: [] }, 10)
+    expect(b.usd).toEqual({ total: 10, lead: 3.33, agents: { write: 6.67 } })
+  })
 })

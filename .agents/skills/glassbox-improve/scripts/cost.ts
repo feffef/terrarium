@@ -1,11 +1,12 @@
 // Where a glassbox-improve run's cost went, by phase, read from the lead's own transcript and its
 // subagents' (issue #2850). Only works where the run happens: past runs' transcripts are gone.
 //
-// Tokens by class are counted from the transcripts; on one session they matched get_session within
-// 2% for cache reads and writes, 14% for output, and not for input. Shares are estimates: each request is weighted by `weights`, and only
-// the ratios between weights matter. Dollars are never computed from list prices (they did not
-// reproduce `cost_usd` on ten sessions, 1.0x to 1.6x too high); `anchor` scales the shares to the
-// run's recorded `costUsd` instead.
+// Tokens by class are counted from the transcripts. On one session they matched get_session within
+// 2% for cache reads and writes and 14% for output, but not for input (about 0K against 3.8K).
+// Shares are estimates: each request gets a relative weight from `weights`, and only the ratios
+// matter. Dollars are never computed from prices: list prices came out 1.0x to 1.6x above
+// get_session's cost_usd on ten sessions, and a fit of the rates was unstable. `anchor` scales the
+// shares to the run's recorded `costUsd` instead.
 import { readFileSync } from 'node:fs'
 import { parseTranscript, readSubagentJsonls } from '../../../../scripts/session/transcript-trace.ts'
 
@@ -18,8 +19,7 @@ export interface ApiUsage {
 }
 
 /** Relative weight per million tokens: the claude-api Skill's list prices (cached 2026-10-06), cache
- *  writes at 1.25x (5 minutes) or 2x (1 hour) input. Not calibrated: sessions' `cost_usd` fits other
- *  rates, but not stably (read, write and output moved 2x between leave-one-out fits). */
+ *  writes at 1.25x (5 minutes) or 2x (1 hour) input. Not calibrated (see the header). */
 const weights: Record<string, { input: number; output: number; read: number }> = {
   'claude-opus-5-5': { input: 4, output: 20, read: 0.2 },
   'claude-sonnet-5-5': { input: 2, output: 10, read: 0.2 },
@@ -46,7 +46,7 @@ export function requestsOf(records: Record<string, unknown>[]): Request[] {
 }
 
 /** Thousand tokens by class, as the transcript records them. `writeK` is cache writes of both lifetimes; the transcript's
- *  subagents hold only a stream-start count of output tokens, so a subagent's `outputK` runs low. */
+ *  subagents hold only a stream-start count of output tokens, so a subagent's `outputK` runs low (`Usage` in transcript-trace.ts). */
 export interface Tokens {
   inputK: number
   outputK: number
@@ -54,7 +54,10 @@ export interface Tokens {
   writeK: number
 }
 
-const writeOf = (u: ApiUsage) => (u.cache_creation ? (u.cache_creation.ephemeral_5m_input_tokens ?? 0) + (u.cache_creation.ephemeral_1h_input_tokens ?? 0) : u.cache_creation_input_tokens ?? 0)
+/** Cache writes by lifetime; a record without the split counts as 5 minutes. */
+const writesOf = (u: ApiUsage) => (u.cache_creation ? { m5: u.cache_creation.ephemeral_5m_input_tokens ?? 0, h1: u.cache_creation.ephemeral_1h_input_tokens ?? 0 } : { m5: u.cache_creation_input_tokens ?? 0, h1: 0 })
+const writeOf = (u: ApiUsage) => writesOf(u).m5 + writesOf(u).h1
+const mapValues = <T, U>(o: Record<string, T>, f: (v: T) => U) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, f(v)]))
 
 export function tokensOf(requests: Request[]): Tokens {
   const sum = (pick: (u: ApiUsage) => number) => Math.round(requests.reduce((n, r) => n + pick(r.usage), 0) / 1000)
@@ -65,8 +68,8 @@ export function tokensOf(requests: Request[]): Tokens {
 export function weightOf({ model, usage: u }: Request): number {
   const w = Object.entries(weights).find(([id]) => model.startsWith(id))?.[1]
   if (!w) throw new Error(`no weight for model ${model}`)
-  const split = u.cache_creation
-  const write = split ? 1.25 * (split.ephemeral_5m_input_tokens ?? 0) + 2 * (split.ephemeral_1h_input_tokens ?? 0) : 1.25 * (u.cache_creation_input_tokens ?? 0)
+  const { m5, h1 } = writesOf(u)
+  const write = 1.25 * m5 + 2 * h1
   return ((u.input_tokens ?? 0) * w.input + write * w.input + (u.cache_read_input_tokens ?? 0) * w.read + (u.output_tokens ?? 0) * w.output) / 1e6
 }
 
@@ -107,7 +110,7 @@ export function breakdown(lead: Request[], agents: { label: string; requests: Re
   const byPhase: Record<string, Request[]> = {}
   for (const a of agents) (byPhase[phaseOf(a.label)] ??= []).push(...a.requests)
   const leadWeight = sum(lead)
-  const agentWeight = Object.fromEntries(Object.entries(byPhase).map(([phase, rs]) => [phase, sum(rs)]))
+  const agentWeight = mapValues(byPhase, sum)
   const total = leadWeight + Object.values(agentWeight).reduce((a, b) => a + b, 0)
   const pct = (w: number) => (total ? round1((100 * w) / total) : 0)
   const firsts = marks.filter((m, i) => marks.findIndex((x) => x.phase === m.phase) === i)
@@ -118,8 +121,8 @@ export function breakdown(lead: Request[], agents: { label: string; requests: Re
     return { ...m, contextK: Math.round(contextOf(done.at(-1) ?? { at: 0, model: '', usage: {} }) / 1000), cumPct: pct(sum(done) - origin) }
   })
   return {
-    tokens: { lead: tokensOf(lead), agents: Object.fromEntries(Object.entries(byPhase).map(([phase, rs]) => [phase, tokensOf(rs)])) },
-    sharePct: { lead: pct(leadWeight), agents: Object.fromEntries(Object.entries(agentWeight).map(([phase, w]) => [phase, pct(w)])) },
+    tokens: { lead: tokensOf(lead), agents: mapValues(byPhase, tokensOf) },
+    sharePct: { lead: pct(leadWeight), agents: mapValues(agentWeight, pct) },
     lead: points,
   }
 }
@@ -127,7 +130,7 @@ export function breakdown(lead: Request[], agents: { label: string; requests: Re
 /** The shares applied to the run's recorded cost (`get_session`), so dollars add up to what was billed. */
 export function anchor(b: CostBreakdown, costUsd: number): CostBreakdown {
   const part = (p: number) => round2((costUsd * p) / 100)
-  return { ...b, usd: { total: round2(costUsd), lead: part(b.sharePct.lead), agents: Object.fromEntries(Object.entries(b.sharePct.agents).map(([phase, p]) => [phase, part(p)])) } }
+  return { ...b, usd: { total: round2(costUsd), lead: part(b.sharePct.lead), agents: mapValues(b.sharePct.agents, part) } }
 }
 
 /** The breakdown of the run in `transcriptPath` (the lead's transcript, with its subagents beside it). */
