@@ -1,0 +1,295 @@
+schemaVersion: 1
+session: session_013zxzePvZE8fj19sBuiXR94
+startedAt: 2026-11-05T04:03:04Z
+endedAt: 2026-11-05T04:16:17Z
+kind: autonomous
+goal: Scheduled audit of the repo's docs for stale or muddled prose
+status: in-review
+outcome: Sweep PR 2858 open with green gate; ADR-0010 cut in escalation PR 2859 awaiting a human
+summary: "Scheduled audit-docs run; the schedule started it and no human prompted any step (all agent-initiated). Three read-only reviewers returned: Freshness 0 findings, Single-home 9 (one with three sub-parts), Coherence 3. Two checkers fact-checked all of them: 3 CONFIRMED (midden-catalogue placement, digest close-session line, prune-trial ADR bullet), 7 CONFIRMED-BUT (tests/README gate steps, visitor-loop anywhere, midden-survey, SQLite sentence, tinkerfund Home pointer, digest intro, journal count), 3 WRONG (Midden proposal note, blog persona stances, ADR-0013 vs ADR-0002), plus the ADR-0010 sentence cut CONFIRMED but human-merge. I applied the checker text in one commit (8 files, +15/-18); I left out the optional digest-intro rewrite after the Spec reviewer flagged it as longer, not shorter. The Spec reviewer also claimed the midden-survey parenthetical was dropped; the file still held it, so no change. Gate:scoped green on the final head; PR 2858 opened, subscribed, verdict posted, awaiting CI to merge. The ADR-0010 cut plus its adr restamp went to separate PR 2859 (Human-only path), gate green, subscribed. No issue filed. Covered by B and C: README.md, SECURITY.md, tests/README.md, deploy/README.md, docs/proposals/README.md, layers/atlas blog commons journal marquee midden tinkerfund GLOSSARY.md, Skills blog-post visitor-loop digest midden-survey midden-catalogue prune-trial tinkerfund-campaign atlas-specimen, ADRs 0002 0006 0007 0010 0013 0014 0016 0018 0020 0022 0023, journal pages highlights history real-and-invented (partly)."
+prs:
+  - "2858"
+  - "2859"
+docsRead:
+  - path: docs/agents/git-conventions.md
+    reason: fetch and commit hygiene before first git command; the no-chaining rule
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR recipe, verdict line, merge steps
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: required before the first GitHub operation; MCP tools for PR and comment
+    useful: partly
+  - path: .agents/prune-trials.yml
+    reason: (no reason given)
+  - path: layers/tinkerfund/app/utils/browse.ts
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/real-and-invented.md
+    reason: (read before editing)
+  - path: docs/adr/0013-content-config-built-from-manifests.md
+    reason: (no reason given)
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: (read before editing)
+  - path: docs/adr/0002-manifest-driven-config-generation.md
+    reason: (no reason given)
+  - path: layers/midden/GLOSSARY.md
+    reason: (no reason given)
+  - path: tests/README.md
+    reason: (read before editing)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (read before editing)
+  - path: tests/unit/gate-parity.spec.ts
+    reason: (no reason given)
+  - path: docs/proposals/README.md
+    reason: (no reason given)
+  - path: layers/atlas/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/blog/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/commons/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/journal/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/marquee/GLOSSARY.md
+    reason: (no reason given)
+  - path: layers/tinkerfund/GLOSSARY.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/personas/david.md
+    reason: (no reason given)
+  - path: .agents/skills/atlas-specimen/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: docs/adr/0020-requester-trust-tiers.md
+    reason: (no reason given)
+  - path: .agents/skills/midden-catalogue/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/midden-survey/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/tinkerfund-campaign/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (read before editing)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (read before editing)
+  - path: docs/adr/0007-derived-files-built-not-committed.md
+    reason: (no reason given)
+  - path: docs/adr/0022-autonomous-triage-sweep.md
+    reason: (no reason given)
+  - path: docs/adr/0023-guest-driven-demo-pipeline.md
+    reason: (no reason given)
+  - path: docs/adr/0014-build-time-virtual-routing-module.md
+    reason: (no reason given)
+  - path: docs/adr/0006-runtime-routing-path-prefix.md
+    reason: (no reason given)
+  - path: docs/adr/0016-tenant-root-layer-routes.md
+    reason: (no reason given)
+  - path: docs/adr/0018-tenant-layers-under-layers-directory.md
+    reason: (no reason given)
+  - path: docs/adr/0004-objective-safety-gate.md
+    reason: (no reason given)
+  - path: docs/adr/0003-agent-operating-model-and-governance.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/decisions.md
+    reason: (no reason given)
+skillsUsed:
+  - name: audit-docs
+    reason: the scheduled routine itself
+  - name: dispatch-subagents
+    reason: brief rules for reviewers and checkers
+  - name: code-review
+    reason: Standards and Spec review of the sweep diff
+  - name: close-session
+    reason: closure before the turn that opens the PR ends
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: I chained git commit --amend and pnpm gate:scoped in one Bash command, against git-conventions.md; the commit landed first and I verified it.
+    solution: Run the commit, check it, then start the gate in a separate call.
+    severity: nit
+  - description: A Spec reviewer wrongly said the midden-survey parenthetical was dropped; I reread the file to settle it, a small detour.
+    solution: Give the reviewer the file path to read rather than only the corrected text.
+    severity: nit
+durationSec: 793
+models:
+  claude-sonnet-5-5: 76
+toolCounts:
+  Read: 3
+  Skill: 4
+  Bash: 26
+  Agent: 7
+  ToolSearch: 1
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  mcp__github__add_issue_comment: 1
+filesEdited:
+  - .claude/rules/adr-0010.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - layers/journal/content/current/pages/real-and-invented.md
+  - tests/README.md
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0028.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/tenant-glossary.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0004-human-merge.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0026.md
+  - .claude/rules/adr-0001.md
+  - .claude/rules/adr-0011.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0025.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0014.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/guards.md
+docsReadBySubagents:
+  - docs/proposals/README.md
+  - layers/atlas/GLOSSARY.md
+  - layers/blog/GLOSSARY.md
+  - layers/commons/GLOSSARY.md
+  - layers/journal/GLOSSARY.md
+  - layers/marquee/GLOSSARY.md
+  - layers/tinkerfund/GLOSSARY.md
+  - layers/midden/GLOSSARY.md
+  - .agents/skills/blog-post/personas/david.md
+  - .agents/skills/atlas-specimen/SKILL.md
+  - .agents/skills/blog-post/SKILL.md
+  - docs/adr/0020-requester-trust-tiers.md
+  - .agents/skills/midden-catalogue/SKILL.md
+  - .agents/skills/midden-survey/SKILL.md
+  - .agents/skills/tinkerfund-campaign/SKILL.md
+  - .agents/skills/tinkerfund-campaign/ILLUSTRATION.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - docs/adr/0007-derived-files-built-not-committed.md
+  - docs/adr/0010-digests-derived-append-only-journal-pages.md
+  - docs/adr/0022-autonomous-triage-sweep.md
+  - docs/adr/0023-guest-driven-demo-pipeline.md
+  - docs/adr/0002-manifest-driven-config-generation.md
+  - docs/adr/0013-content-config-built-from-manifests.md
+  - docs/adr/0014-build-time-virtual-routing-module.md
+  - docs/adr/0006-runtime-routing-path-prefix.md
+  - docs/adr/0016-tenant-root-layer-routes.md
+  - docs/adr/0018-tenant-layers-under-layers-directory.md
+  - docs/adr/0004-objective-safety-gate.md
+  - docs/adr/0003-agent-operating-model-and-governance.md
+  - .agents/skills/visitor-loop/decisions.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the PR; summary was enough, pr-workflow held the steps
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to close-session at PR open and log to main; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Scheduled run changes only what its Skill allows; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on PR and comment bodies and the commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Loaded by the audit-docs hook; Skills are Platform code, no edit conflict here
+    useful: partly
+  - path: .claude/rules/adr-0015.md
+    reason: Installed Skills are out of scope; confirmed none edited
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary single-home rule supported the Midden and Digest pointer findings
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Open trials are untouchable; I checked prune-trials.yml before editing
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Orphan-addition criterion for docs/agents reachability; no new docs, so no action
+    useful: partly
+  - path: .claude/rules/adr-0030.md
+    reason: ADR edits are rewrites without history; shaped the ADR-0010 cut
+    useful: yes
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Put the ADR-0010 edit on a human-merge escalation PR
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Loaded on the digest read; its summary was unaffected by the cut so only restamped
+    useful: yes
+  - path: .claude/rules/adr-0028.md
+    reason: Navigation payload rule; unrelated to a docs audit
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Mermaid lanes; no diagram touched
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on tenant glossary reads; I only checked them for duplication
+    useful: no
+subagents:
+  - task: Audit A Freshness
+    durationSec: 111
+    toolCalls: 26
+    modelCalls: 25
+    tokenShare: 15.8
+  - task: Audit B Single-home
+    durationSec: 146
+    toolCalls: 20
+    modelCalls: 16
+    tokenShare: 14.6
+  - task: Audit C Coherence
+    durationSec: 143
+    toolCalls: 24
+    modelCalls: 21
+    tokenShare: 14.7
+  - task: Fact-check findings batch 1
+    durationSec: 102
+    toolCalls: 26
+    modelCalls: 15
+    tokenShare: 7.9
+  - task: Fact-check findings batch 2
+    durationSec: 71
+    toolCalls: 23
+    modelCalls: 8
+    tokenShare: 4.9
+  - task: Review Standards axis
+    durationSec: 33
+    toolCalls: 12
+    modelCalls: 4
+    tokenShare: 4.4
+  - task: Review Spec axis
+    durationSec: 27
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 4.2
+gitBranch: claude/festive-mayer-tjgy70
+entrypoint: remote_trigger
+cliVersion: 2.1.318
+trigger: audit-docs
+landedBy: Stop
