@@ -44,6 +44,10 @@ cut or section pages inside the existing Subjects). Out of remit: a new
 Subject or diagram, moving a page to another Subject, and any change to this
 Skill, the `glassbox-lesson` docs or the page checks; step 10 files them.
 
+**Dispatch names.** Start each `Agent` description with its phase: `Rater`,
+`Research`, `Write`, `Gate judge`, `A judge` or `Code review`. `record` groups
+the run's cost by that prefix.
+
 Save every subagent reply, a resumed one's too, with
 `pnpm exec tsx scripts/session/save-handback.ts <agent-id> <file> [<agent-id> <file> ...]`
 in this run's scratch folder, one call per round, and work only from those files.
@@ -80,7 +84,11 @@ Run `grades.ts tally --base <base> --out <scratch folder> <every hand-back>`.
 It adds the page checks' findings (`layers/glassbox/page-checks.ts`) and
 prints the work in order: false claims, page checks, deficits weakest page
 first, then gaps; the steps queue, with each inverse of a step taken in the
-last 5 runs refused; and the A comparisons, at most 4. Then, in `run.yml`:
+last 5 runs refused; and the A comparisons, at most 4. A run takes at most
+`workPerRun` items and steps together (false claims and page checks, then
+pending steps, then deficits and gaps): the rest is marked `skipped` or shown
+as deferred, and a later run finds it again. This keeps a run's cost bounded;
+do not add to the list. Then, in `run.yml`:
 
 - **Filters.** Mark `skipped` with its reason every item a `DECISIONS.md` line
   settles, and every fix that would undo a change from the last 2 runs unless
@@ -164,7 +172,8 @@ branch, keeping your page with its pin at the base. Run `grades.ts record
 false claims fixed, edits merged and stopped, steps taken and refused, and A
 changes, and a link to `runs.yml` for the rest. Once the PR is open, run
 `record` again with `--pr <number> --cost <usage.cost_usd from get_session>`
-(it replaces this run's entry), commit, push, and point the body's link at
+(it replaces this run's entry and rereads the local transcript for the cost by
+phase, so run it in this session), commit, push, and point the body's link at
 `runs.yml` at that commit; that commit is a simple follow-up
 (`pr-workflow.md`). If anything outside the Remit is in the diff, leave the PR
 open for a human.
@@ -191,3 +200,8 @@ After 3 to 5 v3 runs, compare `runs.yml` with the v2 runs listed in that
 issue: the gate pass rate (near 100% means a rubber stamp, near 50% weak
 selection or writing), whether low-value edits were stopped, how many inverse
 steps were refused, and the cost per run and per page that passed the gate.
+`costBreakdown` in each `runs.yml` entry splits that cost: tokens by
+class (counted from the transcripts) for the lead and each subagent phase, the lead's context at each phase
+start, and estimated shares (`sharePct`). `usd` is those shares times `costUsd`,
+so it exists once `record` gets `--cost`. The shares rest on uncalibrated
+weights; read them as estimates, and the lead-versus-subagents split with care.
