@@ -451,3 +451,9 @@ observations:
   - date: "2026-11-04"
     note: >-
       Behaviour check, 10 runs, all logs landed, no revert. Verified silent failure, seventh window: ruleVerdicts incomplete in session_013zxzeQrhKwVsWaJZV8Bs7y (2 of 16) and session_013zxzeSAtjCQiatdUuuFCRJ (2 of 17); rates now 3,1,1,3,3,1,2 of 10. No friction logged; not re-commented on #2607 (owner chose make-it-visible). Grade unchanged.
+  - date: "2026-11-05"
+    note: >-
+      ruleVerdicts incomplete in 4 of 10 newest logs (rates now 3,1,1,3,3,1,2,4; counts below are rules missing a verdict): session_013zxzeT8tDd5GPJiRNZRA4J 21 of 34,
+      session_013zxzeSDVFqSAse9NJHqJYv 11 of 22, session_013zxzeNezKVRxRiZLs4z9n4 4, session_013zxzeNcfR7ezGAhwXWTD1g 1. Mostly
+      subagent-loaded; T8tD also lacks main-session followed-up rules (adr-0025, adr-0011, adr-0023). T8tD logged that its 38 judge briefs omitted the verdict ask. No friction for the gap. Not
+      re-commented on #2607 (owner chose make-it-visible). Grade unchanged.

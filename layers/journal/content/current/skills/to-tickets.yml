@@ -5,7 +5,4 @@ installedSha256: 56ec23c5b2782785d4e65bff9e315b6d3aeb4ef977c174a219e99489fada199
 role: >-
   Turn findings into tracked issues — the intake for net-new work that
   governance requires a human to green-light (ADR-0003), and input to `triage`.
-observations:
-  - date: 2026-09-25
-    note: >-
-      Renamed upstream from `to-issues`; entry carried over with its grade.
+observations: []

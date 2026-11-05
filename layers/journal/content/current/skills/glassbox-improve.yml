@@ -40,3 +40,8 @@ observations:
   - date: "2026-11-04"
     note: >-
       Behaviour check, 10 runs, all PRs merged, no revert. Verified silent failure, fixed in #2826: same-day runs session_013zxzeQH3GSc8uMpvhebnFr and session_013zxzeSAtjCQiatdUuuFCRJ overwrote each other's runs.yml entry. Known, unfixed: gate misses edited pages no item names (session_013zxzeQZYwzDuf4JEncnqAa). Unverified: 127 judges dispatched by hand. Grade unchanged.
+  - date: "2026-11-05"
+    note: >-
+      runs.yml still holds two entries keyed run: 2026-11-03 (session_013zxzeQH3GSc8uMpvhebnFr, session_013zxzeSAtjCQiatdUuuFCRJ), the overwrite
+      bug #2826 fixed; data intact. T8tD run: tally re-raises dropped steps and crashes on a step with no gist (#2848); 4 hand-resolved writer conflicts.
+      All delivered. Grade unchanged.

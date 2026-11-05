@@ -464,3 +464,8 @@ observations:
   - date: "2026-10-31"
     note: >-
       Behaviour check, 7 runs, PRs merged. Verified: session_013zxzeSXsJSnGEYu9VQYXFH (#2641, severity-only verdict) was followed by 7576cccf6 restoring a cut dispatch-subagents line once rates rose (#2657); the rates step added since closes this gap. Unverified: session_013zxzeQmQLYRYBUN1FkDfN6 filed nothing on harness-proxy-blocks 4/177 to 4/41, judged unrelated (#2695). Grade/role unchanged.
+  - date: "2026-11-05"
+    note: >-
+      Unverified: session_013zxzeQmQLYRYBUN1FkDfN6 (10-30) filed no issue when harness-proxy-blocks rose from 4/177 to 4/41 sessions, judging it
+      unrelated to the reword (#2695 closed, a different topic); 11-02 filed #2784 on a smaller rise. All 7 runs delivered; cut deltas matched git.
+      Grade unchanged.

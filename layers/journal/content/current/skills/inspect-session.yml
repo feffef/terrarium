@@ -131,3 +131,8 @@ observations:
   - date: "2026-11-04"
     note: >-
       Behaviour check, 4 runs. Verified repeat: cost questions answered from journal logs without the Skill in session_013zxzeR2kopqGDtf5GQztz6 and session_013zxzeQrhKwVsWaJZV8Bs7y; description gained cost wording in #2812, untested since. Rejected-cursor rule (#2827) also untested; evidence is one run (session_013zxzeQn5ksJrQasTk95LKb). Watch only. Grade unchanged.
+  - date: "2026-11-05"
+    note: >-
+      Unverified, n=1: session_013zxzeSAtjCQiatdUuuFCRJ (11-03, after #2812 landed) answered a cost question with get_session twice and no
+      Skill. session_013zxzeR2kopqGDtf5GQztz6 and session_013zxzeQrhKwVsWaJZV8Bs7y answered from logs first, then invoked it. Earlier run
+      session_013zxzeQn5ksJrQasTk95LKb read 98 pages sequentially (pre-#2809 text). Watch whether #2812 wording gets cost questions to the Skill. Grade unchanged.

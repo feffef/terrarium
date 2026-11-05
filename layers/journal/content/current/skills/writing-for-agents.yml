@@ -5,7 +5,4 @@ installedSha256: 551adca942227b44192edba88acd4e8db911f0121ce58ad16944ccf6a896a74
 role: >-
   The reference standard for authoring Skills. Pull is inconsistent, but it now
   frames authoring (a pair of new Skills), not just decisions.
-observations:
-  - date: 2026-09-25
-    note: >-
-      Renamed upstream from `writing-great-skills`; entry carried over with its grade.
+observations: []

@@ -20,11 +20,3 @@ observations:
       session_01Bwzp9LzTsRFbM7AGRc1nGS). Skipping it cost a major friction in
       session_01Lm5nzVoByigqhQ1YxFggTk: four impl PRs opened unreviewed, and a
       later review found an ADR-0016 violation.
-  - date: 2026-09-25
-    note: >-
-      Collapsed from eight held-as-is runs, 2026-07-13 to 2026-08-17 (ADR-0015
-      says a run with no change adds no entry). Each run found it used in 2 to 7
-      of its 40-session window and skipped in other code-landing sessions. The
-      bright-line bar was never crossed, so role and grade held throughout. A
-      spec-reviewer subagent fabricated a line number in #323, which prompted
-      the citation-verification guidance in role.
