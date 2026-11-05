@@ -80,6 +80,23 @@ const sections = computed(() => [
   },
 ])
 
+// Each section lists its first clusters until the viewer expands it.
+const SECTION_LIMIT = 10
+const expanded = ref(new Set<string>())
+const expand = (id: string) => (expanded.value = new Set(expanded.value).add(id))
+function shownEntries<T>(sec: { id: string; entries: T[] }): T[] {
+  return expanded.value.has(sec.id) ? sec.entries : sec.entries.slice(0, SECTION_LIMIT)
+}
+// A link to a hidden cluster (`#cluster-<name>`) opens its section, then scrolls to it.
+onMounted(async () => {
+  const target = route.hash.slice(1)
+  const sec = sections.value.find((s) => s.entries.some((e) => `cluster-${e.name}` === target))
+  if (!sec) return
+  expand(sec.id)
+  await nextTick()
+  document.getElementById(target)?.scrollIntoView()
+})
+
 useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
 </script>
 
@@ -116,7 +133,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         <h2 :id="sec.id">{{ sec.title }} <span class="n">{{ sec.entries.length }}</span></h2>
         <p class="intro">{{ sec.intro }}</p>
         <ul v-if="sec.entries.length" class="ledger">
-          <li v-for="e in sec.entries" :id="`cluster-${e.name}`" :key="e.name">
+          <li v-for="e in shownEntries(sec)" :id="`cluster-${e.name}`" :key="e.name">
             <details>
               <summary>
                 <span class="count">{{ e.count }}<small>{{ e.count === 1 ? 'session' : 'sessions' }}</small></span>
@@ -179,7 +196,15 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
             </details>
           </li>
         </ul>
-        <p v-else>No friction clusters in this window.</p>
+        <button
+          v-if="sec.entries.length > SECTION_LIMIT && !expanded.has(sec.id)"
+          type="button"
+          class="show-all"
+          @click="expand(sec.id)"
+        >
+          Show all {{ sec.entries.length }}
+        </button>
+        <p v-if="!sec.entries.length">No friction clusters in this window.</p>
       </template>
     </article>
 
@@ -202,6 +227,18 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
   padding: 0.1rem 0.3rem;
 }
 .window select:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px; }
+.show-all {
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--jd-accent);
+  background: none;
+  border: 1px solid var(--jd-line);
+  border-radius: 4px;
+  padding: 0.2rem 0.7rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+}
+.show-all:focus-visible { outline: 2px solid var(--jd-accent); outline-offset: 2px; }
 .ledger { list-style: none; padding: 0; margin: 0; }
 .ledger > li { margin: 0; border-top: 1px solid var(--jd-line); }
 .ledger > li:first-child { border-top: 0; }
