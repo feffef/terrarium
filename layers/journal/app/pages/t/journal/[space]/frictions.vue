@@ -84,10 +84,10 @@ const sections = computed(() => [
 const SECTION_LIMIT = 10
 const expanded = ref(new Set<string>())
 const expand = (id: string) => (expanded.value = new Set(expanded.value).add(id))
-const visible = <T,>(sec: { id: string; entries: T[] }) => (expanded.value.has(sec.id) ? sec.entries : sec.entries.slice(0, SECTION_LIMIT))
+const shownEntries = <T>(sec: { id: string; entries: T[] }) => (expanded.value.has(sec.id) ? sec.entries : sec.entries.slice(0, SECTION_LIMIT))
 // A link to a hidden cluster (`#cluster-<name>`) opens its section, then scrolls to it.
 onMounted(async () => {
-  const target = decodeURIComponent(route.hash).replace(/^#/, '')
+  const target = route.hash.slice(1)
   const sec = sections.value.find((s) => s.entries.some((e) => `cluster-${e.name}` === target))
   if (!sec) return
   expand(sec.id)
@@ -131,7 +131,7 @@ useSeoMeta({ title: () => `${PAGE_TITLE} · journal/${space}` })
         <h2 :id="sec.id">{{ sec.title }} <span class="n">{{ sec.entries.length }}</span></h2>
         <p class="intro">{{ sec.intro }}</p>
         <ul v-if="sec.entries.length" class="ledger">
-          <li v-for="e in visible(sec)" :id="`cluster-${e.name}`" :key="e.name">
+          <li v-for="e in shownEntries(sec)" :id="`cluster-${e.name}`" :key="e.name">
             <details>
               <summary>
                 <span class="count">{{ e.count }}<small>{{ e.count === 1 ? 'session' : 'sessions' }}</small></span>
