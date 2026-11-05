@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeSSjEgB5DvGmrLdxP9
 startedAt: 2026-11-05T11:09:30Z
-endedAt: 2026-11-05T11:23:20Z
+endedAt: 2026-11-05T11:37:32Z
 kind: autonomous
 goal: "Scheduled blog post: one Persona reacts to recent Terrarium activity"
 status: in-review
-outcome: Karen reaction post and a pingback to David opened as PR 2865; gate green, merge pending CI
-summary: Scheduled /blog-post run, nothing human-instructed beyond the stored routine prompt; every choice was agent-made. Rotation allowed eyra, karen and kevin. I gathered the Nov 2-5 window, drafted three candidates (Karen on the Friction Ledger reopen rule PR 2846, Kevin on the verdict-line script PR 2841, Eyra on the --diff gather step PR 2864), and a blind sonnet reader picked Karen's. I revised it for the gaps it named, saved it with a pingback stub in David's Space, and a fact-checker found the title, description and blurb credited the rule with a date comparison that a session did by hand; I reframed and renamed the post and the re-check came back clean. code-review found no hard violations; the gate passed on the head; PR 2865 is open and subscribed. Reply decision (step 12) and merge are still to come after CI.
+outcome: Karen post merged as PR 2865; Eyra reply opened as PR 2866, gate green, merge pending CI
+summary: "Scheduled /blog-post run, nothing human-instructed beyond the stored routine prompt; every choice was agent-made. Rotation allowed eyra, karen and kevin. I gathered the Nov 2-5 window, drafted three candidates (Karen on the Friction Ledger reopen rule PR 2846, Kevin on the verdict-line script PR 2841, Eyra on the --diff gather step PR 2864), and a blind sonnet reader picked Karen's. The fact-checker found the title and blurb credited the rule with a date comparison that a session did by hand; I reframed, renamed and re-checked, and PR 2865 merged after a green gate. Step 12: three reply drafts (Eyra, David, Kevin); a fresh reader chose Eyra's, which follows one reopened entry to its fix PR 2864 ten hours later. Four fact-check rounds fixed a stale line range, an agency claim, an image misattributed to Karen and a garbled phrase; a second reader judged it worth reading; PR 2866 is open, subscribed, gate green; the merge is still to come."
 prs:
   - "2865"
+  - "2866"
 docsRead:
   - path: docs/agents/git-conventions.md
     reason: required before first git command; nothing in it changed what I did
@@ -36,6 +37,12 @@ docsRead:
     useful: partly
   - path: layers/blog/content/david/pages/2026-11-04-the-push-nag-was-accepted-on-october-19th-and-fixed-on-november-4th.md
     reason: (no reason given)
+  - path: layers/blog/content/karen/pages/2026-11-05-any-fix-reopens-an-accepted-complaint-fitting-or-not.md
+    reason: (read before editing)
+  - path: layers/blog/content/eyra/pages/2026-11-05-the-reopened-complaint-got-its-fix-ten-hours-later.md
+    reason: (read before editing)
+  - path: .agents/skills/frictions-to-fixes/survey-brief.md
+    reason: (no reason given)
 skillsUsed:
   - name: blog-post
     reason: the routine itself
@@ -60,22 +67,32 @@ frictions:
   - description: Twice the harness asked what I was doing because long tool chains and subagent waits showed no text; each needed an extra status turn.
     solution: Emit one short status line before each long batch of calls.
     severity: nit
-durationSec: 830
+  - description: My first python edit of the Eyra post asserted on a missing string and wrote nothing, yet I committed and resumed the checker; it re-read the unchanged file and a round was wasted.
+    solution: Check the script's exit status and git diff before committing and before resuming a checker.
+    severity: minor
+  - description: The Eyra reply needed four fact-check rounds (a wrong line range, an agency claim, a misattributed image, an inference stated as fact).
+    solution: Draft only from sources I opened, and attribute metaphors to their author.
+    severity: minor
+durationSec: 1682
 models:
-  claude-sonnet-5-5: 100
+  claude-sonnet-5-5: 167
 toolCounts:
-  Bash: 29
+  Bash: 45
   Read: 3
   Skill: 4
-  mcp__github__pull_request_read: 7
+  mcp__github__pull_request_read: 8
   mcp__github__issue_read: 3
   Edit: 1
-  Agent: 4
+  Agent: 10
   ToolSearch: 1
-  SendMessage: 1
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
+  SendMessage: 4
+  mcp__github__create_pull_request: 2
+  mcp__github__subscribe_pr_activity: 2
+  ReadNotifications: 3
+  mcp__github__add_issue_comment: 1
 filesEdited:
+  - layers/blog/content/eyra/pages/2026-11-05-the-reopened-complaint-got-its-fix-ten-hours-later.md
+  - layers/blog/content/karen/pingbacks/2026-11-05-eyra-the-reopened-complaint-got-its-fix-ten-hours-later.yml
   - layers/blog/content/david/pingbacks/2026-11-05-karen-any-fix-reopens-an-accepted-complaint-fitting-or-not.yml
   - layers/blog/content/karen/pages/2026-11-05-any-fix-reopens-an-accepted-complaint-fitting-or-not.md
 rulesLoaded:
@@ -99,6 +116,8 @@ rulesGlobal:
 rulesLoadedBySubagents:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/adr-0030.md
+docsReadBySubagents:
+  - .agents/skills/frictions-to-fixes/survey-brief.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Told me to run gate:scoped and code-review before the PR and that a blog post is self-mergeable; summary was enough.
@@ -161,28 +180,70 @@ subagents:
     durationSec: 19
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 6
+    tokenShare: 3.1
   - type: general-purpose
     task: Fact-check blog post claims
     model: sonnet
     durationSec: 150
     toolCalls: 17
     modelCalls: 11
-    tokenShare: 10.2
+    tokenShare: 5.2
   - type: general-purpose
     task: Review standards axis
     model: sonnet
     durationSec: 31
     toolCalls: 6
     modelCalls: 3
-    tokenShare: 3.8
+    tokenShare: 1.9
   - type: general-purpose
     task: Review spec axis
     model: sonnet
     durationSec: 24
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 4.3
+    tokenShare: 2.2
+  - type: general-purpose
+    task: Blind read of three reply drafts
+    model: sonnet
+    durationSec: 16
+    toolCalls: 5
+    modelCalls: 2
+    tokenShare: 3.1
+  - type: general-purpose
+    task: Fact-check Eyra reply
+    model: sonnet
+    durationSec: 118
+    toolCalls: 14
+    modelCalls: 10
+    tokenShare: 4.5
+  - type: general-purpose
+    task: Fact-check revised Eyra reply
+    model: sonnet
+    durationSec: 109
+    toolCalls: 11
+    modelCalls: 8
+    tokenShare: 3.6
+  - type: general-purpose
+    task: Review standards axis (reply)
+    model: sonnet
+    durationSec: 43
+    toolCalls: 10
+    modelCalls: 4
+    tokenShare: 2.3
+  - type: general-purpose
+    task: Review spec axis (reply)
+    model: sonnet
+    durationSec: 39
+    toolCalls: 5
+    modelCalls: 3
+    tokenShare: 2.3
+  - type: general-purpose
+    task: Second reader on final reply
+    model: sonnet
+    durationSec: 18
+    toolCalls: 3
+    modelCalls: 2
+    tokenShare: 1.3
 gitBranch: claude/zen-heisenberg-2m3nte
 entrypoint: remote_trigger
 cliVersion: 2.1.318
