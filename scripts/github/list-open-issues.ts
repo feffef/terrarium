@@ -31,7 +31,7 @@
 // Usage:  tsx scripts/github/list-open-issues.ts [N] [--closed]
 //   Prints up to N open (or, with --closed, closed) issues (default 50) as
 //   JSON: { number, title, labels, updatedAt }. Newest-updated-first.
-import { root, runIfMain } from '../lib/cli.ts'
+import { fail, root, runIfMain } from '../lib/cli.ts'
 import { decodeHtmlEntities, listAll, NO_ACCESS_MESSAGE, resolveAccess, type Access } from '../lib/github-client.ts'
 
 const DEFAULT_LIMIT = 50
@@ -130,7 +130,12 @@ export function parseArgs(argv: string[]): { state: IssueState; limit: number } 
 }
 
 function main(): void {
-  const args = parseArgs(process.argv.slice(2))
+  let args: ReturnType<typeof parseArgs>
+  try {
+    args = parseArgs(process.argv.slice(2))
+  } catch (err) {
+    fail(err instanceof Error ? err.message : String(err))
+  }
   process.stdout.write(JSON.stringify(listOpenIssues(args.limit, root, args.state), null, 2) + '\n')
 }
 
