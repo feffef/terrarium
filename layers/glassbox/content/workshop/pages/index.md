@@ -73,7 +73,7 @@ glassbox-update keeps existing text true, so curate can spend its runs on teachi
 
 ### The owner's direction
 
-These are the owner's decisions of direction, not findings. A new Subject needs the owner's approval: an autonomous run files an issue for it, and in an interactive run the owner decides. Where a cut is suggested below, it is a lead, not a decision.
+These are the owner's decisions of direction, not findings. A new Subject still needs the owner's approval (the curate Skill's Remit). Where a cut is suggested below, it is a lead, not a decision.
 
 - **Split up the Claude Code Subject.** One lead, inferred from the pages' topics:
   - instructions: `01.claude-md`, `02.path-scoped-rules`, `03.skills`;
@@ -99,7 +99,7 @@ These are the owner's decisions of direction, not findings. A new Subject needs 
 ### Known gaps
 
 **Missing Lessons within existing Subjects:**
-- **Git plumbing** (Git & GitHub). Building a commit without a checkout: a temporary index via `GIT_INDEX_FILE`, then `read-tree`, `hash-object`, `update-index`, `write-tree` and `commit-tree`, and a push retry. The session-log lander relies on it. Only stop 6 of `walkthroughs/session-log-lands-on-main` shows it, and no guide page names `GIT_INDEX_FILE`. This lead has been open since 2026-11-05.
+- **Git plumbing** (Git & GitHub). Building a commit without a checkout, which the session-log lander relies on. Only stop 6 of `walkthroughs/session-log-lands-on-main` shows it, and no guide page names `GIT_INDEX_FILE`. This lead has been open since 2026-11-05.
 - **Git hooks** (Git & GitHub). Taught only inside `git-github/05.attribution`. A lead from one rater.
 - **UI checks** (Verification). `scripts/ui/` (preview, screenshot, eval-in-page) is named only on `claude-code/07.subagents`. This is likely a gap, not yet confirmed by a run.
 - **Journal digests and pingbacks.** ADR-0010 and ADR-0012 are the only ADRs no guide page cites. They may be uncovered on purpose, as Journal internals; no run has decided.
@@ -114,7 +114,7 @@ These are the owner's decisions of direction, not findings. A new Subject needs 
 
 ### Steps already decided
 
-These are page changes earlier improve runs weighed and turned down. Don't propose one again without new evidence, meaning something on `main` that changed since the decision.
+These are page changes earlier improve runs weighed and turned down. Each stays decided until something on `main` changes the reason it was turned down.
 
 **Dropped** (a researcher or the run rejected it):
 - **Folding `skill-pack/02.planning-with-the-pack` into `skill-pack/01.skill-packs`** (2026-11-02). The proposal kept only the wayfinder-on-GitHub mapping and the ready-for-agent rule. It was dropped because the page's tour of seven Skills is upstream and Skill Inventory content, so a fold would leave Terrarium's own two facts with no Lesson. Raise it again only if the page loses those facts.
