@@ -2,14 +2,12 @@
 // `curl`) whose text lacks a session URL naming THIS session, in the shape its
 // surface prescribes: a first-line `🤖 [Model](<session-url>)` header on a body,
 // a last-lines `Claude-Session:` trailer on an MCP-API commit message (no local
-// git hook sees those). Prose failed five times (#387, #605, #628, #723, #788),
-// so the deny message teaches the format and is the rule's agent-facing home.
-//
-// Findings: `missing` (#737), `mismatch` (#628), `malformed` (#788),
-// `unverified` and `uninspectable` (ground truth or a Bash body can't be read:
-// fail CLOSED). Also denies a bare `<...>` span in a title or body, which GitHub
-// silently strips (#886). A posted comment can't be fixed here: post a visible
-// follow-up correction.
+// git hook sees those). Prose alone failed five times (#387, #605, #628, #723,
+// #788), so the deny message teaches the format and is the rule's agent-facing
+// home. Findings: `missing`, `mismatch`, `malformed`, and `unverified` /
+// `uninspectable` (ground truth or a Bash body can't be read: fail CLOSED).
+// Also denies a bare `<...>` span in a title or body, which GitHub silently
+// strips (#886). A posted comment can't be fixed here: post a visible correction.
 //
 // The Bash entry (#1900) fail-opens on: `gh api` or `curl` run by a script,
 // alias, `xargs` or a shell other than `sh`/`bash`/`zsh`/`dash -c` or `eval`;
@@ -34,77 +32,58 @@ import { shellSegments, type Token } from '../session/shell-reads.ts'
 const LABEL = 'provenance guard'
 const REF = 'ADR-0017'
 
-/** A global copy of `SESSION_TRAILER` for `matchAll` (the last match is the
- *  message's own, #692). Local because `commit-trailer.ts` calls `.test()` on
- *  the shared one, which a `g` flag would make stateful. Not dead code despite
- *  #784: it reads the COMMIT surface. */
+/** `SESSION_TRAILER` with `g` for `matchAll`; the shared one gets `.test()`,
+ *  which `g` would make stateful. */
 const SESSION_TRAILER_GLOBAL = new RegExp(SESSION_TRAILER.source, 'g')
 
-/** Which marker shape a surface prescribes. A commit message renders no
- *  markdown, so the header would be noise there; a GitHub body renders it, and
- *  the top is the one position the harness's own footer never claims. */
+/** A commit message renders no markdown, so it takes a trailer; a body takes the
+ *  header, the one position the harness's own footer never claims. */
 export type ProvenanceSurface = 'body' | 'commit'
 
-/** One tool call that can carry agent-authored provenance: which parameter
- *  holds the text, and which surface's shape that text must be in. Field names
- *  are verified against each tool's real schema via `ToolSearch` (issue #628 —
- *  never guess a deferred tool's shape), never assumed from the
- *  tool's name. */
+/** One tool call that can carry agent-authored provenance. Take field names from
+ *  the tool's real schema (`ToolSearch`), never from its name (#628). */
 export interface ProvenanceTool {
   tool: string
   /** Default `body`. `message` for the MCP-API commit tools. */
   field?: string
   /** Default `body`. */
   surface?: ProvenanceSurface
-  /** Whether THIS call must carry the text at all. Default: always. Set it for
-   *  a call that may legitimately have none (a label-only `issue_write`, a bare
-   *  approval) so the guard never wedges it (#737). */
+  /** Default: always. Set for a call that may legitimately carry no text. */
   required?: (input: Record<string, unknown>) => boolean
 }
 
-/** Every tool call an agent uses to publish authored text outside this
- *  session. Add a row when a new surface appears. */
+/** Every tool call an agent uses to publish authored text. */
 export const GITHUB_PROVENANCE_TOOLS: readonly ProvenanceTool[] = [
-  // A comment IS its body — one with none is malformed, not exempt.
   { tool: 'mcp__github__add_issue_comment' },
   { tool: 'mcp__github__add_reply_to_pull_request_comment' },
   { tool: 'mcp__github__add_comment_to_pending_review' },
-  // `body` is optional in the schema, but an empty PR body is the #737 case.
+  // `body` is optional in the schema, but an empty PR body is a miss (#737).
   { tool: 'mcp__github__create_pull_request' },
-  // Creating an issue publishes prose; updating one may only touch labels/state.
   { tool: 'mcp__github__issue_write', required: (input) => input.method === 'create' },
-  // Partial updates (title, base, state) carry no body and must not be wedged.
   { tool: 'mcp__github__update_pull_request', required: () => false },
-  // A review can be submitted with no comment (a bare approval).
   { tool: 'mcp__github__pull_request_review_write', required: () => false },
 
-  // MCP-API commits bypass `.githooks/commit-msg` (#723): trailer, not header.
+  // MCP-API commits bypass `.githooks/commit-msg` (#723).
   { tool: 'mcp__github__create_or_update_file', field: 'message', surface: 'commit' },
   { tool: 'mcp__github__push_files', field: 'message', surface: 'commit' },
   // `merge_pull_request` is absent: `scripts/github/merge-pr.ts` is the sole
   // merge path and passes no commit message.
 ]
 
-/** `missing` — no session URL at all (#737); `mismatch` — a session URL naming
- *  someone else (#628); `malformed` — this session's URL, but not in the shape
- *  its surface prescribes (#788); `unverified` — ground truth unresolvable, so
- *  nothing can be established either way (fail-closed).
- *
- *  `found` is present only on a `mismatch`. `expected` is absent only when
- *  ground truth could not be resolved. */
+/** `missing`: no session URL (#737). `mismatch`: another session's (#628).
+ *  `malformed`: this session's, in the wrong shape (#788). `unverified`: ground
+ *  truth unresolvable. `found` is set only on a `mismatch`. */
 export interface ProvenanceFinding {
   kind: 'missing' | 'mismatch' | 'malformed' | 'unverified' | 'uninspectable'
   tool: string
   surface: ProvenanceSurface
   found?: string
   expected?: string
-  /** Why a Bash write's body could not be read; only on `uninspectable`. */
+  /** Only on `uninspectable`. */
   detail?: string
 }
 
-/** Judge `text` against `truth` once the surface's slot has been read: a slot
- *  naming someone else is a `mismatch`; no slot but our URL loose in the text
- *  is `malformed`; no session URL at all is `missing`; only another's, `mismatch`. */
+/** `slotId` is the id read from the surface's header or trailer, if any. */
 function adjudicate(
   slotId: string | undefined,
   text: string,
@@ -121,10 +100,8 @@ function adjudicate(
   return { kind: 'mismatch', tool, surface, found: ids.at(-1)!, expected: truth }
 }
 
-/** The pure core: does this call's text carry a session URL naming the
- *  resolved ground truth, in its surface's shape? `null` only for a compliant
- *  or out-of-scope call (see `ProvenanceTool.required`); anything else,
- *  unresolvable ground truth included, is a finding. Never throws. */
+/** The pure core. `null` only for a compliant or out-of-scope call; anything
+ *  else, unresolvable ground truth included, is a finding. */
 export function checkGithubProvenance(
   toolName: string,
   toolInput: unknown,
@@ -140,32 +117,27 @@ export function checkGithubProvenance(
   const text = typeof raw === 'string' ? raw : ''
 
   if (text.trim() === '') {
-    // Judged before ground truth so an exempt no-text call passes even where
-    // nothing resolves.
+    // Before the ground-truth check, so an exempt no-text call passes.
     return (entry.required ?? (() => true))(input)
       ? { kind: 'missing', tool: toolName, surface, expected: groundTruthId ?? undefined }
       : null
   }
 
-  // Fail closed (ADR-0017): text is being published and compliance
-  // cannot be established, so the call does not proceed.
+  // Fail closed (ADR-0017).
   if (!groundTruthId) return { kind: 'unverified', tool: toolName, surface }
 
   // Judge the surface's slot alone: a quoted foreign URL must neither satisfy
   // nor break the check (#692).
   if (surface === 'commit') {
-    // The LAST `Claude-Session:` trailer is the message's own; earlier ones are
-    // citations (#692).
+    // The last trailer is the message's own; earlier ones are citations.
     const trailer = [...text.matchAll(SESSION_TRAILER_GLOBAL)].at(-1)
     return adjudicate(trailer?.[1], text, groundTruthId, toolName, surface)
   }
   return adjudicate(readProvenanceHeader(text)?.sessionId, text, groundTruthId, toolName, surface)
 }
 
-/** The exact marker the offending call should have carried, ready to paste.
- *  Built from the same `provenanceHeader` / `provenanceFooter` the rest of the
- *  repo writes with, so the guard can never teach a shape the codebase does not
- *  itself produce. */
+/** Built from the helpers the rest of the repo writes with, so the guard never
+ *  teaches a shape the codebase doesn't produce. */
 function prescribedMarker(surface: ProvenanceSurface, url: string): string {
   return surface === 'commit'
     ? `${provenanceFooter('<your model name>', url)}\n\n...as the LAST lines of the commit message.`
@@ -174,8 +146,8 @@ function prescribedMarker(surface: ProvenanceSurface, url: string): string {
       `you must not name your model (#1422).`
 }
 
-/** The deny message: names the tool, the real session id and the exact marker
- *  to paste, so it works for an agent that has read no doc. */
+/** Names the tool, the real session id and the marker to paste, so it works for
+ *  an agent that has read no doc. */
 export function formatGuardMessage(f: ProvenanceFinding): string {
   const message = formatFinding(f)
   return f.tool.startsWith('Bash') ? `${message}\n\n${USE_MCP}` : message
@@ -208,7 +180,7 @@ function formatFinding(f: ProvenanceFinding): string {
     )
   }
 
-  // `expected` can be absent; never paste `.../undefined` as a session URL.
+  // Never paste `.../undefined` as a session URL.
   const url = f.expected ? sessionUrl(f.expected) : '<the session URL resolved from your system prompt>'
   const paste = prescribedMarker(f.surface, url)
   const verbatim = f.expected
@@ -238,29 +210,22 @@ function formatFinding(f: ProvenanceFinding): string {
   )
 }
 
-/** The `PreToolUse` "deny" control object a hook writes to stdout to block a
- *  call (Claude Code hooks reference). `null` when nothing should be blocked,
- *  so `main` writes nothing and the call proceeds untouched. */
+/** `null` when nothing should be blocked. */
 export function denyOutputFor(finding: ProvenanceFinding | null): DenyOutput | null {
   return finding ? buildDenyOutput(formatGuardMessage(finding)) : null
 }
 
 // --- Angle-bracket stripping (issue #886) -----------------------------------
 
-/** A span GitHub renders rather than silently dropping: a GFM autolink, or one
- *  of the HTML tags its sanitizer keeps. Denying these would wedge a legitimate
- *  post — #886's brief bars a false positive that leaves a session unable to
- *  publish. */
+/** A span GitHub renders rather than drops. Denying these would wedge a
+ *  legitimate post. */
 const RENDERED = /^(?:https?:\/\/|mailto:|\/?(?:details|summary|br|img|kbd|sub|sup)\b)/i
 
-/** A `<...>` span, single-line only: `guards.md`'s test-quality note warns a
- *  negated-class regex that crosses newlines can match far more than
- *  intended, so this stops at the first line break. */
+/** Single-line only: a negated class that crosses newlines over-matches. */
 const ANGLE_SPAN = /<([^<>\n]+)>/g
 
-/** The first bare, markup-sensitive `<...>` span in `text`, or `null`. Fenced
- *  code, inline backticks and HTML comments are stripped first — GitHub
- *  publishes all three verbatim, so a placeholder inside one is safe (#886). */
+/** The first bare `<...>` span in `text`, or `null`. Code and HTML comments are
+ *  stripped first: GitHub publishes them verbatim. */
 export function bareAngleBracketSpan(text: string): string | null {
   const withoutCode = text
     .replace(/```[\s\S]*?```/g, '')
@@ -272,19 +237,14 @@ export function bareAngleBracketSpan(text: string): string | null {
   return null
 }
 
-/** A bare angle-bracket span found in one field of one GitHub write. */
 export interface AngleBracketFinding {
   tool: string
   field: string
   span: string
 }
 
-/** Second condition on the same registry: does this call's title or body carry
- *  a span GitHub would silently strip? Only the `body` surface is at risk — a
- *  commit message renders no markdown, and scanning one denied every compliant
- *  MCP-API commit, since ADR-0017's own footer carries `<noreply@…>`. Titles
- *  are checked unconditionally rather than added to `ProvenanceTool` — the #880
- *  failure hit both, and a tool with no `title` has nothing there to match. */
+/** Only the `body` surface is at risk: scanning a commit message denied every
+ *  compliant MCP-API commit, since the footer carries `<noreply@…>`. */
 export function checkAngleBrackets(
   toolName: string,
   toolInput: unknown,
@@ -304,9 +264,7 @@ export function checkAngleBrackets(
   return null
 }
 
-/** The corrective message for an angle-bracket finding — names the offending
- *  text and the fenced-code-block form that actually holds (a bare-backtick
- *  wrap did not: `docs/agents/github-integration.md`, issue #886). */
+/** A bare-backtick wrap did not hold (#886); a fenced block does. */
 export function formatAngleBracketMessage(f: AngleBracketFinding): string {
   return (
     `Blocked by the provenance guard's angle-bracket check (#886): \`${f.tool}\`'s \`${f.field}\` contains a bare ` +
@@ -322,8 +280,7 @@ export function formatAngleBracketMessage(f: AngleBracketFinding): string {
 
 type BashBody = { text: string } | { uninspectable: string }
 
-/** `cwd` is `undefined` once a `cd` the guard cannot follow has run, so a
- *  relative path is unknown. */
+/** `cwd` is `undefined` after a `cd` the guard cannot follow. */
 function fileBody(path: Pick<Token, 'text' | 'dynamic'>, cwd: string | undefined): BashBody {
   if (path.dynamic) return { uninspectable: 'its file path is built by the shell' }
   if (path.text === '-') return { uninspectable: 'it is read from standard input' }
@@ -350,9 +307,7 @@ function jsonBody(raw: BashBody): BashBody | null {
 
 const DYNAMIC = { uninspectable: 'the shell builds it from a variable or command' }
 
-/** The bodies one `gh api` call sends: every `body` field (`-f`, `-F`,
- *  `--raw-field`, `--field`, in any of their spellings) and the `body` of an
- *  `--input` file. Only `-F`/`--field` read `@path`, as in gh itself. */
+/** Only `-F`/`--field` read `@path`, as in gh itself. */
 function ghApiBodies(args: Token[], cwd: string | undefined): BashBody[] {
   const bodies: BashBody[] = []
   for (let j = 0; j < args.length; j++) {
@@ -403,10 +358,8 @@ function curlBodies(args: Token[], cwd: string | undefined): BashBody[] {
   return bodies
 }
 
-/** The Bash half of the guard: does any `gh api` or `curl`-to-REST write in
- *  `command` send a body without this session's header? Judged exactly as an
- *  MCP body is (`checkGithubProvenance`); a body the guard cannot read is
- *  `uninspectable`. `null` for a command that sends no body. Never throws. */
+/** The Bash half: judged as an MCP body is; a body it cannot read is
+ *  `uninspectable`. */
 export function checkBashGithubWrite(
   command: string,
   groundTruthId: string | null | undefined,
@@ -436,11 +389,8 @@ export function checkBashGithubWrite(
 
 const SHELL = /(?:^|\/)(?:ba|z|da)?sh$/
 
-/** Reads the hook JSON on stdin, resolves ground truth, runs the checks, and
- *  writes a deny object to stdout for any finding. Always exits 0 (the deny
- *  travels in stdout) and fails CLOSED. Ground truth is resolved even with no
- *  `transcript_path`: the env var may carry it. A crash before this runs is
- *  blocked by the hook entry's `"onFailure": "block"`. */
+/** Ground truth is resolved even with no `transcript_path`: the env var may
+ *  carry it. */
 export function main(): void {
   const result = readHookPayload()
   if (result.kind === 'none') return
@@ -448,9 +398,6 @@ export function main(): void {
   if (result.kind === 'no-tool') return denyUninspectable(LABEL, REF, 'the hook payload named no tool')
   const { payload } = result
 
-  // An unreadable transcript is not fatal on its own — the env var may still
-  // carry ground truth — so fall through with an empty transcript and let
-  // `checkGithubProvenance` decide whether anything is resolvable.
   let transcriptJsonl = ''
   if (payload.transcript_path) {
     try {
