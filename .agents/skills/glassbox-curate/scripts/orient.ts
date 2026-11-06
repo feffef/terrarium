@@ -1,8 +1,9 @@
 // The orientation step of glassbox-curate: everything a run reads before it
-// chooses a focus, in one output. That is the workshop's memory page, every curate run
-// entry, glassbox-update's check state, the Glass Box terms, the page-check
-// warnings, and each guide page's title, description, first paragraph and Where
-// next links.
+// chooses a focus, in one output. It prints the workshop's memory page, every
+// curate run entry, glassbox-update's check state, the Glass Box terms, the
+// page-check warnings, and each guide page's title, description, first
+// paragraph and Where next links. All of it, unfiltered: trim it only once the
+// output grows too large to read.
 // Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts
 import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -38,8 +39,7 @@ export function orientation(base = join(root, content)): string {
   const terms = files(join(base, 'guide/terms'), '*.yml')
   const memory = files(join(base, 'workshop/pages'), 'index.md')[0]?.[1] ?? ''
   const warnings = [
-    // A "so" clause is a judgement call, not a finding (glassbox-improve's tally dropped them too).
-    ...guide.flatMap(([f, text]) => glassboxPageWarnings(text).filter((w) => !w.startsWith('In Terrarium may give a motive')).map((w) => `- ${f}: ${w}`)),
+    ...guide.flatMap(([f, text]) => glassboxPageWarnings(text).map((w) => `- ${f}: ${w}`)),
     ...glassboxOrphans(Object.fromEntries(guide)).map((f) => `- ${f}: ${glassboxOrphanText}`),
   ]
   const section = (title: string, body: string) => `# ${title}\n\n${body.trim() || '(none)'}`

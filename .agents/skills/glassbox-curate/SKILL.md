@@ -45,14 +45,13 @@ in a brief as `.agents/skills/...`.
 
 - **Orient.** This is the orientation step: run
   `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts` and read all
-  of its output. It holds the memory page, every run entry, glassbox-update's
-  check state, the terms, the page-check warnings, and each guide page's title,
-  description, first paragraph and Where next links. Then read `git log` of the
-  guide since the last run. Leave alone every page an open PR touches and every
+  of its output (its header says what it holds), then `git log` of the guide
+  since the last run. Leave alone every page an open PR touches and every
   focus another open curate run has claimed.
 - **Choose.** Take the focus from memory leads, the owner's review notes,
-  page-check warnings, problems the overview shows, or gaps; when nothing is pressing, from
-  pages no fresh reader has seen lately (`pagesRead`). The run entry says why.
+  page-check warnings, problems the orientation shows, or gaps; when nothing is
+  pressing, from pages no fresh reader has seen lately (`pagesRead`). The run
+  entry says why.
 - **Gaps.** Compare what Terrarium relies on (`package.json`, the ADRs, the
   Skills, `scripts/`) with what the Lessons teach. The memory page keeps known
   gaps, those left uncovered on purpose too. Fix what makes pages hard to learn

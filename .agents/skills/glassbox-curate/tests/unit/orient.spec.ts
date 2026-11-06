@@ -1,4 +1,7 @@
-import { describe, expect, it } from 'vitest'
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join } from 'node:path'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { orientation, pageOverview } from '../../scripts/orient.ts'
 
 const page = `---
@@ -40,12 +43,30 @@ describe('pageOverview', () => {
 })
 
 describe('orientation', () => {
-  it('holds every section, the memory text and every guide page', () => {
-    const out = orientation()
-    for (const heading of ['# Memory page', '# Curate runs, newest first', '# glassbox-update checks', '# Terms', '# Page-check warnings', '# Guide pages']) {
-      expect(out).toContain(heading)
+  let base: string
+  beforeAll(() => {
+    base = mkdtempSync(join(tmpdir(), 'orient-'))
+    const write = (path: string, text: string) => {
+      mkdirSync(dirname(join(base, path)), { recursive: true })
+      writeFileSync(join(base, path), text)
     }
-    expect(out).toContain('## Memory')
+    write('guide/pages/claude-code/05.blocking-hooks.md', page)
+    write('guide/terms/hook.yml', 'term: Hook\ndefinition: A command Claude Code runs on an event.\n')
+    write('workshop/pages/index.md', '---\ntitle: Workshop\n---\n\n## Memory\n\nA lead.\n')
+    write('workshop/runs/2026-11-06T0900.yml', 'focus: first\n')
+    write('workshop/runs/2026-11-07T0900.yml', 'focus: second\n')
+    write('workshop/checks/update.yml', 'pages: []\n')
+  })
+  afterAll(() => rmSync(base, { recursive: true, force: true }))
+
+  it('prints every section, with runs newest first and every page summarised', () => {
+    const out = orientation(base)
+    const at = (text: string) => out.indexOf(text)
+    expect(at('# Memory page')).toBeLessThan(at('A lead.'))
+    expect(at('focus: second')).toBeLessThan(at('focus: first'))
+    expect(out).toContain('pages: []')
+    expect(out).toContain('term: Hook')
+    expect(out).toContain('# Page-check warnings')
     expect(out).toContain('### claude-code/05.blocking-hooks: Blocking hooks')
   })
 })
