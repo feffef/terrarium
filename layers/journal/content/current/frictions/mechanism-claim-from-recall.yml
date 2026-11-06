@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   How a script, guard, rule, harness setting, data format or the code's current state behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set; this includes a reviewer or rater subagent's own finding. A reviewer, the owner or a later check finds it false. glassbox-improve's lead now proposes only facts found in the source (PR #2626). A helper's claim the main agent passed on unchecked belongs in relayed-subagent-claims. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed"; a reviewer finding a check proved false.
 surface: safe
-status: open
-ref: "issue #2504 closed not planned on 2026-10-25: the owner accepts the cost. Three prose fixes (#2336, #2378, #2453) didn't hold; in the latest moderate case the false claims were caught before the push; a line per Skill would repeat CLAUDE.md's Verify before you state."
+status: tracked
+ref: "issue #2876 (regression of #2626)"
 notes: |-
   2026-11-04 reopened: fix #2626 (2026-10-28) merged after the owner accepted it on 2026-10-25.
 fixes:
@@ -22,11 +22,6 @@ fixes:
     date: "2026-10-28"
     summary: "glassbox-improve's lead proposes only facts and wording found in the source (an absence claim most of all), and its researcher checks an absence claim against every code location."
 occurrences:
-  - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
-    date: "2026-10-22"
-    severity: minor
-    description: "My Kevin post said a rule was written down where agents read it, but the session-start ADR-0004 summary omits that clause; I only noticed after it merged and fixed it in a second PR."
-    solution: "The fact-check brief should name sentences that characterise where a rule lives so the checker opens the loaded rule file, not just the ADR."
   - session: session_01PWZU3TqUdSp6uD1KaoQXit
     date: "2026-10-23"
     severity: minor

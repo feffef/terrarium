@@ -2,7 +2,8 @@ name: glassbox-improve-unstated-steps
 surface: safe
 summary: The glassbox-improve Skill leaves a step's rule or command unstated or in conflict with its briefs, so a run improvises and has to disclose the choice.
 cause: "SKILL.md and its briefs name no rule where a run needs one: no tie-break among tied three-rater promotions or two gap drafts with equal rank sums (the run reuses the previous run's importance rank sum or picks by judgement; PR #2668 added one for equal gap rank sums), no word on a second same-day run's branch name, on pushing the run branch before check:worktrees (PR #2668 now says it), on how the tally counts a point one rater lists as Optional, on a run based on an unpushed commit, or on whether a writer or the lead repoints links in other drafts (writer-brief.md and the lead's rules disagree, leaving the layer test red per branch). The cooling-off step's git diff names pre-rename paths or prints about 60 unrelated Journal lines. Signals: 'no tie-break', 'the Skill never states', 'equal rank sums', 'tied', 'conflict', a choice the run discloses in its PR."
-status: open
+status: tracked
+ref: "issue #2878 (regression of #2709)"
 fixes:
   - pr: 2668
     date: "2026-10-29"

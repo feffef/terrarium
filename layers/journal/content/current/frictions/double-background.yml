@@ -11,16 +11,6 @@ fixes:
     date: "2026-10-16"
     summary: "The double-background guard's deny message now says the whole call was denied and nothing in it ran."
 occurrences:
-  - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
-    date: "2026-10-22"
-    severity: nit
-    description: "A backgrounded gate command with a trailing ampersand plus run_in_background was blocked by the double-background guard; a chained sleep was also blocked. Both resent correctly."
-    solution: "The Skill step 10 could say: gate in background with run_in_background alone, then a Monitor on its log."
-  - session: session_0149fVyZ37qWGMuwVPw3Uryc
-    date: "2026-10-22"
-    severity: nit
-    description: "Stacked run_in_background with a text-level & (blocked by the double-background guard, #1208); the wrapper echo also reported exit 0 for a failed gate."
-    solution: "Run the gate as a plain background command and read the log for the result."
   - session: session_01CfTFFQrkwq1eUsDy61AJzz
     date: "2026-10-23"
     severity: nit

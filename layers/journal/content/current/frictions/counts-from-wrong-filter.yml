@@ -10,11 +10,6 @@ notes: |-
   2026-10-24 design: a CLAUDE.md or doc line dropped: CLAUDE.md already says a count is a fact only after you read every item, it was in context for all 5, and the five causes (eligibility rule, outlier drop, window start, ls headers) share no mechanism a helper could check.
 fixes: []
 occurrences:
-  - session: session_01BYiuxza1S1QZgmyXngfzLE
-    date: "2026-10-22"
-    severity: minor
-    description: "I counted #2286 and #2137 eligible as unlabelled issues, but both are on-hold specs whose last comment is an agent's, so auto-triage would skip them; #2286's hold had not lifted yet."
-    solution: "Apply auto-triage's on-hold-spec exception (issue-tracker.md Specs) when resolving the set; a helper that prints eligibility per issue would make it mechanical."
   - session: session_01PWZU3TqUdSp6uD1KaoQXit
     date: "2026-10-23"
     severity: minor

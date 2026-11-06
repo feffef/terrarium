@@ -13,11 +13,6 @@ fixes:
     date: "2026-10-28"
     summary: "visitor-loop section 3 lists open issues with list-open-issues.ts and checks merged PRs with git log origin/main --grep instead of searching; github-integration.md unchanged."
 occurrences:
-  - session: session_0195CYW3YBg2stBS6aGigmbp
-    date: "2026-10-22"
-    severity: minor
-    description: "GitHub search_issues returned zero results for plain queries like Friction Ledger, while the refiner's searches found 166; so my no-match search lines were weak evidence."
-    solution: "Document in github-integration.md which search tool and query form is reliable for the visitor-loop search step."
   - session: session_013zxzeSxgYzYmeAuCzvJdhY
     date: "2026-10-28"
     severity: minor

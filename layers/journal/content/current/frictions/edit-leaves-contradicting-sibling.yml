@@ -13,11 +13,6 @@ fixes:
     date: "2026-11-01"
     summary: "CLAUDE.md Self-verification: after changing a type or a test, run pnpm typecheck and the touched spec before gate:scoped."
 occurrences:
-  - session: session_019CbZiWqLbydExXQCmHRDyg
-    date: "2026-10-22"
-    severity: minor
-    description: "First commit left many callers pointing at removed glossary sections (manifests, theme.css, session.ts, an Atlas page); review caught them."
-    solution: "Before cutting a section, grep for its heading and phrases across code comments, not only Markdown (CLAUDE.md one home per fact)."
   - session: session_013zxzeP5MnAU2v4XFBZHSdY
     date: "2026-10-30"
     severity: minor

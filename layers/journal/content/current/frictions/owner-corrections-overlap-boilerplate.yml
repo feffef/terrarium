@@ -9,11 +9,6 @@ fixes:
     date: "2026-10-18"
     summary: "owner-corrections.ts --check now credits every issue or URL named on one dismissal line, so one tally line can dismiss several candidates."
 occurrences:
-  - session: session_0195CYW3YBg2stBS6aGigmbp
-    date: "2026-10-22"
-    severity: minor
-    description: "owner-corrections.ts printed 19 candidates for ten PRs, almost all routine bot content PRs; resolving them took several GitHub reads that the previous run had already done."
-    solution: "Have the script skip PRs whose title matches a known routine prefix (glassbox-update, journal(digest), blog(...)) or whose author is a Routine session."
   - session: session_013zxzePwzHSC4uh6dyhsHxg
     date: "2026-10-27"
     severity: nit

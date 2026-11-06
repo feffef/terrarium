@@ -33,16 +33,6 @@ fixes:
     date: "2026-10-28"
     summary: "pr-workflow.md's simple-change bar now says a simple change adds, renames or moves no file, so a rename sweep gets code-review before its first push."
 occurrences:
-  - session: session_01CKXPocBm85jSCheqepKn2v
-    date: "2026-10-22"
-    severity: moderate
-    description: "Misjudged the Inventory-sweep diff (10 files, 164 lines) as a \"simple change\" under ADR-0004/pr-workflow.md and skipped the mandatory code-review Skill before the first push, even though pr-workflow.md's simple-change bar is \"at most 10 lines in at most 2 files\" and this Skill's own Inventory history repeatedly treats a skipped code-review as a real finding on itself."
-    solution: "Check the diff's file/line count against pr-workflow.md's literal \"simple\" definition before the push, not by file type (YAML-only, no code) alone. Caught it myself during close-session's step 1, before any human or subagent flagged it; ran code-review after the push instead, which cost an extra push cycle fixing what it found (notes over the word cap, one duplicated fact)."
-  - session: session_016THR5o2Wcj8DYR6voyvXnu
-    date: "2026-10-22"
-    severity: nit
-    description: "Never read the full diff before the first push; only git diff --stat, though pr-workflow wants a self-read for a simple change."
-    solution: "Read git diff origin/main...HEAD before pushing, even for 8 lines."
   - session: session_01CMjFaMZxZgD7oTzNXmWwzv
     date: "2026-10-23"
     severity: minor

@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-22"
     summary: "git-conventions.md's chaining rule now forbids a push or other state-changing git only when it comes later in the same command as a gate or test run."
 occurrences:
-  - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
-    date: "2026-10-22"
-    severity: minor
-    description: "Pushed the reply branch in the same command that printed the gate log tail, though the gate had exited 1 (a Journal accordion e2e test outside the diff). A re-run passed."
-    solution: "Read the gate exit status in its own step before any push, as git-conventions says; the Monitor result alone showed EXIT=1."
-  - session: session_01T4UbBvJmjSunCwb3cUN68Q
-    date: "2026-10-22"
-    severity: nit
-    description: "Ran the first gate:scoped in the same command as git commit --amend, against git-conventions."
-    solution: "Commit first, then start the gate alone."
   - session: session_01JJcYmSGnRbUcVyvdPbkGs9
     date: "2026-10-24"
     severity: nit
