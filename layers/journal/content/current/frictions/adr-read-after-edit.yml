@@ -103,3 +103,13 @@ occurrences:
     severity: nit
     description: "Edited ledger-set.ts, its spec and survey-brief.md before reading the ADRs the hook then asked for in full; I read them after."
     solution: "Read the ADRs a Skill's files name before the first edit there."
+  - session: session_013zxzeSbd2LJtWWawqrWBJD
+    date: "2026-11-05"
+    severity: nit
+    description: "A hook made me read three full ADRs after a one-clause trim of the blog-post Skill, none of which changed the edit."
+    solution: "Let the ADR-load hook skip an edit that only deletes prose, or name the one ADR that bears on the Skill."
+  - session: session_013zxzeTJp1jinYqgNJRczgA
+    date: "2026-11-05"
+    severity: nit
+    description: "Hooks told me to read ADR-0005, ADR-0027 and ADR-0021 only after I had edited grades.ts and the glossary; each ADR was consistent with the edit, but the rule can only load once a governed file is touched"
+    solution: "Read the ADRs a Skill script change names before the first edit: .agents/skills/glassbox-improve/scripts/ falls under ADR-0005 and ADR-0027"

@@ -61,3 +61,8 @@ occurrences:
     severity: nit
     description: "A bash cd into layers/blog/content shifted the working directory twice, which I only noticed from environment notices."
     solution: "Use absolute paths and avoid cd in compound commands."
+  - session: session_013zxzeS7NuFmaoXJkxVfNby
+    date: "2026-11-05"
+    severity: nit
+    description: "A for-loop Bash call began with cd into the ledger directory, which moved the session's working directory; the harness noted the change."
+    solution: "Use absolute paths or a subshell for cd, as the bare-cd Friction already says."

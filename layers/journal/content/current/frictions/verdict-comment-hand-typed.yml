@@ -97,3 +97,8 @@ occurrences:
     severity: nit
     description: "I typed a full SHA from the short hash in my #2836 verdict update, the exact slip the verdict-comment-hand-typed entry records; I fixed the comment one call later."
     solution: "Run git rev-parse HEAD in the same step before writing any Reviewed line."
+  - session: session_013zxzeS7NuFmaoXJkxVfNby
+    date: "2026-11-05"
+    severity: nit
+    description: "Wrote a PR verdict comment's Reviewed SHA by hand (a made-up full hash from a short one) instead of pasting verdict-line.ts output; caught and corrected before merging."
+    solution: "Run verdict-line.ts first and paste its output; never type the hash."

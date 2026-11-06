@@ -31,3 +31,8 @@ occurrences:
     severity: minor
     description: "I told the user I would self-merge once green before checking verifying-ui-changes, which requires a human's eye on an illustration from a brief; caught it before merging."
     solution: "The ui-verification rule summary could state the human-eye requirement for illustrations, not only point to the doc."
+  - session: session_013zxzeSjNrJGoGzDkoSzhK9
+    date: "2026-11-05"
+    severity: minor
+    description: "Took no screenshot of the rendered page; the UI was checked only through the e2e test and counts from SSR HTML."
+    solution: "Run scripts/ui/preview.ts shot on the built page before the PR."

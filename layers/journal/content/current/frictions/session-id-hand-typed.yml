@@ -51,3 +51,8 @@ occurrences:
     severity: nit
     description: "Wrote the wrong session id in the first commit message; the commit-msg hook replaced it with the right trailer, so nothing landed wrong."
     solution: "Copy the id from the system prompt template instead of the scorecard."
+  - session: session_013zxzeSSjEgB5DvGmrLdxP9
+    date: "2026-11-05"
+    severity: nit
+    description: "I typed a session id from memory in my first commit message; the commit-msg hook replaced it with the real one."
+    solution: "Copy the id from the env or system reminder before writing the commit message."

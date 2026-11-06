@@ -54,3 +54,13 @@ occurrences:
     severity: minor
     description: "Chained git commit, push and gate:scoped in one background command, against git-conventions. Gate was green, but a failed step could have hidden behind the chain."
     solution: "Run the push in its own call after reading the gate's exit status."
+  - session: session_013zxzePvZE8fj19sBuiXR94
+    date: "2026-11-05"
+    severity: nit
+    description: "I chained git commit --amend and pnpm gate:scoped in one Bash command, against git-conventions.md; the commit landed first and I verified it."
+    solution: "Run the commit, check it, then start the gate in a separate call."
+  - session: session_013zxzeQWJEVk8sAXq1hcSjq
+    date: "2026-11-05"
+    severity: nit
+    description: "Chained git add -A onto the gate command in one Bash call, against git-conventions.md, before I had read that doc's rule about it."
+    solution: "A hook or CLAUDE.md line that loads the doc before the first staging command, not only before the first non-read-only git command."

@@ -46,3 +46,13 @@ occurrences:
     severity: minor
     description: "Tally rejected fable's report because one lone page had no grade; the Skill covers only parse errors, so I resumed fable and merged its addendum into a copy."
     solution: "Say in glassbox-improve step 2 what to do for a missing grade, or let grades.ts tally accept an addendum file per rater."
+  - session: session_013zxzeQH3GSc8uMpvhebnFr
+    date: "2026-11-03"
+    severity: minor
+    description: "The guest-contributions writer read its brief literally, fixed the one listed item (f15) and wrote no Lesson; I had to resume it, costing about 9 minutes and a second hand-back."
+    solution: "The step brief should name the new page, its title and its folder, and say that the new page is the task; the step's into path (guest-contributions) also differed from the title rule's slug (outside-contributions)."
+  - session: session_013zxzeTJp1jinYqgNJRczgA
+    date: "2026-11-05"
+    severity: minor
+    description: "I forgot step 5's edited:true marking, so the first gate run wrote briefs for only the 2 step pages instead of all 7 edited pages and I regenerated it"
+    solution: "Make grades.ts gate warn when a writer branch changed a page that no item marks edited, or mark items edited from the merged diff"

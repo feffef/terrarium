@@ -1,9 +1,12 @@
 name: glassbox-grades-tally-crashes
 surface: safe
 summary: The glassbox-improve grades.ts tally crashed with a TypeError on a rater's report it did not expect, with no line named.
-cause: "grades.ts tally summary throws a bare TypeError on an input shape it does not validate (a gap written with keys better instead of exemplar and take; a cut step without a gist) instead of naming the offending line; issue #2848 (open) also covers the tally listing already-dropped steps as pending and the lesson-step brief gaps. Signals: 'grades.ts tally', 'TypeError in summary', 'crashed'."
-status: tracked
-ref: "#2848"
+cause: "grades.ts tally summary threw a bare TypeError on an input it did not validate (a gap written with keys better instead of exemplar and take; a cut step without a gist). PR #2862 (2026-11-05) rejects a step with no gist, shows a restated dropped step's history beside it and has the lesson Task name the page to write; a rater report that breaks the shape (a gap shaped as quote and fix, a graded page outside its plan) is still refused by the tally and fixed by hand in the saved hand-back. Signals: 'grades.ts tally', 'TypeError in summary', 'tally rejected the hand-back', 'crashed'."
+status: open
+fixes:
+  - pr: 2862
+    date: "2026-11-05"
+    summary: "glassbox-improve: tally lists the earlier decided date, status and gist beside a restated dropped step, reportProblems rejects a step with no gist, and a lesson step's Task starts with the new page to write (closes #2848)."
 occurrences:
   - session: session_013zxzeSAtjCQiatdUuuFCRJ
     date: "2026-11-03"
@@ -15,3 +18,13 @@ occurrences:
     severity: minor
     description: "grades.ts tally listed two steps as pending that grades.yml already held as dropped, and a cut step without a gist crashed its summary with a TypeError."
     solution: "Print a step's earlier decision beside any re-raise, and require a gist in reportProblems (filed in issue 2848)."
+  - session: session_013zxzeQH3GSc8uMpvhebnFr
+    date: "2026-11-03"
+    severity: nit
+    description: "The tally listed the invariant-tests section step as pending a third time although grades.yml already marked the same step dropped; a researcher then spent a round confirming what the history said."
+    solution: "tally should not relist a step dropped with an unchanged gist inside the churn window."
+  - session: session_013zxzeTJp1jinYqgNJRczgA
+    date: "2026-11-05"
+    severity: minor
+    description: "Rater C7's brief example for rater C shows no gaps shape, so it wrote gaps as quote and fix; the tally rejected the hand-back and I rewrote six lines"
+    solution: "Put a gaps example with section, exemplar and take into the rater C brief template"

@@ -146,3 +146,13 @@ occurrences:
     severity: minor
     description: "Committed while pnpm gate:scoped was running; the gate aborted because HEAD changed, so I reran it, against pr-workflow's edit-nothing-until-it-ends."
     solution: "Treat a commit as an edit while a gate runs; the Stop hook's push ask is safe, a commit is not."
+  - session: session_013zxzeSjNrJGoGzDkoSzhK9
+    date: "2026-11-05"
+    severity: minor
+    description: "Started pnpm gate:scoped before code-review finished, then edited files, so that gate run was wasted. pr-workflow says review first, gate last, edit nothing during it."
+    solution: "Run the gate only after review fixes are committed, as the PR workflow says."
+  - session: session_013zxzeQWJEVk8sAXq1hcSjq
+    date: "2026-11-05"
+    severity: minor
+    description: "Committed locally while pnpm gate:scoped ran in the background, so the gate aborted before its test step and had to be re-run."
+    solution: "Read git-conventions.md first (it says no state-changing git beside a gate) and commit before starting the gate, not during it."

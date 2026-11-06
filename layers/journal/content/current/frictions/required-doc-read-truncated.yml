@@ -39,3 +39,8 @@ occurrences:
     severity: nit
     description: "Bundled the Lessons with cat; one output was persisted to a file and a later Read truncated, costing two extra reads"
     solution: "Read large page sets in chunks under ~35k tokens per call from the start"
+  - session: session_013zxzeTDG9WP45rYE5hRMpG
+    date: "2026-11-06"
+    severity: minor
+    description: "Read docs/agents/github-integration.md with head -80, against CLAUDE.md's read-it-whole rule; a later write trap could have been missed"
+    solution: "Read trigger docs whole with the Read tool; it costs a few hundred tokens"

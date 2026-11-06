@@ -17,6 +17,9 @@ fixes:
   - pr: 2794
     date: "2026-11-02"
     summary: "glassbox-improve v3 keeps run state in repo YAML (grades.yml, runs.yml); scripts/grades.ts plans the rater briefs and tallies, and a blind judge gate decides edits."
+  - pr: 2868
+    date: "2026-11-05"
+    summary: "glassbox-improve caps a run at 8 items and steps together (rest stays pending) and records cost per phase in runs.yml via phases.yml and costBreakdown (relates to #2850)."
 occurrences:
   - session: session_013zxzeQ5JaiqQgggGaNSagD
     date: "2026-10-29"
@@ -58,3 +61,8 @@ occurrences:
     severity: minor
     description: "About a hundred long subagent hand-backs arrived in my context, each re-read to decide the next step; the skill saves them to files but still wants me to read them."
     solution: "Have each hand-back end in a short machine-readable verdict block and give the lead only that, with the full text read from the saved file when needed."
+  - session: session_013zxzeTJp1jinYqgNJRczgA
+    date: "2026-11-05"
+    severity: moderate
+    description: "Eleven raters read all 68 pages, about 2.5M subagent tokens by their usage lines, yet the run takes 8 of 80 items, so most findings were skipped by the cap"
+    solution: "Size the reading plan to the cap: read changed pages plus a short rotation, or do a cheap first pass and let a full rater read only the suspects"

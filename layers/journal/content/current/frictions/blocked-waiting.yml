@@ -59,3 +59,8 @@ occurrences:
     severity: nit
     description: "A foreground sleep to wait for the gate was blocked by the harness; I ended the turn and relied on the completion notification instead, a minor detour."
     solution: "Say in blog-post step 10 to run the gate in the background and end the turn at once."
+  - session: session_013zxzeS7NuFmaoXJkxVfNby
+    date: "2026-11-05"
+    severity: nit
+    description: "I tried a foreground sleep to wait for the gate; the harness blocked it, wasting a call."
+    solution: "End the turn and let the background completion notification wake me."

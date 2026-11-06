@@ -25,3 +25,8 @@ occurrences:
     severity: nit
     description: "Owner's '2 checked the parked ones' was ambiguous; I proceeded on one reading instead of asking, and stated it"
     solution: "Fine here since blocked-check is cheap; for costlier readings, ask"
+  - session: session_013zxzeSbd2LJtWWawqrWBJD
+    date: "2026-11-05"
+    severity: minor
+    description: "I closed #2852 as not planned on my own reading of the owner's accept answer, without asking about the Friction entry; the owner then asked, I edited, and they said leave it."
+    solution: "When an accept answer implies a ledger change, ask in the grilling whether to update the entry as well as close."

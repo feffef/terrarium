@@ -172,3 +172,23 @@ occurrences:
     severity: minor
     description: "Reviewer findings were mostly wrong (17 of 22): reviewers proposed cuts without checking what each original sentence carried, costing two checker runs."
     solution: "Tell reviewers to list each rule and pointer in the original before proposing a cut, as the checkers must."
+  - session: session_013zxzeSjNrJGoGzDkoSzhK9
+    date: "2026-11-05"
+    severity: minor
+    description: "Removed decodeURIComponent on route.hash assuming vue-router decodes it; unchecked, and no test covers deep links."
+    solution: "Check the router's behaviour, or add a deep-link e2e test."
+  - session: session_013zxzeQWJEVk8sAXq1hcSjq
+    date: "2026-11-05"
+    severity: moderate
+    description: "Shipped a price table sourced from the claude-api Skill without checking it against cost_usd, then found it 1.0x to 1.6x too high and redesigned the breakdown."
+    solution: "Test a price table against one get_session cost_usd before building on it; get_session needs no transcript, so the check is cheap."
+  - session: session_013zxzeTJp1jinYqgNJRczgA
+    date: "2026-11-05"
+    severity: minor
+    description: "I stated figures and advice before checking them: about 27 C-rated pages (really 20), about 46 changed pages (really 47), that the recorder fix stops rediscovery (it does not), and post-edit hashes as safe (history showed edited text had the errors). Each needed a corrective message"
+    solution: "Compute counts from the data and read what consumes a field before recommending a change, as CLAUDE.md's verify-before-you-state rule says"
+  - session: session_013zxzeTDG9WP45rYE5hRMpG
+    date: "2026-11-06"
+    severity: minor
+    description: "Posted an unverified guess (sources hash) as the likely cause in the 2871 comment; measuring later showed own edits dominate, needing a correction comment"
+    solution: "Measure a cause before posting it, even flagged as a guess, when the measurement is a few minutes away"

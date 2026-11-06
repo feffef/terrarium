@@ -40,3 +40,8 @@ occurrences:
     severity: minor
     description: "Built the first list of six reopen candidates from the first git -S date for status accepted, which missed relayed-subagent-claims' re-acceptance, so I corrected to five."
     solution: "Read each entry's ref and its latest status commit, not the first, before reporting acceptance dates."
+  - session: session_013zxzeSbd2LJtWWawqrWBJD
+    date: "2026-11-05"
+    severity: nit
+    description: "My quick check of the Friction files' occurrence counts was a sloppy grep that returned meaningless numbers; I left the issues' counts marked unverified instead of recounting."
+    solution: "Count with a short script over the occurrences list, or say unverified up front rather than running a grep that cannot count."

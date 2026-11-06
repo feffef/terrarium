@@ -181,3 +181,13 @@ occurrences:
     severity: nit
     description: "Called the Workflow tool without reading dispatch-subagents first, as CLAUDE.md requires before any subagent brief; the dispatch-read guard blocked the call."
     solution: "Read dispatch-subagents right after reading the clear-backlog Skill, since it launches workflows."
+  - session: session_013zxzeSbd2LJtWWawqrWBJD
+    date: "2026-11-05"
+    severity: nit
+    description: "The Workflow call was blocked by the dispatch-read guard until I read dispatch-subagents; the clear-backlog Skill doesn't name that read."
+    solution: "Name the dispatch-subagents read in clear-backlog section 1, before the first Workflow call."
+  - session: session_013zxzeR86XgVYHo9beEWkmj
+    date: "2026-11-06"
+    severity: minor
+    description: "First Agent call for the fact-check was blocked by the dispatch-read guard because I had not read dispatch-subagents; one wasted call."
+    solution: "Digest step 3 could name dispatch-subagents as a read before the fact-check brief."

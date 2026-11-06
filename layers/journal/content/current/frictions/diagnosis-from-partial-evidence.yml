@@ -18,3 +18,8 @@ occurrences:
     severity: minor
     description: "Guessed a first fix (tf-tokens class alone) and spent a production build on it before probing the portrait's computed styles."
     solution: "Read computed color-scheme and token values with a Playwright probe before the first fix attempt."
+  - session: session_013zxzeTDG9WP45rYE5hRMpG
+    date: "2026-11-06"
+    severity: minor
+    description: "First diagnostic diffed page files naively and reported every page's text changed, missing that pageHash already strips revision lines"
+    solution: "Reuse the Skill's own exported hash functions in a diagnostic from the start"

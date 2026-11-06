@@ -24,3 +24,8 @@ occurrences:
     severity: nit
     description: "First PR #2809 body had a garbled size line, fixed with update_pull_request"
     solution: "Reread the PR body before creating"
+  - session: session_013zxzeS7NuFmaoXJkxVfNby
+    date: "2026-11-05"
+    severity: minor
+    description: "Filed regression issue #2853 with quotes and session ids written from memory (garbled suffixes); I had to rewrite it, despite 'Verify before you state'."
+    solution: "Print the occurrence text with print-ledger-occurrence.ts and paste it, rather than retyping."

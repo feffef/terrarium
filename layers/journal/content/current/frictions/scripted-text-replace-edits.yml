@@ -13,3 +13,8 @@ occurrences:
     severity: minor
     description: "Round-tripping 11 Inventory files through the yaml package reformatted about 2,600 lines; I reverted and redid the edit as a text splice."
     solution: "audit-skills step 5 could name a script that appends an observation without reparsing the file."
+  - session: session_013zxzeSSjEgB5DvGmrLdxP9
+    date: "2026-11-05"
+    severity: minor
+    description: "My first python edit of the Eyra post asserted on a missing string and wrote nothing, yet I committed and resumed the checker; it re-read the unchanged file and a round was wasted."
+    solution: "Check the script's exit status and git diff before committing and before resuming a checker."

@@ -121,3 +121,13 @@ occurrences:
     severity: nit
     description: "My first gate:scoped call set run_in_background and ended with a trailing ampersand; the double-background guard refused it and I resent it plainly."
     solution: "Pass run_in_background alone, as the guard's message and CLAUDE.md say."
+  - session: session_013zxzeSjNrJGoGzDkoSzhK9
+    date: "2026-11-05"
+    severity: nit
+    description: "A Bash call with run_in_background and a trailing & was blocked by the double-background guard."
+    solution: "Pass run_in_background alone with a plain foreground command."
+  - session: session_013zxzeSTMBmmufJQf6nWEjx
+    date: "2026-11-05"
+    severity: nit
+    description: "Sent run_in_background with a trailing & and disown on the gate run; the double-background guard denied it"
+    solution: "Pass run_in_background alone; the guard message said so"

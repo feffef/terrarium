@@ -16,6 +16,9 @@ fixes:
   - pr: 2535
     date: "2026-10-25"
     summary: "Added a general 'Question the premise' bullet to CLAUDE.md's Working conventions, in the wording the owner approved."
+  - pr: 2863
+    date: "2026-11-05"
+    summary: "CLAUDE.md Ask before building: clarify all user-facing UI with extra care, settling in the first round what each displayed value (label, hover, metric) follows (closes #2853)."
 occurrences:
   - session: session_01Wd2WvrPmFRYHAZmf7DYnrG
     date: "2026-10-23"
@@ -37,3 +40,8 @@ occurrences:
     severity: moderate
     description: "I assumed the hover label should always show cost; the user wanted the selected metric. A premise check on the first ask would have caught it."
     solution: "Ask in the first round whether the label follows the metric switch or is fixed to cost."
+  - session: session_013zxzeTDG9WP45rYE5hRMpG
+    date: "2026-11-06"
+    severity: minor
+    description: "Proposed a claim check on cited-file changes without first reading glassbox-update, which already does it daily; the owner had to point out the overlap"
+    solution: "Before proposing a change to one Glass Box Skill, read the sibling Skills that touch the same pages"

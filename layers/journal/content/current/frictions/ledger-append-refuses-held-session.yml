@@ -31,3 +31,8 @@ occurrences:
     severity: minor
     description: "The survey subagent's batched --append aborted on a held session and it reran after grepping; and it left never-fixed labels ledger-derived, skipping the tracker check."
     solution: "The queued ledger-append-refuses-held-session fix (collect all entries' collisions in one error)."
+  - session: session_013zxzeS7NuFmaoXJkxVfNby
+    date: "2026-11-05"
+    severity: minor
+    description: "Survey subagent: a 32-call per-triple --append loop outran the foreground limit; all-or-nothing --append plus --unledgered meant bulk calls wrote nothing; --move refusal looked like success."
+    solution: "Have --append skip held sessions and print refusals clearly; the brief should say how to batch."

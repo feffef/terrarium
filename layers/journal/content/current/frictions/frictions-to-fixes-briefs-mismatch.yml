@@ -99,3 +99,8 @@ occurrences:
     severity: minor
     description: "Survey brief's list_issues CLOSED paging asks for a heavy scan; the survey agent substituted a gh api scan, and the survey omitted each regression's severity-since that its brief requires."
     solution: "Have the survey brief require the since column copied per regression, and name the cheap closed-issue scan."
+  - session: session_013zxzeS7NuFmaoXJkxVfNby
+    date: "2026-11-05"
+    severity: minor
+    description: "Survey brief asks for paging list_issues CLOSED, which contradicts github-integration.md overflow guidance; subagent substituted gh api and could not confirm paraphrase misses."
+    solution: "Replace the CLOSED paging step with a cheap scripted closed-title scan."

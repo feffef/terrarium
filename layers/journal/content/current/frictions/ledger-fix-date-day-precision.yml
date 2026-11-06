@@ -1,0 +1,16 @@
+name: ledger-fix-date-day-precision
+surface: safe
+summary: Fix dates in the ledger and candidate labels have day precision, so a same-day fix and a later Friction (or an owner acceptance) cannot be ordered without git history.
+cause: "A fixes entry stores only a UTC date and acceptance time is stored nowhere, so --candidates labels same-day fixes (#2826, #2828, #2811) as regressions and judging whether a fix came after an owner acceptance needs merged_at and git work. Signals: 'day precision', 'print as regressions', 'acceptance time is stored nowhere', 'checked by hand'."
+status: open
+occurrences:
+  - session: session_013zxzeS7NuFmaoXJkxVfNby
+    date: "2026-11-05"
+    severity: minor
+    description: "Survey/candidates labels use day precision, so same-day fixes (#2826, #2828, #2811) print as regressions and had to be checked by hand."
+    solution: "Compare timestamps in the --summary and --candidates scripts."
+  - session: session_013zxzeQNXfvE3ck6tjqWpYK
+    date: "2026-11-04"
+    severity: minor
+    description: "Acceptance time is stored nowhere and fix dates have day precision, so judging whether a fix came after acceptance needed git history work."
+    solution: "Propose a stored acceptedOn timestamp to the owner as a data-shape question."
