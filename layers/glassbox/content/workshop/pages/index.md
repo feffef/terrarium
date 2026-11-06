@@ -39,17 +39,14 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
    - *Mermaid pre-rendering* (`nuxt-content/07.mermaid-pre-rendering`), which turns diagrams into SVG files;
    - `app/utils/svg.ts`, which checks SVG before a page shows it. Today the guide mentions it only as a linting example.
 3. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
-4. **Retire the drafts.** Promote each draft into the guide or remove it, until no drafts are left.
+4. **Retire the drafts.** Done: the drafts hold no Lessons or Walkthroughs.
 5. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
 
 ### Good next focuses
 
 1. **Propose the Claude Code split** (direction 1), using the ideas about its pages below.
-2. **Decide the last draft,** *A newcomer's first hour* (direction 4).
-   - To promote it, it needs its `revision` set to a current commit, a shorter description and a publish date (`publishedAt`).
-   - The case against it: three of its eight stops only tour the Journal, which Glass Box should link to rather than retell.
-3. **Make titles consistent** (direction 3), one Subject at a time.
-4. **Prepare the web standards Subject** (direction 2) as an issue for the owner, listing the pages it would hold.
+2. **Make titles consistent** (direction 3), one Subject at a time.
+3. **Prepare the web standards Subject** (direction 2) as an issue for the owner, listing the pages it would hold.
 
 ### Ideas not yet decided
 
