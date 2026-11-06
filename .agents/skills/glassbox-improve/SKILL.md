@@ -78,6 +78,9 @@ full claim check). Done when every hand-back is saved and `grades.ts tally`
 accepts them; on a parse error, fix only the line it names in the saved
 hand-back. Resume a stalled rater once with `SendMessage`; if it still
 returns nothing, dispatch a fresh one with the same brief and log a Friction.
+When `tally` reports a page with no grades, resume that rater once naming the
+page; on a second miss, dispatch a fresh rater for that page alone and log a
+Friction.
 
 ## 3. Tally
 
@@ -142,8 +145,8 @@ on the run branch.
 
 ## 7. Blind gate
 
-Run `grades.ts gate --base <base> --out <scratch folder>`. For each page named
-by an `edited` item or a taken step, it writes one judge brief from
+Run `grades.ts gate --base <base> --out <scratch folder>`. For each guide page
+that differs from the base, it writes one judge brief from
 [`judge-brief.md`](judge-brief.md): old and new in random order, with the
 criterion the edit targeted and the house rules; a page new since the base
 has no old version, so `code-review` alone checks it. Dispatch one judge per brief,
