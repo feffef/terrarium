@@ -39,7 +39,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
    - *Mermaid pre-rendering* (`nuxt-content/07.mermaid-pre-rendering`), which turns diagrams into SVG files;
    - `app/utils/svg.ts`, which checks SVG before a page shows it. Today the guide mentions it only as a linting example.
 3. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
-4. **Retire the drafts.** Done: no draft pages are left.
+4. **Retire the drafts.** Done: the drafts hold no Lessons or Walkthroughs.
 5. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
 
 ### Good next focuses
