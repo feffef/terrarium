@@ -141,4 +141,5 @@ turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
   brought up to date with `main`.
 - **`.agents/skills/glassbox-improve/SKILL.md`** — how a run raises the
   guide lens by lens, gating each edit with blind judges; its `grades.yml`
-  holds each page's lens grades and `runs.yml` the recent runs.
+  holds each page's lens grades and the backlog of findings the run's cap
+  skipped, and `runs.yml` the recent runs.

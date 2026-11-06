@@ -25,8 +25,9 @@ as `.agents/skills/...`.
 [`scripts/grades.ts`](scripts/grades.ts) does the counting; its header gives
 each command. It writes the run's state to `run.yml` in the scratch folder
 (`--out`), and at the end [`grades.yml`](grades.yml) (each page's lens grades,
-and the structural steps) and [`runs.yml`](runs.yml) (the last 10 runs'
-metrics and detail). Never edit either file by hand. A v2 `grades.yml` (no
+the structural steps and the backlog of findings the cap skipped) and
+[`runs.yml`](runs.yml) (the last 10 runs' metrics and detail). Never edit
+either file by hand. A v2 `grades.yml` (no
 `version: 3`) reads as empty, so the first v3 run reads every page once and
 its waiting candidates become steps.
 
@@ -87,8 +88,11 @@ first, then gaps; the steps queue, with each inverse of a step taken in the
 last 5 runs refused; and the A comparisons, at most 4. A run takes at most
 `workPerRun` items and steps together (false claims and page checks, then
 pending steps, then deficits and gaps): the rest is marked `skipped` or shown
-as deferred, and a later run finds it again. This keeps a run's cost bounded;
-do not add to the list. Then, in `run.yml`:
+as deferred. This keeps a run's cost bounded; do not add to the list. A finding
+the cap skips waits unresearched in the backlog of `grades.yml`, so it never
+changes a grade. `tally` brings back the entries on pages no rater read again
+(marked `[backlog, found …]`) among the items; a page a rater reads again
+replaces its entries with fresh findings. Then, in `run.yml`:
 
 - **Filters.** Mark `skipped` with its reason every item a `DECISIONS.md` line
   settles, and every fix that would undo a change from the last 2 runs unless
@@ -108,8 +112,9 @@ Run `grades.ts briefs --kind researcher --base <base> --out <scratch folder>`
 hand-back as `research-<name>.md` beside its brief, and dispatch read-only
 researchers on them. Each confirms every item in the source or refuses it with proof. In `run.yml`, set
 each item's `confirmed` to `true` or `false` and each step's `status` to
-`taken` or `dropped`. An unconfirmed item is dropped; a contradicted claim a
-researcher finds is added as a false claim once you confirm it. Done when every
+`taken` or `dropped`. An item a researcher refuses is dropped, and a deficit it
+refuses counts as B; a contradicted claim a researcher finds is added as a
+false claim once you confirm it. Done when every
 kept item and pending step has its answer.
 
 ## 5. Write
