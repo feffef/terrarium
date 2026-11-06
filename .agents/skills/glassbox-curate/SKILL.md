@@ -67,8 +67,8 @@ in a brief as `.agents/skills/...`.
   `git log --oneline origin/main -- <page>` and the run entries that name the
   page. Never reverse a change from the last 5 runs unless it made the page
   false.
-- **Fix.** An opus writer, in its own worktree, quotes the `path:line` behind
-  every sentence it adds or changes.
+- **Fix.** An opus writer quotes the `path:line` behind every sentence it adds
+  or changes.
 - **Check.** A separate sonnet claim checker checks the changed sentences
   and a promoted draft's whole page. `glassbox-update` owns the claim check of
   unchanged text, so leave that to it. Run EVERY-PAGE.md's Check on the
