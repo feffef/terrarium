@@ -58,9 +58,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 
 **Installed Skills.** *Engineering skills* could become part of *Installed Skills* (`skill-pack/01.skill-packs`).
 
-**Git & GitHub.** *Commit and PR attribution* also teaches git hooks, a separate topic that could get its own Lesson.
-
-**Missing Lessons.** None known. *Headless browser checks* (`verification/09.headless-browser-checks`) now covers `scripts/ui/`; it was written from `docs/agents/verifying-ui-changes.md`, and the sharp edges listed there (`<ClientOnly>` timing, CSS traps) are only partly covered.
+**Missing Lessons.** None known. *Headless browser checks* (`verification/09.headless-browser-checks`) now covers `scripts/ui/`; it was written from `docs/agents/verifying-ui-changes.md`. That doc's lists of browser quirks and CSS traps are only partly covered.
 
 **Ideas earlier runs rejected.** Before acting on one, re-check the reasons for and against.
 - Moving the timestamp rule and its warnings from *Content validation* (`verification/03.content-validation`) to *Zod refinements* (`verification/06.schema-validation`).
