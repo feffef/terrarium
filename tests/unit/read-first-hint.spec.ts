@@ -211,8 +211,11 @@ describe('the hook entry (sh pre-filter → tsx)', () => {
 
   it('says to invoke close-session after a successful main-session merge-pr.ts, unless invoked after it', () => {
     const merge = 'pnpm exec tsx scripts/github/merge-pr.ts 12'
-    const merged = (extra: object = {}) => context(run(call(merge, extra)))
+    const merged = (extra: object = {}) => context(run(call(merge, { tool_response: { stdout: '{"merged": true}' }, ...extra })))
     expect(merged()).toContain(MERGE_CLOSE_SESSION_HINT)
+    // merge-pr.ts prints its result and exits 1 when not merged: only the output tells.
+    expect(merged({ tool_response: { stdout: '{"merged": false}' } })).not.toContain(MERGE_CLOSE_SESSION_HINT)
+    expect(merged({ tool_response: undefined })).not.toContain(MERGE_CLOSE_SESSION_HINT)
     expect(merged({ hook_event_name: 'PostToolUseFailure' })).not.toContain(MERGE_CLOSE_SESSION_HINT)
     transcript('m/subagents/agent-s1.jsonl', [{ type: 'user', message: { content: 'go' } }])
     expect(merged({ transcript_path: join(dir, 'm.jsonl'), agent_id: 's1' })).not.toContain(MERGE_CLOSE_SESSION_HINT)

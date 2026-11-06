@@ -12,7 +12,7 @@
 // After a successful `mcp__github__create_pull_request` in the main session it
 // also says to invoke `close-session`, unless the transcript shows it invoked
 // after that PR call, so each PR gets it (issue #2209): prose alone left sessions
-// logging only at the end (issue #1859). After a successful `merge-pr.ts` run it
+// logging only at the end (issue #1859). After a `merge-pr.ts` run whose stdout says merged it
 // says the same for the merge, which ADR-0009 also closes on (issue #2772).
 // Fails open: any error adds nothing. `scripts/hooks/read-first-hint.sh` is the Bash
 // hot-path pre-filter.
@@ -112,7 +112,9 @@ function hintFor(payload: unknown, dryRun = false): string | null {
   const agent = prop(payload, 'agent_id')
   const mainOk = agent === undefined && prop(payload, 'hook_event_name') !== 'PostToolUseFailure'
   const prOpened = mainOk && tool === 'mcp__github__create_pull_request'
-  const merged = mainOk && isMerge(tool, prop(payload, 'tool_input'))
+  const stdout = prop(prop(payload, 'tool_response'), 'stdout')
+  // merge-pr.ts prints its result as JSON and exits 1 when not merged.
+  const merged = mainOk && isMerge(tool, prop(payload, 'tool_input')) && typeof stdout === 'string' && stdout.includes('"merged": true')
   if (docs.length === 0 && !prOpened && !merged) return null
   let records: Record<string, unknown>[] | null
   if (typeof parent !== 'string') records = dryRun && parent === undefined ? [] : null
