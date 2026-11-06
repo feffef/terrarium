@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRJEE2ehNrQTL62nhX
 startedAt: 2026-11-06T20:57:42Z
-endedAt: 2026-11-06T21:12:42Z
+endedAt: 2026-11-06T21:16:35Z
 kind: interactive
 goal: Curate the Glass Box guide with one focus
-status: in-review
-outcome: PR 2908 adds the Headless browser checks Lesson; scoped gate green, CI pending
-summary: 'The user invoked glassbox-curate with no focus. I asked once which focus to take (their stated preference is to ask first); they answered "let the run choose", so I ran in autonomous mode: agent-initiated focus, chosen by me. I ran the orientation script, rejected a git-hooks Lesson (the repo has one hook, already taught by Commit and PR attribution), and confirmed a real gap: the guide never covered the scripts/ui capture tools that several Skills depend on. An opus writer drafted verification/09 Headless browser checks; a sonnet claim checker found nine items (three Why-bullet costs the cited file never states, a screenshot.ts flag that belongs to preview.ts, imprecise stop/PID wording) and a fresh reader asked for sample output and the package choice; I fixed those. code-review Standards and Spec axes found more; I applied the valid ones, kept the preview.ts verb list (a fixed interface) and the dev-warning watch item. Gate green on the pre-review head; the review fixes were prose-only. Opened PR 2908, set pr in the run entry, subscribed. Open: playwright.dev was unreachable, so the Full reference was checked against raw docs source; the Try it install commands were not run.'
+status: completed
+outcome: "PR 2908 merged: adds the Headless browser checks Lesson"
+summary: 'The user invoked glassbox-curate with no focus. I asked once which focus to take (their stated preference is to ask first); they answered "let the run choose", so I ran in autonomous mode: agent-initiated focus, chosen by me. I ran the orientation script, rejected a git-hooks Lesson (the repo has one hook, already taught by Commit and PR attribution), and confirmed a real gap: the guide never covered the scripts/ui capture tools that several Skills depend on. An opus writer drafted verification/09 Headless browser checks; a sonnet claim checker found nine items (three Why-bullet costs the cited file never states, a screenshot.ts flag that belongs to preview.ts, imprecise stop/PID wording) and a fresh reader asked for sample output and the package choice; I fixed those. code-review Standards and Spec axes found more; I applied the valid ones, kept the preview.ts verb list (a fixed interface) and the dev-warning watch item. Gate green on the pre-review head; the review fixes were prose-only. Opened PR 2908, set pr in the run entry, subscribed, posted my verdict once CI gate was green on the head, and merged it with merge-pr.ts. Open: playwright.dev was unreachable, so the Full reference was checked against raw docs source; the Try it install commands were not run.'
 prs:
   - "2908"
 docsRead:
@@ -69,20 +69,26 @@ frictions:
   - description: The curate Skill says autonomous mode asks nothing, while the user's preference is to ask first; I had to reconcile them by asking one focus question.
     solution: Let the Skill say an interactive invocation with no focus should ask one question.
     severity: nit
-durationSec: 901
+  - description: Safety-gate bot comments and a check-suite event named commits other than my PR head, briefly looking like a green on my head; I had to confirm the gate run itself.
+    solution: Have the gate comment and event name the PR head they cover, or say when they are for a merge ref.
+    severity: nit
+durationSec: 1134
 models:
-  claude-sonnet-5-5: 92
+  claude-sonnet-5-5: 121
 toolCounts:
-  Bash: 30
+  Bash: 33
   Read: 9
   AskUserQuestion: 1
   mcp__github__list_pull_requests: 1
   Agent: 5
   Edit: 1
-  Skill: 3
-  ToolSearch: 1
+  Skill: 4
+  ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 6
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/verification/04.unit-and-e2e-tests.md
   - layers/glassbox/content/guide/pages/verification/09.headless-browser-checks.md
@@ -160,35 +166,35 @@ subagents:
     durationSec: 287
     toolCalls: 30
     modelCalls: 29
-    tokenShare: 27.5
+    tokenShare: 22.4
   - type: general-purpose
     task: Claim-check new Lesson
     model: sonnet
     durationSec: 93
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 10
+    tokenShare: 8.2
   - type: general-purpose
     task: Fresh reader pass
     model: sonnet
     durationSec: 14
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 5
+    tokenShare: 4.1
   - type: general-purpose
     task: "Review diff: standards"
     model: sonnet
     durationSec: 35
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 3.9
+    tokenShare: 3.2
   - type: general-purpose
     task: "Review diff: spec"
     model: sonnet
     durationSec: 19
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 3.1
+    tokenShare: 2.5
 gitBranch: ccr-b9edf38b-sk3vtr
 entrypoint: remote_mobile
 cliVersion: 2.1.319
