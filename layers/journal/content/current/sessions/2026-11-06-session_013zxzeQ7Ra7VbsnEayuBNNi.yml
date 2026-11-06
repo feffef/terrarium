@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQ7Ra7VbsnEayuBNNi
 startedAt: 2026-11-06T21:50:36Z
-endedAt: 2026-11-06T22:51:08Z
+endedAt: 2026-11-06T22:52:36Z
 kind: delegated
 goal: "Glass Box curate run: shorten the attribution Lesson"
 status: completed
 outcome: PR 2909 merged with the shortened page, memory page and run entry
-summary: 'The owner invoked /glassbox-curate with no focus. I asked which focus and mode; the owner answered "you decide" and autonomous limits, so the focus choice was agent-initiated within that grant. I ran the orientation, saw the Claude Code pages were edited heavily in recent days, and chose the longest page, Commit and PR attribution. I claimed it with a run entry, cut about 150 words (cuts only, one rewritten sentence checked against commit-trailer.ts), updated the memory page, ran the scoped gate (green) and opened the PR. I skipped the fresh reader, claim checker and subagent code-review to stay in budget: the lead read the diff instead, and the PR and run entry say so. The PR merged after green CI with a posted verdict.'
+summary: 'After the merge the owner asked for the retro findings about the Skill to go into the existing issue 2906 (posted as a comment) and general ones into this log as Frictions. The owner invoked /glassbox-curate with no focus. I asked which focus and mode; the owner answered "you decide" and autonomous limits, so the focus choice was agent-initiated within that grant. I ran the orientation, saw the Claude Code pages were edited heavily in recent days, and chose the longest page, Commit and PR attribution. I claimed it with a run entry, cut about 150 words (cuts only, one rewritten sentence checked against commit-trailer.ts), updated the memory page, ran the scoped gate (green) and opened the PR. I skipped the fresh reader, claim checker and subagent code-review to stay in budget: the lead read the diff instead, and the PR and run entry say so. The PR merged after green CI with a posted verdict.'
 prs:
   - "2909"
 docsRead:
@@ -28,6 +28,9 @@ docsRead:
   - path: layers/glassbox/GLOSSARY.md
     reason: page contract; only skimmed the first part
     useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: how to comment on an existing issue; MCP for writes
+    useful: yes
   - path: layers/glassbox/content/guide/pages/git-github/05.attribution.md
     reason: (read before editing)
 skillsUsed:
@@ -37,7 +40,11 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: writing-for-agents
+    reason: (no reason given)
   - name: glassbox-curate
+    reason: (invoked as a slash command)
+  - name: retro
     reason: (invoked as a slash command)
 frictions:
   - description: Skill says no focus means autonomous, but user preference and CLAUDE.md lean toward asking; I ran orientation, then asked, which cost one round trip.
@@ -46,19 +53,26 @@ frictions:
   - description: I skipped the Skill's fresh-reader and claim-checker steps and the subagent code-review, doing a lead-only read, a deviation from the Skill and pr-workflow.
     solution: Give cut-only edits an explicit lighter path in glassbox-curate, so skipping is allowed rather than a judgement.
     severity: minor
-durationSec: 3632
+  - description: The safety-gate green comments named merge-ref SHAs, not my PR head, so I could not tell whether the head was green and checked its runs by hand.
+    solution: "Add a line to docs/agents/pr-workflow.md step 3: confirm green from the head's check runs, not the SHA in the gate comment."
+    severity: minor
+  - description: I ran gh pr list in a cloud session before reading github-integration.md, and it failed with the documented GraphQL 403.
+    solution: List docs/agents/github-integration.md in the curate Skill's Read first list; findings already collected in issue 2906.
+    severity: nit
+durationSec: 3720
 models:
-  claude-sonnet-5-5: 82
+  claude-sonnet-5-5: 101
 toolCounts:
-  Bash: 21
-  Read: 8
+  Bash: 25
+  Read: 9
   AskUserQuestion: 1
-  Skill: 4
+  Skill: 5
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 4
+  ReadNotifications: 5
   mcp__github__pull_request_read: 4
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__issue_read: 2
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-06T2242.yml
   - layers/glassbox/content/guide/pages/git-github/05.attribution.md
