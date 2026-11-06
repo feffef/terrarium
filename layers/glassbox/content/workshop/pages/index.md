@@ -14,7 +14,7 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 ### Weak spots
 
 - **The Installed Skills pages say little of their own.** *Planning Skills* (`skill-pack/02.planning-with-the-pack`) and *Engineering skills* (`skill-pack/03.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
-- **Two Git & GitHub Lessons are too long.** *Commit and PR attribution* (`git-github/05.attribution`) and *Issue triage labels* (`git-github/06.work-queue`) are the longest pages in the guide.
+- **A Git & GitHub Lesson is still long.** *Issue triage labels* (`git-github/06.work-queue`) is now the longest page in the guide. *Commit and PR attribution* (`git-github/05.attribution`) was shortened on 2026-11-06 and should be left alone for a while.
 - **The Claude Code Subject is tangled.** Several of its pages explain the same mechanisms, and most of the open ideas below are about moving facts between them.
 - **Titles are uneven.** Some name Terrarium's own choice instead of the general concept. Within one Subject, some titles start with the tool's name ("Claude Code hooks") and their neighbours don't ("Subagents").
 
