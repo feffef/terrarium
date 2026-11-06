@@ -42,8 +42,10 @@ every line that applies.
 - Impl agents on the branch you have checked out: detach your checkout first
   and re-sync after hand-back. Each agent bases on a fresh `origin/<branch>`,
   with no same-named local branch.
-- A read-only agent that wants to experiment copies the file aside or uses its
-  own worktree.
+- A read-only or review agent outside its own isolation worktree reads with
+  `git show <sha>:<path>` or `git diff` and never runs `checkout`, `switch` or
+  `reset`; its brief says so. To experiment it copies the file aside or uses
+  its own worktree.
 
 **Stranding**
 - Commit before stopping, even mid-gate: an agent can end at any time.
