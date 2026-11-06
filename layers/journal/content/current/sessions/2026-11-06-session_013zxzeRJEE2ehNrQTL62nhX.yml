@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeRJEE2ehNrQTL62nhX
 startedAt: 2026-11-06T20:57:42Z
-endedAt: 2026-11-06T21:16:35Z
+endedAt: 2026-11-06T21:51:06Z
 kind: interactive
 goal: Curate the Glass Box guide with one focus
 status: completed
@@ -37,6 +37,9 @@ docsRead:
   - path: .agents/skills/glassbox-curate/SKILL.md
     reason: the skill itself; the spec subagent read it and used it as the spec
     useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: read before commenting retro findings on the existing issue; confirmed the comment recipe and that findings go to the issue
+    useful: partly
   - path: layers/glassbox/content/guide/pages/git-github/05.attribution.md
     reason: (no reason given)
   - path: layers/glassbox/content/guide/pages/verification/09.headless-browser-checks.md
@@ -48,11 +51,15 @@ skillsUsed:
     reason: Standards and Spec review before the PR
   - name: close-session
     reason: closure after the PR opened
+  - name: retro
+    reason: retrospective on this session; findings split between issue 2906 and Frictions
   - name: log-session
+    reason: (no reason given)
+  - name: writing-for-agents
     reason: (no reason given)
 frictions:
   - description: Ran my first git command and first GitHub call before reading git-conventions.md and github-integration.md; hooks pointed to them only after the call.
-    solution: Read the CLAUDE.md-triggered docs before the first matching command.
+    solution: Read the CLAUDE.md-triggered docs before the first matching command; a PreToolUse guard could deny the first non-read-only git or GitHub call until that doc is in the transcript, since the hint arrives only after the call.
     severity: minor
   - description: Piped orient.ts output through head -300, which truncated the guide-pages section of its output.
     solution: Redirect orient output to a file and read it whole.
@@ -72,23 +79,24 @@ frictions:
   - description: Safety-gate bot comments and a check-suite event named commits other than my PR head, briefly looking like a green on my head; I had to confirm the gate run itself.
     solution: Have the gate comment and event name the PR head they cover, or say when they are for a merge ref.
     severity: nit
-durationSec: 1134
+durationSec: 3205
 models:
-  claude-sonnet-5-5: 121
+  claude-sonnet-5-5: 143
 toolCounts:
-  Bash: 33
-  Read: 9
+  Bash: 38
+  Read: 10
   AskUserQuestion: 1
   mcp__github__list_pull_requests: 1
   Agent: 5
   Edit: 1
-  Skill: 4
-  ToolSearch: 3
+  Skill: 5
+  ToolSearch: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 4
+  ReadNotifications: 5
   mcp__github__pull_request_read: 6
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__issue_read: 2
 filesEdited:
   - layers/glassbox/content/guide/pages/verification/04.unit-and-e2e-tests.md
   - layers/glassbox/content/guide/pages/verification/09.headless-browser-checks.md
@@ -166,35 +174,35 @@ subagents:
     durationSec: 287
     toolCalls: 30
     modelCalls: 29
-    tokenShare: 22.4
+    tokenShare: 19.5
   - type: general-purpose
     task: Claim-check new Lesson
     model: sonnet
     durationSec: 93
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 8.2
+    tokenShare: 7.1
   - type: general-purpose
     task: Fresh reader pass
     model: sonnet
     durationSec: 14
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 4.1
+    tokenShare: 3.5
   - type: general-purpose
     task: "Review diff: standards"
     model: sonnet
     durationSec: 35
     toolCalls: 8
     modelCalls: 4
-    tokenShare: 3.2
+    tokenShare: 2.7
   - type: general-purpose
     task: "Review diff: spec"
     model: sonnet
     durationSec: 19
     toolCalls: 4
     modelCalls: 3
-    tokenShare: 2.5
+    tokenShare: 2.2
 gitBranch: ccr-b9edf38b-sk3vtr
 entrypoint: remote_mobile
 cliVersion: 2.1.319
