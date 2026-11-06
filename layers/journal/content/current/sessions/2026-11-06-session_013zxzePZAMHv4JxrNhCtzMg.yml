@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePZAMHv4JxrNhCtzMg
 startedAt: 2026-11-06T00:46:07Z
-endedAt: 2026-11-06T00:55:36Z
+endedAt: 2026-11-06T00:58:54Z
 kind: autonomous
 goal: Weekly check of the Platform's own Skills
-status: in-review
-outcome: "Audit done; issue #2874 filed; Inventory PR #2875 open and green"
-summary: "Scheduled audit-skills run, agent-initiated by the schedule (no human prompt). Gathered the 7-day scorecard, had one subagent fetch usage for 7 Routine runs and 12 subagents check one Skill each. All checked Skills delivered their outcomes. Step 3 closure: orphanScan scanned 1905 merged PRs, 1748 with a session; both orphan candidates carry resolvedBy (#736, #1063) and the suppression log shows only resolved-annotation; one human-prompted closure (session_013zxzeRkv6UCWJtPmJ68h32) is already tracked. Filed one issue, #2874, for the dispatch-subagents review-agent checkout repeating a third time (its own prior observation said to escalate then). All other findings went into seven Skill observations, no grade or role changes. Opened PR #2875 (Inventory and Routine rows only) after code-review Standards and Spec found nothing blocking and gate:scoped went green. Left unmerged: closure is not yet completed; merge via merge-pr.ts is the next step."
+status: completed
+outcome: "Audit done; issue #2874 filed; Inventory PR #2875 merged"
+summary: "Scheduled audit-skills run, agent-initiated by the schedule (no human prompt). Gathered the 7-day scorecard, had one subagent fetch usage for 7 Routine runs and 12 subagents check one Skill each. All checked Skills delivered their outcomes. Step 3 closure: orphanScan scanned 1905 merged PRs, 1748 with a session; both orphan candidates carry resolvedBy (#736, #1063) and the suppression log shows only resolved-annotation; one human-prompted closure (session_013zxzeRkv6UCWJtPmJ68h32) is already tracked. Filed one issue, #2874, for the dispatch-subagents review-agent checkout repeating a third time (its own prior observation said to escalate then). All other findings went into seven Skill observations, no grade or role changes. Opened PR #2875 (Inventory and Routine rows only) after code-review Standards and Spec found nothing blocking and gate:scoped went green. Posted my verdict and merged #2875 with merge-pr.ts once CI was green."
 prs:
   - "2875"
 docsRead:
@@ -88,19 +88,21 @@ frictions:
   - description: Subagent reports each listed docs verdicts for rules I then had to relay; pending report lists 20 subagent-only rules and docs.
     solution: Have the brief ask for verdicts in a structured one-line-per-rule form.
     severity: nit
-durationSec: 570
+durationSec: 767
 models:
-  claude-sonnet-5-5: 83
+  claude-sonnet-5-5: 99
 toolCounts:
-  Bash: 21
-  Skill: 4
+  Bash: 26
+  Skill: 5
   Agent: 16
   ToolSearch: 2
   mcp__Claude_Code_Remote__get_session: 1
   mcp__github__issue_write: 1
   mcp__github__create_pull_request: 1
   mcp__github__subscribe_pr_activity: 1
-  mcp__github__pull_request_read: 1
+  mcp__github__pull_request_read: 2
+  ReadNotifications: 2
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/journal/content/current/routines/audit-docs.yml
   - layers/journal/content/current/routines/audit-skills.yml
@@ -199,97 +201,97 @@ subagents:
     durationSec: 26
     toolCalls: 11
     modelCalls: 4
-    tokenShare: 2.9
+    tokenShare: 2.7
   - task: Check audit-docs behaviour
     model: sonnet
     durationSec: 56
     toolCalls: 11
     modelCalls: 9
-    tokenShare: 4.8
+    tokenShare: 4.5
   - task: Check audit-skills behaviour
     model: sonnet
     durationSec: 68
     toolCalls: 16
     modelCalls: 10
-    tokenShare: 5.8
+    tokenShare: 5.4
   - task: Check blog-post behaviour
     model: sonnet
     durationSec: 63
     toolCalls: 17
     modelCalls: 12
-    tokenShare: 5.8
+    tokenShare: 5.4
   - task: Check clear-backlog behaviour
     model: sonnet
     durationSec: 62
     toolCalls: 15
     modelCalls: 9
-    tokenShare: 4.6
+    tokenShare: 4.3
   - task: Check close-session behaviour
     model: sonnet
     durationSec: 56
     toolCalls: 11
     modelCalls: 8
-    tokenShare: 4.2
+    tokenShare: 4
   - task: Check digest behaviour
     model: sonnet
     durationSec: 44
     toolCalls: 12
     modelCalls: 7
-    tokenShare: 4.2
+    tokenShare: 4
   - task: Check dispatch-subagents behaviour
     model: sonnet
     durationSec: 113
     toolCalls: 20
     modelCalls: 14
-    tokenShare: 7.2
+    tokenShare: 6.8
   - task: Check frictions-to-fixes behaviour
     model: sonnet
     durationSec: 65
     toolCalls: 18
     modelCalls: 10
-    tokenShare: 6.2
+    tokenShare: 5.8
   - task: Check glassbox-improve behaviour
     model: sonnet
     durationSec: 55
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 5.5
+    tokenShare: 5.2
   - task: Check glassbox-update behaviour
     model: sonnet
     durationSec: 59
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 4.4
+    tokenShare: 4.1
   - task: Check log-session behaviour
     model: sonnet
     durationSec: 50
     toolCalls: 13
     modelCalls: 8
-    tokenShare: 4.3
+    tokenShare: 4.1
   - task: Check prune-trial behaviour
     model: sonnet
     durationSec: 57
     toolCalls: 12
     modelCalls: 9
-    tokenShare: 4.6
+    tokenShare: 4.3
   - task: Check visitor-loop behaviour
     model: sonnet
     durationSec: 58
     toolCalls: 16
     modelCalls: 8
-    tokenShare: 4.9
+    tokenShare: 4.6
   - task: Standards review of Inventory diff
     model: sonnet
     durationSec: 28
     toolCalls: 8
     modelCalls: 5
-    tokenShare: 3.4
+    tokenShare: 3.2
   - task: Spec review of Inventory diff
     model: sonnet
     durationSec: 44
     toolCalls: 10
     modelCalls: 8
-    tokenShare: 4.1
+    tokenShare: 3.9
 gitBranch: claude/upbeat-sagan-aqzgsd
 entrypoint: remote_trigger
 cliVersion: 2.1.318
