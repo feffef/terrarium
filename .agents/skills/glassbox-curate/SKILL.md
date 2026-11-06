@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 **Goals.** Make the guide easier to learn from, page by page and as a whole.
 Second, fill gaps: a technology or process Terrarium relies on that no Lesson
-teaches. You are an opus lead and choose the steps; improvise.
+teaches. You lead and choose the steps; improvise.
 
 **Shape.** One focus per run (a Subject, a structural question or a gap), about
 $20. Read your spend with `get_session` called with no session id, and stop at
@@ -67,8 +67,8 @@ in a brief as `.agents/skills/...`.
   `git log --oneline origin/main -- <page>` and the run entries that name the
   page. Never reverse a change from the last 5 runs unless it made the page
   false.
-- **Fix.** The writer quotes the `path:line` behind every sentence it adds or
-  changes.
+- **Fix.** An opus writer quotes the `path:line` behind every sentence it adds
+  or changes.
 - **Check.** A separate sonnet claim checker checks the changed sentences
   and a promoted draft's whole page. `glassbox-update` owns the claim check of
   unchanged text, so leave that to it. Run EVERY-PAGE.md's Check on the
