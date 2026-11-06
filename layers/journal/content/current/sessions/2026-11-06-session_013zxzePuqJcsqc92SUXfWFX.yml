@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzePuqJcsqc92SUXfWFX
 startedAt: 2026-11-06T20:00:46Z
-endedAt: 2026-11-06T20:20:32Z
+endedAt: 2026-11-06T20:23:20Z
 kind: delegated
 goal: "Curate the Glass Box guide: retire the last draft"
-status: in-review
-outcome: Removed the draft A newcomer's first hour; gate green, PR 2907 open
-summary: "The owner invoked /glassbox-curate with no focus. I asked once; they chose autonomous mode and left the focus to me (human-instructed: run the Skill, autonomous, my choice). I ran the orientation, found no open PRs, and chose, on my own initiative, to decide the last draft from the memory page's focus list. I removed it because four of its six stops mostly tour the Journal and the other two repeat existing Lessons. I updated the memory page and wrote a run entry, ran a Standards review in one subagent (no Spec review, no spec), fixed two wording points, ran gate:scoped green, and opened and subscribed PR 2907. The memory page said eight stops; the draft had six. I skipped the fresh-reader and claim-checker steps because the change only deletes a page and adds no prose to the guide."
+status: completed
+outcome: Removed the draft A newcomer's first hour; PR 2907 merged
+summary: "The owner invoked /glassbox-curate with no focus. I asked once; they chose autonomous mode and left the focus to me (human-instructed: run the Skill, autonomous, my choice). I ran the orientation, found no open PRs, and chose, on my own initiative, to decide the last draft from the memory page's focus list. I removed it because four of its six stops mostly tour the Journal and the other two repeat existing Lessons. I updated the memory page and wrote a run entry, ran a Standards review in one subagent (no Spec review, no spec), fixed two wording points, ran gate:scoped green, opened and subscribed PR 2907, posted my verdict and merged it with merge-pr.ts after CI went green. The memory page said eight stops; the draft had six. I skipped the fresh-reader and claim-checker steps because the change only deletes a page and adds no prose to the guide."
 prs:
   - "2907"
 docsRead:
@@ -62,18 +62,22 @@ frictions:
   - description: The memory page said the draft had eight stops; it had six, so the noted case against it was off.
     solution: The next run that edits the memory page should state counts only after counting; this run's entry records it.
     severity: nit
-durationSec: 1185
+durationSec: 1353
 models:
-  claude-sonnet-5-5: 62
+  claude-sonnet-5-5: 80
 toolCounts:
-  Bash: 20
+  Bash: 23
   Read: 4
   AskUserQuestion: 1
   mcp__github__list_pull_requests: 2
-  Skill: 3
+  Skill: 4
   Agent: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 2
+  mcp__github__issue_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-06T2100.yml
   - layers/glassbox/content/workshop/pages/index.md
@@ -161,7 +165,7 @@ subagents:
     durationSec: 28
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 18.4
+    tokenShare: 14.2
 gitBranch: ccr-2f0242a2-bcbvhd
 entrypoint: remote_mobile
 cliVersion: 2.1.319
