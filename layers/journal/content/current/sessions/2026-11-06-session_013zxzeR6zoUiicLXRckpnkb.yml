@@ -1,0 +1,83 @@
+schemaVersion: 1
+session: session_013zxzeR6zoUiicLXRckpnkb
+startedAt: 2026-11-06T06:13:22Z
+endedAt: 2026-11-06T06:33:56Z
+kind: interactive
+goal: Find why a Journal session log stayed in review
+status: completed
+outcome: Cause found (filtered log command hid a refusal), log corrected by its own session, issue 2884 filed
+summary: "The user asked why the Journal showed session_013zxzeQDfNNTXpQYQtt9saY as in review with no PR. Per their preference I asked clarifying questions first (they chose: find out why, and a different session). I read that session's log, get_session and result events, and the log on origin/main: its final log update never landed. The user then directed me to message that session, file an issue and ask it to log again; all three were human-instructed, as was updating the issue body. The session's own comment on the issue confirmed the cause: log-session --author refused a completed log because close-session had not run, and a grep filter plus a pipe through head hid both the message and the exit status. It re-authored and commit 437fc629e landed completed on main. I filed issue 2884 and rewrote its body with the confirmed cause. No code changed and no PR was opened."
+prs: []
+docsRead:
+  - path: docs/agents/github-integration.md
+    reason: MCP write rules and list-script advice before filing the issue
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: how to file an issue; needs the verified versus assumed split
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: non-triage Skills file issues as needs-triage
+    useful: yes
+skillsUsed:
+  - name: inspect-session
+    reason: cheap-source-first route to read another session
+  - name: close-session
+    reason: session only answered a question
+  - name: log-session
+    reason: authored this log
+frictions:
+  - description: I ran git fetch before reading git-conventions.md, which CLAUDE.md requires before any git command beyond the read-only list; a hint reminded me afterwards.
+    solution: The first-git-command hint could fire on fetch before it runs, not after.
+    severity: nit
+  - description: My first message to the other session returned delivered, but the user said it could not reply or use SendMessage, so I relayed through them.
+    solution: State in the message that the target may not receive or answer send_message, and ask it to answer in an issue comment.
+    severity: nit
+durationSec: 1235
+models:
+  claude-sonnet-5-5: 40
+toolCounts:
+  AskUserQuestion: 1
+  Skill: 3
+  Bash: 9
+  mcp__claude-code-remote__get_session: 1
+  mcp__claude-code-remote__list_events: 2
+  mcp__claude-code-remote__send_message: 2
+  mcp__github__issue_write: 2
+  mcp__github__issue_read: 1
+rulesLoaded:
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: No PR or merge in this session, so it did not apply; summary was enough
+    useful: no
+  - path: .claude/rules/adr-0009.md
+    reason: Told me never to edit another session's log, so I asked that session to re-log; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Proposing as an issue rather than building matched what I did; no PR opened, summary enough
+    useful: partly
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the issue and sibling messages; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded by reading triage-labels.md; about the triage sweep, unrelated to this task
+    useful: no
+  - path: .claude/rules/adr-0027.md
+    reason: Loaded by reading issue-tracker.md; about prune trials, unrelated to this task
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded by reading github-integration.md; about where instructions live, unrelated to this task
+    useful: no
+gitBranch: ccr-1b54fb65-h5pfge
+entrypoint: remote_mobile
+cliVersion: 2.1.318
+learnings:
+  - log-session --author refuses a completed log when a PR merged and close-session has not run since; its message contains no word error, rejected or invalid.
+landedBy: Stop
