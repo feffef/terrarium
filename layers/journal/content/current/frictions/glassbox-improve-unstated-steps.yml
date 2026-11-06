@@ -11,7 +11,7 @@ fixes:
   - pr: 2709
     date: "2026-10-30"
     summary: "Briefs write Skill paths as .agents/skills; writers add their own Terms and repoint links to a promoted draft; the review requires a new home per deleted sentence."
-  - pr: 2891
+  - pr: 2892
     date: "2026-11-06"
     summary: "grades.ts gate also gates every guide page that differs from the base, on its confirmed items when no item or step names it; step 2 says what to do for a page with no grades."
 occurrences:
