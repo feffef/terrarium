@@ -1,9 +1,10 @@
 // The orientation step of glassbox-curate: everything a run reads before it
 // chooses a focus, in one output. It prints the workshop's memory page, every
 // curate run entry, glassbox-update's check state, the Glass Box terms, the
-// page-check warnings, the guide's git log since the last run, and each guide
-// page's title, description, first paragraph and Where next links. All of it, unfiltered: trim it only once the
-// output grows too large to read.
+// page-check warnings, the git log of the guide and drafts since the last run,
+// and each guide page's title, description, first paragraph and Where next
+// links. All of it, unfiltered: trim it only once the output grows too large to
+// read.
 // Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts
 import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
@@ -33,9 +34,10 @@ export function pageOverview(stem: string, source: string): string {
 const files = (dir: string, pattern: string): [string, string][] =>
   existsSync(dir) ? globSync(pattern, { cwd: dir }).sort().map((f) => [f, readFileSync(join(dir, f), 'utf8')]) : []
 
-/** The guide's commits since `since` (ISO time), or its last 30 when no run has happened yet. */
+/** Commits to the guide and drafts since `since` (ISO time), or their last 30 when no run has happened yet. */
 export function guideLog(since: string | undefined): string {
-  return tryGit(['log', '--oneline', '--no-merges', ...(since ? [`--since=${since}`] : ['-n', '30']), '--', `${content}/guide`], root).out
+  const r = tryGit(['log', '--oneline', '--no-merges', ...(since ? [`--since=${since}`] : ['-n', '30']), '--', `${content}/guide`, `${content}/drafts`], root)
+  return r.ok ? r.out : '(git log failed)'
 }
 
 /** A run entry's file stem, `2026-11-06T0930`, as an ISO time: the entry's shape has no date field. */
@@ -58,7 +60,7 @@ export function orientation(base = join(root, content), log = guideLog): string 
     section('glassbox-update checks', checks.map(([, t]) => t.trim()).join('\n')),
     section('Terms', terms.map(([f, t]) => `## ${f}\n${t.trim()}`).join('\n')),
     section('Page-check warnings', warnings.join('\n')),
-    section(runs.length ? 'Guide changes since the last curate run' : 'Last 30 guide changes (no curate run yet)', log(runs[0] ? runStart(runs[0][0]) : undefined)),
+    section(runs.length ? 'Guide and drafts changes since the last curate run' : 'Last 30 guide and drafts changes (no curate run yet)', log(runs[0] ? runStart(runs[0][0]) : undefined)),
     section('Guide pages', guide.map(([f, t]) => pageOverview(f.replace(/\.md$/, ''), t)).join('\n\n')),
   ].join('\n\n')
 }
