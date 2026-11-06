@@ -1,8 +1,8 @@
 ---
 title: A friction becomes a fix
 description: How a pain-point one agent logs becomes a change to the instructions later agents work under, through a scheduled Skill.
-revision: 'f24d21037680455f0ec7ff04e82af3383444b297'
-revisionDate: '2026-11-05'
+revision: '072fab38ecac37f9f9500c4394a42ff2cdf54ade'
+revisionDate: '2026-11-06'
 publishedAt: '2026-11-03T13:25:30Z'
 ---
 
@@ -52,7 +52,7 @@ One subagent reads the logs and hands back a short ranked report. It reads every
 
 ## 5. It screens out what a fix can't help
 
-The subagent checks each candidate against the changes merged since its sessions, the open issues and PRs, and the open :term[Prune Trial]s. It labels each one never-fixed, dropped, already tracked or a regression, and ranks what is left.
+The subagent checks each candidate against the changes merged since its sessions, the open and closed issues, the open PRs, and the open :term[Prune Trial]s. It labels each one never-fixed, dropped, already tracked or a regression, and ranks what is left.
 
 ::lessons
 [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Pruning instructions](/t/glassbox/guide/terrarium-practice/pruning-instructions) · :file[scripts/git/list-merges-since.ts]
