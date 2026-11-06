@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeTDG9WP45rYE5hRMpG
 startedAt: 2026-11-06T00:29:45Z
-endedAt: 2026-11-06T00:32:06Z
+endedAt: 2026-11-06T00:35:26Z
 kind: interactive
 goal: Review two glassbox-improve cost proposals
 status: completed
-outcome: Verdict and suggestions posted on issues 2871 and 2872; neither cuts run cost
-summary: "Human-instructed: read issues 2871 (backlog, grades change only on evidence) and 2872 (materiality bar) and judge whether they solve the glassbox-improve run cost; then, on a second ask, post a verdict and suggestions on each. I checked the issues' claims against grades.ts (nextRecord resets unconfirmed C/D to B, capWork slot order) and runs.yml (last run 34.98 USD, rating 56.7%). Main finding, agent-initiated analysis: every v3 run reads every page (pagesRead equals pagesChecked in all five runs), so the rotation in planPages never narrows; that, not slot allocation, is the cost lever. Verdict: 2871 Part 1 is a good correctness fix, the backlog needs a cap and expiry, 2872 is sound but cost-neutral. Why the changed set covers every page is unverified (guess: sources hash churn)."
+outcome: Verdicts posted on issues 2871 and 2872; measured cause and cost proposal posted on 2805
+summary: "Human-instructed: read issues 2871 (backlog, grades change only on evidence) and 2872 (materiality bar) and judge whether they solve the glassbox-improve run cost; then post a verdict and suggestions on each; then, after the owner set the goal (cost per run, spend on real improvements not churn, some lost recall acceptable, feed into the 2792 review), post a cost proposal. Verdict: 2871 Part 1 is a good correctness fix, its backlog needs a cap and expiry, 2872 is sound but cost-neutral. Agent-initiated: I measured why every v3 run reads all pages by recomputing planPages' changed set with the real pageHash/sourcesHash across the five run bases. The main cause is a run's own edits re-entering 'changed' next run, then cited-file changes (including whole cited directories) and the one-third rotation. My earlier guess posted on 2871 (sources hash) was wrong, so I posted a correction there. Chose 2805 for the proposal because 2792 is closed and 2805 is the open cost issue parked on that review; told the owner."
 prs: []
 docsRead:
   - path: docs/agents/github-integration.md
@@ -18,6 +18,12 @@ docsRead:
   - path: docs/agents/issue-tracker.md
     reason: grep for comment conventions before posting; nothing specific to comments
     useful: no
+  - path: docs/agents/git-conventions.md
+    reason: read after the first git fetch; confirmed fetch-before-history, nothing I did contradicted it
+    useful: partly
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: "set-up and review-after-runs sections: rotation every 3 runs and the cost review criteria"
+    useful: yes
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -33,14 +39,23 @@ frictions:
   - description: Page count from ls (66) did not match runs.yml pagesRead (68); left unexplained, so I wrote 'every page' without a verified total
     solution: Count guide pages with the same function grades.ts uses before comparing
     severity: nit
-durationSec: 140
+  - description: Ran git fetch before reading docs/agents/git-conventions.md, against CLAUDE.md's read-first trigger; the hook hint caught it
+    solution: Read git-conventions.md at session start when a task may need history
+    severity: nit
+  - description: First diagnostic diffed page files naively and reported every page's text changed, missing that pageHash already strips revision lines
+    solution: Reuse the Skill's own exported hash functions in a diagnostic from the start
+    severity: minor
+  - description: Posted an unverified guess (sources hash) as the likely cause in the 2871 comment; measuring later showed own edits dominate, needing a correction comment
+    solution: Measure a cause before posting it, even flagged as a guess, when the measurement is a few minutes away
+    severity: minor
+durationSec: 341
 models:
-  claude-opus-5-5: 33
+  claude-opus-5-5: 69
 toolCounts:
-  Bash: 8
+  Bash: 22
   ToolSearch: 2
-  mcp__github__issue_read: 4
-  mcp__github__add_issue_comment: 2
+  mcp__github__issue_read: 5
+  mcp__github__add_issue_comment: 4
   Skill: 2
 rulesLoaded:
   - .claude/rules/adr-0027.md
@@ -78,6 +93,8 @@ entrypoint: remote_mobile
 cliVersion: 2.1.318
 learnings:
   - "Inferred, not verified: glassbox-improve's planPages rotation never narrows in practice, because the changed set covers nearly every page each run"
+  - glassbox-improve reads every page each run mainly because a run's own gated edits change pageHash, so the next run re-reads them; rotationRuns=3 sweeps up the rest
 ideas:
   - Have grades.ts plan write, per page, which trigger put it in the read set (text hash, sources hash, never read, rematch, rotation) into runs.yml, so the 2792 review can see why every run reads all pages and target the claim-check cost
+  - Add a grades.ts plan --why flag that prints, per page, which trigger put it in the read set, backed by a unit test, so cost regressions from read-set growth show in the plan output
 landedBy: Stop
