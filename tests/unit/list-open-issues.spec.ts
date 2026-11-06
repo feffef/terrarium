@@ -3,7 +3,7 @@
 // shell is a thin wrapper over these, exercised by running the script
 // directly (`tsx scripts/github/list-open-issues.ts`).
 import { describe, expect, it } from 'vitest'
-import { openIssues, toOpenIssue, type RawIssueApiRecord } from '../../scripts/github/list-open-issues.ts'
+import { openIssues, parseArgs, toOpenIssue, type RawIssueApiRecord } from '../../scripts/github/list-open-issues.ts'
 
 describe('toOpenIssue()', () => {
   it('maps a plain issue record to an OpenIssue, decoding the title', () => {
@@ -59,3 +59,16 @@ describe('openIssues()', () => {
   })
 })
 
+describe('parseArgs()', () => {
+  it('defaults to open issues, limit 50', () => {
+    expect(parseArgs([])).toEqual({ state: 'open', limit: 50 })
+  })
+  it('--closed selects closed issues, in any position beside the limit', () => {
+    expect(parseArgs(['--closed'])).toEqual({ state: 'closed', limit: 50 })
+    expect(parseArgs(['20', '--closed'])).toEqual({ state: 'closed', limit: 20 })
+    expect(parseArgs(['--closed', '20'])).toEqual({ state: 'closed', limit: 20 })
+  })
+  it('rejects a non-positive limit', () => {
+    expect(() => parseArgs(['0'])).toThrow('not a positive integer: 0')
+  })
+})

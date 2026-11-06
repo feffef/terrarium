@@ -1,4 +1,4 @@
-// The list-open-issues helper: turns "what open issues exist right now" —
+// The list-open-issues helper: turns "what open (or, with --closed, closed) issues exist right now" —
 // today answered via `mcp__github__list_issues`/`search_issues`, which return
 // full issue bodies with no compact mode and have overflowed the tool's own
 // output-token ceiling four times across a recent 20-session survey window
@@ -24,13 +24,19 @@
 // does the helper exit, with an actionable message pointing at the MCP
 // fallback rather than a bare ENOENT.
 //
-// Usage:  tsx scripts/github/list-open-issues.ts [N]
-//   Prints up to N open issues (default 50) as JSON:
-//   { number, title, labels, updatedAt }. Newest-updated-first.
+// `--closed` lists closed issues instead, same shape: the survey brief uses it
+// to look for an already-fixed cause without paging `list_issues` (issue #2877).
+// The file keeps its name because other scripts import its types.
+//
+// Usage:  tsx scripts/github/list-open-issues.ts [N] [--closed]
+//   Prints up to N open (or, with --closed, closed) issues (default 50) as
+//   JSON: { number, title, labels, updatedAt }. Newest-updated-first.
 import { fail, root, runIfMain } from '../lib/cli.ts'
 import { decodeHtmlEntities, listAll, NO_ACCESS_MESSAGE, resolveAccess, type Access } from '../lib/github-client.ts'
 
 const DEFAULT_LIMIT = 50
+
+type IssueState = 'open' | 'closed'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -66,7 +72,7 @@ export function toOpenIssue(raw: RawIssueApiRecord): OpenIssue | null {
   }
 }
 
-/** The `limit` most-recently-updated open issues out of `records`,
+/** The `limit` most-recently-updated issues (open or closed, per the state fetched) out of `records`,
  *  newest-first. Pull requests are silently skipped (see `toOpenIssue`);
  *  records are re-sorted by their own `updated_at` rather than trusting API
  *  order, since pages arrive one after another rather than as a single global
@@ -96,14 +102,14 @@ const withCaveat = (err: unknown): Error => {
   return new Error(`${msg}. ${MCP_FALLBACK_CAVEAT}`, { cause: err })
 }
 
-export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root): OpenIssue[] {
+export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root, state: IssueState = 'open'): OpenIssue[] {
   let access: Access
   try {
     access = resolveAccess(cwd)
   } catch (err) {
     throw err instanceof Error && err.message === NO_ACCESS_MESSAGE ? withCaveat(err) : err
   }
-  const list = () => openIssues(listAll<RawIssueApiRecord>(access, 'issues', { state: 'open' }), limit)
+  const list = () => openIssues(listAll<RawIssueApiRecord>(access, 'issues', { state }), limit)
   if (access.strategy === 'gh') return list()
   try {
     return list()
@@ -114,15 +120,23 @@ export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root): OpenIssue[] {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
+export function parseArgs(argv: string[]): { state: IssueState; limit: number } {
+  const state: IssueState = argv.includes('--closed') ? 'closed' : 'open'
+  const limitArg = argv.find((a) => a !== '--closed')
+  if (limitArg === undefined) return { state, limit: DEFAULT_LIMIT }
+  const limit = Number(limitArg)
+  if (!Number.isInteger(limit) || limit <= 0) throw new Error(`not a positive integer: ${limitArg}`)
+  return { state, limit }
+}
+
 function main(): void {
-  const argv = process.argv.slice(2)
-  const limitArg = argv[0]
-  let limit = DEFAULT_LIMIT
-  if (limitArg !== undefined) {
-    limit = Number(limitArg)
-    if (!Number.isInteger(limit) || limit <= 0) fail(`not a positive integer: ${limitArg}`)
+  let args: ReturnType<typeof parseArgs>
+  try {
+    args = parseArgs(process.argv.slice(2))
+  } catch (err) {
+    fail(err instanceof Error ? err.message : String(err))
   }
-  process.stdout.write(JSON.stringify(listOpenIssues(limit), null, 2) + '\n')
+  process.stdout.write(JSON.stringify(listOpenIssues(args.limit, root, args.state), null, 2) + '\n')
 }
 
 runIfMain(import.meta.url, main)
