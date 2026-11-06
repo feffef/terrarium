@@ -23,36 +23,6 @@
 #            topic's tools correctly.
 trials:
   - problem: >
-      CLAUDE.md "Docs you must read first" git bullet cut (-1 net, from
-      `git diff --numstat`: 2 added, 3 deleted; this entry not counted): the
-      list of mutating commands (commit, fetch, pull, rebase, amend, reset)
-      dropped, since the rule is already "beyond the read-only ones"; the
-      trigger string `read-first-hint.ts` quotes stays. Chosen after the search
-      subagent covered the instruction corpus, guard headers and the tracker:
-      the read-first block failed as prose (#1754, #1819, #2066, #2475, #2543;
-      ledger `binding-docs-skipped`), and the hints cover only git, GitHub,
-      issue writes and screenshots. Little text to cut. Left alone: the "Every
-      subagent brief" bullet and "Verify before you state" (open
-      dispatch-subagents trial), "Question the premise" (owner-approved wording),
-      the foreground-gate bullet (already trialled, #2426 closed). Same run
-      judged and deleted the `pr-workflow.md` review-before-push trial (landed
-      67c211d6): 36 sessions started since, no major or blocker Friction traces
-      to it; rates flat (prepush-gate-review-skipped 10.7% -> 10.3%); the one
-      rise, edit-during-gate-run 12.6% -> 17.2% (5 of 29 sessions), is edits
-      made while a gate ran, which the cut text did not touch, so no issue.
-    territory:
-      paths:
-        - "CLAUDE.md: 'Docs you must read first', the git bullet"
-      keywords:
-        - Before your first git command
-    opened: 2026-11-03
-    proven: true
-    check: >
-      Damage is a major or blocker Friction where a session ran a mutating git
-      command (commit, rebase, reset...) without reading git-conventions.md
-      and the missing command list would have prevented it. NOT damage: a late
-      read the hint already counts as accepted (`binding-docs-skipped`).
-  - problem: >
       Backgrounding prose in the guard comments and `dispatch-subagents` §3
       (-21 net, from `git diff --numstat` against the parent: 9 added, 30
       deleted in `subagent-background-guard.ts`, `double-background-guard.ts`
@@ -117,3 +87,34 @@ trials:
       sentence would have prevented it. NOT damage: the nit/minor
       `edit-during-gate-run` hits that the gate's own abort catches, its
       standing rate (compare its share of sessions with `friction-rates.ts`).
+  - problem: >
+      Doc comments in `scripts/hooks/github-provenance-guard.ts` (-53 net, from
+      `git diff --numstat`: 46 added, 99 deleted; code unchanged, this entry
+      not counted): the per-function recaps and incident tags ("not dead code
+      despite #784", "never throws", the field-by-field restatements) cut; the
+      header keeps the rule, its five failed-prose issues, the finding kinds
+      and the fail-open list. Chosen after the search subagent covered the
+      instruction corpus, guard headers, the tracker and the ledger: the
+      session-id rule failed as prose five times (#387, #605, #628, #723, #788;
+      ledger `session-id-hand-typed`, 10 occurrences) and this wired guard holds
+      it, and its 124 comment lines are the largest single home. The deny
+      messages, `adr-0017.md` and `guards.md` stay. Runners-up:
+      `loop-only-tool-guard.ts` comments (#814) and the close-session prose
+      (#2521, #2772). Same run judged and deleted the CLAUDE.md git-bullet
+      trial (landed ae537404): 36 sessions ended since, no major or blocker
+      Friction traces to it; binding-docs-skipped 0/148 -> 0/27. The one
+      moderate git hit (a review subagent ran `git checkout --detach`) was not
+      the cut command list; no issue.
+    territory:
+      paths:
+        - "scripts/hooks/github-provenance-guard.ts: comments"
+      keywords:
+        - provenance guard
+    opened: 2026-11-06
+    proven: true
+    check: >
+      Damage is a major or blocker Friction where a session edited the guard
+      wrongly, or a guard change regressed (a compliant post denied or a
+      missing header let through), and a cut comment would have prevented it.
+      NOT damage: sessions hitting the guard's deny (`session-id-hand-typed`
+      at its standing rate); the code and deny messages are unchanged.
