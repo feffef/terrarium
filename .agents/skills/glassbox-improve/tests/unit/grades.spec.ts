@@ -2,7 +2,7 @@
 // the blind comparisons, the next record and the drafts report. The git shell runs in the Skill.
 import { describe, expect, it } from 'vitest'
 import type { GlassboxGit } from '../../../../../layers/glassbox/page-checks.ts'
-import { agentBriefs, blindPair, claimShards, judgeBrief, lensDefinition, raterBrief, comparisonResult, coverageProblems, decodeVerdict, draftsReport, gateCriteria, gateMerged, nextRecord, pageHash, parseReport, runEntry, planPages, readRecord, reportProblems, sourcesHash, stepCriterion, tally, trimPage, workPerRun, type GradeRecord, type PageRecord, type Plan, type Report, type RunEntry, type Step, type Tally, type Vote } from '../../scripts/grades.ts'
+import { agentBriefs, blindPair, claimShards, judgeBrief, lensDefinition, raterBrief, comparisonResult, coverageProblems, decodeVerdict, draftsReport, gateCriteria, gateMerged, nextRecord, pageHash, parseReport, runEntry, planPages, readRecord, reportProblems, sourcesHash, stepCriterion, tally, trimPage, workPerRun, type BacklogEntry, type GradeRecord, type Item, type PageRecord, type Plan, type Report, type RunEntry, type Step, type Tally, type Vote } from '../../scripts/grades.ts'
 
 const page = '---\ntitle: Hooks\nrevision: abc\nrevisionDate: 2026-10-01\n---\nBody\n::excerpt{path="a.ts" lines="3-5"}\n'
 
@@ -52,6 +52,7 @@ candidates:
   })
   it('reads an absent file as empty', () => {
     expect(readRecord(undefined)).toEqual({ version: 3, pages: {}, steps: [] })
+    expect(readRecord('version: 3\npages: {}\nsteps: []\nbacklog:\n  - { page: a/01.p, kind: deficit, lens: clarity, grade: C, fix: f, found: "2026-11-05" }\n').backlog).toEqual([{ page: 'a/01.p', kind: 'deficit', lens: 'clarity', grade: 'C', fix: 'f', found: '2026-11-05' }])
   })
 })
 
@@ -265,6 +266,29 @@ describe('tally', () => {
     ])
   })
 
+  it('brings back backlog entries on pages no rater read again, and lets a fresh read replace the rest', () => {
+    const entry = (e: Partial<BacklogEntry> & Pick<BacklogEntry, 'page' | 'kind'>): BacklogEntry => ({ grade: 'C', fix: 'old fix', found: '2026-11-03', ...e })
+    const held: GradeRecord = {
+      ...record(),
+      backlog: [
+        entry({ page: 'a/01.p', kind: 'deficit', lens: 'clarity', quote: 'replaced' }),
+        entry({ page: 'a/04.p', kind: 'deficit', lens: 'reasoning', grade: 'D', quote: 'comes back' }),
+        entry({ page: 'a/09.gone', kind: 'deficit', lens: 'clarity', quote: 'page is gone' }),
+        entry({ page: 'b/01.p', kind: 'falseClaim', quote: 'replaced claim', source: 'x.ts:1' }),
+        entry({ page: 'a/03.p', kind: 'gap', lens: 'clarity', quote: 'Lede', exemplar: 'a/02.p' }),
+      ],
+    }
+    const a = reportA({ 'a/01.p': { clarity: { grade: 'C', findings: [{ quote: 'fresh', fix: 'f' }] }, reasoning: { grade: 'B' } } })
+    const result = tally(held, { ...plan, read: ['a/01.p', 'b/01.p'] }, [a], [], {}, today)
+    // The fresh C on a/01.p replaces its entry; a/04.p was not read, so its D comes back first; the claim on a read page is dropped.
+    expect(result.items.map((i) => [i.page, i.kind, i.quote, i.fromBacklog ?? false, i.found])).toEqual([
+      ['a/04.p', 'deficit', 'comes back', true, '2026-11-03'],
+      ['a/01.p', 'deficit', 'fresh', false, undefined],
+      ['a/03.p', 'gap', 'Lede', true, '2026-11-03'],
+    ])
+    expect(result.items[2]!.skipped).toBe('a/02.p holds no A on clarity')
+  })
+
   it('keeps a dropped step dropped when raised again with the same gist; nextRecord prunes it after 5 runs', () => {
     const dropped: Step = { id: 'cut-p', kind: 'cut', pages: ['a/04.p'], raised: ['2026-11-02'], status: 'dropped', decided: '2026-11-02', gist: 'g' }
     const b: Report = { rater: 'B', pages: [], steps: [{ kind: 'cut', pages: ['a/04.p'], gist: 'g' }] }
@@ -419,6 +443,30 @@ describe('nextRecord and runEntry', () => {
   it('keeps each lens\'s last edit, so an edit on another lens leaves its pause', () => {
     const before = { ...old, pages: { ...old.pages, 'a/02.p': { hash: 'h', sources: 's', lenses: {}, edited: { reasoning: '2026-11-02', clarity: '2026-10-01' } } } }
     expect(nextRecord(before, plan, current, result, runs, today).pages['a/02.p']!.edited).toEqual({ reasoning: '2026-11-02', clarity: today })
+  })
+
+  it('changes a lens grade only on evidence: unresearched findings leave it and wait in the backlog', () => {
+    const left = { skipped: 'over the 8 items a run takes', deferred: true }
+    const items: Item[] = [
+      { id: 'f1', page: 'a/01.p', kind: 'deficit', lens: 'reasoning', grade: 'C', quote: 'q1', fix: 'fix1', ...left },
+      { id: 'f2', page: 'a/02.p', kind: 'deficit', lens: 'clarity', grade: 'D', quote: 'q2', fix: 'fix2', ...left },
+      { id: 'f3', page: 'a/02.p', kind: 'falseClaim', quote: 'runs daily', source: 'x.ts:3', fix: 'correct it to match x.ts:3', ...left },
+      { id: 'f4', page: 'a/02.p', kind: 'check', fix: 'stop 1 has 81 words', ...left },
+      { id: 'f5', page: 'a/03.p', kind: 'gap', lens: 'clarity', quote: 'Lede', exemplar: 'a/01.p', fix: 'take', fromBacklog: true, found: '2026-10-30', ...left },
+      { id: 'f6', page: 'a/02.p', kind: 'deficit', lens: 'reasoning', grade: 'C', quote: 'q6', fix: 'fix6', confirmed: false },
+    ]
+    const grades = { 'a/01.p': { clarity: 'B', reasoning: 'C' }, 'a/02.p': { clarity: 'D', reasoning: 'C' } } as Tally['grades']
+    const next = nextRecord(old, plan, current, { ...result, grades, items, comparisons: [] }, runs, today)
+    // Skipped, so a/01.p keeps the B it had; a/02.p had no clarity grade and gets none; a refuted C is B.
+    expect(next.pages['a/01.p']!.lenses.reasoning).toEqual(old.pages['a/01.p']!.lenses.reasoning)
+    expect(next.pages['a/02.p']!.lenses).toEqual({ reasoning: { grade: 'B', run: today } })
+    expect(next.backlog).toEqual([
+      { page: 'a/01.p', kind: 'deficit', lens: 'reasoning', grade: 'C', quote: 'q1', fix: 'fix1', found: today },
+      { page: 'a/02.p', kind: 'deficit', lens: 'clarity', grade: 'D', quote: 'q2', fix: 'fix2', found: today },
+      { page: 'a/02.p', kind: 'falseClaim', quote: 'runs daily', source: 'x.ts:3', fix: 'correct it to match x.ts:3', found: today },
+      { page: 'a/03.p', kind: 'gap', lens: 'clarity', quote: 'Lede', exemplar: 'a/01.p', fix: 'take', found: '2026-10-30' },
+    ])
+    expect(nextRecord(old, plan, current, result, runs, today).backlog).toBeUndefined()
   })
 
   it('takes A only through a confirmed deficit, and keeps a lone win only from the run before', () => {
