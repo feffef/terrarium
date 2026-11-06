@@ -1,0 +1,219 @@
+schemaVersion: 1
+session: session_013zxzeNeTKPqiQ1jj1FgYXh
+startedAt: 2026-11-06T19:35:42Z
+endedAt: 2026-11-06T19:49:38Z
+kind: interactive
+goal: "Glass Box curate run: add a Lesson on git plumbing"
+status: in-review
+outcome: New Git plumbing Lesson, Walkthrough link, memory page and run entry are in an open PR with a green scoped gate
+summary: "The user ran /glassbox-curate with no focus; I asked one question and they chose autonomous mode (the only human instruction beyond the kickoff). Everything after was agent-initiated within the Skill's remit. Orientation showed no prior curate runs and no open PRs, so I took the memory page's concrete gap, no Lesson on building commits without a checkout (how session logs land on main), over the long-page weak spots, which sat on pages edited in the last days. I claimed the focus with a pushed run entry, had an opus writer draft git-github/08.git-plumbing from log-session.ts, ADR-0009 and the git docs, then ran a sonnet claim checker and a no-repo fresh reader. The checker found an overstated GIT_INDEX_FILE claim and a cost wrongly attributed to ADR-0009; the reader found undefined terms and Try it prerequisites that would fail without a git identity. All were fixed. code-review (Standards and Spec) then found a Walkthrough link that breaks the Where next contract and a memory-page sentence about the run's own work; both were fixed after the gate passed, as prose-only commits. PR 2905 is open and subscribed. Open: the CI result and any review comments. The git-scm.com pages were unreachable (403), so the git claims were checked against the docs' source on GitHub, and the PR says so."
+prs:
+  - "2905"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson, Excerpt and Term contracts the page had to follow
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin, Write and Check rules; mechanism not motive
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: Lenses; only skimmed for the review brief
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: Closed rulings; none applied to a new page
+    useful: no
+  - path: docs/agents/git-conventions.md
+    reason: Hook sent me to it after my first git fetch; held the commit-tree warning the Lesson cites
+    useful: yes
+  - path: docs/adr/0009-session-logs-commit-directly-to-main.md
+    reason: Source of the Why bullets for building the commit from main
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: Review-before-PR steps and what counts as simple
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: Hook pointed to it after my first MCP call; MCP write guidance
+    useful: partly
+  - path: docs/research/github-branch-protection-vs-autonomous-log-commits.md
+    reason: Only grep output showed its opening lines; not needed
+    useful: no
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: Spec review subagent read it; it was also my brief in the prompt
+    useful: yes
+  - path: scripts/session/log-session.ts
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/02.git-worktrees.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/git-github/08.git-plumbing.md
+    reason: (read before editing)
+skillsUsed:
+  - name: glassbox-curate
+    reason: the run itself
+  - name: dispatch-subagents
+    reason: brief rules before dispatching writer, reader, checker
+  - name: code-review
+    reason: Standards and Spec review before opening the PR
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran git fetch before reading docs/agents/git-conventions.md, and an MCP PR list before github-integration.md; both CLAUDE.md triggers. A hook then pointed to each.
+    solution: Read the trigger docs right after the Skill's orientation step, before the first non-read-only git or GitHub call.
+    severity: nit
+  - description: git-scm.com returned 403, so the writer and checker verified git claims from the docs source on GitHub, and the mode 100644 meaning stayed unsourced.
+    solution: Allow git-scm.com in the environment, or have EVERY-PAGE name the raw git/git docs path as a standard fallback.
+    severity: nit
+  - description: The first draft overstated that all five plumbing commands use GIT_INDEX_FILE and pinned a cost on ADR-0009 that it does not state; the claim checker caught both.
+    solution: Keep the separate claim checker step; tell writers to cite a cost to code, not to an ADR that does not state it.
+    severity: minor
+  - description: The Skill says autonomous mode asks nothing, but the user's preference was to ask first and the invocation named no focus, so I asked one mode question.
+    solution: Say in the Skill how a user-started run with no focus should choose its mode.
+    severity: nit
+durationSec: 837
+models:
+  claude-sonnet-5-5: 85
+toolCounts:
+  AskUserQuestion: 1
+  Bash: 23
+  Read: 9
+  mcp__github__list_pull_requests: 1
+  Skill: 4
+  Agent: 5
+  Edit: 1
+  get_session_placeholder: 1
+  mcp__claude-code-remote__get_session: 1
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/walkthroughs/session-log-lands-on-main.md
+  - layers/glassbox/content/guide/pages/git-github/08.git-plumbing.md
+  - layers/glassbox/content/workshop/runs/2026-11-06T1936.yml
+  - layers/glassbox/content/workshop/pages/index.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0009.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-curate/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the PR; the summary was enough, pr-workflow held the steps
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Open the PR myself and subscribe; the Skill already settled approval, so the full ADR was not needed
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body header and commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; no trial covered the text I touched
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill layout; I changed no Skill
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement; I added no term
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Told me to read the Glass Box glossary, which I had already read
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: Loaded with the glossary; I added no term
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on a read; no Human-only file was in the PR
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; I wrote none
+    useful: no
+  - path: .claude/rules/adr-0002.md
+    reason: Loaded when I read tenant.config.ts; I changed no manifest
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Loaded by the same read; I added no stored field
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Loaded on a content read; I added no component
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded on a layer file read; irrelevant to a Lesson
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: No counts, ids or line numbers in prose; shaped the brief and the review
+    useful: yes
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagram in this page
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Blog pingbacks; unrelated, loaded by a grep over scripts
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR style; I edited no ADR
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Write git plumbing Lesson
+    model: opus
+    durationSec: 251
+    toolCalls: 30
+    modelCalls: 26
+    tokenShare: 24.2
+  - type: general-purpose
+    task: Fresh reader of Git plumbing
+    model: sonnet
+    durationSec: 23
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 5.1
+  - type: general-purpose
+    task: Claim-check Git plumbing
+    model: sonnet
+    durationSec: 112
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 9.9
+  - type: general-purpose
+    task: Standards review of diff
+    model: sonnet
+    durationSec: 29
+    toolCalls: 5
+    modelCalls: 4
+    tokenShare: 7.3
+  - type: general-purpose
+    task: Spec review of diff
+    model: sonnet
+    durationSec: 34
+    toolCalls: 4
+    modelCalls: 4
+    tokenShare: 7
+gitBranch: claude/practical-meitner-87xquf
+entrypoint: remote
+cliVersion: 2.1.319
+learnings:
+  - Of the five git plumbing commands, only read-tree, update-index and write-tree use GIT_INDEX_FILE; hash-object and commit-tree do not.
+  - The commit-msg hook runs for git commit and git merge but not for commit-tree, so a plumbing commit must carry its own trailer.
+landedBy: Stop
