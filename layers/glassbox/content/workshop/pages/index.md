@@ -58,10 +58,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 
 **Installed Skills.** *Engineering skills* could become part of *Installed Skills* (`skill-pack/01.skill-packs`).
 
-**Git & GitHub.** *Commit and PR attribution* also teaches git hooks, a separate topic that could get its own Lesson.
-
-**Missing Lessons.**
-- **UI checks.** The scripts in `scripts/ui/` (preview, screenshots) are mentioned only on *Subagents*. Check whether this is really a gap before writing a Lesson.
+**Missing Lessons.** None known. *Headless browser checks* (`verification/09.headless-browser-checks`) now covers `scripts/ui/`; it was written from `docs/agents/verifying-ui-changes.md`. That doc's lists of browser quirks and CSS traps are only partly covered.
 
 **Ideas earlier runs rejected.** Before acting on one, re-check the reasons for and against.
 - Moving the timestamp rule and its warnings from *Content validation* (`verification/03.content-validation`) to *Zod refinements* (`verification/06.schema-validation`).
@@ -76,6 +73,7 @@ Earlier runs turned these down. Each stays turned down until something in the re
 - **Moving the payload-size reason from *queryCollection* to *Data fetching*.** Both pages already state it, so moving it gains nothing.
 - **Moving the URL-resolver facts from *Multi-tenant isolation* to *File routing*.** They belong with isolation, because that is where their testability matters.
 - **Merging *Engineering skills* into *Planning Skills*.** That would undo a recent split.
+- **A Lesson on git hooks.** The repo has one hook, `.githooks/commit-msg`, and *Commit and PR attribution* already teaches hooks and trailers; a separate Lesson would repeat it.
 - **Splitting the unattended triage sweep out of *Issue triage labels*.** It came too soon after the page last changed. The page's length is still a problem.
 
 ## Curate runs
