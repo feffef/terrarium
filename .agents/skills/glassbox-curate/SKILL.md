@@ -71,8 +71,9 @@ in a brief as `.agents/skills/...`.
   changes.
 - **Check.** A separate sonnet claim checker checks the changed sentences
   and a promoted draft's whole page. `glassbox-update` owns the claim check of
-  unchanged text, so leave that to it. Run EVERY-PAGE.md's Check on the changed pages, and a fresh reader re-reads
-  them. One retry, then drop the change.
+  unchanged text, so leave that to it. Run EVERY-PAGE.md's Check on the
+  changed pages, and a fresh reader re-reads them. One retry, then drop the
+  change.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
   the memory page, complete the run entry, open one self-merged PR
