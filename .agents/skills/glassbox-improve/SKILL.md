@@ -78,6 +78,9 @@ full claim check). Done when every hand-back is saved and `grades.ts tally`
 accepts them; on a parse error, fix only the line it names in the saved
 hand-back. Resume a stalled rater once with `SendMessage`; if it still
 returns nothing, dispatch a fresh one with the same brief and log a Friction.
+When `tally` reports a page with no grades, resume that rater once naming the
+page; on a second miss, dispatch a fresh rater for that page alone and log a
+Friction.
 
 ## 3. Tally
 

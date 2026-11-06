@@ -757,12 +757,17 @@ export function agentBriefs(kind: 'researcher' | 'writer', state: Pick<RunState,
   }))
 }
 
-/** What each page's gate judge is told its edits targeted: this run's edited items and taken steps. */
-export function gateCriteria(items: Item[], steps: Step[], run: string): Map<string, string[]> {
+/** What each page's gate judge is told its edits targeted: this run's edited items and taken steps. A `changed` page
+ *  neither names falls back to its confirmed items, so an unmarked edit is still gated (issue #2878). */
+export function gateCriteria(items: Item[], steps: Step[], run: string, changed: string[] = []): Map<string, string[]> {
   const criteria = new Map<string, string[]>()
   const add = (page: string, text: string) => criteria.set(page, [...(criteria.get(page) ?? []), text])
   for (const i of items.filter((i) => i.edited)) add(i.page, `${i.lens ?? i.kind}: ${i.fix}`)
   for (const s of steps.filter((s) => s.status === 'taken' && (s.decided ?? run) === run)) for (const p of new Set([...s.pages, ...(s.into ? [s.into] : [])])) add(p, stepCriterion(s, p))
+  for (const page of changed.filter((p) => !criteria.has(p))) {
+    const confirmed = items.filter((i) => i.page === page && i.confirmed)
+    add(page, confirmed.map((i) => `${i.lens ?? i.kind}: ${i.fix}`).join('; ') || 'the page as a whole')
+  }
   return criteria
 }
 
@@ -1033,7 +1038,9 @@ runIfMain(import.meta.url, () => {
   if (command === 'gate') {
     stamp(out, 'gate')
     const wanted = flags.pages?.split(',').filter(Boolean)
-    const criteria = gateCriteria(state.items, state.steps, state.run)
+    const dir = pagesDir('guide')
+    const changed = git(['diff', '--name-only', '--no-renames', sha, '--', dir], root).split('\n').filter((f) => f.endsWith('.md')).map((f) => f.slice(dir.length + 1, -3))
+    const criteria = gateCriteria(state.items, state.steps, state.run, changed)
     const briefs: string[] = []
     for (const [page, list] of [...criteria].filter(([p]) => !wanted || wanted.includes(p))) {
       const path = `${pagesDir('guide')}/${page}.md`
