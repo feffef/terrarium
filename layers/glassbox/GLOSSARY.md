@@ -149,3 +149,6 @@ turned into hyphens: `:term[Nuxt & Vue]` reads `nuxt-vue.yml`,
   guide lens by lens, gating each edit with blind judges; its `grades.yml`
   holds each page's lens grades and the backlog of findings the run's cap
   skipped, and `runs.yml` the recent runs.
+- **`.agents/skills/glassbox-curate/SKILL.md`** — how a run makes the guide
+  easier to learn from and fills gaps, one focus at a time; its state lives in
+  the `workshop` Space.
