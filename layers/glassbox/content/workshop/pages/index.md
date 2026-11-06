@@ -26,10 +26,10 @@ Each curate run rewrites this section from what it learned. It holds facts and l
 
 The drafts Space holds one page, `walkthroughs/a-newcomers-first-hour`. Zod and TypeScript have no Subject of their own; they are taught inside Verification (`verification/06.schema-validation`, `verification/02.type-checking`), though the Glass Box glossary lists both among what the guide teaches.
 
-**Strong.** Five Walkthroughs were promoted from drafts between 2026-11-02 and 2026-11-04, so 8 of the 10 Walkthroughs the spec (#1985) listed are now in the guide. The claim check works: it fixed 31 false claims in five runs. The one A grade ever given went to `claude-code/05.blocking-hooks` (Reasoning), which can serve as a model for Why bullets.
+**Strong.** Five Walkthroughs were promoted from drafts between 2026-11-02 and 2026-11-04, so 8 of the 10 Walkthroughs the spec (#1985) listed are now in the guide. The claim check works: it fixed 31 false claims in five runs.
 
 **Weak.**
-- **Installed Skills** drew the most findings per page across the five runs: `skill-pack/02.planning-with-the-pack` 12, `skill-pack/03.engineering-skills` 11. The record suggests why: the pages mostly retell upstream Skills, with little decided by Terrarium.
+- **Installed Skills:** `skill-pack/02.planning-with-the-pack` and `skill-pack/03.engineering-skills` mostly retell upstream Skills, with little decided by Terrarium.
 - **Long Lessons:** `git-github/05.attribution` (about 1,700 words, the longest) and `git-github/06.work-queue` (about 1,550).
 - **Titles** are uneven (see the owner's direction below).
 - **Gaps in numbering** left by folds: Nuxt Content has no 06, House rules no 06, Verification no 07 or 09.
@@ -40,13 +40,6 @@ The drafts Space holds one page, `walkthroughs/a-newcomers-first-hour`. Zod and 
 - **Churn.** A page promoted or kept on one day was folded a few runs later. `nuxt-content/06.prose-overrides` was promoted on 2026-11-02 and folded into `nuxt-content/05.mdc-components` on 2026-11-05. `verification/09.invariant-tests` was kept by three runs and then folded into `verification/04.unit-and-e2e-tests` on 2026-11-05.
 - **Titles that don't match.** The title and the file stem often differ (see below), and some titles name Terrarium's choice instead of the concept. `verification/07.timestamps-stored-as-strings` was one; it is now folded.
 
-**What the history taught.**
-- Absolute grades carry no signal: 389 of 390 lens grades were B (#2896).
-- The blind gate passed 109 of 110 edits.
-- What worked: a researcher confirming each finding before a writer acts, and the claim check as one agent's main job.
-- Improve runs cost $35 to $117 each and read the whole guide every time.
-- The record suggests the useful unit is one focus read closely, not a grade per page.
-
 ### Roadmap
 
 **Next runs**, ranked:
@@ -54,13 +47,13 @@ The drafts Space holds one page, `walkthroughs/a-newcomers-first-hour`. Zod and 
 1. **Claude Code structure.** It is the largest Subject. Four open leads move text out of its pages, and the owner wants it split (below).
 2. **Title consistency.** It is the owner's direction, and the mismatches are listed below.
 3. **The last draft.** Promote or remove `walkthroughs/a-newcomers-first-hour` (below), which empties the drafts Space.
-4. **Installed Skills.** Its pages have the most findings. One move is open (`skill-pack/03.engineering-skills` into `skill-pack/01.skill-packs`), and one merge was refused (below).
+4. **Installed Skills.** Its pages mostly retell upstream Skills (above). One move is open (`skill-pack/03.engineering-skills` into `skill-pack/01.skill-packs`), and one merge was refused (below).
 5. **A git plumbing Lesson.** This is the open gap with the clearest source (below).
-6. **The long Git & GitHub Lessons.** `git-github/05.attribution` teaches git hooks inside a page about attribution. The idea of a separate git hooks Lesson came from one rater only (session `013zxzeSvdGh`).
+6. **The long Git & GitHub Lessons.** `git-github/05.attribution` teaches git hooks inside a page about attribution. The idea of a separate git hooks Lesson was raised once (session `013zxzeSvdGh`).
 7. **The two cross-Subject moves whose history conflicts** (see Open leads): `verification/03.content-validation` and `nuxt-vue/06.use-async-data`.
 8. **Small loose ends:**
    - `terrarium-practice/04.session-logs`' "Old logs never change" bullet doesn't link `verification/08.schema-evolution` (session `013zxzeSkTLm`; still true).
-   - Retitle candidates the raters split on: Self-improvement loop (`013zxzeQRYzC`), Workflow scripts (`013zxzeRoWcN`), Engineering skills and Hook-added context (`013zxzeSvdGh`).
+   - Retitle candidates earlier runs disagreed on: Self-improvement loop (`013zxzeQRYzC`), Workflow scripts (`013zxzeRoWcN`), Engineering skills and Hook-added context (`013zxzeSvdGh`).
    - Whether `git-github/06.work-queue`'s Why bullets still restate `terrarium-practice/01.human-in-the-loop` and `git-github/04.trust-tiers` (`013zxzeRoWcN`; not re-checked).
 
 **The bigger arc.** The guide is moving from page polish to structure. The goals:
@@ -100,7 +93,7 @@ These are the owner's decisions of direction, not findings. A new Subject still 
 
 **Missing Lessons within existing Subjects:**
 - **Git plumbing** (Git & GitHub). Building a commit without a checkout, which the session-log lander relies on. Only stop 6 of `walkthroughs/session-log-lands-on-main` shows it, and no guide page names `GIT_INDEX_FILE`. This lead has been open since 2026-11-05.
-- **Git hooks** (Git & GitHub). Taught only inside `git-github/05.attribution`. A lead from one rater.
+- **Git hooks** (Git & GitHub). Taught only inside `git-github/05.attribution`. Raised once.
 - **UI checks** (Verification). `scripts/ui/` (preview, screenshot, eval-in-page) is named only on `claude-code/07.subagents`. This is likely a gap, not yet confirmed by a run.
 - **Journal digests and pingbacks.** ADR-0010 and ADR-0012 are the only ADRs no guide page cites. They may be uncovered on purpose, as Journal internals; no run has decided.
 
@@ -108,7 +101,7 @@ These are the owner's decisions of direction, not findings. A new Subject still 
 - **Web standards: CSS and SVG** (the owner's direction above).
 - No other topic in the record calls for a new Subject.
 
-**Claims raters could not source** (session `013zxzeQH3GS`; update's claim check owns these):
+**Claims earlier runs could not source** (session `013zxzeQH3GS`; update's claim check owns these):
 - the two incident stories on `terrarium-practice/07.human-only-list`;
 - whether a Routine runs `dependabot-sweep`. PR #2869 found no Routine file for it, yet `claude-code/10.routines` lists it.
 
@@ -123,7 +116,7 @@ These are page changes earlier improve runs weighed and turned down. Each stays 
 - **Moving the payload-size reason and the query-outside-useAsyncData warning from `nuxt-content/04.query-collection` to `nuxt-vue/06.use-async-data`** (2026-11-03). Both pages state them. It was dropped, and a later session (`013zxzeQH3GS`) proposed a ruling that the payload-size reason lives on Data fetching and Query collection only links to it.
 - **Moving the resolver facts from `nuxt-content/02.multi-tenant-isolation` to `nuxt-vue/02.file-routing`, beside `useSpace`** (2026-11-04). Dropped as undoing recent work. Isolation keeps the resolver's testability.
 
-**Refused** (both by the churn guard, which blocks undoing a recent change):
+**Refused** (both as undoing a recent change):
 - **Merging `skill-pack/03.engineering-skills` into `skill-pack/02.planning-with-the-pack`** (2026-11-04). The record likely means it would undo the 2026-11-02 split of `planning-with-the-pack`. The open lead into `skill-pack/01.skill-packs` is a different home for the same page.
 - **Splitting the unattended triage sweep out of `git-github/06.work-queue`** (2026-11-05). The page had just received Out-of-scope records on 2026-11-04, so the record suggests the split came too soon. Its length is still a live problem.
 
