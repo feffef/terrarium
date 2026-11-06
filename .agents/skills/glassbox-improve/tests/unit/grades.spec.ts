@@ -679,7 +679,7 @@ describe('agentBriefs', () => {
   it('gates a changed page no item marks edited, on its confirmed items', () => {
     const seen: Item[] = [{ ...items[0]!, page: 'z/01.q', lens: 'clarity', fix: 'fixz', confirmed: true }]
     expect(gateCriteria(seen, [], '2026-11-05T0900', ['z/01.q', 'z/02.q']).get('z/01.q')).toEqual(['clarity: fixz'])
-    expect(gateCriteria(seen, [], '2026-11-05T0900', ['z/02.q']).has('z/02.q')).toBe(true)
+    expect(gateCriteria(seen, [], '2026-11-05T0900', ['z/02.q']).get('z/02.q')).toEqual(['the page as a whole'])
   })
 })
 
