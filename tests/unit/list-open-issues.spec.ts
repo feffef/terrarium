@@ -59,7 +59,6 @@ describe('openIssues()', () => {
   })
 })
 
-
 describe('parseArgs()', () => {
   it('defaults to open issues, limit 50', () => {
     expect(parseArgs([])).toEqual({ state: 'open', limit: 50 })

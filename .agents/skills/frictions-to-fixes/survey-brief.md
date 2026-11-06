@@ -165,10 +165,13 @@ resolution.
      window's output can overflow you). Find the fixing commit or PR there
      rather than comparing git timestamps by hand. Capture stdout and stderr
      separately: diagnostics go to stderr and break the JSON on stdout.
-   - Before labelling a candidate never-fixed, filter
-     `pnpm exec tsx scripts/github/list-open-issues.ts > {SCRATCH_DIR}/open-issues.json` output locally by the
-     Friction's tool name and error text, and likewise
-     `pnpm exec tsx scripts/github/list-open-issues.ts 200 --closed > {SCRATCH_DIR}/closed-issues.json`. A title match is a hint, not proof, and a
+   - Before labelling a candidate never-fixed, list open and closed issues,
+     then filter both locally by the Friction's tool name and error text.
+     The closed listing holds only the 200 most recently updated, so an
+     older fix surfaces through `merges.json` instead:
+     `pnpm exec tsx scripts/github/list-open-issues.ts > {SCRATCH_DIR}/open-issues.json`
+     `pnpm exec tsx scripts/github/list-open-issues.ts 200 --closed > {SCRATCH_DIR}/closed-issues.json`
+     A title match is a hint, not proof, and a
      miss alone proves nothing: also eyeball nearby issues (same file,
      script or mechanism) for a closed one covering the same root cause in
      other words. A paraphrase or a nearby instance of an already-fixed
