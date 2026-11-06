@@ -1,14 +1,16 @@
 schemaVersion: 1
 session: session_013zxzeQDfNNTXpQYQtt9saY
 startedAt: 2026-11-06T02:07:29Z
-endedAt: 2026-11-06T02:23:42Z
+endedAt: 2026-11-06T02:29:46Z
 kind: autonomous
 goal: "Scheduled run: turn logged session Frictions into fixes"
 status: in-review
-outcome: Ledger PR open, four issues filed, one doc fix being built; closing ledger PR still to come
-summary: "Scheduled frictions-to-fixes run (all work agent-initiated by the schedule; no human prompt). A survey subagent filed 57 window Frictions into the ledger, opened three entries and recorded four merged fixes. I filed regression issues #2876, #2877 and #2878 (mechanism-claim-from-recall, frictions-to-fixes-briefs-mismatch, glassbox-improve-unstated-steps) and skipped glassbox-grades-run-key (its post-fix occurrence is a different, already closed brief bug) and the owner-accepted or on-trial entries. A design agent recommended: no change for ledger-fix-date-day-precision (the exact-time check already exists), an issue for the merge-close hint (hook is Human-only, #2879), and a one-line rater-brief fix, which a Sonnet agent is building. Ledger PR #2880 is open and gated green. Still to do: review, push and merge the rater-brief PR, then the closing ledger PR and final log."
+outcome: Ledger PR and rater-brief fix merged, four issues filed; closing ledger PR open
+summary: "Scheduled frictions-to-fixes run (all work agent-initiated by the schedule; no human prompt). A survey subagent filed 57 window Frictions into the ledger, opened three entries and recorded four merged fixes. I filed regression issues #2876, #2877 and #2878 (mechanism-claim-from-recall, frictions-to-fixes-briefs-mismatch, glassbox-improve-unstated-steps) and skipped glassbox-grades-run-key (its post-fix occurrence is a different, already closed brief bug) and the owner-accepted or on-trial entries. A design agent recommended: no change for ledger-fix-date-day-precision (the exact-time check already exists), an issue for the merge-close hint (hook is Human-only, #2879), and a one-line rater-brief fix, built by a Sonnet agent and merged as #2881. Ledger PR #2880 merged after a green gate; closing ledger PR #2882 (records #2881 as a fix) is open. A force-push to the reused branch name was denied by the auto-mode classifier; a plain push worked because the old branch was already merged."
 prs:
   - "2880"
+  - "2881"
+  - "2882"
 docsRead:
   - path: docs/agents/github-integration.md
     reason: issue writes go through MCP; list script for open issues
@@ -65,18 +67,23 @@ frictions:
   - description: I only skimmed the added lines of the 55-file ledger diff before opening its PR; the diff is mostly script-pruned data, so I relied on the gate.
     solution: Give the Skill a cheap diff summary command for the ledger PR review step.
     severity: nit
-durationSec: 973
+durationSec: 1337
 models:
-  claude-sonnet-5-5: 69
+  claude-sonnet-5-5: 112
 toolCounts:
-  Bash: 21
+  Bash: 32
   Agent: 4
   Skill: 3
   ToolSearch: 1
   mcp__github__issue_write: 4
-  mcp__github__create_pull_request: 1
-  mcp__github__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 3
+  mcp__github__subscribe_pr_activity: 3
+  ReadNotifications: 3
+  mcp__github__pull_request_read: 5
+  mcp__github__add_issue_comment: 2
 filesEdited:
+  - layers/journal/content/current/frictions/glassbox-grades-rater-off-plan.yml
+  - .agents/skills/glassbox-improve/rater-brief.md
   - layers/journal/content/current/frictions/adr-check-output-oversized.yml
   - layers/journal/content/current/frictions/adr-check-scope-in-skill-runs.yml
   - layers/journal/content/current/frictions/blocked-waiting.yml
@@ -90,7 +97,6 @@ filesEdited:
   - layers/journal/content/current/frictions/foreground-gate.yml
   - layers/journal/content/current/frictions/frictions-to-fixes-briefs-mismatch.yml
   - layers/journal/content/current/frictions/gate-background-advice-conflict.yml
-  - layers/journal/content/current/frictions/glassbox-grades-rater-off-plan.yml
   - layers/journal/content/current/frictions/glassbox-improve-unstated-steps.yml
   - layers/journal/content/current/frictions/journal-content-breaks-main.yml
   - layers/journal/content/current/frictions/late-read-first-docs.yml
@@ -150,8 +156,6 @@ rulesLoadedBySubagents:
   - .claude/rules/adr-0004-human-merge.md
   - .claude/rules/guards.md
   - .claude/rules/adr-0030.md
-docsReadBySubagents:
-  - .agents/skills/glassbox-improve/rater-brief.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Told me the gate and merge limits; summary was enough, I did not open the full ADR
@@ -206,20 +210,20 @@ subagents:
     durationSec: 402
     toolCalls: 42
     modelCalls: 34
-    tokenShare: 38.8
+    tokenShare: 28.7
   - type: general-purpose
     task: Design three fixes
     durationSec: 131
     toolCalls: 22
     modelCalls: 15
-    tokenShare: 11.5
+    tokenShare: 8.5
   - type: general-purpose
     task: Build rater brief fix
     model: sonnet
-    durationSec: 21
-    toolCalls: 7
-    modelCalls: 6
-    tokenShare: 7.1
+    durationSec: 93
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 5.9
 gitBranch: claude/eager-ptolemy-73r019
 entrypoint: remote_trigger
 cliVersion: 2.1.318
