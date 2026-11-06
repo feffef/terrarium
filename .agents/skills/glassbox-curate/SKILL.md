@@ -85,8 +85,8 @@ in a brief as `.agents/skills/...`.
 All in `layers/glassbox/content/workshop/`:
 
 - `pages/index.md`, the memory page: each run rewrites it with facts and leads,
-  never procedures, within 1,500 words
-  (`layers/glassbox/tests/unit/workshop.spec.ts` enforces the cap).
+  never procedures, within the word cap that
+  `layers/glassbox/tests/unit/workshop.spec.ts` enforces.
 - `runs/<YYYY-MM-DDTHHMM>.yml`: one entry per run, named by its UTC start time.
   Its shape is the `runs` Collection in `layers/glassbox/tenant.config.ts`. A
   `changes` entry is `page | what changed | why`, `page` being the guide page's

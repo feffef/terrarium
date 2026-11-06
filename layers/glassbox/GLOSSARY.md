@@ -47,8 +47,8 @@ Terrarium applies them without reading the source.
   `glassboxSubjects` in `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
   `/t/glassbox/workshop`, is one page of state for the improvement Skills: a
   memory text, one entry per curate run and glassbox-update's check state. It
-  has no sidebar entry and no link from the guide; its memory text is capped at
-  1,500 words.
+  has no sidebar entry and no link from the guide; its memory text has a word
+  cap (`layers/glassbox/tests/unit/workshop.spec.ts`).
 - **Shown in progress.** The Platform homepage gives Glass Box its own band
   under the hero, labelled the newest experiment and work in progress, with
   both Spaces and a guide Lesson of the day; when it's finished, the label
