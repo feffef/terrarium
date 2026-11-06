@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQwTKjoSLKH31R1ijd
 startedAt: 2026-11-06T13:15:26Z
-endedAt: 2026-11-06T13:26:14Z
+endedAt: 2026-11-06T15:22:21Z
 kind: autonomous
 goal: "Scheduled prune-trial run: judge open trials, prune one problem"
-status: in-review
-outcome: "PR 2895 open: git-bullet trial judged and deleted, provenance-guard comments pruned (-53); waits for a human merge"
-summary: "Scheduled run, no human prompt; everything was the Skill's own instructions. Judged the CLAUDE.md git-bullet trial (landed 2026-11-03): no major or blocker Friction traces to it, binding-docs-skipped 0/148 -> 0/27, so the prune holds and the entry was deleted. The other two trials are not judgeable until 11-07 and 11-08. A search subagent ranked failed-prose candidates; I chose the comments of github-provenance-guard.ts (rule failed as prose five times, wired guard holds it, 124 comment lines). Cut 99 comment lines, added 46, no code line changed, 84 unit tests and gate:scoped green. A Sonnet probe pinned to the post-prune SHA answered six situations correctly. The file is under scripts/hooks, so the PR needs a human merge. Skipped the two-agent code-review fan-out as overkill for a comment-only diff with no spec; I read the full diff myself instead."
+status: completed
+outcome: "PR 2895 merged: git-bullet trial judged and deleted, provenance-guard comments pruned (-53)"
+summary: "Scheduled run, no human prompt; everything was the Skill's own instructions. Judged the CLAUDE.md git-bullet trial (landed 2026-11-03): no major or blocker Friction traces to it, binding-docs-skipped 0/148 -> 0/27, so the prune holds and the entry was deleted. The other two trials are not judgeable until 11-07 and 11-08. A search subagent ranked failed-prose candidates; I chose the comments of github-provenance-guard.ts (rule failed as prose five times, wired guard holds it, 124 comment lines). Cut 99 comment lines, added 46, no code line changed, 84 unit tests and gate:scoped green. A Sonnet probe pinned to the post-prune SHA answered six situations correctly. The file is under scripts/hooks, so the PR needed a human merge; a human merged it. Skipped the two-agent code-review fan-out as overkill for a comment-only diff with no spec; I read the full diff myself instead."
 prs:
   - "2895"
 docsRead:
@@ -48,18 +48,22 @@ frictions:
   - description: Stop hook flagged uncommitted changes while a subagent search ran; I committed the trial deletion early rather than with the prune.
     solution: Fine as is; the early commit was harmless and still part of the one PR.
     severity: nit
-durationSec: 648
+  - description: extract-frictions wrote 245KB of JSON to a file with no per-severity view, so I wrote an ad hoc python filter to find major and blocker hits.
+    solution: Give extract-frictions a --min-severity flag for the trial-judging use.
+    severity: nit
+durationSec: 7615
 models:
-  claude-sonnet-5-5: 60
+  claude-sonnet-5-5: 75
 toolCounts:
-  Bash: 20
+  Bash: 22
   Read: 6
   Agent: 2
-  Skill: 3
+  Skill: 4
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   PushNotification: 1
+  ReadNotifications: 4
 filesEdited:
   - .agents/prune-trials.yml
   - scripts/hooks/github-provenance-guard.ts
@@ -120,14 +124,14 @@ subagents:
     durationSec: 219
     toolCalls: 27
     modelCalls: 24
-    tokenShare: 32.1
+    tokenShare: 21.8
   - type: general-purpose
     task: Probe pruned guard comments
     model: sonnet
     durationSec: 31
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 4.4
+    tokenShare: 3
 gitBranch: claude/practical-rubin-a1k7vy
 entrypoint: remote_trigger
 cliVersion: 2.1.318
