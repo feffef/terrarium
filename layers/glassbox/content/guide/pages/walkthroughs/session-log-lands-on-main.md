@@ -64,7 +64,7 @@ Instead of `git commit`, which commits what is staged on the current branch, the
 ::
 
 ::lessons
-[Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+[Git plumbing](/t/glassbox/guide/git-github/git-plumbing) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
 ::
 
 ## 7. The push retries until it lands
