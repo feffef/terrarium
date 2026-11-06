@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeTDG9WP45rYE5hRMpG
 startedAt: 2026-11-06T00:29:45Z
-endedAt: 2026-11-06T00:35:26Z
+endedAt: 2026-11-06T00:40:41Z
 kind: interactive
 goal: Review two glassbox-improve cost proposals
 status: completed
-outcome: Verdicts posted on issues 2871 and 2872; measured cause and cost proposal posted on 2805
-summary: "Human-instructed: read issues 2871 (backlog, grades change only on evidence) and 2872 (materiality bar) and judge whether they solve the glassbox-improve run cost; then post a verdict and suggestions on each; then, after the owner set the goal (cost per run, spend on real improvements not churn, some lost recall acceptable, feed into the 2792 review), post a cost proposal. Verdict: 2871 Part 1 is a good correctness fix, its backlog needs a cap and expiry, 2872 is sound but cost-neutral. Agent-initiated: I measured why every v3 run reads all pages by recomputing planPages' changed set with the real pageHash/sourcesHash across the five run bases. The main cause is a run's own edits re-entering 'changed' next run, then cited-file changes (including whole cited directories) and the one-third rotation. My earlier guess posted on 2871 (sources hash) was wrong, so I posted a correction there. Chose 2805 for the proposal because 2792 is closed and 2805 is the open cost issue parked on that review; told the owner."
+outcome: Verdicts on issues 2871 and 2872; measured cause, cost proposal and glassbox-update overlap amendment posted on 2805
+summary: "Human-instructed: read issues 2871 (backlog, grades change only on evidence) and 2872 (materiality bar) and judge whether they solve the glassbox-improve run cost; then post a verdict and suggestions on each; then, after the owner set the goal (cost per run, spend on real improvements not churn, some lost recall acceptable, feed into the 2792 review), post a cost proposal. Verdict: 2871 Part 1 is a good correctness fix, its backlog needs a cap and expiry, 2872 is sound but cost-neutral. Agent-initiated: I measured why every v3 run reads all pages by recomputing planPages' changed set with the real pageHash/sourcesHash across the five run bases. The main cause is a run's own edits re-entering 'changed' next run, then cited-file changes (including whole cited directories) and the one-third rotation. My earlier guess posted on 2871 (sources hash) was wrong, so I posted a correction there. Chose 2805 for the proposal because 2792 is closed and 2805 is the open cost issue parked on that review. The owner then noted glassbox-update runs daily; I verified it already re-checks pages whose cited files changed, so improve duplicates that, and posted an amendment (human-instructed) dropping that check and sketching a daily improve Routine."
 prs: []
 docsRead:
   - path: docs/agents/github-integration.md
@@ -24,6 +24,8 @@ docsRead:
   - path: .agents/skills/glassbox-improve/SKILL.md
     reason: "set-up and review-after-runs sections: rotation every 3 runs and the cost review criteria"
     useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
 skillsUsed:
   - name: close-session
     reason: (no reason given)
@@ -48,14 +50,17 @@ frictions:
   - description: Posted an unverified guess (sources hash) as the likely cause in the 2871 comment; measuring later showed own edits dominate, needing a correction comment
     solution: Measure a cause before posting it, even flagged as a guess, when the measurement is a few minutes away
     severity: minor
-durationSec: 341
+  - description: Proposed a claim check on cited-file changes without first reading glassbox-update, which already does it daily; the owner had to point out the overlap
+    solution: Before proposing a change to one Glass Box Skill, read the sibling Skills that touch the same pages
+    severity: minor
+durationSec: 656
 models:
-  claude-opus-5-5: 69
+  claude-opus-5-5: 81
 toolCounts:
-  Bash: 22
+  Bash: 27
   ToolSearch: 2
   mcp__github__issue_read: 5
-  mcp__github__add_issue_comment: 4
+  mcp__github__add_issue_comment: 5
   Skill: 2
 rulesLoaded:
   - .claude/rules/adr-0027.md
