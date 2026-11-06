@@ -492,3 +492,6 @@ observations:
       agent copies the file aside or uses its own worktree; a one-line 'no checkout, switch or reset in the shared tree' is the candidate fix.
       Same shape in session_013zxzeRDagsHLSNJ939gcWK (10-30, workflow run). Escalate on a third. Same run skipped section 4 (16 writers, 4 hand-resolved
       conflicts). Grade unchanged.
+  - date: "2026-11-06"
+    note: >-
+      Behaviour check, 10 runs, all PRs merged. Third session with a read-only review subagent running git checkout --detach in the lead's checkout (session_013zxzeTJp1jinYqgNJRczgA, after the 11-05 §3 reword; earlier session_013zxzeT8tDd5GPJiRNZRA4J, session_013zxzeRDagsHLSNJ939gcWK): filed #2874. Verified: session_013zxzeT8tDd5GPJiRNZRA4J skipped scratchpad subfolders and §4 same-file check (4 hand-resolved conflicts). Grade unchanged.

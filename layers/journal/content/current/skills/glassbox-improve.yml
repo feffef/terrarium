@@ -45,3 +45,6 @@ observations:
       runs.yml still holds two entries keyed run: 2026-11-03 (session_013zxzeQH3GSc8uMpvhebnFr, session_013zxzeSAtjCQiatdUuuFCRJ), the overwrite
       bug #2826 fixed; data intact. T8tD run: tally re-raises dropped steps and crashes on a step with no gist (#2848); 4 hand-resolved writer conflicts.
       All delivered. Grade unchanged.
+  - date: "2026-11-06"
+    note: >-
+      All 7 delivered. Unverified churn: Prose overrides promoted 11-02 then folded away 11-05 (PR #2869); invariant-tests page likewise; step 3's two-run filter did not stop it. Step 5 'edited: true' forgotten once in session_013zxzeTJp1jinYqgNJRczgA. Known script defects tracked in #2848. Grade unchanged.

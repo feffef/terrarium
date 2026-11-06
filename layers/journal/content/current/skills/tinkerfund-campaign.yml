@@ -9,11 +9,6 @@ role: >-
   crowd numbers, the figure style and refinement loop, and the e2e Home
   assertions a new Campaign disturbs. Essential whenever the catalog grows.
 observations:
-  - date: 2026-09-26
-    note: >-
-      Written from the phase 1 build (#1375): the voice from the launch catalog
-      (#1368), the figure process from the two Fable illustrator runs (#1403,
-      #1407).
   - date: "2026-10-03"
     note: >-
       First audit-skills behaviour check: 3/3 usedIn sessions clean. PR #1528
