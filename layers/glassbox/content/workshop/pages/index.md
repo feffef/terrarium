@@ -61,7 +61,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 
 **Installed Skills.** *Engineering skills* could become part of *Installed Skills* (`skill-pack/01.skill-packs`).
 
-**Git & GitHub.** *Commit and PR attribution* also teaches git hooks, a separate topic that could get its own Lesson. *Git plumbing* now says commit-msg hooks skip `commit-tree` and links to *Commit and PR attribution*; a hooks Lesson would be its natural neighbour.
+**Git & GitHub.** *Commit and PR attribution* also teaches git hooks, a separate topic that could get its own Lesson.
 
 **Missing Lessons.**
 - **UI checks.** The scripts in `scripts/ui/` (preview, screenshots) are mentioned only on *Subagents*. Check whether this is really a gap before writing a Lesson.
