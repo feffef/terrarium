@@ -9,7 +9,7 @@ This page is the working state of the Skills that improve Glass Box. It is not p
 
 ## Memory
 
-Pages are named by their title, followed by their file under `layers/glassbox/content/guide/pages/`.
+Pages are named by their title, followed by their file under `layers/glassbox/content/guide/pages/`. Subject, Lesson, Walkthrough and draft mean what `layers/glassbox/GLOSSARY.md` says.
 
 ### Weak spots
 
@@ -22,7 +22,7 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 
 - **New text has contained false claims.** Twice, a newly written page or fix said something its source contradicted, and it was only noticed a day later.
 - **Neighbouring pages repeat each other.** Most structural changes so far took a reason that two pages both explained and left it on just one of them.
-- **Changes have been undone soon after.** Two pages were promoted or kept by one run and folded into another page a few runs later: *Prose overrides* and *Invariant tests*.
+- **Changes have been undone soon after.** Two pages were added to the guide, or kept, by one run and then folded into another page a few runs later: *Prose overrides* and *Invariant tests*.
 
 ### The owner's direction
 
@@ -46,16 +46,16 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 
 1. **Propose the Claude Code split** (direction 1), using the ideas about its pages below.
 2. **Decide the last draft,** *A newcomer's first hour* (direction 4).
-   - To promote it, it needs a fresh pin, a shorter description and a `publishedAt`.
+   - To promote it, it needs its `revision` set to a current commit, a shorter description and a publish date (`publishedAt`).
    - The case against it: three of its eight stops only tour the Journal, which Glass Box should link to rather than retell.
 3. **Make titles consistent** (direction 3), one Subject at a time.
-4. **Write a git plumbing Lesson** (direction 5; see Missing Lessons below).
+4. **Write a Lesson on building commits without a checkout** (direction 5; see Missing Lessons below).
 5. **Prepare the web standards Subject** (direction 2) as an issue for the owner, listing the pages it would hold.
 
 ### Ideas not yet decided
 
 **Claude Code: giving each fact one home.** In each case the first page keeps a short link.
-- *Path-specific rules* explains the hook that reminds agents to read an ADR. That belongs on *Hook-added context*.
+- *Path-specific rules* explains the hook that reminds agents to read an ADR (a decision record in `docs/adr/`). That belongs on *Hook-added context*.
 - *Hook-added context* explains how a hint is shown only once per session by looking it up in the transcript. That belongs on *Session transcripts*.
 - *MCP servers* explains how hooks pick out MCP tools by name. That belongs on *Blocking hooks*.
 - *Session transcripts* explains how a session log is built from the transcript. That belongs on *Session logs* (`terrarium-practice/04.session-logs`).
@@ -65,12 +65,12 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 **Git & GitHub.** *Commit and PR attribution* also teaches git hooks, a separate topic that could get its own Lesson.
 
 **Missing Lessons.**
-- **Git plumbing.** Terrarium builds commits without checking out a branch: this is how session logs land on `main`. Only one stop of the Walkthrough *A session log lands on main* shows it, and no Lesson teaches it.
+- **Building commits without a checkout** (low-level git commands). This is how session logs land on `main`. Only one stop of the Walkthrough *A session log lands on main* shows it, and no Lesson teaches it.
 - **UI checks.** The scripts in `scripts/ui/` (preview, screenshots) are mentioned only on *Subagents*. Check whether this is really a gap before writing a Lesson.
 
-**Ideas that earlier runs ruled against.** These need a fresh look at both sides before anyone acts on them.
+**Ideas earlier runs rejected.** Before acting on one, re-check the reasons for and against.
 - Moving the timestamp rule and its warnings from *Content validation* (`verification/03.content-validation`) to *Zod refinements* (`verification/06.schema-validation`).
-- Moving the warning to return only what a page reads from *Data fetching* (`nuxt-vue/06.use-async-data`) to *queryCollection* (`nuxt-content/04.query-collection`).
+- Moving the warning to return only what a page reads from *Data fetching* (`nuxt-vue/06.use-async-data`) to *queryCollection* (`nuxt-content/04.query-collection`). A related move the other way is under Already decided.
 
 ### Already decided
 
