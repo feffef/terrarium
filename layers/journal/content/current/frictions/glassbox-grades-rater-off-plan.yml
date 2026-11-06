@@ -1,9 +1,12 @@
 name: glassbox-grades-rater-off-plan
 surface: safe
 summary: A glassbox-improve rater graded a draft page its plan did not list, so the tally refused the report and the lead deleted lines from the saved hand-back.
-cause: "A rater brief does not bound the pages a rater may grade to its plan, so a rater grades an extra draft page and grades.ts tally refuses the hand-back; the lead edits the saved hand-back by hand. Signals: 'graded four draft pages the plan never listed', 'tally refused the report', 'deleted those lines from the saved hand-back'."
-status: tracked
-ref: "fix PR in flight (frictions-to-fixes run 2026-11-06): rater B brief says never grade a draft"
+cause: "The rater B brief gave B a catalog of guide pages and drafts without saying a draft is not graded, so B graded an extra draft page and grades.ts tally refused the hand-back; the lead edited the saved hand-back by hand. PR #2881 (2026-11-06) made the brief say to grade guide pages only. Signals: 'graded four draft pages the plan never listed', 'tally refused the report', 'deleted those lines from the saved hand-back'."
+status: open
+fixes:
+  - pr: 2881
+    date: "2026-11-06"
+    summary: "Rater B brief says to grade guide pages only and never a draft, so tally no longer refuses the report for off-plan drafts."
 occurrences:
   - session: session_013zxzeT8tDd5GPJiRNZRA4J
     date: "2026-11-04"
