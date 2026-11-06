@@ -757,8 +757,7 @@ export function agentBriefs(kind: 'researcher' | 'writer', state: Pick<RunState,
   }))
 }
 
-/** What each page's gate judge is told its edits targeted: this run's edited items and taken steps. A `changed` page
- *  neither names falls back to its confirmed items, so an unmarked edit is still gated (issue #2878). */
+/** Criteria per page for the gate judge; a `changed` page no item or step names falls back to its confirmed items, so an unmarked edit is still gated. */
 export function gateCriteria(items: Item[], steps: Step[], run: string, changed: string[] = []): Map<string, string[]> {
   const criteria = new Map<string, string[]>()
   const add = (page: string, text: string) => criteria.set(page, [...(criteria.get(page) ?? []), text])
