@@ -1,6 +1,6 @@
 ---
 name: glassbox-update
-description: Bring every Glass Box guide page (drafts opt-in) up to date with main, then land it as one self-merging gated PR.
+description: Bring every Glass Box guide page (drafts opt-in) up to date with main, claim-check flagged pages and a daily rotation, then land it as one self-merging gated PR.
 disable-model-invocation: true
 ---
 
