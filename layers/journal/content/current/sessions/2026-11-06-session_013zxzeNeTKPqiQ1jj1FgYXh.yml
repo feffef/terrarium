@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeNeTKPqiQ1jj1FgYXh
 startedAt: 2026-11-06T19:35:42Z
-endedAt: 2026-11-06T19:53:48Z
+endedAt: 2026-11-06T19:55:35Z
 kind: interactive
 goal: "Glass Box curate run: add a Lesson on git plumbing"
 status: completed
@@ -57,6 +57,10 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: writing-for-agents
+    reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
 frictions:
   - description: Ran git fetch before reading docs/agents/git-conventions.md, and an MCP PR list before github-integration.md; both CLAUDE.md triggers. A hook then pointed to each.
     solution: Read the trigger docs right after the Skill's orientation step, before the first non-read-only git or GitHub call.
@@ -70,15 +74,18 @@ frictions:
   - description: The Skill says autonomous mode asks nothing, but the user's preference was to ask first and the invocation named no focus, so I asked one mode question.
     solution: Say in the Skill how a user-started run with no focus should choose its mode.
     severity: nit
-durationSec: 1086
+  - description: Three of four subagent briefs (reader, claim checker, code-review pair) omitted CLAUDE.md's required ask for doc and rule verdicts, scratchpad subfolder and sourced counts; only the writer's brief had them.
+    solution: Make the dispatch-subagents Skill's brief checklist include the CLAUDE.md every-brief line verbatim, so a brief cannot skip it.
+    severity: minor
+durationSec: 1193
 models:
-  claude-sonnet-5-5: 122
+  claude-sonnet-5-5: 128
 toolCounts:
   AskUserQuestion: 1
-  Bash: 28
+  Bash: 29
   Read: 9
   mcp__github__list_pull_requests: 1
-  Skill: 5
+  Skill: 6
   Agent: 5
   Edit: 1
   get_session_placeholder: 1
@@ -86,7 +93,7 @@ toolCounts:
   ToolSearch: 3
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 4
+  ReadNotifications: 5
   mcp__github__pull_request_read: 7
   mcp__github__issue_read: 1
   mcp__github__add_issue_comment: 1
@@ -186,35 +193,35 @@ subagents:
     durationSec: 251
     toolCalls: 30
     modelCalls: 26
-    tokenShare: 19.1
+    tokenShare: 18.1
   - type: general-purpose
     task: Fresh reader of Git plumbing
     model: sonnet
     durationSec: 23
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 4
+    tokenShare: 3.8
   - type: general-purpose
     task: Claim-check Git plumbing
     model: sonnet
     durationSec: 112
     toolCalls: 13
     modelCalls: 9
-    tokenShare: 7.8
+    tokenShare: 7.4
   - type: general-purpose
     task: Standards review of diff
     model: sonnet
     durationSec: 29
     toolCalls: 5
     modelCalls: 4
-    tokenShare: 5.8
+    tokenShare: 5.5
   - type: general-purpose
     task: Spec review of diff
     model: sonnet
     durationSec: 34
     toolCalls: 4
     modelCalls: 4
-    tokenShare: 5.5
+    tokenShare: 5.2
 gitBranch: claude/practical-meitner-87xquf
 entrypoint: remote
 cliVersion: 2.1.319
