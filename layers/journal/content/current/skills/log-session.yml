@@ -457,3 +457,6 @@ observations:
       session_013zxzeSDVFqSAse9NJHqJYv 11 of 22, session_013zxzeNezKVRxRiZLs4z9n4 4, session_013zxzeNcfR7ezGAhwXWTD1g 1. Mostly
       subagent-loaded; T8tD also lacks main-session followed-up rules (adr-0025, adr-0011, adr-0023). T8tD logged that its 38 judge briefs omitted the verdict ask. No friction for the gap. Not
       re-commented on #2607 (owner chose make-it-visible). Grade unchanged.
+  - date: "2026-11-06"
+    note: >-
+      Behaviour check, 10 runs, all logs on main. Verified: session_013zxzeTJp1jinYqgNJRczgA has 12 ruleVerdicts for 15 loaded rules (adr-0004-human-merge, adr-0022, adr-0030 missing); the other 9 complete. Eighth window of this shape; tracked by #2607 and #2645, no new comment. Grade unchanged.

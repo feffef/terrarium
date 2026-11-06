@@ -346,3 +346,6 @@ observations:
     note: >-
       All 7 delivered, 7-date retention holds. code-review skipped on session_013zxzePsSguQyDiqnq52irG's diff (adds a file); #2472 family, step 6
       does not name code-review. Dispatch-read guard blocked the first Agent call in 4 of 7 runs. Grade unchanged.
+  - date: "2026-11-06"
+    note: >-
+      All 7 runs delivered. session_013zxzePsSguQyDiqnq52irG (11-04) skipped code-review again (#2472 family; step 6 still does not name it). Dispatch-read guard blocked the first Agent call in 2 of 7 logs. Grade unchanged.

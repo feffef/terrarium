@@ -143,3 +143,6 @@ observations:
     note: >-
       All 7 runs delivered. Unverified: session_013zxzeNsjXNYsepq7RSwxjV (PR #2839, 32 pages) shows no code-review in skillsUsed or the summary.
       Step 3 'every commit read' again admitted unmet (session_013zxzeRpGWPCotTQup1ui46, 91 commits). Grade unchanged.
+  - date: "2026-11-06"
+    note: >-
+      All 7 delivered. Verified from logs: code-review replaced or thinned by an own read of 58-68 file re-pin diffs in 5 of 7 runs (session_013zxzeSTMBmmufJQf6nWEjx, session_013zxzeNsjXNYsepq7RSwxjV, session_013zxzePhrV1oZiDPfSuW2Hm, session_013zxzeQBuD3C4A1V2DpoHYu, session_013zxzeNZn2iJjZrQj2ortVS); #2472 family, #2748 closed not planned. Step 3 'every commit read' is met by grep and cited diffs, disclosed in the logs. Grade unchanged.
