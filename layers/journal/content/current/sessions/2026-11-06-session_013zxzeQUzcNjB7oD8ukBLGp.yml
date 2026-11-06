@@ -1,0 +1,200 @@
+schemaVersion: 1
+session: session_013zxzeQUzcNjB7oD8ukBLGp
+startedAt: 2026-11-06T07:26:07Z
+endedAt: 2026-11-06T16:16:32Z
+kind: interactive
+goal: Redesign glassbox-improve as a small goal-driven Skill
+status: completed
+outcome: "Design for glassbox-curate and a deeper glassbox-update agreed with the owner and filed as issue #2896; nothing built"
+summary: "Human-instructed throughout. The owner asked for an overview of glassbox-improve and glassbox-update and the improve Skill's deficits, from the open issues (#2871, #2872, #2805) and every Skill file. I read both Skills, grades.ts, the briefs, the glassbox-lesson docs, and counted runs.yml and grades.yml with a throwaway script. Main findings: 389 of 390 lens grades are B, the A election gave 1 A in 32 comparisons, the gate passed 109 of 110 edits, every run reads every page, rating is 57% of cost while 1 of 75 findings was fixed in the last run, and #2871's backlog already landed on main yet rarely survives because every page is re-read. The owner then asked for a redesign proposal for a smaller Skill under a new name, and for two sonnet Explore agents (history, run logs) to explain why each mechanism exists; their reports showed the absolute grades failed on three designs while QUALITY/DECISIONS, the researcher step and the claim check worked, and glassbox-update averages $1.37 a run. Decided with the owner: glassbox-update keeps existing pages true and gains a deep claim check on flagged pages plus a rotation; the new glassbox-curate owns structure, teaching quality and gaps, one focus per run, opus lead, about $20 a run, judged by the owner's review sessions. I proposed a per-page reader exam; the owner rejected it as moving the problem to writing exams, and I agreed. I recommended the Journal for the run log; the owner chose a Glass Box workshop Space holding a memory page that renders the run entries, not in the sidebar. The owner asked me to file the issue (needs-triage). Agent-initiated: the deep-check rotation size, the drift-rule and glossary implications, the entry fields proposed and the issue's structure."
+prs: []
+docsRead:
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: "the Skill under review: its 10 steps, remit and trial review"
+    useful: yes
+  - path: .agents/skills/glassbox-improve/judge-brief.md
+    reason: gate and A judge brief; showed the judge sees the edit's own criterion
+    useful: yes
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: rater lenses and the claim-check task
+    useful: yes
+  - path: .agents/skills/glassbox-improve/researcher-brief.md
+    reason: the researcher step
+    useful: yes
+  - path: .agents/skills/glassbox-improve/writer-brief.md
+    reason: writer rules accumulated from Frictions
+    useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: the sibling Skill's scope, for the cut
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/QUALITY.md
+    reason: lenses, grades and the A rule
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: closed rulings; kept in the new design
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: page rules the new Skill keeps
+    useful: partly
+  - path: .agents/skills/glassbox-lesson/SKILL.md
+    reason: how a new Lesson is written, for gap-filling
+    useful: partly
+  - path: layers/glassbox/GLOSSARY.md
+    reason: "'not a live record' product decision and the Two Spaces, which the workshop changes"
+    useful: yes
+  - path: .claude/rules/glassbox-content.md
+    reason: drift rule bans ids and line numbers in all glassbox content, so the workshop needs an exception
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: MCP tool mapping and fields on list_issues; read after the first GitHub call
+    useful: partly
+  - path: docs/agents/issue-tracker.md
+    reason: "what to put in a filed issue: verified vs assumed"
+    useful: yes
+  - path: docs/agents/triage-labels.md
+    reason: non-triage Skills file needs-triage
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: (not read) by me; the history subagent read its first 30 lines and reported it not useful for read-only git
+    useful: no
+  - path: .agents/skills/log-session/SKILL.md
+    reason: the runs subagent used it for the session-log schema and severity grades and found it useful
+    useful: yes
+skillsUsed:
+  - name: dispatch-subagents
+    reason: before writing the two Explore briefs
+  - name: close-session
+    reason: session answered and filed its issue
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Read docs/agents/github-integration.md only after the first mcp__github__list_issues call, against CLAUDE.md's read-first trigger
+    solution: Read it before the first GitHub call; the hook's late reminder was right and the call was already correct
+    severity: nit
+  - description: First Bash call cat'ed grades.yml and the 190 KB runs.yml with the Skill files, overflowing to a saved output and needing re-reads
+    solution: Check file sizes with wc first and extract YAML metrics by script, as I did later
+    severity: minor
+  - description: Ran git log before reading docs/agents/git-conventions.md; harmless as it was read-only, but CLAUDE.md lists log used to draw a conclusion as a trigger
+    solution: Read git-conventions.md before the first git log used for findings
+    severity: nit
+  - description: History subagent marked the 8-item cap as possibly agent-built; the QWJE session log shows the owner chose it, so I had to verify and correct it
+    solution: Briefs for history research should name session logs as a source for owner decisions, not only issues and PRs
+    severity: minor
+durationSec: 31825
+models:
+  claude-opus-5-5: 99
+toolCounts:
+  Bash: 26
+  ToolSearch: 2
+  mcp__github__list_issues: 1
+  mcp__github__issue_read: 7
+  Skill: 3
+  Agent: 2
+  AskUserQuestion: 1
+  Write: 2
+  mcp__github__issue_write: 1
+rulesLoaded:
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0015.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0002.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/data-shapes.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/mdc-when-to-use.md
+  - .claude/rules/tenant-layers.md
+  - .claude/rules/adr-0008.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0030.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - docs/agents/git-conventions.md
+  - .agents/skills/log-session/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: No PR in this session; it shaped the issue's note on what needs a human merge. Summary was enough
+    useful: partly
+  - path: .claude/rules/adr-0009.md
+    reason: Told me to log via close-session and keep the log off any branch; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: New work needs Trusted approval, so I filed an issue and kept a new Subject as an issue in the design
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Made the issue body start with the session header line
+    useful: yes
+  - path: .claude/rules/adr-0005.md
+    reason: Skills live in .agents/skills; confirmed where glassbox-curate would sit; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0027.md
+    reason: Cut-before-add backed the critique that fixes kept adding instructions; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0029.md
+    reason: Loaded on reading skill files; nothing to place in rules this session
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Showed .claude/rules is Human-only, so the drift-rule exception needs a human merge, noted in the issue
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Loaded via a subagent's Journal reads; no installed Skill involved
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Pointed to the Glass Box glossary, which held the product decision the workshop changes
+    useful: yes
+  - path: .claude/rules/adr-0002.md
+    reason: The workshop Space goes only in the manifest; noted in the issue; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded on reading the Glass Box glossary; no term added
+    useful: no
+  - path: .claude/rules/data-shapes.md
+    reason: Made me settle the run-entry shape with the owner before filing and flag the rotation file shape as open
+    useful: yes
+  - path: .claude/rules/glossary-terms.md
+    reason: No glossary term added
+    useful: no
+  - path: .claude/rules/mdc-when-to-use.md
+    reason: Relevant to the run-list MDC component, but nothing built yet
+    useful: no
+  - path: .claude/rules/tenant-layers.md
+    reason: Reminded that only pages get URLs (ADR-0006), which shaped the memory-page design
+    useful: partly
+  - path: .claude/rules/adr-0008.md
+    reason: Loaded on reading a Journal Routine file; nothing changed there
+    useful: no
+  - path: .claude/rules/adr-0022.md
+    reason: Loaded with triage-labels; I am not the sweep, so needs-triage applied
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded on reading the human-merge rule; no ADR touched
+    useful: no
+subagents:
+  - type: Explore
+    task: Explore glassbox-improve design history
+    model: sonnet
+    durationSec: 215
+    toolCalls: 22
+    modelCalls: 20
+    tokenShare: 13.4
+  - type: Explore
+    task: Explore glassbox run session logs
+    model: sonnet
+    durationSec: 288
+    toolCalls: 32
+    modelCalls: 31
+    tokenShare: 19
+gitBranch: ccr-160f8d19-vqizrn
+entrypoint: remote_mobile
+cliVersion: 2.1.318
+learnings:
+  - Absolute quality grades by models saturated on three designs of glassbox-improve (v1 mostly A, v2 92% B, v3 99.7% B); pairwise comparison only separates edits when the criterion is independent of the edit.
+ideas:
+  - Build glassbox-curate per issue 2896 beside glassbox-improve, then compare them on cost per run and an owner review after a fixed number of runs each, and retire the loser along with its scripts.
+landedBy: Stop
