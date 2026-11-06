@@ -1,4 +1,4 @@
-// The list-open-issues helper: turns "what open issues exist right now" —
+// The list-open-issues helper: turns "what open (or, with --closed, closed) issues exist right now" —
 // today answered via `mcp__github__list_issues`/`search_issues`, which return
 // full issue bodies with no compact mode and have overflowed the tool's own
 // output-token ceiling four times across a recent 20-session survey window
@@ -72,7 +72,7 @@ export function toOpenIssue(raw: RawIssueApiRecord): OpenIssue | null {
   }
 }
 
-/** The `limit` most-recently-updated open issues out of `records`,
+/** The `limit` most-recently-updated issues (open or closed, per the state fetched) out of `records`,
  *  newest-first. Pull requests are silently skipped (see `toOpenIssue`);
  *  records are re-sorted by their own `updated_at` rather than trusting API
  *  order, since pages arrive one after another rather than as a single global
