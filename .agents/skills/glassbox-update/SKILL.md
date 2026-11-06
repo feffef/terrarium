@@ -46,29 +46,35 @@ that one commit, never a later fetch.
      page's step-1 `revision`.
    - **Rotation:** the 5 pages whose `checked` in
      `layers/glassbox/content/workshop/checks/update.yml` is oldest, a page
-     with none oldest of all, ties by page path. Each gets a **full check**.
+     with none oldest of all, ties by page path. Each gets a **full
+     check**, also a page flagged too.
 
-   Hand sonnet subagents at most 8 pages each (`dispatch-subagents`), with this
-   brief: *The claim check is your main task. On each page, check every
+   Hand sonnet subagents at most 8 pages each (`dispatch-subagents`). Add this
+   to each brief, with the commit and the repo path of
+   `.agents/skills/glassbox-lesson/EVERY-PAGE.md`, since a subagent sees
+   nothing else: *The claim check is your main task. On each page, check every
    concrete claim (a flag, a file, a function, a Skill name, a count, a
    behaviour) against the file it cites at the commit, and the tool's claims
    against its docs URL (fetch it) or, when that fails, EVERY-PAGE.md's Write
    fallback for a blocked fetch. A claim the source contradicts goes under
    `falseClaims`, quoted, with the `path:line` or URL that contradicts it.
    Report the claims you checked on each page (`claims`, one short line each)
-   and the docs URL or fallback you used (`docs`).* A flagged page's brief
-   names the changed files and limits it to claims citing them.
+   and the docs URL or fallback you used (`docs`).* For a page that is only
+   flagged, the brief names the changed files and limits it to claims citing
+   them.
 
    Confirm each reported contradiction in the source yourself, then make the
    smallest correction of the false claim: no retitle, restructuring or style
-   edit. Then rewrite `update.yml` (`pages: [{ page, checked }]`, `checked` a
-   `YYYY-MM-DD` date): set today's date on each fully checked page, keep the
-   rest, and drop pages that no longer exist. A scoped check of a flagged page
-   leaves its date. Done when every checked page's reports are confirmed or
-   rejected and `update.yml` is rewritten.
+   edit. Then rewrite `update.yml` (shape: the `checks` Collection in
+   `layers/glassbox/tenant.config.ts`): set today's date on each fully checked
+   page, keep the rest, and drop pages that no longer exist. A scoped check of
+   a flagged page leaves its date. The run writes no run entries. Done when
+   every checked page's reports are confirmed or rejected and `update.yml` is
+   rewritten.
 6. **Check** (EVERY-PAGE.md).
-7. **Land.** If nothing changed, invoke `close-session` and stop. Otherwise
-   follow "Closing a scheduled run's PR" in `docs/agents/pr-workflow.md`, one
-   PR titled `glassbox-update: <YYYY-MM-DD>` whose body lists each flagged
-   page and term, why, and what changed, and each page fully checked. If the PR includes anything outside this
-   run's paths, leave it for a human.
+7. **Land.** If nothing changed, `update.yml` included, invoke `close-session`
+   and stop. Otherwise follow "Closing a scheduled run's PR" in
+   `docs/agents/pr-workflow.md`, one PR titled `glassbox-update: <YYYY-MM-DD>`
+   whose body lists each flagged page and term, why, and what changed, and each
+   page fully checked. If the PR includes anything outside this run's paths,
+   leave it for a human.
