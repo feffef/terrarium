@@ -49,8 +49,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
    - To promote it, it needs its `revision` set to a current commit, a shorter description and a publish date (`publishedAt`).
    - The case against it: three of its eight stops only tour the Journal, which Glass Box should link to rather than retell.
 3. **Make titles consistent** (direction 3), one Subject at a time.
-4. **Write a Lesson on building commits without a checkout** (direction 5; see Missing Lessons below).
-5. **Prepare the web standards Subject** (direction 2) as an issue for the owner, listing the pages it would hold.
+4. **Prepare the web standards Subject** (direction 2) as an issue for the owner, listing the pages it would hold.
 
 ### Ideas not yet decided
 
@@ -65,7 +64,6 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 **Git & GitHub.** *Commit and PR attribution* also teaches git hooks, a separate topic that could get its own Lesson.
 
 **Missing Lessons.**
-- **Building commits without a checkout** (low-level git commands). This is how session logs land on `main`. Only one stop of the Walkthrough *A session log lands on main* shows it, and no Lesson teaches it.
 - **UI checks.** The scripts in `scripts/ui/` (preview, screenshots) are mentioned only on *Subagents*. Check whether this is really a gap before writing a Lesson.
 
 **Ideas earlier runs rejected.** Before acting on one, re-check the reasons for and against.
