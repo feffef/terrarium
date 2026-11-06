@@ -1,13 +1,14 @@
 // The orientation step of glassbox-curate: everything a run reads before it
 // chooses a focus, in one output. It prints the workshop's memory page, every
 // curate run entry, glassbox-update's check state, the Glass Box terms, the
-// page-check warnings, and each guide page's title, description, first
-// paragraph and Where next links. All of it, unfiltered: trim it only once the
+// page-check warnings, the guide's git log since the last run, and each guide
+// page's title, description, first paragraph and Where next links. All of it, unfiltered: trim it only once the
 // output grows too large to read.
 // Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts
 import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { tryGit } from '../../../../scripts/lib/git.ts'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { glassboxOrphans, glassboxOrphanText, glassboxPageWarnings } from '../../../../layers/glassbox/page-checks.ts'
 
@@ -32,7 +33,15 @@ export function pageOverview(stem: string, source: string): string {
 const files = (dir: string, pattern: string): [string, string][] =>
   existsSync(dir) ? globSync(pattern, { cwd: dir }).sort().map((f) => [f, readFileSync(join(dir, f), 'utf8')]) : []
 
-export function orientation(base = join(root, content)): string {
+/** The guide's commits since `since` (ISO time), or its last 30 when no run has happened yet. */
+export function guideLog(since: string | undefined): string {
+  return tryGit(['log', '--oneline', '--no-merges', ...(since ? [`--since=${since}`] : ['-n', '30']), '--', `${content}/guide`], root).out
+}
+
+/** A run entry's file stem, `2026-11-06T0930`, as an ISO time: the entry's shape has no date field. */
+const runStart = (stem: string) => `${stem.slice(0, 13)}:${stem.slice(13, 15)}:00Z`
+
+export function orientation(base = join(root, content), log = guideLog): string {
   const guide = files(join(base, 'guide/pages'), '**/*.md')
   const runs = files(join(base, 'workshop/runs'), '*.yml').reverse()
   const checks = files(join(base, 'workshop/checks'), '*.yml')
@@ -49,6 +58,7 @@ export function orientation(base = join(root, content)): string {
     section('glassbox-update checks', checks.map(([, t]) => t.trim()).join('\n')),
     section('Terms', terms.map(([f, t]) => `## ${f}\n${t.trim()}`).join('\n')),
     section('Page-check warnings', warnings.join('\n')),
+    section(runs.length ? 'Guide changes since the last curate run' : 'Last 30 guide changes (no curate run yet)', log(runs[0] ? runStart(runs[0][0]) : undefined)),
     section('Guide pages', guide.map(([f, t]) => pageOverview(f.replace(/\.md$/, ''), t)).join('\n\n')),
   ].join('\n\n')
 }

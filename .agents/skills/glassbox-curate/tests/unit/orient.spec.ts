@@ -60,12 +60,15 @@ describe('orientation', () => {
   afterAll(() => rmSync(base, { recursive: true, force: true }))
 
   it('prints every section in order, unfiltered, with runs newest first', () => {
-    const out = orientation(base)
+    const seen: (string | undefined)[] = []
+    const out = orientation(base, (since) => (seen.push(since), 'abc1234 a guide commit'))
     expect(out.split('\n').filter((l) => l.startsWith('# '))).toEqual([
-      '# Memory page', '# Curate runs, newest first', '# glassbox-update checks', '# Terms', '# Page-check warnings', '# Guide pages',
+      '# Memory page', '# Curate runs, newest first', '# glassbox-update checks', '# Terms', '# Page-check warnings', '# Guide changes since the last curate run', '# Guide pages',
     ])
     for (const text of ['A lead.', 'focus: first', 'focus: second', 'pages: []', 'term: Hook', '### claude-code/05.blocking-hooks: Blocking hooks']) expect(out).toContain(text)
     expect(out.indexOf('focus: second')).toBeLessThan(out.indexOf('focus: first'))
     expect(out).toContain('may give a motive ("so")')
+    expect(out).toContain('abc1234 a guide commit')
+    expect(seen).toEqual(['2026-11-07T09:00:00Z'])
   })
 })

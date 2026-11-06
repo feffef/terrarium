@@ -45,8 +45,8 @@ in a brief as `.agents/skills/...`.
 
 - **Orient.** This is the orientation step: run
   `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts` and read all
-  of its output, then `git log` of the guide since the last run. Leave alone every page an open PR touches and every
-  focus another open curate run has claimed.
+  of its output. Leave alone every page an open PR touches and every focus
+  another open curate run has claimed.
 - **Choose.** Take the focus from memory leads, the owner's review notes,
   page-check warnings, problems the orientation shows, or gaps; when nothing is
   pressing, from pages no fresh reader has seen lately (`pagesRead`). The run
