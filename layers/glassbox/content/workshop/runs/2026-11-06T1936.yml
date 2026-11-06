@@ -1,6 +1,13 @@
 session: session_013zxzeNeTKPqiQ1jj1FgYXh
 mode: autonomous
-focus: Gap — no Lesson teaches building a commit without a checkout (git plumbing); chosen because the memory page lists it as a concrete missing Lesson, no open PR touches the guide, and the Git & GitHub pages it would sit beside were all edited recently, so no page fix is more pressing.
-changes: []
-pagesRead: []
-learned: []
+focus: Gap — no Lesson taught building a commit without a checkout (git plumbing). Chosen because the memory page listed it as a concrete missing Lesson, no open PR touched the guide, and the other Git & GitHub pages were all edited in the last days, so no page fix was more pressing.
+changes:
+  - "git-github/08.git-plumbing | New Lesson: the plumbing sequence, GIT_INDEX_FILE, pushing a bare commit id, and how buildLogCommit and pushWithRetry use them | no Lesson taught the commit-building half of landing a session log"
+  - "walkthroughs/session-log-lands-on-main | Stop 6 now links the new Lesson | so the Walkthrough points to the concept's home and the Lesson is not an orphan"
+pagesRead:
+  - git-github/08.git-plumbing
+  - git-github/02.git-worktrees
+  - walkthroughs/session-log-lands-on-main
+learned:
+  - "The first draft claimed all five plumbing commands use GIT_INDEX_FILE and put a cost on an ADR that does not state it; the claim checker caught both, so keep the checker even for a short page."
+  - "A fresh reader found the Try it steps would fail without a git identity and a named branch; state a Try it's prerequisites."
