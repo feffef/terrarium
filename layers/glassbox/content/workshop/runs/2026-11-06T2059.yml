@@ -1,0 +1,8 @@
+session: session_013zxzeRJEE2ehNrQTL62nhX
+pr: 0
+mode: autonomous
+focus: Gap — no Lesson taught how Terrarium checks that a page renders (the scripts/ui tools and headless browser checks). Chosen because the memory page listed UI checks as a possible gap, I confirmed the guide never cites scripts/ui or docs/agents/verifying-ui-changes.md, five Skills depend on them, and no open PR touched the guide. A git hooks Lesson was rejected: the repo has one hook, which Commit and PR attribution already teaches.
+changes: []
+pagesRead:
+  - git-github/05.attribution
+learned: []
