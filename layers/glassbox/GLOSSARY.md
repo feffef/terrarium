@@ -28,7 +28,9 @@ Terrarium applies them without reading the source.
 - **A curated textbook, not a live record.** What is happening now is the
   Journal's job. Glass Box links to Journal pages and ADRs as evidence and never
   repeats them. Each page is pinned to one `main` commit (`revision`, with its
-  date in `revisionDate`), so it reads like a dated edition.
+  date in `revisionDate`), so it reads like a dated edition. The `workshop`
+  Space is the one exception: it is a live record of the improvement Skills'
+  state, not part of the textbook.
 - **An overview, then a reference.** The guide's landing page,
   `guide/pages/index.md`, is the overview of how Terrarium works, in plain
   words, linking the Lessons for depth. It links pages only through chips, a
@@ -37,12 +39,16 @@ Terrarium applies them without reading the source.
   reading order: readers use the sidebar, where
   Lessons lead and Walkthroughs follow the Subjects, plainly listed, none
   named a starting point while they are still being worked out.
-- **Two Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
+- **Three Spaces.** `guide`, at `/t/glassbox/guide`, holds the pages central to
   Terrarium that the work focuses on; `/t/glassbox` redirects there. `drafts`
   holds the rest; each may be improved and moved to the guide. A guide page never links to a draft; a draft may link to
   the guide. Walkthroughs sit in `walkthroughs/`. A two-digit filename prefix
   orders Lessons inside a folder; Subject order and names come from
-  `glassboxSubjects` in `layers/glassbox/app/utils/subjects.ts`.
+  `glassboxSubjects` in `layers/glassbox/app/utils/subjects.ts`. `workshop`, at
+  `/t/glassbox/workshop`, is one page of state for the improvement Skills: a
+  memory text, one entry per curate run and glassbox-update's check state. It
+  has no sidebar entry and no link from the guide; its memory text is capped at
+  1,500 words.
 - **Shown in progress.** The Platform homepage gives Glass Box its own band
   under the hero, labelled the newest experiment and work in progress, with
   both Spaces and a guide Lesson of the day; when it's finished, the label

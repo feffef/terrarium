@@ -335,7 +335,8 @@ describe('glassboxTermProblems', () => {
 
 describe('every Glass Box page matches the code at its revision', () => {
   const content = join(root, 'layers/glassbox/content')
-  const spaces = glassbox.spaces
+  // The workshop's memory page is state, not a Lesson (workshop.spec.ts checks it).
+  const spaces = glassbox.spaces.filter((space) => space !== 'workshop')
   const read = (space: string, file: string) => readFileSync(join(content, space, 'pages', file), 'utf8')
   const files = Object.fromEntries(spaces.map((space) => [space, globSync('**/*.md', { cwd: join(content, space, 'pages') }).sort()]))
   const pages = spaces.flatMap((space) => files[space]!.map((file) => ({ space, file })))
