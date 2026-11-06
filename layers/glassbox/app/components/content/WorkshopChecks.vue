@@ -4,7 +4,7 @@ const { collections } = useSpace('glassbox')
 const { data } = await useAsyncData('glassbox-workshop-checks', async () => {
   const [files, guide] = await Promise.all([
     queryCollection(collections.checks).select('pages').all(),
-    useGlassboxPages('guide'),
+    queryGlassboxPages('guide'),
   ])
   const checks = files.flatMap((file) => file.pages)
   return { checks: checks.length, rows: glassboxCheckRows(guide, checks) }

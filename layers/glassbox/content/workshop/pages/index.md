@@ -15,9 +15,7 @@ Each curate run rewrites this section from what it learned. It holds facts and l
 
 Page changes earlier runs weighed and turned down. Do not propose them again without new evidence.
 
-- **Dropped:** `verification/07.timestamps-stored-as-strings` into `verification/06.schema-validation`. One refined-string helper whose concept is a `.refine`; its premise is taught on Zod refinements and Content validation.
 - **Dropped:** `skill-pack/02.planning-with-the-pack` into `skill-pack/01.skill-packs`. The seven-Skill tour is upstream and Skill Inventory content; only the wayfinder-on-GitHub mapping and the ready-for-agent rule are Terrarium's.
-- **Dropped:** promoting the draft `nuxt-content/06.prose-overrides`. Mermaid pre-rendering relies on the override it teaches, so promoting it would give that page a Lesson to link.
 - **Dropped:** `terrarium-practice/01.human-in-the-loop` into `git-github/04.trust-tiers`. The two-tier definition and the identity-not-text rule; the human-in-the-loop page links them.
 - **Dropped:** `skill-pack/02.planning-with-the-pack` into `git-github/06.work-queue`. The do-not-apply-ready-for-agent rule, already in work-queue's Who sets the state excerpt.
 - **Dropped:** `nuxt-content/04.query-collection` into `nuxt-vue/06.use-async-data`. The payload-size reason and the query-outside-useAsyncData warning that both pages state.

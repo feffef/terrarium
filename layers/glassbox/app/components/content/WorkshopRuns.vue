@@ -1,12 +1,12 @@
 <script setup lang="ts">
 const { collections } = useSpace('glassbox')
 
-// Select only what shows: it travels in the payload (ADR-0028).
+// Only the mapped fields below travel in the payload (ADR-0028).
 const { data } = await useAsyncData('glassbox-workshop-runs', async () => {
   const [runs, guide, drafts] = await Promise.all([
     queryCollection(collections.runs).order('stem', 'DESC').all(),
-    useGlassboxPages('guide'),
-    useGlassboxPages('drafts'),
+    queryGlassboxPages('guide'),
+    queryGlassboxPages('drafts'),
   ])
   const targets = Object.fromEntries([...drafts, ...guide].map(({ stem, ...page }) => [stem, page]))
   return runs.map(({ stem, pr, mode, focus, changes, learned }) => ({
