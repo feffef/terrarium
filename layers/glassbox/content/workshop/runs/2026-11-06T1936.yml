@@ -1,4 +1,5 @@
 session: session_013zxzeNeTKPqiQ1jj1FgYXh
+pr: 2905
 mode: autonomous
 focus: Gap — no Lesson taught building a commit without a checkout (git plumbing). Chosen because the memory page listed it as a concrete missing Lesson, no open PR touched the guide, and the other Git & GitHub pages were all edited in the last days, so no page fix was more pressing.
 changes:
