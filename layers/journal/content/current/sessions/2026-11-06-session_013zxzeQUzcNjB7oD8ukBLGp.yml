@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeQUzcNjB7oD8ukBLGp
 startedAt: 2026-11-06T07:26:07Z
-endedAt: 2026-11-06T18:44:00Z
+endedAt: 2026-11-06T19:02:38Z
 kind: interactive
 goal: Redesign glassbox-improve as a small goal-driven Skill
-status: completed
+status: in-review
 outcome: "Designed glassbox-curate and a deeper glassbox-update (spec #2896, sub-issues #2897-#2899), reviewed their build and merged follow-up PR #2903"
-summary: "Human-instructed throughout. The owner asked for an overview of glassbox-improve and glassbox-update and the improve Skill's deficits, from the open issues (#2871, #2872, #2805) and every Skill file. I read both Skills, grades.ts, the briefs, the glassbox-lesson docs, and counted runs.yml and grades.yml with a throwaway script. Main findings: 389 of 390 lens grades are B, the A election gave 1 A in 32 comparisons, the gate passed 109 of 110 edits, every run reads every page, rating is 57% of cost while 1 of 75 findings was fixed in the last run, and #2871's backlog already landed on main yet rarely survives because every page is re-read. The owner then asked for a redesign proposal for a smaller Skill under a new name, and for two sonnet Explore agents (history, run logs) to explain why each mechanism exists; their reports showed the absolute grades failed on three designs while QUALITY/DECISIONS, the researcher step and the claim check worked, and glassbox-update averages $1.37 a run. Decided with the owner: glassbox-update keeps existing pages true and gains a deep claim check on flagged pages plus a rotation; the new glassbox-curate owns structure, teaching quality and gaps, one focus per run, opus lead, about $20 a run, judged by the owner's review sessions. I proposed a per-page reader exam; the owner rejected it as moving the problem to writing exams, and I agreed. I recommended the Journal for the run log; the owner chose a Glass Box workshop Space holding a memory page that renders the run entries, not in the sidebar. The owner asked me to file the issue (needs-triage), then asked that the run data support several runs a day and that curate have an interactive mode (owner sets the focus, grilling on decisions) beside the autonomous one; I updated the issue body with the two modes, timestamp-named run files, a mode field, and an open question on recording cost for runs outside a Routine. A final grilling round (owner-invoked) settled the rest: links from both the guide overview and the homepage band, no cost stored (get_session), update's check state moves into the workshop, 1,500-word memory cap, improve paused and compared after 5-7 curate runs, interactive approval limited to Glass Box content, and a three-part split. I rewrote #2896 and filed sub-issues #2897 (workshop Space, human merge for the rule change), #2898 (update deep check) and #2899 (curate Skill), with #2898 and #2899 blocked by #2897. The owner then asked for a fable review: it found the guide overview can't link outside the guide (page-checks.ts:322), the update deep-check cost 3-6x low, weak self-checking of writers' sentences, churn, raw-MDC readers and concurrency gaps. The owner accepted all fixes except keeping update's check state in the workshop, rendered on the one workshop page; links are deferred. I rewrote all four issues with the fixes. I answered the implementing session's seven UI and shape questions (owner-delegated), then, at the owner's request, reviewed the merged PRs 2900-2902 against the design: all match, with a reasoned deviation (checks list without never-checked pages or links, to keep the page within its own Space), an empty desktop sidebar, and the curate Skill not naming the writer's model. The owner accepted the first two and asked me to drop the lead's model from curate, name the writer's (opus), and mention the claim check in glassbox-update's description; I did that in PR 2903 (code-review clean, gate green, self-merged). Agent-initiated: the deep-check rotation size, the drift-rule and glossary implications, the entry fields proposed and the issue's structure."
+summary: "Human-instructed throughout. The owner asked for an overview of glassbox-improve and glassbox-update and the improve Skill's deficits, from the open issues (#2871, #2872, #2805) and every Skill file. I read both Skills, grades.ts, the briefs, the glassbox-lesson docs, and counted runs.yml and grades.yml with a throwaway script. Main findings: 389 of 390 lens grades are B, the A election gave 1 A in 32 comparisons, the gate passed 109 of 110 edits, every run reads every page, rating is 57% of cost while 1 of 75 findings was fixed in the last run, and #2871's backlog already landed on main yet rarely survives because every page is re-read. The owner then asked for a redesign proposal for a smaller Skill under a new name, and for two sonnet Explore agents (history, run logs) to explain why each mechanism exists; their reports showed the absolute grades failed on three designs while QUALITY/DECISIONS, the researcher step and the claim check worked, and glassbox-update averages $1.37 a run. Decided with the owner: glassbox-update keeps existing pages true and gains a deep claim check on flagged pages plus a rotation; the new glassbox-curate owns structure, teaching quality and gaps, one focus per run, opus lead, about $20 a run, judged by the owner's review sessions. I proposed a per-page reader exam; the owner rejected it as moving the problem to writing exams, and I agreed. I recommended the Journal for the run log; the owner chose a Glass Box workshop Space holding a memory page that renders the run entries, not in the sidebar. The owner asked me to file the issue (needs-triage), then asked that the run data support several runs a day and that curate have an interactive mode (owner sets the focus, grilling on decisions) beside the autonomous one; I updated the issue body with the two modes, timestamp-named run files, a mode field, and an open question on recording cost for runs outside a Routine. A final grilling round (owner-invoked) settled the rest: links from both the guide overview and the homepage band, no cost stored (get_session), update's check state moves into the workshop, 1,500-word memory cap, improve paused and compared after 5-7 curate runs, interactive approval limited to Glass Box content, and a three-part split. I rewrote #2896 and filed sub-issues #2897 (workshop Space, human merge for the rule change), #2898 (update deep check) and #2899 (curate Skill), with #2898 and #2899 blocked by #2897. The owner then asked for a fable review: it found the guide overview can't link outside the guide (page-checks.ts:322), the update deep-check cost 3-6x low, weak self-checking of writers' sentences, churn, raw-MDC readers and concurrency gaps. The owner accepted all fixes except keeping update's check state in the workshop, rendered on the one workshop page; links are deferred. I rewrote all four issues with the fixes. I answered the implementing session's seven UI and shape questions (owner-delegated), then, at the owner's request, reviewed the merged PRs 2900-2902 against the design: all match, with a reasoned deviation (checks list without never-checked pages or links, to keep the page within its own Space), an empty desktop sidebar, and the curate Skill not naming the writer's model. The owner accepted the first two and asked me to drop the lead's model from curate, name the writer's (opus), and mention the claim check in glassbox-update's description; I did that in PR 2903 (code-review clean, gate green, self-merged). The owner then asked for a free-form memory page (state, two-horizon roadmap, their direction: split Claude Code, a web standards Subject for CSS and SVG, consistent titles, retire drafts, fill missing Subjects and Lessons; ideas from earlier glassbox session logs) and a 2,500-word cap. An opus subagent drafted it; I re-checked its counts, code-review found three procedure sentences (fixed) and one false positive, and I opened PR 2904, which the owner asked to review and merge themselves. Agent-initiated: the deep-check rotation size, the drift-rule and glossary implications, the entry fields proposed and the issue's structure."
 prs:
   - "2903"
+  - "2904"
 docsRead:
   - path: .agents/skills/glassbox-improve/SKILL.md
     reason: "the Skill under review: its 10 steps, remit and trial review"
@@ -88,13 +89,16 @@ docsRead:
   - path: .agents/skills/writing-for-agents/SKILL.md
     reason: the Standards reviewer used it for the description and pruning rules
     useful: yes
+  - path: docs/adr/0021-multi-context-domain-docs.md
+    reason: read after the hook on the Glass Box glossary edit; product decisions belong in the Tenant glossary, so the cap pointer fits
+    useful: partly
+  - path: CLAUDE.md
+    reason: (no reason given)
   - path: layers/glassbox/tenant.config.ts
     reason: (no reason given)
   - path: layers/glassbox/page-checks.ts
     reason: (no reason given)
   - path: layers/glassbox/tests/unit/glassbox-pages.spec.ts
-    reason: (no reason given)
-  - path: CLAUDE.md
     reason: (no reason given)
 skillsUsed:
   - name: dispatch-subagents
@@ -136,32 +140,39 @@ frictions:
   - description: Added an 'in its own worktree' clause that dispatch-subagents already states, so code-review flagged it and a second commit and gate run were needed
     solution: Before adding a clause to a Skill, grep the Skills it relies on for the same fact
     severity: minor
-durationSec: 40673
+  - description: Started gate:scoped in parallel with the code-review subagents, then committed their fixes, so the gate aborted and had to run twice more
+    solution: Run the gate only after review fixes are committed; reviews and the gate are not parallel work
+    severity: minor
+durationSec: 41790
 models:
-  claude-opus-5-5: 267
+  claude-opus-5-5: 346
 toolCounts:
-  Bash: 72
-  ToolSearch: 4
+  Bash: 95
+  ToolSearch: 5
   mcp__github__list_issues: 2
   mcp__github__issue_read: 8
-  Skill: 8
-  Agent: 5
+  Skill: 9
+  Agent: 8
   AskUserQuestion: 1
   Write: 3
   mcp__github__issue_write: 10
-  Edit: 15
+  Edit: 21
   Read: 2
-  ReadNotifications: 1
+  ReadNotifications: 2
   mcp__claude-code-remote__send_message: 1
   mcp__github__list_pull_requests: 1
   mcp__github__pull_request_read: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__add_issue_comment: 1
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
+  SendMessage: 4
 filesEdited:
   - .agents/skills/glassbox-curate/SKILL.md
   - .agents/skills/glassbox-update/SKILL.md
+  - layers/glassbox/GLOSSARY.md
+  - layers/glassbox/content/workshop/pages/index.md
+  - layers/glassbox/tests/unit/workshop.spec.ts
 rulesLoaded:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0027.md
@@ -188,6 +199,7 @@ rulesGlobal:
 rulesFollowedUp:
   - .claude/rules/adr-0005.md
   - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0021.md
 adrHints:
   - adr: 5
     via: path
@@ -197,16 +209,20 @@ adrHints:
     via: path
     readAfter: true
     by: main
+  - adr: 21
+    via: path
+    readAfter: true
+    by: main
 rulesLoadedBySubagents:
   - .claude/rules/adr-0001.md
   - .claude/rules/adr-0013.md
   - .claude/rules/adr-0025.md
   - .claude/rules/ui-verification.md
 docsReadBySubagents:
+  - .agents/skills/writing-for-agents/SKILL.md
   - GLOSSARY-MAP.md
   - docs/agents/mdc-when-to-use.md
   - .agents/skills/log-session/SKILL.md
-  - .agents/skills/writing-for-agents/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: No PR in this session; it shaped the issue's note on what needs a human merge. Summary was enough
@@ -290,35 +306,56 @@ subagents:
     durationSec: 215
     toolCalls: 22
     modelCalls: 20
-    tokenShare: 5.1
+    tokenShare: 3.6
   - type: Explore
     task: Explore glassbox run session logs
     model: sonnet
     durationSec: 288
     toolCalls: 32
     modelCalls: 31
-    tokenShare: 7.2
+    tokenShare: 5.1
   - type: Explore
     task: Fable review of curate design
     model: fable
     durationSec: 446
     toolCalls: 41
     modelCalls: 7
-    tokenShare: 4.4
+    tokenShare: 3.1
   - type: Explore
     task: "Code review: Standards axis"
     model: sonnet
     durationSec: 23
     toolCalls: 5
     modelCalls: 3
-    tokenShare: 1.2
+    tokenShare: 0.8
   - type: Explore
     task: "Code review: Spec axis"
     model: sonnet
     durationSec: 13
     toolCalls: 3
     modelCalls: 2
-    tokenShare: 1
+    tokenShare: 0.7
+  - type: Explore
+    task: Draft workshop memory page
+    model: opus
+    durationSec: 430
+    toolCalls: 40
+    modelCalls: 37
+    tokenShare: 5.6
+  - type: Explore
+    task: "Code review: Standards axis"
+    model: sonnet
+    durationSec: 33
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 1.1
+  - type: Explore
+    task: "Code review: Spec axis"
+    model: sonnet
+    durationSec: 53
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 1.2
 gitBranch: ccr-160f8d19-vqizrn
 entrypoint: remote_mobile
 cliVersion: 2.1.318
