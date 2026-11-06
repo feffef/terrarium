@@ -167,9 +167,8 @@ resolution.
      separately: diagnostics go to stderr and break the JSON on stdout.
    - Before labelling a candidate never-fixed, filter
      `pnpm exec tsx scripts/github/list-open-issues.ts > {SCRATCH_DIR}/open-issues.json` output locally by the
-     Friction's tool name and error text, and page `mcp__github__list_issues`
-     with `state: CLOSED` (parameters per `docs/agents/github-integration.md`),
-     filtering titles locally. A title match is a hint, not proof, and a
+     Friction's tool name and error text, and likewise
+     `pnpm exec tsx scripts/github/list-open-issues.ts 200 --closed > {SCRATCH_DIR}/closed-issues.json`. A title match is a hint, not proof, and a
      miss alone proves nothing: also eyeball nearby issues (same file,
      script or mechanism) for a closed one covering the same root cause in
      other words. A paraphrase or a nearby instance of an already-fixed

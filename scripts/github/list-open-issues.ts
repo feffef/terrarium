@@ -24,13 +24,19 @@
 // does the helper exit, with an actionable message pointing at the MCP
 // fallback rather than a bare ENOENT.
 //
-// Usage:  tsx scripts/github/list-open-issues.ts [N]
-//   Prints up to N open issues (default 50) as JSON:
-//   { number, title, labels, updatedAt }. Newest-updated-first.
+// `--closed` lists closed issues instead, same shape: the survey brief uses it
+// to look for an already-fixed cause without paging `list_issues` (issue #2877).
+// The file keeps its name because other scripts import its types.
+//
+// Usage:  tsx scripts/github/list-open-issues.ts [N] [--closed]
+//   Prints up to N open (or, with --closed, closed) issues (default 50) as
+//   JSON: { number, title, labels, updatedAt }. Newest-updated-first.
 import { fail, root, runIfMain } from '../lib/cli.ts'
 import { decodeHtmlEntities, listAll, NO_ACCESS_MESSAGE, resolveAccess, type Access } from '../lib/github-client.ts'
 
 const DEFAULT_LIMIT = 50
+
+type IssueState = 'open' | 'closed'
 
 // ── Types ───────────────────────────────────────────────────────────────────
 
@@ -96,14 +102,14 @@ const withCaveat = (err: unknown): Error => {
   return new Error(`${msg}. ${MCP_FALLBACK_CAVEAT}`, { cause: err })
 }
 
-export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root): OpenIssue[] {
+export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root, state: IssueState = 'open'): OpenIssue[] {
   let access: Access
   try {
     access = resolveAccess(cwd)
   } catch (err) {
     throw err instanceof Error && err.message === NO_ACCESS_MESSAGE ? withCaveat(err) : err
   }
-  const list = () => openIssues(listAll<RawIssueApiRecord>(access, 'issues', { state: 'open' }), limit)
+  const list = () => openIssues(listAll<RawIssueApiRecord>(access, 'issues', { state }), limit)
   if (access.strategy === 'gh') return list()
   try {
     return list()
@@ -114,15 +120,23 @@ export function listOpenIssues(limit = DEFAULT_LIMIT, cwd = root): OpenIssue[] {
 
 // ── CLI ───────────────────────────────────────────────────────────────────────
 
+export function parseArgs(argv: string[]): { state: IssueState; limit: number } {
+  const state: IssueState = argv.includes('--closed') ? 'closed' : 'open'
+  const limitArg = argv.find((a) => a !== '--closed')
+  if (limitArg === undefined) return { state, limit: DEFAULT_LIMIT }
+  const limit = Number(limitArg)
+  if (!Number.isInteger(limit) || limit <= 0) throw new Error(`not a positive integer: ${limitArg}`)
+  return { state, limit }
+}
+
 function main(): void {
-  const argv = process.argv.slice(2)
-  const limitArg = argv[0]
-  let limit = DEFAULT_LIMIT
-  if (limitArg !== undefined) {
-    limit = Number(limitArg)
-    if (!Number.isInteger(limit) || limit <= 0) fail(`not a positive integer: ${limitArg}`)
+  let args: ReturnType<typeof parseArgs>
+  try {
+    args = parseArgs(process.argv.slice(2))
+  } catch (err) {
+    return fail(err instanceof Error ? err.message : String(err))
   }
-  process.stdout.write(JSON.stringify(listOpenIssues(limit), null, 2) + '\n')
+  process.stdout.write(JSON.stringify(listOpenIssues(args.limit, root, args.state), null, 2) + '\n')
 }
 
 runIfMain(import.meta.url, main)
