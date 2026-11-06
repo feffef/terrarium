@@ -1,14 +1,15 @@
 schemaVersion: 1
 session: session_013zxzeRCJHe4rmKN5i2CQ16
 startedAt: 2026-11-06T16:58:10Z
-endedAt: 2026-11-06T17:31:27Z
+endedAt: 2026-11-06T17:42:00Z
 kind: interactive
-goal: Build the Glass Box workshop Space (issue 2897)
-status: completed
-outcome: PR 2900 merged by the owner; issue 2897 closed
-summary: "The user ran /implement on #2896 (a design spec with three sub-issues) and, when asked, chose #2897 only (the workshop Space). They told me to put UI questions to the session that wrote the spec, which I did (seven questions, all answered with recommendations, not owner decisions). I then built the manifest entries, the seeded memory page, two MDC components, helper tests and the glossary and drift-rule exceptions. Agent-initiated: reading the guide and drafts Spaces to link pages and list never-checked pages (the spec session recommended it); dropping three stale seed steps; renaming the page lookup; running code-review with two read-only subagents; opening PR 2900 and subscribing, as ADR-0003 asks. Human-instructed: the scope choice, asking the spec session, 'OK for now' (taken as approval of the sidebar and list look, then the PR), 'Remove the read, keep it simple' after I explained the read had no requirement behind it, and the human merge itself (the PR edited a Human-only file, so the owner merged it; I did not). The cross-Space read broke ADR-0006 (a page reads only its own Space); code-review flagged it and the user had it removed, so the checks list shows only checked pages and page names are plain stems. CI was green on the final head and the PR merged about five minutes after opening. Still open after the merge: an empty frosted sidebar pane on desktop, no owner sign-off on the list look beyond 'OK for now', and the blocked sub-issues 2898 and 2899."
+goal: Build the Glass Box workshop Space and the update claim check (issues 2897, 2898)
+status: in-review
+outcome: PR 2900 (workshop Space) merged; PR 2901 (update claim check) is open and waits for a human merge
+summary: "The user ran /implement on #2896 (a design spec with three sub-issues) and chose #2897 only. They told me to put UI questions to the session that wrote the spec (seven questions, answered as recommendations, not owner decisions). I built the workshop Space: manifest entries, a seeded memory page, two MDC components, helper tests and the glossary and drift-rule exceptions. PR 2900 was reviewed with code-review (two read-only subagents), gated and merged by the owner. After the merge the user said '/implement 2898 in a subagent': I dispatched one implementation agent in its own worktree, pinned to origin/main, with a brief that fixed the page-identifier decision (guide page stem) and a size ceiling. I checked its hand-back (head, diff, gate log), ran code-review on it, sent the findings back to the same agent (three commits in all, each gated), reviewed the follow-up commit again, then pushed the branch and opened PR 2901. Agent-initiated: the cross-Space read in PR 2900 (later removed), dropping three stale seed steps, running code-review rounds, the page-stem decision, opening both PRs and subscribing, as ADR-0003 asks. Human-instructed: the scope, asking the spec session, 'OK for now', 'Remove the read, keep it simple', and 'merged, now /implement 2898 in a subagent'. The owner merged PR 2900 (Human-only file). PR 2901 changes the Skill the daily Routine runs, which no test can observe, so it also needs a human merge. Open: the issue's real-run cost measurement (the PR says so and does not close 2898), an empty frosted sidebar pane on the workshop page, and the blocked sub-issue 2899."
 prs:
   - "2900"
+  - "2901"
 docsRead:
   - path: docs/agents/github-integration.md
     reason: required before the first GitHub call; gave the tool map and the entity-encoding caveat
@@ -37,6 +38,27 @@ docsRead:
   - path: docs/adr/0006-runtime-routing-path-prefix.md
     reason: read the lines on page-reads-own-Space but still built the cross-Space read; the review and user then removed it
     useful: yes
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: the Skill being changed; the implementation agent read it in full and I read it on the branch
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: implementation agent read it for the docs-URL fallback and cited it in the new step
+    useful: yes
+  - path: docs/adr/0027-prune-trials.md
+    reason: implementation agent read it after a hook; confirmed no open trial covers the Skill text
+    useful: partly
+  - path: .agents/skills/writing-for-agents/SKILL.md
+    reason: the standard for Skill prose; the Standards reviewer read it and judged the new step against it
+    useful: yes
+  - path: docs/adr/0005-skill-model.md
+    reason: implementation agent read it; confirms Skills live in the repo, no change needed
+    useful: partly
+  - path: .agents/skills/glassbox-improve/rater-brief.md
+    reason: source of the rater C claim-check wording copied into the Skill
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: the Standards reviewer used its brief checklist to test the new step; I read it before dispatching
+    useful: yes
   - path: layers/glassbox/app/utils/workshop.ts
     reason: (read before editing)
   - path: layers/glassbox/app/components/content/WorkshopRuns.vue
@@ -55,6 +77,8 @@ skillsUsed:
   - name: close-session
     reason: closure after opening PR 2900
   - name: log-session
+    reason: (no reason given)
+  - name: writing-for-agents
     reason: (no reason given)
 frictions:
   - description: Built a cross-Space read although ADR-0006 says a page reads only its own Space; I leaned on the Journal precedent and the spec session's advice.
@@ -75,9 +99,15 @@ frictions:
   - description: The preview shot of a route with an anchor did not scroll, so I took full-page shots and cropped them with a script.
     solution: Document in verifying-ui-changes.md that anchors do not scroll in shot mode, and recommend a full-page shot with a crop.
     severity: nit
-durationSec: 1997
+  - description: Saved only the first subagent hand-back with save-handback.ts; the later hand-backs and the reviewers' replies were not saved.
+    solution: Run save-handback.ts after every hand-back, or note in dispatch-subagents that a resumed agent's later reply needs it too.
+    severity: nit
+  - description: A third commit and gate run was spent on a one-phrase rewording that a bundled second pass could have carried.
+    solution: Collect every reviewer's wording nits before resuming the implementation agent, and send one fix list.
+    severity: nit
+durationSec: 2630
 models:
-  claude-sonnet-5-5: 250
+  claude-sonnet-5-5: 321
 toolCounts:
   Read: 18
   ToolSearch: 4
@@ -85,17 +115,18 @@ toolCounts:
   AskUserQuestion: 1
   mcp__claude-code-remote__send_message: 1
   ReadNotifications: 5
-  Bash: 60
+  Bash: 76
   Write: 7
   Edit: 2
-  Skill: 5
-  Agent: 3
-  mcp__github__list_pull_requests: 1
-  mcp__github__create_pull_request: 1
-  mcp__claude-code-remote__subscribe_pr_activity: 1
+  Skill: 8
+  Agent: 7
+  mcp__github__list_pull_requests: 2
+  mcp__github__create_pull_request: 2
+  mcp__claude-code-remote__subscribe_pr_activity: 2
   mcp__github__pull_request_read: 6
   mcp__claude-code-remote__send_later: 1
   mcp__claude-code-remote__delete_trigger: 1
+  SendMessage: 2
 filesEdited:
   - layers/glassbox/tests/unit/workshop.spec.ts
   - layers/glassbox/app/utils/workshop.ts
@@ -103,6 +134,7 @@ filesEdited:
   - layers/glassbox/app/composables/useGlassboxPages.ts
   - layers/glassbox/app/components/content/WorkshopRuns.vue
   - layers/glassbox/app/components/content/WorkshopChecks.vue
+  - .agents/skills/glassbox-update/SKILL.md
   - layers/glassbox/app/utils/workshop-pages.ts
   - layers/glassbox/content/workshop/pages/index.md
   - .claude/rules/glassbox-content.md
@@ -142,6 +174,8 @@ rulesFollowedUp:
   - .claude/rules/adr-0002.md
   - .claude/rules/adr-0028.md
   - .claude/rules/adr-0006.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
 adrHints:
   - adr: 2
     via: path
@@ -151,6 +185,17 @@ adrHints:
     via: text
     readAfter: true
     by: main
+  - adr: 27
+    via: path
+    readAfter: true
+    by: subagent
+docsReadBySubagents:
+  - .agents/skills/glassbox-lesson/EVERY-PAGE.md
+  - docs/adr/0027-prune-trials.md
+  - docs/adr/0005-skill-model.md
+  - .agents/skills/glassbox-improve/rater-brief.md
+  - .agents/skills/writing-for-agents/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
 ruleVerdicts:
   - path: .claude/rules/adr-0004.md
     reason: Made me run gate:scoped and code-review before the PR; the summary was enough, skipped the full ADR
@@ -239,20 +284,47 @@ subagents:
     durationSec: 49
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 4.9
+    tokenShare: 3
   - type: general-purpose
     task: Spec review of workshop diff
     durationSec: 65
     toolCalls: 11
     modelCalls: 6
-    tokenShare: 6
+    tokenShare: 3.7
   - type: general-purpose
     task: "Implement #2898 update claim check"
-    durationSec: 0
-    toolCalls: 0
+    durationSec: 549
+    toolCalls: 53
+    modelCalls: 35
+    tokenShare: 10.5
+  - type: general-purpose
+    task: Standards review of update claim check
+    durationSec: 40
+    toolCalls: 6
+    modelCalls: 5
+    tokenShare: 2.8
+  - type: general-purpose
+    task: Spec review of update claim check
+    durationSec: 35
+    toolCalls: 8
+    modelCalls: 4
+    tokenShare: 2.8
+  - type: general-purpose
+    task: Standards review of follow-up commit
+    durationSec: 18
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 1.1
+  - type: general-purpose
+    task: Spec review of follow-up commit
+    durationSec: 28
+    toolCalls: 6
+    modelCalls: 4
+    tokenShare: 1.3
 gitBranch: ccr-f9f7a11b-sh915o
 entrypoint: remote_mobile
 cliVersion: 2.1.318
 learnings:
   - scripts/ui/preview.ts shot does not scroll to a route anchor, despite its usage text; take a full-page shot and crop.
+  - A resumed worktree agent keeps its branch and scratchpad; its later hand-backs arrive as new messages and still need to be verified against git.
 landedBy: Stop
