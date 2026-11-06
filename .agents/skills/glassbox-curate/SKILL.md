@@ -37,15 +37,24 @@ this Skill, the `glassbox-lesson` docs or the page checks, become issues.
 [`../glassbox-lesson/QUALITY.md`](../glassbox-lesson/QUALITY.md) (Lenses only),
 [`../glassbox-lesson/DECISIONS.md`](../glassbox-lesson/DECISIONS.md),
 `.claude/rules/glassbox-content.md`, the workshop page and its run entries.
-Subagents can't follow the `.claude/skills` link: write Skill paths in their
-briefs as `.agents/skills/...`.
+Subagents read committed files at the base with `git show <base>:<path>`,
+which can't follow the `.claude/skills/<name>` link, so write every Skill path
+in a brief as `.agents/skills/...`.
 
 ## How a run goes
 
 - **Orient.** Run `pnpm exec tsx layers/glassbox/page-checks.ts`: its warnings
   and orphans are one source of focus. Read the memory page, the last few run
-  entries and `git log` of the guide. Leave alone every page an open PR touches
-  and every focus another open curate run has claimed.
+  entries, the catalog (every page's title, description, Subject and Where next
+  links) and `git log` of the guide since the last run. Leave alone every page
+  an open PR touches and every focus another open curate run has claimed.
+- **Choose.** Take the focus from memory leads, the owner's review notes,
+  page-check warnings, catalog problems or gaps; when nothing is pressing, from
+  pages no fresh reader has seen lately (`pagesRead`). The run entry says why.
+- **Gaps.** Compare what Terrarium relies on (`package.json`, the ADRs, the
+  Skills, `scripts/`) with what the Lessons teach. The memory page keeps known
+  gaps, those left uncovered on purpose too. Fix what makes pages hard to learn
+  from first; take a gap when no page problem outweighs it.
 - **Claim.** Right after choosing, push the run branch with its run entry, so a
   concurrent run sees the focus.
 - **Diagnose.** Fresh readers (sonnet, no repo access) get each page as plain
@@ -58,12 +67,15 @@ briefs as `.agents/skills/...`.
   page. Never reverse a change from the last 5 runs unless it made the page false.
 - **Fix.** The writer quotes the `path:line` behind every sentence it adds or
   changes.
-- **Check.** A separate sonnet claim checker checks the changed sentences;
-  `glassbox-update` owns the claim check of unchanged text, so do none of it.
-  The page checks and `validate:content` pass (EVERY-PAGE.md, Check), and a
-  fresh reader re-reads the changed pages. One retry, then drop the change.
-- **Land.** Merge `origin/main` and keep the newer pin. Rewrite the memory page,
-  complete the run entry, open one self-merged PR (`docs/agents/pr-workflow.md`).
+- **Check.** A separate sonnet claim checker checks the changed sentences
+  and a promoted draft's whole page (`glassbox-update` checks the guide only).
+  `glassbox-update` owns the claim check of unchanged text, so leave that to it.
+  Run EVERY-PAGE.md's Check on the changed pages, and a fresh reader re-reads
+  them. One retry, then drop the change.
+- **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
+  both rewrite the memory page: the later one keeps both runs' leads. Rewrite
+  the memory page, complete the run entry, open one self-merged PR
+  (`docs/agents/pr-workflow.md`). Done when the PR is open with both current.
 
 ## State
 
