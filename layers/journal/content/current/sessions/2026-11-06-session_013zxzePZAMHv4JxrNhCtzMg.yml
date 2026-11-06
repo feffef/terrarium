@@ -1,0 +1,297 @@
+schemaVersion: 1
+session: session_013zxzePZAMHv4JxrNhCtzMg
+startedAt: 2026-11-06T00:46:07Z
+endedAt: 2026-11-06T00:55:36Z
+kind: autonomous
+goal: Weekly check of the Platform's own Skills
+status: in-review
+outcome: "Audit done; issue #2874 filed; Inventory PR #2875 open and green"
+summary: "Scheduled audit-skills run, agent-initiated by the schedule (no human prompt). Gathered the 7-day scorecard, had one subagent fetch usage for 7 Routine runs and 12 subagents check one Skill each. All checked Skills delivered their outcomes. Step 3 closure: orphanScan scanned 1905 merged PRs, 1748 with a session; both orphan candidates carry resolvedBy (#736, #1063) and the suppression log shows only resolved-annotation; one human-prompted closure (session_013zxzeRkv6UCWJtPmJ68h32) is already tracked. Filed one issue, #2874, for the dispatch-subagents review-agent checkout repeating a third time (its own prior observation said to escalate then). All other findings went into seven Skill observations, no grade or role changes. Opened PR #2875 (Inventory and Routine rows only) after code-review Standards and Spec found nothing blocking and gate:scoped went green. Left unmerged: closure is not yet completed; merge via merge-pr.ts is the next step."
+prs:
+  - "2875"
+docsRead:
+  - path: .agents/skills/audit-skills/brief.md
+    reason: the subagent brief for each Skill check
+    useful: yes
+  - path: docs/agents/issue-tracker.md
+    reason: "filing an issue: what to include"
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: closing a scheduled run's PR and review rules
+    useful: yes
+  - path: docs/agents/github-integration.md
+    reason: which GitHub tool works in the cloud; glassbox-update subagent also read it and found it useful
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: read after my first non-read-only git commit; blog-post subagent read it partly useful
+    useful: partly
+  - path: .claude/skills/audit-skills/brief.md
+    reason: (no reason given)
+  - path: .agents/skills/blog-post/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-05-session_013zxzeTJp1jinYqgNJRczgA.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-04-session_013zxzeT8tDd5GPJiRNZRA4J.yml
+    reason: (no reason given)
+  - path: .agents/skills/audit-skills/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/glassbox-update/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/digest/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/frictions-to-fixes/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-05-session_013zxzeS7NuFmaoXJkxVfNby.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-04-session_013zxzeNezKVRxRiZLs4z9n4.yml
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-03-session_013zxzeSrSkYPpnoS2ag6EbC.yml
+    reason: (no reason given)
+  - path: .agents/skills/close-session/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/clear-backlog/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/visitor-loop/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-03-session_013zxzePCZc7PkwLBo6YoDJt.yml
+    reason: (no reason given)
+  - path: .agents/skills/log-session/SKILL.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/sessions/2026-11-06-session_013zxzeTDG9WP45rYE5hRMpG.yml
+    reason: (no reason given)
+  - path: .agents/skills/prune-trial/SKILL.md
+    reason: (no reason given)
+  - path: .agents/skills/audit-docs/SKILL.md
+    reason: (no reason given)
+skillsUsed:
+  - name: dispatch-subagents
+    reason: brief the usage and 12 check subagents
+  - name: code-review
+    reason: Standards and Spec review before the PR
+  - name: close-session
+    reason: closure
+  - name: log-session
+    reason: (no reason given)
+  - name: audit-skills
+    reason: (invoked as a slash command)
+frictions:
+  - description: Read git-conventions.md, github-integration.md and issue-tracker.md only after hook prompts, after running git/gh commands, not before as CLAUDE.md says.
+    solution: Read them before the first non-read-only git or GitHub call; the hint hook already prompts after the fact.
+    severity: nit
+  - description: Looked up the dispatch-subagents observations by dumping a 32KB YAML twice (output overflowed) before parsing only the last entries.
+    solution: Print only the last observations with a short python snippet from the start.
+    severity: nit
+  - description: Subagent reports each listed docs verdicts for rules I then had to relay; pending report lists 20 subagent-only rules and docs.
+    solution: Have the brief ask for verdicts in a structured one-line-per-rule form.
+    severity: nit
+durationSec: 570
+models:
+  claude-sonnet-5-5: 83
+toolCounts:
+  Bash: 21
+  Skill: 4
+  Agent: 16
+  ToolSearch: 2
+  mcp__Claude_Code_Remote__get_session: 1
+  mcp__github__issue_write: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+filesEdited:
+  - layers/journal/content/current/routines/audit-docs.yml
+  - layers/journal/content/current/routines/audit-skills.yml
+  - layers/journal/content/current/routines/blog-post.yml
+  - layers/journal/content/current/routines/digest.yml
+  - layers/journal/content/current/routines/frictions-to-fixes.yml
+  - layers/journal/content/current/routines/glassbox-update.yml
+  - layers/journal/content/current/routines/prune-trial.yml
+  - layers/journal/content/current/skills/clear-backlog.yml
+  - layers/journal/content/current/skills/digest.yml
+  - layers/journal/content/current/skills/dispatch-subagents.yml
+  - layers/journal/content/current/skills/glassbox-improve.yml
+  - layers/journal/content/current/skills/glassbox-update.yml
+  - layers/journal/content/current/skills/log-session.yml
+  - layers/journal/content/current/skills/tinkerfund-campaign.yml
+  - layers/journal/content/current/skills/visitor-loop.yml
+rulesLoaded:
+  - .claude/rules/adr-0015.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/adr-0029.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesLoadedBySubagents:
+  - .claude/rules/adr-0012.md
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/adr-0022.md
+  - .claude/rules/adr-0028.md
+docsReadBySubagents:
+  - .agents/skills/blog-post/SKILL.md
+  - .agents/skills/glassbox-improve/SKILL.md
+  - .agents/skills/audit-skills/SKILL.md
+  - .agents/skills/glassbox-update/SKILL.md
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/prune-trial/SKILL.md
+  - .agents/skills/frictions-to-fixes/SKILL.md
+  - .agents/skills/close-session/SKILL.md
+  - .agents/skills/dispatch-subagents/SKILL.md
+  - .agents/skills/audit-docs/SKILL.md
+  - .agents/skills/clear-backlog/SKILL.md
+  - .agents/skills/visitor-loop/SKILL.md
+  - .agents/skills/log-session/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Sets review and gate before the PR; summary was enough, no full ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Says the log goes straight to main; summary enough
+    useful: partly
+  - path: .claude/rules/adr-0003.md
+    reason: Scheduled run changes only what its Skill allows; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Required the session header on the issue and PR; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0015.md
+    reason: Inventory-only edits and when a grade may move; summary enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; no trial text changed
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skills as code; I edited no Skill
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on Journal reads; I did no Tenant work
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: Instruction placement; irrelevant to an audit
+    useful: no
+  - path: .claude/rules/adr-0012.md
+    reason: Only the blog-post subagent loaded it; it called it partly useful
+    useful: partly
+  - path: .claude/rules/adr-0010.md
+    reason: Only the digest subagent loaded it; useful, the Digest rule
+    useful: yes
+  - path: .claude/rules/adr-0030.md
+    reason: Loaded by subagents only; they found it not useful
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded by subagents only; not needed
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Loaded by the audit-docs subagent only; not needed
+    useful: no
+subagents:
+  - task: Fetch routine run usage
+    model: sonnet
+    durationSec: 26
+    toolCalls: 11
+    modelCalls: 4
+    tokenShare: 2.9
+  - task: Check audit-docs behaviour
+    model: sonnet
+    durationSec: 56
+    toolCalls: 11
+    modelCalls: 9
+    tokenShare: 4.8
+  - task: Check audit-skills behaviour
+    model: sonnet
+    durationSec: 68
+    toolCalls: 16
+    modelCalls: 10
+    tokenShare: 5.8
+  - task: Check blog-post behaviour
+    model: sonnet
+    durationSec: 63
+    toolCalls: 17
+    modelCalls: 12
+    tokenShare: 5.8
+  - task: Check clear-backlog behaviour
+    model: sonnet
+    durationSec: 62
+    toolCalls: 15
+    modelCalls: 9
+    tokenShare: 4.6
+  - task: Check close-session behaviour
+    model: sonnet
+    durationSec: 56
+    toolCalls: 11
+    modelCalls: 8
+    tokenShare: 4.2
+  - task: Check digest behaviour
+    model: sonnet
+    durationSec: 44
+    toolCalls: 12
+    modelCalls: 7
+    tokenShare: 4.2
+  - task: Check dispatch-subagents behaviour
+    model: sonnet
+    durationSec: 113
+    toolCalls: 20
+    modelCalls: 14
+    tokenShare: 7.2
+  - task: Check frictions-to-fixes behaviour
+    model: sonnet
+    durationSec: 65
+    toolCalls: 18
+    modelCalls: 10
+    tokenShare: 6.2
+  - task: Check glassbox-improve behaviour
+    model: sonnet
+    durationSec: 55
+    toolCalls: 13
+    modelCalls: 9
+    tokenShare: 5.5
+  - task: Check glassbox-update behaviour
+    model: sonnet
+    durationSec: 59
+    toolCalls: 13
+    modelCalls: 8
+    tokenShare: 4.4
+  - task: Check log-session behaviour
+    model: sonnet
+    durationSec: 50
+    toolCalls: 13
+    modelCalls: 8
+    tokenShare: 4.3
+  - task: Check prune-trial behaviour
+    model: sonnet
+    durationSec: 57
+    toolCalls: 12
+    modelCalls: 9
+    tokenShare: 4.6
+  - task: Check visitor-loop behaviour
+    model: sonnet
+    durationSec: 58
+    toolCalls: 16
+    modelCalls: 8
+    tokenShare: 4.9
+  - task: Standards review of Inventory diff
+    model: sonnet
+    durationSec: 28
+    toolCalls: 8
+    modelCalls: 5
+    tokenShare: 3.4
+  - task: Spec review of Inventory diff
+    model: sonnet
+    durationSec: 44
+    toolCalls: 10
+    modelCalls: 8
+    tokenShare: 4.1
+gitBranch: claude/upbeat-sagan-aqzgsd
+entrypoint: remote_trigger
+cliVersion: 2.1.318
+trigger: audit-skills
+landedBy: Stop
