@@ -1,0 +1,177 @@
+schemaVersion: 1
+session: session_013zxzeR86XgVYHo9beEWkmj
+startedAt: 2026-11-06T00:16:07Z
+endedAt: 2026-11-06T00:23:28Z
+kind: autonomous
+goal: Write the 2026-11-05 Journal Digest
+status: in-review
+outcome: PR 2870 open with the 2026-11-05 Digest and archive sweep; gate green, awaiting CI
+summary: Scheduled digest run, agent-initiated by the schedule with no human prompts. Gathered 2026-11-05 (17 PRs, 11 sessions), wrote one Digest, fact-checked it with a subagent (28 claims; one wrong, one imprecise, both fixed), ran the archive sweep (1 Digest, 15 session logs), ran Standards and Spec review, applied wording tweaks, passed gate:scoped and opened PR 2870. Merge pending CI.
+prs:
+  - "2870"
+docsRead:
+  - path: docs/adr/0010-digests-derived-append-only-journal-pages.md
+    reason: Skill requires it; confirmed Digests are written once and may be archived
+    useful: yes
+  - path: docs/agents/git-conventions.md
+    reason: Read-first trigger for git; fetch and commit-message hygiene
+    useful: partly
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: Guard demanded it before the fact-check brief; read-only agents need no isolation
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: Read-first trigger before opening the PR; MCP tool guidance
+    useful: partly
+  - path: docs/agents/pr-workflow.md
+    reason: Closing a scheduled run's PR steps and review-before-PR order
+    useful: yes
+  - path: .agents/skills/digest/SKILL.md
+    reason: Standards reviewer subagent read it as the writing spec
+    useful: yes
+  - path: .agents/skills/glassbox-improve/SKILL.md
+    reason: Fact-check subagent read its diff to verify the PR 2868 claim
+    useful: yes
+  - path: layers/journal/content/current/pages/digests/2026-11-04.md
+    reason: (no reason given)
+  - path: layers/journal/content/current/pages/digests/2026-11-05.md
+    reason: (read before editing)
+skillsUsed:
+  - name: code-review
+    reason: (no reason given)
+  - name: close-session
+    reason: (no reason given)
+  - name: log-session
+    reason: (no reason given)
+  - name: digest
+    reason: (invoked as a slash command)
+frictions:
+  - description: Ran git status, digest list and gather before reading git-conventions.md as CLAUDE.md orders; a hook pointed to it afterwards. All were read-only.
+    solution: Have the digest Skill name the git-conventions read before step 1.
+    severity: nit
+  - description: First Agent call for the fact-check was blocked by the dispatch-read guard because I had not read dispatch-subagents; one wasted call.
+    solution: Digest step 3 could name dispatch-subagents as a read before the fact-check brief.
+    severity: minor
+  - description: First draft described PR 2862 as page-summary history, but it concerns a queued step's gist, and said fold two pages together; the fact-check caught both.
+    solution: Read each PR's diff before describing it, not only its title and the session outcome.
+    severity: minor
+  - description: The Stop hook asked repeatedly to push while review and the gate were pending, against the review-before-push order; I declined until the gate passed.
+    solution: Stop hook could skip its push nag while a gate or review is in flight.
+    severity: nit
+durationSec: 442
+models:
+  claude-sonnet-5-5: 58
+toolCounts:
+  Bash: 12
+  Read: 6
+  Write: 1
+  Agent: 4
+  Edit: 5
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__github__subscribe_pr_activity: 1
+filesEdited:
+  - layers/journal/content/current/pages/digests/2026-11-05.md
+  - layers/journal/content/archived/pages/digests/2026-10-29.md
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzePQM2TjRCTtcKaV61o.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzePtHJNqS19fEy1yRGv.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeQ5JaiqQgggGaNSagD.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeQBZ87ypp2V7zZVW9v.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeQPnKXDNxriCwJfZnz.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeQUV6c2tzkFzv3WgiY.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeQZ6Qwu5TMAKNcgDtH.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeQhtk66yyXVbQRdWeb.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeQn5ksJrQasTk95LKb.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeRejGhGCyE3SttX9AL.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeRnPtjPsVQM71SzX63.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeRoWcNj4VhbkkjybNG.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeSgD6cuF2mawqY6jWM.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeT84bc5MXpkCAApyxA.yml
+  - layers/journal/content/archived/sessions/2026-10-29-session_013zxzeTDLMF5mxnvWB4oyWE.yml
+  - layers/journal/content/current/pages/digests/2026-10-29.md
+rulesLoaded:
+  - .claude/rules/adr-0010.md
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/adr-0030.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/adr-0005.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+rulesFollowedUp:
+  - .claude/rules/adr-0010.md
+docsReadBySubagents:
+  - .agents/skills/digest/SKILL.md
+  - .agents/skills/glassbox-improve/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to review then gate before opening the PR; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session-log rule; close-session handles it, summary sufficed
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Confirmed opening the PR myself after review and gate; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: PR body header and commit trailer; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0010.md
+    reason: Digest written once, landed by PR, no index edit; I opened the full ADR as the Skill orders
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; not relevant to a Digest run
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About where instructions live; not relevant here
+    useful: no
+  - path: .claude/rules/adr-0030.md
+    reason: About ADR style; I changed no ADR
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded for the Skill's PR; nothing Human-only touched
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Loaded on a Journal page; I did not need the glossary for plain prose
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: No diagram involved
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: Skill model; no Skill changed
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Fact-check Digest 2026-11-05
+    model: sonnet
+  - type: general-purpose
+    task: Fact-check Digest 2026-11-05
+    model: sonnet
+    durationSec: 67
+    toolCalls: 23
+    modelCalls: 7
+    tokenShare: 20.8
+  - type: general-purpose
+    task: Standards review of digest diff
+    model: sonnet
+    durationSec: 21
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 5.6
+  - type: general-purpose
+    task: Spec review of digest diff
+    model: sonnet
+    durationSec: 17
+    toolCalls: 6
+    modelCalls: 3
+    tokenShare: 6.1
+gitBranch: claude/compassionate-lovelace-yh69gi
+entrypoint: remote_trigger
+cliVersion: 2.1.318
+trigger: digest
+landedBy: Stop
