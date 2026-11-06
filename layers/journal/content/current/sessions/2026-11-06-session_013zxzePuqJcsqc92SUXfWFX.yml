@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzePuqJcsqc92SUXfWFX
 startedAt: 2026-11-06T20:00:46Z
-endedAt: 2026-11-06T20:23:20Z
+endedAt: 2026-11-06T20:55:58Z
 kind: delegated
 goal: "Curate the Glass Box guide: retire the last draft"
 status: completed
@@ -49,6 +49,10 @@ skillsUsed:
     reason: (no reason given)
   - name: log-session
     reason: (no reason given)
+  - name: writing-for-agents
+    reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
 frictions:
   - description: Called mcp__github__list_pull_requests before reading docs/agents/github-integration.md, which CLAUDE.md requires before the first GitHub operation; the call also missed required owner and repo.
     solution: Read the doc when the Skill's orientation step first mentions open PRs, before any tool call.
@@ -62,22 +66,32 @@ frictions:
   - description: The memory page said the draft had eight stops; it had six, so the noted case against it was off.
     solution: The next run that edits the memory page should state counts only after counting; this run's entry records it.
     severity: nit
-durationSec: 1353
+  - description: The GitHub and git read-first reminders arrive in a hook after the call has run, while the dispatch guard blocks before it, so CLAUDE.md's read-first bullets did not stop three mistakes.
+    solution: Make the GitHub and git hooks block before the call like the dispatch-read guard, or drop the CLAUDE.md bullets they repeat.
+    severity: nit
+  - description: check-conflicting-issues.ts matched issue 2896 on the word delete alone, and the advisory told me to read it, so I fetched a very long issue that had nothing to do with the diff.
+    solution: Have the script print the title and the matching line, or match on file paths, so a false hit can be dismissed without fetching the issue.
+    severity: minor
+  - description: Eleven of seventeen loaded rules needed a no verdict in log-session, several loaded after Bash commands that only read Glass Box files, so each cost context and an entry.
+    solution: Narrow the paths of tenant-layers, data-shapes, mdc-when-to-use, adr-0002 and mermaid-lanes, or let an unused loaded rule count as no without an entry.
+    severity: nit
+durationSec: 3311
 models:
-  claude-sonnet-5-5: 80
+  claude-sonnet-5-5: 91
 toolCounts:
-  Bash: 23
+  Bash: 24
   Read: 4
   AskUserQuestion: 1
   mcp__github__list_pull_requests: 2
-  Skill: 4
+  Skill: 5
   Agent: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  ReadNotifications: 2
+  ReadNotifications: 3
   mcp__github__pull_request_read: 2
   mcp__github__issue_read: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
+  mcp__github__list_issues: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-06T2100.yml
   - layers/glassbox/content/workshop/pages/index.md
@@ -165,7 +179,7 @@ subagents:
     durationSec: 28
     toolCalls: 9
     modelCalls: 4
-    tokenShare: 14.2
+    tokenShare: 12.2
 gitBranch: ccr-2f0242a2-bcbvhd
 entrypoint: remote_mobile
 cliVersion: 2.1.319
