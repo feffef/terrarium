@@ -84,9 +84,12 @@ in a brief as `.agents/skills/...`.
 
 All in `layers/glassbox/content/workshop/`:
 
-- `pages/index.md`, the memory page: each run rewrites it with facts and leads,
-  never procedures, within the word cap that
-  `layers/glassbox/tests/unit/workshop.spec.ts` enforces.
+- `pages/index.md`, the memory page: the guide's current state and direction,
+  never a diary. Each run rewrites it with facts and leads, never procedures or
+  history (the run entry holds what this run did), and **cuts** whatever its
+  work addressed and whatever it judges no longer needed, so the page stays
+  short; the word cap `layers/glassbox/tests/unit/workshop.spec.ts` enforces is
+  a ceiling, not a target.
 - `runs/<YYYY-MM-DDTHHMM>.yml`: one entry per run, named by its UTC start time.
   Its shape is the `runs` Collection in `layers/glassbox/tenant.config.ts`. A
   `changes` entry is `page | what changed | why`, `page` being the guide page's
