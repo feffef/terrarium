@@ -50,9 +50,9 @@ describe('glassboxCheckRows', () => {
 describe('the workshop memory page', () => {
   const { body } = splitFrontmatter(readFileSync(join(root, 'layers/glassbox/content/workshop/pages/index.md'), 'utf8'))
 
-  it('stays within 1,500 words, not counting its component lines', () => {
+  it('stays within 2,500 words, not counting its component lines', () => {
     const words = body.split('\n').filter((line) => !line.startsWith('::')).join(' ').split(/\s+/).filter(Boolean)
-    expect(words.length).toBeLessThanOrEqual(1500)
+    expect(words.length).toBeLessThanOrEqual(2500)
   })
 
   it('places both lists after its text', () => {

@@ -1,40 +1,87 @@
 ---
 title: Workshop
 description: What the next Glass Box curate run should know now, the curate runs so far, and when glassbox-update last fully checked each guide page.
-revision: 34598cfc01e1b4ab99c61a9e008db80540620881
+revision: fd3599e030281af21ff988c09235e5f704c04f37
 revisionDate: 2026-11-06
 ---
 
-Working state of the Glass Box improvement Skills, kept here so each run starts from the last one's findings. It is not part of the textbook.
+This page is the working state of the Skills that improve Glass Box. It is not part of the textbook.
 
 ## Memory
 
-Each curate run rewrites this section from what it learned. It holds facts and leads, never procedures.
+Pages are named by their title, followed by their file under `layers/glassbox/content/guide/pages/`. Subject, Lesson, Walkthrough and draft mean what `layers/glassbox/GLOSSARY.md` says.
 
-### Steps already decided
+### Weak spots
 
-Page changes earlier runs weighed and turned down. Do not propose them again without new evidence.
+- **The Installed Skills pages say little of their own.** *Planning Skills* (`skill-pack/02.planning-with-the-pack`) and *Engineering skills* (`skill-pack/03.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
+- **Two Git & GitHub Lessons are too long.** *Commit and PR attribution* (`git-github/05.attribution`) and *Issue triage labels* (`git-github/06.work-queue`) are the longest pages in the guide.
+- **The Claude Code Subject is tangled.** Several of its pages explain the same mechanisms, and most of the open ideas below are about moving facts between them.
+- **Titles are uneven.** Some name Terrarium's own choice instead of the general concept. Within one Subject, some titles start with the tool's name ("Claude Code hooks") and their neighbours don't ("Subagents").
 
-- **Dropped:** `skill-pack/02.planning-with-the-pack` into `skill-pack/01.skill-packs`. The seven-Skill tour is upstream and Skill Inventory content; only the wayfinder-on-GitHub mapping and the ready-for-agent rule are Terrarium's.
-- **Dropped:** `terrarium-practice/01.human-in-the-loop` into `git-github/04.trust-tiers`. The two-tier definition and the identity-not-text rule; the human-in-the-loop page links them.
-- **Dropped:** `skill-pack/02.planning-with-the-pack` into `git-github/06.work-queue`. The do-not-apply-ready-for-agent rule, already in work-queue's Who sets the state excerpt.
-- **Dropped:** `nuxt-content/04.query-collection` into `nuxt-vue/06.use-async-data`. The payload-size reason and the query-outside-useAsyncData warning that both pages state.
-- **Dropped:** `nuxt-content/02.multi-tenant-isolation` into `nuxt-vue/02.file-routing`. Move the resolver facts beside `useSpace`; keep only key-per-table isolation on the isolation page.
-- **Refused:** merging `skill-pack/03.engineering-skills` into `skill-pack/02.planning-with-the-pack`.
-- **Refused:** splitting the unattended triage sweep out of `git-github/06.work-queue` into its own page.
+### Recurring problems
 
-### Open leads
+- **New text has contained false claims.** Twice, a newly written page or fix said something its source contradicted, and it was only noticed a day later.
+- **Neighbouring pages repeat each other.** Most structural changes so far took a reason that two pages both explained and left it on just one of them.
+- **Changes have been undone soon after.** Two pages were added to the guide, or kept, by one run and then folded into another page a few runs later: *Prose overrides* and *Invariant tests*.
 
-Moves and additions raised but not yet decided.
+### The owner's direction
 
-- `verification/03.content-validation` to `verification/06.schema-validation`: the `utcTimestamp` refinement, the Timestamps-are-refined-strings reason, and the `toISOString` and `Date.parse` watch items. Content validation keeps one sentence and a link.
-- A Lesson `git-github/08.git-plumbing`, from the walkthrough `session-log-lands-on-main`: build a commit onto a branch without a checkout (a temporary index via `GIT_INDEX_FILE`; `read-tree`, `hash-object`, `update-index`, `write-tree`, `commit-tree`; push retry). Terrarium's session-log lander relies on it, and only a Walkthrough stop teaches it.
-- `claude-code/13.session-transcripts` to `terrarium-practice/04.session-logs`: the Session logs paragraph (`extractTrace` derives the mechanical half); keep a link on the transcripts page.
-- `claude-code/06.hook-added-context` to `claude-code/13.session-transcripts`: the subagent-reader watch item and the say-once mechanism (transcript lookup by agent id); hook-added-context keeps the Say it once reason and a link.
-- `claude-code/02.path-scoped-rules` to `claude-code/06.hook-added-context`: the `adr-read-hint` paragraph; path-scoped-rules keeps `skill-rules-hint` and `bash-rules-hint` and a link.
-- `claude-code/08.mcp-servers` to `claude-code/05.blocking-hooks`: the Matched-by-name and by-server matcher Excerpts and the Name-tools-not-the-server reason; MCP servers keeps full-name loading and servers-from-the-host.
-- `nuxt-vue/06.use-async-data` to `nuxt-content/04.query-collection`: the Return-what-the-page-reads watch item (`select` and payload size); Data fetching links to it.
-- `skill-pack/03.engineering-skills` into `skill-pack/01.skill-packs`: the implement, tdd and code-review loop and the one fixed review step; Terrarium adds no decision of its own beyond pointers.
+These are the owner's goals for the guide. A new Subject needs the owner's approval.
+
+1. **Split the Claude Code Subject.** One possible split, based on what each page is about:
+   - telling Claude what to do: *CLAUDE.md*, *Path-specific rules* and *Claude Code Skills*;
+   - hooks: *Claude Code hooks*, *Blocking hooks*, *Hook-added context* and *Session transcripts*;
+   - agents and automation: *Subagents*, *Workflow scripts*, *Scheduled tasks* and *Cloud sessions*.
+
+   *MCP servers* and *Claude Code permissions* would go wherever what they teach fits best.
+2. **Add a web standards Subject** for CSS and SVG. It would include how Terrarium keeps binary image files out of the repository by using SVG. Pages and code to start from:
+   - *CSS custom properties* (`nuxt-vue/07.css-custom-properties`);
+   - *Mermaid pre-rendering* (`nuxt-content/07.mermaid-pre-rendering`), which turns diagrams into SVG files;
+   - `app/utils/svg.ts`, which checks SVG before a page shows it. Today the guide mentions it only as a linting example.
+3. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
+4. **Retire the drafts.** Promote each draft into the guide or remove it, until no drafts are left.
+5. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
+
+### Good next focuses
+
+1. **Propose the Claude Code split** (direction 1), using the ideas about its pages below.
+2. **Decide the last draft,** *A newcomer's first hour* (direction 4).
+   - To promote it, it needs its `revision` set to a current commit, a shorter description and a publish date (`publishedAt`).
+   - The case against it: three of its eight stops only tour the Journal, which Glass Box should link to rather than retell.
+3. **Make titles consistent** (direction 3), one Subject at a time.
+4. **Write a Lesson on building commits without a checkout** (direction 5; see Missing Lessons below).
+5. **Prepare the web standards Subject** (direction 2) as an issue for the owner, listing the pages it would hold.
+
+### Ideas not yet decided
+
+**Claude Code: giving each fact one home.** In each case the first page keeps a short link.
+- *Path-specific rules* explains the hook that reminds agents to read an ADR (a decision record in `docs/adr/`). That belongs on *Hook-added context*.
+- *Hook-added context* explains how a hint is shown only once per session by looking it up in the transcript. That belongs on *Session transcripts*.
+- *MCP servers* explains how hooks pick out MCP tools by name. That belongs on *Blocking hooks*.
+- *Session transcripts* explains how a session log is built from the transcript. That belongs on *Session logs* (`terrarium-practice/04.session-logs`).
+
+**Installed Skills.** *Engineering skills* could become part of *Installed Skills* (`skill-pack/01.skill-packs`).
+
+**Git & GitHub.** *Commit and PR attribution* also teaches git hooks, a separate topic that could get its own Lesson.
+
+**Missing Lessons.**
+- **Building commits without a checkout** (low-level git commands). This is how session logs land on `main`. Only one stop of the Walkthrough *A session log lands on main* shows it, and no Lesson teaches it.
+- **UI checks.** The scripts in `scripts/ui/` (preview, screenshots) are mentioned only on *Subagents*. Check whether this is really a gap before writing a Lesson.
+
+**Ideas earlier runs rejected.** Before acting on one, re-check the reasons for and against.
+- Moving the timestamp rule and its warnings from *Content validation* (`verification/03.content-validation`) to *Zod refinements* (`verification/06.schema-validation`).
+- Moving the warning to return only what a page reads from *Data fetching* (`nuxt-vue/06.use-async-data`) to *queryCollection* (`nuxt-content/04.query-collection`). A related move the other way is under Already decided.
+
+### Already decided
+
+Earlier runs turned these down. Each stays turned down until something in the repository changes the reason.
+- **Folding *Planning Skills* into *Installed Skills*.** Planning Skills holds two facts about Terrarium's own choices that would lose their page.
+- **Moving the trust rules from *Human-in-the-loop agents* to *Author trust*.** The first page already links to the second.
+- **Moving the rule about the `ready-for-agent` label into *Issue triage labels*.** That page already shows it.
+- **Moving the payload-size reason from *queryCollection* to *Data fetching*.** Both pages already state it, so moving it gains nothing.
+- **Moving the URL-resolver facts from *Multi-tenant isolation* to *File routing*.** They belong with isolation, because that is where their testability matters.
+- **Merging *Engineering skills* into *Planning Skills*.** That would undo a recent split.
+- **Splitting the unattended triage sweep out of *Issue triage labels*.** It came too soon after the page last changed. The page's length is still a problem.
 
 ## Curate runs
 

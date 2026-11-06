@@ -36,21 +36,21 @@ this Skill, the `glassbox-lesson` docs or the page checks, become issues.
 [`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md),
 [`../glassbox-lesson/QUALITY.md`](../glassbox-lesson/QUALITY.md) (Lenses only),
 [`../glassbox-lesson/DECISIONS.md`](../glassbox-lesson/DECISIONS.md),
-`.claude/rules/glassbox-content.md`, the workshop page and its run entries.
+`.claude/rules/glassbox-content.md`.
 Subagents read committed files at the base with `git show <base>:<path>`,
 which can't follow the `.claude/skills/<name>` link, so write every Skill path
 in a brief as `.agents/skills/...`.
 
 ## How a run goes
 
-- **Orient.** Run `pnpm exec tsx layers/glassbox/page-checks.ts`: its warnings
-  and orphans are one source of focus. Read the memory page, the last few run
-  entries, the catalog (every page's title, description, Subject and Where next
-  links) and `git log` of the guide since the last run. Leave alone every page
-  an open PR touches and every focus another open curate run has claimed.
+- **Orient.** This is the orientation step: run
+  `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts` and read all
+  of its output. Leave alone every page an open PR touches and every focus
+  another open curate run has claimed.
 - **Choose.** Take the focus from memory leads, the owner's review notes,
-  page-check warnings, catalog problems or gaps; when nothing is pressing, from
-  pages no fresh reader has seen lately (`pagesRead`). The run entry says why.
+  page-check warnings, problems the orientation shows, or gaps; when nothing is
+  pressing, from pages no fresh reader has seen lately (`pagesRead`). The run
+  entry says why.
 - **Gaps.** Compare what Terrarium relies on (`package.json`, the ADRs, the
   Skills, `scripts/`) with what the Lessons teach. The memory page keeps known
   gaps, those left uncovered on purpose too. Fix what makes pages hard to learn
@@ -84,9 +84,13 @@ in a brief as `.agents/skills/...`.
 
 All in `layers/glassbox/content/workshop/`:
 
-- `pages/index.md`, the memory page: each run rewrites it with facts and leads,
-  never procedures, within 1,500 words
-  (`layers/glassbox/tests/unit/workshop.spec.ts` enforces the cap).
+- `pages/index.md`, the memory page: the guide's current weak spots, the
+  owner's direction and the open ideas. Write it in simple, plain words, so a
+  person reads it easily and later runs don't copy needlessly complex wording.
+  Each run rewrites it and **cuts** whatever its work addressed and whatever it
+  judges no longer needed, so the page stays short. What a run did goes in its
+  run entry, not here. The word cap in
+  `layers/glassbox/tests/unit/workshop.spec.ts` is a ceiling, not a target.
 - `runs/<YYYY-MM-DDTHHMM>.yml`: one entry per run, named by its UTC start time.
   Its shape is the `runs` Collection in `layers/glassbox/tenant.config.ts`. A
   `changes` entry is `page | what changed | why`, `page` being the guide page's
