@@ -1,0 +1,198 @@
+schemaVersion: 1
+session: session_013zxzeRJEE2ehNrQTL62nhX
+startedAt: 2026-11-06T20:57:42Z
+endedAt: 2026-11-06T21:12:42Z
+kind: interactive
+goal: Curate the Glass Box guide with one focus
+status: in-review
+outcome: PR 2908 adds the Headless browser checks Lesson; scoped gate green, CI pending
+summary: 'The user invoked glassbox-curate with no focus. I asked once which focus to take (their stated preference is to ask first); they answered "let the run choose", so I ran in autonomous mode: agent-initiated focus, chosen by me. I ran the orientation script, rejected a git-hooks Lesson (the repo has one hook, already taught by Commit and PR attribution), and confirmed a real gap: the guide never covered the scripts/ui capture tools that several Skills depend on. An opus writer drafted verification/09 Headless browser checks; a sonnet claim checker found nine items (three Why-bullet costs the cited file never states, a screenshot.ts flag that belongs to preview.ts, imprecise stop/PID wording) and a fresh reader asked for sample output and the package choice; I fixed those. code-review Standards and Spec axes found more; I applied the valid ones, kept the preview.ts verb list (a fixed interface) and the dev-warning watch item. Gate green on the pre-review head; the review fixes were prose-only. Opened PR 2908, set pr in the run entry, subscribed. Open: playwright.dev was unreachable, so the Full reference was checked against raw docs source; the Try it install commands were not run.'
+prs:
+  - "2908"
+docsRead:
+  - path: layers/glassbox/GLOSSARY.md
+    reason: Lesson, Excerpt and Term contract the new page follows
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/EVERY-PAGE.md
+    reason: Pin, mechanism-vs-motive and Check steps
+    useful: yes
+  - path: .agents/skills/glassbox-lesson/DECISIONS.md
+    reason: closed rulings; none applied
+    useful: partly
+  - path: docs/agents/git-conventions.md
+    reason: hook pointed to it after my first git command; nothing changed my route
+    useful: partly
+  - path: docs/agents/github-integration.md
+    reason: hook pointed to it after first GitHub call; read, nothing new needed
+    useful: partly
+  - path: docs/agents/verifying-ui-changes.md
+    reason: source for the new Lesson
+    useful: yes
+  - path: .agents/skills/dispatch-subagents/SKILL.md
+    reason: brief checklist for the writer and reviewers
+    useful: yes
+  - path: docs/agents/pr-workflow.md
+    reason: review before PR, gate and verdict steps
+    useful: yes
+  - path: .agents/skills/glassbox-curate/SKILL.md
+    reason: the skill itself; the spec subagent read it and used it as the spec
+    useful: yes
+  - path: layers/glassbox/content/guide/pages/git-github/05.attribution.md
+    reason: (no reason given)
+  - path: layers/glassbox/content/guide/pages/verification/09.headless-browser-checks.md
+    reason: (read before editing)
+skillsUsed:
+  - name: glassbox-curate
+    reason: the run itself
+  - name: code-review
+    reason: Standards and Spec review before the PR
+  - name: close-session
+    reason: closure after the PR opened
+  - name: log-session
+    reason: (no reason given)
+frictions:
+  - description: Ran my first git command and first GitHub call before reading git-conventions.md and github-integration.md; hooks pointed to them only after the call.
+    solution: Read the CLAUDE.md-triggered docs before the first matching command.
+    severity: minor
+  - description: Piped orient.ts output through head -300, which truncated the guide-pages section of its output.
+    solution: Redirect orient output to a file and read it whole.
+    severity: minor
+  - description: A Bash call set run_in_background and also ended in an ampersand; the double-background guard blocked it and nothing ran.
+    solution: Pass run_in_background alone with a plain foreground command.
+    severity: nit
+  - description: Wrote the run entry's focus with an unquoted colon-space, which broke the runs YAML and failed validate:content until quoted.
+    solution: Quote free-text YAML values in run entries; the curate Skill could say so.
+    severity: minor
+  - description: Read pr-workflow.md only after review and gate had started, though CLAUDE.md asks for it before opening a PR.
+    solution: Read the PR doc before starting the review step.
+    severity: nit
+  - description: The curate Skill says autonomous mode asks nothing, while the user's preference is to ask first; I had to reconcile them by asking one focus question.
+    solution: Let the Skill say an interactive invocation with no focus should ask one question.
+    severity: nit
+durationSec: 901
+models:
+  claude-sonnet-5-5: 92
+toolCounts:
+  Bash: 30
+  Read: 9
+  AskUserQuestion: 1
+  mcp__github__list_pull_requests: 1
+  Agent: 5
+  Edit: 1
+  Skill: 3
+  ToolSearch: 1
+  mcp__github__create_pull_request: 1
+  mcp__claude-code-remote__subscribe_pr_activity: 1
+filesEdited:
+  - layers/glassbox/content/guide/pages/verification/04.unit-and-e2e-tests.md
+  - layers/glassbox/content/guide/pages/verification/09.headless-browser-checks.md
+  - layers/glassbox/content/workshop/runs/2026-11-06T2059.yml
+  - layers/glassbox/content/workshop/pages/index.md
+rulesLoaded:
+  - .claude/rules/adr-0027.md
+  - .claude/rules/adr-0005.md
+  - .claude/rules/adr-0021.md
+  - .claude/rules/tenant-glossary.md
+  - .claude/rules/glossary-terms.md
+  - .claude/rules/adr-0004-human-merge.md
+  - .claude/rules/adr-0029.md
+  - .claude/rules/mermaid-lanes.md
+  - .claude/rules/glassbox-content.md
+  - .claude/rules/ui-verification.md
+  - .claude/rules/tenant-layers.md
+rulesGlobal:
+  - .claude/rules/adr-0004.md
+  - .claude/rules/adr-0009.md
+  - .claude/rules/adr-0003.md
+  - .claude/rules/adr-0017.md
+docsReadBySubagents:
+  - .agents/skills/glassbox-curate/SKILL.md
+ruleVerdicts:
+  - path: .claude/rules/adr-0004.md
+    reason: Told me to run gate:scoped and code-review before the PR; summary was enough, did not open the ADR
+    useful: yes
+  - path: .claude/rules/adr-0009.md
+    reason: Session log goes to main via close-session; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0003.md
+    reason: Told me to open the PR myself and subscribe; Trusted-approval part moot for Glass Box content; no full ADR read
+    useful: yes
+  - path: .claude/rules/adr-0017.md
+    reason: Header line one on the PR body and commit trailers; summary was enough
+    useful: yes
+  - path: .claude/rules/adr-0027.md
+    reason: About prune trials; none covered my text
+    useful: no
+  - path: .claude/rules/adr-0005.md
+    reason: About Skill placement; I changed no Skill
+    useful: no
+  - path: .claude/rules/adr-0021.md
+    reason: Glossary placement; I touched no glossary
+    useful: no
+  - path: .claude/rules/tenant-glossary.md
+    reason: Reminder to read the Tenant glossary; I had already read Glass Box's
+    useful: partly
+  - path: .claude/rules/glossary-terms.md
+    reason: About adding glossary terms; I added none
+    useful: no
+  - path: .claude/rules/adr-0004-human-merge.md
+    reason: Loaded on workshop reads; no Human-only file was in my PR
+    useful: no
+  - path: .claude/rules/adr-0029.md
+    reason: About rule placement; I wrote no rule
+    useful: no
+  - path: .claude/rules/mermaid-lanes.md
+    reason: Loaded on a Glass Box read; the page has no diagram
+    useful: no
+  - path: .claude/rules/glassbox-content.md
+    reason: Bars counts, ids and line numbers in prose; I checked the page against it and the standards reviewer cited it
+    useful: yes
+  - path: .claude/rules/ui-verification.md
+    reason: Pointed to verifying-ui-changes.md, which I was already reading as the Lesson's source
+    useful: partly
+  - path: .claude/rules/tenant-layers.md
+    reason: Loaded when I read a layer file; unrelated to prose content
+    useful: no
+subagents:
+  - type: general-purpose
+    task: Write UI-checks Lesson
+    model: opus
+    durationSec: 287
+    toolCalls: 30
+    modelCalls: 29
+    tokenShare: 27.5
+  - type: general-purpose
+    task: Claim-check new Lesson
+    model: sonnet
+    durationSec: 93
+    toolCalls: 9
+    modelCalls: 8
+    tokenShare: 10
+  - type: general-purpose
+    task: Fresh reader pass
+    model: sonnet
+    durationSec: 14
+    toolCalls: 2
+    modelCalls: 2
+    tokenShare: 5
+  - type: general-purpose
+    task: "Review diff: standards"
+    model: sonnet
+    durationSec: 35
+    toolCalls: 8
+    modelCalls: 4
+    tokenShare: 3.9
+  - type: general-purpose
+    task: "Review diff: spec"
+    model: sonnet
+    durationSec: 19
+    toolCalls: 4
+    modelCalls: 3
+    tokenShare: 3.1
+gitBranch: ccr-b9edf38b-sk3vtr
+entrypoint: remote_mobile
+cliVersion: 2.1.319
+learnings:
+  - "Fresh-reader and claim-checker passes each found real defects in a freshly written Lesson: unsourced Why-bullet costs and a flag owned by preview.ts rather than screenshot.ts"
+  - playwright.dev did not resolve in the cloud session; the Playwright docs source on raw.githubusercontent.com is the fallback
+landedBy: Stop
