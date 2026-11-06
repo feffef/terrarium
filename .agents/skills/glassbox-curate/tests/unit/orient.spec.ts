@@ -50,7 +50,7 @@ describe('orientation', () => {
       mkdirSync(dirname(join(base, path)), { recursive: true })
       writeFileSync(join(base, path), text)
     }
-    write('guide/pages/claude-code/05.blocking-hooks.md', page)
+    write('guide/pages/claude-code/05.blocking-hooks.md', page.replace('## Where next', '## In Terrarium\n\nThe hook runs first, so the agent sees it.\n\n## Where next'))
     write('guide/terms/hook.yml', 'term: Hook\ndefinition: A command Claude Code runs on an event.\n')
     write('workshop/pages/index.md', '---\ntitle: Workshop\n---\n\n## Memory\n\nA lead.\n')
     write('workshop/runs/2026-11-06T0900.yml', 'focus: first\n')
@@ -59,14 +59,13 @@ describe('orientation', () => {
   })
   afterAll(() => rmSync(base, { recursive: true, force: true }))
 
-  it('prints every section, with runs newest first and every page summarised', () => {
+  it('prints every section in order, unfiltered, with runs newest first', () => {
     const out = orientation(base)
-    const at = (text: string) => out.indexOf(text)
-    expect(at('# Memory page')).toBeLessThan(at('A lead.'))
-    expect(at('focus: second')).toBeLessThan(at('focus: first'))
-    expect(out).toContain('pages: []')
-    expect(out).toContain('term: Hook')
-    expect(out).toContain('# Page-check warnings')
-    expect(out).toContain('### claude-code/05.blocking-hooks: Blocking hooks')
+    expect(out.split('\n').filter((l) => l.startsWith('# '))).toEqual([
+      '# Memory page', '# Curate runs, newest first', '# glassbox-update checks', '# Terms', '# Page-check warnings', '# Guide pages',
+    ])
+    for (const text of ['A lead.', 'focus: first', 'focus: second', 'pages: []', 'term: Hook', '### claude-code/05.blocking-hooks: Blocking hooks']) expect(out).toContain(text)
+    expect(out.indexOf('focus: second')).toBeLessThan(out.indexOf('focus: first'))
+    expect(out).toContain('may give a motive ("so")')
   })
 })
