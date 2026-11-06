@@ -168,15 +168,15 @@ Fetch `origin/main`; if it changed a page you edited, merge it into the run
 branch, keeping your page with its pin at the base. Run `grades.ts record
 --base <base> --out <scratch folder> --session <this session's id>` and commit
 `grades.yml` and `runs.yml`. Follow "Closing a scheduled run's PR" in
-`docs/agents/pr-workflow.md`, with a short PR body: how many pages were read,
-false claims fixed, edits merged and stopped, steps taken and refused, and A
+`docs/agents/pr-workflow.md` (the `code-review` above is its review), with a
+short PR body: how many pages were read, false claims fixed, edits merged and stopped, steps taken and refused, and A
 changes, and a link to `runs.yml` for the rest. Once the PR is open, run
 `record` again with `--pr <number> --cost <usage.cost_usd from get_session>`
 (it replaces this run's entry and rereads the local transcript for the cost by
 phase, so run it in this session), commit, push, and point the body's link at
-`runs.yml` at that commit; that commit is a simple follow-up
-(`pr-workflow.md`). If anything outside the Remit is in the diff, leave the PR
-open for a human.
+`runs.yml` at that commit; that commit holds only run metadata, so your own
+read of its diff replaces `code-review`. If anything outside the Remit is in
+the diff, leave the PR open for a human.
 
 ## 10. File
 
@@ -196,9 +196,9 @@ exits 0, which it does only once the run branch is pushed. Then invoke
 ## Review after the first runs
 
 The owner adopted the A rule and the blind gate as a trial (issue #2792).
-After 3 to 5 v3 runs, compare `runs.yml` with the v2 runs listed in that
-issue: the gate pass rate (near 100% means a rubber stamp, near 50% weak
-selection or writing), whether low-value edits were stopped, how many inverse
+The review is due: `runs.yml` holds 5 v3 runs. Compare it with the v2 runs
+listed in that issue and comment the result there: the gate pass rate (near
+100% means a rubber stamp, near 50% weak selection or writing), whether low-value edits were stopped, how many inverse
 steps were refused, and the cost per run and per page that passed the gate.
 `costBreakdown` in each `runs.yml` entry splits that cost: tokens by
 class (counted from the transcripts) for the lead and each subagent phase, the lead's context at each phase

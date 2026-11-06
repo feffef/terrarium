@@ -23,8 +23,8 @@ Read in full first: `layers/glassbox/GLOSSARY.md`, and
 `DECISIONS.md`. For a new Lesson, follow
 `.agents/skills/glassbox-lesson/SKILL.md` as well. Meet EVERY-PAGE's length
 caps as you write, not first in the Check. A Why item is a bold-lead bullet of
-12 to 65 words, so no Excerpt can sit in it
-(`layers/glassbox/page-checks.ts:238-263`). Before you add or edit a Why
+12 to 65 words of its own, so no Excerpt can sit in it
+(`ownWords` in `layers/glassbox/page-checks.ts`). Before you add or edit a Why
 bullet, read the Why section of every Lesson that cites the same ADR
 (`git grep -l ADR-NNNN layers/glassbox/content/guide`): a reason another
 Lesson owns gets one sentence and a link.
