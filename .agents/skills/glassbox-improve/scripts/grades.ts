@@ -35,6 +35,7 @@ export const runsKept = 10
 // What one run takes: items to fix plus steps, false claims first. A run costs about 2 USD per edit
 // (runs.yml, runs after the one-gate-judge change), so 8 keeps it near 25 USD and lets later runs take the rest.
 export const workPerRun = 8
+export const capReason = `over the ${workPerRun} items a run takes`
 
 export interface LensRecord {
   grade: Grade
@@ -82,7 +83,7 @@ export interface GradeRecord {
   run?: string
   pages: Record<string, PageRecord>
   steps: Step[]
-  /** Findings skipped by the cap; `tally` brings back those on pages no rater read again. */
+  /** Findings the cap skipped (`capReason`); SKILL.md, step 3, says how `tally` brings them back. */
   backlog?: BacklogEntry[]
 }
 
@@ -309,10 +310,8 @@ export interface Item {
   fix: string
   source?: string
   exemplar?: string
-  /** Why the run leaves it, when it does. */
+  /** Why the run leaves it, when it does. `capReason` marks an item nobody researched: the backlog keeps it. */
   skipped?: string
-  /** Skipped by the cap, so nobody researched it: `nextRecord` keeps it in the backlog. */
-  deferred?: boolean
   /** Brought back from the backlog; `found` is the run that first found it. */
   fromBacklog?: boolean
   found?: string
@@ -365,7 +364,7 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: 
   for (const [page, list] of Object.entries(checks).sort()) for (const fix of list) raw.push({ page, kind: 'check', fix })
   const deficits: Omit<Item, 'id'>[] = []
   const gaps: Omit<Item, 'id'>[] = []
-  const gapSkipped = (page: string, lens: Lens, exemplar: string) => {
+  const gapSkipReason = (page: string, lens: Lens, exemplar: string) => {
     const edited = record.pages[page]?.edited
     return record.pages[exemplar]?.lenses[lens]?.grade !== 'A'
       ? `${exemplar} holds no A on ${lens}`
@@ -378,7 +377,7 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: 
         if (!l) continue
         for (const f of l.findings ?? []) deficits.push({ page: p.page, kind: 'deficit', lens, grade: l.grade, quote: f.quote, fix: f.fix })
         for (const g of l.gaps ?? []) {
-          const skipped = gapSkipped(p.page, lens, g.exemplar)
+          const skipped = gapSkipReason(p.page, lens, g.exemplar)
           gaps.push({ page: p.page, kind: 'gap', lens, quote: g.section, exemplar: g.exemplar, fix: g.take, ...(skipped ? { skipped } : {}) })
         }
       }
@@ -387,21 +386,21 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: 
   // The backlog: findings an earlier run's cap left. Raters that graded a page's lens this run (or checked its
   // claims) have fresh findings, or none, which replace its entries; the page checks are recomputed every run.
   // An entry on a page nobody read again comes back as an item, for a researcher to confirm like any other.
-  const regraded = (e: BacklogEntry) => (e.kind === 'falseClaim' ? plan.read.includes(e.page) : e.lens !== undefined && grades[e.page]?.[e.lens] !== undefined)
+  const rereadThisRun = (e: BacklogEntry) => (e.kind === 'falseClaim' ? plan.read.includes(e.page) : e.lens !== undefined && grades[e.page]?.[e.lens] !== undefined)
   for (const e of record.backlog ?? []) {
-    if (!plan.pages.includes(e.page) || regraded(e)) continue
+    if (!plan.pages.includes(e.page) || rereadThisRun(e)) continue
     const item: Omit<Item, 'id'> = { ...e, fromBacklog: true }
     if (e.kind === 'falseClaim') raw.push(item)
     else if (e.kind === 'deficit') deficits.push(item)
     else {
-      const skipped = gapSkipped(e.page, e.lens!, e.exemplar!)
+      const skipped = gapSkipReason(e.page, e.lens!, e.exemplar!)
       gaps.push(skipped ? { ...item, skipped } : item)
     }
   }
-  // The owner's order (issue #2792): weakest lens first. A page nobody graded this run ranks by its entry's grade.
+  // The owner's order (issue #2792): weakest lens first. A backlog page has no grades this run, so its entry's grade ranks it.
   const weakest = (page: string) => Math.min(...Object.values(grades[page] ?? {}).map((g) => gradeRank[g]))
-  const rank = (i: Omit<Item, 'id'>) => (grades[i.page] ? weakest(i.page) : gradeRank[i.grade ?? 'C'])
-  deficits.sort((a, b) => rank(a) - rank(b) || a.page.localeCompare(b.page) || lenses.indexOf(a.lens!) - lenses.indexOf(b.lens!))
+  const sortRank = (i: Omit<Item, 'id'>) => (grades[i.page] ? weakest(i.page) : gradeRank[i.grade ?? 'C'])
+  deficits.sort((a, b) => sortRank(a) - sortRank(b) || a.page.localeCompare(b.page) || lenses.indexOf(a.lens!) - lenses.indexOf(b.lens!))
   gaps.sort((a, b) => a.page.localeCompare(b.page) || lenses.indexOf(a.lens!) - lenses.indexOf(b.lens!))
   const items = [...raw, ...deficits, ...gaps].map((item, i) => ({ id: `f${i + 1}`, ...item }))
 
@@ -435,13 +434,11 @@ export function tally(record: GradeRecord, plan: Plan, reports: Report[], runs: 
 /** Runs before the lead's filters and the researchers, so a slot can go to an item they later drop: the cap bounds cost, it doesn't promise 8 edits. */
 function capWork(items: Item[], steps: Step[]): string[] {
   let room = workPerRun
-  const over = `over the ${workPerRun} items a run takes`
   const take = () => room-- > 0
   const group = (kinds: Item['kind'][]) => items.filter((i) => kinds.includes(i.kind) && !i.skipped)
-  const skip = (i: Item) => Object.assign(i, { skipped: over, deferred: true })
-  for (const i of group(['falseClaim', 'check'])) if (!take()) skip(i)
+  for (const i of group(['falseClaim', 'check'])) if (!take()) i.skipped = capReason
   const deferred = steps.filter((s) => s.status === 'pending' && !take()).map((s) => s.id)
-  for (const i of group(['deficit', 'gap'])) if (!take()) skip(i)
+  for (const i of group(['deficit', 'gap'])) if (!take()) i.skipped = capReason
   return deferred
 }
 
@@ -532,7 +529,7 @@ export function comparisonResult(votes: Vote[]): 'win' | 'loss' | undefined {
  *  A is lost only through a confirmed deficit, and taken by winning every comparison in two runs in a row. */
 export function nextRecord(record: GradeRecord, plan: Plan, current: Record<string, { hash: string; sources: string }>, result: Tally, runs: RunEntry[], run: string): GradeRecord {
   const confirmed = (page: string, lens: Lens) => result.items.some((i) => i.page === page && i.lens === lens && i.kind === 'deficit' && i.confirmed)
-  const unresearched = (page: string, lens: Lens) => result.items.some((i) => i.page === page && i.lens === lens && i.kind === 'deficit' && i.deferred && i.confirmed == null)
+  const unresearched = (page: string, lens: Lens) => result.items.some((i) => i.page === page && i.lens === lens && i.kind === 'deficit' && i.skipped === capReason && i.confirmed == null)
   const compared = new Map<string, Comparison[]>()
   for (const c of result.comparisons.filter((c) => c.result)) compared.set(`${c.candidate} ${c.lens}`, [...(compared.get(`${c.candidate} ${c.lens}`) ?? []), c])
   const pages: GradeRecord['pages'] = {}
@@ -547,6 +544,15 @@ export function nextRecord(record: GradeRecord, plan: Plan, current: Record<stri
       const was = old?.lenses[lens]
       if (was?.grade === 'A' && !confirmed(page, lens)) continue
       entry.lenses[lens] = { grade, run, ...(was?.wins && grade === 'B' ? { wins: was.wins } : {}) }
+    }
+    // A finding brought back from the backlog has no rating this run, so its researcher's verdict sets the lens.
+    for (const lens of lenses) {
+      const back = result.items.filter((i) => i.page === page && i.lens === lens && i.kind === 'deficit' && i.fromBacklog && i.confirmed != null)
+      if (!back.length || result.grades[page]?.[lens]) continue
+      const was = entry.lenses[lens]
+      const stands = back.find((i) => i.confirmed)
+      if (stands) entry.lenses[lens] = { grade: stands.grade ?? 'C', run }
+      else if (was?.grade !== 'A') entry.lenses[lens] = { grade: 'B', run, ...(was?.wins ? { wins: was.wins } : {}) }
     }
     for (const lens of electedLenses) {
       const results = compared.get(`${page} ${lens}`)
@@ -570,9 +576,11 @@ export function nextRecord(record: GradeRecord, plan: Plan, current: Record<stri
     .map((s) => (s.status !== 'pending' && !s.decided ? { ...s, decided: run } : s))
     .filter((s) => s.status === 'pending' || s.decided! >= cutoff)
   // What the cap left and nobody researched. The page checks are recomputed every run, so they never wait here.
-  const backlog = result.items
-    .filter((i): i is Item & { kind: BacklogEntry['kind'] } => !!i.deferred && i.confirmed == null && i.kind !== 'check' && i.page in current)
-    .map((i): BacklogEntry => ({ page: i.page, kind: i.kind, ...(i.lens ? { lens: i.lens } : {}), ...(i.grade ? { grade: i.grade } : {}), ...(i.quote ? { quote: i.quote } : {}), fix: i.fix, ...(i.source ? { source: i.source } : {}), ...(i.exemplar ? { exemplar: i.exemplar } : {}), found: i.found ?? run }))
+  const backlog: BacklogEntry[] = []
+  for (const i of result.items) {
+    if (i.skipped !== capReason || i.confirmed != null || i.kind === 'check' || !(i.page in current)) continue
+    backlog.push({ page: i.page, kind: i.kind, ...(i.lens ? { lens: i.lens } : {}), ...(i.grade ? { grade: i.grade } : {}), ...(i.quote ? { quote: i.quote } : {}), fix: i.fix, ...(i.source ? { source: i.source } : {}), ...(i.exemplar ? { exemplar: i.exemplar } : {}), found: i.found ?? run })
+  }
   return { version: 3, run, pages, steps, ...(backlog.length ? { backlog } : {}) }
 }
 

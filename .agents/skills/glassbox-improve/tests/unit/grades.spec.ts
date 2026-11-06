@@ -2,7 +2,7 @@
 // the blind comparisons, the next record and the drafts report. The git shell runs in the Skill.
 import { describe, expect, it } from 'vitest'
 import type { GlassboxGit } from '../../../../../layers/glassbox/page-checks.ts'
-import { agentBriefs, blindPair, claimShards, judgeBrief, lensDefinition, raterBrief, comparisonResult, coverageProblems, decodeVerdict, draftsReport, gateCriteria, gateMerged, nextRecord, pageHash, parseReport, runEntry, planPages, readRecord, reportProblems, sourcesHash, stepCriterion, tally, trimPage, workPerRun, type BacklogEntry, type GradeRecord, type Item, type PageRecord, type Plan, type Report, type RunEntry, type Step, type Tally, type Vote } from '../../scripts/grades.ts'
+import { agentBriefs, blindPair, capReason, claimShards, judgeBrief, lensDefinition, raterBrief, comparisonResult, coverageProblems, decodeVerdict, draftsReport, gateCriteria, gateMerged, nextRecord, pageHash, parseReport, runEntry, planPages, readRecord, reportProblems, sourcesHash, stepCriterion, tally, trimPage, workPerRun, type BacklogEntry, type GradeRecord, type Item, type PageRecord, type Plan, type Report, type RunEntry, type Step, type Tally, type Vote } from '../../scripts/grades.ts'
 
 const page = '---\ntitle: Hooks\nrevision: abc\nrevisionDate: 2026-10-01\n---\nBody\n::excerpt{path="a.ts" lines="3-5"}\n'
 
@@ -446,7 +446,7 @@ describe('nextRecord and runEntry', () => {
   })
 
   it('changes a lens grade only on evidence: unresearched findings leave it and wait in the backlog', () => {
-    const left = { skipped: 'over the 8 items a run takes', deferred: true }
+    const left = { skipped: capReason }
     const items: Item[] = [
       { id: 'f1', page: 'a/01.p', kind: 'deficit', lens: 'reasoning', grade: 'C', quote: 'q1', fix: 'fix1', ...left },
       { id: 'f2', page: 'a/02.p', kind: 'deficit', lens: 'clarity', grade: 'D', quote: 'q2', fix: 'fix2', ...left },
@@ -454,10 +454,12 @@ describe('nextRecord and runEntry', () => {
       { id: 'f4', page: 'a/02.p', kind: 'check', fix: 'stop 1 has 81 words', ...left },
       { id: 'f5', page: 'a/03.p', kind: 'gap', lens: 'clarity', quote: 'Lede', exemplar: 'a/01.p', fix: 'take', fromBacklog: true, found: '2026-10-30', ...left },
       { id: 'f6', page: 'a/02.p', kind: 'deficit', lens: 'reasoning', grade: 'C', quote: 'q6', fix: 'fix6', confirmed: false },
+      { id: 'f7', page: 'a/03.p', kind: 'deficit', lens: 'clarity', grade: 'C', quote: 'q7', fix: 'fix7', skipped: 'DECISIONS.md settles it' },
     ]
     const grades = { 'a/01.p': { clarity: 'B', reasoning: 'C' }, 'a/02.p': { clarity: 'D', reasoning: 'C' } } as Tally['grades']
     const next = nextRecord(old, plan, current, { ...result, grades, items, comparisons: [] }, runs, today)
     // Skipped, so a/01.p keeps the B it had; a/02.p had no clarity grade and gets none; a refuted C is B.
+    // f7, which the lead set aside for another reason, is not in the backlog.
     expect(next.pages['a/01.p']!.lenses.reasoning).toEqual(old.pages['a/01.p']!.lenses.reasoning)
     expect(next.pages['a/02.p']!.lenses).toEqual({ reasoning: { grade: 'B', run: today } })
     expect(next.backlog).toEqual([
@@ -467,6 +469,18 @@ describe('nextRecord and runEntry', () => {
       { page: 'a/03.p', kind: 'gap', lens: 'clarity', quote: 'Lede', exemplar: 'a/01.p', fix: 'take', found: '2026-10-30' },
     ])
     expect(nextRecord(old, plan, current, result, runs, today).backlog).toBeUndefined()
+  })
+
+  it('lets a researcher\'s verdict on a finding brought back from the backlog set its lens', () => {
+    const back = (id: string, page: string, lens: Item['lens'], confirmed: boolean): Item => ({ id, page, kind: 'deficit', lens, grade: 'C', quote: 'q', fix: 'f', fromBacklog: true, found: '2026-10-30', confirmed })
+    const run1 = (items: Item[]) => nextRecord(old, plan, current, { ...result, grades: {}, items, comparisons: [] }, runs, today)
+    const next = run1([back('f1', 'a/01.p', 'clarity', true), back('f2', 'a/01.p', 'reasoning', false), back('f3', 'a/03.p', 'clarity', false)])
+    expect(next.pages['a/01.p']!.lenses.clarity).toEqual({ grade: 'C', run: today }) // a confirmed deficit takes A away
+    expect(next.pages['a/01.p']!.lenses.reasoning).toEqual({ grade: 'B', run: today, wins: ['2026-11-02'] }) // a refuted one is B
+    expect(next.pages['a/03.p']!.lenses.clarity).toEqual({ grade: 'B', run: today })
+    // A refuted finding does not touch a lens that holds A.
+    expect(run1([back('f4', 'a/01.p', 'clarity', false)]).pages['a/01.p']!.lenses.clarity).toEqual(old.pages['a/01.p']!.lenses.clarity)
+    expect(next.backlog).toBeUndefined()
   })
 
   it('takes A only through a confirmed deficit, and keeps a lone win only from the run before', () => {
