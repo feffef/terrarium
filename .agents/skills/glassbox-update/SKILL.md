@@ -47,7 +47,7 @@ that one commit, never a later fetch.
    - **Rotation:** the 5 pages whose `checked` in
      `layers/glassbox/content/workshop/checks/update.yml` is oldest, a page
      with none oldest of all, ties by page path. Each gets a **full
-     check**, also a page flagged too.
+     check**, even a page that is also flagged.
 
    Hand sonnet subagents at most 8 pages each (`dispatch-subagents`). Add this
    to each brief, with the commit and the repo path of
