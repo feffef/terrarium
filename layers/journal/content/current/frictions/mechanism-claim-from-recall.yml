@@ -4,8 +4,8 @@ summary: >-
 cause: >-
   How a script, guard, rule, harness setting, data format or the code's current state behaves is written from recall instead of read from its source, or a scope claim (only, every, nothing, never) is made after checking one item of the set; this includes a reviewer or rater subagent's own finding. A reviewer, the owner or a later check finds it false. glassbox-improve's lead now proposes only facts found in the source (PR #2626). A helper's claim the main agent passed on unchecked belongs in relayed-subagent-claims. Signals: a claim about what merge-pr.ts, a guard, an ADR rule or a config does; "only X changed"; a reviewer finding a check proved false.
 surface: safe
-status: tracked
-ref: "issue #2876 (regression of #2626)"
+status: accepted
+ref: "Issue #2876: the owner accepted the cost again on 2026-11-06 after #2626 did not hold; no general check exists. The one checkable class (a price or figure entering a data file) is filed for a narrow check."
 notes: |-
   2026-11-04 reopened: fix #2626 (2026-10-28) merged after the owner accepted it on 2026-10-25.
 fixes:
