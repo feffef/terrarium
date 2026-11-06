@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeQ7Ra7VbsnEayuBNNi
 startedAt: 2026-11-06T21:50:36Z
-endedAt: 2026-11-06T22:46:54Z
+endedAt: 2026-11-06T22:51:08Z
 kind: delegated
 goal: "Glass Box curate run: shorten the attribution Lesson"
-status: in-review
-outcome: PR opened with the shortened page, memory page and run entry; waiting for CI and merge
-summary: 'The owner invoked /glassbox-curate with no focus. I asked which focus and mode; the owner answered "you decide" and autonomous limits, so the focus choice was agent-initiated within that grant. I ran the orientation, saw the Claude Code pages were edited heavily in recent days, and chose the longest page, Commit and PR attribution. I claimed it with a run entry, cut about 150 words (cuts only, one rewritten sentence checked against commit-trailer.ts), updated the memory page, ran the scoped gate (green) and opened the PR. I skipped the fresh reader, claim checker and subagent code-review to stay in budget: the lead read the diff instead, and the PR and run entry say so. Open: merge once CI is green.'
+status: completed
+outcome: PR 2909 merged with the shortened page, memory page and run entry
+summary: 'The owner invoked /glassbox-curate with no focus. I asked which focus and mode; the owner answered "you decide" and autonomous limits, so the focus choice was agent-initiated within that grant. I ran the orientation, saw the Claude Code pages were edited heavily in recent days, and chose the longest page, Commit and PR attribution. I claimed it with a run entry, cut about 150 words (cuts only, one rewritten sentence checked against commit-trailer.ts), updated the memory page, ran the scoped gate (green) and opened the PR. I skipped the fresh reader, claim checker and subagent code-review to stay in budget: the lead read the diff instead, and the PR and run entry say so. The PR merged after green CI with a posted verdict.'
 prs:
   - "2909"
 docsRead:
@@ -46,16 +46,19 @@ frictions:
   - description: I skipped the Skill's fresh-reader and claim-checker steps and the subagent code-review, doing a lead-only read, a deviation from the Skill and pr-workflow.
     solution: Give cut-only edits an explicit lighter path in glassbox-curate, so skipping is allowed rather than a judgement.
     severity: minor
-durationSec: 3378
+durationSec: 3632
 models:
-  claude-sonnet-5-5: 52
+  claude-sonnet-5-5: 82
 toolCounts:
-  Bash: 16
+  Bash: 21
   Read: 8
   AskUserQuestion: 1
-  Skill: 3
+  Skill: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 4
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-06T2242.yml
   - layers/glassbox/content/guide/pages/git-github/05.attribution.md
