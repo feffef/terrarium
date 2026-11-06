@@ -3,18 +3,13 @@ const { collections } = useSpace('glassbox')
 
 // Only the mapped fields below travel in the payload (ADR-0028).
 const { data } = await useAsyncData('glassbox-workshop-runs', async () => {
-  const [runs, guide, drafts] = await Promise.all([
-    queryCollection(collections.runs).order('stem', 'DESC').all(),
-    queryGlassboxPages('guide'),
-    queryGlassboxPages('drafts'),
-  ])
-  const targets = Object.fromEntries([...drafts, ...guide].map(({ stem, ...page }) => [stem, page]))
+  const runs = await queryCollection(collections.runs).order('stem', 'DESC').all()
   return runs.map(({ stem, pr, mode, focus, changes, learned }) => ({
     stem,
     pr,
     mode,
     focus,
-    changes: changes.map((change) => glassboxRunChange(change, targets)),
+    changes: changes.map(glassboxRunChange),
     learned,
   }))
 })
@@ -34,8 +29,7 @@ const { data } = await useAsyncData('glassbox-workshop-runs', async () => {
         <li v-for="(change, i) in run.changes" :key="i">
           <template v-if="'raw' in change">{{ change.raw }}</template>
           <template v-else>
-            <NuxtLink v-if="change.to" :to="change.to">{{ change.page }}</NuxtLink><template v-else>{{ change.page }}</template>:
-            {{ change.what }}. <em>{{ change.why }}</em>
+            <code>{{ change.page }}</code>: {{ change.what }}. <em>{{ change.why }}</em>
           </template>
         </li>
       </ul>

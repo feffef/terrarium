@@ -5,33 +5,19 @@ export function glassboxRunStart(stem: string) {
   return `${date} ${time.slice(0, 2)}:${time.slice(2)} UTC`
 }
 
-interface GlassboxPageTarget {
-  path: string
-  title: string
-}
-
 export type GlassboxRunChange =
   | { raw: string }
-  | { page: string, to?: string, what: string, why: string }
+  | { page: string, what: string, why: string }
 
 /** A run entry's `changes` string, "page | what changed | why", split for display.
- *  The page links when `pages` (by stem) knows it; a string that does not split
- *  into three parts shows as written. */
-export function glassboxRunChange(entry: string, pages: Record<string, GlassboxPageTarget>): GlassboxRunChange {
+ *  A string that does not split into three parts shows as written. */
+export function glassboxRunChange(entry: string): GlassboxRunChange {
   const [page, what, ...why] = entry.split(' | ')
   if (!page || !what || !why.length) return { raw: entry }
-  const to = pages[page]?.path
-  return { page, ...(to && { to }), what, why: why.join(' | ') }
+  return { page, what, why: why.join(' | ') }
 }
 
-/** The pages glassbox-update checks, in its queue order: never checked first,
- *  then oldest check first, ties by path. A check for a page that is gone is dropped. */
-export function glassboxCheckRows(
-  pages: Array<GlassboxPageTarget & { stem: string }>,
-  checks: Array<{ page: string, checked: string }>,
-) {
-  const checked = new Map(checks.map((check) => [check.page, check.checked]))
-  return pages
-    .map((page) => ({ ...page, checked: checked.get(page.stem) }))
-    .sort((a, b) => (a.checked ?? '').localeCompare(b.checked ?? '') || a.path.localeCompare(b.path))
+/** glassbox-update's checks, oldest first, ties by page. */
+export function glassboxCheckRows(checks: Array<{ page: string, checked: string }>) {
+  return [...checks].sort((a, b) => a.checked.localeCompare(b.checked) || a.page.localeCompare(b.page))
 }

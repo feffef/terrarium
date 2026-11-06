@@ -12,52 +12,38 @@ describe('glassboxRunStart', () => {
 })
 
 describe('glassboxRunChange', () => {
-  const pages = { 'claude-code/01.claude-md': { path: '/claude-code/claude-md', title: 'CLAUDE.md' } }
-
-  it('splits "page | what | why" and links a page that resolves', () => {
-    expect(glassboxRunChange('claude-code/01.claude-md | cut a duplicate | the Lesson restated another', pages)).toEqual({
+  it('splits "page | what | why"', () => {
+    expect(glassboxRunChange('claude-code/01.claude-md | cut a duplicate | the Lesson restated another')).toEqual({
       page: 'claude-code/01.claude-md',
-      to: '/claude-code/claude-md',
       what: 'cut a duplicate',
       why: 'the Lesson restated another',
     })
   })
 
-  it('leaves a page that does not resolve unlinked', () => {
-    expect(glassboxRunChange('gone/01.page | a | b', pages)).toEqual({ page: 'gone/01.page', what: 'a', why: 'b' })
-  })
-
   it('keeps pipes inside the reason', () => {
-    expect(glassboxRunChange('p | a | b | c', {})).toEqual({ page: 'p', what: 'a', why: 'b | c' })
+    expect(glassboxRunChange('p | a | b | c')).toEqual({ page: 'p', what: 'a', why: 'b | c' })
   })
 
   it('falls back to the raw string when it does not split into three parts', () => {
-    expect(glassboxRunChange('one | two', pages)).toEqual({ raw: 'one | two' })
-    expect(glassboxRunChange('plain text', pages)).toEqual({ raw: 'plain text' })
+    expect(glassboxRunChange('one | two')).toEqual({ raw: 'one | two' })
+    expect(glassboxRunChange('plain text')).toEqual({ raw: 'plain text' })
   })
 })
 
 describe('glassboxCheckRows', () => {
-  const pages = [
-    { stem: 'a/01.x', path: '/a/x', title: 'X' },
-    { stem: 'a/02.y', path: '/a/y', title: 'Y' },
-    { stem: 'b/01.z', path: '/b/z', title: 'Z' },
-  ]
-
-  it('lists never-checked pages first, then oldest check first, ties by path', () => {
-    const rows = glassboxCheckRows(pages, [
+  it('lists the oldest check first, ties by page', () => {
+    const rows = glassboxCheckRows([
       { page: 'b/01.z', checked: '2026-11-01' },
+      { page: 'a/02.y', checked: '2026-11-03' },
       { page: 'a/01.x', checked: '2026-11-01' },
     ])
-    expect(rows.map((r) => [r.stem, r.checked])).toEqual([
-      ['a/02.y', undefined],
-      ['a/01.x', '2026-11-01'],
-      ['b/01.z', '2026-11-01'],
-    ])
+    expect(rows.map((r) => r.page)).toEqual(['a/01.x', 'b/01.z', 'a/02.y'])
   })
 
-  it('ignores a check for a page that no longer exists', () => {
-    expect(glassboxCheckRows(pages, [{ page: 'gone/01.q', checked: '2026-11-01' }]).map((r) => r.stem)).toEqual(['a/01.x', 'a/02.y', 'b/01.z'])
+  it('leaves its input unsorted', () => {
+    const checks = [{ page: 'b', checked: '2026-11-02' }, { page: 'a', checked: '2026-11-01' }]
+    glassboxCheckRows(checks)
+    expect(checks.map((c) => c.page)).toEqual(['b', 'a'])
   })
 })
 

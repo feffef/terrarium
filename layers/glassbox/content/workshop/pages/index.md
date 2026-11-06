@@ -45,7 +45,7 @@ Newest first.
 
 ## Update checks
 
-When glassbox-update last fully checked each guide page, never-checked pages first.
+When glassbox-update last fully checked each guide page, oldest check first.
 
 ::workshop-checks
 ::
