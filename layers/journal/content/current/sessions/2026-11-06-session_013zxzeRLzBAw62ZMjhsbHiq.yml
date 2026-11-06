@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRLzBAw62ZMjhsbHiq
 startedAt: 2026-11-06T07:33:14Z
-endedAt: 2026-11-06T07:41:51Z
+endedAt: 2026-11-06T07:44:58Z
 kind: autonomous
 goal: "Scheduled glassbox-update: bring Glass Box guide pages up to date with main"
-status: in-review
-outcome: "PR #2893 opened, gate green, code-review clean; awaiting merge"
-summary: "Autonomous scheduled run of the glassbox-update Skill (no human instruction beyond the schedule). The report flagged 17 guide pages and no terms. I advanced pins to 072fab38, read the code diffs against each flagged page and found 4 needing edits: a merge-hint sentence in Hook-added context, the friction walkthrough's issue check (now open and closed), and stale Excerpt line ranges in Subagents and Session transcripts (the script's --write left them stale on pages with an edited range). Ran page spec, validate:content, gate:scoped (green), and code-review via two subagents (clean). Pushed, opened PR #2893 and subscribed; merge is still to come."
+status: completed
+outcome: "PR #2893 merged after green CI; guide pages re-pinned to 072fab38"
+summary: "Autonomous scheduled run of the glassbox-update Skill (no human instruction beyond the schedule). The report flagged 17 guide pages and no terms. I advanced pins to 072fab38, read the code diffs against each flagged page and found 4 needing edits: a merge-hint sentence in Hook-added context, the friction walkthrough's issue check (now open and closed), and stale Excerpt line ranges in Subagents and Session transcripts (the script's --write left them stale on pages with an edited range). Ran page spec, validate:content, gate:scoped (green), and code-review via two subagents (clean). Pushed, opened PR #2893, posted my verdict and merged it with merge-pr.ts after CI went green."
 prs:
   - "2893"
 docsRead:
@@ -53,17 +53,21 @@ frictions:
   - description: glassbox-update --write shifted ranges but left Excerpt lines stale on pages with an edited range; fixed by hand after reading files at the commit.
     solution: Have the script report the new line numbers for edited ranges or flag them explicitly in step 2.
     severity: minor
-durationSec: 517
+durationSec: 704
 models:
-  claude-sonnet-5-5: 71
+  claude-sonnet-5-5: 91
 toolCounts:
-  Bash: 29
+  Bash: 34
   Read: 3
-  Skill: 3
+  Skill: 5
   Agent: 2
   mcp__github__list_pull_requests: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 3
+  mcp__github__add_issue_comment: 1
+  mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/claude-code/01.claude-md.md
   - layers/glassbox/content/guide/pages/claude-code/02.path-scoped-rules.md
@@ -196,13 +200,13 @@ subagents:
     durationSec: 36
     toolCalls: 7
     modelCalls: 5
-    tokenShare: 11.1
+    tokenShare: 8.7
   - type: general-purpose
     task: Spec review of re-pin
     durationSec: 47
     toolCalls: 9
     modelCalls: 8
-    tokenShare: 16.7
+    tokenShare: 13
 gitBranch: claude/ecstatic-euler-n6ztbk
 entrypoint: remote_trigger
 cliVersion: 2.1.318
