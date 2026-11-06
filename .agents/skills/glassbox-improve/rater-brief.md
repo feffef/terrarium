@@ -23,7 +23,7 @@ Then read each page below in full, as it is at {COMMIT}
 Overlaps only show across pages, so you read every guide page each run, from
 {TRIMMED}: each page's title, description and prose, with code cut to its line
 count and long lines cut. Read a full page with `git show {COMMIT}:<path>` only
-to back a finding. Every guide page and draft, by title and description:
+to back a finding. Every guide page (grade these) and draft (never grade one; only a `promote` step names it), by title and description:
 
 {CATALOG}
 
