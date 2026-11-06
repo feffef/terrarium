@@ -59,17 +59,19 @@ in a brief as `.agents/skills/...`.
   concurrent run sees the focus.
 - **Diagnose.** Fresh readers (sonnet, no repo access) get each page as plain
   text: MDC stripped, each term followed by its definition, each Excerpt as code
-  with its file path. They report where a newcomer gets lost. For structure, read
-  the pages involved in full; for a gap, the sources the new Lesson would cite.
+  with its file path. They report where a newcomer gets lost. For structure,
+  read the pages involved in full; for a gap, the sources the new Lesson would
+  cite.
   For a Subject focus, check each Why bullet against its cited ADR or file.
 - **Churn guard.** Before a structural step or a retitle, read
   `git log --oneline origin/main -- <page>` and the run entries that name the
-  page. Never reverse a change from the last 5 runs unless it made the page false.
+  page. Never reverse a change from the last 5 runs unless it made the page
+  false.
 - **Fix.** The writer quotes the `path:line` behind every sentence it adds or
   changes.
 - **Check.** A separate sonnet claim checker checks the changed sentences
-  and a promoted draft's whole page. `glassbox-update` owns the claim check of unchanged text, so leave that to it.
-  Run EVERY-PAGE.md's Check on the changed pages, and a fresh reader re-reads
+  and a promoted draft's whole page. `glassbox-update` owns the claim check of
+  unchanged text, so leave that to it. Run EVERY-PAGE.md's Check on the changed pages, and a fresh reader re-reads
   them. One retry, then drop the change.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
@@ -82,8 +84,8 @@ in a brief as `.agents/skills/...`.
 All in `layers/glassbox/content/workshop/`:
 
 - `pages/index.md`, the memory page: each run rewrites it with facts and leads,
-  never procedures, within 1,500 words (`layers/glassbox/tests/unit/workshop.spec.ts`
-  enforces the cap).
+  never procedures, within 1,500 words
+  (`layers/glassbox/tests/unit/workshop.spec.ts` enforces the cap).
 - `runs/<YYYY-MM-DDTHHMM>.yml`: one entry per run, named by its UTC start time.
   Its shape is the `runs` Collection in `layers/glassbox/tenant.config.ts`. A
   `changes` entry is `page | what changed | why`, `page` being the guide page's
