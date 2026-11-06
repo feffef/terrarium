@@ -68,14 +68,14 @@ in a brief as `.agents/skills/...`.
 - **Fix.** The writer quotes the `path:line` behind every sentence it adds or
   changes.
 - **Check.** A separate sonnet claim checker checks the changed sentences
-  and a promoted draft's whole page (`glassbox-update` checks the guide only).
-  `glassbox-update` owns the claim check of unchanged text, so leave that to it.
+  and a promoted draft's whole page. `glassbox-update` owns the claim check of unchanged text, so leave that to it.
   Run EVERY-PAGE.md's Check on the changed pages, and a fresh reader re-reads
   them. One retry, then drop the change.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
   the memory page, complete the run entry, open one self-merged PR
-  (`docs/agents/pr-workflow.md`). Done when the PR is open with both current.
+  (`docs/agents/pr-workflow.md`). Done when the PR is open with the memory page
+  and run entry current.
 
 ## State
 
