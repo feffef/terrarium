@@ -2,7 +2,8 @@ name: glassbox-improve-unstated-steps
 surface: safe
 summary: The glassbox-improve Skill leaves a step's rule or command unstated or in conflict with its briefs, so a run improvises and has to disclose the choice.
 cause: "SKILL.md and its briefs name no rule where a run needs one: no tie-break among tied three-rater promotions or two gap drafts with equal rank sums (the run reuses the previous run's importance rank sum or picks by judgement; PR #2668 added one for equal gap rank sums), no word on a second same-day run's branch name, on pushing the run branch before check:worktrees (PR #2668 now says it), on how the tally counts a point one rater lists as Optional, on a run based on an unpushed commit, or on whether a writer or the lead repoints links in other drafts (writer-brief.md and the lead's rules disagree, leaving the layer test red per branch). The cooling-off step's git diff names pre-rename paths or prints about 60 unrelated Journal lines. Signals: 'no tie-break', 'the Skill never states', 'equal rank sums', 'tied', 'conflict', a choice the run discloses in its PR."
-status: open
+status: tracked
+ref: "issue #2878 (regression of #2709)"
 fixes:
   - pr: 2668
     date: "2026-10-29"
@@ -46,3 +47,13 @@ occurrences:
     severity: minor
     description: "Tally rejected fable's report because one lone page had no grade; the Skill covers only parse errors, so I resumed fable and merged its addendum into a copy."
     solution: "Say in glassbox-improve step 2 what to do for a missing grade, or let grades.ts tally accept an addendum file per rater."
+  - session: session_013zxzeQH3GSc8uMpvhebnFr
+    date: "2026-11-03"
+    severity: minor
+    description: "The guest-contributions writer read its brief literally, fixed the one listed item (f15) and wrote no Lesson; I had to resume it, costing about 9 minutes and a second hand-back."
+    solution: "The step brief should name the new page, its title and its folder, and say that the new page is the task; the step's into path (guest-contributions) also differed from the title rule's slug (outside-contributions)."
+  - session: session_013zxzeTJp1jinYqgNJRczgA
+    date: "2026-11-05"
+    severity: minor
+    description: "I forgot step 5's edited:true marking, so the first gate run wrote briefs for only the 2 step pages instead of all 7 edited pages and I regenerated it"
+    solution: "Make grades.ts gate warn when a writer branch changed a page that no item marks edited, or mark items edited from the merged diff"

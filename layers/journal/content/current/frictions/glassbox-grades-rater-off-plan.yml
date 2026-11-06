@@ -1,0 +1,17 @@
+name: glassbox-grades-rater-off-plan
+surface: safe
+summary: A glassbox-improve rater graded a draft page its plan did not list, so the tally refused the report and the lead deleted lines from the saved hand-back.
+cause: "A rater brief does not bound the pages a rater may grade to its plan, so a rater grades an extra draft page and grades.ts tally refuses the hand-back; the lead edits the saved hand-back by hand. Signals: 'graded four draft pages the plan never listed', 'tally refused the report', 'deleted those lines from the saved hand-back'."
+status: tracked
+ref: "fix PR in flight (frictions-to-fixes run 2026-11-06): rater B brief says never grade a draft"
+occurrences:
+  - session: session_013zxzeT8tDd5GPJiRNZRA4J
+    date: "2026-11-04"
+    severity: nit
+    description: "Rater B graded four draft pages the plan never listed, so tally refused the report; I deleted those lines from the saved hand-back to get it through."
+    solution: "Let tally accept draft pages from rater B, or tell rater B not to grade drafts."
+  - session: session_013zxzeTJp1jinYqgNJRczgA
+    date: "2026-11-05"
+    severity: minor
+    description: "Rater B graded a draft page that was not in its plan, so the tally rejected the reports; I had to delete that page entry from the saved hand-back"
+    solution: "Tell rater B in its brief to grade only the plan pages and ignore drafts"

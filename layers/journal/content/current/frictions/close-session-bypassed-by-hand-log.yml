@@ -15,11 +15,6 @@ fixes:
     date: "2026-11-02"
     summary: "read-first-hint.ts now hints close-session after a successful merge-pr.ts run, unless close-session already ran after that merge."
 occurrences:
-  - session: session_01EjH3TbrydEY2sArBMYE5Gy
-    date: "2026-10-22"
-    severity: major
-    description: "HUMAN-PROMPTED-CLOSURE: after PR #2418 merged I authored the completed log directly instead of invoking close-session (ADR-0009 rule), skipping step 1's rule re-read; the user had to ask for a proper close"
-    solution: "Invoke the close-session Skill at every merge, even when its text is in context from editing it; having edited a Skill is not having run it"
   - session: session_01PdrNTJLJJMKBGGZfsAhL6w
     date: "2026-10-25"
     severity: nit

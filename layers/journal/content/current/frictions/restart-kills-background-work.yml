@@ -24,3 +24,8 @@ occurrences:
     severity: moderate
     description: "A session restart at about 23:20 killed the first clear-backlog-build run mid-fix; I noticed only when the second run finished and its output file was empty, then resumed it."
     solution: "Check each running workflow's journal mtime right after a resume hook fires, as clear-backlog §3 says."
+  - session: session_013zxzeSbd2LJtWWawqrWBJD
+    date: "2026-11-05"
+    severity: moderate
+    description: "A container restart killed both build workflows and the opus agent; I twice said they were probably running until the owner asked if they were stuck, costing about an hour."
+    solution: "After any gap, compare journal mtimes and process start times before reporting a background run as live; the clear-backlog Skill already says to check the journal's mtime."

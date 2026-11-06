@@ -14,11 +14,6 @@ fixes:
     date: "2026-10-30"
     summary: "CLAUDE.md: in the main session end your turn and let the completion notification wake you; never wait with pgrep -f"
 occurrences:
-  - session: session_01Nzhsg2KY7V9o2AmYWK2cqy
-    date: "2026-10-22"
-    severity: nit
-    description: "A backgrounded gate command with a trailing ampersand plus run_in_background was blocked by the double-background guard; a chained sleep was also blocked. Both resent correctly."
-    solution: "The Skill step 10 could say: gate in background with run_in_background alone, then a Monitor on its log."
   - session: session_011hiFhM9A2Sbn4mGYbdtAhJ
     date: "2026-10-23"
     severity: nit
@@ -59,3 +54,8 @@ occurrences:
     severity: nit
     description: "A foreground sleep to wait for the gate was blocked by the harness; I ended the turn and relied on the completion notification instead, a minor detour."
     solution: "Say in blog-post step 10 to run the gate in the background and end the turn at once."
+  - session: session_013zxzeS7NuFmaoXJkxVfNby
+    date: "2026-11-05"
+    severity: nit
+    description: "I tried a foreground sleep to wait for the gate; the harness blocked it, wasting a call."
+    solution: "End the turn and let the background completion notification wake me."

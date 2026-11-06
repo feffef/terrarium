@@ -36,3 +36,8 @@ occurrences:
     severity: nit
     description: "adr-0004-human-merge rule fired on merely reading ADR files, saying 'You just touched a Human-only file' when nothing was edited"
     solution: "Fire that rule only on edits, or reword it for reads"
+  - session: session_013zxzeShpLwnUmQEGZdog9F
+    date: "2026-11-05"
+    severity: nit
+    description: "Rules unrelated to the task (adr-0021, guards, adr-0022 and others) loaded into the search subagent as hook side effects, adding noise to its report."
+    solution: "Narrower paths for those rules so a grep over scripts or journal files doesn't load them."

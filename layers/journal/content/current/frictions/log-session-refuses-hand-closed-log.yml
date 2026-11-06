@@ -73,3 +73,8 @@ occurrences:
     severity: nit
     description: "After the merge I authored a completed log before re-invoking close-session, which log-session refused; one wasted call."
     solution: "Have the merge-pr.ts output remind to run close-session before authoring."
+  - session: session_013zxzeS7NuFmaoXJkxVfNby
+    date: "2026-11-05"
+    severity: nit
+    description: "After the last PR merged I authored a completed log before re-invoking close-session; log-session refused it, costing one call."
+    solution: "Invoke close-session immediately after merge-pr.ts (the hint already says so)."

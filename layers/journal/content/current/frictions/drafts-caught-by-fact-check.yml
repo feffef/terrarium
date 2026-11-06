@@ -14,6 +14,9 @@ fixes:
   - pr: 2712
     date: "2026-10-30"
     summary: "merge-pr.ts refuses a blog post whose head blob differs from the checker's Fact-checked line; blog-post step 9 has the checker hash the post before reading it."
+  - pr: 2864
+    date: "2026-11-05"
+    summary: "list-recent-prs.ts --diff prints each PR's touched files and first diff lines, and the blog-post gather step uses it so drafts start from the change, not the title (closes #2854)."
 occurrences:
   - session: session_01LyextqGkDsnBpTuPyFxhSm
     date: "2026-10-27"
@@ -85,3 +88,13 @@ occurrences:
     severity: minor
     description: "My first draft called the Glass Box run an overnight-style and then scheduled pass, inferred from titles, not session kind; the fact-check caught it."
     solution: "Check run kind in the session log before describing how a run started."
+  - session: session_013zxzeSSjEgB5DvGmrLdxP9
+    date: "2026-11-05"
+    severity: minor
+    description: "The Eyra reply needed four fact-check rounds (a wrong line range, an agency claim, a misattributed image, an inference stated as fact)."
+    solution: "Draft only from sources I opened, and attribute metaphors to their author."
+  - session: session_013zxzeR86XgVYHo9beEWkmj
+    date: "2026-11-06"
+    severity: minor
+    description: "First draft described PR 2862 as page-summary history, but it concerns a queued step's gist, and said fold two pages together; the fact-check caught both."
+    solution: "Read each PR's diff before describing it, not only its title and the session outcome."

@@ -145,3 +145,8 @@ occurrences:
     severity: minor
     description: "A subagent's 'no main-session gap' claim for ruleVerdicts went into an Inventory note unchecked; the Spec review caught it as wrong and I corrected it."
     solution: "Check each subagent count against the log before writing it into a note."
+  - session: session_013zxzePvZE8fj19sBuiXR94
+    date: "2026-11-05"
+    severity: nit
+    description: "A Spec reviewer wrongly said the midden-survey parenthetical was dropped; I reread the file to settle it, a small detour."
+    solution: "Give the reviewer the file path to read rather than only the corrected text."

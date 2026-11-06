@@ -4,7 +4,8 @@ summary: >-
 cause: >-
   survey-brief.md and design-brief.md (not SKILL.md) carry broken or outdated instructions: a dangling fragment and a glob that matches nothing, mixed window dates, no status for closed-not-planned or on-trial entries, search guidance that contradicts github-integration.md, no named way to find merged PRs missing from the ledger, an impossible 'read every full log' ask, no owner/repo slug, and a design-brief wanting only docReadCounts from a 40 KB audit-skills JSON with no filter. PR #2733 (2026-10-31) gave the survey brief {SCRATCH_DIR} output paths and an all-or-nothing note for --append and redirected the design brief's audit-skills output. Signals: a survey or design subagent reporting the brief 'says ... but', a glob matching nothing, work done by hand that the brief should have pointed to.
 surface: safe
-status: open
+status: tracked
+ref: "issue #2877 (regression of #2733)"
 notes: |-
   2026-10-30 survey: the Prune Trial of PR #2539 was judged and deleted by PR #2681; status reset to open.
 fixes:
@@ -24,11 +25,6 @@ fixes:
     date: "2026-10-31"
     summary: "Survey brief passes --out {SCRATCH_DIR} paths to the summary, candidates and extract calls and redirects the merges and open-issues calls; design brief redirects audit-skills output; states that --append writes all or nothing."
 occurrences:
-  - session: session_01JkRFBik4MUWwZcP45q7egk
-    date: "2026-10-22"
-    severity: minor
-    description: "Survey agent reported the survey brief pulls opposite ways on closed-issue search (brief says search_issues, github-integration.md says avoid it), and that --summary's max-severity column does not match the brief's 'since the latest PR' part (e)."
-    solution: "Make --summary print the severity since the latest PR, and reconcile the search guidance in the brief with github-integration.md."
   - session: session_01CfTFFQrkwq1eUsDy61AJzz
     date: "2026-10-23"
     severity: minor
@@ -99,3 +95,8 @@ occurrences:
     severity: minor
     description: "Survey brief's list_issues CLOSED paging asks for a heavy scan; the survey agent substituted a gh api scan, and the survey omitted each regression's severity-since that its brief requires."
     solution: "Have the survey brief require the since column copied per regression, and name the cheap closed-issue scan."
+  - session: session_013zxzeS7NuFmaoXJkxVfNby
+    date: "2026-11-05"
+    severity: minor
+    description: "Survey brief asks for paging list_issues CLOSED, which contradicts github-integration.md overflow guidance; subagent substituted gh api and could not confirm paraphrase misses."
+    solution: "Replace the CLOSED paging step with a cheap scripted closed-title scan."

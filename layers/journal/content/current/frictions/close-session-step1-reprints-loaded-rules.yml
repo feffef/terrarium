@@ -10,11 +10,6 @@ fixes:
     date: "2026-10-24"
     summary: "close-session step 1 no longer runs always-loaded.ts; the script and its spec are deleted."
 occurrences:
-  - session: session_01EjH3TbrydEY2sArBMYE5Gy
-    date: "2026-10-22"
-    severity: nit
-    description: "Look-back: close-session step 1 re-printed CLAUDE.md and the always-loaded rules already in context, a large output for a short session"
-    solution: "None needed for this session; worth watching whether always-loaded.ts output is skimmed rather than read"
   - session: session_01SNKBDEtR5UiaMXBdxvHuuE
     date: "2026-10-23"
     severity: nit

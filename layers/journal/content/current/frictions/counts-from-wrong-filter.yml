@@ -10,11 +10,6 @@ notes: |-
   2026-10-24 design: a CLAUDE.md or doc line dropped: CLAUDE.md already says a count is a fact only after you read every item, it was in context for all 5, and the five causes (eligibility rule, outlier drop, window start, ls headers) share no mechanism a helper could check.
 fixes: []
 occurrences:
-  - session: session_01BYiuxza1S1QZgmyXngfzLE
-    date: "2026-10-22"
-    severity: minor
-    description: "I counted #2286 and #2137 eligible as unlabelled issues, but both are on-hold specs whose last comment is an agent's, so auto-triage would skip them; #2286's hold had not lifted yet."
-    solution: "Apply auto-triage's on-hold-spec exception (issue-tracker.md Specs) when resolving the set; a helper that prints eligibility per issue would make it mechanical."
   - session: session_01PWZU3TqUdSp6uD1KaoQXit
     date: "2026-10-23"
     severity: minor
@@ -40,3 +35,8 @@ occurrences:
     severity: minor
     description: "Built the first list of six reopen candidates from the first git -S date for status accepted, which missed relayed-subagent-claims' re-acceptance, so I corrected to five."
     solution: "Read each entry's ref and its latest status commit, not the first, before reporting acceptance dates."
+  - session: session_013zxzeSbd2LJtWWawqrWBJD
+    date: "2026-11-05"
+    severity: nit
+    description: "My quick check of the Friction files' occurrence counts was a sloppy grep that returned meaningless numbers; I left the issues' counts marked unverified instead of recounting."
+    solution: "Count with a short script over the occurrences list, or say unverified up front rather than running a grep that cannot count."

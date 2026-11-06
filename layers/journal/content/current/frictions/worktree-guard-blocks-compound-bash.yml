@@ -26,3 +26,8 @@ occurrences:
     severity: minor
     description: "Writers hit worktree-guard and inline-heredoc refusals and worked around them with script files"
     solution: "writer-brief should tell writers to write edit scripts to their scratch folder from the start"
+  - session: session_013zxzeS7NuFmaoXJkxVfNby
+    date: "2026-11-05"
+    severity: nit
+    description: "Impl agent's combined mkdir && git && pnpm call was refused by the worktree-isolation guard; it split the call."
+    solution: "dispatch-subagents already says one git command per Bash call; repeat it in impl-brief."

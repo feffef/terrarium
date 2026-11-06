@@ -14,16 +14,6 @@ fixes:
     date: "2026-10-28"
     summary: "CLAUDE.md says to read a required doc whole if you can, no longer in one Read call: partial reads are encouraged against, not required."
 occurrences:
-  - session: session_01T4UbBvJmjSunCwb3cUN68Q
-    date: "2026-10-22"
-    severity: minor
-    description: "Read GLOSSARY-MAP, GLOSSARY and two docs in one cat that truncated at 30KB; never read the rest of GLOSSARY or the full git-conventions."
-    solution: "Read each required doc with its own Read call."
-  - session: session_0195CYW3YBg2stBS6aGigmbp
-    date: "2026-10-22"
-    severity: minor
-    description: "Root GLOSSARY.md was catted together with other docs; output overflowed to a file and I read only its first 2KB, not the whole glossary the start-of-session rule requires."
-    solution: "Read big required docs in their own Read call so truncation is visible."
   - session: session_012Yzae3uty5Jj8ZPug9zpjr
     date: "2026-10-23"
     severity: nit
@@ -39,3 +29,8 @@ occurrences:
     severity: nit
     description: "Bundled the Lessons with cat; one output was persisted to a file and a later Read truncated, costing two extra reads"
     solution: "Read large page sets in chunks under ~35k tokens per call from the start"
+  - session: session_013zxzeTDG9WP45rYE5hRMpG
+    date: "2026-11-06"
+    severity: minor
+    description: "Read docs/agents/github-integration.md with head -80, against CLAUDE.md's read-it-whole rule; a later write trap could have been missed"
+    solution: "Read trigger docs whole with the Read tool; it costs a few hundred tokens"
