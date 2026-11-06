@@ -109,7 +109,7 @@ These are the owner's decisions of direction, not findings. A new Subject still 
 
 These are page changes earlier improve runs weighed and turned down. Each stays decided until something on `main` changes the reason it was turned down.
 
-**Dropped** (a researcher or the run rejected it):
+**Dropped** (an earlier run rejected it):
 - **Folding `skill-pack/02.planning-with-the-pack` into `skill-pack/01.skill-packs`** (2026-11-02). The proposal kept only the wayfinder-on-GitHub mapping and the ready-for-agent rule. It was dropped because the page's tour of seven Skills is upstream and Skill Inventory content, so a fold would leave Terrarium's own two facts with no Lesson. Raise it again only if the page loses those facts.
 - **Moving the two-tier definition and the identity-not-text rule from `terrarium-practice/01.human-in-the-loop` to `git-github/04.trust-tiers`** (2026-11-03). Dropped because human-in-the-loop already links them there. Nothing needs to move.
 - **Moving the do-not-apply-ready-for-agent rule from `skill-pack/02.planning-with-the-pack` to `git-github/06.work-queue`** (2026-11-03). Dropped because work-queue's "Who sets the state" Excerpt already holds it.
