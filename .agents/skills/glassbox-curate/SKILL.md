@@ -46,14 +46,24 @@ in a brief as `.agents/skills/...`.
 
 ## How a run goes
 
+**Know the guide before you change it.** Glass Box is one textbook, not a
+set of separate pages. A reader meets a concept once, in one Lesson, and
+follows Where next and Walkthroughs to the rest. An edit made without knowing
+the other pages breaks that: it repeats what a sibling page already teaches,
+contradicts it, adds a page that exists under another title, or cuts the only
+place a fact was taught. Runs that read only the page they changed repeated a
+sibling page (#2943) and cut the only place a fact was taught (#2927). So
+every run reads at two depths before it edits: the first paragraph of every
+page, to know what the whole guide teaches, and every page of its area in
+full, to know exactly what its neighbours say.
+
 - **Orient.** This is the orientation step: run
   `pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts`, then the
   same with `--pages`, and read each output whole, never through `head`; if
   the tool saves one to a file, read that file whole. The first gives the
   state: where to write the run entry, open PRs, memory, recent runs and
-  warnings. The second gives every page's first paragraph, your only overview
-  of what the guide already teaches: you need it to spot a gap, an overlap or a
-  page that already exists. Leave alone every page an open PR touches. While a
+  warnings. The second gives every page's first paragraph: the whole-guide
+  depth above. Leave alone every page an open PR touches. While a
   `glassbox-update` PR is open, wait for it: subscribe to its activity, end
   your turn, and orient again once it merges or closes. An autonomous run stops
   without a PR once that PR has been open 20 hours; an interactive run keeps
@@ -65,10 +75,11 @@ in a brief as `.agents/skills/...`.
   the area is the Subject it would join, or the pages nearest its topic.
   Before you take a gap from the memory page, grep the guide for its key
   terms: a lead can be stale.
-- **Read.** Run `orient.ts --area <folder>` and read its output whole; it ends
-  with the `pagesRead` lines to paste. Also read in full every page outside
-  the area that a change would edit, link or overlap. A change that only
-  removes text reads just those pages. Edit only after this step.
+- **Read.** The full depth above. Run `orient.ts --area <folder>` and read its
+  output whole; it ends with the `pagesRead` lines to paste. Also read in full
+  every page outside the area that a change would edit, link or overlap. A
+  change that only removes text reads just those pages. Edit only after this
+  step.
 - **Choose.** Pick this run's focus from what you read. Put every other weak
   spot or proposal you found on the memory page, so later runs inherit the
   reading. The run entry says why you chose the focus.
