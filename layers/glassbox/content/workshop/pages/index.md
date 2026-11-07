@@ -29,17 +29,17 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 
 These are the owner's goals for the guide. A new Subject needs the owner's approval.
 
-1. **Add a web standards Subject** for CSS and SVG. The proposal is issue #2941 (the move of CSS custom properties, then new SVG, ARIA and Colour schemes Lessons) and waits for the owner's answers; do not start it before they answer. Facts from it: *ARIA* has no recorded practice or accessibility check to cite, only components and tests; no ADR or rule says binary images are kept out of the repository (the repo just holds none), so the SVG Lesson has no source for that point until the owner gives it a home; *CSS custom properties* already has a dark-mode paragraph the Colour schemes Lesson must not repeat; and *Mermaid pre-rendering* should probably stay in Nuxt Content.
+1. **Finish the web standards Subject.** It now holds *CSS custom properties*, *SVG*, *ARIA* and *Colour and motion settings*. Still open: no ADR or rule says binary images are kept out of the repository (the repo just holds none), so no page teaches that; and *ARIA* cites components and tests only, because no accessibility practice is recorded. Ask the owner whether to record one.
 2. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
 3. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
 
 ### Good next focuses
 
 1. **Ask the owner whether to rename files to match their titles** (direction 2), as an issue that lists each rename and its URL effect.
-2. **Build the web standards Subject** once the owner answers issue #2941.
-
 
 ### Ideas not yet decided
+
+**More web standards pages, looked at and left out.** *View Transitions* (Tinkerfund's plugin, mostly a story about a Nuxt hook, so it fits Nuxt & Vue); page metadata such as Open Graph and robots (one Tenant's helper); container queries and `IntersectionObserver` (one or two files each). Reduced motion sits in *Colour and motion settings* at the owner's choice; a reader may look for it under accessibility.
 
 **Claude Code and Hooks: giving each fact one home.** In each case the first page keeps a short link.
 - *MCP servers* explains how hooks pick out MCP tools by name. That belongs on *Blocking hooks*.
