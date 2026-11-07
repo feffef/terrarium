@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeNpEgoBzTxHw74sJHY
 startedAt: 2026-11-07T19:27:13Z
-endedAt: 2026-11-07T19:48:18Z
+endedAt: 2026-11-07T19:52:02Z
 kind: interactive
 goal: Back ten Glass Box Lessons with the official docs earlier runs couldn't reach
-status: in-review
-outcome: "PR 2952 open: ten Lessons re-read against live docs, five facts corrected, deep links added, memory page and run entry updated; gate green"
-summary: "The owner invoked glassbox-curate with no focus. I asked, and they answered in their own words: find Lessons whose primary docs were blocked in earlier runs, read the docs now that the network is open, fix the Lessons from what the docs say, and add deep links (human-instructed). Choosing which ten was my call (agent-initiated), made from PR bodies #2034, #2041, #2044, #2500, #2763 and #2787, which name the blocked sites. I did not confirm the ten with the owner before building. Five opus writers (one per page group) fetched the docs, corrected claims and added links; a sonnet claim checker, a sonnet fresh reader, and a two-axis code-review followed. The claim checker's one false verdict (Vue hydration re-patching bound attributes) was wrong: Vue's source re-patches dynamicProps and class/style are not in them, so I left that older sentence. The Standards reviewer made me cut the memory page lead and drop a publishedAt I had added to Content database; the Spec reviewer's missing-pagesRead list was read by one reader (no contradiction) and recorded. Open for later runs: the other Nuxt & Vue, Verification and Git & GitHub Lessons still rest on non-docs sources (memory page). Run cost was 10.32 USD at PR time. Not merged; waiting on CI."
+status: completed
+outcome: "PR 2952 merged: ten Lessons re-read against live docs, facts corrected, deep links added, memory page and run entry updated"
+summary: "The owner invoked glassbox-curate with no focus. I asked, and they answered in their own words: find Lessons whose primary docs were blocked in earlier runs, read the docs now that the network is open, fix the Lessons from what the docs say, and add deep links (human-instructed). Choosing which ten was my call (agent-initiated), made from PR bodies #2034, #2041, #2044, #2500, #2763 and #2787, which name the blocked sites. I did not confirm the ten with the owner before building. Five opus writers (one per page group) fetched the docs, corrected claims and added links; a sonnet claim checker, a sonnet fresh reader, and a two-axis code-review followed. The claim checker's one false verdict (Vue hydration re-patching bound attributes) was wrong: Vue's source re-patches dynamicProps and class/style are not in them, so I left that older sentence. The Standards reviewer made me cut the memory page lead and drop a publishedAt I had added to Content database; the Spec reviewer's missing-pagesRead list was read by one reader (no contradiction) and recorded. Open for later runs: the other Nuxt & Vue, Verification and Git & GitHub Lessons still rest on non-docs sources (memory page). Run cost was 10.32 USD at PR time. I posted my verdict and merged it with merge-pr.ts once the gate was green."
 prs:
   - "2952"
 docsRead:
@@ -79,22 +79,24 @@ frictions:
   - description: The Stop hook demanded commits while writers were still editing, so I committed three work-in-progress commits with mixed content to the run branch.
     solution: Let the Stop hook skip when background subagents are running, or squash before the PR.
     severity: nit
-durationSec: 1266
+durationSec: 1489
 models:
-  claude-sonnet-5-5: 115
+  claude-sonnet-5-5: 131
 toolCounts:
   AskUserQuestion: 1
-  Bash: 32
+  Bash: 37
   Read: 10
   Grep: 1
-  Skill: 4
+  Skill: 5
   Write: 2
   Agent: 10
-  ReadNotifications: 1
+  ReadNotifications: 3
   mcp__claude-code-remote__get_session: 2
   ToolSearch: 1
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  mcp__github__pull_request_read: 1
+  mcp__github__add_issue_comment: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/verification/40.testing.md
   - layers/glassbox/content/guide/pages/verification/60.zod-refinements.md
@@ -185,70 +187,70 @@ subagents:
     durationSec: 168
     toolCalls: 31
     modelCalls: 17
-    tokenShare: 7.1
+    tokenShare: 6.6
   - type: general-purpose
     task: Nuxt Content pages B
     model: opus
     durationSec: 178
     toolCalls: 31
     modelCalls: 25
-    tokenShare: 9
+    tokenShare: 8.4
   - type: general-purpose
     task: Nuxt and Vue pages
     model: opus
     durationSec: 245
     toolCalls: 39
     modelCalls: 27
-    tokenShare: 10.1
+    tokenShare: 9.4
   - type: general-purpose
     task: Verification pages
     model: opus
     durationSec: 413
     toolCalls: 59
     modelCalls: 45
-    tokenShare: 17
+    tokenShare: 15.9
   - type: general-purpose
     task: Deploy page
     model: opus
     durationSec: 121
     toolCalls: 17
     modelCalls: 14
-    tokenShare: 5.5
+    tokenShare: 5.2
   - type: general-purpose
     task: Claim-check changed sentences
     model: sonnet
     durationSec: 163
     toolCalls: 23
     modelCalls: 21
-    tokenShare: 7
+    tokenShare: 6.5
   - type: general-purpose
     task: Fresh reader of three pages
     model: sonnet
     durationSec: 10
     toolCalls: 4
     modelCalls: 2
-    tokenShare: 1.1
+    tokenShare: 1
   - type: general-purpose
     task: Standards review
     model: sonnet
     durationSec: 42
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: general-purpose
     task: Spec review
     model: sonnet
     durationSec: 47
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 2.2
+    tokenShare: 2.1
   - type: general-purpose
     task: Overlap read of neighbour pages
     model: sonnet
     durationSec: 29
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 3.7
+    tokenShare: 3.4
 gitBranch: claude/gracious-knuth-t5alq2
 entrypoint: remote
 cliVersion: 2.1.319
