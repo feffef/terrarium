@@ -28,7 +28,7 @@ flowchart TD
 A :term[Document] starts as a Markdown or YAML file in its Tenant's folder under `layers/`, at `content/<space>/<collection>/`, merged to `main` like any other change. Take a post in the Blog's `layers/blog/content/david/pages/`: the folders name its :term[Tenant] (`blog`), its :term[Space] (`david`) and its :term[Collection] (`pages`); nothing else says where it belongs.
 
 ::lessons
-[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · :file[layers/blog/content/david/pages/]
+[Content collections](/t/glassbox/guide/nuxt-content/content-collections) · :file[layers/blog/content/david/pages/]
 ::
 
 ## 2. The manifest names its table
@@ -36,7 +36,7 @@ A :term[Document] starts as a Markdown or YAML file in its Tenant's folder under
 The Tenant's :term[manifest] lists its Spaces and Collections. Each time Nuxt Content loads `content.config.ts`, `expand()` turns every manifest into one collection per Tenant, Space and Collection, each pointed at its own folder and named by a key joined from the three names: the post's is `blog_david_pages`. That key is the name of its table.
 
 ::lessons
-[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
+[Content collections](/t/glassbox/guide/nuxt-content/content-collections) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation)
 ::
 
 ## 3. The build parses it into SQLite and a dump
@@ -52,7 +52,7 @@ The Tenant's :term[manifest] lists its Spaces and Collections. Each time Nuxt Co
 A Caddy proxy passes the visitor's request to :term[Nitro], Nuxt's server, which first checks its page cache: a copy rendered moments ago goes back as it is. On a miss, Nuxt picks the page file that matches the address, and its `useSpace` turns the address into the keys of one Space's Collections, or a 404. The page's `useAsyncData` then calls `queryCollection` with its key, on the server.
 
 ::lessons
-[Nitro server engine](/t/glassbox/guide/nuxt-vue/nitro) · [Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · [queryCollection](/t/glassbox/guide/nuxt-content/query-collection)
+[Nitro server engine](/t/glassbox/guide/nuxt-vue/nitro) · [Data fetching](/t/glassbox/guide/nuxt-vue/data-fetching) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · [Multi-tenant isolation](/t/glassbox/guide/nuxt-content/multi-tenant-isolation) · [queryCollection](/t/glassbox/guide/nuxt-content/query-collection)
 ::
 
 ## 5. The first query restores the table from the dump
@@ -68,13 +68,13 @@ The first query for a Collection since the server started compares the checksum 
 Vue renders the page to HTML with the `useAsyncData` result inside, and the browser shows it, then takes the page over without fetching that data again. When the pointer enters a link, a finger touches it or the keyboard focuses it, the browser fetches that route's code and its `_payload.json`, and the click builds the next page from them with no query. A query no payload answers runs instead in an SQLite database the browser builds from the Collection's dump.
 
 ::lessons
-[Hydration](/t/glassbox/guide/nuxt-vue/hydration) · [Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [Content database](/t/glassbox/guide/nuxt-content/content-database)
+[Hydration](/t/glassbox/guide/nuxt-vue/hydration) · [Data fetching](/t/glassbox/guide/nuxt-vue/data-fetching) · [Content database](/t/glassbox/guide/nuxt-content/content-database)
 ::
 
 ## Where next
 
-- [Content collections](/t/glassbox/guide/nuxt-content/manifest-collections)
+- [Content collections](/t/glassbox/guide/nuxt-content/content-collections)
 - [Content database](/t/glassbox/guide/nuxt-content/content-database)
-- [Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data)
-- [Continuous deployment](/t/glassbox/guide/deploy/self-updating-container)
+- [Data fetching](/t/glassbox/guide/nuxt-vue/data-fetching)
+- [Continuous deployment](/t/glassbox/guide/deploy/continuous-deployment)
 - [A change goes live](/t/glassbox/guide/walkthroughs/a-change-goes-live)

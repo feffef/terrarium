@@ -13,7 +13,7 @@ Terrarium keeps each Tenant's content in tables of its own, yet the Commons Sear
 The Blog's :term[manifest] gives its `pages` :term[Collection] one extra field, `kind: 'page'`. That field is the whole opt-in: a Collection with no `kind` stays off every list below. The :term[Collection kinds]{id="collection-kind"} and their contracts live in :file[shared/kinds.ts], and the manifest check refuses a kind that isn't there or one meant for the other Collection type.
 
 ::lessons
-[Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · [Zod refinements](/t/glassbox/guide/verification/schema-validation) · :file[layers/blog/tenant.config.ts]
+[Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads) · [Zod refinements](/t/glassbox/guide/verification/zod-refinements) · :file[layers/blog/tenant.config.ts]
 ::
 
 ## 2. The contract joins the schema
@@ -21,7 +21,7 @@ The Blog's :term[manifest] gives its `pages` :term[Collection] one extra field, 
 When `expand()` builds the Blog's collections, it adds the `page` contract's fields to the Blog's own page schema, keeping any Blog field of the same name. The Blog's schema doesn't declare `publishedAt`; its posts get that field from the contract. `pnpm validate:content` checks every post against the combined schema, so a reader can rely on those fields' names and types.
 
 ::lessons
-[Content collections](/t/glassbox/guide/nuxt-content/manifest-collections) · [Content validation](/t/glassbox/guide/verification/content-validation)
+[Content collections](/t/glassbox/guide/nuxt-content/content-collections) · [Content validation](/t/glassbox/guide/verification/content-validation)
 ::
 
 ## 3. The build lists it in the Catalog
@@ -45,7 +45,7 @@ A visitor opens `/t/commons/search`. The Commons layer's Space page renders its 
 The server renders the first rows; the whole list travels in the page's data. Typing in the box filters that list in the browser, by title, description, Tenant and Space, with no new query. The filter and the sort order are code in the Commons layer, not in the shared read functions. A click on a result goes to the post's own address under `/t/blog/`, where the Blog's own pages render it.
 
 ::lessons
-[Data fetching](/t/glassbox/guide/nuxt-vue/use-async-data) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/commons/app/components/commons/Search.vue] · :file[layers/commons/app/pages/t/commons/]
+[Data fetching](/t/glassbox/guide/nuxt-vue/data-fetching) · [File routing](/t/glassbox/guide/nuxt-vue/file-routing) · :file[layers/commons/app/components/commons/Search.vue] · :file[layers/commons/app/pages/t/commons/]
 ::
 
 ## 6. Where the reading stops
@@ -61,5 +61,5 @@ The Commons's own `pages` name no kind, so its Search never lists itself. A Coll
 - [Cross-tenant reads](/t/glassbox/guide/terrarium-practice/cross-tenant-reads)
 - [queryCollection](/t/glassbox/guide/nuxt-content/query-collection)
 - [Virtual modules](/t/glassbox/guide/nuxt-vue/virtual-modules)
-- [Adding a site](/t/glassbox/guide/walkthroughs/adding-a-tenant)
+- [Adding a site](/t/glassbox/guide/walkthroughs/adding-a-site)
 - [From file to browser](/t/glassbox/guide/walkthroughs/from-file-to-browser)

@@ -14,10 +14,9 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 ### Weak spots
 
 - **The Installed Skills pages say little of their own.** *Planning skills* (`skill-pack/02.planning-with-the-pack`) and *Engineering skills* (`skill-pack/03.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
-- **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/05.attribution`) and *Issue triage labels* (`git-github/06.work-queue`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
+- **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/05.attribution`) and *Issue triage labels* (`git-github/06.issue-triage-labels`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
 - **The drafts Space is empty.** A gap that isn't central goes there as a new draft.
 - **The Claude Code, Hooks and Agents & automation Subjects still repeat each other.** The split moved pages without moving facts; the ideas below are about giving each fact one home.
-- **File names and titles differ.** Guide titles are settled (see Already decided), but 12 file names differ from their titles, 8 of them sharing no word with it: `agents/03.routines` (*Scheduled tasks*), `deploy/01.self-updating-container`, `git-github/01.every-change-a-pr`, `git-github/06.work-queue`, `terrarium-practice/02.adrs`, `terrarium-practice/07.human-only-list`, `verification/04.unit-and-e2e-tests` and `verification/06.schema-validation`. The other 4 share one word: `git-github/04.trust-tiers`, `nuxt-content/01.manifest-collections`, `nuxt-vue/06.use-async-data` (*Data fetching*) and `walkthroughs/adding-a-tenant`. Renaming a file changes its URL. A grep of the guide for the 12 old addresses finds 186 links (`grep -rhoE` over `layers/glassbox/content/guide`). The Journal's *Highlights* page also links `agents/routines`, outside the Glass Box remit, and `layers/glassbox/tests/unit/walkthrough.spec.ts` uses the `adding-a-tenant` address in a fixture.
 
 ### Recurring problems
 
@@ -35,7 +34,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 ### Good next focuses
 
-1. **Rename the 12 files to match their titles** (direction 2). The titles are settled, so nothing blocks it. Update every guide link, the `checks/update.yml` page names and the test fixture, and list each rename and its URL effect in the PR for the owner.
+1. **None queued.** Pick from the weak spots and ideas below.
 
 ### Ideas not yet decided
 
@@ -47,13 +46,13 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 **Installed Skills.** *Engineering skills* could become part of *Installed skills* (`skill-pack/01.skill-packs`).
 
-**A fact about out-of-scope records that no Lesson teaches.** Before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request (`.agents/skills/triage/SKILL.md`, step 1). *Issue triage labels* (`git-github/06.work-queue`) teaches the records and their format but not this check. It could be one sentence there, or a section if that page is split after a fresh reader finds it hard to follow.
+**A fact about out-of-scope records that no Lesson teaches.** Before it recommends anything, `triage` reads every record in `.out-of-scope/` and shows the person deciding any that resembles the new request (`.agents/skills/triage/SKILL.md`, step 1). *Issue triage labels* (`git-github/06.issue-triage-labels`) teaches the records and their format but not this check. It could be one sentence there, or a section if that page is split after a fresh reader finds it hard to follow.
 
 **Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/09.headless-browser-checks`).
 
 **Ideas earlier runs rejected.** Before acting on one, re-check the reasons for and against.
-- Moving the timestamp rule and its warnings from *Content validation* (`verification/03.content-validation`) to *Zod refinements* (`verification/06.schema-validation`).
-- Moving the warning to return only what a page reads from *Data fetching* (`nuxt-vue/06.use-async-data`) to *queryCollection* (`nuxt-content/04.query-collection`). A related move the other way is under Already decided.
+- Moving the timestamp rule and its warnings from *Content validation* (`verification/03.content-validation`) to *Zod refinements* (`verification/06.zod-refinements`).
+- Moving the warning to return only what a page reads from *Data fetching* (`nuxt-vue/06.data-fetching`) to *queryCollection* (`nuxt-content/04.query-collection`). A related move the other way is under Already decided.
 
 ### Already decided
 

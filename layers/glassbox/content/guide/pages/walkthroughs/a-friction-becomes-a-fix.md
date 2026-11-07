@@ -39,7 +39,7 @@ A hook commits the :term[session log] straight to `main`, without a PR. The Fric
 A :term[Routine] starts a session that runs the `frictions-to-fixes` Skill, or a Trusted user runs it by hand. It is a session like any other, following the Skill's steps.
 
 ::lessons
-[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/agents/routines) · [Claude Code skills](/t/glassbox/guide/claude-code/skills)
+[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks) · [Claude Code skills](/t/glassbox/guide/claude-code/skills)
 ::
 
 ## 4. A subagent reads the logs
@@ -63,7 +63,7 @@ The subagent checks each candidate against the changes merged since its sessions
 The run picks the top candidates and has one design subagent design each fix and judge its risk. A fix the run may not build becomes an issue with the design; the rest go on to be built.
 
 ::lessons
-[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Protected paths](/t/glassbox/guide/terrarium-practice/human-only-list) · [Blocking hooks](/t/glassbox/guide/hooks/blocking-hooks) · [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
+[Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop) · [Protected paths](/t/glassbox/guide/terrarium-practice/protected-paths) · [Blocking hooks](/t/glassbox/guide/hooks/blocking-hooks) · [Issue triage labels](/t/glassbox/guide/git-github/issue-triage-labels)
 ::
 
 ## 7. Helper agents write the fixes
@@ -79,7 +79,7 @@ Helper agents write the fixes, each in a git worktree of its own, run the Gate a
 The run reviews each branch itself, opens its PR and posts its verdict there as a comment. A clean, low-risk fix it merges through `scripts/github/merge-pr.ts`, which refuses without that verdict and refuses a PR that changes a Human-only file. A fix whose diff needs a human merge stays open, with the reason, for a Trusted user.
 
 ::lessons
-[Merge gate](/t/glassbox/guide/verification/gate) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr)
+[Merge gate](/t/glassbox/guide/verification/gate) · [Pull requests](/t/glassbox/guide/git-github/pull-requests)
 ::
 
 ## 9. The next session reads the fix
@@ -98,6 +98,6 @@ On 8 July 2026 a scheduled session waited about two hours on a PR's CI. It had c
 
 - [Self-improvement loop](/t/glassbox/guide/terrarium-practice/self-improvement-loop)
 - [Session logs](/t/glassbox/guide/terrarium-practice/session-logs)
-- [Scheduled tasks](/t/glassbox/guide/agents/routines)
+- [Scheduled tasks](/t/glassbox/guide/agents/scheduled-tasks)
 - [Asking an agent for a change](/t/glassbox/guide/walkthroughs/asking-for-a-change)
 - [Friction Ledger](/t/journal/current/frictions)

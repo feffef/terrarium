@@ -1,0 +1,6 @@
+session: session_013zxzeTCE8mdvR9V6wVJoCV
+mode: interactive
+focus: "Rename the 12 guide files whose names differ from their titles (owner's direction 2, top lead on the memory page). The owner started the run with no focus, saw the orientation, and chose this; they approved the exact new names and asked that the Journal Highlights link be fixed in the same PR."
+changes:
+  - "agents/03.scheduled-tasks, deploy/01.continuous-deployment, git-github/01.pull-requests, git-github/04.author-trust, git-github/06.issue-triage-labels, nuxt-content/01.content-collections, nuxt-vue/06.data-fetching, terrarium-practice/02.decision-records, terrarium-practice/07.protected-paths, verification/04.testing, verification/06.zod-refinements, walkthroughs/adding-a-site | File renamed to follow its title (12 URLs changed); every guide link, the checks/update.yml page names and the Journal Highlights link repointed | titles were settled the same day; no sentence that states a fact changed, so the writer, claim checker and fresh reader were skipped"
+pagesRead: []
