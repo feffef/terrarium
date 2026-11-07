@@ -1,9 +1,11 @@
 // The orientation step of glassbox-curate, split in two so each output is read
-// whole; terms and Where next were cut because no run used them (#2906).
-// Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts [--pages]
+// whole; terms and Where next were cut because no run used them (#2906). `--area`
+// prints one Subject's pages in full, so the Read step is one output to read, not
+// a choice of what to open: runs that chose for themselves read too little.
+// Usage: pnpm exec tsx .agents/skills/glassbox-curate/scripts/orient.ts [--pages | --area <subject>]
 import { existsSync, globSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import { root, runIfMain } from '../../../../scripts/lib/cli.ts'
+import { fail, flagValue, root, runIfMain } from '../../../../scripts/lib/cli.ts'
 import { tryGit } from '../../../../scripts/lib/git.ts'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { listAll, resolveAccess } from '../../../../scripts/lib/github-client.ts'
@@ -89,6 +91,23 @@ export function guidePages(base = join(root, content)): string {
   return section('Guide pages', files(join(base, 'guide/pages'), '**/*.md').map(([f, t]) => pageOverview(f.replace(/\.md$/, ''), t)).join('\n\n'))
 }
 
+/** Every page of one area (a Subject's folder, or `walkthroughs`) in full, then the `pagesRead` lines they make. */
+export function areaPages(area: string, base = join(root, content)): string {
+  const pages = files(join(base, 'guide/pages', area), '*.md')
+  if (!pages.length) throw new Error(`no guide pages under "${area}"; an area is a folder of ${content}/guide/pages`)
+  const stems = pages.map(([f]) => `${area}/${f.replace(/\.md$/, '')}`)
+  return [
+    ...pages.map(([, t], i) => `# ${stems[i]}\n\n${t.trim()}`),
+    section('pagesRead for these pages', ['pagesRead:', ...stems.map((s) => `  - ${s}`)].join('\n')),
+  ].join('\n\n')
+}
+
 runIfMain(import.meta.url, () => {
-  process.stdout.write(`${process.argv.includes('--pages') ? guidePages() : orientation()}\n`)
+  const area = flagValue(process.argv, '--area')
+  if (process.argv.includes('--area') && !area) fail('--area needs a Subject folder, such as git-github')
+  try {
+    process.stdout.write(`${area ? areaPages(area) : process.argv.includes('--pages') ? guidePages() : orientation()}\n`)
+  } catch (err) {
+    fail(err instanceof Error ? err.message : String(err))
+  }
 })

@@ -17,7 +17,7 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 - **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/05.attribution`) and *Issue triage labels* (`git-github/06.work-queue`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
 - **The drafts Space is empty.** A gap that isn't central goes there as a new draft.
 - **The Claude Code, Hooks and Agents & automation Subjects still repeat each other.** The split moved pages without moving facts; the ideas below are about giving each fact one home.
-- **File names and titles differ.** In the Claude Code, Hooks and Agents & automation Subjects every title passes the title rule (a tool's name is in front only where the bare word is ambiguous). But some file names no longer match their titles, such as `agents/03.routines` (*Scheduled tasks*) and `nuxt-vue/06.use-async-data` (*Data fetching*). Renaming a file changes its URL, so it needs the owner.
+- **File names and titles differ.** In the Claude Code, Hooks and Agents & automation Subjects every title passes the title rule (a tool's name is in front only where the bare word is ambiguous). But some file names no longer match their titles, such as `agents/03.routines` (*Scheduled tasks*) and `nuxt-vue/06.use-async-data` (*Data fetching*). Renaming a file changes its URL, so a run that renames waits for the owner's merge.
 
 ### Recurring problems
 
@@ -27,7 +27,7 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 
 ### The owner's direction
 
-These are the owner's goals for the guide. A new Subject needs the owner's approval.
+These are the owner's goals for the guide. A run builds toward them directly; a PR that adds a Lesson or changes a Subject waits for the owner's merge.
 
 1. **Finish the web standards Subject.** It now holds *CSS custom properties*, *SVG*, *ARIA* and *Colour and motion settings*. Still open: no ADR or rule says binary images are kept out of the repository (the repo just holds none), so no page teaches that; and *ARIA* cites components and tests only, because no accessibility practice is recorded. Ask the owner whether to record one.
 2. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
@@ -35,7 +35,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 
 ### Good next focuses
 
-1. **Ask the owner whether to rename files to match their titles** (direction 2), as an issue that lists each rename and its URL effect.
+1. **Rename files to match their titles** (direction 2), listing each rename and its URL effect in the PR.
 
 ### Ideas not yet decided
 

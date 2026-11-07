@@ -65,7 +65,11 @@ page is written or promoted; a retitle keeps the URL.
   *Try it* line depends on. If the network blocks the fetch, read the page's
   source in the published docs package (e.g. `@nuxt/docs` from npm) or the
   docs repo on `raw.githubusercontent.com` (docs.github.com: `github/docs/...`;
-  vuejs.org: `vuejs/docs/main/src/...`; nuxt.com: `nuxt/nuxt/main/docs/...`),
+  vuejs.org: `vuejs/docs/main/src/...`; nuxt.com: `nuxt/nuxt/main/docs/...`;
+  MDN: `mdn/content/main/files/en-us/...`, whose folders can differ from the
+  URL, e.g. `web/css/reference/values/color_value/light-dark/index.md`; WAI-ARIA
+  spec: `w3c/aria/main/index.html`; playwright.dev:
+  `microsoft/playwright/main/docs/src/...`),
   confirm the exact URL and title in web search results, and say so in the
   PR. Zod links go to v3.zod.dev.
 - **A second tool gets its own link** at its first mention, even though *The

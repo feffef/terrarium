@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest'
 import { splitFrontmatter } from '../../../../scripts/lib/frontmatter.ts'
 import { root } from '../../../../shared/expand.ts'
 import glassbox from '../../tenant.config.ts'
-import { glassboxCites, glassboxJournalRoutes, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
+import { glassboxCites, glassboxLengthProblems, glassboxJournalRoutes, glassboxOrphans, glassboxPageProblems, glassboxPageWarnings, glassboxSitePath, glassboxTermProblems, glassboxTerms, repoGit, type GlassboxGit, type GlassboxSite } from '../../page-checks.ts'
 
 const rev = 'a'.repeat(40)
 const expandTs = [
@@ -369,5 +369,13 @@ describe('every Glass Box page matches the code at its revision', () => {
 
   it('every term source exists', () => {
     expect(glassboxTermProblems(terms, (path) => existsSync(join(root, path)))).toEqual([])
+  })
+})
+
+describe('glassboxLengthProblems', () => {
+  it('names a Lesson title over its cap and passes a page that fits', () => {
+    const page = (title: string) => `---\ntitle: ${title}\ndescription: Short.\n---\n\nBody.\n`
+    expect(glassboxLengthProblems({ 'web-standards/04.colour.md': page('Colour and motion preferences'), 'web-standards/02.svg.md': page('SVG') }))
+      .toEqual(['guide/pages/web-standards/04.colour.md: title "Colour and motion preferences" is 29 chars, more than 28'])
   })
 })

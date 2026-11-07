@@ -1,6 +1,6 @@
 ---
 name: glassbox-curate
-description: Make the Glass Box guide easier to learn from, then fill gaps; one focus per run, one self-merged PR. Started by a person, it runs interactively.
+description: Make the Glass Box guide easier to learn from, then fill gaps; one focus per run, one PR, which waits for the owner's merge when it adds a Lesson or changes a Subject or a Skill. Started by a person, it runs interactively.
 disable-model-invocation: true
 ---
 
@@ -17,11 +17,8 @@ called with no session id, and stop at the budget. Several runs a day must work.
 **Modes.** *Autonomous* (a Routine fired it): decide everything,
 ask nothing, and say in the run entry why you chose the focus.
 *Interactive* (a person started it): if no focus was given, ask for one; settle
-every decision with them via `grilling`. Their decision there counts as
-ADR-0003 approval for Glass Box content only, so a step beyond the remit, such
-as a new Subject, is allowed; changes to this Skill, the page checks or the
-rules still go through their own PRs. If they answer "autonomous", the run is
-autonomous from then on and its entry says so.
+every decision with them via `grilling`. If they answer "autonomous", the run
+is autonomous from then on and its entry says so.
 
 **Hard rules.** Never make a page false. Never undo an earlier change without
 new evidence. `DECISIONS.md` rulings are closed. One PR per run, within the
@@ -29,10 +26,12 @@ remit.
 
 **Remit.** Edit `layers/glassbox/content/guide/`,
 `layers/glassbox/content/drafts/`, the diagram SVGs you re-render, your own
-workshop files, and a moved page's name in `checks/update.yml`. A gap needing a
-new Lesson goes into an existing Subject, or into drafts if it isn't central. A
-gap needing a new Subject, and any change to this Skill, the `glassbox-lesson`
-docs or the page checks, become issues.
+workshop files, and a moved page's name in `checks/update.yml`. Build, in any
+mode and never as an issue: a new Lesson (in drafts if it isn't central), a new
+Subject with its `layers/glassbox/app/utils/subjects.ts` entry, a split or a
+move between Subjects, and a change to this Skill, the `glassbox-lesson` docs
+or the page checks. A PR holding any of these waits for the owner's merge: its
+body says so, and you don't merge it.
 
 **Read first.** `layers/glassbox/GLOSSARY.md`,
 [`../glassbox-lesson/EVERY-PAGE.md`](../glassbox-lesson/EVERY-PAGE.md),
@@ -64,37 +63,40 @@ in a brief as `.agents/skills/...`.
   problems the orientation shows, or gaps; when nothing is pressing, from pages
   no fresh reader has seen lately (`pagesRead`). For a gap or a new Subject,
   the area is the Subject it would join, or the pages nearest its topic.
-- **Read.** Read every page of the area in full, and every page outside it
-  that a change would edit, link or overlap. Edit only after this step.
+  Before you take a gap from the memory page, grep the guide for its key
+  terms: a lead can be stale.
+- **Read.** Run `orient.ts --area <folder>` and read its output whole; it ends
+  with the `pagesRead` lines to paste. Also read in full every page outside
+  the area that a change would edit, link or overlap. A change that only
+  removes text reads just those pages. Edit only after this step.
 - **Choose.** Pick this run's focus from what you read. Put every other weak
   spot or proposal you found on the memory page, so later runs inherit the
   reading. The run entry says why you chose the focus.
-- **Proposal.** A focus that needs the owner's decision (a new Subject, a
-  split, a move between Subjects) is a valid focus, and its result is an issue
-  for the owner. It gives the Subjects and their pages, each move and retitle
-  with its effect on URLs and links, the entries
-  `layers/glassbox/app/utils/subjects.ts` would gain, and the decision asked
-  for as a yes/no or a choice between options. The run's PR then holds only
-  its run entry, whose `changes` names the issue, and the memory page, which
-  says the lead waits for the owner in that issue.
+- **Owner's questions.** Build the option you'd recommend. A question only the
+  owner can answer (where a topic belongs, whether a practice is recorded)
+  goes in the PR body, with each move or retitle and its effect on URLs and
+  links, and on the memory page if it outlives the PR.
 - **Gaps.** Compare what Terrarium relies on (`package.json`, the ADRs, the
   Skills, `scripts/`) with what the Lessons teach. The memory page keeps known
   gaps, those left uncovered on purpose too. Fix what makes pages hard to learn
   from first; take a gap when no page problem outweighs it.
 - **Run entry.** Right after choosing, write it from the orientation's
   skeleton, keeping `focus` quoted, and push the run branch.
-- **Diagnose.** Fresh readers (sonnet, no repo access) get each page as plain
-  text: MDC stripped, each term followed by its definition, each Excerpt as code
-  with its file path. They report where a newcomer gets lost. For a gap, read
+- **Diagnose.** Fresh readers (sonnet, no repo access) get each page as the
+  plain text that `.agents/skills/glassbox-curate/scripts/plain.ts <stem>`
+  prints. They report where a newcomer gets lost. For a gap, read
   the sources the new Lesson would cite. For a Subject focus, check each Why
   bullet against its cited ADR or file.
 - **Churn guard.** Before a structural step or a retitle, read
   `git log --oneline origin/main -- <page>` and the run entries that name the
   page. Never reverse a change from the last 5 runs unless it made the page
   false.
-- **Fix.** An opus writer quotes the `path:line` behind every sentence it adds
-  or changes. Each `The cost:` clause needs a source that states that cost, and
-  the writer runs a command sequence before it says what the sequence does.
+- **Fix.** An opus writer writes every sentence that states a fact, however
+  small the change, and quotes the `path:line` behind each one. Give it the
+  caps and link rules `layers/glassbox/page-checks.ts` enforces: title,
+  description and Why bullet lengths, and a capitalised link's text being its
+  target's title. Each `The cost:` clause needs a source that states that
+  cost, and the writer runs a command sequence before it says what it does.
   A new Lesson follows `.agents/skills/glassbox-lesson/SKILL.md` step by step:
   give the writer its path and have it report each step's Done.
 - **Check.** A separate sonnet claim checker checks the changed sentences
@@ -113,9 +115,11 @@ in a brief as `.agents/skills/...`.
   `checks/update.yml` and keep its date.
 - **Land.** Merge `origin/main` and keep the newer pin. Two runs on one day can
   both rewrite the memory page: the later one keeps both runs' leads. Rewrite
-  the memory page, complete the run entry, open one self-merged PR
-  (`docs/agents/pr-workflow.md`) whose body gives the run's cost from
-  `get_session`, or "unreported" when the field is missing. Give `code-review`
+  the memory page, complete the run entry, and open one PR
+  (`docs/agents/pr-workflow.md`), self-merged unless the Remit says it waits.
+  Its body gives the run's cost from `get_session`, read just before you write
+  the body, since the field appears only later in a run; "unreported" when it
+  is still missing. Give `code-review`
   the Lesson contract, EVERY-PAGE.md, DECISIONS.md and the glassbox-content
   rule as its standards, without the code-smell baseline, and say the page
   checks already ran. Its Spec reviewer also judges which pages the change
