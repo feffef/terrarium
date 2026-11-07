@@ -1,7 +1,7 @@
 schemaVersion: 1
 session: session_013zxzeRCCqrxVitqSaxJa4K
 startedAt: 2026-11-07T16:59:33Z
-endedAt: 2026-11-07T17:41:52Z
+endedAt: 2026-11-07T17:47:42Z
 kind: interactive
 goal: Settle the best title for each Glass Box guide page
 status: completed
@@ -49,6 +49,10 @@ skillsUsed:
     reason: PR opened
   - name: log-session
     reason: (no reason given)
+  - name: writing-for-agents
+    reason: (no reason given)
+  - name: retro
+    reason: (invoked as a slash command)
 frictions:
   - description: "Verify before you state broken: I told the user 52 titles were kept (the seven reports covered 62) and drafted memory-page counts (12 names sharing no words, about 60 links) that were wrong."
     solution: Count with a command before writing any number; really 8 file names share no word with their title, 4 share one, and 186 guide links use the 12 old addresses. The code-review agents caught the memory-page ones.
@@ -62,16 +66,28 @@ frictions:
   - description: My reviewer briefs said read each page in full, but several reviewers read through cut or head filters and truncated long lines, so some keeps rest on ledes and headings.
     solution: State in the brief that page text must not be filtered or cut, and ask each reviewer to name any page it read only in part.
     severity: minor
-durationSec: 2539
+  - description: "Wrote 'Run cost: unreported' in the PR body after calling get_session only once, at the start; the Land step says to read the cost just before writing the body. A later call showed cost_usd 2.85."
+    solution: Call get_session again right before writing the PR body and quote cost_usd; the main-session figure may not include subagent runs, which I could not verify.
+    severity: minor
+  - description: Dispatched eight reviewers asking for one title proposal each, then resumed all eight to ask for ranked alternatives, so every reviewer read its pages and reported twice.
+    solution: Settle the number of proposals per page before dispatch (dispatch-subagents section 1, lock the shared design axis); skipped because the run began autonomous and ran no grilling.
+    severity: minor
+  - description: A read-only grep of layers/glassbox/tenant.config.ts loaded adr-0002, data-shapes, mdc-when-to-use and tenant-layers; all four got a no verdict, and mermaid-lanes loaded on reading walkthroughs with no diagram edit.
+    solution: Their paths are right for editing those files; the cost is the loader firing on read-only access. Decide whether a read-only grep should load rules, or accept the cost.
+    severity: nit
+  - description: No orient output shows which guide file names differ from their titles or how many links use each old address, so I wrote a throwaway bash loop and hand-counted, which led to the wrong counts.
+    solution: Add a section to glassbox-curate orient.ts listing pages whose file name shares no word with the title, with their inbound link counts; a Skill change that waits for the owner's merge.
+    severity: minor
+durationSec: 2889
 models:
-  claude-sonnet-5-5: 175
+  claude-sonnet-5-5: 188
 toolCounts:
   AskUserQuestion: 4
-  Bash: 37
+  Bash: 39
   Read: 11
-  mcp__claude-code-remote__get_session: 1
+  mcp__claude-code-remote__get_session: 2
   Write: 2
-  Skill: 5
+  Skill: 6
   Agent: 10
   ToolSearch: 1
   SendMessage: 8
@@ -79,9 +95,9 @@ toolCounts:
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
   mcp__github__pull_request_read: 1
-  ReadNotifications: 2
+  ReadNotifications: 3
   mcp__github__add_issue_comment: 1
-  Edit: 1
+  Edit: 2
   mcp__claude-code-remote__unsubscribe_pr_activity: 1
 filesEdited:
   - layers/glassbox/content/workshop/runs/2026-11-07T1700.yml
@@ -171,70 +187,70 @@ subagents:
     durationSec: 81
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 4.5
+    tokenShare: 4.2
   - type: general-purpose
     task: "Title review: claude-code, skill-pack"
     model: sonnet
     durationSec: 94
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 4.2
+    tokenShare: 3.9
   - type: general-purpose
     task: "Title review: git-github, deploy"
     model: sonnet
     durationSec: 81
     toolCalls: 9
     modelCalls: 9
-    tokenShare: 5.3
+    tokenShare: 4.9
   - type: general-purpose
     task: "Title review: nuxt-content, web-standards"
     model: sonnet
     durationSec: 77
     toolCalls: 7
     modelCalls: 7
-    tokenShare: 4.2
+    tokenShare: 3.9
   - type: general-purpose
     task: "Title review: nuxt-vue"
     model: sonnet
     durationSec: 67
     toolCalls: 7
     modelCalls: 6
-    tokenShare: 3.7
+    tokenShare: 3.4
   - type: general-purpose
     task: "Title review: terrarium-practice"
     model: sonnet
     durationSec: 80
     toolCalls: 9
     modelCalls: 6
-    tokenShare: 4.7
+    tokenShare: 4.3
   - type: general-purpose
     task: "Title review: verification"
     model: sonnet
     durationSec: 69
     toolCalls: 6
     modelCalls: 4
-    tokenShare: 3.7
+    tokenShare: 3.5
   - type: general-purpose
     task: "Title review: walkthroughs, index"
     model: sonnet
     durationSec: 82
     toolCalls: 6
     modelCalls: 6
-    tokenShare: 3.6
+    tokenShare: 3.4
   - type: general-purpose
     task: "Code review: Standards axis"
     model: sonnet
     durationSec: 47
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 3.8
+    tokenShare: 3.5
   - type: general-purpose
     task: "Code review: Spec axis"
     model: sonnet
     durationSec: 47
     toolCalls: 5
     modelCalls: 5
-    tokenShare: 3.5
+    tokenShare: 3.3
 gitBranch: ccr-e0d588cc-1xktla
 entrypoint: remote_mobile
 cliVersion: 2.1.319
