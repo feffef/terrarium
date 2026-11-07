@@ -29,7 +29,7 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 
 These are the owner's goals for the guide. A new Subject needs the owner's approval.
 
-1. **Add a web standards Subject** for CSS and SVG. The proposal is issue #2941 and waits for the owner's answers; do not start it before they answer. Two facts from it: no ADR or rule says binary images are kept out of the repository (the repo just holds none), so the SVG Lesson has no source for that point until the owner gives it a home; and *Mermaid pre-rendering* should probably stay in Nuxt Content.
+1. **Add a web standards Subject** for CSS and SVG. The proposal is issue #2941 (the move of CSS custom properties, then new SVG, ARIA and Colour schemes Lessons) and waits for the owner's answers; do not start it before they answer. Facts from it: *ARIA* has no recorded practice or accessibility check to cite, only components and tests; no ADR or rule says binary images are kept out of the repository (the repo just holds none), so the SVG Lesson has no source for that point until the owner gives it a home; *CSS custom properties* already has a dark-mode paragraph the Colour schemes Lesson must not repeat; and *Mermaid pre-rendering* should probably stay in Nuxt Content.
 2. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
 3. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
 
