@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeRGhhzxkXgfdpEX9js
 startedAt: 2026-11-07T13:38:49Z
-endedAt: 2026-11-07T14:15:03Z
+endedAt: 2026-11-07T14:17:43Z
 kind: interactive
 goal: Add a Web standards Subject to the Glass Box guide
-status: in-review
-outcome: "PR #2942 open with a new Subject, one moved page and three new Lessons; gate green, merge pending CI"
-summary: 'An owner-started glassbox-curate run with no focus given. The owner left the choice to the run, so I (agent-initiated) took their direction 1 from the memory page and first filed a proposal, issue #2941, after checking the repo: no ADR says binary images are kept out, ARIA has no recorded practice or checker, and the Mermaid page fits Nuxt Content better. The owner then asked, in their own words, for accessibility (ARIA) and colour schemes to be added (human-instructed), asked whether reduced motion belongs to accessibility (they chose to keep it in the colour page and retitle it to cover both), and told me to implement the whole thing in the session with glassbox-lesson. I added the Subject, moved CSS custom properties, and had three opus writers draft SVG, ARIA and Colour and motion settings; fresh sonnet readers and a claim checker found unsupported sentences (the receipt-printing reason, two color-scheme default claims) and snags, which I fixed. Title cap forced "settings" over "preferences". Standards and Spec reviews found nothing hard; I added three Where next links. Several first-round subagents stalled and were abandoned. Open for the owner: record an accessibility practice, the binary-image idea, file renames.'
+status: completed
+outcome: "PR #2942 merged: new Web standards Subject, one moved page and three new Lessons"
+summary: 'An owner-started glassbox-curate run with no focus given. The owner left the choice to the run, so I (agent-initiated) took their direction 1 from the memory page and first filed a proposal, issue #2941, after checking the repo: no ADR says binary images are kept out, ARIA has no recorded practice or checker, and the Mermaid page fits Nuxt Content better. The owner then asked, in their own words, for accessibility (ARIA) and colour schemes to be added (human-instructed), asked whether reduced motion belongs to accessibility (they chose to keep it in the colour page and retitle it to cover both), and told me to implement the whole thing in the session with glassbox-lesson. I added the Subject, moved CSS custom properties, and had three opus writers draft SVG, ARIA and Colour and motion settings; fresh sonnet readers and a claim checker found unsupported sentences (the receipt-printing reason, two color-scheme default claims) and snags, which I fixed. Title cap forced "settings" over "preferences". Standards and Spec reviews found nothing hard; I added three Where next links. Several first-round subagents stalled and were abandoned. I posted my verdict and merged PR #2942 with merge-pr.ts after the gate went green. Open for the owner: record an accessibility practice, the binary-image idea, file renames.'
 prs:
   - "2942"
 docsRead:
@@ -100,22 +100,24 @@ frictions:
   - description: A retitle to Colour and motion preferences was one character over the 28-character title cap, found only at test time.
     solution: Say the cap in the glassbox-curate Skill or run the title check before a rename.
     severity: nit
-durationSec: 2173
+durationSec: 2334
 models:
-  claude-sonnet-5-5: 211
+  claude-sonnet-5-5: 227
 toolCounts:
-  Bash: 73
+  Bash: 76
   AskUserQuestion: 2
   Read: 3
   mcp__github__list_issues: 1
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__github__issue_write: 2
-  Skill: 4
+  Skill: 5
   Agent: 14
   mcp__claude-code-remote__get_session: 2
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
-  mcp__github__add_issue_comment: 1
+  mcp__github__add_issue_comment: 2
+  ReadNotifications: 2
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/web-standards/02.svg.md
   - layers/glassbox/content/guide/pages/web-standards/03.aria.md
@@ -257,84 +259,84 @@ subagents:
     durationSec: 6
     toolCalls: 4
     modelCalls: 1
-    tokenShare: 1.3
+    tokenShare: 1.2
   - type: general-purpose
     task: Spec review of run diff
     model: sonnet
     durationSec: 6
     toolCalls: 5
     modelCalls: 2
-    tokenShare: 1.4
+    tokenShare: 1.3
   - type: general-purpose
     task: Write SVG Lesson
     model: opus
     durationSec: 351
     toolCalls: 64
     modelCalls: 50
-    tokenShare: 12.1
+    tokenShare: 11.4
   - type: general-purpose
     task: Write ARIA Lesson
     model: opus
     durationSec: 339
     toolCalls: 63
     modelCalls: 52
-    tokenShare: 13
+    tokenShare: 12.2
   - type: general-purpose
     task: Write Colour schemes Lesson
     model: opus
     durationSec: 334
     toolCalls: 62
     modelCalls: 45
-    tokenShare: 10.7
+    tokenShare: 10
   - type: general-purpose
     task: Claim-check the three new Lessons
     model: sonnet
     durationSec: 50
     toolCalls: 20
     modelCalls: 5
-    tokenShare: 2.5
+    tokenShare: 2.4
   - type: general-purpose
     task: "Fresh reader: SVG page"
     model: sonnet
     durationSec: 12
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: "Fresh reader: ARIA page"
     model: sonnet
     durationSec: 13
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: "Fresh reader: Colour schemes page"
     model: sonnet
     durationSec: 12
     toolCalls: 2
     modelCalls: 2
-    tokenShare: 1.5
+    tokenShare: 1.4
   - type: general-purpose
     task: Claim-check the three new Lessons (final text)
     model: sonnet
     durationSec: 105
     toolCalls: 22
     modelCalls: 7
-    tokenShare: 3
+    tokenShare: 2.8
   - type: general-purpose
     task: Standards review of the Web standards PR
     model: sonnet
     durationSec: 84
     toolCalls: 21
     modelCalls: 10
-    tokenShare: 2.7
+    tokenShare: 2.5
   - type: general-purpose
     task: Spec review of the Web standards PR
     model: sonnet
     durationSec: 71
     toolCalls: 20
     modelCalls: 7
-    tokenShare: 1.9
+    tokenShare: 1.8
 gitBranch: ccr-110d5533-2qn54g
 entrypoint: remote_mobile
 cliVersion: 2.1.319
