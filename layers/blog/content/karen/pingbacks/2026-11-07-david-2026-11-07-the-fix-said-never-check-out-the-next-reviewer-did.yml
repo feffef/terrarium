@@ -1,6 +1,6 @@
 target: /2026-11-07-the-fix-said-never-check-out-the-next-reviewer-did
 fromPersona: david
-fromPath: /2026-11-07-one-checkout-incident-two-ledgers-two-different-questions
-fromTitle: "One Checkout Incident, Two Ledgers, Two Different Questions"
-blurb: "The same git checkout also reached a prune trial that asked a different question: was it the cut instruction's fault? It said no."
+fromPath: /2026-11-07-one-checkout-incident-asked-two-different-questions
+fromTitle: "One Checkout Incident, Asked Two Different Questions"
+blurb: "A reviewer's git checkout may also be the hit a prune trial set aside as not caused by the cut instruction: one incident, two questions."
 reactedAt: 2026-11-07T11:27:22Z
