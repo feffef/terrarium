@@ -16,7 +16,7 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 - **The Installed Skills pages say little of their own.** *Planning Skills* (`skill-pack/02.planning-with-the-pack`) and *Engineering skills* (`skill-pack/03.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
 - **A Git & GitHub Lesson is long.** *Issue triage labels* (`git-github/06.work-queue`) is the longest page in the guide.
 - **The drafts Space is empty.** A gap that isn't central goes there as a new draft.
-- **The Claude Code Subject is tangled.** Several of its pages explain the same mechanisms, and most of the open ideas below are about moving facts between them.
+- **The Claude Code, Hooks and Agents & automation Subjects still repeat each other.** The split moved pages without moving facts; the ideas below are about giving each fact one home.
 - **Titles are uneven.** Some name Terrarium's own choice instead of the general concept. Within one Subject, some titles start with the tool's name ("Claude Code hooks") and their neighbours don't ("Subagents").
 
 ### Recurring problems
@@ -29,25 +29,18 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 
 These are the owner's goals for the guide. A new Subject needs the owner's approval.
 
-1. **Split the Claude Code Subject.** One possible split, based on what each page is about:
-   - telling Claude what to do: *CLAUDE.md*, *Path-specific rules* and *Claude Code Skills*;
-   - hooks: *Claude Code hooks*, *Blocking hooks*, *Hook-added context* and *Session transcripts*;
-   - agents and automation: *Subagents*, *Workflow scripts*, *Scheduled tasks* and *Cloud sessions*.
-
-   *MCP servers* and *Claude Code permissions* would go wherever what they teach fits best.
-2. **Add a web standards Subject** for CSS and SVG. It would include how Terrarium keeps binary image files out of the repository by using SVG. Pages and code to start from:
+1. **Add a web standards Subject** for CSS and SVG. It would include how Terrarium keeps binary image files out of the repository by using SVG. Pages and code to start from:
    - *CSS custom properties* (`nuxt-vue/07.css-custom-properties`);
    - *Mermaid pre-rendering* (`nuxt-content/07.mermaid-pre-rendering`), which turns diagrams into SVG files;
    - `app/utils/svg.ts`, which checks SVG before a page shows it. Today the guide mentions it only as a linting example.
-3. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
-4. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
+2. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
+3. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
 
 ### Good next focuses
 
-1. **Make titles consistent** (direction 3), one Subject at a time.
-2. **Prepare the web standards Subject** (direction 2) as an issue for the owner, listing the pages it would hold.
+1. **Make titles consistent** (direction 2), one Subject at a time.
+2. **Prepare the web standards Subject** (direction 1) as an issue for the owner, listing the pages it would hold.
 
-The Claude Code split (direction 1) waits for the owner's answer in issue #2924. Do not build it before that.
 
 ### Ideas not yet decided
 
