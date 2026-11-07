@@ -1,0 +1,6 @@
+session: session_013zxzeRwjiiLkjj6sQ3u49g
+mode: autonomous
+focus: "Propose the Claude Code split (owner's direction 1) as issue #2924. Chosen because the memory page listed it first among the focuses that need no page edits, and the Claude Code Subject is the biggest at 13 Lessons. Open PR #2922 only updates check state, so no page was touched."
+changes:
+  - "index | Proposal only: issue #2924 asks the owner whether to split Claude Code into Claude Code, Hooks and Agents & automation; no guide page changed | a split needs the owner's decision (new Subjects, 8 URLs move, 99 links to update)"
+pagesRead: []

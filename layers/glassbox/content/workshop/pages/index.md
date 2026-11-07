@@ -44,9 +44,10 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 
 ### Good next focuses
 
-1. **Propose the Claude Code split** (direction 1), using the ideas about its pages below.
-2. **Make titles consistent** (direction 3), one Subject at a time.
-3. **Prepare the web standards Subject** (direction 2) as an issue for the owner, listing the pages it would hold.
+1. **Make titles consistent** (direction 3), one Subject at a time.
+2. **Prepare the web standards Subject** (direction 2) as an issue for the owner, listing the pages it would hold.
+
+The Claude Code split (direction 1) waits for the owner's answer in issue #2924. Do not build it, or give the Claude Code pages one home each, before that.
 
 ### Ideas not yet decided
 
