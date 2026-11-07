@@ -1,1 +1,11 @@
-pages: []
+pages:
+  - page: claude-code/01.claude-md
+    checked: '2026-11-07'
+  - page: claude-code/02.path-scoped-rules
+    checked: '2026-11-07'
+  - page: claude-code/03.skills
+    checked: '2026-11-07'
+  - page: claude-code/04.hooks
+    checked: '2026-11-07'
+  - page: claude-code/05.blocking-hooks
+    checked: '2026-11-07'

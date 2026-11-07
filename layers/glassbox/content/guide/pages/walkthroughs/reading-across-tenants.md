@@ -1,8 +1,8 @@
 ---
 title: Reading across Tenants
 description: How a Blog post becomes a Commons Search result, through a kind named in a manifest, a catalog built with the site and one read function.
-revision: '072fab38ecac37f9f9500c4394a42ff2cdf54ade'
-revisionDate: '2026-11-06'
+revision: 'a438b80f310f19d9c51a899be43a1110d89af6f6'
+revisionDate: '2026-11-07'
 publishedAt: '2026-11-04T23:07:44Z'
 ---
 
