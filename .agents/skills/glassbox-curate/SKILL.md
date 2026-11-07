@@ -129,8 +129,7 @@ All in `layers/glassbox/content/workshop/`:
 - `pages/index.md`, the memory page: the guide's current weak spots, the
   owner's direction and the open ideas. Write it in simple, plain words, so a
   person reads it easily and later runs don't copy needlessly complex wording.
-  State a count only after counting its items in their source (CLAUDE.md,
-  "Count every item").
+  State a count only after counting its items in their source.
   Each run rewrites it and **cuts** whatever its work addressed and whatever it
   judges no longer needed, so the page stays short. Delete a finished item;
   never mark it done. A fact the next run still needs stays as a plain current
