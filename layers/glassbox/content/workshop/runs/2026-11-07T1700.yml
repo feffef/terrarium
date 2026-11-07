@@ -1,5 +1,7 @@
 session: session_013zxzeRCCqrxVitqSaxJa4K
 mode: autonomous
-focus: "Rename guide files to match their titles (owner's direction 2, the memory page's good next focus). The run started interactive with no focus; the owner chose autonomous and left the focus to the run. Chosen because no open PR touches the guide, no rename was made in the last 5 runs, and 12 file names share no words with their titles."
-changes: []
+focus: "Check every guide title for the best possible name (owner's direction 2), before any file rename. The run started interactive with no focus; the owner chose autonomous, then asked for titles to be settled first, each weighed against alternatives. Chosen because the file renames would change URLs twice if titles moved later, and no open PR touches the guide."
+changes:
+  - "skill-pack/03.engineering-skills | Title Engineering skills became Engineering Skills; the five link texts that quote it changed to match (git-github/01.every-change-a-pr, skill-pack/02.planning-with-the-pack, walkthroughs/a-bug-report-becomes-work, walkthroughs/planning-a-big-change twice) | the only lowercase title among Installed Skills, Planning Skills and Claude Code Skills; the owner chose a capital S. The URL is unchanged. Skipped the writer and claim checker: no sentence that states a fact changed"
+  - "index | Kept Adding a site over Adding a Tenant; no page changed | the overview introduces site first; the owner chose to keep it, noted on the memory page"
 pagesRead: []
