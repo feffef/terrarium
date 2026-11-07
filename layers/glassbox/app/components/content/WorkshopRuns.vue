@@ -1,16 +1,17 @@
 <script setup lang="ts">
+import { sessionUrl } from '#shared/session-url'
+
 const { collections } = useSpace('glassbox')
 
 // Only the mapped fields below travel in the payload (ADR-0028).
 const { data } = await useAsyncData('glassbox-workshop-runs', async () => {
   const runs = await queryCollection(collections.runs).order('stem', 'DESC').all()
-  return runs.map(({ stem, pr, mode, focus, changes, learned }) => ({
+  return runs.map(({ stem, session, mode, focus, changes }) => ({
     stem,
-    pr,
+    session,
     mode,
     focus,
     changes: changes.map(glassboxRunChange),
-    learned,
   }))
 })
 </script>
@@ -22,7 +23,7 @@ const { data } = await useAsyncData('glassbox-workshop-runs', async () => {
       <p class="head">
         <time class="when">{{ glassboxRunStart(run.stem) }}</time>
         <span class="mode">{{ run.mode }}</span>
-        <a v-if="run.pr" :href="`${REPO_URL}/pull/${run.pr}`">PR #{{ run.pr }} ↗</a>
+        <a :href="sessionUrl(run.session)">session ↗</a>
       </p>
       <p class="focus">{{ run.focus }}</p>
       <ul v-if="run.changes.length" class="changes">
@@ -32,9 +33,6 @@ const { data } = await useAsyncData('glassbox-workshop-runs', async () => {
             <code>{{ change.page }}</code>: {{ change.what }}. <em>{{ change.why }}</em>
           </template>
         </li>
-      </ul>
-      <ul v-if="run.learned.length" class="learned">
-        <li v-for="(line, i) in run.learned" :key="i">{{ line }}</li>
       </ul>
     </li>
   </ol>
@@ -53,6 +51,5 @@ const { data } = await useAsyncData('glassbox-workshop-runs', async () => {
 .head { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 0; font: 12px var(--gb-mono); color: var(--gb-muted); }
 .mode { text-transform: uppercase; letter-spacing: 0.08em; }
 .focus { margin: 6px 0 0; font-weight: 600; }
-.changes, .learned { margin: 8px 0 0; padding-left: 1.2em; font-size: 15px; overflow-wrap: anywhere; }
-.learned { color: var(--gb-muted); }
+.changes { margin: 8px 0 0; padding-left: 1.2em; font-size: 15px; overflow-wrap: anywhere; }
 </style>

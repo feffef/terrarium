@@ -268,13 +268,14 @@ function lessonProblems(file: string, body: string, prose: string, space: string
   return problems
 }
 
-// Where next holds the closest pages, any one Journal page last.
-function nextProblems(prose: string): string[] {
+// Where next holds the closest pages, any one Journal page last; a Lesson's lists only Lessons (GLOSSARY.md, Lesson).
+function nextProblems(prose: string, lesson: boolean): string[] {
   const lines = prose.split('\n')
   const at = lines.findIndex((l) => /^## /.test(l) && glassboxTermId(l.slice(3)) === glassboxLessonIds.whereNext)
   const next = at < 0 ? [] : lines.slice(at + 1).filter((l) => l.startsWith('- '))
   const problems = next.length > cap ? [`Where next lists ${next.length} pages, more than ${cap}`] : []
   if (next.slice(0, -1).some((l) => l.includes('](/t/journal'))) problems.push('Where next lists a Journal page before its end')
+  if (lesson && next.some((l) => l.includes('](/t/glassbox/guide/walkthroughs/'))) problems.push('Where next on a Lesson lists a Walkthrough')
   return problems
 }
 
@@ -302,7 +303,7 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
   const route = `/${contentRoute(file)}`
   problems.push(...glassboxStopProblems(body, glassboxWalkthroughOf(route), space === 'guide' && route === '/', site.cites))
   if (glassboxSubjectOf(route)) problems.push(...lessonProblems(file, body, prose, space))
-  if (glassboxSubjectOf(route) || glassboxWalkthroughOf(route)) problems.push(...nextProblems(prose))
+  if (glassboxSubjectOf(route) || glassboxWalkthroughOf(route)) problems.push(...nextProblems(prose, Boolean(glassboxSubjectOf(route))))
   // Drafts are set aside (GLOSSARY.md, Two Spaces); a page moved to the guide meets its caps.
   if (space === 'guide') problems.push(...lengthProblems(route, frontmatter))
 
@@ -342,6 +343,8 @@ export function glassboxPageProblems(file: string, source: string, site: Glassbo
 
 // A reviewer's call, so these warn and never fail (#2701); glassbox-improve
 // takes each but the "so" clause as a finding (issue #2792).
+export const glassboxMotiveWarning = 'In Terrarium may give a motive ("so"); check it states mechanism'
+
 const excerptMaxLines = 15
 const stopMaxWords = 80
 const linkOnlyMaxWords = 3
@@ -352,7 +355,7 @@ const wordCount = (text: string) => text.split(/\s+/).filter((w) => /\w/.test(w)
  *  comment-only Excerpts, long Walkthrough stops and Why bullets that are only a link. */
 export function glassboxPageWarnings(source: string): string[] {
   const { body } = splitFrontmatter(source)
-  const warnings = motiveLines(body, 'so').map((l) => `In Terrarium may give a motive ("so"); check it states mechanism: ${l}`)
+  const warnings = motiveLines(body, 'so').map((l) => `${glassboxMotiveWarning}: ${l}`)
   for (const ref of glassboxPageRefs(body).files) {
     const lines = ref.excerpt?.split('\n') ?? []
     if (lines.length > excerptMaxLines) warnings.push(`the Excerpt of ${ref.path} renders ${lines.length} lines, more than ${excerptMaxLines}: cut it to the code that makes the decision`)

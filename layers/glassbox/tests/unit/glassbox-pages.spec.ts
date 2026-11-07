@@ -182,6 +182,7 @@ describe('glassboxPageProblems on fixture pages', () => {
     ['a Where next over 5 pages', (s: string) => `${s}${gateItem.repeat(5)}`, 'Where next lists 6 pages, more than 5'],
     ['a Journal page before a Lesson in Where next', (s: string) => s.replace(gateItem, `${journalItem}${gateItem}`), 'Where next lists a Journal page before its end'],
     ['two Journal pages in Where next', (s: string) => `${s}${journalItem}${journalItem}`, 'Where next lists a Journal page before its end'],
+    ['a Walkthrough in Where next', (s: string) => s.replace(gateItem, `- [A request](/t/glassbox/guide/walkthroughs/a-request)\n${gateItem}`), 'Where next on a Lesson lists a Walkthrough'],
   ])('fails %s', (_name, broken, message) => {
     expect(problemsOf('nuxt-content/01.collections.md', broken(lesson)).join('\n')).toContain(message)
   })

@@ -14,7 +14,8 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 ### Weak spots
 
 - **The Installed Skills pages say little of their own.** *Planning Skills* (`skill-pack/02.planning-with-the-pack`) and *Engineering skills* (`skill-pack/03.engineering-skills`) mostly describe Skills that come from outside Terrarium. Only a few of their facts are about choices Terrarium made.
-- **A Git & GitHub Lesson is still long.** *Issue triage labels* (`git-github/06.work-queue`) is now the longest page in the guide. *Commit and PR attribution* (`git-github/05.attribution`) was shortened on 2026-11-06 and should be left alone for a while.
+- **A Git & GitHub Lesson is long.** *Issue triage labels* (`git-github/06.work-queue`) is the longest page in the guide.
+- **The drafts Space is empty.** A gap that isn't central goes there as a new draft.
 - **The Claude Code Subject is tangled.** Several of its pages explain the same mechanisms, and most of the open ideas below are about moving facts between them.
 - **Titles are uneven.** Some name Terrarium's own choice instead of the general concept. Within one Subject, some titles start with the tool's name ("Claude Code hooks") and their neighbours don't ("Subagents").
 
@@ -39,8 +40,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
    - *Mermaid pre-rendering* (`nuxt-content/07.mermaid-pre-rendering`), which turns diagrams into SVG files;
    - `app/utils/svg.ts`, which checks SVG before a page shows it. Today the guide mentions it only as a linting example.
 3. **Make structure and titles consistent.** Titles should name the general concept and follow one pattern within a Subject, and file names should match their titles.
-4. **Retire the drafts.** Done: the drafts hold no Lessons or Walkthroughs.
-5. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
+4. **Fill what is missing entirely.** This covers a Lesson, or a whole Subject, for something Terrarium relies on that no page teaches yet.
 
 ### Good next focuses
 
@@ -58,7 +58,7 @@ These are the owner's goals for the guide. A new Subject needs the owner's appro
 
 **Installed Skills.** *Engineering skills* could become part of *Installed Skills* (`skill-pack/01.skill-packs`).
 
-**Missing Lessons.** None known. *Headless browser checks* (`verification/09.headless-browser-checks`) now covers `scripts/ui/`; it was written from `docs/agents/verifying-ui-changes.md`. That doc's lists of browser quirks and CSS traps are only partly covered.
+**Missing Lessons.** The browser quirks and CSS traps listed in `docs/agents/verifying-ui-changes.md` are only partly taught, in *Headless browser checks* (`verification/09.headless-browser-checks`).
 
 **Ideas earlier runs rejected.** Before acting on one, re-check the reasons for and against.
 - Moving the timestamp rule and its warnings from *Content validation* (`verification/03.content-validation`) to *Zod refinements* (`verification/06.schema-validation`).
