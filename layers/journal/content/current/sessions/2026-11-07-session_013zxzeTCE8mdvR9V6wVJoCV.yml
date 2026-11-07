@@ -1,12 +1,12 @@
 schemaVersion: 1
 session: session_013zxzeTCE8mdvR9V6wVJoCV
 startedAt: 2026-11-07T18:14:19Z
-endedAt: 2026-11-07T18:42:56Z
+endedAt: 2026-11-07T19:00:29Z
 kind: interactive
 goal: Rename 12 Glass Box guide files to match their titles
-status: in-review
-outcome: PR 2950 open, waits for owner merge; gate and reviews green
-summary: "Started via the glassbox-curate Skill with no focus. Human-instructed: the owner chose interactive mode, then chose the file-rename focus after seeing the orientation, approved the exact 12 new names, and asked that the Journal Highlights link be fixed in the same PR. Agent-initiated: the sed-based repoint of about 180 link lines, the memory page and run entry edits, two read-only review subagents (both clean), gate:scoped (green) and opening PR 2950 (ADR-0003). The PR is marked as waiting for the owner's merge. Cost was unreported because get_session showed no cost_usd. Open: old URLs 404 with no redirect; the owner may want redirects."
+status: completed
+outcome: PR 2950 merged by the owner; 12 guide files renamed to match their titles
+summary: "Started via the glassbox-curate Skill with no focus. Human-instructed: the owner chose interactive mode, then chose the file-rename focus after seeing the orientation, approved the exact 12 new names, and asked that the Journal Highlights link be fixed in the same PR. Agent-initiated: the sed-based repoint of about 180 link lines, the memory page and run entry edits, two read-only review subagents (both clean), gate:scoped (green) and opening PR 2950 (ADR-0003). The owner merged the PR after the gate and both reviews were green. Cost was unreported because get_session showed no cost_usd. Open: old URLs 404 with no redirect; the owner may want redirects."
 prs:
   - "2950"
 docsRead:
@@ -52,19 +52,21 @@ frictions:
   - description: get_session showed no cost_usd, so the PR body had to say the run cost was unreported.
     solution: None needed; the Skill already allows 'unreported'.
     severity: nit
-durationSec: 1717
+durationSec: 2770
 models:
-  claude-sonnet-5-5: 59
+  claude-sonnet-5-5: 74
 toolCounts:
   AskUserQuestion: 3
-  Bash: 18
+  Bash: 19
   Read: 2
-  ToolSearch: 2
+  ToolSearch: 3
   mcp__claude-code-remote__get_session: 1
-  Skill: 3
+  Skill: 4
   Agent: 4
   mcp__github__create_pull_request: 1
   mcp__claude-code-remote__subscribe_pr_activity: 1
+  ReadNotifications: 4
+  mcp__github__pull_request_read: 1
 filesEdited:
   - layers/glassbox/content/guide/pages/agents/03.routines.md
   - layers/glassbox/content/guide/pages/agents/03.scheduled-tasks.md
@@ -226,13 +228,13 @@ subagents:
     durationSec: 36
     toolCalls: 8
     modelCalls: 6
-    tokenShare: 13.7
+    tokenShare: 11
   - type: general-purpose
     task: Spec review of rename diff
     durationSec: 34
     toolCalls: 6
     modelCalls: 5
-    tokenShare: 13.5
+    tokenShare: 10.8
 gitBranch: ccr-3edce76d-2y3uf4
 entrypoint: remote_mobile
 cliVersion: 2.1.319
