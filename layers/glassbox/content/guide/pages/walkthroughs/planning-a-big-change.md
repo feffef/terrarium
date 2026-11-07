@@ -53,7 +53,7 @@ When nothing is left to decide, the way is clear and the work is handed off. `to
 From here each story is ordinary work: triage marks it ready to build, then a session builds it on its own branch, reviews it, runs the :term[Gate] and opens a PR. A story the issue view shows as blocked waits for its blockers to close.
 
 ::lessons
-[Engineering skills](/t/glassbox/guide/skill-pack/engineering-skills) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/verification/gate)
+[Engineering Skills](/t/glassbox/guide/skill-pack/engineering-skills) · [Pull requests](/t/glassbox/guide/git-github/every-change-a-pr) · [Merge gate](/t/glassbox/guide/verification/gate)
 ::
 
 ## A real case
@@ -65,5 +65,5 @@ On 14 October 2026 a session charted a map with the owner, issue #1965, for a ne
 - [Wayfinder](/t/glassbox/guide/skill-pack/wayfinder)
 - [Planning Skills](/t/glassbox/guide/skill-pack/planning-with-the-pack)
 - [Issue triage labels](/t/glassbox/guide/git-github/work-queue)
-- [Engineering skills](/t/glassbox/guide/skill-pack/engineering-skills)
+- [Engineering Skills](/t/glassbox/guide/skill-pack/engineering-skills)
 - [A bug report becomes work](/t/glassbox/guide/walkthroughs/a-bug-report-becomes-work)
