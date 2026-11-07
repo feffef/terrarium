@@ -136,3 +136,6 @@ observations:
       Unverified, n=1: session_013zxzeSAtjCQiatdUuuFCRJ (11-03, after #2812 landed) answered a cost question with get_session twice and no
       Skill. session_013zxzeR2kopqGDtf5GQztz6 and session_013zxzeQrhKwVsWaJZV8Bs7y answered from logs first, then invoked it. Earlier run
       session_013zxzeQn5ksJrQasTk95LKb read 98 pages sequentially (pre-#2809 text). Watch whether #2812 wording gets cost questions to the Skill. Grade unchanged.
+  - date: "2026-11-07"
+    note: >-
+      Behaviour check, 4 runs delivered. Borderline missed invocations, n=1 each, cost-wording cause: session_013zxzeSAtjCQiatdUuuFCRJ (2 get_session calls, claimed cost_usd included subagents unchecked) and session_013zxzeQWJEVk8sAXq1hcSjq (11 get_session calls for cost, no Skill). Escalate if a third appears. Grade unchanged.

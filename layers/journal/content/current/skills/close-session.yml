@@ -9,13 +9,6 @@ role: >-
   the self-judged "invoke at closure" rule fire reliably; its invocation rate is the evidence for ADR-0009's choice
   of a Skill over a reminder hook.
 observations:
-  - date: 2026-09-27
-    note: >-
-      Verified silent failure (audit-skills behaviour check), one session:
-      session_01TMgZyrN42pwudxkUdHLKwP's log stayed `in-review` ("#1344 in
-      review") although PR #1344 merged at 2026-09-25T18:01Z, 26 minutes after
-      the session ended; the log was never finalized to `completed`. The only
-      stale log in the 2026-09-20..27 window.
   - date: 2026-09-28
     note: >-
       Re-checked (audit-skills behaviour check): session_01TMgZyrN42pwudxkUdHLKwP's
@@ -369,3 +362,6 @@ observations:
       10-12, 10-13, 10-23). Contract held (friction recorded, final status
       right). No orphaned sessions: both candidates resolved (#736, #1063).
       Grade unchanged.
+  - date: "2026-11-07"
+    note: >-
+      Behaviour check, 10 sessions delivered, no orphan. Human-prompted closure: session_013zxzeQDfNNTXpQYQtt9saY (frictions-to-fixes 2026-11-06) ignored three close-session hints until the owner prompted; PRs unaffected. Earlier one is session_013zxzeRkv6UCWJtPmJ68h32 (#2772). Grade unchanged.

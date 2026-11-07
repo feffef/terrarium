@@ -146,3 +146,6 @@ observations:
   - date: "2026-11-06"
     note: >-
       All 7 delivered. Verified from logs: code-review replaced or thinned by an own read of 58-68 file re-pin diffs in 5 of 7 runs (session_013zxzeSTMBmmufJQf6nWEjx, session_013zxzeNsjXNYsepq7RSwxjV, session_013zxzePhrV1oZiDPfSuW2Hm, session_013zxzeQBuD3C4A1V2DpoHYu, session_013zxzeNZn2iJjZrQj2ortVS); #2472 family, #2748 closed not planned. Step 3 'every commit read' is met by grep and cited diffs, disclosed in the logs. Grade unchanged.
+  - date: "2026-11-07"
+    note: >-
+      Behaviour check, 7 runs delivered, graded on the pre-f7497331 text. The script's --write pins only pages without an edited range and leaves Excerpt lines stale on edited ones (session_013zxzeNsjXNYsepq7RSwxjV, session_013zxzeRLzBAw62ZMjhsbHiq): manual pins needed, 2 of 3 recent runs. Step 3 'every commit read' was not met at 91 commits (session_013zxzeRpGWPCotTQup1ui46). Grade unchanged.

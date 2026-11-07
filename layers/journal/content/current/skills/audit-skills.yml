@@ -9,14 +9,6 @@ role: >-
   Inventory's grades in line with usage as a by-product, self-merging those
   edits (ADR-0015).
 observations:
-  - date: 2026-09-27
-    note: >-
-      Rewritten at the owner's direction after a review of the 83 session logs
-      that used it (2026-07-06 to 2026-09-27): no grade change since
-      2026-07-27, one confirmed regression-watch finding (#1206), and most of
-      the issues it filed concerned its own tooling. The regression watch is gone; each own
-      Skill used in ≥3 sessions of a 7-day window now gets a behaviour-check
-      subagent.
   - date: 2026-09-28
     note: >-
       Self-check, verified: this is the first real scheduled run under the

@@ -218,3 +218,6 @@ observations:
   - date: "2026-11-06"
     note: >-
       Behaviour check, 8 runs, 33 PRs merged. Verified from mechanical frictions: stranded wf_* worktrees at close in session_013zxzeSbd2LJtWWawqrWBJD, session_013zxzeSuucewJSDd3eyaNnh, session_013zxzeTLLY3FmiXzuBKgc2o, so §4 check:worktrees exit 0 is not reached; no log records a clean run (unverified why). Unverified: list-human-only-paths.ts printed empty in session_013zxzeSbd2LJtWWawqrWBJD. Not issued (no damage); a repeat would be. Grade unchanged.
+  - date: "2026-11-07"
+    note: >-
+      Behaviour check, 8 runs, 33 PRs merged. Repeat, unverified why: session_013zxzePVGCU1ARYitEsVKoy claims check:worktrees passes yet logs stranded wf_* worktrees at close; same in session_013zxzeSbd2LJtWWawqrWBJD. Section 4 gives no cleanup for wf_* worktrees. Not issued (no damage; #2721 closed). Grade unchanged.
