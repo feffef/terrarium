@@ -1,21 +1,21 @@
 pages:
-  - page: agents/01.subagents
+  - page: agents/10.subagents
     checked: '2026-11-07'
-  - page: agents/02.workflow-scripts
+  - page: agents/20.workflow-scripts
     checked: '2026-11-07'
-  - page: agents/03.scheduled-tasks
+  - page: agents/40.scheduled-tasks
     checked: '2026-11-07'
-  - page: agents/04.cloud-sessions
+  - page: agents/30.cloud-sessions
     checked: '2026-11-07'
-  - page: claude-code/01.claude-md
+  - page: claude-code/10.claude-md
     checked: '2026-11-07'
-  - page: claude-code/02.path-scoped-rules
+  - page: claude-code/20.path-scoped-rules
     checked: '2026-11-07'
-  - page: claude-code/03.skills
+  - page: claude-code/30.skills
     checked: '2026-11-07'
-  - page: claude-code/04.permissions
+  - page: claude-code/40.permissions
     checked: '2026-11-07'
-  - page: hooks/01.hooks
+  - page: hooks/10.hooks
     checked: '2026-11-07'
-  - page: hooks/02.blocking-hooks
+  - page: hooks/20.blocking-hooks
     checked: '2026-11-07'

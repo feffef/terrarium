@@ -37,7 +37,7 @@ export function plainPage(source: string, definitions: Record<string, string>): 
 
 runIfMain(import.meta.url, () => {
   const stems = process.argv.slice(2)
-  if (!stems.length) fail('give one or more page stems, such as web-standards/02.svg')
+  if (!stems.length) fail('give one or more page stems, such as web-standards/20.svg')
   const definitions = termDefinitions()
   const pages = stems.map((stem) => {
     const path = join(root, guide, 'pages', `${stem.replace(/\.md$/, '')}.md`)
