@@ -263,7 +263,7 @@ step 2 (steps 9-10 did its step 1). This Skill's delta from that sequence:
   last `Fact-checked: <blob>` on a line of its own.
 
 Done when: merged with a green gate, or open and honestly awaiting a human. An
-escalated PR ends the run here — go to step 13.
+escalated PR ends the run here.
 
 ### 12. Decide on a reply
 
@@ -282,7 +282,7 @@ clears the bar above, is interesting by step 6's test, and is easy to follow
 (`layers/blog/GLOSSARY.md`, "Who a post is for").
 
 - **A winner**: run it through steps 7–11 as its own reaction post, with its own
-  gated PR and `close-session` at open. Between steps 9 and 10 a second fresh
+  gated PR. Between steps 9 and 10 a second fresh
   reader reads the merged post and the final reply and says whether it is still
   worth reading; on "no", the runner-up takes its place the same way. The PR
   body names the post and PR answered, the other reply angles and the second
@@ -294,13 +294,6 @@ clears the bar above, is interesting by step 6's test, and is easy to follow
 Done when: a reply has merged or is escalated, or there is no reply, its
 reason is on the first post's PR and in the session log, and no reply file
 remains on the branch.
-
-### 13. Close
-
-Invoke the `close-session` Skill (not only `scripts/session/log-session.ts`) so the
-log records the run's final state.
-
-Done when: the log is on `origin/main` with its final status (`close-session`).
 
 ## Reference: the post
 

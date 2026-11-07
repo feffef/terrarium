@@ -198,8 +198,7 @@ the diff, leave the PR open for a human.
   proposed `DECISIONS.md` lines and drafts too far from the bar to promote.
 
 Done when every Friction, issue and idea is written and `pnpm check:worktrees`
-exits 0, which it does only once the run branch is pushed. Then invoke
-`close-session`.
+exits 0, which it does only once the run branch is pushed.
 
 ## Review after the first runs
 
