@@ -17,7 +17,7 @@ Pages are named by their title, followed by their file under `layers/glassbox/co
 - **Two Git & GitHub Lessons are long.** *Commit and PR attribution* (`git-github/05.attribution`) and *Issue triage labels* (`git-github/06.work-queue`) are each about 1,400 to 1,600 words. Both have been trimmed; look for a split only after a fresh reader finds them hard to follow.
 - **The drafts Space is empty.** A gap that isn't central goes there as a new draft.
 - **The Claude Code, Hooks and Agents & automation Subjects still repeat each other.** The split moved pages without moving facts; the ideas below are about giving each fact one home.
-- **File names and titles differ.** A review of every guide title found them sound (see Already decided). But 12 file names share no words with their titles, such as `agents/03.routines` (*Scheduled tasks*) and `nuxt-vue/06.use-async-data` (*Data fetching*); the others are `deploy/01.self-updating-container`, `git-github/01.every-change-a-pr`, `git-github/04.trust-tiers`, `git-github/06.work-queue`, `nuxt-content/01.manifest-collections`, `terrarium-practice/02.adrs`, `terrarium-practice/07.human-only-list`, `verification/04.unit-and-e2e-tests`, `verification/06.schema-validation` and `walkthroughs/adding-a-tenant`. Renaming a file changes its URL, and about 60 links in the guide use the old ones, so the PR lists each rename and its URL effect. The Journal's *Highlights* page links `agents/routines`, outside the Glass Box remit.
+- **File names and titles differ.** Guide titles are settled (see Already decided), but 12 file names differ from their titles, 8 of them sharing no word with it: `agents/03.routines` (*Scheduled tasks*), `deploy/01.self-updating-container`, `git-github/01.every-change-a-pr`, `git-github/06.work-queue`, `terrarium-practice/02.adrs`, `terrarium-practice/07.human-only-list`, `verification/04.unit-and-e2e-tests` and `verification/06.schema-validation`. The other 4 share one word: `git-github/04.trust-tiers`, `nuxt-content/01.manifest-collections`, `nuxt-vue/06.use-async-data` (*Data fetching*) and `walkthroughs/adding-a-tenant`. Renaming a file changes its URL. A grep of the guide for the 12 old addresses finds 186 links (`grep -rhoE` over `layers/glassbox/content/guide`). The Journal's *Highlights* page also links `agents/routines`, outside the Glass Box remit, and `layers/glassbox/tests/unit/walkthrough.spec.ts` uses the `adding-a-tenant` address in a fixture.
 
 ### Recurring problems
 
@@ -35,7 +35,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 
 ### Good next focuses
 
-1. **Rename the 12 files to match their titles** (direction 2). The titles are settled, so nothing else blocks it. Update every guide link, the `checks/update.yml` page names and the owner-facing PR list.
+1. **Rename the 12 files to match their titles** (direction 2). The titles are settled, so nothing blocks it. Update every guide link, the `checks/update.yml` page names and the test fixture, and list each rename and its URL effect in the PR for the owner.
 
 ### Ideas not yet decided
 
@@ -58,7 +58,7 @@ These are the owner's goals for the guide. A run builds toward them directly; a 
 ### Already decided
 
 Earlier runs turned these down. Each stays turned down until something in the repository changes the reason.
-- **Retitling the guide.** A run read every Lesson, Walkthrough and the overview in full and weighed 2 to 4 titles for each; only *Engineering Skills* changed (a capital S, to match *Installed Skills* and *Planning Skills*). Strongest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*, *Continuous improvement* for *Self-improvement loop*, *Adding a Tenant* for *Adding a site*. The owner chose a capital S for Skills in titles and a plain *site* in *Adding a site*, because the overview says site first.
+- **Guide titles.** Every Lesson, Walkthrough and the overview has been weighed against 2 to 4 alternatives. The owner chose a capital S for Skills in titles (*Installed Skills*, *Planning Skills*, *Engineering Skills*, *Claude Code Skills*) and a plain *Adding a site*, because the overview says site first. Closest rivals that lost: *Required status checks* for *Merge gate*, *Claude Code workflows* for *Workflow scripts*, *Adding a Tenant* for *Adding a site*.
 - **Folding *Planning Skills* into *Installed Skills*.** Planning Skills holds facts about Terrarium's own choices that would lose their page.
 - **Moving the trust rules from *Human-in-the-loop agents* to *Author trust*.** The first page already links to the second.
 - **Moving the rule about the `ready-for-agent` label into *Issue triage labels*.** That page already shows it.
