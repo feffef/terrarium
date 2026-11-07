@@ -1,8 +1,8 @@
 ---
 title: A friction becomes a fix
 description: How a pain-point one agent logs becomes a change to the instructions later agents work under, through a scheduled Skill.
-revision: '072fab38ecac37f9f9500c4394a42ff2cdf54ade'
-revisionDate: '2026-11-06'
+revision: 'a438b80f310f19d9c51a899be43a1110d89af6f6'
+revisionDate: '2026-11-07'
 publishedAt: '2026-11-03T13:25:30Z'
 ---
 

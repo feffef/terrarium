@@ -1,8 +1,8 @@
 ---
 title: A bug report becomes work
 description: 'How a visitor''s issue reaches a merged fix: a sweep labels it, a person approves it, a session builds it and a person merges it.'
-revision: '072fab38ecac37f9f9500c4394a42ff2cdf54ade'
-revisionDate: '2026-11-06'
+revision: 'a438b80f310f19d9c51a899be43a1110d89af6f6'
+revisionDate: '2026-11-07'
 publishedAt: '2026-11-02T22:25:43Z'
 ---
 
