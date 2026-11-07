@@ -293,7 +293,7 @@ describe('In Terrarium motive and long Excerpts', () => {
   })
 })
 
-describe('mechanical findings for glassbox-improve', () => {
+describe('mechanical page warnings', () => {
   const walkthrough = (stop: string) => `${frontmatter}\nIntro.\n\n## 1. A stop\n\n${stop}\n\n::lessons\n[Collections](/t/glassbox/guide/nuxt-content/collections)\n::\n`
 
   it('warns on an Excerpt that holds only comments', () => {
